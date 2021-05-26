@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="dir_e93aecffac38c7eb64f496b2ebdb4016" kind="dir">
+    <compoundname>C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray</compoundname>
+    <innerfile refid="array__arithmetic_8hpp">array_arithmetic.hpp</innerfile>
+    <innerfile refid="array__array__arithmetic_8hpp">array_array_arithmetic.hpp</innerfile>
+    <innerfile refid="array__scalar__arithmetic_8hpp">array_scalar_arithmetic.hpp</innerfile>
+    <innerfile refid="basic__extent_8hpp">basic_extent.hpp</innerfile>
+    <innerfile refid="basic__ndarray_8hpp">basic_ndarray.hpp</innerfile>
+    <innerfile refid="basic__stride_8hpp">basic_stride.hpp</innerfile>
+    <innerfile refid="broadcast__arrays_8hpp">broadcast_arrays.hpp</innerfile>
+    <innerfile refid="config_8hpp">config.hpp</innerfile>
+    <innerfile refid="core__math_8hpp">core_math.hpp</innerfile>
+    <innerfile refid="errors_8hpp">errors.hpp</innerfile>
+    <innerfile refid="ndarray_8hpp">ndarray.hpp</innerfile>
+    <innerfile refid="scalar__array__arithmetic_8hpp">scalar_array_arithmetic.hpp</innerfile>
+    <innerfile refid="strided__loops_8hpp">strided_loops.hpp</innerfile>
+    <innerfile refid="to__string_8hpp">to_string.hpp</innerfile>
+    <innerfile refid="utils_8hpp">utils.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/"/>
+  </compounddef>
+</doxygen>
