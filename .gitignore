@@ -1,3 +1,3 @@
 docs/build
-docs/api
-docs/doxygenoutput
+docs/source/api
+docs/source/doxygenoutput
