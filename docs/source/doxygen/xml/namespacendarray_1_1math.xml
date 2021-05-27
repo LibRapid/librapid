@@ -1,0 +1,338 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="namespacendarray_1_1math" kind="namespace" language="C++">
+    <compoundname>ndarray::math</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="core__math_8hpp_1ab4b911407a5aaeed49cf2faf0d7f05a2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename std::enable_if&lt; std::is_integral&lt; T &gt;::value, int &gt;::type</type>
+            <defval>0</defval>
+          </param>
+        </templateparamlist>
+        <type>ND_INLINE const T</type>
+        <definition>ND_INLINE const T ndarray::math::product</definition>
+        <argsstring>(const std::vector&lt; T &gt; &amp;vals)</argsstring>
+        <name>product</name>
+        <param>
+          <type>const std::vector&lt; T &gt; &amp;</type>
+          <declname>vals</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" line="12" column="19" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" bodystart="12" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="core__math_8hpp_1adc801e32302aca0c151d6104295c62d7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename std::enable_if&lt; std::is_integral&lt; T &gt;::value, int &gt;::type</type>
+            <defval>0</defval>
+          </param>
+        </templateparamlist>
+        <type>ND_INLINE const T</type>
+        <definition>ND_INLINE const T ndarray::math::product</definition>
+        <argsstring>(const T *__restrict vals, nd_int num)</argsstring>
+        <name>product</name>
+        <param>
+          <type>const T *__restrict</type>
+          <declname>vals</declname>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>num</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" line="21" column="19" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" bodystart="21" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="core__math_8hpp_1ae16edffdbcbb6854c04499bd36357253" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename V</type>
+          </param>
+        </templateparamlist>
+        <type>ND_INLINE const bool</type>
+        <definition>ND_INLINE const bool ndarray::math::anyBelow</definition>
+        <argsstring>(const std::vector&lt; T &gt; &amp;vals, V bound)</argsstring>
+        <name>anyBelow</name>
+        <param>
+          <type>const std::vector&lt; T &gt; &amp;</type>
+          <declname>vals</declname>
+        </param>
+        <param>
+          <type>V</type>
+          <declname>bound</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" line="30" column="22" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" bodystart="30" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="core__math_8hpp_1a8947236388626039f214ce48c7604665" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename V</type>
+          </param>
+        </templateparamlist>
+        <type>ND_INLINE const bool</type>
+        <definition>ND_INLINE const bool ndarray::math::anyBelow</definition>
+        <argsstring>(const T *__restrict vals, nd_int dims, V bound)</argsstring>
+        <name>anyBelow</name>
+        <param>
+          <type>const T *__restrict</type>
+          <declname>vals</declname>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>dims</declname>
+        </param>
+        <param>
+          <type>V</type>
+          <declname>bound</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" line="39" column="22" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" bodystart="39" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="function" id="core__math_8hpp_1aa77e34b8a7c1897e4dd0fe67afac6b91" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename V</type>
+          </param>
+        </templateparamlist>
+        <type>ND_INLINE const T</type>
+        <definition>ND_INLINE const T ndarray::math::nd_to_scalar</definition>
+        <argsstring>(const std::vector&lt; T &gt; &amp;index, const std::vector&lt; V &gt; &amp;shape)</argsstring>
+        <name>nd_to_scalar</name>
+        <param>
+          <type>const std::vector&lt; T &gt; &amp;</type>
+          <declname>index</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; V &gt; &amp;</type>
+          <declname>shape</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" line="48" column="19" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" bodystart="48" bodyend="59"/>
+      </memberdef>
+      <memberdef kind="function" id="core__math_8hpp_1a812c96206f1592207ead1e9d9a5cc367" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename A</type>
+          </param>
+          <param>
+            <type>typename B</type>
+          </param>
+        </templateparamlist>
+        <type>ND_INLINE const A</type>
+        <definition>ND_INLINE const A ndarray::math::max_value</definition>
+        <argsstring>(A a, B b)</argsstring>
+        <name>max_value</name>
+        <param>
+          <type>A</type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type>B</type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" line="62" column="19" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" bodystart="62" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="function" id="core__math_8hpp_1af19801a81840aa1e2de1467604199b88" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename A</type>
+          </param>
+          <param>
+            <type>typename B</type>
+          </param>
+        </templateparamlist>
+        <type>ND_INLINE const A</type>
+        <definition>ND_INLINE const A ndarray::math::min_value</definition>
+        <argsstring>(A a, B b)</argsstring>
+        <name>min_value</name>
+        <param>
+          <type>A</type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type>B</type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" line="69" column="19" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" bodystart="69" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="core__math_8hpp_1a4c2f912f49a2e753be0d4563ebaf695a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>T &amp;&amp;</type>
+        <definition>T&amp;&amp; ndarray::math::min</definition>
+        <argsstring>(T &amp;&amp;val)</argsstring>
+        <name>min</name>
+        <param>
+          <type>T &amp;&amp;</type>
+          <declname>val</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" line="76" column="10" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" bodystart="76" bodyend="79"/>
+      </memberdef>
+      <memberdef kind="function" id="core__math_8hpp_1a45699cfe47a9e0676a76ed94d75d3a51" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T0</type>
+          </param>
+          <param>
+            <type>typename T1</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto ndarray::math::min</definition>
+        <argsstring>(T0 &amp;&amp;val1, T1 &amp;&amp;val2, Ts &amp;&amp;... vs)</argsstring>
+        <name>min</name>
+        <param>
+          <type>T0 &amp;&amp;</type>
+          <declname>val1</declname>
+        </param>
+        <param>
+          <type>T1 &amp;&amp;</type>
+          <declname>val2</declname>
+        </param>
+        <param>
+          <type>Ts &amp;&amp;...</type>
+          <declname>vs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" line="82" column="13" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" bodystart="82" bodyend="87"/>
+      </memberdef>
+      <memberdef kind="function" id="core__math_8hpp_1affdbc57e8bde0727f9ae9f48dab75ad7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>T &amp;&amp;</type>
+        <definition>T&amp;&amp; ndarray::math::max</definition>
+        <argsstring>(T &amp;&amp;val)</argsstring>
+        <name>max</name>
+        <param>
+          <type>T &amp;&amp;</type>
+          <declname>val</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" line="90" column="10" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" bodystart="90" bodyend="93"/>
+      </memberdef>
+      <memberdef kind="function" id="core__math_8hpp_1a28a1901f1bfb7b36e1237009490f4333" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T0</type>
+          </param>
+          <param>
+            <type>typename T1</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type>auto</type>
+        <definition>auto ndarray::math::max</definition>
+        <argsstring>(T0 &amp;&amp;val1, T1 &amp;&amp;val2, Ts &amp;&amp;... vs)</argsstring>
+        <name>max</name>
+        <param>
+          <type>T0 &amp;&amp;</type>
+          <declname>val1</declname>
+        </param>
+        <param>
+          <type>T1 &amp;&amp;</type>
+          <declname>val2</declname>
+        </param>
+        <param>
+          <type>Ts &amp;&amp;...</type>
+          <declname>vs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" line="96" column="13" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" bodystart="96" bodyend="101"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/core_math.hpp" line="9" column="1"/>
+  </compounddef>
+</doxygen>

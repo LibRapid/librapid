@@ -1,0 +1,163 @@
+\hypertarget{classndarray_1_1basic__ndarray}{}\doxysection{ndarray\+::basic\+\_\+ndarray$<$ T, alloc, type $>$ Class Template Reference}
+\label{classndarray_1_1basic__ndarray}\index{ndarray::basic\_ndarray$<$ T, alloc, type $>$@{ndarray::basic\_ndarray$<$ T, alloc, type $>$}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classndarray_1_1basic__ndarray_a63290fae666f09ebafd3387e17c69176}{set\+\_\+stride}} (const \mbox{\hyperlink{classndarray_1_1basic__stride}{stride}} \&s)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_af52177c47766845d354a48bf557f69a2}\label{classndarray_1_1basic__ndarray_af52177c47766845d354a48bf557f69a2}} 
+{\footnotesize template$<$typename V $>$ }\\{\bfseries basic\+\_\+ndarray} (const \mbox{\hyperlink{classndarray_1_1basic__extent}{basic\+\_\+extent}}$<$ V $>$ \&size)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a34c8eed9c58f14ce2c938f214bd7f6f6}\label{classndarray_1_1basic__ndarray_a34c8eed9c58f14ce2c938f214bd7f6f6}} 
+{\footnotesize template$<$typename E , typename V $>$ }\\{\bfseries basic\+\_\+ndarray} (const \mbox{\hyperlink{classndarray_1_1basic__extent}{basic\+\_\+extent}}$<$ E $>$ \&size, const V \&val)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a9b9a122f0997e7f97deab53ed16865d7}\label{classndarray_1_1basic__ndarray_a9b9a122f0997e7f97deab53ed16865d7}} 
+{\bfseries basic\+\_\+ndarray} (const \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T $>$ \&arr)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a84170ac6dd3ecc926caf77d38ecd2ff4}\label{classndarray_1_1basic__ndarray_a84170ac6dd3ecc926caf77d38ecd2ff4}} 
+ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T $>$ \& {\bfseries operator=} (const \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T $>$ \&arr)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a7f3ad25f462983fea73cdd002a39b10a}\label{classndarray_1_1basic__ndarray_a7f3ad25f462983fea73cdd002a39b10a}} 
+{\footnotesize template$<$typename V $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}} \& {\bfseries operator=} (const V \&other)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a41fc99c613712cc5b36ea9f00b008e01}\label{classndarray_1_1basic__ndarray_a41fc99c613712cc5b36ea9f00b008e01}} 
+ND\+\_\+\+INLINE nd\+\_\+int {\bfseries ndim} () const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_aa0d55015224272c6f28a64ed6181ff6f}\label{classndarray_1_1basic__ndarray_aa0d55015224272c6f28a64ed6181ff6f}} 
+ND\+\_\+\+INLINE bool {\bfseries is\+\_\+initialized} () const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a76cef267742cdd06ae3fdc52ac23eea4}\label{classndarray_1_1basic__ndarray_a76cef267742cdd06ae3fdc52ac23eea4}} 
+ND\+\_\+\+INLINE bool {\bfseries is\+\_\+scalar} () const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_afe09b6d73b966ea1f5def8ca240601ee}\label{classndarray_1_1basic__ndarray_afe09b6d73b966ea1f5def8ca240601ee}} 
+ND\+\_\+\+INLINE const \mbox{\hyperlink{classndarray_1_1basic__extent}{extent}} \& {\bfseries get\+\_\+extent} () const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_acdbb0d87db893d53b05a9bc559cd293d}\label{classndarray_1_1basic__ndarray_acdbb0d87db893d53b05a9bc559cd293d}} 
+ND\+\_\+\+INLINE const \mbox{\hyperlink{classndarray_1_1basic__stride}{stride}} \& {\bfseries get\+\_\+stride} () const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a77a7af919567216a7124f2dfc47e00d3}\label{classndarray_1_1basic__ndarray_a77a7af919567216a7124f2dfc47e00d3}} 
+ND\+\_\+\+INLINE T $\ast$ {\bfseries get\+\_\+data\+\_\+start} () const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a8529e3defb969bb19e0e08110b3e19d7}\label{classndarray_1_1basic__ndarray_a8529e3defb969bb19e0e08110b3e19d7}} 
+ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T, alloc $>$ {\bfseries operator\mbox{[}$\,$\mbox{]}} (nd\+\_\+int index)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_ace59ad4bd6f48ab0e28131275781656d}\label{classndarray_1_1basic__ndarray_ace59ad4bd6f48ab0e28131275781656d}} 
+ND\+\_\+\+INLINE const \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T, alloc $>$ {\bfseries operator\mbox{[}$\,$\mbox{]}} (nd\+\_\+int index) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a6423c15b290c594d2ff26d25b4cbd8fe}\label{classndarray_1_1basic__ndarray_a6423c15b290c594d2ff26d25b4cbd8fe}} 
+{\footnotesize template$<$class F $>$ }\\ND\+\_\+\+INLINE void {\bfseries fill} (const F \&filler)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a8a58183cdfe1292de0851b441f5c4048}\label{classndarray_1_1basic__ndarray_a8a58183cdfe1292de0851b441f5c4048}} 
+ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T, alloc $>$ {\bfseries filled} (const T \&filler) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_ac54ad98133784182bedb7ea92488b396}\label{classndarray_1_1basic__ndarray_ac54ad98133784182bedb7ea92488b396}} 
+ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T, alloc $>$ {\bfseries clone} () const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_af7fb9c7cf931e9fc5cc8ce29ae9115a8}\label{classndarray_1_1basic__ndarray_af7fb9c7cf931e9fc5cc8ce29ae9115a8}} 
+void {\bfseries set\+\_\+value} (nd\+\_\+int index, T val)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a534d7b4b7b992f34dec6731425c2438a}\label{classndarray_1_1basic__ndarray_a534d7b4b7b992f34dec6731425c2438a}} 
+{\footnotesize template$<$typename B\+\_\+T , typename B\+\_\+A $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type, nd\+\_\+allocator$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type $>$ $>$ {\bfseries operator+} (const \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ B\+\_\+T, B\+\_\+A $>$ \&other) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a1a5f53a80fb8345421e8eb314f560fdc}\label{classndarray_1_1basic__ndarray_a1a5f53a80fb8345421e8eb314f560fdc}} 
+{\footnotesize template$<$typename B\+\_\+T , typename B\+\_\+A $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type, nd\+\_\+allocator$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type $>$ $>$ {\bfseries operator-\/} (const \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ B\+\_\+T, B\+\_\+A $>$ \&other) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a903a8798f6be1f5570bba4ddafb6d397}\label{classndarray_1_1basic__ndarray_a903a8798f6be1f5570bba4ddafb6d397}} 
+{\footnotesize template$<$typename B\+\_\+T , typename B\+\_\+A $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type, nd\+\_\+allocator$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type $>$ $>$ {\bfseries operator$\ast$} (const \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ B\+\_\+T, B\+\_\+A $>$ \&other) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_ae8d7ed51b22ed84c97dce796d07ea502}\label{classndarray_1_1basic__ndarray_ae8d7ed51b22ed84c97dce796d07ea502}} 
+{\footnotesize template$<$typename B\+\_\+T , typename B\+\_\+A $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type, nd\+\_\+allocator$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type $>$ $>$ {\bfseries operator/} (const \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ B\+\_\+T, B\+\_\+A $>$ \&other) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_aa20293fac7e051bbcda85495024d2f7a}\label{classndarray_1_1basic__ndarray_aa20293fac7e051bbcda85495024d2f7a}} 
+{\footnotesize template$<$typename B\+\_\+T $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type, nd\+\_\+allocator$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type $>$ $>$ {\bfseries operator+} (const B\+\_\+T \&other) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a009a3f9678d4aa8f3707b56ec03ea447}\label{classndarray_1_1basic__ndarray_a009a3f9678d4aa8f3707b56ec03ea447}} 
+{\footnotesize template$<$typename B\+\_\+T $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type, nd\+\_\+allocator$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type $>$ $>$ {\bfseries operator-\/} (const B\+\_\+T \&other) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_aeb53931e673648185e141a6c076d4048}\label{classndarray_1_1basic__ndarray_aeb53931e673648185e141a6c076d4048}} 
+{\footnotesize template$<$typename B\+\_\+T $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type, nd\+\_\+allocator$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type $>$ $>$ {\bfseries operator$\ast$} (const B\+\_\+T \&other) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a8d24d5325868dc9ea73d69fd62fe8f6d}\label{classndarray_1_1basic__ndarray_a8d24d5325868dc9ea73d69fd62fe8f6d}} 
+{\footnotesize template$<$typename B\+\_\+T $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type, nd\+\_\+allocator$<$ typename std\+::common\+\_\+type$<$ T, B\+\_\+T $>$\+::type $>$ $>$ {\bfseries operator/} (const B\+\_\+T \&other) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a48d4116e15c0698fb391fa1148f07fa5}\label{classndarray_1_1basic__ndarray_a48d4116e15c0698fb391fa1148f07fa5}} 
+{\footnotesize template$<$typename O $>$ }\\ND\+\_\+\+INLINE void {\bfseries reshape} (const std\+::vector$<$ O $>$ \&order)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a8373d4223ca91abb87444e2c3cfcbca5}\label{classndarray_1_1basic__ndarray_a8373d4223ca91abb87444e2c3cfcbca5}} 
+{\footnotesize template$<$typename O $>$ }\\ND\+\_\+\+INLINE void {\bfseries reshape} (const std\+::initializer\+\_\+list$<$ O $>$ \&order)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_aafd840c7faec663ab6685b4824d519c3}\label{classndarray_1_1basic__ndarray_aafd840c7faec663ab6685b4824d519c3}} 
+{\footnotesize template$<$typename O $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T, alloc $>$ {\bfseries reshaped} (const std\+::vector$<$ O $>$ \&order) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a3f89205742a7743953f14b62e3b8b326}\label{classndarray_1_1basic__ndarray_a3f89205742a7743953f14b62e3b8b326}} 
+{\footnotesize template$<$typename O $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T, alloc $>$ {\bfseries reshaped} (const std\+::initializer\+\_\+list$<$ O $>$ \&order)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_ad399b6e59ce172425c4aeb65940d4eac}\label{classndarray_1_1basic__ndarray_ad399b6e59ce172425c4aeb65940d4eac}} 
+ND\+\_\+\+INLINE void {\bfseries strip\+\_\+front} ()
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a6fa4c9bcbde7c060c0d958d2199f5fea}\label{classndarray_1_1basic__ndarray_a6fa4c9bcbde7c060c0d958d2199f5fea}} 
+ND\+\_\+\+INLINE void {\bfseries strip\+\_\+back} ()
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a66b25b87e31871be66d9b9a50d470111}\label{classndarray_1_1basic__ndarray_a66b25b87e31871be66d9b9a50d470111}} 
+ND\+\_\+\+INLINE void {\bfseries strip} ()
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a0c601957abf7b8f48d6dd31e73910a79}\label{classndarray_1_1basic__ndarray_a0c601957abf7b8f48d6dd31e73910a79}} 
+ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T, alloc $>$ {\bfseries stripped\+\_\+front} () const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a231e161522adf6e5c6cc4ad813fb8239}\label{classndarray_1_1basic__ndarray_a231e161522adf6e5c6cc4ad813fb8239}} 
+ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T, alloc $>$ {\bfseries stripped\+\_\+back} () const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a14b6c9271973ed737c2df8d1a4d1449d}\label{classndarray_1_1basic__ndarray_a14b6c9271973ed737c2df8d1a4d1449d}} 
+ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T, alloc $>$ {\bfseries stripped} () const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_af4e8d170e750c552c9f43a9691259375}\label{classndarray_1_1basic__ndarray_af4e8d170e750c552c9f43a9691259375}} 
+{\footnotesize template$<$typename O $>$ }\\ND\+\_\+\+INLINE void {\bfseries transpose} (const std\+::vector$<$ O $>$ \&order)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_af4cdcbf410279c3d2038a9453477d8f8}\label{classndarray_1_1basic__ndarray_af4cdcbf410279c3d2038a9453477d8f8}} 
+ND\+\_\+\+INLINE void {\bfseries transpose} ()
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a651eeeaf6c259be36dccada2ebffa654}\label{classndarray_1_1basic__ndarray_a651eeeaf6c259be36dccada2ebffa654}} 
+{\footnotesize template$<$typename O $>$ }\\ND\+\_\+\+INLINE void {\bfseries transpose} (const std\+::initializer\+\_\+list$<$ O $>$ \&order)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a5352330fde7f6a4d9d0e77ba2527dd7f}\label{classndarray_1_1basic__ndarray_a5352330fde7f6a4d9d0e77ba2527dd7f}} 
+{\footnotesize template$<$typename O $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T, alloc $>$ {\bfseries transposed} (const std\+::vector$<$ O $>$ \&order) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a934fe89d22dc7ba0b7e5e0dadc423b16}\label{classndarray_1_1basic__ndarray_a934fe89d22dc7ba0b7e5e0dadc423b16}} 
+{\footnotesize template$<$typename O $>$ }\\ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T, alloc $>$ {\bfseries transposed} (const std\+::initializer\+\_\+list$<$ O $>$ \&order) const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_afe512b0542b17d6c02ce0c507ef671ef}\label{classndarray_1_1basic__ndarray_afe512b0542b17d6c02ce0c507ef671ef}} 
+ND\+\_\+\+INLINE \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ T, alloc $>$ {\bfseries transposed} () const
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_abe0b92ad398cce48c5c40fa45580eba4}\label{classndarray_1_1basic__ndarray_abe0b92ad398cce48c5c40fa45580eba4}} 
+std\+::string {\bfseries str} (nd\+\_\+int start\+\_\+depth=0) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a73c0f15b5284d4285f9cd43148619ddd}\label{classndarray_1_1basic__ndarray_a73c0f15b5284d4285f9cd43148619ddd}} 
+{\footnotesize template$<$typename A\+\_\+T , typename B\+\_\+T , typename B\+\_\+A $>$ }\\\mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ typename std\+::common\+\_\+type$<$ A\+\_\+T, B\+\_\+T $>$\+::type, nd\+\_\+allocator$<$ typename std\+::common\+\_\+type$<$ A\+\_\+T, B\+\_\+T $>$\+::type $>$ $>$ {\bfseries operator+} (const A\+\_\+T \&val, const \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ B\+\_\+T, B\+\_\+A $>$ \&arr)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a086ea91d92902ef62cd29287ec7c1e3d}\label{classndarray_1_1basic__ndarray_a086ea91d92902ef62cd29287ec7c1e3d}} 
+{\footnotesize template$<$typename A\+\_\+T , typename B\+\_\+T , typename B\+\_\+A $>$ }\\\mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ typename std\+::common\+\_\+type$<$ A\+\_\+T, B\+\_\+T $>$\+::type, nd\+\_\+allocator$<$ typename std\+::common\+\_\+type$<$ A\+\_\+T, B\+\_\+T $>$\+::type $>$ $>$ {\bfseries operator-\/} (const A\+\_\+T \&val, const \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ B\+\_\+T, B\+\_\+A $>$ \&arr)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_ad7dc8ec381369e62a944f6d6f3da90b3}\label{classndarray_1_1basic__ndarray_ad7dc8ec381369e62a944f6d6f3da90b3}} 
+{\footnotesize template$<$typename A\+\_\+T , typename B\+\_\+T , typename B\+\_\+A $>$ }\\\mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ typename std\+::common\+\_\+type$<$ A\+\_\+T, B\+\_\+T $>$\+::type, nd\+\_\+allocator$<$ typename std\+::common\+\_\+type$<$ A\+\_\+T, B\+\_\+T $>$\+::type $>$ $>$ {\bfseries operator$\ast$} (const A\+\_\+T \&val, const \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ B\+\_\+T, B\+\_\+A $>$ \&arr)
+\item 
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a0ce608a6ec2f524accb2a130f618c22a}\label{classndarray_1_1basic__ndarray_a0ce608a6ec2f524accb2a130f618c22a}} 
+{\footnotesize template$<$typename A\+\_\+T , typename B\+\_\+T , typename B\+\_\+A $>$ }\\\mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ typename std\+::common\+\_\+type$<$ A\+\_\+T, B\+\_\+T $>$\+::type, nd\+\_\+allocator$<$ typename std\+::common\+\_\+type$<$ A\+\_\+T, B\+\_\+T $>$\+::type $>$ $>$ {\bfseries operator/} (const A\+\_\+T \&val, const \mbox{\hyperlink{classndarray_1_1basic__ndarray}{basic\+\_\+ndarray}}$<$ B\+\_\+T, B\+\_\+A $>$ \&arr)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classndarray_1_1basic__ndarray_a63290fae666f09ebafd3387e17c69176}\label{classndarray_1_1basic__ndarray_a63290fae666f09ebafd3387e17c69176}} 
+\index{ndarray::basic\_ndarray$<$ T, alloc, type $>$@{ndarray::basic\_ndarray$<$ T, alloc, type $>$}!set\_stride@{set\_stride}}
+\index{set\_stride@{set\_stride}!ndarray::basic\_ndarray$<$ T, alloc, type $>$@{ndarray::basic\_ndarray$<$ T, alloc, type $>$}}
+\doxysubsubsection{\texorpdfstring{set\_stride()}{set\_stride()}}
+{\footnotesize\ttfamily template$<$typename T , class alloc  = nd\+\_\+allocator$<$\+T$>$, typename std\+::enable\+\_\+if$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, int $>$\+::type  = 0$>$ \\
+void \mbox{\hyperlink{classndarray_1_1basic__ndarray}{ndarray\+::basic\+\_\+ndarray}}$<$ T, alloc, type $>$\+::set\+\_\+stride (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classndarray_1_1basic__stride}{stride}} \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+This is a function. It does something. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/penci/\+One\+Drive/\+Desktop/librapid/librapid/librapid/ndarray/basic\+\_\+ndarray.\+hpp\end{DoxyCompactItemize}

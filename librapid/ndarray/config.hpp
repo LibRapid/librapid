@@ -28,3 +28,13 @@
 using nd_int = unsigned long long;
 
 #endif // NDARRAY_CONFIG
+
+/**
+ * @brief This is a function with a purpose
+ * 
+ * @param val A value
+ * @return int The value multiplied by 123
+ */
+int a_random_function(int val) {
+    return val * 123;
+}

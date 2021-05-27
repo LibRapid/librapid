@@ -81,13 +81,8 @@ Contents
 Test
 ====
 
-.. doxygenfunction:: ndarray::broadcast::calculate_arithmetic_mode(const A *, nd_int, const B *, nd_int)
-
-Another Test
-============
-
-.. doxygenclass:: ndarray::basic_ndarray
-	:members:
+.. doxy:c:: config.hpp::a_random_function
+    :children:
 
 Indices and tables
 ******************

@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="namespacendarray_1_1utils" kind="namespace" language="C++">
+    <compoundname>ndarray::utils</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="utils_8hpp_1ab15020e26e4eaab9f4412814be5c4636" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>std::vector&lt; T &gt;</type>
+        <definition>std::vector&lt;T&gt; ndarray::utils::sub_vector</definition>
+        <argsstring>(const std::vector&lt; T &gt; &amp;vec, nd_int start=(nd_int) -1, nd_int end=(nd_int) -1)</argsstring>
+        <name>sub_vector</name>
+        <param>
+          <type>const std::vector&lt; T &gt; &amp;</type>
+          <declname>vec</declname>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>start</declname>
+          <defval>(nd_int) -1</defval>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>end</declname>
+          <defval>(nd_int) -1</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/utils.hpp" line="9" column="20" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/utils.hpp" bodystart="9" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="utils_8hpp_1a4d00b98546b582b8ff03eee99ceac06b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>std::pair&lt; T *, nd_int &gt;</type>
+        <definition>std::pair&lt;T *, nd_int&gt; ndarray::utils::sub_vector</definition>
+        <argsstring>(const T *vec, nd_int len, nd_int start=(nd_int) -1, nd_int end=(nd_int) -1)</argsstring>
+        <name>sub_vector</name>
+        <param>
+          <type>const T *</type>
+          <declname>vec</declname>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>len</declname>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>start</declname>
+          <defval>(nd_int) -1</defval>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>end</declname>
+          <defval>(nd_int) -1</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/utils.hpp" line="21" column="18" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/utils.hpp" bodystart="21" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="function" id="utils_8hpp_1a2485bf1103812c658ea57b4d0abd1e05" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename A</type>
+          </param>
+          <param>
+            <type>typename B</type>
+          </param>
+        </templateparamlist>
+        <type>ND_INLINE bool</type>
+        <definition>ND_INLINE bool ndarray::utils::check_ptr_match</definition>
+        <argsstring>(A *a, nd_int len_a, B *b, nd_int len_b)</argsstring>
+        <name>check_ptr_match</name>
+        <param>
+          <type>A *</type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>len_a</declname>
+        </param>
+        <param>
+          <type>B *</type>
+          <declname>b</declname>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>len_b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/utils.hpp" line="34" column="16" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/utils.hpp" bodystart="34" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="function" id="utils_8hpp_1a5183dcdd5e0630f989c534100634e7ca" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename A</type>
+          </param>
+          <param>
+            <type>typename B</type>
+          </param>
+          <param>
+            <type>typename C</type>
+          </param>
+        </templateparamlist>
+        <type>ND_INLINE bool</type>
+        <definition>ND_INLINE bool ndarray::utils::check_ptr_match</definition>
+        <argsstring>(A *a, nd_int len_a, const std::pair&lt; B, C &gt; &amp;pair)</argsstring>
+        <name>check_ptr_match</name>
+        <param>
+          <type>A *</type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>len_a</declname>
+        </param>
+        <param>
+          <type>const std::pair&lt; B, C &gt; &amp;</type>
+          <declname>pair</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/utils.hpp" line="45" column="16" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/utils.hpp" bodystart="45" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="function" id="utils_8hpp_1af74fb82c1cc2b550d0dd11d93e62b403" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename A</type>
+          </param>
+          <param>
+            <type>typename B</type>
+          </param>
+          <param>
+            <type>typename C</type>
+          </param>
+          <param>
+            <type>typename D</type>
+          </param>
+        </templateparamlist>
+        <type>ND_INLINE bool</type>
+        <definition>ND_INLINE bool ndarray::utils::check_ptr_match</definition>
+        <argsstring>(const std::pair&lt; A, B &gt; &amp;pair1, const std::pair&lt; C, D &gt; &amp;pair2)</argsstring>
+        <name>check_ptr_match</name>
+        <param>
+          <type>const std::pair&lt; A, B &gt; &amp;</type>
+          <declname>pair1</declname>
+        </param>
+        <param>
+          <type>const std::pair&lt; C, D &gt; &amp;</type>
+          <declname>pair2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/utils.hpp" line="56" column="16" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/utils.hpp" bodystart="56" bodyend="64"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/utils.hpp" line="6" column="1"/>
+  </compounddef>
+</doxygen>

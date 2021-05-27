@@ -39,57 +39,62 @@ extensions = [
 	"sphinx.ext.napoleon",
 	"sphinx.ext.coverage",
     "sphinx.ext.autosectionlabel",
-	"breathe",
-	"exhale"
+	# "breathe",
+	# "exhale"
+    "antidox"
 ]
 
 autosectionlabel_prefix_document = True
 
-source_encoding = "utf-8"
+# source_encoding = "utf-8"
 
 # Set up the breathe extension
-breathe_projects = {
-	"librapid": "./doxygenoutput/xml"
-}
+# breathe_projects = {
+# 	"librapid": "./doxygenoutput/xml"
+# }
 
-breathe_default_project = "librapid"
+# breathe_default_project = "librapid"
 
 # Custom inputs to doxygen generator
-doxygen_inputs = """
-
-INPUT = ../../librapid
-
-ENABLE_PREPROCESSING = YES
-MACRO_EXPANSION = YES
-SKIP_FUNCTION_MACROS = NO
-EXPAND_ONLY_PREDEF = NO
-
-"""
+# doxygen_inputs = """
+# 
+# INPUT = ../../librapid
+# 
+# ENABLE_PREPROCESSING = YES
+# MACRO_EXPANSION = YES
+# SKIP_FUNCTION_MACROS = NO
+# EXPAND_ONLY_PREDEF = NO
+# 
+# """
 
 # Set up the exhale extension
-exhale_args = {
-	# These arguments are required
-    "containmentFolder":     "./api",
-    "rootFileName":          "index.rst",
-    "rootFileTitle":         "LibRapid",
-    "doxygenStripFromPath":  "..",
-    # Suggested optional arguments
-    "createTreeView":        True,
-    # TIP: if using the sphinx-bootstrap-theme, you need
-    # "treeViewIsBootstrap": True,
-    "exhaleExecutesDoxygen": True,
-    "exhaleDoxygenStdin":    "INPUT = ../../librapid",
-    "exhaleDoxygenStdin": textwrap.dedent("""
-        INPUT                   = ../../librapid
-       
-        ENABLE_PREPROCESSING    = YES
-        MACRO_EXPANSION         = YES
-        EXPAND_ONLY_PREDEF      = NO
-        PREDEFINED              += ND_INLINE=
-        PREDEFINED              += __restrict=
-        PREDEFINED              += ND_MAX_DIMS=50
-    """)
-}
+# exhale_args = {
+# 	# These arguments are required
+#     "containmentFolder":     "./api",
+#     "rootFileName":          "index.rst",
+#     "rootFileTitle":         "LibRapid",
+#     "doxygenStripFromPath":  "..",
+#     # Suggested optional arguments
+#     "createTreeView":        True,
+#     # TIP: if using the sphinx-bootstrap-theme, you need
+#     # "treeViewIsBootstrap": True,
+#     "exhaleExecutesDoxygen": True,
+#     "exhaleDoxygenStdin":    "INPUT = ../../librapid",
+#     "exhaleDoxygenStdin": textwrap.dedent("""
+#         INPUT                   = ../../librapid
+#        
+#         ENABLE_PREPROCESSING    = YES
+#         MACRO_EXPANSION         = YES
+#         EXPAND_ONLY_PREDEF      = NO
+#         PREDEFINED              += ND_INLINE=
+#         PREDEFINED              += __restrict=
+#         PREDEFINED              += ND_MAX_DIMS=50
+#     """)
+# }
+
+print("INFORMATION: DIR IS", os.getcwd())
+
+antidox_doxy_xml_dir = os.getcwd() + "\\doxygen\\xml"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

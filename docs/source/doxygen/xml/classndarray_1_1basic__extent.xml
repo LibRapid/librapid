@@ -1,0 +1,445 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="classndarray_1_1basic__extent" kind="class" language="C++" prot="public">
+    <compoundname>ndarray::basic_extent</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename T</type>
+      </param>
+      <param>
+        <type>typename std::enable_if&lt; std::is_integral&lt; T &gt;::value, int &gt;::type</type>
+        <defval>0</defval>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classndarray_1_1basic__extent_1a8e9a723f4eb19bf2131e059e92c7f850" prot="private" static="no" mutable="no">
+        <type>T</type>
+        <definition>T ndarray::basic_extent&lt; T, type &gt;::m_extent[ND_MAX_DIMS]</definition>
+        <argsstring>[ND_MAX_DIMS]</argsstring>
+        <name>m_extent</name>
+        <initializer>{}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="218" column="3" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="218" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classndarray_1_1basic__extent_1a5a383dd05a305ae7d74a140c058fdede" prot="private" static="no" mutable="no">
+        <type>T</type>
+        <definition>T ndarray::basic_extent&lt; T, type &gt;::m_extent_alt[ND_MAX_DIMS]</definition>
+        <argsstring>[ND_MAX_DIMS]</argsstring>
+        <name>m_extent_alt</name>
+        <initializer>{}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="219" column="3" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="219" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classndarray_1_1basic__extent_1a1ffa0d6275b5cf15aa5e94f49b5523b4" prot="private" static="no" mutable="no">
+        <type>nd_int</type>
+        <definition>nd_int ndarray::basic_extent&lt; T, type &gt;::m_dims</definition>
+        <argsstring></argsstring>
+        <name>m_dims</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="221" column="8" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="221" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a017eda3336a79b8de833bdb53b89ee79" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>ndarray::basic_extent&lt; T, type &gt;::basic_extent</definition>
+        <argsstring>()=default</argsstring>
+        <name>basic_extent</name>
+        <briefdescription>
+<para>Construct a new basic extent object. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is some documentation </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="24" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a750202a3e6ced8bb628b01d36aed9761" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename V</type>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>ndarray::basic_extent&lt; T, type &gt;::basic_extent</definition>
+        <argsstring>(const std::initializer_list&lt; V &gt; &amp;vals)</argsstring>
+        <name>basic_extent</name>
+        <param>
+          <type>const std::initializer_list&lt; V &gt; &amp;</type>
+          <declname>vals</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="27" column="1" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="27" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1abe4936ce03300dba6a08b401fd3c2f9c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename V</type>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>ndarray::basic_extent&lt; T, type &gt;::basic_extent</definition>
+        <argsstring>(const std::vector&lt; V &gt; &amp;vals)</argsstring>
+        <name>basic_extent</name>
+        <param>
+          <type>const std::vector&lt; V &gt; &amp;</type>
+          <declname>vals</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="32" column="1" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="32" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a7bacb00ecf8011c9616a538848e0f6a7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ndarray::basic_extent&lt; T, type &gt;::basic_extent</definition>
+        <argsstring>(nd_int n)</argsstring>
+        <name>basic_extent</name>
+        <param>
+          <type>nd_int</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="52" column="1" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="52" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a3215eb0bf3fa8ff055da5c057bb820f1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ndarray::basic_extent&lt; T, type &gt;::basic_extent</definition>
+        <argsstring>(const basic_extent&lt; T &gt; &amp;o)</argsstring>
+        <name>basic_extent</name>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__extent" kindref="compound">basic_extent</ref>&lt; T &gt; &amp;</type>
+          <declname>o</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="69" column="1" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="69" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a5b4d7acd617073e83d1beaa21b0064ea" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename A</type>
+          </param>
+          <param>
+            <type>typename B</type>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>ndarray::basic_extent&lt; T, type &gt;::basic_extent</definition>
+        <argsstring>(const std::pair&lt; A, B &gt; &amp;pair)</argsstring>
+        <name>basic_extent</name>
+        <param>
+          <type>const std::pair&lt; A, B &gt; &amp;</type>
+          <declname>pair</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="84" column="1" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="84" bodyend="93"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1ad7c0a54e0e3fb69d472ed61679945253" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename PTR</type>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>ndarray::basic_extent&lt; T, type &gt;::basic_extent</definition>
+        <argsstring>(PTR data, nd_int dims)</argsstring>
+        <name>basic_extent</name>
+        <param>
+          <type>PTR</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>dims</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="96" column="1" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="96" bodyend="111"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a772e88e954366c281084b4a8eadfe34f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ND_INLINE <ref refid="classndarray_1_1basic__extent" kindref="compound">basic_extent</ref> &amp;</type>
+        <definition>ND_INLINE basic_extent&amp; ndarray::basic_extent&lt; T, type &gt;::operator=</definition>
+        <argsstring>(const basic_extent&lt; T &gt; &amp;o)</argsstring>
+        <name>operator=</name>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__extent" kindref="compound">basic_extent</ref>&lt; T &gt; &amp;</type>
+          <declname>o</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="113" column="24" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="113" bodyend="122"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a313fa44b97890a6742d5285e2b80bb92" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ND_INLINE T &amp;</type>
+        <definition>ND_INLINE T&amp; ndarray::basic_extent&lt; T, type &gt;::operator[]</definition>
+        <argsstring>(nd_int index)</argsstring>
+        <name>operator[]</name>
+        <param>
+          <type>nd_int</type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="124" column="13" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="124" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a107306da1c341ded577a731a4a6549a1" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>ND_INLINE const T &amp;</type>
+        <definition>ND_INLINE const T&amp; ndarray::basic_extent&lt; T, type &gt;::operator[]</definition>
+        <argsstring>(nd_int index) const</argsstring>
+        <name>operator[]</name>
+        <param>
+          <type>nd_int</type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="129" column="19" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="129" bodyend="132"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a3b9bc280a6ba9751b984957435553551" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ND_INLINE T &amp;</type>
+        <definition>ND_INLINE T&amp; ndarray::basic_extent&lt; T, type &gt;::operator()</definition>
+        <argsstring>(nd_int index, bool normal)</argsstring>
+        <name>operator()</name>
+        <param>
+          <type>nd_int</type>
+          <declname>index</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>normal</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="134" column="13" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="134" bodyend="139"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1ab64420c2f613285a312522ad87b90b3c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>ND_INLINE const T &amp;</type>
+        <definition>ND_INLINE const T&amp; ndarray::basic_extent&lt; T, type &gt;::operator()</definition>
+        <argsstring>(nd_int index, bool normal) const</argsstring>
+        <name>operator()</name>
+        <param>
+          <type>nd_int</type>
+          <declname>index</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>normal</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="141" column="19" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="141" bodyend="146"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a771b51e1e648a3ebfa7263268b551fac" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>ND_INLINE <ref refid="classndarray_1_1basic__extent" kindref="compound">basic_extent</ref></type>
+        <definition>ND_INLINE basic_extent ndarray::basic_extent&lt; T, type &gt;::compress</definition>
+        <argsstring>() const</argsstring>
+        <name>compress</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="148" column="24" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="148" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a539502e717027aa30c4965e6d1452867" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>ND_INLINE nd_int</type>
+        <definition>ND_INLINE nd_int ndarray::basic_extent&lt; T, type &gt;::ndim</definition>
+        <argsstring>() const</argsstring>
+        <name>ndim</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="160" column="18" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="160" bodyend="163"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1ae057901f42f4a0c6798ff823a2f7c2df" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>ND_INLINE bool</type>
+        <definition>ND_INLINE bool ndarray::basic_extent&lt; T, type &gt;::is_valid</definition>
+        <argsstring>() const</argsstring>
+        <name>is_valid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="165" column="16" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="165" bodyend="168"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a9f796cc731dd284f3807a9069ce2c85b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>ND_INLINE auto</type>
+        <definition>ND_INLINE auto ndarray::basic_extent&lt; T, type &gt;::get_extent</definition>
+        <argsstring>() const</argsstring>
+        <name>get_extent</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="170" column="16" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="170" bodyend="173"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a0c7c3654d3b7994f21b26d53750d4720" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>ND_INLINE auto</type>
+        <definition>ND_INLINE auto ndarray::basic_extent&lt; T, type &gt;::get_extent_alt</definition>
+        <argsstring>() const</argsstring>
+        <name>get_extent_alt</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="175" column="16" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="175" bodyend="178"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1adfda67bb0fdf8bd9f4e739738e69aac8" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>ND_INLINE bool</type>
+        <definition>ND_INLINE bool ndarray::basic_extent&lt; T, type &gt;::operator==</definition>
+        <argsstring>(const basic_extent&lt; T &gt; &amp;test) const</argsstring>
+        <name>operator==</name>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__extent" kindref="compound">basic_extent</ref>&lt; T &gt; &amp;</type>
+          <declname>test</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="180" column="16" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="180" bodyend="183"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1a7ba7810162431714343c8b7a6f15dc84" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename O</type>
+          </param>
+        </templateparamlist>
+        <type>ND_INLINE void</type>
+        <definition>ND_INLINE void ndarray::basic_extent&lt; T, type &gt;::reshape</definition>
+        <argsstring>(const std::vector&lt; O &gt; &amp;order)</argsstring>
+        <name>reshape</name>
+        <param>
+          <type>const std::vector&lt; O &gt; &amp;</type>
+          <declname>order</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="186" column="16" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="186" bodyend="204"/>
+      </memberdef>
+      <memberdef kind="function" id="classndarray_1_1basic__extent_1aca741a5741a3d87f645866873de88bda" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>ND_INLINE std::string</type>
+        <definition>ND_INLINE std::string ndarray::basic_extent&lt; T, type &gt;::str</definition>
+        <argsstring>() const</argsstring>
+        <name>str</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="206" column="23" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="206" bodyend="215"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" line="15" column="1" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/basic_extent.hpp" bodystart="16" bodyend="222"/>
+    <listofallmembers>
+      <member refid="classndarray_1_1basic__extent_1a017eda3336a79b8de833bdb53b89ee79" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>basic_extent</name></member>
+      <member refid="classndarray_1_1basic__extent_1a750202a3e6ced8bb628b01d36aed9761" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>basic_extent</name></member>
+      <member refid="classndarray_1_1basic__extent_1abe4936ce03300dba6a08b401fd3c2f9c" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>basic_extent</name></member>
+      <member refid="classndarray_1_1basic__extent_1a7bacb00ecf8011c9616a538848e0f6a7" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>basic_extent</name></member>
+      <member refid="classndarray_1_1basic__extent_1a3215eb0bf3fa8ff055da5c057bb820f1" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>basic_extent</name></member>
+      <member refid="classndarray_1_1basic__extent_1a5b4d7acd617073e83d1beaa21b0064ea" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>basic_extent</name></member>
+      <member refid="classndarray_1_1basic__extent_1ad7c0a54e0e3fb69d472ed61679945253" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>basic_extent</name></member>
+      <member refid="classndarray_1_1basic__extent_1a771b51e1e648a3ebfa7263268b551fac" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>compress</name></member>
+      <member refid="classndarray_1_1basic__extent_1a9f796cc731dd284f3807a9069ce2c85b" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>get_extent</name></member>
+      <member refid="classndarray_1_1basic__extent_1a0c7c3654d3b7994f21b26d53750d4720" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>get_extent_alt</name></member>
+      <member refid="classndarray_1_1basic__extent_1ae057901f42f4a0c6798ff823a2f7c2df" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>is_valid</name></member>
+      <member refid="classndarray_1_1basic__extent_1a1ffa0d6275b5cf15aa5e94f49b5523b4" prot="private" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>m_dims</name></member>
+      <member refid="classndarray_1_1basic__extent_1a8e9a723f4eb19bf2131e059e92c7f850" prot="private" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>m_extent</name></member>
+      <member refid="classndarray_1_1basic__extent_1a5a383dd05a305ae7d74a140c058fdede" prot="private" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>m_extent_alt</name></member>
+      <member refid="classndarray_1_1basic__extent_1a539502e717027aa30c4965e6d1452867" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>ndim</name></member>
+      <member refid="classndarray_1_1basic__extent_1a3b9bc280a6ba9751b984957435553551" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>operator()</name></member>
+      <member refid="classndarray_1_1basic__extent_1ab64420c2f613285a312522ad87b90b3c" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>operator()</name></member>
+      <member refid="classndarray_1_1basic__extent_1a772e88e954366c281084b4a8eadfe34f" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>operator=</name></member>
+      <member refid="classndarray_1_1basic__extent_1adfda67bb0fdf8bd9f4e739738e69aac8" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>operator==</name></member>
+      <member refid="classndarray_1_1basic__extent_1a313fa44b97890a6742d5285e2b80bb92" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>operator[]</name></member>
+      <member refid="classndarray_1_1basic__extent_1a107306da1c341ded577a731a4a6549a1" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>operator[]</name></member>
+      <member refid="classndarray_1_1basic__extent_1a7ba7810162431714343c8b7a6f15dc84" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>reshape</name></member>
+      <member refid="classndarray_1_1basic__extent_1aca741a5741a3d87f645866873de88bda" prot="public" virt="non-virtual"><scope>ndarray::basic_extent</scope><name>str</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
