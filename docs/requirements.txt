@@ -1,4 +1,4 @@
-sphinx>=2.0
+sphinx==3.4.3
 breathe>=4.13.0
 furo
 exhale
