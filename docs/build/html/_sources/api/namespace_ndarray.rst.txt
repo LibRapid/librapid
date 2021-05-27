@@ -58,9 +58,9 @@ Functions
 
 - :ref:`exhale_function_basic__ndarray_8hpp_1adeeba504fd1234c1fa2b67e2dab4a857`
 
-- :ref:`exhale_function_basic__stride_8hpp_1a4827d4e09d7296367e64f886155aff9e`
-
 - :ref:`exhale_function_basic__extent_8hpp_1ab269931fe00c6820f83c08cf5e485af9`
+
+- :ref:`exhale_function_basic__stride_8hpp_1a4827d4e09d7296367e64f886155aff9e`
 
 
 Typedefs
