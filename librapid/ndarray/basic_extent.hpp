@@ -11,9 +11,9 @@
 
 namespace ndarray
 {
-// 	template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
-// 	class basic_extent
-// 	{
+	template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
+	class basic_extent
+	{
 // 	public:
 // 		basic_extent() = default;
 // 
@@ -213,10 +213,10 @@ namespace ndarray
 // 		T m_extent_alt[ND_MAX_DIMS]{};
 // 
 // 		nd_int m_dims = 0;
-// 	};
-// 
-// 	using extent = basic_extent<nd_int>;
-// 
+	};
+
+	using extent = basic_extent<nd_int>;
+ 
 	template<typename T>
 	std::ostream &operator<<(std::ostream &os, const basic_extent<T> &s)
 	{
