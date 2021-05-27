@@ -43,23 +43,23 @@ namespace ndarray
 				throw "basic_extent cannot contain values less than 1";
 		}
 
-		basic_extent(nd_int n)
-		{
-			m_dims = n;
-
-			if (m_dims > ND_MAX_DIMS)
-			{
-				m_dims = ND_MAX_DIMS + 1;
-				return;
-			}
-
-			for (nd_int i = 0; i < m_dims; i++)
-			{
-				m_extent[i] = 1;
-				m_extent_alt[i] = 1;
-			}
-		}
-
+// 		basic_extent(nd_int n)
+// 		{
+// 			m_dims = n;
+// 
+// 			if (m_dims > ND_MAX_DIMS)
+// 			{
+// 				m_dims = ND_MAX_DIMS + 1;
+// 				return;
+// 			}
+// 
+// 			for (nd_int i = 0; i < m_dims; i++)
+// 			{
+// 				m_extent[i] = 1;
+// 				m_extent_alt[i] = 1;
+// 			}
+// 		}
+// 
 // 		basic_extent(const basic_extent<T> &o)
 // 		{
 // 			m_dims = o.m_dims;
