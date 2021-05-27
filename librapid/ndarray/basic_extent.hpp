@@ -17,32 +17,32 @@ namespace ndarray
 	public:
 		basic_extent() = default;
 
-		template<typename V>
-		basic_extent(const std::initializer_list<V> &vals)
-		: basic_extent(std::vector<V>(vals.begin(), vals.end()))
-		{}
-
-		template<typename V>
-		basic_extent(const std::vector<V> &vals)
-		{
-			m_dims = vals.size();
-
-			if (m_dims > ND_MAX_DIMS)
-			{
-				m_dims = ND_MAX_DIMS + 1;
-				return;
-			}
-
-			for (nd_int i = 0; i < m_dims; i++)
-			{
-				m_extent[i] = vals[i];
-				m_extent_alt[i] = vals[vals.size() - i - 1];
-			}
-
-			if (math::anyBelow(m_extent, vals.size(), 1))
-				throw "basic_extent cannot contain values less than 1";
-		}
-
+// 		template<typename V>
+// 		basic_extent(const std::initializer_list<V> &vals)
+// 		: basic_extent(std::vector<V>(vals.begin(), vals.end()))
+// 		{}
+// 
+// 		template<typename V>
+// 		basic_extent(const std::vector<V> &vals)
+// 		{
+// 			m_dims = vals.size();
+// 
+// 			if (m_dims > ND_MAX_DIMS)
+// 			{
+// 				m_dims = ND_MAX_DIMS + 1;
+// 				return;
+// 			}
+// 
+// 			for (nd_int i = 0; i < m_dims; i++)
+// 			{
+// 				m_extent[i] = vals[i];
+// 				m_extent_alt[i] = vals[vals.size() - i - 1];
+// 			}
+// 
+// 			if (math::anyBelow(m_extent, vals.size(), 1))
+// 				throw "basic_extent cannot contain values less than 1";
+// 		}
+// 
 // 		basic_extent(nd_int n)
 // 		{
 // 			m_dims = n;
