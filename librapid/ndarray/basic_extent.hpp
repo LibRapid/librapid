@@ -15,7 +15,7 @@ namespace ndarray
 	class basic_extent
 	{
 	public:
-		basic_extent() = default;
+// 		basic_extent() = default;
 
 // 		template<typename V>
 // 		basic_extent(const std::initializer_list<V> &vals)
