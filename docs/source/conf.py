@@ -16,7 +16,7 @@ import textwrap
 sys.path.insert(0, os.path.abspath("../.."))
 
 # Get doxygen to generate the documentation
-os.system("cd doxygen && doxygen config.txt")
+os.system("mkdir doxygen && cd doxygen && doxygen config.txt")
 
 # -- Project information -----------------------------------------------------
 
