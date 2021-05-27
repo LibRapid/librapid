@@ -97,7 +97,7 @@ autosectionlabel_prefix_document = True
 
 print("INFORMATION: DIR IS", os.getcwd())
 
-antidox_doxy_xml_dir = os.getcwd() + "\\doxygen\\xml"
+antidox_doxy_xml_dir = os.getcwd() + "/doxygen/xml"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
