@@ -17,10 +17,10 @@ namespace ndarray
 	public:
 // 		basic_extent() = default;
 
-// 		template<typename V>
-// 		basic_extent(const std::initializer_list<V> &vals)
-// 		: basic_extent(std::vector<V>(vals.begin(), vals.end()))
-// 		{}
+		template<typename V>
+		basic_extent(const std::initializer_list<V> &vals)
+		: basic_extent(std::vector<V>(vals.begin(), vals.end()))
+		{}
 // 
 // 		template<typename V>
 // 		basic_extent(const std::vector<V> &vals)
