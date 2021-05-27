@@ -84,7 +84,8 @@ exhale_args = {
     # TIP: if using the sphinx-bootstrap-theme, you need
     # "treeViewIsBootstrap": True,
     "exhaleExecutesDoxygen": True,
-    "exhaleDoxygenStdin": textwrap.dedent(doxygen_inputs)
+    "exhaleDoxygenStdin": textwrap.dedent(doxygen_inputs),
+    "verboseBuild": True
 }
 
 # Add any paths that contain templates here, relative to this directory.
