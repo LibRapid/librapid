@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="namespacendarray_1_1broadcast" kind="namespace" language="C++">
+    <compoundname>ndarray::broadcast</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="broadcast__arrays_8hpp_1a1ed233b5bca05a82ed2c562bd2f450bb" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename A</type>
+          </param>
+          <param>
+            <type>typename B</type>
+          </param>
+        </templateparamlist>
+        <type>int</type>
+        <definition>static int ndarray::broadcast::calculate_arithmetic_mode</definition>
+        <argsstring>(const A *a, nd_int dims_a, const B *b, nd_int dims_b)</argsstring>
+        <name>calculate_arithmetic_mode</name>
+        <param>
+          <type>const A *</type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>dims_a</declname>
+        </param>
+        <param>
+          <type>const B *</type>
+          <declname>b</declname>
+        </param>
+        <param>
+          <type>nd_int</type>
+          <declname>dims_b</declname>
+        </param>
+        <briefdescription>
+<para>This file does not even exist in the real world. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><verbatim>embed:rst:leading-asterisk
+* There is a :math:`N^2` environment for reStructuredText!
+*
+* +-------------------+-------------------+
+* | Grid Tables       | Are Beautiful     |
+* +===================+===================+
+* | Easy to read      | In code and docs  |
+* +-------------------+-------------------+
+* | Exceptionally flexible and powerful   |
+* +-------+-------+-------+-------+-------+
+* | Col 1 | Col 2 | Col 3 | Col 4 | Col 5 |
+* +-------+-------+-------+-------+-------+
+*
+* </verbatim> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/broadcast_arrays.hpp" line="30" column="12" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/broadcast_arrays.hpp" bodystart="30" bodyend="135"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/broadcast_arrays.hpp" line="8" column="1"/>
+  </compounddef>
+</doxygen>

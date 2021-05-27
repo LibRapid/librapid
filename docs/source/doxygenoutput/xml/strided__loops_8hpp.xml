@@ -1,0 +1,272 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="strided__loops_8hpp" kind="file" language="C++">
+    <compoundname>strided_loops.hpp</compoundname>
+    <includedby refid="ndarray_8hpp" local="no">C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/ndarray.hpp</includedby>
+    <invincdepgraph>
+      <node id="2">
+        <label>C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/ndarray.hpp</label>
+        <link refid="ndarray_8hpp_source"/>
+      </node>
+      <node id="1">
+        <label>C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp</label>
+        <link refid="strided__loops_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="strided__loops_8hpp_1a7985ddd0791eeac19afc72e260374968" prot="public" static="no">
+        <name>ND_BEGIN_INDEXED_LOOP_SINGLE</name>
+        <param><defname>a_i</defname></param>
+        <param><defname>idim</defname></param>
+        <param><defname>ndim</defname></param>
+        <initializer>auto *__restrict coord = new nd_int[ndim]; \
+memset(coord, 0, sizeof(nd_int) * ndim); \
+idim = 0; a_i = 0; \
+do {</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp" line="4" column="9" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp" bodystart="4" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="strided__loops_8hpp_1a122123f989657e7b8abf08bf0104d4af" prot="public" static="no">
+        <name>ND_INDEXED_LOOP_SINGLE</name>
+        <param><defname>_extent</defname></param>
+        <param><defname>_stride_a</defname></param>
+        <param><defname>a_i</defname></param>
+        <param><defname>src_a</defname></param>
+        <param><defname>coord</defname></param>
+        <param><defname>idim</defname></param>
+        <param><defname>ndim</defname></param>
+        <initializer>	for (idim = 0; idim &lt; ndim; ++idim) \
+	{ \
+		if (++coord[idim] == _extent[idim]) \
+		{ \
+			coord[idim] = 0; \
+			a_i = a_i - (_extent[idim] - 1) * _stride_a[idim]; \
+		} \
+		else \
+		{ \
+			a_i = a_i + _stride_a[idim]; \
+			break; \
+		} \
+	} \
+} while (idim &lt; ndim); \
+delete[] coord;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp" line="10" column="9" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="strided__loops_8hpp_1add7dae112fc2343959410c3c028ff2d2" prot="public" static="no">
+        <name>ND_BEGIN_INDEXED_LOOP_DOUBLE</name>
+        <param><defname>a_i</defname></param>
+        <param><defname>b_i</defname></param>
+        <param><defname>idim</defname></param>
+        <param><defname>ndim</defname></param>
+        <initializer>auto *__restrict coord = new nd_int[ndim]; \
+memset(coord, 0, sizeof(nd_int) * ndim); \
+idim = 0; a_i = 0; b_i = 0; \
+do {</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp" line="27" column="9" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="strided__loops_8hpp_1af74a3193b4d38de081db52395e99c4bb" prot="public" static="no">
+        <name>ND_INDEXED_LOOP_DOUBLE</name>
+        <param><defname>_extent</defname></param>
+        <param><defname>_stride_a</defname></param>
+        <param><defname>_stride_b</defname></param>
+        <param><defname>a_i</defname></param>
+        <param><defname>b_i</defname></param>
+        <param><defname>src_a</defname></param>
+        <param><defname>src_b</defname></param>
+        <param><defname>coord</defname></param>
+        <param><defname>idim</defname></param>
+        <param><defname>ndim</defname></param>
+        <initializer>	for (idim = 0; idim &lt; ndim; ++idim) \
+	{ \
+		if (++coord[idim] == _extent[idim]) \
+		{ \
+			coord[idim] = 0; \
+			a_i = a_i - (_extent[idim] - 1) * _stride_a[idim]; \
+			b_i = b_i - (_extent[idim] - 1) * _stride_b[idim]; \
+		} \
+		else \
+		{ \
+			a_i = a_i + _stride_a[idim]; \
+			b_i = b_i + _stride_b[idim]; \
+			break; \
+		} \
+	} \
+} while (idim &lt; ndim); \
+delete[] coord;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp" line="33" column="9" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="strided__loops_8hpp_1a23c0addd55ef7265197930313a6d0887" prot="public" static="no">
+        <name>ND_BEGIN_INDEXED_LOOP_TRIPLE</name>
+        <param><defname>a_i</defname></param>
+        <param><defname>b_i</defname></param>
+        <param><defname>c_i</defname></param>
+        <param><defname>idim</defname></param>
+        <param><defname>ndim</defname></param>
+        <initializer>auto *__restrict coord = new nd_int[ndim]; \
+memset(coord, 0, sizeof(nd_int) * ndim); \
+idim = 0; a_i = 0; b_i = 0; c_i = 0; \
+do {</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp" line="52" column="9" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="strided__loops_8hpp_1afbf5277ed8fbf8c9e71fb92d85819160" prot="public" static="no">
+        <name>ND_INDEXED_LOOP_TRIPLE</name>
+        <param><defname>_extent</defname></param>
+        <param><defname>_stride_a</defname></param>
+        <param><defname>_stride_b</defname></param>
+        <param><defname>_stride_c</defname></param>
+        <param><defname>a_i</defname></param>
+        <param><defname>b_i</defname></param>
+        <param><defname>c_i</defname></param>
+        <param><defname>src_a</defname></param>
+        <param><defname>src_b</defname></param>
+        <param><defname>src_c</defname></param>
+        <param><defname>coord</defname></param>
+        <param><defname>idim</defname></param>
+        <param><defname>ndim</defname></param>
+        <initializer>	for (idim = 0; idim &lt; ndim; ++idim) \
+	{ \
+		if (++coord[idim] == _extent[idim]) \
+		{ \
+			coord[idim] = 0; \
+			a_i = a_i - (_extent[idim] - 1) * _stride_a[idim]; \
+			b_i = b_i - (_extent[idim] - 1) * _stride_b[idim]; \
+			c_i = c_i - (_extent[idim] - 1) * _stride_c[idim]; \
+		} \
+		else \
+		{ \
+			a_i = a_i + _stride_a[idim]; \
+			b_i = b_i + _stride_b[idim]; \
+			c_i = c_i + _stride_c[idim]; \
+			break; \
+		} \
+	} \
+} while (idim &lt; ndim); \
+delete[] coord;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp" line="58" column="9" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>NDARRAY_STRIDED_LOOPS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NDARRAY_STRIDED_LOOPS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ND_BEGIN_INDEXED_LOOP_SINGLE(a_i,<sp/>idim,<sp/>ndim)<sp/>\</highlight></codeline>
+<codeline lineno="5"><highlight class="preprocessor">auto<sp/>*__restrict<sp/>coord<sp/>=<sp/>new<sp/>nd_int[ndim];<sp/>\</highlight></codeline>
+<codeline lineno="6"><highlight class="preprocessor">memset(coord,<sp/>0,<sp/>sizeof(nd_int)<sp/>*<sp/>ndim);<sp/>\</highlight></codeline>
+<codeline lineno="7"><highlight class="preprocessor">idim<sp/>=<sp/>0;<sp/>a_i<sp/>=<sp/>0;<sp/>\</highlight></codeline>
+<codeline lineno="8"><highlight class="preprocessor">do<sp/>{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ND_INDEXED_LOOP_SINGLE(_extent,<sp/>_stride_a,<sp/>a_i,<sp/>src_a,<sp/>coord,<sp/>idim,<sp/>ndim)<sp/>\</highlight></codeline>
+<codeline lineno="11"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>for<sp/>(idim<sp/>=<sp/>0;<sp/>idim<sp/>&lt;<sp/>ndim;<sp/>++idim)<sp/>\</highlight></codeline>
+<codeline lineno="12"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>{<sp/>\</highlight></codeline>
+<codeline lineno="13"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(++coord[idim]<sp/>==<sp/>_extent[idim])<sp/>\</highlight></codeline>
+<codeline lineno="14"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>\</highlight></codeline>
+<codeline lineno="15"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>coord[idim]<sp/>=<sp/>0;<sp/>\</highlight></codeline>
+<codeline lineno="16"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>a_i<sp/>=<sp/>a_i<sp/>-<sp/>(_extent[idim]<sp/>-<sp/>1)<sp/>*<sp/>_stride_a[idim];<sp/>\</highlight></codeline>
+<codeline lineno="17"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/>\</highlight></codeline>
+<codeline lineno="18"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>else<sp/>\</highlight></codeline>
+<codeline lineno="19"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>\</highlight></codeline>
+<codeline lineno="20"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>a_i<sp/>=<sp/>a_i<sp/>+<sp/>_stride_a[idim];<sp/>\</highlight></codeline>
+<codeline lineno="21"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>break;<sp/>\</highlight></codeline>
+<codeline lineno="22"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/>\</highlight></codeline>
+<codeline lineno="23"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}<sp/>\</highlight></codeline>
+<codeline lineno="24"><highlight class="preprocessor">}<sp/>while<sp/>(idim<sp/>&lt;<sp/>ndim);<sp/>\</highlight></codeline>
+<codeline lineno="25"><highlight class="preprocessor">delete[]<sp/>coord;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ND_BEGIN_INDEXED_LOOP_DOUBLE(a_i,<sp/>b_i,<sp/>idim,<sp/>ndim)<sp/>\</highlight></codeline>
+<codeline lineno="28"><highlight class="preprocessor">auto<sp/>*__restrict<sp/>coord<sp/>=<sp/>new<sp/>nd_int[ndim];<sp/>\</highlight></codeline>
+<codeline lineno="29"><highlight class="preprocessor">memset(coord,<sp/>0,<sp/>sizeof(nd_int)<sp/>*<sp/>ndim);<sp/>\</highlight></codeline>
+<codeline lineno="30"><highlight class="preprocessor">idim<sp/>=<sp/>0;<sp/>a_i<sp/>=<sp/>0;<sp/>b_i<sp/>=<sp/>0;<sp/>\</highlight></codeline>
+<codeline lineno="31"><highlight class="preprocessor">do<sp/>{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ND_INDEXED_LOOP_DOUBLE(_extent,<sp/>_stride_a,<sp/>_stride_b,<sp/>a_i,<sp/>b_i,<sp/>src_a,<sp/>src_b,<sp/>coord,<sp/>idim,<sp/>ndim)<sp/>\</highlight></codeline>
+<codeline lineno="34"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>for<sp/>(idim<sp/>=<sp/>0;<sp/>idim<sp/>&lt;<sp/>ndim;<sp/>++idim)<sp/>\</highlight></codeline>
+<codeline lineno="35"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>{<sp/>\</highlight></codeline>
+<codeline lineno="36"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(++coord[idim]<sp/>==<sp/>_extent[idim])<sp/>\</highlight></codeline>
+<codeline lineno="37"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>\</highlight></codeline>
+<codeline lineno="38"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>coord[idim]<sp/>=<sp/>0;<sp/>\</highlight></codeline>
+<codeline lineno="39"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>a_i<sp/>=<sp/>a_i<sp/>-<sp/>(_extent[idim]<sp/>-<sp/>1)<sp/>*<sp/>_stride_a[idim];<sp/>\</highlight></codeline>
+<codeline lineno="40"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>b_i<sp/>=<sp/>b_i<sp/>-<sp/>(_extent[idim]<sp/>-<sp/>1)<sp/>*<sp/>_stride_b[idim];<sp/>\</highlight></codeline>
+<codeline lineno="41"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/>\</highlight></codeline>
+<codeline lineno="42"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>else<sp/>\</highlight></codeline>
+<codeline lineno="43"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>\</highlight></codeline>
+<codeline lineno="44"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>a_i<sp/>=<sp/>a_i<sp/>+<sp/>_stride_a[idim];<sp/>\</highlight></codeline>
+<codeline lineno="45"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>b_i<sp/>=<sp/>b_i<sp/>+<sp/>_stride_b[idim];<sp/>\</highlight></codeline>
+<codeline lineno="46"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>break;<sp/>\</highlight></codeline>
+<codeline lineno="47"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/>\</highlight></codeline>
+<codeline lineno="48"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}<sp/>\</highlight></codeline>
+<codeline lineno="49"><highlight class="preprocessor">}<sp/>while<sp/>(idim<sp/>&lt;<sp/>ndim);<sp/>\</highlight></codeline>
+<codeline lineno="50"><highlight class="preprocessor">delete[]<sp/>coord;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ND_BEGIN_INDEXED_LOOP_TRIPLE(a_i,<sp/>b_i,<sp/>c_i,<sp/>idim,<sp/>ndim)<sp/>\</highlight></codeline>
+<codeline lineno="53"><highlight class="preprocessor">auto<sp/>*__restrict<sp/>coord<sp/>=<sp/>new<sp/>nd_int[ndim];<sp/>\</highlight></codeline>
+<codeline lineno="54"><highlight class="preprocessor">memset(coord,<sp/>0,<sp/>sizeof(nd_int)<sp/>*<sp/>ndim);<sp/>\</highlight></codeline>
+<codeline lineno="55"><highlight class="preprocessor">idim<sp/>=<sp/>0;<sp/>a_i<sp/>=<sp/>0;<sp/>b_i<sp/>=<sp/>0;<sp/>c_i<sp/>=<sp/>0;<sp/>\</highlight></codeline>
+<codeline lineno="56"><highlight class="preprocessor">do<sp/>{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ND_INDEXED_LOOP_TRIPLE(_extent,<sp/>_stride_a,<sp/>_stride_b,<sp/>_stride_c,<sp/>a_i,<sp/>b_i,<sp/>c_i,<sp/>src_a,<sp/>src_b,<sp/>src_c,<sp/>coord,<sp/>idim,<sp/>ndim)<sp/>\</highlight></codeline>
+<codeline lineno="59"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>for<sp/>(idim<sp/>=<sp/>0;<sp/>idim<sp/>&lt;<sp/>ndim;<sp/>++idim)<sp/>\</highlight></codeline>
+<codeline lineno="60"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>{<sp/>\</highlight></codeline>
+<codeline lineno="61"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(++coord[idim]<sp/>==<sp/>_extent[idim])<sp/>\</highlight></codeline>
+<codeline lineno="62"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>\</highlight></codeline>
+<codeline lineno="63"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>coord[idim]<sp/>=<sp/>0;<sp/>\</highlight></codeline>
+<codeline lineno="64"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>a_i<sp/>=<sp/>a_i<sp/>-<sp/>(_extent[idim]<sp/>-<sp/>1)<sp/>*<sp/>_stride_a[idim];<sp/>\</highlight></codeline>
+<codeline lineno="65"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>b_i<sp/>=<sp/>b_i<sp/>-<sp/>(_extent[idim]<sp/>-<sp/>1)<sp/>*<sp/>_stride_b[idim];<sp/>\</highlight></codeline>
+<codeline lineno="66"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>c_i<sp/>=<sp/>c_i<sp/>-<sp/>(_extent[idim]<sp/>-<sp/>1)<sp/>*<sp/>_stride_c[idim];<sp/>\</highlight></codeline>
+<codeline lineno="67"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/>\</highlight></codeline>
+<codeline lineno="68"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>else<sp/>\</highlight></codeline>
+<codeline lineno="69"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>\</highlight></codeline>
+<codeline lineno="70"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>a_i<sp/>=<sp/>a_i<sp/>+<sp/>_stride_a[idim];<sp/>\</highlight></codeline>
+<codeline lineno="71"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>b_i<sp/>=<sp/>b_i<sp/>+<sp/>_stride_b[idim];<sp/>\</highlight></codeline>
+<codeline lineno="72"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>c_i<sp/>=<sp/>c_i<sp/>+<sp/>_stride_c[idim];<sp/>\</highlight></codeline>
+<codeline lineno="73"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>break;<sp/>\</highlight></codeline>
+<codeline lineno="74"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/>\</highlight></codeline>
+<codeline lineno="75"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}<sp/>\</highlight></codeline>
+<codeline lineno="76"><highlight class="preprocessor">}<sp/>while<sp/>(idim<sp/>&lt;<sp/>ndim);<sp/>\</highlight></codeline>
+<codeline lineno="77"><highlight class="preprocessor">delete[]<sp/>coord;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>NDARRAY_STRIDED_LOOPS</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/strided_loops.hpp"/>
+  </compounddef>
+</doxygen>

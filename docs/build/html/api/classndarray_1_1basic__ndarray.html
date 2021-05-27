@@ -1,0 +1,383 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+
+    <meta name="generator" content="sphinx-3.4.3, furo 2021.04.11.beta34"/>
+        <title>Template Class basic_ndarray - librapid 0.0.3 documentation</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../_static/collapsible-lists\css\tree_view.css" />
+    <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">librapid 0.0.3 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">librapid 0.0.3 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../ndarray_api.html">LibRapid NDarray</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="template-class-basic-ndarray">
+<span id="exhale-class-classndarray-1-1basic-ndarray"></span><h1>Template Class basic_ndarray<a class="headerlink" href="#template-class-basic-ndarray" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_C__Users_penci_OneDrive_Desktop_librapid_librapid_librapid_ndarray_basic_ndarray.hpp.html#file-c-users-penci-onedrive-desktop-librapid-librapid-librapid-ndarray-basic-ndarray-hpp"><span class="std std-ref">File basic_ndarray.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE">
+<span id="_CPPv3I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE"></span><span id="_CPPv2I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE"></span>template&lt;typename <code class="sig-name descname">T</code>, class <code class="sig-name descname">alloc</code> = <a class="reference internal" href="typedef_basic__ndarray_8hpp_1aa5f3b1190653a46439980c67513493a1.html#_CPPv4I0EN7ndarray12nd_allocatorE" title="ndarray::nd_allocator">nd_allocator</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>&gt;, <em class="property">typename</em> std::enable_if&lt;std::is_arithmetic&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>&gt;::value, int&gt;::type = 0&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray"></span><em class="property">class </em><code class="sig-prename descclassname">ndarray<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">basic_ndarray</code><a class="headerlink" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N7ndarray13basic_ndarray10set_strideERK6stride">
+<span id="_CPPv3N7ndarray13basic_ndarray10set_strideERK6stride"></span><span id="_CPPv2N7ndarray13basic_ndarray10set_strideERK6stride"></span><span id="ndarray::basic_ndarray::set_stride__strideCR"></span><span class="target" id="classndarray_1_1basic__ndarray_1a63290fae666f09ebafd3387e17c69176"></span><em class="property">inline</em> void <code class="sig-name descname">set_stride</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_basic__stride_8hpp_1a3d2f72feb66900f4801f0691ba57b0e6.html#_CPPv4N7ndarray6strideE" title="ndarray::stride">stride</a> &amp;<em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7ndarray13basic_ndarray10set_strideERK6stride" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>This is a function. It does something. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4N7ndarray13basic_ndarray13basic_ndarrayEv">
+<span id="_CPPv3N7ndarray13basic_ndarray13basic_ndarrayEv"></span><span id="_CPPv2N7ndarray13basic_ndarray13basic_ndarrayEv"></span><span id="ndarray::basic_ndarray::basic_ndarray"></span><span class="target" id="classndarray_1_1basic__ndarray_1af14c9918eb34167a5781bcda103330ff"></span><em class="property">inline</em> <code class="sig-name descname">basic_ndarray</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7ndarray13basic_ndarray13basic_ndarrayEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN7ndarray13basic_ndarray13basic_ndarrayERK12basic_extentI1VE">
+<span id="_CPPv3I0EN7ndarray13basic_ndarray13basic_ndarrayERK12basic_extentI1VE"></span><span id="_CPPv2I0EN7ndarray13basic_ndarray13basic_ndarrayERK12basic_extentI1VE"></span>template&lt;typename <code class="sig-name descname">V</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1af52177c47766845d354a48bf557f69a2"></span><em class="property">inline</em> <code class="sig-name descname">basic_ndarray</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classndarray_1_1basic__extent.html#_CPPv4I0_NSt9enable_ifINSt11is_integralI1TE5valueEiE4typeEEN7ndarray12basic_extentE" title="ndarray::basic_extent">basic_extent</a>&lt;<a class="reference internal" href="#_CPPv4I0EN7ndarray13basic_ndarray13basic_ndarrayERK12basic_extentI1VE" title="ndarray::basic_ndarray::basic_ndarray::V">V</a>&gt; &amp;<em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN7ndarray13basic_ndarray13basic_ndarrayERK12basic_extentI1VE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I00EN7ndarray13basic_ndarray13basic_ndarrayERK12basic_extentI1EERK1V">
+<span id="_CPPv3I00EN7ndarray13basic_ndarray13basic_ndarrayERK12basic_extentI1EERK1V"></span><span id="_CPPv2I00EN7ndarray13basic_ndarray13basic_ndarrayERK12basic_extentI1EERK1V"></span>template&lt;typename <code class="sig-name descname">E</code>, typename <code class="sig-name descname">V</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1a34c8eed9c58f14ce2c938f214bd7f6f6"></span><em class="property">inline</em> <code class="sig-name descname">basic_ndarray</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classndarray_1_1basic__extent.html#_CPPv4I0_NSt9enable_ifINSt11is_integralI1TE5valueEiE4typeEEN7ndarray12basic_extentE" title="ndarray::basic_extent">basic_extent</a>&lt;<a class="reference internal" href="#_CPPv4I00EN7ndarray13basic_ndarray13basic_ndarrayERK12basic_extentI1EERK1V" title="ndarray::basic_ndarray::basic_ndarray::E">E</a>&gt; &amp;<em>size</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN7ndarray13basic_ndarray13basic_ndarrayERK12basic_extentI1EERK1V" title="ndarray::basic_ndarray::basic_ndarray::V">V</a> &amp;<em>val</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN7ndarray13basic_ndarray13basic_ndarrayERK12basic_extentI1EERK1V" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4N7ndarray13basic_ndarray13basic_ndarrayERK13basic_ndarrayI1TE">
+<span id="_CPPv3N7ndarray13basic_ndarray13basic_ndarrayERK13basic_ndarrayI1TE"></span><span id="_CPPv2N7ndarray13basic_ndarray13basic_ndarrayERK13basic_ndarrayI1TE"></span><span id="ndarray::basic_ndarray::basic_ndarray__basic_ndarray:T:CR"></span><span class="target" id="classndarray_1_1basic__ndarray_1a9b9a122f0997e7f97deab53ed16865d7"></span><em class="property">inline</em> <code class="sig-name descname">basic_ndarray</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N7ndarray13basic_ndarray13basic_ndarrayERK13basic_ndarrayI1TE" title="ndarray::basic_ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>&gt; &amp;<em>arr</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7ndarray13basic_ndarray13basic_ndarrayERK13basic_ndarrayI1TE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4N7ndarray13basic_ndarrayaSERK13basic_ndarrayI1TE">
+<span id="_CPPv3N7ndarray13basic_ndarrayaSERK13basic_ndarrayI1TE"></span><span id="_CPPv2N7ndarray13basic_ndarrayaSERK13basic_ndarrayI1TE"></span><span id="ndarray::basic_ndarray::assign-operator__basic_ndarray:T:CR"></span><span class="target" id="classndarray_1_1basic__ndarray_1a2ebf1f75c921ca2b73c183dad9601ed7"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>&gt; &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>&gt; &amp;<em>arr</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7ndarray13basic_ndarrayaSERK13basic_ndarrayI1TE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN7ndarray13basic_ndarrayaSER13basic_ndarrayRK1V">
+<span id="_CPPv3I0EN7ndarray13basic_ndarrayaSERK1V"></span><span id="_CPPv2I0EN7ndarray13basic_ndarrayaSERK1V"></span>template&lt;typename <code class="sig-name descname">V</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1ab6de6d1702163d18b3879bd6bb76db2c"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN7ndarray13basic_ndarrayaSER13basic_ndarrayRK1V" title="ndarray::basic_ndarray::operator=::V">V</a> &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN7ndarray13basic_ndarrayaSER13basic_ndarrayRK1V" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4N7ndarray13basic_ndarrayD0Ev">
+<span id="_CPPv3N7ndarray13basic_ndarrayD0Ev"></span><span id="_CPPv2N7ndarray13basic_ndarrayD0Ev"></span><span id="ndarray::basic_ndarray::~basic_ndarray"></span><span class="target" id="classndarray_1_1basic__ndarray_1a7c55148d3b1790ef6eecad356065ca16"></span><em class="property">inline</em> <code class="sig-name descname">~basic_ndarray</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7ndarray13basic_ndarrayD0Ev" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray4ndimEv">
+<span id="_CPPv3NK7ndarray13basic_ndarray4ndimEv"></span><span id="_CPPv2NK7ndarray13basic_ndarray4ndimEv"></span><span id="ndarray::basic_ndarray::ndimC"></span><span class="target" id="classndarray_1_1basic__ndarray_1a10f608440ab437a6c61e7fa0d01dae4c"></span><em class="property">inline</em> <a class="reference internal" href="typedef_config_8hpp_1ac5d24738bf17028cf2d4dea7a3e38642.html#_CPPv46nd_int" title="nd_int">nd_int</a> <code class="sig-name descname">ndim</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray4ndimEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray14is_initializedEv">
+<span id="_CPPv3NK7ndarray13basic_ndarray14is_initializedEv"></span><span id="_CPPv2NK7ndarray13basic_ndarray14is_initializedEv"></span><span id="ndarray::basic_ndarray::is_initializedC"></span><span class="target" id="classndarray_1_1basic__ndarray_1a0ded9189b4be9b2677ec36f20fb96e54"></span><em class="property">inline</em> bool <code class="sig-name descname">is_initialized</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray14is_initializedEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray9is_scalarEv">
+<span id="_CPPv3NK7ndarray13basic_ndarray9is_scalarEv"></span><span id="_CPPv2NK7ndarray13basic_ndarray9is_scalarEv"></span><span id="ndarray::basic_ndarray::is_scalarC"></span><span class="target" id="classndarray_1_1basic__ndarray_1a1d63139852a945a50e45aa8e734eb236"></span><em class="property">inline</em> bool <code class="sig-name descname">is_scalar</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray9is_scalarEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray10get_extentEv">
+<span id="_CPPv3NK7ndarray13basic_ndarray10get_extentEv"></span><span id="_CPPv2NK7ndarray13basic_ndarray10get_extentEv"></span><span id="ndarray::basic_ndarray::get_extentC"></span><span class="target" id="classndarray_1_1basic__ndarray_1a910b6de2f778dbd8968e6f82ce415d3f"></span><em class="property">inline</em> <em class="property">const</em> <a class="reference internal" href="typedef_basic__extent_8hpp_1ad31c5e01fb33d0e476c569c772da0399.html#_CPPv4N7ndarray6extentE" title="ndarray::extent">extent</a> &amp;<code class="sig-name descname">get_extent</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray10get_extentEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray10get_strideEv">
+<span id="_CPPv3NK7ndarray13basic_ndarray10get_strideEv"></span><span id="_CPPv2NK7ndarray13basic_ndarray10get_strideEv"></span><span id="ndarray::basic_ndarray::get_strideC"></span><span class="target" id="classndarray_1_1basic__ndarray_1a9a9703636a24290589598179a377eacd"></span><em class="property">inline</em> <em class="property">const</em> <a class="reference internal" href="typedef_basic__stride_8hpp_1a3d2f72feb66900f4801f0691ba57b0e6.html#_CPPv4N7ndarray6strideE" title="ndarray::stride">stride</a> &amp;<code class="sig-name descname">get_stride</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray10get_strideEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray14get_data_startEv">
+<span id="_CPPv3NK7ndarray13basic_ndarray14get_data_startEv"></span><span id="_CPPv2NK7ndarray13basic_ndarray14get_data_startEv"></span><span id="ndarray::basic_ndarray::get_data_startC"></span><span class="target" id="classndarray_1_1basic__ndarray_1a3735d52f3b26a02eca6c25d50d308c10"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a> *<code class="sig-name descname">get_data_start</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray14get_data_startEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4N7ndarray13basic_ndarrayixE6nd_int">
+<span id="_CPPv3N7ndarray13basic_ndarrayixE6nd_int"></span><span id="_CPPv2N7ndarray13basic_ndarrayixE6nd_int"></span><span id="ndarray::basic_ndarray::subscript-operator__nd_int"></span><span class="target" id="classndarray_1_1basic__ndarray_1aa0a9f5209c22e0e22c6d82954b67019f"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::alloc">alloc</a>&gt; <code class="sig-name descname">operator[]</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_config_8hpp_1ac5d24738bf17028cf2d4dea7a3e38642.html#_CPPv46nd_int" title="nd_int">nd_int</a> <em>index</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7ndarray13basic_ndarrayixE6nd_int" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarrayixE6nd_int">
+<span id="_CPPv3NK7ndarray13basic_ndarrayixE6nd_int"></span><span id="_CPPv2NK7ndarray13basic_ndarrayixE6nd_int"></span><span id="ndarray::basic_ndarray::subscript-operator__nd_intC"></span><span class="target" id="classndarray_1_1basic__ndarray_1a3a45e272585519b72d14def2a7c44ed4"></span><em class="property">inline</em> <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::alloc">alloc</a>&gt; <code class="sig-name descname">operator[]</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_config_8hpp_1ac5d24738bf17028cf2d4dea7a3e38642.html#_CPPv46nd_int" title="nd_int">nd_int</a> <em>index</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarrayixE6nd_int" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN7ndarray13basic_ndarray4fillEvRK1F">
+<span id="_CPPv3I0EN7ndarray13basic_ndarray4fillERK1F"></span><span id="_CPPv2I0EN7ndarray13basic_ndarray4fillERK1F"></span>template&lt;class <code class="sig-name descname">F</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1ab27a7fa7b3cf23b4446f57b883488067"></span><em class="property">inline</em> void <code class="sig-name descname">fill</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN7ndarray13basic_ndarray4fillEvRK1F" title="ndarray::basic_ndarray::fill::F">F</a> &amp;<em>filler</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN7ndarray13basic_ndarray4fillEvRK1F" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray6filledERK1T">
+<span id="_CPPv3NK7ndarray13basic_ndarray6filledERK1T"></span><span id="_CPPv2NK7ndarray13basic_ndarray6filledERK1T"></span><span id="ndarray::basic_ndarray::filled__TCRC"></span><span class="target" id="classndarray_1_1basic__ndarray_1a9a6469fd3b0c1df55aad7698cd829f91"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::alloc">alloc</a>&gt; <code class="sig-name descname">filled</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a> &amp;<em>filler</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray6filledERK1T" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray5cloneEv">
+<span id="_CPPv3NK7ndarray13basic_ndarray5cloneEv"></span><span id="_CPPv2NK7ndarray13basic_ndarray5cloneEv"></span><span id="ndarray::basic_ndarray::cloneC"></span><span class="target" id="classndarray_1_1basic__ndarray_1a81160fcf671dba8c599c598133d7b619"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::alloc">alloc</a>&gt; <code class="sig-name descname">clone</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray5cloneEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4N7ndarray13basic_ndarray9set_valueE6nd_int1T">
+<span id="_CPPv3N7ndarray13basic_ndarray9set_valueE6nd_int1T"></span><span id="_CPPv2N7ndarray13basic_ndarray9set_valueE6nd_int1T"></span><span id="ndarray::basic_ndarray::set_value__nd_int.T"></span><span class="target" id="classndarray_1_1basic__ndarray_1af7fb9c7cf931e9fc5cc8ce29ae9115a8"></span><em class="property">inline</em> void <code class="sig-name descname">set_value</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_config_8hpp_1ac5d24738bf17028cf2d4dea7a3e38642.html#_CPPv46nd_int" title="nd_int">nd_int</a> <em>index</em>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a> <em>val</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7ndarray13basic_ndarray9set_valueE6nd_int1T" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK7ndarray13basic_ndarrayplE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE">
+<span id="_CPPv3I00ENK7ndarray13basic_ndarrayplERK13basic_ndarrayI3B_T3B_AE"></span><span id="_CPPv2I00ENK7ndarray13basic_ndarrayplERK13basic_ndarrayI3B_T3B_AE"></span>template&lt;typename <code class="sig-name descname">B_T</code>, typename <code class="sig-name descname">B_A</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1af08688dfddb023a842a43f943d00167f"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarrayplE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator+::B_T">B_T</a>&gt;::type, <a class="reference internal" href="typedef_basic__ndarray_8hpp_1aa5f3b1190653a46439980c67513493a1.html#_CPPv4I0EN7ndarray12nd_allocatorE" title="ndarray::nd_allocator">nd_allocator</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarrayplE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator+::B_T">B_T</a>&gt;::type&gt;&gt; <code class="sig-name descname">operator+</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarrayplE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator+::B_T">B_T</a>, <a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarrayplE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator+::B_A">B_A</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK7ndarray13basic_ndarrayplE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK7ndarray13basic_ndarraymiE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE">
+<span id="_CPPv3I00ENK7ndarray13basic_ndarraymiERK13basic_ndarrayI3B_T3B_AE"></span><span id="_CPPv2I00ENK7ndarray13basic_ndarraymiERK13basic_ndarrayI3B_T3B_AE"></span>template&lt;typename <code class="sig-name descname">B_T</code>, typename <code class="sig-name descname">B_A</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1a263b2e4c63977644125003de0de8fa26"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarraymiE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator-::B_T">B_T</a>&gt;::type, <a class="reference internal" href="typedef_basic__ndarray_8hpp_1aa5f3b1190653a46439980c67513493a1.html#_CPPv4I0EN7ndarray12nd_allocatorE" title="ndarray::nd_allocator">nd_allocator</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarraymiE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator-::B_T">B_T</a>&gt;::type&gt;&gt; <code class="sig-name descname">operator-</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarraymiE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator-::B_T">B_T</a>, <a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarraymiE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator-::B_A">B_A</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK7ndarray13basic_ndarraymiE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK7ndarray13basic_ndarraymlE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE">
+<span id="_CPPv3I00ENK7ndarray13basic_ndarraymlERK13basic_ndarrayI3B_T3B_AE"></span><span id="_CPPv2I00ENK7ndarray13basic_ndarraymlERK13basic_ndarrayI3B_T3B_AE"></span>template&lt;typename <code class="sig-name descname">B_T</code>, typename <code class="sig-name descname">B_A</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1a9ead683b8f70bb1aa8611ecbef3f73ce"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarraymlE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator*::B_T">B_T</a>&gt;::type, <a class="reference internal" href="typedef_basic__ndarray_8hpp_1aa5f3b1190653a46439980c67513493a1.html#_CPPv4I0EN7ndarray12nd_allocatorE" title="ndarray::nd_allocator">nd_allocator</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarraymlE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator*::B_T">B_T</a>&gt;::type&gt;&gt; <code class="sig-name descname">operator*</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarraymlE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator*::B_T">B_T</a>, <a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarraymlE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator*::B_A">B_A</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK7ndarray13basic_ndarraymlE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK7ndarray13basic_ndarraydvE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE">
+<span id="_CPPv3I00ENK7ndarray13basic_ndarraydvERK13basic_ndarrayI3B_T3B_AE"></span><span id="_CPPv2I00ENK7ndarray13basic_ndarraydvERK13basic_ndarrayI3B_T3B_AE"></span>template&lt;typename <code class="sig-name descname">B_T</code>, typename <code class="sig-name descname">B_A</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1a23915a037035e7738702eacbe0e33160"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarraydvE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator/::B_T">B_T</a>&gt;::type, <a class="reference internal" href="typedef_basic__ndarray_8hpp_1aa5f3b1190653a46439980c67513493a1.html#_CPPv4I0EN7ndarray12nd_allocatorE" title="ndarray::nd_allocator">nd_allocator</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarraydvE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator/::B_T">B_T</a>&gt;::type&gt;&gt; <code class="sig-name descname">operator/</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarraydvE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator/::B_T">B_T</a>, <a class="reference internal" href="#_CPPv4I00ENK7ndarray13basic_ndarraydvE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="ndarray::basic_ndarray::operator/::B_A">B_A</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK7ndarray13basic_ndarraydvE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK13basic_ndarrayI3B_T3B_AE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK7ndarray13basic_ndarrayplE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T">
+<span id="_CPPv3I0ENK7ndarray13basic_ndarrayplERK3B_T"></span><span id="_CPPv2I0ENK7ndarray13basic_ndarrayplERK3B_T"></span>template&lt;typename <code class="sig-name descname">B_T</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1a00887f07e65c3b7edab39a45eb2fcb40"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarrayplE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="ndarray::basic_ndarray::operator+::B_T">B_T</a>&gt;::type, <a class="reference internal" href="typedef_basic__ndarray_8hpp_1aa5f3b1190653a46439980c67513493a1.html#_CPPv4I0EN7ndarray12nd_allocatorE" title="ndarray::nd_allocator">nd_allocator</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarrayplE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="ndarray::basic_ndarray::operator+::B_T">B_T</a>&gt;::type&gt;&gt; <code class="sig-name descname">operator+</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarrayplE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="ndarray::basic_ndarray::operator+::B_T">B_T</a> &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK7ndarray13basic_ndarrayplE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK7ndarray13basic_ndarraymiE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T">
+<span id="_CPPv3I0ENK7ndarray13basic_ndarraymiERK3B_T"></span><span id="_CPPv2I0ENK7ndarray13basic_ndarraymiERK3B_T"></span>template&lt;typename <code class="sig-name descname">B_T</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1aea0943da1737bc665ab7b16c61fe49ce"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarraymiE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="ndarray::basic_ndarray::operator-::B_T">B_T</a>&gt;::type, <a class="reference internal" href="typedef_basic__ndarray_8hpp_1aa5f3b1190653a46439980c67513493a1.html#_CPPv4I0EN7ndarray12nd_allocatorE" title="ndarray::nd_allocator">nd_allocator</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarraymiE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="ndarray::basic_ndarray::operator-::B_T">B_T</a>&gt;::type&gt;&gt; <code class="sig-name descname">operator-</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarraymiE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="ndarray::basic_ndarray::operator-::B_T">B_T</a> &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK7ndarray13basic_ndarraymiE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK7ndarray13basic_ndarraymlE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T">
+<span id="_CPPv3I0ENK7ndarray13basic_ndarraymlERK3B_T"></span><span id="_CPPv2I0ENK7ndarray13basic_ndarraymlERK3B_T"></span>template&lt;typename <code class="sig-name descname">B_T</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1acaf8dfcdb87ee7d0e8cc2e36648560f6"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarraymlE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="ndarray::basic_ndarray::operator*::B_T">B_T</a>&gt;::type, <a class="reference internal" href="typedef_basic__ndarray_8hpp_1aa5f3b1190653a46439980c67513493a1.html#_CPPv4I0EN7ndarray12nd_allocatorE" title="ndarray::nd_allocator">nd_allocator</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarraymlE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="ndarray::basic_ndarray::operator*::B_T">B_T</a>&gt;::type&gt;&gt; <code class="sig-name descname">operator*</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarraymlE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="ndarray::basic_ndarray::operator*::B_T">B_T</a> &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK7ndarray13basic_ndarraymlE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK7ndarray13basic_ndarraydvE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T">
+<span id="_CPPv3I0ENK7ndarray13basic_ndarraydvERK3B_T"></span><span id="_CPPv2I0ENK7ndarray13basic_ndarraydvERK3B_T"></span>template&lt;typename <code class="sig-name descname">B_T</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1a899a384084815b0c6144b07e6e0b61a0"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarraydvE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="ndarray::basic_ndarray::operator/::B_T">B_T</a>&gt;::type, <a class="reference internal" href="typedef_basic__ndarray_8hpp_1aa5f3b1190653a46439980c67513493a1.html#_CPPv4I0EN7ndarray12nd_allocatorE" title="ndarray::nd_allocator">nd_allocator</a>&lt;<em class="property">typename</em> std::common_type&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarraydvE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="ndarray::basic_ndarray::operator/::B_T">B_T</a>&gt;::type&gt;&gt; <code class="sig-name descname">operator/</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarraydvE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="ndarray::basic_ndarray::operator/::B_T">B_T</a> &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK7ndarray13basic_ndarraydvE13basic_ndarrayINSt11common_typeI1T3B_TE4typeE12nd_allocatorINSt11common_typeI1T3B_TE4typeEEERK3B_T" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN7ndarray13basic_ndarray7reshapeEvRKNSt6vectorI1OEE">
+<span id="_CPPv3I0EN7ndarray13basic_ndarray7reshapeERKNSt6vectorI1OEE"></span><span id="_CPPv2I0EN7ndarray13basic_ndarray7reshapeERKNSt6vectorI1OEE"></span>template&lt;typename <code class="sig-name descname">O</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1a14b2a1b10af67315021bde1a6a98792e"></span><em class="property">inline</em> void <code class="sig-name descname">reshape</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN7ndarray13basic_ndarray7reshapeEvRKNSt6vectorI1OEE" title="ndarray::basic_ndarray::reshape::O">O</a>&gt; &amp;<em>order</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN7ndarray13basic_ndarray7reshapeEvRKNSt6vectorI1OEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN7ndarray13basic_ndarray7reshapeEvRKNSt16initializer_listI1OEE">
+<span id="_CPPv3I0EN7ndarray13basic_ndarray7reshapeERKNSt16initializer_listI1OEE"></span><span id="_CPPv2I0EN7ndarray13basic_ndarray7reshapeERKNSt16initializer_listI1OEE"></span>template&lt;typename <code class="sig-name descname">O</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1ac69b2d831bca7895bc914db1efdb0898"></span><em class="property">inline</em> void <code class="sig-name descname">reshape</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;<a class="reference internal" href="#_CPPv4I0EN7ndarray13basic_ndarray7reshapeEvRKNSt16initializer_listI1OEE" title="ndarray::basic_ndarray::reshape::O">O</a>&gt; &amp;<em>order</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN7ndarray13basic_ndarray7reshapeEvRKNSt16initializer_listI1OEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK7ndarray13basic_ndarray8reshapedE13basic_ndarrayI1T5allocERKNSt6vectorI1OEE">
+<span id="_CPPv3I0ENK7ndarray13basic_ndarray8reshapedERKNSt6vectorI1OEE"></span><span id="_CPPv2I0ENK7ndarray13basic_ndarray8reshapedERKNSt6vectorI1OEE"></span>template&lt;typename <code class="sig-name descname">O</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1a21e230c5a805484220248a9fe7b588c0"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::alloc">alloc</a>&gt; <code class="sig-name descname">reshaped</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarray8reshapedE13basic_ndarrayI1T5allocERKNSt6vectorI1OEE" title="ndarray::basic_ndarray::reshaped::O">O</a>&gt; &amp;<em>order</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK7ndarray13basic_ndarray8reshapedE13basic_ndarrayI1T5allocERKNSt6vectorI1OEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN7ndarray13basic_ndarray8reshapedE13basic_ndarrayI1T5allocERKNSt16initializer_listI1OEE">
+<span id="_CPPv3I0EN7ndarray13basic_ndarray8reshapedERKNSt16initializer_listI1OEE"></span><span id="_CPPv2I0EN7ndarray13basic_ndarray8reshapedERKNSt16initializer_listI1OEE"></span>template&lt;typename <code class="sig-name descname">O</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1a682b5036dd92c278cfa04bd3954100a7"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::alloc">alloc</a>&gt; <code class="sig-name descname">reshaped</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;<a class="reference internal" href="#_CPPv4I0EN7ndarray13basic_ndarray8reshapedE13basic_ndarrayI1T5allocERKNSt16initializer_listI1OEE" title="ndarray::basic_ndarray::reshaped::O">O</a>&gt; &amp;<em>order</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN7ndarray13basic_ndarray8reshapedE13basic_ndarrayI1T5allocERKNSt16initializer_listI1OEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4N7ndarray13basic_ndarray11strip_frontEv">
+<span id="_CPPv3N7ndarray13basic_ndarray11strip_frontEv"></span><span id="_CPPv2N7ndarray13basic_ndarray11strip_frontEv"></span><span id="ndarray::basic_ndarray::strip_front"></span><span class="target" id="classndarray_1_1basic__ndarray_1aec82b832b408b0b48c85a3f7599fa928"></span><em class="property">inline</em> void <code class="sig-name descname">strip_front</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7ndarray13basic_ndarray11strip_frontEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4N7ndarray13basic_ndarray10strip_backEv">
+<span id="_CPPv3N7ndarray13basic_ndarray10strip_backEv"></span><span id="_CPPv2N7ndarray13basic_ndarray10strip_backEv"></span><span id="ndarray::basic_ndarray::strip_back"></span><span class="target" id="classndarray_1_1basic__ndarray_1a3ff2fa95a2d4fedec1d47cef3afbf9e9"></span><em class="property">inline</em> void <code class="sig-name descname">strip_back</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7ndarray13basic_ndarray10strip_backEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4N7ndarray13basic_ndarray5stripEv">
+<span id="_CPPv3N7ndarray13basic_ndarray5stripEv"></span><span id="_CPPv2N7ndarray13basic_ndarray5stripEv"></span><span id="ndarray::basic_ndarray::strip"></span><span class="target" id="classndarray_1_1basic__ndarray_1aee1ae508123c0f13681b243cb0521c69"></span><em class="property">inline</em> void <code class="sig-name descname">strip</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7ndarray13basic_ndarray5stripEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray14stripped_frontEv">
+<span id="_CPPv3NK7ndarray13basic_ndarray14stripped_frontEv"></span><span id="_CPPv2NK7ndarray13basic_ndarray14stripped_frontEv"></span><span id="ndarray::basic_ndarray::stripped_frontC"></span><span class="target" id="classndarray_1_1basic__ndarray_1a1bf446f6d5cb77d70dc87b651cf4e43c"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::alloc">alloc</a>&gt; <code class="sig-name descname">stripped_front</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray14stripped_frontEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray13stripped_backEv">
+<span id="_CPPv3NK7ndarray13basic_ndarray13stripped_backEv"></span><span id="_CPPv2NK7ndarray13basic_ndarray13stripped_backEv"></span><span id="ndarray::basic_ndarray::stripped_backC"></span><span class="target" id="classndarray_1_1basic__ndarray_1a917b7e8b1745026acbf26847b3a5169f"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::alloc">alloc</a>&gt; <code class="sig-name descname">stripped_back</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray13stripped_backEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray8strippedEv">
+<span id="_CPPv3NK7ndarray13basic_ndarray8strippedEv"></span><span id="_CPPv2NK7ndarray13basic_ndarray8strippedEv"></span><span id="ndarray::basic_ndarray::strippedC"></span><span class="target" id="classndarray_1_1basic__ndarray_1ae9e42bb1120731e38d9c32f149a07e66"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::alloc">alloc</a>&gt; <code class="sig-name descname">stripped</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray8strippedEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN7ndarray13basic_ndarray9transposeEvRKNSt6vectorI1OEE">
+<span id="_CPPv3I0EN7ndarray13basic_ndarray9transposeERKNSt6vectorI1OEE"></span><span id="_CPPv2I0EN7ndarray13basic_ndarray9transposeERKNSt6vectorI1OEE"></span>template&lt;typename <code class="sig-name descname">O</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1a2870e8c0e3e239fa92bfa4c89a4bfcdf"></span><em class="property">inline</em> void <code class="sig-name descname">transpose</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN7ndarray13basic_ndarray9transposeEvRKNSt6vectorI1OEE" title="ndarray::basic_ndarray::transpose::O">O</a>&gt; &amp;<em>order</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN7ndarray13basic_ndarray9transposeEvRKNSt6vectorI1OEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4N7ndarray13basic_ndarray9transposeEv">
+<span id="_CPPv3N7ndarray13basic_ndarray9transposeEv"></span><span id="_CPPv2N7ndarray13basic_ndarray9transposeEv"></span><span id="ndarray::basic_ndarray::transpose"></span><span class="target" id="classndarray_1_1basic__ndarray_1ac248b90e823925eb3bcc21cb98477999"></span><em class="property">inline</em> void <code class="sig-name descname">transpose</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7ndarray13basic_ndarray9transposeEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN7ndarray13basic_ndarray9transposeEvRKNSt16initializer_listI1OEE">
+<span id="_CPPv3I0EN7ndarray13basic_ndarray9transposeERKNSt16initializer_listI1OEE"></span><span id="_CPPv2I0EN7ndarray13basic_ndarray9transposeERKNSt16initializer_listI1OEE"></span>template&lt;typename <code class="sig-name descname">O</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1a596650ea1e9789e51babb61ac64b5fae"></span><em class="property">inline</em> void <code class="sig-name descname">transpose</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;<a class="reference internal" href="#_CPPv4I0EN7ndarray13basic_ndarray9transposeEvRKNSt16initializer_listI1OEE" title="ndarray::basic_ndarray::transpose::O">O</a>&gt; &amp;<em>order</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN7ndarray13basic_ndarray9transposeEvRKNSt16initializer_listI1OEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK7ndarray13basic_ndarray10transposedE13basic_ndarrayI1T5allocERKNSt6vectorI1OEE">
+<span id="_CPPv3I0ENK7ndarray13basic_ndarray10transposedERKNSt6vectorI1OEE"></span><span id="_CPPv2I0ENK7ndarray13basic_ndarray10transposedERKNSt6vectorI1OEE"></span>template&lt;typename <code class="sig-name descname">O</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1ae606d652f8a1e76f1d8973c2b2022f75"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::alloc">alloc</a>&gt; <code class="sig-name descname">transposed</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarray10transposedE13basic_ndarrayI1T5allocERKNSt6vectorI1OEE" title="ndarray::basic_ndarray::transposed::O">O</a>&gt; &amp;<em>order</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK7ndarray13basic_ndarray10transposedE13basic_ndarrayI1T5allocERKNSt6vectorI1OEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK7ndarray13basic_ndarray10transposedE13basic_ndarrayI1T5allocERKNSt16initializer_listI1OEE">
+<span id="_CPPv3I0ENK7ndarray13basic_ndarray10transposedERKNSt16initializer_listI1OEE"></span><span id="_CPPv2I0ENK7ndarray13basic_ndarray10transposedERKNSt16initializer_listI1OEE"></span>template&lt;typename <code class="sig-name descname">O</code>&gt;<br/><span class="target" id="classndarray_1_1basic__ndarray_1a9a43c0100fc9aef66b765d5776969dc6"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::alloc">alloc</a>&gt; <code class="sig-name descname">transposed</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;<a class="reference internal" href="#_CPPv4I0ENK7ndarray13basic_ndarray10transposedE13basic_ndarrayI1T5allocERKNSt16initializer_listI1OEE" title="ndarray::basic_ndarray::transposed::O">O</a>&gt; &amp;<em>order</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK7ndarray13basic_ndarray10transposedE13basic_ndarrayI1T5allocERKNSt16initializer_listI1OEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray10transposedEv">
+<span id="_CPPv3NK7ndarray13basic_ndarray10transposedEv"></span><span id="_CPPv2NK7ndarray13basic_ndarray10transposedEv"></span><span id="ndarray::basic_ndarray::transposedC"></span><span class="target" id="classndarray_1_1basic__ndarray_1a0c680c833d9fa3c4e6bc2941b4b12a0a"></span><em class="property">inline</em> <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray">basic_ndarray</a>&lt;<a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::T">T</a>, <a class="reference internal" href="#_CPPv4I00_NSt9enable_ifINSt13is_arithmeticI1TE5valueEiE4typeEEN7ndarray13basic_ndarrayE" title="ndarray::basic_ndarray::alloc">alloc</a>&gt; <code class="sig-name descname">transposed</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray10transposedEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt id="_CPPv4NK7ndarray13basic_ndarray3strE6nd_int">
+<span id="_CPPv3NK7ndarray13basic_ndarray3strE6nd_int"></span><span id="_CPPv2NK7ndarray13basic_ndarray3strE6nd_int"></span><span id="ndarray::basic_ndarray::str__nd_intC"></span><span class="target" id="classndarray_1_1basic__ndarray_1abe0b92ad398cce48c5c40fa45580eba4"></span><em class="property">inline</em> std::string <code class="sig-name descname">str</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_config_8hpp_1ac5d24738bf17028cf2d4dea7a3e38642.html#_CPPv46nd_int" title="nd_int">nd_int</a> <em>start_depth</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7ndarray13basic_ndarray3strE6nd_int" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+</dd></dl>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Toby Davis
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../_sources/api/classndarray_1_1basic__ndarray.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Template Class basic_ndarray</a><ul>
+<li><a class="reference internal" href="#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+    <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>

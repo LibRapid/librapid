@@ -1,0 +1,269 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="namespacendarray_1_1arithmetic" kind="namespace" language="C++">
+    <compoundname>ndarray::arithmetic</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="array__arithmetic_8hpp_1a2ac6e295378759390795431ff72b753e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename A</type>
+          </param>
+          <param>
+            <type>typename B</type>
+          </param>
+          <param>
+            <type>typename E</type>
+          </param>
+          <param>
+            <type>typename S_a</type>
+          </param>
+          <param>
+            <type>typename S_b</type>
+          </param>
+          <param>
+            <type>typename LAMBDA</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void ndarray::arithmetic::array_op</definition>
+        <argsstring>(A *src_a, B *src_b, const basic_extent&lt; E &gt; &amp;extent, const basic_stride&lt; S_a &gt; &amp;stride_a, const basic_stride&lt; S_b &gt; &amp;stride_b, LAMBDA op)</argsstring>
+        <name>array_op</name>
+        <param>
+          <type>A *</type>
+          <declname>src_a</declname>
+        </param>
+        <param>
+          <type>B *</type>
+          <declname>src_b</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__extent" kindref="compound">basic_extent</ref>&lt; E &gt; &amp;</type>
+          <declname>extent</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__stride" kindref="compound">basic_stride</ref>&lt; S_a &gt; &amp;</type>
+          <declname>stride_a</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__stride" kindref="compound">basic_stride</ref>&lt; S_b &gt; &amp;</type>
+          <declname>stride_b</declname>
+        </param>
+        <param>
+          <type>LAMBDA</type>
+          <declname>op</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/array_arithmetic.hpp" line="15" column="7" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/array_arithmetic.hpp" bodystart="15" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="array__array__arithmetic_8hpp_1a64ed7c98bce4d4acfec0aef69ac2746e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename A</type>
+          </param>
+          <param>
+            <type>typename B</type>
+          </param>
+          <param>
+            <type>typename C</type>
+          </param>
+          <param>
+            <type>typename E</type>
+          </param>
+          <param>
+            <type>typename S_a</type>
+          </param>
+          <param>
+            <type>typename S_b</type>
+          </param>
+          <param>
+            <type>typename S_c</type>
+          </param>
+          <param>
+            <type>typename LAMBDA</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void ndarray::arithmetic::array_op_array</definition>
+        <argsstring>(A *src_a, B *src_b, C *src_c, const basic_extent&lt; E &gt; &amp;extent, const basic_stride&lt; S_a &gt; &amp;stride_a, const basic_stride&lt; S_b &gt; &amp;stride_b, const basic_stride&lt; S_c &gt; &amp;stride_c, LAMBDA op)</argsstring>
+        <name>array_op_array</name>
+        <param>
+          <type>A *</type>
+          <declname>src_a</declname>
+        </param>
+        <param>
+          <type>B *</type>
+          <declname>src_b</declname>
+        </param>
+        <param>
+          <type>C *</type>
+          <declname>src_c</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__extent" kindref="compound">basic_extent</ref>&lt; E &gt; &amp;</type>
+          <declname>extent</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__stride" kindref="compound">basic_stride</ref>&lt; S_a &gt; &amp;</type>
+          <declname>stride_a</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__stride" kindref="compound">basic_stride</ref>&lt; S_b &gt; &amp;</type>
+          <declname>stride_b</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__stride" kindref="compound">basic_stride</ref>&lt; S_c &gt; &amp;</type>
+          <declname>stride_c</declname>
+        </param>
+        <param>
+          <type>LAMBDA</type>
+          <declname>op</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/array_array_arithmetic.hpp" line="15" column="7" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/array_array_arithmetic.hpp" bodystart="15" bodyend="85"/>
+      </memberdef>
+      <memberdef kind="function" id="array__scalar__arithmetic_8hpp_1aeb0ddad2fee4b6e91397b0953cdba081" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename A</type>
+          </param>
+          <param>
+            <type>typename B</type>
+          </param>
+          <param>
+            <type>typename C</type>
+          </param>
+          <param>
+            <type>typename E</type>
+          </param>
+          <param>
+            <type>typename S_a</type>
+          </param>
+          <param>
+            <type>typename S_c</type>
+          </param>
+          <param>
+            <type>typename LAMBDA</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void ndarray::arithmetic::array_op_scalar</definition>
+        <argsstring>(A *src_a, B *src_b, C *src_c, const basic_extent&lt; E &gt; &amp;extent, const basic_stride&lt; S_a &gt; &amp;stride_a, const basic_stride&lt; S_c &gt; &amp;stride_c, LAMBDA op)</argsstring>
+        <name>array_op_scalar</name>
+        <param>
+          <type>A *</type>
+          <declname>src_a</declname>
+        </param>
+        <param>
+          <type>B *</type>
+          <declname>src_b</declname>
+        </param>
+        <param>
+          <type>C *</type>
+          <declname>src_c</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__extent" kindref="compound">basic_extent</ref>&lt; E &gt; &amp;</type>
+          <declname>extent</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__stride" kindref="compound">basic_stride</ref>&lt; S_a &gt; &amp;</type>
+          <declname>stride_a</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__stride" kindref="compound">basic_stride</ref>&lt; S_c &gt; &amp;</type>
+          <declname>stride_c</declname>
+        </param>
+        <param>
+          <type>LAMBDA</type>
+          <declname>op</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/array_scalar_arithmetic.hpp" line="15" column="7" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/array_scalar_arithmetic.hpp" bodystart="15" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="scalar__array__arithmetic_8hpp_1a3b250c2a1d5f7a6960df2575270ba8c3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename A</type>
+          </param>
+          <param>
+            <type>typename B</type>
+          </param>
+          <param>
+            <type>typename C</type>
+          </param>
+          <param>
+            <type>typename E</type>
+          </param>
+          <param>
+            <type>typename S_b</type>
+          </param>
+          <param>
+            <type>typename S_c</type>
+          </param>
+          <param>
+            <type>typename LAMBDA</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void ndarray::arithmetic::scalar_op_array</definition>
+        <argsstring>(A *src_a, B *src_b, C *src_c, const basic_extent&lt; E &gt; &amp;extent, const basic_stride&lt; S_b &gt; &amp;stride_b, const basic_stride&lt; S_c &gt; &amp;stride_c, LAMBDA op)</argsstring>
+        <name>scalar_op_array</name>
+        <param>
+          <type>A *</type>
+          <declname>src_a</declname>
+        </param>
+        <param>
+          <type>B *</type>
+          <declname>src_b</declname>
+        </param>
+        <param>
+          <type>C *</type>
+          <declname>src_c</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__extent" kindref="compound">basic_extent</ref>&lt; E &gt; &amp;</type>
+          <declname>extent</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__stride" kindref="compound">basic_stride</ref>&lt; S_b &gt; &amp;</type>
+          <declname>stride_b</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classndarray_1_1basic__stride" kindref="compound">basic_stride</ref>&lt; S_c &gt; &amp;</type>
+          <declname>stride_c</declname>
+        </param>
+        <param>
+          <type>LAMBDA</type>
+          <declname>op</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/scalar_array_arithmetic.hpp" line="15" column="7" bodyfile="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/scalar_array_arithmetic.hpp" bodystart="15" bodyend="81"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/penci/OneDrive/Desktop/librapid/librapid/librapid/ndarray/array_arithmetic.hpp" line="9" column="1"/>
+  </compounddef>
+</doxygen>
