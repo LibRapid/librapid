@@ -13,10 +13,10 @@ Another simple type of NDarray is a matrix, which is a grid of values.
 
 .. code-block::
 
-    This is a vector with 3 elements
+    // This is a vector with 3 elements
     [1 2 3]
     
-    This is a 2x3 matrix
+    // This is a 2x3 matrix
     [[1 2 3]
      [4 5 6]]
 

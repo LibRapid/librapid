@@ -45,6 +45,8 @@ extensions = [
 
 autosectionlabel_prefix_document = True
 
+source_encoding = "utf-8"
+
 # Set up the breathe extension
 breathe_projects = {
 	"librapid": "./doxygenoutput/xml"
