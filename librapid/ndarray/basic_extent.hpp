@@ -9,8 +9,8 @@
 #include <ostream>
 #include <vector>
 
-// namespace ndarray
-// {
+namespace ndarray
+{
 // 	template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
 // 	class basic_extent
 // 	{
@@ -217,11 +217,11 @@
 // 
 // 	using extent = basic_extent<nd_int>;
 // 
-// 	template<typename T>
-// 	std::ostream &operator<<(std::ostream &os, const basic_extent<T> &s)
-// 	{
-// 		return os << s.str();
-// 	}
-// }
+	template<typename T>
+	std::ostream &operator<<(std::ostream &os, const basic_extent<T> &s)
+	{
+		return os << s.str();
+	}
+}
 
 #endif // NDARRAY_BASIC_EXTENTS
