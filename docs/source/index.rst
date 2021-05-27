@@ -77,7 +77,6 @@ Contents
 	:glob:
 
 	ndarray_api
-	librapid.extent
 
 Test
 ====
