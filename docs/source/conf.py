@@ -49,11 +49,9 @@ extensions = [
 
 autosectionlabel_prefix_document = True
 
-cwd = os.getcwd()
-
 # Set up the breathe extension
 breathe_projects = {
-	"librapid": cwd + "/doxygenoutput/xml"
+	"librapid": "./doxygenoutput/xml"
 }
 
 breathe_default_project = "librapid"
@@ -61,7 +59,7 @@ breathe_default_project = "librapid"
 # Custom inputs to doxygen generator
 doxygen_inputs = """
 
-INPUT                   = {}/../../librapid
+INPUT                   = ../../librapid
        
 ENABLE_PREPROCESSING    = YES
 MACRO_EXPANSION         = YES
@@ -70,7 +68,7 @@ PREDEFINED              += ND_INLINE=
 PREDEFINED              += __restrict=
 PREDEFINED              += ND_MAX_DIMS=50
 
-""".format(cwd)
+"""
 
 # Set up the exhale extension
 exhale_args = {

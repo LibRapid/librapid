@@ -71,6 +71,30 @@ namespace ndarray
 
 		/**
 		 * This is a function. It does something.
+		 * 
+		 * Hello, World!
+		 * 
+		 * \rst
+		 * 
+		 * Hello. This is a title
+		 * ======================
+		 * 
+		 * 1. This
+		 * 2. Is
+		 * 3. A
+		 * 4. Numbered
+		 * 5. List
+		 * 
+		 * 
+		 * .. code-block:: Python
+		 * 
+		 * 		print("Hello, World!")
+		 * 
+		 * .. hint::
+		 * 		This is a hint in a box! How cool is that!?
+		 * 
+		 * \endrst
+		 * 
 		 */
 		void set_stride(const stride &s)
 		{
