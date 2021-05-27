@@ -1,4 +1,4 @@
-breathe
-exhale
+sphinx>=2.0
+breathe>=4.13.0
 furo
-antidox
+exhale
