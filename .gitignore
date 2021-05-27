@@ -1,2 +1,4 @@
 docs/build/
-docs/source/doxygen/
+docs/source/doxygen/html
+docs/source/doxygen/latex
+docs/source/doxygen/xml
