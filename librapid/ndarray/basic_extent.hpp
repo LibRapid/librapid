@@ -15,7 +15,7 @@ namespace ndarray
 	class basic_extent
 	{
 	public:
-		// basic_extent() = default;
+		basic_extent() = default;
 
 		template<typename V>
 		basic_extent(const std::initializer_list<V> &vals)
@@ -60,19 +60,19 @@ namespace ndarray
 			}
 		}
 
-		basic_extent(const basic_extent<T> &o)
-		{
-			m_dims = o.m_dims;
-
-			if (m_dims > ND_MAX_DIMS)
-			{
-				m_dims = ND_MAX_DIMS + 1;
-				return;
-			}
-
-			memcpy(m_extent, o.m_extent, sizeof(T) * m_dims);
-			memcpy(m_extent_alt, o.m_extent_alt, sizeof(T) * m_dims);
-		}
+// 		basic_extent(const basic_extent<T> &o)
+// 		{
+// 			m_dims = o.m_dims;
+// 
+// 			if (m_dims > ND_MAX_DIMS)
+// 			{
+// 				m_dims = ND_MAX_DIMS + 1;
+// 				return;
+// 			}
+// 
+// 			memcpy(m_extent, o.m_extent, sizeof(T) * m_dims);
+// 			memcpy(m_extent_alt, o.m_extent_alt, sizeof(T) * m_dims);
+// 		}
 // 
 // 		template<typename A, typename B>
 // 		basic_extent(const std::pair<A, B> &pair)

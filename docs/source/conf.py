@@ -87,6 +87,7 @@ exhale_args = {
         EXPAND_ONLY_PREDEF      = NO
         PREDEFINED              += ND_INLINE=
         PREDEFINED              += __restrict=
+        PREDEFINED              += ND_MAX_DIMS=50
     """)
 }
 
