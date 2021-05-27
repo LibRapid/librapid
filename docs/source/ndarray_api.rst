@@ -49,8 +49,10 @@ How are the arrays stored?
 
 The underlying memory of each array is stored in a contiguous memory block. To access
 the different elements of an array, they also store the dimensions
+
 of the array, and a set of strides
 which specify how far through memory one must move
+
 to increment by one value in a given axis.
 
 The fact that the arrays are stored in this way means that many functions can be
