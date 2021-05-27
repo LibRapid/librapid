@@ -11,7 +11,7 @@ can be operated on in a variety of ways.
 The simplest type of NDarray is a vector, which is a list of values.
 Another simple type of NDarray is a matrix, which is a grid of values.
 
-.. code-block::
+.. code-block:: C++
 
     // This is a vector with 3 elements
     [1 2 3]

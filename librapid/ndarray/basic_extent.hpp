@@ -1,16 +1,16 @@
-#ifndef NDARRAY_BASIC_EXTENTS
-#define NDARRAY_BASIC_EXTENTS
+// #ifndef NDARRAY_BASIC_EXTENTS
+// #define NDARRAY_BASIC_EXTENTS
 
-#include "utils.hpp"
+// #include "utils.hpp"
 
-#include <memory>
-#include <string>
-#include <sstream>
-#include <ostream>
-#include <vector>
+// #include <memory>
+// #include <string>
+// #include <sstream>
+// #include <ostream>
+// #include <vector>
 
-namespace ndarray
-{
+// namespace ndarray
+// {
 // 	template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
 // 	class basic_extent
 // 	{
@@ -222,6 +222,6 @@ namespace ndarray
 // 	{
 // 		return os << s.str();
 // 	}
-}
+// }
 
-#endif // NDARRAY_BASIC_EXTENTS
+// #endif // NDARRAY_BASIC_EXTENTS
