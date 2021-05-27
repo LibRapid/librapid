@@ -10,5 +10,4 @@ can be used to iterate over an array if needed.
     and iterating using the extent object is very tedious. This **will**
     be changed in the future.
 
-.. doxygenclass:: ndarray::basic_extent
-	:members:
+
