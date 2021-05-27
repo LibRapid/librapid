@@ -1,13 +1,13 @@
-// #ifndef NDARRAY_BASIC_EXTENTS
-// #define NDARRAY_BASIC_EXTENTS
+#ifndef NDARRAY_BASIC_EXTENTS
+#define NDARRAY_BASIC_EXTENTS
 
-// #include "utils.hpp"
+#include "utils.hpp"
 
-// #include <memory>
-// #include <string>
-// #include <sstream>
-// #include <ostream>
-// #include <vector>
+#include <memory>
+#include <string>
+#include <sstream>
+#include <ostream>
+#include <vector>
 
 // namespace ndarray
 // {
@@ -224,4 +224,4 @@
 // 	}
 // }
 
-// #endif // NDARRAY_BASIC_EXTENTS
+#endif // NDARRAY_BASIC_EXTENTS
