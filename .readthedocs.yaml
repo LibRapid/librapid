@@ -12,7 +12,7 @@ formats: all
 
 # Set the python version and requirements
 python:
-  version: 3.9.0rc1
+  version: 3.9
   install:
     - requirements: docs/requirements.txt
 
