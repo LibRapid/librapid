@@ -2,7 +2,18 @@
 #define NDARRAY_CONFIG
 
 #ifndef LIBRAPID_BUILD
-#define LIBRAPID_BUILD "C++"
+// LIBRAPID_BUILD 0 == C++
+// LIBRAPID_BUILD 1 == PYBIND
+#define LIBRAPID_BUILD 0
+#endif
+
+#if LIBRAPID_BUILD == 1
+
+// PyBind11 specific definitions and includes
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+namespace py = pybind11;
+
 #endif
 
 #if defined(NDEBUG) || defined(NDARRAY_NDEBUG)

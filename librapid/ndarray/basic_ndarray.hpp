@@ -71,30 +71,30 @@ namespace ndarray
 
 		/**
 		 * This is a function. It does something.
-		 * 
+		 *
 		 * Hello, World!
-		 * 
+		 *
 		 * \rst
-		 * 
+		 *
 		 * Hello. This is a title
 		 * ======================
-		 * 
+		 *
 		 * 1. This
 		 * 2. Is
 		 * 3. A
 		 * 4. Numbered
 		 * 5. List
-		 * 
-		 * 
+		 *
+		 *
 		 * .. code-block:: Python
-		 * 
+		 *
 		 * 		print("Hello, World!")
-		 * 
+		 *
 		 * .. hint::
 		 * 		This is a hint in a box! How cool is that!?
-		 * 
+		 *
 		 * \endrst
-		 * 
+		 *
 		 */
 		void set_stride(const stride &s)
 		{
@@ -116,7 +116,7 @@ namespace ndarray
 
 			if (state == errors::ARRAY_DIMENSIONS_TOO_LARGE)
 				throw std::range_error("Too many dimensions in array. Maximum allowed is "
-										 + std::to_string(ND_MAX_DIMS));
+									   + std::to_string(ND_MAX_DIMS));
 		}
 
 		template<typename E, typename V>
@@ -134,7 +134,7 @@ namespace ndarray
 
 			if (state == errors::ARRAY_DIMENSIONS_TOO_LARGE)
 				throw std::range_error("Too many dimensions in array. Maximum allowed is "
-										 + std::to_string(ND_MAX_DIMS));
+									   + std::to_string(ND_MAX_DIMS));
 		}
 
 		basic_ndarray(const basic_ndarray<T> &arr) : m_extent(arr.m_extent),
@@ -266,7 +266,8 @@ namespace ndarray
 				m_data_start[index] = (T) filler;
 		}
 
-		ND_INLINE basic_ndarray<T, alloc> filled(const T &filler) const
+		template<class F>
+		ND_INLINE basic_ndarray<T, alloc> filled(const F &filler) const
 		{
 			basic_ndarray<T, alloc> res;
 			res.construct_new(m_extent, m_stride);
@@ -279,12 +280,51 @@ namespace ndarray
 		{
 			basic_ndarray<T, alloc> res(m_extent);
 
-			res.m_stride = m_stride;
 			res.m_origin_size = m_origin_size;
 			res.m_is_scalar = m_is_scalar;
 
-			memcpy(res.m_data_start, m_data_start,
-				   m_extent_product * sizeof(T));
+			if (!m_stride.is_trivial())
+			{
+				// Non-trivial stride, so this array will be deferenced and a new array
+				// created in its place
+
+				nd_int idim = 0;
+				nd_int dims = ndim();
+
+				const auto *__restrict _extent = m_extent.get_extent_alt();
+				const auto *__restrict _stride_this = m_stride.get_stride_alt();
+				auto *__restrict this_ptr = m_data_start;
+				auto *__restrict res_ptr = res.get_data_start();
+
+				nd_int coord[ND_MAX_DIMS]{};
+
+				do
+				{
+					*(res_ptr++) = *this_ptr;
+
+					for (idim = 0; idim < dims; ++idim)
+					{
+						if (++coord[idim] == _extent[idim])
+						{
+							coord[idim] = 0;
+							this_ptr = this_ptr - (_extent[idim] - 1) * _stride_this[idim];
+						}
+						else
+						{
+							this_ptr = this_ptr + _stride_this[idim];
+							break;
+						}
+					}
+				} while (idim < dims);
+
+				res_ptr -= m_extent_product;
+			}
+			else
+			{
+				memcpy(res.m_data_start, m_data_start,
+					   m_extent_product * sizeof(T));
+			}
+
 			return res;
 		}
 
@@ -389,12 +429,25 @@ namespace ndarray
 			});
 		}
 
+		ND_INLINE basic_ndarray<T, alloc> operator-() const
+		{
+			basic_ndarray<T, alloc> res(m_extent);
+			arithmetic::array_op(res.m_data_start, m_data_start, m_extent,
+										res.get_stride(), m_stride,
+										[]<typename T_a>(T_a a)
+			{
+				return -a;
+			});
+
+			return res;
+		}
+
 		template<typename O>
 		ND_INLINE void reshape(const std::vector<O> &order)
 		{
 			if (math::product(order) != m_extent_product)
 				throw std::length_error("Array sizes are different, so cannot reshape array. Shapes "
-										 + m_extent.str() + " and " + extent(order).str() + " cannot be broadcast");
+										+ m_extent.str() + " and " + extent(order).str() + " cannot be broadcast");
 
 			if (!m_stride.is_trivial())
 			{

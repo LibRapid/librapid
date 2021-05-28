@@ -1,0 +1,44 @@
+language: python
+
+os: linux
+env:
+  global:
+    - CIBW_BUILD=cp3?-*
+    - CIBW_MANYLINUX_X86_64_IMAGE=manylinux1
+    - CIBW_MANYLINUX_I686_IMAGE=manylinux1
+    - TWINE_USERNAME=__token__
+
+jobs:
+  include:
+    - services: docker
+    - os: osx
+      language: generic
+      env: MACOSX_DEPLOYMENT_TARGET=10.9
+    - os: windows
+      language: bash
+      before_install:
+        - choco install python --version 3.9.0
+        - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
+    - os: windows
+      language: bash
+      before_install:
+        - choco install python --version 3.8.0
+        - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
+    - os: windows
+      language: bash
+      before_install:
+        - choco install python --version 3.7.0
+        - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
+
+install:
+  - python -m pip install -U setuptools wheel twine cibuildwheel==1.1.0
+script:
+  - python -m cibuildwheel --output-dir ./wheelhouse
+  - ls wheelhouse
+after_success:
+  # if the release was tagged, upload them to PyPI
+  - |
+    if [[ $TRAVIS_TAG ]]; then
+      python3 -m pip install twine
+      python3 -m twine upload wheelhouse/*.whl
+    fi

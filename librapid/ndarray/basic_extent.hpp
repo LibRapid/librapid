@@ -9,6 +9,10 @@
 #include <ostream>
 #include <vector>
 
+#if LIBRAPID_BUILD == 1
+namespace py = pybind11;
+#endif
+
 namespace ndarray
 {
 	template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
@@ -42,10 +46,10 @@ namespace ndarray
 			for (nd_int i = 0; i < m_dims; i++)
 			{
 				m_extent[i] = vals[i];
-				m_extent_alt[i] = vals[vals.size() - i - 1];
+				m_extent_alt[i] = vals[m_dims - i - 1];
 			}
 
-			if (math::anyBelow(m_extent, vals.size(), 1))
+			if (math::anyBelow(m_extent, m_dims, 1))
 				throw std::domain_error("basic_extent cannot contain values less than 1");
 		}
 
@@ -109,6 +113,32 @@ namespace ndarray
 				m_extent_alt[i] = data[m_dims - i - 1];
 			}
 		}
+
+	#if LIBRAPID_BUILD == 1
+
+		// PyBind11 specific constructor
+
+		basic_extent(py::args args)
+		{
+			m_dims = py::len(args);
+
+			if (m_dims > ND_MAX_DIMS)
+			{
+				m_dims = ND_MAX_DIMS + 1;
+				return;
+			}
+
+			for (nd_int i = 0; i < m_dims; i++)
+			{
+				m_extent[i] = py::cast<nd_int>(args[i]);
+				m_extent_alt[i] = py::cast<nd_int>(args[m_dims - i - 1]);
+			}
+
+			if (math::anyBelow(m_extent, m_dims, 1))
+				throw std::domain_error("basic_extent cannot contain values less than 1");
+		}
+
+	#endif
 
 		ND_INLINE basic_extent &operator=(const basic_extent<T> &o)
 		{
@@ -223,33 +253,6 @@ namespace ndarray
 				else stream << m_extent[i] << ", ";
 			}
 			return "extent(" + stream.str() + ")";
-		}
-
-		// =================== Python API Specific Functions ====================
-
-		ND_INLINE T &__py_getitem(nd_int index)
-		{
-			if (index < 0 || index >= m_dims)
-				throw std::out_of_range("Index " + std::to_string(index)
-										+ " is out of range for extent with "
-										+ std::to_string(m_dims) + " dimensions");
-
-			return m_extent[index];
-		}
-
-		ND_INLINE void __py_setitem(nd_int index, T value)
-		{
-			if (index < 0 || index >= m_dims)
-				throw std::out_of_range("Index " + std::to_string(index)
-										+ " is out of range for extent with "
-										+ std::to_string(m_dims) + " dimensions");
-
-			m_extent[index] = value;
-		}
-
-		ND_INLINE void __py_reshape(const std::vector<nd_int> &order)
-		{
-			reshape(order);
 		}
 
 	private:

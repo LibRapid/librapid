@@ -9,6 +9,10 @@
 #include <ostream>
 #include <vector>
 
+#if LIBRAPID_BUILD == 1
+namespace py = pybind11;
+#endif
+
 namespace ndarray
 {
 	template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
@@ -111,6 +115,34 @@ namespace ndarray
 
 			m_is_trivial = check_trivial();
 		}
+
+	#if LIBRAPID_BUILD == 1
+
+		// PyBind11 specific constructor
+
+		basic_stride(py::args args)
+		{
+			m_dims = py::len(args);
+
+			if (m_dims > ND_MAX_DIMS)
+			{
+				m_dims = ND_MAX_DIMS + 1;
+				return;
+			}
+
+			for (nd_int i = 0; i < m_dims; i++)
+			{
+				m_stride[i] = py::cast<nd_int>(args[i]);
+				m_stride_alt[i] = py::cast<nd_int>(args[m_dims - i - 1]);
+			}
+
+			m_is_trivial = check_trivial();
+
+			if (math::anyBelow(m_stride, m_dims, 1))
+				throw std::domain_error("basic_stride cannot contain values less than 1");
+		}
+
+	#endif
 
 		template<typename V>
 		static basic_stride<T> from_extent(const std::vector<V> &extent)
@@ -235,28 +267,6 @@ namespace ndarray
 				else stream << m_stride[i] << ", ";
 			}
 			return "stride(" + stream.str() + ")";
-		}
-
-		// =================== Python API Specific Functions ====================
-
-		static basic_stride<T> __py_from_extent(const std::vector<nd_int> &extent)
-		{
-			return from_extent(extent.data(), extent.size());
-		}
-
-		ND_INLINE T &__py_getitem(nd_int index)
-		{
-			return m_stride[index];
-		}
-
-		ND_INLINE void __py_setitem(nd_int index, nd_int value)
-		{
-			m_stride[index] = value;
-		}
-
-		ND_INLINE void __py_reshape(const std::vector<nd_int> &order)
-		{
-			reshape(order);
 		}
 
 	private:

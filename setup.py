@@ -7,12 +7,15 @@ from pybind11 import get_cmake_dir
 import os
 import sys
 
-__version__ = "0.0.3"
+# Load the version number from VERSION.hpp
+version_file = open("VERSION.hpp", "r")
+__version__ = version_file.readlines()[1].split()[2].replace("\"", "")
+version_file.close()
 
 ext_modules = [
     Pybind11Extension("librapid",
-        ["librapid/pybind_ndarray.cpp"],
-        define_macros = [('LIBRAPID_BUILD', "PYBIND")],
+        ["librapid/pybind_librapid.cpp"],
+        define_macros = [('LIBRAPID_BUILD', 1)],
         include_dirs=[os.getcwd()]
         )
 ]

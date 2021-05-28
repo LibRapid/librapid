@@ -18,6 +18,7 @@ int main()
 		rhs.set_value(i, i + 1);
 
 	std::cout << "LHS:\n" << lhs.str() << "\n\n";
+	std::cout << "LHS:\n" << (-lhs).str() << "\n\n";
 	std::cout << "RHS:\n" << rhs.str() << "\n\n";
 
 	try
@@ -28,10 +29,6 @@ int main()
 	{
 		std::cout << "Error occurred while adding arrays: " << e.what() << "\n";
 	}
-
-	auto x = ndarray::extent({1, 1, 2, 3});
-	std::cout << x.str() << "\n";
-	std::cout << x.compressed().str() << "\n";
 
 	return 0;
 }

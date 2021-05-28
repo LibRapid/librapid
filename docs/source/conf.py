@@ -29,7 +29,9 @@ copyright = "2021, Toby Davis"
 author = "Toby Davis"
 
 # The full version, including alpha/beta/rc tags
-release = "0.0.3"
+version_file = open("VERSION.hpp", "r")
+release = version_file.readlines()[1].split()[2].replace("\"", "")
+version_file.close()
 
 # Set the master file
 master_doc = "index"
