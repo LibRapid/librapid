@@ -3,7 +3,7 @@ version: 2
 
 # Set the build image to use the latest version
 build:
-  image: testing
+  image: stable
   apt_packages:
     - doxygen
 
