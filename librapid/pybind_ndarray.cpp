@@ -19,5 +19,11 @@ PYBIND11_MODULE(librapid, module)
         .def(py::init<const std::vector<nd_int> &>())
         .def(py::init<nd_int>())
         .def(py::init<const ndarray::extent &>())
+        .def("__getitem__", &ndarray::extent::__py_getitem)
+        .def("__setitem__", &ndarray::extent::__py_setitem)
+        .def("compressed", &ndarray::extent::compressed)
+        .def_property_readonly("ndim", &ndarray::extent::ndim)
+        .def_property_readonly("is_valid", &ndarray::extent::is_valid)
+        .def("reshape", &ndarray::extent::__py_reshape)
         .def("__str__", &ndarray::extent::str);
 }

@@ -22,12 +22,16 @@ int main()
 
 	try
 	{
-		std::cout << "Result:\n" << (10. + lhs).str() << "\n\n";
+		std::cout << "Result:\n" << (10. + lhs.transposed()).str() << "\n\n";
 	}
 	catch (std::exception &e)
 	{
 		std::cout << "Error occurred while adding arrays: " << e.what() << "\n";
 	}
+
+	auto x = ndarray::extent({1, 1, 2, 3});
+	std::cout << x.str() << "\n";
+	std::cout << x.compressed().str() << "\n";
 
 	return 0;
 }

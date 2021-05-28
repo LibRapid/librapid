@@ -1,6 +1,10 @@
 #ifndef NDARRAY_CONFIG
 #define NDARRAY_CONFIG
 
+#ifndef LIBRAPID_BUILD
+#define LIBRAPID_BUILD "C++"
+#endif
+
 #if defined(NDEBUG) || defined(NDARRAY_NDEBUG)
 #define ND_NDEBUG
 #define ND_INLINE inline

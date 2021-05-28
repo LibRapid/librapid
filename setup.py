@@ -12,7 +12,7 @@ __version__ = "0.0.3"
 ext_modules = [
     Pybind11Extension("librapid",
         ["librapid/pybind_ndarray.cpp"],
-        define_macros = [('LIBRAPID_VERSION', __version__)],
+        define_macros = [('LIBRAPID_BUILD', "PYBIND")],
         include_dirs=[os.getcwd()]
         )
 ]

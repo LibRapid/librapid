@@ -155,15 +155,16 @@ namespace ndarray
 			return m_extent_alt[index];
 		}
 
-		ND_INLINE basic_extent compress() const
+		ND_INLINE basic_extent<T> compressed() const
 		{
-			if (math::product(m_extent) == 1)
+			if (math::product(m_extent, m_dims) == 1)
 				return basic_extent({1});
 
 			std::vector<T> res;
-			for (const auto &val : m_extent)
-				if (val != 1)
-					res.emplace_back(val);
+			for (nd_int i = 0; i < m_dims; i++)
+				if (m_extent[i] != 1)
+					res.emplace_back(m_extent[i]);
+
 			return basic_extent(res);
 		}
 
@@ -174,7 +175,7 @@ namespace ndarray
 
 		ND_INLINE bool is_valid() const
 		{
-			return m_dims > 0;
+			return m_dims > 0 && m_dims < ND_MAX_DIMS;
 		}
 
 		ND_INLINE auto get_extent() const
@@ -192,7 +193,7 @@ namespace ndarray
 			return utils::check_ptr_match(m_extent, m_dims, test.m_extent, test.m_dims);
 		}
 
-		template<typename O>
+		template<typename O, typename std::enable_if<std::is_integral<O>::value, int>::type = 0>
 		ND_INLINE void reshape(const std::vector<O> &order)
 		{
 			// No validation. This should be completed by the caller of this function
@@ -222,6 +223,33 @@ namespace ndarray
 				else stream << m_extent[i] << ", ";
 			}
 			return "extent(" + stream.str() + ")";
+		}
+
+		// =================== Python API Specific Functions ====================
+
+		ND_INLINE T &__py_getitem(nd_int index)
+		{
+			if (index < 0 || index >= m_dims)
+				throw std::out_of_range("Index " + std::to_string(index)
+										+ " is out of range for extent with "
+										+ std::to_string(m_dims) + " dimensions");
+
+			return m_extent[index];
+		}
+
+		ND_INLINE void __py_setitem(nd_int index, T value)
+		{
+			if (index < 0 || index >= m_dims)
+				throw std::out_of_range("Index " + std::to_string(index)
+										+ " is out of range for extent with "
+										+ std::to_string(m_dims) + " dimensions");
+
+			m_extent[index] = value;
+		}
+
+		ND_INLINE void __py_reshape(const std::vector<nd_int> &order)
+		{
+			reshape(order);
 		}
 
 	private:
