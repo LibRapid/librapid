@@ -31,7 +31,7 @@ jobs:
         - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
 
 install:
-  - python -m pip install -U setuptools wheel twine cibuildwheel==1.1.0
+  - python -m pip3 install -U setuptools wheel twine cibuildwheel==1.1.0
 script:
   - python -m cibuildwheel --output-dir ./wheelhouse
   - ls wheelhouse
