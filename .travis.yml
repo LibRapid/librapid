@@ -1,44 +1,166 @@
-language: python
+branches:
+  only:
+  - master
 
-os: linux
 env:
   global:
-    - CIBW_BUILD=cp3?-*
-    - CIBW_MANYLINUX_X86_64_IMAGE=manylinux1
-    - CIBW_MANYLINUX_I686_IMAGE=manylinux1
-    - TWINE_USERNAME=__token__
+    - CIBW_BUILD_VERBOSITY=1
+    - CIBW_TEST_REQUIRES=pytest
+    - CIBW_TEST_COMMAND="pytest {project}/tests"
+    - CIBW_BEFORE_BUILD="pip3 install -r requirements.txt"
 
-jobs:
+matrix:
   include:
-    - services: docker
-    - os: osx
-      language: generic
-      env: MACOSX_DEPLOYMENT_TARGET=10.9
-    - os: windows
-      language: bash
-      before_install:
-        - choco install python --version 3.9.0
-        - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
-    - os: windows
-      language: bash
-      before_install:
-        - choco install python --version 3.8.0
-        - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
-    - os: windows
-      language: bash
+    ##### Linux #####
+    ##### ARM #####
+    ### 3.7 ###
+    - name: "Python 3.7 on Linux arm64"
+      arch:
+        - arm64
+      env:
+        - CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
+        - CIBW_BUILD="cp37-manylinux*"
+        - CIBW_SKIP: "*-manylinux_i686"
+      language: python
+      dist: bionic
+      sudo: required
+      python: "3.8"
+      services:
+        - docker
+    ### 3.8 ###
+    - name: "Python 3.8 on Linux arm64"
+      arch:
+        - arm64
+      env:
+        - CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
+        - CIBW_BUILD="cp38-manylinux*"
+        - CIBW_SKIP: "*-manylinux_i686"
+      language: python
+      dist: bionic
+      sudo: required
+      python: "3.8"
+      services:
+        - docker
+    ### 3.9 ###
+    - name: "Python 3.9 on Linux arm64"
+      arch:
+        - arm64
+      env:
+        - CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
+        - CIBW_BUILD="cp39-manylinux*"
+        - CIBW_SKIP: "*-manylinux_i686"
+      language: python
+      dist: bionic
+      sudo: required
+      python: "3.8"
+      services:
+        - docker
+    ##### x86_64 #####
+    ### 3.7 ###
+    - name: "Python 3.7 on Linux amd64"
+      arch:
+        - amd64
+      env:
+        - CIBW_BUILD="cp37-manylinux*"
+        - CIBW_SKIP: "*-manylinux_i686"
+      language: python
+      dist: bionic
+      sudo: required
+      python: "3.8"
+      services:
+        - docker
+    ### 3.8 ###
+    - name: "Python 3.8 on Linux amd64"
+      arch:
+        - amd64
+      env:
+        - CIBW_BUILD="cp38-manylinux*"
+        - CIBW_SKIP: "*-manylinux_i686"
+      language: python
+      dist: bionic
+      sudo: required
+      python: "3.8"
+      services:
+        - docker
+    ### 3.9 ###
+    - name: "Python 3.9 on Linux amd64"
+      arch:
+        - amd64
+      env:
+        - CIBW_BUILD="cp39-manylinux*"
+        - CIBW_SKIP: "*-manylinux_i686"
+      language: python
+      dist: bionic
+      sudo: required
+      python: "3.8"
+      services:
+        - docker
+    ##### macOS #####
+    ### 3.7 ###
+    - name: "Python 3.7 on macOS 10.14"
+      env:
+        - CIBW_BUILD="cp37-macosx*"
+      os: osx
+      osx_image: xcode11
+      language: shell
+    ### 3.8 ###
+    - name: "Python 3.8 on macOS 10.14"
+      env:
+        - CIBW_BUILD="cp38-macosx*"
+      os: osx
+      osx_image: xcode11
+      language: shell
+    ### 3.9 ###
+    - name: "Python 3.9 on macOS 10.14"
+      env:
+        - CIBW_BUILD="cp39-macosx*"
+      os: osx
+      osx_image: xcode11
+      language: shell
+    ##### Windows #####
+    ### 3.7 ###
+    - name: "Python 3.7 on Windows"
+      os: windows
+      language: shell
       before_install:
         - choco install python --version 3.7.0
-        - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
+        - export PATH="/c/Python37:/c/Python37/Scripts:$PATH"
+        # Make sure Python is on PATH as "python3"
+        - ln -s /c/Python37/python.exe /c/Python37/python3.exe
+    ### 3.8 ###
+    - name: "Python 3.8 on Windows"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.8.0
+        - export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
+        # Make sure Python is on PATH as "python3"
+        - ln -s /c/Python38/python.exe /c/Python38/python3.exe
+    ### 3.9 ###
+    - name: "Python 3.9 on Windows"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.9.0
+        - export PATH="/c/Python39:/c/Python39/Scripts:$PATH"
+        # Make sure Python is on PATH as "python3"
+        - ln -s /c/Python39/python.exe /c/Python39/python3.exe
+
+before_install:
+  - python3 --version
 
 install:
-  - python -m pip3 install -U setuptools wheel twine cibuildwheel==1.1.0
+  - pip3 install --upgrade cibuildwheel
+
 script:
-  - python -m cibuildwheel --output-dir ./wheelhouse
+  - cibuildwheel --output-dir wheelhouse
   - ls wheelhouse
-after_success:
-  # if the release was tagged, upload them to PyPI
-  - |
-    if [[ $TRAVIS_TAG ]]; then
-      python3 -m pip3 install twine
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+      pip3 install --upgrade pip;
+      pip3 install --upgrade --upgrade-strategy eager twine;
+    elif [ "$TRAVIS_OS_NAME" = "osx" ]; then
+      pip install twine;
+    fi
+  - if [[ $TRAVIS_TAG ]]; then
       python3 -m twine upload wheelhouse/*.whl
     fi
