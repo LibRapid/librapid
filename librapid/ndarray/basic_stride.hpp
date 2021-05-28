@@ -237,6 +237,28 @@ namespace ndarray
 			return "stride(" + stream.str() + ")";
 		}
 
+		// =================== Python API Specific Functions ====================
+
+		static basic_stride<T> __py_from_extent(const std::vector<nd_int> &extent)
+		{
+			return from_extent(extent.data(), extent.size());
+		}
+
+		ND_INLINE T &__py_getitem(nd_int index)
+		{
+			return m_stride[index];
+		}
+
+		ND_INLINE void __py_setitem(nd_int index, nd_int value)
+		{
+			m_stride[index] = value;
+		}
+
+		ND_INLINE void __py_reshape(const std::vector<nd_int> &order)
+		{
+			reshape(order);
+		}
+
 	private:
 
 		ND_INLINE const bool check_trivial() const

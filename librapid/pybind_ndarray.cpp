@@ -25,5 +25,24 @@ PYBIND11_MODULE(librapid, module)
         .def_property_readonly("ndim", &ndarray::extent::ndim)
         .def_property_readonly("is_valid", &ndarray::extent::is_valid)
         .def("reshape", &ndarray::extent::__py_reshape)
-        .def("__str__", &ndarray::extent::str);
+        .def("__eq__", &ndarray::extent::operator==)
+        .def("__str__", &ndarray::extent::str)
+        .def("__repr__", &ndarray::extent::str);
+
+    py::class_<ndarray::stride>(module, "stride")
+        .def(py::init<>())
+        .def(py::init<std::vector<nd_int>>())
+        .def(py::init<nd_int>())
+        .def(py::init<const ndarray::stride &>())
+        .def("from_extent", &ndarray::stride::__py_from_extent)
+        .def("__getitem__", &ndarray::stride::__py_getitem)
+        .def("__setitem__", &ndarray::stride::__py_setitem)
+        .def_property_readonly("ndim", &ndarray::stride::ndim)
+        .def_property_readonly("is_valid", &ndarray::stride::is_valid)
+        .def_property_readonly("is_trivial", &ndarray::stride::is_trivial)
+        .def("set_dimensions", &ndarray::stride::set_dimensions)
+        .def("reshape", &ndarray::stride::__py_reshape)
+        .def("__eq__", &ndarray::stride::operator==)
+        .def("__str__", &ndarray::stride::str)
+        .def("__repr__", &ndarray::stride::str);
 }
