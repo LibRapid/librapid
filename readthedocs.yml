@@ -6,6 +6,11 @@ formats:
   - pdf
   - epub
 
+# Set the build image to use the latest version
+build:
+  image: testing
+
+# Set the python version and requirements
 python:
   version: 3.7
   install:
@@ -15,6 +20,6 @@ python:
 sphinx:
   configuration: docs/source/conf.py
 
-# don't use submodules for documentation (readthedocs fails when using submodules)
+# Don't use submodules for documentation (readthedocs fails when using submodules)
 submodules:
   exclude: all
