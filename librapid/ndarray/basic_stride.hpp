@@ -1,7 +1,7 @@
 #ifndef NDARRAY_BASIC_STRIDE
 #define NDARRAY_BASIC_STRIDE
 
-#include "utils.hpp"
+#include <librapid/ndarray/utils.hpp>
 
 #include <memory>
 #include <string>
@@ -59,7 +59,7 @@ namespace ndarray
 		basic_stride(const std::vector<V> &strides)
 		{
 			if (math::anyBelow(strides, 1))
-				throw "basic_stride cannot contain values less than 1";
+				throw std::domain_error("basic_stride cannot contain values less than 1");
 
 			m_dims = strides.size();
 
@@ -122,7 +122,7 @@ namespace ndarray
 		static basic_stride<T> from_extent(const V *extent, nd_int dims)
 		{
 			if (math::anyBelow(extent, dims, 1))
-				throw "basic_stride cannot contain values less than 1";
+				throw std::domain_error("basic_stride cannot contain values less than 1");
 
 			basic_stride<T> res;
 

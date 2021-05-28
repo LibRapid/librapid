@@ -3,7 +3,8 @@
 
 #define ND_MAX_DIMS 32
 #define ND_NUM_THREADS 5
-#include <ndarray/ndarray.hpp>
+
+#include <librapid/ndarray/ndarray.hpp>
 
 int main()
 {

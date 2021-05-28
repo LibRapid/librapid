@@ -1,7 +1,7 @@
 #ifndef NDARRAY_BASIC_EXTENTS
 #define NDARRAY_BASIC_EXTENTS
 
-#include "utils.hpp"
+#include <librapid/ndarray/utils.hpp>
 
 #include <memory>
 #include <string>
@@ -46,7 +46,7 @@ namespace ndarray
 			}
 
 			if (math::anyBelow(m_extent, vals.size(), 1))
-				throw "basic_extent cannot contain values less than 1";
+				throw std::domain_error("basic_extent cannot contain values less than 1");
 		}
 
 		basic_extent(nd_int n)
@@ -123,11 +123,21 @@ namespace ndarray
 
 		ND_INLINE T &operator[](nd_int index)
 		{
+			if (index < 0 || index >= m_dims)
+				throw std::out_of_range("Index " + std::to_string(index)
+										+ " is out of range for extent with "
+										+ std::to_string(m_dims) + " dimensions");
+
 			return m_extent[index];
 		}
 
 		ND_INLINE const T &operator[](nd_int index) const
 		{
+			if (index < 0 || index >= m_dims)
+				throw std::out_of_range("Index " + std::to_string(index)
+										+ " is out of range for extent with "
+										+ std::to_string(m_dims) + " dimensions");
+
 			return m_extent[index];
 		}
 

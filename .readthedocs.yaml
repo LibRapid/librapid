@@ -1,18 +1,12 @@
 # Required
 version: 2
-
-# Set the build image to use the latest version
-build:
-  image: stable
-  apt_packages:
-    - doxygen
-
+ 
 # Build all formats
 formats: all
 
 # Set the python version and requirements
 python:
-  version: 3.7
+  version: 3.9
   install:
     - requirements: docs/requirements.txt
 
@@ -24,3 +18,10 @@ sphinx:
 # Don't use submodules for documentation (readthedocs fails when using submodules)
 submodules:
   exclude: all
+
+# Set the build image to use the most recent version
+build:
+  image: testing
+  apt_packages:
+    - doxygen
+    - cmake

@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include "to_string.hpp"
+#include <librapid/ndarray/to_string.hpp>
 
 namespace ndarray
 {
@@ -115,7 +115,7 @@ namespace ndarray
 				return;
 
 			if (state == errors::ARRAY_DIMENSIONS_TOO_LARGE)
-				throw std::runtime_error("Too many dimensions in array. Maximum allowed is "
+				throw std::range_error("Too many dimensions in array. Maximum allowed is "
 										 + std::to_string(ND_MAX_DIMS));
 		}
 
@@ -133,7 +133,7 @@ namespace ndarray
 			}
 
 			if (state == errors::ARRAY_DIMENSIONS_TOO_LARGE)
-				throw std::runtime_error("Too many dimensions in array. Maximum allowed is "
+				throw std::range_error("Too many dimensions in array. Maximum allowed is "
 										 + std::to_string(ND_MAX_DIMS));
 		}
 
@@ -146,6 +146,16 @@ namespace ndarray
 			increment();
 		}
 
+		template<typename L>
+		basic_ndarray(const std::initializer_list<L> &shape)
+			: basic_ndarray(std::vector<L>(shape.begin(), shape.end()))
+		{}
+
+		template<typename L, typename V>
+		basic_ndarray(const std::initializer_list<L> &shape, V value)
+			: basic_ndarray(std::vector<L>(shape.begin(), shape.end()), value)
+		{}
+
 		ND_INLINE basic_ndarray<T> &operator=(const basic_ndarray<T> &arr)
 		{
 			if (!arr.is_initialized())
@@ -153,7 +163,7 @@ namespace ndarray
 
 			if (!(utils::check_ptr_match(m_extent.get_extent(),
 				ndim(), arr.m_extent.get_extent(), arr.ndim())))
-				throw "Invalid shape for array setting. Dimensions are not equal.";
+				throw std::length_error("Invalid shape for array setting. Dimensions are not equal.");
 
 			if (!is_initialized())
 			{
@@ -383,7 +393,7 @@ namespace ndarray
 		ND_INLINE void reshape(const std::vector<O> &order)
 		{
 			if (math::product(order) != m_extent_product)
-				throw std::runtime_error("Array sizes are different, so cannot reshape array. Shapes "
+				throw std::length_error("Array sizes are different, so cannot reshape array. Shapes "
 										 + m_extent.str() + " and " + extent(order).str() + " cannot be broadcast");
 
 			if (!m_stride.is_trivial())
@@ -546,7 +556,7 @@ namespace ndarray
 				std::string msg = "To transpose an array with " + std::to_string(ndim()) + " dimensions, "
 					+ std::to_string(ndim()) + " indices are required, but only " +
 					std::to_string(order.size()) + " were supplied";
-				throw std::runtime_error(msg);
+				throw std::domain_error(msg);
 			}
 
 			bool valid = true;
@@ -812,7 +822,7 @@ namespace ndarray
 					" out of range for array with leading dimension "
 					+ std::to_string(m_extent.get_extent()[0]);
 
-				throw std::runtime_error(msg);
+				throw std::out_of_range(msg);
 			}
 
 			basic_ndarray<T, alloc> res;
@@ -864,7 +874,7 @@ namespace ndarray
 			{
 				auto msg = std::string("Cannot operate arrays with shapes ")
 					+ a.get_extent().str() + " and " + b.get_extent().str();
-				throw std::runtime_error(msg);
+				throw std::length_error(msg);
 			}
 
 			switch (mode)
@@ -1110,6 +1120,10 @@ namespace ndarray
 			return a / b;
 		});
 	}
+
+	using ndarray = basic_ndarray<double>;
+	using ndarray_f = basic_ndarray<float>;
+	using ndarray_i = basic_ndarray<int>;
 }
 
 #endif // NDARRAY_BASIC_ARRAY

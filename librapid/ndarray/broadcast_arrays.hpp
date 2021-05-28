@@ -1,7 +1,7 @@
 #ifndef NDARRAY_BROADCAST_ARRAYS
 #define NDARRAY_BROADCAST_ARRAYS
 
-#include "utils.hpp"
+#include <librapid/ndarray/utils.hpp>
 
 namespace ndarray
 {
