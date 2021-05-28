@@ -84,6 +84,8 @@ Test
 .. doxygenclass:: ndarray::basic_ndarray
 	:members:
 
+.. doxygenfunction:: ndarray::math::product(const std::vector<T> &)
+
 Indices and tables
 ******************
 
