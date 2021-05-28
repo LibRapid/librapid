@@ -4,6 +4,15 @@ version: 2
 # Build all formats
 formats: all
 
+# Set the build image to use the most recent version
+build:
+  image: ubuntu20
+  python: 3.9
+  apt_packages:
+    - doxygen
+  system_packages:
+    - doxygen
+
 # Set the python version and requirements
 python:
   version: 3.9
@@ -18,10 +27,3 @@ sphinx:
 # Don't use submodules for documentation (readthedocs fails when using submodules)
 submodules:
   exclude: all
-
-# Set the build image to use the most recent version
-build:
-  image: testing
-  apt_packages:
-    - doxygen
-    - cmake

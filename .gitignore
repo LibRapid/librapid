@@ -1,3 +1,7 @@
+build
+dist
+librapid.egg-info
+
 docs/build
 docs/source/api
 docs/source/doxygenoutput
