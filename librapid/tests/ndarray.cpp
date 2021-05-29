@@ -13,14 +13,14 @@ int main()
 
 	for (nd_int i = 0; i < ndarray::math::product(lhs.get_extent().get_extent(), lhs.get_extent().ndim()); i++)
 		lhs.set_value(i, i + 1);
-	
+
 	for (nd_int i = 0; i < ndarray::math::product(rhs.get_extent().get_extent(), rhs.get_extent().ndim()); i++)
 		rhs.set_value(i, i + 1);
 
 	std::cout << "LHS:\n" << lhs.str() << "\n\n";
 	std::cout << "LHS:\n" << (-lhs).str() << "\n\n";
 	std::cout << "RHS:\n" << rhs.str() << "\n\n";
-	
+
 	try
 	{
 		std::cout << "Result:\n" << (10. + lhs.transposed()).str() << "\n\n";
