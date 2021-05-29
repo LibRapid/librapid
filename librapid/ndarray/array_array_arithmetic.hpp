@@ -2,7 +2,6 @@
 #define NDARRAY_ARRAY_ARRAY_ARITHMETIC
 
 #include <cstring> // For memset
-#include <omp.h>
 
 namespace ndarray
 {
