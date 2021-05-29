@@ -46,8 +46,8 @@ jobs:
           path: wheelhouse/*.tar.gz
 
   wheels:
-    name: Wheels • Running on ${{ matrix.runs-on }}
-    runs-on: ${{ matrix.runs-on }}
+    name: Wheels • Running on ${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
 
     strategy:
       fail-fast: false
