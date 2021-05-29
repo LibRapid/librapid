@@ -24,6 +24,7 @@ jobs:
 
       - name: Install requirements
         run: |
+          pip install --user check-manifest
           pip install --user check-manifest twine
           pip install --user check-manifest pybind11
 
