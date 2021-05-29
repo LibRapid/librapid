@@ -63,7 +63,7 @@ jobs:
             cibw-arch: win_amd64
             python-version: "3.7"
 
-    name:  Wheels • Python ${{ matrix.python-version }} • Running on ${{ matrix.runs-on }} 
+    name: Wheels • Python ${{ matrix.python-version }} • Running on ${{ matrix.runs-on }}
     runs-on: ${{ matrix.runs-on }}
 
     steps:
