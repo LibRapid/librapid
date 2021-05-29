@@ -29,7 +29,7 @@ copyright = "2021, Toby Davis"
 author = "Toby Davis"
 
 # The full version, including alpha/beta/rc tags
-version_file = open("VERSION.hpp", "r")
+version_file = open("../../librapid/VERSION.hpp", "r")
 release = version_file.readlines()[1].split()[2].replace("\"", "")
 version_file.close()
 

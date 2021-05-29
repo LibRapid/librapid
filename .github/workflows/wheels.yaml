@@ -85,6 +85,10 @@ jobs:
         run: |
           python -m pip install cibuildwheel twine
 
+      - name: Configure cibuildwheel
+        env:
+          CIBW_SKIP: cp27-*
+
       - name: Run cibuildwheel
         run: |
           cibuildwheel

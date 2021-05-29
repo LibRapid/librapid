@@ -8,7 +8,7 @@ import os
 import sys
 
 # Load the version number from VERSION.hpp
-version_file = open("VERSION.hpp", "r")
+version_file = open("librapid/VERSION.hpp", "r")
 __version__ = version_file.readlines()[1].split()[2].replace("\"", "")
 version_file.close()
 
