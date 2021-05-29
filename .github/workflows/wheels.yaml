@@ -85,4 +85,4 @@ jobs:
         run: |
           python setup.py sdist
           ls wheelhouse
-          twine upload wheelhouse/* -u ${{ secrets.pypi_user }} -p ${{ secrets.pypi_password }}
+          twine upload wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
