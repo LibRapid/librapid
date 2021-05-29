@@ -1,0 +1,50 @@
+name: Wheels
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  sdist:
+    name: Source Distribution
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+
+      - name: Install requirements
+        run: |
+          pip install --user check-manifest twine
+          pip install --user check-manifest pybind11
+
+      - name: Run check-manifest
+        run: |
+          python -m check-manifest
+
+      - name: Build sdist
+        run: |
+          python -m build --sdist --outdir wheelhouse
+      
+      - name: Install from sdist
+        run: |
+          pip install --user wheelhouse/*.tar.gz
+
+      - name: Check sdist
+        run: |
+          python -m twine check wheelhouse/*
+
+      - name: Upload sdist
+        uses: actions/upload-artifact@v2
+        with:
+          name: wheels
+          path: wheelhouse/*.tar.gz
