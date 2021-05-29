@@ -2,6 +2,8 @@ branches:
   only:
   - master
 
+language: python
+
 env:
   global:
     - CIBW_BUILD_VERBOSITY=1
@@ -159,6 +161,8 @@ script:
       pip3 install --upgrade pip;
       pip3 install --upgrade --upgrade-strategy eager twine;
     elif [ "$TRAVIS_OS_NAME" = "osx" ]; then
+      pip install twine;
+    elif [ "$TRAVIS_OS_NAME" = "windows" ]; then
       pip install twine;
     fi
   - |
