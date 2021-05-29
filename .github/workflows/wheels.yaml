@@ -85,6 +85,7 @@ jobs:
 
       - name: Install Requirements
         run: |
+          python -m pip install wheel
           python -m pip install cibuildwheel twine
 
       - name: Run cibuildwheel
