@@ -88,6 +88,8 @@ jobs:
       - name: Configure cibuildwheel
         env:
           CIBW_SKIP: cp27-*
+        run: |
+          echo "cibuildwheel not building for Python 2.7-*"
 
       - name: Run cibuildwheel
         run: |
