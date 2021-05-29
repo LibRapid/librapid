@@ -65,9 +65,6 @@ jobs:
             cibw-arch: macosx_universal2
           - runs-on: windows-latest
             cibw-arch: win_amd64
-          - runs-on: windows-latest
-            cibw-arch: win32
-            python-arch: x86
 
     steps:
       - name: Checkout Code
@@ -86,10 +83,10 @@ jobs:
           python -m pip install wheel
           python -m pip install cibuildwheel twine
 
-      - name: Configure cibuildwheel
+      - name: Configure cibuildwheel for MacOS
         shell: bash
         run: |
-          echo " CIBW_SKIP=cp27-* " >> $GITHUB_ENV
+          echo "/Library/Frameworks/Python.framework/Versions/2.7/bin" >> $GITHUB_PATH
 
       - name: Run cibuildwheel
         run: |
