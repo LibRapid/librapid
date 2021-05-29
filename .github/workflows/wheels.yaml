@@ -53,15 +53,15 @@ jobs:
           - runs-on: ubuntu-latest
             cibw-arch: manylinux_x86_64
             python-version: "3.7"
-          - runs-on: macos-latest
-            cibw-arch: macosx_x86_64
-            python-version: "3.7"
-          - runs-on: macos-latest
-            cibw-arch: macosx_arm64
-            python-version: "3.7"
-          - runs-on: windows-latest
-            cibw-arch: win_amd64
-            python-version: "3.7"
+         # - runs-on: macos-latest
+         #   cibw-arch: macosx_x86_64
+         #   python-version: "3.7"
+         # - runs-on: macos-latest
+         #   cibw-arch: macosx_arm64
+         #   python-version: "3.7"
+         # - runs-on: windows-latest
+         #   cibw-arch: win_amd64
+         #   python-version: "3.7"
 
     name: Wheels • Python ${{ matrix.python-version }} • Running on ${{ matrix.runs-on }}
     runs-on: ${{ matrix.runs-on }}
