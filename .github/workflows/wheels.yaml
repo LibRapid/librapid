@@ -52,7 +52,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: [36, 37, 38, 39]
         include:
           - runs-on: ubuntu-latest
             cibw-arch: manylinux_x86_64
