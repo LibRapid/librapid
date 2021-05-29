@@ -48,13 +48,10 @@ jobs:
   wheels:
     name: Wheels • Running on ${{ matrix.runs-on }}
     runs-on: ${{ matrix.runs-on }}
-    env:
-      CIBW_SKIP: cp27-*
 
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
         python: [36, 37, 38, 39]
         include:
           - runs-on: ubuntu-latest
@@ -72,6 +69,9 @@ jobs:
           - runs-on: windows-latest
             cibw-arch: win32
             python-arch: x86
+
+    env:
+      CIBW_SKIP: cp27-*
 
     steps:
       - name: Checkout Code
