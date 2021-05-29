@@ -46,8 +46,8 @@ jobs:
           path: wheelhouse/*.tar.gz
 
   wheels:
-    name: Wheels • Python ${{ matrix.python-version }} • Running on ${{ matrix.runs-on }}
-    runs-on: ubuntu-latest # ${{ matrix.runs-on }}
+    name: Wheels • Running on ${{ matrix.runs-on }}
+    runs-on: ${{ matrix.runs-on }}
 
     strategy:
       fail-fast: false
