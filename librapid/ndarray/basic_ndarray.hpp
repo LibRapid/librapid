@@ -41,8 +41,7 @@ namespace ndarray
 		nd_allocator<typename std::common_type<A_T, B_T>::type>>
 		operator/(const A_T &val, const basic_ndarray<B_T, B_A> &arr);
 
-	template<typename T, class alloc = nd_allocator<T>,
-		typename std::enable_if<std::is_arithmetic<T>::value, int>::type = 0>
+	template<typename T, class alloc, std::enable_if<std::is_arithmetic<T>::value, int>::type>
 		class basic_ndarray
 	{
 		using _alloc = alloc;
@@ -392,7 +391,7 @@ namespace ndarray
 		{
 			using T_c = std::common_type<T, B_T>::type;
 			return basic_ndarray<T, alloc>::
-				array_scalar_arithmetic(*this, other, []>(T_c a, T_c b)
+				array_scalar_arithmetic(*this, other, [](T_c a, T_c b)
 			{
 				return a + b;
 			});
@@ -1143,7 +1142,8 @@ namespace ndarray
 		nd_allocator<typename std::common_type<A_T, B_T>::type>>
 		operator+(const A_T &val, const basic_ndarray<B_T, B_A> &arr)
 	{
-		return basic_ndarray<B_T, B_A>::scalar_array_arithmetic(val, arr, []<typename T_a, typename T_b>(T_a a, T_b b)
+		using T_c = std::common_type<A_T, B_T>::type;
+		return basic_ndarray<B_T, B_A>::scalar_array_arithmetic(val, arr, [](T_c a, T_c b)
 		{
 			return a + b;
 		});
@@ -1154,7 +1154,8 @@ namespace ndarray
 		nd_allocator<typename std::common_type<A_T, B_T>::type>>
 		operator-(const A_T &val, const basic_ndarray<B_T, B_A> &arr)
 	{
-		return basic_ndarray<B_T, B_A>::scalar_array_arithmetic(val, arr, []<typename T_a, typename T_b>(T_a a, T_b b)
+		using T_c = std::common_type<A_T, B_T>::type;
+		return basic_ndarray<B_T, B_A>::scalar_array_arithmetic(val, arr, [](T_c a, T_c b)
 		{
 			return a - b;
 		});
@@ -1165,7 +1166,8 @@ namespace ndarray
 		nd_allocator<typename std::common_type<A_T, B_T>::type>>
 		operator*(const A_T &val, const basic_ndarray<B_T, B_A> &arr)
 	{
-		return basic_ndarray<B_T, B_A>::scalar_array_arithmetic(val, arr, []<typename T_a, typename T_b>(T_a a, T_b b)
+		using T_c = std::common_type<A_T, B_T>::type;
+		return basic_ndarray<B_T, B_A>::scalar_array_arithmetic(val, arr, [](T_c a, T_c b)
 		{
 			return a * b;
 		});
@@ -1176,7 +1178,8 @@ namespace ndarray
 		nd_allocator<typename std::common_type<A_T, B_T>::type>>
 		operator/(const A_T &val, const basic_ndarray<B_T, B_A> &arr)
 	{
-		return basic_ndarray<B_T, B_A>::scalar_array_arithmetic(val, arr, []<typename T_a, typename T_b>(T_a a, T_b b)
+		using T_c = std::common_type<A_T, B_T>::type;
+		return basic_ndarray<B_T, B_A>::scalar_array_arithmetic(val, arr, [](T_c a, T_c b)
 		{
 			return a / b;
 		});

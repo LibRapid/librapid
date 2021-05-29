@@ -1,7 +1,8 @@
+#include <librapid/ndarray/ndarray.hpp>
+
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include <librapid/ndarray/ndarray.hpp>
 
 #include <string>
 
