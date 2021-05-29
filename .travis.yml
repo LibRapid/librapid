@@ -1,171 +1,35 @@
-branches:
-  only:
-  - master
 
-language: python
-
-env:
-  global:
-    - CIBW_BUILD_VERBOSITY=1
-    - CIBW_BEFORE_BUILD="pip3 install -r requirements.txt"
-    # - CIBW_TEST_REQUIRES=pytest
-    # - CIBW_TEST_COMMAND="pytest {project}/tests"
-
+language: cpp
+dist: trusty
 matrix:
   include:
-    ##### Linux #####
-    ##### ARM #####
-    ### 3.7 ###
-    - name: "Python 3.7 on Linux arm64"
-      arch:
-        - arm64
-      env:
-        - CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
-        - CIBW_BUILD="cp37-manylinux*"
-        - CIBW_SKIP: "*-manylinux_i686"
-      language: python
-      dist: bionic
-      sudo: required
-      python: "3.8"
-      services:
-        - docker
-    ### 3.8 ###
-    - name: "Python 3.8 on Linux arm64"
-      arch:
-        - arm64
-      env:
-        - CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
-        - CIBW_BUILD="cp38-manylinux*"
-        - CIBW_SKIP: "*-manylinux_i686"
-      language: python
-      dist: bionic
-      sudo: required
-      python: "3.8"
-      services:
-        - docker
-    ### 3.9 ###
-    - name: "Python 3.9 on Linux arm64"
-      arch:
-        - arm64
-      env:
-        - CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
-        - CIBW_BUILD="cp39-manylinux*"
-        - CIBW_SKIP: "*-manylinux_i686"
-      language: python
-      dist: bionic
-      sudo: required
-      python: "3.8"
-      services:
-        - docker
-    ##### x86_64 #####
-    ### 3.7 ###
-    - name: "Python 3.7 on Linux amd64"
-      arch:
-        - amd64
-      env:
-        - CIBW_BUILD="cp37-manylinux*"
-        - CIBW_SKIP: "*-manylinux_i686"
-      language: python
-      dist: bionic
-      sudo: required
-      python: "3.8"
-      services:
-        - docker
-    ### 3.8 ###
-    - name: "Python 3.8 on Linux amd64"
-      arch:
-        - amd64
-      env:
-        - CIBW_BUILD="cp38-manylinux*"
-        - CIBW_SKIP: "*-manylinux_i686"
-      language: python
-      dist: bionic
-      sudo: required
-      python: "3.8"
-      services:
-        - docker
-    ### 3.9 ###
-    - name: "Python 3.9 on Linux amd64"
-      arch:
-        - amd64
-      env:
-        - CIBW_BUILD="cp39-manylinux*"
-        - CIBW_SKIP: "*-manylinux_i686"
-      language: python
-      dist: bionic
-      sudo: required
-      python: "3.8"
-      services:
-        - docker
-    ##### macOS #####
-    ### 3.7 ###
-    - name: "Python 3.7 on macOS 10.14"
-      env:
-        - CIBW_BUILD="cp37-macosx*"
-      os: osx
-      osx_image: xcode11
-      language: shell
-    ### 3.8 ###
-    - name: "Python 3.8 on macOS 10.14"
-      env:
-        - CIBW_BUILD="cp38-macosx*"
-      os: osx
-      osx_image: xcode11
-      language: shell
-    ### 3.9 ###
-    - name: "Python 3.9 on macOS 10.14"
-      env:
-        - CIBW_BUILD="cp39-macosx*"
-      os: osx
-      osx_image: xcode11
-      language: shell
-    ##### Windows #####
-    ### 3.7 ###
-    - name: "Python 3.7 on Windows"
-      os: windows
-      language: shell
-      before_install:
-        - choco install python --version 3.7.0
-        - export PATH="/c/Python37:/c/Python37/Scripts:$PATH"
-        # Make sure Python is on PATH as "python3"
-        - ln -s /c/Python37/python.exe /c/Python37/python3.exe
-    ### 3.8 ###
-    - name: "Python 3.8 on Windows"
-      os: windows
-      language: shell
-      before_install:
-        - choco install python --version 3.8.0
-        - export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
-        # Make sure Python is on PATH as "python3"
-        - ln -s /c/Python38/python.exe /c/Python38/python3.exe
-    ### 3.9 ###
-    - name: "Python 3.9 on Windows"
-      os: windows
-      language: shell
-      before_install:
-        - choco install python --version 3.9.0
-        - export PATH="/c/Python39:/c/Python39/Scripts:$PATH"
-        # Make sure Python is on PATH as "python3"
-        - ln -s /c/Python39/python.exe /c/Python39/python3.exe
-
+  - os: linux
+    env: PYTHON=3.8
+  - os: linux
+    env: CONDA=3.7
 before_install:
-  - python3 --version
-
+- |
+  export CXX=g++-4.8 CC=gcc-4.8
+  if [ -n "$PYTHON" ]; then
+    python -m pip install --user virtualenv
+    virtualenv -p python${PYTHON:0:1} venv
+    source venv/bin/activate
+  elif [ -n "$CONDA" ]; then
+    wget -O miniconda.sh https://repo.continuum.io/miniconda/Miniconda${CONDA:0:1}-latest-Linux-x86_64.sh
+    bash miniconda.sh -b -p $HOME/miniconda
+    export PATH="$HOME/miniconda/bin:$PATH"
+    conda config --set always_yes yes --set changeps1 no
+    conda config --add channels conda-forge
+    conda update -q conda
+    conda install -q conda-build
+    conda create -q -n test-environment python=$CONDA
+    source activate test-environment
+  fi
 install:
-  - pip3 install --upgrade cibuildwheel
-
-script:
-  - cibuildwheel --output-dir wheelhouse
-  - ls wheelhouse
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-      pip3 install --upgrade pip;
-      pip3 install --upgrade --upgrade-strategy eager twine;
-    elif [ "$TRAVIS_OS_NAME" = "osx" ]; then
-      pip install twine;
-    elif [ "$TRAVIS_OS_NAME" = "windows" ]; then
-      pip install twine;
-    fi
-  - |
-    if [[ $TRAVIS_TAG ]]; then
-      python3 -m twine upload wheelhouse/*.whl;
-    fi
+- |
+  if [ -n "$PYTHON" ]; then
+    python -m pip install .
+  elif [ -n "$CONDA" ]; then
+    conda build conda.recipe --python $CONDA
+    conda install --use-local python_example
+  fi

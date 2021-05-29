@@ -23,6 +23,7 @@ int main()
 
 	try
 	{
+		std::cout << "Result:\n" << (lhs.transposed() + 10.).str() << "\n\n";
 		std::cout << "Result:\n" << (10. + lhs.transposed()).str() << "\n\n";
 	}
 	catch (std::exception &e)
