@@ -52,8 +52,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          platform: [windows-latest, macos-latest, ubuntu-latest]
+        platform: [windows-latest, macos-latest, ubuntu-latest]
     env:
       CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
 
