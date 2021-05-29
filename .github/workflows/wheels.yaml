@@ -48,6 +48,8 @@ jobs:
   wheels:
     name: Wheels • Running on ${{ matrix.runs-on }}
     runs-on: ${{ matrix.runs-on }}
+    env:
+      CIBW_SKIP: cp27-*
 
     strategy:
       fail-fast: false
@@ -84,12 +86,6 @@ jobs:
       - name: Install Requirements
         run: |
           python -m pip install cibuildwheel twine
-
-      - name: Configure cibuildwheel
-        env:
-          CIBW_SKIP: cp27-*
-        run: |
-          echo "cibuildwheel not building for Python 2.7-*"
 
       - name: Run cibuildwheel
         run: |
