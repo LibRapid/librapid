@@ -7,7 +7,7 @@ formats: all
 # Set the build image to use the most recent version
 build:
   image: testing
-  python: 3.9
+  python: 3.8
   apt_packages:
     - doxygen
   system_packages:
