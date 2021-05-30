@@ -6,7 +6,7 @@ formats: all
 
 # Set the build image to use the most recent version
 build:
-  image: ubuntu20
+  image: testing
   python: 3.9
   apt_packages:
     - doxygen

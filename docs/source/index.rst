@@ -2,8 +2,8 @@
 LibRapid Documentation
 ======================
 
-.. image:: https://www.travis-ci.com/Pencilcaseman/librapid.svg?branch=master
-    :target: https://www.travis-ci.com/Pencilcaseman/librapid
+.. image:: https://github.com/pencilcaseman/librapid/actions/workflows/wheels.yaml/badge.svg
+    :target: https://github.com/Pencilcaseman/librapid/actions/workflows/wheels.yaml
 
 LibRapid -- a fast, general purpose math and neural network library for C++ and Python
 

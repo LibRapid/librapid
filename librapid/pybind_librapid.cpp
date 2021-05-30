@@ -119,5 +119,7 @@ PYBIND11_MODULE(librapid, module)
         .def("transposed", [](ndarray::ndarray &arr) { return arr.transposed(); })
 
         .def("__str__", [](const ndarray::ndarray &arr) { return arr.str(0); })
+        .def("__int__", [](const ndarray::ndarray &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to int"); return (nd_int) arr[0]; }
+        .def("__float__", [](const ndarray::ndarray &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to float"); return (double) arr[0]; }
         .def("__repr__", [](const ndarray::ndarray &arr) { return "<librapid.ndarray " + arr.str(18) + ">"; });
 }
