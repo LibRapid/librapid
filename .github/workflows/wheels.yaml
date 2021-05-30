@@ -82,6 +82,7 @@ jobs:
           twine check wheelhouse/*
 
       - name: Upload Built Wheels
+        if: github.event_name == 'release'
         run: |
           python setup.py sdist
           ls wheelhouse
