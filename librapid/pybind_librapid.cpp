@@ -105,6 +105,8 @@ PYBIND11_MODULE(librapid, module)
 
         .def("reshape", [](ndarray::ndarray &arr, const std::vector<nd_int> &order) { arr.reshape(order); })
         .def("reshaped", [](const ndarray::ndarray &arr, const std::vector<nd_int> &order) { return arr.reshaped(order); })
+        .def("reshape", [](ndarray::ndarray &arr, py::args args) { arr.reshape(py::cast<std::vector<nd_int>>(args)); })
+        .def("reshaped", [](const ndarray::ndarray &arr, py::args args) { return arr.reshaped(py::cast<std::vector<nd_int>>(args)); })
 
         .def("strip_front", &ndarray::ndarray::strip_front)
         .def("strip_back", &ndarray::ndarray::strip_back)
@@ -119,7 +121,7 @@ PYBIND11_MODULE(librapid, module)
         .def("transposed", [](ndarray::ndarray &arr) { return arr.transposed(); })
 
         .def("__str__", [](const ndarray::ndarray &arr) { return arr.str(0); })
-        .def("__int__", [](const ndarray::ndarray &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to int"); return (nd_int) arr[0]; }
-        .def("__float__", [](const ndarray::ndarray &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to float"); return (double) arr[0]; }
+        .def("__int__", [](const ndarray::ndarray &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to int"); return (nd_int) *arr.get_data_start(); })
+        .def("__float__", [](const ndarray::ndarray &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to float"); return (double) *arr.get_data_start(); })
         .def("__repr__", [](const ndarray::ndarray &arr) { return "<librapid.ndarray " + arr.str(18) + ">"; });
 }
