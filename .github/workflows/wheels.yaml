@@ -40,7 +40,7 @@ jobs:
           python -m twine check wheelhouse/*
 
       - name: Upload Source Distribution
-        if: github.event_name == 'release'
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           python setup.py sdist
           ls dist
@@ -83,7 +83,7 @@ jobs:
           twine check wheelhouse/*
 
       - name: Upload Built Wheels
-        if: github.event_name == 'release'
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           python setup.py sdist
           ls wheelhouse
