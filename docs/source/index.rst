@@ -4,6 +4,18 @@ LibRapid Documentation
 
 .. image:: https://github.com/pencilcaseman/librapid/actions/workflows/wheels.yaml/badge.svg
     :target: https://github.com/Pencilcaseman/librapid/actions/workflows/wheels.yaml
+.. image:: https://readthedocs.org/projects/librapid/badge/?version=latest
+	:target: https://librapid.readthedocs.io/en/latest/?badge=latest
+.. image:: https://badge.fury.io/py/librapid.svg
+	:target: https://pypi.python.org/pypi/librapid/
+.. image:: https://img.shields.io/pypi/l/librapid.svg
+	:target: https://pypi.python.org/pypi/librapid/
+.. image:: https://img.shields.io/pypi/pyversions/librapid.svg
+	:target: https://pypi.python.org/pypi/librapid/
+.. image:: https://img.shields.io/pypi/dm/librapid.svg
+	:target: https://pypi.python.org/pypi/librapid/
+.. image:: https://img.shields.io/discord/848914274105557043
+	:target: https://discord.gg/cGxTFTgCAC
 
 LibRapid -- a fast, general purpose math and neural network library for C++ and Python
 

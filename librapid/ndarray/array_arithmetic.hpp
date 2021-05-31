@@ -41,13 +41,13 @@ namespace ndarray
 					{
 						if (end > 100000)
 						{
-						#pragma omp parallel for shared(src_a, src_b, op) default(none) num_threads(ND_NUM_THREADS)
-							for (long long i = 0; i < end; ++i)
+						#pragma omp parallel for shared(src_a, src_b, op, end) default(none) num_threads(ND_NUM_THREADS)
+							for (long long i = 0; i < (long long) end; ++i)
 								src_a[i] = op(src_b[i]);
 						}
 						else
 						{
-							for (long long i = 0; i < end; ++i)
+							for (nd_int i = 0; i < end; ++i)
 								src_a[i] = op(src_b[i]);
 						}
 						break;
