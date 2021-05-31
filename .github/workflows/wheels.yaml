@@ -39,6 +39,11 @@ jobs:
         run: |
           python -m twine check wheelhouse/*
 
+      - name: Testing things
+        run: |
+          echo github.ref
+          echo ${{ github.ref }}
+
       - name: Upload Source Distribution
         if: startsWith(github.ref, 'refs/tags/')
         run: |
