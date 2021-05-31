@@ -43,9 +43,10 @@ jobs:
         run: |
           echo GitHub ref is
           echo ${{ github.ref }}
+          echo ${{ startsWith(github.ref, 'refs/tags/') }}
 
       - name: Upload Source Distribution
-        if: startsWith( "${{ github.ref }}", "refs/tags/" )
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           python setup.py sdist
           ls dist
@@ -93,7 +94,7 @@ jobs:
           echo ${{ github.ref }}
 
       - name: Upload Built Wheels
-        if: startsWith( "${{ github.ref }}", "refs/tags/" )
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           python setup.py sdist
           ls wheelhouse
