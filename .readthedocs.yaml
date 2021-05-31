@@ -7,7 +7,7 @@ formats: all
 # Set the build image to use the most recent version
 build:
   image: testing
-  python: 3.8
+  python: 3.7
   apt_packages:
     - doxygen
   system_packages:
@@ -15,9 +15,10 @@ build:
 
 # Set the python version and requirements
 python:
-  version: 3.9
+  version: 3.7
   install:
     - requirements: docs/requirements.txt
+  system_packages: true
 
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
