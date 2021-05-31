@@ -1,2 +1,2 @@
 #pragma once
-#define LIBRAPID_VERSION "0.0.7"
+#define LIBRAPID_VERSION "0.0.8"
