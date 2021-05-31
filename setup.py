@@ -55,9 +55,9 @@ long_description = Path("./README.md").read_text(encoding="utf-8")
 def std_version():
 	c = get_compiler_name()
 	if c == "msvc": return ["/std:c++latest"]
-	elif c in ("gcc", "g++"): return ["-std=c17"]
-	elif c == "clang": return ["-std=c17"]
-	elif c == "unix": return ["-std=c17"]
+	elif c in ("gcc", "g++"): return ["-std=c++17"]
+	elif c == "clang": return ["-std=c++17"]
+	elif c == "unix": return ["-std=c++17"]
 	return []
 
 def compile_with_omp():

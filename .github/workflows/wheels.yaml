@@ -40,10 +40,11 @@ jobs:
           python -m twine check wheelhouse/*
 
       - name: Upload Source Distribution
-        uses: actions/upload-artifact@v2
-        with:
-          name: wheels
-          path: wheelhouse/*.tar.gz
+        if: github.event_name == 'release'
+        run: |
+          python setup.py sdist
+          ls dist
+          twine upload --skip-existing dist/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
 
   wheels:
     name: Wheels • Running on ${{ matrix.platform }}
@@ -86,4 +87,4 @@ jobs:
         run: |
           python setup.py sdist
           ls wheelhouse
-          twine upload wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
+          twine upload --skip-existing wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
