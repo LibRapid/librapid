@@ -101,11 +101,20 @@ jobs:
             ./vcpkg/vcpkg install openblas
           fi
           
-          
           echo "Files in 'packages' directory"
           ls ./vcpkg/packages
           echo "Files in 'openblas' directory"
-          ls ./vcpkg/packages/openblas
+          
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            ls ./vcpkg/packages/openblas_x64-windows
+          elif [ "$RUNNER_OS" == "Linux" ]; then
+            ls ./vcpkg/packages/openblas_x64-linux
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            ls ./vcpkg/packages/openblas_x64-osx
+          else
+            ./vcpkg/vcpkg install openblas
+          fi
+
         shell: bash
 
       - name: Run cibuildwheel
