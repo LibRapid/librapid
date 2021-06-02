@@ -27,6 +27,20 @@ jobs:
           pip install --user check-manifest twine
           pip install --user check-manifest pybind11
 
+      - name: Install OpenBLAS
+        run: |
+          echo "Cloning Microsoft vcpkg"
+          git clone https://github.com/microsoft/vcpkg.git
+          echo "Bootstrapping vcpkg"
+          ./vcpkg/bootstrap-vcpkg.sh
+          echo "Installing OpenBLAS"
+          ./vcpkg/vcpkg install openblas
+          echo "Files in 'packages' directory"
+          ls ./vcpkg/packages
+          echo "Files in 'openblas' directory"
+          ls ./vcpkg/packages/openblas
+        shell: bash
+
       - name: Build Source Distribution
         run: |
           python -m build --sdist --outdir wheelhouse
@@ -39,14 +53,7 @@ jobs:
         run: |
           python -m twine check wheelhouse/*
 
-      - name: Check Build Information
-        run: |
-          echo GitHub event trigger:
-          echo ${{ github.event_name }}
-          echo ${{ github.event.action }}
-
       - name: Upload Source Distribution
-        if: github.event_name == 'release' && github.event.action == 'created'
         run: |
           python setup.py sdist
           ls dist
@@ -80,6 +87,27 @@ jobs:
           python -m pip install cibuildwheel twine
           python -m pip install pybind11
 
+      - name: Install OpenBLAS
+        run: |
+          echo "Cloning Microsoft vcpkg"
+          git clone https://github.com/microsoft/vcpkg.git
+          echo "Bootstrapping vcpkg"
+          ./vcpkg/bootstrap-vcpkg.sh
+          echo "Installing OpenBLAS"
+
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            ./vcpkg/vcpkg install openblas --triplet=x64-windows
+          else
+            ./vcpkg/vcpkg install openblas
+          fi
+          
+          
+          echo "Files in 'packages' directory"
+          ls ./vcpkg/packages
+          echo "Files in 'openblas' directory"
+          ls ./vcpkg/packages/openblas
+        shell: bash
+
       - name: Run cibuildwheel
         run: |
           cibuildwheel --output-dir wheelhouse
@@ -88,14 +116,7 @@ jobs:
         run: |
           twine check wheelhouse/*
 
-      - name: Check Build Information
-        run: |
-          echo GitHub event trigger:
-          echo ${{ github.event_name }}
-          echo ${{ github.event.action }}
-
       - name: Upload Built Wheels
-        if: github.event_name == 'release' && github.event.action == 'created'
         run: |
           python setup.py sdist
           ls wheelhouse

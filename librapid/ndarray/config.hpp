@@ -98,6 +98,6 @@ namespace py = pybind11;
 #define LIBRAPID_OS "unknown"
 #endif
 
-using nd_int = unsigned long long;
+using nd_int = long long;
 
 #endif // NDARRAY_CONFIG

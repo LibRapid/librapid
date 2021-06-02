@@ -20,6 +20,10 @@ To install LibRapid as a Python library, simply run ```pip install librapid``` i
 
 To use the library for C++ use, a modern C++ compiler will definitely be required. To use the library simply add the directory of this file to your extra include paths, and include the library using ```#include<librapid/librapid.hpp>```
 
+## Things to Note
+
+1. Parallel code -- If using LibRapid mulit-dimensional array with OpenMP, ensure that any parallel blocks define the necessary arrays as ```shared```, otherwise the application will ```segfault```, due to uninitialized arrays being used.
+
 ## Documentation
 
 Unfortunately, the documentation cannot currently be built by [ReadTheDocs](https://readthedocs.org/) due to a bug in the version of [Doxygen](https://www.doxygen.nl/index.html) they are using. It would seem that the systems will be getting an upgrade in the near future, hopefully moving to a newer version of Doxygen, though this is still not certain.
