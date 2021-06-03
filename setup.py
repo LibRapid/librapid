@@ -74,6 +74,8 @@ def find_blas(args):
             search_dirs.append("/dev/vcpkg/packages/" + vcdir)
 
         search_dirs.append("../vcpkg/packages/" + vcdir)
+        search_dirs.append("../../vcpkg/packages/" + vcdir)
+        search_dirs.append("../../../vcpkg/packages/" + vcdir)
 
         for dir in search_dirs:
             print("Searching directory", dir, "for BLAS libraries")
