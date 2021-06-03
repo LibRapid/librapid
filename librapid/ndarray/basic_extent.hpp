@@ -211,12 +211,12 @@ namespace librapid
 				return m_dims > 0 && m_dims < ND_MAX_DIMS;
 			}
 
-			ND_INLINE auto get_extent() const
+			ND_INLINE const auto &get_extent() const
 			{
 				return m_extent;
 			}
 
-			ND_INLINE auto get_extent_alt() const
+			ND_INLINE const auto &get_extent_alt() const
 			{
 				return m_extent_alt;
 			}

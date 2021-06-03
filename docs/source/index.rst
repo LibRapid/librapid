@@ -34,10 +34,6 @@ LibRapid hopes to provide a functionally and interactively consistant interface 
 both C++ and Python, allowing high level code to run faster and more efficiently,
 while also ensuring low-level programs in C++ can be optimized in the same way.
 
-.. Tip::
-
-	LibRapid is a header-only library, meaning there are no binaries to be built!
-
 Licencing
 =========
 

@@ -10,14 +10,23 @@
 
 #include <vector>
 #include <algorithm>
+#include <atomic>
 
 #include <librapid/ndarray/to_string.hpp>
+
+// Define this if using a custom cblas interface.
+// If it is not defined, the (slower) internal
+// interface will be used.
+#ifdef LIBRAPID_CBLAS
 #include <cblas.h>
+#endif
 
 namespace librapid
 {
 	namespace ndarray
 	{
+		constexpr nd_int AUTO = -1;
+
 		template<typename T>
 		using nd_allocator = std::allocator<T>;
 
@@ -104,8 +113,7 @@ namespace librapid
 				m_stride = s;
 			}
 
-			basic_ndarray()
-			{}
+			basic_ndarray() = default;
 
 			template<typename V>
 			basic_ndarray(const basic_extent<V> &size) : m_extent(size),
@@ -161,12 +169,11 @@ namespace librapid
 
 			ND_INLINE basic_ndarray<T> &operator=(const basic_ndarray<T> &arr)
 			{
-				if (!arr.is_initialized())
-					return *this;
-
 				if (!(utils::check_ptr_match(m_extent.get_extent(),
 					ndim(), arr.m_extent.get_extent(), arr.ndim())))
-					throw std::length_error("Invalid shape for array setting. Dimensions are not equal.");
+					throw std::domain_error("Invalid shape for array setting. " +
+											m_extent.str() + " and " + arr.get_extent().str() +
+											" are not equal.");
 
 				if (!is_initialized())
 				{
@@ -195,7 +202,8 @@ namespace librapid
 			ND_INLINE basic_ndarray &operator=(const V &other)
 			{
 				if (!m_is_scalar)
-					throw std::runtime_error("Cannot set non-scalar value to a scalar");
+					throw std::runtime_error("Cannot set non-scalar array with " +
+											 m_extent.str() + " to a scalar");
 
 				*m_data_start = T(other);
 
@@ -246,6 +254,65 @@ namespace librapid
 			ND_INLINE const basic_ndarray<T, alloc> operator[](nd_int index) const
 			{
 				return subscript(index);
+			}
+
+			template<typename I>
+			ND_INLINE basic_ndarray<T, alloc> subarray(const std::vector<I> &index) const
+			{
+				// Validate the index
+
+				if (index.size() != ndim())
+					throw std::domain_error("Array with " + std::to_string(ndim()) +
+											" dimensions requires " + std::to_string(index.size()) +
+											" access elements");
+
+				nd_int new_shape[ND_MAX_DIMS]{};
+				nd_int new_stride[ND_MAX_DIMS]{};
+				nd_int count = 0;
+
+				T *new_start = m_data_start;
+
+				for (nd_int i = 0; i < index.size(); i++)
+				{
+					if (index[i] != AUTO && (index[i] < 0 || index[i] >= m_extent[i]))
+					{
+						throw std::range_error("Index " + std::to_string(index[i]) +
+											   " is out of range for array with extent[" +
+											   std::to_string(i) + "] = " + std::to_string(m_extent[i]));
+					}
+
+					if (index[i] == AUTO)
+					{
+						new_shape[count] = m_extent[i];
+						new_stride[count] = m_stride[i];
+						++count;
+					}
+					else
+						new_start += m_stride[i] * index[i];
+				}
+
+				basic_ndarray<T, alloc> res;
+
+				res.m_data_origin = m_data_origin;
+				res.m_origin_references = m_origin_references;
+
+				res.m_origin_size = m_origin_size;
+
+				res.m_data_start = new_start;
+
+				res.m_stride = stride(new_stride, count);
+				res.m_extent = extent(new_shape, count);
+				res.m_extent_product = math::product(new_shape, count);
+				res.m_is_scalar = count == 0;
+
+				increment();
+
+				return res;
+			}
+
+			ND_INLINE basic_ndarray<T, alloc> subarray(const std::initializer_list<nd_int> &index) const
+			{
+				return subarray(std::vector<nd_int>(index.begin(), index.end()));
 			}
 
 			template<class F>
@@ -446,6 +513,8 @@ namespace librapid
 					// Non-trivial stride, so this array will be deferenced and a new array
 					// created in its place
 
+					// This destroys the current array and replaces it!
+
 					auto new_data = m_alloc.allocate(m_extent_product);
 
 					nd_int idim = 0;
@@ -477,12 +546,14 @@ namespace librapid
 
 					new_data -= m_extent_product;
 
+					// Erase the current array
 					decrement();
 
+					// Initialize new values
 					m_data_origin = new_data;
 					m_data_start = new_data;
 
-					m_origin_references = new nd_int(1);
+					m_origin_references = new std::atomic<nd_int>(1);
 
 					m_origin_size = m_extent_product;
 				}
@@ -676,8 +747,10 @@ namespace librapid
 			{
 				using R_T = typename std::common_type<T, B_T>::type;
 
-				if (utils::check_ptr_match(other.get_extent().get_extent(), other.get_extent().ndim(),
-					utils::sub_vector(m_extent.get_extent(), m_extent.ndim(), 1)))
+				const auto &o_e = other.get_extent();
+				if (utils::check_ptr_match(o_e.get_extent(), o_e.ndim(),
+					utils::sub_vector(m_extent.get_extent(), m_extent.ndim(), 1),
+					true))
 				{
 					// Matrix-Vector product
 					nd_int res_shape[ND_MAX_DIMS]{};
@@ -695,7 +768,8 @@ namespace librapid
 				}
 
 				if (ndim() != other.ndim())
-					throw std::range_error("Cannot compute dot product with arrays with " + m_extent.str() + " and " + other.get_extent().str());
+					throw std::range_error("Cannot compute dot product on arrays with " +
+										   m_extent.str() + " and " + other.get_extent().str());
 
 				nd_int dims = ndim();
 
@@ -703,64 +777,197 @@ namespace librapid
 				{
 					case 1:
 						{
+							if (m_extent[0] != other.get_extent()[0])
+								throw std::range_error("Cannot compute dot product with arrays with " +
+													   m_extent.str() + " and " + other.get_extent().str());
+
 							// Vector product
 							basic_ndarray<R_T, nd_allocator<R_T>> res(extent({1}));
 							res.m_is_scalar = true;
-							*res.get_data_start() = cblas_ddot(m_extent_product, m_data_start, m_stride[0], other.get_data_start(), other.get_stride()[0]);
+
+						#ifndef LIBRAPID_CBLAS
+							R_T *r = res.get_data_start();
+							T *m = m_data_start;
+							B_T *o = other.get_data_start();
+							nd_int lda = m_stride[0];
+							nd_int ldb = other.get_stride()[0];
+							*r = 0;
+							for (nd_int i = 0; i < m_extent_product; i++)
+								*r += m[i * lda] * o[i * ldb];
+						#else
+							*res.get_data_start() = cblas_ddot(m_extent_product, m_data_start, m_stride[0],
+															   other.get_data_start(), other.get_stride()[0]);
+						#endif // LIBRAPID_CBLAS
+
 							return res;
 						}
 					case 2:
 						{
-// 							basic_ndarray<T, alloc> tmp_this = *this;
-// 							basic_ndarray<T, alloc> tmp_other = other.transposed_matrix();
-// 
-// 							const auto M = get_extent()[0];
-// 							const auto N = get_extent()[1];
-// 							const auto K = tmp_other.get_extent()[1];
-// 							const auto K_prime = other.get_extent()[1];
-// 
-// 							auto res = basic_ndarray<R_T>(extent{M, K_prime});
-// 
-// 						#pragma omp parallel for shared(res, tmp_this, tmp_other, M, K_prime)
-// 							for (nd_int outer = 0; outer < M; outer++)
-// 							{
-// 								for (nd_int inner = 0; inner < K_prime; inner++)
-// 								{
-// 									// res[outer][inner] = tmp_this[outer].dot(tmp_other[inner]);
-// 									auto thing = tmp_this[0];
-// 								}
-// 							}
-// 
-// 							return res;
+							if (m_extent[1] != other.get_extent()[0])
+								throw std::range_error("Cannot compute dot product with arrays with " +
+													   m_extent.str() + " and " + other.get_extent().str());
+
+						#ifndef LIBRAPID_CBLAS
+							const basic_ndarray<T, alloc> tmp_this = *this;
+							const basic_ndarray<T, alloc> tmp_other = other.transposed_matrix();
+
+							const auto M = get_extent()[0];
+							const auto N = get_extent()[1];
+							const auto K = tmp_other.get_extent()[1];
+							const auto K_prime = other.get_extent()[1];
+
+							auto res = basic_ndarray<R_T>(extent{M, K_prime});
+
+							T *a = m_data_start;
+							B_T *b = tmp_other.get_data_start();
+							R_T *c = res.get_data_start();
+
+							nd_int lda = m_stride[0], fda = m_stride[1];
+							nd_int ldb = tmp_other.get_stride()[0], fdb = tmp_other.get_stride()[1];
+							nd_int ldc = res.get_stride()[0], fdc = res.get_stride()[1];
+
+							nd_int index_a, index_b, index_c;
+
+							// Only run in parallel if arrays are smaller than a
+							// given size. Running in parallel on smaller matrices
+							// will result in slower code. Note, a branch is used
+							// in preference to #pragma omp ... if (...) because
+							// that requires runtime evaluation of a condition to
+							// set up threads, which adds a significant overhead
+							if (M * N * K < 25000)
+							{
+								for (nd_int outer = 0; outer < M; ++outer)
+								{
+									for (nd_int inner = 0; inner < K_prime; ++inner)
+									{
+										index_c = outer * ldc + inner * fdc;
+										c[index_c] = 0;
+
+										for (nd_int k = 0; k < N; k++)
+										{
+											index_a = outer * lda + k * fda;
+											index_b = inner * ldb + k * fdb;
+
+											c[index_c] += a[index_a] * b[index_b];
+										}
+									}
+								}
+							}
+							else
+							{
+							#pragma omp parallel for shared(M, N, K, a, b, c) private(index_a, index_b, index_c) default(none) num_threads(ND_NUM_THREADS)
+								for (nd_int outer = 0; outer < M; ++outer)
+								{
+									for (nd_int inner = 0; inner < K_prime; ++inner)
+									{
+										index_c = outer * ldc + inner * fdc;
+										c[index_c] = 0;
+
+										for (nd_int k = 0; k < N; k++)
+										{
+											index_a = outer * lda + k * fda;
+											index_b = inner * ldb + k * fdb;
+
+											c[index_c] += a[index_a] * b[index_b];
+										}
+									}
+								}
+							}
+
+							return res;
+						#else
 
 							const auto M = m_extent[0];
 							const auto N = m_extent[1];
 							const auto K = other.get_extent()[1];
-							
+
 							const R_T alpha = 1.0;
 							const R_T beta = 0.0;
-							
+
 							auto res = basic_ndarray<R_T>(extent{M, K});
-							
+
 							const auto transA = m_stride[0] == N ? CblasNoTrans : CblasTrans;
 							const auto transB = other.get_stride()[0] == K ? CblasNoTrans : CblasTrans;
-							
+
 							const auto lda = N;
 							const auto ldb = K;
 							const auto ldc = K;
-							
+
 							auto *__restrict a = m_data_start;
 							auto *__restrict b = other.get_data_start();
 							auto *__restrict c = res.get_data_start();
-							
-							cblas_dgemm(CblasRowMajor, transA, transB, (blasint) M, (blasint) K, (blasint) N,
-										alpha, a, (blasint) lda, b, (blasint) ldb, beta, c, (blasint) ldc);
+
+							cblas_dgemm(CblasRowMajor, transA, transB, M, K, N,
+										alpha, a, lda, b, ldb, beta, c, ldc);
+
 							return res;
+						#endif // LIBRAPID_CBLAS
 						}
 					default:
 						{
-							// Unknown or unsupported multiplication type
-							throw std::range_error("Cannot compute dot product with arrays with " + m_extent.str() + " and " + other.get_extent().str());
+							// Check the arrays are valid
+							if (m_extent[ndim() - 1] != other.get_extent()[other.ndim() - 2])
+							{
+								throw std::range_error("Cannot compute dot product with arrays with " +
+													   m_extent.str() + " and " + other.get_extent().str());
+							}
+
+							// Create the new array dimensions
+							nd_int new_extent[ND_MAX_DIMS]{};
+
+							// Initialize the new dimensions
+							for (nd_int i = 0; i < ndim() - 1; i++) new_extent[i] = m_extent[i];
+							for (nd_int i = 0; i < other.ndim() - 2; i++) new_extent[i + ndim()] = other.get_extent()[i];
+							new_extent[ndim() + other.ndim() - 4] = other.get_extent()[other.ndim() - 3];
+							new_extent[ndim() + other.ndim() - 3] = other.get_extent()[other.ndim() - 1];
+
+							auto res = basic_ndarray<R_T, nd_allocator<R_T>>(extent(new_extent, ndim() + other.ndim() - 2));
+							R_T *__restrict res_ptr = res.get_data_start();
+
+							nd_int idim = 0;
+							nd_int dims = res.ndim();
+
+							const auto *__restrict _extent = res.get_extent().get_extent();
+							const auto *__restrict _stride = res.get_stride().get_stride();
+
+							nd_int coord[ND_MAX_DIMS]{};
+
+							std::vector<nd_int> lhs_index(ndim());
+							std::vector<nd_int> rhs_index(other.ndim());
+
+							do
+							{
+								// Extract the index for the lhs
+								for (nd_int i = 0; i < ndim() - 1; i++)
+									lhs_index[i] = coord[i];
+								lhs_index[ndim() - 1] = AUTO;
+
+								// Extract the index for the rhs
+								for (nd_int i = 0; i < other.ndim() - 2; i++)
+									rhs_index[i] = coord[ndim() + i - 1];
+								rhs_index[other.ndim() - 2] = AUTO;
+								rhs_index[other.ndim() - 1] = coord[dims - 1];
+
+								*res_ptr = *(subarray(lhs_index).dot(other.subarray(rhs_index)).get_data_start());
+
+								for (idim = 0; idim < dims; ++idim)
+								{
+									if (++coord[idim] == _extent[idim])
+									{
+										res_ptr = res_ptr - (_extent[idim] - 1) * _stride[idim];
+										coord[idim] = 0;
+									}
+									else
+									{
+										res_ptr = res_ptr + _stride[idim];
+										break;
+									}
+								}
+							} while (idim < dims);
+
+							res_ptr -= math::product(res.get_extent().get_extent(), res.ndim());
+
+							return res;
 						}
 				}
 			}
@@ -881,7 +1088,8 @@ namespace librapid
 				m_data_start = m_alloc.allocate(m_extent_product);
 				m_origin_size = m_extent_product;
 				m_data_origin = m_data_start;
-				m_origin_references = new nd_int(1);
+
+				m_origin_references = new std::atomic<nd_int>(1);
 
 				return errors::ALL_OK;
 			}
@@ -901,7 +1109,7 @@ namespace librapid
 				m_origin_size = m_extent_product;
 
 				m_data_origin = m_data_start;
-				m_origin_references = new nd_int(1);
+				m_origin_references = new std::atomic<nd_int>(1);
 
 				return errors::ALL_OK;
 			}
@@ -924,31 +1132,33 @@ namespace librapid
 			ND_INLINE basic_ndarray<T, alloc> create_reference() const
 			{
 				basic_ndarray<T, alloc> res;
-				res.m_extent = m_extent;
-				res.m_stride = m_stride;
-
-				res.m_origin_size = m_origin_size;
-				res.m_origin_references = m_origin_references;
 
 				res.m_data_origin = m_data_origin;
+				res.m_origin_references = m_origin_references;
+				res.m_origin_size = m_origin_size;
+
 				res.m_data_start = m_data_start;
 
+				res.m_stride = m_stride;
+				res.m_extent = m_extent;
+
 				res.m_extent_product = m_extent_product;
+				res.m_is_scalar = m_is_scalar;
 
 				increment();
 				return res;
 			}
 
-			ND_INLINE void increment(nd_int amt = 1) const
+			ND_INLINE void increment() const
 			{
-				(*m_origin_references) += amt;
+				++(*m_origin_references);
 			}
 
 			ND_INLINE void decrement()
 			{
-				(*m_origin_references)--;
+				--(*m_origin_references);
 
-				if (*m_origin_references == 0)
+				if ((*m_origin_references) == 0)
 				{
 					m_alloc.deallocate(m_data_origin, m_origin_size);
 					delete m_origin_references;
@@ -1005,11 +1215,12 @@ namespace librapid
 					throw std::domain_error("Cannot matrix transpose array with shape " + m_extent.str());
 
 				basic_ndarray<T, alloc> res(extent{m_extent[1], m_extent[0]});
+				nd_int lda = m_stride[0], fda = m_stride[1];
 				nd_int scal = m_extent[1];
 
 				for (nd_int i = 0; i < m_extent[0]; i++)
 					for (nd_int j = 0; j < m_extent[1]; j++)
-						res.set_value(i + j * scal, m_data_start[j + i * m_extent[1]]);
+						res.set_value(i + j * scal, m_data_start[j * fda + i * lda]);
 
 				return res;
 			}
@@ -1220,10 +1431,9 @@ namespace librapid
 
 		private:
 
-		public:
-
 			T *m_data_origin = nullptr;
-			nd_int *m_origin_references = nullptr;
+			std::atomic<nd_int> *m_origin_references = nullptr;
+
 			nd_int m_origin_size = 0;
 
 			T *m_data_start = nullptr;

@@ -65,9 +65,6 @@ namespace librapid
 			template<typename V>
 			basic_stride(const std::vector<V> &strides)
 			{
-				if (math::anyBelow(strides, 1))
-					throw std::domain_error("basic_stride cannot contain values less than 1");
-
 				m_dims = strides.size();
 
 				if (m_dims > ND_MAX_DIMS)
@@ -140,9 +137,6 @@ namespace librapid
 				}
 
 				m_is_trivial = check_trivial();
-
-				if (math::anyBelow(m_stride, m_dims, 1))
-					throw std::domain_error("basic_stride cannot contain values less than 1");
 			}
 
 		#endif
@@ -220,17 +214,17 @@ namespace librapid
 				return m_dims > 0;
 			}
 
-			ND_INLINE auto get_stride() const
+			ND_INLINE const auto &get_stride() const
 			{
 				return m_stride;
 			}
 
-			ND_INLINE auto get_stride_alt() const
+			ND_INLINE const auto &get_stride_alt() const
 			{
 				return m_stride_alt;
 			}
 
-			ND_INLINE const bool &is_trivial() const
+			ND_INLINE const bool is_trivial() const
 			{
 				return m_is_trivial;
 			}

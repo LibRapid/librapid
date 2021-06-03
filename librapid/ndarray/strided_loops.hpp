@@ -6,7 +6,6 @@ auto *__restrict coord = new nd_int[ndim]; \
 memset(coord, 0, sizeof(nd_int) * ndim); \
 idim = 0; a_i = 0; \
 do {
-
 #define ND_INDEXED_LOOP_SINGLE(_extent, _stride_a, a_i, src_a, coord, idim, ndim) \
 	for (idim = 0; idim < ndim; ++idim) \
 	{ \
@@ -29,7 +28,6 @@ auto *__restrict coord = new nd_int[ndim]; \
 memset(coord, 0, sizeof(nd_int) * ndim); \
 idim = 0; a_i = 0; b_i = 0; \
 do {
-
 #define ND_INDEXED_LOOP_DOUBLE(_extent, _stride_a, _stride_b, a_i, b_i, src_a, src_b, coord, idim, ndim) \
 	for (idim = 0; idim < ndim; ++idim) \
 	{ \
@@ -54,7 +52,6 @@ auto *__restrict coord = new nd_int[ndim]; \
 memset(coord, 0, sizeof(nd_int) * ndim); \
 idim = 0; a_i = 0; b_i = 0; c_i = 0; \
 do {
-
 #define ND_INDEXED_LOOP_TRIPLE(_extent, _stride_a, _stride_b, _stride_c, a_i, b_i, c_i, src_a, src_b, src_c, coord, idim, ndim) \
 	for (idim = 0; idim < ndim; ++idim) \
 	{ \

@@ -54,7 +54,7 @@ namespace librapid
 				}
 				else if (dims_a < dims_b &&
 						 prodA == prodB &&
-						 utils::check_ptr_match(a, dims_a, utils::sub_vector(b, dims_b, dims_b - dims_a)))
+						 utils::check_ptr_match(a, dims_a, utils::sub_vector(b, dims_b, dims_b - dims_a), true))
 				{
 					// Check if last dimensions of other match *this, and all other dimensions are 1
 					// E.g. [1 2] + [[[3 4]]] => [4 6]
@@ -62,7 +62,7 @@ namespace librapid
 				}
 				else if (dims_a > dims_b &&
 						 prodA == prodB &&
-						 utils::check_ptr_match(b, dims_b, utils::sub_vector(a, dims_a, dims_a - dims_b)))
+						 utils::check_ptr_match(b, dims_b, utils::sub_vector(a, dims_a, dims_a - dims_b), true))
 				{
 					// Check if last dimensions of *this match other, and all other dimensions are 1
 					// E.g. [[[1 2]]] + [3 4] => [[[4 6]]]
@@ -82,14 +82,14 @@ namespace librapid
 
 					mode = 2;
 				}
-				else if (utils::check_ptr_match(b, dims_b, utils::sub_vector(a, dims_a, leading_ones_a + 1)))
+				else if (utils::check_ptr_match(b, dims_b, utils::sub_vector(a, dims_a, leading_ones_a + 1), true))
 				{
 					// Check for "row by row" addition
 					// E.g. [[1 2]   +   [5 6]    =>   [[ 6  8]
 					//       [3 4]]                     [ 8 10]]
 					mode = 3;
 				}
-				else if (utils::check_ptr_match(a, dims_a, utils::sub_vector(b, dims_b, leading_ones_b + 1)))
+				else if (utils::check_ptr_match(a, dims_a, utils::sub_vector(b, dims_b, leading_ones_b + 1), true))
 				{
 					// Check for reverse "row by row" addition
 					// E.g. [1 2]  +   [[3 4]     =>   [[4 6]
@@ -116,7 +116,7 @@ namespace librapid
 				}
 				else if (a[dims_a - 1] == 1 &&
 						 utils::check_ptr_match(utils::sub_vector(a, dims_a, 0, dims_b - 1),
-						 utils::sub_vector(b, dims_b, 0, dims_b - 1)))
+						 utils::sub_vector(b, dims_b, 0, dims_b - 1), true, true))
 				{
 					// Check for "column by column" addition
 					// E.g. [[1]     +    [[10 11]      =>     [[11 12]
@@ -125,7 +125,7 @@ namespace librapid
 				}
 				else if (b[dims_b - 1] == 1 &&
 						 utils::check_ptr_match(utils::sub_vector(a, dims_a, 0, dims_b - 1),
-						 utils::sub_vector(b, dims_b, 0, dims_b - 1)))
+						 utils::sub_vector(b, dims_b, 0, dims_b - 1), true, true))
 				{
 					// Check for reverse "column by column" addition
 					// E.g.  [[1 2]    +    [[5]      =>     [[ 6  7]

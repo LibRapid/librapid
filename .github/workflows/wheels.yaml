@@ -38,7 +38,7 @@ jobs:
           echo "Files in 'packages' directory"
           ls ./vcpkg/packages
           echo "Files in 'openblas' directory"
-          ls ./vcpkg/packages/openblas
+          ls ./vcpkg/packages/openblas_x64-linux
         shell: bash
 
       - name: Build Source Distribution
@@ -112,7 +112,8 @@ jobs:
           elif [ "$RUNNER_OS" == "macOS" ]; then
             ls ./vcpkg/packages/openblas_x64-osx
           else
-            ./vcpkg/vcpkg install openblas
+            echo "$RUNNER_OS is not supported"
+            exit 1
           fi
 
         shell: bash
