@@ -75,6 +75,8 @@ def find_blas(args):
             search_dirs.append("/dev/openblas")
             search_dirs.append("/dev/vcpkg/packages/" + vcdir)
 
+        # Search a few relative directories for vcpkg packages
+        search_dirs.append("./vcpkg/packages/" + vcdir)
         search_dirs.append("../vcpkg/packages/" + vcdir)
         search_dirs.append("../../vcpkg/packages/" + vcdir)
         search_dirs.append("../../../vcpkg/packages/" + vcdir)
@@ -406,9 +408,8 @@ while index < len(sys.argv):
     else:
         index += 1
 
+print("The current working directory is", os.getcwd())
 blas_dir = find_blas(args)
-
-raise RuntimeError("THE CURRENT DIRECTORY:", os.getcwd())
 
 if blas_dir is not None:
     print("Found BLAS")
