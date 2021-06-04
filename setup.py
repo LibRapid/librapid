@@ -413,7 +413,7 @@ blas_dir = find_blas(args)
 
 if blas_dir is not None:
     print("Found BLAS")
-    print("Binaries:", blas_dir["bin"])
+    print("Binaries:", blas_dir["bin"] if "bin" in blas_dir else None)
     print("Includes:", blas_dir["include"])
     print("Libraries:", blas_dir["lib"])
 

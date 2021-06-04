@@ -7,10 +7,7 @@ formats: all
 # Set the build image to use the most recent version
 build:
   image: testing
-  python: 3.7
   apt_packages:
-    - doxygen
-  system_packages:
     - doxygen
 
 # Set the python version and requirements
