@@ -821,9 +821,9 @@ namespace librapid
 							B_T *b = tmp_other.get_data_start();
 							R_T *c = res.get_data_start();
 
-							const nd_int lda = m_stride[0], fda = m_stride[1];
-							const nd_int ldb = tmp_other.get_stride()[0], fdb = tmp_other.get_stride()[1];
-							const nd_int ldc = res.get_stride()[0], fdc = res.get_stride()[1];
+							nd_int lda = m_stride[0], fda = m_stride[1];
+							nd_int ldb = tmp_other.get_stride()[0], fdb = tmp_other.get_stride()[1];
+							nd_int ldc = res.get_stride()[0], fdc = res.get_stride()[1];
 
 							nd_int index_a, index_b, index_c;
 
