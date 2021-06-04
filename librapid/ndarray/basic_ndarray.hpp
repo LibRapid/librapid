@@ -808,13 +808,12 @@ namespace librapid
 													   m_extent.str() + " and " + other.get_extent().str());
 
 						#ifndef LIBRAPID_CBLAS
-							const basic_ndarray<T, alloc> tmp_this = *this;
 							const basic_ndarray<T, alloc> tmp_other = other.transposed_matrix();
 
-							const auto M = get_extent()[0];
-							const auto N = get_extent()[1];
-							const auto K = tmp_other.get_extent()[1];
-							const auto K_prime = other.get_extent()[1];
+							nd_int M = get_extent()[0];
+							nd_int N = get_extent()[1];
+							nd_int K = tmp_other.get_extent()[1];
+							nd_int K_prime = other.get_extent()[1];
 
 							auto res = basic_ndarray<R_T>(extent{M, K_prime});
 
@@ -822,9 +821,9 @@ namespace librapid
 							B_T *b = tmp_other.get_data_start();
 							R_T *c = res.get_data_start();
 
-							nd_int lda = m_stride[0], fda = m_stride[1];
-							nd_int ldb = tmp_other.get_stride()[0], fdb = tmp_other.get_stride()[1];
-							nd_int ldc = res.get_stride()[0], fdc = res.get_stride()[1];
+							const nd_int lda = m_stride[0], fda = m_stride[1];
+							const nd_int ldb = tmp_other.get_stride()[0], fdb = tmp_other.get_stride()[1];
+							const nd_int ldc = res.get_stride()[0], fdc = res.get_stride()[1];
 
 							nd_int index_a, index_b, index_c;
 
@@ -855,7 +854,7 @@ namespace librapid
 							}
 							else
 							{
-							#pragma omp parallel for shared(M, N, K, K_prime, a, b, c, lda, ldb, ldc, fda, fdb, fdc) private(index_a, index_b, index_c) default(none) num_threads(ND_NUM_THREADS)
+							#pragma omp parallel for shared(a, b, c, M, N, K, K_prime, lda, ldb, ldc, fda, fdb, fdc) private(index_a, index_b, index_c) default(none) num_threads(ND_NUM_THREADS)
 								for (nd_int outer = 0; outer < M; ++outer)
 								{
 									for (nd_int inner = 0; inner < K_prime; ++inner)
