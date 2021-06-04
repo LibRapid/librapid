@@ -1,6 +1,8 @@
 #ifndef NDARRAY_UTILS
 #define NDARRAY_UTILS
 
+#include <cstring>
+
 namespace librapid
 {
 	namespace ndarray

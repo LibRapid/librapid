@@ -3,7 +3,7 @@
 
 #define ND_MAX_DIMS 10
 #define ND_NUM_THREADS 1
-#define LIBRAPID_CBLAS
+// #define LIBRAPID_CBLAS
 
 #include <librapid/ndarray/ndarray.hpp>
 

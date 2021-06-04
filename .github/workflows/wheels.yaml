@@ -35,9 +35,11 @@ jobs:
           ./vcpkg/bootstrap-vcpkg.sh
           echo "Installing OpenBLAS"
           ./vcpkg/vcpkg install openblas
+          echo "Current directory"
+          pwd
           echo "Files in 'packages' directory"
           ls ./vcpkg/packages
-          echo "Files in 'openblas' directory"
+          echo "Files in 'openblas_x64-linux' directory"
           ls ./vcpkg/packages/openblas_x64-linux
         shell: bash
 
@@ -101,9 +103,11 @@ jobs:
             ./vcpkg/vcpkg install openblas
           fi
           
+          echo "Current directory"
+          pwd
           echo "Files in 'packages' directory"
           ls ./vcpkg/packages
-          echo "Files in 'openblas' directory"
+          echo "Files in 'openblas_x64-...' directory"
           
           if [ "$RUNNER_OS" == "Windows" ]; then
             ls ./vcpkg/packages/openblas_x64-windows
