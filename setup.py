@@ -50,7 +50,7 @@ def find_blas(args):
         return None
 
     if len(args) == 0:
-        # Search through default directories for OpebBLAS
+        # Search through default directories for OpenBLAS
         search_dirs = []
 
         vcdir = None
@@ -61,7 +61,11 @@ def find_blas(args):
             else:
                 vcdir = "openblas_x86-windows"
         elif platform.system() == "Linux":
-            vcdir = "openblas_x64-linux"
+            if platform.architecture()[0] == "64bit":
+                vcdir = "openblas_x64-linux"
+            else:
+                print("OpenBLAS cannot be installed on 32bit Linux")
+                return None
         elif platform.system() == "Darwin":
             vcdir = "openblas_x64-osx"
 
