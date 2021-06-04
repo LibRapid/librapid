@@ -1,9 +1,10 @@
 [build-system]
 requires = [
-    "setuptools>=42",
+    "setuptools",
     "wheel",
-    "pybind11>=2.6.0",
-    "cpufeature"
+    "pybind11",
+    "cpufeature",
+    "cibuildwheel"
 ]
 
 build-backend = "setuptools.build_meta"

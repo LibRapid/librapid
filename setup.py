@@ -76,10 +76,10 @@ def find_blas(args):
             search_dirs.append("/dev/vcpkg/packages/" + vcdir)
 
         # Search a few relative directories for vcpkg packages
-        search_dirs.append("./vcpkg/packages/" + vcdir)
-        search_dirs.append("../vcpkg/packages/" + vcdir)
-        search_dirs.append("../../vcpkg/packages/" + vcdir)
-        search_dirs.append("../../../vcpkg/packages/" + vcdir)
+        search_dirs.append(os.getcwd() + "/vcpkg/packages/" + vcdir)
+        search_dirs.append(os.getcwd() + "/../vcpkg/packages/" + vcdir)
+        search_dirs.append(os.getcwd() + "/../../vcpkg/packages/" + vcdir)
+        search_dirs.append(os.getcwd() + "/../../../vcpkg/packages/" + vcdir)
 
         for dir in search_dirs:
             print("Searching directory", dir, "for BLAS libraries")
@@ -263,7 +263,12 @@ def find_lib(base_path):
             for ending in known_endings:
                 if file.endswith(ending):
                     # Remove the filetype from the filename
-                    return file[:-len(ending)]
+                    new_name = file[:-len(ending)]
+
+                    if platform.system() in ["Linux", "Darwin"]:
+                        # If the name starts with "lib", remove it
+                        return new_name[3:]
+                    return new_name
         return None
     except FileNotFoundError:
         print("Suitable library file not found")
