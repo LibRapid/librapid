@@ -26,6 +26,7 @@ jobs:
         run: |
           pip install --user check-manifest twine
           pip install --user check-manifest pybind11
+          pip install --user check-manifest cpufeature
 
       - name: Install OpenBLAS
         run: |
@@ -89,6 +90,7 @@ jobs:
           python -m pip install wheel
           python -m pip install cibuildwheel twine
           python -m pip install pybind11
+          python -m pip install cpufeature
 
       - name: Install OpenBLAS
         run: |

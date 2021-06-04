@@ -341,7 +341,14 @@ def link_omp():
     elif c == "clang": return ["-lgomp"]
     return []
 
-def enable_optimizations():    
+def enable_optimizations():
+    """
+    Enable a load of compiler optimizations. The specific
+    optimizations enabled will differ based on the compiler
+    and the host architecture. Aim to produce the fastest
+    code possible.
+    """
+
     c = get_compiler_name()
     if c == "msvc":
         res = ["/O2", "/Ot", "/Ob1"]
@@ -361,9 +368,12 @@ def enable_optimizations():
             res += ["/arch:AVX"]
 
         return res
-    elif c in ("gcc", "g++"): return ["-O3", "-mavx", "-m64"]
-    elif c == "clang": return ["-O3", "-mavx", "-m64"]
-    elif c == "unix": return ["-O3", "-mavx", "-m64"]
+    elif c in ("gcc", "g++"):
+        return ["-O3", "-mavx"] + ["-m64"] if platform.architecture()[0] == "64bit" else []
+    elif c == "clang":
+        return ["-O3", "-mavx"] + ["-m64"] if platform.architecture()[0] == "64bit" else []
+    elif c == "unix":
+        return ["-O3", "-mavx"] + ["-m64"] if platform.architecture()[0] == "64bit" else []
     return []
 
 # The following command line options are available
