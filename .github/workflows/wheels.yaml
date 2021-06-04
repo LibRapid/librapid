@@ -69,6 +69,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: [windows-latest, macos-latest, ubuntu-latest]
+        targetplatform: [x64]
     env:
       CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
 
@@ -98,6 +99,7 @@ jobs:
           echo "Installing OpenBLAS"
 
           if [ "$RUNNER_OS" == "Windows" ]; then
+            ./vcpkg/vcpkg install openblas --triplet=x86-windows
             ./vcpkg/vcpkg install openblas --triplet=x64-windows
           else
             ./vcpkg/vcpkg install openblas

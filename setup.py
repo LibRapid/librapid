@@ -56,7 +56,10 @@ def find_blas(args):
         vcdir = None
 
         if platform.system() == "Windows":
-            vcdir = "openblas_x64-windows"
+            if platform.architecture()[0] == "64bit":
+                vcdir = "openblas_x64-windows"
+            else:
+                vcdir = "openblas_x86-windows"
         elif platform.system() == "Linux":
             vcdir = "openblas_x64-linux"
         elif platform.system() == "Darwin":
@@ -269,6 +272,7 @@ def find_lib(base_path):
                         # If the name starts with "lib", remove it
                         return new_name[3:]
                     return new_name
+
         return None
     except FileNotFoundError:
         print("Suitable library file not found")
