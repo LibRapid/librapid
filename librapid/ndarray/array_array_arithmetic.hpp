@@ -20,9 +20,11 @@ namespace librapid
 											  const basic_stride<S_c> &stride_c,
 											  LAMBDA op)
 			{
+				// Counters
 				nd_int idim = 0;
 				nd_int ndim = extent.ndim();
 
+				// Create pointers here to reduce function calls
 				const auto *__restrict _extent = extent.get_extent();
 				const auto *__restrict _stride_a = stride_a.get_stride();
 				const auto *__restrict _stride_b = stride_b.get_stride();
@@ -35,14 +37,19 @@ namespace librapid
 				if (stride_a.is_trivial() && stride_b.is_trivial() && stride_c.is_trivial())
 					mode = 0;
 
+				// Reduce calculations required
 				const auto end = math::product(extent.get_extent(), extent.ndim());
 
+				// Array coordinate
 				nd_int coord[ND_MAX_DIMS]{};
 
 				switch (mode)
 				{
 					case 0:
 						{
+							// Only use OpenMP if size is above a certain threshold
+							// to improve speed for small arrays (overhead of multiple
+							// threads makes it slower for small arrays)
 							if (end > 100000)
 							{
 								long long e = (long long) end;

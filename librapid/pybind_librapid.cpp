@@ -18,7 +18,6 @@ PYBIND11_MODULE(librapid, module)
     py::class_<librapid::ndarray::extent>(module, "extent")
         .def(py::init<>())
         .def(py::init<const std::vector<nd_int> &>())
-        .def(py::init<nd_int>())
         .def(py::init<const librapid::ndarray::extent &>())
         .def(py::init<py::args>())
 
@@ -29,6 +28,8 @@ PYBIND11_MODULE(librapid, module)
         .def_property_readonly("ndim", &librapid::ndarray::extent::ndim)
         .def_property_readonly("is_valid", &librapid::ndarray::extent::is_valid)
         .def("reshape", [](librapid::ndarray::extent &e, const std::vector<nd_int> &order) { e.reshape(order); })
+
+        .def("__len__", &librapid::ndarray::extent::ndim)
 
         .def("__eq__", &librapid::ndarray::extent::operator==)
         .def("__str__", &librapid::ndarray::extent::str)
@@ -51,6 +52,8 @@ PYBIND11_MODULE(librapid, module)
         .def_property_readonly("is_trivial", &librapid::ndarray::stride::is_trivial)
         .def("set_dimensions", &librapid::ndarray::stride::set_dimensions)
         .def("reshape", [](librapid::ndarray::stride &s, const std::vector<nd_int> &order) { s.reshape(order); })
+
+        .def("__len__", &librapid::ndarray::stride::ndim)
 
         .def("__eq__", &librapid::ndarray::stride::operator==)
         .def("__str__", &librapid::ndarray::stride::str)

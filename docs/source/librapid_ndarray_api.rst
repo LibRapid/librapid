@@ -49,8 +49,8 @@ How are the arrays stored?
 
 The underlying memory of each array is stored in a contiguous memory block. To access
 the different elements of an array, they also store the dimensions
-(:doc:`LibRapid.Extent <librapid.extent>`) of the array, and a set of strides
-(:doc:`LibRapid.Stride <librapid.stride>`) which specify how far through memory one
+(:doc:`LibRapid Extent <librapid_ndarray_extent>`) of the array, and a set of strides
+(:doc:`LibRapid Stride <librapid_ndarray_stride>`) which specify how far through memory one
 must move to increment by one value in a given axis.
 
 The fact that the arrays are stored in this way means that many functions can be
@@ -60,6 +60,10 @@ For example, to transpose an array, the stride and extent are simply reversed.
 Library contents
 ================
 
-- :doc:`LibRapid.Extent <librapid.extent>`
-- :doc:`LibRapid.Stride <librapid.stride>`
-- :doc:`LibRapid.NDarray <librapid.ndarray>`
+.. toctree::
+	:maxdepth: 1
+	:glob:
+
+	librapid_ndarray_extent
+    librapid_ndarray_stride
+    librapid_ndarray_ndarray

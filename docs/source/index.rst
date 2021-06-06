@@ -87,15 +87,15 @@ Contents
 	:maxdepth: 2
 	:glob:
 
-	ndarray_api
+	librapid_ndarray_api
 
 Test
 ====
 
-.. doxygenclass:: ndarray::basic_ndarray
+.. doxygenclass:: librapid::ndarray::basic_ndarray
 	:members:
 
-.. doxygenfunction:: ndarray::math::product(const std::vector<T> &)
+.. doxygenfunction:: librapid::ndarray::math::product(const std::vector<T> &)
 
 Indices and tables
 ******************

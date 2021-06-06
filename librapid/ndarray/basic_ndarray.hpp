@@ -502,11 +502,11 @@ namespace librapid
 			}
 
 			template<typename O>
-			ND_INLINE void reshape(const std::vector<O> &order)
+			ND_INLINE void reshape(const std::vector<O> &new_shape)
 			{
-				if (math::product(order) != m_extent_product)
+				if (math::product(new_shape) != m_extent_product)
 					throw std::length_error("Array sizes are different, so cannot reshape array. Shapes "
-											+ m_extent.str() + " and " + extent(order).str() + " cannot be broadcast");
+											+ m_extent.str() + " and " + extent(new_shape).str() + " cannot be broadcast");
 
 				if (!m_stride.is_trivial())
 				{
@@ -558,28 +558,40 @@ namespace librapid
 					m_origin_size = m_extent_product;
 				}
 
-				m_stride = stride::from_extent(order);
-				m_extent = extent(order);
+				m_stride = stride::from_extent(new_shape);
+				m_extent = extent(new_shape);
 			}
 
 			template<typename O>
-			ND_INLINE void reshape(const std::initializer_list<O> &order)
+			ND_INLINE void reshape(const std::initializer_list<O> &new_shape)
 			{
-				reshape(std::vector<O>(order.begin(), order.end()));
+				reshape(std::vector<O>(new_shape.begin(), new_shape.end()));
 			}
 
 			template<typename O>
-			ND_INLINE basic_ndarray<T, alloc> reshaped(const std::vector<O> &order) const
+			ND_INLINE void reshape(const basic_extent<O> &new_shape)
+			{
+				reshape(std::vector<O>(new_shape.begin(), new_shape.end()));
+			}
+
+			template<typename O>
+			ND_INLINE basic_ndarray<T, alloc> reshaped(const std::vector<O> &new_shape) const
 			{
 				auto res = create_reference();
-				res.reshape(order);
+				res.reshape(new_shape);
 				return res;
 			}
 
 			template<typename O>
-			ND_INLINE basic_ndarray<T, alloc> reshaped(const std::initializer_list<O> &order)
+			ND_INLINE basic_ndarray<T, alloc> reshaped(const std::initializer_list<O> &new_shape) const
 			{
-				return reshaped(std::vector<O>(order.begin(), order.end()));
+				return reshaped(std::vector<O>(new_shape.begin(), new_shape.end()));
+			}
+
+			template<typename O>
+			ND_INLINE basic_ndarray<T, alloc> reshaped(const basic_extent<O> &new_shape) const
+			{
+				return reshaped(std::vector<O>(new_shape.begin(), new_shape.end()));
 			}
 
 			ND_INLINE void strip_front()
@@ -1487,6 +1499,28 @@ namespace librapid
 			{
 				return a / b;
 			});
+		}
+
+		/// <summary>
+		/// Reshape any array into a new shape. The new shape
+		/// must result in the same number of elements, otherwise
+		/// an exception will be thrown.
+		/// 
+		/// This function will try to link the resulting array
+		/// to the parent array, however, if the parent array has
+		/// a non-trivial stride, the child array will not be linked
+		/// due to the extreme performance loss that would result.
+		/// </summary>
+		/// <typeparam name="T">The datatype of the array</typeparam>
+		/// <typeparam name="alloc">The allocator used for the array</typeparam>
+		/// <typeparam name="O">The datatype for the shape specified</typeparam>
+		/// <param name="arr">The array to reshape</param>
+		/// <param name="new_shape">The new shape for the array</param>
+		/// <returns></returns>
+		template<typename T, class alloc, typename O>
+		ND_INLINE basic_ndarray<T, alloc> reshape(const basic_ndarray<T, alloc> &arr, const basic_extent<O> &new_shape)
+		{
+			return arr.reshaped(new_shape);
 		}
 
 		using ndarray = basic_ndarray<double>;
