@@ -66,10 +66,11 @@ namespace librapid
 			/// of the same type
 			/// </summary>
 			/// <param name="ptr">The pointer to iterate</param>
-			/// <returns></returns>
+			/// <returns>Reference to original iterator</returns>
 			ND_INLINE extent_iterator<T> &operator=(pointer ptr)
 			{
 				m_ptr = ptr;
+				return *this;
 			}
 
 			/// <summary>

@@ -1,9 +1,9 @@
-======================
-LibRapid Documentation
-======================
+.. image:: ../../branding/logo_transparent_trimmed.png
+   :width: 800
+
 
 .. image:: https://github.com/pencilcaseman/librapid/actions/workflows/wheels.yaml/badge.svg
-    :target: https://github.com/Pencilcaseman/librapid/actions/workflows/wheels.yaml
+	:target: https://github.com/Pencilcaseman/librapid/actions/workflows/wheels.yaml
 .. image:: https://readthedocs.org/projects/librapid/badge/?version=latest
 	:target: https://librapid.readthedocs.io/en/latest/?badge=latest
 .. image:: https://badge.fury.io/py/librapid.svg

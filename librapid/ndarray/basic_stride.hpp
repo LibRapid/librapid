@@ -18,7 +18,258 @@ namespace librapid
 {
 	namespace ndarray
 	{
-		template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
+		template<typename T = nd_int, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
+		class basic_stride;
+
+		/// <summary>
+		/// The stride iterator class allows you to iterate
+		/// over the stride of an array, accessing the values
+		/// one by one in order
+		/// </summary>
+		/// <typeparam name="T">The datatype of the extestrident being iterated over</typeparam>
+		template<typename T>
+		class stride_iterator
+		{
+		public:
+			using iterator_category = std::random_access_iterator_tag;
+			using value_type = T;
+			using difference_type = std::ptrdiff_t;
+			using pointer = value_type *;
+			using reference = value_type &;
+
+			/// <summary>
+			/// Create an empty stride iterator
+			/// </summary>
+			stride_iterator() = default;
+
+			/// <summary>
+			/// Create a new stride iterator using
+			/// the starting pointer
+			/// </summary>
+			/// <param name="start">The starting memory location</param>
+			stride_iterator(pointer start)
+			{
+				m_ptr = start;
+			}
+
+			~stride_iterator() = default;
+
+			/// <summary>
+			/// Set one stride iterator equal to another
+			/// </summary>
+			/// <param name="other">Another stride iterator</param>
+			/// <returns>A reference to the original iterator</returns>
+			ND_INLINE stride_iterator<T> &operator=(const stride_iterator<T> &other) = default;
+
+			/// <summary>
+			/// Set an stride iterator to a pointer
+			/// of the same type
+			/// </summary>
+			/// <param name="ptr">The pointer to iterate</param>
+			/// <returns>Reference to original iterator</returns>
+			ND_INLINE stride_iterator<T> &operator=(pointer ptr)
+			{
+				m_ptr = ptr;
+				return *this;
+			}
+
+			/// <summary>
+			/// Convert the iterator to a boolean value.
+			/// The result is "true" if the pointer is a
+			/// valid memory location, otherwise the result
+			/// is "false"
+			/// </summary>
+			/// <returns>True if the iterator's pointer is valid</returns>
+			ND_INLINE operator bool() const
+			{
+				return m_ptr ? true : false;
+			}
+
+			/// <summary>
+			/// Check whether one stride iterator is equal to another
+			/// stride iterator of the same type
+			/// </summary>
+			/// <param name="other">The iterator to compare against</param>
+			/// <returns>True if the iterators are equal</returns>
+			ND_INLINE bool operator==(const stride_iterator<T> &other) const
+			{
+				return m_ptr == other.get_const_ptr();
+			}
+
+			/// <summary>
+			/// Check for a lack of equality with another iterator
+			/// of the same type.
+			/// </summary>
+			/// <param name="other">The iterator to compare agianst</param>
+			/// <returns>True if the iterators are not equal</returns>
+			ND_INLINE bool operator!=(const stride_iterator<T> &other) const
+			{
+				return m_ptr != other.get_const_ptr();
+			}
+
+			/// <summary>
+			/// Increment the pointer by a specific offset
+			/// </summary>
+			/// <param name="movement">The offset for the pointer</param>
+			/// <returns>Reference to the iterator</returns>
+			ND_INLINE stride_iterator<T> &operator+=(const difference_type &movement)
+			{
+				m_ptr += movement;
+				return (*this);
+			}
+
+			/// <summary>
+			/// Decrement the pointer by a specific offset
+			/// </summary>
+			/// <param name="movement">The offset for the pointer</param>
+			/// <returns>Reference to the iterator</returns>
+			ND_INLINE stride_iterator<T> &operator-=(const difference_type &movement)
+			{
+				m_ptr -= movement;
+				return (*this);
+			}
+
+			/// <summary>
+			/// Increment the pointer by one
+			/// </summary>
+			/// <returns>Reference to the iterator</returns>
+			ND_INLINE stride_iterator<T> &operator++()
+			{
+				++m_ptr;
+				return (*this);
+			}
+
+			/// <summary>
+			/// Decrement the iterator by one
+			/// </summary>
+			/// <returns>Reference to the iterator</returns>
+			ND_INLINE stride_iterator<T> &operator--()
+			{
+				--m_ptr;
+				return (*this);
+			}
+
+			/// <summary>
+			/// Increment the iterator, but return
+			/// it's unincremented value. For example,
+			/// an iterator at memory location zero
+			/// would return another iterator at zero,
+			/// though the original iterator would then
+			/// be at memory location one
+			/// </summary>
+			/// <param name=""></param>
+			/// <returns></returns>
+			ND_INLINE stride_iterator<T> operator++(int)
+			{
+				auto temp(*this);
+				++m_ptr;
+				return temp;
+			}
+
+			/// <summary>
+			/// Decrement the iterator, but return
+			/// it's original value. For example,
+			/// an iterator at memory location one
+			/// would return another iterator at one,
+			/// though the original iterator would then
+			/// be at memory location zero
+			/// </summary>
+			/// <param name=""></param>
+			/// <returns></returns>
+			ND_INLINE stride_iterator<T> operator--(int)
+			{
+				auto temp(*this);
+				--m_ptr;
+				return temp;
+			}
+
+			/// <summary>
+			/// Return a new iterator incremented
+			/// with a given offset
+			/// </summary>
+			/// <param name="movement"></param>
+			/// <returns>A new iterator</returns>
+			ND_INLINE stride_iterator<T> operator+(const difference_type &movement) const
+			{
+				return stride_iterator<T>(m_ptr + movement);
+			}
+
+			/// <summary>
+			/// Return a new iterator decremented
+			/// with a given offset
+			/// </summary>
+			/// <param name="movement"></param>
+			/// <returns>A new iterator</returns>
+			ND_INLINE stride_iterator<T> operator-(const difference_type &movement) const
+			{
+				return stride_iterator<T>(m_ptr - movement);
+			}
+
+			/// <summary>
+			/// Find the difference between one iterator
+			/// and another
+			/// </summary>
+			/// <param name="raw_iterator"></param>
+			/// <returns>The difference between the iterators</returns>
+			ND_INLINE difference_type operator-(const stride_iterator<T> &raw_iterator) const
+			{
+				return std::distance(raw_iterator.get_ptr(), get_ptr());
+			}
+
+			/// <summary>
+			/// Dereference the iterator and return
+			/// a reference to the value at the current
+			/// point in the iterator
+			/// </summary>
+			/// <returns>A value reference</returns>
+			ND_INLINE T &operator*()
+			{
+				return *m_ptr;
+			}
+
+			/// <summary>
+			/// Dereference the iterator and return
+			/// a const reference to the value at the
+			/// current point in the iterator
+			/// </summary>
+			/// <returns>A const value reference</returns>
+			ND_INLINE const T &operator*() const
+			{
+				return *m_ptr;
+			}
+
+			/// <summary>
+			/// Access the pointer
+			/// </summary>
+			/// <returns></returns>
+			ND_INLINE T *operator->()
+			{
+				return m_ptr;
+			}
+
+			/// <summary>
+			/// Access the const pointer of the iterator
+			/// </summary>
+			/// <returns>A const pointer</returns>
+			ND_INLINE const pointer get_const_ptr() const
+			{
+				return m_ptr;
+			}
+
+			/// <summary>
+			/// Access the non-const pointer of the iterator
+			/// </summary>
+			/// <returns>A pointer</returns>
+			ND_INLINE pointer get_ptr() const
+			{
+				return m_ptr;
+			}
+
+		private:
+			pointer m_ptr = nullptr;
+		};
+
+		template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type>
 		class basic_stride
 		{
 		public:
@@ -253,6 +504,30 @@ namespace librapid
 				memcpy(m_stride_alt, new_stride_alt, sizeof(T) * m_dims);
 
 				m_is_trivial = check_trivial();
+			}
+
+			/// <summary>
+			/// The begin function returns an iterator
+			/// pointing to the first element of the
+			/// stride, allowing you to iterate over
+			/// it easily
+			/// </summary>
+			/// <returns>Stride iterator object</returns>
+			ND_INLINE stride_iterator<T> begin() const
+			{
+				return stride_iterator<T>((T *) m_stride);
+			}
+
+			/// <summary>
+			/// The end function returns an iterator
+			/// pointing to the memory location one
+			/// element beyond the end of the stride,
+			/// allowing you to iterate over it
+			/// </summary>
+			/// <returns>Stride iterator object</returns>
+			ND_INLINE stride_iterator<T> end() const
+			{
+				return stride_iterator<T>((T *) m_stride + m_dims);
 			}
 
 			ND_INLINE std::string str() const

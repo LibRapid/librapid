@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/Pencilcaseman/librapid/blob/master/branding/color.png" width="800">
+<img src="https://github.com/Pencilcaseman/librapid/blob/master/branding/logo_transparent_trimmed.png" width="800">
 </p>
 
 [![Build Status](https://github.com/pencilcaseman/librapid/actions/workflows/wheels.yaml/badge.svg)](https://github.com/Pencilcaseman/librapid/actions/workflows/wheels.yaml) [![Documentation Status](https://readthedocs.org/projects/librapid/badge/?version=latest)](https://librapid.readthedocs.io/en/latest/?badge=latest) [![PyPI version fury.io](https://badge.fury.io/py/librapid.svg)](https://pypi.python.org/pypi/librapid/) [![PyPI license](https://img.shields.io/pypi/l/librapid.svg)](https://pypi.python.org/pypi/librapid/) [![PyPI pyversions](https://img.shields.io/pypi/pyversions/librapid.svg)](https://pypi.python.org/pypi/librapid/) [![Downloads per month](https://img.shields.io/pypi/dm/librapid.svg)](https://pypi.python.org/pypi/librapid/) [![Discord](https://img.shields.io/discord/848914274105557043)](https://discord.gg/cGxTFTgCAC)
@@ -59,26 +59,26 @@ They should be used as follows:
 e.g. --blas-dir=c:/opt/openblas
 
 Options:
---no-blas       << Do not attempt to link against any BLAS library
-                   Use only the pre-installed routines (which are slower)
---blas-dir      << Set the directory where LibRapid can find a CBlas
-                   compatible library. LibRapid will expect the directory
-                   to contain a file structure like this (Windows example):
+--no-blas	   << Do not attempt to link against any BLAS library
+				   Use only the pre-installed routines (which are slower)
+--blas-dir	  << Set the directory where LibRapid can find a CBlas
+				   compatible library. LibRapid will expect the directory
+				   to contain a file structure like this (Windows example):
 
-                   blas-dir
-                   ├── bin
-                   |    └── libopenblas.dll
-                   ├── include
-                   |    └── cblas.h
-                   └── lib
-                       └── libopenblas.lib
+				   blas-dir
+				   ├── bin
+				   |	└── libopenblas.dll
+				   ├── include
+				   |	└── cblas.h
+				   └── lib
+					   └── libopenblas.lib
 --blas-include  << Set the BLAS include directory. LibRapid will expect
-                   cblas.h to be in this directory
---blas-lib      << Set the BLAS library directory. LibRapid will expect
-                   a library file to be here, such as libopenblas.lib
-                   or openblas.a
---blas-bin      << Set the directory of the BLAS binaries on Windows.
-                   LibRapid will search for a DLL file
+				   cblas.h to be in this directory
+--blas-lib	  << Set the BLAS library directory. LibRapid will expect
+				   a library file to be here, such as libopenblas.lib
+				   or openblas.a
+--blas-bin	  << Set the directory of the BLAS binaries on Windows.
+				   LibRapid will search for a DLL file
 ```
 
 To build LibRapid from source and specify commands, use the following commands:
@@ -87,7 +87,7 @@ To build LibRapid from source and specify commands, use the following commands:
 git clone https://github.com/Pencilcaseman/librapid.git
 cd librapid
 python setup.py sdist --blas-dir=C:/opt/openblas
-#                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
-#                     Change this to your arguments
+#					 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+#					 Change this to your arguments
 pip install .
 ```

@@ -47,7 +47,7 @@ extensions = [
 	"sphinx.ext.autodoc",
 	"sphinx.ext.napoleon",
 	"sphinx.ext.coverage",
-    "sphinx.ext.autosectionlabel",
+	"sphinx.ext.autosectionlabel",
 	"breathe",
 	"exhale"
 ]
@@ -64,31 +64,31 @@ breathe_default_project = "librapid"
 # Custom inputs to doxygen generator
 doxygen_inputs = """
 
-INPUT                   = ../../librapid
-       
-ENABLE_PREPROCESSING    = YES
-MACRO_EXPANSION         = YES
-EXPAND_ONLY_PREDEF      = NO
-PREDEFINED              += ND_INLINE=
-PREDEFINED              += __restrict=
-PREDEFINED              += ND_MAX_DIMS=50
+INPUT				   = ../../librapid
+	   
+ENABLE_PREPROCESSING	= YES
+MACRO_EXPANSION		 = YES
+EXPAND_ONLY_PREDEF	  = NO
+PREDEFINED			  += ND_INLINE=
+PREDEFINED			  += __restrict=
+PREDEFINED			  += ND_MAX_DIMS=50
 
 """
 
 # Set up the exhale extension
 exhale_args = {
 	# These arguments are required
-    "containmentFolder":     "./api",
-    "rootFileName":          "index.rst",
-    "rootFileTitle":         "LibRapid",
-    "doxygenStripFromPath":  "..",
-    # Suggested optional arguments
-    "createTreeView":        True,
-    # TIP: if using the sphinx-bootstrap-theme, you need
-    # "treeViewIsBootstrap": True,
-    "exhaleExecutesDoxygen": True,
-    "exhaleDoxygenStdin": textwrap.dedent(doxygen_inputs),
-    "verboseBuild": False
+	"containmentFolder":	 "./api",
+	"rootFileName":		  "index.rst",
+	"rootFileTitle":		 "LibRapid",
+	"doxygenStripFromPath":  "..",
+	# Suggested optional arguments
+	"createTreeView":		True,
+	# TIP: if using the sphinx-bootstrap-theme, you need
+	# "treeViewIsBootstrap": True,
+	"exhaleExecutesDoxygen": True,
+	"exhaleDoxygenStdin": textwrap.dedent(doxygen_inputs),
+	"verboseBuild": False
 }
 
 # Add any paths that contain templates here, relative to this directory.

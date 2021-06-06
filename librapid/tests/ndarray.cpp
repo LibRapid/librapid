@@ -44,5 +44,8 @@ int main()
 
 	std::cout << librapid::ndarray::reshape(lhs, librapid::ndarray::extent{6}).str() << "\n";
 
+	for (const auto &val : lhs.get_stride())
+		std::cout << "Value: " << val << "\n";
+
 	return 0;
 }

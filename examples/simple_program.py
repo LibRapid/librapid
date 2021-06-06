@@ -11,7 +11,7 @@ print(my_vector) # Print it out!
 
 # Fill it with values:
 for i in range(my_vector.extent[0]):
-    my_vector[i] = i + 1
+	my_vector[i] = i + 1
 
 print(my_vector)
 # [1. 2. 3. 4.]

@@ -502,11 +502,11 @@ namespace librapid
 			}
 
 			template<typename O>
-			ND_INLINE void reshape(const std::vector<O> &new_shape)
+			ND_INLINE void reshape(const basic_extent<O> &new_shape)
 			{
-				if (math::product(new_shape) != m_extent_product)
+				if (math::product(new_shape.get_extent(), new_shape.ndim()) != m_extent_product)
 					throw std::length_error("Array sizes are different, so cannot reshape array. Shapes "
-											+ m_extent.str() + " and " + extent(new_shape).str() + " cannot be broadcast");
+											+ m_extent.str() + " and " + new_shape.str() + " cannot be broadcast");
 
 				if (!m_stride.is_trivial())
 				{
@@ -558,7 +558,8 @@ namespace librapid
 					m_origin_size = m_extent_product;
 				}
 
-				m_stride = stride::from_extent(new_shape);
+				m_stride = stride::from_extent(std::vector<O>(new_shape.begin(),
+											   new_shape.end()));
 				m_extent = extent(new_shape);
 			}
 
@@ -569,13 +570,13 @@ namespace librapid
 			}
 
 			template<typename O>
-			ND_INLINE void reshape(const basic_extent<O> &new_shape)
+			ND_INLINE void reshape(const std::vector<O> &new_shape)
 			{
 				reshape(std::vector<O>(new_shape.begin(), new_shape.end()));
 			}
 
 			template<typename O>
-			ND_INLINE basic_ndarray<T, alloc> reshaped(const std::vector<O> &new_shape) const
+			ND_INLINE basic_ndarray<T, alloc> reshaped(const basic_extent<O> &new_shape) const
 			{
 				auto res = create_reference();
 				res.reshape(new_shape);
@@ -589,7 +590,7 @@ namespace librapid
 			}
 
 			template<typename O>
-			ND_INLINE basic_ndarray<T, alloc> reshaped(const basic_extent<O> &new_shape) const
+			ND_INLINE basic_ndarray<T, alloc> reshaped(const std::vector<O> &new_shape) const
 			{
 				return reshaped(std::vector<O>(new_shape.begin(), new_shape.end()));
 			}
@@ -1517,7 +1518,7 @@ namespace librapid
 		/// <param name="arr">The array to reshape</param>
 		/// <param name="new_shape">The new shape for the array</param>
 		/// <returns></returns>
-		template<typename T, class alloc, typename O>
+		template<typename T, class alloc, typename O = nd_int>
 		ND_INLINE basic_ndarray<T, alloc> reshape(const basic_ndarray<T, alloc> &arr, const basic_extent<O> &new_shape)
 		{
 			return arr.reshaped(new_shape);
