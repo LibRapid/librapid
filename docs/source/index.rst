@@ -92,10 +92,24 @@ Contents
 Test
 ====
 
+.. doxygenclass:: librapid::ndarray::extent_iterator
+	:members:
+
 .. doxygenclass:: librapid::ndarray::basic_ndarray
 	:members:
 
 .. doxygenfunction:: librapid::ndarray::math::product(const std::vector<T> &)
+
+Another Test
+============
+
+.. include:: test_documentation.rst
+
+A final Test
+============
+
+.. automodule:: librapid
+   :members:
 
 Indices and tables
 ******************

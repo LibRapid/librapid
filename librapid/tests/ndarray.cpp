@@ -31,7 +31,7 @@ int main()
 	int res = test_function(123, 456);
 
 	auto lhs = librapid::ndarray::basic_ndarray<double>(librapid::ndarray::extent({2, 3}));
-	auto rhs = librapid::ndarray::basic_ndarray<double>(librapid::ndarray::extent({4, 5}));
+	auto rhs = librapid::ndarray::basic_ndarray<double>(librapid::ndarray::extent({3}));
 
 	for (nd_int i = 0; i < librapid::ndarray::math::product(lhs.get_extent().get_extent(), lhs.get_extent().ndim()); i++)
 		lhs.set_value(i, i + 1);
@@ -46,6 +46,9 @@ int main()
 
 	for (const auto &val : lhs.get_stride())
 		std::cout << "Value: " << val << "\n";
+
+	std::cout << "\n\nResult:\n";
+	std::cout << librapid::ndarray::add((int) 123, (int) 456) << "\n";
 
 	return 0;
 }

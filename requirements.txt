@@ -2,4 +2,3 @@ setuptools
 wheel
 pybind11
 cpufeature
-cibuildwheel

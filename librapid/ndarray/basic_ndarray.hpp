@@ -96,8 +96,17 @@ namespace librapid
 			 * 3. A
 			 * 4. Numbered
 			 * 5. List
-			 *
-			 *
+			 * 
+			 * +---------+------+--------+
+			 * | This is |      | A      |
+			 * |         +------+-----+--+
+			 * |         | Very fancy |  |
+			 * +=====+===+======+=====+==+
+			 * |     | Table    |     |  |
+			 * +-----+          +-----+--+
+			 * |     |          |     |  |
+			 * +-----+----------+-----+--+
+			 * 
 			 * .. code-block:: Python
 			 *
 			 * 		print("Hello, World!")
@@ -1503,6 +1512,78 @@ namespace librapid
 		}
 
 		/// <summary>
+		/// Adds together two arithmetic types and returns
+		/// the result. The datatype of the result is the
+		/// largest common type of the inputs. For example,
+		/// adding an integer and a double will result in
+		/// a double as the return type.
+		/// </summary>
+		/// <typeparam name="T_A">The datatype of the left-hand side</typeparam>
+		/// <typeparam name="T_B">The datatype of the right-hand side</typeparam>
+		/// <typeparam name="enable_if">Only enable this function for arithmetic types</typeparam>
+		/// <param name="lhs">The left-hand side of the equation</param>
+		/// <param name="rhs">The right-hand side of the equation</param>
+		/// <returns>Arithmetic value</returns>
+		template<typename T_A, typename T_B,
+			typename std::enable_if<std::is_arithmetic<T_A>::value &&
+			std::is_arithmetic<T_B>::value, int> = 0>
+		ND_INLINE typename std::common_type<T_A, T_B>::type
+			add(const T_A &lhs, const T_B &rhs)
+		{
+			return lhs + rhs;
+		}
+
+		/// <summary>
+		/// Adds together and array and an arithmetic
+		/// type element-wise. The return type of the
+		/// array is the largest common datatype of
+		/// the two input types. For example, adding
+		/// an array of integers to a double will
+		/// result in an array of doubles.
+		/// </summary>
+		/// <typeparam name="A_T">The datatype of the array</typeparam>
+		/// <typeparam name="A_A">The allocator type of the array</typeparam>
+		/// <typeparam name="B_T">The datatype of the scalar</typeparam>
+		/// <typeparam name="enable_if">Only allow array + scalar</typeparam>
+		/// <param name="lhs">The left-hand side array</param>
+		/// <param name="rhs">The right-hand side scalar</param>
+		/// <returns>The result of the addition</returns>
+		template<typename A_T, class A_A, typename B_T,
+			typename std::enable_if<std::is_arithmetic<B_T>::value, int> = 0>
+			ND_INLINE basic_ndarray<typename std::common_type<A_T, B_T>::type>
+			add(const basic_ndarray<A_T, A_A> &lhs, const B_T &rhs)
+		{
+			return lhs + rhs;
+		}
+
+		/// <summary>
+		/// Subtract one value from another and return
+		/// the result.
+		/// 
+		/// If the values are arrays, then the result
+		/// is an array where the datatype is the
+		/// higher precision of the two input types. For
+		/// example, subtracting an array of integers
+		/// from an array of doubles will return an
+		/// array of doubles, as it has a higher precision.
+		/// 
+		/// If one of the values is a scalar and another
+		/// is an array, then the result is array-scalar
+		/// subtraction, where the datatype is again the
+		/// higher-precision of the two input values
+		/// </summary>
+		/// <typeparam name="T_A">The datatype of the lhs of the equation</typeparam>
+		/// <typeparam name="T_B">The datatype of the rhs of the equation</typeparam>
+		/// <param name="lhs">The left-hand side of the equation</param>
+		/// <param name="rhs">The right-hand side of the equation</param>
+		/// <returns>The result of the subtraction operation</returns>
+		template<typename T_A, typename T_B>
+		ND_INLINE auto sub(const T_A &lhs, const T_B &rhs)
+		{
+			return lhs - rhs;
+		}
+
+		/// <summary>
 		/// Reshape any array into a new shape. The new shape
 		/// must result in the same number of elements, otherwise
 		/// an exception will be thrown.
@@ -1517,7 +1598,7 @@ namespace librapid
 		/// <typeparam name="O">The datatype for the shape specified</typeparam>
 		/// <param name="arr">The array to reshape</param>
 		/// <param name="new_shape">The new shape for the array</param>
-		/// <returns></returns>
+		/// <returns>The reshaped array</returns>
 		template<typename T, class alloc, typename O = nd_int>
 		ND_INLINE basic_ndarray<T, alloc> reshape(const basic_ndarray<T, alloc> &arr, const basic_extent<O> &new_shape)
 		{

@@ -11,11 +11,29 @@ namespace py = pybind11;
 // Docstring for the module
 std::string module_docstring = "A fast math and neural network library for Python and C++";
 
+const char *class_extent_docstring = R"(
+.. hint::
+	This is a test thing. Does it work?"
+
+.. tip::
+	Can I use variable names? This should be a variable `abc123`
+
+Description of parameter `x` (the default is -1, which implies summation
+over all axes).
+
+Parameters
+----------
+x : type
+	Description of parameter `x`.
+y
+	Description of parameter `y` (with type not specified).
+)";
+
 PYBIND11_MODULE(librapid, module)
 {
 	module.doc() = module_docstring;
 
-	py::class_<librapid::ndarray::extent>(module, "extent")
+	py::class_<librapid::ndarray::extent>(module, "extent", class_extent_docstring)
 		.def(py::init<>())
 		.def(py::init<const std::vector<nd_int> &>())
 		.def(py::init<const librapid::ndarray::extent &>())
