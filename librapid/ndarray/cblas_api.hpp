@@ -141,19 +141,19 @@ namespace librapid
 			{
 				for (nd_int outer = 0; outer < m; ++outer)
 				{
-					// for (nd_int inner = 0; inner < K_prime; ++inner)
 					for (nd_int inner = 0; inner < n; ++inner)
 					{
 						index_c = outer * ldc + inner;
-						c[index_c] = 0;
+
+						if (beta != 0)
+							c[index_c] += c[index_c] * beta;
+						else
+							c[index_c] = 0;
 
 						for (nd_int sub = 0; sub < k; sub++)
 						{
 							index_a = outer * _lda + sub * _fda;
 							index_b = inner * _ldb + sub * _fdb;
-
-							if (beta != 0)
-								c[index_c] += c[index_c] * beta;
 
 							c[index_c] += a[index_a] * b[index_b];
 						}
@@ -162,14 +162,17 @@ namespace librapid
 			}
 			else
 			{
-			#pragma omp parallel for shared(a, b, c, m, n, k, _lda, _ldb, _fda, _fdb) private(index_a, index_b, index_c) default(none) num_threads(ND_NUM_THREADS)
+			#pragma omp parallel for shared(a, b, c, m, n, k, _lda, _ldb, ldc, _fda, _fdb) private(index_a, index_b, index_c) default(none) num_threads(ND_NUM_THREADS)
 				for (nd_int outer = 0; outer < m; ++outer)
 				{
-					// for (nd_int inner = 0; inner < K_prime; ++inner)
 					for (nd_int inner = 0; inner < n; ++inner)
 					{
 						index_c = outer * ldc + inner;
-						c[index_c] = 0;
+						
+						if (beta != 0)
+							c[index_c] += c[index_c] * beta;
+						else
+							c[index_c] = 0;
 
 						for (nd_int sub = 0; sub < k; sub++)
 						{
