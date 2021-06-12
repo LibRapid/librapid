@@ -12,7 +12,7 @@
 inline int benchmark_ndarray()
 {
 	// Benchmark simple arithmetic functions
-	nd_int iters = 100;
+	nd_int iters = 1000;
 	nd_int min = 10;
 	nd_int max = 1000;
 	nd_int inc = 10;

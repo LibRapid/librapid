@@ -162,7 +162,7 @@ namespace librapid
 			}
 			else
 			{
-			#pragma omp parallel for shared(a, b, c, m, n, k, _lda, _ldb, ldc, _fda, _fdb) private(index_a, index_b, index_c) default(none) num_threads(ND_NUM_THREADS)
+			#pragma omp parallel for shared(a, b, c, m, n, k, _lda, _ldb, ldc, _fda, _fdb, beta) private(index_a, index_b, index_c) default(none) num_threads(ND_NUM_THREADS)
 				for (nd_int outer = 0; outer < m; ++outer)
 				{
 					for (nd_int inner = 0; inner < n; ++inner)

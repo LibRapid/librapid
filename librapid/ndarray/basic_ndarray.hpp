@@ -57,6 +57,21 @@ namespace librapid
 			nd_allocator<typename std::common_type<A_T, B_T>::type>>
 			operator/(const A_T &val, const basic_ndarray<B_T, B_A> &arr);
 
+		/**
+		 * \rst
+		 * 
+		 * The core multi-dimensional array class that is responsible for handling
+		 * all array functionality.
+		 * 
+		 * It is highly optimized, fully templated, and is capable of using CBlas
+		 * interfaces to accelerate many of its functions.
+		 * 
+		 * Arrays of up to 32 dimensions can be created, though this can be
+		 * overridden by editing the "config.hpp" file, or by defining the macro
+		 * ``ND_MAX_DIMS`` before including ``librapid.hpp``.
+		 * 
+		 * \endrst
+		 */
 		template<typename T, class alloc, typename std::enable_if<std::is_arithmetic<T>::value, int>::type>
 		class basic_ndarray
 		{
@@ -85,48 +100,32 @@ namespace librapid
 		public:
 
 			/**
-			 * This is a function. It does something.
-			 *
-			 * Hello, World!
-			 *
 			 * \rst
-			 *
-			 * Hello. This is a title
-			 * ======================
-			 *
-			 * 1. This
-			 * 2. Is
-			 * 3. A
-			 * 4. Numbered
-			 * 5. List
-			 *
-			 * +---------+------+--------+
-			 * | This is |      | A      |
-			 * |         +------+-----+--+
-			 * |         | Very fancy |  |
-			 * +=====+===+======+=====+==+
-			 * |     | Table    |     |  |
-			 * +-----+          +-----+--+
-			 * |     |          |     |  |
-			 * +-----+----------+-----+--+
-			 *
-			 * .. code-block:: Python
-			 *
-			 * 		print("Hello, World!")
-			 *
-			 * .. hint::
-			 * 		This is a hint in a box! How cool is that!?
-			 *
+			 * 
+			 * Create an empty n-dimensional array. This array does not have an
+			 * extent or a stride, and many functions will not operate correctly
+			 * on such an array.
+			 * 
+			 * .. Hint::
+			 *		No memory is allocated on the heap when using this function,
+			 *		so it is incredibly fast.
+			 * 
 			 * \endrst
-			 *
 			 */
-			void set_stride(const stride &s)
-			{
-				m_stride = s;
-			}
-
 			basic_ndarray() = default;
 
+			/**
+			 * \rst
+			 * 
+			 * Create a new array from a given extent.
+			 * 
+			 * The array created will have the same number of dimensions
+			 * as the number of elements passed in the extent object. For
+			 * example, passing in ``extent(2, 3)`` will create a 2x3
+			 * matrix.
+			 * 
+			 * \endrst
+			 */
 			template<typename V>
 			basic_ndarray(const basic_extent<V> &size) : m_extent(size),
 				m_stride(stride::from_extent(size.get_extent(), size.ndim())),

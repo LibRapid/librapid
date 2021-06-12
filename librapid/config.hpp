@@ -37,7 +37,7 @@ namespace py = pybind11;
 #endif
 
 #ifndef ND_MAX_DIMS
-#define ND_MAX_DIMS 50
+#define ND_MAX_DIMS 32
 #endif // ND_MAX_DIMS
 
 // Operating system defines
