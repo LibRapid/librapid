@@ -89,6 +89,7 @@ PYBIND11_MODULE(librapid, module)
 		.def(py::init<const librapid::ndarray::ndarray &>())
 
 		.def_property_readonly("ndim", &librapid::ndarray::ndarray::ndim)
+		.def_property_readonly("size", &librapid::ndarray::ndarray::size)
 		.def_property_readonly("is_initialized", &librapid::ndarray::ndarray::is_initialized)
 		.def_property_readonly("is_scalar", &librapid::ndarray::ndarray::is_scalar)
 
@@ -154,6 +155,22 @@ PYBIND11_MODULE(librapid, module)
 		.def("__int__", [](const librapid::ndarray::ndarray &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to int"); return (nd_int) *arr.get_data_start(); })
 		.def("__float__", [](const librapid::ndarray::ndarray &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to float"); return (double) *arr.get_data_start(); })
 		.def("__repr__", [](const librapid::ndarray::ndarray &arr) { return "<librapid.ndarray " + arr.str(18) + ">"; });
+
+	module.def("add", [](double lhs, double rhs) { return lhs + rhs; });
+	module.def("add", [](librapid::ndarray::ndarray lhs, double rhs) { return lhs + rhs; });
+	module.def("add", [](double lhs, librapid::ndarray::ndarray rhs) { return lhs + rhs; });
+
+	module.def("sub", [](double lhs, double rhs) { return lhs - rhs; });
+	module.def("sub", [](librapid::ndarray::ndarray lhs, double rhs) { return lhs - rhs; });
+	module.def("sub", [](double lhs, librapid::ndarray::ndarray rhs) { return lhs - rhs; });
+	
+	module.def("mul", [](double lhs, double rhs) { return lhs * rhs; });
+	module.def("mul", [](librapid::ndarray::ndarray lhs, double rhs) { return lhs * rhs; });
+	module.def("mul", [](double lhs, librapid::ndarray::ndarray rhs) { return lhs * rhs; });
+
+	module.def("div", [](double lhs, double rhs) { return lhs / rhs; });
+	module.def("div", [](librapid::ndarray::ndarray lhs, double rhs) { return lhs / rhs; });
+	module.def("div", [](double lhs, librapid::ndarray::ndarray rhs) { return lhs / rhs; });
 
 	module.def("reshape", [](const librapid::ndarray::ndarray &arr, const librapid::ndarray::extent &shape) { return librapid::ndarray::reshape(arr, shape); });
 	module.def("reshape", [](const librapid::ndarray::ndarray &arr, const std::vector<nd_int> &shape) { return librapid::ndarray::reshape(arr, librapid::ndarray::extent(shape)); });

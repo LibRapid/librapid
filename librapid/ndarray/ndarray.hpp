@@ -1,13 +1,12 @@
 #ifndef NDARRAY_CORE
 #define NDARRAY_CORE
 
-#include <librapid/ndarray/config.hpp>
+#include <librapid/config.hpp>
 
-#include <librapid/ndarray/errors.hpp>
-#include <librapid/ndarray/core_math.hpp>
+#include <librapid/errors.hpp>
+#include <librapid/math/core_math.hpp>
 #include <librapid/ndarray/basic_stride.hpp>
 #include <librapid/ndarray/basic_extent.hpp>
-#include <librapid/ndarray/strided_loops.hpp>
 #include <librapid/ndarray/to_string.hpp>
 #include <librapid/ndarray/utils.hpp>
 #include <librapid/ndarray/broadcast_arrays.hpp>

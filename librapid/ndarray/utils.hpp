@@ -2,6 +2,7 @@
 #define NDARRAY_UTILS
 
 #include <cstring>
+#include <librapid/math/rapid_math.hpp>
 
 namespace librapid
 {

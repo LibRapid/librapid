@@ -1,6 +1,8 @@
 #ifndef NDARRAY_TO_STRING
 #define NDARRAY_TO_STRING
 
+#include <librapid/math/rapid_math.hpp>
+
 namespace librapid
 {
 	namespace ndarray
@@ -14,7 +16,7 @@ namespace librapid
 			};
 
 			template<typename T>
-			inline bool inc_arr(std::vector<T> &arr, const std::vector<T> &m)
+			ND_INLINE bool inc_arr(std::vector<T> &arr, const std::vector<T> &m)
 			{
 				arr[arr.size() - 1]++;
 
@@ -34,7 +36,7 @@ namespace librapid
 			}
 
 			template<typename T>
-			str_container format_numerical(const T &val)
+			ND_INLINE str_container format_numerical(const T &val)
 			{
 				std::stringstream stream;
 
@@ -61,7 +63,7 @@ namespace librapid
 				return {str, (nd_int) last_decimal};
 			}
 
-			std::string to_string_1D(const std::vector<std::string> &adjusted, bool strip_middle)
+			ND_INLINE std::string to_string_1D(const std::vector<std::string> &adjusted, bool strip_middle)
 			{
 				std::string res = "[";
 
@@ -81,8 +83,8 @@ namespace librapid
 			}
 
 			template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
-			std::string to_string(const std::vector<std::string> &adjusted, const std::vector<T> &shape,
-								  T depth, bool strip_middle)
+			ND_INLINE std::string to_string(const std::vector<std::string> &adjusted, const std::vector<T> &shape,
+											T depth, bool strip_middle)
 			{
 				if (shape.size() == 1)
 					return to_string_1D(adjusted, strip_middle);

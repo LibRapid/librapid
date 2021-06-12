@@ -2,6 +2,7 @@
 #define NDARRAY_BROADCAST_ARRAYS
 
 #include <librapid/ndarray/utils.hpp>
+#include <librapid/math/rapid_math.hpp>
 
 namespace librapid
 {

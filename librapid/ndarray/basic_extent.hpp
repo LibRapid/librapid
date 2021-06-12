@@ -2,6 +2,7 @@
 #define NDARRAY_BASIC_EXTENTS
 
 #include <librapid/ndarray/utils.hpp>
+#include <librapid/math/rapid_math.hpp>
 
 #include <memory>
 #include <string>
@@ -21,12 +22,6 @@ namespace librapid
 		template<typename T = nd_int, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
 		class basic_extent;
 
-		/// <summary>
-		/// The extent iterator class allows you to iterate
-		/// over the extent of an array, accessing the values
-		/// one by one in order
-		/// </summary>
-		/// <typeparam name="T">The datatype of the extent being iterated over</typeparam>
 		template<typename T>
 		class extent_iterator
 		{
@@ -37,16 +32,8 @@ namespace librapid
 			using pointer = value_type *;
 			using reference = value_type &;
 
-			/// <summary>
-			/// Create an empty extent iterator
-			/// </summary>
 			extent_iterator() = default;
 
-			/// <summary>
-			/// Create a new extent iterator using
-			/// the starting pointer
-			/// </summary>
-			/// <param name="start">The starting memory location</param>
 			extent_iterator(pointer start)
 			{
 				m_ptr = start;
@@ -54,111 +41,53 @@ namespace librapid
 
 			~extent_iterator() = default;
 
-			/// <summary>
-			/// Set one extent iterator equal to another
-			/// </summary>
-			/// <param name="other">Another extent iterator</param>
-			/// <returns>A reference to the original iterator</returns>
 			ND_INLINE extent_iterator<T> &operator=(const extent_iterator<T> &other) = default;
 
-			/// <summary>
-			/// Set an extent iterator to a pointer
-			/// of the same type
-			/// </summary>
-			/// <param name="ptr">The pointer to iterate</param>
-			/// <returns>Reference to original iterator</returns>
 			ND_INLINE extent_iterator<T> &operator=(pointer ptr)
 			{
 				m_ptr = ptr;
 				return *this;
 			}
 
-			/// <summary>
-			/// Convert the iterator to a boolean value.
-			/// The result is "true" if the pointer is a
-			/// valid memory location, otherwise the result
-			/// is "false"
-			/// </summary>
-			/// <returns>True if the iterator's pointer is valid</returns>
 			ND_INLINE operator bool() const
 			{
 				return m_ptr ? true : false;
 			}
 
-			/// <summary>
-			/// Check whether one extent iterator is equal to another
-			/// extent iterator of the same type
-			/// </summary>
-			/// <param name="other">The iterator to compare against</param>
-			/// <returns>True if the iterators are equal</returns>
 			ND_INLINE bool operator==(const extent_iterator<T> &other) const
 			{
 				return m_ptr == other.get_const_ptr();
 			}
 
-			/// <summary>
-			/// Check for a lack of equality with another iterator
-			/// of the same type.
-			/// </summary>
-			/// <param name="other">The iterator to compare agianst</param>
-			/// <returns>True if the iterators are not equal</returns>
 			ND_INLINE bool operator!=(const extent_iterator<T> &other) const
 			{
 				return m_ptr != other.get_const_ptr();
 			}
 
-			/// <summary>
-			/// Increment the pointer by a specific offset
-			/// </summary>
-			/// <param name="movement">The offset for the pointer</param>
-			/// <returns>Reference to the iterator</returns>
 			ND_INLINE extent_iterator<T> &operator+=(const difference_type &movement)
 			{
 				m_ptr += movement;
 				return (*this);
 			}
 
-			/// <summary>
-			/// Decrement the pointer by a specific offset
-			/// </summary>
-			/// <param name="movement">The offset for the pointer</param>
-			/// <returns>Reference to the iterator</returns>
 			ND_INLINE extent_iterator<T> &operator-=(const difference_type &movement)
 			{
 				m_ptr -= movement;
 				return (*this);
 			}
 
-			/// <summary>
-			/// Increment the pointer by one
-			/// </summary>
-			/// <returns>Reference to the iterator</returns>
 			ND_INLINE extent_iterator<T> &operator++()
 			{
 				++m_ptr;
 				return (*this);
 			}
 
-			/// <summary>
-			/// Decrement the iterator by one
-			/// </summary>
-			/// <returns>Reference to the iterator</returns>
 			ND_INLINE extent_iterator<T> &operator--()
 			{
 				--m_ptr;
 				return (*this);
 			}
 
-			/// <summary>
-			/// Increment the iterator, but return
-			/// it's unincremented value. For example,
-			/// an iterator at memory location zero
-			/// would return another iterator at zero,
-			/// though the original iterator would then
-			/// be at memory location one
-			/// </summary>
-			/// <param name=""></param>
-			/// <returns></returns>
 			ND_INLINE extent_iterator<T> operator++(int)
 			{
 				auto temp(*this);
@@ -166,16 +95,6 @@ namespace librapid
 				return temp;
 			}
 
-			/// <summary>
-			/// Decrement the iterator, but return
-			/// it's original value. For example,
-			/// an iterator at memory location one
-			/// would return another iterator at one,
-			/// though the original iterator would then
-			/// be at memory location zero
-			/// </summary>
-			/// <param name=""></param>
-			/// <returns></returns>
 			ND_INLINE extent_iterator<T> operator--(int)
 			{
 				auto temp(*this);
@@ -183,83 +102,41 @@ namespace librapid
 				return temp;
 			}
 
-			/// <summary>
-			/// Return a new iterator incremented
-			/// with a given offset
-			/// </summary>
-			/// <param name="movement"></param>
-			/// <returns>A new iterator</returns>
 			ND_INLINE extent_iterator<T> operator+(const difference_type &movement) const
 			{
 				return extent_iterator<T>(m_ptr + movement);
 			}
 
-			/// <summary>
-			/// Return a new iterator decremented
-			/// with a given offset
-			/// </summary>
-			/// <param name="movement"></param>
-			/// <returns>A new iterator</returns>
 			ND_INLINE extent_iterator<T> operator-(const difference_type &movement) const
 			{
 				return extent_iterator<T>(m_ptr - movement);
 			}
 
-			/// <summary>
-			/// Find the difference between one iterator
-			/// and another
-			/// </summary>
-			/// <param name="raw_iterator"></param>
-			/// <returns>The difference between the iterators</returns>
 			ND_INLINE difference_type operator-(const extent_iterator<T> &raw_iterator) const
 			{
 				return std::distance(raw_iterator.get_ptr(), get_ptr());
 			}
 
-			/// <summary>
-			/// Dereference the iterator and return
-			/// a reference to the value at the current
-			/// point in the iterator
-			/// </summary>
-			/// <returns>A value reference</returns>
 			ND_INLINE T &operator*()
 			{
 				return *m_ptr;
 			}
 
-			/// <summary>
-			/// Dereference the iterator and return
-			/// a const reference to the value at the
-			/// current point in the iterator
-			/// </summary>
-			/// <returns>A const value reference</returns>
 			ND_INLINE const T &operator*() const
 			{
 				return *m_ptr;
 			}
 
-			/// <summary>
-			/// Access the pointer
-			/// </summary>
-			/// <returns></returns>
 			ND_INLINE T *operator->()
 			{
 				return m_ptr;
 			}
 
-			/// <summary>
-			/// Access the const pointer of the iterator
-			/// </summary>
-			/// <returns>A const pointer</returns>
 			ND_INLINE const pointer get_const_ptr() const
 			{
 				return m_ptr;
 			}
 
-			/// <summary>
-			/// Access the non-const pointer of the iterator
-			/// </summary>
-			/// <returns>A pointer</returns>
 			ND_INLINE pointer get_ptr() const
 			{
 				return m_ptr;
@@ -345,7 +222,7 @@ namespace librapid
 			}
 
 			template<typename PTR>
-			basic_extent(PTR data, nd_int dims)
+			basic_extent(PTR *data, nd_int dims)
 			{
 				m_dims = dims;
 

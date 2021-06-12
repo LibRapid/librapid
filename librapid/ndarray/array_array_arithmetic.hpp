@@ -1,6 +1,7 @@
 #ifndef NDARRAY_ARRAY_ARRAY_ARITHMETIC
 #define NDARRAY_ARRAY_ARRAY_ARITHMETIC
 
+#include <librapid/math/rapid_math.hpp>
 #include <cstring> // For memset
 
 namespace librapid
@@ -50,7 +51,7 @@ namespace librapid
 							// Only use OpenMP if size is above a certain threshold
 							// to improve speed for small arrays (overhead of multiple
 							// threads makes it slower for small arrays)
-							if (end > 100000)
+							if (end > 1000000)
 							{
 								long long e = (long long) end;
 							#pragma omp parallel for shared(src_a, src_b, src_c, op, e) default(none) num_threads(ND_NUM_THREADS)

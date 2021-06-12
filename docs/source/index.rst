@@ -77,7 +77,7 @@ the library in one of your projects, simply do the following:
 .. code-block:: C++
 	:caption: For C++ programs
 
-	#include <librapid.hpp>
+	#include <librapid/librapid.hpp>
 
 
 Contents
@@ -87,31 +87,9 @@ Contents
 	:maxdepth: 2
 	:glob:
 
-	librapid_ndarray_api
-
-Test
-====
-
-.. doxygenclass:: librapid::ndarray::extent_iterator
-	:members:
-
-.. doxygenclass:: librapid::ndarray::basic_ndarray
-	:members:
-
-.. doxygenfunction:: librapid::ndarray::math::product(const std::vector<T> &)
-
-Another Test
-============
-
-.. include:: test_documentation.rst
-
-A final Test
-============
-
-.. automodule:: librapid
-   :members:
+	cpp_docs
 
 Indices and tables
-******************
+==================
 
 * :ref:`search`

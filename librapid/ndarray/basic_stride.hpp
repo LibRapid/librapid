@@ -2,6 +2,7 @@
 #define NDARRAY_BASIC_STRIDE
 
 #include <librapid/ndarray/utils.hpp>
+#include <librapid/math/rapid_math.hpp>
 
 #include <memory>
 #include <string>

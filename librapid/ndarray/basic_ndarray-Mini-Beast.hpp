@@ -22,8 +22,6 @@
 #include <cblas.h>
 #endif
 
-#include <librapid/ndarray/cblas_api.hpp>
-
 namespace librapid
 {
 	namespace ndarray
@@ -230,11 +228,6 @@ namespace librapid
 			ND_INLINE nd_int ndim() const
 			{
 				return (nd_int) m_extent.ndim();
-			}
-
-			ND_INLINE nd_int size() const
-			{
-				return (nd_int) m_extent_product;
 			}
 
 			ND_INLINE bool is_initialized() const
@@ -777,19 +770,10 @@ namespace librapid
 			{
 				using R_T = typename std::common_type<T, B_T>::type;
 
-				bool is_matrix_vector = false;
-
 				const auto &o_e = other.get_extent();
-				bool is_matrix_vector_like = utils::check_ptr_match(o_e.get_extent(), o_e.ndim(),
-																	utils::sub_vector(m_extent.get_extent(),
-																	m_extent.ndim(), 1), true);
-
-				// Check for column-vector
-				if (ndim() == 2)
-					if (m_extent[1] == o_e[0] && o_e[1] == 1)
-						is_matrix_vector = true;
-
-				if (is_matrix_vector || is_matrix_vector_like)
+				if (utils::check_ptr_match(o_e.get_extent(), o_e.ndim(),
+					utils::sub_vector(m_extent.get_extent(), m_extent.ndim(), 1),
+					true))
 				{
 					// Matrix-Vector product
 					nd_int res_shape[ND_MAX_DIMS]{};
@@ -800,39 +784,15 @@ namespace librapid
 						res_shape[i] = other.get_extent()[i];
 
 					auto res = basic_ndarray<R_T>(extent(res_shape, dims));
-
-					// #ifdef LIBRAPID_CBLAS
-					const auto M = m_extent[0];
-					const auto N = m_extent[1];
-					const auto K = other.get_extent()[0];
-
-					if (is_matrix_vector_like)
-					{
-						for (nd_int i = 0; i < M; i++)
-							res[i] = subscript(i).dot(other);
-						return res;
-					}
-
-					const R_T alpha = 1.0;
-					const R_T beta = 0.0;
-
-					const auto trans = m_stride[0] != N;
-
-					const auto lda = M;
-					const auto ldb = other.get_stride()[other.ndim() - 1];
-
-					auto *__restrict a = m_data_start;
-					auto *__restrict b = other.get_data_start();
-					auto *__restrict c = res.get_data_start();
-
-					linalg::cblas_gemv('r', trans, M, N, alpha, a, lda, b, ldb, beta, c, 1);
+					for (nd_int i = 0; i < m_extent[0]; i++)
+						res[i] = subscript(i).dot(other);
 
 					return res;
 				}
 
 				if (ndim() != other.ndim())
-					throw std::domain_error("Cannot compute dot product on arrays with " +
-											m_extent.str() + " and " + other.get_extent().str());
+					throw std::range_error("Cannot compute dot product on arrays with " +
+										   m_extent.str() + " and " + other.get_extent().str());
 
 				nd_int dims = ndim();
 
@@ -841,23 +801,103 @@ namespace librapid
 					case 1:
 						{
 							if (m_extent[0] != other.get_extent()[0])
-								throw std::domain_error("Cannot compute dot product with arrays with " +
-														m_extent.str() + " and " + other.get_extent().str());
+								throw std::range_error("Cannot compute dot product with arrays with " +
+													   m_extent.str() + " and " + other.get_extent().str());
 
 							// Vector product
 							basic_ndarray<R_T, nd_allocator<R_T>> res(extent({1}));
 							res.m_is_scalar = true;
 
-							*res.get_data_start() = linalg::cblas_dot(m_extent_product, m_data_start, m_stride[0],
-																	  other.get_data_start(), other.get_stride()[0]);
+						#ifndef LIBRAPID_CBLAS
+							R_T *r = res.get_data_start();
+							T *m = m_data_start;
+							B_T *o = other.get_data_start();
+							nd_int lda = m_stride[0];
+							nd_int ldb = other.get_stride()[0];
+							*r = 0;
+							for (nd_int i = 0; i < m_extent_product; i++)
+								*r += m[i * lda] * o[i * ldb];
+						#else
+							*res.get_data_start() = cblas_ddot(m_extent_product, m_data_start, m_stride[0],
+															   other.get_data_start(), other.get_stride()[0]);
+						#endif // LIBRAPID_CBLAS
 
 							return res;
 						}
 					case 2:
 						{
 							if (m_extent[1] != other.get_extent()[0])
-								throw std::domain_error("Cannot compute dot product with arrays with " +
-														m_extent.str() + " and " + other.get_extent().str());
+								throw std::range_error("Cannot compute dot product with arrays with " +
+													   m_extent.str() + " and " + other.get_extent().str());
+
+						#ifndef LIBRAPID_CBLAS
+							const basic_ndarray<T, alloc> tmp_other = other.transposed_matrix();
+
+							nd_int M = get_extent()[0];
+							nd_int N = get_extent()[1];
+							nd_int K = tmp_other.get_extent()[1];
+							nd_int K_prime = other.get_extent()[1];
+
+							auto res = basic_ndarray<R_T>(extent{M, K_prime});
+
+							T *a = m_data_start;
+							B_T *b = tmp_other.get_data_start();
+							R_T *c = res.get_data_start();
+
+							nd_int lda = m_stride[0], fda = m_stride[1];
+							nd_int ldb = tmp_other.get_stride()[0], fdb = tmp_other.get_stride()[1];
+							nd_int ldc = res.get_stride()[0], fdc = res.get_stride()[1];
+
+							nd_int index_a, index_b, index_c;
+
+							// Only run in parallel if arrays are smaller than a
+							// given size. Running in parallel on smaller matrices
+							// will result in slower code. Note, a branch is used
+							// in preference to #pragma omp ... if (...) because
+							// that requires runtime evaluation of a condition to
+							// set up threads, which adds a significant overhead
+							if (M * N * K < 25000)
+							{
+								for (nd_int outer = 0; outer < M; ++outer)
+								{
+									for (nd_int inner = 0; inner < K_prime; ++inner)
+									{
+										index_c = outer * ldc + inner * fdc;
+										c[index_c] = 0;
+
+										for (nd_int k = 0; k < N; k++)
+										{
+											index_a = outer * lda + k * fda;
+											index_b = inner * ldb + k * fdb;
+
+											c[index_c] += a[index_a] * b[index_b];
+										}
+									}
+								}
+							}
+							else
+							{
+							#pragma omp parallel for shared(a, b, c, M, N, K, K_prime, lda, ldb, ldc, fda, fdb, fdc) private(index_a, index_b, index_c) default(none) num_threads(ND_NUM_THREADS)
+								for (nd_int outer = 0; outer < M; ++outer)
+								{
+									for (nd_int inner = 0; inner < K_prime; ++inner)
+									{
+										index_c = outer * ldc + inner * fdc;
+										c[index_c] = 0;
+
+										for (nd_int k = 0; k < N; k++)
+										{
+											index_a = outer * lda + k * fda;
+											index_b = inner * ldb + k * fdb;
+
+											c[index_c] += a[index_a] * b[index_b];
+										}
+									}
+								}
+							}
+
+							return res;
+						#else
 
 							const auto M = m_extent[0];
 							const auto N = m_extent[1];
@@ -868,10 +908,8 @@ namespace librapid
 
 							auto res = basic_ndarray<R_T>(extent{M, K});
 
-							// const auto transA = m_stride[0] == N ? CblasNoTrans : CblasTrans;
-							// const auto transB = other.get_stride()[0] == K ? CblasNoTrans : CblasTrans;
-							const auto transA = m_stride[0] != N;
-							const auto transB = other.get_stride()[0] != K;
+							const auto transA = m_stride[0] == N ? CblasNoTrans : CblasTrans;
+							const auto transB = other.get_stride()[0] == K ? CblasNoTrans : CblasTrans;
 
 							const auto lda = N;
 							const auto ldb = K;
@@ -881,17 +919,20 @@ namespace librapid
 							auto *__restrict b = other.get_data_start();
 							auto *__restrict c = res.get_data_start();
 
-							linalg::cblas_gemm('r', transA, transB, M, K, N,
-											   alpha, a, lda, b, ldb, beta, c, ldc);
+							cblas_dgemm(CblasRowMajor, transA, transB, M, K, N,
+										alpha, a, lda, b, ldb, beta, c, ldc);
 
 							return res;
+						#endif // LIBRAPID_CBLAS
 						}
 					default:
 						{
 							// Check the arrays are valid
 							if (m_extent[ndim() - 1] != other.get_extent()[other.ndim() - 2])
-								throw std::domain_error("Cannot compute dot product with arrays with " +
-														m_extent.str() + " and " + other.get_extent().str());
+							{
+								throw std::range_error("Cannot compute dot product with arrays with " +
+													   m_extent.str() + " and " + other.get_extent().str());
+							}
 
 							// Create the new array dimensions
 							nd_int new_extent[ND_MAX_DIMS]{};

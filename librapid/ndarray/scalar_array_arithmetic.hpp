@@ -1,6 +1,7 @@
 #ifndef NDARRAY_SCALAR_ARRAY_ARITHMETIC
 #define NDARRAY_SCALAR_ARRAY_ARITHMETIC
 
+#include <librapid/math/rapid_math.hpp>
 #include <cstring> // For memset
 
 namespace librapid
