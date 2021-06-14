@@ -1,6 +1,9 @@
 build
 dist
 librapid.egg-info
+librapid/librapid.egg-info
+
+librapid/blas
 
 docs/build
 docs/source/api
