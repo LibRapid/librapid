@@ -1,6 +1,3 @@
-from inspect import FullArgSpec
-from setuptools import setup
-
 # Available at setup time due to pyproject.toml
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 from pybind11 import get_cmake_dir
@@ -13,6 +10,8 @@ import os
 from os import listdir
 from os.path import isfile, join
 import sys
+import distutils.sysconfig
+import shutil
 
 try:
 	from setuptools import setup, Extension, find_packages
@@ -23,7 +22,6 @@ except ImportError:
 		return [folder.replace("/", ".").lstrip(".")
 				for (folder, _, files) in os.walk(where)
 				if "__init__.py" in files]
-
 
 """
 Find an OpenBLAS directory somewhere to link against for
@@ -117,18 +115,23 @@ def find_blas(args):
 
 			for dir in dirs:
 				if dir.lower() == "bin":
-					bin_dir = search_dir + "/" + dir
+					# bin_dir = search_dir + "/" + dir
+					bin_dir = os.path.join(search_dir, dir)
 				elif dir.lower() == "include":
 					# For vcpkg OpenBLAS, first check if there
 					# is another directory
 
-					if "openblas" in listdir(search_dir + "/" + dir):
+					# if "openblas" in listdir(search_dir + "/" + dir):
+					if "openblas" in listdir(os.path.join(search_dir, dir)):
 						print("Found vcpkg OpenBLAS, so shifting into 'openblas' directory for cblas.h")
-						include_dir = search_dir + "/" + dir + "/openblas"
+						# include_dir = search_dir + "/" + dir + "/openblas"
+						include_dir = os.path.join(search_dir, dir, "openblas")
 					else:
-						include_dir = search_dir + "/" + dir
+						# include_dir = search_dir + "/" + dir
+						include_dir = os.path.join(search_dir, dir)
 				elif dir.lower() == "lib":
-					lib_dir = search_dir + "/" + dir
+					# lib_dir = search_dir + "/" + dir
+					lib_dir = os.path.join(search_dir, dir)
 
 			cmd = {}
 
@@ -190,13 +193,13 @@ def find_blas(args):
 					blas_dir["include"] = [blas_include, filename]
 
 			if blas_lib is not None:
-				filename = find_lib(blas_lib)
+				filename, full = find_lib(blas_lib)
 
 				if filename is not None:
 					# A valid library was found
 					print("Found a valid library at", blas_lib)
 					found[2] = True
-					blas_dir["lib"] = [blas_lib, filename]
+					blas_dir["lib"] = [blas_lib, filename, full]
 
 			# Only set this if the correct files are found
 			found_blas = all(found)
@@ -275,7 +278,7 @@ def find_lib(base_path):
 					if platform.system() in ["Linux", "Darwin"]:
 						# If the name starts with "lib", remove it
 						return new_name[3:]
-					return new_name
+					return new_name, file
 
 		return None
 	except FileNotFoundError:
@@ -392,12 +395,12 @@ def enable_optimizations():
 #						to contain a file structure like this (Windows example):
 #
 #						blas-dir
-#						├── bin
-#						|	└── libopenblas.dll
-#						├── include
-#						|	└── cblas.h
-#						└── lib
-#							└── libopenblas.lib
+#                       ├── bin
+#                       |   └── libopenblas.dll
+#                       ├── include
+#                       |   └── cblas.h
+#                       └── lib
+#                       	└── libopenblas.lib
 # --blas-include	<<  Set the BLAS include directory. LibRapid will expect
 #						cblas.h to be in this directory
 # --blas-lib		<<  Set the BLAS library directory. LibRapid will expect
@@ -440,10 +443,10 @@ if blas_dir is not None:
 	print("Includes:", blas_dir["include"])
 	print("Libraries:", blas_dir["lib"])
 
-	# If on Windows and BLAS was found, add binaries to PATH
-	if platform.system() == "Windows":
-		if blas_dir["bin"][0] not in os.environ["PATH"]:
-			os.environ["PATH"] += os.pathsep + blas_dir["bin"][0]
+	# # If on Windows and BLAS was found, add binaries to PATH
+	# if platform.system() == "Windows":
+	# 	if blas_dir["bin"][0] not in os.environ["PATH"]:
+	# 		os.environ["PATH"] += os.pathsep + blas_dir["bin"][0]
 
 compiler_flags = std_version() + compile_with_omp() + enable_optimizations()
 linker_flags = link_omp()
@@ -455,9 +458,51 @@ libraries = []
 if blas_dir is not None:
 	# BLAS library was found, so link against it
 	define_macros.append(("LIBRAPID_CBLAS", 1))
+	
 	include_dirs.append(blas_dir["include"][0])
 	library_dirs.append(blas_dir["lib"][0])
 	libraries.append(blas_dir["lib"][1])
+
+	include_dirs.append(os.path.join(distutils.sysconfig.get_python_lib(), "librapid", "blas"))
+	library_dirs.append(os.path.join(distutils.sysconfig.get_python_lib(), "librapid", "blas"))
+	libraries.append(blas_dir["lib"][1])
+	
+	# Copy the required files to the source distribution
+
+	try:
+		if os.path.exists("librapid/blas"):
+			os.remove("librapid/blas")
+	except OSError:
+		print("Error thrown. Not removing directory")
+
+	try:
+		os.mkdir("librapid/blas")
+	except FileExistsError:
+		pass
+
+	# Copy all CBLAS files to new directory
+	include_dir = blas_dir["include"][0]
+	lib_dir = blas_dir["lib"][0]
+	bin_dir = blas_dir["bin"][0] if "bin" in blas_dir else None
+
+	os.environ["PATH"] = os.path.join(os.getcwd(), "librapid/blas") + os.pathsep + os.environ["PATH"]
+	
+	for file in next(os.walk(include_dir), (None, None, []))[2]:
+		# Copy the include files
+		print("Copying file '%s'" %file)
+		shutil.copyfile(os.path.join(include_dir, file), os.path.join(os.getcwd(), "librapid/blas", file))
+
+	# Copy the library files
+	print("Copying file '%s'" %blas_dir["lib"][2])
+	shutil.copyfile(os.path.join(lib_dir, blas_dir["lib"][2]), os.path.join(os.getcwd(), "librapid/blas", blas_dir["lib"][2]))
+
+	if bin_dir is not None:
+		# Copy the binary files
+		print("Copying file '%s'" %blas_dir["bin"][1])
+		shutil.copyfile(os.path.join(bin_dir, blas_dir["bin"][1]), os.path.join(os.getcwd(), "librapid/blas", blas_dir["bin"][1]))
+
+else:
+	print("A valid CBlas interface was not found")
 
 ext_modules = [
 	Pybind11Extension("librapid",
@@ -480,8 +525,8 @@ setup(
 	description="A fast math and neural network library for Python and C++",
 	long_description=long_description,
 	long_description_content_type="text/markdown",
+	packages=[] + ["" + mod for mod in find_packages("librapid")],
 	ext_modules=ext_modules,
-	packages=["librapid"] + ["librapid." + mod for mod in find_packages("librapid")],
 	license="Boost Software License",
 	keywords=["math", "neural network", "ndarray", "array", "matrix",
 			"high-performance computing"],
@@ -498,5 +543,10 @@ setup(
 	],
 	extras_require={"test": "pytest"},
 	cmdclass={"build_ext": build_ext},
+	include_package_data=True,
+	package_dir={"": "librapid"},
+	package_data={
+		"" : ["*.cpp", "*.hpp", "*.py", "*.dll", "*.so", "*.a", "*.lib"]
+	},
 	zip_safe=False
 )
