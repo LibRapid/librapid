@@ -29,7 +29,7 @@ y
 	Description of parameter `y` (with type not specified).
 )";
 
-PYBIND11_MODULE(librapid, module)
+PYBIND11_MODULE(librapid_, module)
 {
 	module.doc() = module_docstring;
 
