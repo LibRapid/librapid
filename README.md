@@ -68,12 +68,12 @@ Options:
 				   to contain a file structure like this (Windows example):
 
 				   blas-dir
-				   ├── bin
-				   |	└── libopenblas.dll
-				   ├── include
-				   |	└── cblas.h
-				   └── lib
-					   └── libopenblas.lib
+                   ├── bin
+                   |   └── libopenblas.dll
+                   ├── include
+                   |   └── cblas.h
+                   └── lib
+                       └── libopenblas.lib
 --blas-include  << Set the BLAS include directory. LibRapid will expect
 				   cblas.h to be in this directory
 --blas-lib	  << Set the BLAS library directory. LibRapid will expect
