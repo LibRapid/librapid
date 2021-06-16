@@ -32,14 +32,23 @@ jobs:
         run: |
           echo "Cloning Microsoft vcpkg"
           git clone https://github.com/microsoft/vcpkg.git
+          
+          cd vcpkg
+          git reset --hard 835f1613b5d785eed9cfc6c0b76d6ac2aa0a61ba
+          cd ..
+
           echo "Bootstrapping vcpkg"
           ./vcpkg/bootstrap-vcpkg.sh
+
           echo "Installing OpenBLAS"
           ./vcpkg/vcpkg install openblas
+
           echo "Current directory"
           pwd
+
           echo "Files in 'packages' directory"
           ls ./vcpkg/packages
+
           echo "Files in 'openblas_x64-linux' directory"
           ls ./vcpkg/packages/openblas_x64-linux
         shell: bash
@@ -96,10 +105,15 @@ jobs:
         run: |
           echo "Cloning Microsoft vcpkg"
           git clone https://github.com/microsoft/vcpkg.git
+          
+          cd vcpkg
+          git reset --hard 835f1613b5d785eed9cfc6c0b76d6ac2aa0a61ba
+          cd ..
+
           echo "Bootstrapping vcpkg"
           ./vcpkg/bootstrap-vcpkg.sh
+
           echo "Installing OpenBLAS"
-      
           if [ "$RUNNER_OS" == "Windows" ]; then
             ./vcpkg/vcpkg install openblas --triplet=x86-windows
             ./vcpkg/vcpkg install openblas --triplet=x64-windows
@@ -109,10 +123,11 @@ jobs:
           
           echo "Current directory"
           pwd
+
           echo "Files in 'packages' directory"
           ls ./vcpkg/packages
+
           echo "Files in 'openblas_x64-...' directory"
-          
           if [ "$RUNNER_OS" == "Windows" ]; then
             ls ./vcpkg/packages/openblas_x64-windows
           elif [ "$RUNNER_OS" == "Linux" ]; then

@@ -5,14 +5,9 @@ import shutil
 
 from . import progress
 
-try:
-	from librapid_ import *
-except ImportError as error:
-	print("Error while loading librapid core:", error)
+if platform.system() == "Windows":
+	import win32api
+	print("Adding DLL path", os.path.join(distutils.sysconfig.get_python_lib(), "librapid", "blas"))
+	win32api.SetDllDirectory(os.path.join(distutils.sysconfig.get_python_lib(), "librapid", "blas"))
 
-	if platform.system() == "Windows":
-		import win32api
-		print("Adding DLL path", os.path.join(distutils.sysconfig.get_python_lib(), "librapid", "blas"))
-		win32api.SetDllDirectory(os.path.join(distutils.sysconfig.get_python_lib(), "librapid", "blas"))
-	
-	from librapid_ import *
+from librapid_ import *

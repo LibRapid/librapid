@@ -10,18 +10,10 @@ import os
 from os import listdir
 from os.path import isfile, join
 import sys
+from setuptools import setup, Extension, find_packages
 import distutils.sysconfig
 import shutil
 
-try:
-	from setuptools import setup, Extension, find_packages
-except ImportError:
-	from distutils.core import setup, Extension
-
-	def find_packages(where='.'):
-		return [folder.replace("/", ".").lstrip(".")
-				for (folder, _, files) in os.walk(where)
-				if "__init__.py" in files]
 
 """
 Find an OpenBLAS directory somewhere to link against for
