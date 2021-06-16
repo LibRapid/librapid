@@ -100,4 +100,15 @@ namespace py = pybind11;
 
 using nd_int = long long;
 
+// Some tests
+namespace librapid {
+    int librapid_has_blas() {
+    #ifdef LIBRAPID_CBLAS
+        return 1;
+    #else
+        return 0;
+    #endif // LIBRAPID_CBLAS
+    }
+}
+
 #endif // NDARRAY_CONFIG
