@@ -784,7 +784,7 @@ namespace librapid
 																	m_extent.ndim(), 1), true);
 
 				// Check for column-vector
-				if (ndim() == 2)
+				if (ndim() == 2 && other.ndim() == 2)
 					if (m_extent[1] == o_e[0] && o_e[1] == 1)
 						is_matrix_vector = true;
 

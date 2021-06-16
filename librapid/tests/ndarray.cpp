@@ -3,7 +3,7 @@
 
 #define ND_MAX_DIMS 10
 #define ND_NUM_THREADS 32
-// #define LIBRAPID_CBLAS
+#define LIBRAPID_CBLAS
 
 #include "ndarray_benchmarks.hpp"
 #include <librapid/ndarray/ndarray.hpp>
@@ -11,7 +11,7 @@
 int main()
 {
 	auto lhs = librapid::ndarray::basic_ndarray<double>(librapid::ndarray::extent({2, 2}), 0);
-	auto rhs = librapid::ndarray::basic_ndarray<double>(librapid::ndarray::extent({2, 1}), 0);
+	auto rhs = librapid::ndarray::basic_ndarray<double>(librapid::ndarray::extent({2}), 0);
 
 	for (nd_int i = 0; i < lhs.size(); i++)
 		lhs.set_value(i, i + 1);
@@ -29,7 +29,7 @@ int main()
 
 	std::cout << res.str() << "\n";
 
-	benchmark_ndarray();
+	// benchmark_ndarray();
 
 	return 0;
 }
