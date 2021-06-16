@@ -539,9 +539,9 @@ setup(
 		"Programming Language :: Python :: 3.9",
 	],
 	extras_require={"test": "pytest"},
+	install_requires=["cpufeature", "pypiwin32"],
 	cmdclass={"build_ext": build_ext},
 	include_package_data=True,
-	# package_dir={"": "librapid"},
 	package_data={
 		"" : ["*.cpp", "*.hpp", "*.py", "*.dll", "*.so", "*.a", "*.lib"]
 	},
