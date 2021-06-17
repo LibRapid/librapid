@@ -33,6 +33,10 @@ PYBIND11_MODULE(librapid_, module)
 {
 	module.doc() = module_docstring;
 
+	module.def("has_blas", &librapid::has_blas);
+	module.def("set_blas_threads", &librapid::set_blas_threads);
+	module.def("get_blas_threads", &librapid::get_blas_threads);
+
 	py::class_<librapid::ndarray::extent>(module, "extent", class_extent_docstring)
 		.def(py::init<>())
 		.def(py::init<const std::vector<nd_int> &>())
