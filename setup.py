@@ -528,7 +528,7 @@ setup(
 		"Programming Language :: Python :: 3.9",
 	],
 	extras_require={"test": "pytest"},
-	install_requires=["cpufeature", "pypiwin32"],
+	install_requires=["pypiwin32"] if platform.system() == "Windows" else [],
 	cmdclass={"build_ext": build_ext},
 	include_package_data=True,
 	package_data={
