@@ -11,7 +11,7 @@
 int main()
 {
 	auto lhs = librapid::ndarray::basic_ndarray<double>(librapid::ndarray::extent({2, 2}), 0);
-	auto rhs = librapid::ndarray::basic_ndarray<double>(librapid::ndarray::extent({2}), 0);
+	auto rhs = librapid::ndarray::basic_ndarray<double>(librapid::ndarray::extent({2, 1}), 0);
 
 	for (nd_int i = 0; i < lhs.size(); i++)
 		lhs.set_value(i, i + 1);
@@ -29,7 +29,7 @@ int main()
 
 	std::cout << res.str() << "\n";
 
-	// benchmark_ndarray();
+	benchmark_ndarray();
 
 	return 0;
 }
