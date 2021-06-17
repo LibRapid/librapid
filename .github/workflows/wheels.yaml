@@ -34,7 +34,7 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           
           cd vcpkg
-          git reset --hard 03992f2e1dfe78568ec95a381b7f65c90d7cd42d
+          git reset --hard 256d8a497a77f000168fe5a5b7c90a1962fa76ff
           cd ..
 
           echo "Bootstrapping vcpkg"
@@ -111,7 +111,7 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           
           cd vcpkg
-          git reset --hard 03992f2e1dfe78568ec95a381b7f65c90d7cd42d
+          git reset --hard 256d8a497a77f000168fe5a5b7c90a1962fa76ff
           cd ..
 
           echo "Bootstrapping vcpkg"

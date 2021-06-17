@@ -14,7 +14,6 @@ from setuptools import setup, Extension, find_packages
 import distutils.sysconfig
 import shutil
 
-
 """
 Find an OpenBLAS directory somewhere to link against for
 faster matrix operations. This file is mainly for use
