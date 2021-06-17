@@ -276,8 +276,9 @@ namespace librapid
 		public:
 			basic_stride() = default;
 
-			basic_stride(const std::initializer_list<T> &vals) :
-				basic_stride(std::vector<T>(vals.begin(), vals.end()))
+			template<typename V>
+			basic_stride(const std::initializer_list<V> &vals) :
+				basic_stride(std::vector<V>(vals.begin(), vals.end()))
 			{}
 
 			basic_stride(nd_int n)

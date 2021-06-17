@@ -14,7 +14,6 @@ from setuptools import setup, Extension, find_packages
 import distutils.sysconfig
 import shutil
 
-
 """
 Find an OpenBLAS directory somewhere to link against for
 faster matrix operations. This file is mainly for use
@@ -429,17 +428,6 @@ while index < len(sys.argv):
 print("The current working directory is", os.getcwd())
 blas_dir = find_blas(args)
 
-if blas_dir is not None:
-	print("Found BLAS")
-	print("Binaries:", blas_dir["bin"] if "bin" in blas_dir else None)
-	print("Includes:", blas_dir["include"])
-	print("Libraries:", blas_dir["lib"])
-
-	# # If on Windows and BLAS was found, add binaries to PATH
-	# if platform.system() == "Windows":
-	# 	if blas_dir["bin"][0] not in os.environ["PATH"]:
-	# 		os.environ["PATH"] += os.pathsep + blas_dir["bin"][0]
-
 compiler_flags = std_version() + compile_with_omp() + enable_optimizations()
 linker_flags = link_omp()
 define_macros = [("LIBRAPID_BUILD", 1)]
@@ -447,6 +435,8 @@ include_dirs = [os.getcwd()]
 library_dirs = []
 libraries = []
 
+# If the blas directory already exists, remove it to
+# reduce binary size
 try:
 	if os.path.exists("librapid/blas"):
 		print("Removing directory 'librapid/blas'")
@@ -455,6 +445,11 @@ except OSError as error:
 	print("Not removing directory due to '%s'" %error)
 
 if blas_dir is not None:
+	print("Found BLAS")
+	print("Binaries:", blas_dir["bin"] if "bin" in blas_dir else None)
+	print("Includes:", blas_dir["include"])
+	print("Libraries:", blas_dir["lib"])
+
 	# BLAS library was found, so link against it
 	define_macros.append(("LIBRAPID_CBLAS", 1))
 	
@@ -464,12 +459,8 @@ if blas_dir is not None:
 
 	include_dirs.append(os.path.join(os.getcwd(), "librapid", "blas"))
 	library_dirs.append(os.path.join(os.getcwd(), "librapid", "blas"))
-	
-	# include_dirs.append(blas_dir["include"][0])
-	# library_dirs.append(blas_dir["lib"][0])
-	# libraries.append(blas_dir["lib"][1])
 
-	# Copy the required files to the source distribution
+	# Make the blas directory
 	try:
 		os.mkdir("librapid/blas")
 	except FileExistsError:
@@ -480,10 +471,6 @@ if blas_dir is not None:
 	lib_dir = blas_dir["lib"][0]
 	bin_dir = blas_dir["bin"][0] if "bin" in blas_dir else None
 
-	# if platform.system() == "Windows":
-	# 	os.environ["PATH"] = os.path.join(os.getcwd(), "librapid", "blas") + os.pathsep + os.environ["PATH"]
-	# 	os.add_dll_directory(os.path.join(distutils.sysconfig.get_python_lib(), "librapid", "blas"))
-	
 	for file in next(os.walk(include_dir), (None, None, []))[2]:
 		# Copy the include files
 		print("Copying file '%s'" %file)
@@ -499,6 +486,7 @@ if blas_dir is not None:
 		shutil.copyfile(os.path.join(bin_dir, blas_dir["bin"][1]), os.path.join(os.getcwd(), "librapid", "blas", blas_dir["bin"][1]))
 
 else:
+	define_macros.append(("LIBRAPID_NO_CBLAS", 1))
 	print("A valid CBlas interface was not found")
 
 ext_modules = [
@@ -542,7 +530,6 @@ setup(
 	install_requires=["pypiwin32"] if platform.system() == "Windows" else [],
 	cmdclass={"build_ext": build_ext},
 	include_package_data=True,
-	# package_dir={"": "librapid"},
 	package_data={
 		"" : ["*.cpp", "*.hpp", "*.py", "*.dll", "*.so", "*.a", "*.lib"]
 	},

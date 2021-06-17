@@ -122,10 +122,10 @@ namespace librapid
 				else
 				{
 					std::string res = "[";
-					T count = 0;
-					T inc = math::product(shape) / shape[0];
+					nd_int count = 0;
+					nd_int inc = math::product(shape) / shape[0];
 
-					for (T i = 0; i < adjusted.size(); i += inc)
+					for (nd_int i = 0; i < adjusted.size(); i += inc)
 					{
 						if (strip_middle && shape[0] > 6 && i == inc * 3)
 						{
