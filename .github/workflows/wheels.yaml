@@ -52,6 +52,10 @@ jobs:
           echo "Files in 'openblas_x64-linux' directory"
           ls ./vcpkg/packages/openblas_x64-linux
         shell: bash
+        env:
+          OPENBLAS_NUM_THREADS: 128
+          GOTO_NUM_THREADS: 128
+          OMP_NUM_THREADS: 128
 
       - name: Build Source Distribution
         run: |
@@ -139,6 +143,10 @@ jobs:
             exit 1
           fi
         shell: bash
+        env:
+          OPENBLAS_NUM_THREADS: 128
+          GOTO_NUM_THREADS: 128
+          OMP_NUM_THREADS: 128
 
       - name: Run cibuildwheel
         run: |
