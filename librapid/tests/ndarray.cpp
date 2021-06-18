@@ -29,7 +29,7 @@ int main()
 
 	std::cout << res.str() << "\n";
 
-	benchmark_ndarray();
+	// benchmark_ndarray();
 
 	return 0;
 }
