@@ -3,6 +3,7 @@ language: python
 env:
   global:
     - CIBW_BUILD=cp3?-*
+    - CIBW_SKIP=cp35-*
     - CIBW_MANYLINUX_X86_64_IMAGE=manylinux1
     - CIBW_MANYLINUX_I686_IMAGE=manylinux1
     - TWINE_USERNAME=__token__
@@ -19,7 +20,7 @@ jobs:
           packages:
             - g++-7
       env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+        - MATRIX_EVAL="CC=g++-7 && CXX=g++-7"
 
     - name: "Python 3.7.2 on macOS"
       os: osx
