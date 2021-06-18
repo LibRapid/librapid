@@ -11,12 +11,22 @@ jobs:
   include:
     - name: "Python 3.8.0 on Xenial Linux"
       python: 3.8
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-9
+      env:
+         - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
 
     - name: "Python 3.7.2 on macOS"
       os: osx
       osx_image: xcode11
       language: shell
       before_install: python3 --version ; pip3 --version ; sw_vers
+      env:
+        - MATRIX_EVAL="brew install gcc && CC=gcc-9 && CXX=g++-9"
 
     - name: "Python 3.7.4 on Windows"
       os: windows
