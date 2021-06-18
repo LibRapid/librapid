@@ -10,15 +10,16 @@ env:
 jobs:
   include:
     - name: "Python 3.7.2 on Xenial Linux"
+      os: linux
       python: 3.7.2
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-9
+            - g++-7
       env:
-         - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
     - name: "Python 3.7.2 on macOS"
       os: osx
@@ -33,9 +34,23 @@ jobs:
       language: shell
       before_install:
         - choco install python --version 3.7.2
+        - choco install gcc 
         - python -m pip install --upgrade pip
+      install:
+        - choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
+        - choco install dotnetcore-sdk
+        - dotnet restore
+      script:
+        - export PATH=$MSBUILD_PATH:$PATH
+        - MSBuild.exe -p:Configuration=Release -p:Platform=x64 CppProject/CppProject.vcxproj
+        - dotnet build --configuration Release
+        - dotnet test DotNetProject.Tests/bin/Release/netcoreapp3.1/DotNetProject.Tests.dll
       env:
-        PATH=/c/Python37:/c/Python37/Scripts:$PATH
+        - MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin"
+        - PATH=/c/Python37:/c/Python37/Scripts:$PATH
+
+before_install:
+  - eval "${MATRIX_EVAL}"
 
 install:
   - python -m pip install -U setuptools wheel twine cibuildwheel
