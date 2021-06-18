@@ -2,8 +2,6 @@
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 from pybind11 import get_cmake_dir
 
-from cpufeature import CPUFeature as features
-
 from pathlib import Path
 import platform
 import os
@@ -357,13 +355,6 @@ def enable_optimizations():
 			res += ["/favor:INTEL64"]
 		elif p == "ATOM":
 			res += ["/favor:ATOM"]
-
-		if features["OS_AVX512"]:
-			res += ["/arch:AVX512"]
-		elif features["AVX2"]:
-			res += ["/arch:AVX2"]
-		elif features["OS_AVX"]:
-			res += ["/arch:AVX"]
 
 		return res
 	elif c in ("gcc", "g++"):
