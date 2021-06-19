@@ -1,0 +1,6 @@
+setuptools
+wheel
+twine
+cibuildwheel
+pybind11
+pathlib

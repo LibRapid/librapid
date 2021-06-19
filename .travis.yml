@@ -1,77 +1,22 @@
 language: python
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
+  - "3.9"
+  - "3.9-dev"
+  - "nightly"
+os:
+  - linux
+  - osx
+  - windows
 
-env:
-  global:
-    - CIBW_BUILD=cp3?-*
-    - CIBW_SKIP=cp35-*
-    - CIBW_MANYLINUX_X86_64_IMAGE=manylinux2014
-    - CIBW_MANYLINUX_I686_IMAGE=manylinux2014
-    - MACOSX_DEPLOYMENT_TARGET="10.14"
-    - TWINE_USERNAME=__token__
-
-jobs:
-  include:
-    - name: "Python 3.7.2 on Xenial Linux"
-      os: linux
-      language: c++
-      python: 3.7.2
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-      env:
-        - MATRIX_EVAL="CC=g++-7 && CXX=g++-7"
-
-    - name: "Python 3.7.2 on macOS"
-      os: osx
-      osx_image: xcode11
-      language: c++
-      before_install: python3 --version ; pip3 --version ; sw_vers
-      env:
-        - MATRIX_EVAL="brew install gcc && CC=gcc-9 && CXX=g++-9"
-
-    - name: "Python 3.7.2 on Windows"
-      os: windows
-      language: c++
-      before_install:
-        - choco install python --version 3.7.2
-        - choco install gcc 
-        - python -m pip install --upgrade pip
-      install:
-        - choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
-        - choco install dotnetcore-sdk
-        - dotnet restore
-      script:
-        - export PATH=$MSBUILD_PATH:$PATH
-        - MSBuild.exe -p:Configuration=Release -p:Platform=x64 CppProject/CppProject.vcxproj
-        - dotnet build --configuration Release
-        - dotnet test DotNetProject.Tests/bin/Release/netcoreapp3.1/DotNetProject.Tests.dll
-      env:
-        - MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin"
-        - PATH=/c/Python37:/c/Python37/Scripts:$PATH
-
-before_install:
-  - eval "${MATRIX_EVAL}"
-  - choco install python --version 3.7.2
-  - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
-
+# Install dependencies
 install:
-  - python3 -m pip install -U setuptools wheel twine cibuildwheel pybind11 pathlib
+  - pip install -r build_requirements.txt
 
-# script:
-#   - python -m cibuildwheel --output-dir ./wheelhouse
-#   - ls wheelhouse
-
+ # Build the library
 script:
-  - python3 setup.py sdist bdist_wheel
-  - pip install . --user
-
-after_success:
-  # if the release was tagged, upload them to PyPI
-  - |
-    if [[ $TRAVIS_TAG ]]; then
-      python3 -m pip install twine
-      python3 -m twine upload wheelhouse/*.whl
-    fi
+  - python3 setup.py sdist bdist_wheel || python setup.py sdist bdist_wheel
+  - pip install .
+  - pytest
