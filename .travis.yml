@@ -4,8 +4,9 @@ env:
   global:
     - CIBW_BUILD=cp3?-*
     - CIBW_SKIP=cp35-*
-    - CIBW_MANYLINUX_X86_64_IMAGE=manylinux1
-    - CIBW_MANYLINUX_I686_IMAGE=manylinux1
+    - CIBW_MANYLINUX_X86_64_IMAGE=manylinux2014
+    - CIBW_MANYLINUX_I686_IMAGE=manylinux2014
+    - MACOSX_DEPLOYMENT_TARGET="10.14"
     - TWINE_USERNAME=__token__
 
 jobs:
@@ -56,9 +57,15 @@ before_install:
 
 install:
   - python -m pip install -U setuptools wheel twine cibuildwheel
+
+# script:
+#   - python -m cibuildwheel --output-dir ./wheelhouse
+#   - ls wheelhouse
+
 script:
-  - python -m cibuildwheel --output-dir ./wheelhouse
-  - ls wheelhouse
+  - python setup.py sdist bdist_wheel
+  - pip3 install . --user
+
 after_success:
   # if the release was tagged, upload them to PyPI
   - |
