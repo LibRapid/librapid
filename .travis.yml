@@ -54,16 +54,18 @@ jobs:
 
 before_install:
   - eval "${MATRIX_EVAL}"
+  - choco install python --version 3.7.2
+  - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
 
 install:
-  - python -m pip install -U setuptools wheel twine cibuildwheel pybind11 pathlib
+  - python3 -m pip install -U setuptools wheel twine cibuildwheel pybind11 pathlib
 
 # script:
 #   - python -m cibuildwheel --output-dir ./wheelhouse
 #   - ls wheelhouse
 
 script:
-  - python setup.py sdist bdist_wheel
+  - python3 setup.py sdist bdist_wheel
   - pip install . --user
 
 after_success:
