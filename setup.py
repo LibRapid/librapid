@@ -4,7 +4,6 @@
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 from pybind11 import get_cmake_dir
 
-from pathlib import Path
 import platform
 import os
 from os import listdir
@@ -25,11 +24,6 @@ If you have a different CBlas compatible BLAS library
 installed on your system, please specify the location
 of the relevant files to setup.py when compiling.
 """
-
-import platform
-import os
-from os import listdir
-from os.path import isfile, join
 
 def find_blas(args):
 	# Attempt to find a BLAS library
@@ -306,7 +300,9 @@ __version__ = version_file.readlines()[1].split()[2].replace("\"", "")
 version_file.close()
 
 # Locate and read the contents of README.md
-long_description = Path("./README.md").read_text(encoding="utf-8")
+this_directory = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 # Set the C++ version to use
 def std_version():
