@@ -9,7 +9,6 @@ python:
 os:
   - linux
   - osx
-  - windows
 
 # Install dependencies
 install:
