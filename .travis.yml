@@ -1,22 +1,25 @@
 language: python
+os: linux
+env:
+  global:
+    - CIBW_BUILD=cp3?-*
+    - CIBW_MANYLINUX_X86_64_IMAGE=manylinux1
+    - CIBW_MANYLINUX_I686_IMAGE=manylinux1
+    - TWINE_USERNAME=__token__
 
-
-python:
-  - "3.6.0"
-  - "3.7.0"
-  - "3.8.0"
-  - "3.9.0"
-  - "3.9-dev"
-  - "nightly"
-os:
-  - linux
-  - osx
-
-# Install dependencies
+jobs:
+  include:
+    - services: docker
+    - os: osx
+      language: generic
+      env: MACOSX_DEPLOYMENT_TARGET=10.9
+    - os: windows
+      language: bash
+      before_install:
+        - choco install python --version 3.8.0
+        - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
 install:
   - pip install -r build_requirements.txt
-
- # Build the library
 script:
   - python3 setup.py sdist bdist_wheel || python setup.py sdist bdist_wheel
   - pip install .
