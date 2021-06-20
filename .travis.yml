@@ -12,6 +12,7 @@ jobs:
     - services: docker
     - os: osx
       language: generic
+      osx_image: xcode12.4
       env: MACOSX_DEPLOYMENT_TARGET=10.13
     - os: windows
       language: bash
