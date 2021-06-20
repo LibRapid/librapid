@@ -19,7 +19,7 @@ jobs:
         - choco install python --version 3.8.0
         - choco install visualstudio2019community
         - choco install visualstudio2019-workload-nativedesktop
-        - export VS160COMNTOOLS="/c/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/Tools
+        - export VS160COMNTOOLS="/c/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/Tools"
         - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
 
 install:
