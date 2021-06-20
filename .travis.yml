@@ -24,23 +24,6 @@ jobs:
       language: generic
       osx_image: xcode11.6
 
-    - os: osx
-      language: generic
-      osx_image: xcode10.3
-
-    - os: osx
-      language: generic
-      osx_image: xcode9.4
-
-    - os: windows
-      language: bash
-      before_install:
-        - choco install python --version 3.6.0
-        - choco install visualstudio2019community
-        - choco install visualstudio2019-workload-nativedesktop
-        - export VS160COMNTOOLS="/c/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/Tools"
-        - export PATH="/c/Python36:/c/Python/Scripts:$PATH"
-
     - os: windows
       language: bash
       before_install:
