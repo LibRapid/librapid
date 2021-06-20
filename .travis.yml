@@ -1,5 +1,10 @@
 language: python
 os: linux
+python:
+  - 3.6
+  - 3.7
+  - 3.8
+  - 3.9
 env:
   global:
     - CIBW_BUILD=cp3?-*
@@ -26,7 +31,14 @@ install:
   - python3 -m pip install -r build_requirements.txt || python -m pip install -r build_requirements.txt
 
 script:
-  # - python3 setup.py sdist bdist_wheel || python setup.py sdist bdist_wheel
-  # - python3 -m pip install . || python -m pip install .
-  # - python3 -m pytest || python -m pytest
-  - python3 -m cibuildwheel --output-dir ./wheelhouse || python -m cibuildwheel --output-dir ./wheelhouse
+  - python3 setup.py sdist bdist_wheel || python setup.py sdist bdist_wheel
+  - python3 -m pip install . || python -m pip install .
+  - python3 -m pytest || python -m pytest
+
+after_success:
+  # If the release was tagged, upload them to PyPI
+  - |
+    if [[ $TRAVIS_TAG ]]; then
+      python3 -m pip install twine
+      python3 -m twine upload wheelhouse/*.whl
+    fi
