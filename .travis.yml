@@ -26,5 +26,5 @@ install:
   - python3 -m pip install -r build_requirements.txt || python -m pip install -r build_requirements.txt
 script:
   - python3 setup.py sdist bdist_wheel || python setup.py sdist bdist_wheel
-  - pip3 install . || pip install .
+  - python3 -m pip install . || python -m pip install .
   - python3 -m pytest || python -m pytest
