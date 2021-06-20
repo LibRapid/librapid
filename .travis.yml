@@ -20,12 +20,12 @@ jobs:
     - services: docker
 
     - os: osx
-      name: "Python: ?.?"
+      name: "Python: 3.9"
       language: generic
       osx_image: xcode12.4
 
     - os: osx
-      name: "Python: ?.?"
+      name: "Python: 3.8"
       language: generic
       osx_image: xcode11.6
 
@@ -61,6 +61,33 @@ jobs:
 
 install:
   - python3 -m pip install -r build_requirements.txt || python -m pip install -r build_requirements.txt
+
+# sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+# sudo apt-get update -y
+# sudo apt-get install g++-7 -y
+
+  - |
+    if [ "%TRAVIS_OS_NAME" == "linux" ]; then
+      echo "Upgrading g++"
+      sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+      sudo apt-get update -y
+      sudo apt-get install g++-7 -y
+    else
+      echo "Not upgrading g++"
+    fi
+
+    echo "Cloning Microsoft vcpkg"
+    git clone https://github.com/microsoft/vcpkg.git
+
+    echo "Bootstrapping vcpkg"
+    ./vcpkg/bootstrap-vcpkg.sh
+
+    echo "Installing OpenBLAS"
+    if [ "$TRAVIS_OS_NAME" == "windows" ]; then
+      ./vcpkg/vcpkg install openblas --triplet=x64-windows
+    else
+      ./vcpkg/vcpkg install openblas
+    fi
 
 script:
   - python3 --version || python --version
