@@ -18,8 +18,9 @@ jobs:
       before_install:
         - choco install python --version 3.8.0
         - export PATH="/c/Python38:/c/Python/Scripts:$PATH"
+
 install:
-  - pip3 install -r build_requirements.txt || pip install -r build_requirements.txt
+  - python3 -m pip install -r build_requirements.txt || python -m pip install -r build_requirements.txt
 script:
   - python3 setup.py sdist bdist_wheel || python setup.py sdist bdist_wheel
   - pip3 install . || pip install .
