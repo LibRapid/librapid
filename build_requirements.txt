@@ -3,3 +3,4 @@ wheel
 twine
 cibuildwheel
 pybind11
+pytest
