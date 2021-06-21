@@ -594,13 +594,13 @@ namespace librapid
 		template<typename O>
 		LR_INLINE void reshape(const std::initializer_list<O> &new_shape)
 		{
-			reshape(std::vector<O>(new_shape.begin(), new_shape.end()));
+			reshape(basic_extent(new_shape));
 		}
 
 		template<typename O>
 		LR_INLINE void reshape(const std::vector<O> &new_shape)
 		{
-			reshape(std::vector<O>(new_shape.begin(), new_shape.end()));
+			reshape(basic_extent(new_shape));
 		}
 
 		template<typename O>
@@ -614,13 +614,13 @@ namespace librapid
 		template<typename O>
 		LR_INLINE basic_ndarray<T, alloc> reshaped(const std::initializer_list<O> &new_shape) const
 		{
-			return reshaped(std::vector<O>(new_shape.begin(), new_shape.end()));
+			return reshaped(basic_extent(new_shape));
 		}
 
 		template<typename O>
 		LR_INLINE basic_ndarray<T, alloc> reshaped(const std::vector<O> &new_shape) const
 		{
-			return reshaped(basic_extent<nd_int>(new_shape));
+			return reshaped(basic_extent(new_shape));
 		}
 
 		LR_INLINE void strip_front()
