@@ -87,7 +87,7 @@ Contents
 	:maxdepth: 2
 	:glob:
 
-	cpp_docs
+	librapid_ndarray_api
 
 Indices and tables
 ==================

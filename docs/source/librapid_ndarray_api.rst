@@ -21,13 +21,12 @@ Another simple type of NDarray is a matrix, which is a grid of values.
 	 [4 5 6]]
 
 The LibRapid NDarray can store arrays of any dimension, though the default
-limit is 50 dimensions.
+limit is 32 dimensions.
 
 .. WARNING::
 	While it is possible to change the maximum number of dimensions an array
-	can contain, it is not recommended. To show why, an array of 64 bit floats
-	with 50 dimensions in the format ``[2 2 2 ... 2 2 2]`` would require a
-	little over 9 *petabytes* of RAM
+	can contain, it is not recommended due to the extraordinary amount of
+	memory that would be required to store such an array.
 
 Why use an NDarray?
 ===================
@@ -48,22 +47,43 @@ How are the arrays stored?
 ==========================
 
 The underlying memory of each array is stored in a contiguous memory block. To access
-the different elements of an array, they also store the dimensions
-(:doc:`LibRapid Extent <librapid_ndarray_extent>`) of the array, and a set of strides
-(:doc:`LibRapid Stride <librapid_ndarray_stride>`) which specify how far through memory one
-must move to increment by one value in a given axis.
+the different elements of an array, they also store the dimensions of the array, and
+a set of strides which specify how far through memory one must move to increment by
+one value in a given axis.
 
 The fact that the arrays are stored in this way means that many functions can be
 accelerated dramatically by reducing the amount of data that must be transferred.
 For example, to transpose an array, the stride and extent are simply reversed.
 
-Library contents
+C++ Documentation
+=================
+
+.. toctree::
+	:maxdepth: 2
+	:glob:
+
+	cpp/librapid_cpp_extent
+	cpp/librapid_cpp_stride
+	cpp/librapid_cpp_ndarray
+
+C# Documentation
 ================
 
 .. toctree::
-	:maxdepth: 1
+	:maxdepth: 2
 	:glob:
 
-	librapid_ndarray_extent
-	librapid_ndarray_stride
-	librapid_ndarray_ndarray
+	csharp/librapid_csharp_extent
+	csharp/librapid_csharp_stride
+	csharp/librapid_csharp_ndarray
+
+Python Documentation
+====================
+
+.. toctree::
+	:maxdepth: 2
+	:glob:
+
+	python/librapid_py_extent
+	python/librapid_py_stride
+	python/librapid_py_ndarray

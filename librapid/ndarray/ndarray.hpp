@@ -4,7 +4,7 @@
 #include <librapid/config.hpp>
 
 #include <librapid/errors.hpp>
-#include <librapid/math/core_math.hpp>
+#include <librapid/math/rapid_math.hpp>
 #include <librapid/ndarray/basic_stride.hpp>
 #include <librapid/ndarray/basic_extent.hpp>
 #include <librapid/ndarray/to_string.hpp>

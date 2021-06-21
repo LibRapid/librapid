@@ -19,8 +19,8 @@ inline int benchmark_ndarray()
 
 	for (nd_int size = min; size <= max; size += inc)
 	{
-		auto matrix = librapid::ndarray::basic_ndarray<float>(librapid::ndarray::extent({size, size}));
-		auto vector = librapid::ndarray::basic_ndarray<float>(librapid::ndarray::extent({size, size}));
+		auto matrix = librapid::basic_ndarray<float>(librapid::extent({size, size}));
+		auto vector = librapid::basic_ndarray<float>(librapid::extent({size, size}));
 		matrix.fill(0);
 		vector.fill(0);
 

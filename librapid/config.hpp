@@ -1,5 +1,5 @@
-#ifndef NDARRAY_CONFIG
-#define NDARRAY_CONFIG
+#ifndef LIBRAPID_CONFIG
+#define LIBRAPID_CONFIG
 
 #ifndef LIBRAPID_BUILD
 // LIBRAPID_BUILD 0 == C++
@@ -22,26 +22,22 @@ namespace py = pybind11;
 #include <cblas.h>
 #endif
 
-#if defined(NDEBUG) || defined(NDARRAY_NDEBUG)
-#define ND_NDEBUG
-#define ND_INLINE inline
+#if defined(NDEBUG) || defined(LIBRAPID_NDEBUG)
+#define LR_NDEBUG
+#define LR_INLINE inline
 #else
-#define ND_DEBUG
-#define ND_INLINE
+#define LR_DEBUG
+#define LR_INLINE
 #endif // NDEBUG || NDARRAY_DEBUG
 
 #ifdef _OPENMP
-#define ND_HAS_OMP
+#define LR_HAS_OMP
 #include <omp.h>
 #endif // _OPENMP
 
-#ifndef ND_NUM_THREADS
-#define ND_NUM_THREADS 4
-#endif
-
-#ifndef ND_MAX_DIMS
-#define ND_MAX_DIMS 32
-#endif // ND_MAX_DIMS
+#ifndef LIBRAPID_MAX_DIMS
+#define LIBRAPID_MAX_DIMS 32
+#endif // LIBRAPID_MAX_DIMS
 
 // Operating system defines
 
@@ -109,11 +105,11 @@ using nd_int = long long;
 
 // BLAS config settings
 namespace librapid {
-    int has_blas() {
+    bool has_blas() {
     #if defined(LIBRAPID_CBLAS) && (LIBRAPID_CBLAS == 1)
-        return 1;
+        return true;
     #else
-        return 0;
+        return false;
     #endif // LIBRAPID_CBLAS
     }
 
@@ -122,11 +118,12 @@ namespace librapid {
 		openblas_set_num_threads(num);
 		goto_set_num_threads(num);
 
-	#ifdef ND_HAS_OMP
+	#ifdef LR_HAS_OMP
 		omp_set_num_threads(num);
-	#endif // ND_HAS_OMP
+	#endif // LR_HAS_OMP
 	#else
-		std::cout << "The function 'librapid_set_blas_threads' only works in C++ and Python when compiled with OpenBLAS" << "\n";
+		std::cout << "The function 'librapid_set_blas_threads' only works in C++"
+					 "and Python when compiled with OpenBLAS" << "\n";
 	#endif // LIBRAPID_HAS_OPENBLAS
     }
 
@@ -134,10 +131,37 @@ namespace librapid {
     #ifdef LIBRAPID_HAS_OPENBLAS
 		return openblas_get_num_threads();
 	#else
-		std::cout << "The function 'librapid_set_blas_threads' only works in C++ and Python when compiled with OpenBLAS" << "\n";
+		std::cout << "The function 'librapid_set_blas_threads' only works in C++"
+					 "and Python when compiled with OpenBLAS" << "\n";
 		return -1;
 	#endif // LIBRAPID_HAS_OPENBLAS
     }
+
+	void set_num_threads(int num)
+	{
+	#if defined(LIBRAPID_HAS_OPENBLAS)
+		set_blas_threads(num);
+	#elif defined(LR_HAS_OMP)
+		omp_set_num_threads(num);
+	#else
+		std::cout << "LibRapid does not have access to any multi-threaded components"
+					 "such as OpenMP or OpenBLAS, so the function \"set_num_threads\""
+					 "will not do anything" << "\n";
+	#endif
+	}
+
+	int get_num_threads()
+	{
+	#if defined(LIBRAPID_HAS_OPENBLAS)
+		return get_blas_threads();
+	#elif defined(LR_HAS_OMP)
+		return omp_get_num_threads();
+	#else
+		std::cout << "LibRapid does not have access to any multi-threaded components"
+			"such as OpenMP or OpenBLAS, so the function \"set_num_threads\""
+			"will not do anything" << "\n";
+	#endif
+	}
 }
 
-#endif // NDARRAY_CONFIG
+#endif // LIBRAPID_CONFIG
