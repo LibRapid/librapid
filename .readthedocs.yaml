@@ -8,13 +8,13 @@ formats: all
 build:
   image: testing
   apt_packages:
-	- doxygen
+    - doxygen
 
 # Set the python version and requirements
 python:
   version: 3.7
   install:
-	- requirements: docs/requirements.txt
+    - requirements: docs/requirements.txt
   system_packages: true
 
 # Build documentation in the docs/ directory with Sphinx

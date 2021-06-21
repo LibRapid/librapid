@@ -1,6 +1,5 @@
-===============
-LibRapid Stride
-===============
+LibRapid Stride | C++
+#####################
 
 A stride (basic_stride) stores the distance in memory one must move to
 increment by one value in a given axis inside an NDarray. It determines

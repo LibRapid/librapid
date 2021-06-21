@@ -1,17 +1,16 @@
 #include <iostream>
 #include <chrono>
 
-#define ND_MAX_DIMS 10
-#define ND_NUM_THREADS 32
-#define LIBRAPID_CBLAS
+#define LIBRAPID_MAX_DIMS 10
+// #define LIBRAPID_CBLAS
 
 #include "ndarray_benchmarks.hpp"
 #include <librapid/ndarray/ndarray.hpp>
 
 int main()
 {
-	auto lhs = librapid::ndarray::basic_ndarray<double>(librapid::ndarray::extent({1000, 1000}), 0);
-	auto rhs = librapid::ndarray::basic_ndarray<double>(librapid::ndarray::extent({1000, 1000}), 0);
+	auto lhs = librapid::ndarray(librapid::extent({10, 10}), 0);
+	auto rhs = librapid::ndarray(librapid::extent({10, 10}), 0);
 
 	for (nd_int i = 0; i < lhs.size(); i++)
 		lhs.set_value(i, i + 1);
@@ -23,6 +22,7 @@ int main()
 	std::cout << rhs.str() << "\n";
 	auto start = TIME;
 	auto res = lhs.dot(rhs);
+	res = lhs + rhs;
 	auto end = TIME;
 
 	std::cout << end - start << "ms\n";
@@ -30,6 +30,9 @@ int main()
 	std::cout << res.str() << "\n";
 
 	// benchmark_ndarray();
+
+	auto my_thing = librapid::range(0, 10, 1);
+	std::cout << my_thing.str() << "\n";
 
 	return 0;
 }

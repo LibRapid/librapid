@@ -12,7 +12,7 @@ namespace librapid
 	namespace linalg
 	{
 		template<typename T>
-		ND_INLINE T cblas_dot(nd_int n, T *__restrict x, nd_int incx,
+		LR_INLINE T cblas_dot(nd_int n, T *__restrict x, nd_int incx,
 							  T *__restrict y, nd_int incy)
 		{
 			T res = 0;
@@ -25,14 +25,14 @@ namespace librapid
 
 	#ifdef LIBRAPID_CBLAS
 		template<>
-		ND_INLINE float cblas_dot(nd_int n, float *__restrict x, nd_int incx,
+		LR_INLINE float cblas_dot(nd_int n, float *__restrict x, nd_int incx,
 								  float *__restrict y, nd_int incy)
 		{
 			return cblas_sdot(n, x, incx, y, incy);
 		}
 
 		template<>
-		ND_INLINE double cblas_dot(nd_int n, double *__restrict x, nd_int incx,
+		LR_INLINE double cblas_dot(nd_int n, double *__restrict x, nd_int incx,
 								   double *__restrict y, nd_int incy)
 		{
 			return cblas_ddot(n, x, incx, y, incy);
@@ -40,7 +40,7 @@ namespace librapid
 	#endif // LIBRAPID_CBLAS
 
 		template<typename T>
-		ND_INLINE void cblas_gemv(char order, bool trans, nd_int m, nd_int n,
+		LR_INLINE void cblas_gemv(char order, bool trans, nd_int m, nd_int n,
 								  T alpha, T *__restrict a, nd_int lda,
 								  T *__restrict x, nd_int incx, double beta,
 								  T *__restrict y, nd_int incy)
@@ -75,7 +75,7 @@ namespace librapid
 
 	#ifdef LIBRAPID_CBLAS
 		template<>
-		ND_INLINE void cblas_gemv(char order, bool trans, nd_int m, nd_int n,
+		LR_INLINE void cblas_gemv(char order, bool trans, nd_int m, nd_int n,
 								  float alpha, float *__restrict a, nd_int lda,
 								  float *__restrict x, nd_int incx, double beta,
 								  float *__restrict y, nd_int incy)
@@ -96,7 +96,7 @@ namespace librapid
 		}
 
 		template<>
-		ND_INLINE void cblas_gemv(char order, bool trans, nd_int m, nd_int n,
+		LR_INLINE void cblas_gemv(char order, bool trans, nd_int m, nd_int n,
 								  double alpha, double *__restrict a, nd_int lda,
 								  double *__restrict x, nd_int incx, double beta,
 								  double *__restrict y, nd_int incy)
@@ -118,7 +118,7 @@ namespace librapid
 	#endif // LIBRAPID_CBLAS
 
 		template<typename T>
-		ND_INLINE void cblas_gemm(char order, bool trans_a, bool trans_b, nd_int m,
+		LR_INLINE void cblas_gemm(char order, bool trans_a, bool trans_b, nd_int m,
 								  nd_int n, nd_int k, T alpha,
 								  T *__restrict a, nd_int lda, T *__restrict b,
 								  nd_int ldb, T beta, T *__restrict c, nd_int ldc)
@@ -162,7 +162,7 @@ namespace librapid
 			}
 			else
 			{
-			#pragma omp parallel for shared(a, b, c, m, n, k, _lda, _ldb, ldc, _fda, _fdb, beta) private(index_a, index_b, index_c) default(none) num_threads(ND_NUM_THREADS)
+			#pragma omp parallel for shared(a, b, c, m, n, k, _lda, _ldb, ldc, _fda, _fdb, beta) private(index_a, index_b, index_c) default(none)
 				for (nd_int outer = 0; outer < m; ++outer)
 				{
 					for (nd_int inner = 0; inner < n; ++inner)
@@ -188,7 +188,7 @@ namespace librapid
 
 	#ifdef LIBRAPID_CBLAS
 		template<>
-		ND_INLINE void cblas_gemm(char order, bool trans_a, bool trans_b, nd_int m,
+		LR_INLINE void cblas_gemm(char order, bool trans_a, bool trans_b, nd_int m,
 								  nd_int n, nd_int k, float alpha,
 								  float *__restrict a, nd_int lda, float *__restrict b,
 								  nd_int ldb, float beta, float *__restrict c, nd_int ldc)
@@ -216,7 +216,7 @@ namespace librapid
 		}
 
 		template<>
-		ND_INLINE void cblas_gemm(char order, bool trans_a, bool trans_b, nd_int m,
+		LR_INLINE void cblas_gemm(char order, bool trans_a, bool trans_b, nd_int m,
 								  nd_int n, nd_int k, double alpha,
 								  double *__restrict a, nd_int lda, double *__restrict b,
 								  nd_int ldb, double beta, double *__restrict c, nd_int ldc)
