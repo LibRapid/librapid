@@ -5,6 +5,8 @@ librapid/librapid.egg-info
 
 librapid/blas
 
+tests/__pycache__
+
 docs/build
 docs/source/api
 docs/source/doxygenoutput
