@@ -147,9 +147,16 @@ jobs:
         run: |
           cibuildwheel --output-dir wheelhouse
 
+      - name: Build Source Distribution
+        run: |
+          python -m build --sdist --outdir wheelhouse
+      
+      - name: Install from Source Distribution
+        run: |
+          pip install --user wheelhouse/*.tar.gz
+
       - name: Run Python Tests
         run: |
-          pip install --user ./wheelhouse
           python -m pytest
 
       - name: Check Built Wheels
