@@ -61,6 +61,11 @@ jobs:
         run: |
           pip install --user wheelhouse/*.tar.gz
 
+      - name: Run Python Tests
+        run: |
+          python -m pip install .
+          python -m pytest
+
       - name: Check Source Distribution
         run: |
           python -m twine check wheelhouse/*
@@ -143,6 +148,11 @@ jobs:
       - name: Run cibuildwheel
         run: |
           cibuildwheel --output-dir wheelhouse
+
+      - name: Run Python Tests
+        run: |
+          pip install --user wheelhouse/*.tar.gz
+          python -m pytest
 
       - name: Check Built Wheels
         run: |

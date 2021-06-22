@@ -12,12 +12,12 @@
 inline int benchmark_ndarray()
 {
 	// Benchmark simple arithmetic functions
-	nd_int iters = 1000;
-	nd_int min = 10;
-	nd_int max = 1000;
-	nd_int inc = 10;
+	lr_int iters = 1000;
+	lr_int min = 10;
+	lr_int max = 1000;
+	lr_int inc = 10;
 
-	for (nd_int size = min; size <= max; size += inc)
+	for (lr_int size = min; size <= max; size += inc)
 	{
 		auto matrix = librapid::basic_ndarray<float>(librapid::extent({size, size}));
 		auto vector = librapid::basic_ndarray<float>(librapid::extent({size, size}));
@@ -25,7 +25,7 @@ inline int benchmark_ndarray()
 		vector.fill(0);
 
 		auto start = TIME;
-		for (nd_int iter = 0; iter < iters; iter++)
+		for (lr_int iter = 0; iter < iters; iter++)
 		{
 			auto res = matrix.dot(vector);
 		}

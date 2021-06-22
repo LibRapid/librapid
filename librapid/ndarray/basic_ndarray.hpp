@@ -26,7 +26,7 @@
 
 namespace librapid
 {
-	constexpr nd_int AUTO = -1;
+	constexpr lr_int AUTO = -1;
 
 	template<typename T>
 	using nd_allocator = std::allocator<T>;
@@ -180,7 +180,7 @@ namespace librapid
 
 		template<typename L>
 		basic_ndarray(const std::initializer_list<L> &shape)
-			: basic_ndarray(basic_extent<nd_int>(shape))
+			: basic_ndarray(basic_extent<lr_int>(shape))
 		{}
 
 		template<typename L, typename V>
@@ -236,14 +236,14 @@ namespace librapid
 			decrement();
 		}
 
-		LR_INLINE nd_int ndim() const
+		LR_INLINE lr_int ndim() const
 		{
-			return (nd_int) m_extent.ndim();
+			return (lr_int) m_extent.ndim();
 		}
 
-		LR_INLINE nd_int size() const
+		LR_INLINE lr_int size() const
 		{
-			return (nd_int) m_extent_product;
+			return (lr_int) m_extent_product;
 		}
 
 		LR_INLINE bool is_initialized() const
@@ -271,13 +271,13 @@ namespace librapid
 			return m_data_start;
 		}
 
-		LR_INLINE basic_ndarray<T, alloc> operator[](nd_int index)
+		LR_INLINE basic_ndarray<T, alloc> operator[](lr_int index)
 		{
 			using non_const = typename std::remove_const<basic_ndarray<T, alloc>>::type;
 			return (non_const) subscript(index);
 		}
 
-		LR_INLINE const basic_ndarray<T, alloc> operator[](nd_int index) const
+		LR_INLINE const basic_ndarray<T, alloc> operator[](lr_int index) const
 		{
 			return subscript(index);
 		}
@@ -292,13 +292,13 @@ namespace librapid
 										" dimensions requires " + std::to_string(index.size()) +
 										" access elements");
 
-			nd_int new_shape[LIBRAPID_MAX_DIMS]{};
-			nd_int new_stride[LIBRAPID_MAX_DIMS]{};
-			nd_int count = 0;
+			lr_int new_shape[LIBRAPID_MAX_DIMS]{};
+			lr_int new_stride[LIBRAPID_MAX_DIMS]{};
+			lr_int count = 0;
 
 			T *new_start = m_data_start;
 
-			for (nd_int i = 0; i < index.size(); i++)
+			for (lr_int i = 0; i < index.size(); i++)
 			{
 				if (index[i] != AUTO && (index[i] < 0 || index[i] >= m_extent[i]))
 				{
@@ -336,9 +336,9 @@ namespace librapid
 			return res;
 		}
 
-		LR_INLINE basic_ndarray<T, alloc> subarray(const std::initializer_list<nd_int> &index) const
+		LR_INLINE basic_ndarray<T, alloc> subarray(const std::initializer_list<lr_int> &index) const
 		{
-			return subarray(std::vector<nd_int>(index.begin(), index.end()));
+			return subarray(std::vector<lr_int>(index.begin(), index.end()));
 		}
 
 		template<class F>
@@ -373,15 +373,15 @@ namespace librapid
 				// method to ensure that the resulting array is contiguous
 				// in memory for faster running times overall
 
-				nd_int idim = 0;
-				nd_int dims = ndim();
+				lr_int idim = 0;
+				lr_int dims = ndim();
 
 				const auto *__restrict _extent = m_extent.get_extent_alt();
 				const auto *__restrict _stride_this = m_stride.get_stride_alt();
 				auto *__restrict this_ptr = m_data_start;
 				auto *__restrict res_ptr = res.get_data_start();
 
-				nd_int coord[LIBRAPID_MAX_DIMS]{};
+				lr_int coord[LIBRAPID_MAX_DIMS]{};
 
 				do
 				{
@@ -413,7 +413,7 @@ namespace librapid
 			return res;
 		}
 
-		void set_value(nd_int index, T val)
+		void set_value(lr_int index, T val)
 		{
 			m_data_start[index] = val;
 		}
@@ -545,13 +545,13 @@ namespace librapid
 
 				auto new_data = m_alloc.allocate(m_extent_product);
 
-				nd_int idim = 0;
-				nd_int dims = ndim();
+				lr_int idim = 0;
+				lr_int dims = ndim();
 
 				const auto *__restrict _extent = m_extent.get_extent_alt();
 				const auto *__restrict _stride_this = m_stride.get_stride_alt();
 
-				nd_int coord[LIBRAPID_MAX_DIMS]{};
+				lr_int coord[LIBRAPID_MAX_DIMS]{};
 
 				do
 				{
@@ -581,7 +581,7 @@ namespace librapid
 				m_data_origin = new_data;
 				m_data_start = new_data;
 
-				m_origin_references = new std::atomic<nd_int>(1);
+				m_origin_references = new std::atomic<lr_int>(1);
 
 				m_origin_size = m_extent_product;
 			}
@@ -627,8 +627,8 @@ namespace librapid
 		{
 			// Remove leading dimensions which are all 1
 
-			nd_int strip_to = 0;
-			for (nd_int i = 0; i < ndim(); i++)
+			lr_int strip_to = 0;
+			for (lr_int i = 0; i < ndim(); i++)
 				if (m_extent[i] == 1) strip_to++;
 				else break;
 
@@ -637,14 +637,14 @@ namespace librapid
 			if (strip_to == ndim())
 				strip_to--;
 
-			nd_int new_dims = ndim() - strip_to;
+			lr_int new_dims = ndim() - strip_to;
 
-			nd_int new_extent[LIBRAPID_MAX_DIMS]{};
-			for (nd_int i = 0; i < new_dims; i++)
+			lr_int new_extent[LIBRAPID_MAX_DIMS]{};
+			for (lr_int i = 0; i < new_dims; i++)
 				new_extent[i] = m_extent[i + strip_to];
 
-			nd_int new_stride[LIBRAPID_MAX_DIMS]{};
-			for (nd_int i = 0; i < new_dims; i++)
+			lr_int new_stride[LIBRAPID_MAX_DIMS]{};
+			for (lr_int i = 0; i < new_dims; i++)
 				new_stride[i] = m_stride[i + strip_to];
 
 			m_stride = stride(new_stride, new_dims);
@@ -655,8 +655,8 @@ namespace librapid
 		{
 			// Remove trailing dimensions which are all 1
 
-			nd_int strip_to = ndim();
-			for (nd_int i = ndim(); i > 0; i--)
+			lr_int strip_to = ndim();
+			for (lr_int i = ndim(); i > 0; i--)
 				if (m_extent[i - 1] == 1) strip_to--;
 				else break;
 
@@ -665,12 +665,12 @@ namespace librapid
 			if (strip_to == 0)
 				strip_to++;
 
-			nd_int new_extent[LIBRAPID_MAX_DIMS]{};
-			for (nd_int i = 0; i < strip_to; i++)
+			lr_int new_extent[LIBRAPID_MAX_DIMS]{};
+			for (lr_int i = 0; i < strip_to; i++)
 				new_extent[i] = m_extent[i];
 
-			nd_int new_stride[LIBRAPID_MAX_DIMS]{};
-			for (nd_int i = 0; i < strip_to; i++)
+			lr_int new_stride[LIBRAPID_MAX_DIMS]{};
+			for (lr_int i = 0; i < strip_to; i++)
 				new_stride[i] = m_stride[i];
 
 			m_stride = stride(new_stride, strip_to);
@@ -718,7 +718,7 @@ namespace librapid
 
 			bool valid = true;
 			std::vector<O> missing;
-			for (nd_int i = 0; i < ndim(); i++)
+			for (lr_int i = 0; i < ndim(); i++)
 			{
 				if (std::count(order.begin(), order.end(), (O) i) != 1)
 				{
@@ -730,7 +730,7 @@ namespace librapid
 			if (!valid)
 			{
 				auto stream = std::stringstream();
-				for (nd_int i = 0; i < m_stride.ndim(); i++)
+				for (lr_int i = 0; i < m_stride.ndim(); i++)
 				{
 					if (i == m_stride.ndim() - 1) stream << m_stride.get_stride()[i];
 					else stream << m_stride.get_stride()[i] << ", ";
@@ -748,8 +748,8 @@ namespace librapid
 
 		LR_INLINE void transpose()
 		{
-			std::vector<nd_int> order(ndim());
-			for (nd_int i = 0; i < ndim(); i++)
+			std::vector<lr_int> order(ndim());
+			for (lr_int i = 0; i < ndim(); i++)
 				order[i] = ndim() - i - 1;
 			transpose(order);
 		}
@@ -803,11 +803,11 @@ namespace librapid
 			if (is_matrix_vector || is_matrix_vector_like)
 			{
 				// Matrix-Vector product
-				nd_int res_shape[LIBRAPID_MAX_DIMS]{};
+				lr_int res_shape[LIBRAPID_MAX_DIMS]{};
 				res_shape[0] = m_extent[0];
 
-				nd_int dims = other.ndim();
-				for (nd_int i = 1; i < dims; i++)
+				lr_int dims = other.ndim();
+				for (lr_int i = 1; i < dims; i++)
 					res_shape[i] = other.get_extent()[i];
 
 				auto res = basic_ndarray<R_T>(extent(res_shape, dims));
@@ -819,7 +819,7 @@ namespace librapid
 
 				if (is_matrix_vector_like)
 				{
-					for (nd_int i = 0; i < M; i++)
+					for (lr_int i = 0; i < M; i++)
 						res[i] = subscript(i).dot(other);
 					return res;
 				}
@@ -845,7 +845,7 @@ namespace librapid
 				throw std::domain_error("Cannot compute dot product on arrays with " +
 										m_extent.str() + " and " + other.get_extent().str());
 
-			nd_int dims = ndim();
+			lr_int dims = ndim();
 
 			switch (dims)
 			{
@@ -905,37 +905,37 @@ namespace librapid
 													m_extent.str() + " and " + other.get_extent().str());
 
 						// Create the new array dimensions
-						nd_int new_extent[LIBRAPID_MAX_DIMS]{};
+						lr_int new_extent[LIBRAPID_MAX_DIMS]{};
 
 						// Initialize the new dimensions
-						for (nd_int i = 0; i < ndim() - 1; i++) new_extent[i] = m_extent[i];
-						for (nd_int i = 0; i < other.ndim() - 2; i++) new_extent[i + ndim()] = other.get_extent()[i];
+						for (lr_int i = 0; i < ndim() - 1; i++) new_extent[i] = m_extent[i];
+						for (lr_int i = 0; i < other.ndim() - 2; i++) new_extent[i + ndim()] = other.get_extent()[i];
 						new_extent[ndim() + other.ndim() - 4] = other.get_extent()[other.ndim() - 3];
 						new_extent[ndim() + other.ndim() - 3] = other.get_extent()[other.ndim() - 1];
 
 						auto res = basic_ndarray<R_T, nd_allocator<R_T>>(extent(new_extent, ndim() + other.ndim() - 2));
 						R_T *__restrict res_ptr = res.get_data_start();
 
-						nd_int idim = 0;
-						nd_int dims = res.ndim();
+						lr_int idim = 0;
+						lr_int dims = res.ndim();
 
 						const auto *__restrict _extent = res.get_extent().get_extent();
 						const auto *__restrict _stride = res.get_stride().get_stride();
 
-						nd_int coord[LIBRAPID_MAX_DIMS]{};
+						lr_int coord[LIBRAPID_MAX_DIMS]{};
 
-						std::vector<nd_int> lhs_index(ndim());
-						std::vector<nd_int> rhs_index(other.ndim());
+						std::vector<lr_int> lhs_index(ndim());
+						std::vector<lr_int> rhs_index(other.ndim());
 
 						do
 						{
 							// Extract the index for the lhs
-							for (nd_int i = 0; i < ndim() - 1; i++)
+							for (lr_int i = 0; i < ndim() - 1; i++)
 								lhs_index[i] = coord[i];
 							lhs_index[ndim() - 1] = AUTO;
 
 							// Extract the index for the rhs
-							for (nd_int i = 0; i < other.ndim() - 2; i++)
+							for (lr_int i = 0; i < other.ndim() - 2; i++)
 								rhs_index[i] = coord[ndim() + i - 1];
 							rhs_index[other.ndim() - 2] = AUTO;
 							rhs_index[other.ndim() - 1] = coord[dims - 1];
@@ -964,7 +964,7 @@ namespace librapid
 			}
 		}
 
-		std::string str(nd_int start_depth = 0) const
+		std::string str(lr_int start_depth = 0) const
 		{
 			const auto *__restrict extent_data = m_extent.get_extent();
 
@@ -975,8 +975,8 @@ namespace librapid
 				return to_string::format_numerical(m_data_start[0]).str;
 
 			std::vector<to_string::str_container> formatted(m_extent_product, {"", 0});
-			nd_int longest_integral = 0;
-			nd_int longest_decimal = 0;
+			lr_int longest_integral = 0;
+			lr_int longest_decimal = 0;
 
 			// General checks
 			bool strip_middle = false;
@@ -987,16 +987,16 @@ namespace librapid
 			if (ndim() == 2 && extent_data[1] == 1)
 				strip_middle = false;
 
-			nd_int idim = 0;
-			nd_int dimensions = ndim();
-			nd_int index = 0;
-			nd_int data_index = 0;
-			auto coord = new nd_int[dimensions];
-			memset(coord, 0, sizeof(nd_int) * dimensions);
+			lr_int idim = 0;
+			lr_int dimensions = ndim();
+			lr_int index = 0;
+			lr_int data_index = 0;
+			auto coord = new lr_int[dimensions];
+			memset(coord, 0, sizeof(lr_int) * dimensions);
 
-			std::vector<nd_int> tmp_extent(dimensions);
-			std::vector<nd_int> tmp_stride(dimensions);
-			for (nd_int i = 0; i < dimensions; i++)
+			std::vector<lr_int> tmp_extent(dimensions);
+			std::vector<lr_int> tmp_stride(dimensions);
+			for (lr_int i = 0; i < dimensions; i++)
 			{
 				tmp_stride[dimensions - i - 1] = m_stride.get_stride()[i];
 				tmp_extent[dimensions - i - 1] = m_extent.get_extent()[i];
@@ -1005,7 +1005,7 @@ namespace librapid
 			do
 			{
 				bool skip = false;
-				for (nd_int i = 0; i < dimensions; i++)
+				for (lr_int i = 0; i < dimensions; i++)
 				{
 					if (strip_middle &&
 						(coord[i] > 3 && coord[i] < extent_data[i] - 3))
@@ -1049,21 +1049,21 @@ namespace librapid
 
 			std::vector<std::string> adjusted(formatted.size(), "");
 
-			for (nd_int i = 0; i < formatted.size(); i++)
+			for (lr_int i = 0; i < formatted.size(); i++)
 			{
 				if (formatted[i].str.empty())
 					continue;
 
 				const auto &term = formatted[i];
-				nd_int decimal = (term.str.length() - term.decimal_point - 1);
+				lr_int decimal = (term.str.length() - term.decimal_point - 1);
 
-				auto tmp = std::string((nd_int) (longest_integral - (T) term.decimal_point), ' ')
-					+ term.str + std::string((nd_int) (longest_decimal - decimal), ' ');
+				auto tmp = std::string((lr_int) (longest_integral - (T) term.decimal_point), ' ')
+					+ term.str + std::string((lr_int) (longest_decimal - decimal), ' ');
 				adjusted[i] = tmp;
 			}
 
-			std::vector<nd_int> extent_vector(ndim());
-			for (nd_int i = 0; i < ndim(); i++)
+			std::vector<lr_int> extent_vector(ndim());
+			for (lr_int i = 0; i < ndim(); i++)
 				extent_vector[i] = extent_data[i];
 
 			auto res = to_string::to_string(adjusted, extent_vector, 1 + start_depth, strip_middle);
@@ -1081,7 +1081,7 @@ namespace librapid
 			m_origin_size = m_extent_product;
 			m_data_origin = m_data_start;
 
-			m_origin_references = new std::atomic<nd_int>(1);
+			m_origin_references = new std::atomic<lr_int>(1);
 
 			return errors::ALL_OK;
 		}
@@ -1101,7 +1101,7 @@ namespace librapid
 			m_origin_size = m_extent_product;
 
 			m_data_origin = m_data_start;
-			m_origin_references = new std::atomic<nd_int>(1);
+			m_origin_references = new std::atomic<lr_int>(1);
 
 			return errors::ALL_OK;
 		}
@@ -1163,7 +1163,7 @@ namespace librapid
 			}
 		}
 
-		LR_INLINE const basic_ndarray<T, alloc> subscript(nd_int index) const
+		LR_INLINE const basic_ndarray<T, alloc> subscript(lr_int index) const
 		{
 			if (index < 0 || index >= m_extent.get_extent()[0])
 			{
@@ -1179,10 +1179,10 @@ namespace librapid
 
 			res.m_data_start = m_data_start + m_stride.get_stride()[0] * index;
 			res.m_origin_references = m_origin_references;
-			nd_int dims = ndim();
+			lr_int dims = ndim();
 
-			nd_int new_extent[LIBRAPID_MAX_DIMS]{};
-			nd_int new_stride[LIBRAPID_MAX_DIMS]{};
+			lr_int new_extent[LIBRAPID_MAX_DIMS]{};
+			lr_int new_stride[LIBRAPID_MAX_DIMS]{};
 
 			if (dims == 1)
 			{
@@ -1194,8 +1194,8 @@ namespace librapid
 			}
 			else
 			{
-				memcpy(new_extent, m_extent.get_extent() + 1, sizeof(nd_int) * (LIBRAPID_MAX_DIMS - 1));
-				memcpy(new_stride, m_stride.get_stride() + 1, sizeof(nd_int) * (LIBRAPID_MAX_DIMS - 1));
+				memcpy(new_extent, m_extent.get_extent() + 1, sizeof(lr_int) * (LIBRAPID_MAX_DIMS - 1));
+				memcpy(new_stride, m_stride.get_stride() + 1, sizeof(lr_int) * (LIBRAPID_MAX_DIMS - 1));
 
 				res.construct_hollow(extent(new_extent, m_extent.ndim() - 1),
 									 stride(new_stride, m_stride.ndim() - 1));
@@ -1213,11 +1213,11 @@ namespace librapid
 				throw std::domain_error("Cannot matrix transpose array with shape " + m_extent.str());
 
 			basic_ndarray<T, alloc> res(extent{m_extent[1], m_extent[0]});
-			nd_int lda = m_stride[0], fda = m_stride[1];
-			nd_int scal = m_extent[1];
+			lr_int lda = m_stride[0], fda = m_stride[1];
+			lr_int scal = m_extent[1];
 
-			for (nd_int i = 0; i < m_extent[0]; i++)
-				for (nd_int j = 0; j < m_extent[1]; j++)
+			for (lr_int i = 0; i < m_extent[0]; i++)
+				for (lr_int j = 0; j < m_extent[1]; j++)
 					res.set_value(i + j * scal, m_data_start[j * fda + i * lda]);
 
 			return res;
@@ -1235,7 +1235,7 @@ namespace librapid
 			auto mode = broadcast::calculate_arithmetic_mode(a.get_extent().get_extent(),
 															 a.ndim(), b.get_extent().get_extent(), b.ndim());
 
-			if (mode == (nd_int) -1)
+			if (mode == (lr_int) -1)
 			{
 				auto msg = std::string("Cannot operate arrays with shapes ")
 					+ a.get_extent().str() + " and " + b.get_extent().str();
@@ -1292,7 +1292,7 @@ namespace librapid
 
 						auto res = basic_ndarray<C, R>(a.get_extent());
 
-						for (nd_int i = 0; i < a.get_extent()[0]; i++)
+						for (lr_int i = 0; i < a.get_extent()[0]; i++)
 							res[i] = op(a[i], b);
 
 						return res;
@@ -1304,7 +1304,7 @@ namespace librapid
 
 						auto res = basic_ndarray<C, R>(b.get_extent());
 
-						for (nd_int i = 0; i < b.get_extent()[0]; i++)
+						for (lr_int i = 0; i < b.get_extent()[0]; i++)
 							res[i] = op(a, b[i]);
 
 						return res;
@@ -1315,13 +1315,13 @@ namespace librapid
 						//  > Grid addition
 
 						extent res_shape(b.ndim() + 1);
-						for (nd_int i = 0; i < b.ndim(); i++)
+						for (lr_int i = 0; i < b.ndim(); i++)
 							res_shape[i] = a.get_extent()[i];
 						res_shape[b.ndim()] = b.get_extent()[b.ndim() - 1];
 
 						auto res = basic_ndarray<C, R>(res_shape);
 
-						for (nd_int i = 0; i < res_shape[0]; i++)
+						for (lr_int i = 0; i < res_shape[0]; i++)
 							res[i] = op(a[i], b);
 
 						return res;
@@ -1332,13 +1332,13 @@ namespace librapid
 						//  > Reverse grid addition
 
 						extent res_shape(a.ndim() + 1);
-						for (nd_int i = 0; i < a.ndim(); i++)
+						for (lr_int i = 0; i < a.ndim(); i++)
 							res_shape[i] = b.get_extent()[i];
 						res_shape[a.ndim()] = a.get_extent()[a.ndim() - 1];
 
 						auto res = basic_ndarray<C, R>(res_shape, a.ndim() + 1);
 
-						for (nd_int i = 0; i < res_shape[0]; i++)
+						for (lr_int i = 0; i < res_shape[0]; i++)
 							res[i] = op(a, b[i]);
 
 						return res;
@@ -1351,8 +1351,8 @@ namespace librapid
 						if (a.ndim() == 2)
 							return op(a.transposed().stripped(), b.transposed()).transposed();
 
-						nd_int new_extent[LIBRAPID_MAX_DIMS]{};
-						nd_int i = 0;
+						lr_int new_extent[LIBRAPID_MAX_DIMS]{};
+						lr_int i = 0;
 						for (; i < a.ndim() - 1; i++)
 							new_extent[i] = a.get_extent()[i];
 						new_extent[i] = b.get_extent()[1];
@@ -1361,7 +1361,7 @@ namespace librapid
 						auto tmp_a = a;
 						auto tmp_b = b.transposed();
 
-						for (nd_int i = 0; i < res.get_extent()[0]; i++)
+						for (lr_int i = 0; i < res.get_extent()[0]; i++)
 							res[i] = op(tmp_a[i].transposed().stripped(), tmp_b).transposed();
 
 						return res;
@@ -1374,8 +1374,8 @@ namespace librapid
 						if (b.ndim() == 2)
 							return op(a.transposed(), b.transposed().stripped()).transposed();
 
-						nd_int new_extent[LIBRAPID_MAX_DIMS]{};
-						nd_int i = 0;
+						lr_int new_extent[LIBRAPID_MAX_DIMS]{};
+						lr_int i = 0;
 						for (; i < b.ndim() - 1; i++)
 							new_extent[i] = b.get_extent()[i];
 						new_extent[i] = a.get_extent()[1];
@@ -1384,7 +1384,7 @@ namespace librapid
 						auto tmp_a = a.transposed();
 						auto tmp_b = b;
 
-						for (nd_int i = 0; i < res.get_extent()[0]; i++)
+						for (lr_int i = 0; i < res.get_extent()[0]; i++)
 							res[i] = op(tmp_a, tmp_b[i].transposed().stripped()).transposed();
 
 						return res;
@@ -1430,15 +1430,15 @@ namespace librapid
 	private:
 
 		T *m_data_origin = nullptr;
-		std::atomic<nd_int> *m_origin_references = nullptr;
+		std::atomic<lr_int> *m_origin_references = nullptr;
 
-		nd_int m_origin_size = 0;
+		lr_int m_origin_size = 0;
 
 		T *m_data_start = nullptr;
 
 		stride m_stride;
 		extent m_extent;
-		nd_int m_extent_product = 0;
+		lr_int m_extent_product = 0;
 		bool m_is_scalar = false;
 
 		_alloc m_alloc = alloc();
@@ -2210,7 +2210,7 @@ namespace librapid
 	*
 	* \endrst
 	*/
-	template<typename T, class alloc, typename O = nd_int>
+	template<typename T, class alloc, typename O = lr_int>
 	LR_INLINE basic_ndarray<T, alloc> reshape(const basic_ndarray<T, alloc> &arr,
 											  const basic_extent<O> &new_shape)
 	{
@@ -2254,14 +2254,14 @@ namespace librapid
 	* \endrst
 	*/
 	template<typename S = double, typename E = double>
-	LR_INLINE basic_ndarray<typename std::common_type<S, E>::type> linear(S start, E end, nd_int len)
+	LR_INLINE basic_ndarray<typename std::common_type<S, E>::type> linear(S start, E end, lr_int len)
 	{
 		using ct = typename std::common_type<S, E>::type;
 
 		basic_ndarray<ct> res({len});
 
 		ct inc = ((ct) end - (ct) start) / (ct) (len - 1);
-		for (nd_int i = 0; i < len; i++)
+		for (lr_int i = 0; i < len; i++)
 			res[i] = (ct) start + (ct) i * inc;
 
 		return res;
@@ -2314,20 +2314,20 @@ namespace librapid
 	{
 		using ct = typename std::common_type<S, E, I>::type;
 
-		nd_int len;
+		lr_int len;
 
 		if (inc > 0 && start < end)
-			len = (nd_int) ceil(abs((ct) end - (ct) start) / (ct) inc);
+			len = (lr_int) ceil(abs((ct) end - (ct) start) / (ct) inc);
 		else if (inc > 0 && start >= end)
 			len = 0;
 		else if (inc < 0 && start > end)
-			len = (nd_int) ceil(abs((ct) start - (ct) end) / (ct) -inc);
+			len = (lr_int) ceil(abs((ct) start - (ct) end) / (ct) -inc);
 		else
 			len = 0;
 
 		auto res = basic_ndarray<ct>({len});
 
-		for (nd_int i = 0; i < len; i++)
+		for (lr_int i = 0; i < len; i++)
 			res[i] = (ct) start + (ct) inc * (ct) i;
 
 		return res;
