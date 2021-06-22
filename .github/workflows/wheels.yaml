@@ -29,30 +29,30 @@ jobs:
           pip install --user check-manifest cpufeature==0.2.0
           pip install --user check-manifest -r build_requirements.txt
 
-      # - name: Install OpenBLAS
-      #   run: |
-      #     echo "Cloning Microsoft vcpkg"
-      #     git clone https://github.com/microsoft/vcpkg.git
+      - name: Install OpenBLAS
+        run: |
+          echo "Cloning Microsoft vcpkg"
+          git clone https://github.com/microsoft/vcpkg.git
 
-      #     echo "Bootstrapping vcpkg"
-      #     ./vcpkg/bootstrap-vcpkg.sh
+          echo "Bootstrapping vcpkg"
+          ./vcpkg/bootstrap-vcpkg.sh
 
-      #     echo "Installing OpenBLAS"
-      #     ./vcpkg/vcpkg install openblas
+          echo "Installing OpenBLAS"
+          ./vcpkg/vcpkg install openblas
 
-      #     echo "Current directory"
-      #     pwd
+          echo "Current directory"
+          pwd
 
-      #     echo "Files in 'packages' directory"
-      #     ls ./vcpkg/packages
+          echo "Files in 'packages' directory"
+          ls ./vcpkg/packages
 
-      #     echo "Files in 'openblas_x64-linux' directory"
-      #     ls ./vcpkg/packages/openblas_x64-linux
-      #   shell: bash
-      #   env:
-      #     OPENBLAS_NUM_THREADS: 128
-      #     GOTO_NUM_THREADS: 128
-      #     OMP_NUM_THREADS: 128
+          echo "Files in 'openblas_x64-linux' directory"
+          ls ./vcpkg/packages/openblas_x64-linux
+        shell: bash
+        env:
+          OPENBLAS_NUM_THREADS: 128
+          GOTO_NUM_THREADS: 128
+          OMP_NUM_THREADS: 128
 
       - name: Build Source Distribution
         run: |
@@ -104,50 +104,50 @@ jobs:
         run: |
           python -m pip install -r build_requirements.txt
 
-      # - name: Install OpenBLAS
-      #   run: |
-      #     echo "Cloning Microsoft vcpkg"
-      #     git clone https://github.com/microsoft/vcpkg.git
-      #     
-      #     echo "Bootstrapping vcpkg"
-      #     ./vcpkg/bootstrap-vcpkg.sh
+      - name: Install OpenBLAS
+        run: |
+          echo "Cloning Microsoft vcpkg"
+          git clone https://github.com/microsoft/vcpkg.git
+          
+          echo "Bootstrapping vcpkg"
+          ./vcpkg/bootstrap-vcpkg.sh
 
-      #     echo "Installing OpenBLAS"
-      #     if [ "$RUNNER_OS" == "Windows" ]; then
-      #       ./vcpkg/vcpkg install openblas --triplet=x86-windows
-      #       ./vcpkg/vcpkg install openblas --triplet=x64-windows
-      #     else
-      #       ./vcpkg/vcpkg install openblas
-      #     fi
-      #     
-      #     echo "Current directory"
-      #     pwd
+          echo "Installing OpenBLAS"
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            ./vcpkg/vcpkg install openblas --triplet=x86-windows
+            ./vcpkg/vcpkg install openblas --triplet=x64-windows
+          else
+            ./vcpkg/vcpkg install openblas
+          fi
+          
+          echo "Current directory"
+          pwd
 
-      #     echo "Files in 'packages' directory"
-      #     ls ./vcpkg/packages
+          echo "Files in 'packages' directory"
+          ls ./vcpkg/packages
 
-      #     echo "Files in 'openblas_x64-...' directory"
-      #     if [ "$RUNNER_OS" == "Windows" ]; then
-      #       ls ./vcpkg/packages/openblas_x64-windows
-      #     elif [ "$RUNNER_OS" == "Linux" ]; then
-      #       ls ./vcpkg/packages/openblas_x64-linux
-      #     elif [ "$RUNNER_OS" == "macOS" ]; then
-      #       ls ./vcpkg/packages/openblas_x64-osx
-      #     else
-      #       echo "$RUNNER_OS is not supported"
-      #       exit 1
-      #     fi
-      #   shell: bash
-      #   env:
-      #     OPENBLAS_NUM_THREADS: 128
-      #     GOTO_NUM_THREADS: 128
-      #     OMP_NUM_THREADS: 128
+          echo "Files in 'openblas_x64-...' directory"
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            ls ./vcpkg/packages/openblas_x64-windows
+          elif [ "$RUNNER_OS" == "Linux" ]; then
+            ls ./vcpkg/packages/openblas_x64-linux
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            ls ./vcpkg/packages/openblas_x64-osx
+          else
+            echo "$RUNNER_OS is not supported"
+            exit 1
+          fi
+        shell: bash
+        env:
+          OPENBLAS_NUM_THREADS: 128
+          GOTO_NUM_THREADS: 128
+          OMP_NUM_THREADS: 128
 
       - name: Run cibuildwheel
         run: |
           cibuildwheel --output-dir wheelhouse
 
-      - name: Build anbd Install Source Distribution
+      - name: Build and Install Source Distribution
         run: |
           python setup.py sdist
           pip install .
