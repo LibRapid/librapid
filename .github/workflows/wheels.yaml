@@ -147,14 +147,11 @@ jobs:
         run: |
           cibuildwheel --output-dir wheelhouse
 
-      - name: Build Source Distribution
+      - name: Build anbd Install Source Distribution
         run: |
-          python -m build --sdist --outdir wheelhouse
+          python setup.py sdist
+          pip install .
       
-      - name: Install from Source Distribution
-        run: |
-          pip install --user wheelhouse/*.tar.gz
-
       - name: Run Python Tests
         run: |
           python -m pytest
