@@ -19,8 +19,8 @@ namespace librapid
 										   LAMBDA op)
 		{
 			// Counters
-			nd_int idim = 0;
-			nd_int ndim = extent.ndim();
+			lr_int idim = 0;
+			lr_int ndim = extent.ndim();
 
 			// Create pointers here to reduce function calls and improve performance
 			const auto *__restrict _extent = extent.get_extent_alt();
@@ -28,7 +28,7 @@ namespace librapid
 			const auto *__restrict _stride_c = stride_c.get_stride_alt();
 
 			// All strides are non-trivial
-			nd_int mode = 1;
+			lr_int mode = 1;
 
 			// All strides trivial
 			if (stride_b.is_trivial() && stride_c.is_trivial())
@@ -38,7 +38,7 @@ namespace librapid
 			const auto end = math::product(extent.get_extent(), extent.ndim());
 
 			// The array index
-			nd_int coord[LIBRAPID_MAX_DIMS]{};
+			lr_int coord[LIBRAPID_MAX_DIMS]{};
 
 			switch (mode)
 			{
@@ -56,7 +56,7 @@ namespace librapid
 						}
 						else
 						{
-							for (nd_int i = 0; i < end; ++i)
+							for (lr_int i = 0; i < end; ++i)
 								src_c[i] = op(*src_a, src_b[i]);
 						}
 						break;

@@ -28,21 +28,21 @@ namespace librapid
 		 * \endrst
 		 */
 		template<typename A, typename B>
-		static int calculate_arithmetic_mode(const A *a, nd_int dims_a, const B *b, nd_int dims_b)
+		static int calculate_arithmetic_mode(const A *a, lr_int dims_a, const B *b, lr_int dims_b)
 		{
 			// Check for direct or indirect shape match
 			int mode = -1; // Addition mode
 
-			nd_int prodA = math::product(a, dims_a);
-			nd_int prodB = math::product(b, dims_b);
+			lr_int prodA = math::product(a, dims_a);
+			lr_int prodB = math::product(b, dims_b);
 
-			nd_int leading_ones_a = 0, leading_ones_b = 0;
+			lr_int leading_ones_a = 0, leading_ones_b = 0;
 
-			for (nd_int i = 0; i < dims_a; i++)
+			for (lr_int i = 0; i < dims_a; i++)
 				if (a[i] == 1) leading_ones_a++;
 				else break;
 
-			for (nd_int i = 0; i < dims_b; i++)
+			for (lr_int i = 0; i < dims_b; i++)
 				if (b[i] == 1) leading_ones_b++;
 				else break;
 

@@ -17,15 +17,9 @@ namespace py = pybind11;
 
 namespace librapid
 {
-	template<typename T = nd_int, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
+	template<typename T = lr_int, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
 	class basic_stride;
 
-	/// <summary>
-	/// The stride iterator class allows you to iterate
-	/// over the stride of an array, accessing the values
-	/// one by one in order
-	/// </summary>
-	/// <typeparam name="T">The datatype of the extestrident being iterated over</typeparam>
 	template<typename T>
 	class stride_iterator
 	{
@@ -36,16 +30,8 @@ namespace librapid
 		using pointer = value_type *;
 		using reference = value_type &;
 
-		/// <summary>
-		/// Create an empty stride iterator
-		/// </summary>
 		stride_iterator() = default;
 
-		/// <summary>
-		/// Create a new stride iterator using
-		/// the starting pointer
-		/// </summary>
-		/// <param name="start">The starting memory location</param>
 		stride_iterator(pointer start)
 		{
 			m_ptr = start;
@@ -53,111 +39,53 @@ namespace librapid
 
 		~stride_iterator() = default;
 
-		/// <summary>
-		/// Set one stride iterator equal to another
-		/// </summary>
-		/// <param name="other">Another stride iterator</param>
-		/// <returns>A reference to the original iterator</returns>
 		LR_INLINE stride_iterator<T> &operator=(const stride_iterator<T> &other) = default;
 
-		/// <summary>
-		/// Set an stride iterator to a pointer
-		/// of the same type
-		/// </summary>
-		/// <param name="ptr">The pointer to iterate</param>
-		/// <returns>Reference to original iterator</returns>
 		LR_INLINE stride_iterator<T> &operator=(pointer ptr)
 		{
 			m_ptr = ptr;
 			return *this;
 		}
 
-		/// <summary>
-		/// Convert the iterator to a boolean value.
-		/// The result is "true" if the pointer is a
-		/// valid memory location, otherwise the result
-		/// is "false"
-		/// </summary>
-		/// <returns>True if the iterator's pointer is valid</returns>
 		LR_INLINE operator bool() const
 		{
 			return m_ptr ? true : false;
 		}
 
-		/// <summary>
-		/// Check whether one stride iterator is equal to another
-		/// stride iterator of the same type
-		/// </summary>
-		/// <param name="other">The iterator to compare against</param>
-		/// <returns>True if the iterators are equal</returns>
 		LR_INLINE bool operator==(const stride_iterator<T> &other) const
 		{
 			return m_ptr == other.get_const_ptr();
 		}
 
-		/// <summary>
-		/// Check for a lack of equality with another iterator
-		/// of the same type.
-		/// </summary>
-		/// <param name="other">The iterator to compare agianst</param>
-		/// <returns>True if the iterators are not equal</returns>
 		LR_INLINE bool operator!=(const stride_iterator<T> &other) const
 		{
 			return m_ptr != other.get_const_ptr();
 		}
 
-		/// <summary>
-		/// Increment the pointer by a specific offset
-		/// </summary>
-		/// <param name="movement">The offset for the pointer</param>
-		/// <returns>Reference to the iterator</returns>
 		LR_INLINE stride_iterator<T> &operator+=(const difference_type &movement)
 		{
 			m_ptr += movement;
 			return (*this);
 		}
 
-		/// <summary>
-		/// Decrement the pointer by a specific offset
-		/// </summary>
-		/// <param name="movement">The offset for the pointer</param>
-		/// <returns>Reference to the iterator</returns>
 		LR_INLINE stride_iterator<T> &operator-=(const difference_type &movement)
 		{
 			m_ptr -= movement;
 			return (*this);
 		}
 
-		/// <summary>
-		/// Increment the pointer by one
-		/// </summary>
-		/// <returns>Reference to the iterator</returns>
 		LR_INLINE stride_iterator<T> &operator++()
 		{
 			++m_ptr;
 			return (*this);
 		}
 
-		/// <summary>
-		/// Decrement the iterator by one
-		/// </summary>
-		/// <returns>Reference to the iterator</returns>
 		LR_INLINE stride_iterator<T> &operator--()
 		{
 			--m_ptr;
 			return (*this);
 		}
 
-		/// <summary>
-		/// Increment the iterator, but return
-		/// it's unincremented value. For example,
-		/// an iterator at memory location zero
-		/// would return another iterator at zero,
-		/// though the original iterator would then
-		/// be at memory location one
-		/// </summary>
-		/// <param name=""></param>
-		/// <returns></returns>
 		LR_INLINE stride_iterator<T> operator++(int)
 		{
 			auto temp(*this);
@@ -165,16 +93,6 @@ namespace librapid
 			return temp;
 		}
 
-		/// <summary>
-		/// Decrement the iterator, but return
-		/// it's original value. For example,
-		/// an iterator at memory location one
-		/// would return another iterator at one,
-		/// though the original iterator would then
-		/// be at memory location zero
-		/// </summary>
-		/// <param name=""></param>
-		/// <returns></returns>
 		LR_INLINE stride_iterator<T> operator--(int)
 		{
 			auto temp(*this);
@@ -182,83 +100,41 @@ namespace librapid
 			return temp;
 		}
 
-		/// <summary>
-		/// Return a new iterator incremented
-		/// with a given offset
-		/// </summary>
-		/// <param name="movement"></param>
-		/// <returns>A new iterator</returns>
 		LR_INLINE stride_iterator<T> operator+(const difference_type &movement) const
 		{
 			return stride_iterator<T>(m_ptr + movement);
 		}
 
-		/// <summary>
-		/// Return a new iterator decremented
-		/// with a given offset
-		/// </summary>
-		/// <param name="movement"></param>
-		/// <returns>A new iterator</returns>
 		LR_INLINE stride_iterator<T> operator-(const difference_type &movement) const
 		{
 			return stride_iterator<T>(m_ptr - movement);
 		}
 
-		/// <summary>
-		/// Find the difference between one iterator
-		/// and another
-		/// </summary>
-		/// <param name="raw_iterator"></param>
-		/// <returns>The difference between the iterators</returns>
 		LR_INLINE difference_type operator-(const stride_iterator<T> &raw_iterator) const
 		{
 			return std::distance(raw_iterator.get_ptr(), get_ptr());
 		}
 
-		/// <summary>
-		/// Dereference the iterator and return
-		/// a reference to the value at the current
-		/// point in the iterator
-		/// </summary>
-		/// <returns>A value reference</returns>
 		LR_INLINE T &operator*()
 		{
 			return *m_ptr;
 		}
 
-		/// <summary>
-		/// Dereference the iterator and return
-		/// a const reference to the value at the
-		/// current point in the iterator
-		/// </summary>
-		/// <returns>A const value reference</returns>
 		LR_INLINE const T &operator*() const
 		{
 			return *m_ptr;
 		}
 
-		/// <summary>
-		/// Access the pointer
-		/// </summary>
-		/// <returns></returns>
 		LR_INLINE T *operator->()
 		{
 			return m_ptr;
 		}
 
-		/// <summary>
-		/// Access the const pointer of the iterator
-		/// </summary>
-		/// <returns>A const pointer</returns>
 		LR_INLINE const pointer get_const_ptr() const
 		{
 			return m_ptr;
 		}
 
-		/// <summary>
-		/// Access the non-const pointer of the iterator
-		/// </summary>
-		/// <returns>A pointer</returns>
 		LR_INLINE pointer get_ptr() const
 		{
 			return m_ptr;
@@ -278,7 +154,7 @@ namespace librapid
 			basic_stride(std::vector<T>(vals.begin(), vals.end()))
 		{}
 
-		basic_stride(nd_int n)
+		basic_stride(lr_int n)
 		{
 			m_is_trivial = true;
 			m_dims = n;
@@ -289,7 +165,7 @@ namespace librapid
 				return;
 			}
 
-			for (nd_int i = 0; i < n; i++)
+			for (lr_int i = 0; i < n; i++)
 			{
 				m_stride[i] = 1;
 				m_stride_alt[i] = 1;
@@ -323,7 +199,7 @@ namespace librapid
 				return;
 			}
 
-			for (nd_int i = 0; i < m_dims; i++)
+			for (lr_int i = 0; i < m_dims; i++)
 			{
 				m_stride[i] = strides[i];
 				m_stride_alt[i] = strides[m_dims - i - 1];
@@ -337,7 +213,7 @@ namespace librapid
 		{
 			m_dims = pair.second;
 
-			for (nd_int i = 0; i < m_dims; i++)
+			for (lr_int i = 0; i < m_dims; i++)
 			{
 				m_stride[i] = pair.first[i];
 				m_stride_alt[i] = pair.first[m_dims - i - 1];
@@ -347,7 +223,7 @@ namespace librapid
 		}
 
 		template<typename PTR>
-		basic_stride(PTR data, nd_int dims)
+		basic_stride(PTR data, lr_int dims)
 		{
 			m_dims = dims;
 
@@ -357,7 +233,7 @@ namespace librapid
 				return;
 			}
 
-			for (nd_int i = 0; i < m_dims; i++)
+			for (lr_int i = 0; i < m_dims; i++)
 			{
 				m_stride[i] = data[i];
 				m_stride_alt[i] = data[m_dims - i - 1];
@@ -380,10 +256,10 @@ namespace librapid
 				return;
 			}
 
-			for (nd_int i = 0; i < m_dims; i++)
+			for (lr_int i = 0; i < m_dims; i++)
 			{
-				m_stride[i] = py::cast<nd_int>(args[i]);
-				m_stride_alt[i] = py::cast<nd_int>(args[m_dims - i - 1]);
+				m_stride[i] = py::cast<lr_int>(args[i]);
+				m_stride_alt[i] = py::cast<lr_int>(args[m_dims - i - 1]);
 			}
 
 			m_is_trivial = check_trivial();
@@ -398,20 +274,20 @@ namespace librapid
 		}
 
 		template<typename V>
-		static basic_stride<T> from_extent(const V *extent, nd_int dims)
+		static basic_stride<T> from_extent(const V *extent, lr_int dims)
 		{
 			basic_stride<T> res;
 
 			res.m_dims = dims;
 
 			V prod = 1;
-			for (nd_int i = 0; i < dims; i++)
+			for (lr_int i = 0; i < dims; i++)
 			{
 				res.m_stride[dims - i - 1] = (T) prod;
 				prod *= extent[dims - i - 1];
 			}
 
-			for (nd_int i = 0; i < dims; i++)
+			for (lr_int i = 0; i < dims; i++)
 				res.m_stride_alt[i] = res.m_stride[dims - i - 1];
 
 			res.m_is_trivial = true;
@@ -451,7 +327,7 @@ namespace librapid
 			return m_stride[index];
 		}
 
-		LR_INLINE nd_int ndim() const
+		LR_INLINE lr_int ndim() const
 		{
 			return m_dims;
 		}
@@ -476,7 +352,7 @@ namespace librapid
 			return m_is_trivial;
 		}
 
-		LR_INLINE void set_dimensions(nd_int new_dims)
+		LR_INLINE void set_dimensions(lr_int new_dims)
 		{
 			m_dims = new_dims;
 		}
@@ -488,7 +364,7 @@ namespace librapid
 			T new_stride[LIBRAPID_MAX_DIMS]{};
 			T new_stride_alt[LIBRAPID_MAX_DIMS]{};
 
-			nd_int i = 0;
+			lr_int i = 0;
 			for (const auto &index : order)
 			{
 				new_stride[index] = m_stride[i];
@@ -529,7 +405,7 @@ namespace librapid
 		LR_INLINE std::string str() const
 		{
 			auto stream = std::stringstream();
-			for (nd_int i = 0; i < m_dims; i++)
+			for (lr_int i = 0; i < m_dims; i++)
 			{
 				if (i == m_dims - 1) stream << m_stride[i];
 				else stream << m_stride[i] << ", ";
@@ -544,7 +420,7 @@ namespace librapid
 			if (m_dims == 1)
 				return m_stride[0] == 1;
 
-			for (nd_int i = 0; i < m_dims - 1; i++)
+			for (lr_int i = 0; i < m_dims - 1; i++)
 			{
 				if (m_stride[i] < m_stride[i + 1])
 					goto not_trivial;
@@ -558,7 +434,7 @@ namespace librapid
 		T m_stride[LIBRAPID_MAX_DIMS]{};
 		T m_stride_alt[LIBRAPID_MAX_DIMS]{};
 
-		nd_int m_dims = 0;
+		lr_int m_dims = 0;
 		bool m_is_trivial = false;
 	};
 

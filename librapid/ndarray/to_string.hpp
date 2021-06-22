@@ -10,7 +10,7 @@ namespace librapid
 		struct str_container
 		{
 			std::string str;
-			nd_int decimal_point;
+			lr_int decimal_point;
 		};
 
 		template<typename T>
@@ -56,16 +56,16 @@ namespace librapid
 
 			// Value is integral
 			if (last_decimal == std::string::npos)
-				return {str, (nd_int) str.length() - 1};
+				return {str, (lr_int) str.length() - 1};
 
-			return {str, (nd_int) last_decimal};
+			return {str, (lr_int) last_decimal};
 		}
 
 		LR_INLINE std::string to_string_1D(const std::vector<std::string> &adjusted, bool strip_middle)
 		{
 			std::string res = "[";
 
-			for (nd_int i = 0; i < adjusted.size(); i++)
+			for (lr_int i = 0; i < adjusted.size(); i++)
 			{
 				if (strip_middle && adjusted.size() > 6 && i == 3)
 				{
@@ -141,7 +141,7 @@ namespace librapid
 					auto shapeEnd = shape.end();
 
 					auto adjusted_substring = std::vector<std::string>(adjustedStart, adjustedEnd);
-					auto sub_shape = std::vector<nd_int>(shapeStart, shapeEnd);
+					auto sub_shape = std::vector<lr_int>(shapeStart, shapeEnd);
 
 					res += to_string(adjusted_substring, sub_shape, depth + 1, strip_middle);
 

@@ -12,13 +12,13 @@ namespace librapid
 	{
 	#define TIME (double) std::chrono::high_resolution_clock().now().time_since_epoch().count() / 1000000000
 
-		constexpr long double pi = 3.141592653589793238462643383279502884197169399375105820974944592307816406286;
-		constexpr long double twoPi = 6.283185307179586476925286766559005768394338798750211641949889184615632812572;
-		constexpr long double halfPi = 1.570796326794896619231321691639751442098584699687552910487472296153908203143;
-		constexpr long double e = 2.718281828459045235360287471352662497757247093699959574966967627724076630353;
-		constexpr long double sqrt2 = 1.414213562373095048801688724209698078569671875376948073176679737990732478;
-		constexpr long double sqrt3 = 1.7320508075688772935274463415058723669428052538103806280558069794519330169;
-		constexpr long double sqrt5 = 2.2360679774997896964091736687312762354406183596115257242708972454105209256378;
+		extern long double pi = 3.141592653589793238462643383279502884197169399375105820974944592307816406286;
+		extern long double twopi = 6.283185307179586476925286766559005768394338798750211641949889184615632812572;
+		extern long double halfpi = 1.570796326794896619231321691639751442098584699687552910487472296153908203143;
+		extern long double e = 2.718281828459045235360287471352662497757247093699959574966967627724076630353;
+		extern long double sqrt2 = 1.414213562373095048801688724209698078569671875376948073176679737990732478;
+		extern long double sqrt3 = 1.7320508075688772935274463415058723669428052538103806280558069794519330169;
+		extern long double sqrt5 = 2.2360679774997896964091736687312762354406183596115257242708972454105209256378;
 
 		template<typename T>
 		LR_INLINE T product(const std::vector<T> &vals)
@@ -30,10 +30,10 @@ namespace librapid
 		}
 
 		template<typename T>
-		LR_INLINE T product(const T *__restrict vals, nd_int num)
+		LR_INLINE T product(const T *__restrict vals, lr_int num)
 		{
 			T res = 1;
-			for (nd_int i = 0; i < num; i++)
+			for (lr_int i = 0; i < num; i++)
 				res *= vals[i];
 			return res;
 		}
@@ -48,9 +48,9 @@ namespace librapid
 		}
 
 		template<typename T, typename V>
-		LR_INLINE const bool anyBelow(const T *__restrict vals, nd_int dims, V bound)
+		LR_INLINE const bool anyBelow(const T *__restrict vals, lr_int dims, V bound)
 		{
-			for (nd_int i = 0; i < dims; i++)
+			for (lr_int i = 0; i < dims; i++)
 				if (vals[i] < bound)
 					return true;
 			return false;
@@ -69,22 +69,6 @@ namespace librapid
 
 			return pos;
 		}
-
-		/*
-		template<typename A, typename B>
-		LR_INLINE const A max_value(A a, B b)
-		{
-			if (a > b) return a;
-			return b;
-		}
-
-		template<typename A, typename B>
-		LR_INLINE const A min_value(A a, B b)
-		{
-			if (a < b) return a;
-			return b;
-		}
-		*/
 
 		template<typename T>
 		LR_INLINE T &&min(T &&val)
@@ -155,10 +139,12 @@ namespace librapid
 		}
 
 		template<typename v, typename s, typename e, typename ss, typename ee>
-		LR_INLINE typename std::common_type<v, s, e, ss, ee>::type map(v val, s start1, e stop1, ss start2, ee stop2)
+		LR_INLINE typename std::common_type<v, s, e, ss, ee>::type map(v val, s start1, e stop1,
+																	   ss start2, ee stop2)
 		{
 			using _Ty = typename std::common_type<v, s, e, ss, ee>::type;
-			return (_Ty) start2 + ((_Ty) stop2 - (_Ty) start2) * (((_Ty) val - (_Ty) start1) / ((_Ty) stop1 - (_Ty) start1));
+			return (_Ty) start2 + ((_Ty) stop2 - (_Ty) start2) *
+				(((_Ty) val - (_Ty) start1) / ((_Ty) stop1 - (_Ty) start1));
 		}
 
 		template<typename type, typename std::enable_if<std::is_floating_point<type>::value, int>::type = 0>
@@ -181,19 +167,38 @@ namespace librapid
 			return (type) random((double) min, (double) max + 1);
 		}
 
-		template<typename t>
-		LR_INLINE t round(const t &number, nd_int dp = 0)
+		LR_INLINE double pow10(lr_int exponent)
 		{
-			auto num = abs(number);
+			const static double pows[] = {0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000, 100000};
+			if (exponent >= -5 && exponent <= 5)
+				return pows[exponent + 5];
 
-			t remainder = fmod(abs(num), 1. * pow(10, -((t) dp)));
+			double res = 1;
+
+			if (exponent > 0)
+				for (lr_int i = 0; i < exponent; i++)
+					res *= 10;
+			else
+				for (lr_int i = 0; i > exponent; i--)
+					res *= 0.1;
+
+			return res;
+		}
+
+		template<typename t>
+		LR_INLINE t round(const t &num, lr_int dp = 0)
+		{
+			double p10 = pow10(-dp);
+
+			t remainder = fmod(num, p10);
+
 			if (remainder == 0)
-				return num * (num >= 0 ? 1 : -1);
+				return num;
 
-			if (remainder < 0.4999999999 * pow(10, -((t) dp)))
-				return (num - remainder) * (num >= 0 ? 1 : -1);
+			if (remainder < 0.4999999999 * p10)
+				return num - remainder;
 
-			return (num + (1. * pow(10, -((t) dp))) - remainder) * (num >= 0 ? 1 : -1);
+			return num + p10 - remainder;
 		}
 	}
 }

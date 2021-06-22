@@ -12,10 +12,10 @@ int main()
 	auto lhs = librapid::ndarray(librapid::extent({10, 10}), 0);
 	auto rhs = librapid::ndarray(librapid::extent({10, 10}), 0);
 
-	for (nd_int i = 0; i < lhs.size(); i++)
+	for (lr_int i = 0; i < lhs.size(); i++)
 		lhs.set_value(i, i + 1);
 
-	for (nd_int i = 0; i < rhs.size(); i++)
+	for (lr_int i = 0; i < rhs.size(); i++)
 		rhs.set_value(i, i + 1);
 
 	std::cout << lhs.str() << "\n";
@@ -31,8 +31,9 @@ int main()
 
 	// benchmark_ndarray();
 
-	auto my_thing = librapid::range(0, 10, 1);
-	std::cout << my_thing.str() << "\n";
+	std::cout << librapid::math::round(-0.05, 1) << "\n";
+	std::cout << librapid::math::round(-0.5) << "\n";
+	std::cout << librapid::math::round(0.44, 1) << "\n";
 
 	return 0;
 }

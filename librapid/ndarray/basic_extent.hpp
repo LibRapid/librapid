@@ -17,7 +17,7 @@ namespace py = pybind11;
 
 namespace librapid
 {
-	template<typename T = nd_int, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
+	template<typename T = lr_int, typename std::enable_if<std::is_integral<T>::value, int>::type = 0 >
 	class basic_extent;
 
 	template<typename T>
@@ -168,7 +168,7 @@ namespace librapid
 
 			int neg_1 = 0;
 
-			for (nd_int i = 0; i < m_dims; i++)
+			for (lr_int i = 0; i < m_dims; i++)
 			{
 				m_extent[i] = vals[i];
 				m_extent_alt[i] = vals[m_dims - i - 1];
@@ -189,7 +189,7 @@ namespace librapid
 				m_contains_automatic = true;
 		}
 
-		basic_extent(nd_int n)
+		basic_extent(lr_int n)
 		{
 			m_dims = n;
 
@@ -199,7 +199,7 @@ namespace librapid
 				return;
 			}
 
-			for (nd_int i = 0; i < m_dims; i++)
+			for (lr_int i = 0; i < m_dims; i++)
 			{
 				m_extent[i] = 1;
 				m_extent_alt[i] = 1;
@@ -226,7 +226,7 @@ namespace librapid
 		{
 			m_dims = pair.second;
 
-			for (nd_int i = 0; i < m_dims; i++)
+			for (lr_int i = 0; i < m_dims; i++)
 			{
 				m_extent[i] = pair.first[i];
 				m_extent_alt[i] = pair.first[m_dims - i - 1];
@@ -234,7 +234,7 @@ namespace librapid
 		}
 
 		template<typename PTR>
-		basic_extent(PTR *data, nd_int dims)
+		basic_extent(PTR *data, lr_int dims)
 		{
 			m_dims = dims;
 
@@ -244,7 +244,7 @@ namespace librapid
 				return;
 			}
 
-			for (nd_int i = 0; i < m_dims; i++)
+			for (lr_int i = 0; i < m_dims; i++)
 			{
 				m_extent[i] = data[i];
 				m_extent_alt[i] = data[m_dims - i - 1];
@@ -265,14 +265,27 @@ namespace librapid
 				return;
 			}
 
-			for (nd_int i = 0; i < m_dims; i++)
+			int neg_1 = 0;
+
+			for (lr_int i = 0; i < m_dims; i++)
 			{
-				m_extent[i] = py::cast<nd_int>(args[i]);
-				m_extent_alt[i] = py::cast<nd_int>(args[m_dims - i - 1]);
+				m_extent[i] = py::cast<lr_int>(args[i]);
+				m_extent_alt[i] = py::cast<lr_int>(args[m_dims - i - 1]);
+
+				if (m_extent[i] < 0)
+				{
+					if (m_extent[i] == -1)
+						neg_1++;
+					else
+						throw std::domain_error("Extent cannot contain a negative number");
+				}
 			}
 
-			if (math::anyBelow(m_extent, m_dims, 1))
-				throw std::domain_error("basic_extent cannot contain values less than 1");
+			if (neg_1 > 1)
+				throw std::domain_error("Extent cannot contain more than 1 automatic dimension");
+
+			if (neg_1 == 1)
+				m_contains_automatic = true;
 		}
 
 	#endif
@@ -288,7 +301,7 @@ namespace librapid
 			return *this;
 		}
 
-		LR_INLINE T &operator[](nd_int index)
+		LR_INLINE T &operator[](lr_int index)
 		{
 			if (index < 0 || index >= m_dims)
 				throw std::out_of_range("Index " + std::to_string(index)
@@ -298,7 +311,7 @@ namespace librapid
 			return m_extent[index];
 		}
 
-		LR_INLINE const T &operator[](nd_int index) const
+		LR_INLINE const T &operator[](lr_int index) const
 		{
 			if (index < 0 || index >= m_dims)
 				throw std::out_of_range("Index " + std::to_string(index)
@@ -308,14 +321,14 @@ namespace librapid
 			return m_extent[index];
 		}
 
-		LR_INLINE T &operator()(nd_int index, bool normal)
+		LR_INLINE T &operator()(lr_int index, bool normal)
 		{
 			if (normal)
 				return m_extent[index];
 			return m_extent_alt[index];
 		}
 
-		LR_INLINE const T &operator()(nd_int index, bool normal) const
+		LR_INLINE const T &operator()(lr_int index, bool normal) const
 		{
 			if (normal)
 				return m_extent[index];
@@ -328,19 +341,19 @@ namespace librapid
 				return basic_extent({1});
 
 			std::vector<T> res;
-			for (nd_int i = 0; i < m_dims; i++)
+			for (lr_int i = 0; i < m_dims; i++)
 				if (m_extent[i] != 1)
 					res.emplace_back(m_extent[i]);
 
 			return basic_extent(res);
 		}
 
-		LR_INLINE basic_extent<T> fix_automatic(nd_int elems) const
+		LR_INLINE basic_extent<T> fix_automatic(lr_int elems) const
 		{
 			basic_extent<T> res(m_dims);
-			nd_int non_auto_dims = 1;
-			nd_int auto_index = -1;
-			for (nd_int i = 0; i < m_dims; i++)
+			lr_int non_auto_dims = 1;
+			lr_int auto_index = -1;
+			for (lr_int i = 0; i < m_dims; i++)
 			{
 				if (m_extent[i] == -1)
 				{
@@ -359,7 +372,7 @@ namespace librapid
 
 			// Ensure that the number of elements provided is possible
 			double check = (double) elems / double(non_auto_dims);
-			if (check != (nd_int) check)
+			if (check != (lr_int) check)
 				goto invalid;
 
 			res.m_extent[auto_index] = elems / non_auto_dims;
@@ -372,7 +385,7 @@ namespace librapid
 			return basic_extent();
 		}
 
-		LR_INLINE nd_int ndim() const
+		LR_INLINE lr_int ndim() const
 		{
 			return m_dims;
 		}
@@ -406,12 +419,12 @@ namespace librapid
 		LR_INLINE void reshape(const std::vector<O> &order)
 		{
 			// No validation. This should be completed by the caller of this function
-			nd_int size = m_dims;
+			lr_int size = m_dims;
 
-			nd_int new_extent[LIBRAPID_MAX_DIMS]{};
-			nd_int new_extent_alt[LIBRAPID_MAX_DIMS]{};
+			lr_int new_extent[LIBRAPID_MAX_DIMS]{};
+			lr_int new_extent_alt[LIBRAPID_MAX_DIMS]{};
 
-			nd_int i = 0;
+			lr_int i = 0;
 			for (const auto &index : order)
 			{
 				new_extent[index] = m_extent[i];
@@ -419,8 +432,8 @@ namespace librapid
 				++i;
 			}
 
-			memcpy(m_extent, new_extent, sizeof(nd_int) * size);
-			memcpy(m_extent_alt, new_extent_alt, sizeof(nd_int) * size);
+			memcpy(m_extent, new_extent, sizeof(lr_int) * size);
+			memcpy(m_extent_alt, new_extent_alt, sizeof(lr_int) * size);
 		}
 
 		LR_INLINE extent_iterator<T> begin() const
@@ -436,7 +449,7 @@ namespace librapid
 		LR_INLINE std::string str() const
 		{
 			auto stream = std::stringstream();
-			for (nd_int i = 0; i < m_dims; i++)
+			for (lr_int i = 0; i < m_dims; i++)
 			{
 				if (i == m_dims - 1) stream << m_extent[i];
 				else stream << m_extent[i] << ", ";
@@ -448,11 +461,11 @@ namespace librapid
 		T m_extent[LIBRAPID_MAX_DIMS]{};
 		T m_extent_alt[LIBRAPID_MAX_DIMS]{};
 
-		nd_int m_dims = 0;
+		lr_int m_dims = 0;
 		bool m_contains_automatic = false;
 	};
 
-	using extent = basic_extent<nd_int>;
+	using extent = basic_extent<lr_int>;
 
 	template<typename T>
 	std::ostream &operator<<(std::ostream &os, const basic_extent<T> &s)
