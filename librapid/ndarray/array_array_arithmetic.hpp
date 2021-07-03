@@ -49,10 +49,10 @@ namespace librapid
 						// Only use OpenMP if size is above a certain threshold
 						// to improve speed for small arrays (overhead of multiple
 						// threads makes it slower for small arrays)
-						if (end > 1000000)
+						if (end > 100000)
 						{
 							long long e = (long long) end;
-						#pragma omp parallel for shared(src_a, src_b, src_c, op, e) default(none)
+						#pragma omp parallel for shared(src_a, src_b, src_c, op, e) default(none) num_threads(4)
 							for (long long i = 0; i < e; ++i)
 								src_c[i] = op(src_a[i], src_b[i]);
 						}

@@ -10,15 +10,13 @@ namespace librapid
 {
 	namespace math
 	{
-	#define TIME (double) std::chrono::high_resolution_clock().now().time_since_epoch().count() / 1000000000
-
-		extern long double pi = 3.141592653589793238462643383279502884197169399375105820974944592307816406286;
-		extern long double twopi = 6.283185307179586476925286766559005768394338798750211641949889184615632812572;
-		extern long double halfpi = 1.570796326794896619231321691639751442098584699687552910487472296153908203143;
-		extern long double e = 2.718281828459045235360287471352662497757247093699959574966967627724076630353;
-		extern long double sqrt2 = 1.414213562373095048801688724209698078569671875376948073176679737990732478;
-		extern long double sqrt3 = 1.7320508075688772935274463415058723669428052538103806280558069794519330169;
-		extern long double sqrt5 = 2.2360679774997896964091736687312762354406183596115257242708972454105209256378;
+		constexpr long double pi = 3.141592653589793238462643383279502884197169399375105820974944592307816406286;
+		constexpr long double twopi = 6.283185307179586476925286766559005768394338798750211641949889184615632812572;
+		constexpr long double halfpi = 1.570796326794896619231321691639751442098584699687552910487472296153908203143;
+		constexpr long double e = 2.718281828459045235360287471352662497757247093699959574966967627724076630353;
+		constexpr long double sqrt2 = 1.414213562373095048801688724209698078569671875376948073176679737990732478;
+		constexpr long double sqrt3 = 1.7320508075688772935274463415058723669428052538103806280558069794519330169;
+		constexpr long double sqrt5 = 2.2360679774997896964091736687312762354406183596115257242708972454105209256378;
 
 		template<typename T>
 		LR_INLINE T product(const std::vector<T> &vals)
@@ -71,7 +69,7 @@ namespace librapid
 		}
 
 		template<typename T>
-		LR_INLINE T &&min(T &&val)
+		LR_INLINE T &&min_max_forward(T &&val)
 		{
 			return std::forward<T>(val);
 		}
@@ -80,8 +78,8 @@ namespace librapid
 		LR_INLINE auto min(T0 &&val1, T1 &&val2, Ts &&... vs)
 		{
 			return (val1 < val2) ?
-				min(val1, std::forward<Ts>(vs)...) :
-				min(val2, std::forward<Ts>(vs)...);
+				min_max_forward(val1, std::forward<Ts>(vs)...) :
+				min_max_forward(val2, std::forward<Ts>(vs)...);
 		}
 
 		template<typename T>
@@ -94,18 +92,12 @@ namespace librapid
 			return min_found;
 		}
 
-		template<typename T>
-		LR_INLINE T &&max(T &&val)
-		{
-			return std::forward<T>(val);
-		}
-
 		template<typename T0, typename T1, typename... Ts>
 		LR_INLINE auto max(T0 &&val1, T1 &&val2, Ts &&... vs)
 		{
 			return (val1 > val2) ?
-				max(val1, std::forward<Ts>(vs)...) :
-				max(val2, std::forward<Ts>(vs)...);
+				min_max_forward(val1, std::forward<Ts>(vs)...) :
+				min_max_forward(val2, std::forward<Ts>(vs)...);
 		}
 
 		template<typename T>
@@ -118,22 +110,16 @@ namespace librapid
 			return min_found;
 		}
 
-		template<typename t>
-		LR_INLINE t abs(t a)
+		template<typename T, typename std::enable_if<std::is_signed<T>::value, int>::type = 0>
+		LR_INLINE T abs(T a)
 		{
 			if (a < 0)
 				return -a;
 			return a;
 		}
 
-		template<>
-		LR_INLINE unsigned int abs(unsigned int a)
-		{
-			return a;
-		}
-
-		template<>
-		LR_INLINE unsigned long long abs(unsigned long long a)
+		template<typename T, typename std::enable_if<std::is_unsigned<T>::value, int>::type = 0>
+		LR_INLINE T abs(T a)
 		{
 			return a;
 		}
@@ -153,7 +139,7 @@ namespace librapid
 			// Random floating point value in range [min, max)
 
 			static std::uniform_real_distribution<type> distribution(0., 1.);
-			static std::mt19937 generator(TIME * 1000000);
+			static std::mt19937 generator(TIME * 10);
 			return min + (max - min) * distribution(generator);
 		}
 
@@ -161,9 +147,6 @@ namespace librapid
 		LR_INLINE type random(const type &min, const type &max)
 		{
 			// Random integral value in range [min, max]
-
-			static std::uniform_real_distribution<double> distribution(0., 1.);
-			static std::mt19937 generator(TIME * 1000000);
 			return (type) random((double) min, (double) max + 1);
 		}
 
@@ -185,12 +168,12 @@ namespace librapid
 			return res;
 		}
 
-		template<typename t>
-		LR_INLINE t round(const t &num, lr_int dp = 0)
+		template<typename T>
+		LR_INLINE T round(const T &num, lr_int dp = 0)
 		{
 			double p10 = pow10(-dp);
 
-			t remainder = fmod(num, p10);
+			T remainder = fmod(num, p10);
 
 			if (remainder == 0)
 				return num;

@@ -152,6 +152,10 @@ jobs:
           python setup.py sdist
           pip install .
 
+      - name: Run Python Tests
+        run: |
+          pytest
+
       - name: Check Built Wheels
         run: |
           twine check wheelhouse/*

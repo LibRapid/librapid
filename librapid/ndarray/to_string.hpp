@@ -65,7 +65,7 @@ namespace librapid
 		{
 			std::string res = "[";
 
-			for (lr_int i = 0; i < adjusted.size(); i++)
+			for (size_t i = 0; i < adjusted.size(); i++)
 			{
 				if (strip_middle && adjusted.size() > 6 && i == 3)
 				{
@@ -92,11 +92,11 @@ namespace librapid
 				std::string res = "[";
 
 				T count = 0;
-				for (T i = 0; i < adjusted.size(); i += shape[1])
+				for (size_t i = 0; i < adjusted.size(); i += shape[1])
 				{
 					if (strip_middle && shape[0] > 6 && i == shape[1] * 3)
 					{
-						i = (T) adjusted.size() - shape[1] * 3;
+						i = (size_t) adjusted.size() - shape[1] * 3;
 						res += std::string(depth, ' ') + "...\n";
 						count = shape[0] - 3;
 					}
@@ -123,7 +123,7 @@ namespace librapid
 				T count = 0;
 				T inc = math::product(shape) / shape[0];
 
-				for (T i = 0; i < adjusted.size(); i += inc)
+				for (size_t i = 0; i < adjusted.size(); i += inc)
 				{
 					if (strip_middle && shape[0] > 6 && i == inc * 3)
 					{

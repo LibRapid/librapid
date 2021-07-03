@@ -95,6 +95,29 @@ namespace librapid
 			if (del_pair2) delete pair2.first;
 			return true;
 		}
+
+		template<typename V>
+		LR_INLINE std::vector<lr_int> extract_size(const std::vector<V> &vec)
+		{
+			std::vector<lr_int> res(1);
+			res[0] = vec.size();
+			return res;
+		}
+
+		template<typename V>
+		LR_INLINE std::vector<lr_int> extract_size(std::vector<std::vector<V>> &vec)
+		{
+			std::vector<lr_int> res(1);
+			for (const auto &sub_vec : vec)
+				if (sub_vec.size() != vec[0].size())
+					throw std::length_error("Not all vectors passed were the same length. Please"
+											" ensure that all sub-vectors have the same length");
+
+			auto sub_size = extract_size(vec[0]);
+			res[0] = vec.size();
+			res.insert(res.end(), sub_size.begin(), sub_size.end());
+			return res;
+		}
 	}
 }
 
