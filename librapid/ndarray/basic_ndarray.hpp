@@ -11,6 +11,7 @@
 #include <vector>
 #include <algorithm>
 #include <atomic>
+#include <cmath>
 
 #include <librapid/math/rapid_math.hpp>
 #include <librapid/ndarray/to_string.hpp>
@@ -110,7 +111,8 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		basic_ndarray() = default;
+		basic_ndarray()
+		{};
 
 		/**
 		 * \rst
@@ -129,6 +131,9 @@ namespace librapid
 			m_stride(stride::from_extent(size.get_extent(), size.ndim())),
 			m_extent_product(math::product(size.get_extent(), size.ndim()))
 		{
+
+			if (m_extent.is_automatic())
+				throw std::domain_error("Cannot create a new array with an automatic dimension");
 			if (m_extent_product < 1)
 				return;
 
@@ -140,9 +145,6 @@ namespace librapid
 			if (state == errors::ARRAY_DIMENSIONS_TOO_LARGE)
 				throw std::range_error("Too many dimensions in array. Maximum allowed is "
 									   + std::to_string(LIBRAPID_MAX_DIMS));
-
-			if (m_extent.is_automatic())
-				throw std::domain_error("Cannot create a new array with an automatic dimension");
 		}
 
 		template<typename E, typename V>
@@ -188,13 +190,64 @@ namespace librapid
 			: basic_ndarray(std::vector<L>(shape.begin(), shape.end()), (L) value)
 		{}
 
+		LR_INLINE static basic_ndarray<T> from_scalar(T scalar)
+		{
+			basic_ndarray<T> res({1});
+			res.m_data_start[0] = scalar;
+			res.m_is_scalar = true;
+			return res;
+		}
+
+		LR_INLINE void set_to(const basic_ndarray<T> &other)
+		{
+			decrement();
+
+			m_data_origin = other.m_data_origin;
+			m_origin_references = other.m_origin_references;
+
+			m_origin_size = other.m_origin_size;
+
+			m_data_start = other.m_data_start;
+
+			m_stride = other.m_stride;
+			m_extent = other.m_extent;
+			m_extent_product = other.m_extent_product;
+			m_is_scalar = other.m_is_scalar;
+			;
+			increment();
+		}
+
+		template<typename V>
+		LR_INLINE static basic_ndarray<T> from_data(std::vector<V> values)
+		{
+			basic_ndarray<T> res(extent({values.size()}));
+			for (size_t i = 0; i < values.size(); i++)
+				res.set_value(i, (T) values[i]);
+			return res;
+		}
+
+		template<typename V>
+		LR_INLINE static basic_ndarray<T> from_data(std::vector<std::vector<V>> values)
+		{
+			std::vector<lr_int> size = utils::extract_size(values);
+			auto res = basic_ndarray<T>(extent(size));
+			for (size_t i = 0; i < values.size(); i++)
+				res[i] = from_data(values[i]);
+			return res;
+		}
+
 		LR_INLINE basic_ndarray<T> &operator=(const basic_ndarray<T> &arr)
 		{
+			if (!is_initialized())
+				construct_new(arr.get_extent(), arr.get_stride());
+
 			if (!(utils::check_ptr_match(m_extent.get_extent(),
 				ndim(), arr.m_extent.get_extent(), arr.ndim())))
 				throw std::domain_error("Invalid shape for array setting. " +
 										m_extent.str() + " and " + arr.get_extent().str() +
 										" are not equal.");
+
+			m_extent_product = arr.m_extent_product;
 
 			if (!is_initialized())
 			{
@@ -271,6 +324,22 @@ namespace librapid
 			return m_data_start;
 		}
 
+		template<typename V>
+		LR_INLINE bool operator==(const V &val) const
+		{
+			if (!m_is_scalar)
+				throw std::domain_error("Cannot compare array with "
+										+ m_extent.str() + " with scalar");
+
+			return *m_data_start == (T) val;
+		}
+
+		template<typename V>
+		LR_INLINE bool operator!=(const V &val) const
+		{
+			return !(*this == val);
+		}
+
 		LR_INLINE basic_ndarray<T, alloc> operator[](lr_int index)
 		{
 			using non_const = typename std::remove_const<basic_ndarray<T, alloc>>::type;
@@ -298,7 +367,7 @@ namespace librapid
 
 			T *new_start = m_data_start;
 
-			for (lr_int i = 0; i < index.size(); i++)
+			for (size_t i = 0; i < index.size(); i++)
 			{
 				if (index[i] != AUTO && (index[i] < 0 || index[i] >= m_extent[i]))
 				{
@@ -360,7 +429,87 @@ namespace librapid
 			return res;
 		}
 
-		LR_INLINE basic_ndarray<T, alloc> clone() const
+		template<typename MIN = T, typename MAX = T>
+		LR_INLINE void fill_random(MIN min = 0, MAX max = 1)
+		{
+			arithmetic::array_op(m_data_start, m_data_start, m_extent, m_stride, m_stride, [=]<typename V>(V x)
+			{
+				return math::random((T) min, (T) max);
+			});
+		}
+
+		template<typename MIN = T, typename MAX = T>
+		LR_INLINE basic_ndarray<T, alloc> filled_random(MIN min = 0, MAX max = 1) const
+		{
+			basic_ndarray<T, alloc> res;
+			res.construct_new(m_extent, m_stride);
+			res.fill_random(min, max);
+
+			return res;
+		}
+
+		template<typename LAMBDA>
+		LR_INLINE void map(LAMBDA func) const
+		{
+			if (!m_stride.is_trivial())
+			{
+				// Non-trivial stride, so use a more complicated accessing
+				// method to ensure that the resulting array is contiguous
+				// in memory for faster running times overall
+
+				lr_int idim = 0;
+				lr_int dims = ndim();
+
+				const auto *__restrict _extent = m_extent.get_extent_alt();
+				const auto *__restrict _stride_this = m_stride.get_stride_alt();
+				auto *__restrict this_ptr = m_data_start;
+
+				lr_int coord[LIBRAPID_MAX_DIMS]{};
+
+				do
+				{
+					*this_ptr = func(*this_ptr);
+
+					for (idim = 0; idim < dims; ++idim)
+					{
+						if (++coord[idim] == _extent[idim])
+						{
+							coord[idim] = 0;
+							this_ptr = this_ptr - (_extent[idim] - 1) * _stride_this[idim];
+						}
+						else
+						{
+							this_ptr = this_ptr + _stride_this[idim];
+							break;
+						}
+					}
+				} while (idim < dims);
+			}
+			else
+			{
+				lr_int end = this->size();
+				for (lr_int i = 0; i < end; ++i)
+					m_data_start[i] = func(m_data_start[i]);
+			}
+		}
+
+		template<typename LAMBDA>
+		LR_INLINE basic_ndarray<T> mapped(LAMBDA func) const
+		{
+			auto res = clone();
+			res.map(func);
+			return res;
+		}
+
+		LR_INLINE T to_scalar() const
+		{
+			if (!m_is_scalar)
+				throw std::domain_error("Cannot convert non-scalar array with "
+										+ m_extent.str() + " to scalar value");
+			return m_data_start[0];
+		}
+
+		LR_INLINE basic_ndarray<T> clone() const
 		{
 			basic_ndarray<T, alloc> res(m_extent);
 
@@ -514,6 +663,94 @@ namespace librapid
 			});
 		}
 
+		template<typename B_T, typename B_A>
+		LR_INLINE basic_ndarray<T> &operator+=(const basic_ndarray<B_T, B_A> &other)
+		{
+			basic_ndarray<T, alloc>::
+				array_array_arithmetic_inplace(*this, other, []<typename T_a, typename T_b>(T_a a, T_b b)
+			{
+				return a + b;
+			});
+			return *this;
+		}
+
+		template<typename B_T, typename B_A>
+		LR_INLINE basic_ndarray<T> &operator-=(const basic_ndarray<B_T, B_A> &other)
+		{
+			basic_ndarray<T, alloc>::
+				array_array_arithmetic_inplace(*this, other, []<typename T_a, typename T_b>(T_a a, T_b b)
+			{
+				return a - b;
+			});
+			return *this;
+		}
+
+		template<typename B_T, typename B_A>
+		LR_INLINE basic_ndarray<T> &operator*=(const basic_ndarray<B_T, B_A> &other)
+		{
+			basic_ndarray<T, alloc>::
+				array_array_arithmetic_inplace(*this, other, []<typename T_a, typename T_b>(T_a a, T_b b)
+			{
+				return a * b;
+			});
+			return *this;
+		}
+
+		template<typename B_T, typename B_A>
+		LR_INLINE basic_ndarray<T> &operator/=(const basic_ndarray<B_T, B_A> &other)
+		{
+			basic_ndarray<T, alloc>::
+				array_array_arithmetic_inplace(*this, other, []<typename T_a, typename T_b>(T_a a, T_b b)
+			{
+				return a / b;
+			});
+			return *this;
+		}
+
+		template<typename B_T>
+		LR_INLINE basic_ndarray<T> &operator+=(const B_T &other)
+		{
+			basic_ndarray<T, alloc>::
+				array_scalar_arithmetic_inplace(*this, other, []<typename T_a, typename T_b>(T_a a, T_b b)
+			{
+				return a + b;
+			});
+			return *this;
+		}
+
+		template<typename B_T>
+		LR_INLINE basic_ndarray<T> &operator-=(const B_T &other)
+		{
+			basic_ndarray<T, alloc>::
+				array_scalar_arithmetic_inplace(*this, other, []<typename T_a, typename T_b>(T_a a, T_b b)
+			{
+				return a - b;
+			});
+			return *this;
+		}
+
+		template<typename B_T>
+		LR_INLINE basic_ndarray<T> &operator*=(const B_T &other)
+		{
+			basic_ndarray<T, alloc>::
+				array_scalar_arithmetic_inplace(*this, other, []<typename T_a, typename T_b>(T_a a, T_b b)
+			{
+				return a * b;
+			});
+			return *this;
+		}
+
+		template<typename B_T>
+		LR_INLINE basic_ndarray<T> &operator/=(const B_T &other)
+		{
+			basic_ndarray<T, alloc>::
+				array_scalar_arithmetic_inplace(*this, other, []<typename T_a, typename T_b>(T_a a, T_b b)
+			{
+				return a / b;
+			});
+			return *this;
+		}
+
 		LR_INLINE basic_ndarray<T, alloc> operator-() const
 		{
 			basic_ndarray<T, alloc> res(m_extent);
@@ -594,13 +831,13 @@ namespace librapid
 		template<typename O>
 		LR_INLINE void reshape(const std::initializer_list<O> &new_shape)
 		{
-			reshape(basic_extent(new_shape));
+			reshape(extent(new_shape));
 		}
 
 		template<typename O>
 		LR_INLINE void reshape(const std::vector<O> &new_shape)
 		{
-			reshape(basic_extent(new_shape));
+			reshape(extent(new_shape));
 		}
 
 		template<typename O>
@@ -614,13 +851,13 @@ namespace librapid
 		template<typename O>
 		LR_INLINE basic_ndarray<T, alloc> reshaped(const std::initializer_list<O> &new_shape) const
 		{
-			return reshaped(basic_extent(new_shape));
+			return reshaped(extent(new_shape));
 		}
 
 		template<typename O>
 		LR_INLINE basic_ndarray<T, alloc> reshaped(const std::vector<O> &new_shape) const
 		{
-			return reshaped(basic_extent(new_shape));
+			return reshaped(extent(new_shape));
 		}
 
 		LR_INLINE void strip_front()
@@ -781,6 +1018,752 @@ namespace librapid
 			return res;
 		}
 
+		/**
+		 * \rst
+		 *
+		 * Calculate the sum of the values in an array and return
+		 * the result.
+		 *
+		 * Passing in no parameters (or passing in ``axis=AUTO``)
+		 * will calculate the sum of the entire array and will
+		 * return a scalar value (of type basic_ndarray) with the
+		 * result.
+		 *
+		 * Setting the ``axis`` parameter will calculate the sum
+		 * over a particular axis. For example, calculating the
+		 * sum of a matrix over the first axis (``axis=0``) will
+		 * return a new array with the same number of columns as
+		 * the original matrix, where each value is the sum of
+		 * the values in the corresponding column.
+		 *
+		 * .. Hint::
+		 *		To convert a zero-dimensional array (a scalar) to
+		 *		the corresponding arithmetic type, you can use the
+		 *		function ``my_array.to_scalar()``
+		 *
+		 * Example:
+		 * .. code-block:: python
+		 *
+		 *		# The input matrix
+		 *		[[ 1.  2.  3.  4.]
+		 *		 [ 5.  6.  7.  8.]
+		 *		 [ 9. 10. 11. 12.]]
+		 *
+		 *		# The resulting vector after "sum(0)"
+		 *		[15. 18. 21. 24.]
+		 *
+		 * The datatype of the returned array will be the same
+		 * as the type of the input array.
+		 *
+		 * Parameters
+		 * ----------
+		 *
+		 * axis = AUTO: any arithmetic type
+		 * 		The axis to calculate the sum over
+		 *
+		 * Returns
+		 * -------
+		 *
+		 * result: basic_ndarray (potentially a scalar)
+		 * 		The sum of the array (over an axis)
+		 *
+		 * \endrst
+		 */
+		template<typename A = lr_int, typename std::enable_if<std::is_integral<A>::value, int>::type = 0>
+		LR_INLINE basic_ndarray<T> sum(A axis = AUTO) const
+		{
+			return basic_ndarray<T>::recursive_axis_func(*this, [&]<typename V>(const basic_ndarray<V> &arr)
+			{
+				V res = 0;
+				basic_ndarray<V> fixed_array;
+				V *__restrict fixed;
+
+				if (arr.get_stride().is_trivial())
+				{
+					fixed = arr.get_data_start();
+				}
+				else
+				{
+					fixed_array = arr.reshaped({AUTO}).clone();
+					fixed = fixed_array.get_data_start();
+				}
+
+				for (lr_int i = 0; i < arr.size(); i++)
+					res += fixed[i];
+				return basic_ndarray<V>::from_scalar(res);
+			}, axis, 0);
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Calculate the product of the values in an array and
+		 * return the result.
+		 *
+		 * Passing in no parameters (or passing in ``axis=AUTO``)
+		 * will calculate the product of the entire array and will
+		 * return a scalar value (of type basic_ndarray) with the
+		 * result.
+		 *
+		 * Setting the ``axis`` parameter will calculate the
+		 * product over a particular axis. For example, calculating
+		 * the sum of a matrix over the first axis (``axis=0``) will
+		 * return a new array with the same number of columns as
+		 * the original matrix, where each value is the product of
+		 * the values in the corresponding column.
+		 *
+		 * .. Hint::
+		 *		To convert a zero-dimensional array (a scalar) to
+		 *		the corresponding arithmetic type, you can use the
+		 *		function ``my_array.to_scalar()``
+		 *
+		 * Example:
+		 * .. code-block:: python
+		 *
+		 *		# The input matrix
+		 *		[[ 1.  2.  3.  4.]
+		 *		 [ 5.  6.  7.  8.]
+		 *		 [ 9. 10. 11. 12.]]
+		 *
+		 *		# The resulting vector after "product(0)"
+		 *		[ 45. 120. 231. 384.]
+		 *
+		 * The datatype of the returned array will be the same
+		 * as the type of the input array.
+		 *
+		 * Parameters
+		 * ----------
+		 *
+		 * axis = AUTO: any arithmetic type
+		 * 		The axis to calculate the product over
+		 *
+		 * Returns
+		 * -------
+		 *
+		 * result: basic_ndarray (potentially a scalar)
+		 * 		The product of the array (over an axis)
+		 *
+		 * \endrst
+		 */
+		template<typename A = lr_int, typename std::enable_if<std::is_integral<A>::value, int>::type = 0>
+		LR_INLINE basic_ndarray<T> product(A axis = AUTO) const
+		{
+			return basic_ndarray<T>::recursive_axis_func(*this, [&]<typename V>(const basic_ndarray<V> &arr)
+			{
+				V res = 1;
+				basic_ndarray<V> fixed_array;
+				V *__restrict fixed;
+
+				if (arr.get_stride().is_trivial())
+				{
+					fixed = arr.get_data_start();
+				}
+				else
+				{
+					fixed_array = arr.reshaped({AUTO}).clone();
+					fixed = fixed_array.get_data_start();
+				}
+
+				for (lr_int i = 0; i < arr.size(); i++)
+					res *= fixed[i];
+				return basic_ndarray<V>::from_scalar(res);
+			}, axis, 0);
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Calculate the mean average of the values in an array and
+		 * return the result.
+		 *
+		 * Passing in no parameters (or passing in ``axis=AUTO``)
+		 * will calculate the mean of the entire array and will
+		 * return a scalar value (of type basic_ndarray) with the
+		 * result.
+		 *
+		 * Setting the ``axis`` parameter will calculate the
+		 * mean over a particular axis. For example, calculating
+		 * the mean of a matrix over the first axis (``axis=0``) will
+		 * return a new array with the same number of columns as
+		 * the original matrix, where each value is the mean average of
+		 * the values in the corresponding column.
+		 *
+		 * .. Hint::
+		 *		To convert a zero-dimensional array (a scalar) to
+		 *		the corresponding arithmetic type, you can use the
+		 *		function ``my_array.to_scalar()``
+		 *
+		 * Example:
+		 * .. code-block:: python
+		 *
+		 *		# The input matrix
+		 *		[[ 1.  2.  3.  4.]
+		 *		 [ 5.  6.  7.  8.]
+		 *		 [ 9. 10. 11. 12.]]
+		 *
+		 *		# The resulting vector after "mean(0)"
+		 *		[5. 6. 7. 8.]
+		 *
+		 * The datatype of the returned array will be the same
+		 * as the type of the input array.
+		 *
+		 * Parameters
+		 * ----------
+		 *
+		 * axis = AUTO: any arithmetic type
+		 * 		The axis to calculate the mean over
+		 *
+		 * Returns
+		 * -------
+		 *
+		 * result: basic_ndarray (potentially a scalar)
+		 * 		The mean average of the array (over an axis)
+		 *
+		 * \endrst
+		 */
+		template<typename A = lr_int, typename std::enable_if<std::is_integral<A>::value, int>::type = 0>
+		LR_INLINE basic_ndarray<T> mean(A axis = AUTO) const
+		{
+			return basic_ndarray<T>::recursive_axis_func(*this, [&]<typename V>(const basic_ndarray<V> &arr)
+			{
+				V res = 0;
+				basic_ndarray<V> fixed_array;
+				V *__restrict fixed;
+
+				if (arr.get_stride().is_trivial())
+				{
+					fixed = arr.get_data_start();
+				}
+				else
+				{
+					fixed_array = arr.reshaped({AUTO}).clone();
+					fixed = fixed_array.get_data_start();
+				}
+
+				for (lr_int i = 0; i < arr.size(); i++)
+					res += fixed[i];
+
+				return basic_ndarray<V>::from_scalar(res / (V) arr.size());
+			}, axis, 0);
+		}
+
+		/**
+		* \rst
+		*
+		* Calculate the absolute value of each element of an array
+		* and return a new array containing those values.
+		*
+		* .. math::
+		*
+		*		y=\mid x \mid
+		*
+		* Example:
+		* .. code-block:: python
+		*
+		*		# The input matrix
+		*		[-1 -2 -3 -4 -5]
+		*
+		*		# The resulting vector after "abs()"
+		*		[1 2 3 4 5]
+		*
+		* The datatype of the returned array will be the same
+		* as the type of the input array.
+		*
+		* Parameters
+		* ----------
+		*
+		* None
+		*
+		* Returns
+		* -------
+		*
+		* result: basic_ndarray (potentially a scalar)
+		* 		An array containing the absolute values of the
+		*		elements in the parent array
+		*
+		* \endrst
+		*/
+		LR_INLINE basic_ndarray<T> abs() const
+		{
+			return mapped([](T x)
+			{
+				return std::abs(x);
+			});
+		}
+
+		/**
+		* \rst
+		*
+		* Calculate the square of each element of an array
+		* and return a new array containing those values.
+		*
+		* .. math::
+		*
+		*		y=x^2
+		*
+		* Example:
+		* .. code-block:: python
+		*
+		*		# The input matrix
+		*		[1. 2. 3. 4. 5.]
+		*
+		*		# The resulting vector after "abs()"
+		*		[ 1.  4.  9. 16. 25.]
+		*
+		* The datatype of the returned array will be the same
+		* as the type of the input array.
+		*
+		* Parameters
+		* ----------
+		*
+		* None
+		*
+		* Returns
+		* -------
+		*
+		* result: basic_ndarray (potentially a scalar)
+		* 		An array containing the squared values of the
+		*		elements in the parent array
+		*
+		* \endrst
+		*/
+		LR_INLINE basic_ndarray<T> square() const
+		{
+			return mapped([](T x)
+			{
+				return x * x;
+			});
+		}
+
+		LR_INLINE basic_ndarray<T> sqrt() const
+		{
+			return mapped([](T x)
+			{
+				return std::sqrt(x);
+			});
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Calculate the variance of the values in an array and
+		 * return the result.
+		 *
+		 * Passing in no parameters (or passing in ``axis=AUTO``)
+		 * will calculate the variance of the entire array and will
+		 * return a scalar value (of type basic_ndarray) with the
+		 * result.
+		 *
+		 * Setting the ``axis`` parameter will calculate the
+		 * mean over a particular axis. For example, calculating
+		 * the variance of a matrix over the first axis (``axis=0``) will
+		 * return a new array with the same number of columns as
+		 * the original matrix, where each value is the variance of
+		 * the values in the corresponding column.
+		 *
+		 * The variance of an array is calculated as follows:
+		 * .. math::
+		 *
+		 *		\textit{mean}(x - \textit{mean}(x)) ^ 2)
+		 *
+		 * .. Hint::
+		 *		To convert a zero-dimensional array (a scalar) to
+		 *		the corresponding arithmetic type, you can use the
+		 *		function ``my_array.to_scalar()``
+		 *
+		 * Example:
+		 * .. code-block:: python
+		 *
+		 *		# The input matrix
+		 *		[[ 1.  2.  3.  4.]
+		 *		 [ 5.  6.  7.  8.]
+		 *		 [ 9. 10. 11. 12.]]
+		 *
+		 *		# The resulting vector after "variance(0)"
+		 *		[10.6667 10.6667 10.6667 10.6667]
+		 *
+		 * The datatype of the returned array will be the same
+		 * as the type of the input array.
+		 *
+		 * Parameters
+		 * ----------
+		 *
+		 * axis = AUTO: any arithmetic type
+		 * 		The axis to calculate the variance over
+		 *
+		 * Returns
+		 * -------
+		 *
+		 * result: basic_ndarray (potentially a scalar)
+		 * 		The variance of the array (over an axis)
+		 *
+		 * \endrst
+		 */
+		template<typename A = lr_int, typename std::enable_if<std::is_integral<A>::value, int>::type = 0>
+		LR_INLINE basic_ndarray<T> variance(A axis = AUTO) const
+		{
+			return basic_ndarray<T>::recursive_axis_func(*this, [&]<typename V>(const basic_ndarray<V> &arr)
+			{
+				return (arr - arr.mean()).abs().square().mean();
+			}, axis, 0);
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Compare this array with another array (potentially a scalar)
+		 * and return a new array with the element-wise minimum values.
+		 *
+		 * If both inputs are scalars, the result is a scalar.
+		 *
+		 * If one input is a scalar and the other is an array, the result
+		 * is the minima of each element of the array and the scalar
+		 *
+		 * Example:
+		 * .. code-block:: python
+		 *
+		 *		# The input matrix
+		 *		[1. 2. 3. 4. 5.]
+		 *
+		 *		# The resulting vector after "minimum(3)"
+		 *		[1. 2. 3. 3. 3.]
+		 *
+		 * The datatype of the returned array will be the datatype
+		 * with the highest precision out of the two input arrays. For
+		 * example, using a datatype of ``int`` and ``float`` will
+		 * return an array of ``float``s.
+		 *
+		 * Parameters
+		 * ----------
+		 *
+		 * other: basic_ndarray or scalar
+		 * 		The array (or scalar) to find the element-wise minimum
+		 *		with.
+		 *
+		 * Returns
+		 * -------
+		 *
+		 * result: basic_ndarray
+		 * 		The element-wise minima of the input values
+		 *
+		 * \endrst
+		 */
+		template<typename M>
+		LR_INLINE basic_ndarray<typename std::common_type<T, M>::type>
+			minimum(const basic_ndarray<M> &other) const
+		{
+			return basic_ndarray<T>::array_or_scalar_func(*this, other,
+														  []<typename X1, typename X2> (X1 x1, X2 x2)
+			{
+				return x1 < x2 ? x1 : x2;
+			});
+		}
+
+		template<typename M>
+		LR_INLINE basic_ndarray<typename std::common_type<T, M>::type>
+			minimum(M other) const
+		{
+			using ct = typename std::common_type<T, M>::type;
+
+			return minimum(basic_ndarray<ct>::from_scalar((ct) other));
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Compare this array with another array (potentially a scalar)
+		 * and return a new array with the element-wise maxima values.
+		 *
+		 * If both inputs are scalars, the result is a scalar.
+		 *
+		 * If one input is a scalar and the other is an array, the result
+		 * is the maxima of each element of the array and the scalar
+		 *
+		 * Example:
+		 * .. code-block:: python
+		 *
+		 *		# The input matrix
+		 *		[1. 2. 3. 4. 5.]
+		 *
+		 *		# The resulting vector after "maximum(3)"
+		 *		[3. 3. 3. 4. 5.]
+		 *
+		 * The datatype of the returned array will be the datatype
+		 * with the highest precision out of the two input arrays. For
+		 * example, using a datatype of ``int`` and ``float`` will
+		 * return an array of ``float``s.
+		 *
+		 * Parameters
+		 * ----------
+		 *
+		 * other: basic_ndarray or scalar
+		 * 		The array (or scalar) to find the element-wise maximum
+		 *		with.
+		 *
+		 * Returns
+		 * -------
+		 *
+		 * result: basic_ndarray
+		 * 		The element-wise maxima of the input values
+		 *
+		 * \endrst
+		 */
+		template<typename M>
+		LR_INLINE basic_ndarray<typename std::common_type<T, M>::type>
+			maximum(const basic_ndarray<M> &other) const
+		{
+			return basic_ndarray<T>::array_or_scalar_func(*this, other,
+														  []<typename X1, typename X2> (X1 x1, X2 x2)
+			{
+				return x1 > x2 ? x1 : x2;
+			});
+		}
+
+		template<typename M>
+		LR_INLINE basic_ndarray<typename std::common_type<T, M>::type>
+			maximum(M other) const
+		{
+			using ct = typename std::common_type<T, M>::type;
+
+			return maximum(basic_ndarray<ct>::from_scalar((ct) other));
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Compare this array with another array (potentially a scalar)
+		 * and return a new array containing ones and zeros only, where
+		 * a value of one means the value in the left hand side array
+		 * was less than the corresponding value in the right hand side
+		 * array (or simply the right hand side value, if it is a scalar)
+		 *
+		 * If both inputs are scalars, the result is a scalar.
+		 *
+		 * Example:
+		 * .. code-block:: python
+		 *
+		 *		# The input matrix
+		 *		[1. 2. 3. 4. 5.]
+		 *
+		 *		# The resulting vector after "less_than(3)"
+		 *		[1. 1. 0. 0. 0.]
+		 *
+		 * The datatype of the returned array will be the datatype
+		 * with the highest precision out of the two input arrays. For
+		 * example, using a datatype of ``int`` and ``float`` will
+		 * return an array of ``float``s.
+		 *
+		 * Parameters
+		 * ----------
+		 *
+		 * other: basic_ndarray or scalar
+		 * 		The array (or scalar) to compare with
+		 *
+		 * Returns
+		 * -------
+		 *
+		 * result: basic_ndarray
+		 * 		The element-wise result of the less than operation
+		 *
+		 * \endrst
+		 */
+		template<typename M>
+		LR_INLINE basic_ndarray<typename std::common_type<T, M>::type>
+			less_than(const basic_ndarray<M> &other) const
+		{
+			return basic_ndarray<T>::array_or_scalar_func(*this, other,
+														  []<typename X1, typename X2> (X1 x1, X2 x2)
+			{
+				return x1 < x2 ? 1 : 0;
+			});
+		}
+
+		template<typename M>
+		LR_INLINE basic_ndarray<typename std::common_type<T, M>::type>
+			less_than(M other) const
+		{
+			using ct = typename std::common_type<T, M>::type;
+			return less_than(basic_ndarray<ct>::from_scalar((ct) other));
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Compare this array with another array (potentially a scalar)
+		 * and return a new array containing ones and zeros only, where
+		 * a value of one means the value in the left hand side array
+		 * was greater than the corresponding value in the right hand side
+		 * array (or simply the right hand side value, if it is a scalar)
+		 *
+		 * If both inputs are scalars, the result is a scalar.
+		 *
+		 * Example:
+		 * .. code-block:: python
+		 *
+		 *		# The input matrix
+		 *		[1. 2. 3. 4. 5.]
+		 *
+		 *		# The resulting vector after "greater_than(3)"
+		 *		[0. 0. 0. 1. 1.]
+		 *
+		 * The datatype of the returned array will be the datatype
+		 * with the highest precision out of the two input arrays. For
+		 * example, using a datatype of ``int`` and ``float`` will
+		 * return an array of ``float``s.
+		 *
+		 * Parameters
+		 * ----------
+		 *
+		 * other: basic_ndarray or scalar
+		 * 		The array (or scalar) to compare with
+		 *
+		 * Returns
+		 * -------
+		 *
+		 * result: basic_ndarray
+		 * 		The element-wise result of the greater than operation
+		 *
+		 * \endrst
+		 */
+		template<typename M>
+		LR_INLINE basic_ndarray<typename std::common_type<T, M>::type>
+			greater_than(const basic_ndarray<M> &other) const
+		{
+			return basic_ndarray<T>::array_or_scalar_func(*this, other,
+														  []<typename X1, typename X2> (X1 x1, X2 x2)
+			{
+				return x1 > x2 ? 1 : 0;
+			});
+		}
+
+		template<typename M>
+		LR_INLINE basic_ndarray<typename std::common_type<T, M>::type>
+			greater_than(M other) const
+		{
+			using ct = typename std::common_type<T, M>::type;
+			return greater_than(basic_ndarray<ct>::from_scalar((ct) other));
+		}
+
+		/**
+		* \rst
+		*
+		* Compare this array with another array (potentially a scalar)
+		* and return a new array containing ones and zeros only, where
+		* a value of one means the value in the left hand side array
+		* was less than or equal to the corresponding value in the right
+		* hand side array (or simply the right hand side value, if it
+		* is a scalar)
+		*
+		* If both inputs are scalars, the result is a scalar.
+		*
+		* Example:
+		* .. code-block:: python
+		*
+		*		# The input matrix
+		*		[1. 2. 3. 4. 5.]
+		*
+		*		# The resulting vector after "less_than_or_equal(3)"
+		*		[1. 1. 1. 0. 0.]
+		*
+		* The datatype of the returned array will be the datatype
+		* with the highest precision out of the two input arrays. For
+		* example, using a datatype of ``int`` and ``float`` will
+		* return an array of ``float``s.
+		*
+		* Parameters
+		* ----------
+		*
+		* other: basic_ndarray or scalar
+		* 		The array (or scalar) to compare with
+		*
+		* Returns
+		* -------
+		*
+		* result: basic_ndarray
+		* 		The element-wise result of the less than or equal
+		*		to operation
+		*
+		* \endrst
+		*/
+		template<typename M>
+		LR_INLINE basic_ndarray<typename std::common_type<T, M>::type>
+			less_than_or_equal(const basic_ndarray<M> &other) const
+		{
+			return basic_ndarray<T>::array_or_scalar_func(*this, other,
+														  []<typename X1, typename X2> (X1 x1, X2 x2)
+			{
+				return x1 <= x2 ? 1 : 0;
+			});
+		}
+
+		template<typename M>
+		LR_INLINE basic_ndarray<typename std::common_type<T, M>::type>
+			less_than_or_equal(M other) const
+		{
+			using ct = typename std::common_type<T, M>::type;
+			return less_than_or_equal(basic_ndarray<ct>::from_scalar((ct) other));
+		}
+
+		/**
+		* \rst
+		*
+		* Compare this array with another array (potentially a scalar)
+		* and return a new array containing ones and zeros only, where
+		* a value of one means the value in the left hand side array
+		* was greater than or equal to the corresponding value in the
+		* right hand side array (or simply the right hand side value,
+		* if it is a scalar)
+		*
+		* If both inputs are scalars, the result is a scalar.
+		*
+		* Example:
+		* .. code-block:: python
+		*
+		*		# The input matrix
+		*		[1. 2. 3. 4. 5.]
+		*
+		*		# The resulting vector after "greater_than_or_equal(3)"
+		*		[0. 0. 1. 1. 1.]
+		*
+		* The datatype of the returned array will be the datatype
+		* with the highest precision out of the two input arrays. For
+		* example, using a datatype of ``int`` and ``float`` will
+		* return an array of ``float``s.
+		*
+		* Parameters
+		* ----------
+		*
+		* other: basic_ndarray or scalar
+		* 		The array (or scalar) to compare with
+		*
+		* Returns
+		* -------
+		*
+		* result: basic_ndarray
+		* 		The element-wise result of the greater than or
+		*		equal to operation
+		*
+		* \endrst
+		*/
+		template<typename M>
+		LR_INLINE basic_ndarray<typename std::common_type<T, M>::type>
+			greater_than_or_equal(const basic_ndarray<M> &other) const
+		{
+			return basic_ndarray<T>::array_or_scalar_func(*this, other,
+														  []<typename X1, typename X2> (X1 x1, X2 x2)
+			{
+				return x1 > x2 ? 1 : 0;
+			});
+		}
+
+		template<typename M>
+		LR_INLINE basic_ndarray<typename std::common_type<T, M>::type>
+			greater_than_or_equal(M other) const
+		{
+			using ct = typename std::common_type<T, M>::type;
+			return greater_than_or_equal(basic_ndarray<ct>::from_scalar((ct) other));
+		}
+
 		template<typename B_T, typename B_A>
 		LR_INLINE basic_ndarray<typename std::common_type<T, B_T>::type,
 			nd_allocator<typename std::common_type<T, B_T>::type>>
@@ -794,6 +1777,11 @@ namespace librapid
 			bool is_matrix_vector_like = utils::check_ptr_match(o_e.get_extent(), o_e.ndim(),
 																utils::sub_vector(m_extent.get_extent(),
 																m_extent.ndim(), 1), true);
+
+			// Check for column-vector
+			if (ndim() == 2 && other.ndim() == 1)
+				if (m_extent[1] == o_e[0])
+					is_matrix_vector = true;
 
 			// Check for column-vector
 			if (ndim() == 2 && other.ndim() == 2)
@@ -817,7 +1805,7 @@ namespace librapid
 				const auto N = m_extent[1];
 				const auto K = other.get_extent()[0];
 
-				if (is_matrix_vector_like)
+				if (!is_matrix_vector && is_matrix_vector_like)
 				{
 					for (lr_int i = 0; i < M; i++)
 						res[i] = subscript(i).dot(other);
@@ -827,19 +1815,23 @@ namespace librapid
 				const R_T alpha = 1.0;
 				const R_T beta = 0.0;
 
-				const auto trans = m_stride[0] != N;
+				const auto trans = !m_stride.is_trivial();
 
-				const auto lda = M;
+				const auto lda = m_stride[0];
 				const auto ldb = other.get_stride()[other.ndim() - 1];
 
 				auto *__restrict a = m_data_start;
 				auto *__restrict b = other.get_data_start();
 				auto *__restrict c = res.get_data_start();
 
-				linalg::cblas_gemv('r', trans, M, N, alpha, a, lda, b, ldb, beta, c, 1);
+				if (!trans)
+					linalg::cblas_gemv('r', trans, M, N, alpha, a, lda, b, ldb, beta, c, 1);
+				else
+					linalg::cblas_gemv_no_blas('r', trans, M, N, alpha, a, lda, b, ldb, beta, c, 1);
 
 				return res;
 			}
+
 
 			if (ndim() != other.ndim())
 				throw std::domain_error("Cannot compute dot product on arrays with " +
@@ -862,7 +1854,7 @@ namespace librapid
 						*res.get_data_start() = linalg::cblas_dot(m_extent_product, m_data_start, m_stride[0],
 																  other.get_data_start(), other.get_stride()[0]);
 
-						return res;
+						return res; \
 					}
 				case 2:
 					{
@@ -870,30 +1862,33 @@ namespace librapid
 							throw std::domain_error("Cannot compute dot product with arrays with " +
 													m_extent.str() + " and " + other.get_extent().str());
 
-						const auto M = m_extent[0];
-						const auto N = m_extent[1];
-						const auto K = other.get_extent()[1];
+						const auto M = m_extent[0];           // Rows of op(a)
+						const auto N = other.get_extent()[1]; // Cols of op(b)
+						const auto K = m_extent[1]; // Cols of op(a) and rows of op(b)
 
 						const R_T alpha = 1.0;
 						const R_T beta = 0.0;
 
-						auto res = basic_ndarray<R_T>(extent{M, K});
+						auto res = basic_ndarray<R_T>(extent{M, N});
 
-						// const auto transA = m_stride[0] == N ? CblasNoTrans : CblasTrans;
-						// const auto transB = other.get_stride()[0] == K ? CblasNoTrans : CblasTrans;
-						const auto transA = m_stride[0] != N;
-						const auto transB = other.get_stride()[0] != K;
+						const auto transA = !m_stride.is_trivial();
+						const auto transB = !other.get_stride().is_trivial();
 
-						const auto lda = N;
-						const auto ldb = K;
-						const auto ldc = K;
+						const auto lda = K;
+						const auto ldb = N;
+						const auto ldc = N;
 
 						auto *__restrict a = m_data_start;
 						auto *__restrict b = other.get_data_start();
 						auto *__restrict c = res.get_data_start();
 
-						linalg::cblas_gemm('r', transA, transB, M, K, N,
-										   alpha, a, lda, b, ldb, beta, c, ldc);
+						if (!transA && !transB)
+							linalg::cblas_gemm('r', false, false, M, N, K, alpha, a, lda,
+											   b, ldb, beta, c, ldc);
+						else if (transA && !transB)
+							return clone().dot(other);
+						else
+							return dot(other.clone());
 
 						return res;
 					}
@@ -1023,8 +2018,8 @@ namespace librapid
 						longest_integral = formatted[index].decimal_point;
 
 					auto &format_tmp = formatted[index];
-					if (format_tmp.str.length() >= format_tmp.decimal_point &&
-						format_tmp.str.length() - format_tmp.decimal_point > longest_decimal)
+					if ((lr_int) format_tmp.str.length() >= format_tmp.decimal_point &&
+						(lr_int) format_tmp.str.length() - format_tmp.decimal_point > longest_decimal)
 						longest_decimal = format_tmp.str.length() - format_tmp.decimal_point;
 				}
 
@@ -1049,7 +2044,7 @@ namespace librapid
 
 			std::vector<std::string> adjusted(formatted.size(), "");
 
-			for (lr_int i = 0; i < formatted.size(); i++)
+			for (size_t i = 0; i < formatted.size(); i++)
 			{
 				if (formatted[i].str.empty())
 					continue;
@@ -1288,7 +2283,7 @@ namespace librapid
 				case 3:
 					{
 						// Cases:
-						//  > "Row by row" addition
+						//  > "Row by row" operations
 
 						auto res = basic_ndarray<C, R>(a.get_extent());
 
@@ -1300,7 +2295,7 @@ namespace librapid
 				case 4:
 					{
 						// Cases:
-						//  > Reverse "row by row" addition
+						//  > Reverse "row by row" operations
 
 						auto res = basic_ndarray<C, R>(b.get_extent());
 
@@ -1312,7 +2307,7 @@ namespace librapid
 				case 5:
 					{
 						// Cases
-						//  > Grid addition
+						//  > Grid operations
 
 						extent res_shape(b.ndim() + 1);
 						for (lr_int i = 0; i < b.ndim(); i++)
@@ -1329,7 +2324,7 @@ namespace librapid
 				case 6:
 					{
 						// Cases
-						//  > Reverse grid addition
+						//  > Reverse grid operations
 
 						extent res_shape(a.ndim() + 1);
 						for (lr_int i = 0; i < a.ndim(); i++)
@@ -1346,46 +2341,38 @@ namespace librapid
 				case 7:
 					{
 						// Cases
-						//  > "Column by column" addition
+						//  > "Column by column" operations
 
-						if (a.ndim() == 2)
-							return op(a.transposed().stripped(), b.transposed()).transposed();
+						if (b.ndim() == 2)
+							return op(a.transposed(), b.transposed().stripped()).transposed();
 
 						lr_int new_extent[LIBRAPID_MAX_DIMS]{};
-						lr_int i = 0;
-						for (; i < a.ndim() - 1; i++)
+						for (lr_int i = 0; i < a.ndim(); i++)
 							new_extent[i] = a.get_extent()[i];
-						new_extent[i] = b.get_extent()[1];
 
 						auto res = basic_ndarray<C, R>(extent(new_extent, a.ndim()));
-						auto tmp_a = a;
-						auto tmp_b = b.transposed();
 
-						for (lr_int i = 0; i < res.get_extent()[0]; i++)
-							res[i] = op(tmp_a[i].transposed().stripped(), tmp_b).transposed();
+						for (lr_int i = 0; i < new_extent[0]; i++)
+							res[i] = op(a[i], b[i]);
 
 						return res;
 					}
 				case 8:
 					{
 						// Cases:
-						// Check for reverse "column by column" addition
+						// Check for reverse "column by column" operations
 
-						if (b.ndim() == 2)
-							return op(a.transposed(), b.transposed().stripped()).transposed();
+						if (a.ndim() == 2)
+							return op(a.transposed().stripped(), b.transposed()).transposed();
 
 						lr_int new_extent[LIBRAPID_MAX_DIMS]{};
-						lr_int i = 0;
-						for (; i < b.ndim() - 1; i++)
+						for (lr_int i = 0; i < b.ndim(); i++)
 							new_extent[i] = b.get_extent()[i];
-						new_extent[i] = a.get_extent()[1];
 
 						auto res = basic_ndarray<C, R>(extent(new_extent, b.ndim()));
-						auto tmp_a = a.transposed();
-						auto tmp_b = b;
 
-						for (lr_int i = 0; i < res.get_extent()[0]; i++)
-							res[i] = op(tmp_a, tmp_b[i].transposed().stripped()).transposed();
+						for (lr_int i = 0; i < new_extent[0]; i++)
+							res[i] = op(a[i], b[i]);
 
 						return res;
 					}
@@ -1427,6 +2414,207 @@ namespace librapid
 			return res;
 		}
 
+		template<typename A_T, typename A_A, typename B_T, typename B_A, typename LAMBDA>
+		static LR_INLINE void array_array_arithmetic_inplace(basic_ndarray<A_T, A_A> &a,
+															 const basic_ndarray<B_T, B_A> &b,
+															 LAMBDA op)
+		{
+			using C = typename std::common_type<A_T, B_T>::type;
+			using R = nd_allocator<typename std::common_type<A_T, B_T>::type>;
+
+			auto mode = broadcast::calculate_arithmetic_mode(a.get_extent().get_extent(), a.ndim(),
+															 b.get_extent().get_extent(), b.ndim());
+
+			if (mode == (lr_int) -1)
+			{
+				auto msg = std::string("Cannot operate arrays with shapes ")
+					+ a.get_extent().str() + " and " + b.get_extent().str();
+				throw std::length_error(msg);
+			}
+
+			switch (mode)
+			{
+				case 0:
+					{
+						// Cases:
+						//  > Exact match
+						//  > End dimensions of other match this
+						//  > End dimensions of this match other
+
+						auto tmp_a = a.stripped();
+						auto tmp_b = b.stripped();
+
+						arithmetic::array_op_array(tmp_a.get_data_start(), tmp_b.get_data_start(),
+												   a.get_data_start(), tmp_a.get_extent(),
+												   tmp_a.get_stride(), tmp_b.get_stride(),
+												   a.get_stride(), op);
+						break;
+					}
+				case 1:
+					{
+						// Cases:
+						//  > Other is a single value
+
+						arithmetic::array_op_scalar(a.get_data_start(), b.get_data_start(),
+													a.get_data_start(), a.get_extent(),
+													a.get_stride(), a.get_stride(), op);
+						break;
+					}
+				case 3:
+					{
+						// Cases:
+						//  > "Row by row" operation
+
+						for (lr_int i = 0; i < a.get_extent()[0]; i++)
+							a[i] = op(a[i], b);
+						break;
+					}
+				case 7:
+					{
+						// Cases
+						//  > "Column by column" operation
+
+						// Cases
+						//  > "Column by column" operation
+
+						if (b.ndim() == 2)
+						{
+							a = op(a.transposed(), b.transposed().stripped()).transposed();
+							break;
+						}
+
+						lr_int new_extent[LIBRAPID_MAX_DIMS]{};
+						for (lr_int i = 0; i < a.ndim(); i++)
+							new_extent[i] = a.get_extent()[i];
+
+						for (lr_int i = 0; i < new_extent[0]; i++)
+							a[i] = op(a[i], b[i]);
+
+						break;
+					}
+				default:
+					{
+						auto msg = std::string("Inplace arithmetic mode ") + std::to_string(mode) +
+							" is not valid on arrays of shape " + a.get_extent().str() +
+							" and " + b.get_extent().str();
+						throw std::runtime_error(msg);
+					}
+			}
+		}
+
+		template<typename A_T, typename A_A, typename B_T, typename LAMBDA>
+		static LR_INLINE void array_scalar_arithmetic_inplace(const basic_ndarray<A_T, A_A> &a,
+															  const B_T &b, LAMBDA op)
+		{
+			using C = typename std::common_type<A_T, B_T>::type;
+			using R = nd_allocator<typename std::common_type<A_T, B_T>::type>;
+
+			arithmetic::array_op_scalar(a.get_data_start(), &b, a.get_data_start(),
+										a.get_extent(), a.get_stride(), a.get_stride(), op);
+		}
+
+		template<typename A_T, typename B_T, typename B_A, typename LAMBDA>
+		static LR_INLINE void scalar_array_arithmetic_inplace(const A_T &a,
+															  const basic_ndarray<B_T, B_A> &b,
+															  LAMBDA op)
+		{
+			using C = typename std::common_type<A_T, B_T>::type;
+			using R = nd_allocator<typename std::common_type<A_T, B_T>::type>;
+
+			arithmetic::scalar_op_array(&a, b.get_data_start(), b.get_data_start(),
+										b.get_extent(), b.get_stride(), b.get_stride(), op);
+		}
+
+		template<typename A, typename LAMBDA>
+		static LR_INLINE basic_ndarray<A> recursive_axis_func(const basic_ndarray<A> &arr,
+															  LAMBDA func, lr_int axis, lr_int depth)
+		{
+			if (arr.is_scalar())
+				return func(arr.reshaped({1ll, AUTO}));
+
+			if (axis == (lr_int) -1 || arr.ndim() == 1)
+				return func(arr);
+
+			std::vector<lr_int> transpose_order(arr.ndim());
+
+			if (depth == 0)
+			{
+				for (lr_int i = axis; i < arr.ndim() - 1; i++)
+					transpose_order[i] = i < axis ? i : i + 1;
+				transpose_order[transpose_order.size() - 1] = axis;
+			}
+			else
+			{
+				for (lr_int i = 0; i < arr.ndim(); i++)
+					transpose_order[i] = i;
+			}
+
+			auto fixed = arr.transposed(transpose_order);
+
+			std::vector<lr_int> res_shape(arr.ndim() - 1);
+			for (lr_int i = 0; i < arr.ndim() - 1; i++)
+				res_shape[i] = arr.get_extent()[transpose_order[i]];
+
+			auto res = basic_ndarray<T>(extent(res_shape));
+
+			for (lr_int outer = 0; outer < res_shape[0]; outer++)
+				res[outer] = basic_ndarray<T>::recursive_axis_func(fixed[outer], func,
+																   math::max(axis, 1) - 1,
+																   depth + 1);
+
+			return res;
+		}
+
+		template<typename A, typename B, typename LAMBDA>
+		LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+			array_or_scalar_func(const basic_ndarray<A> &x1, const basic_ndarray<B> &x2,
+								 LAMBDA func) const
+		{
+			using ct = typename std::common_type<A, B>::type;
+
+			// If both are scalars, the result is a scalar
+			if (x1.is_scalar() && x2.is_scalar())
+				return basic_ndarray<ct>::from_scalar((ct) math::min(*x1.get_data_start(),
+													  *x2.get_data_start()));
+
+			// If this is an array and other is a scalar, the
+			// result is the minima of each element of the array
+			// and the scalar
+			if (!x1.is_scalar() && x2.is_scalar())
+			{
+				return basic_ndarray<ct>::
+					array_scalar_arithmetic(x1, *x2.get_data_start(),
+											[&]<typename T_a, typename T_b>(T_a a, T_b b)
+				{
+					return func((ct) a, (ct) b);
+				});
+			}
+
+			if (x1.is_scalar() && !x2.is_scalar())
+			{
+				return basic_ndarray<ct>::
+					scalar_array_arithmetic(*x1.get_data_start(), x2,
+											[&]<typename T_a, typename T_b>(T_a a, T_b b)
+				{
+					return func((ct) a, (ct) b);
+				});
+			}
+
+			// Both values are arrays
+			if (x1.get_extent() != x2.get_extent())
+				throw std::domain_error("Cannot operate arrays with "
+										+ x1.get_extent().str() + " and "
+										+ x2.get_extent().str()
+										+ ". Arrays must be of the same size");
+
+			basic_ndarray<ct> res(x1.get_extent());
+			arithmetic::array_op_array(x1.get_data_start(), x2.get_data_start(), res.get_data_start(),
+									   x1.get_extent(),
+									   x1.get_stride(), x2.get_stride(), res.get_stride(),
+									   func);
+			return res;
+		}
+
 	private:
 
 		T *m_data_origin = nullptr;
@@ -1443,6 +2631,114 @@ namespace librapid
 
 		_alloc m_alloc = alloc();
 	};
+
+	/**
+	 * \rst
+	 *
+	 * Create and return a new array with the same shape
+	 * as the provided array, but filled entirely with
+	 * zeros.
+	 *
+	 * The datatype of the returned array will be the same
+	 * as the type of the input array.
+	 *
+	 * Parameters
+	 * ----------
+	 *
+	 * arr: basic_ndarray
+	 * 		The array to base the size off
+	 *
+	 * Returns
+	 * -------
+	 *
+	 * result: basic_ndarray
+	 * 		A new array filled with zeros
+	 *
+	 * \endrst
+	 */
+	template<typename T>
+	LR_INLINE basic_ndarray<T> zeros_like(const basic_ndarray<T> &arr)
+	{
+		auto res = basic_ndarray<T>(arr.get_extent());
+		res.fill(0);
+		return res;
+	}
+
+	/**
+	 * \rst
+	 *
+	 * Create and return a new array with the same shape
+	 * as the provided array, but filled entirely with
+	 * ones.
+	 *
+	 * The datatype of the returned array will be the same
+	 * as the type of the input array.
+	 *
+	 * Parameters
+	 * ----------
+	 *
+	 * arr: basic_ndarray
+	 * 		The array to base the size off
+	 *
+	 * Returns
+	 * -------
+	 *
+	 * result: basic_ndarray
+	 * 		A new array filled with ones
+	 *
+	 * \endrst
+	 */
+	template<typename T>
+	LR_INLINE basic_ndarray<T> ones_like(const basic_ndarray<T> &arr)
+	{
+		auto res = basic_ndarray<T>(arr.get_extent());
+		res.fill(1);
+		return res;
+	}
+
+	/**
+	 * \rst
+	 *
+	 * Create and return a new array with the same shape
+	 * as the provided array, but filled entirely with
+	 * random numbers within the provided range.
+	 *
+	 * The datatype of the returned array will be the same
+	 * as the type of the input array.
+	 *
+	 * .. Attention::
+	 *		Please note that the ``librapid::math::random``
+	 *		function returns values in the range ``[min, max]``
+	 *		for integer values, though in the range ``[min, max)``
+	 *		for floating point values (i.e. floating point values
+	 *		will never exceed the value of ``max``)
+	 *
+	 * Parameters
+	 * ----------
+	 *
+	 * arr: basic_ndarray
+	 * 		The array to base the size off
+	 * min = 0: any arithmetic type
+	 *		The minimum random value
+	 * max = 1: any arithmetic type
+	 *		The maximum random value
+	 *
+	 * Returns
+	 * -------
+	 *
+	 * result: basic_ndarray
+	 * 		A new array filled with random values in the
+	 *		specified range
+	 *
+	 * \endrst
+	 */
+	template<typename T, typename MIN = double, typename MAX = double>
+	LR_INLINE basic_ndarray<T> random_like(const basic_ndarray<T> &arr, MIN min = 0, MAX max = 1)
+	{
+		auto res = basic_ndarray<T>(arr.get_extent());
+		res.fill_random(min, max);
+		return res;
+	}
 
 	template<typename A_T, typename B_T, typename B_A>
 	LR_INLINE basic_ndarray<typename std::common_type<A_T, B_T>::type,
@@ -1493,36 +2789,36 @@ namespace librapid
 	}
 
 	/**
-	 *\rst
+	 * \rst
 	 *
-	 *.. Hint::
-	 *	This function is mostly for compatibility
-	 *	with the C# port of the library, as the
-	 *	C++ and Python libraries support overloaded
-	 *	operators.
+	 * .. Hint::
+	 * 	This function is mostly for compatibility
+	 * 	with the C# port of the library, as the
+	 * 	C++ and Python libraries support overloaded
+	 * 	operators.
 	 *
-	 *Add two values together and return the result.
+	 * Add two values together and return the result.
 	 *
-	 *The input values can be any type that supports
-	 *addition. In general, the return type will be
-	 *the higher precision of the two input types,
-	 *or an n-dimensional array if one is passed.
+	 * The input values can be any type that supports
+	 * addition. In general, the return type will be
+	 * the higher precision of the two input types,
+	 * or an n-dimensional array if one is passed.
 	 *
-	 *Parameters
-	 *----------
+	 * Parameters
+	 * ----------
 	 *
-	 *addend1: any
-	 *	The left-hand side of the addition operation
-	 *addend2: any
-	 *	The right-hand side of the addition operation
+	 * addend1: any
+	 * 		The left-hand side of the addition operation
+	 * addend2: any
+	 * 		The right-hand side of the addition operation
 	 *
-	 *Returns
-	 *-------
+	 * Returns
+	 * -------
 	 *
-	 *sum: any
-	 *	The result of the addition calculation
+	 * sum: any
+	 * 	The result of the addition calculation
 	 *
-	 *\endrst
+	 * \endrst
 	 */
 	template<typename T_A, typename T_B>
 	LR_INLINE auto add(const T_A &addend1, const T_B &addend2)
@@ -2163,53 +3459,53 @@ namespace librapid
 	}
 
 	/**
-	* \rst
-	*
-	* Reshape an array of values and return the result. The resulting
-	* array is linked to the parent array, so an update in one will
-	* result in an update in the other.
-	*
-	* .. Attention::
-	*		The new array must have the same number of elements as the
-	*		original array, otherwise this function will throw an error.
-	*		This means the product of all the dimensions must be equal
-	*		before and after reshaping
-	*
-	* .. Hint::
-	*		The new array doesn't need to have the same number of
-	*		dimensions as the parent array, so you could reshape
-	*		a matrix into a vector, if you wanted to.
-	*
-	* When reshaping an array, it is possible to use the
-	* ``librapid::ndarray::AUTO`` value (-1) to specify a dimension
-	* that will adjust automatically based on the other values. It
-	* will attempt to ensure that the resulting array has the same
-	* number of elements as the parent array.
-	*
-	* Example (approximate values shown):
-	*
-	* .. code-block:: c++
-	*
-	*		// Create a 2x3 matrix filled with 0s
-	*		auto my_matrix = librapid::ndarray(librapid::extent({2, 3}), 0);
-	*		auto my_vector = librapid::reshape(my_matrix, librapid::extent({6}));
-	*
-	* Parameters
-	* ----------
-	*
-	* arr: const basic_ndarray
-	*		The array to reshape
-	* new_shape: const basic_extent
-	*		The new shape for the array
-	*
-	* Returns
-	* -------
-	*
-	* result: basic_ndarray<T, A>
-	*		The result of the hyperbolic tangent function calculation
-	*
-	* \endrst
-	*/
+	 * \rst
+	 *
+	 * Reshape an array of values and return the result. The resulting
+	 * array is linked to the parent array, so an update in one will
+	 * result in an update in the other.
+	 *
+	 * .. Attention::
+	 *		The new array must have the same number of elements as the
+	 *		original array, otherwise this function will throw an error.
+	 *		This means the product of all the dimensions must be equal
+	 *		before and after reshaping
+	 *
+	 * .. Hint::
+	 *		The new array doesn't need to have the same number of
+	 *		dimensions as the parent array, so you could reshape
+	 *		a matrix into a vector, if you wanted to.
+	 *
+	 * When reshaping an array, it is possible to use the
+	 * ``librapid::ndarray::AUTO`` value (-1) to specify a dimension
+	 * that will adjust automatically based on the other values. It
+	 * will attempt to ensure that the resulting array has the same
+	 * number of elements as the parent array.
+	 *
+	 * Example (approximate values shown):
+	 *
+	 * .. code-block:: c++
+	 *
+	 *		// Create a 2x3 matrix filled with 0s
+	 *		auto my_matrix = librapid::ndarray(librapid::extent({2, 3}), 0);
+	 *		auto my_vector = librapid::reshape(my_matrix, librapid::extent({6}));
+	 *
+	 * Parameters
+	 * ----------
+	 *
+	 * arr: const basic_ndarray
+	 *		The array to reshape
+	 * new_shape: const basic_extent
+	 *		The new shape for the array
+	 *
+	 * Returns
+	 * -------
+	 *
+	 * result: basic_ndarray<T, A>
+	 *		The result of the hyperbolic tangent function calculation
+	 *
+	 * \endrst
+	 */
 	template<typename T, class alloc, typename O = lr_int>
 	LR_INLINE basic_ndarray<T, alloc> reshape(const basic_ndarray<T, alloc> &arr,
 											  const basic_extent<O> &new_shape)
@@ -2218,43 +3514,44 @@ namespace librapid
 	}
 
 	/**
-	* \rst
-	*
-	* Create a new vector which starts and ends with a set value, and
-	* has a set length. The values in between will increment linearly
-	* between the two starting and ending values.
-	*
-	* .. Hint::
-	*		The resulting array's datatype will be the largest of the
-	*		start and end values. For example, passing an ``int`` and
-	*		a ``float`` will result in an array of ``float``s being
-	*		returned.
-	*
-	* .. code-block:: c++
-	*
-	*		auto my_vector = librapid::linear(1, 5, 4)
-	*		// my_vector = [1 2 3 4]
-	*
-	* Parameters
-	* ----------
-	*
-	* start: any arithmetic type
-	*		The starting value of the vector
-	* end: any arithmetic type
-	*		The ending value of the vector
-	* len: long long
-	*		The number of elements in the vector
-	*
-	* Returns
-	* -------
-	*
-	* result: basic_ndarray
-	*		A new vector of values
-	*
-	* \endrst
-	*/
-	template<typename S = double, typename E = double>
-	LR_INLINE basic_ndarray<typename std::common_type<S, E>::type> linear(S start, E end, lr_int len)
+	 * \rst
+	 *
+	 * Create a new vector which starts and ends with a set value, and
+	 * has a set length. The values in between will increment linearly
+	 * between the two starting and ending values.
+	 *
+	 * .. Hint::
+	 *		The resulting array's datatype will be the largest of the
+	 *		start and end values. For example, passing an ``int`` and
+	 *		a ``float`` will result in an array of ``float``s being
+	 *		returned.
+	 *
+	 * .. code-block:: c++
+	 *
+	 *		auto my_vector = librapid::linear(1, 5, 4)
+	 *		// my_vector = [1 2 3 4]
+	 *
+	 * Parameters
+	 * ----------
+	 *
+	 * start: any arithmetic type
+	 *		The starting value of the vector
+	 * end: any arithmetic type
+	 *		The ending value of the vector
+	 * len: long long
+	 *		The number of elements in the vector
+	 *
+	 * Returns
+	 * -------
+	 *
+	 * result: basic_ndarray
+	 *		A new vector of values
+	 *
+	 * \endrst
+	 */
+	template<typename S = double, typename E = double, typename L = lr_int>
+	LR_INLINE basic_ndarray<typename std::common_type<S, E>::type>
+		linear(S start, E end, L len = 0)
 	{
 		using ct = typename std::common_type<S, E>::type;
 
@@ -2268,47 +3565,47 @@ namespace librapid
 	}
 
 	/**
-	* \rst
-	*
-	* Create a new vector of values which starts at a specified value
-	* and ends at another, going up in specific increments. The length
-	* of the array is determined by the difference between the values
-	* and the size of the increment.
-	*
-	* .. Attention::
-	*		When passing in a start value that is larger than the end
-	*		value, the increment _must_ be negative, otherwise ``[NONE]``
-	*		will be returned.
-	* 
-	* .. Hint::
-	*		The resulting array's datatype will be the largest of the
-	*		start, end and increment values. For example, passing an
-	*		``int``, a ``float`` and a ``double`` will result in an
-	*		array of ``doubles``s being returned.
-	*
-	* .. code-block:: c++
-	*
-	*		auto my_vector = librapid::range(1, 5, 1);
-	*		// my_vector = [1 2 3 4]
-	*
-	* Parameters
-	* ----------
-	*
-	* start: any arithmetic type
-	*		The starting value of the vector
-	* end: any arithmetic type
-	*		The ending value of the vector
-	* inc: any arithmetic type
-	*		The difference between two consecutive elements in the vector
-	*
-	* Returns
-	* -------
-	*
-	* result: basic_ndarray
-	*		A new vector of values
-	*
-	* \endrst
-	*/
+	 * \rst
+	 *
+	 * Create a new vector of values which starts at a specified value
+	 * and ends at another, going up in specific increments. The length
+	 * of the array is determined by the difference between the values
+	 * and the size of the increment.
+	 *
+	 * .. Attention::
+	 *		When passing in a start value that is larger than the end
+	 *		value, the increment _must_ be negative, otherwise ``[NONE]``
+	 *		will be returned.
+	 *
+	 * .. Hint::
+	 *		The resulting array's datatype will be the largest of the
+	 *		start, end and increment values. For example, passing an
+	 *		``int``, a ``float`` and a ``double`` will result in an
+	 *		array of ``doubles``s being returned.
+	 *
+	 * .. code-block:: c++
+	 *
+	 *		auto my_vector = librapid::range(1, 5, 1);
+	 *		// my_vector = [1 2 3 4]
+	 *
+	 * Parameters
+	 * ----------
+	 *
+	 * start: any arithmetic type
+	 *		The starting value of the vector
+	 * end: any arithmetic type
+	 *		The ending value of the vector
+	 * inc: any arithmetic type
+	 *		The difference between two consecutive elements in the vector
+	 *
+	 * Returns
+	 * -------
+	 *
+	 * result: basic_ndarray
+	 *		A new vector of values
+	 *
+	 * \endrst
+	 */
 	template<typename S = double, typename E = double, typename I = double>
 	LR_INLINE basic_ndarray<typename std::common_type<S, E, I>::type> range(S start, E end, I inc = 1)
 	{
@@ -2333,9 +3630,203 @@ namespace librapid
 		return res;
 	}
 
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		minimum(const basic_ndarray<A> &x1, const basic_ndarray<B> &x2)
+	{
+		return x1.minimum(x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		minimum(const basic_ndarray<A> &x1, B x2)
+	{
+		return x1.minimum(x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		minimum(A x1, const basic_ndarray<B> &x2)
+	{
+		return x2.minimum(x1);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE typename std::common_type<A, B>::type
+		minimum(A x1, B x2)
+	{
+		return math::min(x1, x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		maximum(const basic_ndarray<A> &x1, const basic_ndarray<B> &x2)
+	{
+		return x1.maximum(x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		maximum(const basic_ndarray<A> &x1, B x2)
+	{
+		return x1.maximum(x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		maximum(A x1, const basic_ndarray<B> &x2)
+	{
+		return x2.maximum(x1);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE typename std::common_type<A, B>::type
+		maximum(A x1, B x2)
+	{
+		return math::max(x1, x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		less_than(const basic_ndarray<A> &x1, const basic_ndarray<B> &x2)
+	{
+		return x1.less_than(x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		less_than(const basic_ndarray<A> &x1, B x2)
+	{
+		return x1.less_than(x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE typename std::common_type<A, B>::type
+		less_than(A x1, B x2)
+	{
+		return x1 < x2;
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		greater_than(const basic_ndarray<A> &x1, const basic_ndarray<B> &x2)
+	{
+		return x1.greater_than(x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		greater_than(const basic_ndarray<A> &x1, B x2)
+	{
+		return x1.greater_than(x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE typename std::common_type<A, B>::type
+		greater_than(A x1, B x2)
+	{
+		return x1 > x2;
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		less_than_or_equal(const basic_ndarray<A> &x1, const basic_ndarray<B> &x2)
+	{
+		return x1.less_than_or_equal(x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		less_than_or_equal(const basic_ndarray<A> &x1, B x2)
+	{
+		return x1.less_than_or_equal(x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE typename std::common_type<A, B>::type
+		less_than_or_equal(A x1, B x2)
+	{
+		return x1 <= x2;
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		greater_than_or_equal(const basic_ndarray<A> &x1, const basic_ndarray<B> &x2)
+	{
+		return x1.greater_than_or_equal(x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE basic_ndarray<typename std::common_type<A, B>::type>
+		greater_than_or_equal(const basic_ndarray<A> &x1, B x2)
+	{
+		return x1.greater_than_or_equal(x2);
+	}
+
+	template<typename A, typename B>
+	LR_INLINE typename std::common_type<A, B>::type
+		greater_than_or_equal(A x1, B x2)
+	{
+		return x1 >= x2;
+	}
+
+	template<typename T, typename LAMBDA>
+	LR_INLINE basic_ndarray<T> map(const basic_ndarray<T> &arr, LAMBDA func)
+	{
+		return arr.mapped(func);
+	}
+
+	template<typename T, typename A = lr_int>
+	LR_INLINE basic_ndarray<T> sum(const basic_ndarray<T> &arr, A axis = AUTO)
+	{
+		return arr.sum(axis);
+	}
+
+	template<typename T, typename A = lr_int>
+	LR_INLINE basic_ndarray<T> product(const basic_ndarray<T> &arr, A axis = AUTO)
+	{
+		return arr.product(axis);
+	}
+
+	template<typename T, typename A = lr_int>
+	LR_INLINE basic_ndarray<T> mean(const basic_ndarray<T> &arr, A axis = AUTO)
+	{
+		return arr.mean(axis);
+	}
+
+	template<typename T>
+	LR_INLINE basic_ndarray<T> abs(const basic_ndarray<T> &arr)
+	{
+		return arr.abs();
+	}
+
+	template<typename T>
+	LR_INLINE basic_ndarray<T> square(const basic_ndarray<T> &arr)
+	{
+		return arr.square();
+	}
+
+	template<typename T>
+	LR_INLINE basic_ndarray<T> sqrt(const basic_ndarray<T> &arr)
+	{
+		return arr.sqrt();
+	}
+
+	template<typename T, typename A = lr_int>
+	LR_INLINE basic_ndarray<T> variance(const basic_ndarray<T> &arr, A axis = AUTO)
+	{
+		return arr.variance(axis);
+	}
+
 	using ndarray = basic_ndarray<double>;
 	using ndarray_f = basic_ndarray<float>;
 	using ndarray_i = basic_ndarray<int>;
+
+	template<typename T>
+	std::ostream &operator<<(std::ostream &os, const basic_ndarray<T> &arr)
+	{
+		return os << arr.str();
+	}
 }
 
 #endif // NDARRAY_BASIC_ARRAY

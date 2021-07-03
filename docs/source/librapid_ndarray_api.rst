@@ -66,17 +66,6 @@ C++ Documentation
 	cpp/librapid_cpp_stride
 	cpp/librapid_cpp_ndarray
 
-C# Documentation
-================
-
-.. toctree::
-	:maxdepth: 2
-	:glob:
-
-	csharp/librapid_csharp_extent
-	csharp/librapid_csharp_stride
-	csharp/librapid_csharp_ndarray
-
 Python Documentation
 ====================
 

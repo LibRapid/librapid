@@ -40,10 +40,10 @@ namespace librapid
 	#endif // LIBRAPID_CBLAS
 
 		template<typename T>
-		LR_INLINE void cblas_gemv(char order, bool trans, lr_int m, lr_int n,
-								  T alpha, T *__restrict a, lr_int lda,
-								  T *__restrict x, lr_int incx, double beta,
-								  T *__restrict y, lr_int incy)
+		LR_INLINE void cblas_gemv_no_blas(char order, bool trans, lr_int m, lr_int n,
+										  T alpha, T *__restrict a, lr_int lda,
+										  T *__restrict x, lr_int incx, T beta,
+										  T *__restrict y, lr_int incy)
 		{
 			lr_int _lda = trans ? 1 : lda;
 			lr_int _fda = trans ? lda : 1;
@@ -62,7 +62,7 @@ namespace librapid
 				index_x = 0;
 				for (lr_int inner = 0; inner < n; inner++)
 				{
-					index_a = outer * _lda + inner * _fda;
+					index_a = outer * _lda + inner * _fda; // A contains invalid values?
 
 					y[index_y] += a[index_a] * x[index_x];
 
@@ -73,11 +73,19 @@ namespace librapid
 			}
 		}
 
+		template<typename T>
+		LR_INLINE void cblas_gemv(char order, bool trans, lr_int m, lr_int n, T alpha,
+								  T *__restrict a, lr_int lda, T *__restrict x, lr_int incx,
+								  T beta, T *__restrict y, lr_int incy)
+		{
+			cblas_gemv_no_blas(order, trans, m, n, alpha, a, lda, x, incx, beta, y, incy);
+		}
+
 	#ifdef LIBRAPID_CBLAS
 		template<>
 		LR_INLINE void cblas_gemv(char order, bool trans, lr_int m, lr_int n,
 								  float alpha, float *__restrict a, lr_int lda,
-								  float *__restrict x, lr_int incx, double beta,
+								  float *__restrict x, lr_int incx, float beta,
 								  float *__restrict y, lr_int incy)
 		{
 			CBLAS_ORDER blas_order{};
@@ -118,72 +126,39 @@ namespace librapid
 	#endif // LIBRAPID_CBLAS
 
 		template<typename T>
+		LR_INLINE void cblas_gemm_no_blas(char order, bool trans_a, bool trans_b, lr_int m,
+										  lr_int n, lr_int k, T alpha,
+										  T *__restrict a, lr_int lda, T *__restrict b,
+										  lr_int ldb, T beta, T *__restrict c, lr_int ldc)
+		{
+			lr_int temp_a, index_c;
+
+		// #pragma omp parallel for shared(order, trans_a, trans_b, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc) private(temp_a, index_c) default(none)
+			for (lr_int outer = 0; outer < m; outer++)
+			{
+				for (lr_int inner = 0; inner < n; inner++)
+				{
+					temp_a = outer * lda;
+					index_c = inner + outer * ldc;
+
+					c[index_c] = 0;
+
+					for (lr_int sub = 0; sub < k; sub++)
+					{
+						c[index_c] += a[temp_a + sub] * b[sub * ldb + inner];
+					}
+				}
+			}
+		}
+
+		template<typename T>
 		LR_INLINE void cblas_gemm(char order, bool trans_a, bool trans_b, lr_int m,
 								  lr_int n, lr_int k, T alpha,
 								  T *__restrict a, lr_int lda, T *__restrict b,
 								  lr_int ldb, T beta, T *__restrict c, lr_int ldc)
 		{
-			lr_int _lda = trans_a ? 1 : lda;
-			lr_int _fda = trans_a ? lda : 1;
-
-			lr_int _ldb = trans_a ? 1 : ldb;
-			lr_int _fdb = trans_a ? ldb : 1;
-
-			lr_int index_a, index_b, index_c;
-
-			// Only run in parallel if arrays are smaller than a
-			// given size.Running in parallel on smaller matrices
-			// will result in slower code.Note, a branch is used
-			// in preference to #pragma omp ... if (...) because
-			// that requires runtime evaluation of a condition to
-			// set up threads, which adds a significant overhead
-			if (m * n * k < 25000)
-			{
-				for (lr_int outer = 0; outer < m; ++outer)
-				{
-					for (lr_int inner = 0; inner < n; ++inner)
-					{
-						index_c = outer * ldc + inner;
-
-						if (beta != 0)
-							c[index_c] += c[index_c] * beta;
-						else
-							c[index_c] = 0;
-
-						for (lr_int sub = 0; sub < k; sub++)
-						{
-							index_a = outer * _lda + sub * _fda;
-							index_b = inner * _ldb + sub * _fdb;
-
-							c[index_c] += a[index_a] * b[index_b];
-						}
-					}
-				}
-			}
-			else
-			{
-			#pragma omp parallel for shared(a, b, c, m, n, k, _lda, _ldb, ldc, _fda, _fdb, beta) private(index_a, index_b, index_c) default(none)
-				for (lr_int outer = 0; outer < m; ++outer)
-				{
-					for (lr_int inner = 0; inner < n; ++inner)
-					{
-						index_c = outer * ldc + inner;
-
-						if (beta != 0)
-							c[index_c] += c[index_c] * beta;
-						else
-							c[index_c] = 0;
-
-						for (lr_int sub = 0; sub < k; sub++)
-						{
-							index_a = outer * _lda + sub * _fda;
-							index_b = inner * _ldb + sub * _fdb;
-
-							c[index_c] += a[index_a] * b[index_b];
-						}
-					}
-				}
-			}
+			cblas_gemm_no_blas(order, trans_a, trans_b, m, n, k,
+							   alpha, a, lda, b, ldb, beta, c, ldc);
 		}
 
 	#ifdef LIBRAPID_CBLAS

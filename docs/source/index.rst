@@ -1,3 +1,6 @@
+.. role:: raw-html(raw)
+    :format: html
+
 .. image:: ../../branding/logo_transparent_trimmed.png
    :width: 800
 
@@ -88,8 +91,4 @@ Contents
 	:glob:
 
 	librapid_ndarray_api
-
-Indices and tables
-==================
-
-* :ref:`search`
+	librapid_network_api

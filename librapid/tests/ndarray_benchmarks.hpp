@@ -6,9 +6,6 @@
 #include <iostream>
 #include <chrono>
 
-// Get the time in milliseconds
-#define TIME ((double) std::chrono::high_resolution_clock().now().time_since_epoch().count() / 1000000)
-
 inline int benchmark_ndarray()
 {
 	// Benchmark simple arithmetic functions

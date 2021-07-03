@@ -51,14 +51,14 @@ namespace librapid
 						if (end > 100000)
 						{
 							long long e = (long long) end;
-						#pragma omp parallel for shared(src_a, src_b, op, e) default(none)
+						#pragma omp parallel for shared(src_a, src_b, op, e) default(none)  num_threads(4)
 							for (long long i = 0; i < e; ++i)
-								src_a[i] = op(src_b[i]);
+								src_a[i] = (A) op(src_b[i]);
 						}
 						else
 						{
 							for (lr_int i = 0; i < end; ++i)
-								src_a[i] = op(src_b[i]);
+								src_a[i] = (A) op(src_b[i]);
 						}
 						break;
 					}
@@ -67,7 +67,7 @@ namespace librapid
 						// Iterate over the array using it's stride and extent
 						do
 						{
-							*src_a = op(*src_b);
+							*src_a = (A) op(*src_b);
 
 							for (idim = 0; idim < ndim; ++idim)
 							{

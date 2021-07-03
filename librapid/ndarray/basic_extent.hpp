@@ -415,6 +415,11 @@ namespace librapid
 			return utils::check_ptr_match(m_extent, m_dims, test.m_extent, test.m_dims);
 		}
 
+		LR_INLINE bool operator!=(const basic_extent<T> &test) const
+		{
+			return !(*this == test);
+		}
+
 		template<typename O, typename std::enable_if<std::is_integral<O>::value, int>::type = 0>
 		LR_INLINE void reshape(const std::vector<O> &order)
 		{
