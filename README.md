@@ -6,7 +6,7 @@
 
 ## Credits
 
-Thanks to @Windoof-Colourblindoof for his help on the library
+Thanks to @TheWindoof for his help on the library
 
 ## How it Works
 
