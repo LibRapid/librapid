@@ -12,7 +12,7 @@ if platform.system() == "Windows":
 	import win32api
 	this_directory = Path(__file__).parent
 
-	print("Loading DLL from", os.path.join(this_directory, "librapid", "blas"))
-	win32api.SetDllDirectory(os.path.join(this_directory, "librapid", "blas"))
+	print("Loading DLL from", os.path.join(this_directory, "blas"))
+	win32api.SetDllDirectory(os.path.join(this_directory, "blas"))
 
 from librapid_ import *
