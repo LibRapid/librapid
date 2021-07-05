@@ -33,6 +33,9 @@ namespace librapid
 		class basic_activation
 		{
 		public:
+			virtual ~basic_activation()
+			{}
+
 			/**
 			 * \rst
 			 *
@@ -166,21 +169,21 @@ namespace librapid
 
 			basic_ndarray<T> f(const basic_ndarray<T> &arr) const override
 			{
-				return 1. / (1. + exp(-arr));
+				return (T) 1. / ((T) 1. + exp(-arr));
 			}
 
 			basic_ndarray<T> df(const basic_ndarray<T> &arr) const override
 			{
-				return arr * (1. - arr);
+				return arr * ((T) 1. - arr);
 			}
 
 			basic_ndarray<T> weight(const extent &shape) const override
 			{
-				double lower = -1. / std::sqrt((T) m_prev_nodes);
-				double upper = 1. / std::sqrt((T) m_prev_nodes);
+				T lower = -1. / std::sqrt((T) m_prev_nodes);
+				T upper = 1. / std::sqrt((T) m_prev_nodes);
 				basic_ndarray<T> res = basic_ndarray<T>(shape);
 				res.fill_random(lower, upper);
-				return res * (upper - lower);
+				return res * (T) (upper - lower);
 			}
 
 		private:
@@ -220,16 +223,16 @@ namespace librapid
 
 			basic_ndarray<T> df(const basic_ndarray<T> &arr) const override
 			{
-				return 1. - (arr * arr);
+				return (T) 1. - (arr * arr);
 			}
 
 			basic_ndarray<T> weight(const extent &shape) const override
 			{
-				double lower = -1. / std::sqrt((T) m_prev_nodes);
-				double upper = 1. / std::sqrt((T) m_prev_nodes);
+				T lower = -1. / std::sqrt((T) m_prev_nodes);
+				T upper = 1. / std::sqrt((T) m_prev_nodes);
 				basic_ndarray<T> res = basic_ndarray<T>(shape);
 				res.fill_random(lower, upper);
-				return res * (upper - lower);
+				return res * (T) (upper - lower);
 			}
 
 		private:
@@ -248,9 +251,9 @@ namespace librapid
 						x\geq 0 &\quad x\\
 						x < 0   &\quad 0.0\\
 					\end{cases} \\
-		 
-		 		\text{Derivative: }
-		 		\frac{df}{dx}f(x)=
+
+				\text{Derivative: }
+				\frac{df}{dx}f(x)=
 					\begin{cases}
 						x\geq 0 &\quad 1.0\\
 						x < 0   &\quad 0.0\\
@@ -285,7 +288,7 @@ namespace librapid
 				auto std = std::sqrt(2. / (T) m_prev_nodes);
 				auto res = basic_ndarray<T>(shape);
 				res.fill_random(-1, 1);
-				return res * std;
+				return res * (T) std;
 			}
 
 		private:
@@ -307,7 +310,7 @@ namespace librapid
 
 				\text{Derivative: }
 				\frac{df}{dx}f(x)=
-		 			\begin{cases}
+					\begin{cases}
 						x\geq 0 &\quad 1.0\\
 						x < 0   &\quad 0.2\\
 					\end{cases}
@@ -347,7 +350,7 @@ namespace librapid
 				auto std = std::sqrt(2. / (T) m_prev_nodes);
 				auto res = basic_ndarray<T>(shape);
 				res.fill_random(-1, 1);
-				return res * std;
+				return res * (T) std;
 			}
 
 		private:

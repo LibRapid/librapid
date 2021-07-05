@@ -133,7 +133,7 @@ namespace librapid
 		{
 			lr_int temp_a, index_c;
 
-		// #pragma omp parallel for shared(order, trans_a, trans_b, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc) private(temp_a, index_c) default(none)
+			// #pragma omp parallel for shared(order, trans_a, trans_b, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc) private(temp_a, index_c) default(none)
 			for (lr_int outer = 0; outer < m; outer++)
 			{
 				for (lr_int inner = 0; inner < n; inner++)

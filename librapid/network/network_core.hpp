@@ -37,7 +37,6 @@ namespace librapid
 
 		network(const network_config<T> &config)
 		{
-
 		}
 
 		~network()
@@ -60,9 +59,9 @@ namespace librapid
 		LR_INLINE void compile()
 		{
 			// Check the layers are all unique
-			for (lr_int i = 0; i < m_layers.size(); i++)
+			for (size_t i = 0; i < m_layers.size(); i++)
 			{
-				for (lr_int j = 0; j < m_layers.size(); j++)
+				for (size_t j = 0; j < m_layers.size(); j++)
 				{
 					if (i != j && m_layers[i] == m_layers[j])
 					{
@@ -76,7 +75,7 @@ namespace librapid
 			}
 
 			m_layers[0]->compile(nullptr);
-			for (lr_int i = 1; i < m_layers.size(); i++)
+			for (size_t i = 1; i < m_layers.size(); i++)
 			{
 				m_layers[i]->compile(m_layers[i - 1]);
 			}
@@ -128,7 +127,7 @@ namespace librapid
 		LR_INLINE basic_ndarray<T> internal_forward_feed(const basic_ndarray<T> &input) const
 		{
 			m_layers[0]->forward(input);
-			for (lr_int i = 1; i < m_layers.size(); i++)
+			for (size_t i = 1; i < m_layers.size(); i++)
 				m_layers[i]->forward(m_layers[i - 1]->get_prev_output());
 			return m_layers[m_layers.size() - 1]->get_prev_output();
 		}
@@ -139,7 +138,7 @@ namespace librapid
 			auto output = internal_forward_feed(input);
 			auto loss = target - output;
 
-			for (lr_int i = m_layers.size() - 1; i >= 0; i--)
+			for (lr_int i = (lr_int) m_layers.size() - 1; i >= 0; i--)
 				loss.set_to(m_layers[i]->backpropagate(loss));
 
 			return target - output;

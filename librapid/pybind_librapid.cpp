@@ -47,10 +47,55 @@ struct python_activation {
 	}
 };
 
+struct python_sgd {
+	librapid::optimizers::basic_optimizer<python_dtype> *optimizer;
+
+	python_sgd(python_dtype learning_rate = 1e-2) { optimizer = new librapid::optimizers::sgd(learning_rate); }
+	~python_sgd() { delete optimizer; }
+	librapid::basic_ndarray<python_dtype> apply(const librapid::basic_ndarray<python_dtype> &w, const librapid::basic_ndarray<python_dtype> &dw) { return optimizer->apply(w, dw); }
+	void set_param(const std::string &name, const python_dtype val) { optimizer->set_param(name, val); }
+	void set_param(const std::string &name, const librapid::basic_ndarray<python_dtype> &val) { optimizer->set_param(name, val); }
+	const librapid::basic_ndarray<python_dtype> get_param(const std::string &name) { return optimizer->get_param(name); }
+};
+
+struct python_sgd_momentum {
+	librapid::optimizers::basic_optimizer<python_dtype> *optimizer;
+
+	python_sgd_momentum(python_dtype learning_rate = 1e-2, python_dtype momentum = 0.9, const librapid::basic_ndarray<python_dtype> &velocity = librapid::basic_ndarray<python_dtype>()) { optimizer = new librapid::optimizers::sgd_momentum(learning_rate, momentum, velocity); }
+	~python_sgd_momentum() { delete optimizer; }
+	librapid::basic_ndarray<python_dtype> apply(const librapid::basic_ndarray<python_dtype> &w, const librapid::basic_ndarray<python_dtype> &dw) { return optimizer->apply(w, dw); }
+	void set_param(const std::string &name, const python_dtype val) { optimizer->set_param(name, val); }
+	void set_param(const std::string &name, const librapid::basic_ndarray<python_dtype> &val) { optimizer->set_param(name, val); }
+	const librapid::basic_ndarray<python_dtype> get_param(const std::string &name) { return optimizer->get_param(name); }
+};
+
+struct python_rmsprop {
+	librapid::optimizers::basic_optimizer<python_dtype> *optimizer;
+
+	python_rmsprop(python_dtype learning_rate = 1e-2, python_dtype decay_rate = 0.99, python_dtype epsilon = 1e-8, const librapid::basic_ndarray<python_dtype> &cache = librapid::basic_ndarray<python_dtype>()) { optimizer = new librapid::optimizers::rmsprop(learning_rate, decay_rate, epsilon, cache); }
+	~python_rmsprop() { delete optimizer; }
+	librapid::basic_ndarray<python_dtype> apply(const librapid::basic_ndarray<python_dtype> &w, const librapid::basic_ndarray<python_dtype> &dw) { return optimizer->apply(w, dw); }
+	void set_param(const std::string &name, const python_dtype val) { optimizer->set_param(name, val); }
+	void set_param(const std::string &name, const librapid::basic_ndarray<python_dtype> &val) { optimizer->set_param(name, val); }
+	const librapid::basic_ndarray<python_dtype> get_param(const std::string &name) { return optimizer->get_param(name); }
+};
+
+struct python_adam {
+	librapid::optimizers::basic_optimizer<python_dtype> *optimizer;
+
+	python_adam(python_dtype learning_rate = 1e-3, python_dtype beta1 = 0.9, python_dtype beta2 = 0.999, python_dtype epsilon = 1e-8, const librapid::basic_ndarray<python_dtype> &m = librapid::basic_ndarray<python_dtype>(), const librapid::basic_ndarray<python_dtype> &v = librapid::basic_ndarray<python_dtype>(), lr_int time = 0) { optimizer = new librapid::optimizers::adam(learning_rate, beta1, beta2, epsilon, m, v, time); }
+	~python_adam() { delete optimizer; }
+	librapid::basic_ndarray<python_dtype> apply(const librapid::basic_ndarray<python_dtype> &w, const librapid::basic_ndarray<python_dtype> &dw) { return optimizer->apply(w, dw); }
+	void set_param(const std::string &name, const python_dtype val) { optimizer->set_param(name, val); }
+	void set_param(const std::string &name, const librapid::basic_ndarray<python_dtype> &val) { optimizer->set_param(name, val); }
+	const librapid::basic_ndarray<python_dtype> get_param(const std::string &name) { return optimizer->get_param(name); }
+};
+
 PYBIND11_MODULE(librapid_, module)
 {
 	module.doc() = module_docstring;
 
+	module.def("bitness", &librapid::python_bitness);
 	module.def("has_blas", &librapid::has_blas);
 	module.def("set_blas_threads", &librapid::set_blas_threads);
 	module.def("get_blas_threads", &librapid::get_blas_threads);
@@ -69,16 +114,17 @@ PYBIND11_MODULE(librapid_, module)
 	module.attr("sqrt3") = librapid::math::sqrt3;
 	module.attr("sqrt5") = librapid::math::sqrt5;
 
-	module.def("product", [](const std::vector<double> &vals) { return librapid::math::product(vals); }, py::arg("vals"));
+	module.def("product", [](const std::vector<python_dtype> &vals) { return librapid::math::product(vals); }, py::arg("vals"));
 
-	module.def("min", [](const std::vector<double> &vals) { return librapid::math::min(vals); }, py::arg("vals"));
-	module.def("max", [](const std::vector<double> &vals) { return librapid::math::max(vals); }, py::arg("vals"));
+	module.def("min", [](const std::vector<python_dtype> &vals) { return librapid::math::min(vals); }, py::arg("vals"));
+	module.def("max", [](const std::vector<python_dtype> &vals) { return librapid::math::max(vals); }, py::arg("vals"));
 
-	module.def("abs", [](double val) { return librapid::math::abs(val); }, py::arg("val"));
-	module.def("map", [](double val, double start1, double stop1, double start2, double stop2) { return librapid::math::map(val, start1, stop1, start2, stop2); }, py::arg("val"), py::arg("start1") = double(0), py::arg("stop1") = double(1), py::arg("start2") = double(0), py::arg("stop2") = double(1));
-	module.def("random", [](double min, double max) { return librapid::math::random(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
+	module.def("abs", [](python_dtype val) { return librapid::math::abs(val); }, py::arg("val"));
+	module.def("map", [](python_dtype val, python_dtype start1, python_dtype stop1, python_dtype start2, python_dtype stop2) { return librapid::math::map(val, start1, stop1, start2, stop2); }, py::arg("val"), py::arg("start1") = python_dtype(0), py::arg("stop1") = python_dtype(1), py::arg("start2") = python_dtype(0), py::arg("stop2") = python_dtype(1));
+	module.def("random", [](python_dtype min, python_dtype max) { return librapid::math::random(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
 	module.def("pow10", &librapid::math::pow10);
-	module.def("round", [](double val, lr_int places) { return librapid::math::round(val, places); }, py::arg("val"), py::arg("places") = 0);
+	module.def("round", [](python_dtype val, lr_int places) { return librapid::math::round(val, places); }, py::arg("val"), py::arg("places") = 0);
+	module.def("round_sigfig", [](python_dtype val, lr_int figs) { return librapid::math::round(val, figs); }, py::arg("val"), py::arg("figs") = 3);
 
 	// The librapid extent object
 	py::class_<librapid::extent>(module, "extent", class_extent_docstring)
@@ -133,232 +179,276 @@ PYBIND11_MODULE(librapid_, module)
 		.def("__repr__", [](const librapid::stride &s) { return "<librapid." + s.str() + ">"; });
 
 	// The librapid ndarray object
-	py::class_<librapid::ndarray>(module, "ndarray")
+	py::class_<librapid::basic_ndarray<python_dtype>>(module, "ndarray")
 		.def(py::init<>())
 		.def(py::init<const librapid::extent &>())
-		.def(py::init<const librapid::extent &, double>())
-		.def(py::init<const librapid::ndarray &>())
+		.def(py::init<const librapid::extent &, python_dtype>())
+		.def(py::init<const librapid::basic_ndarray<python_dtype> &>())
 		
-		.def_static("from_scalar", [](double x) { return librapid::ndarray::from_scalar(x); }, py::arg("x") = double(0))
+		.def_static("from_data", [](const python_dtype val) { return librapid::basic_ndarray<python_dtype>::from_data(val); }, py::arg("val") = python_dtype(0))
+		.def_static("from_data", [](const V<python_dtype> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<python_dtype>())
+		.def_static("from_data", [](const V<V<python_dtype>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<python_dtype>>())
+		.def_static("from_data", [](const V<V<V<python_dtype>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<python_dtype>>>())
+		.def_static("from_data", [](const V<V<V<V<python_dtype>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<python_dtype>>>>())
+		.def_static("from_data", [](const V<V<V<V<V<python_dtype>>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<V<python_dtype>>>>>())
+		.def_static("from_data", [](const V<V<V<V<V<V<python_dtype>>>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<python_dtype>>>>>>())
+		.def_static("from_data", [](const V<V<V<V<V<V<V<python_dtype>>>>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<V<python_dtype>>>>>>>())
+		.def_static("from_data", [](const V<V<V<V<V<V<V<V<python_dtype>>>>>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<V<V<python_dtype>>>>>>>>())
+		.def_static("from_data", [](const V<V<V<V<V<V<V<V<V<python_dtype>>>>>>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<V<V<V<python_dtype>>>>>>>>>())
+		.def_static("from_data", [](const V<V<V<V<V<V<V<V<V<V<python_dtype>>>>>>>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<V<V<V<V<python_dtype>>>>>>>>>>())
 
-		.def_static("from_data", [](V<double> &vals) { return librapid::ndarray::from_data(vals); }, py::arg("vals") = V<double>())
-		.def_static("from_data", [](V<V<double>> &vals) { return librapid::ndarray::from_data(vals); }, py::arg("vals") = V<V<double>>())
-		.def_static("from_data", [](V<V<V<double>>> &vals) { return librapid::ndarray::from_data(vals); }, py::arg("vals") = V<V<V<double>>>())
-		.def_static("from_data", [](V<V<V<V<double>>>> &vals) { return librapid::ndarray::from_data(vals); }, py::arg("vals") = V<V<V<V<double>>>>())
-		.def_static("from_data", [](V<V<V<V<V<double>>>>> &vals) { return librapid::ndarray::from_data(vals); }, py::arg("vals") = V<V<V<V<V<double>>>>>())
-		.def_static("from_data", [](V<V<V<V<V<V<double>>>>>> &vals) { return librapid::ndarray::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<double>>>>>>())
-		.def_static("from_data", [](V<V<V<V<V<V<V<double>>>>>>> &vals) { return librapid::ndarray::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<V<double>>>>>>>())
-		.def_static("from_data", [](V<V<V<V<V<V<V<V<double>>>>>>>> &vals) { return librapid::ndarray::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<V<V<double>>>>>>>>())
-		.def_static("from_data", [](V<V<V<V<V<V<V<V<V<double>>>>>>>>> &vals) { return librapid::ndarray::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<V<V<V<double>>>>>>>>>())
-		.def_static("from_data", [](V<V<V<V<V<V<V<V<V<V<double>>>>>>>>>> &vals) { return librapid::ndarray::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<V<V<V<V<double>>>>>>>>>>())
+		.def("set_to", &librapid::basic_ndarray<python_dtype>::set_to)
 
-		.def("set_to", &librapid::ndarray::set_to)
+		.def_property_readonly("ndim", &librapid::basic_ndarray<python_dtype>::ndim)
+		.def_property_readonly("size", &librapid::basic_ndarray<python_dtype>::size)
+		.def_property_readonly("is_initialized", &librapid::basic_ndarray<python_dtype>::is_initialized)
+		.def_property_readonly("is_scalar", &librapid::basic_ndarray<python_dtype>::is_scalar)
 
-		.def_property_readonly("ndim", &librapid::ndarray::ndim)
-		.def_property_readonly("size", &librapid::ndarray::size)
-		.def_property_readonly("is_initialized", &librapid::ndarray::is_initialized)
-		.def_property_readonly("is_scalar", &librapid::ndarray::is_scalar)
+		.def("get_extent", &librapid::basic_ndarray<python_dtype>::get_extent)
+		.def("get_stride", &librapid::basic_ndarray<python_dtype>::get_stride)
+		.def_property_readonly("extent", &librapid::basic_ndarray<python_dtype>::get_extent)
+		.def_property_readonly("stride", &librapid::basic_ndarray<python_dtype>::get_stride)
 
-		.def("get_extent", &librapid::ndarray::get_extent)
-		.def("get_stride", &librapid::ndarray::get_stride)
-		.def_property_readonly("extent", &librapid::ndarray::get_extent)
-		.def_property_readonly("stride", &librapid::ndarray::get_stride)
+		.def("__eq__", [](const librapid::basic_ndarray<python_dtype> &arr, python_dtype val) { return arr == val; }, py::arg("val"))
+		.def("__ne__", [](const librapid::basic_ndarray<python_dtype> &arr, python_dtype val) { return arr != val; }, py::arg("val"))
 
-		.def("__eq__", [](const librapid::ndarray &arr, double val) { return arr == val; }, py::arg("val"))
-		.def("__ne__", [](const librapid::ndarray &arr, double val) { return arr != val; }, py::arg("val"))
+		.def("__getitem__", [](const librapid::basic_ndarray<python_dtype> &arr, lr_int index) { return arr[index]; }, py::arg("index"))
+		.def("__setitem__", [](librapid::basic_ndarray<python_dtype> &arr, lr_int index, const librapid::basic_ndarray<python_dtype> &value) { arr[index] = value; }, py::arg("index"), py::arg("value"))
+		.def("__setitem__", [](librapid::basic_ndarray<python_dtype> &arr, lr_int index, python_dtype value) { arr[index] = value; }, py::arg("index"), py::arg("value"))
 
-		.def("__getitem__", [](const librapid::ndarray &arr, lr_int index) { return arr[index]; }, py::arg("index"))
-		.def("__setitem__", [](librapid::ndarray &arr, lr_int index, const librapid::ndarray &value) { arr[index] = value; }, py::arg("index"), py::arg("value"))
-		.def("__setitem__", [](librapid::ndarray &arr, lr_int index, double value) { arr[index] = value; }, py::arg("index"), py::arg("value"))
+		.def("fill", [](librapid::basic_ndarray<python_dtype> &arr, python_dtype filler) { arr.fill(filler); }, py::arg("filler") = python_dtype(0))
+		.def("filled", [](const librapid::basic_ndarray<python_dtype> &arr, python_dtype filler) { return arr.filled(filler); }, py::arg("filler") = python_dtype(0))
+		.def("fill_random", [](librapid::basic_ndarray<python_dtype> &arr, python_dtype min, python_dtype max) { arr.fill_random(min, max); }, py::arg("min") = python_dtype(0), py::arg("max") = python_dtype(1))
+		.def("filled_random", [](const librapid::basic_ndarray<python_dtype> &arr, python_dtype min, python_dtype max) { return arr.filled_random(min, max); }, py::arg("min") = python_dtype(0), py::arg("max") = python_dtype(1))
+		.def("map", [](librapid::basic_ndarray<python_dtype> &arr, const std::function<python_dtype(python_dtype)> &func) { arr.map(func); })
+		.def("mapped", [](const librapid::basic_ndarray<python_dtype> &arr, const std::function<python_dtype(python_dtype)> &func) { return arr.mapped(func); })
+		.def("clone", &librapid::basic_ndarray<python_dtype>::clone)
+		.def("set_value", &librapid::basic_ndarray<python_dtype>::set_value)
 
-		.def("fill", [](librapid::ndarray &arr, double filler) { arr.fill(filler); }, py::arg("filler") = double(0))
-		.def("filled", [](const librapid::ndarray &arr, double filler) { return arr.filled(filler); }, py::arg("filler") = double(0))
-		.def("fill_random", [](librapid::ndarray &arr, double min, double max) { arr.fill_random(min, max); }, py::arg("min") = double(0), py::arg("max") = double(1))
-		.def("filled_random", [](const librapid::ndarray &arr, double min, double max) { return arr.filled_random(min, max); }, py::arg("min") = double(0), py::arg("max") = double(1))
-		.def("map", [](librapid::ndarray &arr, const std::function<double(double)> &func) { arr.map(func); })
-		.def("mapped", [](const librapid::ndarray &arr, const std::function<double(double)> &func) { return arr.mapped(func); })
-		.def("clone", &librapid::ndarray::clone)
-		.def("set_value", &librapid::ndarray::set_value)
+		.def("__add__", [](const librapid::basic_ndarray<python_dtype> &lhs, const librapid::basic_ndarray<python_dtype> &rhs) { return lhs + rhs; }, py::arg("rhs"))
+		.def("__sub__", [](const librapid::basic_ndarray<python_dtype> &lhs, const librapid::basic_ndarray<python_dtype> &rhs) { return lhs - rhs; }, py::arg("rhs"))
+		.def("__mul__", [](const librapid::basic_ndarray<python_dtype> &lhs, const librapid::basic_ndarray<python_dtype> &rhs) { return lhs * rhs; }, py::arg("rhs"))
+		.def("__truediv__", [](const librapid::basic_ndarray<python_dtype> &lhs, const librapid::basic_ndarray<python_dtype> &rhs) { return lhs / rhs; }, py::arg("rhs"))
 
-		.def("__add__", [](const librapid::ndarray &lhs, const librapid::ndarray &rhs) { return lhs + rhs; }, py::arg("rhs"))
-		.def("__sub__", [](const librapid::ndarray &lhs, const librapid::ndarray &rhs) { return lhs - rhs; }, py::arg("rhs"))
-		.def("__mul__", [](const librapid::ndarray &lhs, const librapid::ndarray &rhs) { return lhs * rhs; }, py::arg("rhs"))
-		.def("__truediv__", [](const librapid::ndarray &lhs, const librapid::ndarray &rhs) { return lhs / rhs; }, py::arg("rhs"))
+		.def("__add__", [](const librapid::basic_ndarray<python_dtype> &lhs, python_dtype rhs) { return lhs + rhs; }, py::arg("rhs"))
+		.def("__sub__", [](const librapid::basic_ndarray<python_dtype> &lhs, python_dtype rhs) { return lhs - rhs; }, py::arg("rhs"))
+		.def("__mul__", [](const librapid::basic_ndarray<python_dtype> &lhs, python_dtype rhs) { return lhs * rhs; }, py::arg("rhs"))
+		.def("__truediv__", [](const librapid::basic_ndarray<python_dtype> &lhs, python_dtype rhs) { return lhs / rhs; }, py::arg("rhs"))
 
-		.def("__add__", [](const librapid::ndarray &lhs, double rhs) { return lhs + rhs; }, py::arg("rhs"))
-		.def("__sub__", [](const librapid::ndarray &lhs, double rhs) { return lhs - rhs; }, py::arg("rhs"))
-		.def("__mul__", [](const librapid::ndarray &lhs, double rhs) { return lhs * rhs; }, py::arg("rhs"))
-		.def("__truediv__", [](const librapid::ndarray &lhs, double rhs) { return lhs / rhs; }, py::arg("rhs"))
+		.def("__radd__", [](const librapid::basic_ndarray<python_dtype> &rhs, python_dtype lhs) { return lhs + rhs; }, py::arg("lhs"))
+		.def("__rsub__", [](const librapid::basic_ndarray<python_dtype> &rhs, python_dtype lhs) { return lhs - rhs; }, py::arg("lhs"))
+		.def("__rmul__", [](const librapid::basic_ndarray<python_dtype> &rhs, python_dtype lhs) { return lhs * rhs; }, py::arg("lhs"))
+		.def("__rtruediv__", [](const librapid::basic_ndarray<python_dtype> &rhs, python_dtype lhs) { return lhs / rhs; }, py::arg("lhs"))
 
-		.def("__radd__", [](const librapid::ndarray &rhs, double lhs) { return lhs + rhs; }, py::arg("lhs"))
-		.def("__rsub__", [](const librapid::ndarray &rhs, double lhs) { return lhs - rhs; }, py::arg("lhs"))
-		.def("__rmul__", [](const librapid::ndarray &rhs, double lhs) { return lhs * rhs; }, py::arg("lhs"))
-		.def("__rtruediv__", [](const librapid::ndarray &rhs, double lhs) { return lhs / rhs; }, py::arg("lhs"))
+		.def("__iadd__", [](librapid::basic_ndarray<python_dtype> &lhs, const librapid::basic_ndarray<python_dtype> &rhs) { lhs += rhs; return lhs; }, py::arg("rhs"))
+		.def("__isub__", [](librapid::basic_ndarray<python_dtype> &lhs, const librapid::basic_ndarray<python_dtype> &rhs) { lhs -= rhs; return lhs; }, py::arg("rhs"))
+		.def("__imul__", [](librapid::basic_ndarray<python_dtype> &lhs, const librapid::basic_ndarray<python_dtype> &rhs) { lhs *= rhs; return lhs; }, py::arg("rhs"))
+		.def("__itruediv__", [](librapid::basic_ndarray<python_dtype> &lhs, const librapid::basic_ndarray<python_dtype> &rhs) { lhs /= rhs; return lhs; }, py::arg("rhs"))
 
-		.def("__iadd__", [](librapid::ndarray &lhs, const librapid::ndarray &rhs) { lhs += rhs; return lhs; }, py::arg("rhs"))
-		.def("__isub__", [](librapid::ndarray &lhs, const librapid::ndarray &rhs) { lhs -= rhs; return lhs; }, py::arg("rhs"))
-		.def("__imul__", [](librapid::ndarray &lhs, const librapid::ndarray &rhs) { lhs *= rhs; return lhs; }, py::arg("rhs"))
-		.def("__itruediv__", [](librapid::ndarray &lhs, const librapid::ndarray &rhs) { lhs /= rhs; return lhs; }, py::arg("rhs"))
+		.def("__iadd__", [](librapid::basic_ndarray<python_dtype> &lhs, python_dtype rhs) { lhs += rhs; return lhs; }, py::arg("rhs"))
+		.def("__isub__", [](librapid::basic_ndarray<python_dtype> &lhs, python_dtype rhs) { lhs -= rhs; return lhs; }, py::arg("rhs"))
+		.def("__imul__", [](librapid::basic_ndarray<python_dtype> &lhs, python_dtype rhs) { lhs *= rhs; return lhs; }, py::arg("rhs"))
+		.def("__itruediv__", [](librapid::basic_ndarray<python_dtype> &lhs, python_dtype rhs) { lhs /= rhs; return lhs; }, py::arg("rhs"))
 
-		.def("__iadd__", [](librapid::ndarray &lhs, double rhs) { lhs += rhs; return lhs; }, py::arg("rhs"))
-		.def("__isub__", [](librapid::ndarray &lhs, double rhs) { lhs -= rhs; return lhs; }, py::arg("rhs"))
-		.def("__imul__", [](librapid::ndarray &lhs, double rhs) { lhs *= rhs; return lhs; }, py::arg("rhs"))
-		.def("__itruediv__", [](librapid::ndarray &lhs, double rhs) { lhs /= rhs; return lhs; }, py::arg("rhs"))
+		.def("__neg__", [](const librapid::basic_ndarray<python_dtype> &arr) { return -arr; })
 
-		.def("__neg__", [](const librapid::ndarray &arr) { return -arr; })
+		.def("minimum", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::minimum(x1, x2); }, py::arg("x2"))
+		.def("minimum", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::minimum(x1, x2); }, py::arg("x2"))
+		.def("maximum", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::maximum(x1, x2); }, py::arg("x2"))
+		.def("maximum", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::maximum(x1, x2); }, py::arg("x2"))
 
-		.def("minimum", [](const librapid::ndarray &x1, const librapid::ndarray &x2) { return librapid::minimum(x1, x2); }, py::arg("x2"))
-		.def("minimum", [](const librapid::ndarray &x1, double x2) { return librapid::minimum(x1, x2); }, py::arg("x2"))
-		.def("maximum", [](const librapid::ndarray &x1, const librapid::ndarray &x2) { return librapid::maximum(x1, x2); }, py::arg("x2"))
-		.def("maximum", [](const librapid::ndarray &x1, double x2) { return librapid::maximum(x1, x2); }, py::arg("x2"))
+		.def("less_than", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::less_than(x1, x2); }, py::arg("x2"))
+		.def("less_than", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::less_than(x1, x2); }, py::arg("x2"))
+		.def("greater_than", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::greater_than(x1, x2); }, py::arg("x2"))
+		.def("greater_than", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::greater_than(x1, x2); }, py::arg("x2"))
+		.def("less_than_or_equal", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::less_than_or_equal(x1, x2); }, py::arg("x2"))
+		.def("less_than_or_equal", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::less_than_or_equal(x1, x2); }, py::arg("x2"))
+		.def("greater_than_or_equal", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::greater_than_or_equal(x1, x2); }, py::arg("x2"))
+		.def("greater_than_or_equal", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::greater_than_or_equal(x1, x2); }, py::arg("x2"))
 
-		.def("less_than", [](const librapid::ndarray &x1, const librapid::ndarray &x2) { return librapid::less_than(x1, x2); }, py::arg("x2"))
-		.def("less_than", [](const librapid::ndarray &x1, double x2) { return librapid::less_than(x1, x2); }, py::arg("x2"))
-		.def("greater_than", [](const librapid::ndarray &x1, const librapid::ndarray &x2) { return librapid::greater_than(x1, x2); }, py::arg("x2"))
-		.def("greater_than", [](const librapid::ndarray &x1, double x2) { return librapid::greater_than(x1, x2); }, py::arg("x2"))
-		.def("less_than_or_equal", [](const librapid::ndarray &x1, const librapid::ndarray &x2) { return librapid::less_than_or_equal(x1, x2); }, py::arg("x2"))
-		.def("less_than_or_equal", [](const librapid::ndarray &x1, double x2) { return librapid::less_than_or_equal(x1, x2); }, py::arg("x2"))
-		.def("greater_than_or_equal", [](const librapid::ndarray &x1, const librapid::ndarray &x2) { return librapid::greater_than_or_equal(x1, x2); }, py::arg("x2"))
-		.def("greater_than_or_equal", [](const librapid::ndarray &x1, double x2) { return librapid::greater_than_or_equal(x1, x2); }, py::arg("x2"))
+		.def("dot", [](const librapid::basic_ndarray<python_dtype> &lhs, const librapid::basic_ndarray<python_dtype> &rhs) { return lhs.dot(rhs); }, py::arg("rhs"))
+		.def("__matmul__", [](const librapid::basic_ndarray<python_dtype> &lhs, const librapid::basic_ndarray<python_dtype> &rhs) { return lhs.dot(rhs); }, py::arg("rhs"))
 
-		.def("dot", [](const librapid::ndarray &lhs, const librapid::ndarray &rhs) { return lhs.dot(rhs); }, py::arg("rhs"))
-		.def("__matmul__", [](const librapid::ndarray &lhs, const librapid::ndarray &rhs) { return lhs.dot(rhs); }, py::arg("rhs"))
+		.def("reshape", [](librapid::basic_ndarray<python_dtype> &arr, const std::vector<lr_int> &order) { arr.reshape(order); }, py::arg("order"))
+		.def("reshape", [](librapid::basic_ndarray<python_dtype> &arr, const librapid::extent &order) { arr.reshape(order); }, py::arg("order"))
+		.def("reshaped", [](const librapid::basic_ndarray<python_dtype> &arr, const std::vector<lr_int> &order) { return arr.reshaped(order); }, py::arg("order"))
+		.def("reshape", [](librapid::basic_ndarray<python_dtype> &arr, py::args args) { arr.reshape(py::cast<std::vector<lr_int>>(args)); })
+		.def("reshaped", [](const librapid::basic_ndarray<python_dtype> &arr, py::args args) { return arr.reshaped(py::cast<std::vector<lr_int>>(args)); })
+		.def("subarray", [](const librapid::basic_ndarray<python_dtype> &arr, const std::vector<lr_int> &axes) { return arr.subarray(axes); }, py::arg("axes"))
 
-		.def("reshape", [](librapid::ndarray &arr, const std::vector<lr_int> &order) { arr.reshape(order); }, py::arg("order"))
-		.def("reshape", [](librapid::ndarray &arr, const librapid::extent &order) { arr.reshape(order); }, py::arg("order"))
-		.def("reshaped", [](const librapid::ndarray &arr, const std::vector<lr_int> &order) { return arr.reshaped(order); }, py::arg("order"))
-		.def("reshape", [](librapid::ndarray &arr, py::args args) { arr.reshape(py::cast<std::vector<lr_int>>(args)); })
-		.def("reshaped", [](const librapid::ndarray &arr, py::args args) { return arr.reshaped(py::cast<std::vector<lr_int>>(args)); })
-		.def("subarray", [](const librapid::ndarray &arr, const std::vector<lr_int> &axes) { return arr.subarray(axes); }, py::arg("axes"))
+		.def("strip_front", &librapid::basic_ndarray<python_dtype>::strip_front)
+		.def("strip_back", &librapid::basic_ndarray<python_dtype>::strip_back)
+		.def("strip", &librapid::basic_ndarray<python_dtype>::strip)
+		.def("stripped_front", &librapid::basic_ndarray<python_dtype>::stripped_front)
+		.def("stripped_back", &librapid::basic_ndarray<python_dtype>::stripped_back)
+		.def("stripped", &librapid::basic_ndarray<python_dtype>::stripped)
 
-		.def("strip_front", &librapid::ndarray::strip_front)
-		.def("strip_back", &librapid::ndarray::strip_back)
-		.def("strip", &librapid::ndarray::strip)
-		.def("stripped_front", &librapid::ndarray::stripped_front)
-		.def("stripped_back", &librapid::ndarray::stripped_back)
-		.def("stripped", &librapid::ndarray::stripped)
+		.def("transpose", [](librapid::basic_ndarray<python_dtype> &arr, const std::vector<lr_int> &order) { arr.transpose(order); }, py::arg("order"))
+		.def("transpose", [](librapid::basic_ndarray<python_dtype> &arr) { arr.transpose(); })
+		.def("transposed", [](const librapid::basic_ndarray<python_dtype> &arr, const std::vector<lr_int> &order) { return arr.transposed(order); }, py::arg("order"))
+		.def("transposed", [](const librapid::basic_ndarray<python_dtype> &arr) { return arr.transposed(); })
 
-		.def("transpose", [](librapid::ndarray &arr, const std::vector<lr_int> &order) { arr.transpose(order); }, py::arg("order"))
-		.def("transpose", [](librapid::ndarray &arr) { arr.transpose(); })
-		.def("transposed", [](const librapid::ndarray &arr, const std::vector<lr_int> &order) { return arr.transposed(order); }, py::arg("order"))
-		.def("transposed", [](const librapid::ndarray &arr) { return arr.transposed(); })
+		.def("sum", [](const librapid::basic_ndarray<python_dtype> &arr, lr_int axis) { return arr.sum(axis); }, py::arg("axis") = librapid::AUTO)
+		.def("product", [](const librapid::basic_ndarray<python_dtype> &arr, lr_int axis) { return arr.product(axis); }, py::arg("axis") = librapid::AUTO)
+		.def("mean", [](const librapid::basic_ndarray<python_dtype> &arr, lr_int axis) { return arr.mean(axis); }, py::arg("axis") = librapid::AUTO)
+		.def("abs", [](const librapid::basic_ndarray<python_dtype> &arr) { return arr.abs(); })
+		.def("square", [](const librapid::basic_ndarray<python_dtype> &arr) { return arr.square(); })
+		.def("variance", [](const librapid::basic_ndarray<python_dtype> &arr, lr_int axis) { return arr.variance(axis); }, py::arg("axis") = librapid::AUTO)
 
-		.def("sum", [](const librapid::ndarray &arr, lr_int axis) { return arr.sum(axis); }, py::arg("axis") = librapid::AUTO)
-		.def("product", [](const librapid::ndarray &arr, lr_int axis) { return arr.product(axis); }, py::arg("axis") = librapid::AUTO)
-		.def("mean", [](const librapid::ndarray &arr, lr_int axis) { return arr.mean(axis); }, py::arg("axis") = librapid::AUTO)
-		.def("abs", [](const librapid::ndarray &arr) { return arr.abs(); })
-		.def("square", [](const librapid::ndarray &arr) { return arr.square(); })
-		.def("variance", [](const librapid::ndarray &arr, lr_int axis) { return arr.variance(axis); }, py::arg("axis") = librapid::AUTO)
+		.def("__str__", [](const librapid::basic_ndarray<python_dtype> &arr) { return arr.str(0); })
+		.def("__int__", [](const librapid::basic_ndarray<python_dtype> &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to int"); return (lr_int) *arr.get_data_start(); })
+		.def("__float__", [](const librapid::basic_ndarray<python_dtype> &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to float"); return (python_dtype) *arr.get_data_start(); })
+		.def("__repr__", [](const librapid::basic_ndarray<python_dtype> &arr) { return "<librapid.ndarray " + arr.str(18) + ">"; });
 
-		.def("__str__", [](const librapid::ndarray &arr) { return arr.str(0); })
-		.def("__int__", [](const librapid::ndarray &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to int"); return (lr_int) *arr.get_data_start(); })
-		.def("__float__", [](const librapid::ndarray &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to float"); return (double) *arr.get_data_start(); })
-		.def("__repr__", [](const librapid::ndarray &arr) { return "<librapid.ndarray " + arr.str(18) + ">"; });
+	module.def("zeros_like", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::zeros_like(arr); }, py::arg("arr"));
+	module.def("ones_like", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::ones_like(arr); }, py::arg("arr"));
+	module.def("random_like", [](const librapid::basic_ndarray<python_dtype> &arr, python_dtype min, python_dtype max) { return librapid::random_like(arr, min, max); }, py::arg("arr"), py::arg("min") = 0, py::arg("max") = 1);
 
-	module.def("zeros_like", [](const librapid::ndarray &arr) { return librapid::zeros_like(arr); }, py::arg("arr"));
-	module.def("ones_like", [](const librapid::ndarray &arr) { return librapid::ones_like(arr); }, py::arg("arr"));
-	module.def("random_like", [](const librapid::ndarray &arr, double min, double max) { return librapid::random_like(arr, min, max); }, py::arg("arr"), py::arg("min") = 0, py::arg("max") = 1);
+	module.def("add", [](python_dtype lhs, python_dtype rhs) { return lhs + rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("add", [](librapid::basic_ndarray<python_dtype> lhs, python_dtype rhs) { return lhs + rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("add", [](python_dtype lhs, librapid::basic_ndarray<python_dtype> rhs) { return lhs + rhs; }, py::arg("lhs"), py::arg("rhs"));
 
-	module.def("add", [](double lhs, double rhs) { return lhs + rhs; }, py::arg("lhs"), py::arg("rhs"));
-	module.def("add", [](librapid::ndarray lhs, double rhs) { return lhs + rhs; }, py::arg("lhs"), py::arg("rhs"));
-	module.def("add", [](double lhs, librapid::ndarray rhs) { return lhs + rhs; }, py::arg("lhs"), py::arg("rhs"));
-
-	module.def("sub", [](double lhs, double rhs) { return lhs - rhs; }, py::arg("lhs"), py::arg("rhs"));
-	module.def("sub", [](librapid::ndarray lhs, double rhs) { return lhs - rhs; }, py::arg("lhs"), py::arg("rhs"));
-	module.def("sub", [](double lhs, librapid::ndarray rhs) { return lhs - rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("sub", [](python_dtype lhs, python_dtype rhs) { return lhs - rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("sub", [](librapid::basic_ndarray<python_dtype> lhs, python_dtype rhs) { return lhs - rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("sub", [](python_dtype lhs, librapid::basic_ndarray<python_dtype> rhs) { return lhs - rhs; }, py::arg("lhs"), py::arg("rhs"));
 	
-	module.def("mul", [](double lhs, double rhs) { return lhs * rhs; }, py::arg("lhs"), py::arg("rhs"));
-	module.def("mul", [](librapid::ndarray lhs, double rhs) { return lhs * rhs; }, py::arg("lhs"), py::arg("rhs"));
-	module.def("mul", [](double lhs, librapid::ndarray rhs) { return lhs * rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("mul", [](python_dtype lhs, python_dtype rhs) { return lhs * rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("mul", [](librapid::basic_ndarray<python_dtype> lhs, python_dtype rhs) { return lhs * rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("mul", [](python_dtype lhs, librapid::basic_ndarray<python_dtype> rhs) { return lhs * rhs; }, py::arg("lhs"), py::arg("rhs"));
 
-	module.def("div", [](double lhs, double rhs) { return lhs / rhs; }, py::arg("lhs"), py::arg("rhs"));
-	module.def("div", [](librapid::ndarray lhs, double rhs) { return lhs / rhs; }, py::arg("lhs"), py::arg("rhs"));
-	module.def("div", [](double lhs, librapid::ndarray rhs) { return lhs / rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("div", [](python_dtype lhs, python_dtype rhs) { return lhs / rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("div", [](librapid::basic_ndarray<python_dtype> lhs, python_dtype rhs) { return lhs / rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("div", [](python_dtype lhs, librapid::basic_ndarray<python_dtype> rhs) { return lhs / rhs; }, py::arg("lhs"), py::arg("rhs"));
 
-	module.def("exp", [](const librapid::ndarray &arr) { return librapid::exp(arr); }, py::arg("arr"));
+	module.def("exp", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::exp(arr); }, py::arg("arr"));
 
-	module.def("sin", [](const librapid::ndarray &arr) { return librapid::sin(arr); }, py::arg("arr"));
-	module.def("cos", [](const librapid::ndarray &arr) { return librapid::cos(arr); }, py::arg("arr"));
-	module.def("tan", [](const librapid::ndarray &arr) { return librapid::tan(arr); }, py::arg("arr"));
+	module.def("sin", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::sin(arr); }, py::arg("arr"));
+	module.def("cos", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::cos(arr); }, py::arg("arr"));
+	module.def("tan", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::tan(arr); }, py::arg("arr"));
 
-	module.def("asin", [](const librapid::ndarray &arr) { return librapid::asin(arr); }, py::arg("arr"));
-	module.def("acos", [](const librapid::ndarray &arr) { return librapid::acos(arr); }, py::arg("arr"));
-	module.def("atan", [](const librapid::ndarray &arr) { return librapid::atan(arr); }, py::arg("arr"));
+	module.def("asin", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::asin(arr); }, py::arg("arr"));
+	module.def("acos", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::acos(arr); }, py::arg("arr"));
+	module.def("atan", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::atan(arr); }, py::arg("arr"));
 
-	module.def("sinh", [](const librapid::ndarray &arr) { return librapid::sinh(arr); }, py::arg("arr"));
-	module.def("cosh", [](const librapid::ndarray &arr) { return librapid::cosh(arr); }, py::arg("arr"));
-	module.def("tanh", [](const librapid::ndarray &arr) { return librapid::tanh(arr); }, py::arg("arr"));
+	module.def("sinh", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::sinh(arr); }, py::arg("arr"));
+	module.def("cosh", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::cosh(arr); }, py::arg("arr"));
+	module.def("tanh", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::tanh(arr); }, py::arg("arr"));
 
-	module.def("reshape", [](const librapid::ndarray &arr, const librapid::extent &shape) { return librapid::reshape(arr, shape); }, py::arg("arr"), py::arg("shape"));
-	module.def("reshape", [](const librapid::ndarray &arr, const std::vector<lr_int> &shape) { return librapid::reshape(arr, librapid::extent(shape)); }, py::arg("arr"), py::arg("shape"));
+	module.def("reshape", [](const librapid::basic_ndarray<python_dtype> &arr, const librapid::extent &shape) { return librapid::reshape(arr, shape); }, py::arg("arr"), py::arg("shape"));
+	module.def("reshape", [](const librapid::basic_ndarray<python_dtype> &arr, const std::vector<lr_int> &shape) { return librapid::reshape(arr, librapid::extent(shape)); }, py::arg("arr"), py::arg("shape"));
 
-	module.def("linear", [](double start, double end, lr_int len) { return librapid::linear(start, end, len); }, py::arg("start") = double(0), py::arg("end"), py::arg("len"));
-	module.def("range", [](double start, double end, double inc) { return librapid::range(start, end, inc); }, py::arg("start") = double(0), py::arg("end"), py::arg("inc") = double(1));
+	module.def("linear", [](python_dtype start, python_dtype end, lr_int len) { return librapid::linear(start, end, len); }, py::arg("start") = python_dtype(0), py::arg("end"), py::arg("len"));
+	module.def("range", [](python_dtype start, python_dtype end, python_dtype inc) { return librapid::range(start, end, inc); }, py::arg("start") = python_dtype(0), py::arg("end"), py::arg("inc") = python_dtype(1));
 
-	module.def("minimum", [](const librapid::ndarray &x1, const librapid::ndarray &x2) { return librapid::minimum(x1, x2); }, py::arg("x1"), py::arg("x2"));
-	module.def("minimum", [](const librapid::ndarray &x1, double x2) { return librapid::minimum(x1, x2); }, py::arg("x1"), py::arg("x2"));
-	module.def("minimum", [](double x1, const librapid::ndarray &x2) { return librapid::minimum(x1, x2); }, py::arg("x1"), py::arg("x2"));
-	module.def("minimum", [](double x1, double x2) { return librapid::minimum(x1, x2); }, py::arg("x1"), py::arg("x2"));
+	module.def("minimum", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::minimum(x1, x2); }, py::arg("x1"), py::arg("x2"));
+	module.def("minimum", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::minimum(x1, x2); }, py::arg("x1"), py::arg("x2"));
+	module.def("minimum", [](python_dtype x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::minimum(x1, x2); }, py::arg("x1"), py::arg("x2"));
+	module.def("minimum", [](python_dtype x1, python_dtype x2) { return librapid::minimum(x1, x2); }, py::arg("x1"), py::arg("x2"));
 	
-	module.def("maximum", [](const librapid::ndarray &x1, const librapid::ndarray &x2) { return librapid::maximum(x1, x2); }, py::arg("x1"), py::arg("x2"));
-	module.def("maximum", [](const librapid::ndarray &x1, double x2) { return librapid::maximum(x1, x2); }, py::arg("x1"), py::arg("x2"));
-	module.def("maximum", [](double x1, const librapid::ndarray &x2) { return librapid::maximum(x1, x2); }, py::arg("x1"), py::arg("x2"));
-	module.def("maximum", [](double x1, double x2) { return librapid::maximum(x1, x2); }, py::arg("x1"), py::arg("x2"));
+	module.def("maximum", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::maximum(x1, x2); }, py::arg("x1"), py::arg("x2"));
+	module.def("maximum", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::maximum(x1, x2); }, py::arg("x1"), py::arg("x2"));
+	module.def("maximum", [](python_dtype x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::maximum(x1, x2); }, py::arg("x1"), py::arg("x2"));
+	module.def("maximum", [](python_dtype x1, python_dtype x2) { return librapid::maximum(x1, x2); }, py::arg("x1"), py::arg("x2"));
 
-	module.def("less_than", [](const librapid::ndarray &x1, const librapid::ndarray &x2) { return librapid::less_than(x1, x2); });
-	module.def("less_than", [](const librapid::ndarray &x1, double x2) { return librapid::less_than(x1, x2); });
-	module.def("less_than", [](double x1, const librapid::ndarray &x2) { return librapid::greater_than(x2, x1); });
-	module.def("less_than", [](double x1, double x2) { return librapid::less_than(x1, x2); });
+	module.def("less_than", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::less_than(x1, x2); });
+	module.def("less_than", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::less_than(x1, x2); });
+	module.def("less_than", [](python_dtype x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::greater_than(x2, x1); });
+	module.def("less_than", [](python_dtype x1, python_dtype x2) { return librapid::less_than(x1, x2); });
 
-	module.def("greater_than", [](const librapid::ndarray &x1, const librapid::ndarray &x2) { return librapid::greater_than(x1, x2); });
-	module.def("greater_than", [](const librapid::ndarray &x1, double x2) { return librapid::greater_than(x1, x2); });
-	module.def("greater_than", [](double x1, const librapid::ndarray &x2) { return librapid::less_than(x2, x1); });
-	module.def("greater_than", [](double x1, double x2) { return librapid::greater_than(x1, x2); });
+	module.def("greater_than", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::greater_than(x1, x2); });
+	module.def("greater_than", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::greater_than(x1, x2); });
+	module.def("greater_than", [](python_dtype x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::less_than(x2, x1); });
+	module.def("greater_than", [](python_dtype x1, python_dtype x2) { return librapid::greater_than(x1, x2); });
 
-	module.def("less_than_or_equal", [](const librapid::ndarray &x1, const librapid::ndarray &x2) { return librapid::less_than_or_equal(x1, x2); });
-	module.def("less_than_or_equal", [](const librapid::ndarray &x1, double x2) { return librapid::less_than_or_equal(x1, x2); });
-	module.def("less_than_or_equal", [](double x1, const librapid::ndarray &x2) { return librapid::greater_than_or_equal(x2, x1); });
-	module.def("less_than_or_equal", [](double x1, double x2) { return librapid::less_than_or_equal(x1, x2); });
+	module.def("less_than_or_equal", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::less_than_or_equal(x1, x2); });
+	module.def("less_than_or_equal", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::less_than_or_equal(x1, x2); });
+	module.def("less_than_or_equal", [](python_dtype x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::greater_than_or_equal(x2, x1); });
+	module.def("less_than_or_equal", [](python_dtype x1, python_dtype x2) { return librapid::less_than_or_equal(x1, x2); });
 
-	module.def("greater_than_or_equal", [](const librapid::ndarray &x1, const librapid::ndarray &x2) { return librapid::greater_than_or_equal(x1, x2); });
-	module.def("greater_than_or_equal", [](const librapid::ndarray &x1, double x2) { return librapid::greater_than_or_equal(x1, x2); });
-	module.def("greater_than_or_equal", [](double x1, const librapid::ndarray &x2) { return librapid::less_than_or_equal(x2, x1); });
-	module.def("greater_than_or_equal", [](double x1, double x2) { return librapid::greater_than_or_equal(x1, x2); });
+	module.def("greater_than_or_equal", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::greater_than_or_equal(x1, x2); });
+	module.def("greater_than_or_equal", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::greater_than_or_equal(x1, x2); });
+	module.def("greater_than_or_equal", [](python_dtype x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::less_than_or_equal(x2, x1); });
+	module.def("greater_than_or_equal", [](python_dtype x1, python_dtype x2) { return librapid::greater_than_or_equal(x1, x2); });
 
-	module.def("sum", [](const librapid::ndarray &arr, lr_int axis) { return librapid::sum(arr, axis); }, py::arg("arr"), py::arg("axis") = librapid::AUTO);
-	module.def("product", [](const librapid::ndarray &arr, lr_int axis) { return librapid::product(arr, axis); }, py::arg("arr"), py::arg("axis") = librapid::AUTO);
-	module.def("mean", [](const librapid::ndarray &arr, lr_int axis) { return librapid::mean(arr, axis); }, py::arg("arr"), py::arg("axis") = librapid::AUTO);
-	module.def("abs", [](const librapid::ndarray &arr) { return librapid::abs(arr); }, py::arg("arr"));
-	module.def("square", [](const librapid::ndarray &arr) { return librapid::square(arr); }, py::arg("arr"));
-	module.def("variance", [](const librapid::ndarray &arr, lr_int axis) { return librapid::sum(arr, axis); }, py::arg("arr"), py::arg("axis") = librapid::AUTO);
+	module.def("sum", [](const librapid::basic_ndarray<python_dtype> &arr, lr_int axis) { return librapid::sum(arr, axis); }, py::arg("arr"), py::arg("axis") = librapid::AUTO);
+	module.def("product", [](const librapid::basic_ndarray<python_dtype> &arr, lr_int axis) { return librapid::product(arr, axis); }, py::arg("arr"), py::arg("axis") = librapid::AUTO);
+	module.def("mean", [](const librapid::basic_ndarray<python_dtype> &arr, lr_int axis) { return librapid::mean(arr, axis); }, py::arg("arr"), py::arg("axis") = librapid::AUTO);
+	module.def("abs", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::abs(arr); }, py::arg("arr"));
+	module.def("square", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::square(arr); }, py::arg("arr"));
+	module.def("variance", [](const librapid::basic_ndarray<python_dtype> &arr, lr_int axis) { return librapid::sum(arr, axis); }, py::arg("arr"), py::arg("axis") = librapid::AUTO);
+
+	module.def("from_data", [](python_dtype val) { return librapid::basic_ndarray<python_dtype>::from_data(val); }, py::arg("val") = python_dtype(0));
+	module.def("from_data", [](const V<python_dtype> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<python_dtype>());
+	module.def("from_data", [](const V<V<python_dtype>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<python_dtype>>());
+	module.def("from_data", [](const V<V<V<python_dtype>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<python_dtype>>>());
+	module.def("from_data", [](const V<V<V<V<python_dtype>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<python_dtype>>>>());
+	module.def("from_data", [](const V<V<V<V<V<python_dtype>>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<V<python_dtype>>>>>());
+	module.def("from_data", [](const V<V<V<V<V<V<python_dtype>>>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<python_dtype>>>>>>());
+	module.def("from_data", [](const V<V<V<V<V<V<V<python_dtype>>>>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<V<python_dtype>>>>>>>());
+	module.def("from_data", [](const V<V<V<V<V<V<V<V<python_dtype>>>>>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<V<V<python_dtype>>>>>>>>());
+	module.def("from_data", [](const V<V<V<V<V<V<V<V<V<python_dtype>>>>>>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<V<V<V<python_dtype>>>>>>>>>());
+	module.def("from_data", [](const V<V<V<V<V<V<V<V<V<V<python_dtype>>>>>>>>>> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<V<V<V<V<V<V<V<V<V<python_dtype>>>>>>>>>>());
 
 	py::module_ activations = module.def_submodule("activations", "LibRapid neural network activations");
 
-	py::class_<python_activation<librapid::activations::sigmoid<double>>>(activations, "sigmoid")
+	py::class_<python_activation<librapid::activations::sigmoid<python_dtype>>>(activations, "sigmoid")
 		.def(py::init<>())
-		.def("construct", [](python_activation<librapid::activations::sigmoid<double>> &activation, lr_int prev_nodes) { activation.activation->construct(prev_nodes); }, py::arg("prev_nodes"))
-		.def("f", [](const python_activation<librapid::activations::sigmoid<double>> &activation, const librapid::ndarray &arr) { return activation.activation->f(arr); }, py::arg("arr"))
-		.def("df", [](const python_activation<librapid::activations::sigmoid<double>> &activation, const librapid::ndarray &arr) { return activation.activation->df(arr); }, py::arg("arr"))
-		.def("weight", [](const python_activation<librapid::activations::sigmoid<double>> &activation, const librapid::extent &shape) { return activation.activation->weight(shape); }, py::arg("shape"));
+		.def("construct", [](python_activation<librapid::activations::sigmoid<python_dtype>> &activation, lr_int prev_nodes) { activation.activation->construct(prev_nodes); }, py::arg("prev_nodes"))
+		.def("f", [](const python_activation<librapid::activations::sigmoid<python_dtype>> &activation, const librapid::basic_ndarray<python_dtype> &arr) { return activation.activation->f(arr); }, py::arg("arr"))
+		.def("df", [](const python_activation<librapid::activations::sigmoid<python_dtype>> &activation, const librapid::basic_ndarray<python_dtype> &arr) { return activation.activation->df(arr); }, py::arg("arr"))
+		.def("weight", [](const python_activation<librapid::activations::sigmoid<python_dtype>> &activation, const librapid::extent &shape) { return activation.activation->weight(shape); }, py::arg("shape"));
 
-	py::class_<python_activation<librapid::activations::tanh<double>>>(activations, "tanh")
+	py::class_<python_activation<librapid::activations::tanh<python_dtype>>>(activations, "tanh")
 		.def(py::init<>())
-		.def("construct", [](python_activation<librapid::activations::tanh<double>> &activation, lr_int prev_nodes) { activation.activation->construct(prev_nodes); }, py::arg("prev_nodes"))
-		.def("f", [](const python_activation<librapid::activations::tanh<double>> &activation, const librapid::ndarray &arr) { return activation.activation->f(arr); }, py::arg("arr"))
-		.def("df", [](const python_activation<librapid::activations::tanh<double>> &activation, const librapid::ndarray &arr) { return activation.activation->df(arr); }, py::arg("arr"))
-		.def("weight", [](const python_activation<librapid::activations::tanh<double>> &activation, const librapid::extent &shape) { return activation.activation->weight(shape); }, py::arg("shape"));
+		.def("construct", [](python_activation<librapid::activations::tanh<python_dtype>> &activation, lr_int prev_nodes) { activation.activation->construct(prev_nodes); }, py::arg("prev_nodes"))
+		.def("f", [](const python_activation<librapid::activations::tanh<python_dtype>> &activation, const librapid::basic_ndarray<python_dtype> &arr) { return activation.activation->f(arr); }, py::arg("arr"))
+		.def("df", [](const python_activation<librapid::activations::tanh<python_dtype>> &activation, const librapid::basic_ndarray<python_dtype> &arr) { return activation.activation->df(arr); }, py::arg("arr"))
+		.def("weight", [](const python_activation<librapid::activations::tanh<python_dtype>> &activation, const librapid::extent &shape) { return activation.activation->weight(shape); }, py::arg("shape"));
 
-	py::class_<python_activation<librapid::activations::relu<double>>>(activations, "relu")
+	py::class_<python_activation<librapid::activations::relu<python_dtype>>>(activations, "relu")
 		.def(py::init<>())
-		.def("construct", [](python_activation<librapid::activations::relu<double>> &activation, lr_int prev_nodes) { activation.activation->construct(prev_nodes); }, py::arg("prev_nodes"))
-		.def("f", [](const python_activation<librapid::activations::relu<double>> &activation, const librapid::ndarray &arr) { return activation.activation->f(arr); }, py::arg("arr"))
-		.def("df", [](const python_activation<librapid::activations::relu<double>> &activation, const librapid::ndarray &arr) { return activation.activation->df(arr); }, py::arg("arr"))
-		.def("weight", [](const python_activation<librapid::activations::relu<double>> &activation, const librapid::extent &shape) { return activation.activation->weight(shape); }, py::arg("shape"));
+		.def("construct", [](python_activation<librapid::activations::relu<python_dtype>> &activation, lr_int prev_nodes) { activation.activation->construct(prev_nodes); }, py::arg("prev_nodes"))
+		.def("f", [](const python_activation<librapid::activations::relu<python_dtype>> &activation, const librapid::basic_ndarray<python_dtype> &arr) { return activation.activation->f(arr); }, py::arg("arr"))
+		.def("df", [](const python_activation<librapid::activations::relu<python_dtype>> &activation, const librapid::basic_ndarray<python_dtype> &arr) { return activation.activation->df(arr); }, py::arg("arr"))
+		.def("weight", [](const python_activation<librapid::activations::relu<python_dtype>> &activation, const librapid::extent &shape) { return activation.activation->weight(shape); }, py::arg("shape"));
 
-	py::class_<python_activation<librapid::activations::leaky_relu<double>>>(activations, "leaky_relu")
+	py::class_<python_activation<librapid::activations::leaky_relu<python_dtype>>>(activations, "leaky_relu")
 		.def(py::init<>())
-		.def("construct", [](python_activation<librapid::activations::leaky_relu<double>> &activation, lr_int prev_nodes) { activation.activation->construct(prev_nodes); }, py::arg("prev_nodes"))
-		.def("f", [](const python_activation<librapid::activations::leaky_relu<double>> &activation, const librapid::ndarray &arr) { return activation.activation->f(arr); }, py::arg("arr"))
-		.def("df", [](const python_activation<librapid::activations::leaky_relu<double>> &activation, const librapid::ndarray &arr) { return activation.activation->df(arr); }, py::arg("arr"))
-		.def("weight", [](const python_activation<librapid::activations::leaky_relu<double>> &activation, const librapid::extent &shape) { return activation.activation->weight(shape); }, py::arg("shape"));
+		.def("construct", [](python_activation<librapid::activations::leaky_relu<python_dtype>> &activation, lr_int prev_nodes) { activation.activation->construct(prev_nodes); }, py::arg("prev_nodes"))
+		.def("f", [](const python_activation<librapid::activations::leaky_relu<python_dtype>> &activation, const librapid::basic_ndarray<python_dtype> &arr) { return activation.activation->f(arr); }, py::arg("arr"))
+		.def("df", [](const python_activation<librapid::activations::leaky_relu<python_dtype>> &activation, const librapid::basic_ndarray<python_dtype> &arr) { return activation.activation->df(arr); }, py::arg("arr"))
+		.def("weight", [](const python_activation<librapid::activations::leaky_relu<python_dtype>> &activation, const librapid::extent &shape) { return activation.activation->weight(shape); }, py::arg("shape"));
+
+	py::module_ optimizers = module.def_submodule("optimizers", "LibRapid neural network optimizers");
+
+	py::class_<python_sgd>(optimizers, "sgd")
+		.def(py::init<python_dtype>(), py::arg("learning_rate") = 1e-2)
+		.def("apply", [](python_sgd &optim, const librapid::basic_ndarray<python_dtype> &w, const librapid::basic_ndarray<python_dtype> &dw) { return optim.apply(w, dw); }, py::arg("w"), py::arg("dw"))
+		.def_property("learning_rate", [](python_sgd &optim) { optim.get_param("learning rate").to_scalar(); }, [](python_sgd &optim, const python_dtype val) { optim.set_param("learning rate", val); });
+
+	py::class_<python_sgd_momentum>(optimizers, "sgd_momentum")
+		.def(py::init<python_dtype, python_dtype, const librapid::basic_ndarray<python_dtype> &>(), py::arg("learning_rate") = 1e-2, py::arg("momentum") = 0.9, py::arg("velocity") = librapid::basic_ndarray<python_dtype>())
+		.def("apply", [](python_sgd_momentum &optim, const librapid::basic_ndarray<python_dtype> &w, const librapid::basic_ndarray<python_dtype> &dw) { return optim.apply(w, dw); }, py::arg("w"), py::arg("dw"))
+		.def_property("learning_rate", [](python_sgd_momentum &optim) { return optim.get_param("learning rate").to_scalar(); }, [](python_sgd_momentum &optim, const python_dtype val) { optim.set_param("learning rate", val); })
+		.def_property("momentum", [](python_sgd_momentum &optim) { return optim.get_param("momentum").to_scalar(); }, [](python_sgd_momentum &optim, const python_dtype val) { optim.set_param("momentum", val); })
+		.def_property("velocity", [](python_sgd_momentum &optim) { return optim.get_param("velocity"); }, [](python_sgd_momentum &optim, const librapid::basic_ndarray<python_dtype> &val) { optim.set_param("velocity", val); });
+
+	py::class_<python_rmsprop>(optimizers, "rmsprop")
+		.def(py::init<python_dtype, python_dtype, python_dtype, const librapid::basic_ndarray<python_dtype> &>(), py::arg("learning_rate") = 1e-2, py::arg("decay_rate") = 0.99, py::arg("epsilon") = 1e-8, py::arg("cache") = librapid::basic_ndarray<python_dtype>())
+		.def("apply", [](python_rmsprop &optim, const librapid::basic_ndarray<python_dtype> &w, const librapid::basic_ndarray<python_dtype> &dw) { return optim.apply(w, dw); }, py::arg("w"), py::arg("dw"))
+		.def_property("learning_rate", [](python_rmsprop &optim) { return optim.get_param("learning rate").to_scalar(); }, [](python_rmsprop &optim, const python_dtype val) { optim.set_param("learning rate", val); })
+		.def_property("decay_rate", [](python_rmsprop &optim) { return optim.get_param("decay rate").to_scalar(); }, [](python_rmsprop &optim, const python_dtype val) { optim.set_param("decay rate", val); })
+		.def_property("epsilon", [](python_rmsprop &optim) { return optim.get_param("epsilon").to_scalar(); }, [](python_rmsprop &optim, const python_dtype val) { optim.set_param("epsilon", val); })
+		.def_property("cache", [](python_rmsprop &optim) { return optim.get_param("cache"); }, [](python_rmsprop &optim, const librapid::basic_ndarray<python_dtype> &val) { optim.set_param("cache", val); });
+
+	py::class_<python_adam>(optimizers, "adam")
+		.def(py::init<python_dtype, python_dtype, python_dtype, python_dtype, const librapid::basic_ndarray<python_dtype> &, const librapid::basic_ndarray<python_dtype> &, lr_int>(), py::arg("learning_rate") = 1e-3, py::arg("beta1") = 0.9, py::arg("beta2") = 0.999, py::arg("epsilon") = 1e-8, py::arg("m") = librapid::basic_ndarray<python_dtype>(), py::arg("v") = librapid::basic_ndarray<python_dtype>(), py::arg("time") = 0)
+		.def("apply", [](python_adam &optim, const librapid::basic_ndarray<python_dtype> &w, const librapid::basic_ndarray<python_dtype> &dw) { return optim.apply(w, dw); }, py::arg("w"), py::arg("dw"))
+		.def_property("learning_rate", [](python_adam &optim) { return optim.get_param("learning rate").to_scalar(); }, [](python_adam &optim, const python_dtype val) { optim.set_param("learning rate", val); })
+		.def_property("beta1", [](python_adam &optim) { return optim.get_param("beta1").to_scalar(); }, [](python_adam &optim, const python_dtype val) { optim.set_param("beta1", val); })
+		.def_property("beta2", [](python_adam &optim) { return optim.get_param("beta2").to_scalar(); }, [](python_adam &optim, const python_dtype val) { optim.set_param("beta1", val); })
+		.def_property("epsilon", [](python_adam &optim) { return optim.get_param("epsilon").to_scalar(); }, [](python_adam &optim, const python_dtype val) { optim.set_param("epsilon", val); })
+		.def_property("m", [](python_adam &optim) { return optim.get_param("m"); }, [](python_adam &optim, const librapid::basic_ndarray<python_dtype> &val) { optim.set_param("m", val); })
+		.def_property("v", [](python_adam &optim) { return optim.get_param("v"); }, [](python_adam &optim, const librapid::basic_ndarray<python_dtype> &val) { optim.set_param("v", val); })
+		.def_property("time", [](python_adam &optim) { return optim.get_param("time").to_scalar(); }, [](python_adam &optim, const python_dtype val) { optim.set_param("time", val); });
 }

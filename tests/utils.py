@@ -1,6 +1,6 @@
 import librapid
 
-EPSILON = 1e-10
+EPSILON = 1e-10 if librapid.bitness() == 64 else 1e-5
 
 def is_close_numb(a, b):
 	return abs(a - b) < EPSILON

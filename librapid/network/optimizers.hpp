@@ -12,6 +12,9 @@ namespace librapid
 		class basic_optimizer
 		{
 		public:
+			virtual ~basic_optimizer()
+			{}
+
 			LR_INLINE virtual basic_ndarray<T> apply(const basic_ndarray<T> &w,
 													 const basic_ndarray<T> &dx) = 0;
 
@@ -41,7 +44,6 @@ namespace librapid
 				return w + m_learning_rate * dw;
 			}
 
-
 			LR_INLINE void set_param(const std::string &name, const T val) override
 			{
 				if (name == "learning rate")
@@ -70,7 +72,7 @@ namespace librapid
 			LR_INLINE const basic_ndarray<T> get_param(const std::string &name) const override
 			{
 				if (name == "learning rate")
-					return basic_ndarray<T>::from_scalar(m_learning_rate);
+					return from_data(m_learning_rate);
 
 				throw std::invalid_argument("'Stochastic Gradient Descent' optimizer has no "
 											"parameter named '" + name + "'");
@@ -84,8 +86,10 @@ namespace librapid
 		class sgd_momentum : public basic_optimizer<T>
 		{
 		public:
-			sgd_momentum(T learning_rate = 1e-2, T momentum = 0.9, const basic_ndarray<T> &velocity = basic_ndarray<T>())
-				: m_learning_rate(learning_rate == -1 ? 1e-2 : learning_rate), m_momentum(momentum), m_velocity(velocity)
+			sgd_momentum(T learning_rate = 1e-2, T momentum = 0.9,
+						 const basic_ndarray<T> &velocity = basic_ndarray<T>())
+				: m_learning_rate(learning_rate == -1 ? 1e-2 : learning_rate),
+				m_momentum(momentum), m_velocity(velocity)
 			{
 				if (learning_rate <= 0)
 					throw std::logic_error("Learning rate of " + std::to_string(learning_rate) +
@@ -93,7 +97,8 @@ namespace librapid
 										   "ensure it is a positive value");
 			}
 
-			LR_INLINE basic_ndarray<T> apply(const basic_ndarray<T> &w, const basic_ndarray<T> &dw) override
+			LR_INLINE basic_ndarray<T> apply(const basic_ndarray<T> &w,
+											 const basic_ndarray<T> &dw) override
 			{
 				if (!m_velocity.is_initialized())
 					m_velocity = zeros_like(w);
@@ -123,7 +128,8 @@ namespace librapid
 					return;
 				}
 
-				throw std::invalid_argument("'Stochastic Gradient Descent With Momentum' optimizer has no "
+				throw std::invalid_argument("'Stochastic Gradient Descent With Momentum' "
+											"optimizer has no "
 											"parameter named '" + name + "'");
 			}
 
@@ -131,36 +137,38 @@ namespace librapid
 			{
 				if (name == "learning rate")
 				{
-					m_learning_rate = (T) val;
+					m_learning_rate = val.to_scalar();
 					return;
 				}
 
 				if (name == "momentum")
 				{
-					m_momentum = (T) val;
+					m_momentum = val.to_scalar();
 					return;
 				}
 
 				if (name == "velocity")
 				{
-					m_velocity = val;
+					m_velocity = val.to_scalar();
 					return;
 				}
 
-				throw std::invalid_argument("'Stochastic Gradient Descent With Momentum' optimizer has no "
+				throw std::invalid_argument("'Stochastic Gradient Descent With Momentum' "
+											"optimizer has no "
 											"parameter named '" + name + "'");
 			}
 
 			LR_INLINE const basic_ndarray<T> get_param(const std::string &name) const override
 			{
 				if (name == "learning rate")
-					return basic_ndarray<T>::from_scalar(m_learning_rate);
+					return from_data(m_learning_rate);
 				if (name == "momentum")
-					return basic_ndarray<T>::from_scalar(m_momentum);
+					return from_data(m_momentum);
 				if (name == "velocity")
 					return m_velocity;
 
-				throw std::invalid_argument("'Stochastic Gradient Descent With Momentum' optimizer has no "
+				throw std::invalid_argument("'Stochastic Gradient Descent With Momentum' "
+											"optimizer has no "
 											"parameter named '" + name + "'");
 			}
 
@@ -186,12 +194,12 @@ namespace librapid
 			}
 
 			LR_INLINE basic_ndarray<T> apply(const basic_ndarray<T> &x,
-											  const basic_ndarray<T> &dx) override
+											 const basic_ndarray<T> &dx) override
 			{
 				if (!m_cache.is_initialized())
-					m_cache.set(zeros_like(x));
+					m_cache.set_to(zeros_like(x));
 
-				m_cache.set(m_decay_rate * m_cache + (1 - m_decay_rate) * (dx * dx));
+				m_cache.set_to(m_decay_rate * m_cache + ((T) 1 - m_decay_rate) * (dx * dx));
 				auto next_x = x + (m_learning_rate * dx) / (sqrt(m_cache) + m_epsilon);
 
 				return next_x;
@@ -205,7 +213,7 @@ namespace librapid
 					return;
 				}
 
-				if (name == "decayRate")
+				if (name == "decay rate")
 				{
 					m_decay_rate = val;
 					return;
@@ -231,19 +239,19 @@ namespace librapid
 			{
 				if (name == "learning rate")
 				{
-					m_learning_rate = val[0];
+					m_learning_rate = val.to_scalar();
 					return;
 				}
 
-				if (name == "decayRate")
+				if (name == "decay rate")
 				{
-					m_decay_rate = val[0];
+					m_decay_rate = val.to_scalar();
 					return;
 				}
 
 				if (name == "epsilon")
 				{
-					m_epsilon = val[0];
+					m_epsilon = val.to_scalar();
 					return;
 				}
 
@@ -260,11 +268,11 @@ namespace librapid
 			LR_INLINE const basic_ndarray<T> get_param(const std::string &name) const override
 			{
 				if (name == "learning rate")
-					return basic_ndarray<T>::from_scalar(m_learning_rate);
-				if (name == "decayRate")
-					return basic_ndarray<T>::from_scalar(m_decay_rate);
+					return from_data(m_learning_rate);
+				if (name == "decay rate")
+					return from_data(m_decay_rate);
 				if (name == "m_Epsilon")
-					return basic_ndarray<T>::from_scalar(m_epsilon);
+					return from_data(m_epsilon);
 				if (name == "cache")
 					return m_cache;
 
@@ -296,7 +304,7 @@ namespace librapid
 			}
 
 			LR_INLINE basic_ndarray<T> apply(const basic_ndarray<T> &x,
-											  const basic_ndarray<T> &dx) override
+											 const basic_ndarray<T> &dx) override
 			{
 				if (!m_m.is_initialized())
 					m_m = zeros_like(x);
@@ -305,10 +313,10 @@ namespace librapid
 					m_v = zeros_like(x);
 
 				m_time++;
-				m_m = m_beta1 * m_m + (1 - m_beta1) * dx;
-				auto corr_m = m_m / (1. - std::pow(m_beta1, (T) m_time));
-				m_v = m_beta2 * m_v + (1 - m_beta2) * (dx * dx);
-				auto corr_v = m_v / (1 - std::pow(m_beta2, (T) m_time));
+				m_m = m_beta1 * m_m + ((T) 1 - m_beta1) * dx;
+				auto corr_m = m_m / ((T) 1 - std::pow(m_beta1, (T) m_time));
+				m_v = m_beta2 * m_v + ((T) 1 - m_beta2) * (dx * dx);
+				auto corr_v = m_v / ((T) 1 - std::pow(m_beta2, (T) m_time));
 				auto next_x = x + m_learning_rate * corr_m / (sqrt(corr_v) + m_epsilon);
 
 				return next_x;
@@ -413,19 +421,19 @@ namespace librapid
 			LR_INLINE const basic_ndarray<T> get_param(const std::string &name) const override
 			{
 				if (name == "learning rate")
-					return basic_ndarray<T>::from_scalar(m_learning_rate);
+					return from_data(m_learning_rate);
 				if (name == "beta1")
-					return basic_ndarray<T>::from_scalar(m_beta1);
+					return from_data(m_beta1);
 				if (name == "beta2")
-					return basic_ndarray<T>::from_scalar(m_beta2);
+					return from_data(m_beta2);
 				if (name == "epsilon")
-					return basic_ndarray<T>::from_scalar(m_epsilon);
+					return from_data(m_epsilon);
 				if (name == "m")
 					return m_m;
 				if (name == "v")
 					return m_v;
 				if (name == "time")
-					return basic_ndarray<T>::from_scalar((T) m_time);
+					return from_data((T) m_time);
 
 				throw std::invalid_argument("'ADAM' optimizer has no "
 											"parameter named '" + name + "'");

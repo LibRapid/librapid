@@ -52,7 +52,6 @@ namespace librapid
 			}
 
 			str = stream.str();
-			auto lastZero = str.find_last_of('0');
 
 			// Value is integral
 			if (last_decimal == std::string::npos)
@@ -94,7 +93,7 @@ namespace librapid
 				T count = 0;
 				for (size_t i = 0; i < adjusted.size(); i += shape[1])
 				{
-					if (strip_middle && shape[0] > 6 && i == shape[1] * 3)
+					if (strip_middle && shape[0] > 6 && i == (size_t) shape[1] * 3)
 					{
 						i = (size_t) adjusted.size() - shape[1] * 3;
 						res += std::string(depth, ' ') + "...\n";
@@ -125,7 +124,7 @@ namespace librapid
 
 				for (size_t i = 0; i < adjusted.size(); i += inc)
 				{
-					if (strip_middle && shape[0] > 6 && i == inc * 3)
+					if (strip_middle && shape[0] > 6 && i == (size_t) inc * 3)
 					{
 						i = adjusted.size() - inc * 3;
 						res += std::string(depth, ' ') + "...\n\n";
