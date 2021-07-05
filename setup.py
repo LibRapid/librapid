@@ -482,12 +482,15 @@ else:
 	print("Using default C++ FLOAT for python datatype")
 	define_macros.append(("LIBRAPID_PYTHON_FLOAT", None))
 
-if was_set:
-	with open("./build_config.lrc", "wb") as file:
-		pickle.dump(define_macros, file)
-else:
-	with open("./build_config.lrc", "rb") as file:
-		define_macros = pickle.load(file)
+try:
+	if was_set:
+		with open("./build_config.lrc", "wb") as file:
+			pickle.dump(define_macros, file)
+	else:
+		with open("./build_config.lrc", "rb") as file:
+			define_macros = pickle.load(file)
+except:
+	print("Couldn't save build config info. Results may be different from expected")
 
 # If the blas directory already exists, remove it to
 # reduce binary size
