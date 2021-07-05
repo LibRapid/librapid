@@ -12,6 +12,7 @@ import sys
 from setuptools import setup, Extension, find_packages
 import distutils.sysconfig
 import shutil
+import pickle
 
 """
 Find an OpenBLAS directory somewhere to link against for
@@ -363,35 +364,64 @@ def enable_optimizations():
 		return ["-O3", "-mavx"] + ["-m64"] if platform.architecture()[0] == "64bit" else []
 	return []
 
+def enable_warnings():
+	"""
+	Ensure that all potential warnings found by the
+	compiler are printed at compile time. This way
+	we can fix potential bugs and get a cleaner build.
+	"""
+
+	c = get_compiler_name()
+	if c == "msvc": return ["/Wall"]
+	elif c in ("gcc", "g++"): return ["-Wall"]
+	elif c == "clang": return ["-Wall"]
+	elif c == "unix": return ["-Wall"]
+	return []
+
+
 # The following command line options are available
 # They should be used as follows:
 # e.g. --blas-dir=c:/opt/openblas
 #
 # Options:
-# --no-blas			<<  Do not attempt to link against any BLAS library
-#						Use only the pre-installed routines (which are slower)
-# --blas-dir		<<  Set the directory where LibRapid can find a CBlas
-#						compatible library. LibRapid will expect the directory
-#						to contain a file structure like this (Windows example):
+# --use-float       <<  The datatype used within the python library will be
+#                       32 bit floating point values. They are often slightly
+#                       faster than the 64 bit type, though can only accurately
+#                       store 7 decimal places
 #
-#						blas-dir
+# --use-double      <<  The datatype used within the python library will be
+#                       64 bit floating point values. They are marginally slower
+#                       than 32 bit values but can accurately store 15 decimal places
+#
+# --no-blas         <<  Do not attempt to link against any BLAS library
+#                       Use only the pre-installed routines (which are slower)
+#
+# --blas-dir        <<  Set the directory where LibRapid can find a CBlas
+#                       compatible library. LibRapid will expect the directory
+#                       to contain a file structure like this (Windows example):
+#
+#                       blas-dir
 #                       ├── bin
 #                       |   └── libopenblas.dll
 #                       ├── include
 #                       |   └── cblas.h
 #                       └── lib
 #                           └── libopenblas.lib
-# --blas-include	<<  Set the BLAS include directory. LibRapid will expect
-#						cblas.h to be in this directory
-# --blas-lib		<<  Set the BLAS library directory. LibRapid will expect
-#						a library file to be here, such as libopenblas.lib
-#						or openblas.a
-# --blas-bin		<<	 Set the directory of the BLAS binaries on Windows.
-#						 LibRapid will search for a DLL file
+#
+# --blas-include    <<  Set the BLAS include directory. LibRapid will expect
+#                       cblas.h to be in this directory
+#
+# --blas-lib        <<  Set the BLAS library directory. LibRapid will expect
+#                       a library file to be here, such as libopenblas.lib
+#                       or openblas.a
+#
+# --blas-bin        <<  Set the directory of the BLAS binaries on Windows.
+#                       LibRapid will search for a DLL file
 
 # Format the inputs
-valid = ["--no-blas", "--blas-dir", "--blas-include", "--blas-lib", "--blas-bin"]
+valid = ["--use-float", "--use-double", "--no-blas", "--blas-dir", "--blas-include", "--blas-lib", "--blas-bin"]
 args = {}
+blas_args = {}
 index = 0
 while index < len(sys.argv):
 	passed = sys.argv[index]
@@ -406,23 +436,58 @@ while index < len(sys.argv):
 		if "=" in passed:
 			# Add a dictionary containing the name and value
 			pos = passed.index("=")
-			args[passed[:pos]] = passed[pos + 1:]
+
+			key = passed[:pos]
+			value = passed[pos + 1:]
+			
+			# args[passed[:pos]] = passed[pos + 1:]
 		else:
-			args[passed] = None
+			key = passed
+			value = None
+			
+			# args[passed] = None
+		
+		if "blas" in key:
+			blas_args[key] = value
+		else:
+			args[key] = value
 		
 		sys.argv.pop(index)
 	else:
 		index += 1
 
-print("The current working directory is", os.getcwd())
-blas_dir = find_blas(args)
+print("Arguments passed:", args)
 
-compiler_flags = std_version() + compile_with_omp() + enable_optimizations()
+print("The current working directory is", os.getcwd())
+blas_dir = find_blas(blas_args)
+
+compiler_flags = std_version() + compile_with_omp() + enable_optimizations() + enable_warnings()
 linker_flags = link_omp()
 define_macros = [("LIBRAPID_BUILD", 1)]
 include_dirs = [os.getcwd()]
 library_dirs = []
 libraries = []
+
+# Add the float/double arguments
+was_set = False
+if "--use-double" in args:
+	print("Using C++ DOUBLE for python datatype")
+	define_macros.append(("LIBRAPID_PYTHON_DOUBLE", None))
+	was_set = True
+elif "--use-float" in args:
+	print("Using C++ FLOAT for python datatype")
+	define_macros.append(("LIBRAPID_PYTHON_FLOAT", None))
+	was_set = True
+else:
+	print("Using default C++ FLOAT for python datatype")
+	define_macros.append(("LIBRAPID_PYTHON_FLOAT", None))
+
+if was_set:
+	with open("./build_config.lrc", "wb") as file:
+		pickle.dump(define_macros, file)
+else:
+	with open("./build_config.lrc", "rb") as file:
+		define_macros = pickle.load(file)
 
 # If the blas directory already exists, remove it to
 # reduce binary size
@@ -430,6 +495,8 @@ try:
 	if os.path.exists("librapid/blas"):
 		print("Removing directory 'librapid/blas'")
 		shutil.rmtree("librapid/blas")
+	else:
+		print("Unable to remove BLAS directory because it does not exist")
 except OSError as error:
 	print("Not removing directory due to '%s'" %error)
 
@@ -477,6 +544,8 @@ if blas_dir is not None:
 else:
 	define_macros.append(("LIBRAPID_NO_CBLAS", 1))
 	print("A valid CBlas interface was not found")
+
+print("Defining macros:", define_macros)
 
 ext_modules = [
 	Pybind11Extension("librapid_",

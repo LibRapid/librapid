@@ -175,7 +175,7 @@ namespace librapid
 
 				if (vals[i] < 0)
 				{
-					if (vals[i] == -1)
+					if (vals[i] == (V) -1)
 						neg_1++;
 					else
 						throw std::domain_error("Extent cannot contain a negative number");
@@ -184,7 +184,7 @@ namespace librapid
 
 			if (neg_1 > 1)
 				throw std::domain_error("Extent cannot contain more than 1 automatic dimension");
-			
+
 			if (neg_1 == 1)
 				m_contains_automatic = true;
 		}
@@ -366,7 +366,7 @@ namespace librapid
 					res.m_extent_alt[i] = m_extent[m_dims - i - 1];
 				}
 			}
-		
+
 			if (auto_index == -1)
 				return *this;
 

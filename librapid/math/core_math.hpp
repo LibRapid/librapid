@@ -139,7 +139,7 @@ namespace librapid
 			// Random floating point value in range [min, max)
 
 			static std::uniform_real_distribution<type> distribution(0., 1.);
-			static std::mt19937 generator(TIME * 10);
+			static std::mt19937 generator((unsigned int) (TIME * 10));
 			return min + (max - min) * distribution(generator);
 		}
 
@@ -169,19 +169,47 @@ namespace librapid
 		}
 
 		template<typename T>
-		LR_INLINE T round(const T &num, lr_int dp = 0)
+		LR_INLINE T round(const T num, lr_int dp = 0)
 		{
+			static double alpha = std::numeric_limits<T>::digits10 > 10 ? 0.4999999999 : 0.49999;
+
 			double p10 = pow10(-dp);
 
-			T remainder = fmod(num, p10);
+			double remainder = fmod((double) num, p10);
 
 			if (remainder == 0)
 				return num;
 
-			if (remainder < 0.4999999999 * p10)
-				return num - remainder;
+			if (remainder < alpha * p10)
+				return (T) (num - remainder);
 
-			return num + p10 - remainder;
+			return (T) (num + p10 - remainder);
+		}
+
+		template<typename T>
+		LR_INLINE T round_sigfig(const T num, lr_int figs = 3)
+		{
+			if (figs <= 0)
+				throw std::invalid_argument("Cannot round to "
+											+ std::to_string(figs)
+											+ " significant figures. Must be greater than 0");
+
+			T tmp = num > 0 ? num : -num;
+			lr_int n = 0;
+
+			while (tmp > 10)
+			{
+				tmp /= 10;
+				++n;
+			}
+
+			while (tmp < 1)
+			{
+				tmp *= 10;
+				--n;
+			}
+
+			return (tmp > 0 ? 1 : -1) * (round(tmp, figs - 1) * pow10(n));
 		}
 	}
 }

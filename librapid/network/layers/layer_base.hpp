@@ -41,6 +41,8 @@ namespace librapid
 			input(lr_int nodes) : m_nodes(nodes), m_type("input")
 			{}
 
+			~input() = default;
+
 			inline void compile(basic_layer<T> *prev_layer) override
 			{
 				m_prev_output = basic_ndarray<T>(extent({m_nodes, 1ll}));

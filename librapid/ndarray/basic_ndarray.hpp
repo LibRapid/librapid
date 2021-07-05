@@ -25,6 +25,10 @@
 
 #include <librapid/ndarray/cblas_api.hpp>
 
+// For use in "basic_ndarray::from_data" and "librapid::array"
+template<typename T>
+using VEC = std::vector<T>;
+
 namespace librapid
 {
 	constexpr lr_int AUTO = -1;
@@ -131,7 +135,6 @@ namespace librapid
 			m_stride(stride::from_extent(size.get_extent(), size.ndim())),
 			m_extent_product(math::product(size.get_extent(), size.ndim()))
 		{
-
 			if (m_extent.is_automatic())
 				throw std::domain_error("Cannot create a new array with an automatic dimension");
 			if (m_extent_product < 1)
@@ -190,14 +193,6 @@ namespace librapid
 			: basic_ndarray(std::vector<L>(shape.begin(), shape.end()), (L) value)
 		{}
 
-		LR_INLINE static basic_ndarray<T> from_scalar(T scalar)
-		{
-			basic_ndarray<T> res({1});
-			res.m_data_start[0] = scalar;
-			res.m_is_scalar = true;
-			return res;
-		}
-
 		LR_INLINE void set_to(const basic_ndarray<T> &other)
 		{
 			decrement();
@@ -218,7 +213,16 @@ namespace librapid
 		}
 
 		template<typename V>
-		LR_INLINE static basic_ndarray<T> from_data(std::vector<V> values)
+		LR_INLINE static basic_ndarray<T> from_data(V scalar)
+		{
+			basic_ndarray<T> res({1});
+			res.m_data_start[0] = (T) scalar;
+			res.m_is_scalar = true;
+			return res;
+		}
+
+		template<typename V>
+		LR_INLINE static basic_ndarray<T> from_data(const std::vector<V> &values)
 		{
 			basic_ndarray<T> res(extent({values.size()}));
 			for (size_t i = 0; i < values.size(); i++)
@@ -227,7 +231,7 @@ namespace librapid
 		}
 
 		template<typename V>
-		LR_INLINE static basic_ndarray<T> from_data(std::vector<std::vector<V>> values)
+		LR_INLINE static basic_ndarray<T> from_data(const std::vector<std::vector<V>> &values)
 		{
 			std::vector<lr_int> size = utils::extract_size(values);
 			auto res = basic_ndarray<T>(extent(size));
@@ -356,7 +360,7 @@ namespace librapid
 		{
 			// Validate the index
 
-			if (index.size() != ndim())
+			if (index.size() != (size_t) ndim())
 				throw std::domain_error("Array with " + std::to_string(ndim()) +
 										" dimensions requires " + std::to_string(index.size()) +
 										" access elements");
@@ -945,7 +949,7 @@ namespace librapid
 		LR_INLINE void transpose(const std::vector<O> &order)
 		{
 			// Validate the ordering
-			if (order.size() != ndim())
+			if (order.size() != (size_t) ndim())
 			{
 				std::string msg = "To transpose an array with " + std::to_string(ndim()) + " dimensions, "
 					+ std::to_string(ndim()) + " indices are required, but only " +
@@ -1090,7 +1094,7 @@ namespace librapid
 
 				for (lr_int i = 0; i < arr.size(); i++)
 					res += fixed[i];
-				return basic_ndarray<V>::from_scalar(res);
+				return basic_ndarray<V>::from_data(res);
 			}, axis, 0);
 		}
 
@@ -1166,7 +1170,7 @@ namespace librapid
 
 				for (lr_int i = 0; i < arr.size(); i++)
 					res *= fixed[i];
-				return basic_ndarray<V>::from_scalar(res);
+				return basic_ndarray<V>::from_data(res);
 			}, axis, 0);
 		}
 
@@ -1243,7 +1247,7 @@ namespace librapid
 				for (lr_int i = 0; i < arr.size(); i++)
 					res += fixed[i];
 
-				return basic_ndarray<V>::from_scalar(res / (V) arr.size());
+				return basic_ndarray<V>::from_data(res / (V) arr.size());
 			}, axis, 0);
 		}
 
@@ -1465,7 +1469,7 @@ namespace librapid
 		{
 			using ct = typename std::common_type<T, M>::type;
 
-			return minimum(basic_ndarray<ct>::from_scalar((ct) other));
+			return minimum(basic_ndarray<ct>::from_data((ct) other));
 		}
 
 		/**
@@ -1525,7 +1529,7 @@ namespace librapid
 		{
 			using ct = typename std::common_type<T, M>::type;
 
-			return maximum(basic_ndarray<ct>::from_scalar((ct) other));
+			return maximum(basic_ndarray<ct>::from_data((ct) other));
 		}
 
 		/**
@@ -1583,7 +1587,7 @@ namespace librapid
 			less_than(M other) const
 		{
 			using ct = typename std::common_type<T, M>::type;
-			return less_than(basic_ndarray<ct>::from_scalar((ct) other));
+			return less_than(basic_ndarray<ct>::from_data((ct) other));
 		}
 
 		/**
@@ -1641,7 +1645,7 @@ namespace librapid
 			greater_than(M other) const
 		{
 			using ct = typename std::common_type<T, M>::type;
-			return greater_than(basic_ndarray<ct>::from_scalar((ct) other));
+			return greater_than(basic_ndarray<ct>::from_data((ct) other));
 		}
 
 		/**
@@ -1701,7 +1705,7 @@ namespace librapid
 			less_than_or_equal(M other) const
 		{
 			using ct = typename std::common_type<T, M>::type;
-			return less_than_or_equal(basic_ndarray<ct>::from_scalar((ct) other));
+			return less_than_or_equal(basic_ndarray<ct>::from_data((ct) other));
 		}
 
 		/**
@@ -1761,7 +1765,7 @@ namespace librapid
 			greater_than_or_equal(M other) const
 		{
 			using ct = typename std::common_type<T, M>::type;
-			return greater_than_or_equal(basic_ndarray<ct>::from_scalar((ct) other));
+			return greater_than_or_equal(basic_ndarray<ct>::from_data((ct) other));
 		}
 
 		template<typename B_T, typename B_A>
@@ -1803,7 +1807,6 @@ namespace librapid
 				// #ifdef LIBRAPID_CBLAS
 				const auto M = m_extent[0];
 				const auto N = m_extent[1];
-				const auto K = other.get_extent()[0];
 
 				if (!is_matrix_vector && is_matrix_vector_like)
 				{
@@ -1831,7 +1834,6 @@ namespace librapid
 
 				return res;
 			}
-
 
 			if (ndim() != other.ndim())
 				throw std::domain_error("Cannot compute dot product on arrays with " +
@@ -2419,9 +2421,6 @@ namespace librapid
 															 const basic_ndarray<B_T, B_A> &b,
 															 LAMBDA op)
 		{
-			using C = typename std::common_type<A_T, B_T>::type;
-			using R = nd_allocator<typename std::common_type<A_T, B_T>::type>;
-
 			auto mode = broadcast::calculate_arithmetic_mode(a.get_extent().get_extent(), a.ndim(),
 															 b.get_extent().get_extent(), b.ndim());
 
@@ -2506,9 +2505,6 @@ namespace librapid
 		static LR_INLINE void array_scalar_arithmetic_inplace(const basic_ndarray<A_T, A_A> &a,
 															  const B_T &b, LAMBDA op)
 		{
-			using C = typename std::common_type<A_T, B_T>::type;
-			using R = nd_allocator<typename std::common_type<A_T, B_T>::type>;
-
 			arithmetic::array_op_scalar(a.get_data_start(), &b, a.get_data_start(),
 										a.get_extent(), a.get_stride(), a.get_stride(), op);
 		}
@@ -2518,9 +2514,6 @@ namespace librapid
 															  const basic_ndarray<B_T, B_A> &b,
 															  LAMBDA op)
 		{
-			using C = typename std::common_type<A_T, B_T>::type;
-			using R = nd_allocator<typename std::common_type<A_T, B_T>::type>;
-
 			arithmetic::scalar_op_array(&a, b.get_data_start(), b.get_data_start(),
 										b.get_extent(), b.get_stride(), b.get_stride(), op);
 		}
@@ -2574,8 +2567,8 @@ namespace librapid
 
 			// If both are scalars, the result is a scalar
 			if (x1.is_scalar() && x2.is_scalar())
-				return basic_ndarray<ct>::from_scalar((ct) math::min(*x1.get_data_start(),
-													  *x2.get_data_start()));
+				return basic_ndarray<ct>::from_data((ct) math::min(*x1.get_data_start(),
+													*x2.get_data_start()));
 
 			// If this is an array and other is a scalar, the
 			// result is the minima of each element of the array
@@ -2617,16 +2610,17 @@ namespace librapid
 
 	private:
 
-		T *m_data_origin = nullptr;
-		std::atomic<lr_int> *m_origin_references = nullptr;
+		extent m_extent;
+		stride m_stride;
 
-		lr_int m_origin_size = 0;
+		lr_int m_extent_product = 0;
 
 		T *m_data_start = nullptr;
+		lr_int m_origin_size = 0;
+		T *m_data_origin = nullptr;
 
-		stride m_stride;
-		extent m_extent;
-		lr_int m_extent_product = 0;
+		std::atomic<lr_int> *m_origin_references = nullptr;
+
 		bool m_is_scalar = false;
 
 		_alloc m_alloc = alloc();
@@ -3826,6 +3820,31 @@ namespace librapid
 	std::ostream &operator<<(std::ostream &os, const basic_ndarray<T> &arr)
 	{
 		return os << arr.str();
+	}
+
+	template<typename V = double>
+	LR_INLINE basic_ndarray<V> from_data(V value)
+	{
+		return basic_ndarray<V>::from_data(value);
+	}
+
+	template<typename V = double>
+	LR_INLINE basic_ndarray<V> from_data(const std::vector<V> &values)
+	{
+		basic_ndarray<V> res(extent({values.size()}));
+		for (size_t i = 0; i < values.size(); i++)
+			res.set_value(i, (V) values[i]);
+		return res;
+	}
+
+	template<typename V = double>
+	LR_INLINE basic_ndarray<V> from_data(const std::vector<std::vector<V>> &values)
+	{
+		std::vector<lr_int> size = utils::extract_size(values);
+		auto res = basic_ndarray<V>(extent(size));
+		for (size_t i = 0; i < values.size(); i++)
+			res[i] = from_data(values[i]);
+		return res;
 	}
 }
 

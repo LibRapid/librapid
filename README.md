@@ -61,26 +61,39 @@ They should be used as follows:
 e.g. --blas-dir=c:/opt/openblas
 
 Options:
---no-blas      << Do not attempt to link against any BLAS library
-                  Use only the pre-installed routines (which are slower)
---blas-dir     << Set the directory where LibRapid can find a CBlas
-                 compatible library. LibRapid will expect the directory
-                 to contain a file structure like this (Windows example):
+--use-float       <<  The datatype used within the python library will be
+                      32 bit floating point values. They are often slightly
+                      faster than the 64 bit type, though can only accurately
+                      store 7 decimal places
 
-                 blas-dir
-                 ├── bin
-                 |   └── libopenblas.dll
-                 ├── include
-                 |   └── cblas.h
-                 └── lib
-                     └── libopenblas.lib
---blas-include << Set the BLAS include directory. LibRapid will expect
-                cblas.h to be in this directory
---blas-lib     << Set the BLAS library directory. LibRapid will expect
-                  a library file to be here, such as libopenblas.lib
-                  or openblas.a
---blas-bin     << Set the directory of the BLAS binaries on Windows.
-                  LibRapid will search for a DLL file
+--use-double      <<  The datatype used within the python library will be
+                      64 bit floating point values. They are marginally slower
+                      than 32 bit values but can accurately store 15 decimal places
+
+--no-blas         <<  Do not attempt to link against any BLAS library
+                      Use only the pre-installed routines (which are slower)
+
+--blas-dir        <<  Set the directory where LibRapid can find a CBlas
+                      compatible library. LibRapid will expect the directory
+                      to contain a file structure like this (Windows example):
+
+                      blas-dir
+                      ├── bin
+                      |   └── libopenblas.dll
+                      ├── include
+                      |   └── cblas.h
+                      └── lib
+                          └── libopenblas.lib
+
+--blas-include    <<  Set the BLAS include directory. LibRapid will expect
+                      cblas.h to be in this directory
+
+--blas-lib        <<  Set the BLAS library directory. LibRapid will expect
+                      a library file to be here, such as libopenblas.lib
+                      or openblas.a
+
+--blas-bin        <<  Set the directory of the BLAS binaries on Windows.
+                      LibRapid will search for a DLL file
 ```
 
 To build LibRapid from source and specify commands, use the following commands:

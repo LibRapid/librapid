@@ -14,6 +14,24 @@
 #include <pybind11/stl.h>
 namespace py = pybind11;
 
+#ifdef LIBRAPID_PYTHON_FLOAT
+	using python_dtype = float;
+#else
+	#ifdef LIBRAPID_PYTHON_DOUBLE
+		using python_dtype = double;
+	#else
+		#error Unknown Python Datatype
+	#endif
+#endif
+
+namespace librapid
+{
+	int python_bitness()
+	{
+		return sizeof(python_dtype) * 8;
+	}
+}
+
 #endif
 
 #ifdef LIBRAPID_CBLAS
@@ -179,7 +197,7 @@ namespace librapid
 	#else
 		return false;
 	#endif // LIBRAPID_CBLAS
-	}
+}
 
 	void set_blas_threads(int num)
 	{

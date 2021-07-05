@@ -105,7 +105,7 @@ namespace librapid
 		}
 
 		template<typename V>
-		LR_INLINE std::vector<lr_int> extract_size(std::vector<std::vector<V>> &vec)
+		LR_INLINE std::vector<lr_int> extract_size(const std::vector<std::vector<V>> &vec)
 		{
 			std::vector<lr_int> res(1);
 			for (const auto &sub_vec : vec)
