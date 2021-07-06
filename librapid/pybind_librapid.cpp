@@ -50,7 +50,7 @@ struct python_activation {
 struct python_sgd {
 	librapid::optimizers::basic_optimizer<python_dtype> *optimizer;
 
-	python_sgd(python_dtype learning_rate = 1e-2) { optimizer = new librapid::optimizers::sgd(learning_rate); }
+	python_sgd(python_dtype learning_rate = 1e-2) { optimizer = new librapid::optimizers::sgd<python_dtype>(learning_rate); }
 	~python_sgd() { delete optimizer; }
 	librapid::basic_ndarray<python_dtype> apply(const librapid::basic_ndarray<python_dtype> &w, const librapid::basic_ndarray<python_dtype> &dw) { return optimizer->apply(w, dw); }
 	void set_param(const std::string &name, const python_dtype val) { optimizer->set_param(name, val); }
@@ -61,7 +61,7 @@ struct python_sgd {
 struct python_sgd_momentum {
 	librapid::optimizers::basic_optimizer<python_dtype> *optimizer;
 
-	python_sgd_momentum(python_dtype learning_rate = 1e-2, python_dtype momentum = 0.9, const librapid::basic_ndarray<python_dtype> &velocity = librapid::basic_ndarray<python_dtype>()) { optimizer = new librapid::optimizers::sgd_momentum(learning_rate, momentum, velocity); }
+	python_sgd_momentum(python_dtype learning_rate = 1e-2, python_dtype momentum = 0.9, const librapid::basic_ndarray<python_dtype> &velocity = librapid::basic_ndarray<python_dtype>()) { optimizer = new librapid::optimizers::sgd_momentum<python_dtype>(learning_rate, momentum, velocity); }
 	~python_sgd_momentum() { delete optimizer; }
 	librapid::basic_ndarray<python_dtype> apply(const librapid::basic_ndarray<python_dtype> &w, const librapid::basic_ndarray<python_dtype> &dw) { return optimizer->apply(w, dw); }
 	void set_param(const std::string &name, const python_dtype val) { optimizer->set_param(name, val); }
@@ -72,7 +72,7 @@ struct python_sgd_momentum {
 struct python_rmsprop {
 	librapid::optimizers::basic_optimizer<python_dtype> *optimizer;
 
-	python_rmsprop(python_dtype learning_rate = 1e-2, python_dtype decay_rate = 0.99, python_dtype epsilon = 1e-8, const librapid::basic_ndarray<python_dtype> &cache = librapid::basic_ndarray<python_dtype>()) { optimizer = new librapid::optimizers::rmsprop(learning_rate, decay_rate, epsilon, cache); }
+	python_rmsprop(python_dtype learning_rate = 1e-2, python_dtype decay_rate = 0.99, python_dtype epsilon = 1e-8, const librapid::basic_ndarray<python_dtype> &cache = librapid::basic_ndarray<python_dtype>()) { optimizer = new librapid::optimizers::rmsprop<python_dtype>(learning_rate, decay_rate, epsilon, cache); }
 	~python_rmsprop() { delete optimizer; }
 	librapid::basic_ndarray<python_dtype> apply(const librapid::basic_ndarray<python_dtype> &w, const librapid::basic_ndarray<python_dtype> &dw) { return optimizer->apply(w, dw); }
 	void set_param(const std::string &name, const python_dtype val) { optimizer->set_param(name, val); }
@@ -83,7 +83,7 @@ struct python_rmsprop {
 struct python_adam {
 	librapid::optimizers::basic_optimizer<python_dtype> *optimizer;
 
-	python_adam(python_dtype learning_rate = 1e-3, python_dtype beta1 = 0.9, python_dtype beta2 = 0.999, python_dtype epsilon = 1e-8, const librapid::basic_ndarray<python_dtype> &m = librapid::basic_ndarray<python_dtype>(), const librapid::basic_ndarray<python_dtype> &v = librapid::basic_ndarray<python_dtype>(), lr_int time = 0) { optimizer = new librapid::optimizers::adam(learning_rate, beta1, beta2, epsilon, m, v, time); }
+	python_adam(python_dtype learning_rate = 1e-3, python_dtype beta1 = 0.9, python_dtype beta2 = 0.999, python_dtype epsilon = 1e-8, const librapid::basic_ndarray<python_dtype> &m = librapid::basic_ndarray<python_dtype>(), const librapid::basic_ndarray<python_dtype> &v = librapid::basic_ndarray<python_dtype>(), lr_int time = 0) { optimizer = new librapid::optimizers::adam<python_dtype>(learning_rate, beta1, beta2, epsilon, m, v, time); }
 	~python_adam() { delete optimizer; }
 	librapid::basic_ndarray<python_dtype> apply(const librapid::basic_ndarray<python_dtype> &w, const librapid::basic_ndarray<python_dtype> &dw) { return optimizer->apply(w, dw); }
 	void set_param(const std::string &name, const python_dtype val) { optimizer->set_param(name, val); }
