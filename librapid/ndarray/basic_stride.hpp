@@ -157,6 +157,7 @@ namespace librapid
 		basic_stride(lr_int n)
 		{
 			m_is_trivial = true;
+			m_is_contiguous = true;
 			m_dims = n;
 
 			if (m_dims > LIBRAPID_MAX_DIMS)
@@ -185,6 +186,7 @@ namespace librapid
 			memcpy(m_stride, o.m_stride, sizeof(T) * m_dims);
 			memcpy(m_stride_alt, o.m_stride_alt, sizeof(T) * m_dims);
 
+			m_is_contiguous = o.m_is_contiguous;
 			m_is_trivial = check_trivial();
 		}
 
@@ -302,6 +304,7 @@ namespace librapid
 
 			m_dims = o.m_dims;
 
+			m_is_contiguous = o.m_is_contiguous;
 			m_is_trivial = o.m_is_trivial;
 
 			memcpy(m_stride, o.m_stride, sizeof(T) * m_dims);
@@ -350,6 +353,16 @@ namespace librapid
 		LR_INLINE const bool is_trivial() const
 		{
 			return m_is_trivial;
+		}
+
+		LR_INLINE const bool is_contiguous() const
+		{
+			return m_is_contiguous;
+		}
+
+		LR_INLINE void set_contiguous(bool val)
+		{
+			m_is_contiguous = val;
 		}
 
 		LR_INLINE void set_dimensions(lr_int new_dims)
@@ -413,6 +426,62 @@ namespace librapid
 			return "stride(" + stream.str() + ")";
 		}
 
+		/**
+		 * \rst
+		 * 
+		 * Checks if a given stride represents an array whose data
+		 * is contiguous in memory based on the extent of the array.
+		 * 
+		 * Let :math:`A` be an array with extent :math:`E=\{E_n, E_{n-1}, ... E_2, E_1\}`
+		 * and stride :math:`S=\{S_n, S_{n-1}, ... S_2, S_1\}`. :math:`A` is
+		 * contiguous in memory if, and only if, :math:`S' \cap D' = \emptyset`,
+		 * where 
+		 * 
+		 * .. Math::
+				D_n = \begin{cases}
+					x \geq 2  &\quad \prod_{i=2}^{\text{dims}_a}{S_i} \\
+					otherwise &\quad 1 \\
+				\end{cases}
+		 * 
+		 * \endrst
+		 */
+		LR_INLINE bool check_contiguous(const std::vector<lr_int> &E) const
+		{
+			if (ndim() != E.size())
+				throw std::invalid_argument("Dimensions of extent E must "
+											"match dimensions of stride");
+
+			// Create the test extent
+			basic_stride<T> D = from_extent(E);
+			lr_int valid = 0;
+
+			// Compare the test stride and the current stride (a stride can never
+			// contain two identical values, as it would lead to a contradiction in
+			// the array -- i.e. moving one column down is the same as moving one row across!?)
+			for (lr_int d = 0; d < D.ndim(); ++d)
+			{
+				for (lr_int n = 0; n < ndim(); ++n)
+				{
+					if (D[d] == E[n])
+					{
+						++valid;
+						break;
+					}
+				}
+			}
+
+			return valid == ndim();
+		}
+
+		template<typename V>
+		LR_INLINE bool check_contiguous(V *__restrict extent, lr_int dims) const
+		{
+			std::vector<T> tmp(dims);
+			for (lr_int i = 0; i < dims; ++i)
+				tmp[i] = extent[i];
+			return check_contiguous(tmp);
+		}
+
 	private:
 
 		LR_INLINE const bool check_trivial() const
@@ -435,7 +504,8 @@ namespace librapid
 		T m_stride_alt[LIBRAPID_MAX_DIMS]{};
 
 		lr_int m_dims = 0;
-		bool m_is_trivial = false;
+		bool m_is_trivial = false;    // Data is in a trivial order
+		bool m_is_contiguous = false; // Data is contiguous in memory
 	};
 
 	using stride = basic_stride<long long>;

@@ -14,7 +14,6 @@
 #include <cmath>
 
 #include <librapid/math/rapid_math.hpp>
-#include <librapid/ndarray/to_string.hpp>
 
 // Define this if using a custom cblas interface.
 // If it is not defined, the (slower) internal
@@ -141,6 +140,7 @@ namespace librapid
 				return;
 
 			auto state = construct_new();
+			m_stride.set_contiguous(true);
 
 			if (state == errors::ALL_OK)
 				return;
@@ -162,6 +162,7 @@ namespace librapid
 				throw std::domain_error("Cannot create a new array with an automatic dimension");
 
 			auto state = construct_new();
+			m_stride.set_contiguous(true);
 
 			if (state == errors::ALL_OK)
 			{
@@ -208,7 +209,9 @@ namespace librapid
 			m_extent = other.m_extent;
 			m_extent_product = other.m_extent_product;
 			m_is_scalar = other.m_is_scalar;
-			;
+
+			m_stride.set_contiguous(other.m_stride.is_contiguous());
+
 			increment();
 		}
 
@@ -313,6 +316,16 @@ namespace librapid
 			return m_is_scalar;
 		}
 
+		LR_INLINE bool is_trivial() const
+		{
+			return m_stride.is_trivial();
+		}
+
+		LR_INLINE bool is_contiguous() const
+		{
+			return m_stride.is_contiguous();
+		}
+
 		LR_INLINE const extent &get_extent() const
 		{
 			return m_extent;
@@ -329,13 +342,84 @@ namespace librapid
 		}
 
 		template<typename V>
-		LR_INLINE bool operator==(const V &val) const
+		LR_INLINE bool operator==(const basic_ndarray<V> &arr) const
+		{
+			if (m_is_scalar)
+			{
+				if (!arr.m_is_scalar)
+					return false;
+
+				return *m_data_start == *arr.get_data_start();
+			}
+
+			if (m_extent != arr.get_extent())
+				return false;
+
+			if (m_stride.is_trivial() && m_stride.is_contiguous()
+				&& arr.get_stride().is_trivial() && arr.get_stride().is_contiguous())
+			{
+				const V *__restrict tmp = arr.get_data_start();
+
+				for (lr_int i = 0; i < m_extent_product; ++i)
+					if (m_data_start[i] != tmp[i])
+						return false;
+
+				return true;
+			}
+
+			// Non-trivial stride, so use a more complicated accessing
+			// method to ensure that the resulting array is contiguous
+			// in memory for faster running times overall
+
+			lr_int idim = 0;
+			lr_int dims = ndim();
+
+			const auto *__restrict _extent = m_extent.get_extent_alt();
+			const auto *__restrict _stride_this = m_stride.get_stride_alt();
+			const auto *__restrict _stride_arr = arr.get_stride().get_stride_alt();
+			auto *__restrict this_ptr = m_data_start;
+			auto *__restrict arr_ptr = arr.get_data_start();
+
+			lr_int coord[LIBRAPID_MAX_DIMS]{};
+
+			do
+			{
+				if (*this_ptr != *arr_ptr)
+					return false;
+
+				for (idim = 0; idim < dims; ++idim)
+				{
+					if (++coord[idim] == _extent[idim])
+					{
+						coord[idim] = 0;
+						this_ptr = this_ptr - (_extent[idim] - 1) * _stride_this[idim];
+						arr_ptr = arr_ptr - (_extent[idim] - 1) * _stride_arr[idim];
+					}
+					else
+					{
+						this_ptr = this_ptr + _stride_this[idim];
+						arr_ptr = arr_ptr + _stride_arr[idim];
+						break;
+					}
+				}
+			} while (idim < dims);
+
+			return true;
+		}
+
+		template<typename V>
+		LR_INLINE bool operator==(V value) const
 		{
 			if (!m_is_scalar)
-				throw std::domain_error("Cannot compare array with "
-										+ m_extent.str() + " with scalar");
+				return false;
 
-			return *m_data_start == (T) val;
+			return *m_data_start == value;
+		}
+
+		template<typename V>
+		LR_INLINE bool operator!=(const basic_ndarray<V> &val) const
+		{
+			return !(*this == val);
 		}
 
 		template<typename V>
@@ -362,8 +446,8 @@ namespace librapid
 
 			if (index.size() != (size_t) ndim())
 				throw std::domain_error("Array with " + std::to_string(ndim()) +
-										" dimensions requires " + std::to_string(index.size()) +
-										" access elements");
+										" dimensions requires " + std::to_string(ndim()) +
+										" access elements, not " + std::to_string(index.size()));
 
 			lr_int new_shape[LIBRAPID_MAX_DIMS]{};
 			lr_int new_stride[LIBRAPID_MAX_DIMS]{};
@@ -400,6 +484,8 @@ namespace librapid
 			res.m_data_start = new_start;
 
 			res.m_stride = stride(new_stride, count);
+			res.m_stride.set_contiguous(res.m_stride.check_contiguous(new_shape, count));
+
 			res.m_extent = extent(new_shape, count);
 			res.m_extent_product = math::product(new_shape, count);
 			res.m_is_scalar = count == 0;
@@ -827,9 +913,11 @@ namespace librapid
 				m_origin_size = m_extent_product;
 			}
 
+			m_extent = extent(tmp_shape);
 			m_stride = stride::from_extent(std::vector<O>(tmp_shape.begin(),
 										   tmp_shape.end()));
-			m_extent = extent(tmp_shape);
+			m_stride.set_contiguous(m_stride.check_contiguous(m_extent.get_extent(),
+									m_extent.ndim()));
 		}
 
 		template<typename O>
@@ -888,8 +976,10 @@ namespace librapid
 			for (lr_int i = 0; i < new_dims; i++)
 				new_stride[i] = m_stride[i + strip_to];
 
+			bool tmp = m_stride.is_contiguous();
 			m_stride = stride(new_stride, new_dims);
 			m_extent = extent(new_extent, new_dims);
+			m_stride.set_contiguous(tmp);
 		}
 
 		LR_INLINE void strip_back()
@@ -914,8 +1004,10 @@ namespace librapid
 			for (lr_int i = 0; i < strip_to; i++)
 				new_stride[i] = m_stride[i];
 
+			bool tmp = m_stride.is_contiguous();
 			m_stride = stride(new_stride, strip_to);
 			m_extent = extent(new_extent, strip_to);
+			m_stride.set_contiguous(tmp);
 		}
 
 		LR_INLINE void strip()
@@ -1815,12 +1907,15 @@ namespace librapid
 					return res;
 				}
 
+				if (!m_stride.is_contiguous())
+					return clone().dot(other);
+
 				const R_T alpha = 1.0;
 				const R_T beta = 0.0;
 
 				const auto trans = !m_stride.is_trivial();
 
-				const auto lda = m_stride[0];
+				const auto lda = N; // m_stride[0];
 				const auto ldb = other.get_stride()[other.ndim() - 1];
 
 				auto *__restrict a = m_data_start;
@@ -1856,13 +1951,22 @@ namespace librapid
 						*res.get_data_start() = linalg::cblas_dot(m_extent_product, m_data_start, m_stride[0],
 																  other.get_data_start(), other.get_stride()[0]);
 
-						return res; \
+						return res;
 					}
 				case 2:
 					{
 						if (m_extent[1] != other.get_extent()[0])
 							throw std::domain_error("Cannot compute dot product with arrays with " +
 													m_extent.str() + " and " + other.get_extent().str());
+
+						// If the data is not congituous in memory, we cannot operate on it
+						// normally, so clone the arrays to reorder the data and make it
+						// optimal in memory
+						if (!m_stride.is_contiguous() && other.get_stride().is_contiguous())
+							return clone().dot(other);
+
+						if (m_stride.is_contiguous() && !other.get_stride().is_contiguous())
+							return dot(other.clone());
 
 						const auto M = m_extent[0];           // Rows of op(a)
 						const auto N = other.get_extent()[1]; // Cols of op(b)
@@ -1876,21 +1980,24 @@ namespace librapid
 						const auto transA = !m_stride.is_trivial();
 						const auto transB = !other.get_stride().is_trivial();
 
-						const auto lda = K;
-						const auto ldb = N;
-						const auto ldc = N;
+						const auto lda = transA ? M : K;
+						const auto ldb = transB ? K : N;
+						const auto ldc = transB ? M : N;
 
 						auto *__restrict a = m_data_start;
 						auto *__restrict b = other.get_data_start();
 						auto *__restrict c = res.get_data_start();
 
-						if (!transA && !transB)
-							linalg::cblas_gemm('r', false, false, M, N, K, alpha, a, lda,
-											   b, ldb, beta, c, ldc);
-						else if (transA && !transB)
-							return clone().dot(other);
-						else
-							return dot(other.clone());
+						linalg::cblas_gemm('r', transA, transB, M, N, K, alpha, a, lda,
+										   b, ldb, beta, c, ldc);
+
+						// if (!transA && !transB)
+						// 	linalg::cblas_gemm('r', false, false, M, N, K, alpha, a, lda,
+						// 					   b, ldb, beta, c, ldc);
+						// else if (transA && !transB)
+						// 	return clone().dot(other);
+						// else
+						// 	return dot(other.clone());
 
 						return res;
 					}
@@ -1961,111 +2068,10 @@ namespace librapid
 			}
 		}
 
-		std::string str(lr_int start_depth = 0) const
+		LR_INLINE std::string str(lr_int indent = 0) const
 		{
-			const auto *__restrict extent_data = m_extent.get_extent();
-
-			if (!is_initialized())
-				return "[NONE]";
-
-			if (m_is_scalar)
-				return to_string::format_numerical(m_data_start[0]).str;
-
-			std::vector<to_string::str_container> formatted(m_extent_product, {"", 0});
-			lr_int longest_integral = 0;
-			lr_int longest_decimal = 0;
-
-			// General checks
-			bool strip_middle = false;
-			if (m_extent_product > 1000)
-				strip_middle = true;
-
-			// Edge case
-			if (ndim() == 2 && extent_data[1] == 1)
-				strip_middle = false;
-
-			lr_int idim = 0;
-			lr_int dimensions = ndim();
-			lr_int index = 0;
-			lr_int data_index = 0;
-			auto coord = new lr_int[dimensions];
-			memset(coord, 0, sizeof(lr_int) * dimensions);
-
-			std::vector<lr_int> tmp_extent(dimensions);
-			std::vector<lr_int> tmp_stride(dimensions);
-			for (lr_int i = 0; i < dimensions; i++)
-			{
-				tmp_stride[dimensions - i - 1] = m_stride.get_stride()[i];
-				tmp_extent[dimensions - i - 1] = m_extent.get_extent()[i];
-			}
-
-			do
-			{
-				bool skip = false;
-				for (lr_int i = 0; i < dimensions; i++)
-				{
-					if (strip_middle &&
-						(coord[i] > 3 && coord[i] < extent_data[i] - 3))
-					{
-						skip = true;
-						break;
-					}
-				}
-
-				if (!skip)
-				{
-					formatted[index] = to_string::format_numerical(m_data_start[data_index]);
-
-					if (formatted[index].decimal_point > longest_integral)
-						longest_integral = formatted[index].decimal_point;
-
-					auto &format_tmp = formatted[index];
-					if ((lr_int) format_tmp.str.length() >= format_tmp.decimal_point &&
-						(lr_int) format_tmp.str.length() - format_tmp.decimal_point > longest_decimal)
-						longest_decimal = format_tmp.str.length() - format_tmp.decimal_point;
-				}
-
-				index++;
-
-				for (idim = 0; idim < dimensions; ++idim)
-				{
-					if (++coord[idim] == tmp_extent[idim])
-					{
-						coord[idim] = 0;
-						data_index -= (tmp_extent[idim] - 1) * tmp_stride[idim];
-					}
-					else
-					{
-						data_index += tmp_stride[idim];
-						break;
-					}
-				}
-			} while (idim < dimensions);
-
-			delete[] coord;
-
-			std::vector<std::string> adjusted(formatted.size(), "");
-
-			for (size_t i = 0; i < formatted.size(); i++)
-			{
-				if (formatted[i].str.empty())
-					continue;
-
-				const auto &term = formatted[i];
-				lr_int decimal = (term.str.length() - term.decimal_point - 1);
-
-				auto tmp = std::string((lr_int) (longest_integral - (T) term.decimal_point), ' ')
-					+ term.str + std::string((lr_int) (longest_decimal - decimal), ' ');
-				adjusted[i] = tmp;
-			}
-
-			std::vector<lr_int> extent_vector(ndim());
-			for (lr_int i = 0; i < ndim(); i++)
-				extent_vector[i] = extent_data[i];
-
-			auto res = to_string::to_string(adjusted, extent_vector, 1 + start_depth, strip_middle);
-
-			return res;
+			std::pair<lr_int, lr_int> longest;
+			return stringify(indent, false, true, longest);
 		}
 
 	private:
@@ -2088,6 +2094,8 @@ namespace librapid
 		{
 			m_extent = e;
 			m_stride = s;
+			m_stride.set_contiguous(m_stride.check_contiguous(m_extent.get_extent(),
+									m_extent.ndim()));
 
 			if (ndim() > LIBRAPID_MAX_DIMS)
 				return errors::ARRAY_DIMENSIONS_TOO_LARGE;
@@ -2108,6 +2116,8 @@ namespace librapid
 		{
 			m_extent = e;
 			m_stride = s;
+			m_stride.set_contiguous(m_stride.check_contiguous(m_extent.get_extent(),
+									m_extent.ndim()));
 
 			if (ndim() > LIBRAPID_MAX_DIMS)
 				return errors::ARRAY_DIMENSIONS_TOO_LARGE;
@@ -2158,6 +2168,185 @@ namespace librapid
 				m_alloc.deallocate(m_data_origin, m_origin_size);
 				delete m_origin_references;
 			}
+		}
+
+		LR_INLINE std::pair<lr_int, lr_int> stringify_decimal_finder(bool strip_middle,
+																	 bool auto_strip) const
+		{
+			if (auto_strip)
+			{
+				if (m_extent_product >= 1000) strip_middle = true;
+
+				// Edge case for row and column vectors
+				if (ndim() == 1) strip_middle = false;
+				else if (ndim() == 2 && m_extent[1] == 1) strip_middle = false;
+				else if (ndim() == 2 && m_extent[0] == 1) strip_middle = false;
+			}
+
+			// Scalar values
+			if (m_is_scalar)
+			{
+				std::stringstream stream;
+				stream.precision(10);
+
+				stream << *m_data_start;
+
+				std::string str = stream.str();
+				if (std::is_floating_point<T>::value && str.find_last_of('.') == std::string::npos)
+					return {str.length(), 0};
+
+				size_t index = str.find_last_of('.');
+				if (index == std::string::npos)
+					return {str.length(), 0};
+				return {index, str.length() - index - 1};
+			}
+
+			lr_int longest_integral = 0, longest_decimal = 0;
+
+			// Vectors
+			if (ndim() == 1)
+			{
+				lr_int index = 0;
+
+				for (lr_int i = 0; i < m_extent_product; ++i, ++index)
+				{
+					if (strip_middle && i == 3)
+						i = m_extent_product - 3;
+
+					auto sublongest = subscript(i).stringify_decimal_finder(strip_middle, false);
+
+					if (sublongest.first > longest_integral) longest_integral = sublongest.first;
+					if (sublongest.second > longest_decimal) longest_decimal = sublongest.second;
+				}
+
+				return {longest_integral, longest_decimal};
+			}
+
+			// Everything else
+			lr_int index = 0;
+			lr_int vec_size = strip_middle ? 6 : m_extent[0];
+			std::string res = "[";
+
+			for (lr_int i = 0; i < m_extent[0]; ++i, ++index)
+			{
+				if (strip_middle && i == 3)
+					i = m_extent[0] - 3;
+
+				auto sublongest = subscript(i).stringify_decimal_finder(strip_middle, false);
+
+				if (sublongest.first > longest_integral) longest_integral = sublongest.first;
+				if (sublongest.second > longest_decimal) longest_decimal = sublongest.second;
+			}
+
+			return {longest_integral, longest_decimal};
+		}
+
+		LR_INLINE std::string stringify(lr_int indent, bool strip_middle, bool auto_strip,
+										std::pair<lr_int, lr_int> &longest) const
+		{
+			// Non-initialized arrays
+			if (!is_initialized())
+				return "[NONE]";
+
+			if (auto_strip)
+			{
+				if (m_extent_product >= 1000) strip_middle = true;
+
+				// Edge case for row and column vectors
+				if (ndim() == 1) strip_middle = false;
+				else if (ndim() == 2 && m_extent[1] == 1) strip_middle = false;
+				else if (ndim() == 2 && m_extent[0] == 1) strip_middle = false;
+			}
+
+			// Scalar values
+			if (m_is_scalar)
+			{
+				std::stringstream stream;
+				stream.precision(10);
+
+				stream << *m_data_start;
+
+				std::string str = stream.str();
+				if (std::is_floating_point<T>::value && str.find_last_of('.') == std::string::npos)
+					str += ".";
+
+				return str;
+			}
+
+			// Find the numbers being printed with the most
+			// digits before and after the decimal point
+			if (longest.first == 0 && longest.second == 0)
+				longest = stringify_decimal_finder(false, true);
+
+			// Vectors
+			if (ndim() == 1)
+			{
+				lr_int index = 0;
+				lr_int vec_size = strip_middle ? 6 : m_extent_product;
+				std::string res = "[";
+
+				for (lr_int i = 0; i < m_extent_product; ++i, ++index)
+				{
+					if (strip_middle && i == 3)
+					{
+						i = m_extent_product - 3;
+						res += "... ";
+					}
+
+					std::string temp_val = subscript(i).stringify(indent + 1, strip_middle,
+																  false, longest);
+
+					// Locate the decimal point and calculate
+					// the number of digits before and after it
+					lr_int before = 0, after = 0;
+					auto index = temp_val.find('.');
+
+					if (index == std::string::npos)
+					{
+						// No decimal point
+						before = temp_val.length();
+						after = 0;
+					}
+					else
+					{
+						before = index;
+						after = temp_val.length() - index - 1;
+					}
+
+					lr_int to_add_before, to_add_after;
+					to_add_before = longest.first - before;
+					to_add_after = longest.second - after;
+
+					res += std::string(to_add_before, ' ');
+					res += temp_val;
+					res += std::string(to_add_after, ' ');
+
+					if (i + 1 < m_extent_product) res += " ";
+				}
+				return res + "]";
+			}
+
+			// Everything else
+			lr_int index = 0;
+			lr_int vec_size = strip_middle ? 6 : m_extent[0];
+			std::string res = "[";
+
+			for (lr_int i = 0; i < m_extent[0]; ++i, ++index)
+			{
+				if (strip_middle && i == 3)
+				{
+					i = m_extent[0] - 3;
+					res += "...\n" + std::string(indent + 1, ' ');
+				}
+
+				res += subscript(i).stringify(indent + 1, strip_middle, false, longest);
+				if (i + 1 < m_extent[0])
+				{
+					res += std::string((ndim() > 2) + 1, '\n');
+					res += std::string(indent + 1, ' ');
+				}
+			}
+			return res + "]";
 		}
 
 		LR_INLINE const basic_ndarray<T, alloc> subscript(lr_int index) const

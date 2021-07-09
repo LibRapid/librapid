@@ -3,6 +3,8 @@ dist
 librapid.egg-info
 librapid/librapid.egg-info
 
+build_config.txt
+
 librapid/blas
 
 tests/__pycache__

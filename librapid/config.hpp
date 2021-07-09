@@ -124,7 +124,7 @@ using lr_int = long long;
 #define LIBRAPID_HAS_OPENBLAS
 #endif
 
-// Easy access to the current time (in ms)
+// Easy access to the current time (in s)
 #include <chrono>
 #define TIME (double) std::chrono::high_resolution_clock().now().time_since_epoch().count() / 1000000000
 
@@ -159,7 +159,7 @@ namespace librapid
 #if defined(LIBRAPID_OS_WINDOWS)
 	console_size get_console_size()
 	{
-		CONSOLE_SCREEN_BUFFER_INFO csbi;
+		static CONSOLE_SCREEN_BUFFER_INFO csbi;
 		int cols, rows;
 
 		GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -171,7 +171,7 @@ namespace librapid
 #elif defined(LIBRAPID_OS_UNIX)
 	console_size get_console_size()
 	{
-		struct winsize w;
+		static struct winsize w;
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
 		return {w.ws_row, w.ws_col};
@@ -182,7 +182,7 @@ namespace librapid
 		// Not a clue what this would run on, or how it would be done
 		// correctly, so just return some arbitrary values...
 
-		return {70, 120};
+		return {80, 120};
 	}
 #endif
 }
