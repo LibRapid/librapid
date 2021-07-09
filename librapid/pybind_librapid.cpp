@@ -106,6 +106,8 @@ PYBIND11_MODULE(librapid_, module)
 	module.def("time", [](){ return TIME; });
 	module.def("sleep", &librapid::sleep);
 
+	module.def("get_console_size", []() { auto size = librapid::get_console_size(); return py::make_tuple(size.rows, size.cols); });
+
 	module.attr("pi") = librapid::math::pi;
 	module.attr("twopi") = librapid::math::twopi;
 	module.attr("halfpi") = librapid::math::halfpi;
@@ -167,6 +169,8 @@ PYBIND11_MODULE(librapid_, module)
 		.def_property_readonly("ndim", &librapid::stride::ndim)
 		.def_property_readonly("is_valid", &librapid::stride::is_valid)
 		.def_property_readonly("is_trivial", &librapid::stride::is_trivial)
+		.def_property_readonly("is_contiguous", &librapid::stride::is_contiguous)
+		.def("set_contiguous", &librapid::stride::set_contiguous)
 		.def("set_dimensions", &librapid::stride::set_dimensions)
 		.def("reshape", [](librapid::stride &s, const std::vector<lr_int> &order) { s.reshape(order); })
 
@@ -204,13 +208,18 @@ PYBIND11_MODULE(librapid_, module)
 		.def_property_readonly("is_initialized", &librapid::basic_ndarray<python_dtype>::is_initialized)
 		.def_property_readonly("is_scalar", &librapid::basic_ndarray<python_dtype>::is_scalar)
 
+		.def("is_trivial", &librapid::basic_ndarray<python_dtype>::is_trivial)
+		.def("is_contiguous", &librapid::basic_ndarray<python_dtype>::is_contiguous)
+
 		.def("get_extent", &librapid::basic_ndarray<python_dtype>::get_extent)
 		.def("get_stride", &librapid::basic_ndarray<python_dtype>::get_stride)
 		.def_property_readonly("extent", &librapid::basic_ndarray<python_dtype>::get_extent)
 		.def_property_readonly("stride", &librapid::basic_ndarray<python_dtype>::get_stride)
 
 		.def("__eq__", [](const librapid::basic_ndarray<python_dtype> &arr, python_dtype val) { return arr == val; }, py::arg("val"))
+		.def("__eq__", [](const librapid::basic_ndarray<python_dtype> &arr, const librapid::basic_ndarray<python_dtype> &val) { return arr == val; }, py::arg("val"))
 		.def("__ne__", [](const librapid::basic_ndarray<python_dtype> &arr, python_dtype val) { return arr != val; }, py::arg("val"))
+		.def("__ne__", [](const librapid::basic_ndarray<python_dtype> &arr, const librapid::basic_ndarray<python_dtype> &val) { return arr != val; }, py::arg("val"))
 
 		.def("__getitem__", [](const librapid::basic_ndarray<python_dtype> &arr, lr_int index) { return arr[index]; }, py::arg("index"))
 		.def("__setitem__", [](librapid::basic_ndarray<python_dtype> &arr, lr_int index, const librapid::basic_ndarray<python_dtype> &value) { arr[index] = value; }, py::arg("index"), py::arg("value"))

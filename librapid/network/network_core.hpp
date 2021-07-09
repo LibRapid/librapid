@@ -1,32 +1,57 @@
 #ifndef LIBRAPID_NETWORK_CORE
 #define LIBRAPID_NETWORK_CORE
 
+#include <map>
+
 #include <librapid/config.hpp>
 #include <librapid/ndarray/ndarray.hpp>
 
 namespace librapid
 {
-	template<typename T>
-	struct network_config
+	template<typename T = double, typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
+	struct config_container
 	{
-		lr_int inputs = 0;
-		std::vector<lr_int> hidden;
-		lr_int outputs = 0;
+		bool is_real = false;
+		bool is_string = false;
+		bool is_vector = false;
+		bool is_dict = false;
+		bool is_array = false;
 
-		std::vector<std::string> activations;
-		std::vector<std::string> optimizers;
-		std::vector<T> learning_rates;
-	};
+		std::string name;
 
-	struct train_config
-	{
-		lr_int batch_size;
-		lr_int epochs;
+		T real = 0;
+		std::string str;
+		std::map<std::string, lr_int> dict;
+		std::vector<double> vec;
+		basic_ndarray<T> arr;
 
-		// A trivial constructor with default values
-		train_config(lr_int batch = -1, lr_int epoch = -1) : batch_size(batch), epochs(epoch)
+		config_container(const std::string &title, T val)
+			: name(title), real(val), is_real(true)
+		{}
+
+		config_container(const std::string &title, const std::string &val)
+			: name(title), str(val), is_string(true)
+		{}
+
+		config_container(const std::string &title, const std::vector<double> &val)
+			: name(title), vec(std::vector<double>(val.begin(), val.end())), is_vector(true)
+		{}
+		
+		config_container(const std::string &title, const std::initializer_list<double> &val)
+			: name(title), vec(std::vector<double>(val.begin(), val.end())), is_vector(true)
+		{}
+
+		config_container(const std::string &title, const std::map<std::string, lr_int> &val)
+			: name(title), dict(val), is_dict(true)
+		{}
+
+		config_container(const std::string &title, const basic_ndarray<T> &val)
+			: name(title), arr(val), is_array(true)
 		{}
 	};
+
+	template<typename T = double>
+	using network_config = std::vector<config_container<T>>;
 
 	template<typename T = double,
 		typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
@@ -35,8 +60,87 @@ namespace librapid
 	public:
 		network() = default;
 
+		/**
+		 * \rst
+		 *
+		 * Create a new neural network from a given ``network_config``.
+		 * The ``network_config`` object should contain all of the
+		 * information needed to construct a neural network, such as the
+		 * numbers and sizes of layers, for example.
+		 *
+		 * Parameters
+		 * ----------
+		 *
+		 * input: integer, map<string, integer>
+		 *		Represents the inputs to the neural network.
+		 *
+		 *		If only an integer is passed in as input, the value is
+		 *		treated as the number of nodes in the input layer of the
+		 *		network.
+		 *
+		 *		If the input is a ``map<string, integer>``, the inputs
+		 *		are assumed to be named. For every element in the map, the
+		 *		structure :math:`\textbf{must}` be ``name of input, nodes of input``, and
+		 *		there can be any number of these pairs of values. The name
+		 *		of the input can be used to simplify neural network
+		 *		predictions and training by providing human-readable inputs
+		 *		with their corresponding values. The number of nodes each
+		 *		input represents can be adjusted to support individual
+		 *		values, one-hot vectors, or any other form of input.
+		 *
+		 *		When making predictions with the neural network or training
+		 *		it, the input must be either a single array of values or
+		 *		a ``map<string, array>``, where the first element of each
+		 *		value passed is the name of the input it represents, and the
+		 *		second is the input itself, which should be a vector that can
+		 *		be broadcast to the number of nodes specified earlier. If a
+		 *		single array of values is passed, the number of elements must
+		 *		equal the total number of nodes in the input layer, and the
+		 *		values will be assigned to inputs in the order they were
+		 *		initially specified.
+		 *
+		 * output: integer, map<string, integer>
+		 *		Represents the outputs of the neural network. The functionality
+		 *		of the output parameter is nearly identical to that of the
+		 *		input parameter in terms of functionality, except it refers
+		 *		to the outputs of the network rather than the inputs (obviously...)
+		 * 
+		 * hidden: vector<integer>
+		 *		A list of values containing the number of nodes for each of the
+		 *		hidden layers of the neural network.
+		 * 
+		 *		For example, passing in ``hidden = {3, 4, 2}`` will create a
+		 *		neural network with three hidden layers, with 3, 4 and 2 nodes
+		 *		respectively.
+		 *
+		 * \endrst
+		 */
 		network(const network_config<T> &config)
 		{
+			bool use_named_inputs = false;
+			bool use_named_outputs = false;
+			std::vector<lr_int> shape;
+			std::map<std::string, lr_int> input_names;
+			std::map<std::string, lr_int> output_names;
+
+			if (config.find("input") != config.end())
+			{
+				// Input parameter
+				auto input = config["input"];
+
+				if (input.is_real)
+				{
+					// No need to use named inputs
+					lr_int nodes = input.real; // Convert from real to integer
+					shape.emplace_back(nodes);
+				}
+				else if (input.is_dict)
+				{
+					// Use named inputs
+					use_named_inputs = true;
+					input_names = input.dict;
+				}
+			}
 		}
 
 		~network()
@@ -149,7 +253,7 @@ namespace librapid
 		bool m_has_config = false;
 
 		network_config<T> m_config;
-		train_config m_train_config;
+		network_config<T> m_train_config;
 
 		std::vector<layers::basic_layer<T> *> m_layers;
 

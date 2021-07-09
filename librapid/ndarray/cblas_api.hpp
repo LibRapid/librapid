@@ -62,7 +62,7 @@ namespace librapid
 				index_x = 0;
 				for (lr_int inner = 0; inner < n; inner++)
 				{
-					index_a = outer * _lda + inner * _fda; // A contains invalid values?
+					index_a = outer * _lda + inner * _fda;
 
 					y[index_y] += a[index_a] * x[index_x];
 
@@ -131,21 +131,58 @@ namespace librapid
 										  T *__restrict a, lr_int lda, T *__restrict b,
 										  lr_int ldb, T beta, T *__restrict c, lr_int ldc)
 		{
+			lr_int outer, inner, sub;
 			lr_int temp_a, index_c;
 
-			// #pragma omp parallel for shared(order, trans_a, trans_b, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc) private(temp_a, index_c) default(none)
-			for (lr_int outer = 0; outer < m; outer++)
+			lr_int _lda = trans_a ? 1 : lda;
+			lr_int _fda = trans_a ? lda : 1;
+
+			lr_int _ldb = trans_b ? 1 : ldb;
+			lr_int _fdb = trans_b ? ldb : 1;
+
+			lr_int _ldc = trans_b ? 1 : ldc;
+			lr_int _fdc = trans_b ? ldc : 1;
+
+			if (m * n * k < 2500)
 			{
-				for (lr_int inner = 0; inner < n; inner++)
+				for (outer = 0; outer < m; ++outer)
 				{
-					temp_a = outer * lda;
-					index_c = inner + outer * ldc;
-
-					c[index_c] = 0;
-
-					for (lr_int sub = 0; sub < k; sub++)
+					for (inner = 0; inner < n; ++inner)
 					{
-						c[index_c] += a[temp_a + sub] * b[sub * ldb + inner];
+						temp_a = outer * _lda;
+						index_c = inner * _fdc + outer * _ldc;
+
+						if (beta == 0)
+							c[index_c] = 0;
+						else
+							c[index_c] += c[index_c] * beta;
+
+						for (sub = 0; sub < k; ++sub)
+						{
+							c[index_c] += a[temp_a + sub * _fda] * b[sub * _ldb + inner * _fdb];
+						}
+					}
+				}
+			}
+			else
+			{
+			#pragma omp parallel for shared(m, n, k, _lda, _fda, _ldb, _fdb, _ldc, _fdc, alpha, beta, a, b, c) private(outer, inner, sub, temp_a, index_c) default(none)
+				for (outer = 0; outer < m; ++outer)
+				{
+					for (inner = 0; inner < n; ++inner)
+					{
+						temp_a = outer * _lda;
+						index_c = inner * _fdc + outer * _ldc;
+
+						if (beta == 0)
+							c[index_c] = 0;
+						else
+							c[index_c] += c[index_c] * beta;
+
+						for (sub = 0; sub < k; ++sub)
+						{
+							c[index_c] += a[temp_a + sub * _fda] * b[sub * _ldb + inner * _fdb];
+						}
 					}
 				}
 			}
@@ -216,9 +253,9 @@ namespace librapid
 
 			cblas_dgemm(blas_order, blas_trans_a, blas_trans_b, m, n, k,
 						alpha, a, lda, b, ldb, beta, c, ldc);
-		}
+					}
 	#endif // LIBRAPID_CBLAS
-	}
-}
+				}
+			}
 
 #endif // LIBRAPID_CBLAS_API

@@ -7,7 +7,6 @@
 #include <librapid/math/rapid_math.hpp>
 #include <librapid/ndarray/basic_stride.hpp>
 #include <librapid/ndarray/basic_extent.hpp>
-#include <librapid/ndarray/to_string.hpp>
 #include <librapid/ndarray/utils.hpp>
 #include <librapid/ndarray/broadcast_arrays.hpp>
 #include <librapid/ndarray/array_array_arithmetic.hpp>

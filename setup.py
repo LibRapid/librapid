@@ -26,11 +26,15 @@ installed on your system, please specify the location
 of the relevant files to setup.py when compiling.
 """
 
+build_stage_one = False
+
 def find_blas(args):
+	global build_stage_one
 	# Attempt to find a BLAS library
 
 	if "--no-blas" in args:
 		print("Not searching for a BLAS library")
+		build_stage_one = True
 		return None
 
 	if len(args) == 0:
@@ -80,6 +84,7 @@ def find_blas(args):
 				return blas
 		return None
 
+	build_stage_one = True
 	blas_dir = {}
 	blas_bin = None
 	blas_include = None
@@ -469,28 +474,17 @@ library_dirs = []
 libraries = []
 
 # Add the float/double arguments
-was_set = False
 if "--use-double" in args:
 	print("Using C++ DOUBLE for python datatype")
 	define_macros.append(("LIBRAPID_PYTHON_DOUBLE", None))
-	was_set = True
+	build_stage_one = True
 elif "--use-float" in args:
 	print("Using C++ FLOAT for python datatype")
 	define_macros.append(("LIBRAPID_PYTHON_FLOAT", None))
-	was_set = True
+	build_stage_one = True
 else:
 	print("Using default C++ FLOAT for python datatype")
 	define_macros.append(("LIBRAPID_PYTHON_FLOAT", None))
-
-try:
-	if was_set:
-		with open("./build_config.lrc", "wb") as file:
-			pickle.dump(define_macros, file)
-	else:
-		with open("./build_config.lrc", "rb") as file:
-			define_macros = pickle.load(file)
-except:
-	print("Couldn't save build config info. Results may be different from expected")
 
 # If the blas directory already exists, remove it to
 # reduce binary size
@@ -548,7 +542,23 @@ else:
 	define_macros.append(("LIBRAPID_NO_CBLAS", 1))
 	print("A valid CBlas interface was not found")
 
-print("Defining macros:", define_macros)
+try:
+	if build_stage_one:
+		with open("./build_config.lrc", "wb") as file:
+			pickle.dump((blas_dir, define_macros), file)
+
+		print("\n\nSaved the following values:\n\n")
+		print(blas_dir)
+		print(define_macros)
+	else:
+		with open("./build_config.lrc", "rb") as file:
+			blas_dir, define_macros = pickle.load(file)
+
+		print("\n\nLoaded the following values:\n\n")
+		print(blas_dir)
+		print(define_macros)
+except:
+	print("Couldn't save build config info. Results may be different from expected")
 
 ext_modules = [
 	Pybind11Extension("librapid_",

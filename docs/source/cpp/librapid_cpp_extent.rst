@@ -1,4 +1,7 @@
-LibRapid | C++
-##############
+LibRapid Extent | C++
+#####################
 
-Nothing here yet.
+Stores the shape of an array
+
+.. doxygenclass:: librapid::basic_extent
+	:members:
