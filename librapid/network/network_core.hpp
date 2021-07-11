@@ -2,6 +2,7 @@
 #define LIBRAPID_NETWORK_CORE
 
 #include <map>
+#include <unordered_map>
 
 #include <librapid/config.hpp>
 #include <librapid/ndarray/ndarray.hpp>
@@ -21,7 +22,7 @@ namespace librapid
 
 		T real = 0;
 		std::string str;
-		std::map<std::string, lr_int> dict;
+		std::unordered_map<std::string, lr_int> dict;
 		std::vector<double> vec;
 		basic_ndarray<T> arr;
 
@@ -36,12 +37,12 @@ namespace librapid
 		config_container(const std::string &title, const std::vector<double> &val)
 			: name(title), vec(std::vector<double>(val.begin(), val.end())), is_vector(true)
 		{}
-		
+
 		config_container(const std::string &title, const std::initializer_list<double> &val)
 			: name(title), vec(std::vector<double>(val.begin(), val.end())), is_vector(true)
 		{}
 
-		config_container(const std::string &title, const std::map<std::string, lr_int> &val)
+		config_container(const std::string &title, const std::unordered_map<std::string, lr_int> &val)
 			: name(title), dict(val), is_dict(true)
 		{}
 
@@ -52,6 +53,8 @@ namespace librapid
 
 	template<typename T = double>
 	using network_config = std::vector<config_container<T>>;
+
+	using named_param = std::unordered_map<std::string, lr_int>;
 
 	template<typename T = double,
 		typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
@@ -104,11 +107,11 @@ namespace librapid
 		 *		of the output parameter is nearly identical to that of the
 		 *		input parameter in terms of functionality, except it refers
 		 *		to the outputs of the network rather than the inputs (obviously...)
-		 * 
+		 *
 		 * hidden: vector<integer>
 		 *		A list of values containing the number of nodes for each of the
 		 *		hidden layers of the neural network.
-		 * 
+		 *
 		 *		For example, passing in ``hidden = {3, 4, 2}`` will create a
 		 *		neural network with three hidden layers, with 3, 4 and 2 nodes
 		 *		respectively.
@@ -117,30 +120,121 @@ namespace librapid
 		 */
 		network(const network_config<T> &config)
 		{
+			int found_input = 0;
+			int found_output = 0;
+			int found_hidden = 0;
+
 			bool use_named_inputs = false;
 			bool use_named_outputs = false;
 			std::vector<lr_int> shape;
-			std::map<std::string, lr_int> input_names;
-			std::map<std::string, lr_int> output_names;
+			std::unordered_map<std::string, lr_int> input_names;
+			std::unordered_map<std::string, lr_int> output_names;
 
-			if (config.find("input") != config.end())
+			// Parse the input information and store it
+			for (lr_int param = 0; param < config.size(); param++)
 			{
-				// Input parameter
-				auto input = config["input"];
+				const auto &value = config[param];
 
-				if (input.is_real)
+				if (value.name == "input")
 				{
-					// No need to use named inputs
-					lr_int nodes = input.real; // Convert from real to integer
-					shape.emplace_back(nodes);
+					found_input++; // Increment (not bool to allow for error checking)
+
+					// Input parameter
+					const config_container<T> input = value;
+
+					if (input.is_real)
+					{
+						// No need to use named inputs
+						use_named_inputs = false;
+						lr_int nodes = input.real; // Convert from real to integer
+						shape.insert(shape.begin(), nodes);
+					}
+					else if (input.is_dict)
+					{
+						// Use named inputs
+						use_named_inputs = true;
+						input_names = input.dict;
+
+						shape.insert(shape.begin(), 0);
+						for (const auto &io_pair : input_names)
+							shape[0] += io_pair.second;
+					}
+					else
+					{
+						throw std::invalid_argument("The 'input' parameter requires "
+													"an integer or an unordered_map/dict");
+					}
 				}
-				else if (input.is_dict)
+				else if (value.name == "output")
 				{
-					// Use named inputs
-					use_named_inputs = true;
-					input_names = input.dict;
+					found_output++; // Increment (not bool to allow for error checking)
+
+					// Output parameter
+					const config_container<T> output = value;
+
+					if (output.is_real)
+					{
+						// No need to use named outputs
+						use_named_outputs = false;
+						lr_int nodes = output.real; // Convert from real to integer
+						shape.insert(shape.end(), nodes);
+					}
+					else if (output.is_dict)
+					{
+						// Use named outputs
+						use_named_outputs = true;
+						output_names = output.dict;
+
+						shape.insert(shape.end(), 0);
+						for (const auto &io_pair : output_names)
+							shape[shape.size() - 1] += io_pair.second;
+					}
+					else
+					{
+						throw std::invalid_argument("The 'output' parameter requires "
+													"an integer or an unordered_map/dict");
+					}
+				}
+				else
+				{
+					throw std::invalid_argument("Parameter '" + value.name + "' is invalid");
 				}
 			}
+
+			// Deal with the parsed information
+
+			if (found_input != 1)
+			{
+				throw std::invalid_argument("Only 1 'input' parameter is allowed, but "
+											+ std::to_string(found_input) + "were found");
+			}
+			else
+			{
+				// Add the input layer
+				add_layer(new layers::input<T>(shape[0]));
+
+				if (use_named_inputs)
+					m_input = input_names;
+			}
+
+			if (found_output != 1)
+			{
+				throw std::invalid_argument("Only 1 'output' parameter is allowed, but "
+											+ std::to_string(found_output) + "were found");
+			}
+			else
+			{
+				// Add the output layer
+				
+				// NEED OTHER INFORMATION TO CREATE THE LAYER
+				// - LEARNING RATES
+				// - ACTIVATIONS
+			}
+
+			std::cout << "Extracted shape: ";
+			for (const auto &n : shape)
+				std::cout << n << ", ";
+			std::cout << "\n";
 		}
 
 		~network()
@@ -256,6 +350,13 @@ namespace librapid
 		network_config<T> m_train_config;
 
 		std::vector<layers::basic_layer<T> *> m_layers;
+
+		// Named input information
+		bool m_has_named_inputs = false;
+		bool m_has_named_outputs = false;
+
+		std::unordered_map<std::string, lr_int> m_input;
+		std::unordered_map<std::string, lr_int> m_output;
 
 		std::mt19937 m_random_generator = std::mt19937();
 	};

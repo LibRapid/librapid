@@ -25,3 +25,6 @@ sphinx:
 # Don't use submodules for documentation (readthedocs fails when using submodules)
 submodules:
   exclude: all
+
+conda:
+  environment: environment.yaml

@@ -12,8 +12,14 @@ int main()
 	double start, end;
 
 	librapid::network_config<double> config = {
-		{"input", 2},
-		{"output", 1}
+		{"input", librapid::named_param({
+										{"pos", 2},
+										{"vel", 2},
+										{"thing", 5}})},
+		{"output", librapid::named_param({
+										 {"pos", 3},
+										 {"vel", 4},
+										 {"thing", 5}})}
 	};
 
 	auto test_network = librapid::network(config);

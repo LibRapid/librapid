@@ -461,7 +461,27 @@ while index < len(sys.argv):
 	else:
 		index += 1
 
-print("Arguments passed:", args)
+try:
+	if build_stage_one:
+		with open("./build_config.lrc", "wb") as file:
+			pickle.dump((args, blas_args), file)
+
+		print("\n\nSaved the following values:\n\n")
+		print(args)
+		print(blas_args)
+	else:
+		with open("./build_config.lrc", "rb") as file:
+			args, blas_args = pickle.load(file)
+
+		print("\n\nLoaded the following values:\n\n")
+		print(args)
+		print(blas_args)
+
+		os.remove("./build_config.lrc")
+except:
+	print("Couldn't save build config info. Results may be different from expected")
+
+print("Arguments passed:", args, blas_args)
 
 print("The current working directory is", os.getcwd())
 blas_dir = find_blas(blas_args)
@@ -541,24 +561,6 @@ if blas_dir is not None:
 else:
 	define_macros.append(("LIBRAPID_NO_CBLAS", 1))
 	print("A valid CBlas interface was not found")
-
-try:
-	if build_stage_one:
-		with open("./build_config.lrc", "wb") as file:
-			pickle.dump((blas_dir, define_macros), file)
-
-		print("\n\nSaved the following values:\n\n")
-		print(blas_dir)
-		print(define_macros)
-	else:
-		with open("./build_config.lrc", "rb") as file:
-			blas_dir, define_macros = pickle.load(file)
-
-		print("\n\nLoaded the following values:\n\n")
-		print(blas_dir)
-		print(define_macros)
-except:
-	print("Couldn't save build config info. Results may be different from expected")
 
 ext_modules = [
 	Pybind11Extension("librapid_",
