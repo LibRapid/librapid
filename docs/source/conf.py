@@ -36,7 +36,6 @@ version_file.close()
 # Set the master file
 master_doc = "index"
 
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -112,3 +111,19 @@ html_theme = "furo"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ["_static"]
+
+# latex_engine = "pdflatex"
+latex_engine = "xelatex"
+
+html_theme_options = {
+    "light_css_variables": {
+        "color-brand-primary": "#7C4DFF",
+        "color-brand-content": "#7C4DFF",
+		"prefers-color-scheme": "dark",
+    },
+    "dark_css_variables": {
+        "color-brand-primary": "#7C4DFF",
+        "color-brand-content": "#7C4DFF",
+		"prefers-color-scheme": "dark",
+    },
+}
