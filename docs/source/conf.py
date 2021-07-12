@@ -48,7 +48,8 @@ extensions = [
 	"sphinx.ext.coverage",
 	"sphinx.ext.autosectionlabel",
 	"breathe",
-	"exhale"
+	"exhale",
+	"numpydoc"
 ]
 
 autosectionlabel_prefix_document = True
@@ -109,8 +110,18 @@ exclude_patterns = []
 html_theme = "pydata_sphinx_theme"
 
 html_logo = "../../branding/LibRapid small space.png"
+
+html_context = {
+    "github_user": "Pencilcaseman",
+    "github_repo": "librapid",
+    "github_version": release,
+    "doc_path": "docs/source",
+}
+
 html_theme_options = {
-    "logo_link": "https://github.com/Pencilcaseman/librapid"
+    "logo_link": "https://librapid.readthedocs.io/en/latest/",
+	"use_edit_page_button": True,
+    "google_analytics_id": "G-LYHM6F499Q"
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
