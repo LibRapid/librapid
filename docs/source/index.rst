@@ -90,5 +90,5 @@ Contents
 	:maxdepth: 2
 	:glob:
 
-	librapid_ndarray_api
+	ndarray/librapid_ndarray
 	librapid_network_api

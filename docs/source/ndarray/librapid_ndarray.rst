@@ -55,24 +55,11 @@ The fact that the arrays are stored in this way means that many functions can be
 accelerated dramatically by reducing the amount of data that must be transferred.
 For example, to transpose an array, the stride and extent are simply reversed.
 
-C++ Documentation
-=================
+Documentation
+=============
 
 .. toctree::
 	:maxdepth: 2
 	:glob:
 
-	cpp/librapid_cpp_extent
-	cpp/librapid_cpp_stride
-	cpp/librapid_cpp_ndarray
-
-Python Documentation
-====================
-
-.. toctree::
-	:maxdepth: 2
-	:glob:
-
-	python/librapid_py_extent
-	python/librapid_py_stride
-	python/librapid_py_ndarray
+	array_creation/array_creation

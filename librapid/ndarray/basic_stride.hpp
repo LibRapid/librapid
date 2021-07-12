@@ -391,25 +391,11 @@ namespace librapid
 			m_is_trivial = check_trivial();
 		}
 
-		/// <summary>
-		/// The begin function returns an iterator
-		/// pointing to the first element of the
-		/// stride, allowing you to iterate over
-		/// it easily
-		/// </summary>
-		/// <returns>Stride iterator object</returns>
 		LR_INLINE stride_iterator<T> begin() const
 		{
 			return stride_iterator<T>((T *) m_stride);
 		}
 
-		/// <summary>
-		/// The end function returns an iterator
-		/// pointing to the memory location one
-		/// element beyond the end of the stride,
-		/// allowing you to iterate over it
-		/// </summary>
-		/// <returns>Stride iterator object</returns>
 		LR_INLINE stride_iterator<T> end() const
 		{
 			return stride_iterator<T>((T *) m_stride + m_dims);
