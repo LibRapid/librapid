@@ -86,11 +86,43 @@ namespace librapid
 
 	public:
 
+		/**
+		 * \rst
+		 * 
+		 * Create an empty n-dimensional array. This array does not have an
+		 * extent or a stride, and many functions will not operate correctly
+		 * on such an array. For example, printing out an array created with
+		 * this function will result in ``[NONE]`` being printed.
+		 * 
+		 * .. Hint::
+		 * 		No memory is allocated on the heap when using this function,
+		 * 		so it is incredibly fast
+		 * 
+		 * \endrst
+		 */
 		basic_ndarray()
 		{};
 
-		template<typename V>
-		basic_ndarray(const basic_extent<V> &size) : m_extent(size),
+		/**
+		 * \rst
+		 * 
+		 * Create a new array from a given extent.
+		 *
+		 * The array created will have the same number of dimensions
+		 * as the number of elements passed in the extent object. For
+		 * example, passing in ``extent(2, 3)`` will create a 2x3
+		 * matrix.
+		 * 
+		 * Parameters
+		 * ----------
+		 * 
+		 * size: librapid::extent
+		 *		The dimensions of the array
+		 * 
+		 * \endrst
+		 */
+		template<typename E>
+		basic_ndarray(const basic_extent<E> &size) : m_extent(size),
 			m_stride(stride::from_extent(size.get_extent(), size.ndim())),
 			m_extent_product(math::product(size.get_extent(), size.ndim()))
 		{
@@ -110,6 +142,38 @@ namespace librapid
 									   + std::to_string(LIBRAPID_MAX_DIMS));
 		}
 
+		template<typename E>
+		basic_ndarray(const std::vector<E> &size) : basic_ndarray(extent(size))
+		{}
+
+		template<typename E>
+		basic_ndarray(const std::initializer_list<E> &size) : basic_ndarray(extent(size))
+		{}
+
+		/**
+		 * \rst
+		 * 
+		 * Creates a new array from a given shape, and fill it with a value.
+		 * 
+		 * For example, creating an array from ``librapid::extent({3, 4}), 5.``
+		 * will create the following array:
+		 * 
+		 * .. code-block:: python
+		 * 
+		 * 	[[5. 5. 5. 5.]
+		 * 	 [5. 5. 5. 5.]
+		 * 	 [5. 5. 5. 5.]]
+		 * 
+		 * Parameters
+		 * ----------
+		 * 
+		 * size: librapid::extent
+		 * 		The dimensions of the array
+		 * val: Any arithmetic type
+		 * 		The fill value
+		 * 
+		 * \endrst
+		 */
 		template<typename E, typename V>
 		basic_ndarray(const basic_extent<E> &size, V val) : m_extent(size),
 			m_stride(stride::from_extent(size.get_extent(), size.ndim())),
@@ -135,16 +199,34 @@ namespace librapid
 									   + std::to_string(LIBRAPID_MAX_DIMS));
 		}
 
-		template<typename L>
-		basic_ndarray(const std::initializer_list<L> &shape)
-			: basic_ndarray(basic_extent<lr_int>(shape))
+		template<typename E, typename V>
+		basic_ndarray(const std::vector<E> &size, V val) : basic_ndarray(extent(size), val)
 		{}
 
-		template<typename L, typename V>
-		basic_ndarray(const std::initializer_list<L> &shape, V value)
-			: basic_ndarray(std::vector<L>(shape.begin(), shape.end()), (L) value)
+		template<typename E, typename V>
+		basic_ndarray(const std::initializer_list<E> &size, V val) : basic_ndarray(extent(size), val)
 		{}
 
+		/**
+		 * \rst
+		 * 
+		 * Create a new array from an existing one, where the new array's data
+		 * is linked to the existing one's, so an update in one will update
+		 * the data in the other.
+		 * 
+		 * .. Attention::
+		 * 		The shape and stride of the arrays will be the same, so a sub-optimal
+		 * 		stride in the original array will also result in a sub-optimal stride
+		 * 		in the new one. To mitigate this, try using ``.copy()`` instead.
+		 * 
+		 * Parameters
+		 * ----------
+		 * 
+		 * arr: librapid::ndarray
+		 * 		The array to reference
+		 * 
+		 * \endrst
+		 */
 		basic_ndarray(const basic_ndarray<T> &arr) : m_extent(arr.m_extent),
 			m_stride(arr.m_stride), m_origin_references(arr.m_origin_references),
 			m_data_origin(arr.m_data_origin), m_data_start(arr.m_data_start),
@@ -184,24 +266,82 @@ namespace librapid
 			return res;
 		}
 
+		/**
+		* \rst
+		* 
+		* Create a new array from the provided data. The function supports
+		* creation from a scalar value, as well as vectors, matrices and
+		* higher dimensional data.
+		* 
+		* For arrays with dimensions greater than or equal to 2 (i.e. matrices
+		* and above) the sub-arrays *must* be the same size, otherwise an error
+		* will be thrown.
+		* 
+		* Examples
+		* --------
+		* 
+		* .. code-block:: C++
+		* 		:caption: C++ Example
+		* 
+		* 		auto my_vec = librapid::ndarray::from_data(VEC{1, 2, 3, 4});
+		* 		std::cout << my_vec << "\n";
+		* 		// Prints: [1. 2. 3. 4.]
+		* 
+		* .. code-block:: Python
+		* 		:caption: Python Example
+		* 
+		* 		my_vec = librapid.ndarray.from_data([1, 2, 3, 4])
+		* 		print(my_vec)
+		* 		# Prints: [1. 2. 3. 4.]
+		* 
+		* C++ Specific
+		* ------------
+		* 
+		* In C++, the input must be specifically denoted as ``std::vector<...>``
+		* for vectors and arrays (this may not be needed when using MSVC). To
+		* shorten this process, the typename ``VEC<...>`` is provided to allow
+		* the following: ``librapid:: ... ::from_data(VEC<VEC<int>>{{1, 2}, {3, 4}})``.
+		* 
+		* Python Specific
+		* ---------------
+		* 
+		* Due to Python's dynamic typing features, a ``list`` or ``tuple`` can be
+		* easily converted to an array -- there's no need to worry about any conversions.
+		* 
+		* Parameters
+		* ----------
+		* 
+		* data: scalar, vector, nested-vector
+		* 		The data for the array
+		* 
+		* Returns
+		* -------
+		* 
+		* result: scalar, vector, ndarray
+		*		A new array containing the same values that
+		*		were originally passed
+		* 
+		* \endrst
+		*/
 		template<typename V>
 		LR_INLINE static basic_ndarray<T> from_data(const std::vector<V> &values)
 		{
-			basic_ndarray<T> res(extent({values.size()}));
+			// basic_ndarray<T> res(extent({values.size()}));
+			basic_ndarray<T> res(utils::extract_size(values));
 			for (size_t i = 0; i < values.size(); i++)
-				res.set_value(i, (T) values[i]);
-			return res;
-		}
-
-		template<typename V>
-		LR_INLINE static basic_ndarray<T> from_data(const std::vector<std::vector<V>> &values)
-		{
-			std::vector<lr_int> size = utils::extract_size(values);
-			auto res = basic_ndarray<T>(extent(size));
-			for (size_t i = 0; i < values.size(); i++)
+				// res.set_value(i, (T) values[i]);
 				res[i] = from_data(values[i]);
 			return res;
 		}
+
+		// template<typename V>
+		// LR_INLINE static basic_ndarray<T> from_data(const std::vector<std::vector<V>> &values)
+		// {
+		// 	basic_ndarray<T> res(extent({values.size()}));
+		// 	for (size_t i = 0; i < values.size(); i++)
+		// 		res[i] = 
+		// 	return res;
+		// }
 
 		LR_INLINE basic_ndarray<T> &operator=(const basic_ndarray<T> &arr)
 		{
@@ -3679,7 +3819,7 @@ namespace librapid
 	 * .. Hint::
 	 *		The resulting array's datatype will be the largest of the
 	 *		start and end values. For example, passing an ``int`` and
-	 *		a ``float`` will result in an array of ``float``s being
+	 *		a ``float`` will result in an array of type ``float`` being
 	 *		returned.
 	 *
 	 * .. code-block:: c++
@@ -3737,7 +3877,7 @@ namespace librapid
 	 *		The resulting array's datatype will be the largest of the
 	 *		start, end and increment values. For example, passing an
 	 *		``int``, a ``float`` and a ``double`` will result in an
-	 *		array of ``doubles``s being returned.
+	 *		array of type ``double`` being returned.
 	 *
 	 * .. code-block:: c++
 	 *

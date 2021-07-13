@@ -47,6 +47,7 @@ extensions = [
 	"sphinx.ext.napoleon",
 	"sphinx.ext.coverage",
 	"sphinx.ext.autosectionlabel",
+	"sphinx.ext.intersphinx",
 	"breathe",
 	"exhale",
 	"numpydoc"
