@@ -63,3 +63,4 @@ Documentation
 	:glob:
 
 	array_creation/array_creation
+	arithmetic/arithmetic

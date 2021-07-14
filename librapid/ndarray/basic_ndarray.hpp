@@ -757,6 +757,14 @@ namespace librapid
 			m_data_start[index] = val;
 		}
 
+		/**
+		 * \rst
+		 * 
+		 * Return :math:`this + other`
+		 * See ``librapid::add`` for more details
+		 * 
+		 * \endrst
+		 */
 		template<typename B_T, typename B_A>
 		LR_INLINE basic_ndarray<typename std::common_type<T, B_T>::type,
 			nd_allocator<typename std::common_type<T, B_T>::type>>
@@ -769,6 +777,14 @@ namespace librapid
 			});
 		}
 
+		/**
+		* \rst
+		* 
+		* Return :math:`this - other`
+		* See ``librapid::sub`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T, typename B_A>
 		LR_INLINE basic_ndarray<typename std::common_type<T, B_T>::type,
 			nd_allocator<typename std::common_type<T, B_T>::type>>
@@ -781,6 +797,14 @@ namespace librapid
 			});
 		}
 
+		/**
+		* \rst
+		* 
+		* Return :math:`this \times other`
+		* See ``librapid::mul`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T, typename B_A>
 		LR_INLINE basic_ndarray<typename std::common_type<T, B_T>::type,
 			nd_allocator<typename std::common_type<T, B_T>::type>>
@@ -793,6 +817,14 @@ namespace librapid
 			});
 		}
 
+		/**
+		* \rst
+		* 
+		* Return :math:`\frac{this}{other}`
+		* See ``librapid::div`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T, typename B_A>
 		LR_INLINE basic_ndarray<typename std::common_type<T, B_T>::type,
 			nd_allocator<typename std::common_type<T, B_T>::type>>
@@ -805,6 +837,14 @@ namespace librapid
 			});
 		}
 
+		/**
+		* \rst
+		* 
+		* Return :math:`this + other`
+		* See ``librapid::add`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T>
 		LR_INLINE basic_ndarray<typename std::common_type<T, B_T>::type,
 			nd_allocator<typename std::common_type<T, B_T>::type>>
@@ -817,6 +857,14 @@ namespace librapid
 			});
 		}
 
+		/**
+		* \rst
+		* 
+		* Return :math:`this - other`
+		* See ``librapid::sub`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T>
 		LR_INLINE basic_ndarray<typename std::common_type<T, B_T>::type,
 			nd_allocator<typename std::common_type<T, B_T>::type>>
@@ -829,6 +877,14 @@ namespace librapid
 			});
 		}
 
+		/**
+		* \rst
+		* 
+		* Return :math:`this \times other`
+		* See ``librapid::mul`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T>
 		LR_INLINE basic_ndarray<typename std::common_type<T, B_T>::type,
 			nd_allocator<typename std::common_type<T, B_T>::type>>
@@ -841,6 +897,14 @@ namespace librapid
 			});
 		}
 
+		/**
+		* \rst
+		* 
+		* Return :math:`\frac{this}{other}`
+		* See ``librapid::div`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T>
 		LR_INLINE basic_ndarray<typename std::common_type<T, B_T>::type,
 			nd_allocator<typename std::common_type<T, B_T>::type>>
@@ -853,6 +917,14 @@ namespace librapid
 			});
 		}
 
+		/**
+		* \rst
+		* 
+		* Set ``this`` equal to :math:`this + other`
+		* See ``librapid::add`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T, typename B_A>
 		LR_INLINE basic_ndarray<T> &operator+=(const basic_ndarray<B_T, B_A> &other)
 		{
@@ -864,6 +936,14 @@ namespace librapid
 			return *this;
 		}
 
+		/**
+		* \rst
+		* 
+		* Set ``this`` equal to :math:`this - other`
+		* See ``librapid::sub`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T, typename B_A>
 		LR_INLINE basic_ndarray<T> &operator-=(const basic_ndarray<B_T, B_A> &other)
 		{
@@ -875,6 +955,14 @@ namespace librapid
 			return *this;
 		}
 
+		/**
+		* \rst
+		* 
+		* Set ``this`` equal to :math:`this \times other`
+		* See ``librapid::mul`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T, typename B_A>
 		LR_INLINE basic_ndarray<T> &operator*=(const basic_ndarray<B_T, B_A> &other)
 		{
@@ -886,6 +974,14 @@ namespace librapid
 			return *this;
 		}
 
+		/**
+		* \rst
+		* 
+		* Set ``this`` equal to :math:`\frac{this}{other}`
+		* See ``librapid::div`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T, typename B_A>
 		LR_INLINE basic_ndarray<T> &operator/=(const basic_ndarray<B_T, B_A> &other)
 		{
@@ -897,6 +993,14 @@ namespace librapid
 			return *this;
 		}
 
+		/**
+		* \rst
+		* 
+		* Set ``this`` equal to :math:`this + other`
+		* See ``librapid::add`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T>
 		LR_INLINE basic_ndarray<T> &operator+=(const B_T &other)
 		{
@@ -908,6 +1012,14 @@ namespace librapid
 			return *this;
 		}
 
+		/**
+		* \rst
+		* 
+		* Set ``this`` equal to :math:`this - other`
+		* See ``librapid::sub`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T>
 		LR_INLINE basic_ndarray<T> &operator-=(const B_T &other)
 		{
@@ -919,6 +1031,14 @@ namespace librapid
 			return *this;
 		}
 
+		/**
+		* \rst
+		* 
+		* Set ``this`` equal to :math:`this \times other`
+		* See ``librapid::mul`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T>
 		LR_INLINE basic_ndarray<T> &operator*=(const B_T &other)
 		{
@@ -930,6 +1050,14 @@ namespace librapid
 			return *this;
 		}
 
+		/**
+		* \rst
+		* 
+		* Set ``this`` equal to :math:`\frac{this}{other}`
+		* See ``librapid::div`` for more details
+		* 
+		* \endrst
+		*/
 		template<typename B_T>
 		LR_INLINE basic_ndarray<T> &operator/=(const B_T &other)
 		{
@@ -941,6 +1069,22 @@ namespace librapid
 			return *this;
 		}
 
+		/**
+		* \rst
+		* 
+		* Negate all values in the array and return the
+		* result.
+		* 
+		* Example:
+		* 
+		* .. code-block:: python
+		* 
+		*		[1. -2. -3. 4.]
+		*		// Becomes
+		*		[-1. 2. 3. -4.]
+		* 
+		* \endrst
+		*/
 		LR_INLINE basic_ndarray<T, alloc> operator-() const
 		{
 			basic_ndarray<T, alloc> res(m_extent);
@@ -1731,6 +1875,42 @@ namespace librapid
 			using ct = typename std::common_type<T, M>::type;
 
 			return maximum(basic_ndarray<ct>::from_data((ct) other));
+		}
+
+		/**
+		 * \rst
+		 * 
+		 * Return the element-wise floor of the array
+		 * Please see ``librapid::floor`` for more information
+		 * 
+		 * \endrst
+		 */
+		LR_INLINE basic_ndarray<T> floor() const
+		{
+			auto res = clone();
+			res.map([](T x)
+			{
+				return std::floor(x);
+			});
+			return res;
+		}
+
+		/**
+		 * \rst
+		 * 
+		 * Return the element-wise ceiling of the array.
+		 * Please see ``librapid::ceil`` for more information
+		 * 
+		 * \endrst
+		 */
+		LR_INLINE basic_ndarray<T> ceil() const
+		{
+			auto res = clone();
+			res.map([](T x)
+			{
+				return std::ceil(x);
+			});
+			return res;
 		}
 
 		/**
@@ -3036,6 +3216,60 @@ namespace librapid
 		return res;
 	}
 
+	/**
+	* \rst
+	* 
+	* Return the result of element-wise flooring of values
+	* in the array.
+	* 
+	* Example:
+	* 
+	* .. code-block:: python
+	* 
+	*		[0.5 1.  1.5]
+	*		# Becomes
+	*		[0. 1. 1.]
+	* 
+	* \endrst
+	*/
+	template<typename T>
+	LR_INLINE basic_ndarray<T> floor(const basic_ndarray<T> &arr)
+	{
+		auto res = arr.clone();
+		res.map([](T x)
+		{
+			return std::floor(x);
+		});
+		return res;
+	}
+
+	/**
+	* \rst
+	* 
+	* Return the result of element-wise ceiling of values
+	* in the array.
+	* 
+	* Example:
+	* 
+	* .. code-block:: python
+	* 
+	*		[0.5 1.  1.5]
+	*		# Becomes
+	*		[1. 1. 2.]
+	* 
+	* \endrst
+	*/
+	template<typename T>
+	LR_INLINE basic_ndarray<T> ceil(const basic_ndarray<T> &arr)
+	{
+		auto res = arr.clone();
+		res.map([](T x)
+		{
+			return std::ceil(x);
+		});
+		return res;
+	}
+
 	template<typename A_T, typename B_T, typename B_A>
 	LR_INLINE basic_ndarray<typename std::common_type<A_T, B_T>::type,
 		nd_allocator<typename std::common_type<A_T, B_T>::type>>
@@ -3087,12 +3321,6 @@ namespace librapid
 	/**
 	 * \rst
 	 *
-	 * .. Hint::
-	 * 	This function is mostly for compatibility
-	 * 	with the C# port of the library, as the
-	 * 	C++ and Python libraries support overloaded
-	 * 	operators.
-	 *
 	 * Add two values together and return the result.
 	 *
 	 * The input values can be any type that supports
@@ -3124,13 +3352,7 @@ namespace librapid
 
 	/**
 	 * \rst
-	 *
-	 * .. Hint::
-	 *		This function is mostly for compatibility
-	 *		with the C# port of the library, as the
-	 *		C++ and Python libraries support overloaded
-	 *		operators.
-	 *
+	 * 
 	 * Subtract one value from another and return the
 	 * result.
 	 *
@@ -3164,12 +3386,6 @@ namespace librapid
 	/**
 	 * \rst
 	 *
-	 * .. Hint::
-	 *		This function is mostly for compatibility
-	 *		with the C# port of the library, as the
-	 *		C++ and Python libraries support overloaded
-	 *		operators.
-	 *
 	 * Multiply two values together and return the result
 	 *
 	 * The input values can be any type that supports
@@ -3201,12 +3417,6 @@ namespace librapid
 
 	/**
 	 * \rst
-	 *
-	 * .. Hint::
-	 *		This function is mostly for compatibility
-	 *		with the C# port of the library, as the
-	 *		C++ and Python libraries support overloaded
-	 *		operators.
 	 *
 	 * Divide one value by another and return the result.
 	 *
