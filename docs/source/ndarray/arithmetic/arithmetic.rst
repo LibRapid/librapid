@@ -100,3 +100,4 @@ A full list of the arithmetic types is below:
 	array_subtraction
 	array_multiplication
 	array_division
+	negate
