@@ -266,6 +266,9 @@ PYBIND11_MODULE(librapid_, module)
 		.def("maximum", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::maximum(x1, x2); }, py::arg("x2"))
 		.def("maximum", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::maximum(x1, x2); }, py::arg("x2"))
 
+		.def("floor", [](const librapid::basic_ndarray<python_dtype> &arr) { return arr.floor(); })
+		.def("ceil", [](const librapid::basic_ndarray<python_dtype> &arr) { return arr.ceil(); })
+
 		.def("less_than", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::less_than(x1, x2); }, py::arg("x2"))
 		.def("less_than", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::less_than(x1, x2); }, py::arg("x2"))
 		.def("greater_than", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::greater_than(x1, x2); }, py::arg("x2"))

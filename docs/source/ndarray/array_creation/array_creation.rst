@@ -9,6 +9,16 @@ is referencing it, while others create arrays that reference the
 data of another, so changing a value in one will also change the
 value in the other.
 
+When a new array is created with entirely new data, the memory
+itself is contiguous (i.e. in a single block) in memory, meaning
+it's incredibly fast to access and do calculations with.
+
+.. Hint::
+	If you want to use an array that isn't contiguous (e.g. it
+	was reshaped or is part of a larger array), the ``clone()``
+	function will copy the data, but make it optimal in memory,
+	improving performance where applicable.
+
 .. toctree::
 	:maxdepth: 2
 	:glob:
