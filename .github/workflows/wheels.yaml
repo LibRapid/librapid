@@ -119,7 +119,11 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           
           echo "Bootstrapping vcpkg"
-          ./vcpkg/bootstrap-vcpkg.sh
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            ./vcpkg/bootstrap-vcpkg.bat
+          else
+            ./vcpkg/bootstrap-vcpkg.sh
+            exit 1
 
       - name: Inject Custom vcpkg Code
         continue-on-error: true
