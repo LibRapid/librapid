@@ -131,12 +131,12 @@ jobs:
         run: |
           echo "Installing OpenBLAS"
 
-          echo "Files in CWD:"
-          ls
+          echo "Files in ./vcpkg:"
+          ls vcpkg
 
           if [ "$RUNNER_OS" == "Windows" ]; then
-            .\vcpkg\vcpkg install openblas --triplet=x86-windows
-            .\vcpkg\vcpkg install openblas --triplet=x64-windows
+            .\\vcpkg\\vcpkg install openblas --triplet=x86-windows
+            .\\vcpkg\\vcpkg install openblas --triplet=x64-windows
           else
             ./vcpkg/vcpkg install openblas
           fi

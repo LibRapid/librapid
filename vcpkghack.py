@@ -41,7 +41,7 @@ else:
     file = args[1]
 
 # OpenBLAS command line options to include
-append = ["-DNUM_THREADS=128", "-DBUFFERSIZE=25", "-DUSE_TLS=1"]
+append = ["-DNUM_THREADS=128", "-DUSE_TLS=1"]
 
 contents = file_contents(file)
 new_contents = find_append(contents, "${}COMMON_OPTIONS{}".format("{", "}"), append, True)
