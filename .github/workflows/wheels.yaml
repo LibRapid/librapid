@@ -29,14 +29,23 @@ jobs:
           pip install --user check-manifest cpufeature==0.2.0
           pip install --user check-manifest -r build_requirements.txt
 
-      - name: Install OpenBLAS
+      - name: Install vcpkg
         run: |
           echo "Cloning Microsoft vcpkg"
           git clone https://github.com/microsoft/vcpkg.git
 
           echo "Bootstrapping vcpkg"
           ./vcpkg/bootstrap-vcpkg.sh
+        shell: bash
 
+      - name: Inject Custom vcpkg Code
+        continue-on-error: true
+        run: |
+          python vcpkghack.py ./vcpkg/ports/openblas/portfile.cmake
+        shell: bash
+
+      - name: Install OpenBLAS
+        run: |
           echo "Installing OpenBLAS"
           ./vcpkg/vcpkg install openblas
 
@@ -104,7 +113,7 @@ jobs:
         run: |
           python -m pip install -r build_requirements.txt
 
-      - name: Install OpenBLAS
+      - name: Install vcpkg
         run: |
           echo "Cloning Microsoft vcpkg"
           git clone https://github.com/microsoft/vcpkg.git
@@ -112,6 +121,14 @@ jobs:
           echo "Bootstrapping vcpkg"
           ./vcpkg/bootstrap-vcpkg.sh
 
+        - name: Inject Custom vcpkg Code
+        continue-on-error: true
+        run: |
+          python vcpkghack.py ./vcpkg/ports/openblas/portfile.cmake
+        shell: bash
+
+      - name: Install OpenBLAS
+        run: |
           echo "Installing OpenBLAS"
           if [ "$RUNNER_OS" == "Windows" ]; then
             ./vcpkg/vcpkg install openblas --triplet=x86-windows

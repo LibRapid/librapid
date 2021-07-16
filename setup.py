@@ -29,12 +29,10 @@ of the relevant files to setup.py when compiling.
 build_stage_one = False
 
 def find_blas(args):
-	global build_stage_one
 	# Attempt to find a BLAS library
 
 	if "--no-blas" in args:
 		print("Not searching for a BLAS library")
-		build_stage_one = True
 		return None
 
 	if len(args) == 0:
@@ -84,7 +82,6 @@ def find_blas(args):
 				return blas
 		return None
 
-	build_stage_one = True
 	blas_dir = {}
 	blas_bin = None
 	blas_include = None
@@ -444,13 +441,11 @@ while index < len(sys.argv):
 
 			key = passed[:pos]
 			value = passed[pos + 1:]
-			
-			# args[passed[:pos]] = passed[pos + 1:]
 		else:
 			key = passed
 			value = None
-			
-			# args[passed] = None
+
+		build_stage_one = True
 		
 		if "blas" in key:
 			blas_args[key] = value
@@ -463,6 +458,7 @@ while index < len(sys.argv):
 
 try:
 	if build_stage_one:
+		print("Attempting to save arguments")
 		with open("./build_config.lrc", "wb") as file:
 			pickle.dump((args, blas_args), file)
 
@@ -470,6 +466,7 @@ try:
 		print(args)
 		print(blas_args)
 	else:
+		print("Attempting to load arguments")
 		with open("./build_config.lrc", "rb") as file:
 			args, blas_args = pickle.load(file)
 
@@ -478,8 +475,9 @@ try:
 		print(blas_args)
 
 		os.remove("./build_config.lrc")
-except:
+except Exception as e:
 	print("Couldn't save build config info. Results may be different from expected")
+	print("Error was:", e)
 
 print("Arguments passed:", args, blas_args)
 
@@ -558,9 +556,14 @@ if blas_dir is not None:
 		print("Copying file '%s'" %blas_dir["bin"][1])
 		shutil.copyfile(os.path.join(bin_dir, blas_dir["bin"][1]), os.path.join(os.getcwd(), "librapid", "blas", blas_dir["bin"][1]))
 
+	print(os.listdir(os.path.join(os.getcwd(), "librapid", "blas")))
+	blas_files = [("./librapid_blas", [os.path.join("librapid", "blas", fname)]) for fname in os.listdir(os.path.join(os.getcwd(), "librapid", "blas"))]
+
 else:
 	define_macros.append(("LIBRAPID_NO_CBLAS", 1))
 	print("A valid CBlas interface was not found")
+
+	blas_files = []
 
 ext_modules = [
 	Pybind11Extension("librapid_",
@@ -604,7 +607,8 @@ setup(
 	cmdclass={"build_ext": build_ext},
 	include_package_data=True,
 	package_data={
-		"" : ["*.cpp", "*.hpp", "*.py", "*.dll", "*.so", "*.a", "*.lib"]
+		"" : ["*.cpp", "*.hpp", "*.c", "*.h", "*.py", "*.dll", "*.so", "*.a", "*.lib"] + [f[0] for _, f in blas_files]
 	},
+	data_files=blas_files,
 	zip_safe=False
 )
