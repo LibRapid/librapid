@@ -3243,6 +3243,12 @@ namespace librapid
 		return res;
 	}
 
+	template<typename T>
+	LR_INLINE basic_ndarray<T> floor(T val)
+	{
+		return std::floor(val);
+	}
+
 	/**
 	* \rst
 	* 
@@ -3268,6 +3274,12 @@ namespace librapid
 			return std::ceil(x);
 		});
 		return res;
+	}
+
+	template<typename T>
+	LR_INLINE basic_ndarray<T> ceil(T val)
+	{
+		return std::ceil(val);
 	}
 
 	template<typename A_T, typename B_T, typename B_A>
@@ -4120,11 +4132,11 @@ namespace librapid
 		lr_int len;
 
 		if (inc > 0 && start < end)
-			len = (lr_int) ceil(abs((ct) end - (ct) start) / (ct) inc);
+			len = (lr_int) std::ceil(abs((ct) end - (ct) start) / (ct) inc);
 		else if (inc > 0 && start >= end)
 			len = 0;
 		else if (inc < 0 && start > end)
-			len = (lr_int) ceil(abs((ct) start - (ct) end) / (ct) -inc);
+			len = (lr_int) std::ceil(abs((ct) start - (ct) end) / (ct) -inc);
 		else
 			len = 0;
 
