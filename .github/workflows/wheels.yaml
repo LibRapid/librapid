@@ -124,6 +124,8 @@ jobs:
           else
             ./vcpkg/bootstrap-vcpkg.sh
             exit 1
+          fi
+        shell: bash
 
       - name: Inject Custom vcpkg Code
         continue-on-error: true
