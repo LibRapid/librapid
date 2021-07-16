@@ -121,7 +121,7 @@ jobs:
           echo "Bootstrapping vcpkg"
           ./vcpkg/bootstrap-vcpkg.sh
 
-        - name: Inject Custom vcpkg Code
+      - name: Inject Custom vcpkg Code
         continue-on-error: true
         run: |
           python vcpkghack.py ./vcpkg/ports/openblas/portfile.cmake
