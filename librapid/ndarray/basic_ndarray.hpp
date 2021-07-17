@@ -345,6 +345,9 @@ namespace librapid
 
 		LR_INLINE basic_ndarray<T> &operator=(const basic_ndarray<T> &arr)
 		{
+			if (!arr.is_initialized()) // Quick return
+				return *this;
+
 			if (!is_initialized())
 				construct_new(arr.get_extent(), arr.get_stride());
 

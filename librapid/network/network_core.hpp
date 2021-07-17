@@ -14,7 +14,8 @@ namespace librapid
 	{
 		bool is_real = false;
 		bool is_string = false;
-		bool is_vector = false;
+		bool is_real_vector = false;
+		bool is_str_vector = false;
 		bool is_dict = false;
 		bool is_array = false;
 
@@ -23,8 +24,11 @@ namespace librapid
 		T real = 0;
 		std::string str;
 		std::unordered_map<std::string, lr_int> dict;
-		std::vector<double> vec;
+		std::vector<T> real_vec;
+		std::vector<std::string> str_vec;
 		basic_ndarray<T> arr;
+
+		config_container() = default;
 
 		config_container(const std::string &title, T val)
 			: name(title), real(val), is_real(true)
@@ -34,12 +38,20 @@ namespace librapid
 			: name(title), str(val), is_string(true)
 		{}
 
-		config_container(const std::string &title, const std::vector<double> &val)
-			: name(title), vec(std::vector<double>(val.begin(), val.end())), is_vector(true)
+		config_container(const std::string &title, const std::vector<T> &val)
+			: name(title), real_vec(std::vector<T>(val.begin(), val.end())), is_real_vector(true)
 		{}
 
-		config_container(const std::string &title, const std::initializer_list<double> &val)
-			: name(title), vec(std::vector<double>(val.begin(), val.end())), is_vector(true)
+		config_container(const std::string &title, const std::initializer_list<T> &val)
+			: name(title), real_vec(std::vector<T>(val.begin(), val.end())), is_real_vector(true)
+		{}
+
+		config_container(const std::string &title, const std::vector<std::string> &val)
+			: name(title), str_vec(std::vector<std::string>(val.begin(), val.end())), is_str_vector(true)
+		{}
+
+		config_container(const std::string &title, const std::initializer_list<std::string> &val)
+			: name(title), str_vec(std::vector<std::string>(val.begin(), val.end())), is_str_vector(true)
 		{}
 
 		config_container(const std::string &title, const std::unordered_map<std::string, lr_int> &val)
@@ -61,7 +73,10 @@ namespace librapid
 		class network
 	{
 	public:
-		network() = default;
+		network()
+		{
+			m_reference_count = new std::atomic<lr_int>(1);
+		}
 
 		/**
 		 * \rst
@@ -116,19 +131,76 @@ namespace librapid
 		 *		neural network with three hidden layers, with 3, 4 and 2 nodes
 		 *		respectively.
 		 *
+		 * optimizer: string, vector<string> (optional)
+		 *		A list of optimizers to use for the neural network. If no optimizers
+		 *		are passed, the default ``sgd`` optimizer will be selected for the
+		 *		entire network. If a single optimizer is provided, the entire network
+		 *		will use the specified optimizer. If more are provided, there must be
+		 *		an optimizer for every hidden layer and the output layer, otherwise an
+		 *		error will be thrown. Valid optimizers are:
+		 *
+		 *		- ``sgd`` (Stochastic Gradient Descent)
+		 *		- ``sgd_momentum`` (Stochastic Gradient Descent *with Momentum*)
+		 *		- ``rmsprop`` (Root Mean Square Propagation)
+		 *		- ``adam`` (Adaptive Moment Estimation)
+		 *
+		 * activation: string, vector<string> (optional)
+		 *		A list of activations for the neural network. If no activations
+		 *		are passed, the neural network will default to using the ``sigmoid``
+		 *		activation. If only one activation is passed, then that activation
+		 *		will be used on all of the layers of the network. If more than one
+		 *		activation is passed, the number of activations must equal
+		 *		``the number of hidden layers + 1``, otherwise an error will be thrown.
+		 *		(This is to provide an activation for each hidden layer and the output
+		 *		layer).
+		 *
+		 *		Valid activations are:
+		 *
+		 *		- ``sigmoid``
+		 *		- ``tanh``
+		 *		- ``relu``
+		 *		- ``leaky_relu``
+		 *
+		 * learning rate: vector<real> (optional)
+		 *		A list of learning rates for the neural network. If no inputs are given,
+		 *		each layer will set it's learning rate to the default for the optimizer
+		 *		on that layer. The defaults are shown below. If only one input is given,
+		 *		it will represent the learning rate for all layers of the network. If
+		 *		more values are provided, there must be one value per hidden layer, and
+		 *		another for the output layer, otherwise an error will occur.
+		 *
+		 *		Default Learning Rates:
+		 *		-----------------------
+		 *		- ``sgd = 0.01``
+		 *		- ``sgd_momentum = 0.01``
+		 *		- ``rmsprop = 0.01``
+		 *		- ``adam = 0.001``
+		 *
+		 *
 		 * \endrst
 		 */
 		network(const network_config<T> &config)
 		{
+			m_reference_count = new std::atomic<lr_int>(1);
+
 			int found_input = 0;
 			int found_output = 0;
 			int found_hidden = 0;
+			int found_activations = 0;
+			int found_optimizers = 0;
+			int found_learning_rates = 0;
 
 			bool use_named_inputs = false;
 			bool use_named_outputs = false;
-			std::vector<lr_int> shape;
+			lr_int input_nodes = 0;
+			std::vector<lr_int> hidden_nodes;
+			lr_int output_nodes = 0;
 			std::unordered_map<std::string, lr_int> input_names;
 			std::unordered_map<std::string, lr_int> output_names;
+
+			std::vector<std::string> activations;
+			std::vector<std::string> optimizers;
+			std::vector<T> learning_rates;
 
 			// Parse the input information and store it
 			for (lr_int param = 0; param < config.size(); param++)
@@ -146,8 +218,7 @@ namespace librapid
 					{
 						// No need to use named inputs
 						use_named_inputs = false;
-						lr_int nodes = input.real; // Convert from real to integer
-						shape.insert(shape.begin(), nodes);
+						input_nodes = input.real; // Convert from real to integer
 					}
 					else if (input.is_dict)
 					{
@@ -155,9 +226,9 @@ namespace librapid
 						use_named_inputs = true;
 						input_names = input.dict;
 
-						shape.insert(shape.begin(), 0);
+						input_nodes = 0;
 						for (const auto &io_pair : input_names)
-							shape[0] += io_pair.second;
+							input_nodes += io_pair.second;
 					}
 					else
 					{
@@ -176,8 +247,7 @@ namespace librapid
 					{
 						// No need to use named outputs
 						use_named_outputs = false;
-						lr_int nodes = output.real; // Convert from real to integer
-						shape.insert(shape.end(), nodes);
+						output_nodes = output.real; // Convert from real to integer
 					}
 					else if (output.is_dict)
 					{
@@ -185,15 +255,59 @@ namespace librapid
 						use_named_outputs = true;
 						output_names = output.dict;
 
-						shape.insert(shape.end(), 0);
+						output_nodes = 0;
 						for (const auto &io_pair : output_names)
-							shape[shape.size() - 1] += io_pair.second;
+							output_nodes += io_pair.second;
 					}
 					else
 					{
 						throw std::invalid_argument("The 'output' parameter requires "
 													"an integer or an unordered_map/dict");
 					}
+				}
+				else if (value.name == "hidden")
+				{
+					found_hidden++;
+					const config_container<T> hidden = value;
+
+					if (hidden.is_real_vector)
+						for (const auto &val : hidden.real_vec)
+							hidden_nodes.emplace_back(val);
+					else
+						throw std::invalid_argument("The 'hidden' parameter requires a vector/list of integers");
+				}
+				else if (value.name == "activation")
+				{
+					found_activations++;
+
+					if (value.is_string)
+						activations = std::vector<std::string>({value.str});
+					else if (value.is_str_vector)
+						activations = value.str_vec;
+					else
+						throw std::invalid_argument("The 'activations' parameter requires a string or a vector/list of strings");
+				}
+				else if (value.name == "optimizer")
+				{
+					found_optimizers++;
+
+					if (value.is_string)
+						optimizers = std::vector<std::string>({value.str});
+					else if (value.is_str_vector)
+						optimizers = value.str_vec;
+					else
+						throw std::invalid_argument("The 'optimizers' parameter requires a string or a vector/list of strings");
+				}
+				else if (value.name == "learning rate")
+				{
+					found_learning_rates++;
+
+					if (value.is_real)
+						learning_rates = std::vector<T>({value.real});
+					else if (value.is_real_vector)
+						learning_rates = value.real_vec;
+					else
+						throw std::invalid_argument("The 'learning rates' parameter requires a real or list of reals");
 				}
 				else
 				{
@@ -203,44 +317,179 @@ namespace librapid
 
 			// Deal with the parsed information
 
+			std::vector<lr_int> shape;
+			shape.emplace_back(input_nodes);
+			for (const lr_int val : hidden_nodes) shape.emplace_back(val);
+			shape.emplace_back(output_nodes);
+
 			if (found_input != 1)
 			{
 				throw std::invalid_argument("Only 1 'input' parameter is allowed, but "
-											+ std::to_string(found_input) + "were found");
+											+ std::to_string(found_input) + " were found");
 			}
 			else
 			{
 				// Add the input layer
-				add_layer(new layers::input<T>(shape[0]));
+				add_layer(new layers::input<T>(input_nodes));
 
 				if (use_named_inputs)
 					m_input = input_names;
 			}
 
-			if (found_output != 1)
+			if (found_hidden != 1)
 			{
-				throw std::invalid_argument("Only 1 'output' parameter is allowed, but "
-											+ std::to_string(found_output) + "were found");
+				throw std::invalid_argument("Only 1 'hidden' parameter is allowed, but "
+											+ std::to_string(found_hidden) + " were found");
 			}
 			else
 			{
-				// Add the output layer
-				
-				// NEED OTHER INFORMATION TO CREATE THE LAYER
-				// - LEARNING RATES
-				// - ACTIVATIONS
+				for (size_t i = 1; i < shape.size() - 1; i++)
+				{
+					// Add the hidden layer
+
+					layers::basic_layer<T> *layer = generate_layer(i,
+																   shape,
+																   learning_rates,
+																   activations,
+																   optimizers);
+
+					add_layer(layer);
+				}
 			}
 
-			std::cout << "Extracted shape: ";
-			for (const auto &n : shape)
-				std::cout << n << ", ";
-			std::cout << "\n";
+			if (found_output != 1)
+			{
+				throw std::invalid_argument("Only 1 'output' parameter is allowed, but "
+											+ std::to_string(found_output) + " were found");
+			}
+			else
+			{
+				layers::basic_layer<T> *layer = generate_layer(shape.size() - 1,
+															   shape,
+															   learning_rates,
+															   activations,
+															   optimizers);
+
+				add_layer(layer);
+			}
+		}
+
+	#if LIBRAPID_BUILD == 1
+		LR_INLINE network(py::dict args)
+		{
+			network_config<python_dtype> config;
+			for (auto arg : args)
+			{
+				config_container<T> container;
+
+				auto key = arg.first;
+				auto value = arg.second;
+				std::string key_type = py::repr(key.get_type());
+				std::string value_type = py::repr(value.get_type());
+
+				if (key_type != "<class 'str'>")
+					throw std::invalid_argument("Parameter '" + std::string(py::repr(key))
+												+ "' is invalid. Expected type 'str', received '"
+												+ key_type + "'");
+
+				if (value_type == "<class 'int'>" || value_type == "<class 'float'>")
+				{
+					container = {py::cast<std::string>(key), py::cast<T>(value)};
+				}
+				else if (value_type == "<class 'str'>")
+				{
+					container = config_container<T>(py::cast<std::string>(key),
+													py::cast<std::string>(value));
+				}
+				else if (value_type == "<class 'list'>")
+				{
+					// Convert to std::vector with correct datatype
+					py::list new_val = py::cast<py::list>(value);
+					if (new_val.size() == 0)
+						throw std::invalid_argument("LibRapid cannot process an empty list");
+
+					if (std::string(py::repr(new_val.get_type())) == "<class 'str'>")
+						container = config_container<T>(py::cast<std::string>(key),
+														py::cast<std::vector<std::string>>(value));
+					else
+						container = config_container<T>(py::cast<std::string>(key),
+														py::cast<std::vector<python_dtype>>(value));
+				}
+				else if (value_type == "<class 'dict'")
+				{
+					container = config_container<T>(py::cast<std::string>(key),
+													py::cast<std::unordered_map<std::string, lr_int>>(value));
+				}
+				else if (value_type == "<class 'librapid_.ndarray'>")
+				{
+					container = config_container<T>(py::cast<std::string>(key),
+													py::cast<basic_ndarray<python_dtype>>(value));
+				}
+				else
+				{
+					throw std::invalid_argument("Corresponding value of parameter '" + std::string(py::repr(key))
+												+ "' is invalid. Type '" + value_type + "' is invalid");
+				}
+
+				config.emplace_back(container);
+
+			}
+
+			m_reference_count = new std::atomic<lr_int>(1);
+			*this = network<T>(config);
+		}
+	#endif
+
+		network(const network<T> &other)
+		{
+			decrement();
+			m_layers.clear();
+
+			m_input = other.m_input;
+			m_output = other.m_output;
+
+			m_is_compiled = other.m_is_compiled;
+			m_has_config = other.m_has_config;
+
+			m_config = other.m_config;
+			m_train_config = other.m_train_config;
+
+			m_has_named_inputs = other.m_has_named_inputs;
+			m_has_named_outputs = other.m_has_named_outputs;
+
+			m_reference_count = other.m_reference_count;
+
+			increment();
+		}
+
+		LR_INLINE network<T> &operator=(const network<T> &other)
+		{
+			decrement();
+
+			m_input = other.m_input;
+			m_output = other.m_output;
+
+			m_layers = other.m_layers;
+
+			m_is_compiled = other.m_is_compiled;
+			m_has_config = other.m_has_config;
+
+			m_config = other.m_config;
+			m_train_config = other.m_train_config;
+
+			m_has_named_inputs = other.m_has_named_inputs;
+			m_has_named_outputs = other.m_has_named_outputs;
+
+			m_reference_count = other.m_reference_count;
+
+			increment();
+
+			return *this;
 		}
 
 		~network()
 		{
-			for (auto &layer : m_layers)
-				delete layer;
+			decrement();
 		}
 
 		LR_INLINE void add_layer(layers::basic_layer<T> *layer)
@@ -293,6 +542,101 @@ namespace librapid
 		}
 
 	private:
+		LR_INLINE void increment() const
+		{
+			(*m_reference_count)++;
+		}
+
+		LR_INLINE void decrement()
+		{
+			(*m_reference_count)--;
+
+			if ((*m_reference_count) == 0)
+			{
+				for (auto &layer : m_layers)
+					delete layer;
+				delete m_reference_count;
+			}
+		}
+
+		LR_INLINE layers::basic_layer<T> *generate_layer(lr_int index,
+														 const std::vector<lr_int> &shape,
+														 const std::vector<T> &learning_rates,
+														 const std::vector<std::string> &activations,
+														 const std::vector<std::string> &optimizers) const
+		{
+			// Process the learning rate
+			T lr = -1;
+
+			if (learning_rates.size() == 1)
+				lr = learning_rates[0];
+			else if (learning_rates.size() > 1)
+				if (learning_rates.size() != shape.size() - 1)
+					throw std::invalid_argument("Expected " + std::to_string(shape.size() - 1)
+												+ " learning rate parameters, but received "
+												+ std::to_string(learning_rates.size()));
+				else
+					lr = learning_rates[index - 1];
+
+			// Process the activation
+			std::string activation_name = "sigmoid";
+
+			if (activations.size() == 1)
+				activation_name = activations[0];
+			else if (activations.size() > 1)
+				activation_name = activations[index - 1];
+
+			activations::basic_activation<T> *activation = nullptr;
+
+			if (activation_name == "sigmoid") activation = new activations::sigmoid<T>();
+			else if (activation_name == "tanh") activation = new activations::tanh<T>();
+			else if (activation_name == "relu") activation = new activations::relu<T>();
+			else if (activation_name == "leaky relu") activation = new activations::leaky_relu<T>();
+			else throw std::invalid_argument("Activation '" + activation_name + "' is invalid. "
+											 "See documentation for valid arguments");
+
+			// Process the optimizer
+			std::string optimizer_name = "sgd";
+			optimizers::basic_optimizer<T> *optimizer;
+
+			if (optimizers.size() == 1)
+				optimizer_name = optimizers[0];
+			else if (optimizers.size() > 1)
+				if (optimizers.size() != shape.size() - 1)
+					throw std::invalid_argument("Expected " + std::to_string(shape.size() - 1)
+												+ " optimizer parameters, but received "
+												+ std::to_string(optimizers.size()));
+				else
+					optimizer_name = optimizers[index - 1];
+
+			if (lr == -1)
+			{
+				if (optimizer_name == "sgd") optimizer = new optimizers::sgd<T>();
+				else if (optimizer_name == "sgd_momentum") optimizer = new optimizers::sgd_momentum<T>();
+				else if (optimizer_name == "rmsprop") optimizer = new optimizers::rmsprop<T>();
+				else if (optimizer_name == "adam") optimizer = new optimizers::adam<T>();
+				else throw std::invalid_argument("Optimizer '" + optimizer_name + "' is invalid. "
+												 "See documentation for valid arguments");
+			}
+			else
+			{
+				if (optimizer_name == "sgd") optimizer = new optimizers::sgd<T>(lr);
+				else if (optimizer_name == "sgd_momentum") optimizer = new optimizers::sgd_momentum<T>(lr);
+				else if (optimizer_name == "rmsprop") optimizer = new optimizers::rmsprop<T>(lr);
+				else if (optimizer_name == "adam") optimizer = new optimizers::adam<T>(lr);
+				else throw std::invalid_argument("Optimizer '" + optimizer_name + "' is invalid. "
+												 "See documentation for valid arguments");
+			}
+
+			// Create the final layer
+			layers::basic_layer<T> *layer = nullptr;
+
+			// TODO: Other layer types???
+			layer = new layers::affine<T>(shape[index], activation, optimizer);
+
+			return layer;
+		}
+
 		LR_INLINE basic_ndarray<T> fix_array(const basic_ndarray<T> &arr, bool is_input) const
 		{
 			lr_int target_nodes = is_input ? m_config.inputs : m_config.outputs;
@@ -343,6 +687,8 @@ namespace librapid
 		}
 
 	private:
+		std::atomic<lr_int> *m_reference_count = nullptr;
+
 		bool m_is_compiled = false;
 		bool m_has_config = false;
 

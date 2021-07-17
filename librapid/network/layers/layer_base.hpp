@@ -17,7 +17,7 @@ namespace librapid
 			virtual ~basic_layer()
 			{}
 
-			inline virtual void compile(basic_layer<T> *prevLayer) = 0;
+			inline virtual void compile(basic_layer<T> *prev_layer) = 0;
 			inline virtual bool check(basic_layer<T> *other) = 0;
 
 			inline virtual lr_int get_nodes() const = 0;

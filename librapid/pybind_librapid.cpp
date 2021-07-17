@@ -91,6 +91,8 @@ struct python_adam {
 	const librapid::basic_ndarray<python_dtype> get_param(const std::string &name) { return optimizer->get_param(name); }
 };
 
+using python_network = librapid::network<python_dtype>;
+
 PYBIND11_MODULE(librapid_, module)
 {
 	module.doc() = module_docstring;
@@ -463,4 +465,11 @@ PYBIND11_MODULE(librapid_, module)
 		.def_property("m", [](python_adam &optim) { return optim.get_param("m"); }, [](python_adam &optim, const librapid::basic_ndarray<python_dtype> &val) { optim.set_param("m", val); })
 		.def_property("v", [](python_adam &optim) { return optim.get_param("v"); }, [](python_adam &optim, const librapid::basic_ndarray<python_dtype> &val) { optim.set_param("v", val); })
 		.def_property("time", [](python_adam &optim) { return optim.get_param("time").to_scalar(); }, [](python_adam &optim, const python_dtype val) { optim.set_param("time", val); });
+
+	py::class_<python_network>(module, "network")
+		.def(py::init<py::dict>())
+		
+		.def("compile", [](python_network &network) { network.compile(); })
+		.def("forward", [](python_network &network, const librapid::basic_ndarray<python_dtype> &input) { return network.forward(input); })
+		.def("backpropagate", [](python_network &network, const librapid::basic_ndarray<python_dtype> &input, const librapid::basic_ndarray<python_dtype> &target) { return network.backpropagate(input, target); });
 }
