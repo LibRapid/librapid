@@ -42,12 +42,15 @@ outputs = librapid.from_data(
 # can be found in the documentation
 
 # Create a neural network with 2 inputs, one hidden
-# layer with 3 nodes, and one output node
+# layer with 3 nodes, and one output node, with
+# a learning rate of 0.2
 config = {
     "input" : 2,
-    "hidden" : [3],
+    "hidden" : [4],
     "output" : 1,
-    "learning rate" : 0.2
+    "learning rate" : 0.01,
+    "activation" : "sigmoid",
+    "optimizer" : "sgd_momentum"
 }
 
 # Create the neural network
@@ -58,7 +61,7 @@ my_network.compile()
 
 # Train the neural network
 print("Training neural network")
-epochs = 2000 * 4 # 3000 times through the data
+epochs = 50000 * 4 # 5000 times through the data
 for i in range(epochs):
     index = random.randint(0, 3)
     my_network.backpropagate(inputs[index], outputs[index])

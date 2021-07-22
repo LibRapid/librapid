@@ -11,11 +11,11 @@ int main()
 	double start, end;
 
 	librapid::network_config<float> config = {
-		{"input", librapid::D{{"x", 1}, {"y", 1}}},
+		{"input", 2},
 		{"hidden", {3}},
 		{"output", 1},
 		{"learning rate", {0.01, 0.01}},
-		{"activation", {"leaky relu", "sigmoid"}},
+		{"activation", "leaky relu"},
 		{"optimizer", "adam"}
 	};
 
@@ -29,25 +29,19 @@ int main()
 
 	test_network = test_network2;
 
-	// // The training data input for XOR
-	// auto train_input = librapid::from_data(
-	// 	VEC<VEC<float>>{
-	// 			{0, 0},
-	// 			{0, 1},
-	// 			{1, 0},
-	// 			{1, 1}
-	// });
-
-	// Input is a vector << All inputs
-	// of vectors		 << Values for input on neural network
-	// of dictionaries	 << KEY ( name , value )
+	// The training data input for XOR
+	auto train_input = librapid::from_data(
+		VEC<VEC<float>>{
+				{0, 0},
+				{0, 1},
+				{1, 0},
+				{1, 1}
+	});
 
 	// The labeled data (x XOR y)
 	auto train_output = librapid::from_data(
 		VEC<VEC<float>>{
-			{
-				0
-			},
+				{0},
 				{1},
 				{1},
 				{0}

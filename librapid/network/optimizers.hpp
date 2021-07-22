@@ -104,8 +104,8 @@ namespace librapid
 					m_velocity = zeros_like(w);
 
 				// Momentum update formula -- also update velocity
-				m_velocity = m_learning_rate * dw - m_momentum * m_velocity;
-				return w + m_velocity;
+				m_velocity = m_momentum * m_velocity - m_learning_rate * dw;
+				return w - m_velocity;
 			}
 
 			LR_INLINE void set_param(const std::string &name, const T val) override

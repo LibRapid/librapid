@@ -171,19 +171,15 @@ namespace librapid
 		template<typename T>
 		LR_INLINE T round(const T num, lr_int dp = 0)
 		{
-			static double alpha = std::numeric_limits<T>::digits10 > 10 ? 0.4999999999 : 0.49999;
+			T alpha = pow10(dp);
+			T beta = pow10(-dp);
 
-			double p10 = pow10(-dp);
+			T absx = abs(num * alpha);
+			T y = floor(absx);
 
-			double remainder = fmod((double) num, p10);
+			if (absx - y >= 0.5) y += 1;
 
-			if (remainder == 0)
-				return num;
-
-			if (remainder < alpha * p10)
-				return (T) (num - remainder);
-
-			return (T) (num + p10 - remainder);
+			return (num >= 0 ? y : -y) / alpha;
 		}
 
 		template<typename T>
