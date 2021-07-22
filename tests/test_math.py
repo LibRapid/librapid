@@ -24,9 +24,9 @@ def test_math():
 	assert utils.is_close_numb(librapid.round(0.5, 0), 1)
 	assert utils.is_close_numb(librapid.round(0.44, 1), 0.4)
 	assert utils.is_close_numb(librapid.round(0.45, 1), 0.5)
-	assert utils.is_close_numb(librapid.round(-0.5, 0), 0)
+	assert utils.is_close_numb(librapid.round(-0.5, 0), -1)
 	assert utils.is_close_numb(librapid.round(-1.4, 0), -1)
-	assert utils.is_close_numb(librapid.round(-0.05, 1), 0)
+	assert utils.is_close_numb(librapid.round(-0.05, 1), -0.1)
 	assert utils.is_close_numb(librapid.round(0.05, 1), 0.1)
 
 	assert utils.is_close_numb(librapid.round(0.123456, 6), 0.123456)
