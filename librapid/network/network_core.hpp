@@ -9,6 +9,9 @@
 
 namespace librapid
 {
+	using SV = std::vector<std::string>;
+	using D = std::unordered_map<std::string, lr_int>;
+
 	template<typename T = double, typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
 	struct config_container
 	{
@@ -85,11 +88,25 @@ namespace librapid
 		 * The ``network_config`` object should contain all of the
 		 * information needed to construct a neural network, such as the
 		 * numbers and sizes of layers, for example.
+		 * 
+		 * .. Attention::
+		 *		When using the C++ library, it may be necessary to specify the
+		 *		type of some values, otherwise an error might be raised at runtime.
+		 *		The datatypes this impacts are listed below:
+		 * 
+		 *		- `std::vector<std::string>`
+		 *		- `std::unordered_map<std::string, integer>`
+		 * 
+		 *		To shorten the naming of datatypes, the following aliases are
+		 *		provided:
+		 * 
+		 *		- `std::vector<std::string> = librapid::SV`
+		 *		- `std::unordered_map<std::string, lr_int>` = `librapid::D`
 		 *
 		 * Parameters
 		 * ----------
 		 *
-		 * input: integer, map<string, integer>
+		 * input: integer, unordered_map<string, integer>, dict
 		 *		Represents the inputs to the neural network.
 		 *
 		 *		If only an integer is passed in as input, the value is
@@ -117,7 +134,7 @@ namespace librapid
 		 *		values will be assigned to inputs in the order they were
 		 *		initially specified.
 		 *
-		 * output: integer, map<string, integer>
+		 * output: integer, unordered_map<string, integer>, dict
 		 *		Represents the outputs of the neural network. The functionality
 		 *		of the output parameter is nearly identical to that of the
 		 *		input parameter in terms of functionality, except it refers
@@ -140,7 +157,7 @@ namespace librapid
 		 *		error will be thrown. Valid optimizers are:
 		 *
 		 *		- ``sgd`` (Stochastic Gradient Descent)
-		 *		- ``sgd_momentum`` (Stochastic Gradient Descent *with Momentum*)
+		 *		- ``sgd momentum`` (Stochastic Gradient Descent *with Momentum*)
 		 *		- ``rmsprop`` (Root Mean Square Propagation)
 		 *		- ``adam`` (Adaptive Moment Estimation)
 		 *
@@ -172,7 +189,7 @@ namespace librapid
 		 *		Default Learning Rates:
 		 *		-----------------------
 		 *		- ``sgd = 0.01``
-		 *		- ``sgd_momentum = 0.01``
+		 *		- ``sgd momentum = 0.01``
 		 *		- ``rmsprop = 0.01``
 		 *		- ``adam = 0.001``
 		 *
@@ -494,11 +511,17 @@ namespace librapid
 
 		LR_INLINE void add_layer(layers::basic_layer<T> *layer)
 		{
+			if (m_is_compiled)
+				throw std::runtime_error("Cannot add layers to a compiled network");
+
 			m_layers.emplace_back(layer);
 		}
 
 		LR_INLINE void add_layers(const std::vector<layers::basic_layer<T> *> &layers)
 		{
+			if (m_is_compiled)
+				throw std::runtime_error("Cannot add layers to a compiled network");
+
 			for (auto *layer : layers)
 				m_layers.emplace_back(layer);
 		}
@@ -532,12 +555,22 @@ namespace librapid
 
 		LR_INLINE basic_ndarray<T> forward(const basic_ndarray<T> &input)
 		{
+			if (!m_is_compiled)
+				throw std::runtime_error("Cannot run forward feed on a network "
+										 "that has not yet been compiled. Please "
+										 "see the documentation for more information.");
+
 			return internal_forward_feed(input);
 		}
 
 		LR_INLINE basic_ndarray<T> backpropagate(const basic_ndarray<T> &input,
 												 const basic_ndarray<T> &target)
 		{
+			if (!m_is_compiled)
+				throw std::runtime_error("Cannot backpropagate feed on a network "
+										 "that has not yet been compiled. Please "
+										 "see the documentation for more information.");
+
 			return internal_backpropagate(input, target);
 		}
 
@@ -612,7 +645,7 @@ namespace librapid
 			if (lr == -1)
 			{
 				if (optimizer_name == "sgd") optimizer = new optimizers::sgd<T>();
-				else if (optimizer_name == "sgd_momentum") optimizer = new optimizers::sgd_momentum<T>();
+				else if (optimizer_name == "sgd momentum") optimizer = new optimizers::sgd_momentum<T>();
 				else if (optimizer_name == "rmsprop") optimizer = new optimizers::rmsprop<T>();
 				else if (optimizer_name == "adam") optimizer = new optimizers::adam<T>();
 				else throw std::invalid_argument("Optimizer '" + optimizer_name + "' is invalid. "
@@ -621,7 +654,7 @@ namespace librapid
 			else
 			{
 				if (optimizer_name == "sgd") optimizer = new optimizers::sgd<T>(lr);
-				else if (optimizer_name == "sgd_momentum") optimizer = new optimizers::sgd_momentum<T>(lr);
+				else if (optimizer_name == "sgd momentum") optimizer = new optimizers::sgd_momentum<T>(lr);
 				else if (optimizer_name == "rmsprop") optimizer = new optimizers::rmsprop<T>(lr);
 				else if (optimizer_name == "adam") optimizer = new optimizers::adam<T>(lr);
 				else throw std::invalid_argument("Optimizer '" + optimizer_name + "' is invalid. "

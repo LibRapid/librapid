@@ -1112,7 +1112,7 @@ namespace librapid
 
 			if (!m_stride.is_trivial())
 			{
-				// Non-trivial stride, so this array will be deferenced and a new array
+				// Non-trivial stride, so this array will be dereferenced and a new array
 				// created in its place
 
 				// This destroys the current array and replaces it!
@@ -2255,7 +2255,7 @@ namespace librapid
 							throw std::domain_error("Cannot compute dot product with arrays with " +
 													m_extent.str() + " and " + other.get_extent().str());
 
-						// If the data is not congituous in memory, we cannot operate on it
+						// If the data is not contiguous in memory, we cannot operate on it
 						// normally, so clone the arrays to reorder the data and make it
 						// optimal in memory
 						if (!m_stride.is_contiguous() && other.get_stride().is_contiguous())
@@ -2286,14 +2286,6 @@ namespace librapid
 
 						linalg::cblas_gemm('r', transA, transB, M, N, K, alpha, a, lda,
 										   b, ldb, beta, c, ldc);
-
-						// if (!transA && !transB)
-						// 	linalg::cblas_gemm('r', false, false, M, N, K, alpha, a, lda,
-						// 					   b, ldb, beta, c, ldc);
-						// else if (transA && !transB)
-						// 	return clone().dot(other);
-						// else
-						// 	return dot(other.clone());
 
 						return res;
 					}

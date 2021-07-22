@@ -15,13 +15,13 @@
 namespace py = pybind11;
 
 #ifdef LIBRAPID_PYTHON_FLOAT
-	using python_dtype = float;
+using python_dtype = float;
 #else
-	#ifdef LIBRAPID_PYTHON_DOUBLE
-		using python_dtype = double;
-	#else
-		#error Unknown Python Datatype
-	#endif
+#ifdef LIBRAPID_PYTHON_DOUBLE
+using python_dtype = double;
+#else
+#error Unknown Python Datatype
+#endif
 #endif
 
 namespace librapid
@@ -197,7 +197,7 @@ namespace librapid
 	#else
 		return false;
 	#endif // LIBRAPID_CBLAS
-}
+	}
 
 	void set_blas_threads(int num)
 	{
@@ -229,9 +229,15 @@ namespace librapid
 	{
 	#if defined(LIBRAPID_HAS_OPENBLAS)
 		set_blas_threads(num);
-	#elif defined(LR_HAS_OMP)
+	#define LIB_SET
+	#endif
+
+	#if defined(LR_HAS_OMP)
 		omp_set_num_threads(num);
-	#else
+	#define LIB_SET
+	#endif
+
+	#if !defined(LIB_SET)
 		std::cout << "LibRapid does not have access to any multi-threaded components"
 			"such as OpenMP or OpenBLAS, so the function \"set_num_threads\""
 			"will not do anything" << "\n";

@@ -1,6 +1,7 @@
 #ifndef LIBRAPID_CBLAS_API
 #define LIBRAPID_CBLAS_API
 
+#include <thread>
 #include <librapid/config.hpp>
 
 #ifdef LIBRAPID_CBLAS
@@ -253,9 +254,9 @@ namespace librapid
 
 			cblas_dgemm(blas_order, blas_trans_a, blas_trans_b, m, n, k,
 						alpha, a, lda, b, ldb, beta, c, ldc);
-					}
+		}
 	#endif // LIBRAPID_CBLAS
-				}
-			}
+	}
+}
 
 #endif // LIBRAPID_CBLAS_API
