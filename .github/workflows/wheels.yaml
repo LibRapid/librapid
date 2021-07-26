@@ -34,10 +34,6 @@ jobs:
           echo "Cloning Microsoft vcpkg"
           git clone https://github.com/microsoft/vcpkg.git
 
-          cd vcpkg
-          git reset --hard 03992f2e1dfe78568ec95a381b7f65c90d7cd42d
-          cd ..
-
           echo "Bootstrapping vcpkg"
           ./vcpkg/bootstrap-vcpkg.sh
         shell: bash
@@ -51,7 +47,7 @@ jobs:
       - name: Install OpenBLAS
         run: |
           echo "Installing OpenBLAS"
-          ./vcpkg/vcpkg install openblas
+          ./vcpkg/vcpkg install openblas[threads]
 
           echo "Current directory"
           pwd
@@ -121,10 +117,6 @@ jobs:
         run: |
           echo "Cloning Microsoft vcpkg"
           git clone https://github.com/microsoft/vcpkg.git
-
-          cd vcpkg
-          git reset --hard 03992f2e1dfe78568ec95a381b7f65c90d7cd42d
-          cd ..
           
           echo "Bootstrapping vcpkg"
           if [ "$RUNNER_OS" == "Windows" ]; then
@@ -148,10 +140,10 @@ jobs:
           ls vcpkg
 
           if [ "$RUNNER_OS" == "Windows" ]; then
-            .\\vcpkg\\vcpkg install openblas --triplet=x86-windows
-            .\\vcpkg\\vcpkg install openblas --triplet=x64-windows
+            .\\vcpkg\\vcpkg install openblas[threads] --triplet=x86-windows
+            .\\vcpkg\\vcpkg install openblas[threads] --triplet=x64-windows
           else
-            ./vcpkg/vcpkg install openblas
+            ./vcpkg/vcpkg install openblas[threads]
           fi
           
           echo "Current directory"
