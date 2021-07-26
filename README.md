@@ -20,6 +20,10 @@ Additionally, the Python interface has been adjusted slightly from the C++ inter
 
 To install LibRapid as a Python library, simply run ```pip install librapid``` in the command line. Hopefully, there will be precompiled wheels available for your operating system and python version, meaning you will not need a C++ compiler to install it (if this is not the case, a modern C++ compiler will be required)
 
+### WARNING
+
+When installing LibRapid from ``pip``, there is a chance that the pre-build wheels will lead to an error (ususally a ```signal: illegal instruction (core dumped)```). This is because the pre-build OpenBLAS version that comes with the library is attempting to use an instruction that your computer does not support (AVX, AVX2, AVX512). This is a known issue and I am working on resolving this issue, but until that point, you may have to install LibRapid with a slightly different command: ```pip install librapid --no-binary :all:```
+
 To use the library for C++ use, a modern C++ compiler will definitely be required. To use the library simply add the directory of this file to your extra include paths, and include the library using ```#include<librapid/librapid.hpp>```
 
 ## Documentation

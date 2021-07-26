@@ -69,7 +69,7 @@ namespace librapid
 		}
 
 		template<typename T>
-		LR_INLINE T &&min_max_forward(T &&val)
+		LR_INLINE T &&min(T &&val)
 		{
 			return std::forward<T>(val);
 		}
@@ -78,8 +78,8 @@ namespace librapid
 		LR_INLINE auto min(T0 &&val1, T1 &&val2, Ts &&... vs)
 		{
 			return (val1 < val2) ?
-				min_max_forward(val1, std::forward<Ts>(vs)...) :
-				min_max_forward(val2, std::forward<Ts>(vs)...);
+				min(val1, std::forward<Ts>(vs)...) :
+				min(val2, std::forward<Ts>(vs)...);
 		}
 
 		template<typename T>
@@ -92,12 +92,18 @@ namespace librapid
 			return min_found;
 		}
 
+		template<typename T>
+		LR_INLINE T &&max(T &&val)
+		{
+			return std::forward<T>(val);
+		}
+
 		template<typename T0, typename T1, typename... Ts>
 		LR_INLINE auto max(T0 &&val1, T1 &&val2, Ts &&... vs)
 		{
 			return (val1 > val2) ?
-				min_max_forward(val1, std::forward<Ts>(vs)...) :
-				min_max_forward(val2, std::forward<Ts>(vs)...);
+				max(val1, std::forward<Ts>(vs)...) :
+				max(val2, std::forward<Ts>(vs)...);
 		}
 
 		template<typename T>

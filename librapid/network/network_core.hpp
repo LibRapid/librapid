@@ -7,11 +7,11 @@
 #include <librapid/config.hpp>
 #include <librapid/ndarray/ndarray.hpp>
 
+using SV_ = std::vector<std::string>;
+using D_ = std::unordered_map<std::string, lr_int>;
+
 namespace librapid
 {
-	using SV = std::vector<std::string>;
-	using D = std::unordered_map<std::string, lr_int>;
-
 	template<typename T = double, typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
 	struct config_container
 	{
@@ -22,8 +22,6 @@ namespace librapid
 		bool is_dict = false;
 		bool is_array = false;
 
-		std::string name;
-
 		T real = 0;
 		std::string str;
 		std::unordered_map<std::string, lr_int> dict;
@@ -33,43 +31,82 @@ namespace librapid
 
 		config_container() = default;
 
-		config_container(const std::string &title, T val)
-			: name(title), real(val), is_real(true)
+		// 		config_container(const std::string &title, T val)
+		// 			: name(title), real(val), is_real(true)
+		// 		{}
+		//
+		// 		config_container(const std::string &title, const std::string &val)
+		// 			: name(title), str(val), is_string(true)
+		// 		{}
+		//
+		// 		config_container(const std::string &title, const std::vector<T> &val)
+		// 			: name(title), real_vec(std::vector<T>(val.begin(), val.end())), is_real_vector(true)
+		// 		{}
+		//
+		// 		config_container(const std::string &title, const std::initializer_list<T> &val)
+		// 			: name(title), real_vec(std::vector<T>(val.begin(), val.end())), is_real_vector(true)
+		// 		{}
+		//
+		// 		config_container(const std::string &title, const std::vector<std::string> &val)
+		// 			: name(title), str_vec(std::vector<std::string>(val.begin(), val.end())), is_str_vector(true)
+		// 		{}
+		//
+		// 		config_container(const std::string &title, const std::initializer_list<std::string> &val)
+		// 			: name(title), str_vec(std::vector<std::string>(val.begin(), val.end())), is_str_vector(true)
+		// 		{}
+		//
+		// 		config_container(const std::string &title, const std::unordered_map<std::string, lr_int> &val)
+		// 			: name(title), dict(val), is_dict(true)
+		// 		{}
+		//
+		// 		config_container(const std::string &title, const basic_ndarray<T> &val)
+		// 			: name(title), arr(val), is_array(true)
+		// 		{}
+
+		config_container(T val)
+			: real(val), is_real(true)
 		{}
 
-		config_container(const std::string &title, const std::string &val)
-			: name(title), str(val), is_string(true)
+		config_container(const std::string &val)
+			: str(val), is_string(true)
 		{}
 
-		config_container(const std::string &title, const std::vector<T> &val)
-			: name(title), real_vec(std::vector<T>(val.begin(), val.end())), is_real_vector(true)
+		config_container(const char *val)
+			: str(val), is_string(true)
 		{}
 
-		config_container(const std::string &title, const std::initializer_list<T> &val)
-			: name(title), real_vec(std::vector<T>(val.begin(), val.end())), is_real_vector(true)
+		config_container(const std::vector<T> &val)
+			: real_vec(std::vector<T>(val.begin(), val.end())), is_real_vector(true)
 		{}
 
-		config_container(const std::string &title, const std::vector<std::string> &val)
-			: name(title), str_vec(std::vector<std::string>(val.begin(), val.end())), is_str_vector(true)
+		config_container(const std::initializer_list<T> &val)
+			: real_vec(std::vector<T>(val.begin(), val.end())), is_real_vector(true)
 		{}
 
-		config_container(const std::string &title, const std::initializer_list<std::string> &val)
-			: name(title), str_vec(std::vector<std::string>(val.begin(), val.end())), is_str_vector(true)
+		config_container(const std::vector<std::string> &val)
+			: str_vec(std::vector<std::string>(val.begin(), val.end())), is_str_vector(true)
 		{}
 
-		config_container(const std::string &title, const std::unordered_map<std::string, lr_int> &val)
-			: name(title), dict(val), is_dict(true)
+		config_container(const std::initializer_list<std::string> &val)
+			: str_vec(std::vector<std::string>(val.begin(), val.end())), is_str_vector(true)
 		{}
 
-		config_container(const std::string &title, const basic_ndarray<T> &val)
-			: name(title), arr(val), is_array(true)
+		config_container(const std::unordered_map<std::string, lr_int> &val)
+			: dict(val), is_dict(true)
+		{}
+
+		config_container(const basic_ndarray<T> &val)
+			: arr(val), is_array(true)
 		{}
 	};
 
+	// template<typename T = double>
+	// using network_config = std::vector<config_container<T>>;
 	template<typename T = double>
-	using network_config = std::vector<config_container<T>>;
+	using network_config = std::unordered_map<std::string, config_container<T>>;
 
-	using named_param = std::unordered_map<std::string, lr_int>;
+	template<typename T = double>
+	using named_param = std::unordered_map<std::string, basic_ndarray<T>>;
 
 	template<typename T = double,
 		typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
@@ -88,20 +125,20 @@ namespace librapid
 		 * The ``network_config`` object should contain all of the
 		 * information needed to construct a neural network, such as the
 		 * numbers and sizes of layers, for example.
-		 * 
+		 *
 		 * .. Attention::
 		 *		When using the C++ library, it may be necessary to specify the
 		 *		type of some values, otherwise an error might be raised at runtime.
 		 *		The datatypes this impacts are listed below:
-		 * 
+		 *
 		 *		- `std::vector<std::string>`
 		 *		- `std::unordered_map<std::string, integer>`
-		 * 
+		 *
 		 *		To shorten the naming of datatypes, the following aliases are
 		 *		provided:
-		 * 
-		 *		- `std::vector<std::string> = librapid::SV`
-		 *		- `std::unordered_map<std::string, lr_int>` = `librapid::D`
+		 *
+		 *		- `std::vector<std::string> = SV_`
+		 *		- `std::unordered_map<std::string, lr_int>` = `D_`
 		 *
 		 * Parameters
 		 * ----------
@@ -220,80 +257,84 @@ namespace librapid
 			std::vector<T> learning_rates;
 
 			// Parse the input information and store it
-			for (lr_int param = 0; param < config.size(); param++)
+			for (const auto &param : config)
 			{
-				const auto &value = config[param];
+				const std::string &key = param.first;
+				const config_container<T> &value = param.second;
 
-				if (value.name == "input")
+				if (key == "input")
 				{
 					found_input++; // Increment (not bool to allow for error checking)
 
-					// Input parameter
-					const config_container<T> input = value;
-
-					if (input.is_real)
+					if (value.is_real)
 					{
 						// No need to use named inputs
 						use_named_inputs = false;
-						input_nodes = input.real; // Convert from real to integer
+						input_nodes = value.real; // Convert from real to integer
 					}
-					else if (input.is_dict)
+					else if (value.is_dict)
 					{
 						// Use named inputs
 						use_named_inputs = true;
-						input_names = input.dict;
 
 						input_nodes = 0;
-						for (const auto &io_pair : input_names)
+						for (const auto &io_pair : value.dict)
 							input_nodes += io_pair.second;
+
+						m_config["input_names"] = value.dict;
 					}
 					else
 					{
 						throw std::invalid_argument("The 'input' parameter requires "
 													"an integer or an unordered_map/dict");
 					}
+
+					// Set "input_nodes" in the config
+					m_config["input_nodes"] = input_nodes;
 				}
-				else if (value.name == "output")
+				else if (key == "output")
 				{
 					found_output++; // Increment (not bool to allow for error checking)
 
-					// Output parameter
-					const config_container<T> output = value;
-
-					if (output.is_real)
+					if (value.is_real)
 					{
 						// No need to use named outputs
 						use_named_outputs = false;
-						output_nodes = output.real; // Convert from real to integer
+						output_nodes = value.real; // Convert from real to integer
 					}
-					else if (output.is_dict)
+					else if (value.is_dict)
 					{
 						// Use named outputs
 						use_named_outputs = true;
-						output_names = output.dict;
 
 						output_nodes = 0;
-						for (const auto &io_pair : output_names)
+						for (const auto &io_pair : value.dict)
 							output_nodes += io_pair.second;
+
+						m_config["output_names"] = value.dict;
 					}
 					else
 					{
 						throw std::invalid_argument("The 'output' parameter requires "
 													"an integer or an unordered_map/dict");
 					}
+
+					m_config["output_nodes"] = output_nodes;
 				}
-				else if (value.name == "hidden")
+				else if (key == "hidden")
 				{
 					found_hidden++;
-					const config_container<T> hidden = value;
 
-					if (hidden.is_real_vector)
-						for (const auto &val : hidden.real_vec)
+					if (value.is_real_vector)
+						for (const auto &val : value.real_vec)
 							hidden_nodes.emplace_back(val);
 					else
 						throw std::invalid_argument("The 'hidden' parameter requires a vector/list of integers");
+
+					m_config["hidden_nodes"] = std::vector<T>(hidden_nodes.begin(),
+															  hidden_nodes.end());
 				}
-				else if (value.name == "activation")
+				else if (key == "activation")
 				{
 					found_activations++;
 
@@ -303,8 +344,10 @@ namespace librapid
 						activations = value.str_vec;
 					else
 						throw std::invalid_argument("The 'activations' parameter requires a string or a vector/list of strings");
+
+					m_config["activatio_names"] = activations;
 				}
-				else if (value.name == "optimizer")
+				else if (key == "optimizer")
 				{
 					found_optimizers++;
 
@@ -314,8 +357,10 @@ namespace librapid
 						optimizers = value.str_vec;
 					else
 						throw std::invalid_argument("The 'optimizers' parameter requires a string or a vector/list of strings");
+
+					m_config["optimizer_names"] = optimizers;
 				}
-				else if (value.name == "learning rate")
+				else if (key == "learning rate")
 				{
 					found_learning_rates++;
 
@@ -325,10 +370,12 @@ namespace librapid
 						learning_rates = value.real_vec;
 					else
 						throw std::invalid_argument("The 'learning rates' parameter requires a real or list of reals");
+
+					m_config["learning_rates"] = learning_rates;
 				}
 				else
 				{
-					throw std::invalid_argument("Parameter '" + value.name + "' is invalid");
+					throw std::invalid_argument("Parameter '" + key + "' is invalid");
 				}
 			}
 
@@ -397,6 +444,7 @@ namespace librapid
 			network_config<python_dtype> config;
 			for (auto arg : args)
 			{
+				std::string key_name;
 				config_container<T> container;
 
 				auto key = arg.first;
@@ -411,12 +459,11 @@ namespace librapid
 
 				if (value_type == "<class 'int'>" || value_type == "<class 'float'>")
 				{
-					container = {py::cast<std::string>(key), py::cast<T>(value)};
+					container = py::cast<T>(value);
 				}
 				else if (value_type == "<class 'str'>")
 				{
-					container = config_container<T>(py::cast<std::string>(key),
-													py::cast<std::string>(value));
+					container = py::cast<std::string>(value);
 				}
 				else if (value_type == "<class 'list'>")
 				{
@@ -426,30 +473,28 @@ namespace librapid
 						throw std::invalid_argument("LibRapid cannot process an empty list");
 
 					if (std::string(py::repr(new_val.get_type())) == "<class 'str'>")
-						container = config_container<T>(py::cast<std::string>(key),
-														py::cast<std::vector<std::string>>(value));
+						container = py::cast<std::vector<std::string>>(value);
 					else
-						container = config_container<T>(py::cast<std::string>(key),
-														py::cast<std::vector<python_dtype>>(value));
+						container = py::cast<std::vector<python_dtype>>(value);
 				}
 				else if (value_type == "<class 'dict'")
 				{
-					container = config_container<T>(py::cast<std::string>(key),
-													py::cast<std::unordered_map<std::string, lr_int>>(value));
+					container = py::cast<std::unordered_map<std::string, lr_int>>(value);
 				}
 				else if (value_type == "<class 'librapid_.ndarray'>")
 				{
-					container = config_container<T>(py::cast<std::string>(key),
-													py::cast<basic_ndarray<python_dtype>>(value));
+					container = py::cast<basic_ndarray<python_dtype>>(value);
 				}
 				else
 				{
-					throw std::invalid_argument("Corresponding value of parameter '" + std::string(py::repr(key))
-												+ "' is invalid. Type '" + value_type + "' is invalid");
+					throw std::invalid_argument("Corresponding value of parameter '"
+												+ std::string(py::repr(key))
+												+ "' is invalid. Type '"
+												+ value_type + "' is invalid");
 				}
 
-				config.emplace_back(container);
-
+				key_name = py::cast<std::string>(key);
+				config[key_name] = container;
 			}
 
 			m_reference_count = new std::atomic<lr_int>(1);
@@ -560,18 +605,37 @@ namespace librapid
 										 "that has not yet been compiled. Please "
 										 "see the documentation for more information.");
 
-			return internal_forward_feed(input);
+			// Check that the input is a valid shape
+			auto fixed = fix_array(input, true);
+
+			return internal_forward_feed(fixed);
+		}
+
+		LR_INLINE basic_ndarray<T> forward(const named_param<T> &input)
+		{
+			if (!m_is_compiled)
+				throw std::runtime_error("Cannot run forward feed on a network "
+										 "that has not yet been compiled. Please "
+										 "see the documentation for more information.");
+
+			auto input_array = array_from_named(input, m_config["input_names"]);
+
+			return internal_forward_feed(input_array);
 		}
 
 		LR_INLINE basic_ndarray<T> backpropagate(const basic_ndarray<T> &input,
 												 const basic_ndarray<T> &target)
 		{
 			if (!m_is_compiled)
-				throw std::runtime_error("Cannot backpropagate feed on a network "
+				throw std::runtime_error("Cannot backpropagate on a network "
 										 "that has not yet been compiled. Please "
 										 "see the documentation for more information.");
 
-			return internal_backpropagate(input, target);
+			// Check that the input is a valid shape
+			auto fixed_input = fix_array(input, true);
+			auto fixed_target = fix_array(target, false);
+
+			return internal_backpropagate(fixed_input, fixed_target);
 		}
 
 	private:
@@ -672,7 +736,8 @@ namespace librapid
 
 		LR_INLINE basic_ndarray<T> fix_array(const basic_ndarray<T> &arr, bool is_input) const
 		{
-			lr_int target_nodes = is_input ? m_config.inputs : m_config.outputs;
+			lr_int target_nodes = (is_input ? m_config.at("input_nodes")
+								   : m_config.at("output_nodes")).real;
 
 			if (arr.ndim() == 1)
 			{
@@ -697,6 +762,21 @@ namespace librapid
 			throw std::domain_error("An array with " + arr.get_extent().str()
 									+ " cannot be broadcast to an array with extent("
 									+ std::to_string(target_nodes) + ", 1).");
+		}
+
+		LR_INLINE basic_ndarray<T> array_from_named(const named_param<T> &data,
+													const config_container<T> &names) const
+		{
+			// Convert a list of named data into a single array with the
+			// correct extent
+
+			// Calculate the number of nodes needed
+			lr_int nodes = 0;
+			named_param<T> fixed;
+			for (const auto &input : data)
+			{
+
+			}
 		}
 
 		LR_INLINE basic_ndarray<T> internal_forward_feed(const basic_ndarray<T> &input) const

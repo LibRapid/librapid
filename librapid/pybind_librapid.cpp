@@ -310,9 +310,9 @@ PYBIND11_MODULE(librapid_, module)
 		.def("variance", [](const librapid::basic_ndarray<python_dtype> &arr, lr_int axis) { return arr.variance(axis); }, py::arg("axis") = librapid::AUTO)
 
 		.def("__str__", [](const librapid::basic_ndarray<python_dtype> &arr) { return arr.str(0); })
+		.def("__repr__", [](const librapid::basic_ndarray<python_dtype> &arr) { return "<librapid.ndarray " + arr.str(18, true) + ">"; })
 		.def("__int__", [](const librapid::basic_ndarray<python_dtype> &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to int"); return (lr_int) *arr.get_data_start(); })
-		.def("__float__", [](const librapid::basic_ndarray<python_dtype> &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to float"); return (python_dtype) *arr.get_data_start(); })
-		.def("__repr__", [](const librapid::basic_ndarray<python_dtype> &arr) { return "<librapid.ndarray " + arr.str(18) + ">"; });
+		.def("__float__", [](const librapid::basic_ndarray<python_dtype> &arr) { if (!arr.is_scalar()) throw py::value_error("Cannot convert non-scalar array to float"); return (python_dtype) *arr.get_data_start(); });
 
 	module.def("zeros_like", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::zeros_like(arr); }, py::arg("arr"));
 	module.def("ones_like", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::ones_like(arr); }, py::arg("arr"));
@@ -353,6 +353,9 @@ PYBIND11_MODULE(librapid_, module)
 
 	module.def("linear", [](python_dtype start, python_dtype end, lr_int len) { return librapid::linear(start, end, len); }, py::arg("start") = python_dtype(0), py::arg("end"), py::arg("len"));
 	module.def("range", [](python_dtype start, python_dtype end, python_dtype inc) { return librapid::range(start, end, inc); }, py::arg("start") = python_dtype(0), py::arg("end"), py::arg("inc") = python_dtype(1));
+
+	module.def("concatenate", [](const std::vector<librapid::basic_ndarray<python_dtype>> &arrays, lr_int axis) { return librapid::concatenate(arrays, axis); }, py::arg("arrays"), py::arg("axis") = 0);
+	module.def("stack", [](const std::vector<librapid::basic_ndarray<python_dtype>> &arrays, lr_int axis) { return librapid::stack(arrays, axis); }, py::arg("arrays"), py::arg("axis") = 0);
 
 	module.def("minimum", [](const librapid::basic_ndarray<python_dtype> &x1, const librapid::basic_ndarray<python_dtype> &x2) { return librapid::minimum(x1, x2); }, py::arg("x1"), py::arg("x2"));
 	module.def("minimum", [](const librapid::basic_ndarray<python_dtype> &x1, python_dtype x2) { return librapid::minimum(x1, x2); }, py::arg("x1"), py::arg("x2"));
@@ -472,4 +475,54 @@ PYBIND11_MODULE(librapid_, module)
 		.def("compile", [](python_network &network) { network.compile(); })
 		.def("forward", [](python_network &network, const librapid::basic_ndarray<python_dtype> &input) { return network.forward(input); })
 		.def("backpropagate", [](python_network &network, const librapid::basic_ndarray<python_dtype> &input, const librapid::basic_ndarray<python_dtype> &target) { return network.backpropagate(input, target); });
+
+	// Colours
+	py::module_ color = module.def_submodule("color", "A simple text color library");
+	
+	py::class_<librapid::color::rgb>(color, "rgb")
+		.def(py::init<int, int, int>(), py::arg("red") = 0, py::arg("green") = 0, py::arg("blue") = 0)
+		.def("__str__", [](const librapid::color::rgb &col) { return librapid::color::fore(col); })
+		.def("__repr__", [](const librapid::color::rgb &col) { return std::string("librapid.color.rgb(red: " + std::to_string(col.red) + ", green: " + std::to_string(col.green) + ", blue: " + std::to_string(col.blue)) + ")"; });
+
+	py::class_<librapid::color::hsl>(color, "hsl")
+		.def(py::init<int, int, int>(), py::arg("red") = 0, py::arg("green") = 0, py::arg("blue") = 0)
+		.def("__str__", [](const librapid::color::hsl &col) { return librapid::color::fore(col); })
+		.def("__repr__", [](const librapid::color::hsl &col) { return std::string("librapid.color.hsl(hue: " + std::to_string(col.hue) + ", saturation: " + std::to_string(col.saturation) + ", lightness: " + std::to_string(col.lightness)) + ")"; });
+
+	color.def("rgb_to_hsl", &librapid::color::rgb_to_hsl);
+	color.def("hsl_to_rgb", &librapid::color::hsl_to_rgb);
+	
+	color.def("merge_colors", [](const librapid::color::rgb &colorA, const librapid::color::rgb &colorB) { return librapid::color::merge_colors(colorA, colorB); });
+	color.def("merge_colors", [](const librapid::color::rgb &colorA, const librapid::color::hsl &colorB) { return librapid::color::merge_colors(colorA, colorB); });
+	color.def("merge_colors", [](const librapid::color::hsl &colorA, const librapid::color::rgb &colorB) { return librapid::color::merge_colors(colorA, colorB); });
+	color.def("merge_colors", [](const librapid::color::hsl &colorA, const librapid::color::hsl &colorB) { return librapid::color::merge_colors(colorA, colorB); });
+
+	color.attr("clear") = librapid::color::clear;
+	color.attr("bold") = librapid::color::bold;
+	color.attr("blink") = librapid::color::blink;
+
+	color.attr("black") = librapid::color::black;
+	color.attr("red") = librapid::color::red;
+	color.attr("green") = librapid::color::green;
+	color.attr("yellow") = librapid::color::yellow;
+	color.attr("blue") = librapid::color::blue;
+	color.attr("magenta") = librapid::color::magenta;
+	color.attr("cyan") = librapid::color::cyan;
+	color.attr("white") = librapid::color::white;
+	color.attr("blbright_blackink") = librapid::color::bright_black;
+	color.attr("bright_red") = librapid::color::bright_red;
+	color.attr("bright_green") = librapid::color::bright_green;
+	color.attr("bright_yellow") = librapid::color::bright_yellow;
+	color.attr("bright_blue") = librapid::color::bright_blue;
+	color.attr("bright_magenta") = librapid::color::bright_magenta;
+	color.attr("bright_cyan") = librapid::color::bright_cyan;
+	color.attr("bright_white") = librapid::color::bright_white;
+
+	color.def("fore", [](const librapid::color::rgb &col) { return librapid::color::fore(col); });
+	color.def("fore", [](const librapid::color::hsl &col) { return librapid::color::fore(col); });
+	color.def("fore", [](int r, int g, int b) { return librapid::color::fore(r, g, b); });
+
+	color.def("back", [](const librapid::color::rgb &col) { return librapid::color::back(col); });
+	color.def("back", [](const librapid::color::hsl &col) { return librapid::color::back(col); });
+	color.def("back", [](int r, int g, int b) { return librapid::color::back(r, g, b); });
 }

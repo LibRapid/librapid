@@ -12,3 +12,5 @@ tests/__pycache__
 docs/build
 docs/source/api
 docs/source/doxygenoutput
+
+*.pyc
