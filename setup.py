@@ -297,13 +297,14 @@ def get_compiler_name():
 
 	return comp
 
+this_directory = os.path.abspath(os.path.dirname(__file__))
+
 # Load the version number from VERSION.hpp
-version_file = open("librapid/VERSION.hpp", "r")
+version_file = open(os.path.join("librapid", "VERSION.hpp"), "r")
 __version__ = version_file.readlines()[1].split()[2].replace("\"", "")
 version_file.close()
 
 # Locate and read the contents of README.md
-this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 

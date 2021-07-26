@@ -26,7 +26,7 @@
 
 // For use in "basic_ndarray::from_data" and "librapid::array"
 template<typename T>
-using VEC = std::vector<T>;
+using VEC_ = std::vector<T>;
 
 namespace librapid
 {
@@ -88,16 +88,16 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Create an empty n-dimensional array. This array does not have an
 		 * extent or a stride, and many functions will not operate correctly
 		 * on such an array. For example, printing out an array created with
 		 * this function will result in ``[NONE]`` being printed.
-		 * 
+		 *
 		 * .. Hint::
 		 * 		No memory is allocated on the heap when using this function,
 		 * 		so it is incredibly fast
-		 * 
+		 *
 		 * \endrst
 		 */
 		basic_ndarray()
@@ -105,20 +105,20 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Create a new array from a given extent.
 		 *
 		 * The array created will have the same number of dimensions
 		 * as the number of elements passed in the extent object. For
 		 * example, passing in ``extent(2, 3)`` will create a 2x3
 		 * matrix.
-		 * 
+		 *
 		 * Parameters
 		 * ----------
-		 * 
+		 *
 		 * size: librapid::extent
 		 *		The dimensions of the array
-		 * 
+		 *
 		 * \endrst
 		 */
 		template<typename E>
@@ -152,26 +152,26 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Creates a new array from a given shape, and fill it with a value.
-		 * 
+		 *
 		 * For example, creating an array from ``librapid::extent({3, 4}), 5.``
 		 * will create the following array:
-		 * 
+		 *
 		 * .. code-block:: python
-		 * 
+		 *
 		 * 	[[5. 5. 5. 5.]
 		 * 	 [5. 5. 5. 5.]
 		 * 	 [5. 5. 5. 5.]]
-		 * 
+		 *
 		 * Parameters
 		 * ----------
-		 * 
+		 *
 		 * size: librapid::extent
 		 * 		The dimensions of the array
 		 * val: Any arithmetic type
 		 * 		The fill value
-		 * 
+		 *
 		 * \endrst
 		 */
 		template<typename E, typename V>
@@ -209,22 +209,22 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Create a new array from an existing one, where the new array's data
 		 * is linked to the existing one's, so an update in one will update
 		 * the data in the other.
-		 * 
+		 *
 		 * .. Attention::
 		 * 		The shape and stride of the arrays will be the same, so a sub-optimal
 		 * 		stride in the original array will also result in a sub-optimal stride
 		 * 		in the new one. To mitigate this, try using ``.copy()`` instead.
-		 * 
+		 *
 		 * Parameters
 		 * ----------
-		 * 
+		 *
 		 * arr: librapid::ndarray
 		 * 		The array to reference
-		 * 
+		 *
 		 * \endrst
 		 */
 		basic_ndarray(const basic_ndarray<T> &arr) : m_extent(arr.m_extent),
@@ -268,59 +268,59 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Create a new array from the provided data. The function supports
 		* creation from a scalar value, as well as vectors, matrices and
 		* higher dimensional data.
-		* 
+		*
 		* For arrays with dimensions greater than or equal to 2 (i.e. matrices
 		* and above) the sub-arrays *must* be the same size, otherwise an error
 		* will be thrown.
-		* 
+		*
 		* Examples
 		* --------
-		* 
+		*
 		* .. code-block:: C++
 		* 		:caption: C++ Example
-		* 
-		* 		auto my_vec = librapid::ndarray::from_data(VEC{1, 2, 3, 4});
+		*
+		* 		auto my_vec = librapid::ndarray::from_data(VEC_{1, 2, 3, 4});
 		* 		std::cout << my_vec << "\n";
 		* 		// Prints: [1. 2. 3. 4.]
-		* 
+		*
 		* .. code-block:: Python
 		* 		:caption: Python Example
-		* 
+		*
 		* 		my_vec = librapid.ndarray.from_data([1, 2, 3, 4])
 		* 		print(my_vec)
 		* 		# Prints: [1. 2. 3. 4.]
-		* 
+		*
 		* C++ Specific
 		* ------------
-		* 
+		*
 		* In C++, the input must be specifically denoted as ``std::vector<...>``
 		* for vectors and arrays (this may not be needed when using MSVC). To
-		* shorten this process, the typename ``VEC<...>`` is provided to allow
-		* the following: ``librapid:: ... ::from_data(VEC<VEC<int>>{{1, 2}, {3, 4}})``.
-		* 
+		* shorten this process, the typename ``VEC_<...>`` is provided to allow
+		* the following: ``librapid:: ... ::from_data(VEC_<VEC_<int>>{{1, 2}, {3, 4}})``.
+		*
 		* Python Specific
 		* ---------------
-		* 
+		*
 		* Due to Python's dynamic typing features, a ``list`` or ``tuple`` can be
 		* easily converted to an array -- there's no need to worry about any conversions.
-		* 
+		*
 		* Parameters
 		* ----------
-		* 
+		*
 		* data: scalar, vector, nested-vector
 		* 		The data for the array
-		* 
+		*
 		* Returns
 		* -------
-		* 
+		*
 		* result: scalar, vector, ndarray
 		*		A new array containing the same values that
 		*		were originally passed
-		* 
+		*
 		* \endrst
 		*/
 		template<typename V>
@@ -762,10 +762,10 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Return :math:`this + other`
 		 * See ``librapid::add`` for more details
-		 * 
+		 *
 		 * \endrst
 		 */
 		template<typename B_T, typename B_A>
@@ -782,10 +782,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Return :math:`this - other`
 		* See ``librapid::sub`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T, typename B_A>
@@ -802,10 +802,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Return :math:`this \times other`
 		* See ``librapid::mul`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T, typename B_A>
@@ -822,10 +822,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Return :math:`\frac{this}{other}`
 		* See ``librapid::div`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T, typename B_A>
@@ -842,10 +842,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Return :math:`this + other`
 		* See ``librapid::add`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T>
@@ -862,10 +862,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Return :math:`this - other`
 		* See ``librapid::sub`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T>
@@ -882,10 +882,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Return :math:`this \times other`
 		* See ``librapid::mul`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T>
@@ -902,10 +902,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Return :math:`\frac{this}{other}`
 		* See ``librapid::div`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T>
@@ -922,10 +922,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Set ``this`` equal to :math:`this + other`
 		* See ``librapid::add`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T, typename B_A>
@@ -941,10 +941,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Set ``this`` equal to :math:`this - other`
 		* See ``librapid::sub`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T, typename B_A>
@@ -960,10 +960,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Set ``this`` equal to :math:`this \times other`
 		* See ``librapid::mul`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T, typename B_A>
@@ -979,10 +979,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Set ``this`` equal to :math:`\frac{this}{other}`
 		* See ``librapid::div`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T, typename B_A>
@@ -998,10 +998,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Set ``this`` equal to :math:`this + other`
 		* See ``librapid::add`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T>
@@ -1017,10 +1017,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Set ``this`` equal to :math:`this - other`
 		* See ``librapid::sub`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T>
@@ -1036,10 +1036,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Set ``this`` equal to :math:`this \times other`
 		* See ``librapid::mul`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T>
@@ -1055,10 +1055,10 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Set ``this`` equal to :math:`\frac{this}{other}`
 		* See ``librapid::div`` for more details
-		* 
+		*
 		* \endrst
 		*/
 		template<typename B_T>
@@ -1074,18 +1074,18 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Negate all values in the array and return the
 		* result.
-		* 
+		*
 		* Example:
-		* 
+		*
 		* .. code-block:: python
-		* 
+		*
 		*		[1. -2. -3. 4.]
 		*		// Becomes
 		*		[-1. 2. 3. -4.]
-		* 
+		*
 		* \endrst
 		*/
 		LR_INLINE basic_ndarray<T, alloc> operator-() const
@@ -1106,9 +1106,12 @@ namespace librapid
 		{
 			auto tmp_shape = new_shape.fix_automatic(m_extent_product);
 
-			if (math::product(tmp_shape.get_extent(), tmp_shape.ndim()) != m_extent_product)
-				throw std::length_error("Array sizes are different, so cannot reshape array. Shapes "
-										+ m_extent.str() + " and " + tmp_shape.str() + " cannot be broadcast");
+			lr_int prod = math::product(tmp_shape.get_extent(), tmp_shape.ndim());
+			if (prod != m_extent_product)
+				throw std::length_error("Cannot reshape array with " + m_extent.str() +
+										+" (" + std::to_string(m_extent_product) + " elements)" +
+										" to " + new_shape.str() + " (" +
+										std::to_string(prod) + " elements)");
 
 			if (!m_stride.is_trivial())
 			{
@@ -1385,7 +1388,7 @@ namespace librapid
 		 *		function ``my_array.to_scalar()``
 		 *
 		 * Example:
-		 * 
+		 *
 		 * .. code-block:: python
 		 *
 		 *		# The input matrix
@@ -1462,7 +1465,7 @@ namespace librapid
 		 *		function ``my_array.to_scalar()``
 		 *
 		 * Example:
-		 * 
+		 *
 		 * .. code-block:: python
 		 *
 		 *		# The input matrix
@@ -1539,7 +1542,7 @@ namespace librapid
 		 *		function ``my_array.to_scalar()``
 		 *
 		 * Example:
-		 * 
+		 *
 		 * .. code-block:: python
 		 *
 		 *		# The input matrix
@@ -1604,7 +1607,7 @@ namespace librapid
 		*		y=\mid x \mid
 		*
 		* Example:
-		* 
+		*
 		* .. code-block:: python
 		*
 		*		# The input matrix
@@ -1649,7 +1652,7 @@ namespace librapid
 		*		y=x^2
 		*
 		* Example:
-		* 
+		*
 		* .. code-block:: python
 		*
 		*		# The input matrix
@@ -1710,7 +1713,7 @@ namespace librapid
 		 * the values in the corresponding column.
 		 *
 		 * The variance of an array is calculated as follows:
-		 * 
+		 *
 		 * .. Math::
 		 *
 		 *		\textit{mean}(x - \textit{mean}(x)) ^ 2)
@@ -1721,7 +1724,7 @@ namespace librapid
 		 *		function ``my_array.to_scalar()``
 		 *
 		 * Example:
-		 * 
+		 *
 		 * .. code-block:: python
 		 *
 		 *		# The input matrix
@@ -1770,7 +1773,7 @@ namespace librapid
 		 * is the minima of each element of the array and the scalar
 		 *
 		 * Example:
-		 * 
+		 *
 		 * .. code-block:: python
 		 *
 		 *		# The input matrix
@@ -1831,7 +1834,7 @@ namespace librapid
 		 * is the maxima of each element of the array and the scalar
 		 *
 		 * Example:
-		 * 
+		 *
 		 * .. code-block:: python
 		 *
 		 *		# The input matrix
@@ -1882,10 +1885,10 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Return the element-wise floor of the array
 		 * Please see ``librapid::floor`` for more information
-		 * 
+		 *
 		 * \endrst
 		 */
 		LR_INLINE basic_ndarray<T> floor() const
@@ -1900,10 +1903,10 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Return the element-wise ceiling of the array.
 		 * Please see ``librapid::ceil`` for more information
-		 * 
+		 *
 		 * \endrst
 		 */
 		LR_INLINE basic_ndarray<T> ceil() const
@@ -1928,7 +1931,7 @@ namespace librapid
 		 * If both inputs are scalars, the result is a scalar.
 		 *
 		 * Example:
-		 * 
+		 *
 		 * .. code-block:: python
 		 *
 		 *		# The input matrix
@@ -1987,7 +1990,7 @@ namespace librapid
 		 * If both inputs are scalars, the result is a scalar.
 		 *
 		 * Example:
-		 * 
+		 *
 		 * .. code-block:: python
 		 *
 		 *		# The input matrix
@@ -2047,7 +2050,7 @@ namespace librapid
 		* If both inputs are scalars, the result is a scalar.
 		*
 		* Example:
-		* 
+		*
 		* .. code-block:: python
 		*
 		*		# The input matrix
@@ -2108,7 +2111,7 @@ namespace librapid
 		* If both inputs are scalars, the result is a scalar.
 		*
 		* Example:
-		* 
+		*
 		* .. code-block:: python
 		*
 		*		# The input matrix
@@ -2356,10 +2359,10 @@ namespace librapid
 			}
 		}
 
-		LR_INLINE std::string str(lr_int indent = 0) const
+		LR_INLINE std::string str(lr_int indent = 0, bool show_commas = false) const
 		{
 			std::pair<lr_int, lr_int> longest;
-			return stringify(indent, false, true, longest);
+			return stringify(indent, show_commas, false, true, longest);
 		}
 
 	private:
@@ -2529,7 +2532,7 @@ namespace librapid
 			return {longest_integral, longest_decimal};
 		}
 
-		LR_INLINE std::string stringify(lr_int indent, bool strip_middle, bool auto_strip,
+		LR_INLINE std::string stringify(lr_int indent, bool show_commas, bool strip_middle, bool auto_strip,
 										std::pair<lr_int, lr_int> &longest) const
 		{
 			// Non-initialized arrays
@@ -2581,8 +2584,8 @@ namespace librapid
 						res += "... ";
 					}
 
-					std::string temp_val = subscript(i).stringify(indent + 1, strip_middle,
-																  false, longest);
+					std::string temp_val = subscript(i).stringify(indent + 1, show_commas,
+																  strip_middle, false, longest);
 
 					// Locate the decimal point and calculate
 					// the number of digits before and after it
@@ -2609,7 +2612,7 @@ namespace librapid
 					res += temp_val;
 					res += std::string(to_add_after, ' ');
 
-					if (i + 1 < m_extent_product) res += " ";
+					if (i + 1 < m_extent_product) res += show_commas ? ", " : " ";
 				}
 				return res + "]";
 			}
@@ -2627,7 +2630,8 @@ namespace librapid
 					res += "...\n" + std::string(indent + 1, ' ');
 				}
 
-				res += subscript(i).stringify(indent + 1, strip_middle, false, longest);
+				res += subscript(i).stringify(indent + 1, show_commas,
+											  strip_middle, false, longest);
 				if (i + 1 < m_extent[0])
 				{
 					res += std::string((ndim() > 2) + 1, '\n');
@@ -3213,18 +3217,18 @@ namespace librapid
 
 	/**
 	* \rst
-	* 
+	*
 	* Return the result of element-wise flooring of values
 	* in the array.
-	* 
+	*
 	* Example:
-	* 
+	*
 	* .. code-block:: python
-	* 
+	*
 	*		[0.5 1.  1.5]
 	*		# Becomes
 	*		[0. 1. 1.]
-	* 
+	*
 	* \endrst
 	*/
 	template<typename T>
@@ -3246,18 +3250,18 @@ namespace librapid
 
 	/**
 	* \rst
-	* 
+	*
 	* Return the result of element-wise ceiling of values
 	* in the array.
-	* 
+	*
 	* Example:
-	* 
+	*
 	* .. code-block:: python
-	* 
+	*
 	*		[0.5 1.  1.5]
 	*		# Becomes
 	*		[1. 1. 2.]
-	* 
+	*
 	* \endrst
 	*/
 	template<typename T>
@@ -3359,7 +3363,7 @@ namespace librapid
 
 	/**
 	 * \rst
-	 * 
+	 *
 	 * Subtract one value from another and return the
 	 * result.
 	 *
@@ -4141,6 +4145,352 @@ namespace librapid
 			res[i] = (ct) start + (ct) inc * (ct) i;
 
 		return res;
+	}
+
+	/**
+	 * \rst
+	 *
+	 * Given a list of arrays, join them together along an existing axis, and return the
+	 * result.
+	 *
+	 * Parameters
+	 * ----------
+	 *
+	 * arrays: vector, list, tuple
+	 *		The list of arrays to concatenate
+	 * axis = 0: integer
+	 *		The axis along which to concatenate the arrays
+	 *
+	 * Returns
+	 * -------
+	 *
+	 * stacked: ndarray
+	 *		The stacked array
+	 *
+	 * .. Attention::
+	 *		The arrays must have exactly the same extent, other than the dimension for the
+	 *		concatenating axis, which can be different for each array.
+	 *
+	 * Examples
+	 * --------
+	 *
+	 * .. code-block:: python
+	 *
+	 *		# Create the example arrays
+	 *		first = librapid.from_data(
+	 *			[[1, 2, 3],
+	 *			 [4, 5, 6]]
+	 *		)
+	 *
+	 *		second = librapid.from_data(
+	 *			[[7, 8, 9]]
+	 *		)
+	 *
+	 *		# Concatenate the arrays and store the result
+	 *		# (default axis is 0 -- stack along rows)
+	 *		concatenated = librapid.concatenate((first, second))
+	 *
+	 *		print(concatenated)
+	 *
+	 *		"""
+	 *		Gives:
+	 *
+	 *		[[1. 2. 3.]
+	 * 		 [4. 5. 6.]
+	 * 		 [7. 8. 9.]]
+	 *		"""
+	 *
+	 * .. code-block:: python
+	 *
+	 *		# Create the example arrays
+	 *		first = librapid.from_data(
+	 *			[[1, 2, 3],
+	 *			 [4, 5, 6],
+	 *			 [7, 8, 9]]
+	 *		)
+	 *
+	 *		second = librapid.ndarray(librapid.extent(3, 2)).filled_random(-1, 1)
+	 *
+	 *		# Concatenate the arrays and store the result
+	 *		# (here, we are stacking on axis=1 -- along the columns)
+	 *		concatenated = librapid.concatenate((first, second), 1)
+	 *
+	 *		print(concatenated)
+	 *
+	 *		"""
+	 *		Could give:
+	 *
+	 *		[[ 1.             2.             3.             0.06195223331 -0.1879928112 ]
+	 *		 [ 4.             5.             6.             0.3225619793  -0.1187359691 ]
+	 *		 [ 7.             8.             9.             0.2637588978  -0.1868984699 ]]
+	 *		"""
+	 *
+	 * .. Hint::
+	 *		The resulting array is contiguous in memory, meaning the resulting array
+	 *		can be operated on very quickly and efficiently. (see ``ndarray.clone`` for
+	 *		more information)
+	 *
+	 * \endrst
+	 */
+	template<typename A>
+	LR_INLINE basic_ndarray<A> concatenate(const std::vector<basic_ndarray<A>> &arrays, lr_int axis = 0)
+	{
+		if (arrays.size() == 0) return {};
+		if (arrays.size() == 1) return arrays[0].clone();
+
+		// Check the arrays are all the correct size (and calculate the new dimension
+		// for the result array)
+
+		lr_int dims = arrays[0].ndim();
+		lr_int new_dim = axis < dims ? arrays[0].get_extent()[axis] : 0;
+
+		extent dims_0 = arrays[0].get_extent();
+
+		for (lr_int i = 1; i < arrays.size(); ++i)
+		{
+			if (arrays[i].ndim() != dims)
+				throw std::domain_error("All arrays must have the same dimensions in order to"
+										" concatenate. Array at index 0 has " + std::to_string(dims) +
+										", while array at index " + std::to_string(i) + " has " +
+										std::to_string(arrays[i].ndim()) + " dimensions.");
+
+			extent dims_n = arrays[i].get_extent();
+
+			for (lr_int j = 0; j < dims; ++j)
+			{
+				if (j != axis && dims_0[j] != dims_n[j])
+				{
+					throw std::domain_error("All array dimensions other than the concatenating axis "
+											"must be the same, however, the array at index "
+											+ std::to_string(i) + " had extent " + dims_n.str() +
+											", where dimension " + std::to_string(j) + " was "
+											"invalid.");
+				}
+			}
+
+			if (axis < dims)
+				new_dim += dims_n[axis];
+		}
+
+		if (dims == 0)
+			throw std::domain_error("Cannot concatenate zero-dimensional arrays");
+
+		if (axis >= dims)
+			throw std::domain_error("Axis " + std::to_string(axis) + " is out of range for arrays "
+									"with " + std::to_string(dims) + " dimensions");
+
+		// Calculate the step for the result array.
+		lr_int step = 1;
+		for (lr_int d = axis; d < dims; d++)
+			step *= dims_0[d];
+
+		extent res_shape = arrays[0].get_extent();
+		res_shape[axis] = new_dim;
+
+		// We know res has a trivial stride with contiguous data, so
+		// certain "cheats" can me made
+		basic_ndarray<A> res(res_shape);
+
+		// Iterate over arrays and stack them together
+		lr_int offset = 0;
+		for (const auto &arr : arrays)
+		{
+			lr_int idim = 0;
+
+			const auto *array_extent = arr.get_extent().get_extent_alt();
+			const auto *array_stride = arr.get_stride().get_stride_alt();
+
+			const auto *res_extent = res.get_extent().get_extent_alt();
+			const auto *res_stride = res.get_stride().get_stride_alt();
+
+			auto *array_data = arr.get_data_start();
+			auto *res_data = res.get_data_start() + offset;
+
+			lr_int coord[LIBRAPID_MAX_DIMS]{};
+
+			do
+			{
+				*res_data = *array_data;
+
+				for (idim = 0; idim < dims; ++idim)
+				{
+					if (++coord[idim] == array_extent[idim])
+					{
+						coord[idim] = 0;
+						array_data = array_data - (array_extent[idim] - 1) * array_stride[idim];
+						res_data = res_data - (array_extent[idim] - 1) * res_stride[idim];
+					}
+					else
+					{
+						array_data = array_data + array_stride[idim];
+						res_data = res_data + res_stride[idim];
+						break;
+					}
+				}
+			} while (idim < dims);
+
+			offset += step;
+		}
+
+		return res;
+	}
+
+	template<typename A>
+	LR_INLINE basic_ndarray<A> concatenate(const std::initializer_list<basic_ndarray<A>> &arrays,
+										   lr_int axis = 0)
+	{
+		return concatenate(std::vector<basic_ndarray<A>>(arrays.begin(), arrays.end()), axis);
+	}
+
+	/**
+	 * \rst
+	 *
+	 * Given a list of arrays, join them together along a new axis.
+	 *
+	 * Parameters
+	 * ----------
+	 *
+	 * arrays: vector, list, tuple
+	 *		The list of arrays to stack
+	 * axis = 0: integer
+	 *		The axis along which to stack the arrays
+	 *
+	 * Returns
+	 * -------
+	 * stacked: ndarray
+	 *		An array with one more dimension than the input arrays
+	 *
+	 * .. Attention::
+	 *		The arrays passed must all have exactly the same extent
+	 *
+	 * Examples
+	 * --------
+	 *
+	 * .. code-block:: python
+	 *
+	 *		# Create the example arrays
+	 *		first = librapid.from_data(
+	 *			[1, 2, 3]
+	 *		)
+	 *
+	 *		second = librapid.from_data(
+	 *			[4, 5, 6]
+	 *		)
+	 *
+	 *		# Stack the arrays and store the result
+	 *		# (default axis is 0)
+	 *		stacked = librapid.pack((first, second))
+	 *
+	 *		print(stacked)
+	 *
+	 *		"""
+	 *		Gives:
+	 *
+	 *		[[1. 2. 3.]
+	 * 		 [4. 5. 6.]]
+	 *		"""
+	 *
+	 * .. code-block:: python
+	 *
+	 *		# Create the example arrays
+	 *		first = librapid.from_data(
+	 *			[[1, 2, 3],
+	 *			 [4, 5, 6],
+	 *			 [7, 8, 9]]
+	 *		)
+	 *
+	 *		second = librapid.from_data(
+	 *			[[10, 11, 12],
+	 *			 [13, 14, 15],
+	 *			 [16, 17, 18]]
+	 *		)
+	 *
+	 *		# Stack the arrays and store the result
+	 *		# (here, we are stacking on axis=1 -- along the columns)
+	 *		stacked = librapid.stack((first, second), 1)
+	 *
+	 *		print(stacked)
+	 *
+	 *		"""
+	 *		Gives:
+	 *
+	 *		[[[ 1.  2.  3.]
+	 *		  [10. 11. 12.]]
+	 *
+	 *		 [[ 4.  5.  6.]
+	 *		  [13. 14. 15.]]
+	 *
+	 *		 [[ 7.  8.  9.]
+	 *		  [16. 17. 18.]]]
+	 *		"""
+	 *
+	 * .. Hint::
+	 *		The resulting array is contiguous in memory, meaning the resulting array
+	 *		can be operated on very quickly and efficiently. (see ``ndarray.clone`` for
+	 *		more information)
+	 *
+	 * \endrst
+	 */
+	template<typename A>
+	LR_INLINE basic_ndarray<A> stack(const std::vector<basic_ndarray<A>> &arrays, lr_int axis = 0)
+	{
+		lr_int new_dim = arrays.size();
+
+		if (new_dim == 0) return {};
+		if (new_dim == 1) return arrays[0].clone();
+
+		bool valid = true;
+		const extent &dim_0 = arrays[0].get_extent();
+
+		for (lr_int i = 1; i < new_dim; i++)
+		{
+			if (arrays[i].get_extent() != dim_0)
+			{
+				valid = false;
+				break;
+			}
+		}
+
+		if (!valid)
+			throw std::domain_error("All arrays must have the same extent in order to pack them");
+
+		lr_int dims = dim_0.ndim();
+		lr_int new_shape[LIBRAPID_MAX_DIMS]{};
+
+		for (lr_int dim = 0; dim < dims + 1; dim++)
+		{
+			if (dim < axis) new_shape[dim] = dim_0[dim];
+			else if (dim == axis) new_shape[dim] = new_dim;
+			else new_shape[dim] = dim_0[dim - 1];
+		}
+
+		// If accessing the last dimension, reshape the arrays
+		// to ensure that the correct calculation is performed
+		if (axis == dims)
+		{
+			lr_int tmp_shape[LIBRAPID_MAX_DIMS]{};
+
+			for (lr_int dim = 0; dim < dims + 1; dim++)
+			{
+				if (dim == dims) tmp_shape[dim] = 1;
+				else tmp_shape[dim] = dim_0[dim];
+			}
+
+			std::vector<basic_ndarray<A>> new_arrays;
+			for (auto &arr : arrays)
+				new_arrays.emplace_back(arr.reshaped(extent(tmp_shape, dims + 1)));
+
+			return concatenate(new_arrays, axis).reshaped(extent(new_shape, dims + 1));
+		}
+
+		return concatenate(arrays, axis).reshaped(extent(new_shape, dims + 1));
+	}
+
+	template<typename A>
+	LR_INLINE basic_ndarray<A> stack(const std::initializer_list<basic_ndarray<A>> &arrays,
+										   lr_int axis = 0)
+	{
+		return stack(std::vector<basic_ndarray<A>>(arrays.begin(), arrays.end()), axis);
 	}
 
 	template<typename A, typename B>

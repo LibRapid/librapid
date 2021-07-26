@@ -4,3 +4,4 @@ twine
 cibuildwheel
 pybind11
 pytest
+pathlib2
