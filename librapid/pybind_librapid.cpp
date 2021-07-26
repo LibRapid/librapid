@@ -473,8 +473,10 @@ PYBIND11_MODULE(librapid_, module)
 		.def(py::init<py::dict>())
 		
 		.def("compile", [](python_network &network) { network.compile(); })
-		.def("forward", [](python_network &network, const librapid::basic_ndarray<python_dtype> &input) { return network.forward(input); })
-		.def("backpropagate", [](python_network &network, const librapid::basic_ndarray<python_dtype> &input, const librapid::basic_ndarray<python_dtype> &target) { return network.backpropagate(input, target); });
+		.def("forward", [](python_network &network, const librapid::basic_ndarray<python_dtype> &input) { return network.forward(input); }, py::arg("input"))
+		.def("forward", [](python_network &network, const librapid::named_param<python_dtype> &input) { return network.forward(input); }, py::arg("input"))
+		.def("backpropagate", [](python_network &network, const librapid::basic_ndarray<python_dtype> &input, const librapid::basic_ndarray<python_dtype> &target) { return network.backpropagate(input, target); }, py::arg("input"), py::arg("target"))
+		.def("backpropagate", [](python_network &network, const librapid::named_param<python_dtype> &input, const librapid::named_param<python_dtype> &target) { return network.backpropagate(input, target); }, py::arg("input"), py::arg("target"));
 
 	// Colours
 	py::module_ color = module.def_submodule("color", "A simple text color library");

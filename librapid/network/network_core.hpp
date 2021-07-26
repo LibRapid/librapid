@@ -345,7 +345,7 @@ namespace librapid
 					else
 						throw std::invalid_argument("The 'activations' parameter requires a string or a vector/list of strings");
 
-					m_config["activatio_names"] = activations;
+					m_config["activation_names"] = activations;
 				}
 				else if (key == "optimizer")
 				{
@@ -477,7 +477,7 @@ namespace librapid
 					else
 						container = py::cast<std::vector<python_dtype>>(value);
 				}
-				else if (value_type == "<class 'dict'")
+				else if (value_type == "<class 'dict'>")
 				{
 					container = py::cast<std::unordered_map<std::string, lr_int>>(value);
 				}
@@ -606,11 +606,12 @@ namespace librapid
 										 "see the documentation for more information.");
 
 			// Check that the input is a valid shape
-			auto fixed = fix_array(input, true);
+			auto fixed = fix_array(input, m_config["input_nodes"].real);
 
 			return internal_forward_feed(fixed);
 		}
 
+		// LR_INLINE named_param<T> forward(const named_param<T> &input)
 		LR_INLINE basic_ndarray<T> forward(const named_param<T> &input)
 		{
 			if (!m_is_compiled)
@@ -619,8 +620,11 @@ namespace librapid
 										 "see the documentation for more information.");
 
 			auto input_array = array_from_named(input, m_config["input_names"]);
-
 			return internal_forward_feed(input_array);
+
+			// TODO: NEEDS ARRAY SLICING
+			// auto res = internal_forward_feed(input_array);
+			// return named_from_array(res, m_config["output_names"]);
 		}
 
 		LR_INLINE basic_ndarray<T> backpropagate(const basic_ndarray<T> &input,
@@ -632,10 +636,24 @@ namespace librapid
 										 "see the documentation for more information.");
 
 			// Check that the input is a valid shape
-			auto fixed_input = fix_array(input, true);
-			auto fixed_target = fix_array(target, false);
+			auto fixed_input = fix_array(input, m_config["input_nodes"].real);
+			auto fixed_target = fix_array(target, m_config["output_nodes"].real);
 
 			return internal_backpropagate(fixed_input, fixed_target);
+		}
+
+		LR_INLINE basic_ndarray<T> backpropagate(const named_param<T> &input,
+												 const named_param<T> &target)
+		{
+			if (!m_is_compiled)
+				throw std::runtime_error("Cannot backpropagate on a network "
+										 "that has not yet been compiled. Please "
+										 "see the documentation for more information.");
+
+			auto input_array = array_from_named(input, m_config["input_names"]);
+			auto target_array = array_from_named(target, m_config["output_names"]);
+
+			return internal_backpropagate(input_array, target_array);
 		}
 
 	private:
@@ -734,11 +752,8 @@ namespace librapid
 			return layer;
 		}
 
-		LR_INLINE basic_ndarray<T> fix_array(const basic_ndarray<T> &arr, bool is_input) const
+		LR_INLINE basic_ndarray<T> fix_array(const basic_ndarray<T> &arr, lr_int target_nodes) const
 		{
-			lr_int target_nodes = (is_input ? m_config.at("input_nodes")
-								   : m_config.at("output_nodes")).real;
-
 			if (arr.ndim() == 1)
 			{
 				if (arr.get_extent()[0] != target_nodes)
@@ -771,13 +786,59 @@ namespace librapid
 			// correct extent
 
 			// Calculate the number of nodes needed
-			lr_int nodes = 0;
-			named_param<T> fixed;
-			for (const auto &input : data)
+			std::vector<basic_ndarray<T>> fixed;
+			for (const auto &input : names.dict)
 			{
-
+				if (data.find(input.first) != data.end())
+				{
+					// Found the key
+					fixed.emplace_back(fix_array(data.at(input.first), input.second));
+				}
+				else
+				{
+					// Did not find the key
+					throw std::invalid_argument("Could not find key '" + input.first +
+												" in input parameters. All keys are required");
+				}
 			}
+
+			if (data.size() != names.dict.size())
+				throw std::invalid_argument("Additional keys were found in the input array that "
+											"do not exist in the neural network");
+
+			return concatenate(fixed, 0);
 		}
+
+		// TODO: NEEDS ARRAY SLICING
+		// LR_INLINE basic_ndarray<T> named_from_array(const basic_ndarray<T> &arr,
+		// 											const config_container<T> &names) const
+		// {
+		// 	// Convert an array into a dictionary of named values and the corresponding output
+		// 	// values.
+		// 
+		// 	// Calculate the number of nodes needed
+		// 	std::vector<basic_ndarray<T>> fixed;
+		// 	for (const auto &input : names.dict)
+		// 	{
+		// 		if (data.find(input.first) != data.end())
+		// 		{
+		// 			// Found the key
+		// 			fixed.emplace_back(fix_array(data.at(input.first), input.second));
+		// 		}
+		// 		else
+		// 		{
+		// 			// Did not find the key
+		// 			throw std::invalid_argument("Could not find key '" + input.first +
+		// 										" in input parameters. All keys are required");
+		// 		}
+		// 	}
+		// 
+		// 	if (data.size() != names.dict.size())
+		// 		throw std::invalid_argument("Additional keys were found in the input array that "
+		// 									"do not exist in the neural network");
+		// 
+		// 	return concatenate(fixed, 0);
+		// }
 
 		LR_INLINE basic_ndarray<T> internal_forward_feed(const basic_ndarray<T> &input) const
 		{
