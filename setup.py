@@ -74,6 +74,11 @@ def find_blas(args):
 		search_dirs.append(os.getcwd() + "/../../vcpkg/packages/" + vcdir)
 		search_dirs.append(os.getcwd() + "/../../../vcpkg/packages/" + vcdir)
 
+		search_dirs.append(os.getcwd() + "/openblas_install/" + vcdir)
+		search_dirs.append(os.getcwd() + "/../openblas_install/" + vcdir)
+		search_dirs.append(os.getcwd() + "/../../openblas_install/" + vcdir)
+		search_dirs.append(os.getcwd() + "/../../../openblas_install/" + vcdir)
+
 		for dir in search_dirs:
 			print("Searching directory", dir, "for BLAS libraries")
 			cmd = {"--blas-dir": dir}
@@ -160,7 +165,19 @@ def find_blas(args):
 			blas_lib = args["--blas-lib"]
 
 			# Find the corresponding file in each directory
+			
+
+			########################################################################################
+			########################################################################################
+			###########   Swap these lines to allow Windows builds without DLL file   ##############
+			###########   Swap these lines to allow Windows builds without DLL file   ##############
+			###########   Swap these lines to allow Windows builds without DLL file   ##############
+			###########   Swap these lines to allow Windows builds without DLL file   ##############
+			########################################################################################
+			########################################################################################
+			
 			found = [platform.system() != "Windows", False, False]
+			# found = [True, False, False]
 
 			if blas_bin is not None and not found[0]:
 				filename = find_bin(blas_bin)
@@ -253,6 +270,7 @@ def find_lib(base_path):
 		known_endings.append(".so")
 	if platform.system() == "Darwin":
 		known_endings.append(".a")
+		known_endings.append(".so")
 
 	try:
 		files = [f for f in listdir(base_path) if isfile(join(base_path, f))]
