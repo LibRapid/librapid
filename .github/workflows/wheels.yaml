@@ -124,6 +124,18 @@ jobs:
           ls wheelhouse
           twine upload --skip-existing wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
 
+      - name: Archive OpenBLAS Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenBLAS on ${{ matrix.platform }}
+          path: openblas_install
+      
+      - name: Archive LibRapid Wheels
+        uses: actions/upload-artifact@v2
+        with:
+          name: LibRapid Wheels on ${{ matrix.platform }}
+          path: wheelhouse
+
   windows_build:
     name: Python Wheels | Running on windows-latest
     runs-on: windows-latest
@@ -185,11 +197,11 @@ jobs:
           cmake --build . --config Release
         shell: pwsh
 
-      - name: Install Generated Files
-        run: |
-          cd OpenBLAS
-          cd build
-          cmake --install . --prefix ../../openblas_install -v
+      # - name: Install Generated Files
+      #   run: |
+      #     cd OpenBLAS
+      #     cd build
+      #     cmake --install . --prefix ../../openblas_install -v
 
       - name: Run cibuildwheel
         run: |
@@ -213,3 +225,15 @@ jobs:
           python setup.py sdist
           ls wheelhouse
           twine upload --skip-existing wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
+
+      - name: Archive OpenBLAS Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenBLAS on windows-latest
+          path: openblas_install
+
+      - name: Archive LibRapid Wheels
+        uses: actions/upload-artifact@v2
+        with:
+          name: LibRapid Wheels on windows-latest
+          path: wheelhouse
