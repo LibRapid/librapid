@@ -142,6 +142,7 @@ jobs:
 
     env:
       CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
+      CIBW_SKIP: "*-win32"
 
     steps:
       - name: Checkout Code
@@ -190,12 +191,12 @@ jobs:
           cmake .. -G "Ninja" -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=128 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DCMAKE_BUILD_TYPE=Release
         shell: pwsh
 
-      - name: Build OpenBLAS
-        run: |
-          cd OpenBLAS
-          cd build
-          cmake --build . --config Release
-        shell: pwsh
+      # - name: Build OpenBLAS
+      #   run: |
+      #     cd OpenBLAS
+      #     cd build
+      #     cmake --build . --config Release
+      #   shell: pwsh
 
       # - name: Install Generated Files
       #   run: |
