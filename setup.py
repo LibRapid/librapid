@@ -74,10 +74,12 @@ def find_blas(args):
 		search_dirs.append(os.getcwd() + "/../../vcpkg/packages/" + vcdir)
 		search_dirs.append(os.getcwd() + "/../../../vcpkg/packages/" + vcdir)
 
-		search_dirs.append(os.getcwd() + "/openblas_install/" + vcdir)
-		search_dirs.append(os.getcwd() + "/../openblas_install/" + vcdir)
-		search_dirs.append(os.getcwd() + "/../../openblas_install/" + vcdir)
-		search_dirs.append(os.getcwd() + "/../../../openblas_install/" + vcdir)
+		# Search relative directories for OpenBLAS
+		# (this is for the python wheels)
+		search_dirs.append(os.getcwd() + "/openblas_install")
+		search_dirs.append(os.getcwd() + "/../openblas_install")
+		search_dirs.append(os.getcwd() + "/../../openblas_install")
+		search_dirs.append(os.getcwd() + "/../../../openblas_install")
 
 		for dir in search_dirs:
 			print("Searching directory", dir, "for BLAS libraries")
