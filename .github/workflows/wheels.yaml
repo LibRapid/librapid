@@ -32,6 +32,9 @@ jobs:
       - name: Clone OpenBLAS
         run: |
           git clone https://github.com/xianyi/OpenBLAS.git
+
+          cd OpenBLAS
+          git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
         shell: bash
 
       - name: Build OpenBLAS
@@ -93,6 +96,9 @@ jobs:
       - name: Clone OpenBLAS
         run: |
           git clone https://github.com/xianyi/OpenBLAS.git
+
+          cd OpenBLAS
+          git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
         shell: bash
 
       - name: Build OpenBLAS
@@ -171,6 +177,9 @@ jobs:
       - name: Clone OpenBLAS
         run: |
           git clone https://github.com/xianyi/OpenBLAS.git
+
+          cd OpenBLAS
+          git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
         shell: bash
 
       - name: Install Conda things

@@ -279,7 +279,8 @@ def find_lib(base_path):
 
 		for file in files:
 			for ending in known_endings:
-				if file.endswith(ending):
+				if "dev" not in file and file.endswith(ending):
+
 					# Remove the filetype from the filename
 					new_name = file[:-len(ending)]
 
@@ -585,6 +586,8 @@ else:
 	print("A valid CBlas interface was not found")
 
 	blas_files = []
+
+print("Information:", library_dirs)
 
 ext_modules = [
 	Pybind11Extension("librapid_",
