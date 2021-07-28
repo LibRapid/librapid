@@ -213,9 +213,21 @@ jobs:
           cd build
           cmake --install . --prefix ../../openblas_install -v
 
+      - name: Archive OpenBLAS Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenBLAS on windows-latest
+          path: openblas_install
+
       - name: Run cibuildwheel
         run: |
           cibuildwheel --output-dir wheelhouse
+
+      - name: Archive LibRapid Wheels
+        uses: actions/upload-artifact@v2
+        with:
+          name: LibRapid Wheels on windows-latest
+          path: wheelhouse
 
       - name: Build and Install Source Distribution
         run: |
@@ -235,15 +247,3 @@ jobs:
           python setup.py sdist
           ls wheelhouse
           twine upload --skip-existing wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
-
-      - name: Archive OpenBLAS Build
-        uses: actions/upload-artifact@v2
-        with:
-          name: OpenBLAS on windows-latest
-          path: openblas_install
-
-      - name: Archive LibRapid Wheels
-        uses: actions/upload-artifact@v2
-        with:
-          name: LibRapid Wheels on windows-latest
-          path: wheelhouse
