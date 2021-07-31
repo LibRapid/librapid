@@ -65,14 +65,14 @@ breathe_default_project = "librapid"
 # Custom inputs to doxygen generator
 doxygen_inputs = """
 
-INPUT				   = ../../librapid
+INPUT                 = ../../librapid
 	   
-ENABLE_PREPROCESSING	= YES
-MACRO_EXPANSION		 = YES
-EXPAND_ONLY_PREDEF	  = NO
-PREDEFINED			  += LR_INLINE=
-PREDEFINED			  += __restrict=
-PREDEFINED			  += LIBRAPID_MAX_DIMS=32
+ENABLE_PREPROCESSING  = YES
+MACRO_EXPANSION       = YES
+EXPAND_ONLY_PREDEF    = NO
+PREDEFINED            += LR_INLINE=
+PREDEFINED            += __restrict=
+PREDEFINED            += LIBRAPID_MAX_DIMS=32
 
 """
 
@@ -113,7 +113,7 @@ html_theme = "pydata_sphinx_theme"
 html_logo = "../../branding/LibRapid small space.png"
 
 html_context = {
-    "github_user": "Pencilcaseman",
+    "github_user": "LibRapid",
     "github_repo": "librapid",
     "github_version": release,
     "doc_path": "docs/source",
