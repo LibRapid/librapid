@@ -115,12 +115,13 @@ html_logo = "../../branding/LibRapid small space.png"
 html_context = {
     "github_user": "LibRapid",
     "github_repo": "librapid",
-    "github_version": release,
+    "github_version": "master",
     "doc_path": "docs/source",
 }
 
 html_theme_options = {
     "logo_link": "https://librapid.readthedocs.io/en/latest/",
+	"github_url": "https://github.com/LibRapid/librapid",
 	"use_edit_page_button": True,
     "google_analytics_id": "G-LYHM6F499Q"
 }
