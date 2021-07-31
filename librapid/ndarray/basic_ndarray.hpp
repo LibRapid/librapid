@@ -231,6 +231,43 @@ namespace librapid
 			*m_data_start = value;
 		}
 
+		/**
+		* \rst
+		*
+		* Set one array equal to another, using the same data,
+		* stride and extent. ``*this`` is decremented and is
+		* reinitialized with the data of ``other``.
+		*
+		* .. Attention::
+		*
+		*	The underlying data of the array is not optimized,
+		*	and remains the same as that of the input array,
+		*	which, if suboptimal in memory, will remain that
+		*	way. See ``copy`` to optimize the memory layout
+		*
+		* \endrst
+		*/
+		LR_INLINE void set_to(const basic_ndarray<T> &other)
+		{
+			decrement();
+
+			m_data_origin = other.m_data_origin;
+			m_origin_references = other.m_origin_references;
+
+			m_origin_size = other.m_origin_size;
+
+			m_data_start = other.m_data_start;
+
+			m_stride = other.m_stride;
+			m_extent = other.m_extent;
+			m_extent_product = other.m_extent_product;
+			m_is_scalar = other.m_is_scalar;
+
+			m_stride.set_contiguous(other.m_stride.is_contiguous());
+
+			increment();
+		}
+
 	#define CONSTRUCTOR_TEMPLATE \
 		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
 
@@ -514,45 +551,6 @@ namespace librapid
 										 m_extent.str() + " to a scalar");
 
 			*m_data_start = T(other);
-
-			return *this;
-		}
-
-		/**
-		 * \rst
-		 *
-		 * Set one array equal to another, using the same data,
-		 * stride and extent. ``*this`` is decremented and is
-		 * reinitialized with the data of ``other``.
-		 *
-		 * .. Attention::
-		 *
-		 *	The underlying data of the array is not optimized,
-		 *	and remains the same as that of the input array,
-		 *	which, if suboptimal in memory, will remain that
-		 *	way. See ``copy`` to optimize the memory layout
-		 *
-		 * \endrst
-		 */
-		LR_INLINE basic_ndarray<T> &operator=(const basic_ndarray<T> &other)
-		{
-			decrement();
-
-			m_data_origin = other.m_data_origin;
-			m_origin_references = other.m_origin_references;
-
-			m_origin_size = other.m_origin_size;
-
-			m_data_start = other.m_data_start;
-
-			m_stride = other.m_stride;
-			m_extent = other.m_extent;
-			m_extent_product = other.m_extent_product;
-			m_is_scalar = other.m_is_scalar;
-
-			m_stride.set_contiguous(other.m_stride.is_contiguous());
-
-			increment();
 
 			return *this;
 		}
