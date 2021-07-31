@@ -64,3 +64,4 @@ Documentation
 
 	array_creation/array_creation
 	arithmetic/arithmetic
+	manipulation/manipulation.rst

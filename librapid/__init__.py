@@ -19,3 +19,4 @@ if platform.system() == "Windows":
 	win32api.SetDllDirectory(os.path.join(this_directory, "blas"))
 
 from librapid_ import *
+from .progress import *

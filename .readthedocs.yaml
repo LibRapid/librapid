@@ -6,13 +6,13 @@ formats: all
 
 # Set the build image to use the most recent version
 build:
-  image: testing
+  image: latest
   apt_packages:
     - doxygen
 
 # Set the python version and requirements
 python:
-  version: 3.7
+  version: "3.8"
   install:
     - requirements: docs/requirements.txt
   system_packages: true

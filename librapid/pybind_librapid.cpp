@@ -8,6 +8,99 @@
 
 #include <string>
 
+// If building for python, allow implicit conversions between lists
+// and arrays
+// bool list_tuple_to_vector(PyObject *incoming, std::vector<python_dtype> &output)
+// {
+// 	std::cout << "Vectorizing something\n";
+
+// 	if (PyTuple_Check(incoming))
+// 	{
+// 		for (Py_ssize_t i = 0; i < PyTuple_Size(incoming); i++)
+// 		{
+// 			PyObject *value = PyTuple_GetItem(incoming, i);
+// 			output.push_back(PyFloat_AsDouble(value));
+// 		}
+// 	}
+// 	else
+// 	{
+// 		if (PyList_Check(incoming))
+// 		{
+// 			for (Py_ssize_t i = 0; i < PyList_Size(incoming); i++)
+// 			{
+// 				PyObject *value = PyList_GetItem(incoming, i);
+// 				output.push_back(PyFloat_AsDouble(value));
+// 			}
+// 		}
+// 		else
+// 		{
+// 			return false;
+// 		}
+// 	}
+// 	return true;
+// }
+
+// namespace pybind11
+// {
+// 	namespace detail
+// 	{
+// 		template <> struct type_caster<librapid::basic_ndarray<python_dtype>>
+// 		{
+// 		public:
+// 			/**
+// 			* This macro establishes the name 'ndarray' in
+// 			* function signatures and declares a local variable
+// 			* 'value' of type basic_ndarray
+// 			*/
+// 			PYBIND11_TYPE_CASTER(librapid::basic_ndarray<python_dtype>, _("ndarray"));
+
+// 			/**
+// 			* Conversion part 1 (Python->C++): convert a PyObject into a inty
+// 			* instance or return false upon failure. The second argument
+// 			* indicates whether implicit conversions should be applied.
+// 			*/
+// 			bool load(handle src, bool)
+// 			{
+// 				std::cout << "Loading something\n";
+
+// 				/* Extract PyObject from handle */
+// 				PyObject *source = src.ptr();
+
+// 				std::vector<python_dtype> output;
+// 				bool valid = list_tuple_to_vector(source, output);
+
+// 				if (!valid)
+// 					return false;
+
+// 				/* Now try to convert into a C++ array */
+// 				value = librapid::basic_ndarray<python_dtype>(output);
+
+// 				/* Ensure return code was OK (to avoid out-of-range errors etc) */
+// 				return !!PyErr_Occurred();
+// 			}
+
+// 			/**
+// 			* Conversion part 2 (C++ -> Python): convert an inty instance into
+// 			* a Python object. The second and third arguments are used to
+// 			* indicate the return value policy and parent object (for
+// 			* ``return_value_policy::reference_internal``) and are generally
+// 			* ignored by implicit casters.
+// 			*/
+// 			static handle cast(librapid::basic_ndarray<python_dtype> src, return_value_policy /* policy */, handle /* parent */)
+// 			{
+// 				static int count = 0;
+// 				std::cout << "Casting something | " << count++ << "\n";
+// 				std::cout << src.get_extent() << " | " << src << "\n";
+// 				auto obj = py::cast(src);
+// 				py::handle h = obj.release();
+// 				return h;
+// 			}
+// 		};
+// 	}
+// } // namespace pybind11::detail
+
+
+
 namespace py = pybind11;
 
 // Docstring for the module
@@ -110,6 +203,8 @@ PYBIND11_MODULE(librapid_, module)
 
 	module.def("get_console_size", []() { auto size = librapid::get_console_size(); return py::make_tuple(size.rows, size.cols); });
 
+	module.attr("AUTO") = (lr_int) -1;
+
 	module.attr("pi") = librapid::math::pi;
 	module.attr("twopi") = librapid::math::twopi;
 	module.attr("halfpi") = librapid::math::halfpi;
@@ -190,6 +285,17 @@ PYBIND11_MODULE(librapid_, module)
 		.def(py::init<const librapid::extent &>())
 		.def(py::init<const librapid::extent &, python_dtype>())
 		.def(py::init<const librapid::basic_ndarray<python_dtype> &>())
+		.def(py::init<python_dtype>())
+		.def(py::init<const V<python_dtype> &>())
+		.def(py::init<const V<V<python_dtype>> &>())
+		.def(py::init<const V<V<V<python_dtype>>> &>())
+		.def(py::init<const V<V<V<V<python_dtype>>>> &>())
+		.def(py::init<const V<V<V<V<V<python_dtype>>>>> &>())
+		.def(py::init<const V<V<V<V<V<V<python_dtype>>>>>> &>())
+		.def(py::init<const V<V<V<V<V<V<V<python_dtype>>>>>>> &>())
+		.def(py::init<const V<V<V<V<V<V<V<V<python_dtype>>>>>>>> &>())
+		.def(py::init<const V<V<V<V<V<V<V<V<V<python_dtype>>>>>>>>> &>())
+		.def(py::init<const V<V<V<V<V<V<V<V<V<V<python_dtype>>>>>>>>>> &>())
 		
 		.def_static("from_data", [](const python_dtype val) { return librapid::basic_ndarray<python_dtype>::from_data(val); }, py::arg("val") = python_dtype(0))
 		.def_static("from_data", [](const V<python_dtype> &vals) { return librapid::basic_ndarray<python_dtype>::from_data(vals); }, py::arg("vals") = V<python_dtype>())
@@ -321,18 +427,22 @@ PYBIND11_MODULE(librapid_, module)
 	module.def("add", [](python_dtype lhs, python_dtype rhs) { return lhs + rhs; }, py::arg("lhs"), py::arg("rhs"));
 	module.def("add", [](librapid::basic_ndarray<python_dtype> lhs, python_dtype rhs) { return lhs + rhs; }, py::arg("lhs"), py::arg("rhs"));
 	module.def("add", [](python_dtype lhs, librapid::basic_ndarray<python_dtype> rhs) { return lhs + rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("add", [](librapid::basic_ndarray<python_dtype> lhs, librapid::basic_ndarray<python_dtype> rhs) { return lhs + rhs; }, py::arg("lhs"), py::arg("rhs"));
 
 	module.def("sub", [](python_dtype lhs, python_dtype rhs) { return lhs - rhs; }, py::arg("lhs"), py::arg("rhs"));
 	module.def("sub", [](librapid::basic_ndarray<python_dtype> lhs, python_dtype rhs) { return lhs - rhs; }, py::arg("lhs"), py::arg("rhs"));
 	module.def("sub", [](python_dtype lhs, librapid::basic_ndarray<python_dtype> rhs) { return lhs - rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("sub", [](librapid::basic_ndarray<python_dtype> lhs, librapid::basic_ndarray<python_dtype> rhs) { return lhs - rhs; }, py::arg("lhs"), py::arg("rhs"));
 	
 	module.def("mul", [](python_dtype lhs, python_dtype rhs) { return lhs * rhs; }, py::arg("lhs"), py::arg("rhs"));
 	module.def("mul", [](librapid::basic_ndarray<python_dtype> lhs, python_dtype rhs) { return lhs * rhs; }, py::arg("lhs"), py::arg("rhs"));
 	module.def("mul", [](python_dtype lhs, librapid::basic_ndarray<python_dtype> rhs) { return lhs * rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("mul", [](librapid::basic_ndarray<python_dtype> lhs, librapid::basic_ndarray<python_dtype> rhs) { return lhs * rhs; }, py::arg("lhs"), py::arg("rhs"));
 
 	module.def("div", [](python_dtype lhs, python_dtype rhs) { return lhs / rhs; }, py::arg("lhs"), py::arg("rhs"));
 	module.def("div", [](librapid::basic_ndarray<python_dtype> lhs, python_dtype rhs) { return lhs / rhs; }, py::arg("lhs"), py::arg("rhs"));
 	module.def("div", [](python_dtype lhs, librapid::basic_ndarray<python_dtype> rhs) { return lhs / rhs; }, py::arg("lhs"), py::arg("rhs"));
+	module.def("div", [](librapid::basic_ndarray<python_dtype> lhs, librapid::basic_ndarray<python_dtype> rhs) { return lhs / rhs; }, py::arg("lhs"), py::arg("rhs"));
 
 	module.def("exp", [](const librapid::basic_ndarray<python_dtype> &arr) { return librapid::exp(arr); }, py::arg("arr"));
 
@@ -527,4 +637,9 @@ PYBIND11_MODULE(librapid_, module)
 	color.def("back", [](const librapid::color::rgb &col) { return librapid::color::back(col); });
 	color.def("back", [](const librapid::color::hsl &col) { return librapid::color::back(col); });
 	color.def("back", [](int r, int g, int b) { return librapid::color::back(r, g, b); });
+
+	py::implicitly_convertible<long long, librapid::basic_ndarray<python_dtype>>();
+	py::implicitly_convertible<python_dtype, librapid::basic_ndarray<python_dtype>>();
+	py::implicitly_convertible<py::tuple, librapid::basic_ndarray<python_dtype>>();
+	py::implicitly_convertible<py::list, librapid::basic_ndarray<python_dtype>>();
 }
