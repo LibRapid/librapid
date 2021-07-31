@@ -8,48 +8,8 @@
 
 int main()
 {
-	auto top = librapid::range(1., 10.).reshaped({3, 3});
-	auto bottom = librapid::range(10., 19.).reshaped({3, 3});
-
-	std::cout << top << "\n\n\n";
-	std::cout << bottom << "\n\n\n";
-
-	try
-	{
-		std::cout << librapid::concatenate({top, bottom}, 0) << "\n\n\n\n";
-	}
-	catch (std::exception &e)
-	{
-		std::cout << "Failed\n";
-	}
-
-	try
-	{
-		std::cout << librapid::concatenate({top, bottom}, 1) << "\n\n\n\n";
-	}
-	catch (std::exception &e)
-	{
-		std::cout << "Failed\n";
-	}
-
-	try
-	{
-		std::cout << librapid::concatenate({top, bottom}, 2) << "\n\n\n\n";
-	}
-	catch (std::exception &e)
-	{
-		std::cout << "Failed\n";
-	}
-
-	try
-	{
-		std::cout << librapid::stack({top, bottom}, 2).str(0, true) << "\n";
-	}
-	catch (std::exception &e)
-	{
-		std::cout << "Error: " << e.what() << "\n";
-		return 1;
-	}
+	auto my_array = librapid::ndarray({{{{1, 2, 3}}, {{1, 2, 3}}}, {{{1, 2, 3}}, {{1, 2, 3}}}});
+	std::cout << my_array << "\n";
 
 	double start, end;
 
@@ -62,9 +22,9 @@ int main()
 	{"optimizer", "adam"}
 	};
 
-	auto test_network = librapid::network(config);
+	auto test_network = librapid::network<float>(config);
 
-	auto test_network2 = librapid::network(config);
+	auto test_network2 = librapid::network<float>(config);
 
 	test_network = test_network2;
 
@@ -84,28 +44,28 @@ int main()
 	using input_type = std::unordered_map<std::string, librapid::basic_ndarray<float>>;
 
 	auto train_input = std::vector<input_type>{
-	{{"x", librapid::from_data(0.f)},
-	{"y", librapid::from_data(0.f)}},
+	{{"x", 0},
+	{"y", 0}},
 
-	{{"x", librapid::from_data(1.f)},
-	{"y", librapid::from_data(0.f)}},
+	{{"x", 1},
+	{"y", 0}},
 
-	{{"x", librapid::from_data(0.f)},
-	{"y", librapid::from_data(1.f)}},
+	{{"x", 0},
+	{"y", 1}},
 
-	{{"x", librapid::from_data(1.f)},
-	{"y", librapid::from_data(1.f)}}
+	{{"x", 1},
+	{"y", 1}}
 	};
 
 	// The labeled data (x XOR y)
 	auto train_output = std::vector<input_type>{
-		{{"o", librapid::from_data(0.f)}},
+		{{"o", 0}},
 
-		{{"o", librapid::from_data(1.f)}},
+		{{"o", 1}},
 
-		{{"o", librapid::from_data(1.f)}},
+		{{"o", 1}},
 
-		{{"o", librapid::from_data(0.f)}}
+		{{"o", 0}}
 	};
 
 	test_network.compile();
