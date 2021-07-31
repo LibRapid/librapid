@@ -25,7 +25,7 @@
 #include <librapid/ndarray/cblas_api.hpp>
 
 // For use in "basic_ndarray::from_data" and "librapid::array"
-template<typename T>
+template<typename T = double>
 using VEC_ = std::vector<T>;
 
 namespace librapid
@@ -58,6 +58,9 @@ namespace librapid
 	LR_INLINE basic_ndarray<typename std::common_type<A_T, B_T>::type,
 		nd_allocator<typename std::common_type<A_T, B_T>::type>>
 		operator/(const A_T &val, const basic_ndarray<B_T, B_A> &arr);
+
+	template<typename A>
+	LR_INLINE basic_ndarray<A> stack(const std::vector<basic_ndarray<A>> &arrays, lr_int axis = 0);
 
 	template<typename T, class alloc, typename std::enable_if<std::is_arithmetic<T>::value, int>::type>
 	class basic_ndarray
@@ -122,7 +125,7 @@ namespace librapid
 		 * \endrst
 		 */
 		template<typename E>
-		basic_ndarray(const basic_extent<E> &size) : m_extent(size),
+		explicit basic_ndarray(const basic_extent<E> &size) : m_extent(size),
 			m_stride(stride::from_extent(size.get_extent(), size.ndim())),
 			m_extent_product(math::product(size.get_extent(), size.ndim()))
 		{
@@ -141,14 +144,6 @@ namespace librapid
 				throw std::range_error("Too many dimensions in array. Maximum allowed is "
 									   + std::to_string(LIBRAPID_MAX_DIMS));
 		}
-
-		template<typename E>
-		basic_ndarray(const std::vector<E> &size) : basic_ndarray(extent(size))
-		{}
-
-		template<typename E>
-		basic_ndarray(const std::initializer_list<E> &size) : basic_ndarray(extent(size))
-		{}
 
 		/**
 		 * \rst
@@ -175,7 +170,7 @@ namespace librapid
 		 * \endrst
 		 */
 		template<typename E, typename V>
-		basic_ndarray(const basic_extent<E> &size, V val) : m_extent(size),
+		explicit basic_ndarray(const basic_extent<E> &size, V val) : m_extent(size),
 			m_stride(stride::from_extent(size.get_extent(), size.ndim())),
 			m_extent_product(math::product(size.get_extent(), size.ndim()))
 		{
@@ -198,14 +193,6 @@ namespace librapid
 				throw std::range_error("Too many dimensions in array. Maximum allowed is "
 									   + std::to_string(LIBRAPID_MAX_DIMS));
 		}
-
-		template<typename E, typename V>
-		basic_ndarray(const std::vector<E> &size, V val) : basic_ndarray(extent(size), val)
-		{}
-
-		template<typename E, typename V>
-		basic_ndarray(const std::initializer_list<E> &size, V val) : basic_ndarray(extent(size), val)
-		{}
 
 		/**
 		 * \rst
@@ -236,31 +223,170 @@ namespace librapid
 			increment();
 		}
 
-		LR_INLINE void set_to(const basic_ndarray<T> &other)
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
+		basic_ndarray(V value)
 		{
-			decrement();
-
-			m_data_origin = other.m_data_origin;
-			m_origin_references = other.m_origin_references;
-
-			m_origin_size = other.m_origin_size;
-
-			m_data_start = other.m_data_start;
-
-			m_stride = other.m_stride;
-			m_extent = other.m_extent;
-			m_extent_product = other.m_extent_product;
-			m_is_scalar = other.m_is_scalar;
-
-			m_stride.set_contiguous(other.m_stride.is_contiguous());
-
-			increment();
+			construct_new(extent({1}), stride({1}));
+			m_is_scalar = true;
+			*m_data_start = value;
 		}
+
+	#define CONSTRUCTOR_TEMPLATE \
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
+
+	#define CONSTRUCTOR_BODY_VEC(TYPE) \
+		basic_ndarray(const TYPE &values) \
+		{ \
+			using non_const = typename std::remove_const<basic_ndarray<T, alloc>>::type; \
+			auto shape = utils::extract_size(values); \
+			construct_new(extent(shape), stride::from_extent(shape)); \
+			for (size_t i = 0; i < values.size(); i++) \
+				(non_const) subscript(i) = basic_ndarray<T>(values[i]); \
+		}
+
+	#define CONSTRUCTOR_BODY_INIT(TYPE, VEC_TYPE)	\
+		basic_ndarray(const TYPE &values) \
+		{ \
+			using non_const = typename std::remove_const<basic_ndarray<T, alloc>>::type; \
+			std::vector<basic_ndarray<T>> to_stack; \
+			for (const auto &sub : values) \
+				to_stack.emplace_back(basic_ndarray<T>(sub)); \
+			auto stacked = librapid::stack(to_stack); \
+			set_to(stacked); \
+		}
+
+	#define CVEC std::vector
+	#define CINIT std::initializer_list
+
+		/**
+		 * \rst
+		 *
+		 * Create an array from predefined data. The data must
+		 * contain values of the same type, and any sub-arrays
+		 * must have equal dimensions.
+		 *
+		 * In C++, this function accepts (potentially nested)
+		 * ``std::vector`` and ``std::initializer_list`` values, as
+		 * well as scalars. In Python, it accepts (again, potentially
+		 * nested) `list` and `tuple` values, as well as scalars.
+		 *
+		 * .. Hint::
+		 *
+		 *		Ignore the datatype in the definition of this function.
+		 *		It is specialized to support up to 10 dimensions of
+		 *		nesting and multiple datatypes
+		 *
+		 * In both languages, these constructors are *implicit*,
+		 * meaning any valid input parameter can be converted to an
+		 * array at compiletime (C++) or runtime (Python). This allows
+		 * for things like this to be done:
+		 *
+		 * .. code-block:: Python
+		 *		:caption: Python Example
+		 *
+		 *		# Using "from_data"
+		 *		librapid.add(librapid.from_data([1, 2, 3]), librapid.from_data([4, 5, 6]))
+		 *
+		 *		# Using implicit constructors
+		 *		# (the lists are automatically converted to arrays)
+		 *		librapid.add([1, 2, 3], [4, 5, 6])
+		 *
+		 * .. Attention::
+		 *
+		 *		Be careful with implicit conversions. They can lead to
+		 *		unexpected results due to unintentional casting
+		 *
+		 * \endrst
+		 */
+		CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<V>) // 1D
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<V>,
+								  CVEC<V>)
+
+			// 2D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<V>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<V>>,
+								  CVEC<CVEC<V>>)
+
+			// 3D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<V>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<V>>>,
+								  CVEC<CVEC<CVEC<V>>>)
+
+			// 4D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<V>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<V>>>>,
+								  CVEC<CVEC<CVEC<CVEC<V>>>>)
+
+			// 5D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>,
+								  CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>)
+
+			// 6D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>,
+								  CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>)
+
+			// 7D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>,
+								  CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>)
+
+			// 8D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>,
+								  CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>)
+
+			//9D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>,
+								  CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>)
+
+			//10D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>>,
+								  CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>>)
+
+		#undef CONSTRUCTOR_TEMPLATE
+		#undef CONSTRUCTOR_BODY_VEC
+		#undef CONSTRUCTOR_BODY_INIT
+		#undef CVEC
+		#undef CINIT
 
 		template<typename V>
 		LR_INLINE static basic_ndarray<T> from_data(V scalar)
 		{
-			basic_ndarray<T> res({1});
+			basic_ndarray<T> res(extent{1});
 			res.m_data_start[0] = (T) scalar;
 			res.m_is_scalar = true;
 			return res;
@@ -326,22 +452,11 @@ namespace librapid
 		template<typename V>
 		LR_INLINE static basic_ndarray<T> from_data(const std::vector<V> &values)
 		{
-			// basic_ndarray<T> res(extent({values.size()}));
 			basic_ndarray<T> res(utils::extract_size(values));
 			for (size_t i = 0; i < values.size(); i++)
-				// res.set_value(i, (T) values[i]);
 				res[i] = from_data(values[i]);
 			return res;
 		}
-
-		// template<typename V>
-		// LR_INLINE static basic_ndarray<T> from_data(const std::vector<std::vector<V>> &values)
-		// {
-		// 	basic_ndarray<T> res(extent({values.size()}));
-		// 	for (size_t i = 0; i < values.size(); i++)
-		// 		res[i] = 
-		// 	return res;
-		// }
 
 		LR_INLINE basic_ndarray<T> &operator=(const basic_ndarray<T> &arr)
 		{
@@ -382,14 +497,62 @@ namespace librapid
 			return *this;
 		}
 
+		/**
+		 * \rst
+		 *
+		 * Set a scalar-value array (zero-dimensional) to another
+		 * scalar of any type. This function throws an error
+		 * if the array is not zero-dimensional
+		 *
+		 * \endrst
+		 */
 		template<typename V>
-		LR_INLINE basic_ndarray &operator=(const V &other)
+		LR_INLINE basic_ndarray<T> &operator=(const V &other)
 		{
 			if (!m_is_scalar)
 				throw std::runtime_error("Cannot set non-scalar array with " +
 										 m_extent.str() + " to a scalar");
 
 			*m_data_start = T(other);
+
+			return *this;
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Set one array equal to another, using the same data,
+		 * stride and extent. ``*this`` is decremented and is
+		 * reinitialized with the data of ``other``.
+		 *
+		 * .. Attention::
+		 *
+		 *	The underlying data of the array is not optimized,
+		 *	and remains the same as that of the input array,
+		 *	which, if suboptimal in memory, will remain that
+		 *	way. See ``copy`` to optimize the memory layout
+		 *
+		 * \endrst
+		 */
+		LR_INLINE basic_ndarray<T> &operator=(const basic_ndarray<T> &other)
+		{
+			decrement();
+
+			m_data_origin = other.m_data_origin;
+			m_origin_references = other.m_origin_references;
+
+			m_origin_size = other.m_origin_size;
+
+			m_data_start = other.m_data_start;
+
+			m_stride = other.m_stride;
+			m_extent = other.m_extent;
+			m_extent_product = other.m_extent_product;
+			m_is_scalar = other.m_is_scalar;
+
+			m_stride.set_contiguous(other.m_stride.is_contiguous());
+
+			increment();
 
 			return *this;
 		}
@@ -702,6 +865,21 @@ namespace librapid
 			return m_data_start[0];
 		}
 
+		/**
+		 * \rst
+		 * 
+		 * Create an exact copy of an array and it's data, and return
+		 * the result.
+		 * 
+		 * .. Hint::
+		 * 
+		 *		When cloning an array, the data is optimized in memory
+		 *		to improve performance. Furthermore, and transformations
+		 *		applied to the parent matrix will be optimized out and
+		 *		calculated fully, further improving performance
+		 * 
+		 * \endrst
+		 */
 		LR_INLINE basic_ndarray<T> clone() const
 		{
 			basic_ndarray<T, alloc> res(m_extent);
@@ -1101,6 +1279,66 @@ namespace librapid
 			return res;
 		}
 
+		/**
+		 * \rst
+		 * 
+		 * Adjust the extent (shape) of an array and return the result.
+		 * 
+		 * In order to reshape the array, the new number of elements **MUST** be
+		 * the same as the number of elements in the old array, otherwise an error
+		 * will be thrown.
+		 * 
+		 * It is also possible to use an automatic dimension by passing in
+		 * ``librapid::AUTO`` (equals `-1`) to the shape. This will be evaulated
+		 * when the function is called. If the array cannot be reshaped into
+		 * the new shape, even with an automatic dimension, an error will be thrown
+		 * 
+		 * Examples
+		 * --------
+		 * 
+		 * .. code-block:: python
+		 *		:caption: Example written in Python
+		 *		
+		 *		my_matrix = librapid.ndarray([[1, 2, 3], [4, 5, 6]])
+		 *		print(my_matrix)
+		 *		# [[1 2 3]
+		 *		#  [4 5 6]]
+		 * 
+		 *		my_matrix.reshape([6])
+		 * 
+		 *		print(my_matrix)
+		 *		# [1 2 3 4 5 6]
+		 * 
+		 * .. code-block:: python
+		 *		:caption: Example written in Python
+		 *
+		 *		my_matrix = librapid.ndarray([[1, 2, 3, 4], [5, 6, 7, 8]])
+		 *		print(my_matrix)
+		 *		# [[1. 2. 3. 4.]
+		 *		#  [5. 6. 7. 8.]]
+		 *
+		 *		my_matrix.reshape([2, 2, librapid.AUTO])
+		 *
+		 *		print(my_matrix)
+		 *		# [[[1. 2.]
+		 *		#   [3. 4.]]
+		 *		#
+		 *		#  [[5. 6.]
+		 *		#   [7. 8.]]]
+		 * 
+		 * When possible, the resulting array references the same data
+		 * as the input array, however this is not possible if the array
+		 * has a non-trivial stride (for example, if the array has been
+		 * previously transposed)
+		 * 
+		 * Parameters
+		 * ----------
+		 * 
+		 * new_shape: extent, vector, initializer_list, list, tuple, *args
+		 *		The new shape for the array
+		 * 
+		 * \endrst
+		 */
 		template<typename O>
 		LR_INLINE void reshape(const basic_extent<O> &new_shape)
 		{
@@ -2385,6 +2623,7 @@ namespace librapid
 		{
 			m_extent = e;
 			m_stride = s;
+
 			m_stride.set_contiguous(m_stride.check_contiguous(m_extent.get_extent(),
 									m_extent.ndim()));
 
@@ -4139,7 +4378,7 @@ namespace librapid
 		else
 			len = 0;
 
-		auto res = basic_ndarray<ct>({len});
+		auto res = basic_ndarray<ct>(extent{len});
 
 		for (lr_int i = 0; i < len; i++)
 			res[i] = (ct) start + (ct) inc * (ct) i;
@@ -4432,7 +4671,7 @@ namespace librapid
 	 * \endrst
 	 */
 	template<typename A>
-	LR_INLINE basic_ndarray<A> stack(const std::vector<basic_ndarray<A>> &arrays, lr_int axis = 0)
+	LR_INLINE basic_ndarray<A> stack(const std::vector<basic_ndarray<A>> &arrays, lr_int axis)
 	{
 		lr_int new_dim = arrays.size();
 
@@ -4488,7 +4727,7 @@ namespace librapid
 
 	template<typename A>
 	LR_INLINE basic_ndarray<A> stack(const std::initializer_list<basic_ndarray<A>> &arrays,
-										   lr_int axis = 0)
+									 lr_int axis = 0)
 	{
 		return stack(std::vector<basic_ndarray<A>>(arrays.begin(), arrays.end()), axis);
 	}
