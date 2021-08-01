@@ -277,10 +277,23 @@ def find_lib(base_path):
 	try:
 		files = [f for f in listdir(base_path) if isfile(join(base_path, f))]
 
+		# First check for OpenBLAS files
+		# (openblas.?? or libopenblas.??)
 		for file in files:
 			for ending in known_endings:
-				if "dev" not in file and file.endswith(ending):
+				if file in ["libopenblas" + ending, "openblas" + ending]:
+					# Remove the filetype from the filename
+					new_name = file[:-len(ending)]
 
+					if platform.system() in ["Linux", "Darwin"]:
+						# If the name starts with "lib", remove it
+						return new_name[3:], file
+					return new_name, file
+		
+		# Now check for more generic files
+		for file in files:
+			for ending in known_endings:
+				if file.endswith(ending):
 					# Remove the filetype from the filename
 					new_name = file[:-len(ending)]
 
