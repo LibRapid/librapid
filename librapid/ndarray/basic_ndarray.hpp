@@ -489,7 +489,7 @@ namespace librapid
 		template<typename V>
 		LR_INLINE static basic_ndarray<T> from_data(const std::vector<V> &values)
 		{
-			basic_ndarray<T> res(utils::extract_size(values));
+			basic_ndarray<T> res(extent(utils::extract_size(values)));
 			for (size_t i = 0; i < values.size(); i++)
 				res[i] = from_data(values[i]);
 			return res;
