@@ -8,7 +8,7 @@
 
 int main()
 {
-	auto my_array = librapid::ndarray({{{{1, 2, 3}}, {{1, 2, 3}}}, {{{1, 2, 3}}, {{1, 2, 3}}}});
+	auto my_array = librapid::ndarray::from_data(VEC_<int>{1, 2, 3});
 	std::cout << my_array << "\n";
 
 	double start, end;
