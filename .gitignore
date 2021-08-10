@@ -7,6 +7,8 @@ build_config.txt
 
 librapid/blas
 
+build/*
+
 tests/__pycache__
 
 docs/build
@@ -14,3 +16,10 @@ docs/source/api
 docs/source/doxygenoutput
 
 *.pyc
+
+*.i
+*.ii
+*.gpu
+*.ptx
+*.cubin
+*.fatbin
