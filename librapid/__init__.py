@@ -6,8 +6,6 @@ import distutils.sysconfig
 import shutil
 from pathlib import Path
 
-from . import progress
-
 # If using windows, tell the os where the DLL for blas is
 # If blas was not installed, this doesn't really do anything
 if platform.system() == "Windows":
@@ -19,4 +17,3 @@ if platform.system() == "Windows":
 	win32api.SetDllDirectory(os.path.join(this_directory, "blas"))
 
 from librapid_ import *
-from .progress import *

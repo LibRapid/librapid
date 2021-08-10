@@ -1,28 +1,14 @@
 #ifndef LIBRAPID_CONFIG
 #define LIBRAPID_CONFIG
 
-#ifndef LIBRAPID_BUILD
-// LIBRAPID_BUILD 0 == C++
-// LIBRAPID_BUILD 1 == PYBIND
-#define LIBRAPID_BUILD 0
-#endif
-
-#if LIBRAPID_BUILD == 1
+#ifdef LIBRAPID_PYTHON
 
 // PyBind11 specific definitions and includes
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 namespace py = pybind11;
 
-#ifdef LIBRAPID_PYTHON_FLOAT
-using python_dtype = float;
-#else
-#ifdef LIBRAPID_PYTHON_DOUBLE
 using python_dtype = double;
-#else
-#error Unknown Python Datatype
-#endif
-#endif
 
 namespace librapid
 {
@@ -32,26 +18,28 @@ namespace librapid
 	}
 }
 
-#endif
+#endif // LIBRAPID_PYTHON
 
-#ifdef LIBRAPID_CBLAS
-#undef LIBRAPID_CBLAS
-#define LIBRAPID_CBLAS 1
+#ifdef LIBRAPID_HAS_BLAS
 #include <cblas.h>
 #endif
 
 #if defined(NDEBUG) || defined(LIBRAPID_NDEBUG)
-#define LR_NDEBUG
+#define LIBRAPID_NDEBUG
 #define LR_INLINE inline
 #else
-#define LR_DEBUG
+#define LIBRAPID_NDEBUG
 #define LR_INLINE
 #endif // NDEBUG || NDARRAY_DEBUG
 
+#ifndef LIBRAPID_HAS_OMP
 #ifdef _OPENMP
-#define LR_HAS_OMP
+#define LIBRAPID_HAS_OMP
 #include <omp.h>
 #endif // _OPENMP
+#else // LIBRAPID_HAS_OMP
+#include <omp.h>
+#endif // LIBRAPID_HAS_OMP
 
 #ifndef LIBRAPID_MAX_DIMS
 #define LIBRAPID_MAX_DIMS 32
@@ -126,15 +114,15 @@ using lr_int = long long;
 
 // Easy access to the current time (in s)
 #include <chrono>
-#define TIME (double) std::chrono::high_resolution_clock().now().time_since_epoch().count() / 1000000000
+#define NOW (double) std::chrono::high_resolution_clock().now().time_since_epoch().count() / 1000000000
 
 namespace librapid
 {
 	LR_INLINE void sleep(double time)
 	{
-		auto start = TIME;
+		auto start = NOW;
 
-		while (TIME - start < time)
+		while (NOW - start < time)
 		{
 		}
 	}
@@ -192,7 +180,7 @@ namespace librapid
 {
 	bool has_blas()
 	{
-	#if defined(LIBRAPID_CBLAS) && (LIBRAPID_CBLAS == 1)
+	#ifdef LIBRAPID_CBLAS
 		return true;
 	#else
 		return false;
@@ -255,6 +243,8 @@ namespace librapid
 			"such as OpenMP or OpenBLAS, so the function \"set_num_threads\""
 			"will not do anything" << "\n";
 	#endif
+
+		return 1;
 	}
 }
 
