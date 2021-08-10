@@ -28,7 +28,7 @@ namespace librapid
 		}
 
 		template<typename T>
-		LR_INLINE T product(const T *__restrict vals, lr_int num)
+		LR_INLINE T product(const T *vals, lr_int num)
 		{
 			T res = 1;
 			for (lr_int i = 0; i < num; i++)
@@ -46,7 +46,7 @@ namespace librapid
 		}
 
 		template<typename T, typename V>
-		LR_INLINE const bool anyBelow(const T *__restrict vals, lr_int dims, V bound)
+		LR_INLINE const bool anyBelow(const T *vals, lr_int dims, V bound)
 		{
 			for (lr_int i = 0; i < dims; i++)
 				if (vals[i] < bound)
@@ -145,7 +145,7 @@ namespace librapid
 			// Random floating point value in range [min, max)
 
 			static std::uniform_real_distribution<type> distribution(0., 1.);
-			static std::mt19937 generator((unsigned int) (TIME * 10));
+			static std::mt19937 generator((unsigned int) (NOW * 10));
 			return min + (max - min) * distribution(generator);
 		}
 

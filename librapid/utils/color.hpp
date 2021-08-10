@@ -161,6 +161,23 @@ namespace librapid
 		constexpr char bright_cyan[] = "\033[96m";
 		constexpr char bright_white[] = "\033[97m";
 
+		constexpr char black_background[] = "\033[40m";
+		constexpr char red_background[] = "\033[41m";
+		constexpr char green_background[] = "\033[42m";
+		constexpr char yellow_background[] = "\033[43m";
+		constexpr char blue_background[] = "\033[44m";
+		constexpr char magenta_background[] = "\033[45m";
+		constexpr char cyan_background[] = "\033[46m";
+		constexpr char white_background[] = "\033[47m";
+		constexpr char bright_black_background[] = "\033[100m";
+		constexpr char bright_red_background[] = "\033[101m";
+		constexpr char bright_green_background[] = "\033[102m";
+		constexpr char bright_yellow_background[] = "\033[103m";
+		constexpr char bright_blue_background[] = "\033[104m";
+		constexpr char bright_magenta_background[] = "\033[105m";
+		constexpr char bright_cyan_background[] = "\033[106m";
+		constexpr char bright_white_background[] = "\033[107m";
+
 		std::string fore(const rgb &col)
 		{
 			std::string result = "\033[38;2;";
