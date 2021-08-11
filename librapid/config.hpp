@@ -12,7 +12,7 @@ using python_dtype = double;
 
 namespace librapid
 {
-	int python_bitness()
+	int pythonBitness()
 	{
 		return sizeof(python_dtype) * 8;
 	}
@@ -114,15 +114,22 @@ using lr_int = long long;
 
 // Easy access to the current time (in s)
 #include <chrono>
-#define NOW (double) std::chrono::high_resolution_clock().now().time_since_epoch().count() / 1000000000
 
 namespace librapid
 {
-	LR_INLINE void sleep(double time)
+	LR_INLINE double seconds()
 	{
-		auto start = NOW;
+		return (double) std::chrono::high_resolution_clock().now().time_since_epoch().count() / 1000000000;
+	}
+}
 
-		while (NOW - start < time)
+namespace librapid
+{
+	LR_INLINE void sleep(double s)
+	{
+		auto start = seconds();
+
+		while (seconds() - start < s)
 		{
 		}
 	}
@@ -138,14 +145,14 @@ namespace librapid
 
 namespace librapid
 {
-	struct console_size
+	struct consoleSize
 	{
 		lr_int rows;
 		lr_int cols;
 	};
 
 #if defined(LIBRAPID_OS_WINDOWS)
-	console_size get_console_size()
+	consoleSize getConsoleSize()
 	{
 		static CONSOLE_SCREEN_BUFFER_INFO csbi;
 		int cols, rows;
@@ -157,7 +164,7 @@ namespace librapid
 		return {rows, cols};
 	}
 #elif defined(LIBRAPID_OS_UNIX)
-	console_size get_console_size()
+	consoleSize getConsoleSize()
 	{
 		static struct winsize w;
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
@@ -165,7 +172,7 @@ namespace librapid
 		return {w.ws_row, w.ws_col};
 	}
 #else
-	console_size get_console_size()
+	consoleSize getConsoleSize()
 	{
 		// Not a clue what this would run on, or how it would be done
 		// correctly, so just return some arbitrary values...
@@ -178,16 +185,16 @@ namespace librapid
 // BLAS config settings
 namespace librapid
 {
-	bool has_blas()
+	bool hasBlas()
 	{
 	#ifdef LIBRAPID_CBLAS
 		return true;
 	#else
 		return false;
 	#endif // LIBRAPID_CBLAS
-	}
+}
 
-	void set_blas_threads(int num)
+	void setBlasThreads(int num)
 	{
 	#ifdef LIBRAPID_HAS_OPENBLAS
 		openblas_set_num_threads(num);
@@ -202,7 +209,7 @@ namespace librapid
 	#endif // LIBRAPID_HAS_OPENBLAS
 	}
 
-	int get_blas_threads()
+	int getBlasThreads()
 	{
 	#ifdef LIBRAPID_HAS_OPENBLAS
 		return openblas_get_num_threads();
@@ -213,10 +220,10 @@ namespace librapid
 	#endif // LIBRAPID_HAS_OPENBLAS
 	}
 
-	void set_num_threads(int num)
+	void setNumThreads(int num)
 	{
 	#if defined(LIBRAPID_HAS_OPENBLAS)
-		set_blas_threads(num);
+		setBlasThreads(num);
 	#define LIB_SET
 	#endif
 
@@ -232,10 +239,10 @@ namespace librapid
 	#endif
 	}
 
-	int get_num_threads()
+	int getNumThreads()
 	{
 	#if defined(LIBRAPID_HAS_OPENBLAS)
-		return get_blas_threads();
+		return getBlasThreads();
 	#elif defined(LR_HAS_OMP)
 		return omp_get_num_threads();
 	#else
@@ -247,6 +254,22 @@ namespace librapid
 		return 1;
 	}
 }
+
+// CUDA enabled LibRapid
+#ifdef LIBRAPID_HAS_CUDA
+
+#ifdef _MSC_VER
+// Disable warnings about unsafe classes
+#pragma warning(disable : 4996)
+#endif
+
+#include <jitify/jitify.hpp>
+
+#ifdef _MSC_VER
+#pragma warning(default : 4996)
+#endif
+
+#endif // LIBRAPID_HAS_CUDA
 
 #undef min
 #undef max
