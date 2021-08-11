@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.10)
 project(librapid_)
 
 # Attempt to locate the required packages
@@ -63,6 +63,8 @@ if (${BLAS_FOUND})
 		if (NOT (EXISTS ${inc_path}))
 			message(FATAL_ERROR "Could not locate include path for BLAS")
 		endif()
+
+		set(has_cblas OFF)
 		
 		if (EXISTS "${inc_path}/openblas")
 			FILE(GLOB_RECURSE include_files "${inc_path}/openblas/*.*")
@@ -75,8 +77,12 @@ if (${BLAS_FOUND})
 			FILE(GLOB_RECURSE include_files "${inc_path}/*.*")
 			foreach (file IN LISTS include_files)
 				message(STATUS "Found include file " ${file})
-				get_filename_component(filename ${file} NAME)
-				configure_file(${file} ${CMAKE_SOURCE_DIR}/librapid/blas/${filename} COPYONLY)
+				get_filename_component(inc_file ${file} NAME)
+				configure_file(${file} ${CMAKE_SOURCE_DIR}/librapid/blas/${inc_file} COPYONLY)
+				
+				if (${inc_file} STREQUAL "cblas.h")
+					set(has_cblas ON)
+				endif()
 			endforeach()
 		endif()
 		
@@ -110,7 +116,9 @@ if (${BLAS_FOUND})
 								"${CMAKE_SOURCE_DIR}")
 	
 		# Add the compile definition so LibRapid knows it has BLAS
-		add_compile_definitions(LIBRAPID_HAS_BLAS)
+		if (${has_cblas})
+			add_compile_definitions(LIBRAPID_HAS_BLAS)
+		endif()
 	else()
 		message(WARNING "BLAS was found but is not being linked against (Value <USE_BLAS> is " ${USE_BLAS} ")")
 	endif()

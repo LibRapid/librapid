@@ -13,5 +13,6 @@
 #include <librapid/test/librapid_test.hpp>
 #include <librapid/autocast/autocast.hpp>
 #include <librapid/math/rapid_math.hpp>
+#include <librapid/array/array.hpp>
 
 #endif // LIBRAPID_INCLUDE
