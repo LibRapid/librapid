@@ -107,6 +107,10 @@ namespace librapid
 #endif
 
 using lr_int = long long;
+namespace librapid
+{
+	constexpr lr_int AUTO = -1;
+}
 
 #if defined(OPENBLAS_OPENMP) || defined(OPENBLAS_THREAD) || defined(OPENBLAS_SEQUENTIAL)
 #define LIBRAPID_HAS_OPENBLAS
@@ -192,7 +196,7 @@ namespace librapid
 	#else
 		return false;
 	#endif // LIBRAPID_CBLAS
-}
+	}
 
 	void setBlasThreads(int num)
 	{
@@ -263,7 +267,70 @@ namespace librapid
 #pragma warning(disable : 4996)
 #endif
 
+#include <cuda.h>
+#include <cublas_v2.h>
+#include <curand.h>
+#include <curand_kernel.h>
 #include <jitify/jitify.hpp>
+
+// cuBLAS API errors
+static const char *getCublasErrorEnum_(cublasStatus_t error)
+{
+	switch (error)
+	{
+		case CUBLAS_STATUS_SUCCESS:return "CUBLAS_STATUS_SUCCESS";
+		case CUBLAS_STATUS_NOT_INITIALIZED:return "CUBLAS_STATUS_NOT_INITIALIZED";
+		case CUBLAS_STATUS_ALLOC_FAILED:return "CUBLAS_STATUS_ALLOC_FAILED";
+		case CUBLAS_STATUS_INVALID_VALUE:return "CUBLAS_STATUS_INVALID_VALUE";
+		case CUBLAS_STATUS_ARCH_MISMATCH:return "CUBLAS_STATUS_ARCH_MISMATCH";
+		case CUBLAS_STATUS_MAPPING_ERROR:return "CUBLAS_STATUS_MAPPING_ERROR";
+		case CUBLAS_STATUS_EXECUTION_FAILED:return "CUBLAS_STATUS_EXECUTION_FAILED";
+		case CUBLAS_STATUS_INTERNAL_ERROR:return "CUBLAS_STATUS_INTERNAL_ERROR";
+		case CUBLAS_STATUS_NOT_SUPPORTED:return "CUBLAS_STATUS_NOT_SUPPORTED";
+		case CUBLAS_STATUS_LICENSE_ERROR:return "CUBLAS_STATUS_LICENSE_ERROR";
+	}
+
+	return "UNKNOWN ERROR";
+}
+
+//********************//
+// cuBLAS ERROR CHECK //
+//********************//
+#ifndef cublasSafeCall
+#define cublasSafeCall(err)     cublasSafeCall_(err, __FILE__, __LINE__)
+#endif
+
+inline void cublasSafeCall_(cublasStatus_t err, const char *file, const int line)
+{
+	if (err != CUBLAS_STATUS_SUCCESS)
+		throw std::runtime_error("cuBLAS error at (" + std::string(file) +
+								 ", line " + std::to_string(line) + "): "
+								 + getCublasErrorEnum_(err));
+}
+
+//********************//
+// CUDA ERROR CHECK //
+//********************//
+#ifndef cudaSafeCall
+#define cudaSafeCall(err)     cudaSafeCall_(err, __FILE__, __LINE__)
+#endif
+
+inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
+{
+	if (err != cudaSuccess)
+		throw std::runtime_error("CUDA error at (" + std::string(file) +
+								 ", line " + std::to_string(line) + "): "
+								 + cudaGetErrorString(err));
+}
+
+#define jitifyCall(call)												\
+  do {																	\
+    if (call != CUDA_SUCCESS) {											\
+      const char* str;													\
+      cuGetErrorName(call, &str);										\
+      throw std::runtime_error("CUDA JIT failed: " + str);				\
+    }																	\
+  } while (0)
 
 #ifdef _MSC_VER
 #pragma warning(default : 4996)
