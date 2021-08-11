@@ -109,7 +109,7 @@ if (${BLAS_FOUND})
 								"${CMAKE_SOURCE_DIR}/librapid/blas"
 								"${CMAKE_SOURCE_DIR}")
 	
-		# Add the compile definition so LibRapid knows it has OpenMP
+		# Add the compile definition so LibRapid knows it has BLAS
 		add_compile_definitions(LIBRAPID_HAS_BLAS)
 	else()
 		message(WARNING "BLAS was found but is not being linked against (Value <USE_BLAS> is " ${USE_BLAS} ")")
@@ -123,6 +123,7 @@ if (${CUDAToolkit_FOUND})
 
 		target_include_directories(librapid_ PRIVATE
 									${CUDA_INCLUDE_DIRS}
+									${CMAKE_SOURCE_DIR}
 								  )
 
 		target_link_directories(librapid_ PRIVATE
@@ -136,6 +137,8 @@ if (${CUDAToolkit_FOUND})
 									CUDA::nvrtc
 									Dbghelp
 							 )
+
+		add_compile_definitions(LIBRAPID_HAS_CUDA)
 	else()
 		message(WARNING "CUDA was found but is not being linked against (Value <USE_CUDA> is " ${USE_CUDA} ")")
 	endif()

@@ -5,7 +5,6 @@
 
 namespace librapid
 {
-
 	/**
 	 * \rst
 	 *
@@ -173,7 +172,7 @@ namespace librapid
 		free(data);
 	}
 
-#define AUTOCAST_UNARY_(f, precast, res, ...)									\
+#define AUTOCAST_UNARY_(f, locnA, precast, res, ...)									\
 	switch (res.dtype)															\
 	{																			\
 		case librapid::Datatype::NONE:											\
@@ -182,67 +181,67 @@ namespace librapid
 		}																		\
 		case librapid::Datatype::BOOL:											\
 		{																		\
-			f(precast, (bool *) res.ptr, __VA_ARGS__);							\
+			f(locnA, res.location, precast, (bool *) res.ptr, __VA_ARGS__);							\
 			break;																\
 		}																		\
 		case librapid::Datatype::CHAR:											\
 		{																		\
-			f(precast, (char *) res.ptr, __VA_ARGS__);							\
+			f(locnA, res.location, precast, (char *) res.ptr, __VA_ARGS__);							\
 			break;																\
 		}																		\
 		case librapid::Datatype::UCHAR:											\
 		{																		\
-			f(precast, (unsigned char *) res.ptr, __VA_ARGS__);					\
+			f(locnA, res.location, precast, (unsigned char *) res.ptr, __VA_ARGS__);					\
 			break;																\
 		}																		\
 		case librapid::Datatype::INT16:											\
 		{																		\
-			f(precast, (int *) res.ptr, __VA_ARGS__);							\
+			f(locnA, res.location, precast, (int *) res.ptr, __VA_ARGS__);							\
 			break;																\
 		}																		\
 		case librapid::Datatype::UINT16:										\
 		{																		\
-			f(precast, (unsigned int *) res.ptr, __VA_ARGS__);					\
+			f(locnA, res.location, precast, (unsigned int *) res.ptr, __VA_ARGS__);					\
 			break;																\
 		}																		\
 		case librapid::Datatype::INT32:											\
 		{																		\
-			f(precast, (long *) res.ptr, __VA_ARGS__);							\
+			f(locnA, res.location, precast, (long *) res.ptr, __VA_ARGS__);							\
 			break;																\
 		}																		\
 		case librapid::Datatype::UINT32:										\
 		{																		\
-			f(precast, (unsigned long *) res.ptr, __VA_ARGS__);					\
+			f(locnA, res.location, precast, (unsigned long *) res.ptr, __VA_ARGS__);					\
 			break;																\
 		}																		\
 		case librapid::Datatype::INT64:											\
 		{																		\
-			f(precast, (long long *) res.ptr, __VA_ARGS__);						\
+			f(locnA, res.location, precast, (long long *) res.ptr, __VA_ARGS__);						\
 			break;																\
 		}																		\
 		case librapid::Datatype::UINT64:										\
 		{																		\
-			f(precast, (unsigned long long *) res.ptr, __VA_ARGS__);			\
+			f(locnA, res.location, precast, (unsigned long long *) res.ptr, __VA_ARGS__);			\
 			break;																\
 		}																		\
 		case librapid::Datatype::FLOAT32:										\
 		{																		\
-			f(precast, (float *) res.ptr, __VA_ARGS__);							\
+			f(locnA, res.location, precast, (float *) res.ptr, __VA_ARGS__);							\
 			break;																\
 		}																		\
 		case librapid::Datatype::FLOAT64:										\
 		{																		\
-			f(precast, (double *) res.ptr, __VA_ARGS__);						\
+			f(locnA, res.location, precast, (double *) res.ptr, __VA_ARGS__);						\
 			break;																\
 		}																		\
 		case librapid::Datatype::CFLOAT32:										\
 		{																		\
-			f(precast, (librapid::complex<float> *) res.ptr, __VA_ARGS__);		\
+			f(locnA, res.location, precast, (librapid::complex<float> *) res.ptr, __VA_ARGS__);		\
 			break;																\
 		}																		\
 		case librapid::Datatype::CFLOAT64:										\
 		{																		\
-			f(precast, (librapid::complex<double> *) res.ptr, __VA_ARGS__);		\
+			f(locnA, res.location, precast, (librapid::complex<double> *) res.ptr, __VA_ARGS__);		\
 			break;																\
 		}																		\
 	}
@@ -256,69 +255,291 @@ namespace librapid
 		}																					\
 		case librapid::Datatype::BOOL:														\
 		{																					\
-			AUTOCAST_UNARY_(f, (bool *) vptr.ptr, res, __VA_ARGS__)							\
+			AUTOCAST_UNARY_(f, vptr.location, (bool *) vptr.ptr, res, __VA_ARGS__)							\
 			break;																			\
 		}																					\
 		case librapid::Datatype::CHAR:														\
 		{																					\
-			AUTOCAST_UNARY_(f, (char *) vptr.ptr, res, __VA_ARGS__)							\
+			AUTOCAST_UNARY_(f, vptr.location, (char *) vptr.ptr, res, __VA_ARGS__)							\
 			break;																			\
 		}																					\
 		case librapid::Datatype::UCHAR:														\
 		{																					\
-			AUTOCAST_UNARY_(f, (unsigned char *) vptr.ptr, res, __VA_ARGS__)				\
+			AUTOCAST_UNARY_(f, vptr.location, (unsigned char *) vptr.ptr, res, __VA_ARGS__)				\
 			break;																			\
 		}																					\
 		case librapid::Datatype::INT16:														\
 		{																					\
-			AUTOCAST_UNARY_(f, (int *) vptr.ptr, res, __VA_ARGS__)							\
+			AUTOCAST_UNARY_(f, vptr.location, (int *) vptr.ptr, res, __VA_ARGS__)							\
 			break;																			\
 		}																					\
 		case librapid::Datatype::UINT16:													\
 		{																					\
-			AUTOCAST_UNARY_(f, (unsigned int *) vptr.ptr, res, __VA_ARGS__)					\
+			AUTOCAST_UNARY_(f, vptr.location, (unsigned int *) vptr.ptr, res, __VA_ARGS__)					\
 			break;																			\
 		}																					\
 		case librapid::Datatype::INT32:														\
 		{																					\
-			AUTOCAST_UNARY_(f, (long *) vptr.ptr, res, __VA_ARGS__)							\
+			AUTOCAST_UNARY_(f, vptr.location, (long *) vptr.ptr, res, __VA_ARGS__)							\
 			break;																			\
 		}																					\
 		case librapid::Datatype::UINT32:													\
 		{																					\
-			AUTOCAST_UNARY_(f, (unsigned long *) vptr.ptr, res, __VA_ARGS__)				\
+			AUTOCAST_UNARY_(f, vptr.location, (unsigned long *) vptr.ptr, res, __VA_ARGS__)				\
 			break;																			\
 		}																					\
 		case librapid::Datatype::INT64:														\
 		{																					\
-			AUTOCAST_UNARY_(f, (long long *) vptr.ptr, res, __VA_ARGS__)					\
+			AUTOCAST_UNARY_(f, vptr.location, (long long *) vptr.ptr, res, __VA_ARGS__)					\
 			break;																			\
 		}																					\
 		case librapid::Datatype::UINT64:													\
 		{																					\
-			AUTOCAST_UNARY_(f, (unsigned long long *) vptr.ptr, res, __VA_ARGS__)			\
+			AUTOCAST_UNARY_(f, vptr.location, (unsigned long long *) vptr.ptr, res, __VA_ARGS__)			\
 			break;																			\
 		}																					\
 		case librapid::Datatype::FLOAT32:													\
 		{																					\
-			AUTOCAST_UNARY_(f, (float *) vptr.ptr, res, __VA_ARGS__)						\
+			AUTOCAST_UNARY_(f, vptr.location, (float *) vptr.ptr, res, __VA_ARGS__)						\
 			break;																			\
 		}																					\
 		case librapid::Datatype::FLOAT64:													\
 		{																					\
-			AUTOCAST_UNARY_(f, (double *) vptr.ptr, res, __VA_ARGS__)						\
+			AUTOCAST_UNARY_(f, vptr.location, (double *) vptr.ptr, res, __VA_ARGS__)						\
 			break;																			\
 		}																					\
 		case librapid::Datatype::CFLOAT32:													\
 		{																					\
-			AUTOCAST_UNARY_(f, (librapid::complex<float> *) vptr.ptr, res, __VA_ARGS__)		\
+			AUTOCAST_UNARY_(f, vptr.location, (librapid::complex<float> *) vptr.ptr, res, __VA_ARGS__)		\
 			break;																			\
 		}																					\
 		case librapid::Datatype::CFLOAT64:													\
 		{																					\
-			AUTOCAST_UNARY_(f, (librapid::complex<double> *) vptr.ptr, res, __VA_ARGS__)	\
+			AUTOCAST_UNARY_(f, vptr.location, (librapid::complex<double> *) vptr.ptr, res, __VA_ARGS__)	\
 			break;																			\
 		}																					\
+	}
+
+#define AUTOCAST_BINARY__(f, locnA, locnB, precastA, precastB, res, ...)							\
+	switch (res.dtype)															\
+	{																				\
+		case librapid::Datatype::NONE:												\
+		{																			\
+			throw std::invalid_argument("Cannot run function on NONETYPE");			\
+		}																			\
+		case librapid::Datatype::BOOL:												\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (bool *) res.ptr, __VA_ARGS__);						\
+			break;																	\
+		}																			\
+		case librapid::Datatype::CHAR:												\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (char *) res.ptr, __VA_ARGS__);						\
+			break;																	\
+		}																			\
+		case librapid::Datatype::UCHAR:												\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (unsigned char *) res.ptr, __VA_ARGS__);				\
+			break;																	\
+		}																			\
+		case librapid::Datatype::INT16:												\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (int *) res.ptr, __VA_ARGS__);						\
+			break;																	\
+		}																			\
+		case librapid::Datatype::UINT16:											\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (unsigned int *) res.ptr, __VA_ARGS__);				\
+			break;																	\
+		}																			\
+		case librapid::Datatype::INT32:												\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (long *) res.ptr, __VA_ARGS__);						\
+			break;																	\
+		}																			\
+		case librapid::Datatype::UINT32:											\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (unsigned long *) res.ptr, __VA_ARGS__);				\
+			break;																	\
+		}																			\
+		case librapid::Datatype::INT64:												\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (long long *) res.ptr, __VA_ARGS__);					\
+			break;																	\
+		}																			\
+		case librapid::Datatype::UINT64:											\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (unsigned long long *) res.ptr, __VA_ARGS__);			\
+			break;																	\
+		}																			\
+		case librapid::Datatype::FLOAT32:											\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (float *) res.ptr, __VA_ARGS__);						\
+			break;																	\
+		}																			\
+		case librapid::Datatype::FLOAT64:											\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (double *) res.ptr, __VA_ARGS__);						\
+			break;																	\
+		}																			\
+		case librapid::Datatype::CFLOAT32:											\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (librapid::complex<float> *) res.ptr, __VA_ARGS__);	\
+			break;																	\
+		}																			\
+		case librapid::Datatype::CFLOAT64:											\
+		{																			\
+			f(locnA, locnB, res.location, precastA, precastB, (librapid::complex<double> *) res.ptr, __VA_ARGS__);	\
+			break;																	\
+		}																			\
+	}
+
+#define AUTOCAST_BINARY_(f, locnA, precastA, vptrB, res, ...)													\
+	switch (vptrB.dtype)																				\
+	{																									\
+		case librapid::Datatype::NONE:																	\
+		{																								\
+			throw std::invalid_argument("Cannot run function on NONETYPE");								\
+		}																								\
+		case librapid::Datatype::BOOL:																	\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (bool *) vptrB.ptr, res, __VA_ARGS__)						\
+			break;																						\
+		}																								\
+		case librapid::Datatype::CHAR:																	\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (char *) vptrB.ptr, res, __VA_ARGS__)						\
+			break;																						\
+		}																								\
+		case librapid::Datatype::UCHAR:																	\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (unsigned char *) vptrB.ptr, res, __VA_ARGS__)				\
+			break;																						\
+		}																								\
+		case librapid::Datatype::INT16:																	\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (int *) vptrB.ptr, res, __VA_ARGS__)							\
+			break;																						\
+		}																								\
+		case librapid::Datatype::UINT16:																\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (unsigned int *) vptrB.ptr, res, __VA_ARGS__)				\
+			break;																						\
+		}																								\
+		case librapid::Datatype::INT32:																	\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (long *) vptrB.ptr, res, __VA_ARGS__)						\
+			break;																						\
+		}																								\
+		case librapid::Datatype::UINT32:																\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (unsigned long *) vptrB.ptr, res, __VA_ARGS__)				\
+			break;																						\
+		}																								\
+		case librapid::Datatype::INT64:																	\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (long long *) vptrB.ptr, res, __VA_ARGS__)					\
+			break;																						\
+		}																								\
+		case librapid::Datatype::UINT64:																\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (unsigned long long *) vptrB.ptr, res, __VA_ARGS__)			\
+			break;																						\
+		}																								\
+		case librapid::Datatype::FLOAT32:																\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (float *) vptrB.ptr, res, __VA_ARGS__)						\
+			break;																						\
+		}																								\
+		case librapid::Datatype::FLOAT64:																\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (double *) vptrB.ptr, res, __VA_ARGS__)						\
+			break;																						\
+		}																								\
+		case librapid::Datatype::CFLOAT32:																\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (librapid::complex<float> *) vptrB.ptr, res, __VA_ARGS__)	\
+			break;																						\
+		}																								\
+		case librapid::Datatype::CFLOAT64:																\
+		{																								\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (librapid::complex<double> *) vptrB.ptr, res, __VA_ARGS__)	\
+			break;																						\
+		}																								\
+	}
+
+#define AUTOCAST_BINARY(f, vptrA, vptrB, res, ...)													\
+	switch (vptrA.dtype)																			\
+	{																								\
+		case librapid::Datatype::NONE:																\
+		{																							\
+			throw std::invalid_argument("Cannot run function on NONETYPE");							\
+		}																							\
+		case librapid::Datatype::BOOL:																\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (bool *) vptrA.ptr, vptrB, res, __VA_ARGS__)						\
+			break;																					\
+		}																							\
+		case librapid::Datatype::CHAR:																\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (char *) vptrA.ptr, vptrB, res, __VA_ARGS__)						\
+			break;																					\
+		}																							\
+		case librapid::Datatype::UCHAR:																\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (unsigned char *) vptrA.ptr, vptrB, res, __VA_ARGS__)				\
+			break;																					\
+		}																							\
+		case librapid::Datatype::INT16:																\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (int *) vptrA.ptr, vptrB, res, __VA_ARGS__)							\
+			break;																					\
+		}																							\
+		case librapid::Datatype::UINT16:															\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (unsigned int *) vptrA.ptr, vptrB, res, __VA_ARGS__)				\
+			break;																					\
+		}																							\
+		case librapid::Datatype::INT32:																\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (long *) vptrA.ptr, vptrB, res, __VA_ARGS__)						\
+			break;																					\
+		}																							\
+		case librapid::Datatype::UINT32:															\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (unsigned long *) vptrA.ptr, vptrB, res, __VA_ARGS__)				\
+			break;																					\
+		}																							\
+		case librapid::Datatype::INT64:																\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (long long *) vptrA.ptr, vptrB, res, __VA_ARGS__)					\
+			break;																					\
+		}																							\
+		case librapid::Datatype::UINT64:															\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (unsigned long long *) vptrA.ptr, vptrB, res, __VA_ARGS__)			\
+			break;																					\
+		}																							\
+		case librapid::Datatype::FLOAT32:															\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (float *) vptrA.ptr, vptrB, res, __VA_ARGS__)						\
+			break;																					\
+		}																							\
+		case librapid::Datatype::FLOAT64:															\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (double *) vptrA.ptr, vptrB, res, __VA_ARGS__)						\
+			break;																					\
+		}																							\
+		case librapid::Datatype::CFLOAT32:															\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (librapid::complex<float> *) vptrA.ptr, vptrB, res, __VA_ARGS__)	\
+			break;																					\
+		}																							\
+		case librapid::Datatype::CFLOAT64:															\
+		{																							\
+			AUTOCAST_BINARY_(f, vptrA.location, (librapid::complex<double> *) vptrA.ptr, vptrB, res, __VA_ARGS__)	\
+			break;																					\
+		}																							\
 	}
 }
 

@@ -5,7 +5,7 @@ namespace librapid
 {
 	namespace test
 	{
-		int test_librapid(int x)
+		int testLibrapid(int x)
 		{
 			return x * x;
 		}

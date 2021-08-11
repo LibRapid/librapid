@@ -4,33 +4,46 @@
 #include <string>
 #include <librapid/math/rapid_math.hpp>
 
+// If RGB is defined by wingdi.h, undefine it
+#ifdef RGB
+#undef RGB
+#define LIBRAPID_REDEF_RGB
+#endif
+
 namespace librapid
 {
 	namespace color
 	{
 		// RGB color container
-		typedef struct rgb
+		typedef struct RGB
 		{
 			int red = 0;
 			int green = 0;
 			int blue = 0;
 
-			rgb(int r, int g, int b) :
+			RGB(int r, int g, int b) :
 				red(r), green(g), blue(b)
 			{}
-		} rgb;
+
+		#ifdef LIBRAPID_REDEF_RGB
+			LR_INLINE operator COLORREF() const
+			{
+				return (COLORREF) (((BYTE) (red) | ((WORD) ((BYTE) (green)) << 8)) | (((DWORD) (BYTE) (blue)) << 16));
+			}
+		#endif
+		} RGB;
 
 		// HSL color container
-		typedef struct hsl
+		typedef struct HSL
 		{
 			double hue = 0;
 			double saturation = 0;
 			double lightness = 0;
 
-			hsl(double h, double s, double l) :
+			HSL(double h, double s, double l) :
 				hue(h), saturation(s), lightness(l)
 			{}
-		} hsl;
+		} HSL;
 
 		/**
 		 * \rst
@@ -39,7 +52,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		hsl rgb_to_hsl(const rgb &col)
+		HSL rgbToHsl(const RGB &col)
 		{
 			const double rp = col.red / 255.0;
 			const double gp = col.green / 255.0;
@@ -74,7 +87,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		rgb hsl_to_rgb(const hsl &col)
+		RGB hslToRgb(const HSL &col)
 		{
 			const double c = (1 - math::abs(2 * col.lightness - 1)) * col.saturation;
 			const double x = c * (1 - math::abs(fmod(col.hue / 60, 2) - 1));
@@ -104,7 +117,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		rgb merge_colors(rgb colorA, rgb colorB)
+		RGB mergeColors(RGB colorA, RGB colorB)
 		{
 			int r = colorA.red + colorB.red;
 			int g = colorA.green + colorB.green;
@@ -125,19 +138,19 @@ namespace librapid
 			return {r / 2, g / 2, b / 2};
 		}
 
-		rgb merge_colors(rgb colorA, hsl colorB)
+		RGB mergeColors(RGB colorA, HSL colorB)
 		{
-			return merge_colors(colorA, hsl_to_rgb(colorB));
+			return mergeColors(colorA, hslToRgb(colorB));
 		}
 
-		hsl merge_colors(hsl colorA, rgb colorB)
+		HSL mergeColors(HSL colorA, RGB colorB)
 		{
-			return rgb_to_hsl(merge_colors(hsl_to_rgb(colorA), colorB));
+			return rgbToHsl(mergeColors(hslToRgb(colorA), colorB));
 		}
 
-		hsl merge_colors(hsl colorA, hsl colorB)
+		HSL mergeColors(HSL colorA, HSL colorB)
 		{
-			return rgb_to_hsl(merge_colors(hsl_to_rgb(colorA), hsl_to_rgb(colorB)));
+			return rgbToHsl(mergeColors(hslToRgb(colorA), hslToRgb(colorB)));
 		}
 
 		constexpr char clear[] = "\033[0m";
@@ -152,33 +165,33 @@ namespace librapid
 		constexpr char magenta[] = "\033[35m";
 		constexpr char cyan[] = "\033[36m";
 		constexpr char white[] = "\033[37m";
-		constexpr char bright_black[] = "\033[90m";
-		constexpr char bright_red[] = "\033[91m";
-		constexpr char bright_green[] = "\033[92m";
-		constexpr char bright_yellow[] = "\033[93m";
-		constexpr char bright_blue[] = "\033[94m";
-		constexpr char bright_magenta[] = "\033[95m";
-		constexpr char bright_cyan[] = "\033[96m";
-		constexpr char bright_white[] = "\033[97m";
+		constexpr char brightBlack[] = "\033[90m";
+		constexpr char brightRed[] = "\033[91m";
+		constexpr char brightGreen[] = "\033[92m";
+		constexpr char brightYellow[] = "\033[93m";
+		constexpr char brightBlue[] = "\033[94m";
+		constexpr char brightMagenta[] = "\033[95m";
+		constexpr char brightCyan[] = "\033[96m";
+		constexpr char brightWhite[] = "\033[97m";
 
-		constexpr char black_background[] = "\033[40m";
-		constexpr char red_background[] = "\033[41m";
-		constexpr char green_background[] = "\033[42m";
-		constexpr char yellow_background[] = "\033[43m";
-		constexpr char blue_background[] = "\033[44m";
-		constexpr char magenta_background[] = "\033[45m";
-		constexpr char cyan_background[] = "\033[46m";
-		constexpr char white_background[] = "\033[47m";
-		constexpr char bright_black_background[] = "\033[100m";
-		constexpr char bright_red_background[] = "\033[101m";
-		constexpr char bright_green_background[] = "\033[102m";
-		constexpr char bright_yellow_background[] = "\033[103m";
-		constexpr char bright_blue_background[] = "\033[104m";
-		constexpr char bright_magenta_background[] = "\033[105m";
-		constexpr char bright_cyan_background[] = "\033[106m";
-		constexpr char bright_white_background[] = "\033[107m";
+		constexpr char blackBackground[] = "\033[40m";
+		constexpr char redBackground[] = "\033[41m";
+		constexpr char greenBackground[] = "\033[42m";
+		constexpr char yellowBackground[] = "\033[43m";
+		constexpr char blueBackground[] = "\033[44m";
+		constexpr char magentaBackground[] = "\033[45m";
+		constexpr char cyanBackground[] = "\033[46m";
+		constexpr char whiteBackground[] = "\033[47m";
+		constexpr char brightBlackBackground[] = "\033[100m";
+		constexpr char brightRedBackground[] = "\033[101m";
+		constexpr char brightGreenBackground[] = "\033[102m";
+		constexpr char brightYellowBackground[] = "\033[103m";
+		constexpr char brightBlueBackground[] = "\033[104m";
+		constexpr char brightMagentaBackground[] = "\033[105m";
+		constexpr char brightCyanBackground[] = "\033[106m";
+		constexpr char brightWhiteBackground[] = "\033[107m";
 
-		std::string fore(const rgb &col)
+		std::string fore(const RGB &col)
 		{
 			std::string result = "\033[38;2;";
 
@@ -189,17 +202,17 @@ namespace librapid
 			return result + "m";
 		}
 
-		std::string fore(const hsl &col)
+		std::string fore(const HSL &col)
 		{
-			return fore(hsl_to_rgb(col));
+			return fore(hslToRgb(col));
 		}
 
 		std::string fore(int r, int g, int b)
 		{
-			return fore(rgb(r, g, b));
+			return fore(RGB(r, g, b));
 		}
 
-		std::string back(const rgb &col)
+		std::string back(const RGB &col)
 		{
 			std::string result = "\033[48;2;";
 
@@ -210,43 +223,43 @@ namespace librapid
 			return result + "m";
 		}
 
-		std::string back(const hsl &col)
+		std::string back(const HSL &col)
 		{
-			return back(hsl_to_rgb(col));
+			return back(hslToRgb(col));
 		}
 
 		std::string back(int r, int g, int b)
 		{
-			return back(rgb(r, g, b));
+			return back(RGB(r, g, b));
 		}
 
 		namespace imp
 		{
-			class color_reset
+			class ColorReset
 			{
 			public:
-				color_reset()
+				ColorReset()
 				{
 					std::cout << "\033[0m";
 				}
 
-				~color_reset()
+				~ColorReset()
 				{
 					std::cout << "\033[0m";
 				}
 			};
 
-			color_reset reset_after_close = color_reset();
+			ColorReset reset_after_close = ColorReset();
 		}
 
-		std::ostream &operator<<(std::ostream &os, const rgb &col)
+		std::ostream &operator<<(std::ostream &os, const RGB &col)
 		{
 			return os << color::fore(col);
 		}
 
-		std::ostream &operator<<(std::ostream &os, const hsl &col)
+		std::ostream &operator<<(std::ostream &os, const HSL &col)
 		{
-			return os << color::fore(hsl_to_rgb(col));
+			return os << color::fore(hslToRgb(col));
 		}
 	}
 }
