@@ -145,7 +145,7 @@ namespace librapid
 			// Random floating point value in range [min, max)
 
 			static std::uniform_real_distribution<type> distribution(0., 1.);
-			static std::mt19937 generator((unsigned int) (NOW * 10));
+			static std::mt19937 generator((unsigned int) (seconds() * 10));
 			return min + (max - min) * distribution(generator);
 		}
 
