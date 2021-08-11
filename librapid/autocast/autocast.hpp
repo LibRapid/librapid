@@ -94,7 +94,14 @@ namespace librapid
 	{
 		if (locn == Accelerator::CPU)
 			return malloc(sizeof(T) * elems);
-		throw std::bad_alloc();
+	#ifdef LIBRAPID_HAS_CUDA
+		void *res = nullptr;
+		cudaSafeCall(cudaMalloc(&res, sizeof(T) * elems));
+		return res;
+	#else
+		throw std::runtime_error("CUDA support was not enabled, so memory cannot be allocated "
+								 " on the GPU");
+	#endif
 	}
 
 	LR_INLINE VoidPtr AUTOCAST_ALLOC(Datatype t, Accelerator locn, size_t elems)
@@ -107,55 +114,55 @@ namespace librapid
 				}
 			case librapid::Datatype::BOOL:
 				{
-					return {AUTOCAST_ALLOC_<bool>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<bool>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::CHAR:
 				{
-					return {AUTOCAST_ALLOC_<char>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<char>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::UCHAR:
 				{
-					return {AUTOCAST_ALLOC_<unsigned char>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<unsigned char>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::INT16:
 				{
-					return {AUTOCAST_ALLOC_<int>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<int>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::UINT16:
 				{
-					return {AUTOCAST_ALLOC_<unsigned int>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<unsigned int>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::INT32:
 				{
-					return {AUTOCAST_ALLOC_<long>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<long>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::UINT32:
 				{
-					return {AUTOCAST_ALLOC_<unsigned long>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<unsigned long>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::INT64:
 				{
-					return {AUTOCAST_ALLOC_<long long>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<long long>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::UINT64:
 				{
-					return {AUTOCAST_ALLOC_<unsigned long long>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<unsigned long long>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::FLOAT32:
 				{
-					return {AUTOCAST_ALLOC_<float>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<float>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::FLOAT64:
 				{
-					return {AUTOCAST_ALLOC_<double>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<double>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::CFLOAT32:
 				{
-					return {AUTOCAST_ALLOC_<librapid::complex<float>>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<librapid::complex<float>>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::CFLOAT64:
 				{
-					return {AUTOCAST_ALLOC_<librapid::complex<double>>(locn, elems), t};
+					return {AUTOCAST_ALLOC_<librapid::complex<double>>(locn, elems), t, locn};
 				}
 		}
 
@@ -164,7 +171,14 @@ namespace librapid
 
 	LR_INLINE void AUTOCAST_FREE(VoidPtr data)
 	{
-		free(data.ptr);
+		if (data.location == Accelerator::CPU)
+			free(data.ptr);
+	#ifdef LIBRAPID_HAS_CUDA
+		else
+			cudaSafeCall(cudaFree(data.ptr));
+	#else
+		throw std::runtime_error("CUDA support was not enabled, so device memory cannot be freed");
+	#endif
 	}
 
 	LR_INLINE void AUTOCAST_FREE(void *data)
