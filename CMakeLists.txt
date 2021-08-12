@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(librapid_)
 
+set (CMAKE_CXX_STANDARD 14)
+
 # Attempt to locate the required packages
 find_package(CUDAToolkit)
 find_package(BLAS)
@@ -62,6 +64,9 @@ if (${BLAS_FOUND})
 		
 		# Copy include files
 		set(inc_path "${filepath}/../include")
+		message(STATUS "Checking path ${inc_path} for include files")
+		FILE(GLOB_RECURSE files "${filepath}/..")
+		message(STATUS "Information: ${files}")
 		if (NOT (EXISTS ${inc_path}))
 			message(FATAL_ERROR "Could not locate include path for BLAS")
 		endif()
