@@ -1,3 +1,8 @@
-# Basically just everything...
+# Everything inside of LibRapid
 recursive-include librapid *
-CMakeLists.txt
+
+# Include PyBind11 (for CMake build)
+recursive-include pybind11 *
+
+# CMakeLists.txt and CMake files
+global-include CMakeLists.txt *.cmake
