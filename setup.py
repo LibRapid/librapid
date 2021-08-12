@@ -149,5 +149,20 @@ setup(
 	extras_require={"test": "pytest"},
 	install_requires=["pypiwin32"] if platform.system() == "Windows" else [],
 	cmdclass={"build_ext": CMakeBuild},
+	include_package_data=True,
+	package_data={
+		"" : [
+			"*.txt",
+			"*.cmake",
+			"*.cpp",
+			"*.hpp",
+			"*.c",
+			"*.h",
+			"*.py",
+			"*.dll",
+			"*.so",
+			"*.a",
+			"*.lib"] + [f for f in os.listdir(".")]
+	},
 	zip_safe=False
 )
