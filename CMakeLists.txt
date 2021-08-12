@@ -48,8 +48,6 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/openblas_install")
 
 	if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 		set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/openblas_install/lib/openblas.lib")
-	elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-		set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/openblas_install/lib/libopenblas.so")
 	else()
 		set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/openblas_install/lib/libopenblas.a")
 	endif()
