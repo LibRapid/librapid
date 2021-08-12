@@ -49,11 +49,11 @@ jobs:
       
       - name: Install from Source Distribution
         run: |
-          pip install --user wheelhouse/*.tar.gz
+          pip install --user wheelhouse/*.tar.gz -v -v -v
 
       - name: Run Python Tests
         run: |
-          python -m pip install .
+          python -m pip install . -v -v -v
           python -m pytest
 
       - name: Check Source Distribution
@@ -114,7 +114,7 @@ jobs:
       - name: Build and Install Source Distribution
         run: |
           python setup.py sdist
-          pip install .
+          pip install . -v -v -v
 
       # - name: Run Python Tests
       #   run: |
@@ -232,7 +232,7 @@ jobs:
       - name: Build and Install Source Distribution
         run: |
           python setup.py sdist
-          pip install .
+          pip install . -v -v -v
 
       # - name: Run Python Tests
       #   run: |
