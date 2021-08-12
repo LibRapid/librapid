@@ -22,6 +22,11 @@ jobs:
         with:
           python-version: 3.8
 
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.9
+        with:
+          cmake-version: '3.16.x'
+
       - name: Install Requirements
         run: |
           pip install --user check-manifest twine==3.4.1
@@ -54,7 +59,7 @@ jobs:
       - name: Run Python Tests
         run: |
           python -m pip install . -v -v -v
-          python -m pytest
+          python -m pytest unit_tests
 
       - name: Check Source Distribution
         run: |
@@ -89,6 +94,11 @@ jobs:
         with:
           python-version: 3.8
 
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.9
+        with:
+          cmake-version: '3.16.x'
+
       - name: Install Requirements
         run: |
           python -m pip install -r build_requirements.txt
@@ -118,7 +128,7 @@ jobs:
 
       # - name: Run Python Tests
       #   run: |
-      #     pytest
+      #     pytest unit_tests
 
       - name: Check Built Wheels
         run: |
@@ -236,7 +246,7 @@ jobs:
 
       # - name: Run Python Tests
       #   run: |
-      #     pytest
+      #     pytest unit_tests
 
       - name: Check Built Wheels
         run: |
