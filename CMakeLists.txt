@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(librapid_)
 
+message(STATUS "CMake Version: ${CMAKE_VERSION}")
+
 set (CMAKE_CXX_STANDARD 14)
 
 # Attempt to locate the required packages

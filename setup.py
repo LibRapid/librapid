@@ -9,6 +9,8 @@ from setuptools.command.build_ext import build_ext
 
 import platform
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Convert distutils Windows platform specifiers to CMake -A arguments
 PLAT_TO_CMAKE = {
 	"win32": "Win32",
@@ -65,7 +67,6 @@ class CMakeBuild(build_ext):
 					pass
 
 		else:
-
 			# Single config generators are handled "normally"
 			single_config = any(x in cmake_generator for x in {"NMake", "Ninja"})
 
@@ -110,15 +111,13 @@ class CMakeBuild(build_ext):
 			["cmake", "--build", "."] + build_args, cwd=self.build_temp
 		)
 
-this_directory = os.path.abspath(os.path.dirname(__file__))
-
 # Load the version number from VERSION.hpp
 version_file = open(os.path.join("librapid", "VERSION.hpp"), "r")
 __version__ = version_file.readlines()[1].split()[2].replace("\"", "")
 version_file.close()
 
 # Locate and read the contents of README.md
-with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+with open(os.path.join(ROOT_DIR, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
@@ -147,7 +146,7 @@ setup(
 		"Programming Language :: Python :: 3.9",
 	],
 	extras_require={"test": "pytest"},
-	install_requires=["pypiwin32"] if platform.system() == "Windows" else [],
+	install_requires=["cmake"] + ["pypiwin32"] if platform.system() == "Windows" else [],
 	cmdclass={"build_ext": CMakeBuild},
 	include_package_data=True,
 	package_data={
