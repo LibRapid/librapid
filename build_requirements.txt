@@ -4,3 +4,4 @@ twine
 cibuildwheel==1.8.0
 pybind11==2.6.2
 pytest
+cmake
