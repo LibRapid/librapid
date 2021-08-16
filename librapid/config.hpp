@@ -125,10 +125,7 @@ namespace librapid
 	{
 		return (double) std::chrono::high_resolution_clock().now().time_since_epoch().count() / 1000000000;
 	}
-}
 
-namespace librapid
-{
 	LR_INLINE void sleep(double s)
 	{
 		auto start = seconds();
@@ -328,7 +325,7 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
     if (call != CUDA_SUCCESS) {											\
       const char* str;													\
       cuGetErrorName(call, &str);										\
-      throw std::runtime_error("CUDA JIT failed: " + str);				\
+      throw std::runtime_error(std::string("CUDA JIT failed: ") + str);	\
     }																	\
   } while (0)
 
@@ -336,9 +333,15 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
 #pragma warning(default : 4996)
 #endif
 
+#include <helper_cuda.h>
+#include <helper_functions.h>
+
 #endif // LIBRAPID_HAS_CUDA
 
 #undef min
 #undef max
+
+// Uncomment this to log Array reference changes
+// #define LIBRAPID_REFCHECK
 
 #endif // LIBRAPID_CONFIG
