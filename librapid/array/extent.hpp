@@ -26,12 +26,6 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		 // template<typename _Ty,
-		 // 	typename std::enable_if<std::is_integral<_Ty>::value, int>::type = 0>
-		 // 	Extent(const std::initializer_list<_Ty> &data)
-		 // 	: Extent(std::vector<_Ty>(data.begin(), data.end()))
-		 // {}
-
 		Extent(const std::initializer_list<lr_int> &data)
 			: Extent(std::vector<lr_int>(data.begin(), data.end()))
 		{}
@@ -50,10 +44,17 @@ namespace librapid
 										 + std::to_string(LIBRAPID_MAX_DIMS));
 
 			size_t neg = 0;
+			m_size = 1;
 			for (size_t i = 0; i < data.size(); i++)
 			{
 				m_extent[i] = data[i];
-				if (data[i] < 0) neg++;
+				m_size *= data[i];
+
+				if (data[i] < 0)
+				{
+					neg++;
+					m_extent[i] = AUTO;
+				}
 			}
 
 			if (neg == 1)
@@ -84,6 +85,7 @@ namespace librapid
 		Extent(size_t dims)
 		{
 			m_dims = dims;
+			m_size = dims;
 			if (m_dims > LIBRAPID_MAX_DIMS)
 				throw std::runtime_error("Cannot create Extent with "
 										 + std::to_string(m_dims)
@@ -98,6 +100,7 @@ namespace librapid
 		{
 			memcpy(m_extent, other.m_extent, sizeof(lr_int) * LIBRAPID_MAX_DIMS);
 			m_dims = other.m_dims;
+			m_size = other.m_size;
 			m_containsAutomatic = other.m_containsAutomatic;
 		}
 
@@ -105,6 +108,7 @@ namespace librapid
 		{
 			memcpy(m_extent, other.m_extent, sizeof(lr_int) * LIBRAPID_MAX_DIMS);
 			m_dims = other.m_dims;
+			m_size = other.m_size;
 			m_containsAutomatic = other.m_containsAutomatic;
 			return *this;
 		}
@@ -119,6 +123,25 @@ namespace librapid
 		LR_INLINE const size_t &ndim() const
 		{
 			return m_dims;
+		}
+
+		/**
+		 * \rst
+		 * 
+		 * Returns the number of elements the Extent object represents. This is the
+		 * product ``dim1 * dim2 * dim3 ... ``.
+		 * 
+		 * .. Attention::
+		 * 
+		 *		If an automatic dimension (``librapid.AUTO``) is included in the
+		 *		Extent, the size value will be negative. Ensure your program takes
+		 *		this into account
+		 * 
+		 * \endrst
+		 */
+		LR_INLINE lr_int size() const
+		{
+			return m_size;
 		}
 
 		/**
@@ -155,7 +178,7 @@ namespace librapid
 		 *
 		 * value: integer
 		 *		Size of Extent at dimension ``index``
-		 *
+		 * 
 		 * \endrst
 		 */
 		LR_INLINE const lr_int &operator[](size_t index) const
@@ -271,6 +294,32 @@ namespace librapid
 		/**
 		 * \rst
 		 *
+		 * Reorder the contents of the Extent object.
+		 *
+		 * .. Attention::
+		 *
+		 *		Each index must appear only once. There is currently no check on
+		 *		this, so it should be handled by the calling function.
+		 *
+		 * Parameters
+		 * ----------
+		 *
+		 * order: list
+		 *		A list of indices representing the order in which to reshape
+		 *
+		 * \endrst
+		 */
+		LR_INLINE void reorder(const std::vector<size_t> &order)
+		{
+			Extent temp = *this;
+
+			for (size_t i = 0; i < order.size(); ++i)
+				m_extent[i] = temp.m_extent[order[i]];
+		}
+
+		/**
+		 * \rst
+		 *
 		 * Generate a string representation of the Extent. The result takes the
 		 * following general form:
 		 *
@@ -301,6 +350,7 @@ namespace librapid
 		lr_int m_extent[LIBRAPID_MAX_DIMS]{};
 		size_t m_dims = 0;
 		bool m_containsAutomatic = false;
+		lr_int m_size = 0;
 	};
 
 	LR_INLINE std::ostream &operator<<(std::ostream &os, const Extent &extent)

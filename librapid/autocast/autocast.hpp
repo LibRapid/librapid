@@ -16,6 +16,7 @@ namespace librapid
 	enum class Datatype
 	{
 		NONE,			// no datatype
+		VALIDNONE,		// No datatype, but it is not required
 		BOOL,			// bool
 		CHAR,			// char
 		UCHAR,			// unsigned char
@@ -52,7 +53,9 @@ namespace librapid
 		Accelerator location;
 	};
 
-	size_t datatype_bytes(Datatype t)
+	VoidPtr validVoidPtr = VoidPtr{nullptr, Datatype::VALIDNONE, Accelerator::CPU};
+
+	size_t datatypeBytes(Datatype t)
 	{
 		switch (t)
 		{
@@ -89,6 +92,22 @@ namespace librapid
 		return 0;
 	}
 
+#ifdef LIBRAPID_HAS_CUDA
+	cudaStream_t cudaStream;
+
+	class _StreamCreator
+	{
+	public:
+		_StreamCreator()
+		{
+			checkCudaErrors(cudaStreamCreateWithFlags(&cudaStream,
+							cudaStreamNonBlocking));
+		}
+	};
+
+	auto _streamCreator = _StreamCreator();
+#endif
+
 	template<typename T>
 	LR_INLINE void *AUTOCAST_ALLOC_(Accelerator locn, size_t elems)
 	{
@@ -96,7 +115,8 @@ namespace librapid
 			return malloc(sizeof(T) * elems);
 	#ifdef LIBRAPID_HAS_CUDA
 		void *res = nullptr;
-		cudaSafeCall(cudaMalloc(&res, sizeof(T) * elems));
+		cudaSafeCall(cudaMallocAsync(&res, sizeof(T) * elems, cudaStream));
+		// cudaSafeCall(cudaMalloc(&res, sizeof(T) * elems));
 		return res;
 	#else
 		throw std::runtime_error("CUDA support was not enabled, so memory cannot be allocated "
@@ -173,91 +193,93 @@ namespace librapid
 	{
 		if (data.location == Accelerator::CPU)
 			free(data.ptr);
-	#ifdef LIBRAPID_HAS_CUDA
-		else
-			cudaSafeCall(cudaFree(data.ptr));
+		else if (data.location == Accelerator::GPU)
+		#ifdef LIBRAPID_HAS_CUDA
+			// cudaSafeCall(cudaFree(data.ptr));
+			cudaSafeCall(cudaFreeAsync(data.ptr, cudaStream));
 	#else
-		throw std::runtime_error("CUDA support was not enabled, so device memory cannot be freed");
+			throw std::runtime_error("CUDA support was not enabled, so device memory cannot be freed");
 	#endif
 	}
 
-	LR_INLINE void AUTOCAST_FREE(void *data)
-	{
-		free(data);
-	}
-
 #define AUTOCAST_UNARY_(f, locnA, precast, res, ...)									\
-	switch (res.dtype)															\
-	{																			\
-		case librapid::Datatype::NONE:											\
-		{																		\
-			throw std::invalid_argument("Cannot run function on NONETYPE");		\
-		}																		\
-		case librapid::Datatype::BOOL:											\
-		{																		\
-			f(locnA, res.location, precast, (bool *) res.ptr, __VA_ARGS__);							\
-			break;																\
-		}																		\
-		case librapid::Datatype::CHAR:											\
-		{																		\
-			f(locnA, res.location, precast, (char *) res.ptr, __VA_ARGS__);							\
-			break;																\
-		}																		\
-		case librapid::Datatype::UCHAR:											\
-		{																		\
-			f(locnA, res.location, precast, (unsigned char *) res.ptr, __VA_ARGS__);					\
-			break;																\
-		}																		\
-		case librapid::Datatype::INT16:											\
-		{																		\
-			f(locnA, res.location, precast, (int *) res.ptr, __VA_ARGS__);							\
-			break;																\
-		}																		\
-		case librapid::Datatype::UINT16:										\
-		{																		\
-			f(locnA, res.location, precast, (unsigned int *) res.ptr, __VA_ARGS__);					\
-			break;																\
-		}																		\
-		case librapid::Datatype::INT32:											\
-		{																		\
-			f(locnA, res.location, precast, (long *) res.ptr, __VA_ARGS__);							\
-			break;																\
-		}																		\
-		case librapid::Datatype::UINT32:										\
-		{																		\
-			f(locnA, res.location, precast, (unsigned long *) res.ptr, __VA_ARGS__);					\
-			break;																\
-		}																		\
-		case librapid::Datatype::INT64:											\
-		{																		\
-			f(locnA, res.location, precast, (long long *) res.ptr, __VA_ARGS__);						\
-			break;																\
-		}																		\
-		case librapid::Datatype::UINT64:										\
-		{																		\
-			f(locnA, res.location, precast, (unsigned long long *) res.ptr, __VA_ARGS__);			\
-			break;																\
-		}																		\
-		case librapid::Datatype::FLOAT32:										\
-		{																		\
-			f(locnA, res.location, precast, (float *) res.ptr, __VA_ARGS__);							\
-			break;																\
-		}																		\
-		case librapid::Datatype::FLOAT64:										\
-		{																		\
-			f(locnA, res.location, precast, (double *) res.ptr, __VA_ARGS__);						\
-			break;																\
-		}																		\
-		case librapid::Datatype::CFLOAT32:										\
-		{																		\
-			f(locnA, res.location, precast, (librapid::complex<float> *) res.ptr, __VA_ARGS__);		\
-			break;																\
-		}																		\
-		case librapid::Datatype::CFLOAT64:										\
-		{																		\
+	switch (res.dtype)																	\
+	{																					\
+		case librapid::Datatype::NONE:													\
+		{																				\
+			throw std::invalid_argument("Cannot run function on NONETYPE");				\
+			break;																		\
+		}																				\
+		case librapid::Datatype::VALIDNONE:												\
+		{																				\
+			f(locnA, res.location, precast, (bool *) nullptr, __VA_ARGS__);				\
+			break;																		\
+		}																				\
+		case librapid::Datatype::BOOL:													\
+		{																				\
+			f(locnA, res.location, precast, (bool *) res.ptr, __VA_ARGS__);				\
+			break;																		\
+		}																				\
+		case librapid::Datatype::CHAR:													\
+		{																				\
+			f(locnA, res.location, precast, (char *) res.ptr, __VA_ARGS__);				\
+			break;																		\
+		}																				\
+		case librapid::Datatype::UCHAR:													\
+		{																				\
+			f(locnA, res.location, precast, (unsigned char *) res.ptr, __VA_ARGS__);	\
+			break;																		\
+		}																				\
+		case librapid::Datatype::INT16:													\
+		{																				\
+			f(locnA, res.location, precast, (int *) res.ptr, __VA_ARGS__);				\
+			break;																		\
+		}																				\
+		case librapid::Datatype::UINT16:												\
+		{																				\
+			f(locnA, res.location, precast, (unsigned int *) res.ptr, __VA_ARGS__);		\
+			break;																		\
+		}																				\
+		case librapid::Datatype::INT32:													\
+		{																				\
+			f(locnA, res.location, precast, (long *) res.ptr, __VA_ARGS__);				\
+			break;																		\
+		}																				\
+		case librapid::Datatype::UINT32:												\
+		{																				\
+			f(locnA, res.location, precast, (unsigned long *) res.ptr, __VA_ARGS__);	\
+			break;																		\
+		}																				\
+		case librapid::Datatype::INT64:													\
+		{																				\
+			f(locnA, res.location, precast, (long long *) res.ptr, __VA_ARGS__);		\
+			break;																		\
+		}																				\
+		case librapid::Datatype::UINT64:												\
+		{																				\
+			f(locnA, res.location, precast, (unsigned long long *) res.ptr, __VA_ARGS__);\
+			break;																		\
+		}																				\
+		case librapid::Datatype::FLOAT32:												\
+		{																				\
+			f(locnA, res.location, precast, (float *) res.ptr, __VA_ARGS__);			\
+			break;																		\
+		}																				\
+		case librapid::Datatype::FLOAT64:												\
+		{																				\
+			f(locnA, res.location, precast, (double *) res.ptr, __VA_ARGS__);			\
+			break;																		\
+		}																				\
+		case librapid::Datatype::CFLOAT32:												\
+		{																				\
+			f(locnA, res.location, precast, (librapid::complex<float> *) res.ptr, __VA_ARGS__);\
+			break;																		\
+		}																				\
+		case librapid::Datatype::CFLOAT64:												\
+		{																				\
 			f(locnA, res.location, precast, (librapid::complex<double> *) res.ptr, __VA_ARGS__);		\
-			break;																\
-		}																		\
+			break;																		\
+		}																				\
 	}
 
 #define AUTOCAST_UNARY(f, vptr, res, ...)													\
@@ -266,6 +288,11 @@ namespace librapid
 		case librapid::Datatype::NONE:														\
 		{																					\
 			throw std::invalid_argument("Cannot run function on NONETYPE");					\
+			break;																			\
+		}																					\
+		case librapid::Datatype::VALIDNONE:													\
+		{																					\
+			break;																			\
 		}																					\
 		case librapid::Datatype::BOOL:														\
 		{																					\
@@ -554,6 +581,78 @@ namespace librapid
 			AUTOCAST_BINARY_(f, vptrA.location, (librapid::complex<double> *) vptrA.ptr, vptrB, res, __VA_ARGS__)	\
 			break;																					\
 		}																							\
+	}
+
+	namespace imp
+	{
+		template<typename A, typename B>
+		LR_INLINE void cpyCPU(const librapid::Accelerator &locnA,
+							  const librapid::Accelerator &locnB,
+							  A *dst, B *src, size_t size)
+		{
+			if (size < 250 * 250)
+			{
+				for (size_t i = 0; i < size; ++i)
+				{
+					dst[i] = (B) src[i];
+				}
+			}
+			else
+			{
+			#pragma omp parallel for shared(dst, src, size)
+				for (long long i = 0; i < size; ++i)
+				{
+					dst[i] = (B) src[i];
+				}
+			}
+		}
+	}
+
+	LR_INLINE void AUTOCAST_MEMCPY(VoidPtr dst, const VoidPtr &src, size_t elems)
+	{
+		// 	if (src.location == Accelerator::CPU && dst.location == Accelerator::CPU)
+		// 	{
+		// 		if (src.dtype == dst.dtype)
+		// 			memcpy(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems);
+		// 		else
+		// 			AUTOCAST_UNARY(imp::cpyCPU, dst, src, elems);
+		// 	}
+		// #ifdef LIBRAPID_HAS_CUDA
+		// 	else
+		// 	{
+		// 		if (src.dtype != dst.dtype)
+		// 			throw std::runtime_error("Cannot yet copy over datatypes");
+		// 
+		// 		if (src.location == Accelerator::CPU && dst.location == Accelerator::GPU)
+		// 			cudaSafeCall(cudaMemcpy(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyHostToDevice));
+		// 		else if (src.location == Accelerator::GPU && dst.location == Accelerator::CPU)
+		// 			cudaSafeCall(cudaMemcpy(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyDeviceToHost));
+		// 		else if (src.location == Accelerator::GPU && dst.location == Accelerator::GPU)
+		// 			cudaSafeCall(cudaMemcpy(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyDeviceToDevice));
+		// 	}
+		// #endif
+
+		if (src.location == Accelerator::CPU && dst.location == Accelerator::CPU)
+		{
+			if (src.dtype == dst.dtype)
+				memcpy(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems);
+			else
+				AUTOCAST_UNARY(imp::cpyCPU, dst, src, elems);
+		}
+	#ifdef LIBRAPID_HAS_CUDA
+		else
+		{
+			if (src.dtype != dst.dtype)
+				throw std::runtime_error("Cannot yet copy over datatypes");
+
+			if (src.location == Accelerator::CPU && dst.location == Accelerator::GPU)
+				cudaSafeCall(cudaMemcpyAsync(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyHostToDevice, cudaStream));
+			else if (src.location == Accelerator::GPU && dst.location == Accelerator::CPU)
+				cudaSafeCall(cudaMemcpyAsync(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyDeviceToHost, cudaStream));
+			else if (src.location == Accelerator::GPU && dst.location == Accelerator::GPU)
+				cudaSafeCall(cudaMemcpyAsync(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyDeviceToDevice, cudaStream));
+		}
+	#endif
 	}
 }
 

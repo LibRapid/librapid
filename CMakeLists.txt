@@ -120,6 +120,7 @@ if (${BLAS_FOUND})
 
 		target_include_directories(librapid_ PRIVATE
 								"${CMAKE_SOURCE_DIR}/librapid/blas"
+								"${CMAKE_SOURCE_DIR}/librapid/cudahelpers"
 								"${CMAKE_SOURCE_DIR}")
 	
 		# Add the compile definition so LibRapid knows it has BLAS
