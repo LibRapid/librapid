@@ -12,12 +12,14 @@ namespace librapid
 
 		void streamTest()
 		{
+		#ifdef LIBRAPID_HAS_CUDA
 			cudaStream_t stream;
 
 			cudaSafeCall(cudaStreamCreateWithFlags(&stream,
 							cudaStreamNonBlocking));
 
 			cudaSafeCall(cudaStreamDestroy(stream));
+		#endif // LIBRAPID_HAS_CUDA
 		}
 	}
 }

@@ -4,10 +4,16 @@ recursive-include librapid *
 # CMakeLists.txt and CMake files
 global-include CMakeLists.txt *.cmake
 
+global-include README.md *.md
+
+global-include setup.py *.py
+
 # Include PyBind11 (for CMake build)
 recursive-include pybind11 *
 recursive-exclude pybind11/docs *
 recursive-exclude pybind11/tests *
 recursive-exclude pybind11/.github *
+
+recursive-exclude OpenBLAS *
 
 recursive-include openblas_install *
