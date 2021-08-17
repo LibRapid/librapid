@@ -16,4 +16,4 @@ if platform.system() == "Windows":
 	print("Loading DLL from", os.path.join(this_directory, "blas"))
 	win32api.SetDllDirectory(os.path.join(this_directory, "blas"))
 
-from librapid_ import *
+from .librapidcore import *

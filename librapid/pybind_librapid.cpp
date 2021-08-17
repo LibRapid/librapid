@@ -16,7 +16,7 @@ std::string module_docstring = "A fast math and neural network library for Pytho
 template<typename T>
 using V = std::vector<T>;
 
-PYBIND11_MODULE(librapid_, module)
+PYBIND11_MODULE(librapidcore, module)
 {
 	module.doc() = module_docstring;
 

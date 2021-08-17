@@ -30,7 +30,7 @@ jobs:
           pip install --user check-manifest twine==3.4.1
           pip install --user check-manifest pybind11==2.6.2
           pip install --user check-manifest cpufeature==0.2.0
-          pip install --user check-manifest -r build_requirements.txt
+          pip install --user check-manifest -r requirements.txt
 
       - name: Clone OpenBLAS
         run: |
@@ -97,7 +97,7 @@ jobs:
 
       - name: Install Requirements
         run: |
-          python -m pip install -r build_requirements.txt
+          python -m pip install -r requirements.txt
 
       - name: Clone OpenBLAS
         run: |
@@ -178,7 +178,7 @@ jobs:
 
       - name: Install Requirements
         run: |
-          python -m pip install -r build_requirements.txt
+          python -m pip install -r requirements.txt
 
       - name: Clone OpenBLAS
         run: |
