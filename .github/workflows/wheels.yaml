@@ -122,9 +122,9 @@ jobs:
           python setup.py sdist
           pip install . -v -v -v
 
-      # - name: Run Python Tests
-      #   run: |
-      #     pytest unit_tests
+      - name: Run Python Tests
+        run: |
+          pytest unit_tests
 
       - name: Check Built Wheels
         run: |
@@ -240,9 +240,9 @@ jobs:
           python setup.py sdist
           pip install . -v -v -v
 
-      # - name: Run Python Tests
-      #   run: |
-      #     pytest unit_tests
+      - name: Run Python Tests
+        run: |
+          pytest unit_tests
 
       - name: Check Built Wheels
         run: |
