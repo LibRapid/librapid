@@ -93,20 +93,11 @@ namespace librapid
 	}
 
 #ifdef LIBRAPID_HAS_CUDA
-	cudaStream_t cudaStream;
-
-	class _StreamCreator
-	{
-	public:
-		_StreamCreator()
-		{
-			checkCudaErrors(cudaStreamCreateWithFlags(&cudaStream,
-							cudaStreamNonBlocking));
-		}
-	};
-
-	auto _streamCreator = _StreamCreator();
-#endif
+#ifdef LIBRAPID_CUDA_STREAM
+	inline cudaStream_t cudaStream;
+	inline bool streamCreated = false;
+#endif // LIBRAPID_CUDA_STREAM
+#endif // LIBRAPID_HAS_CUDA
 
 	template<typename T>
 	LR_INLINE void *AUTOCAST_ALLOC_(Accelerator locn, size_t elems)
@@ -115,8 +106,13 @@ namespace librapid
 			return malloc(sizeof(T) * elems);
 	#ifdef LIBRAPID_HAS_CUDA
 		void *res = nullptr;
+
+	#ifdef LIBRAPID_CUDA_STREAM
 		cudaSafeCall(cudaMallocAsync(&res, sizeof(T) * elems, cudaStream));
-		// cudaSafeCall(cudaMalloc(&res, sizeof(T) * elems));
+	#else
+		cudaSafeCall(cudaMalloc(&res, sizeof(T) * elems));
+	#endif
+
 		return res;
 	#else
 		throw std::runtime_error("CUDA support was not enabled, so memory cannot be allocated "
@@ -193,12 +189,17 @@ namespace librapid
 	{
 		if (data.location == Accelerator::CPU)
 			free(data.ptr);
+	#ifdef LIBRAPID_HAS_CUDA
 		else if (data.location == Accelerator::GPU)
-		#ifdef LIBRAPID_HAS_CUDA
-			// cudaSafeCall(cudaFree(data.ptr));
+		{
+		#ifdef LIBRAPID_CUDA_STREAM
 			cudaSafeCall(cudaFreeAsync(data.ptr, cudaStream));
+		#else
+			cudaSafeCall(cudaFree(data.ptr));
+		#endif
+		}
 	#else
-			throw std::runtime_error("CUDA support was not enabled, so device memory cannot be freed");
+		throw std::runtime_error("CUDA support was not enabled, so device memory cannot be freed");
 	#endif
 	}
 
@@ -645,12 +646,21 @@ namespace librapid
 			if (src.dtype != dst.dtype)
 				throw std::runtime_error("Cannot yet copy over datatypes");
 
+		#ifdef LIBRAPID_CUDA_STREAM
 			if (src.location == Accelerator::CPU && dst.location == Accelerator::GPU)
 				cudaSafeCall(cudaMemcpyAsync(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyHostToDevice, cudaStream));
 			else if (src.location == Accelerator::GPU && dst.location == Accelerator::CPU)
 				cudaSafeCall(cudaMemcpyAsync(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyDeviceToHost, cudaStream));
 			else if (src.location == Accelerator::GPU && dst.location == Accelerator::GPU)
 				cudaSafeCall(cudaMemcpyAsync(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyDeviceToDevice, cudaStream));
+		#else
+			if (src.location == Accelerator::CPU && dst.location == Accelerator::GPU)
+				cudaSafeCall(cudaMemcpy(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyHostToDevice));
+			else if (src.location == Accelerator::GPU && dst.location == Accelerator::CPU)
+				cudaSafeCall(cudaMemcpy(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyDeviceToHost));
+			else if (src.location == Accelerator::GPU && dst.location == Accelerator::GPU)
+				cudaSafeCall(cudaMemcpy(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyDeviceToDevice));
+		#endif
 		}
 	#endif
 	}

@@ -3,12 +3,20 @@
 
 #include <librapid/config.hpp>
 #include <librapid/math/rapid_math.hpp>
+#include <librapid/array/iterators.hpp>
 
 namespace librapid
 {
 	class Extent
 	{
 	public:
+		/**
+		 * \rst
+		 *
+		 * Default Extent constructor. The Extent has 0 dimensions by default.
+		 *
+		 * \endrst
+		 */
 		Extent() = default;
 
 		/**
@@ -22,15 +30,16 @@ namespace librapid
 		 * ----------
 		 *
 		 * data: list type
-		 *		The extent's data
+		 *		The Extents data
 		 *
 		 * \endrst
 		 */
-		Extent(const std::initializer_list<lr_int> &data)
+		template<typename _Ty = lr_int>
+		Extent(const std::initializer_list<_Ty> &data)
 			: Extent(std::vector<lr_int>(data.begin(), data.end()))
 		{}
 
-		template<typename _Ty,
+		template<typename _Ty = lr_int,
 			typename std::enable_if<std::is_integral<_Ty>::value, int>::type = 0>
 			Extent(const std::vector<_Ty> &data)
 		{
@@ -43,29 +52,10 @@ namespace librapid
 										 + " dimensions. Limit is "
 										 + std::to_string(LIBRAPID_MAX_DIMS));
 
-			size_t neg = 0;
-			m_size = 1;
 			for (size_t i = 0; i < data.size(); i++)
-			{
 				m_extent[i] = data[i];
-				m_size *= data[i];
 
-				if (data[i] < 0)
-				{
-					neg++;
-					m_extent[i] = AUTO;
-				}
-			}
-
-			if (neg == 1)
-				m_containsAutomatic = true;
-			else if (neg > 1)
-				throw std::invalid_argument("Cannot construct Extent with more than"
-											" one automatic values. " +
-											std::to_string(neg) +
-											" automatic values were found.");
-			else
-				m_containsAutomatic = false;
+			update();
 		}
 
 		/**
@@ -102,7 +92,27 @@ namespace librapid
 			m_dims = other.m_dims;
 			m_size = other.m_size;
 			m_containsAutomatic = other.m_containsAutomatic;
+
+			update();
 		}
+
+	#ifdef LIBRAPID_PYTHON
+		Extent(py::args args)
+		{
+			m_dims = py::len(args);
+
+			if (m_dims > LIBRAPID_MAX_DIMS)
+				throw std::runtime_error("Cannot create Extent with "
+										 + std::to_string(m_dims)
+										 + " dimensions. Limit is "
+										 + std::to_string(LIBRAPID_MAX_DIMS));
+
+			for (lr_int i = 0; i < m_dims; i++)
+				m_extent[i] = py::cast<lr_int>(args[i]);
+
+			update();
+		}
+	#endif
 
 		LR_INLINE Extent &operator=(const Extent &other)
 		{
@@ -110,6 +120,9 @@ namespace librapid
 			m_dims = other.m_dims;
 			m_size = other.m_size;
 			m_containsAutomatic = other.m_containsAutomatic;
+
+			update();
+
 			return *this;
 		}
 
@@ -127,16 +140,16 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Returns the number of elements the Extent object represents. This is the
 		 * product ``dim1 * dim2 * dim3 ... ``.
-		 * 
+		 *
 		 * .. Attention::
-		 * 
+		 *
 		 *		If an automatic dimension (``librapid.AUTO``) is included in the
 		 *		Extent, the size value will be negative. Ensure your program takes
 		 *		this into account
-		 * 
+		 *
 		 * \endrst
 		 */
 		LR_INLINE lr_int size() const
@@ -178,7 +191,7 @@ namespace librapid
 		 *
 		 * value: integer
 		 *		Size of Extent at dimension ``index``
-		 * 
+		 *
 		 * \endrst
 		 */
 		LR_INLINE const lr_int &operator[](size_t index) const
@@ -224,6 +237,16 @@ namespace librapid
 		 */
 		LR_INLINE Extent fixed(size_t target) const
 		{
+			size_t neg = 0;
+			for (size_t i = 0; i < m_dims; ++i)
+				if (m_extent[i] < 0) ++neg;
+
+			if (neg > 1)
+				throw std::invalid_argument("Cannot construct Extent with more than"
+											" one automatic values. " +
+											std::to_string(neg) +
+											" automatic values were found.");
+
 			// If no automatic dimensions exist, quick return
 			if (!m_containsAutomatic)
 				return *this;
@@ -344,6 +367,43 @@ namespace librapid
 			res << ")";
 
 			return res.str();
+		}
+
+		LR_INLINE ESIterator begin() const
+		{
+			return ESIterator((lr_int *) m_extent);
+		}
+
+		LR_INLINE ESIterator end() const
+		{
+			return ESIterator((lr_int *) m_extent + m_dims);
+		}
+
+	private:
+		LR_INLINE void update()
+		{
+			size_t neg = 0;
+			m_size = 1;
+			for (size_t i = 0; i < m_dims; i++)
+			{
+				m_size *= m_extent[i];
+
+				if (m_extent[i] < 0)
+				{
+					neg++;
+					m_extent[i] = AUTO;
+				}
+			}
+
+			if (neg == 1)
+				m_containsAutomatic = true;
+			else if (neg > 1)
+				throw std::invalid_argument("Cannot construct Extent with more than"
+											" one automatic values. " +
+											std::to_string(neg) +
+											" automatic values were found.");
+			else
+				m_containsAutomatic = false;
 		}
 
 	private:

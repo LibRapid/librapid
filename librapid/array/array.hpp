@@ -2,7 +2,6 @@
 #define LIBRAPID_ARRAY
 
 #include <librapid/config.hpp>
-#include <librapid/array/utils.hpp>
 #include <librapid/math/rapid_math.hpp>
 #include <librapid/array/extent.hpp>
 #include <librapid/array/stride.hpp>
@@ -30,7 +29,10 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		Array() = default;
+		Array()
+		{
+			initializeCudaStream();
+		};
 
 		/**
 		 * \rst
@@ -53,6 +55,8 @@ namespace librapid
 		Array(const Extent &extent, Datatype dtype = Datatype::FLOAT32,
 			  Accelerator location = Accelerator::CPU)
 		{
+			initializeCudaStream();
+
 			if (extent.containsAutomatic())
 				throw std::invalid_argument("Cannot create an Array from an Extent"
 											" containing automatic values. "
@@ -156,9 +160,11 @@ namespace librapid
 
 			Array res(m_extent, m_dtype, m_location);
 
+			static auto operation = ops::Add();
+
 			AUTOCAST_BINARY(simpleCPUop, makeVoidPtr(),
 							other.makeVoidPtr(), res.makeVoidPtr(),
-							m_extent.size(), ops::add);
+							m_extent.size(), operation);
 
 			return res;
 		}
@@ -174,7 +180,7 @@ namespace librapid
 
 			AUTOCAST_BINARY(simpleCPUop, makeVoidPtr(),
 							other.makeVoidPtr(), res.makeVoidPtr(),
-							m_extent.size(), ops::add);
+							m_extent.size(), ops::Add());
 		}
 
 		LR_INLINE std::string str() const
@@ -221,6 +227,20 @@ namespace librapid
 				<< *m_references << "\n";
 		}
 	#else
+		LR_INLINE void initializeCudaStream() const
+		{
+		#ifdef LIBRAPID_HAS_CUDA
+		#ifdef LIBRAPID_CUDA_STREAM
+			if (!streamCreated)
+			{
+				checkCudaErrors(cudaStreamCreateWithFlags(&cudaStream,
+								cudaStreamNonBlocking));
+				streamCreated = true;
+			}
+		#endif // LIBRAPID_CUDA_STREAM
+		#endif // LIBRAPID_HAS_CUDA
+		}
+
 		LR_INLINE void increment() const
 		{
 			if (m_references == nullptr)
@@ -301,7 +321,7 @@ namespace librapid
 			m_isChild = false;
 		}
 
-		template<typename A, typename B, typename C, typename FUNC>
+		template<typename A, typename B, typename C, class FUNC>
 		LR_INLINE static void simpleCPUop(librapid::Accelerator locnA,
 										  librapid::Accelerator locnB,
 										  librapid::Accelerator locnC,
@@ -340,24 +360,33 @@ namespace librapid
 				unsigned int threadsPerBlock, blocksPerGrid;
 
 				// Use 1 to 512 threads per block
-				if (size < 512)
+				if (size < 256)
 				{
 					threadsPerBlock = size;
 					blocksPerGrid = 1;
 				}
 				else
 				{
-					threadsPerBlock = 512;
+					threadsPerBlock = 256;
 					blocksPerGrid = ceil(double(size) / double(threadsPerBlock));
 				}
 
 				dim3 grid(blocksPerGrid);
 				dim3 block(threadsPerBlock);
 
+			#ifdef LIBRAPID_CUDA_STREAM
+				cudaSafeCall(cudaStreamSynchronize(cudaStream));
 				jitifyCall(program.kernel("add")
 						   .instantiate(Type<A>(), Type<B>(), Type<C>())
 						   .configure(grid, block, 0, cudaStream)
 						   .launch(a, b, c, size));
+			#else
+				cudaSafeCall(cudaDeviceSynchronize());
+				jitifyCall(program.kernel("add")
+						   .instantiate(Type<A>(), Type<B>(), Type<C>())
+						   .configure(grid, block)
+						   .launch(a, b, c, size));
+			#endif // LIBRAPID_CUDA_STREAM
 
 				// auto instance = program.kernel("add").instantiate(Type<A>(),
 				// 												  Type<B>(),
@@ -392,9 +421,16 @@ namespace librapid
 				auto tmp = (A *) malloc(sizeof(A) * size);
 				for (size_t i = 0; i < size; ++i)
 					tmp[i] = (A) val;
-				
+
 				cudaSafeCall(cudaDeviceSynchronize());
+				// cudaSafeCall(cudaMemcpyAsync(data, tmp, sizeof(A) * size, cudaMemcpyHostToDevice, cudaStream));
+
+			#ifdef LIBRAPID_CUDA_STREAM
 				cudaSafeCall(cudaMemcpyAsync(data, tmp, sizeof(A) * size, cudaMemcpyHostToDevice, cudaStream));
+			#else
+				cudaSafeCall(cudaMemcpy(data, tmp, sizeof(A) * size, cudaMemcpyHostToDevice));
+			#endif
+
 				free(tmp);
 			}
 		#endif
@@ -406,9 +442,6 @@ namespace librapid
 										  A *data, B *, size_t size,
 										  std::string &res)
 		{
-			if (locnA == Accelerator::GPU)
-				res = "Array was on GPU";
-
 			std::stringstream tmp;
 			for (size_t i = 0; i < size; ++i)
 				tmp << data[i] << ", ";
