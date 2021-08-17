@@ -13,9 +13,6 @@ find_package(OpenMP)
 # Ensure PyBind11 is accessible
 add_subdirectory(pybind11)
 
-set(ENABLE_SOMETHING AUTO CACHE STRING "Enable SOMETHING support")
-set_property(CACHE ENABLE_SOMETHING PROPERTY STRINGS AUTO ON OFF)
-
 option(USE_BLAS "Attempt to use a BLAS library" ON)
 option(USE_CUDA "Attempt to use CUDA" ON)
 option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
@@ -77,8 +74,11 @@ if (${BLAS_FOUND})
 			FILE(GLOB_RECURSE include_files "${inc_path}/openblas/*.*")
 			foreach (file IN LISTS include_files)
 				message(STATUS "Found OpenBLAS include file " ${file})
-				get_filename_component(filename ${file} NAME)
-				configure_file(${file} ${CMAKE_SOURCE_DIR}/librapid/blas/${filename} COPYONLY)
+				get_filename_component(inc_file ${file} NAME)
+				configure_file(${file} ${CMAKE_SOURCE_DIR}/librapid/blas/${inc_file} COPYONLY)
+				if (${inc_file} STREQUAL "cblas.h")
+					set(has_cblas ON)
+				endif()
 			endforeach()
 		else()
 			FILE(GLOB_RECURSE include_files "${inc_path}/*.*")
@@ -120,7 +120,6 @@ if (${BLAS_FOUND})
 
 		target_include_directories(librapid_ PRIVATE
 								"${CMAKE_SOURCE_DIR}/librapid/blas"
-								"${CMAKE_SOURCE_DIR}/librapid/cudahelpers"
 								"${CMAKE_SOURCE_DIR}")
 	
 		# Add the compile definition so LibRapid knows it has BLAS
@@ -157,7 +156,12 @@ if (${CUDAToolkit_FOUND})
 							 )
 
 		add_compile_definitions(LIBRAPID_HAS_CUDA)
+		add_compile_definitions(LIBRAPID_CUDA_STREAMS)
 	else()
 		message(WARNING "CUDA was found but is not being linked against (Value <USE_CUDA> is " ${USE_CUDA} ")")
 	endif()
+
+	target_include_directories(librapid_ PRIVATE
+								"${CMAKE_SOURCE_DIR}/librapid/cudahelpers"
+							  )
 endif()

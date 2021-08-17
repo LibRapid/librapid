@@ -68,7 +68,7 @@ namespace librapid
 			// Hue
 			if (cMax == rp) hue = 60 * fmod(((gp - bp) / delta), 6);
 			else if (cMax == gp) hue = 60 * ((bp - rp) / delta + 2);
-			else if (cMax == gp) hue = 60 * ((rp - gp) / delta + 4);
+			else if (cMax == bp) hue = 60 * ((rp - gp) / delta + 4);
 
 			// Lightness
 			lightness = (cMax - cMin) / 2;
@@ -117,7 +117,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		RGB mergeColors(RGB colorA, RGB colorB)
+		RGB mergeColors(const RGB &colorA, const RGB &colorB)
 		{
 			int r = colorA.red + colorB.red;
 			int g = colorA.green + colorB.green;
@@ -138,17 +138,17 @@ namespace librapid
 			return {r / 2, g / 2, b / 2};
 		}
 
-		RGB mergeColors(RGB colorA, HSL colorB)
+		RGB mergeColors(const RGB &colorA, const HSL &colorB)
 		{
 			return mergeColors(colorA, hslToRgb(colorB));
 		}
 
-		HSL mergeColors(HSL colorA, RGB colorB)
+		HSL mergeColors(const HSL &colorA, const RGB &colorB)
 		{
 			return rgbToHsl(mergeColors(hslToRgb(colorA), colorB));
 		}
 
-		HSL mergeColors(HSL colorA, HSL colorB)
+		HSL mergeColors(const HSL &colorA, const HSL &colorB)
 		{
 			return rgbToHsl(mergeColors(hslToRgb(colorA), hslToRgb(colorB)));
 		}

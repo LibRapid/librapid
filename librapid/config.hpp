@@ -52,7 +52,7 @@ namespace librapid
 #elif defined(_M_X64)
 #define LIBRAPID_X64
 #else
-#define LIBRAPID_BUILD_UNKNOWN
+#define LIBRAPID_PYTHON_UNKNOWN
 #endif
 
 #if defined(_WIN32)
