@@ -11,9 +11,13 @@ namespace librapid
 {
 	namespace ops
 	{
-		const auto add = [](auto a, auto b)
+		struct Add
 		{
-			return a + b;
+			template<typename A, typename B>
+			LR_INLINE constexpr auto operator()(A a, B b) const
+			{
+				return a + b;
+			}
 		};
 	}
 }

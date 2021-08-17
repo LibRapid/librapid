@@ -9,6 +9,16 @@ namespace librapid
 		{
 			return x * x;
 		}
+
+		void streamTest()
+		{
+			cudaStream_t stream;
+
+			cudaSafeCall(cudaStreamCreateWithFlags(&stream,
+							cudaStreamNonBlocking));
+
+			cudaSafeCall(cudaStreamDestroy(stream));
+		}
 	}
 }
 
