@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from skbuild import setup
+from setuptools import find_packages
 import platform
 
 from packaging.version import LegacyVersion
@@ -35,7 +36,7 @@ setup(
 	description="A fast math and neural network library for Python and C++",
 	long_description=long_description,
 	long_description_content_type="text/markdown",
-	packages=["librapid"],
+	packages=["librapid"] + ["librapid." + mod for mod in find_packages("librapid")],
 	cmake_install_dir='librapid',
 	license="Boost Software License",
 	keywords=["math", "neural network", "ndarray", "array", "matrix",
