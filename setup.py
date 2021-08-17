@@ -37,7 +37,7 @@ setup(
 	long_description=long_description,
 	long_description_content_type="text/markdown",
 	packages=["librapid"] + ["librapid." + mod for mod in find_packages("librapid")],
-	cmake_install_dir='librapid',
+	cmake_install_dir="librapid",
 	license="Boost Software License",
 	keywords=["math", "neural network", "ndarray", "array", "matrix",
 			"high-performance computing"],
