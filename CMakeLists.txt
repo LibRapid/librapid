@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(librapid_)
+project(librapidcore)
 
 message(STATUS "CMake Version: ${CMAKE_VERSION}")
 
@@ -17,7 +17,7 @@ option(USE_BLAS "Attempt to use a BLAS library" ON)
 option(USE_CUDA "Attempt to use CUDA" ON)
 option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 
-pybind11_add_module(librapid_ librapid/pybind_librapid.cpp)
+pybind11_add_module(librapidcore MODULE librapid/pybind_librapid.cpp)
 
 add_compile_definitions(LIBRAPID_PYTHON)
 
@@ -27,7 +27,7 @@ if (${OpenMP_FOUND})
 		message(STATUS "Linking against OpenMP")
 		
 		# Link the required library
-		target_link_libraries(librapid_ PRIVATE
+		target_link_libraries(librapidcore PRIVATE
 							  OpenMP::OpenMP_CXX
 							 )
 	
@@ -114,11 +114,11 @@ if (${BLAS_FOUND})
 		endif()
 
 		# Link the required library
-		target_link_libraries(librapid_ PRIVATE
+		target_link_libraries(librapidcore PRIVATE
 								"${CMAKE_SOURCE_DIR}/librapid/blas/${lib_name}"
 							 )
 
-		target_include_directories(librapid_ PRIVATE
+		target_include_directories(librapidcore PRIVATE
 								"${CMAKE_SOURCE_DIR}/librapid/blas"
 								"${CMAKE_SOURCE_DIR}")
 	
@@ -138,17 +138,17 @@ if (${CUDAToolkit_FOUND})
 	if (${USE_CUDA})
 		message(STATUS "Using CUDA ${CUDAToolkit_VERSION}")
 
-		target_include_directories(librapid_ PRIVATE
+		target_include_directories(librapidcore PRIVATE
 									${CUDA_INCLUDE_DIRS}
 									${CMAKE_SOURCE_DIR}
 								  )
 
-		target_link_directories(librapid_ PRIVATE
+		target_link_directories(librapidcore PRIVATE
 									${CUDA_LIBRARIES}
 									${CUDA_CUBLAS_LIBRARIES}
 							   )
 
-		target_link_libraries(librapid_ PRIVATE
+		target_link_libraries(librapidcore PRIVATE
 									CUDA::cudart
 									CUDA::cuda_driver
 									CUDA::nvrtc
@@ -161,7 +161,9 @@ if (${CUDAToolkit_FOUND})
 		message(WARNING "CUDA was found but is not being linked against (Value <USE_CUDA> is " ${USE_CUDA} ")")
 	endif()
 
-	target_include_directories(librapid_ PRIVATE
+	target_include_directories(librapidcore PRIVATE
 								"${CMAKE_SOURCE_DIR}/librapid/cudahelpers"
 							  )
 endif()
+
+install(TARGETS librapidcore DESTINATION .)
