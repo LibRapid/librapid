@@ -6,6 +6,7 @@ librapid/librapid.egg-info
 build_config.txt
 
 librapid/blas
+openblas_install
 
 build/*
 
