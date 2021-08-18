@@ -19,12 +19,6 @@ _skbuild\win-amd64-3.8\cmake-install\_skbuild\win-amd64-3.8\cmake-build\CMakeFil
 _skbuild\win-amd64-3.8\cmake-install\_skbuild\win-amd64-3.8\cmake-build\CMakeFiles\3.20.21032501-MSVC_2\CMakeRCCompiler.cmake
 _skbuild\win-amd64-3.8\cmake-install\_skbuild\win-amd64-3.8\cmake-build\CMakeFiles\3.20.21032501-MSVC_2\CMakeSystem.cmake
 _skbuild\win-amd64-3.8\cmake-install\_skbuild\win-amd64-3.8\cmake-build\pybind11\cmake_install.cmake
-_skbuild\win-amd64-3.8\cmake-install\build\cmake_install.cmake
-_skbuild\win-amd64-3.8\cmake-install\build\CMakeFiles\3.20.21032501-MSVC_2\CMakeCCompiler.cmake
-_skbuild\win-amd64-3.8\cmake-install\build\CMakeFiles\3.20.21032501-MSVC_2\CMakeCXXCompiler.cmake
-_skbuild\win-amd64-3.8\cmake-install\build\CMakeFiles\3.20.21032501-MSVC_2\CMakeRCCompiler.cmake
-_skbuild\win-amd64-3.8\cmake-install\build\CMakeFiles\3.20.21032501-MSVC_2\CMakeSystem.cmake
-_skbuild\win-amd64-3.8\cmake-install\build\pybind11\cmake_install.cmake
 _skbuild\win-amd64-3.8\cmake-install\docs\README.md
 _skbuild\win-amd64-3.8\cmake-install\docs\build\html\_static\collapsible-lists\LICENSE.md
 _skbuild\win-amd64-3.8\cmake-install\docs\source\conf.py
@@ -141,12 +135,6 @@ _skbuild\win-amd64-3.8\cmake-install\pybind11\tools\pyproject.toml
 _skbuild\win-amd64-3.8\cmake-install\pybind11\tools\setup_global.py.in
 _skbuild\win-amd64-3.8\cmake-install\pybind11\tools\setup_main.py.in
 _skbuild\win-amd64-3.8\cmake-install\unit_tests\simple_test.py
-build\cmake_install.cmake
-build\CMakeFiles\3.20.21032501-MSVC_2\CMakeCCompiler.cmake
-build\CMakeFiles\3.20.21032501-MSVC_2\CMakeCXXCompiler.cmake
-build\CMakeFiles\3.20.21032501-MSVC_2\CMakeRCCompiler.cmake
-build\CMakeFiles\3.20.21032501-MSVC_2\CMakeSystem.cmake
-build\pybind11\cmake_install.cmake
 docs\README.md
 docs\build\html\_static\collapsible-lists\LICENSE.md
 docs\source\conf.py

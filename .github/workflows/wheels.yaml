@@ -60,7 +60,6 @@ jobs:
 
       - name: Run Python Tests
         run: |
-          python -m pip install . -v -v -v
           python -m pytest unit_tests
 
       - name: Check Source Distribution
@@ -131,10 +130,9 @@ jobs:
         run: |
           cibuildwheel --output-dir wheelhouse
 
-      - name: Build and Install Source Distribution
+      - name: Install Library
         run: |
-          python setup.py sdist
-          pip install . -v -v -v
+          python setup.py install
 
       - name: Run Python Tests
         run: |
@@ -243,10 +241,9 @@ jobs:
           name: LibRapid Wheels on windows-latest
           path: wheelhouse
 
-      - name: Build and Install Source Distribution
+      - name: Install Library
         run: |
-          python setup.py sdist
-          pip install . -v -v -v
+          python setup.py install
 
       - name: Run Python Tests
         run: |
