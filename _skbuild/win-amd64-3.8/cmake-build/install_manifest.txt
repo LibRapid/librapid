@@ -1,1 +1,0 @@
-C:/Users/penci/OneDrive/Desktop/librapid/librapid/_skbuild/win-amd64-3.8/cmake-install/librapid/./librapidcore.cp38-win_amd64.pyd

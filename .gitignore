@@ -9,7 +9,7 @@ librapid/blas
 openblas_install
 
 build/*
-_skbuild *
+_skbuild
 
 tests/__pycache__
 
