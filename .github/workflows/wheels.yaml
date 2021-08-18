@@ -82,7 +82,11 @@ jobs:
         platform: [macos-latest, ubuntu-latest]
         targetplatform: [x64]
     env:
-      CIBW_BUILD: cp37-* cp38-* cp39-*"
+      CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
+      CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+      CIBW_MANYLINUX_I686_IMAGE: manylinux2014
+      CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2014
+      CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux2014
 
     steps:
       - name: Checkout Code
@@ -124,7 +128,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: OpenBLAS on ${{ matrix.platform }}
-          path: openblas_install          
+          path: openblas_install
 
       - name: Run cibuildwheel
         run: |
@@ -159,7 +163,7 @@ jobs:
     runs-on: windows-latest
 
     env:
-      CIBW_BUILD: "cp37-* cp38-* cp39-*"
+      CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
       CIBW_SKIP: "*-win32"
 
     steps:
