@@ -1,6 +1,0 @@
-C:/Users/penci/OneDrive/Desktop/librapid/librapid/_skbuild/win-amd64-3.8/cmake-build/CMakeFiles/librapidcore.dir
-C:/Users/penci/OneDrive/Desktop/librapid/librapid/_skbuild/win-amd64-3.8/cmake-build/CMakeFiles/INSTALL.dir
-C:/Users/penci/OneDrive/Desktop/librapid/librapid/_skbuild/win-amd64-3.8/cmake-build/CMakeFiles/ALL_BUILD.dir
-C:/Users/penci/OneDrive/Desktop/librapid/librapid/_skbuild/win-amd64-3.8/cmake-build/CMakeFiles/ZERO_CHECK.dir
-C:/Users/penci/OneDrive/Desktop/librapid/librapid/_skbuild/win-amd64-3.8/cmake-build/pybind11/CMakeFiles/INSTALL.dir
-C:/Users/penci/OneDrive/Desktop/librapid/librapid/_skbuild/win-amd64-3.8/cmake-build/pybind11/CMakeFiles/ALL_BUILD.dir
