@@ -68,7 +68,7 @@ setup(
 			"*.dll",
 			"*.so",
 			"*.a",
-			"*.lib"] + [f for f in os.listdir(".")]
+			"*.lib"] + [f for f in os.listdir(ROOT_DIR)]
 	},
 	zip_safe=False
 )
