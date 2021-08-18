@@ -188,11 +188,11 @@ namespace librapid
 {
 	bool hasBlas()
 	{
-	#ifdef LIBRAPID_CBLAS
+	#ifdef LIBRAPID_HAS_BLAS
 		return true;
 	#else
 		return false;
-	#endif // LIBRAPID_CBLAS
+	#endif // LIBRAPID_HAS_BLAS
 	}
 
 	void setBlasThreads(int num)
