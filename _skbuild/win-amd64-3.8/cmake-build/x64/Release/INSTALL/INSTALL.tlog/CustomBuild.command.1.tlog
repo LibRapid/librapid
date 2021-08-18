@@ -1,0 +1,10 @@
+^C:\USERS\PENCI\ONEDRIVE\DESKTOP\LIBRAPID\LIBRAPID\_SKBUILD\WIN-AMD64-3.8\CMAKE-BUILD\CMAKEFILES\144A08A9F8818FDF90C54B6603908F14\INSTALL_FORCE.RULE
+setlocal
+cd .
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

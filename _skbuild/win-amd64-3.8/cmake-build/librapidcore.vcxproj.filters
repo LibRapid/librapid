@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\penci\OneDrive\Desktop\librapid\librapid\librapid\pybind_librapid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\penci\OneDrive\Desktop\librapid\librapid\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{0ED97A43-4B67-31DE-8799-1D37470A3DA3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
