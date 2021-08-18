@@ -17,3 +17,4 @@ recursive-exclude pybind11/.github *
 recursive-exclude OpenBLAS *
 
 recursive-include openblas_install *
+recursive-include jitify *.hpp *.cpp *.h *.c

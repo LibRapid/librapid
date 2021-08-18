@@ -32,19 +32,23 @@ jobs:
           pip install --user check-manifest cpufeature==0.2.0
           pip install --user check-manifest -r requirements.txt
 
-      - name: Clone OpenBLAS
-        run: |
-          git clone https://github.com/xianyi/OpenBLAS.git
+      # - name: Clone OpenBLAS
+      #   run: |
+      #     git clone https://github.com/xianyi/OpenBLAS.git
 
-          cd OpenBLAS
-          git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
-        shell: bash
+      #     cd OpenBLAS
+      #     git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
+      #   shell: bash
 
-      - name: Build OpenBLAS
-        run: |
-          cd OpenBLAS
-          make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL'
-          make install PREFIX=../openblas_install
+      # - name: Build OpenBLAS
+      #   run: |
+      #     cd OpenBLAS
+      #     make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL'
+      #     
+      # - name: Install OpenBLAS
+      #   run: |
+      #     cd OpenBLAS
+      #     make install PREFIX=../openblas_install
 
       - name: Build Source Distribution
         run: |
@@ -99,19 +103,29 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
 
-      - name: Clone OpenBLAS
-        run: |
-          git clone https://github.com/xianyi/OpenBLAS.git
+      # - name: Clone OpenBLAS
+      #   run: |
+      #     git clone https://github.com/xianyi/OpenBLAS.git
 
-          cd OpenBLAS
-          git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
-        shell: bash
+      #     cd OpenBLAS
+      #     git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
+      #   shell: bash
 
-      - name: Build OpenBLAS
-        run: |
-          cd OpenBLAS
-          make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL'
-          make install PREFIX=../openblas_install
+      # - name: Build OpenBLAS
+      #   run: |
+      #     cd OpenBLAS
+      #     make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL'
+
+      # - name: Install OpenBLAS
+      #   run: |
+      #     cd OpenBLAS
+      #     make install PREFIX=../openblas_install
+
+      # - name: Archive OpenBLAS Build
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: OpenBLAS on ${{ matrix.platform }}
+      #     path: openblas_install
 
       - name: Run cibuildwheel
         run: |
@@ -135,12 +149,6 @@ jobs:
           python setup.py sdist
           ls wheelhouse
           twine upload --skip-existing wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
-
-      - name: Archive OpenBLAS Build
-        uses: actions/upload-artifact@v2
-        with:
-          name: OpenBLAS on ${{ matrix.platform }}
-          path: openblas_install
       
       - name: Archive LibRapid Wheels
         uses: actions/upload-artifact@v2
@@ -180,50 +188,50 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
 
-      - name: Clone OpenBLAS
-        run: |
-          git clone https://github.com/xianyi/OpenBLAS.git
-
-          cd OpenBLAS
-          git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
-        shell: bash
-
       - name: Install Conda things
         run: |
           conda config --add channels conda-forge --force
           conda config --set auto_update_conda false
           conda install --yes --quiet clangdev cmake ninja flang=11.0.1
 
-      - name: Configure CMake
-        run: |
-          cd OpenBLAS
+      # - name: Clone OpenBLAS
+      #   run: |
+      #     git clone https://github.com/xianyi/OpenBLAS.git
 
-          set "LIB=%CONDA_PREFIX%\Library\lib;%LIB%"
-          set "CPATH=%CONDA_PREFIX%\Library\include;%CPATH%"
-          mkdir build
-          cd build
-          
-          cmake .. -G "Ninja" -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=128 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DCMAKE_BUILD_TYPE=Release
-        shell: pwsh
+      #     cd OpenBLAS
+      #     git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
+      #   shell: bash
 
-      - name: Build OpenBLAS
-        run: |
-          cd OpenBLAS
-          cd build
-          cmake --build . --config Release
-        shell: pwsh
+      # - name: Configure CMake
+      #   run: |
+      #     cd OpenBLAS
 
-      - name: Install Generated Files
-        run: |
-          cd OpenBLAS
-          cd build
-          cmake --install . --prefix ../../openblas_install -v
+      #     set "LIB=%CONDA_PREFIX%\Library\lib;%LIB%"
+      #     set "CPATH=%CONDA_PREFIX%\Library\include;%CPATH%"
+      #     mkdir build
+      #     cd build
+      #     
+      #     cmake .. -G "Ninja" -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=128 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DCMAKE_BUILD_TYPE=Release
+      #   shell: pwsh
 
-      - name: Archive OpenBLAS Build
-        uses: actions/upload-artifact@v2
-        with:
-          name: OpenBLAS on windows-latest
-          path: openblas_install
+      # - name: Build OpenBLAS
+      #   run: |
+      #     cd OpenBLAS
+      #     cd build
+      #     cmake --build . --config Release
+      #   shell: pwsh
+
+      # - name: Install OpenBLAS
+      #   run: |
+      #     cd OpenBLAS
+      #     cd build
+      #     cmake --install . --prefix ../../openblas_install -v
+
+      # - name: Archive OpenBLAS Build
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: OpenBLAS on windows-latest
+      #     path: openblas_install
 
       - name: Run cibuildwheel
         run: |
