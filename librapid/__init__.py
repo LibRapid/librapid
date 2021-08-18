@@ -2,23 +2,24 @@
 
 import os
 import platform
-import distutils.sysconfig
-import shutil
+import sys
 from pathlib import Path
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+sys.path.insert(1, ROOT_DIR)
 
 # If using windows, tell the os where the DLL for blas is
 # If blas was not installed, this doesn't really do anything
 if platform.system() == "Windows":
 	import win32api
-	# this_directory = Path(__file__).parent
-	this_directory = os.path.join(__file__, os.pardir)
 
-	print("Loading DLL from", os.path.join(this_directory, "blas"))
-	win32api.SetDllDirectory(os.path.join(this_directory, "blas"))
+	print("Loading DLL from", os.path.join(ROOT_DIR, "blas"))
+	win32api.SetDllDirectory(os.path.join(ROOT_DIR, "blas"))
 
 try:
-	print("Attempting to load '.librapidcore'")
+	print("Attempting to load '.librapidcore' from {}".format(os.listdir(ROOT_DIR)))
 	from .librapidcore import *
 except ImportError:
-	print("Failed to load '.librapid' from {}. Attempting to load 'librapidcore' globally".format(os.listdir()))
+	print("Failed to load '.librapid'. Attempting to load 'librapidcore' globally"))
 	from librapidcore import *
