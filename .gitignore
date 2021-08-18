@@ -1,11 +1,11 @@
 build
 dist
-librapid.egg-info
-librapid/librapid.egg-info
+src/librapid.egg-info
+src/librapid/librapid.egg-info
 
 build_config.txt
 
-librapid/blas
+src/librapid/blas
 openblas_install
 
 build/*
