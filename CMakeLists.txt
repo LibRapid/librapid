@@ -55,9 +55,17 @@ endif()
 # See if BLAS should be linked against
 if (${BLAS_FOUND})
 	if (${USE_BLAS})
-		message(STATUS "Using BLAS (" ${BLAS_LIBRARIES} ")")
+		message(STATUS "BLAS located was ${BLAS_LIBRARIES}")
 
-		get_filename_component(filepath ${BLAS_LIBRARIES} DIRECTORY)
+		list(GET ${BLAS_LIBRARIES} 0 LIBRAPID_BLAS)
+
+		if (NOT ${LIBRAPID_BLAS})
+			set(LIBRAPID_BLAS ${BLAS_LIBRARIES})
+		endif()
+
+		message(STATUS "Using BLAS (" ${LIBRAPID_BLAS} ")")
+
+		get_filename_component(filepath ${LIBRAPID_BLAS} DIRECTORY)
 		
 		# Copy include files
 		set(inc_path "${filepath}/../include")
@@ -82,7 +90,7 @@ if (${BLAS_FOUND})
 			FILE(GLOB_RECURSE include_files "${inc_path}/*.*")
 			foreach (file IN LISTS include_files)
 				get_filename_component(inc_file ${file} NAME)
-				if (${inc_file} STREQUAL "cblass.h")
+				if (${inc_file} STREQUAL "cblas.h")
 					set(has_cblas ON)
 				endif()
 			endforeach()
@@ -107,9 +115,9 @@ if (${BLAS_FOUND})
 		endif()
 		
 		# Copy library files
-		get_filename_component(lib_name ${BLAS_LIBRARIES} NAME)
+		get_filename_component(lib_name ${LIBRAPID_BLAS} NAME)
 		message(STATUS "Found library file ${lib_name}")
-		configure_file(${BLAS_LIBRARIES} ${CMAKE_SOURCE_DIR}/librapid/blas/${lib_name} COPYONLY)
+		configure_file(${LIBRAPID_BLAS} ${CMAKE_SOURCE_DIR}/librapid/blas/${lib_name} COPYONLY)
 
 		# Copy binary files if on Windows
 		if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
@@ -132,8 +140,8 @@ if (${BLAS_FOUND})
 							 )
 
 		target_include_directories(librapidcore PRIVATE
-								"${CMAKE_SOURCE_DIR}/librapid/blas"
-								"${CMAKE_SOURCE_DIR}")
+									"${CMAKE_SOURCE_DIR}/librapid/blas"
+								  )
 	
 		# Add the compile definition so LibRapid knows it has BLAS
 		if (${has_cblas})
@@ -153,7 +161,6 @@ if (${CUDAToolkit_FOUND})
 
 		target_include_directories(librapidcore PRIVATE
 									${CUDA_INCLUDE_DIRS}
-									${CMAKE_SOURCE_DIR}
 								  )
 
 		target_link_directories(librapidcore PRIVATE
@@ -178,5 +185,9 @@ if (${CUDAToolkit_FOUND})
 								"${CMAKE_SOURCE_DIR}/librapid/cudahelpers"
 							  )
 endif()
+
+target_include_directories(librapidcore PRIVATE
+							${CMAKE_SOURCE_DIR}
+						  )
 
 install(TARGETS librapidcore DESTINATION .)

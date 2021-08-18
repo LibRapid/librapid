@@ -27,6 +27,8 @@ version_file.close()
 with open(os.path.join(ROOT_DIR, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
+cmake_args = []
+
 setup(
 	name="librapid",
 	version=__version__,
@@ -38,6 +40,8 @@ setup(
 	long_description_content_type="text/markdown",
 	packages=["librapid"] + ["librapid." + mod for mod in find_packages("librapid")],
 	cmake_install_dir="librapid",
+	cmake_args=cmake_args,
+	cmake_with_sdist=True,
 	license="Boost Software License",
 	keywords=["math", "neural network", "ndarray", "array", "matrix",
 			"high-performance computing"],
