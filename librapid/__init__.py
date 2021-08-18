@@ -21,5 +21,5 @@ try:
 	print("Attempting to load '.librapidcore' from {}".format(os.listdir(ROOT_DIR)))
 	from .librapidcore import *
 except ImportError:
-	print("Failed to load '.librapid'. Attempting to load 'librapidcore' globally"))
+	print("Failed to load '.librapid'. Attempting to load 'librapidcore' globally")
 	from librapidcore import *
