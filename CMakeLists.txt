@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
-project(librapidcore)
+project(librapid VERSION "0.2.6")
 
 message(STATUS "CMake Version: ${CMAKE_VERSION}")
 
-set (CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 14)
 
 # Attempt to locate the required packages
 find_package(CUDAToolkit)
@@ -17,7 +17,10 @@ option(USE_BLAS "Attempt to use a BLAS library" ON)
 option(USE_CUDA "Attempt to use CUDA" ON)
 option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 
-pybind11_add_module(librapidcore MODULE librapid/pybind_librapid.cpp)
+set(python_module_name "_librapid")
+pybind11_add_module(${python_module_name} MODULE
+					src/librapid/pybind_librapid.cpp
+					)
 
 add_compile_definitions(LIBRAPID_PYTHON)
 
@@ -27,7 +30,7 @@ if (${OpenMP_FOUND})
 		message(STATUS "Linking against OpenMP")
 		
 		# Link the required library
-		target_link_libraries(librapidcore PRIVATE
+		target_link_libraries(${python_module_name} PRIVATE
 							  OpenMP::OpenMP_CXX
 							 )
 	
@@ -40,15 +43,15 @@ endif()
 
 # Check if BLAS was built by CI for Python Wheels.
 # If so, use this instead of any other BLAS install found
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/openblas_install")
+if (EXISTS "${CMAKE_SOURCE_DIR}/openblas_install")
 	message(STATUS "Using OpenBLAS built by CI for Python Wheels")
 	set(BLAS_FOUND TRUE)
 	set(USE_BLAS TRUE)
 
 	if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/openblas_install/lib/openblas.lib")
+		set(BLAS_LIBRARIES "${CMAKE_SOURCE_DIR}/openblas_install/lib/openblas.lib")
 	else()
-		set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/openblas_install/lib/libopenblas.a")
+		set(BLAS_LIBRARIES "${CMAKE_SOURCE_DIR}/openblas_install/lib/libopenblas.a")
 	endif()
 endif()
 
@@ -102,14 +105,14 @@ if (${BLAS_FOUND})
 				foreach (file IN LISTS include_files)
 					message(STATUS "Found OpenBLAS include file " ${file})
 					get_filename_component(inc_file ${file} NAME)
-					configure_file(${file} ${CMAKE_SOURCE_DIR}/librapid/blas/${inc_file} COPYONLY)
+					configure_file(${file} "${CMAKE_SOURCE_DIR}/src/librapid/blas/${inc_file}" COPYONLY)
 				endforeach()
 			else()
 				FILE(GLOB_RECURSE include_files "${inc_path}/*.*")
 				foreach (file IN LISTS include_files)
 					message(STATUS "Found include file " ${file})
 					get_filename_component(inc_file ${file} NAME)
-					configure_file(${file} ${CMAKE_SOURCE_DIR}/librapid/blas/${inc_file} COPYONLY)
+					configure_file(${file} "${CMAKE_SOURCE_DIR}/src/librapid/blas/${inc_file}" COPYONLY)
 				endforeach()
 			endif()
 		endif()
@@ -117,7 +120,7 @@ if (${BLAS_FOUND})
 		# Copy library files
 		get_filename_component(lib_name ${LIBRAPID_BLAS} NAME)
 		message(STATUS "Found library file ${lib_name}")
-		configure_file(${LIBRAPID_BLAS} ${CMAKE_SOURCE_DIR}/librapid/blas/${lib_name} COPYONLY)
+		configure_file(${LIBRAPID_BLAS} "${CMAKE_SOURCE_DIR}/src/librapid/blas/${lib_name}" COPYONLY)
 
 		# Copy binary files if on Windows
 		if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
@@ -130,17 +133,17 @@ if (${BLAS_FOUND})
 			foreach (file IN LISTS include_files)
 				message(STATUS "Found binary file " ${file})
 				get_filename_component(filename ${file} NAME)
-				configure_file(${file} ${CMAKE_SOURCE_DIR}/librapid/blas/${filename} COPYONLY)
+				configure_file(${file} "${CMAKE_SOURCE_DIR}/src/librapid/blas/${filename}" COPYONLY)
 			endforeach()
 		endif()
 
 		# Link the required library
-		target_link_libraries(librapidcore PRIVATE
-								"${CMAKE_SOURCE_DIR}/librapid/blas/${lib_name}"
+		target_link_libraries(${python_module_name} PRIVATE
+								"${CMAKE_SOURCE_DIR}/src/librapid/blas/${lib_name}"
 							 )
 
-		target_include_directories(librapidcore PRIVATE
-									"${CMAKE_SOURCE_DIR}/librapid/blas"
+		target_include_directories(${python_module_name} PRIVATE
+									"${CMAKE_SOURCE_DIR}/src/librapid/blas"
 								  )
 	
 		# Add the compile definition so LibRapid knows it has BLAS
@@ -159,16 +162,16 @@ if (${CUDAToolkit_FOUND})
 	if (${USE_CUDA})
 		message(STATUS "Using CUDA ${CUDAToolkit_VERSION}")
 
-		target_include_directories(librapidcore PRIVATE
+		target_include_directories(${python_module_name} PRIVATE
 									${CUDA_INCLUDE_DIRS}
 								  )
 
-		target_link_directories(librapidcore PRIVATE
+		target_link_directories(${python_module_name} PRIVATE
 									${CUDA_LIBRARIES}
 									${CUDA_CUBLAS_LIBRARIES}
 							   )
 
-		target_link_libraries(librapidcore PRIVATE
+		target_link_libraries(${python_module_name} PRIVATE
 									CUDA::cudart
 									CUDA::cuda_driver
 									CUDA::nvrtc
@@ -181,13 +184,14 @@ if (${CUDAToolkit_FOUND})
 		message(WARNING "CUDA was found but is not being linked against (Value <USE_CUDA> is " ${USE_CUDA} ")")
 	endif()
 
-	target_include_directories(librapidcore PRIVATE
-								"${CMAKE_SOURCE_DIR}/librapid/cudahelpers"
+	target_include_directories(${python_module_name} PRIVATE
+								"${CMAKE_SOURCE_DIR}/src/librapid/cudahelpers"
 							  )
 endif()
 
-target_include_directories(librapidcore PRIVATE
-							${CMAKE_SOURCE_DIR}
+target_include_directories(${python_module_name} PRIVATE
+							"${CMAKE_SOURCE_DIR}/src"
+							"${CMAKE_SOURCE_DIR}"
 						  )
 
-install(TARGETS librapidcore DESTINATION .)
+install(TARGETS ${python_module_name} DESTINATION .)

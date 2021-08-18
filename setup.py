@@ -19,7 +19,7 @@ except SKBuildError:
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Load the version number from VERSION.hpp
-version_file = open(os.path.join("librapid", "VERSION.hpp"), "r")
+version_file = open(os.path.join("src", "librapid", "VERSION.hpp"), "r")
 __version__ = version_file.readlines()[1].split()[2].replace("\"", "")
 version_file.close()
 
@@ -38,8 +38,9 @@ setup(
 	description="A fast math and neural network library for Python and C++",
 	long_description=long_description,
 	long_description_content_type="text/markdown",
-	packages=["librapid"] + ["librapid." + mod for mod in find_packages("librapid")],
-	cmake_install_dir="librapid",
+	packages=["librapid"] + ["librapid." + mod for mod in find_packages("src/librapid")],
+	package_dir={"" : "src"},
+	cmake_install_dir="src/librapid",
 	cmake_args=cmake_args,
 	license="Boost Software License",
 	keywords=["math", "neural network", "ndarray", "array", "matrix",
@@ -59,19 +60,5 @@ setup(
 	install_requires=["cmake"] + ["pypiwin32"] if platform.system() == "Windows" else [],
 	setup_requires=setup_requires,
 	include_package_data=True,
-	package_data={
-		"" : [
-			"*.txt",
-			"*.cmake",
-			"*.cpp",
-			"*.hpp",
-			"*.c",
-			"*.h",
-			"*.py",
-			"*.dll",
-			"*.so",
-			"*.a",
-			"*.lib"] + [f for f in os.listdir(ROOT_DIR)]
-	},
 	zip_safe=False
 )
