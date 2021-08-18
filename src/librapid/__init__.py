@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 sys.path.insert(1, ROOT_DIR)
+sys.path.insert(1, os.path.join(ROOT_DIR, os.pardir))
 
 # If using windows, tell the os where the DLL for blas is
 # If blas was not installed, this doesn't really do anything
@@ -19,7 +20,7 @@ if platform.system() == "Windows":
 
 try:
 	print("Attempting to load '.librapidcore' from {}".format(os.listdir(ROOT_DIR)))
-	from .librapidcore import *
+	from ._librapid import *
 except ModuleNotFoundError:
 	print("Failed to load '.librapid'. Attempting to load 'librapidcore' globally")
-	from librapidcore import *
+	from _librapid import *

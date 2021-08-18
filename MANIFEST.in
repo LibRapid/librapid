@@ -1,5 +1,5 @@
 # Everything inside of LibRapid
-recursive-include librapid *
+recursive-include src/librapid *
 
 # CMakeLists.txt and CMake files
 global-include CMakeLists.txt *.cmake
@@ -17,4 +17,4 @@ recursive-exclude pybind11/.github *
 recursive-exclude OpenBLAS *
 
 recursive-include openblas_install *
-recursive-include jitify *.hpp *.cpp *.h *.c
+recursive-include jitify *.hpp *.cpp
