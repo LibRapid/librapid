@@ -10,11 +10,19 @@ from skbuild.cmaker import get_cmake_version
 
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
+install_requires = []
+
 try:
-    if LegacyVersion(get_cmake_version()) < LegacyVersion("3.10"):
-        setup_requires.append('cmake')
+	if LegacyVersion(get_cmake_version()) < LegacyVersion("3.10"):
+		setup_requires.append('cmake')
+		install_requires.append("cmake")
 except SKBuildError:
-    setup_requires.append('cmake')
+	setup_requires.append('cmake')
+	install_requires.append("cmake")
+
+if platform.system() == "Windows":
+	setup_requires.append('pypiwin32')
+	install_requires.append("pypiwin32")
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -57,7 +65,7 @@ setup(
 		"Programming Language :: Python :: 3.9",
 	],
 	extras_require={"test": "pytest"},
-	install_requires=["cmake"] + ["pypiwin32"] if platform.system() == "Windows" else [],
+	install_requires=install_requires,
 	setup_requires=setup_requires,
 	include_package_data=True,
 	zip_safe=False
