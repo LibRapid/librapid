@@ -83,10 +83,10 @@ jobs:
         targetplatform: [x64]
     env:
       CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
-      CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-      CIBW_MANYLINUX_I686_IMAGE: manylinux2014
-      CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2014
-      CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux2014
+      CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_24
+      CIBW_MANYLINUX_I686_IMAGE: manylinux_2_24
+      CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux_2_24
+      CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux_2_24
 
     steps:
       - name: Checkout Code
@@ -244,6 +244,10 @@ jobs:
         with:
           name: LibRapid Wheels on windows-latest
           path: wheelhouse
+
+      - name: Install win32api
+        run: |
+          python -m pip install pypiwin32
 
       - name: Install Library
         run: |
