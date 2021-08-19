@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from skbuild import setup
+import distutils
 from setuptools import find_packages
 import platform
 
@@ -20,9 +21,9 @@ except SKBuildError:
 	setup_requires.append('cmake')
 	install_requires.append("cmake")
 
-# if platform.system() == "Windows":
-# 	setup_requires.append('pypiwin32')
-# 	install_requires.append("pypiwin32")
+if platform.system() == "Windows":
+	setup_requires.append('pypiwin32')
+	install_requires.append("pypiwin32")
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -36,6 +37,16 @@ with open(os.path.join(ROOT_DIR, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 cmake_args = []
+
+data_files = []
+if platform.system() == "Windows":
+	for filename in ["openblas.dll", "libopenblas.dll"]:
+		try:
+			with open(os.path.join(ROOT_DIR, "src", "librapid", "blas", filename)):
+				# distutils.sysconfig.get_python_lib()
+				data_files = [("", [os.path.join("src", "librapid", "blas", filename)])]
+		except:
+			pass
 
 setup(
 	name="librapid",
@@ -67,6 +78,11 @@ setup(
 	extras_require={"test": "pytest"},
 	install_requires=install_requires,
 	setup_requires=setup_requires,
-	include_package_data=True,
+	# package_data={
+	# 	"" : ["*.txt", "*.py"],
+	# 	"librapid" : ["*"]
+	# },
+	# include_package_data=True,
+	data_files=data_files,
 	zip_safe=False
 )

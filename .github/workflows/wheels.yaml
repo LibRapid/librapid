@@ -136,7 +136,7 @@ jobs:
 
       - name: Install Library
         run: |
-          python setup.py install
+          python -m pip install .
 
       - name: Run Python Tests
         run: |
@@ -251,7 +251,7 @@ jobs:
 
       - name: Install Library
         run: |
-          python setup.py install
+          python -m pip install .
 
       - name: Run Python Tests
         run: |
