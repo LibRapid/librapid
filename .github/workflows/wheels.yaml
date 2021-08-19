@@ -83,6 +83,7 @@ jobs:
         targetplatform: [x64]
     env:
       CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
+      CIBW_SKIP: "*-i686"
       CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
       CIBW_MANYLINUX_I686_IMAGE: manylinux2014
       CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2014
