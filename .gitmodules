@@ -1,3 +1,0 @@
-[submodule "jitify"]
-	path = jitify
-	url = https://github.com/NVIDIA/jitify.git
