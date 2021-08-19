@@ -50,7 +50,6 @@ setup(
 	package_dir={"" : "src"},
 	cmake_install_dir="src/librapid",
 	cmake_args=cmake_args,
-	cmake_with_sdist=True,
 	license="Boost Software License",
 	keywords=["math", "neural network", "ndarray", "array", "matrix",
 			"high-performance computing"],
