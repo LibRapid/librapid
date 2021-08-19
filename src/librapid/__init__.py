@@ -17,6 +17,7 @@ if platform.system() == "Windows":
 
 	print("Loading DLL from", os.path.join(ROOT_DIR, "blas"))
 	win32api.SetDllDirectory(os.path.join(ROOT_DIR, "blas"))
+	sys.path.append(os.path.join(ROOT_DIR, "blas"))
 
 try:
 	print("Attempting to load '.librapidcore' from {}".format(os.listdir(ROOT_DIR)))
