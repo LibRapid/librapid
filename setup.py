@@ -20,9 +20,9 @@ except SKBuildError:
 	setup_requires.append('cmake')
 	install_requires.append("cmake")
 
-if platform.system() == "Windows":
-	setup_requires.append('pypiwin32')
-	install_requires.append("pypiwin32")
+# if platform.system() == "Windows":
+# 	setup_requires.append('pypiwin32')
+# 	install_requires.append("pypiwin32")
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -50,6 +50,7 @@ setup(
 	package_dir={"" : "src"},
 	cmake_install_dir="src/librapid",
 	cmake_args=cmake_args,
+	cmake_with_sdist=True,
 	license="Boost Software License",
 	keywords=["math", "neural network", "ndarray", "array", "matrix",
 			"high-performance computing"],
