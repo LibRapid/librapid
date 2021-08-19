@@ -20,8 +20,15 @@ if platform.system() == "Windows":
 	sys.path.append(os.path.join(ROOT_DIR, "blas"))
 
 try:
-	print("Attempting to load '.librapidcore' from {}".format(os.listdir(ROOT_DIR)))
-	from ._librapid import *
-except ModuleNotFoundError:
-	print("Failed to load '.librapid'. Attempting to load 'librapidcore' globally")
-	from _librapid import *
+	try:
+		print("Attempting to load '.librapidcore' from {}".format(os.listdir(ROOT_DIR)))
+		from ._librapid import *
+	except ModuleNotFoundError:
+		print("Failed to load '.librapid'. Attempting to load 'librapidcore' globally")
+		from _librapid import *
+except ImportError:
+	print("There was an error trying to load the librapid C++ module '_librapid'.")
+	
+	if platform.system() == "Windows":
+		print("This could be caused by a missing DLL file in the 'librapid/blas' directory")
+		print("\n".join(os.listdir(ROOT_DIR, "blas")))

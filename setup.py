@@ -4,10 +4,16 @@ from skbuild import setup
 import distutils
 from setuptools import find_packages
 import platform
-
+import shutil
 from packaging.version import LegacyVersion
 from skbuild.exceptions import SKBuildError
 from skbuild.cmaker import get_cmake_version
+
+if not os.path.exists(os.path.join("src", "librapid", "pybind11")):
+	shutil.copytree("pybind11", os.path.join("src", "librapid", "pybind11"))
+
+if not os.path.exists(os.path.join("src", "librapid", "jitify")):
+	shutil.copytree("jitify", os.path.join("src", "librapid", "jitify"))
 
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
@@ -38,16 +44,6 @@ with open(os.path.join(ROOT_DIR, 'README.md'), encoding='utf-8') as f:
 
 cmake_args = []
 
-data_files = []
-if platform.system() == "Windows":
-	for filename in ["openblas.dll", "libopenblas.dll"]:
-		try:
-			with open(os.path.join(ROOT_DIR, "src", "librapid", "blas", filename)):
-				# distutils.sysconfig.get_python_lib()
-				data_files = [("", [os.path.join("src", "librapid", "blas", filename)])]
-		except:
-			pass
-
 setup(
 	name="librapid",
 	version=__version__,
@@ -57,7 +53,7 @@ setup(
 	description="A fast math and neural network library for Python and C++",
 	long_description=long_description,
 	long_description_content_type="text/markdown",
-	packages=["librapid"] + ["librapid." + mod for mod in find_packages("src/librapid")],
+	packages=find_packages("src"),
 	package_dir={"" : "src"},
 	cmake_install_dir="src/librapid",
 	cmake_args=cmake_args,
@@ -78,11 +74,6 @@ setup(
 	extras_require={"test": "pytest"},
 	install_requires=install_requires,
 	setup_requires=setup_requires,
-	# package_data={
-	# 	"" : ["*.txt", "*.py"],
-	# 	"librapid" : ["*"]
-	# },
-	# include_package_data=True,
-	data_files=data_files,
+	include_package_data=True,
 	zip_safe=False
 )
