@@ -3,7 +3,7 @@ project(librapid VERSION "0.2.6")
 
 message(STATUS "CMake Version: ${CMAKE_VERSION}")
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 
 # Attempt to locate the required packages
 find_package(CUDAToolkit)
