@@ -7,3 +7,5 @@ recursive-exclude _skbuild *
 
 # Everything inside of LibRapid
 recursive-include src/librapid *
+
+include setup.py
