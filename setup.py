@@ -9,11 +9,11 @@ from packaging.version import LegacyVersion
 from skbuild.exceptions import SKBuildError
 from skbuild.cmaker import get_cmake_version
 
-if not os.path.exists(os.path.join("src", "librapid", "pybind11")):
-	shutil.copytree("pybind11", os.path.join("src", "librapid", "pybind11"))
-
-if not os.path.exists(os.path.join("src", "librapid", "jitify")):
-	shutil.copytree("jitify", os.path.join("src", "librapid", "jitify"))
+# if not os.path.exists(os.path.join("src", "librapid", "pybind11")):
+# 	shutil.copytree("pybind11", os.path.join("src", "librapid", "pybind11"))
+# 
+# if not os.path.exists(os.path.join("src", "librapid", "jitify")):
+# 	shutil.copytree("jitify", os.path.join("src", "librapid", "jitify"))
 
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
@@ -32,6 +32,16 @@ if platform.system() == "Windows":
 	install_requires.append("pypiwin32")
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+data_files = []
+if platform.system() == "Windows":
+	for filename in ["openblas.dll", "libopenblas.dll"]:
+		try:
+			with open(os.path.join(ROOT_DIR, "src", "librapid", "blas", filename)):
+				# distutils.sysconfig.get_python_lib()
+				data_files = [("Lib/site-packages/librapid", [os.path.join("src", "librapid", "blas", filename)])]
+		except:
+			pass
 
 # Load the version number from VERSION.hpp
 version_file = open(os.path.join("src", "librapid", "VERSION.hpp"), "r")
@@ -74,6 +84,7 @@ setup(
 	extras_require={"test": "pytest"},
 	install_requires=install_requires,
 	setup_requires=setup_requires,
-	include_package_data=True,
+	# include_package_data=True,
+	data_files=data_files,
 	zip_safe=False
 )
