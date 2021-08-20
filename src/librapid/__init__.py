@@ -28,3 +28,5 @@ except ImportError:
 	if platform.system() == "Windows":
 		print("This could be caused by a missing BLAS DLL file in the '{}' directory".format(ROOT_DIR))
 		print("\n".join(os.listdir(ROOT_DIR)))
+
+	raise ImportError("Could not import '_librapid'")
