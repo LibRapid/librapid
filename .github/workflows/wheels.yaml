@@ -48,7 +48,7 @@ jobs:
       - name: Install OpenBLAS
         run: |
           cd OpenBLAS
-          make install PREFIX=../openblas_install
+          make install PREFIX=../src/librapid/openblas_install
 
       - name: Build Source Distribution
         run: |
@@ -121,7 +121,7 @@ jobs:
       - name: Install OpenBLAS
         run: |
           cd OpenBLAS
-          make install PREFIX=../openblas_install
+          make install PREFIX=../src/librapid/openblas_install
 
       - name: Archive OpenBLAS Build
         uses: actions/upload-artifact@v2
@@ -230,7 +230,7 @@ jobs:
         run: |
           cd OpenBLAS
           cd build
-          cmake --install . --prefix ../../openblas_install -v
+          cmake --install . --prefix ../../src/librapid/openblas_install
 
       - name: Archive OpenBLAS Build
         uses: actions/upload-artifact@v2
