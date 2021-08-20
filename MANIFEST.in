@@ -1,5 +1,6 @@
 # CMakeLists.txt and CMake files
 global-include CMakeLists.txt *.cmake
+global-include README.md *.md
 
 recursive-exclude pybind11 *
 
