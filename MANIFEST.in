@@ -6,6 +6,7 @@ recursive-exclude pybind11 *
 recursive-exclude jitify *
 recursive-exclude _skbuild *
 recursive-exclude docs *
+recursive-exclude openblas_install *
 
 # Everything inside of LibRapid
 recursive-include src/librapid *

@@ -56,15 +56,15 @@ endif()
 
 # Check if BLAS was built by CI for Python Wheels.
 # If so, use this instead of any other BLAS install found
-if (EXISTS "${CMAKE_SOURCE_DIR}/openblas_install")
+if (EXISTS "${CMAKE_SOURCE_DIR}/src/librapid/openblas_install")
 	message(STATUS "Using OpenBLAS built by CI for Python Wheels")
 	set(BLAS_FOUND TRUE)
 	set(USE_BLAS TRUE)
 
 	if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		set(BLAS_LIBRARIES "${CMAKE_SOURCE_DIR}/openblas_install/lib/openblas.lib")
+		set(BLAS_LIBRARIES "${CMAKE_SOURCE_DIR}/src/librapid/openblas_install/lib/openblas.lib")
 	else()
-		set(BLAS_LIBRARIES "${CMAKE_SOURCE_DIR}/openblas_install/lib/libopenblas.a")
+		set(BLAS_LIBRARIES "${CMAKE_SOURCE_DIR}/src/librapid/openblas_install/lib/libopenblas.a")
 	endif()
 endif()
 
