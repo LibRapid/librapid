@@ -1,4 +1,4 @@
-# coding: utf8
+# -*- coding: utf-8 -*-
 
 import os
 import platform
@@ -12,8 +12,13 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 if platform.system() == "Windows":
 	import win32api
 
-	win32api.SetDllDirectory(ROOT_DIR)
-	sys.path.append(ROOT_DIR)
+	if "openblas.dll" in os.listdir(ROOT_DIR) or \
+		"libopenblas.dll" in os.listdir(ROOT_DIR):
+		win32api.SetDllDirectory(ROOT_DIR)
+		sys.path.append(ROOT_DIR)
+	elif os.path.exists(os.listdir(ROOT_DIR), "blas"):
+		win32api.SetDllDirectory(os.listdir(ROOT_DIR), "blas")
+		sys.path.append(os.listdir(ROOT_DIR), "blas")
 
 try:
 	try:
