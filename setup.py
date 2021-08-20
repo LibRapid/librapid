@@ -2,6 +2,7 @@
 import os
 from skbuild import setup
 import distutils
+import glob
 from setuptools import find_packages
 import platform
 import shutil
@@ -18,8 +19,8 @@ if not os.path.exists(os.path.join("src", "librapid", "jitify")):
 if not os.path.exists(os.path.join("src", "librapid", "openblas_install")):
 	shutil.copytree("openblas_install", os.path.join("src", "librapid", "openblas_install"))
 
-if os.path.exists("_skbuild"):
-	shutil.rmtree("_skbuild")
+# if os.path.exists("_skbuild"):
+# 	shutil.rmtree("_skbuild")
 
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
@@ -45,7 +46,9 @@ if platform.system() == "Windows":
 		try:
 			with open(os.path.join(ROOT_DIR, "src", "librapid", "blas", filename)):
 				# distutils.sysconfig.get_python_lib()
-				data_files = [("Lib/site-packages/librapid", [os.path.join("src", "librapid", "blas", filename)])]
+				files = [os.path.join("src", "librapid", "blas", filename)]
+				data_files.append(("", files))
+				data_files.append(("lib/site-packages/librapid", files))
 		except:
 			pass
 
@@ -54,7 +57,9 @@ if platform.system() == "Windows":
 			try:
 				with open(os.path.join(ROOT_DIR, "src", "librapid", "openblas_install", filename)):
 					# distutils.sysconfig.get_python_lib()
-					data_files = [("Lib/site-packages/librapid", [os.path.join("src", "librapid", "openblas_install", filename)])]
+					files = [os.path.join("src", "librapid", "openblas_install", filename)]
+					data_files.append(("", files))
+					data_files.append(("lib/site-packages/librapid", files))
 			except:
 				pass
 
@@ -67,8 +72,6 @@ version_file.close()
 with open(os.path.join(ROOT_DIR, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-cmake_args = []
-
 setup(
 	name="librapid",
 	version=__version__,
@@ -78,10 +81,9 @@ setup(
 	description="A fast math and neural network library for Python and C++",
 	long_description=long_description,
 	long_description_content_type="text/markdown",
-	packages=find_packages("src"),
+	packages=["librapid"],
 	package_dir={"" : "src"},
 	cmake_install_dir="src/librapid",
-	cmake_args=cmake_args,
 	license="Boost Software License",
 	keywords=["math", "neural network", "ndarray", "array", "matrix",
 			"high-performance computing"],
@@ -99,6 +101,11 @@ setup(
 	extras_require={"test": "pytest"},
 	install_requires=install_requires,
 	setup_requires=setup_requires,
+	
+	# datafiles=[
+	# 	("output_dir", glob.glob("*.dll", recursive=True))
+	# ],
+
 	# include_package_data=True,
 	data_files=data_files,
 	zip_safe=False
