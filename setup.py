@@ -18,6 +18,9 @@ if not os.path.exists(os.path.join("src", "librapid", "jitify")):
 if not os.path.exists(os.path.join("src", "librapid", "openblas_install")):
 	shutil.copytree("openblas_install", os.path.join("src", "librapid", "openblas_install"))
 
+if os.path.exists("_skbuild"):
+	shutil.rmtree("_skbuild")
+
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
 install_requires = []
