@@ -9,11 +9,11 @@ from packaging.version import LegacyVersion
 from skbuild.exceptions import SKBuildError
 from skbuild.cmaker import get_cmake_version
 
-# if not os.path.exists(os.path.join("src", "librapid", "pybind11")):
-# 	shutil.copytree("pybind11", os.path.join("src", "librapid", "pybind11"))
-# 
-# if not os.path.exists(os.path.join("src", "librapid", "jitify")):
-# 	shutil.copytree("jitify", os.path.join("src", "librapid", "jitify"))
+if not os.path.exists(os.path.join("src", "librapid", "pybind11")):
+	shutil.copytree("pybind11", os.path.join("src", "librapid", "pybind11"))
+
+if not os.path.exists(os.path.join("src", "librapid", "jitify")):
+	shutil.copytree("jitify", os.path.join("src", "librapid", "jitify"))
 
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
