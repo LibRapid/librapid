@@ -2,10 +2,7 @@
 CMakeLists.txt
 README.md
 setup.py
-openblas_install\share\cmake\OpenBLAS\OpenBLASConfig.cmake
-openblas_install\share\cmake\OpenBLAS\OpenBLASConfigVersion.cmake
-openblas_install\share\cmake\OpenBLAS\OpenBLASTargets-release.cmake
-openblas_install\share\cmake\OpenBLAS\OpenBLASTargets.cmake
+.pytest_cache\README.md
 src\librapid\VERSION.hpp
 src\librapid\__init__.py
 src\librapid\config.hpp
