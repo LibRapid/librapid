@@ -7,6 +7,14 @@ from pathlib import Path
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# If using windows, tell the os where the DLL for blas is
+# If blas was not installed, this doesn't really do anything
+if platform.system() == "Windows":
+	import win32api
+
+	win32api.SetDllDirectory(ROOT_DIR)
+	sys.path.append(ROOT_DIR)
+
 try:
 	try:
 		print("Attempting to load '._librapid' from {}".format(os.listdir(ROOT_DIR)))
@@ -19,4 +27,4 @@ except ImportError:
 	
 	if platform.system() == "Windows":
 		print("This could be caused by a missing BLAS DLL file in the '{}' directory".format(ROOT_DIR))
-		print("\n".join(os.listdir(ROOT_DIR, "blas")))
+		print("\n".join(os.listdir(ROOT_DIR)))
