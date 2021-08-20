@@ -58,8 +58,6 @@ if platform.system() == "Windows":
 			except:
 				pass
 
-raise RuntimeError("Datafiles is " + str(data_files))
-
 # Load the version number from VERSION.hpp
 version_file = open(os.path.join("src", "librapid", "VERSION.hpp"), "r")
 __version__ = version_file.readlines()[1].split()[2].replace("\"", "")
@@ -101,7 +99,7 @@ setup(
 	extras_require={"test": "pytest"},
 	install_requires=install_requires,
 	setup_requires=setup_requires,
-	# include_package_data=True,
+	include_package_data=True,
 	data_files=data_files,
 	zip_safe=False
 )
