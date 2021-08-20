@@ -16,9 +16,9 @@ if platform.system() == "Windows":
 		"libopenblas.dll" in os.listdir(ROOT_DIR):
 		win32api.SetDllDirectory(ROOT_DIR)
 		sys.path.append(ROOT_DIR)
-	elif os.path.exists(os.path.join(os.listdir(ROOT_DIR), "blas")):
-		win32api.SetDllDirectory(os.path.join(os.listdir(ROOT_DIR), "blas"))
-		sys.path.append(os.path.join(os.listdir(ROOT_DIR), "blas"))
+	elif os.path.exists(os.path.join(ROOT_DIR, "blas")):
+		win32api.SetDllDirectory(os.path.join(ROOT_DIR, "blas"))
+		sys.path.append(os.path.join(ROOT_DIR, "blas"))
 
 try:
 	try:
