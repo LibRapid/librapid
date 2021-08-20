@@ -3,8 +3,9 @@ global-include CMakeLists.txt *.cmake
 global-include README.md *.md
 
 recursive-exclude pybind11 *
-
+recursive-exclude jitify *
 recursive-exclude _skbuild *
+recursive-exclude docs *
 
 # Everything inside of LibRapid
 recursive-include src/librapid *

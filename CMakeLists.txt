@@ -11,7 +11,20 @@ find_package(BLAS)
 find_package(OpenMP)
 
 # Ensure PyBind11 is accessible
-add_subdirectory(pybind11)
+if (EXISTS "${CMAKE_SOURCE_DIR}/pybind11")
+	add_subdirectory("pybind11")
+elseif(EXISTS "${CMAKE_SOURCE_DIR}/src/librapid/pybind11")
+	add_subdirectory("src/librapid/pybind11")
+else()
+	include(FetchContent)
+
+	FetchContent_Declare(
+		pybind11
+		URL https://github.com/pybind/pybind11/archive/refs/tags/v2.6.2.tar.gz
+		URL_HASH SHA256=8ff2fff22df038f5cd02cea8af56622bc67f5b64534f1b83b9f133b8366acff2
+	)
+	FetchContent_MakeAvailable(pybind11)
+endif()
 
 option(USE_BLAS "Attempt to use a BLAS library" ON)
 option(USE_CUDA "Attempt to use CUDA" ON)
@@ -190,8 +203,9 @@ if (${CUDAToolkit_FOUND})
 endif()
 
 target_include_directories(${python_module_name} PRIVATE
-							"${CMAKE_SOURCE_DIR}/src"
-							"${CMAKE_SOURCE_DIR}"
+							"${CMAKE_SOURCE_DIR}/src/librapid" # For wheel build
+							"${CMAKE_SOURCE_DIR}/src" # For source dist
+							"${CMAKE_SOURCE_DIR}" # For source dist
 						  )
 
 install(TARGETS ${python_module_name} DESTINATION .)
