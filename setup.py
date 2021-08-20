@@ -49,6 +49,15 @@ if platform.system() == "Windows":
 		except:
 			pass
 
+	if data_files == []:
+		for filename in ["openblas.dll", "libopenblas.dll"]:
+			try:
+				with open(os.path.join(ROOT_DIR, "src", "librapid", "openblas_install", filename)):
+					# distutils.sysconfig.get_python_lib()
+					data_files = [("Lib/site-packages/librapid", [os.path.join("src", "librapid", "openblas_install", filename)])]
+			except:
+				pass
+
 # Load the version number from VERSION.hpp
 version_file = open(os.path.join("src", "librapid", "VERSION.hpp"), "r")
 __version__ = version_file.readlines()[1].split()[2].replace("\"", "")
