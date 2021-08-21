@@ -46,27 +46,27 @@ data_files = []
 if platform.system() == "Windows":
 	for filename in ["openblas.dll", "libopenblas.dll"]:
 		try:
-			print("Attempting to open 'src/librapid/blas/{}".format(filename))
-			with open(os.path.join("src", "librapid", "blas", filename), "r") as _:
-				files = [os.path.join("src", "librapid", "blas", filename)]
+			print("Attempting to open 'src/librapid/blas/bin{}".format(filename))
+			with open(os.path.join("src", "librapid", "blas", "bin", filename), "r") as _:
+				files = [os.path.join("src", "librapid", "blas", "bin", filename)]
 				data_files.append(("", files))
 				data_files.append(("lib/site-packages/librapid", files))
 				data_files.append((distutils.sysconfig.get_python_lib(), files))
 		except:
-			print("Failed to open 'src/librapid/blas/{}".format(filename))
+			print("Failed to open 'src/librapid/blas/bin/{}".format(filename))
 			pass
 
 	if data_files == []:
 		for filename in ["openblas.dll", "libopenblas.dll"]:
 			try:
-				print("Attempting to open 'src/librapid/openblas_install/{}".format(filename))
-				with open(os.path.join("src", "librapid", "openblas_install", filename), "r") as _:
-					files = [os.path.join("src", "librapid", "openblas_install", filename)]
+				print("Attempting to open 'src/librapid/openblas_install/bin/{}".format(filename))
+				with open(os.path.join("src", "librapid", "openblas_install", "bin", filename), "r") as _:
+					files = [os.path.join("src", "librapid", "openblas_install", "bin", filename)]
 					data_files.append(("", files))
 					data_files.append(("lib/site-packages/librapid", files))
 					data_files.append((distutils.sysconfig.get_python_lib(), files))
 			except:
-				print("Failed to open 'src/librapid/openblas_install/{}".format(filename))
+				print("Failed to open 'src/librapid/openblas_install/bin/{}".format(filename))
 				pass
 
 	if data_files == []:
@@ -130,12 +130,6 @@ setup(
 	extras_require={"test": "pytest"},
 	install_requires=install_requires,
 	setup_requires=setup_requires,
-	
-	# datafiles=[
-	# 	("output_dir", glob.glob("*.dll", recursive=True))
-	# ],
-
-	# include_package_data=True,
 	data_files=data_files,
 	zip_safe=False
 )
