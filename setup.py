@@ -40,30 +40,42 @@ if platform.system() == "Windows":
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+print("\n\n\n\n")
+
 data_files = []
 if platform.system() == "Windows":
 	for filename in ["openblas.dll", "libopenblas.dll"]:
 		try:
-			with open(os.path.join(ROOT_DIR, "src", "librapid", "blas", filename)):
-				# distutils.sysconfig.get_python_lib()
+			print("Attempting to open 'src/librapid/blas/{}".format(filename))
+			with open(os.path.join("src", "librapid", "blas", filename)):
 				files = [os.path.join("src", "librapid", "blas", filename)]
 				data_files.append(("", files))
 				data_files.append(("lib/site-packages/librapid", files))
+				data_files.append((distutils.sysconfig.get_python_lib(), files))
 		except:
+			print("Failed to open 'src/librapid/blas/{}".format(filename))
 			pass
 
 	if data_files == []:
 		for filename in ["openblas.dll", "libopenblas.dll"]:
 			try:
-				with open(os.path.join(ROOT_DIR, "src", "librapid", "openblas_install", filename)):
-					# distutils.sysconfig.get_python_lib()
+				print("Attempting to open 'src/librapid/openblas_install/{}".format(filename))
+				with open(os.path.join("src", "librapid", "openblas_install", filename)):
 					files = [os.path.join("src", "librapid", "openblas_install", filename)]
 					data_files.append(("", files))
 					data_files.append(("lib/site-packages/librapid", files))
+					data_files.append((distutils.sysconfig.get_python_lib(), files))
 			except:
+				print("Failed to open 'src/librapid/openblas_install/{}".format(filename))
 				pass
 
-print("\n\n\n\nDataFiles is {} \n\n\n\n".format(data_files))
+	if data_files == []:
+		print("Was not able to load datafiles")
+		print("Files in current directory: {}".format(os.listdir(".")))
+
+print("Operating System: {}".format(platform.system()))
+print("Additional files being included: {}".format(data_files))
+print("\n\n\n\n")
 
 # Load the version number from VERSION.hpp
 version_file = open(os.path.join("src", "librapid", "VERSION.hpp"), "r")
