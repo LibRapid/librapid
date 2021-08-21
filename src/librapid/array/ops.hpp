@@ -14,10 +14,9 @@ namespace librapid
 		struct Add
 		{
 			template<typename A, typename B>
-			LR_INLINE typename std::common_type<A, B>::type operator()(A a, B b) const
+			LR_INLINE constexpr auto operator()(A a, B b) const
 			{
-				typedef typename std::common_type<A, B>::type common;
-				return (common) a + (common) b;
+				return a + b;
 			}
 		};
 	}
