@@ -30,9 +30,14 @@ option(USE_BLAS "Attempt to use a BLAS library" ON)
 option(USE_CUDA "Attempt to use CUDA" ON)
 option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 
+file(GLOB_RECURSE SOURCES "src/librapid/*.cpp")
+
+message(STATUS "Source files found: ${SOURCES}")
+
 set(python_module_name "_librapid")
 pybind11_add_module(${python_module_name} MODULE
-					src/librapid/pybind_librapid.cpp
+					"src/librapid/pybind_librapid.cpp"
+					# "src/librapid/utils/color.cpp"
 					)
 
 add_compile_definitions(LIBRAPID_PYTHON)
