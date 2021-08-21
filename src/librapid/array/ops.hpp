@@ -16,8 +16,8 @@ namespace librapid
 			template<typename A, typename B>
 			LR_INLINE typename std::common_type<A, B>::type operator()(A a, B b) const
 			{
-				using TYPE = typename std::common_type<A, B>::type;
-				return (TYPE) a + (TYPE) b;
+				typedef typename std::common_type<A, B>::type common;
+				return (common) a + (common) b;
 			}
 		};
 	}
