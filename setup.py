@@ -47,7 +47,7 @@ if platform.system() == "Windows":
 	for filename in ["openblas.dll", "libopenblas.dll"]:
 		try:
 			print("Attempting to open 'src/librapid/blas/{}".format(filename))
-			with open(os.path.join("src", "librapid", "blas", filename)):
+			with open(os.path.join("src", "librapid", "blas", filename), "r") as _:
 				files = [os.path.join("src", "librapid", "blas", filename)]
 				data_files.append(("", files))
 				data_files.append(("lib/site-packages/librapid", files))
@@ -60,7 +60,7 @@ if platform.system() == "Windows":
 		for filename in ["openblas.dll", "libopenblas.dll"]:
 			try:
 				print("Attempting to open 'src/librapid/openblas_install/{}".format(filename))
-				with open(os.path.join("src", "librapid", "openblas_install", filename)):
+				with open(os.path.join("src", "librapid", "openblas_install", filename), "r") as _:
 					files = [os.path.join("src", "librapid", "openblas_install", filename)]
 					data_files.append(("", files))
 					data_files.append(("lib/site-packages/librapid", files))
@@ -71,7 +71,22 @@ if platform.system() == "Windows":
 
 	if data_files == []:
 		print("Was not able to load datafiles")
-		print("Files in current directory: {}".format(os.listdir(".")))
+		print("File information:")
+		if os.path.exists("src"):
+			print("./src")
+			print(os.listdir("./src"))
+
+			if (os.path.exists("src/librapid")):
+				print("./src/librapid")
+				print(os.listdir("./src/librapid"))
+
+				if (os.path.exists("src/librapid/openblas_install")):
+					print("./src/librapid/openblas_install")
+					print(os.listdir("./src/librapid/openblas_install"))
+
+					if (os.path.exists("src/librapid/openblas_install/bin")):
+						print("./src/librapid/openblas_install/bin")
+						print(os.listdir("./src/librapid/openblas_install/bin"))
 
 print("Operating System: {}".format(platform.system()))
 print("Additional files being included: {}".format(data_files))

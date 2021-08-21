@@ -238,6 +238,7 @@ jobs:
           dir src
           dir src/librapid
           dir src/librapid/openblas_install
+          dir src/librapid/openblas_install/bin
 
       - name: Archive OpenBLAS Build
         uses: actions/upload-artifact@v2
