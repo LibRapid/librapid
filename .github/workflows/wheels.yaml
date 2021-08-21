@@ -235,10 +235,9 @@ jobs:
       - name: List Root Directories and files
         run: |
           dir
-
-      - name: List LibRapid Directories and files
-        run: |
-          dir src /S
+          dir src
+          dir src/librapid
+          dir src/librapid/openblas_install
 
       - name: Archive OpenBLAS Build
         uses: actions/upload-artifact@v2
