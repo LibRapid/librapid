@@ -326,8 +326,60 @@ namespace librapid
 	}
 }
 
-#ifdef UNDEF_CONTEXPR20
-#undef _CONSTEXPR20
-#endif
+namespace std
+{
+	// GENERATED
+	template<>
+	struct common_type<bool, librapid::complex<double>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<char, librapid::complex<double>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<unsigned char, librapid::complex<double>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<int, librapid::complex<double>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<unsigned int, librapid::complex<double>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<long, librapid::complex<double>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<unsigned long, librapid::complex<double>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<long long, librapid::complex<double>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<unsigned long long, librapid::complex<double>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<float, librapid::complex<double>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<double, librapid::complex<double>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<float>, librapid::complex<double>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, bool> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, char> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, unsigned char> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, int> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, unsigned int> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, long> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, unsigned long> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, long long> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, unsigned long long> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, float> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, double> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, librapid::complex<float>> { using type = librapid::complex<double>; };
+	template<>
+	struct common_type<librapid::complex<double>, librapid::complex<double>> { using type = librapid::complex<double>; };
+	// END GENERATED
+}
 
 #endif
