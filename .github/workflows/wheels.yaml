@@ -127,7 +127,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: OpenBLAS on ${{ matrix.platform }}
-          path: openblas_install
+          path: src/librapid/openblas_install
 
       - name: Run cibuildwheel
         run: |
@@ -232,11 +232,19 @@ jobs:
           cd build
           cmake --install . --prefix ../../src/librapid/openblas_install
 
+      - name: List Root Directories and files
+        run: |
+          dir
+
+      - name: List LibRapid Directories and files
+        run: |
+          dir src /S
+
       - name: Archive OpenBLAS Build
         uses: actions/upload-artifact@v2
         with:
           name: OpenBLAS on windows-latest
-          path: openblas_install
+          path: src/librapid/openblas_install
 
       - name: Run cibuildwheel
         run: |
