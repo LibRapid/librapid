@@ -34,9 +34,10 @@ except SKBuildError:
 	setup_requires.append('cmake')
 	install_requires.append("cmake")
 
-if platform.system() == "Windows":
-	setup_requires.append('pypiwin32')
-	install_requires.append("pypiwin32")
+# ======= Uncomment this to install win32api as well =======
+# if platform.system() == "Windows":
+# 	setup_requires.append('pypiwin32')
+# 	install_requires.append("pypiwin32")
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
