@@ -14,13 +14,7 @@ import os
 import sys
 import textwrap
 
-print("VERSION INFORMATION:")
-os.system("pip show sphinx")
-os.system("pip show breathe")
-os.system("pip show exhale")
-os.system("doxygen --version")
-
-sys.path.insert(0, os.path.abspath("../.."))
+sys.path.insert(1, os.path.abspath("../.."))
 
 # -- Project information -----------------------------------------------------
 
@@ -29,7 +23,7 @@ copyright = "2021, Toby Davis"
 author = "Toby Davis"
 
 # The full version, including alpha/beta/rc tags
-version_file = open("../../librapid/VERSION.hpp", "r")
+version_file = open("../../src/librapid/VERSION.hpp", "r")
 release = version_file.readlines()[1].split()[2].replace("\"", "")
 version_file.close()
 
@@ -65,7 +59,7 @@ breathe_default_project = "librapid"
 # Custom inputs to doxygen generator
 doxygen_inputs = """
 
-INPUT                 = ../../librapid
+INPUT                 = ../../src/librapid
 	   
 ENABLE_PREPROCESSING  = YES
 MACRO_EXPANSION       = YES
@@ -73,23 +67,26 @@ EXPAND_ONLY_PREDEF    = NO
 PREDEFINED            += LR_INLINE=
 PREDEFINED            += __restrict=
 PREDEFINED            += LIBRAPID_MAX_DIMS=32
+PREDEFINED            += __host__
+PREDEFINED            += __device__
+PREDEFINED            += __global__
 
 """
 
 # Set up the exhale extension
 exhale_args = {
 	# These arguments are required
-	"containmentFolder":	 "./api",
-	"rootFileName":		  "index.rst",
-	"rootFileTitle":		 "LibRapid",
-	"doxygenStripFromPath":  "..",
+	"containmentFolder" :		"./api",
+	"rootFileName" :			"index.rst",
+	"rootFileTitle" :			"LibRapid",
+	"doxygenStripFromPath" :	"..",
 	# Suggested optional arguments
-	"createTreeView":		True,
+	"createTreeView" :			True,
 	# TIP: if using the sphinx-bootstrap-theme, you need
 	# "treeViewIsBootstrap": True,
 	"exhaleExecutesDoxygen": True,
 	"exhaleDoxygenStdin": textwrap.dedent(doxygen_inputs),
-	"verboseBuild": False
+	"verboseBuild": True
 }
 
 # Add any paths that contain templates here, relative to this directory.
@@ -98,8 +95,8 @@ exhale_args = {
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
-
+exclude_patterns = ["autocast/README.md"]
+source_suffix = ['.rst', '.txt']
 
 # -- Options for HTML output -------------------------------------------------
 

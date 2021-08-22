@@ -1,15 +1,15 @@
 ================
-LibRapid NDarray
+LibRapid Array
 ================
 
-What is an NDarray?
+What is an Array?
 ===================
 
-An NDarray is a multi-dimensional, homogeneous collection of values which
+An Array is a multi-dimensional, homogeneous collection of values which
 can be operated on in a variety of ways.
 
-The simplest type of NDarray is a vector, which is a list of values.
-Another simple type of NDarray is a matrix, which is a grid of values.
+The simplest type of Array is a vector, which is a list of values.
+Another simple type of Array is a matrix, which is a grid of values.
 
 .. code-block:: C++
 
@@ -20,7 +20,7 @@ Another simple type of NDarray is a matrix, which is a grid of values.
 	[[1 2 3]
 	 [4 5 6]]
 
-The LibRapid NDarray can store arrays of any dimension, though the default
+The LibRapid Array can store arrays of any dimension, though the default
 limit is 32 dimensions.
 
 .. WARNING::
@@ -28,10 +28,10 @@ limit is 32 dimensions.
 	can contain, it is not recommended due to the extraordinary amount of
 	memory that would be required to store such an array.
 
-Why use an NDarray?
+Why use an Array?
 ===================
 
-The LibRapid NDarray class implements extremely optimized and efficent algorithms
+The LibRapid Array class implements extremely optimized and efficent algorithms
 for many mathematical operations, such as element-wise arithmetic, dot-products,
 transpositions and more.
 
@@ -40,7 +40,7 @@ as in the LibRapid neural network library, without compromising the speed of the
 program or the range of functions available.
 
 Additionally, when using LibRapid in C++, it is incredibly easy to manipulate the
-NDarray type to fit you needs, as it is fully templated and works with a wide range
+Array type to fit you needs, as it is fully templated and works with a wide range
 of datatypes, with many functions supporting cross-datatype operations.
 
 How are the arrays stored?
