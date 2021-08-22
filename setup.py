@@ -50,9 +50,9 @@ if platform.system() == "Windows":
 			print("Attempting to open 'src/librapid/blas/bin{}".format(filename))
 			with open(os.path.join("src", "librapid", "blas", "bin", filename), "r") as _:
 				files = [os.path.join("src", "librapid", "blas", "bin", filename)]
-				data_files.append(("", files))
+				# data_files.append(("", files))
 				data_files.append(("lib/site-packages/librapid", files))
-				data_files.append((distutils.sysconfig.get_python_lib(), files))
+				# data_files.append((distutils.sysconfig.get_python_lib(), files))
 		except:
 			print("Failed to open 'src/librapid/blas/bin/{}".format(filename))
 			pass
@@ -63,9 +63,9 @@ if platform.system() == "Windows":
 				print("Attempting to open 'src/librapid/openblas_install/bin/{}".format(filename))
 				with open(os.path.join("src", "librapid", "openblas_install", "bin", filename), "r") as _:
 					files = [os.path.join("src", "librapid", "openblas_install", "bin", filename)]
-					data_files.append(("", files))
+					# data_files.append(("", files))
 					data_files.append(("lib/site-packages/librapid", files))
-					data_files.append((distutils.sysconfig.get_python_lib(), files))
+					# data_files.append((distutils.sysconfig.get_python_lib(), files))
 			except:
 				print("Failed to open 'src/librapid/openblas_install/bin/{}".format(filename))
 				pass
