@@ -31,9 +31,10 @@ What LibRapid is
 ----------------
 
 LibRapid is a lightweight alternative to other popular python libraries, intended
-to be used in both C++ and Python, with potential support for CUDA coming in the
-future. It is designed to be as easy to use as possible while still supporting
-advanced functionality and high performance.
+to be used in both C++ and Python. It also supports NVIDIA CUDA (even in Python), so
+you can run array calculations orders of magnitude more quickly than on the CPU alone.
+It is designed to be as easy to use as possible while still supporting advanced
+functionality and high performance.
 
 What LibRapid is NOT
 --------------------
@@ -132,5 +133,4 @@ Contents
 	:maxdepth: 2
 	:glob:
 
-	ndarray/librapid_ndarray
-	librapid_network_api
+	array/array_overview

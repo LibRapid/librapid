@@ -325,7 +325,7 @@ namespace librapid
 		LR_INLINE static void simpleCPUop(librapid::Accelerator locnA,
 										  librapid::Accelerator locnB,
 										  librapid::Accelerator locnC,
-										  A *a, B *b, C *c, size_t size,
+										  const A *a, const B *b, C *c, size_t size,
 										  const FUNC &op)
 		{
 			if (locnA == Accelerator::CPU && locnB == Accelerator::CPU && locnC == Accelerator::CPU)
@@ -375,13 +375,13 @@ namespace librapid
 				dim3 block(threadsPerBlock);
 
 			#ifdef LIBRAPID_CUDA_STREAM
-				cudaSafeCall(cudaStreamSynchronize(cudaStream));
+				// cudaSafeCall(cudaStreamSynchronize(cudaStream));
 				jitifyCall(program.kernel("add")
 						   .instantiate(Type<A>(), Type<B>(), Type<C>())
 						   .configure(grid, block, 0, cudaStream)
 						   .launch(a, b, c, size));
 			#else
-				cudaSafeCall(cudaDeviceSynchronize());
+				// cudaSafeCall(cudaDeviceSynchronize());
 				jitifyCall(program.kernel("add")
 						   .instantiate(Type<A>(), Type<B>(), Type<C>())
 						   .configure(grid, block)
@@ -422,7 +422,7 @@ namespace librapid
 				for (size_t i = 0; i < size; ++i)
 					tmp[i] = (A) val;
 
-				cudaSafeCall(cudaDeviceSynchronize());
+				// cudaSafeCall(cudaDeviceSynchronize());
 				// cudaSafeCall(cudaMemcpyAsync(data, tmp, sizeof(A) * size, cudaMemcpyHostToDevice, cudaStream));
 
 			#ifdef LIBRAPID_CUDA_STREAM
