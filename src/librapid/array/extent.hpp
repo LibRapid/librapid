@@ -4,6 +4,9 @@
 #include <librapid/config.hpp>
 #include <librapid/math/rapid_math.hpp>
 #include <librapid/array/iterators.hpp>
+#include <iostream>
+#include <sstream>
+#include <ostream>
 
 namespace librapid
 {
@@ -17,7 +20,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		Extent() = default;
+		inline Extent() = default;
 
 		/**
 		 * \rst
@@ -34,29 +37,8 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		template<typename _Ty = lr_int>
-		Extent(const std::initializer_list<_Ty> &data)
-			: Extent(std::vector<lr_int>(data.begin(), data.end()))
-		{}
-
-		template<typename _Ty = lr_int,
-			typename std::enable_if<std::is_integral<_Ty>::value, int>::type = 0>
-			Extent(const std::vector<_Ty> &data)
-		{
-			// Initialize the dimensions
-			m_dims = data.size();
-
-			if (m_dims > LIBRAPID_MAX_DIMS)
-				throw std::runtime_error("Cannot create Extent with "
-										 + std::to_string(m_dims)
-										 + " dimensions. Limit is "
-										 + std::to_string(LIBRAPID_MAX_DIMS));
-
-			for (size_t i = 0; i < data.size(); i++)
-				m_extent[i] = data[i];
-
-			update();
-		}
+		Extent(const std::initializer_list<lr_int> &data);
+		Extent(const std::vector<lr_int> &data);
 
 		/**
 		 * \rst
@@ -72,59 +54,15 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		Extent(size_t dims)
-		{
-			m_dims = dims;
-			m_size = dims;
-			if (m_dims > LIBRAPID_MAX_DIMS)
-				throw std::runtime_error("Cannot create Extent with "
-										 + std::to_string(m_dims)
-										 + " dimensions. Limit is "
-										 + std::to_string(LIBRAPID_MAX_DIMS));
+		Extent(size_t dims);
 
-			for (size_t i = 0; i < m_dims; ++i)
-				m_extent[i] = 1;
-		}
-
-		Extent(const Extent &other)
-		{
-			memcpy(m_extent, other.m_extent, sizeof(lr_int) * LIBRAPID_MAX_DIMS);
-			m_dims = other.m_dims;
-			m_size = other.m_size;
-			m_containsAutomatic = other.m_containsAutomatic;
-
-			update();
-		}
+		Extent(const Extent &other);
 
 	#ifdef LIBRAPID_PYTHON
-		Extent(py::args args)
-		{
-			m_dims = py::len(args);
+		Extent(py::args args);
+	#endif // LIBRAPID_PYTHON
 
-			if (m_dims > LIBRAPID_MAX_DIMS)
-				throw std::runtime_error("Cannot create Extent with "
-										 + std::to_string(m_dims)
-										 + " dimensions. Limit is "
-										 + std::to_string(LIBRAPID_MAX_DIMS));
-
-			for (lr_int i = 0; i < m_dims; i++)
-				m_extent[i] = py::cast<lr_int>(args[i]);
-
-			update();
-		}
-	#endif
-
-		LR_INLINE Extent &operator=(const Extent &other)
-		{
-			memcpy(m_extent, other.m_extent, sizeof(lr_int) * LIBRAPID_MAX_DIMS);
-			m_dims = other.m_dims;
-			m_size = other.m_size;
-			m_containsAutomatic = other.m_containsAutomatic;
-
-			update();
-
-			return *this;
-		}
+		Extent &operator=(const Extent &other);
 
 		/**
 		 * \rst
@@ -133,7 +71,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE const size_t &ndim() const
+		inline const size_t &ndim() const
 		{
 			return m_dims;
 		}
@@ -152,7 +90,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE lr_int size() const
+		inline lr_int size() const
 		{
 			return m_size;
 		}
@@ -168,7 +106,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE bool containsAutomatic() const
+		inline bool containsAutomatic() const
 		{
 			return m_containsAutomatic;
 		}
@@ -194,25 +132,9 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE const lr_int &operator[](size_t index) const
-		{
-			if (index >= m_dims)
-				throw std::out_of_range("Index " + std::to_string(index)
-										+ " is out of range for Extent with "
-										+ std::to_string(m_dims) + " dimensions");
+		const lr_int &operator[](size_t index) const;
 
-			return m_extent[index];
-		}
-
-		LR_INLINE lr_int &operator[](size_t index)
-		{
-			if (index >= m_dims)
-				throw std::out_of_range("Index " + std::to_string(index)
-										+ " is out of range for Extent with "
-										+ std::to_string(m_dims) + " dimensions");
-
-			return m_extent[index];
-		}
+		lr_int &operator[](size_t index);
 
 		/**
 		 * \rst
@@ -235,44 +157,7 @@ namespace librapid
 		 *		target number of elements
 		 * \endrst
 		 */
-		LR_INLINE Extent fixed(size_t target) const
-		{
-			size_t neg = 0;
-			for (size_t i = 0; i < m_dims; ++i)
-				if (m_extent[i] < 0) ++neg;
-
-			if (neg > 1)
-				throw std::invalid_argument("Cannot construct Extent with more than"
-											" one automatic values. " +
-											std::to_string(neg) +
-											" automatic values were found.");
-
-			// If no automatic dimensions exist, quick return
-			if (!m_containsAutomatic)
-				return *this;
-
-			size_t autoIndex = 0;
-			size_t prod = 1;
-
-			for (size_t i = 0; i < m_dims; ++i)
-			{
-				if (m_extent[i] < 1)
-					autoIndex = i;
-				else
-					prod *= m_extent[i];
-			}
-
-			if (target % prod == 0)
-			{
-				Extent res = *this;
-				res.m_extent[autoIndex] = target / prod;
-				return res;
-			}
-
-			throw std::runtime_error("Could not resolve automatic dimension of "
-									 " Extent to fit " + std::to_string(target)
-									 + " elements");
-		}
+		Extent fixed(size_t target) const;
 
 		/**
 		 * \rst
@@ -283,22 +168,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE bool operator==(const Extent &other) const
-		{
-			if (m_dims != other.m_dims)
-				return false;
-
-			if (m_containsAutomatic != other.m_containsAutomatic)
-				return false;
-
-			for (size_t i = 0; i < m_dims; ++i)
-			{
-				if (m_extent[i] != other.m_extent[i])
-					return false;
-			}
-
-			return true;
-		}
+		bool operator==(const Extent &other) const;
 
 		/**
 		 * \rst
@@ -309,9 +179,9 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE bool operator!=(const Extent &other) const
+		inline bool operator!=(const Extent &other) const
 		{
-			return !(*this != other);
+			return !(*this == other);
 		}
 
 		/**
@@ -332,13 +202,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE void reorder(const std::vector<size_t> &order)
-		{
-			Extent temp = *this;
-
-			for (size_t i = 0; i < order.size(); ++i)
-				m_extent[i] = temp.m_extent[order[i]];
-		}
+		void reorder(const std::vector<size_t> &order);
 
 		/**
 		 * \rst
@@ -350,61 +214,20 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE std::string str() const
-		{
-			std::stringstream res;
-			res << "Extent(";
-			for (size_t i = 0; i < m_dims; ++i)
-			{
-				if (m_extent[i] == librapid::AUTO)
-					res << "librapid::AUTO";
-				else
-					res << m_extent[i];
+		std::string str() const;
 
-				if (i < m_dims - 1)
-					res << ", ";
-			}
-			res << ")";
-
-			return res.str();
-		}
-
-		LR_INLINE ESIterator begin() const
+		inline ESIterator begin() const
 		{
 			return ESIterator((lr_int *) m_extent);
 		}
 
-		LR_INLINE ESIterator end() const
+		inline ESIterator end() const
 		{
 			return ESIterator((lr_int *) m_extent + m_dims);
 		}
 
 	private:
-		LR_INLINE void update()
-		{
-			size_t neg = 0;
-			m_size = 1;
-			for (size_t i = 0; i < m_dims; i++)
-			{
-				m_size *= m_extent[i];
-
-				if (m_extent[i] < 0)
-				{
-					neg++;
-					m_extent[i] = AUTO;
-				}
-			}
-
-			if (neg == 1)
-				m_containsAutomatic = true;
-			else if (neg > 1)
-				throw std::invalid_argument("Cannot construct Extent with more than"
-											" one automatic values. " +
-											std::to_string(neg) +
-											" automatic values were found.");
-			else
-				m_containsAutomatic = false;
-		}
+		void update();
 
 	private:
 		lr_int m_extent[LIBRAPID_MAX_DIMS]{};
@@ -413,7 +236,7 @@ namespace librapid
 		lr_int m_size = 0;
 	};
 
-	LR_INLINE std::ostream &operator<<(std::ostream &os, const Extent &extent)
+	inline std::ostream &operator<<(std::ostream &os, const Extent &extent)
 	{
 		return os << extent.str();
 	}

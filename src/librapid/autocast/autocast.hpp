@@ -50,17 +50,111 @@ namespace librapid
 	{
 		void *ptr = nullptr;
 		Datatype dtype = Datatype::NONE;
-		Accelerator location;
+		Accelerator location = Accelerator::CPU;
 	};
 
-	VoidPtr validVoidPtr = VoidPtr{nullptr, Datatype::VALIDNONE, Accelerator::CPU};
+	extern VoidPtr validVoidPtr;
 
-	size_t datatypeBytes(Datatype t)
+	inline bool isIntegral(Datatype t)
+	{
+		switch (t)
+		{
+			case Datatype::NONE:
+				return false;
+			case Datatype::VALIDNONE:
+				return false;
+			case Datatype::BOOL:
+				return true;
+			case Datatype::CHAR:
+				return true;
+			case Datatype::UCHAR:
+				return true;
+			case Datatype::INT16:
+				return true;
+			case Datatype::UINT16:
+				return true;
+			case Datatype::INT32:
+				return true;
+			case Datatype::UINT32:
+				return true;
+			case Datatype::INT64:
+				return true;
+			case Datatype::UINT64:
+				return true;
+		}
+
+		return false;
+	}
+
+	inline bool isUnsigned(Datatype t)
+	{
+		switch (t)
+		{
+			case Datatype::NONE:
+				return false;
+			case Datatype::VALIDNONE:
+				return false;
+			case Datatype::BOOL:
+				return false;
+			case Datatype::CHAR:
+				return false;
+			case Datatype::UCHAR:
+				return true;
+			case Datatype::INT16:
+				return false;
+			case Datatype::UINT16:
+				return true;
+			case Datatype::INT32:
+				return false;
+			case Datatype::UINT32:
+				return true;
+			case Datatype::INT64:
+				return false;
+			case Datatype::UINT64:
+				return true;
+		}
+
+		return false;
+	}
+
+	inline bool isFloating(Datatype t)
+	{
+		switch (t)
+		{
+			case Datatype::FLOAT32:
+				return true;
+			case Datatype::FLOAT64:
+				return true;
+			case Datatype::CFLOAT32:
+				return true;
+			case Datatype::CFLOAT64:
+				return true;
+		}
+
+		return false;
+	}
+
+	inline bool isComplex(Datatype t)
+	{
+		switch (t)
+		{
+			case Datatype::CFLOAT32:
+				return true;
+			case Datatype::CFLOAT64:
+				return true;
+		}
+
+		return false;
+	}
+
+	inline size_t datatypeBytes(Datatype t)
 	{
 		switch (t)
 		{
 			case Datatype::NONE:
 				return 0;
+			case Datatype::VALIDNONE:
+				return 1;
 			case Datatype::BOOL:
 				return sizeof(bool);
 			case Datatype::CHAR:
@@ -84,9 +178,9 @@ namespace librapid
 			case Datatype::FLOAT64:
 				return sizeof(double);
 			case Datatype::CFLOAT32:
-				return sizeof(librapid::complex<float>);
+				return sizeof(librapid::Complex<float>);
 			case Datatype::CFLOAT64:
-				return sizeof(librapid::complex<double>);
+				return sizeof(librapid::Complex<double>);
 		}
 
 		return 0;
@@ -100,7 +194,7 @@ namespace librapid
 #endif // LIBRAPID_HAS_CUDA
 
 	template<typename T>
-	LR_INLINE void *AUTOCAST_ALLOC_(Accelerator locn, size_t elems)
+	inline void *AUTOCAST_ALLOC_(Accelerator locn, size_t elems)
 	{
 		if (locn == Accelerator::CPU)
 			return malloc(sizeof(T) * elems);
@@ -120,7 +214,7 @@ namespace librapid
 	#endif
 	}
 
-	LR_INLINE VoidPtr AUTOCAST_ALLOC(Datatype t, Accelerator locn, size_t elems)
+	inline VoidPtr AUTOCAST_ALLOC(Datatype t, Accelerator locn, size_t elems)
 	{
 		switch (t)
 		{
@@ -174,18 +268,18 @@ namespace librapid
 				}
 			case librapid::Datatype::CFLOAT32:
 				{
-					return {AUTOCAST_ALLOC_<librapid::complex<float>>(locn, elems), t, locn};
+					return {AUTOCAST_ALLOC_<librapid::Complex<float>>(locn, elems), t, locn};
 				}
 			case librapid::Datatype::CFLOAT64:
 				{
-					return {AUTOCAST_ALLOC_<librapid::complex<double>>(locn, elems), t, locn};
+					return {AUTOCAST_ALLOC_<librapid::Complex<double>>(locn, elems), t, locn};
 				}
 		}
 
 		return VoidPtr{};
 	}
 
-	LR_INLINE void AUTOCAST_FREE(VoidPtr data)
+	inline void AUTOCAST_FREE(VoidPtr data)
 	{
 		if (data.location == Accelerator::CPU)
 			free(data.ptr);
@@ -273,12 +367,12 @@ namespace librapid
 		}																				\
 		case librapid::Datatype::CFLOAT32:												\
 		{																				\
-			f(locnA, res.location, precast, (librapid::complex<float> *) res.ptr, __VA_ARGS__);\
+			f(locnA, res.location, precast, (librapid::Complex<float> *) res.ptr, __VA_ARGS__);\
 			break;																		\
 		}																				\
 		case librapid::Datatype::CFLOAT64:												\
 		{																				\
-			f(locnA, res.location, precast, (librapid::complex<double> *) res.ptr, __VA_ARGS__);		\
+			f(locnA, res.location, precast, (librapid::Complex<double> *) res.ptr, __VA_ARGS__);\
 			break;																		\
 		}																				\
 	}
@@ -352,12 +446,12 @@ namespace librapid
 		}																					\
 		case librapid::Datatype::CFLOAT32:													\
 		{																					\
-			AUTOCAST_UNARY_(f, vptr.location, (librapid::complex<float> *) vptr.ptr, res, __VA_ARGS__)		\
+			AUTOCAST_UNARY_(f, vptr.location, (librapid::Complex<float> *) vptr.ptr, res, __VA_ARGS__)		\
 			break;																			\
 		}																					\
 		case librapid::Datatype::CFLOAT64:													\
 		{																					\
-			AUTOCAST_UNARY_(f, vptr.location, (librapid::complex<double> *) vptr.ptr, res, __VA_ARGS__)	\
+			AUTOCAST_UNARY_(f, vptr.location, (librapid::Complex<double> *) vptr.ptr, res, __VA_ARGS__)	\
 			break;																			\
 		}																					\
 	}
@@ -426,12 +520,12 @@ namespace librapid
 		}																			\
 		case librapid::Datatype::CFLOAT32:											\
 		{																			\
-			f(locnA, locnB, res.location, precastA, precastB, (librapid::complex<float> *) res.ptr, __VA_ARGS__);	\
+			f(locnA, locnB, res.location, precastA, precastB, (librapid::Complex<float> *) res.ptr, __VA_ARGS__);	\
 			break;																	\
 		}																			\
 		case librapid::Datatype::CFLOAT64:											\
 		{																			\
-			f(locnA, locnB, res.location, precastA, precastB, (librapid::complex<double> *) res.ptr, __VA_ARGS__);	\
+			f(locnA, locnB, res.location, precastA, precastB, (librapid::Complex<double> *) res.ptr, __VA_ARGS__);	\
 			break;																	\
 		}																			\
 	}
@@ -500,12 +594,12 @@ namespace librapid
 		}																								\
 		case librapid::Datatype::CFLOAT32:																\
 		{																								\
-			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (librapid::complex<float> *) vptrB.ptr, res, __VA_ARGS__)	\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (librapid::Complex<float> *) vptrB.ptr, res, __VA_ARGS__)	\
 			break;																						\
 		}																								\
 		case librapid::Datatype::CFLOAT64:																\
 		{																								\
-			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (librapid::complex<double> *) vptrB.ptr, res, __VA_ARGS__)	\
+			AUTOCAST_BINARY__(f, locnA, vptrB.location, precastA, (librapid::Complex<double> *) vptrB.ptr, res, __VA_ARGS__)	\
 			break;																						\
 		}																								\
 	}
@@ -574,12 +668,12 @@ namespace librapid
 		}																							\
 		case librapid::Datatype::CFLOAT32:															\
 		{																							\
-			AUTOCAST_BINARY_(f, vptrA.location, (librapid::complex<float> *) vptrA.ptr, vptrB, res, __VA_ARGS__)	\
+			AUTOCAST_BINARY_(f, vptrA.location, (librapid::Complex<float> *) vptrA.ptr, vptrB, res, __VA_ARGS__)	\
 			break;																					\
 		}																							\
 		case librapid::Datatype::CFLOAT64:															\
 		{																							\
-			AUTOCAST_BINARY_(f, vptrA.location, (librapid::complex<double> *) vptrA.ptr, vptrB, res, __VA_ARGS__)	\
+			AUTOCAST_BINARY_(f, vptrA.location, (librapid::Complex<double> *) vptrA.ptr, vptrB, res, __VA_ARGS__)	\
 			break;																					\
 		}																							\
 	}
@@ -587,29 +681,29 @@ namespace librapid
 	namespace imp
 	{
 		template<typename A, typename B>
-		LR_INLINE void cpyCPU(const librapid::Accelerator &locnA,
-							  const librapid::Accelerator &locnB,
-							  A *dst, B *src, size_t size)
+		inline void cpyCPU(const librapid::Accelerator &locnA,
+						   const librapid::Accelerator &locnB,
+						   A *dst, B *src, size_t size)
 		{
 			if (size < 250 * 250)
 			{
 				for (size_t i = 0; i < size; ++i)
 				{
-					dst[i] = (B) src[i];
+					dst[i] = (A) src[i];
 				}
 			}
 			else
 			{
 			#pragma omp parallel for shared(dst, src, size)
-				for (long long i = 0; i < size; ++i)
+				for (long long i = 0; i < (long long) size; ++i)
 				{
-					dst[i] = (B) src[i];
+					dst[i] = (A) src[i];
 				}
 			}
 		}
 	}
 
-	LR_INLINE void AUTOCAST_MEMCPY(VoidPtr dst, const VoidPtr &src, size_t elems)
+	inline void AUTOCAST_MEMCPY(VoidPtr dst, const VoidPtr &src, size_t elems)
 	{
 		// 	if (src.location == Accelerator::CPU && dst.location == Accelerator::CPU)
 		// 	{
@@ -623,7 +717,7 @@ namespace librapid
 		// 	{
 		// 		if (src.dtype != dst.dtype)
 		// 			throw std::runtime_error("Cannot yet copy over datatypes");
-		// 
+		//
 		// 		if (src.location == Accelerator::CPU && dst.location == Accelerator::GPU)
 		// 			cudaSafeCall(cudaMemcpy(dst.ptr, src.ptr, datatypeBytes(src.dtype) * elems, cudaMemcpyHostToDevice));
 		// 		else if (src.location == Accelerator::GPU && dst.location == Accelerator::CPU)
