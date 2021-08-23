@@ -14,7 +14,7 @@ namespace librapid
 		struct Add
 		{
 			template<typename A, typename B>
-			LR_INLINE constexpr auto operator()(A a, B b) const
+			inline auto operator()(A a, B b) const
 			{
 				return a + b;
 			}
