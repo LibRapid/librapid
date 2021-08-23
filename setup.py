@@ -114,7 +114,7 @@ setup(
 	packages=["librapid"],
 	package_dir={"" : "src"},
 	cmake_install_dir="src/librapid",
-	license="Boost Software License",
+	license="MIT License",
 	keywords=["math", "neural network", "ndarray", "array", "matrix",
 			"high-performance computing"],
 	classifiers=[
