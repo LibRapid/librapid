@@ -17,19 +17,19 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Default constructor for the ESIterator object. It will not iterate
 		 * over anything.
-		 * 
+		 *
 		 * \endrst
 		 */
 		ESIterator() = default;
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Create an ESIterator from a pointer
-		 * 
+		 *
 		 * \endrst
 		 */
 		ESIterator(pointer start)
@@ -41,21 +41,21 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Set one ESIterator equal to another
-		 * 
+		 *
 		 * \endrst
 		 */
-		LR_INLINE ESIterator &operator=(const ESIterator &other) = default;
+		ESIterator &operator=(const ESIterator &other) = default;
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Set one ESIterator equal to a pointer
-		 * 
+		 *
 		 * \endrst
 		 */
-		LR_INLINE ESIterator &operator=(pointer ptr)
+		ESIterator &operator=(pointer ptr)
 		{
 			m_ptr = ptr;
 			return *this;
@@ -63,40 +63,40 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Returns ``true`` if this ESIterator's pointer is valid (i.e. not
 		 * ``nullptr``), otherwise ``false``
-		 * 
-		 * 
+		 *
+		 *
 		 * \endrst
 		 */
-		LR_INLINE operator bool() const
+		operator bool() const
 		{
 			return m_ptr ? true : false;
 		}
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Returns true if this ESIterator's pointer exactly matches the other's
 		 * value.
-		 * 
+		 *
 		 * \endrst
 		 */
-		LR_INLINE bool operator==(const ESIterator &other) const
+		bool operator==(const ESIterator &other) const
 		{
 			return m_ptr == other.getConstPointer();
 		}
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Returns true if this ESIterator's pointer does not match the other's
 		 * value.
-		 * 
+		 *
 		 * \endrst
 		 */
-		LR_INLINE bool operator!=(const ESIterator &other) const
+		bool operator!=(const ESIterator &other) const
 		{
 			return m_ptr != other.getConstPointer();
 		}
@@ -108,7 +108,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE ESIterator &operator+=(const differenceType &movement)
+		ESIterator &operator+=(const differenceType &movement)
 		{
 			m_ptr += movement;
 			return (*this);
@@ -116,12 +116,12 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Decrement the ESIterator by a specified offset
-		 * 
+		 *
 		 * \endrst
 		 */
-		LR_INLINE ESIterator &operator-=(const differenceType &movement)
+		ESIterator &operator-=(const differenceType &movement)
 		{
 			m_ptr -= movement;
 			return (*this);
@@ -129,12 +129,12 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Increment this ESIterator by one and return the result
-		 * 
+		 *
 		 * \endrst
 		 */
-		LR_INLINE ESIterator &operator++()
+		ESIterator &operator++()
 		{
 			++m_ptr;
 			return (*this);
@@ -142,12 +142,12 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Decrement this ESIterator by one and return the result
-		 * 
+		 *
 		 * \endrst
 		 */
-		LR_INLINE ESIterator &operator--()
+		ESIterator &operator--()
 		{
 			--m_ptr;
 			return (*this);
@@ -155,12 +155,12 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Increment this ESIterator by one and return the unaltered value
-		 * 
+		 *
 		 * \endrst
 		 */
-		LR_INLINE ESIterator operator++(int)
+		ESIterator operator++(int)
 		{
 			auto temp(*this);
 			++m_ptr;
@@ -169,12 +169,12 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Decrement this ESIterator by one and return the unaltered value
-		 * 
+		 *
 		 * \endrst
 		 */
-		LR_INLINE ESIterator operator--(int)
+		ESIterator operator--(int)
 		{
 			auto temp(*this);
 			--m_ptr;
@@ -183,38 +183,38 @@ namespace librapid
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Return a new ESIterator whose pointer is ``movement`` objects further
 		 * through memory
-		 * 
+		 *
 		 * \endrst
 		 */
-		LR_INLINE ESIterator operator+(const differenceType &movement) const
+		ESIterator operator+(const differenceType &movement) const
 		{
 			return ESIterator(m_ptr + movement);
 		}
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Return a new ESIterator whose pointer is ``movement`` objects before
 		 * ``*this->m_ptr`` in memory.
-		 * 
+		 *
 		 * \endrst
 		 */
-		LR_INLINE ESIterator operator-(const differenceType &movement) const
+		ESIterator operator-(const differenceType &movement) const
 		{
 			return ESIterator(m_ptr - movement);
 		}
 
 		/**
 		 * \rst
-		 * 
+		 *
 		 * Return the distance (in bytes) between two ESIterator objects
-		 * 
+		 *
 		 * \endrst
 		 */
-		LR_INLINE differenceType operator-(const ESIterator &rawIterator) const
+		differenceType operator-(const ESIterator &rawIterator) const
 		{
 			return std::distance(rawIterator.getPointer(), getPointer());
 		}
@@ -226,7 +226,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE reference operator*()
+		reference operator*()
 		{
 			return *m_ptr;
 		}
@@ -238,12 +238,12 @@ namespace librapid
 		*
 		* \endrst
 		*/
-		LR_INLINE const reference operator*() const
+		const reference operator*() const
 		{
 			return *m_ptr;
 		}
 
-		LR_INLINE pointer operator->()
+		pointer operator->()
 		{
 			return m_ptr;
 		}
@@ -255,7 +255,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE const pointer getConstPointer() const
+		const pointer getConstPointer() const
 		{
 			return m_ptr;
 		}
@@ -267,7 +267,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE pointer getPointer() const
+		pointer getPointer() const
 		{
 			return m_ptr;
 		}

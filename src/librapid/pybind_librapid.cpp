@@ -16,6 +16,15 @@ std::string module_docstring = "A fast math and neural network library for Pytho
 template<typename T>
 using V = std::vector<T>;
 
+template<typename T>
+T testSum(const std::vector<T> &data)
+{
+	T total = 0;
+	for (const auto &val : data)
+		total += val;
+	return total;
+}
+
 PYBIND11_MODULE(_librapid, module)
 {
 	module.doc() = module_docstring;
@@ -24,11 +33,14 @@ PYBIND11_MODULE(_librapid, module)
 	test.def("testLibrapid", &librapid::test::testLibrapid);
 	test.def("streamTest", &librapid::test::streamTest);
 
-	module.def("bitness", &librapid::pythonBitness);
+	test.def("sum", [](const std::vector<double> &data) { return testSum(data); });
+	test.def("sum", [](const std::vector<lr_int> &data) { return testSum(data); });
+	test.def("sum", [](const std::vector<char> &data) { return testSum(data); });
+	test.def("sum", [](const std::vector<bool> &data) { return testSum(data); });
+
 	module.def("hasBlas", &librapid::hasBlas);
 	module.def("setBlasThreads", &librapid::setBlasThreads);
-	module.def("getBlasThreads", &librapid::getBlasThreads);
-	
+	module.def("getBlasThreads", &librapid::getBlasThreads);	
 	module.def("setNumThreads", &librapid::setNumThreads);
 	module.def("getNumThreads", &librapid::getNumThreads);
 
@@ -47,17 +59,18 @@ PYBIND11_MODULE(_librapid, module)
 	module.attr("sqrt3") = librapid::math::sqrt3;
 	module.attr("sqrt5") = librapid::math::sqrt5;
 
-	module.def("product", [](const std::vector<python_dtype> &vals) { return librapid::math::product(vals); }, py::arg("vals"));
+	module.def("product", [](const std::vector<lr_int> &vals) { return librapid::math::product(vals); }, py::arg("vals"));
+	module.def("product", [](const std::vector<double> &vals) { return librapid::math::product(vals); }, py::arg("vals"));
 
-	module.def("min", [](const std::vector<python_dtype> &vals) { return librapid::math::min(vals); }, py::arg("vals"));
-	module.def("max", [](const std::vector<python_dtype> &vals) { return librapid::math::max(vals); }, py::arg("vals"));
+	module.def("min", [](const std::vector<double> &vals) { return librapid::math::min(vals); }, py::arg("vals"));
+	module.def("max", [](const std::vector<double> &vals) { return librapid::math::max(vals); }, py::arg("vals"));
 
-	module.def("abs", [](python_dtype val) { return librapid::math::abs(val); }, py::arg("val"));
-	module.def("map", [](python_dtype val, python_dtype start1, python_dtype stop1, python_dtype start2, python_dtype stop2) { return librapid::math::map(val, start1, stop1, start2, stop2); }, py::arg("val"), py::arg("start1") = python_dtype(0), py::arg("stop1") = python_dtype(1), py::arg("start2") = python_dtype(0), py::arg("stop2") = python_dtype(1));
-	module.def("random", [](python_dtype min, python_dtype max) { return librapid::math::random(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
+	module.def("map", [](double val, double start1, double stop1, double start2, double stop2) { return librapid::math::map(val, start1, stop1, start2, stop2); }, py::arg("val"), py::arg("start1") = double(0), py::arg("stop1") = double(1), py::arg("start2") = double(0), py::arg("stop2") = double(1));
+	module.def("random", [](double min, double max) { return librapid::math::random(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
+	module.def("randint", [](lr_int min, lr_int max) { return librapid::math::randint(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
 	module.def("pow10", &librapid::math::pow10);
-	module.def("round", [](double val, lr_int places) { return librapid::math::round<double>(val, places); }, py::arg("val"), py::arg("places") = 0);
-	module.def("round_sigfig", [](double val, lr_int figs) { return librapid::math::round(val, figs); }, py::arg("val"), py::arg("figs") = 3);
+	module.def("round", [](double val, lr_int places) { return librapid::math::round(val, places); }, py::arg("val"), py::arg("places") = 0);
+	module.def("roundSigFig", [](double val, lr_int figs) { return librapid::math::roundSigFig(val, figs); }, py::arg("val"), py::arg("figs") = 3);
 
 	 // The librapid Extent object
 	 py::class_<librapid::Extent>(module, "Extent")
@@ -176,8 +189,8 @@ PYBIND11_MODULE(_librapid, module)
 	color.def("back", [](const librapid::color::HSL &col) { return librapid::color::back(col); });
 	color.def("back", [](int r, int g, int b) { return librapid::color::back(r, g, b); });
 
-	// py::implicitly_convertible<long long, librapid::basic_ndarray<python_dtype>>();
-	// py::implicitly_convertible<python_dtype, librapid::basic_ndarray<python_dtype>>();
-	// py::implicitly_convertible<py::tuple, librapid::basic_ndarray<python_dtype>>();
-	// py::implicitly_convertible<py::list, librapid::basic_ndarray<python_dtype>>();
+	// py::implicitly_convertible<long long, librapid::basic_ndarray<double>>();
+	// py::implicitly_convertible<double, librapid::basic_ndarray<double>>();
+	// py::implicitly_convertible<py::tuple, librapid::basic_ndarray<double>>();
+	// py::implicitly_convertible<py::list, librapid::basic_ndarray<double>>();
 }

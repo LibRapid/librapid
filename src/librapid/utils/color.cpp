@@ -6,19 +6,19 @@ namespace librapid
 	namespace color
 	{
 		RGB::RGB(int r, int g, int b) :
-				red(r), green(g), blue(b)
-			{}
+			red(r), green(g), blue(b)
+		{}
 
 	#ifdef LIBRAPID_REDEF_RGB
-		LR_INLINE RGB::operator COLORREF() const
+		RGB::operator COLORREF() const
 		{
 			return (COLORREF) (((BYTE) (red) | ((WORD) ((BYTE) (green)) << 8)) | (((DWORD) (BYTE) (blue)) << 16));
 		}
 	#endif
 
 		HSL::HSL(double h, double s, double l) :
-				hue(h), saturation(s), lightness(l)
-			{}
+			hue(h), saturation(s), lightness(l)
+		{}
 
 		HSL rgbToHsl(const RGB &col)
 		{
@@ -43,15 +43,15 @@ namespace librapid
 
 			// Saturation
 			if (delta != 0)
-				saturation = delta / (1 - math::abs(2 * lightness - 1));
+				saturation = delta / (1 - std::abs(2 * lightness - 1));
 
 			return {hue, saturation, lightness};
 		}
 
 		RGB hslToRgb(const HSL &col)
 		{
-			const double c = (1 - math::abs(2 * col.lightness - 1)) * col.saturation;
-			const double x = c * (1 - math::abs(fmod(col.hue / 60, 2) - 1));
+			const double c = (1 - std::abs(2 * col.lightness - 1)) * col.saturation;
+			const double x = c * (1 - std::abs(fmod(col.hue / 60, 2) - 1));
 			const double m = col.lightness - c / 2;
 			const double h = col.hue;
 
@@ -118,7 +118,7 @@ namespace librapid
 			return result + "m";
 		}
 
-		std::string fore(const HSL &col);
+		std::string fore(const HSL &col)
 		{
 			return fore(hslToRgb(col));
 		}
@@ -139,14 +139,29 @@ namespace librapid
 			return result + "m";
 		}
 
-		imp::ColorReset::ColorReset()
+		std::string back(const HSL &col)
 		{
-			std::cout << "\033[0m";
+			return back(hslToRgb(col));
 		}
 
-		imp::ColorReset::~ColorReset()
+		std::string back(int r, int g, int b)
 		{
-			std::cout << "\033[0m";
+			return back(RGB(r, g, b));
+		}
+
+		namespace imp
+		{
+			ColorReset::ColorReset()
+			{
+				std::cout << "\033[0m";
+			}
+
+			ColorReset::~ColorReset()
+			{
+				std::cout << "\033[0m";
+			}
+
+			ColorReset reset_after_close = ColorReset();
 		}
 
 		std::ostream &operator<<(std::ostream &os, const RGB &col)

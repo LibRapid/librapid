@@ -37,7 +37,20 @@ message(STATUS "Source files found: ${SOURCES}")
 set(python_module_name "_librapid")
 pybind11_add_module(${python_module_name} MODULE
 					"src/librapid/pybind_librapid.cpp"
-					# "src/librapid/utils/color.cpp"
+					# Array library
+					"src/librapid/array/extent.cpp"
+					"src/librapid/array/multiarray.cpp"
+					"src/librapid/array/stride.cpp"
+					# Math library
+					"src/librapid/math/core_math.cpp"
+					# String methods
+					"src/librapid/stringmethods/format_number.cpp"
+					# Utilities
+					"src/librapid/utils/color.cpp"
+					"src/librapid/utils/console_utils.cpp"
+					"src/librapid/utils/time_utils.cpp"
+					# Tests
+					"src/librapid/test/librapid_test.cpp"
 					)
 
 add_compile_definitions(LIBRAPID_PYTHON)
