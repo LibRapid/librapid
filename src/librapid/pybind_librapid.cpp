@@ -25,6 +25,15 @@ T testSum(const std::vector<T> &data)
 	return total;
 }
 
+// Just remove these. They're pointless
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
 PYBIND11_MODULE(_librapid, module)
 {
 	module.doc() = module_docstring;
