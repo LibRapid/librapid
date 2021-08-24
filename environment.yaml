@@ -2,7 +2,14 @@ name: docs # doxygen
 channels:
   - conda-forge
 dependencies:
+  - python>3.5
+  - anaconda
   - doxygen=1.9.1
   - pip
   - pip:
-    - -r file:docs/requirements.txt
+    - sphinx==3.4.3
+    - breathe==4.30.0
+    - exhale==0.2.3
+    - furo==2021.4.11b34
+    - pydata-sphinx-theme==0.6.3
+    - numpydoc==1.1.0
