@@ -31,7 +31,6 @@ option(USE_CUDA "Attempt to use CUDA" ON)
 option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 
 file(GLOB_RECURSE SOURCES "src/librapid/*.cpp")
-
 message(STATUS "Source files found: ${SOURCES}")
 
 set(python_module_name "_librapid")
