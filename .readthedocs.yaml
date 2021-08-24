@@ -7,8 +7,6 @@ formats: all
 # Set the build image to use the most recent version
 build:
   image: latest
-  apt_packages:
-    - doxygen
 
 # Set the python version and requirements
 python:
