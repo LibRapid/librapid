@@ -1,8 +1,8 @@
-name: doxygen
+name: docs # doxygen
 channels:
   - conda-forge
 dependencies:
   - doxygen=1.9.1
   - pip
-  - pip:
-    - -r file:docs/requirements.txt
+#   - pip:
+#     - -r file:docs/requirements.txt
