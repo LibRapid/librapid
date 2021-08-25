@@ -77,18 +77,60 @@ namespace librapid
 		 */
 		Array(const Array &other);
 
+		/**
+		 * \rst
+		 *
+		 * Set one Array equal to another.
+		 *
+		 * If this Array on is invalid (i.e. it was created using the default
+		 * constructor), the array will be initialized and have the values of
+		 * ``other`` copied into it.
+		 *
+		 * If, on the other hand, this Array is already initialized and is *not* a
+		 * direct subscript of another Array instance (e.g. `myArray[0]`), then the
+		 * shapes of both arrays will be compared; if they are the same, the data
+		 * from ``other`` will be copied directly into the existing memory of this
+		 * Array. If this Array *is* a direct subscript and the shapes are not
+		 * exactly equal, an error will be thrown.
+		 *
+		 * Parameters
+		 * ----------
+		 *
+		 * other: ``Array``
+		 *		The Array object to become equal to
+		 *
+		 * \endrst
+		 */
 		Array &operator=(const Array &other);
 
 		~Array();
+
+		inline size_t ndim() const
+		{
+			return m_extent.ndim();
+		}
+
+		inline const Array operator[](lr_int index) const
+		{
+			return subscript(index);
+		}
+
+		inline Array operator[](lr_int index)
+		{
+			using nonConst = typename std::remove_const<Array>::type;
+			return (nonConst) subscript(index);
+		}
 
 		void fill(double val);
 		void fill(const Complex<double> &val);
 
 		Array operator+(const Array &other) const;
-
 		void add(const Array &other, Array &res) const;
 
-		std::string str() const;
+		Array operator-(const Array &other) const;
+		void sub(const Array &other, Array &res) const;
+
+		std::string str(size_t indent = 0, bool showCommas = false) const;
 
 	private:
 	#ifdef LIBRAPID_REFCHECK
@@ -101,7 +143,7 @@ namespace librapid
 
 			std::cout << "Incrementing at line " << line << ". References is now "
 				<< *m_references << "\n";
-		}
+	}
 	#else
 		inline void initializeCudaStream() const
 		{
@@ -150,7 +192,7 @@ namespace librapid
 				std::cout << "Decrementing at line " << line
 					<< ". References is now " << *m_references << "\n";
 			}
-		}
+}
 	#else
 		inline void decrement()
 		{
@@ -177,12 +219,17 @@ namespace librapid
 						  const Datatype &dtype,
 						  const Accelerator &location);
 
+		void constructHollow(const Extent &e, const Stride &s,
+							 const Datatype &dtype, const Accelerator &location);
+
+		const Array subscript(size_t index) const;
+
 		template<typename A, typename B, typename C, class FUNC>
 		static void simpleCPUop(librapid::Accelerator locnA,
 								librapid::Accelerator locnB,
 								librapid::Accelerator locnC,
 								const A *a, const B *b, C *c, size_t size,
-								const FUNC &op);
+								const FUNC &op, const std::string &name);
 
 		template<typename A, typename B, typename C>
 		static void simpleFill(librapid::Accelerator locnA,
@@ -190,11 +237,12 @@ namespace librapid
 							   A *data, B *, size_t size,
 							   C val);
 
-		template<typename A, typename B>
-		static void printLinear(librapid::Accelerator locnA,
-								librapid::Accelerator locnB,
-								A *data, B *, size_t size,
-								std::string &res);
+		std::pair<lr_int, lr_int> stringifyFormatPreprocess(bool stripMiddle,
+															bool autoStrip) const;
+
+		std::string stringify(lr_int indent, bool showCommas,
+							  bool stripMiddle, bool autoStrip,
+							  std::pair<lr_int, lr_int> &longest) const;
 
 	private:
 		Accelerator m_location = Accelerator::CPU;

@@ -13,10 +13,31 @@ namespace librapid
 	{
 		struct Add
 		{
+			const char *name = "add";
+			const char *kernel = R"V0G0N(
+					unsigned int tid = blockDim.x * blockIdx.x + threadIdx.x;
+					if (tid < size) c[tid] = a[tid] + b[tid];
+				)V0G0N";
+
 			template<typename A, typename B>
 			inline auto operator()(A a, B b) const
 			{
 				return a + b;
+			}
+		};
+
+		struct Sub
+		{
+			const char *name = "add";
+			const char *kernel = R"V0G0N(
+					unsigned int tid = blockDim.x * blockIdx.x + threadIdx.x;
+					if (tid < size) c[tid] = a[tid] - b[tid];
+				)V0G0N";
+
+			template<typename A, typename B>
+			inline auto operator()(A a, B b) const
+			{
+				return a - b;
 			}
 		};
 	}
