@@ -136,6 +136,23 @@ namespace librapid
 								 + " elements");
 	}
 
+	Extent Extent::subExtent(lr_int start, lr_int end) const
+	{
+		if (start == -1) start = 0;
+		if (end == -1) end = m_dims;
+
+		if (start >= end)
+			throw std::invalid_argument("Cannot create subExtent from range ["
+										+ std::to_string(start) + ", "
+										+ std::to_string(end) + ")");
+
+		Extent res(end - start);
+		for (lr_int i = start; i < end; ++i)
+			res.m_extent[i - start] = m_extent[i];
+
+		return res;
+	}
+
 	bool Extent::operator==(const Extent &other) const
 	{
 		if (m_dims != other.m_dims)

@@ -18,10 +18,27 @@ namespace librapid
 		 * be equal to the number of elements in the provided list, and the stride
 		 * for each dimension will be the corresponding value in the data provided
 		 *
+		 * If the provided value is a single scalar, the Stride object will
+		 * be created with that number of dimensions, with each value set to one.
+		 *
+		 * .. Attention::
+		 *
+		 *		Creation from a scalar value only works in C++, as in Python the
+		 *		arguments can be passed without specifying they are a list
+		 *
+		 *		Example:
+		 *
+		 *		>>> librapid.Stride([5])
+		 *		<librapid.Stride(5)>
+		 *
+		 *		>>> librapid.Stride(5) # Note, not a list
+		 *		<librapid.Stride(5)>
+		 *
 		 * \endrst
 		 */
 		Stride(const std::initializer_list<lr_int> &data);
 		Stride(const std::vector<lr_int> &data);
+		Stride(size_t dims);
 
 		/**
 		 * \rst
@@ -70,6 +87,8 @@ namespace librapid
 		 * \endrst
 		 */
 		static Stride fromExtent(const Extent &extent);
+
+		void setContiguity(bool newVal);
 
 		/**
 		 * \rst
@@ -172,6 +191,19 @@ namespace librapid
 		 * \endrst
 		 */
 		void reorder(const std::vector<size_t> &order);
+
+		/**
+		 * \rst
+		 *
+		 * Return a new Stride object containing the values from this Stride in the
+		 * range :math:`[\text{start}, \text{end})`
+		 *
+		 * \endrst
+		 */
+		Stride subStride(lr_int start = -1, lr_int end = -1) const;
+
+		void scaleBytes(size_t bytes);
+		Stride scaledBytes(size_t bytes) const;
 
 		/**
 		 * \rst

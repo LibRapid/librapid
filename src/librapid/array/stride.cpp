@@ -24,6 +24,19 @@ namespace librapid
 			m_stride[i] = data[i];
 	}
 
+	Stride::Stride(size_t dims)
+	{
+		m_dims = dims;
+		if (m_dims > LIBRAPID_MAX_DIMS)
+			throw std::runtime_error("Cannot create Stride with "
+									 + std::to_string(m_dims)
+									 + " dimensions. Limit is "
+									 + std::to_string(LIBRAPID_MAX_DIMS));
+
+		for (size_t i = 0; i < m_dims; ++i)
+			m_stride[i] = 1;
+	}
+
 	Stride::Stride(const Stride &other)
 	{
 		m_isTrivial = other.m_isTrivial;
@@ -81,6 +94,11 @@ namespace librapid
 		return res;
 	}
 
+	void Stride::setContiguity(bool newVal)
+	{
+		m_isContiguous = newVal;
+	}
+
 	bool Stride::operator==(const Stride &other) const
 	{
 		if (m_dims != other.m_dims)
@@ -129,6 +147,36 @@ namespace librapid
 			m_stride[i] = temp.m_stride[order[i]];
 
 		m_isTrivial = checkTrivial();
+	}
+
+	Stride Stride::subStride(lr_int start, lr_int end) const
+	{
+		if (start == -1) start = 0;
+		if (end == -1) end = m_dims;
+
+		if (start >= end)
+			throw std::invalid_argument("Cannot create subStride from range ["
+										+ std::to_string(start) + ", "
+										+ std::to_string(end) + ")");
+
+		Stride res(end - start);
+		for (lr_int i = start; i < end; ++i)
+			res.m_stride[i - start] = m_stride[i];
+
+		return res;
+	}
+
+	void Stride::scaleBytes(size_t bytes)
+	{
+		for (size_t i = 0; i < m_dims; ++i)
+			m_stride[i] *= bytes;
+	}
+
+	Stride Stride::scaledBytes(size_t bytes) const
+	{
+		Stride res = *this;
+		res.scaleBytes(bytes);
+		return res;
 	}
 
 	bool Stride::checkTrivial() const
