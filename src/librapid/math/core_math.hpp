@@ -81,7 +81,7 @@ namespace librapid
 			   double start2, double stop2);
 
 	double random(double lower, double upper);
-	double randint(double lower, double upper);
+	lr_int randint(lr_int lower, lr_int upper);
 
 	double pow10(lr_int exponent);
 

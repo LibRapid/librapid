@@ -113,12 +113,18 @@ namespace librapid
 			__constant__ long long LIBRAPID_MAX_DIMS = 32;
 			template<typename A, typename B, typename C>
 			__global__
-			void function(const A *a, const B *b, C *c, size_t size) {
+			void function(const A *arrayA, const B *arrayB, C *arrayC, size_t size) {
+				unsigned int kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
+
+				if (kernelIndex < size) {
+					const auto &a = arrayA[kernelIndex];
+					const auto &b = arrayB[kernelIndex];
+					auto &c = arrayC[kernelIndex];
 			)V0G0N";
 
 			kernel += op.kernel;
 
-			kernel += "\n}";
+			kernel += "\n}\n}";
 
 			static jitify::JitCache kernel_cache;
 			jitify::Program program = kernel_cache.program(kernel, 0);
