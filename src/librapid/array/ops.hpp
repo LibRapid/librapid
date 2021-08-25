@@ -15,8 +15,8 @@ namespace librapid
 		{
 			const char *name = "add";
 			const char *kernel = R"V0G0N(
-					unsigned int tid = blockDim.x * blockIdx.x + threadIdx.x;
-					if (tid < size) c[tid] = a[tid] + b[tid];
+					// if (tid < size) c[tid] = a[tid] + b[tid];
+					c = a + b;
 				)V0G0N";
 
 			template<typename A, typename B>
@@ -30,8 +30,8 @@ namespace librapid
 		{
 			const char *name = "add";
 			const char *kernel = R"V0G0N(
-					unsigned int tid = blockDim.x * blockIdx.x + threadIdx.x;
-					if (tid < size) c[tid] = a[tid] - b[tid];
+					// if (tid < size) c[kernelIndex] = a[kernelIndex] - b[kernelIndex];
+					c = a - b;
 				)V0G0N";
 
 			template<typename A, typename B>

@@ -77,14 +77,6 @@ namespace librapid
 								 bool stripMiddle, bool autoStrip,
 								 std::pair<lr_int, lr_int> &longest) const
 	{
-	#ifdef LIBRAPID_HAS_CUDA
-	#ifdef LIBRAPID_HAS_STREAM
-	#else
-	#endif
-	#endif
-
-		cudaSafeCall(cudaDeviceSynchronize());
-		cudaSafeCall(cudaStreamSynchronize(cudaStream));
 		// Non-initialized arrays
 		if (m_references == nullptr)
 			return "[NONE]";
