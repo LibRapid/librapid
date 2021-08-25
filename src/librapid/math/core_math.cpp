@@ -73,10 +73,10 @@ namespace librapid
 		return lower + (upper - lower) * distribution(generator);
 	}
 
-	double randint(double lower, double upper)
+	lr_int randint(lr_int lower, lr_int upper)
 	{
 		// Random integral value in range [lower, upper]
-		return (double) random((double) lower, (double) upper + 1);
+		return (lr_int) random((double) lower, (double) upper + 1);
 	}
 
 	double pow10(lr_int exponent)

@@ -3,8 +3,11 @@
 namespace librapid
 {
 	VoidPtr validVoidPtr = VoidPtr{nullptr, Datatype::VALIDNONE, Accelerator::CPU};
+
+#ifdef LIBRAPID_CUDA_STREAM
 	cudaStream_t cudaStream;
 	bool streamCreated = false;
+#endif // LIBRAPID_CUDA_STREAM
 
 	Array::Array()
 	{
