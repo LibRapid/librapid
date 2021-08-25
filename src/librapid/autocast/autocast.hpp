@@ -188,8 +188,8 @@ namespace librapid
 
 #ifdef LIBRAPID_HAS_CUDA
 #ifdef LIBRAPID_CUDA_STREAM
-	inline cudaStream_t cudaStream;
-	inline bool streamCreated = false;
+	extern cudaStream_t cudaStream;
+	extern bool streamCreated;
 #endif // LIBRAPID_CUDA_STREAM
 #endif // LIBRAPID_HAS_CUDA
 

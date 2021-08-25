@@ -2,79 +2,6 @@
 
 namespace librapid
 {
-	VoidPtr validVoidPtr = VoidPtr{nullptr, Datatype::VALIDNONE, Accelerator::CPU};
-
-	Array::Array()
-	{
-		initializeCudaStream();
-	}
-
-	Array::Array(const Extent &extent, Datatype dtype, Accelerator location)
-	{
-		initializeCudaStream();
-
-		if (extent.containsAutomatic())
-			throw std::invalid_argument("Cannot create an Array from an Extent"
-										" containing automatic values. "
-										"Extent was " + extent.str());
-
-		constructNew(extent, Stride::fromExtent(extent), dtype, location);
-	}
-
-	Array::Array(const Array &other)
-	{
-		// Quick return if possible
-		if (other.m_references == nullptr)
-			return;
-
-		m_location = other.m_location;
-		m_dtype = other.m_dtype;
-		m_dataStart = other.m_dataStart;
-		m_dataOrigin = other.m_dataOrigin;
-
-		m_references = other.m_references;
-
-		m_extent = other.m_extent;
-		m_stride = other.m_stride;
-
-		m_isScalar = other.m_isScalar;
-		m_isChild = false;
-
-		increment();
-	}
-
-	Array &Array::operator=(const Array &other)
-	{
-		// Quick return if possible
-		if (other.m_references == nullptr)
-			return *this;
-
-		if (m_references == nullptr)
-			constructNew(other.m_extent, other.m_stride,
-						 other.m_dtype, other.m_location);
-
-		if (m_isChild && m_extent != other.m_extent)
-			throw std::invalid_argument("Cannot set child array with "
-										+ m_extent.str() + " to "
-										+ other.m_extent.str());
-
-		// Attempt to copy the data from other into *this
-		if (m_stride.isContiguous() && other.m_stride.isContiguous())
-			AUTOCAST_MEMCPY(makeVoidPtr(), other.makeVoidPtr(),
-							m_extent.size());
-		else
-			throw std::runtime_error("Haven't gotten to this yet...");
-
-		increment();
-
-		return *this;
-	}
-
-	Array::~Array()
-	{
-		decrement();
-	}
-
 	void Array::fill(double val)
 	{
 		AUTOCAST_UNARY(Array::simpleFill, makeVoidPtr(), validVoidPtr,
@@ -100,7 +27,7 @@ namespace librapid
 
 		AUTOCAST_BINARY(simpleCPUop, makeVoidPtr(),
 						other.makeVoidPtr(), res.makeVoidPtr(),
-						m_extent.size(), ops::Add());
+						m_extent.size(), ops::Add(), "add");
 
 		return res;
 	}
@@ -116,62 +43,39 @@ namespace librapid
 
 		AUTOCAST_BINARY(simpleCPUop, makeVoidPtr(),
 						other.makeVoidPtr(), res.makeVoidPtr(),
-						m_extent.size(), ops::Add());
+						m_extent.size(), ops::Add(), "add");
 	}
 
-	std::string Array::str() const
+	Array Array::operator-(const Array &other) const
 	{
-		std::string res;
-		try
-		{
-			if (m_location == Accelerator::CPU)
-			{
-				AUTOCAST_UNARY(Array::printLinear, makeVoidPtr(), validVoidPtr,
-							   m_extent.size(), res);
-			}
-		#ifdef LIBRAPID_HAS_CUDA
-			else
-			{
-				auto tmp = AUTOCAST_ALLOC(m_dtype, Accelerator::CPU, m_extent.size());
-				AUTOCAST_MEMCPY(tmp, makeVoidPtr(), m_extent.size());
+		// Add two arrays together
+		if (!(m_stride.isTrivial() && m_stride.isContiguous()))
+			throw std::runtime_error("Yeah, you can't do this yet");
 
-				AUTOCAST_UNARY(Array::printLinear, tmp, validVoidPtr,
-							   math::min(m_extent.size(), 50), res);
+		if (m_location != other.m_location)
+			throw std::runtime_error("Can't do this either, unfortunately");
 
-				AUTOCAST_FREE(tmp);
-			}
-		#endif
-		}
-		catch (std::exception &e)
-		{
-			std::cout << "Error: " << e.what() << "\n";
-		}
+		Array res(m_extent, m_dtype, m_location);
+
+		AUTOCAST_BINARY(simpleCPUop, makeVoidPtr(),
+						other.makeVoidPtr(), res.makeVoidPtr(),
+						m_extent.size(), ops::Sub(), "sub");
 
 		return res;
 	}
 
-	void Array::constructNew(const Extent &e, const Stride &s,
-							 const Datatype &dtype,
-							 const Accelerator &location)
+	void Array::sub(const Array &other, Array &res) const
 	{
-		// Is scalar if extent is [0]
-		bool isScalar = (e.ndim() == 1) && (e[0] == 0);
+		// Add two arrays together
+		if (!(m_stride.isTrivial() && m_stride.isContiguous()))
+			throw std::runtime_error("Yeah, you can't do this yet");
 
-		// Construct members
-		m_location = location;
-		m_dtype = dtype;
+		if (m_location != other.m_location)
+			throw std::runtime_error("Can't do this either, unfortunately");
 
-		// If array is scalar, allocate "sizeof(dtype)" bytes -- e.size() is 0
-		m_dataStart = AUTOCAST_ALLOC(dtype, location, e.size() + isScalar).ptr;
-		m_dataOrigin = m_dataStart;
-
-		m_references = new std::atomic<size_t>(1);
-
-		m_extent = e;
-		m_stride = s;
-
-		m_isScalar = isScalar;
-		m_isChild = false;
+		AUTOCAST_BINARY(simpleCPUop, makeVoidPtr(),
+						other.makeVoidPtr(), res.makeVoidPtr(),
+						m_extent.size(), ops::Sub(), "sub");
 	}
 
 	template<typename A, typename B, typename C, class FUNC>
@@ -179,7 +83,7 @@ namespace librapid
 							librapid::Accelerator locnB,
 							librapid::Accelerator locnC,
 							const A *a, const B *b, C *c, size_t size,
-							const FUNC &op)
+							const FUNC &op, const std::string &name)
 	{
 		if (locnA == Accelerator::CPU && locnB == Accelerator::CPU && locnC == Accelerator::CPU)
 		{
@@ -191,24 +95,33 @@ namespace librapid
 		else
 		{
 			using jitify::reflection::Type;
+			using jitify::reflection::type_of;
 
-			static const char *program_source =
-				"adder\n"
-				"__constant__ long long LIBRAPID_MAX_DIMS = 32;\n"
-				"template<typename A, typename B, typename C>\n"
-				"__global__\n"
-				"void add(const A *a, const B *b, C *c, size_t size) {\n"
-				"	// unsigned int index = blockIdx.x * blockDim.x + threadIdx.x;\n"
-				"	// unsigned int stride = blockDim.x * gridDim.x;\n"
-				"	// for (unsigned int i = index; i < size; i += stride) {\n"
-				"	// 	c[i] = a[i] + b[i];\n"
-				"	// }\n"
-				"	unsigned int tid = blockDim.x * blockIdx.x + threadIdx.x;\n"
-				"	if (tid < size) c[tid] = a[tid] + b[tid];\n"
-				"}\n";
+			// const char *simpleKernel = R"V0G0N(adder
+			// 	__constant__ long long LIBRAPID_MAX_DIMS = 32;
+			// 	template<typename A, typename B, typename C, typename LAMBDA>
+			// 	__global__
+			// 	void op(const A *a, const B *b, C *c,
+			// 			 size_t size, LAMBDA func) {
+			// 		unsigned int tid = blockDim.x * blockIdx.x + threadIdx.x;
+			// 		// if (tid < size) c[tid] = a[tid] + b[tid];
+			// 		if (tid < size) c[tid] = func(a[tid], b[tid]);
+			// 	}
+			// 	)V0G0N";
+
+			std::string kernel = R"V0G0N(adder
+			__constant__ long long LIBRAPID_MAX_DIMS = 32;
+			template<typename A, typename B, typename C>
+			__global__
+			void function(const A *a, const B *b, C *c, size_t size) {
+			)V0G0N";
+
+			kernel += op.kernel;
+
+			kernel += "\n}";
 
 			static jitify::JitCache kernel_cache;
-			jitify::Program program = kernel_cache.program(program_source, 0);
+			jitify::Program program = kernel_cache.program(kernel, 0);
 
 			unsigned int threadsPerBlock, blocksPerGrid;
 
@@ -227,13 +140,18 @@ namespace librapid
 			dim3 grid(blocksPerGrid);
 			dim3 block(threadsPerBlock);
 
+			auto f = [=](const A &a, const B &b)
+			{
+				return op(a, b);
+			};
+
 		#ifdef LIBRAPID_CUDA_STREAM
-			jitifyCall(program.kernel("add")
+			jitifyCall(program.kernel("function")
 					   .instantiate(Type<A>(), Type<B>(), Type<C>())
 					   .configure(grid, block, 0, cudaStream)
 					   .launch(a, b, c, size));
 		#else
-			jitifyCall(program.kernel("add")
+			jitifyCall(program.kernel("op")
 					   .instantiate(Type<A>(), Type<B>(), Type<C>())
 					   .configure(grid, block)
 					   .launch(a, b, c, size));
@@ -273,29 +191,18 @@ namespace librapid
 			for (size_t i = 0; i < size; ++i)
 				tmp[i] = (A) val;
 
-			cudaSafeCall(cudaDeviceSynchronize());
 			// cudaSafeCall(cudaMemcpyAsync(data, tmp, sizeof(A) * size, cudaMemcpyHostToDevice, cudaStream));
 
 		#ifdef LIBRAPID_CUDA_STREAM
 			cudaSafeCall(cudaMemcpyAsync(data, tmp, sizeof(A) * size, cudaMemcpyHostToDevice, cudaStream));
+			cudaSafeCall(cudaStreamSynchronize(cudaStream));
 		#else
+			cudaSafeCall(cudaDeviceSynchronize());
 			cudaSafeCall(cudaMemcpy(data, tmp, sizeof(A) * size, cudaMemcpyHostToDevice));
+			cudaSafeCall(cudaDeviceSynchronize());
 		#endif
-
 			free(tmp);
 		}
 	#endif
-	}
-
-	template<typename A, typename B>
-	void Array::printLinear(librapid::Accelerator locnA,
-							librapid::Accelerator locnB,
-							A *data, B *, size_t size,
-							std::string &res)
-	{
-		std::stringstream tmp;
-		for (size_t i = 0; i < size; ++i)
-			tmp << data[i] << ", ";
-		res = tmp.str();
 	}
 }

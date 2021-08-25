@@ -204,6 +204,8 @@ namespace librapid
 		 */
 		void reorder(const std::vector<size_t> &order);
 
+		Extent subExtent(lr_int start = -1, lr_int end = -1) const;
+
 		/**
 		 * \rst
 		 *
