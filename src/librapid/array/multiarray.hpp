@@ -6,6 +6,7 @@
 #include <librapid/array/extent.hpp>
 #include <librapid/array/stride.hpp>
 #include <librapid/autocast/autocast.hpp>
+#include <librapid/array/multiarray_operations.hpp>
 #include <librapid/array/ops.hpp>
 
 #include <atomic>
@@ -128,7 +129,6 @@ namespace librapid
 		void add(const Array &other, Array &res) const;
 
 		Array operator-(const Array &other) const;
-		void sub(const Array &other, Array &res) const;
 
 		std::string str(size_t indent = 0, bool showCommas = false) const;
 
@@ -143,7 +143,7 @@ namespace librapid
 
 			std::cout << "Incrementing at line " << line << ". References is now "
 				<< *m_references << "\n";
-	}
+		}
 	#else
 		inline void initializeCudaStream() const
 		{
@@ -192,7 +192,7 @@ namespace librapid
 				std::cout << "Decrementing at line " << line
 					<< ". References is now " << *m_references << "\n";
 			}
-}
+		}
 	#else
 		inline void decrement()
 		{

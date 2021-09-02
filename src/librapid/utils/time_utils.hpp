@@ -2,7 +2,6 @@
 #define LIBRAPID_TIME_UTILS
 
 #include <librapid/config.hpp>
-#include <chrono>
 
 namespace librapid
 {

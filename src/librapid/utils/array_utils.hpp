@@ -40,6 +40,9 @@ namespace librapid
 			{
 				auto tmp = (A *) malloc(sizeof(A));
 
+				if (tmp == nullptr)
+					throw std::bad_alloc();
+
 			#ifdef LIBRAPID_CUDA_STREAM
 				cudaSafeCall(cudaMemcpyAsync(tmp, data, sizeof(A),
 							 cudaMemcpyDeviceToHost, cudaStream));
