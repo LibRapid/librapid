@@ -1,4 +1,6 @@
 #include <librapid/stringmethods/format_number.hpp>
+#include <string>
+#include <sstream>
 
 namespace librapid
 {

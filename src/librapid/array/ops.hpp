@@ -6,6 +6,7 @@
 #include <librapid/array/extent.hpp>
 #include <librapid/array/stride.hpp>
 #include <librapid/autocast/autocast.hpp>
+#include <functional>
 
 namespace librapid
 {
@@ -15,7 +16,6 @@ namespace librapid
 		{
 			const char *name = "add";
 			const char *kernel = R"V0G0N(
-					// if (tid < size) c[tid] = a[tid] + b[tid];
 					c = a + b;
 				)V0G0N";
 
@@ -28,9 +28,8 @@ namespace librapid
 
 		struct Sub
 		{
-			const char *name = "add";
+			const char *name = "sub";
 			const char *kernel = R"V0G0N(
-					// if (tid < size) c[kernelIndex] = a[kernelIndex] - b[kernelIndex];
 					c = a - b;
 				)V0G0N";
 
@@ -38,6 +37,34 @@ namespace librapid
 			inline auto operator()(A a, B b) const
 			{
 				return a - b;
+			}
+		};
+
+		struct Mul
+		{
+			const char *name = "mul";
+			const char *kernel = R"V0G0N(
+					c = a * b;
+				)V0G0N";
+
+			template<typename A, typename B>
+			inline auto operator()(A a, B b) const
+			{
+				return a * b;
+			}
+		};
+
+		struct Div
+		{
+			const char *name = "div";
+			const char *kernel = R"V0G0N(
+					c = a / b;
+				)V0G0N";
+
+			template<typename A, typename B>
+			inline auto operator()(A a, B b) const
+			{
+				return a / b;
 			}
 		};
 	}
