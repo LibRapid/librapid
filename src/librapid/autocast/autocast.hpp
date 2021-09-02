@@ -81,9 +81,9 @@ namespace librapid
 				return true;
 			case Datatype::UINT64:
 				return true;
+			default:
+				return false;
 		}
-
-		return false;
 	}
 
 	inline bool isUnsigned(Datatype t)
@@ -112,6 +112,8 @@ namespace librapid
 				return false;
 			case Datatype::UINT64:
 				return true;
+			default:
+				return false;
 		}
 
 		return false;

@@ -23,7 +23,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		ESIterator() = default;
+		ESIterator();
 
 		/**
 		 * \rst
@@ -32,12 +32,9 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		ESIterator(pointer start)
-		{
-			m_ptr = start;
-		}
+		ESIterator(pointer start);
 
-		~ESIterator() = default;
+		~ESIterator();
 
 		/**
 		 * \rst
@@ -46,7 +43,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		ESIterator &operator=(const ESIterator &other) = default;
+		ESIterator &operator=(const ESIterator &other);
 
 		/**
 		 * \rst
@@ -55,11 +52,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		ESIterator &operator=(pointer ptr)
-		{
-			m_ptr = ptr;
-			return *this;
-		}
+		ESIterator &operator=(pointer ptr);
 
 		/**
 		 * \rst
@@ -70,10 +63,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		operator bool() const
-		{
-			return m_ptr ? true : false;
-		}
+		operator bool() const;
 
 		/**
 		 * \rst
@@ -83,10 +73,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		bool operator==(const ESIterator &other) const
-		{
-			return m_ptr == other.getConstPointer();
-		}
+		bool operator==(const ESIterator &other) const;
 
 		/**
 		 * \rst
@@ -96,10 +83,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		bool operator!=(const ESIterator &other) const
-		{
-			return m_ptr != other.getConstPointer();
-		}
+		bool operator!=(const ESIterator &other) const;
 
 		/**
 		 * \rst
@@ -108,11 +92,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		ESIterator &operator+=(const differenceType &movement)
-		{
-			m_ptr += movement;
-			return (*this);
-		}
+		ESIterator &operator+=(const differenceType &movement);
 
 		/**
 		 * \rst
@@ -121,11 +101,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		ESIterator &operator-=(const differenceType &movement)
-		{
-			m_ptr -= movement;
-			return (*this);
-		}
+		ESIterator &operator-=(const differenceType &movement);
 
 		/**
 		 * \rst
@@ -134,11 +110,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		ESIterator &operator++()
-		{
-			++m_ptr;
-			return (*this);
-		}
+		ESIterator &operator++();
 
 		/**
 		 * \rst
@@ -147,11 +119,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		ESIterator &operator--()
-		{
-			--m_ptr;
-			return (*this);
-		}
+		ESIterator &operator--();
 
 		/**
 		 * \rst
@@ -160,12 +128,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		ESIterator operator++(int)
-		{
-			auto temp(*this);
-			++m_ptr;
-			return temp;
-		}
+		ESIterator operator++(int);
 
 		/**
 		 * \rst
@@ -174,12 +137,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		ESIterator operator--(int)
-		{
-			auto temp(*this);
-			--m_ptr;
-			return temp;
-		}
+		ESIterator operator--(int);
 
 		/**
 		 * \rst
@@ -189,10 +147,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		ESIterator operator+(const differenceType &movement) const
-		{
-			return ESIterator(m_ptr + movement);
-		}
+		ESIterator operator+(const differenceType &movement) const;
 
 		/**
 		 * \rst
@@ -202,10 +157,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		ESIterator operator-(const differenceType &movement) const
-		{
-			return ESIterator(m_ptr - movement);
-		}
+		ESIterator operator-(const differenceType &movement) const;
 
 		/**
 		 * \rst
@@ -214,10 +166,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		differenceType operator-(const ESIterator &rawIterator) const
-		{
-			return std::distance(rawIterator.getPointer(), getPointer());
-		}
+		differenceType operator-(const ESIterator &rawIterator) const;
 
 		/**
 		 * \rst
@@ -226,10 +175,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		reference operator*()
-		{
-			return *m_ptr;
-		}
+		reference operator*();
 
 		/**
 		* \rst
@@ -238,10 +184,7 @@ namespace librapid
 		*
 		* \endrst
 		*/
-		const reference operator*() const
-		{
-			return *m_ptr;
-		}
+		const reference operator*() const;
 
 		pointer operator->()
 		{
@@ -255,10 +198,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		const pointer getConstPointer() const
-		{
-			return m_ptr;
-		}
+		const pointer getConstPointer() const;
 
 		/**
 		 * \rst
@@ -267,10 +207,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		pointer getPointer() const
-		{
-			return m_ptr;
-		}
+		pointer getPointer() const;
 
 	private:
 		pointer m_ptr = nullptr;
