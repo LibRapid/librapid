@@ -18,15 +18,12 @@ namespace librapid
 	Array Array::operator+(const Array &other) const
 	{
 		// Add two arrays together
-		if (!(m_stride.isTrivial() && m_stride.isContiguous()))
-			throw std::runtime_error("Yeah, you can't do this yet");
-
-		// if (m_location != other.m_location)
-		// 	throw std::runtime_error("Can't do this either, unfortunately");
-
 		Accelerator newLoc = max(m_location, other.m_location);
 		Datatype newType = max(m_dtype, other.m_dtype);
 		Array res(m_extent, newType, newLoc);
+
+		if (!(m_stride.isTrivial() && m_stride.isContiguous()))
+			throw std::runtime_error("Yeah, you can't do this yet");
 
 		AUTOCAST_BINARY(imp::multiarrayBinaryOpTrivial, makeVoidPtr(),
 						other.makeVoidPtr(), res.makeVoidPtr(),
@@ -98,5 +95,5 @@ namespace librapid
 			free(tmp);
 		}
 	#endif
+		}
 	}
-}

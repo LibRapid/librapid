@@ -81,28 +81,42 @@ namespace librapid
 		/**
 		 * \rst
 		 *
-		 * Set one Array equal to another.
+		 * Set one Array equal to a value.
 		 *
 		 * If this Array on is invalid (i.e. it was created using the default
-		 * constructor), the array will be initialized and have the values of
-		 * ``other`` copied into it.
+		 * constructor), the array will be initialized and the relevant data
+		 * will be copied into it.
 		 *
-		 * If, on the other hand, this Array is already initialized and is *not* a
-		 * direct subscript of another Array instance (e.g. `myArray[0]`), then the
-		 * shapes of both arrays will be compared; if they are the same, the data
-		 * from ``other`` will be copied directly into the existing memory of this
-		 * Array. If this Array *is* a direct subscript and the shapes are not
-		 * exactly equal, an error will be thrown.
+		 * If the left-hand-side of the operation is another Array instance, the
+		 * data from that array will be copied into this array. If the arrays are
+		 * identical in terms of their Extent, the data will be copied, otherwise
+		 * this array will be recreated with the correct size.
 		 *
-		 * Parameters
-		 * ----------
+		 * .. Attention::
+		 *		There is a single exception to this, which occurs when this array is
+		 *		a direct subscript of another (e.g. ``myArray[0]``). If this is the
+		 *		case, the left-hand-side of this operation *must* have the same
+		 *		extent, otherwise an error will be thrown
 		 *
-		 * other: ``Array``
-		 *		The Array object to become equal to
+		 * If, the left-hand-side of this operation is a scalar value, this Array
+		 * *must* be zero-dimensional.
 		 *
 		 * \endrst
 		 */
 		Array &operator=(const Array &other);
+		// Array &operator=(bool val);
+		// Array &operator=(int8_t val);
+		// Array &operator=(uint8_t val);
+		// Array &operator=(int16_t val);
+		// Array &operator=(uint16_t val);
+		Array &operator=(int32_t val);
+		// Array &operator=(uint32_t val);
+		// Array &operator=(int64_t val);
+		// Array &operator=(uint64_t val);
+		// Array &operator=(float val);
+		// Array &operator=(double val);
+		// Array &operator=(const Complex<float> &val);
+		// Array &operator=(const Complex<double> &val);
 
 		~Array();
 
@@ -129,6 +143,8 @@ namespace librapid
 		void add(const Array &other, Array &res) const;
 
 		Array operator-(const Array &other) const;
+
+		void transpose(const Extent &order = Extent());
 
 		std::string str(size_t indent = 0, bool showCommas = false) const;
 
@@ -244,7 +260,8 @@ namespace librapid
 							  bool stripMiddle, bool autoStrip,
 							  std::pair<lr_int, lr_int> &longest) const;
 
-	private:
+		// private:
+	public:
 		Accelerator m_location = Accelerator::CPU;
 		Datatype m_dtype = Datatype::NONE;
 

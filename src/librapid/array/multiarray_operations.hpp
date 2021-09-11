@@ -212,7 +212,7 @@ namespace librapid
 					}
 					else
 					{
-					#pragma omp parallel for shared(a, b, size, op) num_threads(4) default(none)
+					#pragma omp parallel for shared(a, b, size, op) num_threads(LIBRAPID_ARITHMETIC_THREADS) default(none)
 						for (lr_int i = 0; i < (lr_int) size; ++i)
 							b[i] = (B) op(a[i]);
 					}
@@ -362,14 +362,14 @@ namespace librapid
 					if (aIsScalar)
 					{
 						// Use *a rather than a[i]
-						if (size < 10000)
+						if (size < 2500)
 						{
 							for (size_t i = 0; i < size; ++i)
 								c[i] = (C) op(*a, b[i]);
 						}
 						else
 						{
-						#pragma omp parallel for shared(a, b, c, size, op) num_threads(4) default(none)
+						#pragma omp parallel for shared(a, b, c, size, op) num_threads(LIBRAPID_ARITHMETIC_THREADS) default(none)
 							for (lr_int i = 0; i < (lr_int) size; ++i)
 								c[i] = (C) op(*a, b[i]);
 						}
@@ -377,30 +377,29 @@ namespace librapid
 					else if (bIsScalar)
 					{
 						// Use *b rather than b[i]
-						if (size < 10000)
+						if (size < 2500)
 						{
 							for (size_t i = 0; i < size; ++i)
 								c[i] = (C) op(a[i], *b);
 						}
 						else
 						{
-						#pragma omp parallel for shared(a, b, c, size, op) num_threads(4) default(none)
+						#pragma omp parallel for shared(a, b, c, size, op) num_threads(LIBRAPID_ARITHMETIC_THREADS) default(none)
 							for (lr_int i = 0; i < (lr_int) size; ++i)
 								c[i] = (C) op(a[i], *b);
 						}
 					}
 					else
 					{
-						std::cout << "Debug Point\n";
 						// Use a[i] and b[i]
-						if (size < 10000)
+						if (size < 2500)
 						{
 							for (size_t i = 0; i < size; ++i)
 								c[i] = (C) op(a[i], b[i]);
 						}
 						else
 						{
-						#pragma omp parallel for shared(a, b, c, size, op) num_threads(4) default(none)
+						#pragma omp parallel for shared(a, b, c, size, op) num_threads(LIBRAPID_ARITHMETIC_THREADS) default(none)
 							for (lr_int i = 0; i < (lr_int) size; ++i)
 								c[i] = (C) op(a[i], b[i]);
 						}
@@ -440,12 +439,15 @@ namespace librapid
 					}
 					else
 					{
-					kernel += "const auto &a = arrayA[kernelIndex];\n"
-						"const auto &b = arrayB[kernelIndex];";
+						kernel += "const auto &a = arrayA[kernelIndex];\n"
+							"const auto &b = arrayB[kernelIndex];";
 					}
 
 					kernel += op.kernel;
 					kernel += "\n}\n}";
+
+					// const std::vector<std::string> params = {
+					// };
 
 					static jitify::JitCache kernelCache;
 					jitify::Program program = kernelCache.program(kernel, 0);
