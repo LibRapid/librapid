@@ -42,6 +42,7 @@ namespace librapid
 		m_isTrivial = other.m_isTrivial;
 		m_isContiguous = other.m_isContiguous;
 		m_dims = other.m_dims;
+		m_one = other.m_one;
 
 		for (size_t i = 0; i < m_dims; ++i)
 			m_stride[i] = other.m_stride[i];
@@ -70,6 +71,7 @@ namespace librapid
 		m_dims = other.m_dims;
 		m_isTrivial = other.m_isTrivial;
 		m_isContiguous = other.m_isContiguous;
+		m_one = other.m_one;
 
 		for (size_t i = 0; i < m_dims; ++i)
 		{
@@ -149,6 +151,16 @@ namespace librapid
 		m_isTrivial = checkTrivial();
 	}
 
+	void Stride::reorder(const std::vector<lr_int> &order)
+	{
+		Stride temp = *this;
+
+		for (size_t i = 0; i < order.size(); ++i)
+			m_stride[i] = temp.m_stride[order[i]];
+
+		m_isTrivial = checkTrivial();
+	}
+
 	Stride Stride::subStride(lr_int start, lr_int end) const
 	{
 		if (start == -1) start = 0;
@@ -162,6 +174,8 @@ namespace librapid
 		Stride res(end - start);
 		for (lr_int i = start; i < end; ++i)
 			res.m_stride[i - start] = m_stride[i];
+		res.m_one = m_one;
+		res.m_isTrivial = res.checkTrivial();
 
 		return res;
 	}
@@ -170,6 +184,7 @@ namespace librapid
 	{
 		for (size_t i = 0; i < m_dims; ++i)
 			m_stride[i] *= bytes;
+		m_one = bytes;
 	}
 
 	Stride Stride::scaledBytes(size_t bytes) const
@@ -186,7 +201,7 @@ namespace librapid
 		for (size_t i = 0; i < m_dims; ++i)
 		{
 			if (m_stride[i] <= m_stride[i + 1]) return false;
-			if (m_stride[i] == 1) foundOne = true;
+			if (m_stride[i] == m_one) foundOne = true;
 		}
 
 		return foundOne;
@@ -199,6 +214,7 @@ namespace librapid
 									"dimensions for a contiguity test");
 
 		Stride temp = fromExtent(extent);
+		temp.scaleBytes(m_one);
 		size_t valid = 0;
 
 		for (size_t i = 0; i < m_dims; ++i)

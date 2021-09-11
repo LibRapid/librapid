@@ -96,6 +96,21 @@ namespace librapid
 		}
 
 		/**
+		* \rst
+		*
+		* Convert the Stride object to an std::vector and return the result
+		*
+		* \endrst
+		*/
+		inline std::vector<lr_int> toVec() const
+		{
+			std::vector<lr_int> res(m_dims);
+			for (size_t i = 0; i < m_dims; ++i)
+				res[i] = m_extent[i];
+			return res;
+		}
+
+		/**
 		 * \rst
 		 *
 		 * Returns true if the Extent contains an automatic dimension.
@@ -203,6 +218,7 @@ namespace librapid
 		 * \endrst
 		 */
 		void reorder(const std::vector<size_t> &order);
+		void reorder(const std::vector<lr_int> &order);
 
 		Extent subExtent(lr_int start = -1, lr_int end = -1) const;
 

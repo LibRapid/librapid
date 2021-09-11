@@ -1,4 +1,5 @@
 #include <librapid/array/multiarray.hpp>
+#include <librapid/utils/array_utils.hpp>
 
 namespace librapid
 {
@@ -44,7 +45,7 @@ namespace librapid
 		m_stride = other.m_stride;
 
 		m_isScalar = other.m_isScalar;
-		m_isChild = false;
+		m_isChild = other.m_isChild;
 
 		increment();
 	}
@@ -56,8 +57,22 @@ namespace librapid
 			return *this;
 
 		if (m_references == nullptr)
+		{
 			constructNew(other.m_extent, other.m_stride,
 						 other.m_dtype, other.m_location);
+		}
+		else
+		{
+			// Array already exists, so check if it must be reallocated
+			if (m_extent != other.m_extent)
+			{
+				// Extents are not equal, so memory can not be safely copied
+				decrement();
+				constructNew(other.m_extent, other.m_stride, other.m_dtype,
+							 other.m_location);
+				m_isScalar = other.m_isScalar;
+			}
+		}
 
 		if (m_isChild && m_extent != other.m_extent)
 			throw std::invalid_argument("Cannot set child array with "
@@ -72,13 +87,32 @@ namespace librapid
 
 		// Attempt to copy the data from other into *this
 		if (m_stride.isContiguous() && other.m_stride.isContiguous())
+		{
 			AUTOCAST_MEMCPY(makeVoidPtr(), other.makeVoidPtr(),
 							m_extent.size());
+		}
 		else
+		{
 			throw std::runtime_error("Haven't gotten to this yet...");
+		}
 
-		increment();
+		return *this;
+	}
 
+	Array &Array::operator=(int32_t val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::INT32, Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::INT32,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
 		return *this;
 	}
 

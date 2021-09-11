@@ -33,7 +33,11 @@ namespace librapid
 
 			if (locnA == Accelerator::CPU)
 			{
-				stream << *data;
+				if (std::is_same<A, int8_t>::value ||
+					std::is_same<A, uint8_t>::value)
+					stream << (int) *data;
+				else
+					stream << *data;
 			}
 		#ifdef LIBRAPID_HAS_CUDA
 			else
@@ -50,7 +54,12 @@ namespace librapid
 				cudaSafeCall(cudaMemcpy(tmp, data, sizeof(A), cudaMemcpyDeviceToHost));
 			#endif // LIBRAPID_CUDA_STREAM
 
-				stream << *tmp;
+				if (std::is_same<A, int8_t>::value ||
+					std::is_same<A, uint8_t>::value)
+					stream << (int) *tmp;
+				else
+					stream << *tmp;
+
 				free(tmp);
 			}
 		#endif
@@ -86,7 +95,11 @@ namespace librapid
 
 			if (locnA == Accelerator::CPU)
 			{
-				stream << *data;
+				if (std::is_same<A, int8_t>::value ||
+					std::is_same<A, uint8_t>::value)
+					stream << (int) *data;
+				else
+					stream << *data;
 			}
 		#ifdef LIBRAPID_HAS_CUDA
 			else
@@ -100,7 +113,12 @@ namespace librapid
 				cudaSafeCall(cudaMemcpy(tmp, data, sizeof(A), cudaMemcpyDeviceToHost));
 			#endif // LIBRAPID_CUDA_STREAM
 
-				stream << *tmp;
+				if (std::is_same<A, int8_t>::value ||
+					std::is_same<A, uint8_t>::value)
+					stream << (int) *tmp;
+				else
+					stream << *tmp;
+
 				free(tmp);
 			}
 		#endif
@@ -109,6 +127,28 @@ namespace librapid
 			if (std::is_floating_point<A>::value &&
 				res.find_last_of('.') == std::string::npos)
 				res += ".";
+			}
+
+		template<typename _Ty>
+		void arrayOpEq(void *dataStart, Accelerator location, const _Ty &val)
+		{
+			if (location == Accelerator::CPU)
+			{
+				*((_Ty *) dataStart) = val;
+			}
+			else
+			{
+			#ifdef LIBRAPID_HAS_CUDA
+			#ifdef LIBRAPID_CUDA_STREAM
+				cudaSafeCall(cudaMemcpyAsync((_Ty *) dataStart, &val, sizeof(char),
+							 cudaMemcpyHostToDevice, cudaStream));
+			#else
+				cudaSafeCall(cudaDeviceSynchronize());
+				cudaSafeCall(cudaMemcpy((_Ty *) dataStart, &val, sizeof(char),
+							 cudaMemcpyHostToDevice));
+			#endif // LIBRAPID_CUDA_STREAM
+			#endif // LIBRAPID_HAS_CUDA
+		}
 		}
 	}
 }

@@ -274,6 +274,39 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
 #pragma warning( disable : 6386 )
 #endif
 
+#ifndef LIBRAPID_MALLOC_ALIGN
+#define LIBRAPID_MALLOC_ALIGN 16 // 1024
+#endif
+
+#ifndef LIBRAPID_ARITHMETIC_THREADS
+#define LIBRAPID_ARITHMETIC_THREADS 8
+#endif // LIBRAPID_ARITHMETIC_THREADS
+
+namespace librapid
+{
+	inline void *alignedMalloc(size_t required_bytes,
+							   size_t alignment = LIBRAPID_MALLOC_ALIGN)
+	{
+		// return malloc(required_bytes);
+		void *p1; // original block
+		void **p2; // aligned block
+		size_t offset = alignment - 1 + sizeof(void *);
+
+		if ((p1 = (void *) malloc(required_bytes + offset)) == nullptr)
+			return nullptr;
+
+		p2 = (void **) (((size_t) (p1) +offset) & ~(alignment - 1));
+		p2[-1] = p1;
+		return p2;
+	}
+
+	inline void alignedFree(void *p)
+	{
+		// free(p);
+		free(((void **) p)[-1]);
+	}
+}
+
 // Uncomment this to log Array reference changes
 // #define LIBRAPID_REFCHECK
 
