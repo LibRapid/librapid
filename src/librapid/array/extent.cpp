@@ -178,6 +178,14 @@ namespace librapid
 			m_extent[i] = temp.m_extent[order[i]];
 	}
 
+	void Extent::reorder(const std::vector<lr_int> &order)
+	{
+		Extent temp = *this;
+
+		for (size_t i = 0; i < order.size(); ++i)
+			m_extent[i] = temp.m_extent[order[i]];
+	}
+
 	std::string Extent::str() const
 	{
 		std::stringstream res;

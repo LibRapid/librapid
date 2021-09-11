@@ -230,3 +230,19 @@ target_include_directories(${python_module_name} PRIVATE
 						  )
 
 install(TARGETS ${python_module_name} DESTINATION .)
+
+# Set the compiler to use maximum optimisations (SPEED!!!!)
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+	# using Clang
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	# using GCC
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+	# using Intel C++
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+	# using Visual Studio C++
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 -openmp:experimental")
+endif()

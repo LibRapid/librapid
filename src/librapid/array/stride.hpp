@@ -105,6 +105,21 @@ namespace librapid
 		/**
 		 * \rst
 		 *
+		 * Convert the Stride object to an std::vector and return the result
+		 *
+		 * \endrst
+		 */
+		inline std::vector<lr_int> toVec() const
+		{
+			std::vector<lr_int> res(m_dims);
+			for (size_t i = 0; i < m_dims; ++i)
+				res[i] = m_stride[i];
+			return res;
+		}
+
+		/**
+		 * \rst
+		 *
 		 * Return whether or not the Stride is trivial or not.
 		 *
 		 * .. Hint::
@@ -191,6 +206,7 @@ namespace librapid
 		 * \endrst
 		 */
 		void reorder(const std::vector<size_t> &order);
+		void reorder(const std::vector<lr_int> &order);
 
 		/**
 		 * \rst
@@ -271,6 +287,7 @@ namespace librapid
 		size_t m_dims = 0;
 		bool m_isTrivial = true; // Trivial stride
 		bool m_isContiguous = true; // Data is contiguous in memory
+		size_t m_one = 1; // Value representing a step of 1 element through memory
 	};
 }
 
