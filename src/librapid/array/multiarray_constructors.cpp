@@ -56,7 +56,13 @@ namespace librapid
 		if (other.m_references == nullptr)
 			return *this;
 
-		if (m_references == nullptr)
+		if (m_isChild && m_extent != other.m_extent)
+		{
+			throw std::invalid_argument("Cannot set child array with "
+										+ m_extent.str() + " to "
+										+ other.m_extent.str());
+		}
+		else if (m_references == nullptr)
 		{
 			constructNew(other.m_extent, other.m_stride,
 						 other.m_dtype, other.m_location);
@@ -64,7 +70,7 @@ namespace librapid
 		else
 		{
 			// Array already exists, so check if it must be reallocated
-			if (m_extent != other.m_extent)
+			if (!m_isChild && m_extent != other.m_extent)
 			{
 				// Extents are not equal, so memory can not be safely copied
 				decrement();
@@ -73,11 +79,6 @@ namespace librapid
 				m_isScalar = other.m_isScalar;
 			}
 		}
-
-		if (m_isChild && m_extent != other.m_extent)
-			throw std::invalid_argument("Cannot set child array with "
-										+ m_extent.str() + " to "
-										+ other.m_extent.str());
 
 		if (!m_isChild)
 		{
@@ -99,6 +100,91 @@ namespace librapid
 		return *this;
 	}
 
+	Array &Array::operator=(bool val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::BOOL, Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::BOOL,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
+		return *this;
+	}
+
+	Array &Array::operator=(int8_t val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::INT8, Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::INT8,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
+		return *this;
+	}
+
+	Array &Array::operator=(uint8_t val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::UINT8, Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::UINT8,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
+		return *this;
+	}
+
+	Array &Array::operator=(int16_t val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::INT16, Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::INT16,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
+		return *this;
+	}
+
+	Array &Array::operator=(uint16_t val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::UINT16, Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::UINT16,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
+		return *this;
+	}
+
 	Array &Array::operator=(int32_t val)
 	{
 		if (m_isChild && !m_isScalar)
@@ -111,6 +197,127 @@ namespace librapid
 			constructNew(Extent(1), Stride(1), Datatype::INT32, Accelerator::CPU);
 		}
 		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::INT32,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
+		return *this;
+	}
+
+	Array &Array::operator=(uint32_t val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::UINT32, Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::UINT32,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
+		return *this;
+	}
+
+	Array &Array::operator=(int64_t val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::INT64, Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::INT64,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
+		return *this;
+	}
+
+	Array &Array::operator=(uint64_t val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::UINT64, Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::UINT64,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
+		return *this;
+	}
+
+	Array &Array::operator=(float val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::FLOAT32, Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::FLOAT32,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
+		return *this;
+	}
+
+	Array &Array::operator=(double val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::FLOAT64, Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::FLOAT64,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
+		return *this;
+	}
+
+	Array &Array::operator=(const Complex<float> &val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::CFLOAT32,
+						 Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::CFLOAT32,
+						Accelerator::CPU}, 1);
+		m_isScalar = true;
+		return *this;
+	}
+
+	Array &Array::operator=(const Complex<double> &val)
+	{
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild)
+		{
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::CFLOAT64,
+						 Accelerator::CPU);
+		}
+		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::CFLOAT64,
 						Accelerator::CPU}, 1);
 		m_isScalar = true;
 		return *this;

@@ -226,13 +226,14 @@ namespace librapid
 					kernel += "__constant__ int LIBRAPID_MAX_DIMS = "
 						+ std::to_string(LIBRAPID_MAX_DIMS) + ";";
 					kernel += R"V0G0N(
-					template<typename A, typename B, typename C>
+					#include <stdint.h>
+
+					template<typename A, typename B>
 					__global__
 					void unaryFunc(const A *__restrict arrayA,
-								   const B *__restrict arrayB,
-								   C *__restrict arrayC, size_t size)
+								   B *__restrict arrayB, size_t size)
 					{
-						unsigned int kernelIndex = blockDim.x * blockIdx.x
+						int64_t kernelIndex = blockDim.x * blockIdx.x
 												   + threadIdx.x;
 
 						if (kernelIndex < size) {
@@ -278,6 +279,203 @@ namespace librapid
 			}
 		#endif // LIBRAPID_HAS_CUDA
 		}
+
+		template<typename A, typename B, class FUNC>
+		void multiarrayUnaryOpComplex(Accelerator locnA, Accelerator locnB,
+									  A *__restrict a, B *__restrict b,
+									  size_t size, const Extent &extent,
+									  const Stride &strideA, const Stride &strideB,
+									  const FUNC &op)
+		{
+			if (locnA != locnB)
+			{
+				// Copy A to be on the same accelerator as B
+				A *tempA = nullptr;
+				int freeMode = makeSameAccelerator(locnA, locnB, a, &tempA, size);
+				multiarrayUnaryOpComplex(locnB, locnB, tempA, b, size,
+										 extent, strideA, strideB, op);
+				freeWithMode(tempA, freeMode);
+			}
+			else
+			{
+				if (locnA == Accelerator::CPU)
+				{
+					// Iterate over the array using it's stride and extent
+					lr_int coord[LIBRAPID_MAX_DIMS]{};
+
+					// Counters
+					lr_int idim = 0;
+					lr_int ndim = extent.ndim();
+
+					// Create pointers here so repeated function calls
+					// are not needed
+					static lr_int rawExtent[LIBRAPID_MAX_DIMS];
+					static lr_int rawStrideA[LIBRAPID_MAX_DIMS];
+					static lr_int rawStrideB[LIBRAPID_MAX_DIMS];
+
+					for (size_t i = 0; i < ndim; ++i)
+					{
+						rawExtent[ndim - i - 1] = extent.raw()[i];
+						rawStrideA[ndim - i - 1] = strideA[i] / sizeof(A);
+						rawStrideB[ndim - i - 1] = strideB[i] / sizeof(B);
+					}
+
+					do
+					{
+						*b = (B) op(*a);
+
+						for (idim = 0; idim < ndim; ++idim)
+						{
+							if (++coord[idim] == rawExtent[idim])
+							{
+								coord[idim] = 0;
+								a = a - (rawExtent[idim] - 1) * rawStrideA[idim];
+								b = b - (rawExtent[idim] - 1) * rawStrideB[idim];
+							}
+							else
+							{
+								a = a + rawStrideA[idim];
+								b = b + rawStrideB[idim];
+								break;
+							}
+						}
+					} while (idim < ndim);
+				}
+			#ifdef LIBRAPID_HAS_CUDA
+				else
+				{
+					using jitify::reflection::Type;
+
+					// Buffers for extent and strides
+					int64_t dims = extent.ndim();
+					int64_t *deviceExtent, *deviceStrideA, *deviceStrideB;
+
+				#ifdef LIBRAPID_CUDA_STREAM
+					cudaSafeCall(cudaMallocAsync(&deviceExtent, sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaStream));
+					cudaSafeCall(cudaMallocAsync(&deviceStrideA, sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaStream));
+					cudaSafeCall(cudaMallocAsync(&deviceStrideB, sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaStream));
+
+					cudaSafeCall(cudaMemcpyAsync(deviceExtent, extent.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice, cudaStream));
+					cudaSafeCall(cudaMemcpyAsync(deviceStrideA, strideA.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice, cudaStream));
+					cudaSafeCall(cudaMemcpyAsync(deviceStrideB, strideB.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice, cudaStream));
+				#else
+					cudaSafeCall(cudaMalloc(&deviceExtent, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
+					cudaSafeCall(cudaMalloc(&deviceStrideA, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
+					cudaSafeCall(cudaMalloc(&deviceStrideB, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
+
+					cudaSafeCall(cudaMemcpy(deviceExtent, extent.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
+					cudaSafeCall(cudaMemcpy(deviceStrideA, strideA.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
+					cudaSafeCall(cudaMemcpy(deviceStrideB, strideB.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
+				#endif // LIBRAPID_CUDA_STREAM
+
+					std::string kernel = "unaryKernel\n";
+					kernel += "const size_t LIBRAPID_MAX_DIMS = "
+						+ std::to_string(LIBRAPID_MAX_DIMS) + ";";
+					kernel += R"V0G0N(
+					#include <stdint.h>
+
+					__device__
+					inline size_t indexToIndex(uint64_t index,
+											   const int64_t *__restrict shape,
+											   const int64_t *__restrict strides,
+											   uint64_t dims, size_t size)
+					{
+						int64_t products[LIBRAPID_MAX_DIMS];
+						int64_t prod = 1;
+						for (int64_t i = dims - 1; i >= 0; --i)
+						{
+							products[i] = prod;
+							prod *= shape[i];
+						}
+
+						int64_t tmp = index;
+						int64_t res = 0;
+						int64_t tmp2;
+
+						for (int64_t i = 0; i < dims; ++i)
+						{
+							tmp2 = tmp / products[i];
+							res = res + (strides[i] / size) * tmp2;
+							tmp = tmp - tmp2 * products[i];
+						}
+
+						return res;
+					}
+
+					template<typename A, typename B>
+					__global__
+					void unaryFunc(const A *__restrict arrayA,
+								   B *__restrict arrayB, size_t size,
+								   const int64_t extent[LIBRAPID_MAX_DIMS],
+								   const int64_t strideA[LIBRAPID_MAX_DIMS],
+								   const int64_t strideB[LIBRAPID_MAX_DIMS],
+								   int64_t dims)
+					{
+						uint32_t _kernelIndex = blockDim.x * blockIdx.x
+											    + threadIdx.x;
+
+						uint32_t kernelIndexA = indexToIndex(_kernelIndex, extent, strideA, dims, sizeof(A));
+						uint32_t kernelIndexB = indexToIndex(_kernelIndex, extent, strideB, dims, sizeof(B));
+
+						if (_kernelIndex < size) {
+							const auto &a = arrayA[kernelIndexA];
+							auto &b = arrayB[kernelIndexB];
+					)V0G0N";
+
+					kernel += op.kernel;
+					kernel += "\n}\n}";
+
+					static jitify::JitCache kernelCache;
+					jitify::Program program = kernelCache.program(kernel, 0);
+
+					unsigned int threadsPerBlock, blocksPerGrid;
+
+					// Use 1 to 256 threads per block
+					if (size < 256)
+					{
+						threadsPerBlock = (unsigned int) size;
+						blocksPerGrid = 1;
+					}
+					else
+					{
+						threadsPerBlock = 256;
+						blocksPerGrid = ceil(double(size) / double(threadsPerBlock));
+					}
+
+					dim3 grid(blocksPerGrid);
+					dim3 block(threadsPerBlock);
+
+				#ifdef LIBRAPID_CUDA_STREAM
+					jitifyCall(program.kernel("unaryFunc")
+							   .instantiate(Type<A>(), Type<B>())
+							   .configure(grid, block, 0, cudaStream)
+							   .launch(a, b, size, deviceExtent,
+							   deviceStrideA,
+							   deviceStrideB,
+							   dims));
+				#else
+					jitifyCall(program.kernel("unaryFunc")
+							   .instantiate(Type<A>(), Type<B>())
+							   .configure(grid, block)
+							   .launch(a, b, size, deviceExtent,
+							   deviceStrideA,
+							   deviceStrideB,
+							   dims));
+				#endif // LIBRAPID_CUDA_STREAM
+
+				#ifdef LIBRAPID_CUDA_STREAM
+					cudaSafeCall(cudaFreeAsync(deviceExtent, cudaStream));
+					cudaSafeCall(cudaFreeAsync(deviceStrideA, cudaStream));
+					cudaSafeCall(cudaFreeAsync(deviceStrideB, cudaStream));
+				#else
+					cudaSafeCall(cudaFree(deviceExtent));
+					cudaSafeCall(cudaFree(deviceStrideA));
+					cudaSafeCall(cudaFree(deviceStrideB));
+				#endif // LIBRAPID_CUDA_STREAM
+				}
+			}
+		#endif // LIBRAPID_HAS_CUDA
+				}
 
 		/**
 		 * \rst
@@ -482,9 +680,9 @@ namespace librapid
 				#endif // LIBRAPID_CUDA_STREAM
 				}
 			#endif // LIBRAPID_HAS_CUDA
+				}
 			}
 		}
-	}
-}
+			}
 
 #endif // LIBRAPID_MUTLIARRAY_OPERATIONS

@@ -103,6 +103,18 @@ namespace librapid
 		}
 
 		/**
+		* \rst
+		* 
+		* Return a pointer to the raw data of this stride
+		* 
+		* \endrst
+		*/
+		inline const lr_int *__restrict raw() const
+		{
+			return m_stride;
+		}
+
+		/**
 		 * \rst
 		 *
 		 * Convert the Stride object to an std::vector and return the result

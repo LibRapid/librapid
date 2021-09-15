@@ -81,55 +81,130 @@ PYBIND11_MODULE(_librapid, module)
 	module.def("round", [](double val, lr_int places) { return librapid::round(val, places); }, py::arg("val"), py::arg("places") = 0);
 	module.def("roundSigFig", [](double val, lr_int figs) { return librapid::roundSigFig(val, figs); }, py::arg("val"), py::arg("figs") = 3);
 
-	 // The librapid Extent object
-	 py::class_<librapid::Extent>(module, "Extent")
-	 	.def(py::init<>())
-	 	.def(py::init<const std::vector<lr_int> &>())
-	 	.def(py::init<const librapid::Extent &>())
-	 	.def(py::init<py::args>())
+	// Create the Datatype enum
+	py::enum_<librapid::Datatype>(module, "Datatype")
+		.value("NONE", librapid::Datatype::NONE)
+		.value("VALIDNONE", librapid::Datatype::VALIDNONE)
+		.value("BOOL", librapid::Datatype::BOOL)
+		.value("INT8", librapid::Datatype::INT8)
+		.value("UINT8", librapid::Datatype::UINT8)
+		.value("INT16", librapid::Datatype::INT16)
+		.value("UINT16", librapid::Datatype::UINT16)
+		.value("INT32", librapid::Datatype::INT32)
+		.value("UINT32", librapid::Datatype::UINT32)
+		.value("INT64", librapid::Datatype::INT64)
+		.value("UINT64", librapid::Datatype::UINT64)
+		.value("FLOAT32", librapid::Datatype::FLOAT32)
+		.value("FLOAT64", librapid::Datatype::FLOAT64)
+		.value("CFLOAT32", librapid::Datatype::CFLOAT32)
+		.value("CFLOAT64", librapid::Datatype::CFLOAT64);
 
-	 	.def("__getitem__", [](const librapid::Extent &e, lr_int index) { return e[index]; })
-	 	.def("__setitem__", [](librapid::Extent &e, lr_int index, lr_int val) { e[index] = val; })
+	// Create the Accelerator enum
+	py::enum_<librapid::Accelerator>(module, "Accelerator")
+		.value("CPU", librapid::Accelerator::CPU)
+		.value("GPU", librapid::Accelerator::GPU);
 
-	 	.def_property_readonly("ndim", &librapid::Extent::ndim)
+	module.def("isIntegral", &librapid::isIntegral);
+	module.def("isUnsigned", &librapid::isUnsigned);
+	module.def("isFloating", &librapid::isFloating);
+	module.def("isComplex", &librapid::isComplex);
+	module.def("datatypeBytes", &librapid::datatypeBytes);
+	module.def("datatypeToString", &librapid::datatypeToString);
+
+	// The librapid Extent object
+	py::class_<librapid::Extent>(module, "Extent")
+		.def(py::init<>())
+		.def(py::init<const std::vector<lr_int> &>())
+		.def(py::init<const librapid::Extent &>())
+		.def(py::init<py::args>())
+
+		.def("__getitem__", [](const librapid::Extent &e, lr_int index) { return e[index]; })
+		.def("__setitem__", [](librapid::Extent &e, lr_int index, lr_int val) { e[index] = val; })
+
+		.def_property_readonly("ndim", &librapid::Extent::ndim)
 		.def_property_readonly("containsAutomatic", &librapid::Extent::containsAutomatic)
 		.def_property_readonly("size", &librapid::Extent::size)
-	 	.def("reorder", [](librapid::Extent &e, const std::vector<size_t> &order) { e.reorder(order); })
-	 	.def("fixed", &librapid::Extent::fixed)
+		.def("reorder", [](librapid::Extent &e, const std::vector<size_t> &order) { e.reorder(order); })
+		.def("fixed", &librapid::Extent::fixed)
 
-	 	.def("__len__", &librapid::Extent::ndim)
-	 	.def("__iter__", [](const librapid::Extent &e) { return py::make_iterator(e.begin(), e.end()); }, py::keep_alive<0, 1>())
-	 	.def("__eq__", &librapid::Extent::operator==)
-	 	.def("__ne__", &librapid::Extent::operator!=)
-	 	.def("__str__", &librapid::Extent::str)
-	 	.def("__repr__", [](const librapid::Extent &e) { return "<librapid." + e.str() + ">"; });
+		.def("__len__", &librapid::Extent::ndim)
+		.def("__iter__", [](const librapid::Extent &e) { return py::make_iterator(e.begin(), e.end()); }, py::keep_alive<0, 1>())
+		.def("__eq__", &librapid::Extent::operator==)
+		.def("__ne__", &librapid::Extent::operator!=)
+		.def("__str__", &librapid::Extent::str)
+		.def("__repr__", [](const librapid::Extent &e) { return "<librapid." + e.str() + ">"; });
 
-	 // The librapid Stride object
-	 py::class_<librapid::Stride>(module, "Stride")
-	 	.def(py::init<>())
-	 	.def(py::init<std::vector<lr_int>>())
-	 	.def(py::init<lr_int>())
-	 	.def(py::init<const librapid::Stride &>())
-	 	.def(py::init<py::args>())
-	 	.def_static("fromExtent", &librapid::Stride::fromExtent)
+	// The librapid Stride object
+	py::class_<librapid::Stride>(module, "Stride")
+		.def(py::init<>())
+		.def(py::init<std::vector<lr_int>>())
+		.def(py::init<lr_int>())
+		.def(py::init<const librapid::Stride &>())
+		.def(py::init<py::args>())
+		.def_static("fromExtent", &librapid::Stride::fromExtent)
 
-	 	.def("__getitem__", [](const librapid::Stride &s, lr_int index) { return s[index]; })
-	 	.def("__setitem__", [](librapid::Stride &s, lr_int index, lr_int val) { s[index] = val; })
+		.def("__getitem__", [](const librapid::Stride &s, lr_int index) { return s[index]; })
+		.def("__setitem__", [](librapid::Stride &s, lr_int index, lr_int val) { s[index] = val; })
 
-	 	.def_property_readonly("ndim", &librapid::Stride::ndim)
-	 	.def_property_readonly("isTrivial", &librapid::Stride::isTrivial)
-	 	.def_property_readonly("isContiguous", &librapid::Stride::isContiguous)
-	 	.def("reorder", [](librapid::Stride &s, const std::vector<size_t> &order) { s.reorder(order); })
+		.def_property_readonly("ndim", &librapid::Stride::ndim)
+		.def_property_readonly("isTrivial", &librapid::Stride::isTrivial)
+		.def_property_readonly("isContiguous", &librapid::Stride::isContiguous)
+		.def("reorder", [](librapid::Stride &s, const std::vector<size_t> &order) { s.reorder(order); })
 
-	 	.def("__len__", &librapid::Stride::ndim)
+		.def("__len__", &librapid::Stride::ndim)
 
-	 	.def("__iter__", [](const librapid::Stride &s) { return py::make_iterator(s.begin(), s.end()); }, py::keep_alive<0, 1>())
+		.def("__iter__", [](const librapid::Stride &s) { return py::make_iterator(s.begin(), s.end()); }, py::keep_alive<0, 1>())
 
-	 	.def("__eq__", &librapid::Stride::operator==)
-	 	.def("__str__", &librapid::Stride::str)
-	 	.def("__repr__", [](const librapid::Stride &s) { return "<librapid." + s.str() + ">"; });
+		.def("__eq__", &librapid::Stride::operator==)
+		.def("__str__", &librapid::Stride::str)
+		.def("__repr__", [](const librapid::Stride &s) { return "<librapid." + s.str() + ">"; });
 
 	// The librapid ndarray object
+	py::class_<librapid::Array>(module, "Array")
+		.def(py::init<>())
+		.def(py::init<const librapid::Extent &, librapid::Datatype, librapid::Accelerator>(), py::arg("extent"), py::arg("dtype") = librapid::Datatype::FLOAT64, py::arg("location") = librapid::Accelerator::CPU)
+		.def(py::init<const librapid::Extent &, const std::string &, librapid::Accelerator>(), py::arg("extent"), py::arg("dtype") = "float64", py::arg("location") = librapid::Accelerator::CPU)
+		.def(py::init<const librapid::Extent &, librapid::Datatype, const std::string &>(), py::arg("extent"), py::arg("dtype") = librapid::Datatype::FLOAT64, py::arg("location") = "CPU")
+		.def(py::init<const librapid::Extent &, const std::string &, const std::string &>(), py::arg("extent"), py::arg("dtype") = "float64", py::arg("location") = "CPU")
+		.def(py::init<const librapid::Array &>())
+
+		.def_property_readonly("ndim", &librapid::Array::ndim)
+		.def_property_readonly("extent", &librapid::Array::extent)
+		.def_property_readonly("stride", &librapid::Array::stride)
+		.def_property_readonly("dtype", &librapid::Array::dtype)
+		.def_property_readonly("location", &librapid::Array::location)
+		.def("__len__", &librapid::Array::ndim)
+
+		.def("__getitem__", [](const librapid::Array &arr, lr_int index) { return arr[index]; })
+		.def("__setitem__", [](librapid::Array &arr, lr_int index, int64_t val) { arr[index] = val; })
+		.def("__setitem__", [](librapid::Array &arr, lr_int index, double val) { arr[index] = val; })
+		.def("__setitem__", [](librapid::Array &arr, lr_int index, const librapid::Complex<double> &val) { arr[index] = val; })
+		.def("__setitem__", [](librapid::Array &arr, lr_int index, const librapid::Array &val) { arr[index] = val; })
+
+		.def("fill", [](librapid::Array &arr, double val) { arr.fill(val); })
+		.def("fill", [](librapid::Array &arr, const librapid::Complex<double> &val) { arr.fill(val); })
+
+		.def("__add__", &librapid::Array::operator+)
+		.def("__sub__", &librapid::Array::operator-)
+
+		.def("transpose", [](librapid::Array &arr, const librapid::Extent &order) { arr.transpose(order); }, py::arg("order") = librapid::Extent())
+
+		.def("str", [](const librapid::Array &arr, uint64_t indent, bool showCommas) { return arr.str(indent, showCommas); }, py::arg("indent") = 0, py::arg("showCommas") = false)
+		.def("__str__", [](const librapid::Array &arr) { return arr.str(); })
+		.def("__repr__", [](const librapid::Array &arr) {
+			int64_t rows, cols;
+
+			std::string locnStr = (arr.location() == librapid::Accelerator::CPU ? "CPU" : "GPU");
+
+			std::string res = "<librapid.Array ";
+			res += arr.str(16, true, rows, cols) + "\n\n";
+			res += std::string(16, ' ');
+			res += "dtype=\"" + librapid::datatypeToString(arr.dtype()) + "\"\n";
+			res += std::string(16, ' ');
+			res += "location=\"" + locnStr + "\">";
+
+			return res;
+		});
 	
 	// Colours
 	py::module_ color = module.def_submodule("color", "A simple text color library");
@@ -198,8 +273,12 @@ PYBIND11_MODULE(_librapid, module)
 	color.def("back", [](const librapid::HSL &col) { return librapid::back(col); });
 	color.def("back", [](int r, int g, int b) { return librapid::back(r, g, b); });
 
-	// py::implicitly_convertible<long long, librapid::basic_ndarray<double>>();
-	// py::implicitly_convertible<double, librapid::basic_ndarray<double>>();
-	// py::implicitly_convertible<py::tuple, librapid::basic_ndarray<double>>();
-	// py::implicitly_convertible<py::list, librapid::basic_ndarray<double>>();
+	py::implicitly_convertible<int64_t, librapid::Array>();
+	py::implicitly_convertible<double, librapid::Array>();
+	py::implicitly_convertible<librapid::Complex<double>, librapid::Array>();
+	py::implicitly_convertible<py::tuple, librapid::Array>();
+	py::implicitly_convertible<py::list, librapid::Array>();
+
+	py::implicitly_convertible<py::tuple, librapid::Extent>();
+	py::implicitly_convertible<py::list, librapid::Extent>();
 }
