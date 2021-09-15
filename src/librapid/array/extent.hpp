@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <ostream>
+#include <vector>
 
 namespace librapid
 {
@@ -93,6 +94,18 @@ namespace librapid
 		inline lr_int size() const
 		{
 			return m_size;
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Return a pointer to the raw data of this extent
+		 *
+		 * \endrst
+		 */
+		inline const int64_t *__restrict raw() const
+		{
+			return m_extent;
 		}
 
 		/**

@@ -188,6 +188,198 @@ namespace librapid
 		return 0;
 	}
 
+	inline std::string datatypeToString(const Datatype &t)
+	{
+		switch (t)
+		{
+			case Datatype::NONE:
+				return "NONE";
+			case Datatype::VALIDNONE:
+				return "VALIDNONE";
+			case Datatype::BOOL:
+				return "BOOL";
+			case Datatype::INT8:
+				return "INT8";
+			case Datatype::UINT8:
+				return "UINT8";
+			case Datatype::INT16:
+				return "INT16";
+			case Datatype::UINT16:
+				return "UINT16";
+			case Datatype::INT32:
+				return "INT32";
+			case Datatype::UINT32:
+				return "UINT32";
+			case Datatype::INT64:
+				return "INT64";
+			case Datatype::UINT64:
+				return "UINT64";
+			case Datatype::FLOAT32:
+				return "FLOAT32";
+			case Datatype::FLOAT64:
+				return "FLOAT64";
+			case Datatype::CFLOAT32:
+				return "CFLOAT32";
+			case Datatype::CFLOAT64:
+				return "CFLOAT64";
+		}
+
+		return "UNKNOWN";
+	}
+
+	inline Datatype stringToDatatype(const std::string &str)
+	{
+		// Force the string to be lower case
+		std::string temp = str;
+		std::transform(temp.begin(), temp.end(), temp.begin(),
+					   [](unsigned char c)
+		{
+			return std::tolower(c);
+		});
+
+		// Different types and their potential string representations
+		static std::vector<std::string> noneStr = {
+			"n",
+			"none",
+			"null",
+			"void"
+		};
+
+		static std::vector<std::string> boolStr = {
+			"b",
+			"bool",
+			"boolean"
+		};
+
+		static std::vector<std::string> int8Str = {
+			"int8",
+			"i8",
+			"short"
+		};
+
+		static std::vector<std::string> uint8Str = {
+			"uint8",
+			"ui8",
+			"unsigned short"
+		};
+
+		static std::vector<std::string> int16Str = {
+			"int16",
+			"i16",
+			"int"
+		};
+
+		static std::vector<std::string> uint16Str = {
+			"uint16",
+			"ui16",
+			"unsigned int"
+		};
+
+		static std::vector<std::string> int32Str = {
+			"int32",
+			"i32",
+			"long"
+		};
+
+		static std::vector<std::string> uint32Str = {
+			"uint32",
+			"ui32",
+			"unsigned long"
+		};
+
+		static std::vector<std::string> int64Str = {
+			"i",
+			"int64",
+			"i64",
+			"long long"
+		};
+
+		static std::vector<std::string> uint64Str = {
+			"ui",
+			"uint64",
+			"ui64",
+			"unsigned long long"
+		};
+
+		static std::vector<std::string> float32Str = {
+			"float32",
+			"f32",
+			"float"
+		};
+
+		static std::vector<std::string> float64Str = {
+			"f",
+			"float64",
+			"f64",
+			"double"
+		};
+
+		static std::vector<std::string> cfloat32Str = {
+			"cfloat32",
+			"cf32",
+			"complex float"
+		};
+
+		static std::vector<std::string> cfloat64Str = {
+			"c",
+			"cfloat64",
+			"cf64",
+			"complex double"
+		};
+
+		static std::map<Datatype, std::vector<std::string>> types = {
+			{Datatype::NONE, noneStr},
+			{Datatype::BOOL, boolStr},
+			{Datatype::INT8, int8Str},
+			{Datatype::UINT8, uint8Str},
+			{Datatype::INT16, int16Str},
+			{Datatype::UINT16, uint16Str},
+			{Datatype::INT32, int32Str},
+			{Datatype::UINT32, uint32Str},
+			{Datatype::INT64, int64Str},
+			{Datatype::UINT64, uint64Str},
+			{Datatype::FLOAT32, float32Str},
+			{Datatype::FLOAT64, float64Str},
+			{Datatype::CFLOAT32, cfloat32Str},
+			{Datatype::CFLOAT64, cfloat64Str}
+		};
+
+		// Locate the datatype
+		for (const auto &dtypePair : types)
+		{
+			for (const auto &name : dtypePair.second)
+			{
+				if (name == temp)
+					return dtypePair.first;
+			}
+		}
+
+		throw std::invalid_argument("Name \"" + str + "\" is invalid. See "
+									"documentation for details and valid inputs");
+	}
+
+	inline Accelerator stringToAccelerator(const std::string &str)
+	{
+		// Force the string to be lower case
+		std::string temp = str;
+		std::transform(temp.begin(), temp.end(), temp.begin(),
+					   [](unsigned char c)
+		{
+			return std::tolower(c);
+		});
+
+		if (temp == "cpu")
+			return Accelerator::CPU;
+
+	#ifdef LIBRAPID_HAS_CUDA
+		if (temp == "gpu")
+			return Accelerator::GPU;
+	#endif // LIBRAPID_HAS_CUDA
+
+		throw std::invalid_argument("Accelerator \"" + str + "\" is invalid. See "
+									"documentation for details and valid inputs");
+	}
+
 #ifdef LIBRAPID_HAS_CUDA
 #ifdef LIBRAPID_CUDA_STREAM
 	extern cudaStream_t cudaStream;

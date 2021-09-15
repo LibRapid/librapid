@@ -22,12 +22,42 @@ namespace librapid
 		Datatype newType = max(m_dtype, other.m_dtype);
 		Array res(m_extent, newType, newLoc);
 
-		if (!(m_stride.isTrivial() && m_stride.isContiguous()))
-			throw std::runtime_error("Yeah, you can't do this yet");
+		if ((m_stride.isTrivial() && m_stride.isContiguous() &&
+			other.m_stride.isTrivial() && other.m_stride.isContiguous()) ||
+			(m_stride == other.m_stride))
+		{
+			// Trivial
+			AUTOCAST_BINARY(imp::multiarrayBinaryOpTrivial, makeVoidPtr(),
+							other.makeVoidPtr(), res.makeVoidPtr(),
+							false, false, m_extent.size(), ops::Add());
 
-		AUTOCAST_BINARY(imp::multiarrayBinaryOpTrivial, makeVoidPtr(),
-						other.makeVoidPtr(), res.makeVoidPtr(),
-						false, false, m_extent.size(), ops::Add());
+			// Update the result stride too
+			res.m_stride = m_stride;
+		}
+		else
+		{
+			// Not trivial, so use advanced method
+
+			// AUTOCAST_BINARY(imp::multiarrayBinaryOpComplex, makeVoidPtr(),
+			// 				other.makeVoidPtr(), res.makeVoidPtr(),
+			// 				false, false, m_extent.size(), m_extent,
+			// 				m_stride, other.m_stride, ops::Add());
+
+			/*
+
+			template<typename A, typename B, class FUNC>
+			void multiarrayUnaryOpComplex(Accelerator locnA, Accelerator locnB,
+			A *__restrict a, B *__restrict b,
+			size_t size, const Extent &extent,
+			const Stride &strideA, const Stride &strideB,
+			const FUNC &op)
+
+			*/
+
+			AUTOCAST_UNARY(imp::multiarrayUnaryOpComplex, makeVoidPtr(),
+						   res.makeVoidPtr(), m_extent.size(), m_extent,
+						   m_stride, res.m_stride, ops::TestOp());
+		}
 
 		return res;
 	}
@@ -95,5 +125,5 @@ namespace librapid
 			free(tmp);
 		}
 	#endif
-		}
 	}
+}

@@ -44,6 +44,7 @@ pybind11_add_module(${python_module_name} MODULE
 					"src/librapid/array/multiarray_constructors.cpp"
 					"src/librapid/array/multiarray_string_methods.cpp"
 					"src/librapid/array/multiarray_indexing.cpp"
+					"src/librapid/array/multiarray_manipulation.cpp"
 					# Math library
 					"src/librapid/math/core_math.cpp"
 					# String methods
@@ -213,7 +214,7 @@ if (${CUDAToolkit_FOUND})
 							 )
 
 		add_compile_definitions(LIBRAPID_HAS_CUDA)
-		add_compile_definitions(LIBRAPID_CUDA_STREAMS)
+		add_compile_definitions(LIBRAPID_CUDA_STREAM)
 	else()
 		message(WARNING "CUDA was found but is not being linked against (Value <USE_CUDA> is " ${USE_CUDA} ")")
 	endif()
@@ -244,5 +245,5 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	# using Visual Studio C++
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 -openmp:experimental")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
 endif()
