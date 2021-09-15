@@ -39,19 +39,170 @@ namespace librapid
 		 * Accelerator. The Extent defines the number of dimensions of the Array,
 		 * as well as the size of each dimension.
 		 *
+		 * String values can also be passed as input parameters for the datatype
+		 * and accelerator.
+		 *
+		 * The datatype can be constructed in many ways. For example, all of "i32",
+		 * "int32" and "int" represent a 32-bit signed integer.
+		 *
+		 * All possible names are listed below. A green label means that name is
+		 * safe to use. Yellow represents a value which should be avoided if
+		 * possible, and red means the value is strongly advised not to be used.
+		 *
+		 * *Note: These warnings are more for readability than anything else*
+		 *
+		 * .. panels::
+		 *		:container: container pb-4
+		 *		:column: col-lg-6 col-md-6 col-sm-6 col-xs-12 p-2
+		 *
+		 *		None Type
+		 *
+		 *		:badge:`n, badge-danger`
+		 *		:badge:`none, badge-success`
+		 *		:badge:`null, badge-warning`
+		 *		:badge:`void, badge-warning`
+		 *
+		 *		---
+		 *
+		 *		Boolean
+		 *
+		 *		:badge:`b, badge-danger`
+		 *		:badge:`bool, badge-success`
+		 *		:badge:`boolean, badge-success`
+		 *
+		 *		---
+		 *
+		 *		Signed 8-bit integer
+		 *
+		 *		:badge:`i8, badge-success`
+		 *		:badge:`int8, badge-success`
+		 *		:badge:`short, badge-warning`
+		 *
+		 *		---
+		 *
+		 *		Unsigned 8-bit integer
+		 *
+		 *		:badge:`ui8, badge-success`
+		 *		:badge:`uint8, badge-success`
+		 *		:badge:`unsigned short, badge-warning`
+		 *
+		 * 		---
+		 *
+		 *		Signed 16-bit integer
+		 *
+		 *		:badge:`i16, badge-success`
+		 *		:badge:`int16, badge-success`
+		 *		:badge:`int, badge-warning`
+		 *
+		 * 		---
+		 *
+		 *		Unsigned 16-bit integer
+		 *
+		 *		:badge:`ui16, badge-success`
+		 *		:badge:`uint16, badge-success`
+		 *		:badge:`unsigned int, badge-warning`
+		 *
+		 * 		---
+		 *
+		 *		Signed 32-bit integer
+		 *
+		 *		:badge:`i32, badge-success`
+		 *		:badge:`int32, badge-success`
+		 *		:badge:`long, badge-warning`
+		 *
+		 * 		---
+		 *
+		 *		Unsigned 32-bit integer
+		 *
+		 *		:badge:`ui32, badge-success`
+		 *		:badge:`uint32, badge-success`
+		 *		:badge:`unsigned long, badge-warning`
+		 *
+		 * 		---
+		 *
+		 *		Signed 64-bit integer
+		 *
+		 *		:badge:`i, badge-danger`
+		 *		:badge:`i64, badge-success`
+		 *		:badge:`int64, badge-success`
+		 *		:badge:`long long, badge-warning`
+		 *
+		 * 		---
+		 *
+		 *		Unsigned 64-bit integer
+		 *
+		 *		:badge:`ui, badge-danger`
+		 *		:badge:`ui64, badge-success`
+		 *		:badge:`uint64, badge-success`
+		 *		:badge:`unsigned long long, badge-warning`
+		 *
+		 * 		---
+		 *
+		 *		32-bit floating point
+		 *
+		 *		:badge:`f32, badge-success`
+		 *		:badge:`float32, badge-success`
+		 *		:badge:`float, badge-warning`
+		 *
+		 * 		---
+		 *
+		 *		64-bit floating point
+		 *
+		 *		:badge:`f, badge-danger`
+		 *		:badge:`f64, badge-success`
+		 *		:badge:`float64, badge-success`
+		 *		:badge:`double, badge-warning`
+		 *
+		 * 		---
+		 *
+		 *		Complex 32-bit floating point
+		 *
+		 *		:badge:`cf32, badge-success`
+		 *		:badge:`cfloat32, badge-success`
+		 *		:badge:`complex float, badge-warning`
+		 *
+		 * 		---
+		 *
+		 *		Complex 64-bit floating point
+		 *
+		 *		:badge:`c, badge-danger`
+		 *		:badge:`cf64, badge-success`
+		 *		:badge:`cfloat64, badge-success`
+		 *		:badge:`complex double, badge-warning`
+		 *
+		 * The accelerator value must be "CPU" or "GPU".
+		 *
 		 * Parameters
 		 * ----------
 		 *
 		 * extent: ``Extent``
 		 *		The dimensions for the Array
-		 * dtype: ``Datatype = FLOAT32``
+		 * dtype: ``Datatype = FLOAT64``
 		 *		The datatype for the Array
 		 * location: ``Accelerator = CPU``
+		 *		Where the Array will be stored. GPU is only allowed if CUDA support
+		 *		is enabled at compiletime
 		 *
 		 * \endrst
 		 */
-		Array(const Extent &extent, Datatype dtype = Datatype::FLOAT32,
+		Array(const Extent &extent, Datatype dtype = Datatype::FLOAT64,
 			  Accelerator location = Accelerator::CPU);
+
+		inline Array(const Extent &extent, std::string dtype = "float64",
+					 Accelerator location = Accelerator::CPU)
+			: Array(extent, stringToDatatype(dtype), location)
+		{}
+
+		inline Array(const Extent &extent, Datatype dtype = Datatype::FLOAT64,
+					 std::string accelerator = "cpu")
+			: Array(extent, dtype, stringToAccelerator(accelerator))
+		{}
+
+		inline Array(const Extent &extent, std::string dtype = "float64",
+					 std::string accelerator = "cpu")
+			: Array(extent, stringToDatatype(dtype),
+					stringToAccelerator(accelerator))
+		{}
 
 		/**
 		 * \rst
@@ -98,33 +249,94 @@ namespace librapid
 		 *		case, the left-hand-side of this operation *must* have the same
 		 *		extent, otherwise an error will be thrown
 		 *
-		 * If, the left-hand-side of this operation is a scalar value, this Array
-		 * *must* be zero-dimensional.
-		 *
 		 * \endrst
 		 */
 		Array &operator=(const Array &other);
-		// Array &operator=(bool val);
-		// Array &operator=(int8_t val);
-		// Array &operator=(uint8_t val);
-		// Array &operator=(int16_t val);
-		// Array &operator=(uint16_t val);
+		Array &operator=(bool val);
+		Array &operator=(int8_t val);
+		Array &operator=(uint8_t val);
+		Array &operator=(int16_t val);
+		Array &operator=(uint16_t val);
 		Array &operator=(int32_t val);
-		// Array &operator=(uint32_t val);
-		// Array &operator=(int64_t val);
-		// Array &operator=(uint64_t val);
-		// Array &operator=(float val);
-		// Array &operator=(double val);
-		// Array &operator=(const Complex<float> &val);
-		// Array &operator=(const Complex<double> &val);
+		Array &operator=(uint32_t val);
+		Array &operator=(int64_t val);
+		Array &operator=(uint64_t val);
+		Array &operator=(float val);
+		Array &operator=(double val);
+		Array &operator=(const Complex<float> &val);
+		Array &operator=(const Complex<double> &val);
 
 		~Array();
 
+		/**
+		 * \rst
+		 *
+		 * Return the number of dimensions of the Array
+		 *
+		 * \endrst
+		 */
 		inline size_t ndim() const
 		{
 			return m_extent.ndim();
 		}
 
+		/**
+		 * \rst
+		 *
+		 * Return the Extent of the Array
+		 *
+		 * \endrst
+		 */
+		inline Extent extent() const
+		{
+			return m_extent;
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Return the Stride of the Array
+		 *
+		 * \endrst
+		 */
+		inline Stride stride() const
+		{
+			return m_stride;
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Return the datatype of the Array
+		 *
+		 * \endrst
+		 */
+		inline Datatype dtype() const
+		{
+			return m_dtype;
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Return the accelerator of the Array
+		 *
+		 * \endrst
+		 */
+		inline Accelerator location() const
+		{
+			return m_location;
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Return a sub-array or scalar value at a particular index in the Array. If
+		 * the index is below zero or is greater than the size of the first
+		 * dimension of the Array, an exception will be thrown
+		 *
+		 * \endrst
+		 */
 		inline const Array operator[](lr_int index) const
 		{
 			return subscript(index);
@@ -136,6 +348,13 @@ namespace librapid
 			return (nonConst) subscript(index);
 		}
 
+		/**
+		 * \rst
+		 *
+		 * Fill the every element of the Array with a particular value
+		 *
+		 * \endrst
+		 */
 		void fill(double val);
 		void fill(const Complex<double> &val);
 
@@ -146,7 +365,14 @@ namespace librapid
 
 		void transpose(const Extent &order = Extent());
 
-		std::string str(size_t indent = 0, bool showCommas = false) const;
+		inline std::string str(size_t indent = 0, bool showCommas = false) const
+		{
+			static int64_t tmpRows, tmpCols;
+			return str(indent, showCommas, tmpRows, tmpCols);
+		}
+
+		std::string str(size_t indent, bool showCommas,
+						int64_t &printedRows, int64_t &printedCols) const;
 
 	private:
 	#ifdef LIBRAPID_REFCHECK
@@ -258,7 +484,8 @@ namespace librapid
 
 		std::string stringify(lr_int indent, bool showCommas,
 							  bool stripMiddle, bool autoStrip,
-							  std::pair<lr_int, lr_int> &longest) const;
+							  std::pair<lr_int, lr_int> &longest,
+							  int64_t &printedRows, int64_t &printedCols) const;
 
 		// private:
 	public:

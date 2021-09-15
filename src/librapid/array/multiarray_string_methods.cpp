@@ -75,8 +75,12 @@ namespace librapid
 
 	std::string Array::stringify(lr_int indent, bool showCommas,
 								 bool stripMiddle, bool autoStrip,
-								 std::pair<lr_int, lr_int> &longest) const
+								 std::pair<lr_int, lr_int> &longest,
+								 int64_t &printedRows, int64_t &printedCols) const
 	{
+		printedRows = 0;
+		printedCols = 0;
+
 		// Non-initialized arrays
 		if (m_references == nullptr)
 			return "[NONE]";
@@ -120,12 +124,15 @@ namespace librapid
 				{
 					i = m_extent.size() - 3;
 					res += "... ";
+					printedCols += 4;
 				}
 
+				int64_t tmpRows, tmpCols;
 				std::string tempVal = subscript(i).stringify(indent + 1,
 															 showCommas,
 															 stripMiddle,
-															 false, longest);
+															 false, longest,
+															 tmpRows, tmpCols);
 
 				// Locate the decimal point and calculate
 				// the number of digits before and after it
@@ -148,12 +155,17 @@ namespace librapid
 				addBefore = longest.first - before;
 				addAfter = longest.second - after;
 
-				res += std::string(addBefore, ' ');
-				res += tempVal;
-				res += std::string(addAfter, ' ');
+				std::string formatted;
+				formatted += std::string(addBefore, ' ');
+				formatted += tempVal;
+				formatted += std::string(addAfter, ' ');
 
-				if (i + 1 < m_extent.size()) res += showCommas ? ", " : " ";
+				if (i + 1 < m_extent.size()) formatted += showCommas ? ", " : " ";
+
+				printedCols += formatted.length();
+				res += formatted;
 			}
+
 			return res + "]";
 		}
 
@@ -168,22 +180,34 @@ namespace librapid
 			{
 				i = m_extent[0] - 3;
 				res += "...\n" + std::string(indent + 1, ' ');
+				printedRows++;
 			}
 
+			int64_t tmpRows, tmpCols;
 			res += subscript(i).stringify(indent + 1, showCommas,
-										  stripMiddle, false, longest);
+										  stripMiddle, false, longest,
+										  tmpRows, tmpCols);
+
+			printedRows++;
+			printedCols = tmpCols;
+
 			if (i + 1 < m_extent[0])
 			{
 				res += std::string((ndim() > 2) + 1, '\n');
 				res += std::string(indent + 1, ' ');
 			}
 		}
+
+		printedCols += ndim() * 2;
+
 		return res + "]";
 	}
 
-	std::string Array::str(size_t indent, bool showCommas) const
+	std::string Array::str(size_t indent, bool showCommas,
+						   int64_t &printedRows, int64_t &printedCols) const
 	{
 		std::pair<lr_int, lr_int> longest;
-		return stringify(indent, showCommas, false, true, longest);
+		return stringify(indent, showCommas, false, true, longest,
+						 printedRows, printedCols);
 	}
 }

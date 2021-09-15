@@ -13,6 +13,11 @@ When a new array is created with entirely new data, the memory
 itself is contiguous (i.e. in a single block) in memory, meaning
 it's incredibly fast to access and do calculations with.
 
+Any function which takes a librapid `ndarray` object can also
+take a python list, tuple or scalar, which will be automatically
+cast to the ndarray type. This makes your code more concise and
+accelerates development.
+
 .. Hint::
 	If you want to use an array that isn't contiguous (e.g. it
 	was reshaped or is part of a larger array), the ``clone()``

@@ -48,6 +48,7 @@ extensions = [
 	"sphinx.ext.coverage",
 	"sphinx.ext.autosectionlabel",
 	"sphinx.ext.intersphinx",
+	"sphinx_panels",
 	"breathe",
 	"exhale",
 	"numpydoc"
@@ -65,7 +66,7 @@ breathe_default_project = "librapid"
 # Custom inputs to doxygen generator
 doxygen_inputs = """
 
-INPUT                 = ../../librapid
+INPUT                 = ../../src/librapid
 	   
 ENABLE_PREPROCESSING  = YES
 MACRO_EXPANSION       = YES
@@ -73,16 +74,19 @@ EXPAND_ONLY_PREDEF    = NO
 PREDEFINED            += LR_INLINE=
 PREDEFINED            += __restrict=
 PREDEFINED            += LIBRAPID_MAX_DIMS=32
+PREDEFINED            += __host__=
+PREDEFINED            += __device__=
+PREDEFINED            += __global__=
 
 """
 
 # Set up the exhale extension
 exhale_args = {
 	# These arguments are required
-	"containmentFolder":	 "./api",
-	"rootFileName":		  "index.rst",
-	"rootFileTitle":		 "LibRapid",
-	"doxygenStripFromPath":  "..",
+	"containmentFolder":	"./api",
+	"rootFileName":			"index.rst",
+	"rootFileTitle":		"LibRapid",
+	"doxygenStripFromPath":	"..",
 	# Suggested optional arguments
 	"createTreeView":		True,
 	# TIP: if using the sphinx-bootstrap-theme, you need
@@ -107,7 +111,6 @@ exclude_patterns = []
 # a list of builtin themes.
 
 # html_theme = "furo"
-# html_theme = "default"
 html_theme = "pydata_sphinx_theme"
 
 html_logo = "../../branding/LibRapid small space.png"
