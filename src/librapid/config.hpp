@@ -288,6 +288,7 @@ namespace librapid
 							   size_t alignment = LIBRAPID_MALLOC_ALIGN)
 	{
 		// return malloc(required_bytes);
+
 		void *p1; // original block
 		void **p2; // aligned block
 		size_t offset = alignment - 1 + sizeof(void *);
@@ -303,6 +304,7 @@ namespace librapid
 	inline void alignedFree(void *p)
 	{
 		// free(p);
+
 		free(((void **) p)[-1]);
 	}
 }

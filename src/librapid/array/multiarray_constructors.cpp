@@ -50,6 +50,136 @@ namespace librapid
 		increment();
 	}
 
+	Array::Array(bool val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::BOOL, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::BOOL));
+		m_isScalar = true;
+		*((bool *) m_dataStart) = val;
+	}
+
+	Array::Array(int8_t val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::INT8, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::INT8));
+		m_isScalar = true;
+		*((int8_t *) m_dataStart) = val;
+	}
+
+	Array::Array(uint8_t val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::UINT8, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::UINT8));
+		m_isScalar = true;
+		*((uint8_t *) m_dataStart) = val;
+	}
+
+	Array::Array(int16_t val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::INT16, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::INT16));
+		m_isScalar = true;
+		*((int16_t *) m_dataStart) = val;
+	}
+
+	Array::Array(uint16_t val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::UINT16, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::UINT16));
+		m_isScalar = true;
+		*((uint16_t *) m_dataStart) = val;
+	}
+
+	Array::Array(int32_t val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::INT32, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::INT32));
+		m_isScalar = true;
+		*((int32_t *) m_dataStart) = val;
+	}
+
+	Array::Array(uint32_t val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::UINT32, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::UINT32));
+		m_isScalar = true;
+		*((uint32_t *) m_dataStart) = val;
+	}
+
+	Array::Array(int64_t val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::INT64, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::INT64));
+		m_isScalar = true;
+		*((int64_t *) m_dataStart) = val;
+	}
+
+	Array::Array(uint64_t val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::UINT64, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::UINT64));
+		m_isScalar = true;
+		*((uint64_t *) m_dataStart) = val;
+	}
+
+	Array::Array(float val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::FLOAT32, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::FLOAT32));
+		m_isScalar = true;
+		*((float *) m_dataStart) = val;
+	}
+
+	Array::Array(double val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::FLOAT64, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::FLOAT64));
+		m_isScalar = true;
+		*((double *) m_dataStart) = val;
+	}
+
+	Array::Array(const Complex<float> &val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::CFLOAT32, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::CFLOAT32));
+		m_isScalar = true;
+		*((Complex<float> *) m_dataStart) = val;
+	}
+
+	Array::Array(const Complex<double> &val)
+	{
+		initializeCudaStream();
+
+		constructNew(Extent(1), Stride(1), Datatype::CFLOAT64, Accelerator::CPU);
+		m_stride.scaleBytes(datatypeBytes(Datatype::CFLOAT64));
+		m_isScalar = true;
+		*((Complex<double> *) m_dataStart) = val;
+	}
+
 	Array &Array::operator=(const Array &other)
 	{
 		// Quick return if possible
@@ -62,7 +192,8 @@ namespace librapid
 										+ m_extent.str() + " to "
 										+ other.m_extent.str());
 		}
-		else if (m_references == nullptr)
+
+		if (m_references == nullptr)
 		{
 			constructNew(other.m_extent, other.m_stride,
 						 other.m_dtype, other.m_location);
@@ -70,7 +201,8 @@ namespace librapid
 		else
 		{
 			// Array already exists, so check if it must be reallocated
-			if (!m_isChild && m_extent != other.m_extent)
+			if (!m_isChild && m_extent != other.m_extent ||
+				m_dtype != other.m_dtype)
 			{
 				// Extents are not equal, so memory can not be safely copied
 				decrement();
