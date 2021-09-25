@@ -232,6 +232,29 @@ namespace librapid
 		/**
 		 * \rst
 		 *
+		 * Create an array from a scalar value. The array will be created on host
+		 * memory (even if CUDA is enabled) and will be stored as a zero-dimensional
+		 * Array.
+		 *
+		 * \endrst
+		 */
+		Array(bool val);
+		Array(int8_t val);
+		Array(uint8_t val);
+		Array(int16_t val);
+		Array(uint16_t val);
+		Array(int32_t val);
+		Array(uint32_t val);
+		Array(int64_t val);
+		Array(uint64_t val);
+		Array(float val);
+		Array(double val);
+		Array(const Complex<float> &val);
+		Array(const Complex<double> &val);
+
+		/**
+		 * \rst
+		 *
 		 * Set one Array equal to a value.
 		 *
 		 * If this Array on is invalid (i.e. it was created using the default
@@ -275,7 +298,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline size_t ndim() const
+		inline int64_t ndim() const
 		{
 			return m_extent.ndim();
 		}
@@ -303,6 +326,16 @@ namespace librapid
 		{
 			return m_stride;
 		}
+
+		/**
+		 * \rst
+		 *
+		 * For C++ use only -- returns a VoidPtr object containing the memory
+		 * location of the Array's data, its datatype and its location
+		 *
+		 * \endrst
+		 */
+		VoidPtr makeVoidPtr() const;
 
 		/**
 		 * \rst
@@ -358,10 +391,13 @@ namespace librapid
 		void fill(double val);
 		void fill(const Complex<double> &val);
 
-		Array operator+(const Array &other) const;
-		void add(const Array &other, Array &res) const;
+		Array copy(const Datatype &dtype = Datatype::NONE,
+				   const Accelerator &locn = Accelerator::NONE);
 
+		Array operator+(const Array &other) const;
 		Array operator-(const Array &other) const;
+		Array operator*(const Array &other) const;
+		Array operator/(const Array &other) const;
 
 		void transpose(const Extent &order = Extent());
 
@@ -373,6 +409,133 @@ namespace librapid
 
 		std::string str(size_t indent, bool showCommas,
 						int64_t &printedRows, int64_t &printedCols) const;
+
+		// Arithmetic Operatons that *NEED* to be templated (therefore cannot be in
+		// *.cpp file
+		template<class FUNC>
+		static inline void applyUnaryOp(const Array &a, Array &res,
+										const FUNC &operation)
+		{
+			// Operate on one array and store the result in another array
+
+			if (res.m_references == nullptr || res.m_extent != a.m_extent)
+			{
+				throw std::invalid_argument("Cannot operate on array with "
+											+ a.m_extent.str()
+											+ " and store the result in "
+											+ res.m_extent.str());
+			}
+
+			auto ptrA = a.makeVoidPtr();
+			auto ptrC = res.makeVoidPtr();
+			auto size = a.m_extent.size();
+
+			if (a.m_stride.isTrivial() && a.m_stride.isContiguous())
+			{
+				// Trivial
+				AUTOCAST_UNARY(imp::multiarrayUnaryOpTrivial, ptrA, ptrC,
+							   size, operation);
+			}
+			else
+			{
+				// Not trivial, so use advanced method
+				AUTOCAST_UNARY(imp::multiarrayUnaryOpComplex, ptrA, ptrC, size,
+							   a.m_extent, a.m_stride, res.m_stride, operation);
+			}
+
+			res.m_isScalar = a.m_isScalar;
+		}
+
+		template<class FUNC>
+		static inline void applyBinaryOp(const Array &a, const Array &b, Array &res,
+										 const FUNC &operation)
+		{
+			// Operate on two arrays and store the result in another array
+
+			if (a.m_extent != b.m_extent)
+				throw std::invalid_argument("Cannot operate on two arrays with "
+											+ a.m_extent.str() + " and "
+											+ b.m_extent.str());
+			if (res.m_references == nullptr || res.m_extent != a.m_extent)
+			{
+				throw std::invalid_argument("Cannot operate on two arrays with "
+											+ a.m_extent.str()
+											+ " and store the result in "
+											+ b.m_extent.str());
+			}
+
+			auto ptrA = a.makeVoidPtr();
+			auto ptrB = b.makeVoidPtr();
+			auto ptrC = res.makeVoidPtr();
+			auto size = a.m_extent.size();
+
+			if ((a.m_stride.isTrivial() && a.m_stride.isContiguous() &&
+				b.m_stride.isTrivial() && b.m_stride.isContiguous()) ||
+				(a.m_stride == b.m_stride))
+			{
+				// Trivial
+				AUTOCAST_BINARY(imp::multiarrayBinaryOpTrivial, ptrA, ptrB, ptrC,
+								a.m_isScalar, b.m_isScalar, size, operation);
+
+				// Update the result stride too
+				res.m_stride = a.m_stride;
+			}
+			else
+			{
+				// Not trivial, so use advanced method
+				AUTOCAST_BINARY(imp::multiarrayBinaryOpComplex, ptrA, ptrB, ptrC,
+								a.m_isScalar, b.m_isScalar, size, a.m_extent,
+								a.m_stride, b.m_stride, res.m_stride, operation);
+			}
+
+			if (a.m_isScalar && b.m_isScalar)
+				res.m_isScalar = true;
+		}
+
+		template<class FUNC>
+		static inline Array applyBinaryOp(const Array &a, const Array &b,
+										  const FUNC &operation)
+		{
+			// Operate on two arrays and return the result
+
+			if (!(a.m_isScalar || b.m_isScalar) && a.m_extent != b.m_extent)
+				throw std::invalid_argument("Cannot operate on two arrays with "
+											+ a.m_extent.str() + " and "
+											+ b.m_extent.str());
+
+			Accelerator newLoc = max(a.m_location, b.m_location);
+			Datatype newType = max(a.m_dtype, b.m_dtype);
+			Array res(a.m_extent, newType, newLoc);
+
+			auto ptrA = a.makeVoidPtr();
+			auto ptrB = b.makeVoidPtr();
+			auto ptrC = res.makeVoidPtr();
+			auto size = a.m_extent.size();
+
+			if ((a.m_stride.isTrivial() && a.m_stride.isContiguous() &&
+				b.m_stride.isTrivial() && b.m_stride.isContiguous()) ||
+				(a.m_stride == b.m_stride))
+			{
+				// Trivial
+				AUTOCAST_BINARY(imp::multiarrayBinaryOpTrivial, ptrA, ptrB, ptrC,
+								a.m_isScalar, b.m_isScalar, size, operation);
+
+				// Update the result stride too
+				res.m_stride = a.m_stride;
+			}
+			else
+			{
+				// Not trivial, so use advanced method
+				AUTOCAST_BINARY(imp::multiarrayBinaryOpComplex, ptrA, ptrB, ptrC,
+								a.m_isScalar, b.m_isScalar, size, a.m_extent,
+								a.m_stride, b.m_stride, res.m_stride, operation);
+			}
+
+			if (a.m_isScalar && b.m_isScalar)
+				res.m_isScalar = true;
+
+			return res;
+		}
 
 	private:
 	#ifdef LIBRAPID_REFCHECK
@@ -452,11 +615,6 @@ namespace librapid
 		}
 	#endif // LIBRAPID_REFCHECK
 
-		inline VoidPtr makeVoidPtr() const
-		{
-			return {m_dataStart, m_dtype, m_location};
-		}
-
 		void constructNew(const Extent &e, const Stride &s,
 						  const Datatype &dtype,
 						  const Accelerator &location);
@@ -487,8 +645,7 @@ namespace librapid
 							  std::pair<lr_int, lr_int> &longest,
 							  int64_t &printedRows, int64_t &printedCols) const;
 
-		// private:
-	public:
+	private:
 		Accelerator m_location = Accelerator::CPU;
 		Datatype m_dtype = Datatype::NONE;
 
@@ -506,6 +663,16 @@ namespace librapid
 		bool m_isScalar = false; // Array is a scalar value
 		bool m_isChild = false; // Array is a direct subscript of another (e.g. x[0])
 	};
+
+	void add(const Array &a, const Array &b, Array &res);
+	void sub(const Array &a, const Array &b, Array &res);
+	void mul(const Array &a, const Array &b, Array &res);
+	void div(const Array &a, const Array &b, Array &res);
+
+	Array add(const Array &a, const Array &b);
+	Array sub(const Array &a, const Array &b);
+	Array mul(const Array &a, const Array &b);
+	Array div(const Array &a, const Array &b);
 }
 
 #ifdef LIBRAPID_REFCHECK

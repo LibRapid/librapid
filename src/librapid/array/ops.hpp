@@ -12,17 +12,17 @@ namespace librapid
 {
 	namespace ops
 	{
-		struct TestOp
+		struct Copy
 		{
-			const char *name = "add";
+			const char *name = "copy";
 			const char *kernel = R"V0G0N(
-					b = a * 2;
-				)V0G0N";
+				b = a;
+			)V0G0N";
 
 			template<typename A>
 			inline auto operator()(A a) const
 			{
-				return a * 2;
+				return a;
 			}
 		};
 

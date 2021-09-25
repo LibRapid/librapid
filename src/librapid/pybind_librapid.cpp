@@ -167,6 +167,8 @@ PYBIND11_MODULE(_librapid, module)
 		.def(py::init<const librapid::Extent &, librapid::Datatype, const std::string &>(), py::arg("extent"), py::arg("dtype") = librapid::Datatype::FLOAT64, py::arg("location") = "CPU")
 		.def(py::init<const librapid::Extent &, const std::string &, const std::string &>(), py::arg("extent"), py::arg("dtype") = "float64", py::arg("location") = "CPU")
 		.def(py::init<const librapid::Array &>())
+		.def(py::init<int64_t>())
+		.def(py::init<double>())
 
 		.def_property_readonly("ndim", &librapid::Array::ndim)
 		.def_property_readonly("extent", &librapid::Array::extent)
@@ -186,6 +188,8 @@ PYBIND11_MODULE(_librapid, module)
 
 		.def("__add__", &librapid::Array::operator+)
 		.def("__sub__", &librapid::Array::operator-)
+		.def("__mul__", &librapid::Array::operator*)
+		.def("__div__", &librapid::Array::operator/)
 
 		.def("transpose", [](librapid::Array &arr, const librapid::Extent &order) { arr.transpose(order); }, py::arg("order") = librapid::Extent())
 
@@ -205,73 +209,83 @@ PYBIND11_MODULE(_librapid, module)
 
 			return res;
 		});
+
+	module.def("add", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::add(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
+	module.def("sub", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::sub(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
+	module.def("mul", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::mul(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
+	module.def("div", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::div(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
+
+	module.def("add", [](const librapid::Array &a, const librapid::Array &b) { return librapid::add(a, b); }, py::arg("a"), py::arg("b"));
+	module.def("sub", [](const librapid::Array &a, const librapid::Array &b) { return librapid::sub(a, b); }, py::arg("a"), py::arg("b"));
+	module.def("mul", [](const librapid::Array &a, const librapid::Array &b) { return librapid::mul(a, b); }, py::arg("a"), py::arg("b"));
+	module.def("div", [](const librapid::Array &a, const librapid::Array &b) { return librapid::div(a, b); }, py::arg("a"), py::arg("b"));
 	
 	// Colours
-	py::module_ color = module.def_submodule("color", "A simple text color library");
+	// py::module_ color = module.def_submodule("color", "A simple text color library");
 	
-	py::class_<librapid::RGB>(color, "RGB")
+	py::class_<librapid::RGB>(module, "RGB")
 		.def(py::init<int, int, int>(), py::arg("red") = 0, py::arg("green") = 0, py::arg("blue") = 0)
 		.def("__str__", [](const librapid::RGB &col) { return librapid::fore(col); })
-		.def("__repr__", [](const librapid::RGB &col) { return std::string("librapid.color.RGB(red: " + std::to_string(col.red) + ", green: " + std::to_string(col.green) + ", blue: " + std::to_string(col.blue)) + ")"; });
+		.def("__repr__", [](const librapid::RGB &col) { return std::string("librapid.RGB(red: " + std::to_string(col.red) + ", green: " + std::to_string(col.green) + ", blue: " + std::to_string(col.blue)) + ")"; });
 
-	py::class_<librapid::HSL>(color, "HSL")
+	py::class_<librapid::HSL>(module, "HSL")
 		.def(py::init<int, int, int>(), py::arg("red") = 0, py::arg("green") = 0, py::arg("blue") = 0)
 		.def("__str__", [](const librapid::HSL &col) { return librapid::fore(col); })
-		.def("__repr__", [](const librapid::HSL &col) { return std::string("librapid.color.HSL(hue: " + std::to_string(col.hue) + ", saturation: " + std::to_string(col.saturation) + ", lightness: " + std::to_string(col.lightness)) + ")"; });
+		.def("__repr__", [](const librapid::HSL &col) { return std::string("librapid.HSL(hue: " + std::to_string(col.hue) + ", saturation: " + std::to_string(col.saturation) + ", lightness: " + std::to_string(col.lightness)) + ")"; });
 
-	color.def("rgbToHsl", &librapid::rgbToHsl);
-	color.def("hslToRgb", &librapid::hslToRgb);
+	module.def("rgbToHsl", &librapid::rgbToHsl);
+	module.def("hslToRgb", &librapid::hslToRgb);
 	
-	color.def("mergeColors", [](const librapid::RGB &colorA, const librapid::RGB &colorB) { return librapid::mergeColors(colorA, colorB); });
-	color.def("mergeColors", [](const librapid::RGB &colorA, const librapid::HSL &colorB) { return librapid::mergeColors(colorA, colorB); });
-	color.def("mergeColors", [](const librapid::HSL &colorA, const librapid::RGB &colorB) { return librapid::mergeColors(colorA, colorB); });
-	color.def("mergeColors", [](const librapid::HSL &colorA, const librapid::HSL &colorB) { return librapid::mergeColors(colorA, colorB); });
+	module.def("mergeColors", [](const librapid::RGB &colorA, const librapid::RGB &colorB) { return librapid::mergeColors(colorA, colorB); });
+	module.def("mergeColors", [](const librapid::RGB &colorA, const librapid::HSL &colorB) { return librapid::mergeColors(colorA, colorB); });
+	module.def("mergeColors", [](const librapid::HSL &colorA, const librapid::RGB &colorB) { return librapid::mergeColors(colorA, colorB); });
+	module.def("mergeColors", [](const librapid::HSL &colorA, const librapid::HSL &colorB) { return librapid::mergeColors(colorA, colorB); });
 
-	color.attr("clear") = librapid::clear;
-	color.attr("bold") = librapid::bold;
-	color.attr("blink") = librapid::blink;
+	module.attr("clear") = librapid::clear;
+	module.attr("bold") = librapid::bold;
+	module.attr("blink") = librapid::blink;
 
-	color.attr("black") = librapid::black;
-	color.attr("red") = librapid::red;
-	color.attr("green") = librapid::green;
-	color.attr("yellow") = librapid::yellow;
-	color.attr("blue") = librapid::blue;
-	color.attr("magenta") = librapid::magenta;
-	color.attr("cyan") = librapid::cyan;
-	color.attr("white") = librapid::white;
-	color.attr("brightBlack") = librapid::brightBlack;
-	color.attr("brightRed") = librapid::brightRed;
-	color.attr("brightGreen") = librapid::brightGreen;
-	color.attr("brightYellow") = librapid::brightYellow;
-	color.attr("brightBlue") = librapid::brightBlue;
-	color.attr("brightMagenta") = librapid::brightMagenta;
-	color.attr("brightCyan") = librapid::brightCyan;
-	color.attr("brightWhite") = librapid::brightWhite;
+	module.attr("black") = librapid::black;
+	module.attr("red") = librapid::red;
+	module.attr("green") = librapid::green;
+	module.attr("yellow") = librapid::yellow;
+	module.attr("blue") = librapid::blue;
+	module.attr("magenta") = librapid::magenta;
+	module.attr("cyan") = librapid::cyan;
+	module.attr("white") = librapid::white;
+	module.attr("brightBlack") = librapid::brightBlack;
+	module.attr("brightRed") = librapid::brightRed;
+	module.attr("brightGreen") = librapid::brightGreen;
+	module.attr("brightYellow") = librapid::brightYellow;
+	module.attr("brightBlue") = librapid::brightBlue;
+	module.attr("brightMagenta") = librapid::brightMagenta;
+	module.attr("brightCyan") = librapid::brightCyan;
+	module.attr("brightWhite") = librapid::brightWhite;
 
-	color.attr("blackBackground") = librapid::blackBackground;
-	color.attr("redBackground") = librapid::redBackground;
-	color.attr("greenBackground") = librapid::greenBackground;
-	color.attr("yellowBackground") = librapid::yellowBackground;
-	color.attr("blueBackground") = librapid::blueBackground;
-	color.attr("magentaBackground") = librapid::magentaBackground;
-	color.attr("cyanBackground") = librapid::cyanBackground;
-	color.attr("whiteBackground") = librapid::whiteBackground;
-	color.attr("brightBlackBackground") = librapid::brightBlackBackground;
-	color.attr("brightRedBackground") = librapid::brightRedBackground;
-	color.attr("brightGreenBackground") = librapid::brightGreenBackground;
-	color.attr("brightYellowBackground") = librapid::brightYellowBackground;
-	color.attr("brightBlueBackground") = librapid::brightBlueBackground;
-	color.attr("brightMagentaBackground") = librapid::brightMagentaBackground;
-	color.attr("brightCyanBackground") = librapid::brightCyanBackground;
-	color.attr("brightWhiteBackground") = librapid::brightWhiteBackground;
+	module.attr("blackBackground") = librapid::blackBackground;
+	module.attr("redBackground") = librapid::redBackground;
+	module.attr("greenBackground") = librapid::greenBackground;
+	module.attr("yellowBackground") = librapid::yellowBackground;
+	module.attr("blueBackground") = librapid::blueBackground;
+	module.attr("magentaBackground") = librapid::magentaBackground;
+	module.attr("cyanBackground") = librapid::cyanBackground;
+	module.attr("whiteBackground") = librapid::whiteBackground;
+	module.attr("brightBlackBackground") = librapid::brightBlackBackground;
+	module.attr("brightRedBackground") = librapid::brightRedBackground;
+	module.attr("brightGreenBackground") = librapid::brightGreenBackground;
+	module.attr("brightYellowBackground") = librapid::brightYellowBackground;
+	module.attr("brightBlueBackground") = librapid::brightBlueBackground;
+	module.attr("brightMagentaBackground") = librapid::brightMagentaBackground;
+	module.attr("brightCyanBackground") = librapid::brightCyanBackground;
+	module.attr("brightWhiteBackground") = librapid::brightWhiteBackground;
 
-	color.def("fore", [](const librapid::RGB &col) { return librapid::fore(col); });
-	color.def("fore", [](const librapid::HSL &col) { return librapid::fore(col); });
-	color.def("fore", [](int r, int g, int b) { return librapid::fore(r, g, b); });
+	module.def("fore", [](const librapid::RGB &col) { return librapid::fore(col); });
+	module.def("fore", [](const librapid::HSL &col) { return librapid::fore(col); });
+	module.def("fore", [](int r, int g, int b) { return librapid::fore(r, g, b); });
 
-	color.def("back", [](const librapid::RGB &col) { return librapid::back(col); });
-	color.def("back", [](const librapid::HSL &col) { return librapid::back(col); });
-	color.def("back", [](int r, int g, int b) { return librapid::back(r, g, b); });
+	module.def("back", [](const librapid::RGB &col) { return librapid::back(col); });
+	module.def("back", [](const librapid::HSL &col) { return librapid::back(col); });
+	module.def("back", [](int r, int g, int b) { return librapid::back(r, g, b); });
 
 	py::implicitly_convertible<int64_t, librapid::Array>();
 	py::implicitly_convertible<double, librapid::Array>();

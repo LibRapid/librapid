@@ -103,7 +103,7 @@ version_file.close()
 with open(os.path.join(ROOT_DIR, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-if sys.maxsize > 2**32:
+if sys.maxsize > 2**32 and platform.system() == "Windows":
 	print("Using 64bit Python")
 	cmake_args = ["-DCMAKE_GENERATOR_PLATFORM=x64"]
 else:
