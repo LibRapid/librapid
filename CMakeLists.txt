@@ -45,6 +45,7 @@ pybind11_add_module(${python_module_name} MODULE
 					"src/librapid/array/multiarray_string_methods.cpp"
 					"src/librapid/array/multiarray_indexing.cpp"
 					"src/librapid/array/multiarray_manipulation.cpp"
+					"src/librapid/array/multiarray_arithmetic.cpp"
 					# Math library
 					"src/librapid/math/core_math.cpp"
 					# String methods
