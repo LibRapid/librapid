@@ -5,17 +5,21 @@ namespace librapid
 {
 	void Array::fill(double val)
 	{
-		AUTOCAST_UNARY(Array::simpleFill, makeVoidPtr(), validVoidPtr,
-					   m_extent.size(), val);
+		// AUTOCAST_UNARY(Array::simpleFill, makeVoidPtr(), validVoidPtr,
+		// 			   m_extent.size(), val);
+
+		Array::applyBinaryOp(*this, *this, val, ops::Fill());
 	}
 
 	void Array::fill(const Complex<double> &val)
 	{
-		AUTOCAST_UNARY(Array::simpleFill, makeVoidPtr(), validVoidPtr,
-					   m_extent.size(), val);
+		// AUTOCAST_UNARY(Array::simpleFill, makeVoidPtr(), validVoidPtr,
+		// 			   m_extent.size(), val);
+
+		Array::applyBinaryOp(*this, *this, val, ops::Fill());
 	}
 
-	VoidPtr Array::makeVoidPtr() const
+	RawArray Array::createRaw() const
 	{
 		return {m_dataStart, m_dtype, m_location};
 	}
@@ -26,12 +30,17 @@ namespace librapid
 		Accelerator resLocn = (locn == Accelerator::NONE) ? locn : locn;
 
 		Array res(m_extent, resDtype, resLocn);
+		auto ptrDst = res.createRaw();
 		res.m_isScalar = m_isScalar;
 
 		if (m_stride.isTrivial() && m_stride.isContiguous())
 		{
 			// Trivial stride, so just memcpy
-			AUTOCAST_MEMCPY(res.makeVoidPtr(), makeVoidPtr(), m_extent.size());
+			// AUTOCAST_MEMCPY(res.makeVoidPtr(), makeVoidPtr(), m_extent.size());
+
+			rawArrayMemcpy(ptrDst, createRaw(), m_extent.size());
+			// static_assert(false, "Just break everything");
+			throw std::runtime_error("This hasn't yet been implemented\n");
 		}
 		else if (m_location == Accelerator::CPU && locn == Accelerator::GPU)
 		{
@@ -46,38 +55,5 @@ namespace librapid
 		}
 
 		return res;
-	}
-
-	template<typename A, typename B, typename C>
-	void Array::simpleFill(librapid::Accelerator locnA,
-						   librapid::Accelerator locnB,
-						   A *data, B *, size_t size,
-						   C val)
-	{
-		if (locnA == Accelerator::CPU)
-		{
-			for (size_t i = 0; i < size; ++i)
-				data[i] = (A) val;
-		}
-	#ifdef LIBRAPID_HAS_CUDA
-		else
-		{
-			auto tmp = (A *) malloc(sizeof(A) * size);
-			if (tmp == nullptr)
-				throw std::bad_alloc();
-
-			for (size_t i = 0; i < size; ++i)
-				tmp[i] = (A) val;
-
-		#ifdef LIBRAPID_CUDA_STREAM
-			cudaSafeCall(cudaMemcpyAsync(data, tmp, sizeof(A) * size, cudaMemcpyHostToDevice, cudaStream));
-			cudaSafeCall(cudaStreamSynchronize(cudaStream));
-		#else
-			cudaSafeCall(cudaDeviceSynchronize());
-			cudaSafeCall(cudaMemcpy(data, tmp, sizeof(A) * size, cudaMemcpyHostToDevice));
-		#endif
-			free(tmp);
-		}
-	#endif
 	}
 }

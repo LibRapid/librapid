@@ -21,7 +21,7 @@ namespace librapid
 		return add(*this, other);
 	}
 
-	// ========= Addition =========
+	// ========= Subtraction =========
 
 	void sub(const Array &a, const Array &b, Array &res)
 	{
