@@ -274,18 +274,25 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
 #pragma warning( disable : 6386 )
 #endif
 
-#ifndef LIBRAPID_MALLOC_ALIGN
-#define LIBRAPID_MALLOC_ALIGN 16 // 1024
+// Data allignment
+#ifndef DATA_ALIGN
+#define DATA_ALIGN 16 // 1024
 #endif
 
-#ifndef LIBRAPID_ARITHMETIC_THREADS
-#define LIBRAPID_ARITHMETIC_THREADS 8
-#endif // LIBRAPID_ARITHMETIC_THREADS
+// Number of threads for parallel regions
+#ifndef NUM_THREADS
+#define NUM_THREADS 8
+#endif // NUM_THREADS
+
+// For n < THREAD_THREASHOLD, code runs serially -- otherwise it'll run in parallel
+#ifndef THREAD_THREASHOLD
+#define THREAD_THREASHOLD 10000
+#endif // THREAD_THREASHOLD
 
 namespace librapid
 {
 	inline void *alignedMalloc(size_t required_bytes,
-							   size_t alignment = LIBRAPID_MALLOC_ALIGN)
+							   size_t alignment = DATA_ALIGN)
 	{
 		// return malloc(required_bytes);
 
@@ -294,7 +301,7 @@ namespace librapid
 		size_t offset = alignment - 1 + sizeof(void *);
 
 		if ((p1 = (void *) malloc(required_bytes + offset)) == nullptr)
-			return nullptr;
+			throw std::bad_alloc();
 
 		p2 = (void **) (((size_t) (p1) +offset) & ~(alignment - 1));
 		p2[-1] = p1;

@@ -7,11 +7,6 @@
 #ifndef LIBRAPID_CUSTOM_COMPLEX
 #define LIBRAPID_CUSTOM_COMPLEX
 
-#ifndef _CONSTEXPR20
-#define _CONSTEXPR20
-#define UNDEF_CONTEXPR20
-#endif
-
 #include <librapid/stringmethods/format_number.hpp>
 #include <complex>
 

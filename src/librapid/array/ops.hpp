@@ -14,9 +14,9 @@ namespace librapid
 	{
 		struct Copy
 		{
-			const char *name = "copy";
-			const char *kernel = R"V0G0N(
-				b = a;
+			std::string name = "copy";
+			std::string kernel = R"V0G0N(
+				return a;
 			)V0G0N";
 
 			template<typename A>
@@ -26,11 +26,25 @@ namespace librapid
 			}
 		};
 
+		struct Fill
+		{
+			std::string name = "fill";
+			std::string kernel = R"V0G0N(
+				return b;
+			)V0G0N";
+
+			template<typename A, typename B>
+			inline auto operator()(A a, B b) const
+			{
+				return b;
+			}
+		};
+
 		struct Add
 		{
-			const char *name = "add";
-			const char *kernel = R"V0G0N(
-					c = a + b;
+			std::string name = "add";
+			std::string kernel = R"V0G0N(
+					return a + b;
 				)V0G0N";
 
 			template<typename A, typename B>
@@ -42,9 +56,9 @@ namespace librapid
 
 		struct Sub
 		{
-			const char *name = "sub";
-			const char *kernel = R"V0G0N(
-					c = a - b;
+			std::string name = "sub";
+			std::string kernel = R"V0G0N(
+					return a - b;
 				)V0G0N";
 
 			template<typename A, typename B>
@@ -56,9 +70,9 @@ namespace librapid
 
 		struct Mul
 		{
-			const char *name = "mul";
-			const char *kernel = R"V0G0N(
-					c = a * b;
+			std::string name = "mul";
+			std::string kernel = R"V0G0N(
+					return a * b;
 				)V0G0N";
 
 			template<typename A, typename B>
@@ -70,9 +84,9 @@ namespace librapid
 
 		struct Div
 		{
-			const char *name = "div";
-			const char *kernel = R"V0G0N(
-					c = a / b;
+			std::string name = "div";
+			std::string kernel = R"V0G0N(
+					return a / b;
 				)V0G0N";
 
 			template<typename A, typename B>

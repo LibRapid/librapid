@@ -1,6 +1,10 @@
 #ifndef LIBRAPID_ARRAY
 #define LIBRAPID_ARRAY
 
+#include <atomic>
+#include <functional>
+#include <variant>
+
 #include <librapid/config.hpp>
 #include <librapid/math/rapid_math.hpp>
 #include <librapid/array/extent.hpp>
@@ -8,14 +12,6 @@
 #include <librapid/autocast/autocast.hpp>
 #include <librapid/array/multiarray_operations.hpp>
 #include <librapid/array/ops.hpp>
-
-#include <atomic>
-#include <functional>
-
-#ifdef LIBRAPID_REFCHECK
-#define increment() _increment(__LINE__)
-#define decrement() _decrement(__LINE__)
-#endif // LIBRAPID_REFCHECK
 
 namespace librapid
 {
@@ -335,7 +331,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		VoidPtr makeVoidPtr() const;
+		RawArray createRaw() const;
 
 		/**
 		 * \rst
@@ -410,146 +406,7 @@ namespace librapid
 		std::string str(size_t indent, bool showCommas,
 						int64_t &printedRows, int64_t &printedCols) const;
 
-		// Arithmetic Operatons that *NEED* to be templated (therefore cannot be in
-		// *.cpp file
-		template<class FUNC>
-		static inline void applyUnaryOp(const Array &a, Array &res,
-										const FUNC &operation)
-		{
-			// Operate on one array and store the result in another array
-
-			if (res.m_references == nullptr || res.m_extent != a.m_extent)
-			{
-				throw std::invalid_argument("Cannot operate on array with "
-											+ a.m_extent.str()
-											+ " and store the result in "
-											+ res.m_extent.str());
-			}
-
-			auto ptrA = a.makeVoidPtr();
-			auto ptrC = res.makeVoidPtr();
-			auto size = a.m_extent.size();
-
-			if (a.m_stride.isTrivial() && a.m_stride.isContiguous())
-			{
-				// Trivial
-				AUTOCAST_UNARY(imp::multiarrayUnaryOpTrivial, ptrA, ptrC,
-							   size, operation);
-			}
-			else
-			{
-				// Not trivial, so use advanced method
-				AUTOCAST_UNARY(imp::multiarrayUnaryOpComplex, ptrA, ptrC, size,
-							   a.m_extent, a.m_stride, res.m_stride, operation);
-			}
-
-			res.m_isScalar = a.m_isScalar;
-		}
-
-		template<class FUNC>
-		static inline void applyBinaryOp(const Array &a, const Array &b, Array &res,
-										 const FUNC &operation)
-		{
-			// Operate on two arrays and store the result in another array
-
-			if (a.m_extent != b.m_extent)
-				throw std::invalid_argument("Cannot operate on two arrays with "
-											+ a.m_extent.str() + " and "
-											+ b.m_extent.str());
-			if (res.m_references == nullptr || res.m_extent != a.m_extent)
-			{
-				throw std::invalid_argument("Cannot operate on two arrays with "
-											+ a.m_extent.str()
-											+ " and store the result in "
-											+ b.m_extent.str());
-			}
-
-			auto ptrA = a.makeVoidPtr();
-			auto ptrB = b.makeVoidPtr();
-			auto ptrC = res.makeVoidPtr();
-			auto size = a.m_extent.size();
-
-			if ((a.m_stride.isTrivial() && a.m_stride.isContiguous() &&
-				b.m_stride.isTrivial() && b.m_stride.isContiguous()) ||
-				(a.m_stride == b.m_stride))
-			{
-				// Trivial
-				AUTOCAST_BINARY(imp::multiarrayBinaryOpTrivial, ptrA, ptrB, ptrC,
-								a.m_isScalar, b.m_isScalar, size, operation);
-
-				// Update the result stride too
-				res.m_stride = a.m_stride;
-			}
-			else
-			{
-				// Not trivial, so use advanced method
-				AUTOCAST_BINARY(imp::multiarrayBinaryOpComplex, ptrA, ptrB, ptrC,
-								a.m_isScalar, b.m_isScalar, size, a.m_extent,
-								a.m_stride, b.m_stride, res.m_stride, operation);
-			}
-
-			if (a.m_isScalar && b.m_isScalar)
-				res.m_isScalar = true;
-		}
-
-		template<class FUNC>
-		static inline Array applyBinaryOp(const Array &a, const Array &b,
-										  const FUNC &operation)
-		{
-			// Operate on two arrays and return the result
-
-			if (!(a.m_isScalar || b.m_isScalar) && a.m_extent != b.m_extent)
-				throw std::invalid_argument("Cannot operate on two arrays with "
-											+ a.m_extent.str() + " and "
-											+ b.m_extent.str());
-
-			Accelerator newLoc = max(a.m_location, b.m_location);
-			Datatype newType = max(a.m_dtype, b.m_dtype);
-			Array res(a.m_extent, newType, newLoc);
-
-			auto ptrA = a.makeVoidPtr();
-			auto ptrB = b.makeVoidPtr();
-			auto ptrC = res.makeVoidPtr();
-			auto size = a.m_extent.size();
-
-			if ((a.m_stride.isTrivial() && a.m_stride.isContiguous() &&
-				b.m_stride.isTrivial() && b.m_stride.isContiguous()) ||
-				(a.m_stride == b.m_stride))
-			{
-				// Trivial
-				AUTOCAST_BINARY(imp::multiarrayBinaryOpTrivial, ptrA, ptrB, ptrC,
-								a.m_isScalar, b.m_isScalar, size, operation);
-
-				// Update the result stride too
-				res.m_stride = a.m_stride;
-			}
-			else
-			{
-				// Not trivial, so use advanced method
-				AUTOCAST_BINARY(imp::multiarrayBinaryOpComplex, ptrA, ptrB, ptrC,
-								a.m_isScalar, b.m_isScalar, size, a.m_extent,
-								a.m_stride, b.m_stride, res.m_stride, operation);
-			}
-
-			if (a.m_isScalar && b.m_isScalar)
-				res.m_isScalar = true;
-
-			return res;
-		}
-
 	private:
-	#ifdef LIBRAPID_REFCHECK
-		inline void _increment(int line) const
-		{
-			if (m_references == nullptr)
-				return;
-
-			(*m_references)++;
-
-			std::cout << "Incrementing at line " << line << ". References is now "
-				<< *m_references << "\n";
-		}
-	#else
 		inline void initializeCudaStream() const
 		{
 		#ifdef LIBRAPID_HAS_CUDA
@@ -571,34 +428,7 @@ namespace librapid
 
 			(*m_references)++;
 		}
-	#endif // LIBRAPID_REFCHECK
 
-	#ifdef LIBRAPID_REFCHECK
-		inline void _decrement(int line)
-		{
-			if (m_references == nullptr)
-				return;
-
-			(*m_references)--;
-
-			if (*m_references == 0)
-			{
-				std::cout << "Freeing data at line " << line << "\n";
-
-				// Delete data
-				AUTOCAST_FREE({m_dataOrigin, m_dtype, m_location});
-				delete m_references;
-			}
-			else
-			{
-				printf("Decrementing at line %i. References is now %i\n", line,
-					   (int) *m_references);
-
-				std::cout << "Decrementing at line " << line
-					<< ". References is now " << *m_references << "\n";
-			}
-		}
-	#else
 		inline void decrement()
 		{
 			if (m_references == nullptr)
@@ -609,11 +439,10 @@ namespace librapid
 			if (*m_references == 0)
 			{
 				// Delete data
-				AUTOCAST_FREE({m_dataOrigin, m_dtype, m_location});
+				freeRawArray(createRaw());
 				delete m_references;
 			}
 		}
-	#endif // LIBRAPID_REFCHECK
 
 		void constructNew(const Extent &e, const Stride &s,
 						  const Datatype &dtype,
@@ -624,19 +453,6 @@ namespace librapid
 
 		const Array subscript(size_t index) const;
 
-		template<typename A, typename B, typename C, class FUNC>
-		static void simpleCPUop(librapid::Accelerator locnA,
-								librapid::Accelerator locnB,
-								librapid::Accelerator locnC,
-								const A *a, const B *b, C *c, size_t size,
-								const FUNC &op, const std::string &name);
-
-		template<typename A, typename B, typename C>
-		static void simpleFill(librapid::Accelerator locnA,
-							   librapid::Accelerator locnB,
-							   A *data, B *, size_t size,
-							   C val);
-
 		std::pair<lr_int, lr_int> stringifyFormatPreprocess(bool stripMiddle,
 															bool autoStrip) const;
 
@@ -645,16 +461,98 @@ namespace librapid
 							  std::pair<lr_int, lr_int> &longest,
 							  int64_t &printedRows, int64_t &printedCols) const;
 
+		template<typename FUNC>
+		static inline void applyUnaryOp(Array &dst, const Array &src,
+										const FUNC &operation)
+		{
+			// Operate on one array and store the result in another array
+
+			if (dst.m_references == nullptr || dst.m_extent != src.m_extent)
+			{
+				throw std::invalid_argument("Cannot operate on array with "
+											+ src.m_extent.str()
+											+ " and store the result in "
+											+ dst.m_extent.str());
+			}
+
+			auto srcPtr = src.createRaw();
+			auto dstPtr = dst.createRaw();
+			auto size = src.m_extent.size();
+
+			if (src.m_stride.isTrivial() && src.m_stride.isContiguous())
+			{
+				// Trivial
+				imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation);
+			}
+			else
+			{
+				// Not trivial, so use advanced method
+				imp::multiarrayUnaryOpComplex(dstPtr, srcPtr, size, dst.m_extent,
+											  dst.m_stride, src.m_stride, operation);
+			}
+
+			dst.m_isScalar = src.m_isScalar;
+		}
+
+		template<class FUNC>
+		static inline void applyBinaryOp(Array &dst, const Array &srcA,
+										 const Array &srcB,
+										 const FUNC &operation)
+		{
+			// Operate on two arrays and store the result in another array
+
+			if (srcA.m_extent != srcB.m_extent)
+				throw std::invalid_argument("Cannot operate on two arrays with "
+											+ srcA.m_extent.str() + " and "
+											+ srcA.m_extent.str());
+
+			if (dst.m_references == nullptr || dst.m_extent != srcA.m_extent)
+				throw std::invalid_argument("Cannot operate on two arrays with "
+											+ srcA.m_extent.str()
+											+ " and store the result in "
+											+ dst.m_extent.str());
+
+			auto ptrSrcA = srcA.createRaw();
+			auto ptrSrcB = srcB.createRaw();
+			auto ptrDst = dst.createRaw();
+			auto size = dst.m_extent.size();
+
+			if ((srcA.m_stride.isTrivial() && srcA.m_stride.isContiguous() &&
+				srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
+				(srcA.m_stride == srcB.m_stride))
+			{
+				// Trivial
+				imp::multiarrayBinaryOpTrivial(ptrDst, ptrSrcA, ptrSrcB,
+											   srcA.m_isScalar, srcB.m_isScalar,
+											   size, operation);
+
+				// Update the result stride too
+				dst.m_stride = srcA.m_stride;
+			}
+			else
+			{
+				// Not trivial, so use advanced method
+				imp::multiarrayBinaryOpComplex(ptrDst, ptrSrcA, ptrSrcB,
+											   srcA.m_isScalar, srcB.m_isScalar,
+											   size, dst.m_extent, dst.m_stride,
+											   srcA.m_stride, srcB.m_stride,
+											   operation);
+			}
+
+			if (srcA.m_isScalar && srcB.m_isScalar)
+				dst.m_isScalar = true;
+		}
+
 	private:
 		Accelerator m_location = Accelerator::CPU;
 		Datatype m_dtype = Datatype::NONE;
 
-		void *m_dataStart = nullptr;
-		void *m_dataOrigin = nullptr;
+		RawArrayData m_dataStart;
+		RawArrayData m_dataOrigin;
 
 		// std::atomic to allow for multithreading, because multiple threads may
 		// increment/decrement at the same clock cycle, resulting in values being
-		// incorrect and errors turning up.
+		// incorrect and errors turning up all over the place
 		std::atomic<size_t> *m_references = nullptr;
 
 		Extent m_extent;
@@ -674,10 +572,5 @@ namespace librapid
 	Array mul(const Array &a, const Array &b);
 	Array div(const Array &a, const Array &b);
 }
-
-#ifdef LIBRAPID_REFCHECK
-#undef increment
-#undef decrement
-#endif // LIBRAPID_REFCHECK
 
 #endif // LIBRAPID_ARRAY
