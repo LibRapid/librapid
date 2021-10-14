@@ -19,9 +19,12 @@ namespace librapid
 		// Scalar values
 		if (m_isScalar)
 		{
-			std::pair<lr_int, lr_int> res;
-			AUTOCAST_UNARY(imp::autocastBeforeAfterDecimal, makeVoidPtr(),
-						   validVoidPtr, res);
+			// std::pair<lr_int, lr_int> res;
+			// AUTOCAST_UNARY(imp::autocastBeforeAfterDecimal, makeVoidPtr(),
+			// 			   validRawArray, res);
+
+			std::pair<int64_t, int64_t> res;
+			imp::autocastBeforeAfterDecimal(createRaw(), res);
 			return res;
 		}
 
@@ -99,10 +102,7 @@ namespace librapid
 		if (m_isScalar)
 		{
 			std::string res;
-
-			AUTOCAST_UNARY(imp::autocastFormatValue, makeVoidPtr(),
-						   validVoidPtr, res);
-
+			imp::autocastFormatValue(createRaw(), res);
 			return res;
 		}
 

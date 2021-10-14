@@ -1,13 +1,6 @@
 #ifndef LIBRAPID_OPS
 #define LIBRAPID_OPS
 
-#include <librapid/config.hpp>
-#include <librapid/math/rapid_math.hpp>
-#include <librapid/array/extent.hpp>
-#include <librapid/array/stride.hpp>
-#include <librapid/autocast/autocast.hpp>
-#include <functional>
-
 namespace librapid
 {
 	namespace ops
@@ -20,7 +13,7 @@ namespace librapid
 			)V0G0N";
 
 			template<typename A>
-			inline auto operator()(A a) const
+			auto operator()(A a) const
 			{
 				return a;
 			}
@@ -34,7 +27,7 @@ namespace librapid
 			)V0G0N";
 
 			template<typename A, typename B>
-			inline auto operator()(A a, B b) const
+			auto operator()(A, B b) const
 			{
 				return b;
 			}
@@ -48,7 +41,7 @@ namespace librapid
 				)V0G0N";
 
 			template<typename A, typename B>
-			inline auto operator()(A a, B b) const
+			auto operator()(A a, B b) const
 			{
 				return a + b;
 			}
@@ -62,7 +55,7 @@ namespace librapid
 				)V0G0N";
 
 			template<typename A, typename B>
-			inline auto operator()(A a, B b) const
+			auto operator()(A a, B b) const
 			{
 				return a - b;
 			}
@@ -76,7 +69,7 @@ namespace librapid
 				)V0G0N";
 
 			template<typename A, typename B>
-			inline auto operator()(A a, B b) const
+			auto operator()(A a, B b) const
 			{
 				return a * b;
 			}
@@ -90,7 +83,7 @@ namespace librapid
 				)V0G0N";
 
 			template<typename A, typename B>
-			inline auto operator()(A a, B b) const
+			auto operator()(A a, B b) const
 			{
 				return a / b;
 			}

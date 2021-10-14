@@ -16,7 +16,12 @@ namespace librapid
 		Array res;
 
 		res.m_dataOrigin = m_dataOrigin;
-		res.m_dataStart = (void *) (((char *) m_dataStart) + m_stride[0] * index);
+
+		res.m_dataStart = std::visit([&](auto *data) -> RawArrayData
+		{
+			return data + m_stride[0] * index;
+		}, m_dataStart);
+
 		res.m_references = m_references;
 		lr_int dims = ndim();
 

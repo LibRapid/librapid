@@ -86,18 +86,9 @@ PYBIND11_MODULE(_librapid, module)
 		.value("NONE", librapid::Datatype::NONE)
 		.value("VALIDNONE", librapid::Datatype::VALIDNONE)
 		.value("BOOL", librapid::Datatype::BOOL)
-		.value("INT8", librapid::Datatype::INT8)
-		.value("UINT8", librapid::Datatype::UINT8)
-		.value("INT16", librapid::Datatype::INT16)
-		.value("UINT16", librapid::Datatype::UINT16)
-		.value("INT32", librapid::Datatype::INT32)
-		.value("UINT32", librapid::Datatype::UINT32)
 		.value("INT64", librapid::Datatype::INT64)
-		.value("UINT64", librapid::Datatype::UINT64)
 		.value("FLOAT32", librapid::Datatype::FLOAT32)
-		.value("FLOAT64", librapid::Datatype::FLOAT64)
-		.value("CFLOAT32", librapid::Datatype::CFLOAT32)
-		.value("CFLOAT64", librapid::Datatype::CFLOAT64);
+		.value("FLOAT64", librapid::Datatype::FLOAT64);
 
 	// Create the Accelerator enum
 	py::enum_<librapid::Accelerator>(module, "Accelerator")
@@ -180,11 +171,9 @@ PYBIND11_MODULE(_librapid, module)
 		.def("__getitem__", [](const librapid::Array &arr, lr_int index) { return arr[index]; })
 		.def("__setitem__", [](librapid::Array &arr, lr_int index, int64_t val) { arr[index] = val; })
 		.def("__setitem__", [](librapid::Array &arr, lr_int index, double val) { arr[index] = val; })
-		.def("__setitem__", [](librapid::Array &arr, lr_int index, const librapid::Complex<double> &val) { arr[index] = val; })
 		.def("__setitem__", [](librapid::Array &arr, lr_int index, const librapid::Array &val) { arr[index] = val; })
 
 		.def("fill", [](librapid::Array &arr, double val) { arr.fill(val); })
-		.def("fill", [](librapid::Array &arr, const librapid::Complex<double> &val) { arr.fill(val); })
 
 		.def("__add__", &librapid::Array::operator+)
 		.def("__sub__", &librapid::Array::operator-)
@@ -289,7 +278,6 @@ PYBIND11_MODULE(_librapid, module)
 
 	py::implicitly_convertible<int64_t, librapid::Array>();
 	py::implicitly_convertible<double, librapid::Array>();
-	py::implicitly_convertible<librapid::Complex<double>, librapid::Array>();
 	py::implicitly_convertible<py::tuple, librapid::Array>();
 	py::implicitly_convertible<py::list, librapid::Array>();
 

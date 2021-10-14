@@ -180,19 +180,19 @@ namespace librapid
 		return res;
 	}
 
-	void Stride::scaleBytes(size_t bytes)
-	{
-		for (size_t i = 0; i < m_dims; ++i)
-			m_stride[i] *= bytes;
-		m_one = bytes;
-	}
-
-	Stride Stride::scaledBytes(size_t bytes) const
-	{
-		Stride res = *this;
-		res.scaleBytes(bytes);
-		return res;
-	}
+	// void Stride::scaleBytes(size_t bytes)
+	// {
+	// 	for (size_t i = 0; i < m_dims; ++i)
+	// 		m_stride[i] *= bytes;
+	// 	m_one = bytes;
+	// }
+	//
+	// Stride Stride::scaledBytes(size_t bytes) const
+	// {
+	// 	Stride res = *this;
+	// 	res.scaleBytes(bytes);
+	// 	return res;
+	// }
 
 	bool Stride::checkTrivial() const
 	{
@@ -214,7 +214,7 @@ namespace librapid
 									"dimensions for a contiguity test");
 
 		Stride temp = fromExtent(extent);
-		temp.scaleBytes(m_one);
+		// temp.scaleBytes(m_one);
 		size_t valid = 0;
 
 		for (size_t i = 0; i < m_dims; ++i)

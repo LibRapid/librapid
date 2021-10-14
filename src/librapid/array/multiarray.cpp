@@ -5,17 +5,11 @@ namespace librapid
 {
 	void Array::fill(double val)
 	{
-		// AUTOCAST_UNARY(Array::simpleFill, makeVoidPtr(), validVoidPtr,
-		// 			   m_extent.size(), val);
-
 		Array::applyBinaryOp(*this, *this, val, ops::Fill());
 	}
 
 	void Array::fill(const Complex<double> &val)
 	{
-		// AUTOCAST_UNARY(Array::simpleFill, makeVoidPtr(), validVoidPtr,
-		// 			   m_extent.size(), val);
-
 		Array::applyBinaryOp(*this, *this, val, ops::Fill());
 	}
 
@@ -36,11 +30,7 @@ namespace librapid
 		if (m_stride.isTrivial() && m_stride.isContiguous())
 		{
 			// Trivial stride, so just memcpy
-			// AUTOCAST_MEMCPY(res.makeVoidPtr(), makeVoidPtr(), m_extent.size());
-
 			rawArrayMemcpy(ptrDst, createRaw(), m_extent.size());
-			// static_assert(false, "Just break everything");
-			throw std::runtime_error("This hasn't yet been implemented\n");
 		}
 		else if (m_location == Accelerator::CPU && locn == Accelerator::GPU)
 		{
