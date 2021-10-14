@@ -1,5 +1,5 @@
 [submodule "pybind11"]
-	path = spybind11
+	path = pybind11
 	url = https://github.com/pybind/pybind11.git
 [submodule "jitify"]
 	path = jitify
