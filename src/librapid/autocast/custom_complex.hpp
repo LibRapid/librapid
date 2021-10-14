@@ -226,10 +226,16 @@ namespace librapid
 			return m_imag;
 		}
 
-		template<typename V>
+		template<typename V, typename std::enable_if<std::is_arithmetic<V>::value, int>::type = 0>
 		operator V() const
 		{
 			return (V) m_real;
+		}
+
+		template<typename V, typename std::enable_if<!std::is_arithmetic<V>::value, int>::type = 0>
+		operator V() const
+		{
+			return m_real;
 		}
 
 		template<typename V>

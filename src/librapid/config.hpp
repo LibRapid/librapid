@@ -274,17 +274,17 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
 #pragma warning( disable : 6386 )
 #endif
 
-// Data allignment
+// Data alignment
 #ifndef DATA_ALIGN
 #define DATA_ALIGN 16 // 1024
 #endif
 
 // Number of threads for parallel regions
 #ifndef NUM_THREADS
-#define NUM_THREADS 8
+#define NUM_THREADS 4
 #endif // NUM_THREADS
 
-// For n < THREAD_THREASHOLD, code runs serially -- otherwise it'll run in parallel
+// For n < THREAD_THRESHOLD, code runs serially -- otherwise it'll run in parallel
 #ifndef THREAD_THREASHOLD
 #define THREAD_THREASHOLD 10000
 #endif // THREAD_THREASHOLD

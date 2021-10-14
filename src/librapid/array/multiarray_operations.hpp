@@ -51,6 +51,7 @@ namespace librapid
 				}
 			#endif // LIBRAPID_HAS_CUDA
 			}
+
 			return freeMode;
 		}
 
@@ -71,6 +72,9 @@ namespace librapid
 			// 0 = no free
 			// 1 = free()
 			// 2 = cudaFree()
+			if (mode == 0)
+				return;
+
 			if (mode == 1 || mode == 2)
 				freeRawArray(raw);
 			else
@@ -141,7 +145,9 @@ namespace librapid
 						{
 						#pragma omp parallel for shared(dstData, srcData) num_threads(NUM_THREADS)
 							for (int64_t i = 0; i < elems; ++i)
+							{
 								dstData[i] = op(srcData[i]);
+							}
 						}
 					}, dst.data, src.data);
 				}
@@ -155,10 +161,11 @@ namespace librapid
 						+ std::to_string(LIBRAPID_MAX_DIMS) + ";";
 					kernel += R"V0G0N(
 					#include <stdint.h>
+					#include <typetraits.h>
 
 					template<typename A>
 					__device__
-					auto )V0G0N";
+					inline auto )V0G0N";
 
 					kernel += op.name;
 
@@ -168,25 +175,25 @@ namespace librapid
 
 					kernel += op.kernel;
 
-					R"V0G0N(
-					}
+					kernel += R"V0G0N(}
 
-					template<typename A, typename B>
+					template<typename T_DST, typename T_SRC>
 					__global__
-					void unaryFuncTrivial(const A *__restrict dstData,
-										  B *__restrict srcData, const uint64_t size)
+					void unaryFuncTrivial(T_DST *__restrict dstData,
+										  const T_SRC *__restrict srcData,
+										  const uint64_t size)
 					{
 						int64_t kernelIndex = blockDim.x * blockIdx.x
 												   + threadIdx.x;
 
 						if (kernelIndex < size) {
 					)V0G0N";
-					kernel += "dstData[i] = " + op.name + "(dstData[kernelIndex],\
+					kernel += "dstData[i] = " + op.name + "(dstData[kernelIndex], \
 															srcData[kernelIndex]);";
 					kernel += "\n}\n}";
 
 					const std::vector<std::string> params = {
-						"--disable-warnings"
+						"--disable-warnings", "-std=c++17"
 					};
 
 					static jitify::JitCache kernelCache;
@@ -258,9 +265,6 @@ namespace librapid
 					lr_int idim = 0;
 					lr_int ndim = extent.ndim();
 
-					int64_t bytesDst = datatypeBytes(dst.dtype);
-					int64_t bytesSrc = datatypeBytes(src.dtype);
-
 					// Create pointers here so repeated function calls
 					// are not needed
 					static lr_int rawExtent[LIBRAPID_MAX_DIMS];
@@ -270,8 +274,8 @@ namespace librapid
 					for (size_t i = 0; i < ndim; ++i)
 					{
 						rawExtent[ndim - i - 1] = extent.raw()[i];
-						rawDstStride[ndim - i - 1] = dstStride[i] / bytesDst;
-						rawSrcStride[ndim - i - 1] = srcStride[i] / bytesSrc;
+						rawDstStride[ndim - i - 1] = dstStride[i];
+						rawSrcStride[ndim - i - 1] = srcStride[i];
 					}
 
 					std::visit([&](auto *dstData, auto *srcData)
@@ -341,7 +345,7 @@ namespace librapid
 					inline size_t indexToIndex(uint64_t index,
 											   const int64_t *__restrict shape,
 											   const int64_t *__restrict strides,
-											   uint64_t dims, size_t size)
+											   uint64_t dims)
 					{
 						int64_t products[LIBRAPID_MAX_DIMS];
 						int64_t prod = 1;
@@ -358,7 +362,7 @@ namespace librapid
 						for (int64_t i = 0; i < dims; ++i)
 						{
 							tmp2 = tmp / products[i];
-							res = res + (strides[i] / size) * tmp2;
+							res = res + strides[i] * tmp2;
 							tmp = tmp - tmp2 * products[i];
 						}
 
@@ -369,7 +373,7 @@ namespace librapid
 					kernel += R"V0G0N(
 					template<typename A>
 					__device__
-					auto )V0G0N";
+					inline auto )V0G0N";
 
 					kernel += op.name;
 
@@ -379,12 +383,12 @@ namespace librapid
 
 					kernel += op.kernel;
 
-					R"V0G0N(}
+					kernel += R"V0G0N(}
 
-					template<typename A, typename B>
+					template<typename T_DST, typename T_SRC>
 					__global__
-						void unaryFuncComplex(const A * __restrict dstData,
-											  B * __restrict srcData, size_t size,
+						void unaryFuncComplex(T_DST * __restrict dstData,
+											  const T_SRC * __restrict srcData, size_t size,
 											  const int64_t extent[LIBRAPID_MAX_DIMS],
 											  const int64_t dstStride[LIBRAPID_MAX_DIMS],
 											  const int64_t srcStride[LIBRAPID_MAX_DIMS],
@@ -393,8 +397,8 @@ namespace librapid
 						uint64_t kernelIndex = blockDim.x * blockIdx.x
 											   + threadIdx.x;
 
-						uint64_t dstIndex = indexToIndex(kernelIndex, extent, dstStride, dims, sizeof(A));
-						uint64_t srcIndex = indexToIndex(kernelIndex, extent, srcStride, dims, sizeof(B));
+						uint64_t dstIndex = indexToIndex(kernelIndex, extent, dstStride, dims);
+						uint64_t srcIndex = indexToIndex(kernelIndex, extent, srcStride, dims);
 
 						const auto &a = arrayA[kernelIndexA];
 						auto &b = arrayB[kernelIndexB];
@@ -402,11 +406,11 @@ namespace librapid
 						if (kernelIndex < size) {
 					)V0G0N";
 
-					kernel += "dstData[dstIndex] = " + op.name + "(srcData[srcINdex]);";
+					kernel += "dstData[dstIndex] = " + op.name + "(srcData[srcIndex]);";
 					kernel += "\n}\n}";
 
 					const std::vector<std::string> params = {
-						"--disable-warnings"
+						"--disable-warnings", "-std=c++17"
 					};
 
 					static jitify::JitCache kernelCache;
@@ -429,24 +433,24 @@ namespace librapid
 					dim3 grid(blocksPerGrid);
 					dim3 block(threadsPerBlock);
 
-					std::visit([&](auto *a, auto *b)
+					std::visit([&](auto *dstData, auto *srcData)
 					{
-						using A = typename std::remove_pointer<decltype(a)>::type;
-						using B = typename std::remove_pointer<decltype(b)>::type;
+						using T_DST = typename std::remove_pointer<decltype(dstData)>::type;
+						using T_SRC = typename std::remove_pointer<decltype(srcData)>::type;
 
 					#ifdef LIBRAPID_CUDA_STREAM
 						jitifyCall(program.kernel("unaryFuncComplex")
-								   .instantiate(Type<A>(), Type<B>())
+								   .instantiate(Type<T_DST>(), Type<T_SRC>())
 								   .configure(grid, block, 0, cudaStream)
-								   .launch(a, b, elems, deviceExtent,
+								   .launch(dstData, srcData, elems, deviceExtent,
 								   deviceDstStride,
 								   deviceSrcStride,
 								   dims));
 					#else
 						jitifyCall(program.kernel("unaryFuncComplex")
-								   .instantiate(Type<A>(), Type<B>())
+								   .instantiate(Type<T_DST>(), Type<T_SRC>())
 								   .configure(grid, block)
-								   .launch(a, b, elems, deviceExtent,
+								   .launch(dstData, srcData, elems, deviceExtent,
 								   deviceDstStride,
 								   deviceSrcStride,
 								   dims));
@@ -516,7 +520,7 @@ namespace librapid
 											  bool srcBIsScalar, int64_t elems,
 											  const FUNC &op)
 		{
-			if (!(dst.location != srcA.location || dst.location != srcB.location))
+			if (dst.location != srcA.location || dst.location != srcB.location)
 			{
 				// Locations are different, so make A and B have the same
 				// accelerator as the result array (C)
@@ -547,59 +551,65 @@ namespace librapid
 				// Locations are the same, so apply a single, unified operation
 				if (dst.location == Accelerator::CPU)
 				{
-					// std::visit([&](auto *dstData, auto *srcDataA, auto *srcDataB)
-					// {
-					// 	// Typenames which are useful for casting and checking
-					// 	using C = typename std::remove_pointer<decltype(dstData)>::type;
-					// 	using A = typename std::remove_pointer<decltype(srcDataA)>::type;
-					// 	using B = typename std::remove_pointer<decltype(srcDataB)>::type;
-					//
-					// 	if (srcAIsScalar)
-					// 	{
-					// 		// Use *a rather than a[i]
-					// 		if (elems < 2500)
-					// 		{
-					// 			for (size_t i = 0; i < elems; ++i)
-					// 				dstData[i] = (C) op(*srcDataA, srcDataB[i]);
-					// 		}
-					// 		else
-					// 		{
-					// 		#pragma omp parallel for shared(dstData, srcDataA, srcDataB) num_threads(NUM_THREADS) default(none)
-					// 			for (lr_int i = 0; i < (lr_int) elems; ++i)
-					// 				dstData[i] = (C) op(*srcDataA, srcDataB[i]);
-					// 		}
-					// 	}
-					// 	else if (srcBIsScalar)
-					// 	{
-					// 		// Use *b rather than b[i]
-					// 		if (elems < 2500)
-					// 		{
-					// 			for (size_t i = 0; i < elems; ++i)
-					// 				dstData[i] = (C) op(srcDataA[i], *srcDataB);
-					// 		}
-					// 		else
-					// 		{
-					// 		#pragma omp parallel for shared(dstData, srcDataA, srcDataB) num_threads(NUM_THREADS) default(none)
-					// 			for (lr_int i = 0; i < (lr_int) elems; ++i)
-					// 				dstData[i] = (C) op(srcDataA[i], *srcDataB);
-					// 		}
-					// 	}
-					// 	else
-					// 	{
-					// 		// Use a[i] and b[i]
-					// 		if (elems < 2500)
-					// 		{
-					// 			for (size_t i = 0; i < elems; ++i)
-					// 				dstData[i] = (C) op(srcDataA[i], srcDataB[i]);
-					// 		}
-					// 		else
-					// 		{
-					// 		#pragma omp parallel for shared(dstData, srcDataA, srcDataB) num_threads(NUM_THREADS) default(none)
-					// 			for (lr_int i = 0; i < (lr_int) elems; ++i)
-					// 				dstData[i] = (C) op(srcDataA[i], srcDataB[i]);
-					// 		}
-					// 	}
-					// }, dst.data, srcA.data, srcB.data);
+					std::visit([&](auto *dstData, auto *srcDataA, auto *srcDataB)
+					{
+						// Typenames which are useful for casting and checking
+						using C = typename std::remove_pointer<decltype(dstData)>::type;
+						using A = typename std::remove_pointer<decltype(srcDataA)>::type;
+						using B = typename std::remove_pointer<decltype(srcDataB)>::type;
+
+						if (srcAIsScalar)
+						{
+							// Use *a rather than a[i]
+							if (elems < 2500)
+							{
+								for (size_t i = 0; i < elems; ++i)
+									dstData[i] = (C) op(*srcDataA, srcDataB[i]);
+							}
+							else
+							{
+							#pragma omp parallel for shared(dstData, srcDataA, srcDataB) num_threads(NUM_THREADS) default(none)
+								for (int64_t i = 0; i < elems; ++i)
+								{
+									dstData[i] = op(*srcDataA, srcDataB[i]);
+								}
+							}
+						}
+						else if (srcBIsScalar)
+						{
+							// Use *b rather than b[i]
+							if (elems < 2500)
+							{
+								for (size_t i = 0; i < elems; ++i)
+									dstData[i] = (C) op(srcDataA[i], *srcDataB);
+							}
+							else
+							{
+							#pragma omp parallel for shared(dstData, srcDataA, srcDataB) num_threads(NUM_THREADS) default(none)
+								for (lr_int i = 0; i < (lr_int) elems; ++i)
+								{
+									dstData[i] = (C) op(srcDataA[i], *srcDataB);
+								}
+							}
+						}
+						else
+						{
+							// Use a[i] and b[i]
+							if (elems < 2500)
+							{
+								for (size_t i = 0; i < elems; ++i)
+									dstData[i] = (C) op(srcDataA[i], srcDataB[i]);
+							}
+							else
+							{
+							#pragma omp parallel for shared(dstData, srcDataA, srcDataB) num_threads(NUM_THREADS) default(none)
+								for (lr_int i = 0; i < (lr_int) elems; ++i)
+								{
+									dstData[i] = (C) op(srcDataA[i], srcDataB[i]);
+								}
+							}
+						}
+					}, dst.data, srcA.data, srcB.data);
 				}
 			#ifdef LIBRAPID_HAS_CUDA
 				else
@@ -617,7 +627,7 @@ namespace librapid
 					kernel += R"V0G0N(
 					template<typename A, typename B>
 					__device__
-					auto )V0G0N";
+					inline auto )V0G0N";
 
 					kernel += op.name;
 
@@ -627,12 +637,14 @@ namespace librapid
 
 					kernel += op.kernel;
 
-					kernel += R"V0G0N(
-					template<typename A, typename B, typename C>
+					kernel += R"V0G0N(}
+
+					template<typename T_DST, typename T_SRCA, typename T_SRCB>
 					__global__
-					void binaryFuncTrivial(const A *__restrict srcA,
-										   const B *__restrict srcB,
-										   C *__restrict dstData, size_t size)
+					void binaryFuncTrivial(T_DST *__restrict dstData,
+										   const T_SRCA *__restrict srcA,
+										   const T_SRCB *__restrict srcB,
+										   size_t size)
 					{
 						const int64_t kernelIndex = blockDim.x * blockIdx.x
 												   + threadIdx.x;
@@ -649,7 +661,7 @@ namespace librapid
 					kernel += "\n}\n}";
 
 					const std::vector<std::string> params = {
-						"--disable-warnings"
+						"--disable-warnings", "-std=c++17"
 					};
 
 					static jitify::JitCache kernelCache;
@@ -674,18 +686,18 @@ namespace librapid
 
 					std::visit([&](auto *dstData, auto *srcDataA, auto *srcDataB)
 					{
-						using A = typename std::remove_pointer<decltype(dstData)>::type;
-						using B = typename std::remove_pointer<decltype(dstData)>::type;
-						using C = typename std::remove_pointer<decltype(dstData)>::type;
+						using T_DST = typename std::remove_pointer<decltype(dstData)>::type;
+						using T_SRCA = typename std::remove_pointer<decltype(srcDataA)>::type;
+						using T_SRCB = typename std::remove_pointer<decltype(srcDataB)>::type;
 
 					#ifdef LIBRAPID_CUDA_STREAM
 						jitifyCall(program.kernel("binaryFuncTrivial")
-								   .instantiate(Type<A>(), Type<B>(), Type<C>())
+								   .instantiate(Type<T_DST>(), Type<T_SRCA>(), Type<T_SRCB>())
 								   .configure(grid, block, 0, cudaStream)
 								   .launch(dstData, srcDataA, srcDataB, elems));
 					#else
 						jitifyCall(program.kernel("binaryFuncTrivial")
-								   .instantiate(Type<A>(), Type<B>(), Type<C>())
+								   .instantiate(Type<T_DST>(), Type<T_SRCA>(), Type<T_SRCB>())
 								   .configure(grid, block)
 								   .launch(dstData, srcDataA, srcDataB, elems));
 					#endif // LIBRAPID_CUDA_STREAM
@@ -708,7 +720,7 @@ namespace librapid
 											  const Stride &strideSrcB,
 											  const FUNC &op)
 		{
-			if (!(dst.location != srcA.location || dst.location != srcB.location))
+			if (dst.location != srcA.location || dst.location != srcB.location)
 			{
 				// Locations are different, so make A and B have the same
 				// accelerator as the result array (C)
@@ -761,9 +773,9 @@ namespace librapid
 					for (int64_t i = 0; i < ndim; ++i)
 					{
 						rawExtent[ndim - i - 1] = extent.raw()[i];
-						strideDst[ndim - i - 1] = strideDst[i] / dstBytes;
-						strideSrcA[ndim - i - 1] = strideSrcA[i] / srcABytes;
-						strideSrcB[ndim - i - 1] = strideSrcB[i] / srcBBytes;
+						strideDst[ndim - i - 1] = strideDst[i];
+						strideSrcA[ndim - i - 1] = strideSrcA[i];
+						strideSrcB[ndim - i - 1] = strideSrcB[i];
 					}
 
 					std::visit([&](auto *dstData, auto *srcA, auto *srcB)
@@ -890,7 +902,7 @@ namespace librapid
 					inline size_t indexToIndex(uint64_t index,
 											   const int64_t *__restrict shape,
 											   const int64_t *__restrict strides,
-											   uint64_t dims, size_t size)
+											   uint64_t dims)
 					{
 						int64_t products[LIBRAPID_MAX_DIMS];
 						int64_t prod = 1;
@@ -907,7 +919,7 @@ namespace librapid
 						for (int64_t i = 0; i < dims; ++i)
 						{
 							tmp2 = tmp / products[i];
-							res = res + (strides[i] / size) * tmp2;
+							res = res + strides[i] * tmp2;
 							tmp = tmp - tmp2 * products[i];
 						}
 
@@ -919,7 +931,7 @@ namespace librapid
 					kernel += R"V0G0N(
 					template<typename A, typename B>
 					__device__
-					auto )V0G0N";
+					inline auto )V0G0N";
 
 					kernel += op.name;
 
@@ -929,12 +941,14 @@ namespace librapid
 
 					kernel += op.kernel;
 
-					kernel += R"V0G0N(
-					template<typename A, typename B, typename C>
+					kernel += R"V0G0N(}
+
+					template<typename T_DST, typename T_SRCA, typename T_SRCB>
 					__global__
-					void binaryFuncComplex(const A *__restrict srcA,
-										   const B *__restrict srcB,
-										   C *__restrict dstData, size_t size,
+					void binaryFuncComplex(T_DST *__restrict dstData,
+										   const T_SRCA *__restrict srcA,
+										   const T_SRCB *__restrict srcB,
+										   size_t size,
 										   const int64_t extent[LIBRAPID_MAX_DIMS],
 										   const int64_t strideA[LIBRAPID_MAX_DIMS],
 										   const int64_t strideB[LIBRAPID_MAX_DIMS],
@@ -944,9 +958,9 @@ namespace librapid
 						int64_t kernelIndex = blockDim.x * blockIdx.x
 														+ threadIdx.x;
 
-						int64_t indexSrcA = indexToIndex(kernelIndex, extent, strideA, dims, sizeof(A));;
-						int64_t indexSrcB = indexToIndex(kernelIndex, extent, strideB, dims, sizeof(B));;
-						int64_t indexDst = indexToIndex(kernelIndex, extent, strideC, dims, sizeof(C));;
+						int64_t indexDst = indexToIndex(kernelIndex, extent, strideC, dims);
+						int64_t indexSrcA = indexToIndex(kernelIndex, extent, strideA, dims);
+						int64_t indexSrcB = indexToIndex(kernelIndex, extent, strideB, dims);
 
 						if (kernelIndex < size) {
 							auto &c = dstData[kernelIndexC];
@@ -964,7 +978,7 @@ namespace librapid
 					kernel += "\n}\n}";
 
 					const std::vector<std::string> params = {
-						"--disable-warnings"
+						"--disable-warnings", "-std=c++17"
 					};
 
 					static jitify::JitCache kernelCache;
@@ -989,15 +1003,15 @@ namespace librapid
 
 					std::visit([&](auto *dstData, auto *srcDataA, auto *srcDataB)
 					{
-						using A = typename std::remove_pointer<decltype(srcDataA)>::type;
-						using B = typename std::remove_pointer<decltype(srcDataB)>::type;
-						using C = typename std::remove_pointer<decltype(dstData)>::type;
+						using T_SRCA = typename std::remove_pointer<decltype(srcDataA)>::type;
+						using T_SRCB = typename std::remove_pointer<decltype(srcDataB)>::type;
+						using T_DST = typename std::remove_pointer<decltype(dstData)>::type;
 
 					#ifdef LIBRAPID_CUDA_STREAM
 						jitifyCall(program.kernel("binaryFuncComplex")
-								   .instantiate(Type<A>(), Type<B>(), Type<C>())
+								   .instantiate(Type<T_DST>(), Type<T_SRCA>(), Type<T_SRCB>())
 								   .configure(grid, block, 0, cudaStream)
-								   .launch(srcDataA, srcDataB, dstData, elems,
+								   .launch(dstData, srcDataA, srcDataB, elems,
 								   deviceExtent,
 								   deviceStrideSrcA,
 								   deviceStrideSrcB,
@@ -1005,9 +1019,9 @@ namespace librapid
 								   dims));
 					#else
 						jitifyCall(program.kernel("binaryFuncComplex")
-								   .instantiate(Type<A>(), Type<B>(), Type<C>())
+								   .instantiate(Type<T_DST>(), Type<T_SRCA>(), Type<T_SRCB>())
 								   .configure(grid, block)
-								   .launch(srcDataA, srcDataB, dstData, elems,
+								   .launch(dstData, srcDataA, srcDataB, elems,
 								   deviceExtent,
 								   deviceStrideSrcA,
 								   deviceStrideSrcB,

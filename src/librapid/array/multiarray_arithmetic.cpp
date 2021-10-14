@@ -8,7 +8,7 @@ namespace librapid
 
 	void add(const Array &a, const Array &b, Array &res)
 	{
-		Array::applyBinaryOp(a, b, res, ops::Add());
+		Array::applyBinaryOp(res, a, b, ops::Add());
 	}
 
 	Array add(const Array &a, const Array &b)
@@ -25,7 +25,7 @@ namespace librapid
 
 	void sub(const Array &a, const Array &b, Array &res)
 	{
-		Array::applyBinaryOp(a, b, res, ops::Sub());
+		Array::applyBinaryOp(res, a, b, ops::Sub());
 	}
 
 	Array sub(const Array &a, const Array &b)
@@ -42,7 +42,7 @@ namespace librapid
 
 	void mul(const Array &a, const Array &b, Array &res)
 	{
-		Array::applyBinaryOp(a, b, res, ops::Mul());
+		Array::applyBinaryOp(res, a, b, ops::Mul());
 	}
 
 	Array mul(const Array &a, const Array &b)
@@ -59,7 +59,7 @@ namespace librapid
 
 	void div(const Array &a, const Array &b, Array &res)
 	{
-		Array::applyBinaryOp(a, b, res, ops::Div());
+		Array::applyBinaryOp(res, a, b, ops::Div());
 	}
 
 	Array div(const Array &a, const Array &b)

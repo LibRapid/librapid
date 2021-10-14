@@ -19,18 +19,9 @@ namespace librapid
 		NONE,			// no datatype
 		VALIDNONE,		// No datatype, but it is not required
 		BOOL,			// bool
-		INT8,			// int8_t
-		UINT8,			// uint8_t
-		INT16,			// int16_t
-		UINT16,			// uint16_t
-		INT32,			// int32_t
-		UINT32,			// uint32_t
 		INT64,			// int64_t
-		UINT64,			// uint64_t
 		FLOAT32,		// float
 		FLOAT64,		// double
-		CFLOAT32,		// librapid::Complex<float>
-		CFLOAT64,		// librapid::Complex<double>
 	};
 
 	/**
@@ -43,18 +34,9 @@ namespace librapid
 	 */
 	using RawArrayData = std::variant<
 		bool *,
-		int8_t *,
-		uint8_t *,
-		int16_t *,
-		uint16_t *,
-		int32_t *,
-		uint32_t *,
 		int64_t *,
-		uint64_t *,
 		float *,
-		double *,
-		Complex<float> *,
-		Complex<double> *
+		double *
 	>;
 
 	/**
@@ -104,21 +86,7 @@ namespace librapid
 				return false;
 			case Datatype::BOOL:
 				return true;
-			case Datatype::INT8:
-				return true;
-			case Datatype::UINT8:
-				return true;
-			case Datatype::INT16:
-				return true;
-			case Datatype::UINT16:
-				return true;
-			case Datatype::INT32:
-				return true;
-			case Datatype::UINT32:
-				return true;
 			case Datatype::INT64:
-				return true;
-			case Datatype::UINT64:
 				return true;
 			default:
 				return false;
@@ -142,22 +110,8 @@ namespace librapid
 				return false;
 			case Datatype::BOOL:
 				return false;
-			case Datatype::INT8:
-				return false;
-			case Datatype::UINT8:
-				return true;
-			case Datatype::INT16:
-				return false;
-			case Datatype::UINT16:
-				return true;
-			case Datatype::INT32:
-				return false;
-			case Datatype::UINT32:
-				return true;
 			case Datatype::INT64:
 				return false;
-			case Datatype::UINT64:
-				return true;
 			default:
 				return false;
 		}
@@ -181,10 +135,6 @@ namespace librapid
 				return true;
 			case Datatype::FLOAT64:
 				return true;
-			case Datatype::CFLOAT32:
-				return true;
-			case Datatype::CFLOAT64:
-				return true;
 			default:
 				return false;
 		}
@@ -201,10 +151,6 @@ namespace librapid
 	{
 		switch (t)
 		{
-			case Datatype::CFLOAT32:
-				return true;
-			case Datatype::CFLOAT64:
-				return true;
 			default:
 				return false;
 		}
@@ -228,30 +174,12 @@ namespace librapid
 				return 1;
 			case Datatype::BOOL:
 				return sizeof(bool);
-			case Datatype::INT8:
-				return sizeof(int8_t);
-			case Datatype::UINT8:
-				return sizeof(uint8_t);
-			case Datatype::INT16:
-				return sizeof(int16_t);
-			case Datatype::UINT16:
-				return sizeof(uint16_t);
-			case Datatype::INT32:
-				return sizeof(int32_t);
-			case Datatype::UINT32:
-				return sizeof(uint32_t);
 			case Datatype::INT64:
 				return sizeof(int64_t);
-			case Datatype::UINT64:
-				return sizeof(uint64_t);
 			case Datatype::FLOAT32:
 				return sizeof(float);
 			case Datatype::FLOAT64:
 				return sizeof(double);
-			case Datatype::CFLOAT32:
-				return sizeof(librapid::Complex<float>);
-			case Datatype::CFLOAT64:
-				return sizeof(librapid::Complex<double>);
 		}
 
 		return 0;
@@ -267,30 +195,12 @@ namespace librapid
 				return "VALIDNONE";
 			case Datatype::BOOL:
 				return "BOOL";
-			case Datatype::INT8:
-				return "INT8";
-			case Datatype::UINT8:
-				return "UINT8";
-			case Datatype::INT16:
-				return "INT16";
-			case Datatype::UINT16:
-				return "UINT16";
-			case Datatype::INT32:
-				return "INT32";
-			case Datatype::UINT32:
-				return "UINT32";
 			case Datatype::INT64:
 				return "INT64";
-			case Datatype::UINT64:
-				return "UINT64";
 			case Datatype::FLOAT32:
 				return "FLOAT32";
 			case Datatype::FLOAT64:
 				return "FLOAT64";
-			case Datatype::CFLOAT32:
-				return "CFLOAT32";
-			case Datatype::CFLOAT64:
-				return "CFLOAT64";
 		}
 
 		return "UNKNOWN";
@@ -307,18 +217,9 @@ namespace librapid
 	inline Datatype typeToDatatype(T x)
 	{
 		if constexpr (std::is_same<T, bool>::value) return Datatype::BOOL;
-		if constexpr (std::is_same<T, int8_t>::value) return Datatype::INT8;
-		if constexpr (std::is_same<T, uint8_t>::value) return Datatype::UINT8;
-		if constexpr (std::is_same<T, int16_t>::value) return Datatype::INT16;
-		if constexpr (std::is_same<T, uint16_t>::value) return Datatype::UINT16;
-		if constexpr (std::is_same<T, int32_t>::value) return Datatype::INT32;
-		if constexpr (std::is_same<T, uint32_t>::value) return Datatype::UINT32;
 		if constexpr (std::is_same<T, int64_t>::value) return Datatype::INT64;
-		if constexpr (std::is_same<T, uint64_t>::value) return Datatype::UINT64;
 		if constexpr (std::is_same<T, float>::value) return Datatype::FLOAT32;
 		if constexpr (std::is_same<T, double>::value) return Datatype::FLOAT64;
-		if constexpr (std::is_same<T, Complex<float>>::value) return Datatype::CFLOAT32;
-		if constexpr (std::is_same<T, Complex<double>>::value) return Datatype::CFLOAT64;
 
 		return Datatype::NONE;
 	}
@@ -453,18 +354,9 @@ namespace librapid
 		static std::map<Datatype, std::vector<std::string>> types = {
 			{Datatype::NONE, noneStr},
 			{Datatype::BOOL, boolStr},
-			{Datatype::INT8, int8Str},
-			{Datatype::UINT8, uint8Str},
-			{Datatype::INT16, int16Str},
-			{Datatype::UINT16, uint16Str},
-			{Datatype::INT32, int32Str},
-			{Datatype::UINT32, uint32Str},
 			{Datatype::INT64, int64Str},
-			{Datatype::UINT64, uint64Str},
 			{Datatype::FLOAT32, float32Str},
 			{Datatype::FLOAT64, float64Str},
-			{Datatype::CFLOAT32, cfloat32Str},
-			{Datatype::CFLOAT64, cfloat64Str}
 		};
 
 		// Locate the datatype
@@ -556,52 +448,10 @@ namespace librapid
 							alignedMalloc(sizeof(bool) * elems);
 						break;
 					}
-				case Datatype::INT8:
-					{
-						raw.data = (int8_t *)
-							alignedMalloc(sizeof(int8_t) * elems);
-						break;
-					}
-				case Datatype::UINT8:
-					{
-						raw.data = (uint8_t *)
-							alignedMalloc(sizeof(uint8_t) * elems);
-						break;
-					}
-				case Datatype::INT16:
-					{
-						raw.data = (int8_t *)
-							alignedMalloc(sizeof(int8_t) * elems);
-						break;
-					}
-				case Datatype::UINT16:
-					{
-						raw.data = (uint16_t *)
-							alignedMalloc(sizeof(uint16_t) * elems);
-						break;
-					}
-				case Datatype::INT32:
-					{
-						raw.data = (int8_t *)
-							alignedMalloc(sizeof(int8_t) * elems);
-						break;
-					}
-				case Datatype::UINT32:
-					{
-						raw.data = (uint32_t *)
-							alignedMalloc(sizeof(uint32_t) * elems);
-						break;
-					}
 				case Datatype::INT64:
 					{
-						raw.data = (int8_t *)
+						raw.data = (int64_t *)
 							alignedMalloc(sizeof(int8_t) * elems);
-						break;
-					}
-				case Datatype::UINT64:
-					{
-						raw.data = (uint64_t *)
-							alignedMalloc(sizeof(uint64_t) * elems);
 						break;
 					}
 				case Datatype::FLOAT32:
@@ -616,28 +466,15 @@ namespace librapid
 							alignedMalloc(sizeof(double) * elems);
 						break;
 					}
-				case Datatype::CFLOAT32:
-					{
-						raw.data = (Complex<float> *)
-							alignedMalloc(sizeof(Complex<float>) * elems);
-						break;
-					}
-				case Datatype::CFLOAT64:
-					{
-						raw.data = (Complex<double> *)
-							alignedMalloc(sizeof(Complex<double>) * elems);
-						break;
-					}
 			}
 		}
 		else if (raw.location == Accelerator::GPU)
 		{
 			void *memory = nullptr;
+			int64_t bytes = datatypeBytes(raw.dtype) * elems;
 
 		#ifdef LIBRAPID_CUDA_STREAM
-			cudaSafeCall(cudaMallocAsync(&memory,
-						 datatypeBytes(raw.dtype) * elems,
-						 cudaStream));
+			cudaSafeCall(cudaMallocAsync(&memory, bytes, cudaStream));
 		#else
 			cudaSafeCall(cudaMalloc(&memory, datatypeBytes(raw.dtype) * elems));
 		#endif
@@ -649,44 +486,9 @@ namespace librapid
 						raw.data = (bool *) memory;
 						break;
 					}
-				case Datatype::INT8:
-					{
-						raw.data = (int8_t *) memory;
-						break;
-					}
-				case Datatype::UINT8:
-					{
-						raw.data = (uint8_t *) memory;
-						break;
-					}
-				case Datatype::INT16:
-					{
-						raw.data = (int16_t *) memory;
-						break;
-					}
-				case Datatype::UINT16:
-					{
-						raw.data = (uint16_t *) memory;
-						break;
-					}
-				case Datatype::INT32:
-					{
-						raw.data = (int32_t *) memory;
-						break;
-					}
-				case Datatype::UINT32:
-					{
-						raw.data = (uint32_t *) memory;
-						break;
-					}
 				case Datatype::INT64:
 					{
 						raw.data = (int64_t *) memory;
-						break;
-					}
-				case Datatype::UINT64:
-					{
-						raw.data = (uint64_t *) memory;
 						break;
 					}
 				case Datatype::FLOAT32:
@@ -697,16 +499,6 @@ namespace librapid
 				case Datatype::FLOAT64:
 					{
 						raw.data = (double *) memory;
-						break;
-					}
-				case Datatype::CFLOAT32:
-					{
-						raw.data = (Complex<float> *) memory;
-						break;
-					}
-				case Datatype::CFLOAT64:
-					{
-						raw.data = (Complex<double> *) memory;
 						break;
 					}
 			}
@@ -730,44 +522,9 @@ namespace librapid
 					memory = std::get<bool *>(raw.data);
 					break;
 				}
-			case Datatype::INT8:
-				{
-					memory = std::get<int8_t *>(raw.data);
-					break;
-				}
-			case Datatype::UINT8:
-				{
-					memory = std::get<uint8_t *>(raw.data);
-					break;
-				}
-			case Datatype::INT16:
-				{
-					memory = std::get<int16_t *>(raw.data);
-					break;
-				}
-			case Datatype::UINT16:
-				{
-					memory = std::get<uint16_t *>(raw.data);
-					break;
-				}
-			case Datatype::INT32:
-				{
-					memory = std::get<int32_t *>(raw.data);
-					break;
-				}
-			case Datatype::UINT32:
-				{
-					memory = std::get<uint32_t *>(raw.data);
-					break;
-				}
 			case Datatype::INT64:
 				{
 					memory = std::get<int64_t *>(raw.data);
-					break;
-				}
-			case Datatype::UINT64:
-				{
-					memory = std::get<uint64_t *>(raw.data);
 					break;
 				}
 			case Datatype::FLOAT32:
@@ -778,16 +535,6 @@ namespace librapid
 			case Datatype::FLOAT64:
 				{
 					memory = std::get<double *>(raw.data);
-					break;
-				}
-			case Datatype::CFLOAT32:
-				{
-					memory = std::get<Complex<float> *>(raw.data);
-					break;
-				}
-			case Datatype::CFLOAT64:
-				{
-					memory = std::get<Complex<double> *>(raw.data);
 					break;
 				}
 		}
@@ -811,7 +558,7 @@ namespace librapid
 	}
 
 	inline void rawArrayMemcpy(RawArray &dst,
-							 const RawArray &src, uint64_t elems)
+							   const RawArray &src, uint64_t elems)
 	{
 		if (dst.location == Accelerator::NONE ||
 			src.location == Accelerator::NONE)
@@ -900,7 +647,7 @@ namespace librapid
 		{
 			if (dst.location != src.location)
 			{
-				if (dst.location == Accelerator::CPU)
+				if (src.location == Accelerator::CPU)
 				{
 					// Copy from CPU to GPU
 
@@ -911,7 +658,7 @@ namespace librapid
 
 						for (int64_t i = 0; i < elems; ++i)
 						{
-							const auto tmpVal = (A) b[i];
+							A tmpVal = A(b[i]);
 
 						#ifdef LIBRAPID_CUDA_STREAM
 							cudaSafeCall(cudaMemcpyAsync(a + i, &tmpVal,
@@ -924,7 +671,7 @@ namespace librapid
 						}
 					}, dst.data, src.data);
 				}
-				else if (dst.location == Accelerator::GPU)
+				else if (src.location == Accelerator::GPU)
 				{
 					// Copy from GPU to CPU
 
@@ -939,7 +686,7 @@ namespace librapid
 
 						#ifdef LIBRAPID_CUDA_STREAM
 							cudaSafeCall(cudaMemcpyAsync(&tmp, b + i,
-										 sizeof(A), cudaMemcpyDeviceToHost,
+										 sizeof(B), cudaMemcpyDeviceToHost,
 										 cudaStream));
 						#else
 							cudaSafeCall(cudaMemcpy(&tmp, b + i,

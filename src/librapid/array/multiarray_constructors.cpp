@@ -3,7 +3,7 @@
 
 namespace librapid
 {
-	VoidPtr validVoidPtr = VoidPtr{nullptr, Datatype::VALIDNONE, Accelerator::CPU};
+	RawArray validRawArray = RawArray{(bool *) nullptr, Datatype::VALIDNONE, Accelerator::CPU};
 
 #ifdef LIBRAPID_CUDA_STREAM
 	cudaStream_t cudaStream;
@@ -25,7 +25,7 @@ namespace librapid
 										"Extent was " + extent.str());
 
 		constructNew(extent, Stride::fromExtent(extent), dtype, location);
-		m_stride.scaleBytes(datatypeBytes(dtype));
+		// m_stride.scaleBytes(datatypeBytes(dtype));
 	}
 
 	Array::Array(const Array &other)
@@ -55,89 +55,12 @@ namespace librapid
 		initializeCudaStream();
 
 		constructNew(Extent(1), Stride(1), Datatype::BOOL, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::BOOL));
+		// m_stride.scaleBytes(datatypeBytes(Datatype::BOOL));
 		m_isScalar = true;
-		*((bool *) m_dataStart) = val;
-	}
-
-	Array::Array(int8_t val)
-	{
-		initializeCudaStream();
-
-		constructNew(Extent(1), Stride(1), Datatype::INT8, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::INT8));
-		m_isScalar = true;
-		*((int8_t *) m_dataStart) = val;
-	}
-
-	Array::Array(uint8_t val)
-	{
-		initializeCudaStream();
-
-		constructNew(Extent(1), Stride(1), Datatype::UINT8, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::UINT8));
-		m_isScalar = true;
-		*((uint8_t *) m_dataStart) = val;
-	}
-
-	Array::Array(int16_t val)
-	{
-		initializeCudaStream();
-
-		constructNew(Extent(1), Stride(1), Datatype::INT16, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::INT16));
-		m_isScalar = true;
-		*((int16_t *) m_dataStart) = val;
-	}
-
-	Array::Array(uint16_t val)
-	{
-		initializeCudaStream();
-
-		constructNew(Extent(1), Stride(1), Datatype::UINT16, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::UINT16));
-		m_isScalar = true;
-		*((uint16_t *) m_dataStart) = val;
-	}
-
-	Array::Array(int32_t val)
-	{
-		initializeCudaStream();
-
-		constructNew(Extent(1), Stride(1), Datatype::INT32, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::INT32));
-		m_isScalar = true;
-		*((int32_t *) m_dataStart) = val;
-	}
-
-	Array::Array(uint32_t val)
-	{
-		initializeCudaStream();
-
-		constructNew(Extent(1), Stride(1), Datatype::UINT32, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::UINT32));
-		m_isScalar = true;
-		*((uint32_t *) m_dataStart) = val;
-	}
-
-	Array::Array(int64_t val)
-	{
-		initializeCudaStream();
-
-		constructNew(Extent(1), Stride(1), Datatype::INT64, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::INT64));
-		m_isScalar = true;
-		*((int64_t *) m_dataStart) = val;
-	}
-
-	Array::Array(uint64_t val)
-	{
-		initializeCudaStream();
-
-		constructNew(Extent(1), Stride(1), Datatype::UINT64, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::UINT64));
-		m_isScalar = true;
-		*((uint64_t *) m_dataStart) = val;
+		std::visit([&](auto *data)
+		{
+			*data = val;
+		}, m_dataStart);
 	}
 
 	Array::Array(float val)
@@ -145,9 +68,12 @@ namespace librapid
 		initializeCudaStream();
 
 		constructNew(Extent(1), Stride(1), Datatype::FLOAT32, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::FLOAT32));
+		// m_stride.scaleBytes(datatypeBytes(Datatype::FLOAT32));
 		m_isScalar = true;
-		*((float *) m_dataStart) = val;
+		std::visit([&](auto *data)
+		{
+			*data = val;
+		}, m_dataStart);
 	}
 
 	Array::Array(double val)
@@ -155,29 +81,12 @@ namespace librapid
 		initializeCudaStream();
 
 		constructNew(Extent(1), Stride(1), Datatype::FLOAT64, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::FLOAT64));
+		// m_stride.scaleBytes(datatypeBytes(Datatype::FLOAT64));
 		m_isScalar = true;
-		*((double *) m_dataStart) = val;
-	}
-
-	Array::Array(const Complex<float> &val)
-	{
-		initializeCudaStream();
-
-		constructNew(Extent(1), Stride(1), Datatype::CFLOAT32, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::CFLOAT32));
-		m_isScalar = true;
-		*((Complex<float> *) m_dataStart) = val;
-	}
-
-	Array::Array(const Complex<double> &val)
-	{
-		initializeCudaStream();
-
-		constructNew(Extent(1), Stride(1), Datatype::CFLOAT64, Accelerator::CPU);
-		m_stride.scaleBytes(datatypeBytes(Datatype::CFLOAT64));
-		m_isScalar = true;
-		*((Complex<double> *) m_dataStart) = val;
+		std::visit([&](auto *data)
+		{
+			*data = val;
+		}, m_dataStart);
 	}
 
 	Array &Array::operator=(const Array &other)
@@ -221,8 +130,8 @@ namespace librapid
 		// Attempt to copy the data from other into *this
 		if (m_stride.isContiguous() && other.m_stride.isContiguous())
 		{
-			AUTOCAST_MEMCPY(makeVoidPtr(), other.makeVoidPtr(),
-							m_extent.size());
+			auto raw = createRaw();
+			rawArrayMemcpy(raw, other.createRaw(), m_extent.size());
 		}
 		else
 		{
@@ -243,144 +152,10 @@ namespace librapid
 			if (m_references != nullptr) decrement();
 			constructNew(Extent(1), Stride(1), Datatype::BOOL, Accelerator::CPU);
 		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::BOOL,
-						Accelerator::CPU}, 1);
-		m_isScalar = true;
-		return *this;
-	}
 
-	Array &Array::operator=(int8_t val)
-	{
-		if (m_isChild && !m_isScalar)
-			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
-		if (!m_isChild)
-		{
-			if (m_references != nullptr) decrement();
-			constructNew(Extent(1), Stride(1), Datatype::INT8, Accelerator::CPU);
-		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::INT8,
-						Accelerator::CPU}, 1);
-		m_isScalar = true;
-		return *this;
-	}
+		auto raw = createRaw();
+		rawArrayMemcpy(raw, RawArray{&val, Datatype::BOOL, Accelerator::CPU}, 1);
 
-	Array &Array::operator=(uint8_t val)
-	{
-		if (m_isChild && !m_isScalar)
-			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
-		if (!m_isChild)
-		{
-			if (m_references != nullptr) decrement();
-			constructNew(Extent(1), Stride(1), Datatype::UINT8, Accelerator::CPU);
-		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::UINT8,
-						Accelerator::CPU}, 1);
-		m_isScalar = true;
-		return *this;
-	}
-
-	Array &Array::operator=(int16_t val)
-	{
-		if (m_isChild && !m_isScalar)
-			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
-		if (!m_isChild)
-		{
-			if (m_references != nullptr) decrement();
-			constructNew(Extent(1), Stride(1), Datatype::INT16, Accelerator::CPU);
-		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::INT16,
-						Accelerator::CPU}, 1);
-		m_isScalar = true;
-		return *this;
-	}
-
-	Array &Array::operator=(uint16_t val)
-	{
-		if (m_isChild && !m_isScalar)
-			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
-		if (!m_isChild)
-		{
-			if (m_references != nullptr) decrement();
-			constructNew(Extent(1), Stride(1), Datatype::UINT16, Accelerator::CPU);
-		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::UINT16,
-						Accelerator::CPU}, 1);
-		m_isScalar = true;
-		return *this;
-	}
-
-	Array &Array::operator=(int32_t val)
-	{
-		if (m_isChild && !m_isScalar)
-			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
-		if (!m_isChild)
-		{
-			if (m_references != nullptr) decrement();
-			constructNew(Extent(1), Stride(1), Datatype::INT32, Accelerator::CPU);
-		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::INT32,
-						Accelerator::CPU}, 1);
-		m_isScalar = true;
-		return *this;
-	}
-
-	Array &Array::operator=(uint32_t val)
-	{
-		if (m_isChild && !m_isScalar)
-			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
-		if (!m_isChild)
-		{
-			if (m_references != nullptr) decrement();
-			constructNew(Extent(1), Stride(1), Datatype::UINT32, Accelerator::CPU);
-		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::UINT32,
-						Accelerator::CPU}, 1);
-		m_isScalar = true;
-		return *this;
-	}
-
-	Array &Array::operator=(int64_t val)
-	{
-		if (m_isChild && !m_isScalar)
-			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
-		if (!m_isChild)
-		{
-			if (m_references != nullptr) decrement();
-			constructNew(Extent(1), Stride(1), Datatype::INT64, Accelerator::CPU);
-		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::INT64,
-						Accelerator::CPU}, 1);
-		m_isScalar = true;
-		return *this;
-	}
-
-	Array &Array::operator=(uint64_t val)
-	{
-		if (m_isChild && !m_isScalar)
-			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
-		if (!m_isChild)
-		{
-			if (m_references != nullptr) decrement();
-			constructNew(Extent(1), Stride(1), Datatype::UINT64, Accelerator::CPU);
-		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::UINT64,
-						Accelerator::CPU}, 1);
 		m_isScalar = true;
 		return *this;
 	}
@@ -396,8 +171,10 @@ namespace librapid
 			if (m_references != nullptr) decrement();
 			constructNew(Extent(1), Stride(1), Datatype::FLOAT32, Accelerator::CPU);
 		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::FLOAT32,
-						Accelerator::CPU}, 1);
+
+		auto raw = createRaw();
+		rawArrayMemcpy(raw, RawArray{&val, Datatype::FLOAT32, Accelerator::CPU}, 1);
+
 		m_isScalar = true;
 		return *this;
 	}
@@ -413,44 +190,10 @@ namespace librapid
 			if (m_references != nullptr) decrement();
 			constructNew(Extent(1), Stride(1), Datatype::FLOAT64, Accelerator::CPU);
 		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::FLOAT64,
-						Accelerator::CPU}, 1);
-		m_isScalar = true;
-		return *this;
-	}
 
-	Array &Array::operator=(const Complex<float> &val)
-	{
-		if (m_isChild && !m_isScalar)
-			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
-		if (!m_isChild)
-		{
-			if (m_references != nullptr) decrement();
-			constructNew(Extent(1), Stride(1), Datatype::CFLOAT32,
-						 Accelerator::CPU);
-		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::CFLOAT32,
-						Accelerator::CPU}, 1);
-		m_isScalar = true;
-		return *this;
-	}
+		auto raw = createRaw();
+		rawArrayMemcpy(raw, RawArray{&val, Datatype::FLOAT64, Accelerator::CPU}, 1);
 
-	Array &Array::operator=(const Complex<double> &val)
-	{
-		if (m_isChild && !m_isScalar)
-			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
-		if (!m_isChild)
-		{
-			if (m_references != nullptr) decrement();
-			constructNew(Extent(1), Stride(1), Datatype::CFLOAT64,
-						 Accelerator::CPU);
-		}
-		AUTOCAST_MEMCPY(makeVoidPtr(), VoidPtr{(void *) (&val), Datatype::CFLOAT64,
-						Accelerator::CPU}, 1);
 		m_isScalar = true;
 		return *this;
 	}
@@ -472,7 +215,9 @@ namespace librapid
 		m_dtype = dtype;
 
 		// If array is scalar, allocate "sizeof(dtype)" bytes -- e.size() is 0
-		m_dataStart = AUTOCAST_ALLOC(dtype, location, e.size() + isScalar).ptr;
+		// m_dataStart = AUTOCAST_ALLOC(dtype, location, e.size() + isScalar).ptr;
+		auto raw = RawArray{m_dataStart, dtype, location};
+		m_dataStart = rawArrayMalloc(raw, e.size() + isScalar).data;
 		m_dataOrigin = m_dataStart;
 
 		m_references = new std::atomic<size_t>(1);
