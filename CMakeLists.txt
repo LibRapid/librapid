@@ -231,6 +231,12 @@ target_include_directories(${python_module_name} PRIVATE
 							"${CMAKE_SOURCE_DIR}" # For source dist
 						  )
 
+include(ProcessorCount)
+ProcessorCount(N)
+if(NOT threads EQUAL 0)
+	add_compile_definitions(NUM_THREADS=${N}/2)
+endif()
+
 install(TARGETS ${python_module_name} DESTINATION .)
 
 # Set the compiler to use maximum optimisations (SPEED!!!!)

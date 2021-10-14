@@ -184,18 +184,18 @@ namespace librapid
 		Array(const Extent &extent, Datatype dtype = Datatype::FLOAT64,
 			  Accelerator location = Accelerator::CPU);
 
-		inline Array(const Extent &extent, std::string dtype = "float64",
+		inline Array(const Extent &extent, std::string dtype,
 					 Accelerator location = Accelerator::CPU)
 			: Array(extent, stringToDatatype(dtype), location)
 		{}
 
-		inline Array(const Extent &extent, Datatype dtype = Datatype::FLOAT64,
+		inline Array(const Extent &extent, Datatype dtype,
 					 std::string accelerator = "cpu")
 			: Array(extent, dtype, stringToAccelerator(accelerator))
 		{}
 
-		inline Array(const Extent &extent, std::string dtype = "float64",
-					 std::string accelerator = "cpu")
+		inline Array(const Extent &extent, std::string dtype,
+					 std::string accelerator)
 			: Array(extent, stringToDatatype(dtype),
 					stringToAccelerator(accelerator))
 		{}
@@ -235,18 +235,21 @@ namespace librapid
 		 * \endrst
 		 */
 		Array(bool val);
-		Array(int8_t val);
-		Array(uint8_t val);
-		Array(int16_t val);
-		Array(uint16_t val);
-		Array(int32_t val);
-		Array(uint32_t val);
-		Array(int64_t val);
-		Array(uint64_t val);
 		Array(float val);
 		Array(double val);
-		Array(const Complex<float> &val);
-		Array(const Complex<double> &val);
+
+		template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
+		inline Array(T val)
+		{
+			initializeCudaStream();
+
+			constructNew(Extent(1), Stride(1), Datatype::INT64, Accelerator::CPU);
+			m_isScalar = true;
+			std::visit([&](auto *data)
+			{
+				*data = val;
+			}, m_dataStart);
+		}
 
 		/**
 		 * \rst
@@ -272,18 +275,30 @@ namespace librapid
 		 */
 		Array &operator=(const Array &other);
 		Array &operator=(bool val);
-		Array &operator=(int8_t val);
-		Array &operator=(uint8_t val);
-		Array &operator=(int16_t val);
-		Array &operator=(uint16_t val);
-		Array &operator=(int32_t val);
-		Array &operator=(uint32_t val);
-		Array &operator=(int64_t val);
-		Array &operator=(uint64_t val);
+
+		template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
+		inline Array operator=(T val)
+		{
+			if (m_isChild && !m_isScalar)
+				throw std::invalid_argument("Cannot set an array with more than zero"
+											" dimensions to a scalar value. Array must"
+											" have zero dimensions (i.e. scalar)");
+			if (!m_isChild)
+			{
+				if (m_references != nullptr) decrement();
+				constructNew(Extent(1), Stride(1), Datatype::INT64, Accelerator::CPU);
+			}
+
+			auto raw = createRaw();
+			int64_t tmp = val;
+			rawArrayMemcpy(raw, RawArray{&tmp, Datatype::INT64, Accelerator::CPU}, 1);
+
+			m_isScalar = true;
+			return *this;
+		}
+
 		Array &operator=(float val);
 		Array &operator=(double val);
-		Array &operator=(const Complex<float> &val);
-		Array &operator=(const Complex<double> &val);
 
 		~Array();
 
@@ -406,6 +421,171 @@ namespace librapid
 		std::string str(size_t indent, bool showCommas,
 						int64_t &printedRows, int64_t &printedCols) const;
 
+		template<typename FUNC>
+		static inline void applyUnaryOp(Array &dst, const Array &src,
+										const FUNC &operation)
+		{
+			// Operate on one array and store the result in another array
+
+			if (dst.m_references == nullptr || dst.m_extent != src.m_extent)
+			{
+				throw std::invalid_argument("Cannot operate on array with "
+											+ src.m_extent.str()
+											+ " and store the result in "
+											+ dst.m_extent.str());
+			}
+
+			auto srcPtr = src.createRaw();
+			auto dstPtr = dst.createRaw();
+			auto size = src.m_extent.size();
+
+			if (src.m_stride.isTrivial() && src.m_stride.isContiguous())
+			{
+				// Trivial
+				imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation);
+			}
+			else
+			{
+				// Not trivial, so use advanced method
+				imp::multiarrayUnaryOpComplex(dstPtr, srcPtr, size, dst.m_extent,
+											  dst.m_stride, src.m_stride, operation);
+			}
+
+			dst.m_isScalar = src.m_isScalar;
+		}
+
+		template<typename FUNC>
+		static inline Array applyUnaryOp(Array &src, const FUNC &operation)
+		{
+			// Operate on one array and store the result in another array
+
+			if (src.m_references == nullptr)
+			{
+				throw std::invalid_argument("Cannot operate on an "
+											"uninitialized array");
+			}
+
+			Array dst(src.m_extent, src.m_dtype, src.m_location);
+			auto srcPtr = src.createRaw();
+			auto dstPtr = dst.createRaw();
+			auto size = src.m_extent.size();
+
+			if (src.m_stride.isTrivial() && src.m_stride.isContiguous())
+			{
+				// Trivial
+				imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation);
+			}
+			else
+			{
+				// Not trivial, so use advanced method
+				imp::multiarrayUnaryOpComplex(dstPtr, srcPtr, size, dst.m_extent,
+											  dst.m_stride, src.m_stride, operation);
+			}
+
+			dst.m_isScalar = src.m_isScalar;
+
+			return dst;
+		}
+
+		template<class FUNC>
+		static inline void applyBinaryOp(Array &dst, const Array &srcA,
+										 const Array &srcB,
+										 const FUNC &operation)
+		{
+			// Operate on two arrays and store the result in another array
+
+			if (!srcA.m_isScalar && !srcB.m_isScalar && srcA.m_extent != srcB.m_extent)
+				throw std::invalid_argument("Cannot operate on two arrays with "
+											+ srcA.m_extent.str() + " and "
+											+ srcA.m_extent.str());
+
+			if (dst.m_references == nullptr || dst.m_extent != srcA.m_extent)
+				throw std::invalid_argument("Cannot operate on two arrays with "
+											+ srcA.m_extent.str()
+											+ " and store the result in "
+											+ dst.m_extent.str());
+
+			auto ptrSrcA = srcA.createRaw();
+			auto ptrSrcB = srcB.createRaw();
+			auto ptrDst = dst.createRaw();
+			auto size = dst.m_extent.size();
+
+			if ((srcA.m_stride.isTrivial() && srcA.m_stride.isContiguous() &&
+				srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
+				(srcA.m_stride == srcB.m_stride))
+			{
+				// Trivial
+				imp::multiarrayBinaryOpTrivial(ptrDst, ptrSrcA, ptrSrcB,
+											   srcA.m_isScalar, srcB.m_isScalar,
+											   size, operation);
+
+				// Update the result stride too
+				dst.m_stride = srcA.m_stride;
+			}
+			else
+			{
+				// Not trivial, so use advanced method
+				imp::multiarrayBinaryOpComplex(ptrDst, ptrSrcA, ptrSrcB,
+											   srcA.m_isScalar, srcB.m_isScalar,
+											   size, dst.m_extent, dst.m_stride,
+											   srcA.m_stride, srcB.m_stride,
+											   operation);
+			}
+
+			if (srcA.m_isScalar && srcB.m_isScalar)
+				dst.m_isScalar = true;
+		}
+
+		template<class FUNC>
+		static inline Array applyBinaryOp(const Array &srcA,
+										  const Array &srcB,
+										  const FUNC &operation)
+		{
+			// Operate on two arrays and store the result in another array
+
+			if (!(srcA.m_isScalar || srcB.m_isScalar) &&
+				srcA.m_extent != srcB.m_extent)
+				throw std::invalid_argument("Cannot operate on two arrays with "
+											+ srcA.m_extent.str() + " and "
+											+ srcB.m_extent.str());
+
+			Accelerator newLoc = max(srcA.m_location, srcB.m_location);
+			Datatype newType = max(srcA.m_dtype, srcB.m_dtype);
+			Array dst(srcA.m_extent, newType, newLoc);
+
+			auto ptrSrcA = srcA.createRaw();
+			auto ptrSrcB = srcB.createRaw();
+			auto ptrDst = dst.createRaw();
+			auto size = dst.m_extent.size();
+
+			if ((srcA.m_stride.isTrivial() && srcA.m_stride.isContiguous() &&
+				srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
+				(srcA.m_stride == srcB.m_stride))
+			{
+				// Trivial
+				imp::multiarrayBinaryOpTrivial(ptrDst, ptrSrcA, ptrSrcB,
+											   srcA.m_isScalar, srcB.m_isScalar,
+											   size, operation);
+
+				// Update the result stride too
+				dst.m_stride = srcA.m_stride;
+			}
+			else
+			{
+				// Not trivial, so use advanced method
+				imp::multiarrayBinaryOpComplex(ptrDst, ptrSrcA, ptrSrcB,
+											   srcA.m_isScalar, srcB.m_isScalar,
+											   size, dst.m_extent, dst.m_stride,
+											   srcA.m_stride, srcB.m_stride,
+											   operation);
+			}
+
+			if (srcA.m_isScalar && srcB.m_isScalar)
+				dst.m_isScalar = true;
+
+			return dst;
+		}
+
 	private:
 		inline void initializeCudaStream() const
 		{
@@ -460,88 +640,6 @@ namespace librapid
 							  bool stripMiddle, bool autoStrip,
 							  std::pair<lr_int, lr_int> &longest,
 							  int64_t &printedRows, int64_t &printedCols) const;
-
-		template<typename FUNC>
-		static inline void applyUnaryOp(Array &dst, const Array &src,
-										const FUNC &operation)
-		{
-			// Operate on one array and store the result in another array
-
-			if (dst.m_references == nullptr || dst.m_extent != src.m_extent)
-			{
-				throw std::invalid_argument("Cannot operate on array with "
-											+ src.m_extent.str()
-											+ " and store the result in "
-											+ dst.m_extent.str());
-			}
-
-			auto srcPtr = src.createRaw();
-			auto dstPtr = dst.createRaw();
-			auto size = src.m_extent.size();
-
-			if (src.m_stride.isTrivial() && src.m_stride.isContiguous())
-			{
-				// Trivial
-				imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation);
-			}
-			else
-			{
-				// Not trivial, so use advanced method
-				imp::multiarrayUnaryOpComplex(dstPtr, srcPtr, size, dst.m_extent,
-											  dst.m_stride, src.m_stride, operation);
-			}
-
-			dst.m_isScalar = src.m_isScalar;
-		}
-
-		template<class FUNC>
-		static inline void applyBinaryOp(Array &dst, const Array &srcA,
-										 const Array &srcB,
-										 const FUNC &operation)
-		{
-			// Operate on two arrays and store the result in another array
-
-			if (srcA.m_extent != srcB.m_extent)
-				throw std::invalid_argument("Cannot operate on two arrays with "
-											+ srcA.m_extent.str() + " and "
-											+ srcA.m_extent.str());
-
-			if (dst.m_references == nullptr || dst.m_extent != srcA.m_extent)
-				throw std::invalid_argument("Cannot operate on two arrays with "
-											+ srcA.m_extent.str()
-											+ " and store the result in "
-											+ dst.m_extent.str());
-
-			auto ptrSrcA = srcA.createRaw();
-			auto ptrSrcB = srcB.createRaw();
-			auto ptrDst = dst.createRaw();
-			auto size = dst.m_extent.size();
-
-			if ((srcA.m_stride.isTrivial() && srcA.m_stride.isContiguous() &&
-				srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
-				(srcA.m_stride == srcB.m_stride))
-			{
-				// Trivial
-				imp::multiarrayBinaryOpTrivial(ptrDst, ptrSrcA, ptrSrcB,
-											   srcA.m_isScalar, srcB.m_isScalar,
-											   size, operation);
-
-				// Update the result stride too
-				dst.m_stride = srcA.m_stride;
-			}
-			else
-			{
-				// Not trivial, so use advanced method
-				imp::multiarrayBinaryOpComplex(ptrDst, ptrSrcA, ptrSrcB,
-											   srcA.m_isScalar, srcB.m_isScalar,
-											   size, dst.m_extent, dst.m_stride,
-											   srcA.m_stride, srcB.m_stride,
-											   operation);
-			}
-
-			if (srcA.m_isScalar && srcB.m_isScalar)
-				dst.m_isScalar = true;
-		}
 
 	private:
 		Accelerator m_location = Accelerator::CPU;

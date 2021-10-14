@@ -104,9 +104,9 @@ namespace librapid
 
 		/**
 		* \rst
-		* 
+		*
 		* Return a pointer to the raw data of this stride
-		* 
+		*
 		* \endrst
 		*/
 		inline const lr_int *__restrict raw() const
@@ -230,8 +230,8 @@ namespace librapid
 		 */
 		Stride subStride(lr_int start = -1, lr_int end = -1) const;
 
-		void scaleBytes(size_t bytes);
-		Stride scaledBytes(size_t bytes) const;
+		// void scaleBytes(size_t bytes);
+		// Stride scaledBytes(size_t bytes) const;
 
 		/**
 		 * \rst

@@ -20,10 +20,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		template<typename A, typename B>
-		inline void autocastBeforeAfterDecimal(const Accelerator &locnA,
-											   const Accelerator &locnB,
-											   A *__restrict data, B *,
+		inline void autocastBeforeAfterDecimal(const RawArray &src,
 											   std::pair<lr_int, lr_int> &res)
 		{
 			std::stringstream stream;
@@ -31,42 +28,55 @@ namespace librapid
 
 			stream << std::boolalpha;
 
-			if (locnA == Accelerator::CPU)
+			if (src.location == Accelerator::CPU)
 			{
-				if (std::is_same<A, int8_t>::value ||
-					std::is_same<A, uint8_t>::value)
-					stream << (int) *data;
-				else
-					stream << *data;
+				std::visit([&](auto *value)
+				{
+					// if (src.dtype == Datatype::INT8 ||
+					// 	src.dtype == Datatype::UINT8)
+					// {
+					// 	stream << (int) *value;
+					// }
+					// else
+					// {
+					stream << *value;
+					// }
+				}, src.data);
 			}
 		#ifdef LIBRAPID_HAS_CUDA
 			else
 			{
-				auto tmp = (A *) malloc(sizeof(A));
+				std::visit([&](auto *value)
+				{
+					using A = std::remove_pointer<decltype(value)>::type;
 
-				if (tmp == nullptr)
-					throw std::bad_alloc();
+					A tmp;
 
-			#ifdef LIBRAPID_CUDA_STREAM
-				cudaSafeCall(cudaMemcpyAsync(tmp, data, sizeof(A),
-							 cudaMemcpyDeviceToHost, cudaStream));
-			#else
-				cudaSafeCall(cudaMemcpy(tmp, data, sizeof(A), cudaMemcpyDeviceToHost));
-			#endif // LIBRAPID_CUDA_STREAM
+				#ifdef LIBRAPID_CUDA_STREAM
+					cudaSafeCall(cudaMemcpyAsync(&tmp, value, sizeof(A),
+								 cudaMemcpyDeviceToHost, cudaStream));
+				#else
+					cudaSafeCall(cudaMemcpy(tmp, value, sizeof(A),
+								 cudaMemcpyDeviceToHost));
+				#endif // LIBRAPID_CUDA_STREAM
 
-				if (std::is_same<A, int8_t>::value ||
-					std::is_same<A, uint8_t>::value)
-					stream << (int) *tmp;
-				else
-					stream << *tmp;
-
-				free(tmp);
+					if (std::is_same<A, int8_t>::value ||
+						std::is_same<A, uint8_t>::value)
+						stream << (int) tmp;
+					else
+						stream << tmp;
+				}, src.data);
+			}
+		#else
+			else
+			{
+				throw std::invalid_argument("CUDA support was not enabled, so an
+											" Array on the GPU cannot be printed");
 			}
 		#endif
 
 			std::string str = stream.str();
-			if (std::is_floating_point<A>::value &&
-				str.find_last_of('.') == std::string::npos)
+			if (isFloating(src.dtype) && str.find_last_of('.') == std::string::npos)
 			{
 				res = {str.length(), 0};
 				return;
@@ -82,52 +92,62 @@ namespace librapid
 			res = {index, str.length() - index - 1};
 		}
 
-		template<typename A, typename B>
-		inline void autocastFormatValue(const Accelerator &locnA,
-										const Accelerator &locnB,
-										A *__restrict data, B *,
-										std::string &res)
+		inline void autocastFormatValue(const RawArray &src, std::string &res)
 		{
 			std::stringstream stream;
 			stream.precision(10);
 
 			stream << std::boolalpha;
 
-			if (locnA == Accelerator::CPU)
+			if (src.location == Accelerator::CPU)
 			{
-				if (std::is_same<A, int8_t>::value ||
-					std::is_same<A, uint8_t>::value)
-					stream << (int) *data;
-				else
-					stream << *data;
+				std::visit([&](auto *value)
+				{
+					// if (src.dtype == Datatype::INT8 ||
+					// 	src.dtype == Datatype::UINT8)
+					// {
+					// 	stream << (int) *value;
+					// }
+					// else
+					// {
+					stream << *value;
+					// }
+				}, src.data);
 			}
 		#ifdef LIBRAPID_HAS_CUDA
 			else
 			{
-				auto tmp = (A *) malloc(sizeof(A));
+				std::visit([&](auto *value)
+				{
+					using A = std::remove_pointer<decltype(value)>::type;
 
-			#ifdef LIBRAPID_CUDA_STREAM
-				cudaSafeCall(cudaMemcpyAsync(tmp, data, sizeof(A),
-							 cudaMemcpyDeviceToHost, cudaStream));
-			#else
-				cudaSafeCall(cudaMemcpy(tmp, data, sizeof(A), cudaMemcpyDeviceToHost));
-			#endif // LIBRAPID_CUDA_STREAM
+					auto tmp = (A *) malloc(sizeof(A));
 
-				if (std::is_same<A, int8_t>::value ||
-					std::is_same<A, uint8_t>::value)
-					stream << (int) *tmp;
-				else
-					stream << *tmp;
+					if (tmp == nullptr)
+						throw std::bad_alloc();
 
-				free(tmp);
+				#ifdef LIBRAPID_CUDA_STREAM
+					cudaSafeCall(cudaMemcpyAsync(tmp, value, sizeof(A),
+								 cudaMemcpyDeviceToHost, cudaStream));
+				#else
+					cudaSafeCall(cudaMemcpy(tmp, value, sizeof(A), cudaMemcpyDeviceToHost));
+				#endif // LIBRAPID_CUDA_STREAM
+
+					if (std::is_same<A, int8_t>::value ||
+						std::is_same<A, uint8_t>::value)
+						stream << (int) *tmp;
+					else
+						stream << *tmp;
+
+					free(tmp);
+				}, src.data);
 			}
 		#endif
 
 			res = stream.str();
-			if (std::is_floating_point<A>::value &&
-				res.find_last_of('.') == std::string::npos)
+			if (isFloating(src.dtype) && res.find_last_of('.') == std::string::npos)
 				res += ".";
-			}
+		}
 
 		template<typename _Ty>
 		void arrayOpEq(void *dataStart, Accelerator location, const _Ty &val)
@@ -148,7 +168,7 @@ namespace librapid
 							 cudaMemcpyHostToDevice));
 			#endif // LIBRAPID_CUDA_STREAM
 			#endif // LIBRAPID_HAS_CUDA
-		}
+			}
 		}
 	}
 }
