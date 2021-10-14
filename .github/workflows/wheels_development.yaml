@@ -1,12 +1,9 @@
-name: Wheels
+name: Wheels (development)
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
     branches:
-      - master
+      - development
   schedule:
     - cron: "0 12 1-31 * *"
   workflow_dispatch:
@@ -17,16 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
           submodules: recursive
-          ref: ${{ steps.extract_branch.outputs.branch }}
       
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -99,16 +90,10 @@ jobs:
       CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2014
 
     steps:
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
           submodules: recursive
-          ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -187,16 +172,10 @@ jobs:
       CIBW_SKIP: "*-win32"
 
     steps:
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
           submodules: recursive
-          ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Setup WSL
         uses: Vampire/setup-wsl@v1.1.0

@@ -2,22 +2,10 @@
 #define LIBRAPID_CONFIG
 
 #ifdef LIBRAPID_PYTHON
-
 // PyBind11 specific definitions and includes
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 namespace py = pybind11;
-
-using python_dtype = double;
-
-namespace librapid
-{
-	int pythonBitness()
-	{
-		return sizeof(python_dtype) * 8;
-	}
-}
-
 #endif // LIBRAPID_PYTHON
 
 #ifdef LIBRAPID_HAS_BLAS
@@ -26,11 +14,9 @@ namespace librapid
 
 #if defined(NDEBUG) || defined(LIBRAPID_NDEBUG)
 #define LIBRAPID_NDEBUG
-#define LR_INLINE inline
 #else
 #define LIBRAPID_NDEBUG
-#define LR_INLINE
-#endif // NDEBUG || NDARRAY_DEBUG
+#endif // NDEBUG || LIBRAPID_NDEBUG
 
 #ifndef LIBRAPID_HAS_OMP
 #ifdef _OPENMP
@@ -116,77 +102,12 @@ namespace librapid
 #define LIBRAPID_HAS_OPENBLAS
 #endif
 
-// Easy access to the current time (in s)
-#include <chrono>
-
-namespace librapid
-{
-	LR_INLINE double seconds()
-	{
-		return (double) std::chrono::high_resolution_clock().now().time_since_epoch().count() / 1000000000;
-	}
-
-	LR_INLINE void sleep(double s)
-	{
-		auto start = seconds();
-
-		while (seconds() - start < s)
-		{
-		}
-	}
-}
-
-// Console width and height information
-#if defined(LIBRAPID_OS_WINDOWS)
-#include <windows.h>
-#elif defined(LIBRAPID_OS_UNIX)
-#include <sys/ioctl.h>
-#include <unistd.h>
-#endif
-
-namespace librapid
-{
-	struct consoleSize
-	{
-		lr_int rows;
-		lr_int cols;
-	};
-
-#if defined(LIBRAPID_OS_WINDOWS)
-	consoleSize getConsoleSize()
-	{
-		static CONSOLE_SCREEN_BUFFER_INFO csbi;
-		int cols, rows;
-
-		GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-		cols = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-		rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-
-		return {rows, cols};
-	}
-#elif defined(LIBRAPID_OS_UNIX)
-	consoleSize getConsoleSize()
-	{
-		static struct winsize w;
-		ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-
-		return {w.ws_row, w.ws_col};
-	}
-#else
-	consoleSize getConsoleSize()
-	{
-		// Not a clue what this would run on, or how it would be done
-		// correctly, so just return some arbitrary values...
-
-		return {80, 120};
-	}
-#endif
-}
+#include <iostream>
 
 // BLAS config settings
 namespace librapid
 {
-	bool hasBlas()
+	inline bool hasBlas()
 	{
 	#ifdef LIBRAPID_HAS_BLAS
 		return true;
@@ -195,7 +116,7 @@ namespace librapid
 	#endif // LIBRAPID_HAS_BLAS
 	}
 
-	void setBlasThreads(int num)
+	inline void setBlasThreads(int num)
 	{
 	#ifdef LIBRAPID_HAS_OPENBLAS
 		openblas_set_num_threads(num);
@@ -205,23 +126,23 @@ namespace librapid
 		omp_set_num_threads(num);
 	#endif // LR_HAS_OMP
 	#else
-		std::cout << "The function 'librapid_set_blas_threads' only works in C++"
-			"and Python when compiled with OpenBLAS" << "\n";
+		throw std::runtime_error("Cannot set BLAS threads because OpenBLAS was not "
+								 "linked against");
 	#endif // LIBRAPID_HAS_OPENBLAS
 	}
 
-	int getBlasThreads()
+	inline int getBlasThreads()
 	{
 	#ifdef LIBRAPID_HAS_OPENBLAS
 		return openblas_get_num_threads();
 	#else
-		std::cout << "The function 'librapid_set_blas_threads' only works in C++"
-			"and Python when compiled with OpenBLAS" << "\n";
+		throw std::runtime_error("Cannot set BLAS threads because OpenBLAS was not "
+								 "linked against");
 		return -1;
 	#endif // LIBRAPID_HAS_OPENBLAS
 	}
 
-	void setNumThreads(int num)
+	inline void setNumThreads(int num)
 	{
 	#if defined(LIBRAPID_HAS_OPENBLAS)
 		setBlasThreads(num);
@@ -234,13 +155,12 @@ namespace librapid
 	#endif
 
 	#if !defined(LIB_SET)
-		std::cout << "LibRapid does not have access to any multi-threaded components"
-			"such as OpenMP or OpenBLAS, so the function \"set_num_threads\""
-			"will not do anything" << "\n";
+		throw std::runtime_error("Cannot set the number of threads because LibRapid"
+								 " does not have OpenBLAS or OpenMP");
 	#endif
 	}
 
-	int getNumThreads()
+	inline int getNumThreads()
 	{
 	#if defined(LIBRAPID_HAS_OPENBLAS)
 		return getBlasThreads();
@@ -340,6 +260,61 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
 
 #undef min
 #undef max
+
+// Disable "conversation from X to Y, possible loss of data"
+#if defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#elif defined(__GNUC__) || defined(__GNUG__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#elif defined(_MSC_VER)
+#pragma warning( push )
+#pragma warning( disable : 4244 )
+#pragma warning( disable : 6386 )
+#endif
+
+// Data alignment
+#ifndef DATA_ALIGN
+#define DATA_ALIGN 16 // 1024
+#endif
+
+// Number of threads for parallel regions
+#ifndef NUM_THREADS
+#define NUM_THREADS 4
+#endif // NUM_THREADS
+
+// For n < THREAD_THRESHOLD, code runs serially -- otherwise it'll run in parallel
+#ifndef THREAD_THREASHOLD
+#define THREAD_THREASHOLD 10000
+#endif // THREAD_THREASHOLD
+
+namespace librapid
+{
+	inline void *alignedMalloc(size_t required_bytes,
+							   size_t alignment = DATA_ALIGN)
+	{
+		// return malloc(required_bytes);
+
+		void *p1; // original block
+		void **p2; // aligned block
+		size_t offset = alignment - 1 + sizeof(void *);
+
+		if ((p1 = (void *) malloc(required_bytes + offset)) == nullptr)
+			throw std::bad_alloc();
+
+		p2 = (void **) (((size_t) (p1) +offset) & ~(alignment - 1));
+		p2[-1] = p1;
+		return p2;
+	}
+
+	inline void alignedFree(void *p)
+	{
+		// free(p);
+
+		free(((void **) p)[-1]);
+	}
+}
 
 // Uncomment this to log Array reference changes
 // #define LIBRAPID_REFCHECK

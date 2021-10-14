@@ -4,5 +4,4 @@ exhale==0.2.3
 furo==2021.4.11b34
 pydata-sphinx-theme==0.6.3
 numpydoc==1.1.0
-pyqt5==5.12.3
-pyqtwebengine==5.12.1
+sphinx_panels==0.6.0

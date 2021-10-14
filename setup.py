@@ -9,6 +9,7 @@ import shutil
 from packaging.version import LegacyVersion
 from skbuild.exceptions import SKBuildError
 from skbuild.cmaker import get_cmake_version
+import sys
 
 if os.path.exists("pybind11") and not os.path.exists(os.path.join("src", "librapid", "pybind11")):
 	shutil.copytree("pybind11", os.path.join("src", "librapid", "pybind11"))
@@ -102,6 +103,13 @@ version_file.close()
 with open(os.path.join(ROOT_DIR, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
+if sys.maxsize > 2**32 and platform.system() == "Windows":
+	print("Using 64bit Python")
+	cmake_args = ["-DCMAKE_GENERATOR_PLATFORM=x64"]
+else:
+	print("Using 32bit Python (or unknown)")
+	cmake_args = []
+
 setup(
 	name="librapid",
 	version=__version__,
@@ -113,8 +121,9 @@ setup(
 	long_description_content_type="text/markdown",
 	packages=["librapid"],
 	package_dir={"" : "src"},
+	cmake_args=cmake_args,
 	cmake_install_dir="src/librapid",
-	license="Boost Software License",
+	license="MIT License",
 	keywords=["math", "neural network", "ndarray", "array", "matrix",
 			"high-performance computing"],
 	classifiers=[
