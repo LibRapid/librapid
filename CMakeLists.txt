@@ -3,7 +3,7 @@ project(librapid VERSION "0.2.6")
 
 message(STATUS "CMake Version: ${CMAKE_VERSION}")
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 # Attempt to locate the required packages
 find_package(CUDAToolkit)
@@ -31,12 +31,30 @@ option(USE_CUDA "Attempt to use CUDA" ON)
 option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 
 file(GLOB_RECURSE SOURCES "src/librapid/*.cpp")
-
 message(STATUS "Source files found: ${SOURCES}")
 
 set(python_module_name "_librapid")
 pybind11_add_module(${python_module_name} MODULE
 					"src/librapid/pybind_librapid.cpp"
+					# Array library
+					"src/librapid/array/extent.cpp"
+					"src/librapid/array/iterators.cpp"
+					"src/librapid/array/stride.cpp"
+					"src/librapid/array/multiarray.cpp"
+					"src/librapid/array/multiarray_constructors.cpp"
+					"src/librapid/array/multiarray_string_methods.cpp"
+					"src/librapid/array/multiarray_indexing.cpp"
+					"src/librapid/array/multiarray_manipulation.cpp"
+					"src/librapid/array/multiarray_arithmetic.cpp"
+					# Math library
+					"src/librapid/math/core_math.cpp"
+					# String methods
+					"src/librapid/stringmethods/format_number.cpp"
+					# Utilities
+					"src/librapid/utils/color.cpp"
+					"src/librapid/utils/console_utils.cpp"
+					"src/librapid/utils/time_utils.cpp"
+					# Tests
 					"src/librapid/test/librapid_test.cpp"
 					)
 
@@ -197,7 +215,7 @@ if (${CUDAToolkit_FOUND})
 							 )
 
 		add_compile_definitions(LIBRAPID_HAS_CUDA)
-		add_compile_definitions(LIBRAPID_CUDA_STREAMS)
+		add_compile_definitions(LIBRAPID_CUDA_STREAM)
 	else()
 		message(WARNING "CUDA was found but is not being linked against (Value <USE_CUDA> is " ${USE_CUDA} ")")
 	endif()
@@ -213,4 +231,26 @@ target_include_directories(${python_module_name} PRIVATE
 							"${CMAKE_SOURCE_DIR}" # For source dist
 						  )
 
+include(ProcessorCount)
+ProcessorCount(N)
+if(NOT threads EQUAL 0)
+	add_compile_definitions(NUM_THREADS=${N}/2)
+endif()
+
 install(TARGETS ${python_module_name} DESTINATION .)
+
+# Set the compiler to use maximum optimisations (SPEED!!!!)
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+	# using Clang
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	# using GCC
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+	# using Intel C++
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+	# using Visual Studio C++
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
+endif()

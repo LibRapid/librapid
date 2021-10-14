@@ -10,27 +10,43 @@ Thanks to @TheWindoof for his help on the library
 
 ## How it Works
 
-LibRapid is a fully templated header-only C++ library, which can be found at ```./librapid/```. The C++ library is then interfaced with Python using the amazing [PyBind11](https://github.com/pybind/pybind11) library, meaning very little performance is lost between the C++ and Python versions of the library.
+LibRapid is a highly-optimized C++ (and CUDA) library which can be found at ```./src/librapid```. The C++ library is interfaced with Python using [PyBind11](https://github.com/pybind/pybind11), meaning very little performance is lost between the C++ backend and Python frontend of the library.
 
-LibRapid also aims to provide a consistent interface between the C++ and Python libraries, allowing you to use the library comprehensively in both language.
+LibRapid also aims to provide a consistent interface between the C++ and Python libraries, allowing you to use the library comprehensively in both languages without having to trawl through two sets of documentation.
 
-Additionally, the Python interface has been adjusted slightly from the C++ interface, providing a more "pythonic" feel, while not reducing the functionality in the slightest.
+Please note that the Python interface has been adjusted slightly from the C++ interface to provide a more "pythonic" feel without reducing the overall functionality.
 
 ## Installing LibRapid
 
+### Python
+
 To install LibRapid as a Python library, simply run ```pip install librapid``` in the command line. Hopefully, there will be precompiled wheels available for your operating system and python version, meaning you will not need a C++ compiler to install it (if this is not the case, a modern C++ compiler will be required)
 
-### WARNING
+#### Building from Source
 
-When installing LibRapid from ``pip``, there is a chance that the pre-build wheels will lead to an error (ususally a ```signal: illegal instruction (core dumped)```). This is because the pre-build OpenBLAS version that comes with the library is attempting to use an instruction that your computer does not support (AVX, AVX2, AVX512). This is a known issue and I am working on resolving this issue, but until that point, you may have to install LibRapid with a slightly different command: ```pip install librapid --no-binary :all:```
+To enable CUDA support, to use your own BLAS library or to get a (potentially) more optimised install of the library, you will have to build LibRapid from source:
 
-To use the library for C++ use, a modern C++ compiler will definitely be required. To use the library simply add the directory of this file to your extra include paths, and include the library using ```#include<librapid/librapid.hpp>```
+``` bash
+git clone https://github.com/LibRapid/librapid.git --recursive
+cd librapid
+pip install . -vvv
+```
+
+### C++
+
+To use the library for C++ use, a modern C++ compiler will definitely be required. You will need to add all sources to your project and include the main header file ```librapid/librapid.hpp```.
+
+***This method is very tedious. In the future, CMake support will be added to enable easier building and linking***
 
 ## Documentation
 
-Unfortunately, the documentation cannot currently be built by [ReadTheDocs](https://readthedocs.org/) due to a bug in the version of [Doxygen](https://www.doxygen.nl/index.html) they are using. It would seem that the systems will be getting an upgrade in the near future, hopefully moving to a newer version of Doxygen, though this is still not certain.
+### Viewing Online
 
-If you would like to view the documentation, you will have to build it yourself. This is very simple once you have the correct software installed, most of which can be installed via ```pip```.
+Documentation can be found online here: https://librapid.readthedocs.io/en/latest/
+
+### Building from Source
+
+If you would like to build it yourself, you will need to instal the required software, which can be found below:
 
 ```bash
 pip install sphinx
@@ -43,8 +59,6 @@ You will also need to install a recent version of Doxygen, which you can find [h
 
 To build the documentation, open a command line window in the ```docs``` directory and run ```make html```. You can then open the file ```docs/build/html/index.html``` in a web-browser to view the documentation.
 
-Hopefully, the documentation will be available online in the near future, so you will not have to build it yourself...
-
 ## Performance
 
 LibRapid has highly optimized functions and routines, meaning your code will be faster as a result. Many of the functions can match or even exceed the performance of [NumPy](https://github.com/numpy/numpy)
@@ -55,58 +69,14 @@ To use BLAS in C++, simply allow LibRapid to find the ```cblas.h``` file by addi
 
 For the Python API to LibRapid, things are much simpler. If you install the library via ```pip```, it should come precompiled with OpenBLAS, so you don't have to do anything yourself.
 
-Unfortunately, when building OpenBLAS for the Python wheels, they are designed to be optimal on the build system, which is often use very different hardware to normal users. For this reason, the BLAS installs are often not optimal, and may lead to strange and inconsistent speeds while running. To mitigate this slightly, we recommend you install a BLAS library on your machine and then build LibRapid from source if you want to get the most out of it.
-
-LibRapid will automatically search some specific directories for OpenBLAS, though if you have it installed in a differnet place, or you have a different library installed alltogether, you can specify where LibRapid should search for the files when you build it from the command line.
+If you build LibRapid from source, it will automatically search some specific directories for a BLAS install, though if one is not found, BLAS will not be linked and internal routines will be used instead. Please note that the BLAS install must have the following file structure:
 
 ``` None
-The following command line options are available
-They should be used as follows:
-e.g. --blas-dir=c:/opt/openblas
-
-Options:
---use-float       <<  The datatype used within the python library will be
-                      32 bit floating point values. They are often slightly
-                      faster than the 64 bit type, though can only accurately
-                      store 7 decimal places
-
---use-double      <<  The datatype used within the python library will be
-                      64 bit floating point values. They are marginally slower
-                      than 32 bit values but can accurately store 15 decimal places
-
---no-blas         <<  Do not attempt to link against any BLAS library
-                      Use only the pre-installed routines (which are slower)
-
---blas-dir        <<  Set the directory where LibRapid can find a CBlas
-                      compatible library. LibRapid will expect the directory
-                      to contain a file structure like this (Windows example):
-
-                      blas-dir
-                      ├── bin
-                      |   └── libopenblas.dll
-                      ├── include
-                      |   └── cblas.h
-                      └── lib
-                          └── libopenblas.lib
-
---blas-include    <<  Set the BLAS include directory. LibRapid will expect
-                      cblas.h to be in this directory
-
---blas-lib        <<  Set the BLAS library directory. LibRapid will expect
-                      a library file to be here, such as libopenblas.lib
-                      or openblas.a
-
---blas-bin        <<  Set the directory of the BLAS binaries on Windows.
-                      LibRapid will search for a DLL file
-```
-
-To build LibRapid from source and specify commands, use the following commands:
-
-``` bash
-git clone https://github.com/Pencilcaseman/librapid.git
-cd librapid
-python setup.py sdist --blas-dir=C:/opt/openblas
-#                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
-#                     Change this to your arguments
-pip install .
+blas-dir
+├── include
+|   └── cblas.h
+├── lib
+|   └── your-blas-lib.lib
+└── bin (Only on Windows)
+    └── your-blass-dll.dll
 ```
