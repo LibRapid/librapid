@@ -11,6 +11,8 @@ src/librapid/jitify
 
 openblas_install
 
+MANIFEST
+
 build/*
 _skbuild
 

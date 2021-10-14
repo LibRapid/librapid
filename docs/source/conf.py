@@ -14,7 +14,13 @@ import os
 import sys
 import textwrap
 
-sys.path.insert(1, os.path.abspath("../.."))
+print("VERSION INFORMATION:")
+os.system("pip show sphinx")
+os.system("pip show breathe")
+os.system("pip show exhale")
+os.system("doxygen --version")
+
+sys.path.insert(0, os.path.abspath("../.."))
 
 # -- Project information -----------------------------------------------------
 
@@ -42,6 +48,7 @@ extensions = [
 	"sphinx.ext.coverage",
 	"sphinx.ext.autosectionlabel",
 	"sphinx.ext.intersphinx",
+	"sphinx_panels",
 	"breathe",
 	"exhale",
 	"numpydoc"
@@ -67,26 +74,26 @@ EXPAND_ONLY_PREDEF    = NO
 PREDEFINED            += LR_INLINE=
 PREDEFINED            += __restrict=
 PREDEFINED            += LIBRAPID_MAX_DIMS=32
-PREDEFINED            += __host__
-PREDEFINED            += __device__
-PREDEFINED            += __global__
+PREDEFINED            += __host__=
+PREDEFINED            += __device__=
+PREDEFINED            += __global__=
 
 """
 
 # Set up the exhale extension
 exhale_args = {
 	# These arguments are required
-	"containmentFolder" :		"./api",
-	"rootFileName" :			"index.rst",
-	"rootFileTitle" :			"LibRapid",
-	"doxygenStripFromPath" :	"..",
+	"containmentFolder":	"./api",
+	"rootFileName":			"index.rst",
+	"rootFileTitle":		"LibRapid",
+	"doxygenStripFromPath":	"..",
 	# Suggested optional arguments
-	"createTreeView" :			True,
+	"createTreeView":		True,
 	# TIP: if using the sphinx-bootstrap-theme, you need
 	# "treeViewIsBootstrap": True,
 	"exhaleExecutesDoxygen": True,
 	"exhaleDoxygenStdin": textwrap.dedent(doxygen_inputs),
-	"verboseBuild": True
+	"verboseBuild": False
 }
 
 # Add any paths that contain templates here, relative to this directory.
@@ -95,8 +102,8 @@ exhale_args = {
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["autocast/README.md"]
-source_suffix = ['.rst', '.txt']
+exclude_patterns = []
+
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -104,7 +111,6 @@ source_suffix = ['.rst', '.txt']
 # a list of builtin themes.
 
 # html_theme = "furo"
-# html_theme = "default"
 html_theme = "pydata_sphinx_theme"
 
 html_logo = "../../branding/LibRapid small space.png"

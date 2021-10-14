@@ -18,32 +18,27 @@ namespace librapid
 		 * be equal to the number of elements in the provided list, and the stride
 		 * for each dimension will be the corresponding value in the data provided
 		 *
+		 * If the provided value is a single scalar, the Stride object will
+		 * be created with that number of dimensions, with each value set to one.
+		 *
+		 * .. Attention::
+		 *
+		 *		Creation from a scalar value only works in C++, as in Python the
+		 *		arguments can be passed without specifying they are a list
+		 *
+		 *		Example:
+		 *
+		 *		>>> librapid.Stride([5])
+		 *		<librapid.Stride(5)>
+		 *
+		 *		>>> librapid.Stride(5) # Note, not a list
+		 *		<librapid.Stride(5)>
+		 *
 		 * \endrst
 		 */
-		template<typename _Ty = lr_int>
-		Stride(const std::initializer_list<_Ty> &data)
-			: Stride(std::vector<lr_int>(data.begin(), data.end()))
-		{}
-
-		template<typename _Ty = lr_int,
-			typename std::enable_if<std::is_integral<_Ty>::value, int>::type = 0>
-			Stride(const std::vector<_Ty> &data)
-		{
-			// Initialize members
-			m_isTrivial = true;
-			m_isContiguous = true;
-			m_dims = data.size();
-
-			// Check for a valid number of dimensions
-			if (m_dims > LIBRAPID_MAX_DIMS)
-				throw std::runtime_error("Cannot create Stride with "
-										 + std::to_string(m_dims)
-										 + " dimensions. Maximum allowed is "
-										 + std::to_string(LIBRAPID_MAX_DIMS));
-
-			for (size_t i = 0; i < data.size(); ++i)
-				m_stride[i] = data[i];
-		}
+		Stride(const std::initializer_list<lr_int> &data);
+		Stride(const std::vector<lr_int> &data);
+		Stride(size_t dims);
 
 		/**
 		 * \rst
@@ -53,32 +48,10 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		Stride(const Stride &other)
-		{
-			m_isTrivial = other.m_isTrivial;
-			m_isContiguous = other.m_isContiguous;
-			m_dims = other.m_dims;
-
-			for (size_t i = 0; i < m_dims; ++i)
-				m_stride[i] = other.m_stride[i];
-		}
+		Stride(const Stride &other);
 
 	#ifdef LIBRAPID_PYTHON
-		Stride(py::args args)
-		{
-			m_dims = py::len(args);
-
-			if (m_dims > LIBRAPID_MAX_DIMS)
-				throw std::runtime_error("Cannot create Stride with "
-										 + std::to_string(m_dims)
-										 + " dimensions. Limit is "
-										 + std::to_string(LIBRAPID_MAX_DIMS));
-
-			size_t neg = 0;
-
-			for (lr_int i = 0; i < m_dims; i++)
-				m_stride[i] = py::cast<lr_int>(args[i]);
-		}
+		Stride(py::args args);
 	#endif
 
 		/**
@@ -89,19 +62,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE Stride &operator=(const Stride &other)
-		{
-			m_dims = other.m_dims;
-			m_isTrivial = other.m_isTrivial;
-			m_isContiguous = other.m_isContiguous;
-
-			for (size_t i = 0; i < m_dims; ++i)
-			{
-				m_stride[i] = other.m_stride[i];
-			}
-
-			return *this;
-		}
+		Stride &operator=(const Stride &other);
 
 		/**
 		 * \rst
@@ -125,20 +86,9 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE static Stride fromExtent(const Extent &extent)
-		{
-			Stride res;
-			res.m_dims = extent.ndim();
+		static Stride fromExtent(const Extent &extent);
 
-			size_t prod = 1;
-			for (size_t i = 0; i < extent.ndim(); ++i)
-			{
-				res.m_stride[res.m_dims - i - 1] = (lr_int) prod;
-				prod *= extent[res.m_dims - i - 1];
-			}
-
-			return res;
-		}
+		void setContiguity(bool newVal);
 
 		/**
 		 * \rst
@@ -147,9 +97,36 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE size_t ndim() const
+		inline size_t ndim() const
 		{
 			return m_dims;
+		}
+
+		/**
+		* \rst
+		*
+		* Return a pointer to the raw data of this stride
+		*
+		* \endrst
+		*/
+		inline const lr_int *__restrict raw() const
+		{
+			return m_stride;
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Convert the Stride object to an std::vector and return the result
+		 *
+		 * \endrst
+		 */
+		inline std::vector<lr_int> toVec() const
+		{
+			std::vector<lr_int> res(m_dims);
+			for (size_t i = 0; i < m_dims; ++i)
+				res[i] = m_stride[i];
+			return res;
 		}
 
 		/**
@@ -163,7 +140,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE bool isTrivial() const
+		inline bool isTrivial() const
 		{
 			return m_isTrivial;
 		}
@@ -179,7 +156,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE bool isContiguous() const
+		inline bool isContiguous() const
 		{
 			return m_isContiguous;
 		}
@@ -193,23 +170,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE bool operator==(const Stride &other) const
-		{
-			if (m_dims != other.m_dims)
-				return false;
-
-			if (m_isTrivial != other.m_isTrivial)
-				return false;
-
-			if (m_isContiguous != other.m_isContiguous)
-				return false;
-
-			for (size_t i = 0; i < m_dims; ++i)
-				if (m_stride[i] != other.m_stride[i])
-					return false;
-
-			return true;
-		}
+		bool operator==(const Stride &other) const;
 
 		/**
 		 * \rst
@@ -220,7 +181,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE bool operator!=(const Stride &other) const
+		inline bool operator!=(const Stride &other) const
 		{
 			return !(*this == other);
 		}
@@ -234,27 +195,8 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE const lr_int &operator[](const size_t index) const
-		{
-			if (index > m_dims)
-				throw std::out_of_range("Cannot access index "
-										+ std::to_string(index)
-										+ " of Stride with "
-										+ std::to_string(m_dims) + " dimensions");
-
-			return m_stride[index];
-		}
-
-		LR_INLINE lr_int &operator[](const size_t index)
-		{
-			if (index > m_dims)
-				throw std::out_of_range("Cannot access index "
-										+ std::to_string(index)
-										+ " of Stride with "
-										+ std::to_string(m_dims) + " dimensions");
-
-			return m_stride[index];
-		}
+		const lr_int &operator[](const size_t index) const;
+		lr_int &operator[](const size_t index);
 
 		/**
 		 * \rst
@@ -275,15 +217,21 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE void reorder(const std::vector<size_t> &order)
-		{
-			Stride temp = *this;
+		void reorder(const std::vector<size_t> &order);
+		void reorder(const std::vector<lr_int> &order);
 
-			for (size_t i = 0; i < order.size(); ++i)
-				m_stride[i] = temp.m_stride[order[i]];
+		/**
+		 * \rst
+		 *
+		 * Return a new Stride object containing the values from this Stride in the
+		 * range :math:`[\text{start}, \text{end})`
+		 *
+		 * \endrst
+		 */
+		Stride subStride(lr_int start = -1, lr_int end = -1) const;
 
-			m_isTrivial = checkTrivial();
-		}
+		// void scaleBytes(size_t bytes);
+		// Stride scaledBytes(size_t bytes) const;
 
 		/**
 		 * \rst
@@ -300,18 +248,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE bool checkTrivial() const
-		{
-			// Ensure every stride is bigger than the next one
-			bool foundOne = false;
-			for (size_t i = 0; i < m_dims; ++i)
-			{
-				if (m_stride[i] <= m_stride[i + 1]) return false;
-				if (m_stride[i] == 1) foundOne = true;
-			}
-
-			return foundOne;
-		}
+		bool checkTrivial() const;
 
 		/**
 		 * \rst
@@ -332,29 +269,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		LR_INLINE bool checkContiguous(const Extent &extent) const
-		{
-			if (m_dims != extent.ndim())
-				throw std::domain_error("Stride and Extent must have the same "
-										"dimensions for a contiguity test");
-
-			Stride temp = fromExtent(extent);
-			size_t valid = 0;
-
-			for (size_t i = 0; i < m_dims; ++i)
-			{
-				for (size_t j = 0; j < m_dims; j++)
-				{
-					if (temp[i] == m_stride[i])
-					{
-						++valid;
-						break;
-					}
-				}
-			}
-
-			return valid == m_dims;
-		}
+		bool checkContiguous(const Extent &extent) const;
 
 		/**
 		* \rst
@@ -366,28 +281,14 @@ namespace librapid
 		*
 		* \endrst
 		*/
-		LR_INLINE std::string str() const
-		{
-			std::stringstream res;
-			res << "Stride(";
-			for (size_t i = 0; i < m_dims; ++i)
-			{
-				res << m_stride[i];
+		std::string str() const;
 
-				if (i < m_dims - 1)
-					res << ", ";
-			}
-			res << ")";
-
-			return res.str();
-		}
-
-		LR_INLINE ESIterator begin() const
+		inline ESIterator begin() const
 		{
 			return ESIterator((lr_int *) m_stride);
 		}
 
-		LR_INLINE ESIterator end() const
+		inline ESIterator end() const
 		{
 			return ESIterator((lr_int *) m_stride + m_dims);
 		}
@@ -398,6 +299,7 @@ namespace librapid
 		size_t m_dims = 0;
 		bool m_isTrivial = true; // Trivial stride
 		bool m_isContiguous = true; // Data is contiguous in memory
+		size_t m_one = 1; // Value representing a step of 1 element through memory
 	};
 }
 
