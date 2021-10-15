@@ -92,10 +92,9 @@ namespace py = pybind11;
 #define LIBRAPID_OS "unknown"
 #endif
 
-using lr_int = long long;
 namespace librapid
 {
-	constexpr lr_int AUTO = -1;
+	constexpr int64_t AUTO = -1;
 }
 
 #if defined(OPENBLAS_OPENMP) || defined(OPENBLAS_THREAD) || defined(OPENBLAS_SEQUENTIAL)

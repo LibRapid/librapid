@@ -262,14 +262,14 @@ namespace librapid
 					// Iterate over the array using it's stride and extent
 
 					// Counters
-					lr_int idim = 0;
-					lr_int ndim = extent.ndim();
+					int64_t idim = 0;
+					int64_t ndim = extent.ndim();
 
 					// Create pointers here so repeated function calls
 					// are not needed
-					static lr_int rawExtent[LIBRAPID_MAX_DIMS];
-					static lr_int rawDstStride[LIBRAPID_MAX_DIMS];
-					static lr_int rawSrcStride[LIBRAPID_MAX_DIMS];
+					static int64_t rawExtent[LIBRAPID_MAX_DIMS];
+					static int64_t rawDstStride[LIBRAPID_MAX_DIMS];
+					static int64_t rawSrcStride[LIBRAPID_MAX_DIMS];
 
 					for (size_t i = 0; i < ndim; ++i)
 					{
@@ -283,7 +283,7 @@ namespace librapid
 						using A = std::remove_pointer<decltype(dstData)>;
 						using B = std::remove_pointer<decltype(srcData)>;
 
-						lr_int coord[LIBRAPID_MAX_DIMS]{};
+						int64_t coord[LIBRAPID_MAX_DIMS]{};
 
 						do
 						{
@@ -586,7 +586,7 @@ namespace librapid
 							else
 							{
 							#pragma omp parallel for shared(dstData, srcDataA, srcDataB) num_threads(NUM_THREADS) default(none)
-								for (lr_int i = 0; i < (lr_int) elems; ++i)
+								for (int64_t i = 0; i < (int64_t) elems; ++i)
 								{
 									dstData[i] = (C) op(srcDataA[i], *srcDataB);
 								}
@@ -603,7 +603,7 @@ namespace librapid
 							else
 							{
 							#pragma omp parallel for shared(dstData, srcDataA, srcDataB) num_threads(NUM_THREADS) default(none)
-								for (lr_int i = 0; i < (lr_int) elems; ++i)
+								for (int64_t i = 0; i < (int64_t) elems; ++i)
 								{
 									dstData[i] = (C) op(srcDataA[i], srcDataB[i]);
 								}
@@ -753,11 +753,11 @@ namespace librapid
 				if (dst.location == Accelerator::CPU)
 				{
 					// Iterate over the array using it's stride and extent
-					lr_int coord[LIBRAPID_MAX_DIMS]{};
+					int64_t coord[LIBRAPID_MAX_DIMS]{};
 
 					// Counters
-					lr_int idim = 0;
-					lr_int ndim = extent.ndim();
+					int64_t idim = 0;
+					int64_t ndim = extent.ndim();
 
 					int64_t dstBytes = datatypeBytes(dst.dtype);
 					int64_t srcABytes = datatypeBytes(srcA.dtype);
@@ -765,10 +765,10 @@ namespace librapid
 
 					// Create pointers here so repeated function calls
 					// are not needed
-					static lr_int rawExtent[LIBRAPID_MAX_DIMS];
-					static lr_int strideDst[LIBRAPID_MAX_DIMS];
-					static lr_int strideSrcA[LIBRAPID_MAX_DIMS];
-					static lr_int strideSrcB[LIBRAPID_MAX_DIMS];
+					static int64_t rawExtent[LIBRAPID_MAX_DIMS];
+					static int64_t strideDst[LIBRAPID_MAX_DIMS];
+					static int64_t strideSrcA[LIBRAPID_MAX_DIMS];
+					static int64_t strideSrcB[LIBRAPID_MAX_DIMS];
 
 					for (int64_t i = 0; i < ndim; ++i)
 					{

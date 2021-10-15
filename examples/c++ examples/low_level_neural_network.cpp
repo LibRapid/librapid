@@ -59,16 +59,16 @@ int main()
 
 	// Time the training process over 3000 epochs
 	auto start = TIME;
-	for (lr_int i = 0; i < 3000 * 4; i++) // 3000 * 4 because there are 4 bits of data
+	for (int64_t i = 0; i < 3000 * 4; i++) // 3000 * 4 because there are 4 bits of data
 	{
-		lr_int index = librapid::math::random(0, 3);
+		int64_t index = librapid::math::random(0, 3);
 		network.backpropagate(train_input[index], train_output[index]);
 	}
 	auto end = TIME;
 	std::cout << "Time: " << end - start << "\n";
 
 	// Print the output of the neural network
-	for (lr_int i = 0; i < 4; i++)
+	for (int64_t i = 0; i < 4; i++)
 	{
 		std::cout << "Input: " << train_input[i].str(7) << "\n";
 		std::cout << "Output: " << network.forward(train_input[i]) << "\n";

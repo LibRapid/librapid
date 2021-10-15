@@ -15,8 +15,8 @@ namespace librapid
 {
 	struct consoleSize
 	{
-		lr_int rows;
-		lr_int cols;
+		int64_t rows;
+		int64_t cols;
 	};
 
 	consoleSize getConsoleSize();

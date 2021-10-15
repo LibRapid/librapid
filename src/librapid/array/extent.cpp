@@ -2,11 +2,11 @@
 
 namespace librapid
 {
-	Extent::Extent(const std::initializer_list<lr_int> &data)
-		: Extent(std::vector<lr_int>(data.begin(), data.end()))
+	Extent::Extent(const std::initializer_list<int64_t> &data)
+		: Extent(std::vector<int64_t>(data.begin(), data.end()))
 	{}
 
-	Extent::Extent(const std::vector<lr_int> &data)
+	Extent::Extent(const std::vector<int64_t> &data)
 	{
 		// Initialize the dimensions
 		m_dims = data.size();
@@ -39,7 +39,7 @@ namespace librapid
 
 	Extent::Extent(const Extent &other)
 	{
-		memcpy(m_extent, other.m_extent, sizeof(lr_int) * LIBRAPID_MAX_DIMS);
+		memcpy(m_extent, other.m_extent, sizeof(int64_t) * LIBRAPID_MAX_DIMS);
 		m_dims = other.m_dims;
 		m_size = other.m_size;
 		m_containsAutomatic = other.m_containsAutomatic;
@@ -58,8 +58,8 @@ namespace librapid
 									 + " dimensions. Limit is "
 									 + std::to_string(LIBRAPID_MAX_DIMS));
 
-		for (lr_int i = 0; i < m_dims; i++)
-			m_extent[i] = py::cast<lr_int>(args[i]);
+		for (int64_t i = 0; i < m_dims; i++)
+			m_extent[i] = py::cast<int64_t>(args[i]);
 
 		update();
 	}
@@ -67,7 +67,7 @@ namespace librapid
 
 	Extent &Extent::operator=(const Extent &other)
 	{
-		memcpy(m_extent, other.m_extent, sizeof(lr_int) * LIBRAPID_MAX_DIMS);
+		memcpy(m_extent, other.m_extent, sizeof(int64_t) * LIBRAPID_MAX_DIMS);
 		m_dims = other.m_dims;
 		m_size = other.m_size;
 		m_containsAutomatic = other.m_containsAutomatic;
@@ -77,7 +77,7 @@ namespace librapid
 		return *this;
 	}
 
-	const lr_int &Extent::operator[](size_t index) const
+	const int64_t &Extent::operator[](size_t index) const
 	{
 		if (index >= m_dims)
 			throw std::out_of_range("Index " + std::to_string(index)
@@ -87,7 +87,7 @@ namespace librapid
 		return m_extent[index];
 	}
 
-	lr_int &Extent::operator[](size_t index)
+	int64_t &Extent::operator[](size_t index)
 	{
 		if (index >= m_dims)
 			throw std::out_of_range("Index " + std::to_string(index)
@@ -136,7 +136,7 @@ namespace librapid
 								 + " elements");
 	}
 
-	Extent Extent::subExtent(lr_int start, lr_int end) const
+	Extent Extent::subExtent(int64_t start, int64_t end) const
 	{
 		if (start == -1) start = 0;
 		if (end == -1) end = m_dims;
@@ -147,7 +147,7 @@ namespace librapid
 										+ std::to_string(end) + ")");
 
 		Extent res(end - start);
-		for (lr_int i = start; i < end; ++i)
+		for (int64_t i = start; i < end; ++i)
 			res.m_extent[i - start] = m_extent[i];
 
 		return res;
@@ -178,7 +178,7 @@ namespace librapid
 			m_extent[i] = temp.m_extent[order[i]];
 	}
 
-	void Extent::reorder(const std::vector<lr_int> &order)
+	void Extent::reorder(const std::vector<int64_t> &order)
 	{
 		Extent temp = *this;
 

@@ -3,7 +3,7 @@
 
 namespace librapid
 {
-	std::pair<lr_int, lr_int> Array::stringifyFormatPreprocess(bool stripMiddle,
+	std::pair<int64_t, int64_t> Array::stringifyFormatPreprocess(bool stripMiddle,
 															   bool autoStrip) const
 	{
 		if (autoStrip)
@@ -19,7 +19,7 @@ namespace librapid
 		// Scalar values
 		if (m_isScalar)
 		{
-			// std::pair<lr_int, lr_int> res;
+			// std::pair<int64_t, int64_t> res;
 			// AUTOCAST_UNARY(imp::autocastBeforeAfterDecimal, makeVoidPtr(),
 			// 			   validRawArray, res);
 
@@ -28,14 +28,14 @@ namespace librapid
 			return res;
 		}
 
-		lr_int longestIntegral = 0, longestDecimal = 0;
+		int64_t longestIntegral = 0, longestDecimal = 0;
 
 		// Vectors
 		if (ndim() == 1)
 		{
-			lr_int index = 0;
+			int64_t index = 0;
 
-			for (lr_int i = 0; i < m_extent.size(); ++i, ++index)
+			for (int64_t i = 0; i < m_extent.size(); ++i, ++index)
 			{
 				if (stripMiddle && i == 3)
 					i = m_extent.size() - 3;
@@ -54,11 +54,11 @@ namespace librapid
 		}
 
 		// Everything else
-		lr_int index = 0;
-		lr_int vec_size = stripMiddle ? 6 : m_extent[0];
+		int64_t index = 0;
+		int64_t vec_size = stripMiddle ? 6 : m_extent[0];
 		std::string res = "[";
 
-		for (lr_int i = 0; i < m_extent[0]; ++i, ++index)
+		for (int64_t i = 0; i < m_extent[0]; ++i, ++index)
 		{
 			if (stripMiddle && i == 3)
 				i = m_extent[0] - 3;
@@ -76,9 +76,9 @@ namespace librapid
 		return {longestIntegral, longestDecimal};
 	}
 
-	std::string Array::stringify(lr_int indent, bool showCommas,
+	std::string Array::stringify(int64_t indent, bool showCommas,
 								 bool stripMiddle, bool autoStrip,
-								 std::pair<lr_int, lr_int> &longest,
+								 std::pair<int64_t, int64_t> &longest,
 								 int64_t &printedRows, int64_t &printedCols) const
 	{
 		printedRows = 0;
@@ -114,11 +114,11 @@ namespace librapid
 		// Vectors
 		if (ndim() == 1)
 		{
-			lr_int index = 0;
-			lr_int vecSize = stripMiddle ? 6 : m_extent.size();
+			int64_t index = 0;
+			int64_t vecSize = stripMiddle ? 6 : m_extent.size();
 			std::string res = "[";
 
-			for (lr_int i = 0; i < m_extent.size(); ++i, ++index)
+			for (int64_t i = 0; i < m_extent.size(); ++i, ++index)
 			{
 				if (stripMiddle && i == 3)
 				{
@@ -136,7 +136,7 @@ namespace librapid
 
 				// Locate the decimal point and calculate
 				// the number of digits before and after it
-				lr_int before = 0, after = 0;
+				int64_t before = 0, after = 0;
 				auto index = tempVal.find('.');
 
 				if (index == std::string::npos)
@@ -151,7 +151,7 @@ namespace librapid
 					after = tempVal.length() - index - 1;
 				}
 
-				lr_int addBefore, addAfter;
+				int64_t addBefore, addAfter;
 				addBefore = longest.first - before;
 				addAfter = longest.second - after;
 
@@ -170,11 +170,11 @@ namespace librapid
 		}
 
 		// Everything else
-		lr_int index = 0;
-		lr_int vec_size = stripMiddle ? 6 : m_extent[0];
+		int64_t index = 0;
+		int64_t vec_size = stripMiddle ? 6 : m_extent[0];
 		std::string res = "[";
 
-		for (lr_int i = 0; i < m_extent[0]; ++i, ++index)
+		for (int64_t i = 0; i < m_extent[0]; ++i, ++index)
 		{
 			if (stripMiddle && i == 3)
 			{
@@ -206,7 +206,7 @@ namespace librapid
 	std::string Array::str(size_t indent, bool showCommas,
 						   int64_t &printedRows, int64_t &printedCols) const
 	{
-		std::pair<lr_int, lr_int> longest;
+		std::pair<int64_t, int64_t> longest;
 		return stringify(indent, showCommas, false, true, longest,
 						 printedRows, printedCols);
 	}
