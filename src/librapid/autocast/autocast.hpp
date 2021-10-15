@@ -584,6 +584,7 @@ namespace librapid
 					}
 					else
 					{
+					#ifdef LIBRAPID_HAS_CUDA
 					#ifdef LIBRAPID_CUDA_STREAM
 						if (src.location == Accelerator::CPU &&
 							dst.location == Accelerator::GPU)
@@ -616,7 +617,8 @@ namespace librapid
 							cudaSafeCall(cudaMemcpy(a, b,
 										 datatypeBytes(src.dtype) * elems,
 										 cudaMemcpyDeviceToDevice));
-					#endif
+					#endif // LIBRAPID_CUDA_STREAMS
+					#endif // LIBRAPID_HAS_CUDA
 					}
 				}, dst.data, src.data);
 			}
