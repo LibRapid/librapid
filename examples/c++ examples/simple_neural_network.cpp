@@ -54,15 +54,15 @@ int main()
 	test_network.compile();
 
 	start = TIME;
-	for (lr_int i = 0; i < 3000 * 4; i++) // 3000 * 4 because there are 4 bits of data
+	for (int64_t i = 0; i < 3000 * 4; i++) // 3000 * 4 because there are 4 bits of data
 	{
-		lr_int index = librapid::math::random(0, 3);
+		int64_t index = librapid::math::random(0, 3);
 		test_network.backpropagate(train_input[index], train_output[index]);
 	}
 	end = TIME;
 	std::cout << "Time: " << end - start << "\n";
 
-	for (lr_int i = 0; i < 4; i++)
+	for (int64_t i = 0; i < 4; i++)
 	{
 		std::cout << "Input: " << train_input[i].str(7) << "\n";
 		std::cout << "Output: " << test_network.forward(train_input[i]) << "\n";

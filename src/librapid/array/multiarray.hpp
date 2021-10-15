@@ -381,12 +381,12 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline const Array operator[](lr_int index) const
+		inline const Array operator[](int64_t index) const
 		{
 			return subscript(index);
 		}
 
-		inline Array operator[](lr_int index)
+		inline Array operator[](int64_t index)
 		{
 			using nonConst = typename std::remove_const<Array>::type;
 			return (nonConst) subscript(index);
@@ -633,12 +633,12 @@ namespace librapid
 
 		const Array subscript(size_t index) const;
 
-		std::pair<lr_int, lr_int> stringifyFormatPreprocess(bool stripMiddle,
+		std::pair<int64_t, int64_t> stringifyFormatPreprocess(bool stripMiddle,
 															bool autoStrip) const;
 
-		std::string stringify(lr_int indent, bool showCommas,
+		std::string stringify(int64_t indent, bool showCommas,
 							  bool stripMiddle, bool autoStrip,
-							  std::pair<lr_int, lr_int> &longest,
+							  std::pair<int64_t, int64_t> &longest,
 							  int64_t &printedRows, int64_t &printedCols) const;
 
 	private:

@@ -23,7 +23,7 @@ namespace librapid
 		}, m_dataStart);
 
 		res.m_references = m_references;
-		lr_int dims = ndim();
+		int64_t dims = ndim();
 
 		if (dims == 1)
 		{

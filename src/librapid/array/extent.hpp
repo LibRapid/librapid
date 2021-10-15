@@ -38,8 +38,8 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		Extent(const std::initializer_list<lr_int> &data);
-		Extent(const std::vector<lr_int> &data);
+		Extent(const std::initializer_list<int64_t> &data);
+		Extent(const std::vector<int64_t> &data);
 
 		/**
 		 * \rst
@@ -91,7 +91,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline lr_int size() const
+		inline int64_t size() const
 		{
 			return m_size;
 		}
@@ -115,9 +115,9 @@ namespace librapid
 		*
 		* \endrst
 		*/
-		inline std::vector<lr_int> toVec() const
+		inline std::vector<int64_t> toVec() const
 		{
-			std::vector<lr_int> res(m_dims);
+			std::vector<int64_t> res(m_dims);
 			for (size_t i = 0; i < m_dims; ++i)
 				res[i] = m_extent[i];
 			return res;
@@ -160,9 +160,9 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		const lr_int &operator[](size_t index) const;
+		const int64_t &operator[](size_t index) const;
 
-		lr_int &operator[](size_t index);
+		int64_t &operator[](size_t index);
 
 		/**
 		 * \rst
@@ -231,9 +231,9 @@ namespace librapid
 		 * \endrst
 		 */
 		void reorder(const std::vector<size_t> &order);
-		void reorder(const std::vector<lr_int> &order);
+		void reorder(const std::vector<int64_t> &order);
 
-		Extent subExtent(lr_int start = -1, lr_int end = -1) const;
+		Extent subExtent(int64_t start = -1, int64_t end = -1) const;
 
 		/**
 		 * \rst
@@ -249,22 +249,22 @@ namespace librapid
 
 		inline ESIterator begin() const
 		{
-			return ESIterator((lr_int *) m_extent);
+			return ESIterator((int64_t *) m_extent);
 		}
 
 		inline ESIterator end() const
 		{
-			return ESIterator((lr_int *) m_extent + m_dims);
+			return ESIterator((int64_t *) m_extent + m_dims);
 		}
 
 	private:
 		void update();
 
 	private:
-		lr_int m_extent[LIBRAPID_MAX_DIMS]{};
+		int64_t m_extent[LIBRAPID_MAX_DIMS]{};
 		size_t m_dims = 0;
 		bool m_containsAutomatic = false;
-		lr_int m_size = 0;
+		int64_t m_size = 0;
 	};
 
 	inline std::ostream &operator<<(std::ostream &os, const Extent &extent)

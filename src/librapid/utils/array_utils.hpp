@@ -21,7 +21,7 @@ namespace librapid
 		 * \endrst
 		 */
 		inline void autocastBeforeAfterDecimal(const RawArray &src,
-											   std::pair<lr_int, lr_int> &res)
+											   std::pair<int64_t, int64_t> &res)
 		{
 			std::stringstream stream;
 			stream.precision(10);

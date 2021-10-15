@@ -473,11 +473,13 @@ namespace librapid
 			void *memory = nullptr;
 			int64_t bytes = datatypeBytes(raw.dtype) * elems;
 
+		#ifdef LIBRAPID_HAS_CUDA
 		#ifdef LIBRAPID_CUDA_STREAM
 			cudaSafeCall(cudaMallocAsync(&memory, bytes, cudaStream));
 		#else
 			cudaSafeCall(cudaMalloc(&memory, datatypeBytes(raw.dtype) * elems));
 		#endif
+		#endif // LIBRAPID_HAS_CUDA
 
 			switch (raw.dtype)
 			{
@@ -628,8 +630,8 @@ namespace librapid
 		{
 			std::visit([&](auto *a, auto *b)
 			{
-				using A = std::remove_pointer<decltype(a)>::type;
-				using B = std::remove_pointer<decltype(b)>::type;
+				using A = typename std::remove_pointer<decltype(a)>::type;
+				using B = typename std::remove_pointer<decltype(b)>::type;
 
 				if (elems < THREAD_THREASHOLD)
 				{
@@ -655,8 +657,8 @@ namespace librapid
 
 					std::visit([&](auto *a, auto *b)
 					{
-						using A = std::remove_pointer<decltype(a)>::type;
-						using B = std::remove_pointer<decltype(b)>::type;
+						using A = typename std::remove_pointer<decltype(a)>::type;
+						using B = typename std::remove_pointer<decltype(b)>::type;
 
 						for (int64_t i = 0; i < elems; ++i)
 						{
@@ -679,8 +681,8 @@ namespace librapid
 
 					std::visit([&](auto *a, auto *b)
 					{
-						using A = std::remove_pointer<decltype(a)>::type;
-						using B = std::remove_pointer<decltype(b)>::type;
+						using A = typename std::remove_pointer<decltype(a)>::type;
+						using B = typename std::remove_pointer<decltype(b)>::type;
 
 						for (int64_t i = 0; i < elems; ++i)
 						{
@@ -747,8 +749,8 @@ namespace librapid
 
 				std::visit([&](auto *a, auto *b)
 				{
-					using A = std::remove_pointer<decltype(a)>::type;
-					using B = std::remove_pointer<decltype(b)>::type;
+					using A = typename std::remove_pointer<decltype(a)>::type;
+					using B = typename std::remove_pointer<decltype(b)>::type;
 
 				#ifdef LIBRAPID_CUDA_STREAM
 					jitifyCall(program.kernel("copyKernel")
