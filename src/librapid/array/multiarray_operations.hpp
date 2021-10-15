@@ -813,6 +813,8 @@ namespace librapid
 							// Use *b rather than b[i]
 							do
 							{
+								std::cout << "Information: " << dstData << " | " << *srcA << " | " << *srcB << "\n";
+
 								*dstData = (C) op(*srcA, *srcB);
 
 								for (idim = 0; idim < ndim; ++idim)
@@ -820,13 +822,13 @@ namespace librapid
 									if (++coord[idim] == rawExtent[idim])
 									{
 										coord[idim] = 0;
-										dstData = dstData - (rawExtent[idim] - 1) * strideDst[idim];
 										srcA = srcA - (rawExtent[idim] - 1) * strideSrcA[idim];
+										dstData = dstData - (rawExtent[idim] - 1) * strideDst[idim];
 									}
 									else
 									{
-										dstData = dstData + strideDst[idim];
 										srcA = srcA + strideSrcA[idim];
+										dstData = dstData + strideDst[idim];
 										break;
 									}
 								}
