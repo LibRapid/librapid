@@ -10,7 +10,7 @@ namespace librapid
 	{
 	public:
 		using iteratorCategory = std::random_access_iterator_tag;
-		using valueType = lr_int;
+		using valueType = int64_t;
 		using differenceType = std::ptrdiff_t;
 		using pointer = valueType *;
 		using reference = valueType &;

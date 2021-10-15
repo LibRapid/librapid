@@ -14,13 +14,13 @@ namespace librapid
 	constexpr long double sqrt3 = 1.7320508075688772935274463415058723669428052538103806280558069794519330169;
 	constexpr long double sqrt5 = 2.2360679774997896964091736687312762354406183596115257242708972454105209256378;
 
-	lr_int product(const std::vector<lr_int> &vals);
-	lr_int product(const lr_int *vals, lr_int num);
+	int64_t product(const std::vector<int64_t> &vals);
+	int64_t product(const int64_t *vals, int64_t num);
 	double product(const std::vector<double> &vals);
-	double product(const double *vals, lr_int num);
+	double product(const double *vals, int64_t num);
 
-	bool anyBelow(const std::vector<lr_int> &vals, lr_int bound);
-	bool anyBelow(const lr_int *vals, lr_int dims, lr_int bound);
+	bool anyBelow(const std::vector<int64_t> &vals, int64_t bound);
+	bool anyBelow(const int64_t *vals, int64_t dims, int64_t bound);
 
 	template<typename T>
 	T min(const std::vector<T> &vals)
@@ -81,12 +81,12 @@ namespace librapid
 			   double start2, double stop2);
 
 	double random(double lower, double upper);
-	lr_int randint(lr_int lower, lr_int upper);
+	int64_t randint(int64_t lower, int64_t upper);
 
-	double pow10(lr_int exponent);
+	double pow10(int64_t exponent);
 
-	double round(const double num, lr_int dp = 0);
-	double roundSigFig(const double num, lr_int figs = 3);
+	double round(const double num, int64_t dp = 0);
+	double roundSigFig(const double num, int64_t figs = 3);
 }
 
 #endif // NDARRAY_CORE_MATH

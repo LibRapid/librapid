@@ -8,18 +8,18 @@
 
 namespace librapid
 {
-	lr_int product(const std::vector<lr_int> &vals)
+	int64_t product(const std::vector<int64_t> &vals)
 	{
-		lr_int res = 1;
+		int64_t res = 1;
 		for (const auto &val : vals)
 			res *= val;
 		return res;
 	}
 
-	lr_int product(const lr_int *vals, lr_int num)
+	int64_t product(const int64_t *vals, int64_t num)
 	{
-		lr_int res = 1;
-		for (lr_int i = 0; i < num; i++)
+		int64_t res = 1;
+		for (int64_t i = 0; i < num; i++)
 			res *= vals[i];
 		return res;
 	}
@@ -32,15 +32,15 @@ namespace librapid
 		return res;
 	}
 
-	double product(const double *vals, lr_int num)
+	double product(const double *vals, int64_t num)
 	{
 		double res = 1;
-		for (lr_int i = 0; i < num; i++)
+		for (int64_t i = 0; i < num; i++)
 			res *= vals[i];
 		return res;
 	}
 
-	bool anyBelow(const std::vector<lr_int> &vals, lr_int bound)
+	bool anyBelow(const std::vector<int64_t> &vals, int64_t bound)
 	{
 		for (const auto &val : vals)
 			if (val < bound)
@@ -48,9 +48,9 @@ namespace librapid
 		return false;
 	}
 
-	bool anyBelow(const lr_int *vals, lr_int dims, lr_int bound)
+	bool anyBelow(const int64_t *vals, int64_t dims, int64_t bound)
 	{
-		for (lr_int i = 0; i < dims; i++)
+		for (int64_t i = 0; i < dims; i++)
 			if (vals[i] < bound)
 				return true;
 		return false;
@@ -73,13 +73,13 @@ namespace librapid
 		return lower + (upper - lower) * distribution(generator);
 	}
 
-	lr_int randint(lr_int lower, lr_int upper)
+	int64_t randint(int64_t lower, int64_t upper)
 	{
 		// Random integral value in range [lower, upper]
-		return (lr_int) random((double) lower, (double) upper + 1);
+		return (int64_t) random((double) lower, (double) upper + 1);
 	}
 
-	double pow10(lr_int exponent)
+	double pow10(int64_t exponent)
 	{
 		const static double pows[] = {0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000, 100000};
 		if (exponent >= -5 && exponent <= 5)
@@ -88,16 +88,16 @@ namespace librapid
 		double res = 1;
 
 		if (exponent > 0)
-			for (lr_int i = 0; i < exponent; i++)
+			for (int64_t i = 0; i < exponent; i++)
 				res *= 10;
 		else
-			for (lr_int i = 0; i > exponent; i--)
+			for (int64_t i = 0; i > exponent; i--)
 				res *= 0.1;
 
 		return res;
 	}
 
-	double round(const double num, lr_int dp)
+	double round(const double num, int64_t dp)
 	{
 		double alpha = pow10(dp);
 		double beta = pow10(-dp);
@@ -110,7 +110,7 @@ namespace librapid
 		return (num >= 0 ? y : -y) / alpha;
 	}
 
-	double roundSigFig(const double num, lr_int figs)
+	double roundSigFig(const double num, int64_t figs)
 	{
 		if (figs <= 0)
 			throw std::invalid_argument("Cannot round to "
@@ -118,7 +118,7 @@ namespace librapid
 										+ " significant figures. Must be greater than 0");
 
 		double tmp = num > 0 ? num : -num;
-		lr_int n = 0;
+		int64_t n = 0;
 
 		while (tmp > 10)
 		{

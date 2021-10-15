@@ -29,9 +29,9 @@ namespace librapid
 		}
 
 		bool valid = true;
-		lr_int count = 0;
-		lr_int missing[LIBRAPID_MAX_DIMS]{};
-		for (lr_int i = 0; i < ndim(); ++i)
+		int64_t count = 0;
+		int64_t missing[LIBRAPID_MAX_DIMS]{};
+		for (int64_t i = 0; i < ndim(); ++i)
 		{
 			if (std::count(&(*tempOrder.begin()), &(*tempOrder.end()), i) != 1)
 			{
@@ -43,7 +43,7 @@ namespace librapid
 		if (!valid)
 		{
 			auto stream = std::stringstream();
-			for (lr_int i = 0; i < count; ++i)
+			for (int64_t i = 0; i < count; ++i)
 			{
 				if (i == m_stride.ndim() - 1) stream << missing[i];
 				else stream << missing[i] << ", ";

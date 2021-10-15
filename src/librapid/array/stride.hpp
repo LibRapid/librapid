@@ -36,8 +36,8 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		Stride(const std::initializer_list<lr_int> &data);
-		Stride(const std::vector<lr_int> &data);
+		Stride(const std::initializer_list<int64_t> &data);
+		Stride(const std::vector<int64_t> &data);
 		Stride(size_t dims);
 
 		/**
@@ -109,7 +109,7 @@ namespace librapid
 		*
 		* \endrst
 		*/
-		inline const lr_int *__restrict raw() const
+		inline const int64_t *__restrict raw() const
 		{
 			return m_stride;
 		}
@@ -121,9 +121,9 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline std::vector<lr_int> toVec() const
+		inline std::vector<int64_t> toVec() const
 		{
-			std::vector<lr_int> res(m_dims);
+			std::vector<int64_t> res(m_dims);
 			for (size_t i = 0; i < m_dims; ++i)
 				res[i] = m_stride[i];
 			return res;
@@ -195,8 +195,8 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		const lr_int &operator[](const size_t index) const;
-		lr_int &operator[](const size_t index);
+		const int64_t &operator[](const size_t index) const;
+		int64_t &operator[](const size_t index);
 
 		/**
 		 * \rst
@@ -218,7 +218,7 @@ namespace librapid
 		 * \endrst
 		 */
 		void reorder(const std::vector<size_t> &order);
-		void reorder(const std::vector<lr_int> &order);
+		void reorder(const std::vector<int64_t> &order);
 
 		/**
 		 * \rst
@@ -228,7 +228,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		Stride subStride(lr_int start = -1, lr_int end = -1) const;
+		Stride subStride(int64_t start = -1, int64_t end = -1) const;
 
 		// void scaleBytes(size_t bytes);
 		// Stride scaledBytes(size_t bytes) const;
@@ -285,17 +285,17 @@ namespace librapid
 
 		inline ESIterator begin() const
 		{
-			return ESIterator((lr_int *) m_stride);
+			return ESIterator((int64_t *) m_stride);
 		}
 
 		inline ESIterator end() const
 		{
-			return ESIterator((lr_int *) m_stride + m_dims);
+			return ESIterator((int64_t *) m_stride + m_dims);
 		}
 
 	private:
 
-		lr_int m_stride[LIBRAPID_MAX_DIMS]{};
+		int64_t m_stride[LIBRAPID_MAX_DIMS]{};
 		size_t m_dims = 0;
 		bool m_isTrivial = true; // Trivial stride
 		bool m_isContiguous = true; // Data is contiguous in memory

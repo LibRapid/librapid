@@ -2,11 +2,11 @@
 
 namespace librapid
 {
-	Stride::Stride(const std::initializer_list<lr_int> &data)
-		: Stride(std::vector<lr_int>(data.begin(), data.end()))
+	Stride::Stride(const std::initializer_list<int64_t> &data)
+		: Stride(std::vector<int64_t>(data.begin(), data.end()))
 	{}
 
-	Stride::Stride(const std::vector<lr_int> &data)
+	Stride::Stride(const std::vector<int64_t> &data)
 	{
 		// Initialize members
 		m_isTrivial = true;
@@ -61,8 +61,8 @@ namespace librapid
 
 		size_t neg = 0;
 
-		for (lr_int i = 0; i < m_dims; i++)
-			m_stride[i] = py::cast<lr_int>(args[i]);
+		for (int64_t i = 0; i < m_dims; i++)
+			m_stride[i] = py::cast<int64_t>(args[i]);
 	}
 #endif
 
@@ -89,7 +89,7 @@ namespace librapid
 		size_t prod = 1;
 		for (size_t i = 0; i < extent.ndim(); ++i)
 		{
-			res.m_stride[res.m_dims - i - 1] = (lr_int) prod;
+			res.m_stride[res.m_dims - i - 1] = (int64_t) prod;
 			prod *= extent[res.m_dims - i - 1];
 		}
 
@@ -119,7 +119,7 @@ namespace librapid
 		return true;
 	}
 
-	const lr_int &Stride::operator[](const size_t index) const
+	const int64_t &Stride::operator[](const size_t index) const
 	{
 		if (index > m_dims)
 			throw std::out_of_range("Cannot access index "
@@ -130,7 +130,7 @@ namespace librapid
 		return m_stride[index];
 	}
 
-	lr_int &Stride::operator[](const size_t index)
+	int64_t &Stride::operator[](const size_t index)
 	{
 		if (index > m_dims)
 			throw std::out_of_range("Cannot access index "
@@ -151,7 +151,7 @@ namespace librapid
 		m_isTrivial = checkTrivial();
 	}
 
-	void Stride::reorder(const std::vector<lr_int> &order)
+	void Stride::reorder(const std::vector<int64_t> &order)
 	{
 		Stride temp = *this;
 
@@ -161,7 +161,7 @@ namespace librapid
 		m_isTrivial = checkTrivial();
 	}
 
-	Stride Stride::subStride(lr_int start, lr_int end) const
+	Stride Stride::subStride(int64_t start, int64_t end) const
 	{
 		if (start == -1) start = 0;
 		if (end == -1) end = m_dims;
@@ -172,7 +172,7 @@ namespace librapid
 										+ std::to_string(end) + ")");
 
 		Stride res(end - start);
-		for (lr_int i = start; i < end; ++i)
+		for (int64_t i = start; i < end; ++i)
 			res.m_stride[i - start] = m_stride[i];
 		res.m_one = m_one;
 		res.m_isTrivial = res.checkTrivial();

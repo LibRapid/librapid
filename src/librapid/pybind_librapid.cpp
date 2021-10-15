@@ -43,7 +43,7 @@ PYBIND11_MODULE(_librapid, module)
 	test.def("streamTest", &librapid::test::streamTest);
 
 	test.def("sum", [](const std::vector<double> &data) { return testSum(data); });
-	test.def("sum", [](const std::vector<lr_int> &data) { return testSum(data); });
+	test.def("sum", [](const std::vector<int64_t> &data) { return testSum(data); });
 	test.def("sum", [](const std::vector<char> &data) { return testSum(data); });
 	test.def("sum", [](const std::vector<bool> &data) { return testSum(data); });
 
@@ -58,7 +58,7 @@ PYBIND11_MODULE(_librapid, module)
 
 	module.def("getConsoleSize", []() { auto size = librapid::getConsoleSize(); return py::make_tuple(size.rows, size.cols); });
 
-	module.attr("AUTO") = (lr_int) -1;
+	module.attr("AUTO") = (int64_t) -1;
 
 	module.attr("pi") = librapid::pi;
 	module.attr("twopi") = librapid::twopi;
@@ -68,7 +68,7 @@ PYBIND11_MODULE(_librapid, module)
 	module.attr("sqrt3") = librapid::sqrt3;
 	module.attr("sqrt5") = librapid::sqrt5;
 
-	module.def("product", [](const std::vector<lr_int> &vals) { return librapid::product(vals); }, py::arg("vals"));
+	module.def("product", [](const std::vector<int64_t> &vals) { return librapid::product(vals); }, py::arg("vals"));
 	module.def("product", [](const std::vector<double> &vals) { return librapid::product(vals); }, py::arg("vals"));
 
 	module.def("min", [](const std::vector<double> &vals) { return librapid::min(vals); }, py::arg("vals"));
@@ -76,10 +76,10 @@ PYBIND11_MODULE(_librapid, module)
 
 	module.def("map", [](double val, double start1, double stop1, double start2, double stop2) { return librapid::map(val, start1, stop1, start2, stop2); }, py::arg("val"), py::arg("start1") = double(0), py::arg("stop1") = double(1), py::arg("start2") = double(0), py::arg("stop2") = double(1));
 	module.def("random", [](double min, double max) { return librapid::random(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
-	module.def("randint", [](lr_int min, lr_int max) { return librapid::randint(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
+	module.def("randint", [](int64_t min, int64_t max) { return librapid::randint(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
 	module.def("pow10", &librapid::pow10);
-	module.def("round", [](double val, lr_int places) { return librapid::round(val, places); }, py::arg("val"), py::arg("places") = 0);
-	module.def("roundSigFig", [](double val, lr_int figs) { return librapid::roundSigFig(val, figs); }, py::arg("val"), py::arg("figs") = 3);
+	module.def("round", [](double val, int64_t places) { return librapid::round(val, places); }, py::arg("val"), py::arg("places") = 0);
+	module.def("roundSigFig", [](double val, int64_t figs) { return librapid::roundSigFig(val, figs); }, py::arg("val"), py::arg("figs") = 3);
 
 	// Create the Datatype enum
 	py::enum_<librapid::Datatype>(module, "Datatype")
@@ -105,12 +105,12 @@ PYBIND11_MODULE(_librapid, module)
 	// The librapid Extent object
 	py::class_<librapid::Extent>(module, "Extent")
 		.def(py::init<>())
-		.def(py::init<const std::vector<lr_int> &>())
+		.def(py::init<const std::vector<int64_t> &>())
 		.def(py::init<const librapid::Extent &>())
 		.def(py::init<py::args>())
 
-		.def("__getitem__", [](const librapid::Extent &e, lr_int index) { return e[index]; })
-		.def("__setitem__", [](librapid::Extent &e, lr_int index, lr_int val) { e[index] = val; })
+		.def("__getitem__", [](const librapid::Extent &e, int64_t index) { return e[index]; })
+		.def("__setitem__", [](librapid::Extent &e, int64_t index, int64_t val) { e[index] = val; })
 
 		.def_property_readonly("ndim", &librapid::Extent::ndim)
 		.def_property_readonly("containsAutomatic", &librapid::Extent::containsAutomatic)
@@ -128,14 +128,14 @@ PYBIND11_MODULE(_librapid, module)
 	// The librapid Stride object
 	py::class_<librapid::Stride>(module, "Stride")
 		.def(py::init<>())
-		.def(py::init<std::vector<lr_int>>())
-		.def(py::init<lr_int>())
+		.def(py::init<std::vector<int64_t>>())
+		.def(py::init<int64_t>())
 		.def(py::init<const librapid::Stride &>())
 		.def(py::init<py::args>())
 		.def_static("fromExtent", &librapid::Stride::fromExtent)
 
-		.def("__getitem__", [](const librapid::Stride &s, lr_int index) { return s[index]; })
-		.def("__setitem__", [](librapid::Stride &s, lr_int index, lr_int val) { s[index] = val; })
+		.def("__getitem__", [](const librapid::Stride &s, int64_t index) { return s[index]; })
+		.def("__setitem__", [](librapid::Stride &s, int64_t index, int64_t val) { s[index] = val; })
 
 		.def_property_readonly("ndim", &librapid::Stride::ndim)
 		.def_property_readonly("isTrivial", &librapid::Stride::isTrivial)
@@ -168,10 +168,10 @@ PYBIND11_MODULE(_librapid, module)
 		.def_property_readonly("location", &librapid::Array::location)
 		.def("__len__", &librapid::Array::ndim)
 
-		.def("__getitem__", [](const librapid::Array &arr, lr_int index) { return arr[index]; })
-		.def("__setitem__", [](librapid::Array &arr, lr_int index, int64_t val) { arr[index] = val; })
-		.def("__setitem__", [](librapid::Array &arr, lr_int index, double val) { arr[index] = val; })
-		.def("__setitem__", [](librapid::Array &arr, lr_int index, const librapid::Array &val) { arr[index] = val; })
+		.def("__getitem__", [](const librapid::Array &arr, int64_t index) { return arr[index]; })
+		.def("__setitem__", [](librapid::Array &arr, int64_t index, int64_t val) { arr[index] = val; })
+		.def("__setitem__", [](librapid::Array &arr, int64_t index, double val) { arr[index] = val; })
+		.def("__setitem__", [](librapid::Array &arr, int64_t index, const librapid::Array &val) { arr[index] = val; })
 
 		.def("fill", [](librapid::Array &arr, double val) { arr.fill(val); })
 
