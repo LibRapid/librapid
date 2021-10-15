@@ -141,5 +141,6 @@ setup(
 	install_requires=install_requires,
 	setup_requires=setup_requires,
 	data_files=data_files,
+	include_package_data = True,
 	zip_safe=False
 )
