@@ -143,7 +143,7 @@ namespace librapid
 						}
 						else
 						{
-						#pragma omp parallel for shared(dstData, srcData) num_threads(NUM_THREADS)
+						#pragma omp parallel for shared(dstData, srcData, elems, op) num_threads(NUM_THREADS)
 							for (int64_t i = 0; i < elems; ++i)
 							{
 								dstData[i] = op(srcData[i]);
@@ -234,11 +234,13 @@ namespace librapid
 					#endif // LIBRAPID_CUDA_STREAM
 					}, dst.data, src.data);
 				}
+			#else
+				throw std::runtime_error("CUDA support was not enabled. Invalid operation");
+			#endif // LIBRAPID_HAS_CUDA
 			}
-		#endif // LIBRAPID_HAS_CUDA
 		}
 
-		template<class FUNC>
+		template<typename FUNC>
 		inline void multiarrayUnaryOpComplex(RawArray dst, RawArray src,
 											 size_t elems, const Extent &extent,
 											 const Stride &dstStride,
@@ -468,8 +470,10 @@ namespace librapid
 					cudaSafeCall(cudaFree(deviceSrcStride));
 				#endif // LIBRAPID_CUDA_STREAM
 				}
+			#else
+				throw std::runtime_error("CUDA support was not enabled");
+			#endif // LIBRAPID_HAS_CUDA
 			}
-		#endif // LIBRAPID_HAS_CUDA
 		}
 
 		/**
@@ -514,7 +518,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		template<class FUNC>
+		template<typename FUNC>
 		inline void multiarrayBinaryOpTrivial(RawArray &dst, const RawArray &srcA,
 											  const RawArray &srcB, bool srcAIsScalar,
 											  bool srcBIsScalar, int64_t elems,
@@ -568,7 +572,7 @@ namespace librapid
 							}
 							else
 							{
-							#pragma omp parallel for shared(dstData, srcDataA, srcDataB) num_threads(NUM_THREADS) default(none)
+							#pragma omp parallel for shared(dstData, srcDataA, srcDataB, elems, op) num_threads(NUM_THREADS) default(none)
 								for (int64_t i = 0; i < elems; ++i)
 								{
 									dstData[i] = op(*srcDataA, srcDataB[i]);
@@ -585,8 +589,8 @@ namespace librapid
 							}
 							else
 							{
-							#pragma omp parallel for shared(dstData, srcDataA, srcDataB) num_threads(NUM_THREADS) default(none)
-								for (int64_t i = 0; i < (int64_t) elems; ++i)
+							#pragma omp parallel for shared(dstData, srcDataA, srcDataB, elems, op) num_threads(NUM_THREADS) default(none)
+								for (int64_t i = 0; i < elems; ++i)
 								{
 									dstData[i] = (C) op(srcDataA[i], *srcDataB);
 								}
@@ -602,8 +606,8 @@ namespace librapid
 							}
 							else
 							{
-							#pragma omp parallel for shared(dstData, srcDataA, srcDataB) num_threads(NUM_THREADS) default(none)
-								for (int64_t i = 0; i < (int64_t) elems; ++i)
+							#pragma omp parallel for shared(dstData, srcDataA, srcDataB, elems, op) num_threads(NUM_THREADS) default(none)
+								for (int64_t i = 0; i < elems; ++i)
 								{
 									dstData[i] = (C) op(srcDataA[i], srcDataB[i]);
 								}
@@ -707,7 +711,7 @@ namespace librapid
 			}
 		}
 
-		template<class FUNC>
+		template<typename FUNC>
 		inline void multiarrayBinaryOpComplex(RawArray &dst,
 											  const RawArray &srcA,
 											  const RawArray &srcB,
