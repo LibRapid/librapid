@@ -8,11 +8,6 @@ namespace librapid
 		Array::applyBinaryOp(*this, *this, val, ops::Fill());
 	}
 
-	void Array::fill(const Complex<double> &val)
-	{
-		Array::applyBinaryOp(*this, *this, val, ops::Fill());
-	}
-
 	RawArray Array::createRaw() const
 	{
 		return {m_dataStart, m_dtype, m_location};
