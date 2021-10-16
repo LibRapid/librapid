@@ -70,7 +70,7 @@ namespace librapid
 		#else
 			else
 			{
-				throw std::invalid_argument("CUDA support was not enabled, so an
+				throw std::invalid_argument("CUDA support was not enabled, so an"
 											" Array on the GPU cannot be printed");
 			}
 		#endif
