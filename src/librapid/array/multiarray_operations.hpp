@@ -670,14 +670,14 @@ namespace librapid
 						kernel += "dstData[kernelIndex] = " + op.name + "(srcA[kernelIndex], srcB[kernelIndex]);";
 					kernel += "\n}\n}";
 
-					const std::vector<std::string> params = {
+					static const std::vector<std::string> params = {
 						"--disable-warnings", "-std=c++17"
 					};
 
 					static jitify::JitCache kernelCache;
 					jitify::Program program = kernelCache.program(kernel, 0, params);
 
-					int64_t numsPerThread, threadsPerBlock, blocksPerGrid;
+					int64_t threadsPerBlock, blocksPerGrid;
 
 					// Use 1 to 512 threads per block
 					if (elems < 512)
@@ -694,7 +694,9 @@ namespace librapid
 					dim3 grid(blocksPerGrid);
 					dim3 block(threadsPerBlock);
 
-					std::visit([&](auto *dstData, auto *srcDataA, auto *srcDataB)
+					std::visit([&](auto *__restrict dstData,
+							   auto *__restrict srcDataA,
+							   auto *__restrict srcDataB)
 					{
 						using T_DST = typename std::remove_pointer<decltype(dstData)>::type;
 						using T_SRCA = typename std::remove_pointer<decltype(srcDataA)>::type;
