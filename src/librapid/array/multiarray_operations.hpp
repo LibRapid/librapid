@@ -776,16 +776,18 @@ namespace librapid
 					// Create pointers here so repeated function calls
 					// are not needed
 					static int64_t rawExtent[LIBRAPID_MAX_DIMS];
-					static int64_t strideDst[LIBRAPID_MAX_DIMS];
-					static int64_t strideSrcA[LIBRAPID_MAX_DIMS];
-					static int64_t strideSrcB[LIBRAPID_MAX_DIMS];
+					static int64_t _strideDst[LIBRAPID_MAX_DIMS];
+					static int64_t _strideSrcA[LIBRAPID_MAX_DIMS];
+					static int64_t _strideSrcB[LIBRAPID_MAX_DIMS];
 
 					for (int64_t i = 0; i < ndim; ++i)
 					{
-						rawExtent[ndim - i - 1] = extent.raw()[i];
-						strideDst[ndim - i - 1] = strideDst[i];
-						strideSrcA[ndim - i - 1] = strideSrcA[i];
-						strideSrcB[ndim - i - 1] = strideSrcB[i];
+						std::cout << "Extent | Stride     " << extent[i] << " | " << _strideDst[i] << "\n";
+
+						rawExtent[ndim - i - 1] = extent[i];
+						_strideDst[ndim - i - 1] = strideDst[i];
+						_strideSrcA[ndim - i - 1] = strideSrcA[i];
+						_strideSrcB[ndim - i - 1] = strideSrcB[i];
 					}
 
 					std::visit([&](auto *dstData, auto *srcA, auto *srcB)
@@ -806,13 +808,13 @@ namespace librapid
 									if (++coord[idim] == rawExtent[idim])
 									{
 										coord[idim] = 0;
-										srcB = srcB - (rawExtent[idim] - 1) * strideSrcB[idim];
-										dstData = dstData - (rawExtent[idim] - 1) * strideDst[idim];
+										srcB = srcB - (rawExtent[idim] - 1) * _strideSrcB[idim];
+										dstData = dstData - (rawExtent[idim] - 1) * _strideDst[idim];
 									}
 									else
 									{
-										srcB = srcB + strideSrcB[idim];
-										dstData = dstData + strideDst[idim];
+										srcB = srcB + _strideSrcB[idim];
+										dstData = dstData + _strideDst[idim];
 										break;
 									}
 								}
@@ -823,8 +825,6 @@ namespace librapid
 							// Use *b rather than b[i]
 							do
 							{
-								std::cout << "Information: " << dstData << " | " << *srcA << " | " << *srcB << "\n";
-
 								*dstData = (C) op(*srcA, *srcB);
 
 								for (idim = 0; idim < ndim; ++idim)
@@ -832,13 +832,13 @@ namespace librapid
 									if (++coord[idim] == rawExtent[idim])
 									{
 										coord[idim] = 0;
-										srcA = srcA - (rawExtent[idim] - 1) * strideSrcA[idim];
-										dstData = dstData - (rawExtent[idim] - 1) * strideDst[idim];
+										srcA = srcA - (rawExtent[idim] - 1) * _strideSrcA[idim];
+										dstData = dstData - (rawExtent[idim] - 1) * _strideDst[idim];
 									}
 									else
 									{
-										srcA = srcA + strideSrcA[idim];
-										dstData = dstData + strideDst[idim];
+										srcA = srcA + _strideSrcA[idim];
+										dstData = dstData + _strideDst[idim];
 										break;
 									}
 								}
@@ -856,15 +856,15 @@ namespace librapid
 									if (++coord[idim] == rawExtent[idim])
 									{
 										coord[idim] = 0;
-										dstData = dstData - (rawExtent[idim] - 1) * strideDst[idim];
-										srcA = srcA - (rawExtent[idim] - 1) * strideSrcA[idim];
-										srcB = srcB - (rawExtent[idim] - 1) * strideSrcB[idim];
+										dstData = dstData - (rawExtent[idim] - 1) * _strideDst[idim];
+										srcA = srcA - (rawExtent[idim] - 1) * _strideSrcA[idim];
+										srcB = srcB - (rawExtent[idim] - 1) * _strideSrcB[idim];
 									}
 									else
 									{
-										dstData = dstData + strideDst[idim];
-										srcA = srcA + strideSrcA[idim];
-										srcB = srcB + strideSrcB[idim];
+										dstData = dstData + _strideDst[idim];
+										srcA = srcA + _strideSrcA[idim];
+										srcB = srcB + _strideSrcB[idim];
 										break;
 									}
 								}
@@ -899,7 +899,7 @@ namespace librapid
 					cudaSafeCall(cudaMalloc(&deviceStrideDst, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
 
 					cudaSafeCall(cudaMemcpy(deviceExtent, extent.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
-					cudaSafeCall(cudaMemcpy(deviceStrideSrcA, strideSrcA.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
+					cudaSafeCall(cudaMemcpy(deviceStrideSrcA, _strideSrcA.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
 					cudaSafeCall(cudaMemcpy(deviceStrideSrcB, strideSrcB.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
 					cudaSafeCall(cudaMemcpy(deviceStrideDst, strideDst.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
 				#endif // LIBRAPID_CUDA_STREAM
@@ -1058,7 +1058,7 @@ namespace librapid
 			#endif // LIBRAPID_HAS_CUDA
 			}
 		}
-					}
-				}
+	}
+}
 
 #endif // LIBRAPID_MUTLIARRAY_OPERATIONS
