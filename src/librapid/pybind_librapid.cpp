@@ -198,6 +198,18 @@ PYBIND11_MODULE(_librapid, module)
 			return res;
 		});
 
+	
+	module.def("add", [](const librapid::Array &a, const double b, librapid::Array &res) { librapid::add(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
+	module.def("sub", [](const librapid::Array &a, const double b, librapid::Array &res) { librapid::sub(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
+	module.def("mul", [](const librapid::Array &a, const double b, librapid::Array &res) { librapid::mul(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
+	module.def("div", [](const librapid::Array &a, const double b, librapid::Array &res) { librapid::div(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
+
+	module.def("add", [](const librapid::Array &a, const double b) { return librapid::add(a, b); }, py::arg("a"), py::arg("b"));
+	module.def("sub", [](const librapid::Array &a, const double b) { return librapid::sub(a, b); }, py::arg("a"), py::arg("b"));
+	module.def("mul", [](const librapid::Array &a, const double b) { return librapid::mul(a, b); }, py::arg("a"), py::arg("b"));
+	module.def("div", [](const librapid::Array &a, const double b) { return librapid::div(a, b); }, py::arg("a"), py::arg("b"));
+
+
 	module.def("add", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::add(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
 	module.def("sub", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::sub(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
 	module.def("mul", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::mul(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
