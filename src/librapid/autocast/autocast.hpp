@@ -1,7 +1,7 @@
 #ifndef LIBRAPID_AUTOCAST
 #define LIBRAPID_AUTOCAST
 
-#include <variant>
+#include <algorithm>
 #include <variant>
 
 namespace librapid

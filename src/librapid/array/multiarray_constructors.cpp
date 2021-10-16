@@ -25,7 +25,6 @@ namespace librapid
 										"Extent was " + extent.str());
 
 		constructNew(extent, Stride::fromExtent(extent), dtype, location);
-		// m_stride.scaleBytes(datatypeBytes(dtype));
 	}
 
 	Array::Array(const Array &other)
@@ -55,7 +54,6 @@ namespace librapid
 		initializeCudaStream();
 
 		constructNew(Extent(1), Stride(1), Datatype::BOOL, Accelerator::CPU);
-		// m_stride.scaleBytes(datatypeBytes(Datatype::BOOL));
 		m_isScalar = true;
 		std::visit([&](auto *data)
 		{
@@ -68,7 +66,6 @@ namespace librapid
 		initializeCudaStream();
 
 		constructNew(Extent(1), Stride(1), Datatype::FLOAT32, Accelerator::CPU);
-		// m_stride.scaleBytes(datatypeBytes(Datatype::FLOAT32));
 		m_isScalar = true;
 		std::visit([&](auto *data)
 		{
@@ -81,7 +78,6 @@ namespace librapid
 		initializeCudaStream();
 
 		constructNew(Extent(1), Stride(1), Datatype::FLOAT64, Accelerator::CPU);
-		// m_stride.scaleBytes(datatypeBytes(Datatype::FLOAT64));
 		m_isScalar = true;
 		std::visit([&](auto *data)
 		{
