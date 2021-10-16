@@ -400,7 +400,6 @@ namespace librapid
 		 * \endrst
 		 */
 		void fill(double val);
-		void fill(const Complex<double> &val);
 
 		Array copy(const Datatype &dtype = Datatype::NONE,
 				   const Accelerator &locn = Accelerator::NONE);
@@ -634,7 +633,7 @@ namespace librapid
 		const Array subscript(size_t index) const;
 
 		std::pair<int64_t, int64_t> stringifyFormatPreprocess(bool stripMiddle,
-															bool autoStrip) const;
+															  bool autoStrip) const;
 
 		std::string stringify(int64_t indent, bool showCommas,
 							  bool stripMiddle, bool autoStrip,
