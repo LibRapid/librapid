@@ -2,7 +2,7 @@
 #define LIBRAPID_AUTOCAST
 
 #include <variant>
-#include <librapid/autocast/custom_complex.hpp>
+#include <variant>
 
 namespace librapid
 {
@@ -115,8 +115,6 @@ namespace librapid
 			default:
 				return false;
 		}
-
-		return false;
 	}
 
 	/**
@@ -135,22 +133,6 @@ namespace librapid
 				return true;
 			case Datatype::FLOAT64:
 				return true;
-			default:
-				return false;
-		}
-	}
-
-	/**
-	* \rst
-	*
-	* Returns true if the provided datatype represents a complex value.
-	*
-	* \endrst
-	*/
-	inline bool isComplex(Datatype t)
-	{
-		switch (t)
-		{
 			default:
 				return false;
 		}
