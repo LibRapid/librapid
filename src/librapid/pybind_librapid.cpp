@@ -98,7 +98,6 @@ PYBIND11_MODULE(_librapid, module)
 	module.def("isIntegral", &librapid::isIntegral);
 	module.def("isUnsigned", &librapid::isUnsigned);
 	module.def("isFloating", &librapid::isFloating);
-	module.def("isComplex", &librapid::isComplex);
 	module.def("datatypeBytes", &librapid::datatypeBytes);
 	module.def("datatypeToString", &librapid::datatypeToString);
 
