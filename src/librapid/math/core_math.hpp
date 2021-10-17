@@ -2,6 +2,8 @@
 #define NDARRAY_CORE_MATH
 
 #include <librapid/config.hpp>
+
+#include <vector>
 #include <cmath>
 
 namespace librapid

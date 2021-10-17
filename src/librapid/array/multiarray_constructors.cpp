@@ -5,10 +5,12 @@ namespace librapid
 {
 	RawArray validRawArray = RawArray{(bool *) nullptr, Datatype::VALIDNONE, Accelerator::CPU};
 
+#ifdef LIBRAPID_HAS_CUDA
 #ifdef LIBRAPID_CUDA_STREAM
 	cudaStream_t cudaStream;
 	bool streamCreated = false;
 #endif // LIBRAPID_CUDA_STREAM
+#endif // LIBRAPID_HAS_CUDA
 
 	Array::Array()
 	{

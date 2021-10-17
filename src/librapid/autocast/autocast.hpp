@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <variant>
+#include <map>
 
 namespace librapid
 {
@@ -537,7 +538,11 @@ namespace librapid
 		#endif
 		}
 	#else
-		throw std::runtime_error("CUDA support was not enabled, so device memory cannot be freed");
+		else
+		{
+			throw std::runtime_error("CUDA support was not enabled, so "
+									 "device memory cannot be freed");
+		}
 	#endif
 	}
 
