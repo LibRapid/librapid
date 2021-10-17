@@ -13,6 +13,7 @@ namespace py = pybind11;
 // Docstring for the module
 std::string module_docstring = "A fast math and neural network library for Python and C++";
 
+// Make things a little shorter
 template<typename T>
 using V = std::vector<T>;
 
