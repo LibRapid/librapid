@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 project(librapid VERSION "0.2.6")
 
+if ()
+	message(STATUS "Building library for Python")
+else()
+	message(STATUS "Building static C++ library")
+endif()
+
 message(STATUS "CMake Version: ${CMAKE_VERSION}")
 
 set(CMAKE_CXX_STANDARD 17)
@@ -10,55 +16,61 @@ find_package(CUDAToolkit)
 find_package(BLAS)
 find_package(OpenMP)
 
-# Ensure PyBind11 is accessible
-if (EXISTS "${CMAKE_SOURCE_DIR}/pybind11")
-	add_subdirectory("pybind11")
-elseif(EXISTS "${CMAKE_SOURCE_DIR}/src/librapid/pybind11")
-	add_subdirectory("src/librapid/pybind11")
-else()
-	include(FetchContent)
+if (${SKBUILD})
+	# Ensure PyBind11 is accessible
+	if (EXISTS "${CMAKE_SOURCE_DIR}/pybind11")
+		add_subdirectory("pybind11")
+	elseif(EXISTS "${CMAKE_SOURCE_DIR}/src/librapid/pybind11")
+		add_subdirectory("src/librapid/pybind11")
+	else()
+		include(FetchContent)
 
-	FetchContent_Declare(
-		pybind11
-		URL https://github.com/pybind/pybind11/archive/refs/tags/v2.6.2.tar.gz
-		URL_HASH SHA256=8ff2fff22df038f5cd02cea8af56622bc67f5b64534f1b83b9f133b8366acff2
-	)
-	FetchContent_MakeAvailable(pybind11)
+		FetchContent_Declare(
+			pybind11
+			URL https://github.com/pybind/pybind11/archive/refs/tags/v2.6.2.tar.gz
+			URL_HASH SHA256=8ff2fff22df038f5cd02cea8af56622bc67f5b64534f1b83b9f133b8366acff2
+		)
+		FetchContent_MakeAvailable(pybind11)
+	endif()
 endif()
 
 option(USE_BLAS "Attempt to use a BLAS library" ON)
 option(USE_CUDA "Attempt to use CUDA" ON)
 option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 
-file(GLOB_RECURSE SOURCES "src/librapid/*.cpp")
-message(STATUS "Source files found: ${SOURCES}")
+set(sources # Array library
+			"src/librapid/array/extent.cpp"
+			"src/librapid/array/iterators.cpp"
+			"src/librapid/array/stride.cpp"
+			"src/librapid/array/multiarray.cpp"
+			"src/librapid/array/multiarray_constructors.cpp"
+			"src/librapid/array/multiarray_string_methods.cpp"
+			"src/librapid/array/multiarray_indexing.cpp"
+			"src/librapid/array/multiarray_manipulation.cpp"
+			"src/librapid/array/multiarray_arithmetic.cpp"
+			# Math library
+			"src/librapid/math/core_math.cpp"
+			# String methods
+			"src/librapid/stringmethods/format_number.cpp"
+			# Utilities
+			"src/librapid/utils/color.cpp"
+			"src/librapid/utils/console_utils.cpp"
+			"src/librapid/utils/time_utils.cpp"
+			# Tests
+			"src/librapid/test/librapid_test.cpp")
 
-set(python_module_name "_librapid")
-pybind11_add_module(${python_module_name} MODULE
-					"src/librapid/pybind_librapid.cpp"
-					# Array library
-					"src/librapid/array/extent.cpp"
-					"src/librapid/array/iterators.cpp"
-					"src/librapid/array/stride.cpp"
-					"src/librapid/array/multiarray.cpp"
-					"src/librapid/array/multiarray_constructors.cpp"
-					"src/librapid/array/multiarray_string_methods.cpp"
-					"src/librapid/array/multiarray_indexing.cpp"
-					"src/librapid/array/multiarray_manipulation.cpp"
-					"src/librapid/array/multiarray_arithmetic.cpp"
-					# Math library
-					"src/librapid/math/core_math.cpp"
-					# String methods
-					"src/librapid/stringmethods/format_number.cpp"
-					# Utilities
-					"src/librapid/utils/color.cpp"
-					"src/librapid/utils/console_utils.cpp"
-					"src/librapid/utils/time_utils.cpp"
-					# Tests
-					"src/librapid/test/librapid_test.cpp"
-					)
+if (${SKBUILD})			
+	set(module_name "_librapid")
+	pybind11_add_module(${module_name} MODULE
+						"src/librapid/pybind_librapid.cpp"
+						${sources}
+						)
 
-add_compile_definitions(LIBRAPID_PYTHON)
+	add_compile_definitions(LIBRAPID_PYTHON)
+else()
+	set(module_name "librapid")
+	add_library(${module_name} STATIC ${sources})
+endif()
 
 # See if OpenMP should be linked against
 if (${OpenMP_FOUND})
@@ -66,7 +78,7 @@ if (${OpenMP_FOUND})
 		message(STATUS "Linking against OpenMP")
 		
 		# Link the required library
-		target_link_libraries(${python_module_name} PRIVATE
+		target_link_libraries(${module_name} PRIVATE
 							  OpenMP::OpenMP_CXX
 							 )
 	
@@ -174,11 +186,11 @@ if (${BLAS_FOUND})
 		endif()
 
 		# Link the required library
-		target_link_libraries(${python_module_name} PRIVATE
+		target_link_libraries(${module_name} PRIVATE
 								"${CMAKE_SOURCE_DIR}/src/librapid/blas/${lib_name}"
 							 )
 
-		target_include_directories(${python_module_name} PRIVATE
+		target_include_directories(${module_name} PRIVATE
 									"${CMAKE_SOURCE_DIR}/src/librapid/blas"
 								  )
 	
@@ -198,16 +210,16 @@ if (${CUDAToolkit_FOUND})
 	if (${USE_CUDA})
 		message(STATUS "Using CUDA ${CUDAToolkit_VERSION}")
 
-		target_include_directories(${python_module_name} PRIVATE
+		target_include_directories(${module_name} PRIVATE
 									${CUDA_INCLUDE_DIRS}
 								  )
 
-		target_link_directories(${python_module_name} PRIVATE
+		target_link_directories(${module_name} PRIVATE
 									${CUDA_LIBRARIES}
 									${CUDA_CUBLAS_LIBRARIES}
 							   )
 
-		target_link_libraries(${python_module_name} PRIVATE
+		target_link_libraries(${module_name} PRIVATE
 									CUDA::cudart
 									CUDA::cuda_driver
 									CUDA::nvrtc
@@ -220,24 +232,24 @@ if (${CUDAToolkit_FOUND})
 		message(WARNING "CUDA was found but is not being linked against (Value <USE_CUDA> is " ${USE_CUDA} ")")
 	endif()
 
-	target_include_directories(${python_module_name} PRIVATE
+	target_include_directories(${module_name} PRIVATE
 								"${CMAKE_SOURCE_DIR}/src/librapid/cudahelpers"
 							  )
 endif()
 
-target_include_directories(${python_module_name} PRIVATE
+target_include_directories(${module_name} PRIVATE
 							"${CMAKE_SOURCE_DIR}/src/librapid" # For wheel build
 							"${CMAKE_SOURCE_DIR}/src" # For source dist
 							"${CMAKE_SOURCE_DIR}" # For source dist
 						  )
 
-include(ProcessorCount)
-ProcessorCount(N)
-if(NOT threads EQUAL 0)
-	add_compile_definitions(NUM_THREADS=${N}/2)
-endif()
+# include(ProcessorCount)
+# ProcessorCount(N)
+# if(NOT threads EQUAL 0)
+# 	add_compile_definitions(NUM_THREADS=${N}/2)
+# endif()
 
-install(TARGETS ${python_module_name} DESTINATION .)
+install(TARGETS ${module_name} DESTINATION .)
 
 # Set the compiler to use maximum optimisations (SPEED!!!!)
 
