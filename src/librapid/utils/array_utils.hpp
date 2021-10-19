@@ -32,15 +32,7 @@ namespace librapid
 			{
 				std::visit([&](auto *value)
 				{
-					// if (src.dtype == Datatype::INT8 ||
-					// 	src.dtype == Datatype::UINT8)
-					// {
-					// 	stream << (int) *value;
-					// }
-					// else
-					// {
 					stream << *value;
-					// }
 				}, src.data);
 			}
 		#ifdef LIBRAPID_HAS_CUDA
@@ -60,11 +52,7 @@ namespace librapid
 								 cudaMemcpyDeviceToHost));
 				#endif // LIBRAPID_CUDA_STREAM
 
-					if (std::is_same<A, int8_t>::value ||
-						std::is_same<A, uint8_t>::value)
-						stream << (int) tmp;
-					else
-						stream << tmp;
+					stream << tmp;
 				}, src.data);
 			}
 		#else
@@ -72,7 +60,7 @@ namespace librapid
 			{
 				throw std::invalid_argument("CUDA support was not enabled, so an"
 											" Array on the GPU cannot be printed");
-			}
+		}
 		#endif
 
 			std::string str = stream.str();
@@ -90,7 +78,7 @@ namespace librapid
 			}
 
 			res = {index, str.length() - index - 1};
-		}
+	}
 
 		inline void autocastFormatValue(const RawArray &src, std::string &res)
 		{
@@ -147,7 +135,7 @@ namespace librapid
 			res = stream.str();
 			if (isFloating(src.dtype) && res.find_last_of('.') == std::string::npos)
 				res += ".";
-		}
+			}
 
 		template<typename _Ty>
 		void arrayOpEq(void *dataStart, Accelerator location, const _Ty &val)
@@ -170,7 +158,7 @@ namespace librapid
 			#endif // LIBRAPID_HAS_CUDA
 			}
 		}
-	}
+		}
 }
 
 #endif // LIBRAPID_ARRAY_UTILS

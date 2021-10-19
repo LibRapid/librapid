@@ -301,6 +301,11 @@ namespace librapid
 		bool m_isContiguous = true; // Data is contiguous in memory
 		size_t m_one = 1; // Value representing a step of 1 element through memory
 	};
+
+	inline std::ostream &operator<<(std::ostream &os, const Stride &stride)
+	{
+		return os << stride.str();
+	}
 }
 
 #endif // LIBRAPID_STRIDE

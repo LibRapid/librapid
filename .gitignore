@@ -13,6 +13,7 @@ openblas_install
 
 MANIFEST
 
+build
 build/*
 _skbuild
 
