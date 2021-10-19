@@ -213,7 +213,6 @@ namespace librapid
 		m_dtype = dtype;
 
 		// If array is scalar, allocate "sizeof(dtype)" bytes -- e.size() is 0
-		// m_dataStart = AUTOCAST_ALLOC(dtype, location, e.size() + isScalar).ptr;
 		auto raw = RawArray{m_dataStart, dtype, location};
 		m_dataStart = rawArrayMalloc(raw, e.size() + isScalar).data;
 		m_dataOrigin = m_dataStart;

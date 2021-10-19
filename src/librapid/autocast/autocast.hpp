@@ -196,44 +196,44 @@ namespace librapid
 	 *
 	 * \endrst
 	 */
-	template<typename T>
-	inline Datatype typeToDatatype(T x)
-	{
-		if constexpr (std::is_same<T, bool>::value) return Datatype::BOOL;
-		if constexpr (std::is_same<T, int64_t>::value) return Datatype::INT64;
-		if constexpr (std::is_same<T, float>::value) return Datatype::FLOAT32;
-		if constexpr (std::is_same<T, double>::value) return Datatype::FLOAT64;
+	 // template<typename T>
+	 // inline Datatype typeToDatatype(T x)
+	 // {
+	 // 	if constexpr (std::is_same<T, bool>::value) return Datatype::BOOL;
+	 // 	if constexpr (std::is_same<T, int64_t>::value) return Datatype::INT64;
+	 // 	if constexpr (std::is_same<T, float>::value) return Datatype::FLOAT32;
+	 // 	if constexpr (std::is_same<T, double>::value) return Datatype::FLOAT64;
+	 //
+	 // 	return Datatype::NONE;
+	 // }
 
-		return Datatype::NONE;
-	}
-
-	/**
-	 * /rst
-	 *
-	 * Generate a LibRapid datatype from a string.
-	 *
-	 * The string can be formatted as any of the following:
-	 *  - The C++ typename
-	 *  - <type><bytes>
-	 *		- "int8"
-	 *		- "float64"
-	 *		- "cfloat32"
-	 *		- etc.
-	 *  - Shorthand <type><size>
-	 *		- "i" -> integer
-	 *		- "ui" -> unsigned integer
-	 *		- "f" -> floating
-	 *		- "cf" -> complex floating point
-	 *  - Single specific character
-	 *		- "n" -> None
-	 *		- "b" -> Bool
-	 *		- "i" -> 64-bit signed integer
-	 *		- "ui" -> Unsigned 64-bit integer
-	 *		- "f" -> 64-bit floating point
-	 *		- "c" -> 64-bit complex floating point
-	 *
-	 * \endrst
-	 */
+	 /**
+	  * /rst
+	  *
+	  * Generate a LibRapid datatype from a string.
+	  *
+	  * The string can be formatted as any of the following:
+	  *  - The C++ typename
+	  *  - <type><bytes>
+	  *		- "int8"
+	  *		- "float64"
+	  *		- "cfloat32"
+	  *		- etc.
+	  *  - Shorthand <type><size>
+	  *		- "i" -> integer
+	  *		- "ui" -> unsigned integer
+	  *		- "f" -> floating
+	  *		- "cf" -> complex floating point
+	  *  - Single specific character
+	  *		- "n" -> None
+	  *		- "b" -> Bool
+	  *		- "i" -> 64-bit signed integer
+	  *		- "ui" -> Unsigned 64-bit integer
+	  *		- "f" -> 64-bit floating point
+	  *		- "c" -> 64-bit complex floating point
+	  *
+	  * \endrst
+	  */
 	inline Datatype stringToDatatype(const std::string &str)
 	{
 		// Force the string to be lower case
@@ -258,54 +258,12 @@ namespace librapid
 			"boolean"
 		};
 
-		static std::vector<std::string> int8Str = {
-			"int8",
-			"i8",
-			"short"
-		};
-
-		static std::vector<std::string> uint8Str = {
-			"uint8",
-			"ui8",
-			"unsigned short"
-		};
-
-		static std::vector<std::string> int16Str = {
-			"int16",
-			"i16",
-			"int"
-		};
-
-		static std::vector<std::string> uint16Str = {
-			"uint16",
-			"ui16",
-			"unsigned int"
-		};
-
-		static std::vector<std::string> int32Str = {
-			"int32",
-			"i32",
-			"long"
-		};
-
-		static std::vector<std::string> uint32Str = {
-			"uint32",
-			"ui32",
-			"unsigned long"
-		};
-
 		static std::vector<std::string> int64Str = {
 			"i",
+			"int",
 			"int64",
 			"i64",
 			"long long"
-		};
-
-		static std::vector<std::string> uint64Str = {
-			"ui",
-			"uint64",
-			"ui64",
-			"unsigned long long"
 		};
 
 		static std::vector<std::string> float32Str = {
@@ -319,19 +277,6 @@ namespace librapid
 			"float64",
 			"f64",
 			"double"
-		};
-
-		static std::vector<std::string> cfloat32Str = {
-			"cfloat32",
-			"cf32",
-			"complex float"
-		};
-
-		static std::vector<std::string> cfloat64Str = {
-			"c",
-			"cfloat64",
-			"cf64",
-			"complex double"
 		};
 
 		static std::map<Datatype, std::vector<std::string>> types = {
@@ -434,7 +379,7 @@ namespace librapid
 				case Datatype::INT64:
 					{
 						raw.data = (int64_t *)
-							alignedMalloc(sizeof(int8_t) * elems);
+							alignedMalloc(sizeof(int64_t) * elems);
 						break;
 					}
 				case Datatype::FLOAT32:
@@ -536,12 +481,6 @@ namespace librapid
 		#else
 			cudaSafeCall(cudaFree(memory));
 		#endif
-		}
-	#else
-		else
-		{
-			throw std::runtime_error("CUDA support was not enabled, so "
-									 "device memory cannot be freed");
 		}
 	#endif
 	}

@@ -68,6 +68,9 @@ namespace librapid
 
 	Stride &Stride::operator=(const Stride &other)
 	{
+		if (this == &other)
+			return *this;
+
 		m_dims = other.m_dims;
 		m_isTrivial = other.m_isTrivial;
 		m_isContiguous = other.m_isContiguous;
@@ -179,20 +182,6 @@ namespace librapid
 
 		return res;
 	}
-
-	// void Stride::scaleBytes(size_t bytes)
-	// {
-	// 	for (size_t i = 0; i < m_dims; ++i)
-	// 		m_stride[i] *= bytes;
-	// 	m_one = bytes;
-	// }
-	//
-	// Stride Stride::scaledBytes(size_t bytes) const
-	// {
-	// 	Stride res = *this;
-	// 	res.scaleBytes(bytes);
-	// 	return res;
-	// }
 
 	bool Stride::checkTrivial() const
 	{

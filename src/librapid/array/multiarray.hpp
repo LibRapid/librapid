@@ -68,69 +68,13 @@ namespace librapid
 		 *
 		 *		---
 		 *
-		 *		Signed 8-bit integer
-		 *
-		 *		:badge:`i8, badge-success`
-		 *		:badge:`int8, badge-success`
-		 *		:badge:`short, badge-warning`
-		 *
-		 *		---
-		 *
-		 *		Unsigned 8-bit integer
-		 *
-		 *		:badge:`ui8, badge-success`
-		 *		:badge:`uint8, badge-success`
-		 *		:badge:`unsigned short, badge-warning`
-		 *
-		 * 		---
-		 *
-		 *		Signed 16-bit integer
-		 *
-		 *		:badge:`i16, badge-success`
-		 *		:badge:`int16, badge-success`
-		 *		:badge:`int, badge-warning`
-		 *
-		 * 		---
-		 *
-		 *		Unsigned 16-bit integer
-		 *
-		 *		:badge:`ui16, badge-success`
-		 *		:badge:`uint16, badge-success`
-		 *		:badge:`unsigned int, badge-warning`
-		 *
-		 * 		---
-		 *
-		 *		Signed 32-bit integer
-		 *
-		 *		:badge:`i32, badge-success`
-		 *		:badge:`int32, badge-success`
-		 *		:badge:`long, badge-warning`
-		 *
-		 * 		---
-		 *
-		 *		Unsigned 32-bit integer
-		 *
-		 *		:badge:`ui32, badge-success`
-		 *		:badge:`uint32, badge-success`
-		 *		:badge:`unsigned long, badge-warning`
-		 *
-		 * 		---
-		 *
 		 *		Signed 64-bit integer
 		 *
 		 *		:badge:`i, badge-danger`
+		 *		:badge:`int, badge-warning`
 		 *		:badge:`i64, badge-success`
 		 *		:badge:`int64, badge-success`
 		 *		:badge:`long long, badge-warning`
-		 *
-		 * 		---
-		 *
-		 *		Unsigned 64-bit integer
-		 *
-		 *		:badge:`ui, badge-danger`
-		 *		:badge:`ui64, badge-success`
-		 *		:badge:`uint64, badge-success`
-		 *		:badge:`unsigned long long, badge-warning`
 		 *
 		 * 		---
 		 *
@@ -149,22 +93,6 @@ namespace librapid
 		 *		:badge:`float64, badge-success`
 		 *		:badge:`double, badge-warning`
 		 *
-		 * 		---
-		 *
-		 *		Complex 32-bit floating point
-		 *
-		 *		:badge:`cf32, badge-success`
-		 *		:badge:`cfloat32, badge-success`
-		 *		:badge:`complex float, badge-warning`
-		 *
-		 * 		---
-		 *
-		 *		Complex 64-bit floating point
-		 *
-		 *		:badge:`c, badge-danger`
-		 *		:badge:`cf64, badge-success`
-		 *		:badge:`cfloat64, badge-success`
-		 *		:badge:`complex double, badge-warning`
 		 *
 		 * The accelerator value must be "CPU" or "GPU".
 		 *
@@ -519,7 +447,7 @@ namespace librapid
 											   size, operation);
 
 				// Update the result stride too
-				dst.m_stride = srcA.m_stride;
+				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
 			}
 			else
 			{
@@ -550,7 +478,8 @@ namespace librapid
 
 			Accelerator newLoc = max(srcA.m_location, srcB.m_location);
 			Datatype newType = max(srcA.m_dtype, srcB.m_dtype);
-			Array dst(srcA.m_extent, newType, newLoc);
+
+			Array dst(srcA.m_isScalar ? srcB.m_extent : srcA.m_extent, newType, newLoc);
 
 			auto ptrSrcA = srcA.createRaw();
 			auto ptrSrcB = srcB.createRaw();
@@ -567,7 +496,7 @@ namespace librapid
 											   size, operation);
 
 				// Update the result stride too
-				dst.m_stride = srcA.m_stride;
+				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
 			}
 			else
 			{
@@ -605,7 +534,7 @@ namespace librapid
 			if (m_references == nullptr)
 				return;
 
-			(*m_references)++;
+			++(*m_references);
 		}
 
 		inline void decrement()
@@ -613,7 +542,7 @@ namespace librapid
 			if (m_references == nullptr)
 				return;
 
-			(*m_references)--;
+			--(*m_references);
 
 			if (*m_references == 0)
 			{
@@ -668,6 +597,30 @@ namespace librapid
 	Array sub(const Array &a, const Array &b);
 	Array mul(const Array &a, const Array &b);
 	Array div(const Array &a, const Array &b);
+
+	template<typename T>
+	inline Array operator+(T lhs, const Array &rhs)
+	{
+		return Array::applyBinaryOp(lhs, rhs, ops::Add());
+	}
+
+	template<typename T>
+	inline Array operator-(T lhs, const Array &rhs)
+	{
+		return Array::applyBinaryOp(lhs, rhs, ops::Sub());
+	}
+
+	template<typename T>
+	inline Array operator*(T lhs, const Array &rhs)
+	{
+		return Array::applyBinaryOp(lhs, rhs, ops::Mul());
+	}
+
+	template<typename T>
+	inline Array operator/(T lhs, const Array &rhs)
+	{
+		return Array::applyBinaryOp(lhs, rhs, ops::Div());
+	}
 }
 
 #endif // LIBRAPID_ARRAY

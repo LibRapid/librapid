@@ -533,12 +533,12 @@ namespace librapid
 				// accelerator as the result array (C)
 
 				// Copy A to be on the same accelerator as B
-				RawArray tempSrcA = {(bool *) nullptr, dst.dtype, dst.location};
-				RawArray tempSrcB = {(bool *) nullptr, dst.dtype, dst.location};
+				RawArray tempSrcA = {(bool *) nullptr, srcA.dtype, srcA.location};
+				RawArray tempSrcB = {(bool *) nullptr, srcB.dtype, srcB.location};
 
 				// Allocate memory for temporary sources
-				rawArrayMalloc(tempSrcA, elems);
-				rawArrayMalloc(tempSrcB, elems);
+				rawArrayMalloc(tempSrcA, srcAIsScalar ? 1 : elems);
+				rawArrayMalloc(tempSrcB, srcBIsScalar ? 1 : elems);
 
 				// Copy the data from the original sources to the adjusted sources
 				int freeSrcA = makeSameAccelerator(tempSrcA, srcA, srcAIsScalar ? 1 : elems);
@@ -784,8 +784,6 @@ namespace librapid
 
 					for (int64_t i = 0; i < ndim; ++i)
 					{
-						std::cout << "Extent | Stride     " << extent[i] << " | " << _strideDst[i] << "\n";
-
 						rawExtent[ndim - i - 1] = extent[i];
 						_strideDst[ndim - i - 1] = strideDst[i];
 						_strideSrcA[ndim - i - 1] = strideSrcA[i];
