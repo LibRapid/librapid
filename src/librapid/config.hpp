@@ -293,7 +293,7 @@ namespace librapid
 	inline void *alignedMalloc(size_t required_bytes,
 							   size_t alignment = DATA_ALIGN)
 	{
-		// return malloc(required_bytes);
+		return malloc(required_bytes);
 
 		void *p1; // original block
 		void **p2; // aligned block
@@ -309,9 +309,9 @@ namespace librapid
 
 	inline void alignedFree(void *p)
 	{
-		// free(p);
+		free(p);
 
-		free(((void **) p)[-1]);
+		// free(((void **) p)[-1]);
 	}
 }
 

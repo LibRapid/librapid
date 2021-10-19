@@ -175,10 +175,30 @@ PYBIND11_MODULE(_librapid, module)
 
 		.def("fill", [](librapid::Array &arr, double val) { arr.fill(val); })
 
-		.def("__add__", &librapid::Array::operator+)
-		.def("__sub__", &librapid::Array::operator-)
-		.def("__mul__", &librapid::Array::operator*)
-		.def("__div__", &librapid::Array::operator/)
+		.def("__add__",     [](const librapid::Array &lhs, int64_t rhs) { return lhs + rhs; })
+		.def("__sub__",     [](const librapid::Array &lhs, int64_t rhs) { return lhs - rhs; })
+		.def("__mul__",     [](const librapid::Array &lhs, int64_t rhs) { return lhs * rhs; })
+		.def("__truediv__", [](const librapid::Array &lhs, int64_t rhs) { return lhs / rhs; })
+		
+		.def("__add__",     [](const librapid::Array &lhs, double rhs) { return lhs + rhs; })
+		.def("__sub__",     [](const librapid::Array &lhs, double rhs) { return lhs - rhs; })
+		.def("__mul__",     [](const librapid::Array &lhs, double rhs) { return lhs * rhs; })
+		.def("__truediv__", [](const librapid::Array &lhs, double rhs) { return lhs / rhs; })
+
+		.def("__radd__",     [](const librapid::Array &rhs, int64_t lhs) { return lhs + rhs; })
+		.def("__rsub__",     [](const librapid::Array &rhs, int64_t lhs) { return lhs - rhs; })
+		.def("__rmul__",     [](const librapid::Array &rhs, int64_t lhs) { return lhs * rhs; })
+		.def("__rtruediv__", [](const librapid::Array &rhs, int64_t lhs) { return lhs / rhs; })
+		
+		.def("__radd__",     [](const librapid::Array &rhs, double lhs) { return lhs + rhs; })
+		.def("__rsub__",     [](const librapid::Array &rhs, double lhs) { return lhs - rhs; })
+		.def("__rmul__",     [](const librapid::Array &rhs, double lhs) { return lhs * rhs; })
+		.def("__rtruediv__", [](const librapid::Array &rhs, double lhs) { return lhs / rhs; })
+
+		.def("__add__",     [](const librapid::Array &lhs, const librapid::Array &rhs) { return lhs + rhs; })
+		.def("__sub__",     [](const librapid::Array &lhs, const librapid::Array &rhs) { return lhs - rhs; })
+		.def("__mul__",     [](const librapid::Array &lhs, const librapid::Array &rhs) { return lhs * rhs; })
+		.def("__truediv__", [](const librapid::Array &lhs, const librapid::Array &rhs) { return lhs / rhs; })
 
 		.def("transpose", [](librapid::Array &arr, const librapid::Extent &order) { arr.transpose(order); }, py::arg("order") = librapid::Extent())
 
@@ -210,8 +230,6 @@ PYBIND11_MODULE(_librapid, module)
 	module.def("div", [](const librapid::Array &a, const librapid::Array &b) { return librapid::div(a, b); }, py::arg("a"), py::arg("b"));
 	
 	// Colours
-	// py::module_ color = module.def_submodule("color", "A simple text color library");
-	
 	py::class_<librapid::RGB>(module, "RGB")
 		.def(py::init<int, int, int>(), py::arg("red") = 0, py::arg("green") = 0, py::arg("blue") = 0)
 		.def("__str__", [](const librapid::RGB &col) { return librapid::fore(col); })
@@ -281,6 +299,6 @@ PYBIND11_MODULE(_librapid, module)
 	py::implicitly_convertible<py::tuple, librapid::Array>();
 	py::implicitly_convertible<py::list, librapid::Array>();
 
-	py::implicitly_convertible<py::tuple, librapid::Extent>();
-	py::implicitly_convertible<py::list, librapid::Extent>();
+	// py::implicitly_convertible<py::tuple, librapid::Extent>();
+	// py::implicitly_convertible<py::list, librapid::Extent>();
 }
