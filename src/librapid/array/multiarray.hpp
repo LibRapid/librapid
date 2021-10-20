@@ -300,6 +300,8 @@ namespace librapid
 			return m_location;
 		}
 
+		const Array subscript(size_t index) const;
+
 		/**
 		 * \rst
 		 *
@@ -316,8 +318,9 @@ namespace librapid
 
 		inline Array operator[](int64_t index)
 		{
-			using nonConst = typename std::remove_const<Array>::type;
-			return (nonConst) subscript(index);
+			// using nonConst = typename std::remove_const<Array>::type;
+			// return static_cast<nonConst>(subscript(index));
+			return subscript(index);
 		}
 
 		/**
@@ -558,8 +561,6 @@ namespace librapid
 
 		void constructHollow(const Extent &e, const Stride &s,
 							 const Datatype &dtype, const Accelerator &location);
-
-		const Array subscript(size_t index) const;
 
 		std::pair<int64_t, int64_t> stringifyFormatPreprocess(bool stripMiddle,
 															  bool autoStrip) const;

@@ -1,3 +1,5 @@
+#define LIBRAPID_TRACE
+
 #ifndef LIBRAPID_CONFIG
 #define LIBRAPID_CONFIG
 

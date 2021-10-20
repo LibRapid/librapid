@@ -3,8 +3,22 @@
 namespace librapid
 {
 	Extent::Extent(const std::initializer_list<int64_t> &data)
-		: Extent(std::vector<int64_t>(data.begin(), data.end()))
-	{}
+	{
+		// Initialize the dimensions
+		m_dims = data.size();
+
+		if (m_dims > LIBRAPID_MAX_DIMS)
+			throw std::runtime_error("Cannot create Extent with "
+									 + std::to_string(m_dims)
+									 + " dimensions. Limit is "
+									 + std::to_string(LIBRAPID_MAX_DIMS));
+
+		uint64_t index = 0;
+		for (const auto &val : data)
+			m_extent[index++] = val;
+
+		update();
+	}
 
 	Extent::Extent(const std::vector<int64_t> &data)
 	{
@@ -37,16 +51,6 @@ namespace librapid
 			m_extent[i] = 1;
 	}
 
-	Extent::Extent(const Extent &other)
-	{
-		memcpy(m_extent, other.m_extent, sizeof(int64_t) * LIBRAPID_MAX_DIMS);
-		m_dims = other.m_dims;
-		m_size = other.m_size;
-		m_containsAutomatic = other.m_containsAutomatic;
-
-		update();
-	}
-
 #ifdef LIBRAPID_PYTHON
 	Extent::Extent(py::args args)
 	{
@@ -62,7 +66,7 @@ namespace librapid
 			m_extent[i] = py::cast<int64_t>(args[i]);
 
 		update();
-	}
+}
 #endif // LIBRAPID_PYTHON
 
 	Extent &Extent::operator=(const Extent &other)
