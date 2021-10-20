@@ -57,8 +57,6 @@ namespace librapid
 		 */
 		Extent(size_t dims);
 
-		Extent(const Extent &other);
-
 	#ifdef LIBRAPID_PYTHON
 		Extent(py::args args);
 	#endif // LIBRAPID_PYTHON
@@ -261,7 +259,7 @@ namespace librapid
 		void update();
 
 	private:
-		int64_t m_extent[LIBRAPID_MAX_DIMS]{};
+		int64_t m_extent[LIBRAPID_MAX_DIMS];
 		size_t m_dims = 0;
 		bool m_containsAutomatic = false;
 		int64_t m_size = 0;

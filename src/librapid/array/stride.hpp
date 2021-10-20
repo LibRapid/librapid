@@ -40,29 +40,9 @@ namespace librapid
 		Stride(const std::vector<int64_t> &data);
 		Stride(size_t dims);
 
-		/**
-		 * \rst
-		 *
-		 * Create a Stride from another Stride. This will copy all data, including
-		 * trivial-ness and contiguity.
-		 *
-		 * \endrst
-		 */
-		Stride(const Stride &other);
-
 	#ifdef LIBRAPID_PYTHON
 		Stride(py::args args);
 	#endif
-
-		/**
-		 * \rst
-		 *
-		 * Set one Stride equal to another. This will copy all data, including
-		 * trivial-ness and contiguity.
-		 *
-		 * \endrst
-		 */
-		Stride &operator=(const Stride &other);
 
 		/**
 		 * \rst
@@ -295,11 +275,10 @@ namespace librapid
 
 	private:
 
-		int64_t m_stride[LIBRAPID_MAX_DIMS]{};
+		int64_t m_stride[LIBRAPID_MAX_DIMS];
 		size_t m_dims = 0;
 		bool m_isTrivial = true; // Trivial stride
 		bool m_isContiguous = true; // Data is contiguous in memory
-		size_t m_one = 1; // Value representing a step of 1 element through memory
 	};
 
 	inline std::ostream &operator<<(std::ostream &os, const Stride &stride)
