@@ -42,6 +42,7 @@ PYBIND11_MODULE(_librapid, module)
 	py::module_ test = module.def_submodule("test", "Tests within the librapid library");
 	test.def("testLibrapid", &librapid::test::testLibrapid);
 	test.def("streamTest", &librapid::test::streamTest);
+	test.def("empty", [](int x) { return x * 2; });
 
 	test.def("sum", [](const std::vector<double> &data) { return testSum(data); });
 	test.def("sum", [](const std::vector<int64_t> &data) { return testSum(data); });

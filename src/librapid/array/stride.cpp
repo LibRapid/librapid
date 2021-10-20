@@ -3,8 +3,23 @@
 namespace librapid
 {
 	Stride::Stride(const std::initializer_list<int64_t> &data)
-		: Stride(std::vector<int64_t>(data.begin(), data.end()))
-	{}
+	{
+		// Initialize members
+		m_isTrivial = true;
+		m_isContiguous = true;
+		m_dims = data.size();
+
+		// Check for a valid number of dimensions
+		if (m_dims > LIBRAPID_MAX_DIMS)
+			throw std::runtime_error("Cannot create Stride with "
+									 + std::to_string(m_dims)
+									 + " dimensions. Maximum allowed is "
+									 + std::to_string(LIBRAPID_MAX_DIMS));
+
+		uint64_t index = 0;
+		for (const auto &val : data)
+			m_stride[index++] = val;
+	}
 
 	Stride::Stride(const std::vector<int64_t> &data)
 	{
@@ -37,16 +52,16 @@ namespace librapid
 			m_stride[i] = 1;
 	}
 
-	Stride::Stride(const Stride &other)
-	{
-		m_isTrivial = other.m_isTrivial;
-		m_isContiguous = other.m_isContiguous;
-		m_dims = other.m_dims;
-		m_one = other.m_one;
-
-		for (size_t i = 0; i < m_dims; ++i)
-			m_stride[i] = other.m_stride[i];
-	}
+	// Stride::Stride(const Stride &other)
+	// {
+	// 	m_isTrivial = other.m_isTrivial;
+	// 	m_isContiguous = other.m_isContiguous;
+	// 	m_dims = other.m_dims;
+	// 	m_one = other.m_one;
+	//
+	// 	for (size_t i = 0; i < m_dims; ++i)
+	// 		m_stride[i] = other.m_stride[i];
+	// }
 
 #ifdef LIBRAPID_PYTHON
 	Stride::Stride(py::args args)
@@ -65,24 +80,6 @@ namespace librapid
 			m_stride[i] = py::cast<int64_t>(args[i]);
 	}
 #endif
-
-	Stride &Stride::operator=(const Stride &other)
-	{
-		if (this == &other)
-			return *this;
-
-		m_dims = other.m_dims;
-		m_isTrivial = other.m_isTrivial;
-		m_isContiguous = other.m_isContiguous;
-		m_one = other.m_one;
-
-		for (size_t i = 0; i < m_dims; ++i)
-		{
-			m_stride[i] = other.m_stride[i];
-		}
-
-		return *this;
-	}
 
 	Stride Stride::fromExtent(const Extent &extent)
 	{
@@ -177,7 +174,6 @@ namespace librapid
 		Stride res(end - start);
 		for (int64_t i = start; i < end; ++i)
 			res.m_stride[i - start] = m_stride[i];
-		res.m_one = m_one;
 		res.m_isTrivial = res.checkTrivial();
 
 		return res;
@@ -190,7 +186,7 @@ namespace librapid
 		for (size_t i = 0; i < m_dims; ++i)
 		{
 			if (m_stride[i] <= m_stride[i + 1]) return false;
-			if (m_stride[i] == m_one) foundOne = true;
+			if (m_stride[i] == 1) foundOne = true;
 		}
 
 		return foundOne;
