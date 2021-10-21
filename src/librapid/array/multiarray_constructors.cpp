@@ -229,10 +229,6 @@ namespace librapid
 	void Array::constructHollow(const Extent &e, const Stride &s,
 								const Datatype &dtype, const Accelerator &location)
 	{
-	#ifdef LIBRAPID_TRACE
-		std::cout << "Array::constructHollow(extent, stride, dtype, location)\n";
-	#endif
-
 		m_extent = e;
 		m_stride = s;
 		m_dtype = dtype;
