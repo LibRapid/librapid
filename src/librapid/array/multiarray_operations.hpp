@@ -590,7 +590,7 @@ namespace librapid
 							// Use *b rather than b[i]
 							if (elems < 2500)
 							{
-								for (size_t i = 0; i < tempElems; ++i)
+								for (int64_t i = 0; i < tempElems; ++i)
 									dstData[i] = static_cast<C>(tempOp(srcDataA[i], *srcDataB));
 							}
 							else
@@ -605,10 +605,86 @@ namespace librapid
 						else
 						{
 							// Use a[i] and b[i]
-							if (elems < 2500)
+							if constexpr (std::is_same_v<A, double> && std::is_same_v<B, double> && std::is_same_v<B, double>)
 							{
-								for (size_t i = 0; i < tempElems; ++i)
+								vcl::Vec8d a, b;
+								int64_t i = 0, diff;
+								const auto tmpSrcA = (double *__restrict) srcDataA;
+								const auto tmpSrcB = (double *__restrict) srcDataB;
+								auto tmpDst = (double *__restrict) dstData;
+
+								if (elems < 2500)
+								{
+									for (i = 0; i < tempElems - 7; i += 8)
+									{
+										a.load(tmpSrcA + i);
+										b.load(tmpSrcB + i);
+										vcl::Vec8d c = tempOp(a, b);
+										c.store(tmpDst + i);
+									}
+								}
+								else
+								{
+								#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b, diff) num_threads(NUM_THREADS) default(none)
+									for (i = 0; i < tempElems - 7; i += 8)
+									{
+										a.load(tmpSrcA + i);
+										b.load(tmpSrcB + i);
+										vcl::Vec8d c = tempOp(a, b);
+										c.store(tmpDst + i);
+									}
+								}
+								if ((diff = tempElems - i) > 0)
+								{
+									a.load_partial(diff, tmpSrcA + i);
+									b.load_partial(diff, tmpSrcB + i);
+									vcl::Vec8d c = tempOp(a, b);
+									c.store_partial(diff, tmpDst + i);
+								}
+							}
+							else if constexpr (std::is_same_v<A, float> && std::is_same_v<B, float> && std::is_same_v<B, float>)
+							{
+								vcl::Vec16f a, b;
+								int64_t i = 0, diff;
+								const auto tmpSrcA = (float *__restrict) srcDataA;
+								const auto tmpSrcB = (float *__restrict) srcDataB;
+								auto tmpDst = (float *__restrict) dstData;
+
+								if (elems < 2500)
+								{
+									for (i = 0; i < tempElems - 15; i += 16)
+									{
+										a.load(tmpSrcA + i);
+										b.load(tmpSrcB + i);
+										vcl::Vec16f c = tempOp(a, b);
+										c.store(tmpDst + i);
+									}
+								}
+								else
+								{
+								#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b, diff) num_threads(NUM_THREADS) default(none)
+									for (i = 0; i < tempElems - 15; i += 16)
+									{
+										a.load(tmpSrcA + i);
+										b.load(tmpSrcB + i);
+										vcl::Vec16f c = tempOp(a, b);
+										c.store(tmpDst + i);
+									}
+								}
+								if ((diff = tempElems - i) > 0)
+								{
+									a.load_partial(diff, tmpSrcA + i);
+									b.load_partial(diff, tmpSrcB + i);
+									vcl::Vec16f c = tempOp(a, b);
+									c.store_partial(diff, tmpDst + i);
+								}
+							}
+							else if (elems < 2500)
+							{
+								for (int64_t i = 0; i < tempElems; ++i)
+								{
 									dstData[i] = static_cast<C>(tempOp(srcDataA[i], srcDataB[i]));
+								}
 							}
 							else
 							{
@@ -1005,7 +1081,7 @@ namespace librapid
 					{
 						threadsPerBlock = 512;
 						blocksPerGrid = ceil(double(elems) / double(threadsPerBlock));
-					}
+				}
 
 					dim3 grid(blocksPerGrid);
 					dim3 block(threadsPerBlock);
@@ -1041,7 +1117,7 @@ namespace librapid
 								   deviceStrideDst,
 								   dims));
 					#endif // LIBRAPID_CUDA_STREAM
-					}, dst.data, srcA.data, srcB.data);
+			}, dst.data, srcA.data, srcB.data);
 
 				#ifdef LIBRAPID_CUDA_STREAM
 					cudaSafeCall(cudaFreeAsync(deviceExtent, cudaStream));
@@ -1054,10 +1130,10 @@ namespace librapid
 					cudaSafeCall(cudaFree(deviceStrideSrcB));
 					cudaSafeCall(cudaFree(deviceStrideDst));
 				#endif // LIBRAPID_CUDA_STREAM
-				}
-			#endif // LIBRAPID_HAS_CUDA
-			}
 		}
+			#endif // LIBRAPID_HAS_CUDA
+	}
+}
 	}
 }
 

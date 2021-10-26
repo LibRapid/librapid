@@ -1,6 +1,9 @@
 #ifndef LIBRAPID_CONFIG
 #define LIBRAPID_CONFIG
 
+#include <cstdint>
+#include <cstring>
+
 #ifdef LIBRAPID_PYTHON
 // PyBind11 specific definitions and includes
 #include <pybind11/pybind11.h>
@@ -30,6 +33,10 @@ namespace py = pybind11;
 #ifndef LIBRAPID_MAX_DIMS
 #define LIBRAPID_MAX_DIMS 32
 #endif // LIBRAPID_MAX_DIMS
+
+// SIMD instructions
+#define VCL_NAMESPACE vcl
+#include <version2/vectorclass.h>
 
 // Operating system defines
 
@@ -280,7 +287,7 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
 
 // Number of threads for parallel regions
 #ifndef NUM_THREADS
-#define NUM_THREADS 4
+#define NUM_THREADS 8
 #endif // NUM_THREADS
 
 // For n < THREAD_THRESHOLD, code runs serially -- otherwise it'll run in parallel
@@ -293,8 +300,6 @@ namespace librapid
 	inline void *alignedMalloc(size_t required_bytes,
 							   size_t alignment = DATA_ALIGN)
 	{
-		return malloc(required_bytes);
-
 		void *p1; // original block
 		void **p2; // aligned block
 		size_t offset = alignment - 1 + sizeof(void *);
@@ -309,9 +314,7 @@ namespace librapid
 
 	inline void alignedFree(void *p)
 	{
-		free(p);
-
-		// free(((void **) p)[-1]);
+		free(((void **) p)[-1]);
 	}
 }
 

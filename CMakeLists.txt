@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(librapid VERSION "0.2.6")
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts")
+
 if ()
     message(STATUS "Building library for Python")
 else ()
@@ -20,6 +22,7 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(CUDAToolkit)
 find_package(BLAS)
 find_package(OpenMP)
+find_package(AVX)
 
 if (${SKBUILD})
     # Ensure PyBind11 is accessible
@@ -69,7 +72,10 @@ set(sources # Array library
         "src/librapid/utils/console_utils.cpp"
         "src/librapid/utils/time_utils.cpp"
         # Tests
-        "src/librapid/test/librapid_test.cpp")
+        "src/librapid/test/librapid_test.cpp"
+		# Dependencies
+		"version2/instrset_detect.cpp"
+		)
 
 if (${SKBUILD})
     set(module_name "_librapid")
@@ -165,7 +171,7 @@ if (${BLAS_FOUND})
                 foreach (file IN LISTS include_files)
                     message(STATUS "Found OpenBLAS include file " ${file})
                     get_filename_component(inc_file ${file} NAME)
-                    configure_file(${file} "${CMAKE_SOURCE_DIR}/src/librapid/blas/${inc_file}" COPYONLY)
+                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${inc_file}" COPYONLY)
                 endforeach ()
             else ()
                 FILE(GLOB_RECURSE include_files "${inc_path}/*.*")
@@ -180,7 +186,7 @@ if (${BLAS_FOUND})
         # Copy library files
         get_filename_component(lib_name ${LIBRAPID_BLAS} NAME)
         message(STATUS "Found library file ${lib_name}")
-        configure_file(${LIBRAPID_BLAS} "${CMAKE_SOURCE_DIR}/src/librapid/blas/${lib_name}" COPYONLY)
+        configure_file(${LIBRAPID_BLAS} "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${lib_name}" COPYONLY)
 
         # Copy binary files if on Windows
         if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
@@ -193,17 +199,17 @@ if (${BLAS_FOUND})
             foreach (file IN LISTS include_files)
                 message(STATUS "Found binary file " ${file})
                 get_filename_component(filename ${file} NAME)
-                configure_file(${file} "${CMAKE_SOURCE_DIR}/src/librapid/blas/${filename}" COPYONLY)
+                configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${filename}" COPYONLY)
             endforeach ()
         endif ()
 
         # Link the required library
         target_link_libraries(${module_name} PRIVATE
-                "${CMAKE_SOURCE_DIR}/src/librapid/blas/${lib_name}"
+                "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${lib_name}"
                 )
 
         target_include_directories(${module_name} PRIVATE
-                "${CMAKE_SOURCE_DIR}/src/librapid/blas"
+                "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas"
                 )
 
         # Add the compile definition so LibRapid knows it has BLAS
@@ -245,14 +251,14 @@ if (${CUDAToolkit_FOUND})
     endif ()
 
     target_include_directories(${module_name} PRIVATE
-            "${CMAKE_SOURCE_DIR}/src/librapid/cudahelpers"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/cudahelpers"
             )
 endif ()
 
 target_include_directories(${module_name} PRIVATE
-        "${CMAKE_SOURCE_DIR}/src/librapid" # For wheel build
-        "${CMAKE_SOURCE_DIR}/src" # For source dist
-        "${CMAKE_SOURCE_DIR}" # For source dist
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid" # For wheel build
+        "${CMAKE_CURRENT_SOURCE_DIR}/src" # For source dist
+        "${CMAKE_CURRENT_SOURCE_DIR}" # For source dist
         )
 
 # include(ProcessorCount)
@@ -261,24 +267,31 @@ target_include_directories(${module_name} PRIVATE
 # 	add_compile_definitions(NUM_THREADS=${N}/2)
 # endif()
 
-install(TARGETS ${module_name} DESTINATION .)
+if (${SKBUILD})
+    install(TARGETS ${module_name} DESTINATION .)
+endif ()
+
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/FindAVX.cmake")
+
+message(STATUS "Found AVX: ${AVX_FOUND}")
+message(STATUS "Compiler Options: ${AVX_FLAGS}")
 
 # Set the compiler to use maximum optimisations (SPEED!!!!)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     # using Clang
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 ${AVX_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # using GCC
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 ${AVX_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     # using Intel C++
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 ${AVX_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     # using Visual Studio C++
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /Ob2 /Oi /Ot /GT /GL")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /Ob2 /Oi /Ot /GT /GL ${AVX_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif ()
