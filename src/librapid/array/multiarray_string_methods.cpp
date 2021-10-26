@@ -4,7 +4,7 @@
 namespace librapid
 {
 	std::pair<int64_t, int64_t> Array::stringifyFormatPreprocess(bool stripMiddle,
-															   bool autoStrip) const
+																 bool autoStrip) const
 	{
 		if (autoStrip)
 		{
@@ -203,7 +203,7 @@ namespace librapid
 		return res + "]";
 	}
 
-	std::string Array::str(size_t indent, bool showCommas,
+	std::string Array::str(int64_t indent, bool showCommas,
 						   int64_t &printedRows, int64_t &printedCols) const
 	{
 		std::pair<int64_t, int64_t> longest;

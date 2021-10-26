@@ -31,13 +31,13 @@ namespace librapid
 									 + " dimensions. Limit is "
 									 + std::to_string(LIBRAPID_MAX_DIMS));
 
-		for (size_t i = 0; i < data.size(); i++)
+		for (uint64_t i = 0; i < data.size(); i++)
 			m_extent[i] = data[i];
 
 		update();
 	}
 
-	Extent::Extent(size_t dims)
+	Extent::Extent(int64_t dims)
 	{
 		m_dims = dims;
 		m_size = dims;
@@ -47,7 +47,7 @@ namespace librapid
 									 + " dimensions. Limit is "
 									 + std::to_string(LIBRAPID_MAX_DIMS));
 
-		for (size_t i = 0; i < m_dims; ++i)
+		for (int64_t i = 0; i < m_dims; ++i)
 			m_extent[i] = 1;
 	}
 
@@ -66,7 +66,7 @@ namespace librapid
 			m_extent[i] = py::cast<int64_t>(args[i]);
 
 		update();
-}
+	}
 #endif // LIBRAPID_PYTHON
 
 	Extent &Extent::operator=(const Extent &other)
@@ -81,7 +81,7 @@ namespace librapid
 		return *this;
 	}
 
-	const int64_t &Extent::operator[](size_t index) const
+	const int64_t &Extent::operator[](int64_t index) const
 	{
 		if (index >= m_dims)
 			throw std::out_of_range("Index " + std::to_string(index)
@@ -91,7 +91,7 @@ namespace librapid
 		return m_extent[index];
 	}
 
-	int64_t &Extent::operator[](size_t index)
+	int64_t &Extent::operator[](int64_t index)
 	{
 		if (index >= m_dims)
 			throw std::out_of_range("Index " + std::to_string(index)
@@ -101,10 +101,10 @@ namespace librapid
 		return m_extent[index];
 	}
 
-	Extent Extent::fixed(size_t target) const
+	Extent Extent::fixed(int64_t target) const
 	{
-		size_t neg = 0;
-		for (size_t i = 0; i < m_dims; ++i)
+		int64_t neg = 0;
+		for (int64_t i = 0; i < m_dims; ++i)
 			if (m_extent[i] < 0) ++neg;
 
 		if (neg > 1)
@@ -117,10 +117,10 @@ namespace librapid
 		if (!m_containsAutomatic)
 			return *this;
 
-		size_t autoIndex = 0;
-		size_t prod = 1;
+		int64_t autoIndex = 0;
+		int64_t prod = 1;
 
-		for (size_t i = 0; i < m_dims; ++i)
+		for (int64_t i = 0; i < m_dims; ++i)
 		{
 			if (m_extent[i] < 1)
 				autoIndex = i;
@@ -165,7 +165,7 @@ namespace librapid
 		if (m_containsAutomatic != other.m_containsAutomatic)
 			return false;
 
-		for (size_t i = 0; i < m_dims; ++i)
+		for (int64_t i = 0; i < m_dims; ++i)
 		{
 			if (m_extent[i] != other.m_extent[i])
 				return false;
@@ -174,19 +174,11 @@ namespace librapid
 		return true;
 	}
 
-	void Extent::reorder(const std::vector<size_t> &order)
-	{
-		Extent temp = *this;
-
-		for (size_t i = 0; i < order.size(); ++i)
-			m_extent[i] = temp.m_extent[order[i]];
-	}
-
 	void Extent::reorder(const std::vector<int64_t> &order)
 	{
 		Extent temp = *this;
 
-		for (size_t i = 0; i < order.size(); ++i)
+		for (uint64_t i = 0; i < order.size(); ++i)
 			m_extent[i] = temp.m_extent[order[i]];
 	}
 
@@ -194,7 +186,7 @@ namespace librapid
 	{
 		std::stringstream res;
 		res << "Extent(";
-		for (size_t i = 0; i < m_dims; ++i)
+		for (int64_t i = 0; i < m_dims; ++i)
 		{
 			if (m_extent[i] == librapid::AUTO)
 				res << "librapid::AUTO";
@@ -211,9 +203,9 @@ namespace librapid
 
 	void Extent::update()
 	{
-		size_t neg = 0;
+		int64_t neg = 0;
 		m_size = 1;
-		for (size_t i = 0; i < m_dims; i++)
+		for (int64_t i = 0; i < m_dims; i++)
 		{
 			m_size *= m_extent[i];
 

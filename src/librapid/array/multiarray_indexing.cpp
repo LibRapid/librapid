@@ -2,7 +2,7 @@
 
 namespace librapid
 {
-	const Array Array::subscript(size_t index) const
+	const Array Array::subscript(int64_t index) const
 	{
 		if (index >= m_extent[0])
 		{

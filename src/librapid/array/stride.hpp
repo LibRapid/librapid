@@ -38,7 +38,7 @@ namespace librapid
 		 */
 		Stride(const std::initializer_list<int64_t> &data);
 		Stride(const std::vector<int64_t> &data);
-		Stride(size_t dims);
+		Stride(int64_t dims);
 
 	#ifdef LIBRAPID_PYTHON
 		Stride(py::args args);
@@ -77,7 +77,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline size_t ndim() const
+		inline int64_t ndim() const
 		{
 			return m_dims;
 		}
@@ -104,7 +104,7 @@ namespace librapid
 		inline std::vector<int64_t> toVec() const
 		{
 			std::vector<int64_t> res(m_dims);
-			for (size_t i = 0; i < m_dims; ++i)
+			for (int64_t i = 0; i < m_dims; ++i)
 				res[i] = m_stride[i];
 			return res;
 		}
@@ -175,8 +175,8 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		const int64_t &operator[](const size_t index) const;
-		int64_t &operator[](const size_t index);
+		const int64_t &operator[](const int64_t index) const;
+		int64_t &operator[](const int64_t index);
 
 		/**
 		 * \rst
@@ -197,7 +197,6 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		void reorder(const std::vector<size_t> &order);
 		void reorder(const std::vector<int64_t> &order);
 
 		/**
@@ -210,8 +209,8 @@ namespace librapid
 		 */
 		Stride subStride(int64_t start = -1, int64_t end = -1) const;
 
-		// void scaleBytes(size_t bytes);
-		// Stride scaledBytes(size_t bytes) const;
+		// void scaleBytes(int64_t bytes);
+		// Stride scaledBytes(int64_t bytes) const;
 
 		/**
 		 * \rst
@@ -276,7 +275,7 @@ namespace librapid
 	private:
 
 		int64_t m_stride[LIBRAPID_MAX_DIMS];
-		size_t m_dims = 0;
+		int64_t m_dims = 0;
 		bool m_isTrivial = true; // Trivial stride
 		bool m_isContiguous = true; // Data is contiguous in memory
 	};

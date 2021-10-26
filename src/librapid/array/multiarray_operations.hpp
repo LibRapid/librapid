@@ -10,7 +10,7 @@ namespace librapid
 	{
 		inline int makeSameAccelerator(RawArray &dst,
 									   const RawArray &src,
-									   size_t size)
+									   int64_t size)
 		{
 			// Freeing information
 			// 0 = no free
@@ -116,7 +116,7 @@ namespace librapid
 		 */
 		template<typename FUNC>
 		inline void multiarrayUnaryOpTrivial(RawArray dst, const RawArray &src,
-											 size_t elems, const FUNC &op)
+											 int64_t elems, const FUNC &op)
 		{
 			if (dst.location != src.location)
 			{
@@ -245,7 +245,7 @@ namespace librapid
 
 		template<typename FUNC>
 		inline void multiarrayUnaryOpComplex(RawArray dst, RawArray src,
-											 size_t elems, const Extent &extent,
+											 int64_t elems, const Extent &extent,
 											 const Stride &dstStride,
 											 const Stride &srcStride,
 											 const FUNC &op)
@@ -276,7 +276,7 @@ namespace librapid
 					static int64_t rawDstStride[LIBRAPID_MAX_DIMS];
 					static int64_t rawSrcStride[LIBRAPID_MAX_DIMS];
 
-					for (size_t i = 0; i < ndim; ++i)
+					for (int64_t i = 0; i < ndim; ++i)
 					{
 						rawExtent[ndim - i - 1] = extent.raw()[i];
 						rawDstStride[ndim - i - 1] = dstStride[i];
@@ -341,13 +341,13 @@ namespace librapid
 				#endif // LIBRAPID_CUDA_STREAM
 
 					std::string kernel = "unaryKernelComplex\n";
-					kernel += "const size_t LIBRAPID_MAX_DIMS = "
+					kernel += "const int64_t LIBRAPID_MAX_DIMS = "
 						+ std::to_string(LIBRAPID_MAX_DIMS) + ";";
 					kernel += R"V0G0N(
 					#include <stdint.h>
 
 					__device__
-					inline size_t indexToIndex(uint64_t index,
+					inline int64_t indexToIndex(uint64_t index,
 											   const int64_t *__restrict shape,
 											   const int64_t *__restrict strides,
 											   uint64_t dims)
@@ -393,7 +393,7 @@ namespace librapid
 					template<typename T_DST, typename T_SRC>
 					__global__
 						void unaryFuncComplex(T_DST * __restrict dstData,
-											  const T_SRC * __restrict srcData, size_t size,
+											  const T_SRC * __restrict srcData, int64_t size,
 											  const int64_t extent[LIBRAPID_MAX_DIMS],
 											  const int64_t dstStride[LIBRAPID_MAX_DIMS],
 											  const int64_t srcStride[LIBRAPID_MAX_DIMS],
@@ -573,7 +573,7 @@ namespace librapid
 							// Use *a rather than a[i]
 							if (elems < 2500)
 							{
-								for (size_t i = 0; i < elems; ++i)
+								for (int64_t i = 0; i < elems; ++i)
 									dstData[i] = static_cast<C>(tempOp(*srcDataA, srcDataB[i]));
 							}
 							else
@@ -645,7 +645,7 @@ namespace librapid
 							else if constexpr (std::is_same_v<A, float> && std::is_same_v<B, float> && std::is_same_v<B, float>)
 							{
 								vcl::Vec16f a, b;
-								int64_t i = 0, diff;
+								int64_t i = 0;
 								const auto tmpSrcA = (float *__restrict) srcDataA;
 								const auto tmpSrcB = (float *__restrict) srcDataB;
 								auto tmpDst = (float *__restrict) dstData;
@@ -662,7 +662,7 @@ namespace librapid
 								}
 								else
 								{
-								#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b, diff) num_threads(NUM_THREADS) default(none)
+								#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b) num_threads(NUM_THREADS) default(none)
 									for (i = 0; i < tempElems - 15; i += 16)
 									{
 										a.load(tmpSrcA + i);
@@ -671,7 +671,8 @@ namespace librapid
 										c.store(tmpDst + i);
 									}
 								}
-								if ((diff = tempElems - i) > 0)
+
+								if (int64_t diff = tempElems - i; diff > 0)
 								{
 									a.load_partial(diff, tmpSrcA + i);
 									b.load_partial(diff, tmpSrcB + i);
@@ -730,7 +731,7 @@ namespace librapid
 					void binaryFuncTrivial(T_DST *__restrict dstData,
 										   const T_SRCA *__restrict srcA,
 										   const T_SRCB *__restrict srcB,
-										   size_t size)
+										   int64_t size)
 					{
 						const int64_t kernelIndex = blockDim.x * blockIdx.x
 												   + threadIdx.x;
@@ -981,13 +982,13 @@ namespace librapid
 				#endif // LIBRAPID_CUDA_STREAM
 
 					std::string kernel = "binaryKernelComplex\n";
-					kernel += "const size_t LIBRAPID_MAX_DIMS = "
+					kernel += "const int64_t LIBRAPID_MAX_DIMS = "
 						+ std::to_string(LIBRAPID_MAX_DIMS) + ";";
 					kernel += R"V0G0N(
 					#include <stdint.h>
 
 					__device__
-					inline size_t indexToIndex(uint64_t index,
+					inline int64_t indexToIndex(uint64_t index,
 											   const int64_t *__restrict shape,
 											   const int64_t *__restrict strides,
 											   uint64_t dims)
@@ -1036,7 +1037,7 @@ namespace librapid
 					void binaryFuncComplex(T_DST *__restrict dstData,
 										   const T_SRCA *__restrict srcA,
 										   const T_SRCB *__restrict srcB,
-										   size_t size,
+										   int64_t size,
 										   const int64_t extent[LIBRAPID_MAX_DIMS],
 										   const int64_t strideC[LIBRAPID_MAX_DIMS],
 										   const int64_t strideA[LIBRAPID_MAX_DIMS],
@@ -1081,7 +1082,7 @@ namespace librapid
 					{
 						threadsPerBlock = 512;
 						blocksPerGrid = ceil(double(elems) / double(threadsPerBlock));
-				}
+					}
 
 					dim3 grid(blocksPerGrid);
 					dim3 block(threadsPerBlock);
@@ -1117,7 +1118,7 @@ namespace librapid
 								   deviceStrideDst,
 								   dims));
 					#endif // LIBRAPID_CUDA_STREAM
-			}, dst.data, srcA.data, srcB.data);
+					}, dst.data, srcA.data, srcB.data);
 
 				#ifdef LIBRAPID_CUDA_STREAM
 					cudaSafeCall(cudaFreeAsync(deviceExtent, cudaStream));
@@ -1130,10 +1131,10 @@ namespace librapid
 					cudaSafeCall(cudaFree(deviceStrideSrcB));
 					cudaSafeCall(cudaFree(deviceStrideDst));
 				#endif // LIBRAPID_CUDA_STREAM
-		}
+				}
 			#endif // LIBRAPID_HAS_CUDA
-	}
-}
+			}
+		}
 	}
 }
 
