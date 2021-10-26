@@ -147,7 +147,7 @@ namespace librapid
 	*
 	* \endrst
 	*/
-	inline size_t datatypeBytes(Datatype t)
+	inline int64_t datatypeBytes(Datatype t)
 	{
 		switch (t)
 		{
@@ -486,7 +486,7 @@ namespace librapid
 	}
 
 	inline void rawArrayMemcpy(RawArray &dst,
-							   const RawArray &src, uint64_t elems)
+							   const RawArray &src, int64_t elems)
 	{
 		if (dst.location == Accelerator::NONE ||
 			src.location == Accelerator::NONE)
@@ -640,7 +640,7 @@ namespace librapid
 							__global__
 							void copyKernel(const A *__restrict arrayA,
 											const B *__restrict arrayB,
-											size_t elems)
+											int64_t elems)
 							{
 								uint16_t kernelIndex = blockDim.x * blockIdx.x
 														   + threadIdx.x;

@@ -116,7 +116,7 @@ PYBIND11_MODULE(_librapid, module)
 		.def_property_readonly("ndim", &librapid::Extent::ndim)
 		.def_property_readonly("containsAutomatic", &librapid::Extent::containsAutomatic)
 		.def_property_readonly("size", &librapid::Extent::size)
-		.def("reorder", [](librapid::Extent &e, const std::vector<size_t> &order) { e.reorder(order); })
+		.def("reorder", [](librapid::Extent &e, const std::vector<int64_t> &order) { e.reorder(order); })
 		.def("fixed", &librapid::Extent::fixed)
 
 		.def("__len__", &librapid::Extent::ndim)
@@ -141,7 +141,7 @@ PYBIND11_MODULE(_librapid, module)
 		.def_property_readonly("ndim", &librapid::Stride::ndim)
 		.def_property_readonly("isTrivial", &librapid::Stride::isTrivial)
 		.def_property_readonly("isContiguous", &librapid::Stride::isContiguous)
-		.def("reorder", [](librapid::Stride &s, const std::vector<size_t> &order) { s.reorder(order); })
+		.def("reorder", [](librapid::Stride &s, const std::vector<int64_t> &order) { s.reorder(order); })
 
 		.def("__len__", &librapid::Stride::ndim)
 

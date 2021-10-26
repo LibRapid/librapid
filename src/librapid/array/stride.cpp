@@ -35,11 +35,11 @@ namespace librapid
 									 + " dimensions. Maximum allowed is "
 									 + std::to_string(LIBRAPID_MAX_DIMS));
 
-		for (size_t i = 0; i < data.size(); ++i)
+		for (uint64_t i = 0; i < data.size(); ++i)
 			m_stride[i] = data[i];
 	}
 
-	Stride::Stride(size_t dims)
+	Stride::Stride(int64_t dims)
 	{
 		m_dims = dims;
 		if (m_dims > LIBRAPID_MAX_DIMS)
@@ -48,7 +48,7 @@ namespace librapid
 									 + " dimensions. Limit is "
 									 + std::to_string(LIBRAPID_MAX_DIMS));
 
-		for (size_t i = 0; i < m_dims; ++i)
+		for (int64_t i = 0; i < m_dims; ++i)
 			m_stride[i] = 1;
 	}
 
@@ -59,7 +59,7 @@ namespace librapid
 	// 	m_dims = other.m_dims;
 	// 	m_one = other.m_one;
 	//
-	// 	for (size_t i = 0; i < m_dims; ++i)
+	// 	for (int64_t i = 0; i < m_dims; ++i)
 	// 		m_stride[i] = other.m_stride[i];
 	// }
 
@@ -74,7 +74,7 @@ namespace librapid
 									 + " dimensions. Limit is "
 									 + std::to_string(LIBRAPID_MAX_DIMS));
 
-		size_t neg = 0;
+		int64_t neg = 0;
 
 		for (int64_t i = 0; i < m_dims; i++)
 			m_stride[i] = py::cast<int64_t>(args[i]);
@@ -86,8 +86,8 @@ namespace librapid
 		Stride res;
 		res.m_dims = extent.ndim();
 
-		size_t prod = 1;
-		for (size_t i = 0; i < extent.ndim(); ++i)
+		int64_t prod = 1;
+		for (int64_t i = 0; i < extent.ndim(); ++i)
 		{
 			res.m_stride[res.m_dims - i - 1] = (int64_t) prod;
 			prod *= extent[res.m_dims - i - 1];
@@ -112,14 +112,14 @@ namespace librapid
 		if (m_isContiguous != other.m_isContiguous)
 			return false;
 
-		for (size_t i = 0; i < m_dims; ++i)
+		for (int64_t i = 0; i < m_dims; ++i)
 			if (m_stride[i] != other.m_stride[i])
 				return false;
 
 		return true;
 	}
 
-	const int64_t &Stride::operator[](const size_t index) const
+	const int64_t &Stride::operator[](const int64_t index) const
 	{
 		if (index > m_dims)
 			throw std::out_of_range("Cannot access index "
@@ -130,7 +130,7 @@ namespace librapid
 		return m_stride[index];
 	}
 
-	int64_t &Stride::operator[](const size_t index)
+	int64_t &Stride::operator[](const int64_t index)
 	{
 		if (index > m_dims)
 			throw std::out_of_range("Cannot access index "
@@ -139,23 +139,13 @@ namespace librapid
 									+ std::to_string(m_dims) + " dimensions");
 
 		return m_stride[index];
-	}
-
-	void Stride::reorder(const std::vector<size_t> &order)
-	{
-		Stride temp = *this;
-
-		for (size_t i = 0; i < order.size(); ++i)
-			m_stride[i] = temp.m_stride[order[i]];
-
-		m_isTrivial = checkTrivial();
 	}
 
 	void Stride::reorder(const std::vector<int64_t> &order)
 	{
 		Stride temp = *this;
 
-		for (size_t i = 0; i < order.size(); ++i)
+		for (uint64_t i = 0; i < order.size(); ++i)
 			m_stride[i] = temp.m_stride[order[i]];
 
 		m_isTrivial = checkTrivial();
@@ -183,7 +173,7 @@ namespace librapid
 	{
 		// Ensure every stride is bigger than the next one
 		bool foundOne = false;
-		for (size_t i = 0; i < m_dims; ++i)
+		for (int64_t i = 0; i < m_dims; ++i)
 		{
 			if (m_stride[i] <= m_stride[i + 1]) return false;
 			if (m_stride[i] == 1) foundOne = true;
@@ -200,11 +190,11 @@ namespace librapid
 
 		Stride temp = fromExtent(extent);
 		// temp.scaleBytes(m_one);
-		size_t valid = 0;
+		int64_t valid = 0;
 
-		for (size_t i = 0; i < m_dims; ++i)
+		for (int64_t i = 0; i < m_dims; ++i)
 		{
-			for (size_t j = 0; j < m_dims; j++)
+			for (int64_t j = 0; j < m_dims; j++)
 			{
 				if (temp[i] == m_stride[i])
 				{
@@ -221,7 +211,7 @@ namespace librapid
 	{
 		std::stringstream res;
 		res << "Stride(";
-		for (size_t i = 0; i < m_dims; ++i)
+		for (int64_t i = 0; i < m_dims; ++i)
 		{
 			res << m_stride[i];
 

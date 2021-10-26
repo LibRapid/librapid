@@ -11,7 +11,7 @@ namespace librapid
 		{
 			// Order was not provided, so initialize it to be n, n-1, ... , 2, 0
 			tempOrder = Extent(m_extent.ndim());
-			for (size_t i = 0; i < m_extent.ndim(); ++i)
+			for (int64_t i = 0; i < m_extent.ndim(); ++i)
 				tempOrder[i] = m_extent.ndim() - i - 1;
 		}
 		else
