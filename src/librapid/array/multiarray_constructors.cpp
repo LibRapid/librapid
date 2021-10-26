@@ -217,7 +217,7 @@ namespace librapid
 		m_dataStart = rawArrayMalloc(raw, e.size() + isScalar).data;
 		m_dataOrigin = m_dataStart;
 
-		m_references = new std::atomic<size_t>(1);
+		m_references = new std::atomic<int64_t>(1);
 
 		m_extent = e;
 		m_stride = s;

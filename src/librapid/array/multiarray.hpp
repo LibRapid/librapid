@@ -300,7 +300,7 @@ namespace librapid
 			return m_location;
 		}
 
-		const Array subscript(size_t index) const;
+		const Array subscript(int64_t index) const;
 
 		/**
 		 * \rst
@@ -342,13 +342,13 @@ namespace librapid
 
 		void transpose(const Extent &order = Extent());
 
-		inline std::string str(size_t indent = 0, bool showCommas = false) const
+		inline std::string str(int64_t indent = 0, bool showCommas = false) const
 		{
 			static int64_t tmpRows, tmpCols;
 			return str(indent, showCommas, tmpRows, tmpCols);
 		}
 
-		std::string str(size_t indent, bool showCommas,
+		std::string str(int64_t indent, bool showCommas,
 						int64_t &printedRows, int64_t &printedCols) const;
 
 		template<typename FUNC>
@@ -580,7 +580,7 @@ namespace librapid
 		// std::atomic to allow for multithreading, because multiple threads may
 		// increment/decrement at the same clock cycle, resulting in values being
 		// incorrect and errors turning up all over the place
-		std::atomic<size_t> *m_references = nullptr;
+		std::atomic<int64_t> *m_references = nullptr;
 
 		Extent m_extent;
 		Stride m_stride;

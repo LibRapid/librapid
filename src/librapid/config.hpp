@@ -297,17 +297,17 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
 
 namespace librapid
 {
-	inline void *alignedMalloc(size_t required_bytes,
-							   size_t alignment = DATA_ALIGN)
+	inline void *alignedMalloc(int64_t required_bytes,
+							   int64_t alignment = DATA_ALIGN)
 	{
 		void *p1; // original block
 		void **p2; // aligned block
-		size_t offset = alignment - 1 + sizeof(void *);
+		int64_t offset = alignment - 1 + sizeof(void *);
 
 		if ((p1 = (void *) malloc(required_bytes + offset)) == nullptr)
 			throw std::bad_alloc();
 
-		p2 = (void **) (((size_t) (p1) +offset) & ~(alignment - 1));
+		p2 = (void **) (((int64_t) (p1) +offset) & ~(alignment - 1));
 		p2[-1] = p1;
 		return p2;
 	}

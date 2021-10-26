@@ -55,7 +55,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		Extent(size_t dims);
+		Extent(int64_t dims);
 
 	#ifdef LIBRAPID_PYTHON
 		Extent(py::args args);
@@ -70,7 +70,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline const size_t &ndim() const
+		inline const int64_t &ndim() const
 		{
 			return m_dims;
 		}
@@ -116,7 +116,7 @@ namespace librapid
 		inline std::vector<int64_t> toVec() const
 		{
 			std::vector<int64_t> res(m_dims);
-			for (size_t i = 0; i < m_dims; ++i)
+			for (int64_t i = 0; i < m_dims; ++i)
 				res[i] = m_extent[i];
 			return res;
 		}
@@ -158,9 +158,9 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		const int64_t &operator[](size_t index) const;
+		const int64_t &operator[](int64_t index) const;
 
-		int64_t &operator[](size_t index);
+		int64_t &operator[](int64_t index);
 
 		/**
 		 * \rst
@@ -183,7 +183,7 @@ namespace librapid
 		 *		target number of elements
 		 * \endrst
 		 */
-		Extent fixed(size_t target) const;
+		Extent fixed(int64_t target) const;
 
 		/**
 		 * \rst
@@ -228,7 +228,6 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		void reorder(const std::vector<size_t> &order);
 		void reorder(const std::vector<int64_t> &order);
 
 		Extent subExtent(int64_t start = -1, int64_t end = -1) const;
@@ -260,7 +259,7 @@ namespace librapid
 
 	private:
 		int64_t m_extent[LIBRAPID_MAX_DIMS];
-		size_t m_dims = 0;
+		int64_t m_dims = 0;
 		bool m_containsAutomatic = false;
 		int64_t m_size = 0;
 	};
