@@ -11,11 +11,15 @@ from skbuild.exceptions import SKBuildError
 from skbuild.cmaker import get_cmake_version
 import sys
 
+# Copy dependencies
 if os.path.exists("pybind11") and not os.path.exists(os.path.join("src", "librapid", "pybind11")):
 	shutil.copytree("pybind11", os.path.join("src", "librapid", "pybind11"))
 
 if os.path.exists("jitify") and not os.path.exists(os.path.join("src", "librapid", "jitify")):
 	shutil.copytree("jitify", os.path.join("src", "librapid", "jitify"))
+
+if os.path.exists("version2") and not os.path.exists(os.path.join("src", "librapid", "version2")):
+	shutil.copytree("version2", os.path.join("src", "librapid", "version2"))
 
 if os.path.exists("openblas_install") and not os.path.exists(os.path.join("src", "librapid", "openblas_install")):
 	shutil.copytree("openblas_install", os.path.join("src", "librapid", "openblas_install"))
