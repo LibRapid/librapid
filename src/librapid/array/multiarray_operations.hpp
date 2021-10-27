@@ -605,12 +605,12 @@ namespace librapid
 						else
 						{
 							// Use a[i] and b[i]
-							if constexpr (std::is_same_v<A, double> && std::is_same_v<B, double> && std::is_same_v<B, double>)
+							if constexpr (std::is_same_v<A, double> && std::is_same_v<B, double> && std::is_same_v<C, double>)
 							{
 								vcl::Vec8d a, b;
 								int64_t i = 0, diff;
-								const auto tmpSrcA = (double *__restrict) srcDataA;
-								const auto tmpSrcB = (double *__restrict) srcDataB;
+								auto tmpSrcA = (double *__restrict) srcDataA;
+								auto tmpSrcB = (double *__restrict) srcDataB;
 								auto tmpDst = (double *__restrict) dstData;
 
 								if (elems < 2500)
@@ -642,12 +642,12 @@ namespace librapid
 									c.store_partial(diff, tmpDst + i);
 								}
 							}
-							else if constexpr (std::is_same_v<A, float> && std::is_same_v<B, float> && std::is_same_v<B, float>)
+							else if constexpr (std::is_same_v<A, float> && std::is_same_v<B, float> && std::is_same_v<C, float>)
 							{
 								vcl::Vec16f a, b;
 								int64_t i = 0;
-								const auto tmpSrcA = (float *__restrict) srcDataA;
-								const auto tmpSrcB = (float *__restrict) srcDataB;
+								auto tmpSrcA = (float *__restrict) srcDataA;
+								auto tmpSrcB = (float *__restrict) srcDataB;
 								auto tmpDst = (float *__restrict) dstData;
 
 								if (elems < 2500)
