@@ -146,7 +146,7 @@ namespace librapid
 						}
 						else
 						{
-						#pragma omp parallel for shared(dstData, srcData, tempElems, tempOp) num_threads(NUM_THREADS)
+						#pragma omp parallel for shared(dstData, srcData, tempElems, tempOp)
 							for (int64_t i = 0; i < tempElems; ++i)
 							{
 								dstData[i] = tempOp(srcData[i]);
@@ -578,7 +578,7 @@ namespace librapid
 							}
 							else
 							{
-							#pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) num_threads(NUM_THREADS) default(none)
+							#pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) default(none)
 								for (int64_t i = 0; i < tempElems; ++i)
 								{
 									dstData[i] = static_cast<C>(tempOp(*srcDataA, srcDataB[i]));
@@ -595,7 +595,7 @@ namespace librapid
 							}
 							else
 							{
-							#pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) num_threads(NUM_THREADS) default(none)
+							#pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) default(none)
 								for (int64_t i = 0; i < tempElems; ++i)
 								{
 									dstData[i] = static_cast<C>(tempOp(srcDataA[i], *srcDataB));
@@ -625,7 +625,7 @@ namespace librapid
 								}
 								else
 								{
-								#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b, diff) num_threads(NUM_THREADS) default(none)
+								#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b, diff) default(none)
 									for (i = 0; i < tempElems - 7; i += 8)
 									{
 										a.load(tmpSrcA + i);
@@ -662,7 +662,7 @@ namespace librapid
 								}
 								else
 								{
-								#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b) num_threads(NUM_THREADS) default(none)
+								#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b) default(none)
 									for (i = 0; i < tempElems - 15; i += 16)
 									{
 										a.load(tmpSrcA + i);
@@ -689,7 +689,7 @@ namespace librapid
 							}
 							else
 							{
-							#pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) num_threads(NUM_THREADS) default(none)
+							#pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) default(none)
 								for (int64_t i = 0; i < tempElems; ++i)
 								{
 									dstData[i] = static_cast<C>(tempOp(srcDataA[i], srcDataB[i]));

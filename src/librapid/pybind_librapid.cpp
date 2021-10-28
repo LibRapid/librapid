@@ -50,8 +50,8 @@ PYBIND11_MODULE(_librapid, module)
 	test.def("sum", [](const std::vector<bool> &data) { return testSum(data); });
 
 	module.def("hasBlas", &librapid::hasBlas);
-	module.def("setBlasThreads", &librapid::setBlasThreads);
-	module.def("getBlasThreads", &librapid::getBlasThreads);	
+	// module.def("setBlasThreads", &librapid::setBlasThreads);
+	// module.def("getBlasThreads", &librapid::getBlasThreads);	
 	module.def("setNumThreads", &librapid::setNumThreads);
 	module.def("getNumThreads", &librapid::getNumThreads);
 
