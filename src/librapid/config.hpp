@@ -122,62 +122,60 @@ namespace librapid
 	#endif // LIBRAPID_HAS_BLAS
 	}
 
-	inline void setBlasThreads(int num)
+	inline bool hasCuda()
 	{
-	#ifdef LIBRAPID_HAS_OPENBLAS
-		openblas_set_num_threads(num);
-		goto_set_num_threads(num);
-
-	#ifdef LR_HAS_OMP
-		omp_set_num_threads(num);
-	#endif // LR_HAS_OMP
+	#ifdef LIBRAPID_HAS_CUDA
+		return true;
 	#else
-		throw std::runtime_error("Cannot set BLAS threads because OpenBLAS was not "
-								 "linked against");
-	#endif // LIBRAPID_HAS_OPENBLAS
+		return false;
+	#endif
 	}
 
-	inline int getBlasThreads()
-	{
-	#ifdef LIBRAPID_HAS_OPENBLAS
-		return openblas_get_num_threads();
-	#else
-		throw std::runtime_error("Cannot set BLAS threads because OpenBLAS was not "
-								 "linked against");
-		return -1;
-	#endif // LIBRAPID_HAS_OPENBLAS
-	}
+	// inline void setBlasThreads(int num)
+	// {
+	// #ifdef LIBRAPID_HAS_OPENBLAS
+	// 	openblas_set_num_threads(num);
+	// 	goto_set_num_threads(num);
+	//
+	// #ifdef LR_HAS_OMP
+	// 	omp_set_num_threads(num);
+	// #endif // LR_HAS_OMP
+	// #else
+	// 	throw std::runtime_error("Cannot set BLAS threads because OpenBLAS was not "
+	// 							 "linked against");
+	// #endif // LIBRAPID_HAS_OPENBLAS
+	// }
+	//
+	// inline int getBlasThreads()
+	// {
+	// #ifdef LIBRAPID_HAS_OPENBLAS
+	// 	return openblas_get_num_threads();
+	// #else
+	// 	throw std::runtime_error("Cannot set BLAS threads because OpenBLAS was not "
+	// 							 "linked against");
+	// 	return -1;
+	// #endif // LIBRAPID_HAS_OPENBLAS
+	// }
 
 	inline void setNumThreads(int num)
 	{
 	#if defined(LIBRAPID_HAS_OPENBLAS)
-		setBlasThreads(num);
-	#define LIB_SET
+		openblas_set_num_threads(num);
+		goto_set_num_threads(num);
 	#endif
 
 	#if defined(LR_HAS_OMP)
 		omp_set_num_threads(num);
-	#define LIB_SET
-	#endif
-
-	#if !defined(LIB_SET)
-		throw std::runtime_error("Cannot set the number of threads because LibRapid"
-								 " does not have OpenBLAS or OpenMP");
 	#endif
 	}
 
 	inline int getNumThreads()
 	{
 	#if defined(LIBRAPID_HAS_OPENBLAS)
-		return getBlasThreads();
+		return openblas_get_num_threads();
 	#elif defined(LR_HAS_OMP)
 		return omp_get_num_threads();
-	#else
-		std::cout << "LibRapid does not have access to any multi-threaded components"
-			"such as OpenMP or OpenBLAS, so the function \"set_num_threads\""
-			"will not do anything" << "\n";
 	#endif
-
 		return 1;
 	}
 }
@@ -282,7 +280,7 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
 
 // Data alignment
 #ifndef DATA_ALIGN
-#define DATA_ALIGN 16 // 1024
+#define DATA_ALIGN 32 // 1024
 #endif
 
 // Number of threads for parallel regions
