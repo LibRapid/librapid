@@ -270,7 +270,7 @@ target_include_directories(${module_name} PRIVATE
 if (${SKBUILD})
     install(TARGETS ${module_name} DESTINATION .)
 else ()
-    target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+	target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR})
 endif ()
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/FindAVX.cmake")
