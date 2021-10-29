@@ -90,7 +90,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-11, ubuntu-latest]
+        platform: [macos-11.0, ubuntu-latest]
         targetplatform: [x64]
     env:
       CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
