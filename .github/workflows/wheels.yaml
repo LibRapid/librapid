@@ -90,11 +90,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-10.15, ubuntu-latest]
+        platform: [macos-11, ubuntu-latest]
         targetplatform: [x64]
     env:
       CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
-      CIBW_SKIP: "*-win32 *-manylinux_i686"
+      CIBW_SKIP: "*-win32 *-manylinux_i686 *-musllinux_i686"
       CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
       CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2014
 
@@ -114,6 +114,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
+
+      - if: runner.os == "macOS"
+        name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
 
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
