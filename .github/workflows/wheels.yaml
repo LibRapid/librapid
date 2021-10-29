@@ -115,7 +115,7 @@ jobs:
         with:
           python-version: 3.8
 
-      - if: runner.os == "macOS"
+      - if: runner.os == macOS
         name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
