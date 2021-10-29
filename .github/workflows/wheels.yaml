@@ -28,7 +28,7 @@ jobs:
           submodules: recursive
           ref: ${{ steps.extract_branch.outputs.branch }}
       
-      - name: Setup Python
+      - name: Set Up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
@@ -90,7 +90,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-11, ubuntu-latest]
+        platform: [macos-10.15, ubuntu-latest]
         targetplatform: [x64]
     env:
       CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
@@ -110,17 +110,15 @@ jobs:
           submodules: recursive
           ref: ${{ steps.extract_branch.outputs.branch }}
 
-      - name: Setup Python
+      - name: Set Up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
 
-      - if: runner.os == 'macOS'
-        name: Setup Clang
-        uses: egor-tensin/setup-clang@v1
-        with:
-          version: latest
-          platform: x64
+      # - if: runner.os == 'macOS'
+      #   name: Set Up GCC
+      #   run: |
+      #     brew install gcc
 
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
@@ -153,13 +151,39 @@ jobs:
           name: OpenBLAS on ${{ matrix.platform }}
           path: src/librapid/openblas_install
 
-      - name: Run cibuildwheel
+      - if: runner.os == 'macOS'
+        name: Run cibuildwheel
+        run: |
+          cibuildwheel --output-dir wheelhouse
+        env:
+          CC: gcc-11
+          CXX: g++-11
+
+      - if: runner.os != 'macOS'
+        name: Run cibuildwheel
         run: |
           cibuildwheel --output-dir wheelhouse
 
-      - name: Install Library
+      # - name: Run cibuildwheel
+      #   run: |
+      #     cibuildwheel --output-dir wheelhouse
+
+      - if: runner.os == 'macOS'
+        name: Install Library
         run: |
           python -m pip install . -vvvv
+        env:
+          CC: gcc-11
+          CXX: g++-11
+
+      - if: runner.os != 'macOS'
+        name: Install Library
+        run: |
+          python -m pip install . -vvvv
+
+      # - name: Install Library
+      #   run: |
+      #     python -m pip install . -vvvv
 
       - name: Show all files in librapid install
         run: |
@@ -205,18 +229,18 @@ jobs:
           submodules: recursive
           ref: ${{ steps.extract_branch.outputs.branch }}
 
-      - name: Setup WSL
+      - name: Set Up WSL
         uses: Vampire/setup-wsl@v1.1.0
 
-      - name: Setup Miniconda
+      - name: Set Up Miniconda
         uses: conda-incubator/setup-miniconda@v2.1.1
       
-      - name: Setup Python
+      - name: Set Up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
 
-      - name: Setup Visual Studio shell
+      - name: Set Up Visual Studio shell
         uses: egor-tensin/vs-shell@v2
 
       - name: Install Requirements
