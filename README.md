@@ -8,6 +8,10 @@
 
 Thanks to @TheWindoof for his help on the library. He and I collaborate to provide the best user experience possible, as well as to produce innovative new ideas and faster, more efficient code.
 
+## Why Use Librapid?
+
+In short, LibRapid aims to allow for faster mathematical calculations, including multidimensional arrays, machine learning and arbitrary-precision arithmetic. LibRapid also includes some helper functions to reduce dependencies, such as basic colour manipulation and access to console properties. The entire library is highly optimised and supports GPU calculations where applicable.
+
 ## How it Works
 
 LibRapid is a highly-optimized C++ (and CUDA) library which can be found at ```./src/librapid```. The C++ library is interfaced with Python using [PyBind11](https://github.com/pybind/pybind11), meaning very little performance is lost between the C++ backend and Python frontend of the library. LibRapid also makes use of some of [Agner Fog's](https://agner.org) libraries and optimisations to accelerate low-level functions and increase performance.
