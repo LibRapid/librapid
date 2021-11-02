@@ -1,4 +1,4 @@
-ndarray()
+Array()
 #########
 
-.. doxygenfunction:: librapid::basic_ndarray::basic_ndarray()
+.. doxygenfunction:: librapid::Array::Array()

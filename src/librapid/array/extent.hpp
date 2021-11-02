@@ -38,8 +38,8 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		Extent(const std::initializer_list<int64_t> &data);
-		Extent(const std::vector<int64_t> &data);
+		explicit Extent(const std::initializer_list<int64_t> &data);
+		explicit Extent(const std::vector<int64_t> &data);
 
 		/**
 		 * \rst

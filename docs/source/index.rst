@@ -116,15 +116,15 @@ slightly different -- often, Python values can be cast into equivelent C++ types
 the types are not always clear. Below is a list of common datatypes that you may want to
 pass to functions:
 
-+---------------+-----------------------+-----------------+
-| Type of value | C++ Datatype          | Python Datatype |
-+===============+=======================+=================+
-| List          | ``std::vector<...>``  | ``list, tuple`` |
-+---------------+-----------------------+-----------------+
++---------------+------------------------+-----------------+
+| Type of value | C++ Datatype           | Python Datatype |
++===============+========================+=================+
+| List          | ``std::vector<...>``   | ``list, tuple`` |
++---------------+------------------------+-----------------+
 | Integer       | ``int64_t, int, long`` | ``int``         |
-+---------------+-----------------------+-----------------+
-| Dictionary    | ``std::map<a, b>``    | ``dict``        |
-+---------------+-----------------------+-----------------+
++---------------+------------------------+-----------------+
+| Dictionary    | ``std::map<a, b>``     | ``dict``        |
++---------------+------------------------+-----------------+
 
 Contents
 ========
