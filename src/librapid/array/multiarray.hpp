@@ -406,7 +406,17 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		Array clone() const;
+		Array clone(Datatype dtype = Datatype::NONE,
+					Accelerator locn = Accelerator::NONE) const;
+
+		Array clone(const std::string &dtype,
+					Accelerator locn = Accelerator::NONE) const;
+
+		Array clone(Datatype dtype,
+					const std::string &locn = "none") const;
+
+		Array clone(const std::string &dtype,
+					const std::string &locn) const;
 
 		inline int64_t len() const
 		{

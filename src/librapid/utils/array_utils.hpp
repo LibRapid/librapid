@@ -64,13 +64,27 @@ namespace librapid
 		#endif
 
 			std::string str = stream.str();
+
+			int64_t index;
+
+			// Align the +/- for complex datatypes
+			if (src.dtype == Datatype::CFLOAT64)
+			{
+				index = str.find('+', 1);
+				if (index == std::string::npos)
+					index = str.find('-', 1);
+
+				res = {index, str.length() - index - 1};
+				return;
+			}
+
 			if (isFloating(src.dtype) && str.find_last_of('.') == std::string::npos)
 			{
 				res = {str.length(), 0};
 				return;
 			}
 
-			int64_t index = str.find_last_of('.');
+			index = str.find_last_of('.');
 			if (index == std::string::npos)
 			{
 				res = {str.length(), 0};
