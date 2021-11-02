@@ -1,4 +1,4 @@
-ndarray(shape)
+Array(extent)
 ###############
 
 .. doxygenfunction:: librapid::Array::Array(const Extent &extent, Datatype dtype = Datatype::FLOAT64, Accelerator location = Accelerator::CPU)

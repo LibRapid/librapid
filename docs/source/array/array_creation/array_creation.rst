@@ -30,7 +30,6 @@ accelerates development.
 
 	default_constructor
 	extent_constructor
-	extent_fill_constructor
 	from_array
 	from_data
 	val_like

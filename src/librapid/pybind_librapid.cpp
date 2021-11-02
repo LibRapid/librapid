@@ -166,6 +166,7 @@ PYBIND11_MODULE(_librapid, module)
 		.def_property_readonly("extent", &librapid::Array::extent)
 		.def_property_readonly("stride", &librapid::Array::stride)
 		.def_property_readonly("dtype", &librapid::Array::dtype)
+		.def_property_readonly("isScalar", &librapid::Array::isScalar)
 		.def_property_readonly("location", &librapid::Array::location)
 		// .def("__len__", &librapid::Array::ndim)
 		.def("__len__", [](const librapid::Array &arr) { return arr.extent()[0]; })
@@ -176,6 +177,8 @@ PYBIND11_MODULE(_librapid, module)
 		.def("__setitem__", [](librapid::Array &arr, int64_t index, const librapid::Array &val) { arr[index] = val; })
 
 		.def("fill", [](librapid::Array &arr, double val) { arr.fill(val); })
+
+		.def("clone", &librapid::Array::clone)
 
 		.def("__add__",     [](const librapid::Array &lhs, int64_t rhs) { return lhs + rhs; })
 		.def("__sub__",     [](const librapid::Array &lhs, int64_t rhs) { return lhs - rhs; })
