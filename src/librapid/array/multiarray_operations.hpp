@@ -164,7 +164,6 @@ namespace librapid
 						+ std::to_string(LIBRAPID_MAX_DIMS) + ";";
 					kernel += R"V0G0N(
 					#include <stdint.h>
-					#include <typetraits.h>
 
 					template<typename A>
 					__device__
@@ -191,8 +190,7 @@ namespace librapid
 
 						if (kernelIndex < size) {
 					)V0G0N";
-					kernel += "dstData[i] = " + op.name + "(dstData[kernelIndex], \
-															srcData[kernelIndex]);";
+					kernel += "dstData[kernelIndex] = " + op.name + "(srcData[kernelIndex]);";
 					kernel += "\n}\n}";
 
 					const std::vector<std::string> params = {
@@ -340,11 +338,10 @@ namespace librapid
 					cudaSafeCall(cudaMemcpy(deviceSrcStride, srcStride.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
 				#endif // LIBRAPID_CUDA_STREAM
 
-					std::string kernel = "unaryKernelComplex\n";
+					std::string kernel = "unaryKernelComplex\n#include<stdint.h>\n";
 					kernel += "const int64_t LIBRAPID_MAX_DIMS = "
 						+ std::to_string(LIBRAPID_MAX_DIMS) + ";";
 					kernel += R"V0G0N(
-					#include <stdint.h>
 
 					__device__
 					inline int64_t indexToIndex(uint64_t index,
@@ -404,9 +401,6 @@ namespace librapid
 
 						uint64_t dstIndex = indexToIndex(kernelIndex, extent, dstStride, dims);
 						uint64_t srcIndex = indexToIndex(kernelIndex, extent, srcStride, dims);
-
-						const auto &a = arrayA[kernelIndexA];
-						auto &b = arrayB[kernelIndexB];
 
 						if (kernelIndex < size) {
 					)V0G0N";
@@ -532,9 +526,9 @@ namespace librapid
 				// Locations are different, so make A and B have the same
 				// accelerator as the result array (C)
 
-				// Copy A to be on the same accelerator as B
-				RawArray tempSrcA = {(bool *) nullptr, srcA.dtype, srcA.location};
-				RawArray tempSrcB = {(bool *) nullptr, srcB.dtype, srcB.location};
+				// Copy A and B to be on the same accelerator as the destination
+				RawArray tempSrcA = {(bool *) nullptr, srcA.dtype, dst.location};
+				RawArray tempSrcB = {(bool *) nullptr, srcB.dtype, dst.location};
 
 				// Allocate memory for temporary sources
 				rawArrayMalloc(tempSrcA, srcAIsScalar ? 1 : elems);
@@ -775,9 +769,9 @@ namespace librapid
 							   auto *__restrict srcDataA,
 							   auto *__restrict srcDataB)
 					{
-						using T_DST = typename std::remove_pointer<decltype(dstData)>::type;
-						using T_SRCA = typename std::remove_pointer<decltype(srcDataA)>::type;
-						using T_SRCB = typename std::remove_pointer<decltype(srcDataB)>::type;
+						using T_DST = typename std::remove_pointer_t<decltype(dstData)>;
+						using T_SRCA = typename std::remove_pointer_t<decltype(srcDataA)>;
+						using T_SRCB = typename std::remove_pointer_t<decltype(srcDataB)>;
 
 					#ifdef LIBRAPID_CUDA_STREAM
 						jitifyCall(program.kernel("binaryFuncTrivial")

@@ -1,4 +1,4 @@
-ndarray(ndarray)
+Array(array)
 ################
 
-.. doxygenfunction:: librapid::basic_ndarray::basic_ndarray(const basic_ndarray<T> &arr)
+.. doxygenfunction:: librapid::Array::Array(const Array &arr)

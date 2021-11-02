@@ -15,6 +15,32 @@
 
 namespace librapid
 {
+	namespace utils
+	{
+		template<typename V>
+		inline std::vector<int64_t> extractSize(const std::vector<V> &vec)
+		{
+			std::vector<int64_t> res(1);
+			res[0] = vec.size();
+			return res;
+		}
+
+		template<typename V>
+		inline std::vector<int64_t> extractSize(const std::vector<std::vector<V>> &vec)
+		{
+			std::vector<int64_t> res(1);
+			for (const auto &subVec : vec)
+				if (subVec.size() != vec[0].size())
+					throw std::length_error("Not all vectors passed were the same length. Please"
+											" ensure that all sub-vectors have the same length");
+
+			auto subSize = extractSize(vec[0]);
+			res[0] = vec.size();
+			res.insert(res.end(), subSize.begin(), subSize.end());
+			return res;
+		}
+	}
+
 	class Array
 	{
 	public:
@@ -179,29 +205,67 @@ namespace librapid
 			}, m_dataStart);
 		}
 
-		/**
-		 * \rst
-		 *
-		 * Set one Array equal to a value.
-		 *
-		 * If this Array on is invalid (i.e. it was created using the default
-		 * constructor), the array will be initialized and the relevant data
-		 * will be copied into it.
-		 *
-		 * If the left-hand-side of the operation is another Array instance, the
-		 * data from that array will be copied into this array. If the arrays are
-		 * identical in terms of their Extent, the data will be copied, otherwise
-		 * this array will be recreated with the correct size.
-		 *
-		 * .. Attention::
-		 *		There is a single exception to this, which occurs when this array is
-		 *		a direct subscript of another (e.g. ``myArray[0]``). If this is the
-		 *		case, the left-hand-side of this operation *must* have the same
-		 *		extent, otherwise an error will be thrown
-		 *
-		 * \endrst
-		 */
-		Array &operator=(const Array &other);
+		// TODO: Make this do something useful
+		// inline Array(Array &&other) = default;
+
+	#define CONSTRUCTOR_TEMPLATE \
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
+
+	#define CONSTRUCTOR_BODY_VEC(TYPE) \
+		Array(const TYPE &values) \
+		{ \
+			using nonConst = typename std::remove_const<Array>::type; \
+			auto shape = utils::extractSize(values); \
+			constructNew(Extent(shape), Stride::fromExtent(shape)); \
+			for (uint64_t i = 0; i < values.size(); i++) \
+				(nonConst) subscript(i) = Array(values[i]); \
+		}
+
+	#define CONSTRUCTOR_BODY_INIT(TYPE, VEC_TYPE)	\
+		Array(const TYPE &values) \
+		{ \
+			std::vector<Array<T>> toStack; \
+			for (const auto &sub : values) \
+				toStack.emplace_back(Array(sub)); \
+			auto stacked = librapid::stack(toStack); \
+			*this = (stacked); \
+		}
+
+	#define CVEC std::vector
+	#define CINIT std::initializer_list
+
+		CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<V>) // 1D
+
+		#undef CONSTRUCTOR_TEMPLATE
+		#undef CONSTRUCTOR_BODY_VEC
+		#undef CONSTRUCTOR_BODY_INIT
+		#undef CVEC
+		#undef CINIT
+
+			/**
+			 * \rst
+			 *
+			 * Set one Array equal to a value.
+			 *
+			 * If this Array on is invalid (i.e. it was created using the default
+			 * constructor), the array will be initialized and the relevant data
+			 * will be copied into it.
+			 *
+			 * If the left-hand-side of the operation is another Array instance, the
+			 * data from that array will be copied into this array. If the arrays are
+			 * identical in terms of their Extent, the data will be copied, otherwise
+			 * this array will be recreated with the correct size.
+			 *
+			 * .. Attention::
+			 *		There is a single exception to this, which occurs when this array is
+			 *		a direct subscript of another (e.g. ``myArray[0]``). If this is the
+			 *		case, the left-hand-side of this operation *must* have the same
+			 *		extent, otherwise an error will be thrown
+			 *
+			 * \endrst
+			 */
+			Array &operator=(const Array &other);
 		Array &operator=(bool val);
 
 		template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
@@ -266,6 +330,11 @@ namespace librapid
 			return m_stride;
 		}
 
+		inline bool isScalar() const
+		{
+			return m_isScalar;
+		}
+
 		/**
 		 * \rst
 		 *
@@ -321,6 +390,27 @@ namespace librapid
 			// using nonConst = typename std::remove_const<Array>::type;
 			// return static_cast<nonConst>(subscript(index));
 			return subscript(index);
+		}
+
+		/**
+		 * \rst
+		 *
+		 * Create an exact copy of an array and it's data and return the result.
+		 *
+		 * .. Hint::
+		 *
+		 *		When cloning an array, the data is optimized in memory
+		 *		to improve performance. Furthermore, and transformations
+		 *		applied to the parent matrix will be optimized out and
+		 *		calculated fully, further improving performance
+		 *
+		 * \endrst
+		 */
+		Array clone() const;
+
+		inline int64_t len() const
+		{
+			return m_extent[0];
 		}
 
 		/**
@@ -622,6 +712,93 @@ namespace librapid
 	{
 		return Array::applyBinaryOp(lhs, rhs, ops::Div());
 	}
+
+	/**
+	* \rst
+	*
+	* Given a list of arrays, join them together along an existing axis, and return the
+	* result.
+	*
+	* Parameters
+	* ----------
+	*
+	* arrays: vector, list, tuple
+	*		The list of arrays to concatenate
+	* axis = 0: integer
+	*		The axis along which to concatenate the arrays
+	*
+	* Returns
+	* -------
+	*
+	* stacked: Array
+	*		The stacked array
+	*
+	* .. Attention::
+	*		The arrays must have exactly the same extent, other than the dimension for the
+	*		concatenating axis, which can be different for each array.
+	*
+	* Examples
+	* --------
+	*
+	* .. code-block:: python
+	*
+	*		# Create the example arrays
+	*		first = librapid.fromData(
+	*			[[1, 2, 3],
+	*			 [4, 5, 6]]
+	*		)
+	*
+	*		second = librapid.fromData(
+	*			[[7, 8, 9]]
+	*		)
+	*
+	*		# Concatenate the arrays and store the result
+	*		# (default axis is 0 -- stack along rows)
+	*		concatenated = librapid.concatenate((first, second))
+	*
+	*		print(concatenated)
+	*
+	*		"""
+	*		Gives:
+	*
+	*		[[1. 2. 3.]
+	* 		 [4. 5. 6.]
+	* 		 [7. 8. 9.]]
+	*		"""
+	*
+	* .. code-block:: python
+	*
+	*		# Create the example arrays
+	*		first = librapid.from_data(
+	*			[[1, 2, 3],
+	*			 [4, 5, 6],
+	*			 [7, 8, 9]]
+	*		)
+	*
+	*		second = librapid.Array(librapid.Extent(3, 2)).filledRandom(-1, 1)
+	*
+	*		# Concatenate the arrays and store the result
+	*		# (here, we are stacking on axis=1 -- along the columns)
+	*		concatenated = librapid.concatenate((first, second), 1)
+	*
+	*		print(concatenated)
+	*
+	*		"""
+	*		Could give:
+	*
+	*		[[ 1.             2.             3.             0.06195223331 -0.1879928112 ]
+	*		 [ 4.             5.             6.             0.3225619793  -0.1187359691 ]
+	*		 [ 7.             8.             9.             0.2637588978  -0.1868984699 ]]
+	*		"""
+	*
+	* .. Hint::
+	*		The resulting array is contiguous in memory, meaning the resulting array
+	*		can be operated on very quickly and efficiently. (see ``Array.clone`` for
+	*		more information)
+	*
+	* \endrst
+	*/
+	Array concatenate(const std::vector<Array> &arrays, int64_t axis = 0);
 }
 
 #endif // LIBRAPID_ARRAY

@@ -164,7 +164,7 @@ namespace librapid
 		goto_set_num_threads(num);
 	#endif
 
-	#if defined(LR_HAS_OMP)
+	#if defined(_OPENMP)
 		omp_set_num_threads(num);
 	#endif
 	}
@@ -177,6 +177,20 @@ namespace librapid
 		return omp_get_num_threads();
 	#endif
 		return 1;
+	}
+
+	namespace imp
+	{
+		class ThreadSetter
+		{
+		public:
+			ThreadSetter(int64_t n)
+			{
+				setNumThreads(n);
+			}
+		};
+
+		inline ThreadSetter setter = ThreadSetter(4);
 	}
 }
 

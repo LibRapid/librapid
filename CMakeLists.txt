@@ -63,6 +63,7 @@ set(sources # Array library
         "src/librapid/array/multiarray_indexing.cpp"
         "src/librapid/array/multiarray_manipulation.cpp"
         "src/librapid/array/multiarray_arithmetic.cpp"
+        "src/librapid/array/multiarray_utils.cpp"
         # Math library
         "src/librapid/math/core_math.cpp"
         # String methods
@@ -73,9 +74,9 @@ set(sources # Array library
         "src/librapid/utils/time_utils.cpp"
         # Tests
         "src/librapid/test/librapid_test.cpp"
-		# Dependencies
-		"version2/instrset_detect.cpp"
-		)
+	# Dependencies
+	"version2/instrset_detect.cpp"
+)
 
 if (${SKBUILD})
     set(module_name "_librapid")

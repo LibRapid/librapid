@@ -36,9 +36,9 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		Stride(const std::initializer_list<int64_t> &data);
-		Stride(const std::vector<int64_t> &data);
-		Stride(int64_t dims);
+		explicit Stride(const std::initializer_list<int64_t> &data);
+		explicit Stride(const std::vector<int64_t> &data);
+		explicit Stride(int64_t dims);
 
 	#ifdef LIBRAPID_PYTHON
 		Stride(py::args args);
