@@ -1,4 +1,5 @@
 #include <librapid/stringmethods/format_number.hpp>
+#include <librapid/autocast/custom_complex.hpp>
 #include <string>
 #include <sstream>
 

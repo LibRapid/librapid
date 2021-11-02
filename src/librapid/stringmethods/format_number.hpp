@@ -2,6 +2,7 @@
 #define LIBRAPID_FORMAT_NUMBER
 
 #include <librapid/config.hpp>
+#include <librapid/autocast/custom_complex.hpp>
 
 namespace librapid
 {

@@ -1,9 +1,3 @@
-/**
- * An inherited std::complex type to allow complex types
- * in the autocast library (not enough casting methods exist,
- * so new ones need to be implemented)
- */
-
 #ifndef LIBRAPID_CUSTOM_COMPLEX
 #define LIBRAPID_CUSTOM_COMPLEX
 
@@ -226,13 +220,12 @@ namespace librapid
 			return m_imag;
 		}
 
-		template<typename V, typename std::enable_if<std::is_arithmetic<V>::value, int>::type = 0>
-		operator V() const
+		operator std::string() const
 		{
-			return (V) m_real;
+			return str();
 		}
 
-		template<typename V, typename std::enable_if<!std::is_arithmetic<V>::value, int>::type = 0>
+		template<typename V>
 		operator V() const
 		{
 			return m_real;
@@ -260,61 +253,53 @@ namespace librapid
 		T m_imag = 0;
 	};
 
-	template<typename A, typename B,
-		typename std::enable_if<std::is_arithmetic<A>::value, int>::type = 0>
-		Complex<B> operator+(const A &a, const Complex<B> &b)
+	template<typename A, typename B>
+	Complex<B> operator+(const A &a, const Complex<B> &b)
 	{
 		return Complex<B>(a) + b;
 	}
 
-	template<typename A, typename B,
-		typename std::enable_if<std::is_arithmetic<A>::value, int>::type = 0>
-		Complex<B> operator-(const A &a, const Complex<B> &b)
+	template<typename A, typename B>
+	Complex<B> operator-(const A &a, const Complex<B> &b)
 	{
 		return Complex<B>(a) - b;
 	}
 
-	template<typename A, typename B,
-		typename std::enable_if<std::is_arithmetic<A>::value, int>::type = 0>
-		Complex<B> operator*(const A &a, const Complex<B> &b)
+	template<typename A, typename B>
+	Complex<B> operator*(const A &a, const Complex<B> &b)
 	{
 		return Complex<B>(a) * b;
 	}
 
-	template<typename A, typename B,
-		typename std::enable_if<std::is_arithmetic<A>::value, int>::type = 0>
-		Complex<B> operator/(const A &a, const Complex<B> &b)
+	template<typename A, typename B>
+	Complex<B> operator/(const A &a, const Complex<B> &b)
 	{
 		return Complex<B>(a) / b;
 	}
 
-	template<typename A, typename B,
-		typename std::enable_if<std::is_arithmetic<A>::value, int>::type = 0>
-		A &operator+=(A &a, const Complex<B> &b)
+	template<typename A, typename B>
+	A &operator+=(A &a, const Complex<B> &b)
 	{
 		a += b.real();
 		return a;
 	}
 
-	template<typename A, typename B,
-		typename std::enable_if<std::is_arithmetic<A>::value, int>::type = 0>
-		A &operator-=(A &a, const Complex<B> &b)
+	template<typename A, typename B>
+	A &operator-=(A &a, const Complex<B> &b)
 	{
 		a -= b.real();
 		return a;
 	}
 
-	template<typename A, typename B,
-		typename std::enable_if<std::is_arithmetic<A>::value, int>::type = 0>
-		A &operator*=(A &a, const Complex<B> &b)
+	template<typename A, typename B>
+	A &operator*=(A &a, const Complex<B> &b)
 	{
 		a *= b.real();
 		return a;
 	}
 
-	template<typename A, typename B,
-		typename std::enable_if<std::is_arithmetic<A>::value, int>::type = 0>
-		A &operator/=(A &a, const Complex<B> &b)
+	template<typename A, typename B>
+	A &operator/=(A &a, const Complex<B> &b)
 	{
 		a /= b.real();
 		return a;
@@ -325,137 +310,15 @@ namespace librapid
 	{
 		return os << val.str();
 	}
-}
 
-namespace std
-{
-	// GENERATED
-	template<>
-	struct common_type<bool, librapid::Complex<double>>
+	template<typename T>
+	std::string format_number(const Complex<T> &val)
 	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<char, librapid::Complex<double>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<unsigned char, librapid::Complex<double>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<int, librapid::Complex<double>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<unsigned int, librapid::Complex<double>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<long, librapid::Complex<double>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<unsigned long, librapid::Complex<double>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<long long, librapid::Complex<double>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<unsigned long long, librapid::Complex<double>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<float, librapid::Complex<double>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<double, librapid::Complex<double>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<float>, librapid::Complex<double>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, bool>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, char>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, unsigned char>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, int>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, unsigned int>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, long>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, unsigned long>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, long long>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, unsigned long long>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, float>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, double>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, librapid::Complex<float>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	template<>
-	struct common_type<librapid::Complex<double>, librapid::Complex<double>>
-	{
-		using type = librapid::Complex<double>;
-	};
-	// END GENERATED
+		std::stringstream stream;
+		stream.precision(10);
+		stream << val;
+		return stream.str();
+	}
 }
 
 #endif
