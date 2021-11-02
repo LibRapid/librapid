@@ -168,7 +168,6 @@ PYBIND11_MODULE(_librapid, module)
 		.def_property_readonly("dtype", &librapid::Array::dtype)
 		.def_property_readonly("isScalar", &librapid::Array::isScalar)
 		.def_property_readonly("location", &librapid::Array::location)
-		// .def("__len__", &librapid::Array::ndim)
 		.def("__len__", [](const librapid::Array &arr) { return arr.extent()[0]; })
 
 		.def("__getitem__", [](const librapid::Array &arr, int64_t index) { return arr[index]; })
@@ -178,7 +177,10 @@ PYBIND11_MODULE(_librapid, module)
 
 		.def("fill", [](librapid::Array &arr, double val) { arr.fill(val); })
 
-		.def("clone", &librapid::Array::clone)
+		.def("clone", [](const librapid::Array &arr, librapid::Datatype dtype, librapid::Accelerator locn) { return arr.clone(dtype, locn); }, py::arg("dtype") = librapid::Datatype::NONE, py::arg("locn") = librapid::Accelerator::NONE)
+		.def("clone", [](const librapid::Array &arr, const std::string &dtype, librapid::Accelerator locn) { return arr.clone(dtype, locn); }, py::arg("dtype") = "none", py::arg("locn") = librapid::Accelerator::NONE)
+		.def("clone", [](const librapid::Array &arr, librapid::Datatype dtype, const std::string &locn) { return arr.clone(dtype, locn); }, py::arg("dtype") = librapid::Datatype::NONE, py::arg("locn") = "none")
+		.def("clone", [](const librapid::Array &arr, const std::string &dtype, const std::string &locn) { return arr.clone(dtype, locn); }, py::arg("dtype") = "none", py::arg("locn") = "none")
 
 		.def("__add__",     [](const librapid::Array &lhs, int64_t rhs) { return lhs + rhs; })
 		.def("__sub__",     [](const librapid::Array &lhs, int64_t rhs) { return lhs - rhs; })

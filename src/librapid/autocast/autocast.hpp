@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <variant>
 #include <map>
+#include <librapid/autocast/custom_complex.hpp>
 
 namespace librapid
 {
@@ -23,6 +24,7 @@ namespace librapid
 		INT64,			// int64_t
 		FLOAT32,		// float
 		FLOAT64,		// double
+		CFLOAT64,		// complex double
 	};
 
 	/**
@@ -37,7 +39,9 @@ namespace librapid
 		bool *,
 		int64_t *,
 		float *,
-		double *
+		double *,
+		Complex<double> *
+		// int16_t *
 	>;
 
 	/**
@@ -134,6 +138,8 @@ namespace librapid
 				return true;
 			case Datatype::FLOAT64:
 				return true;
+			case Datatype::CFLOAT64:
+				return true;
 			default:
 				return false;
 		}
@@ -163,6 +169,8 @@ namespace librapid
 				return sizeof(float);
 			case Datatype::FLOAT64:
 				return sizeof(double);
+			case Datatype::CFLOAT64:
+				return sizeof(Complex<double>);
 		}
 
 		return 0;
@@ -184,6 +192,8 @@ namespace librapid
 				return "FLOAT32";
 			case Datatype::FLOAT64:
 				return "FLOAT64";
+			case Datatype::CFLOAT64:
+				return "CFLOAT64";
 		}
 
 		return "UNKNOWN";
@@ -279,12 +289,21 @@ namespace librapid
 			"double"
 		};
 
+		static std::vector<std::string> cfloat64Str = {
+			"cf",
+			"cfloat64",
+			"cf64",
+			"complex"
+			"complex double"
+		};
+
 		static std::map<Datatype, std::vector<std::string>> types = {
 			{Datatype::NONE, noneStr},
 			{Datatype::BOOL, boolStr},
 			{Datatype::INT64, int64Str},
 			{Datatype::FLOAT32, float32Str},
 			{Datatype::FLOAT64, float64Str},
+			{Datatype::CFLOAT64, cfloat64Str},
 		};
 
 		// Locate the datatype
@@ -394,6 +413,12 @@ namespace librapid
 							alignedMalloc(sizeof(double) * elems);
 						break;
 					}
+				case Datatype::CFLOAT64:
+					{
+						raw.data = (Complex<double> *)
+							alignedMalloc(sizeof(Complex<double>) * elems);
+						break;
+					}
 			}
 		}
 		else if (raw.location == Accelerator::GPU)
@@ -431,6 +456,11 @@ namespace librapid
 						raw.data = (double *) memory;
 						break;
 					}
+				case Datatype::CFLOAT64:
+					{
+						raw.data = (Complex<double> *) memory;
+						break;
+					}
 			}
 		}
 		else
@@ -465,6 +495,11 @@ namespace librapid
 			case Datatype::FLOAT64:
 				{
 					memory = std::get<double *>(raw.data);
+					break;
+				}
+			case Datatype::CFLOAT64:
+				{
+					memory = std::get<Complex<double> *>(raw.data);
 					break;
 				}
 		}
@@ -670,8 +705,6 @@ namespace librapid
 
 				dim3 grid(blocksPerGrid);
 				dim3 block(threadsPerBlock);
-
-				// int64_t elems = elems;
 
 				std::visit([&](auto *a, auto *b)
 				{

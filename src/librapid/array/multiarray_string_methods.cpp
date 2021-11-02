@@ -139,6 +139,14 @@ namespace librapid
 				int64_t before = 0, after = 0;
 				auto index = tempVal.find('.');
 
+				// Align the +/- for complex datatypes
+				if (m_dtype == Datatype::CFLOAT64)
+				{
+					index = tempVal.find('+', 1);
+					if (index == std::string::npos)
+						index = tempVal.find('-', 1);
+				}
+
 				if (index == std::string::npos)
 				{
 					// No decimal point
