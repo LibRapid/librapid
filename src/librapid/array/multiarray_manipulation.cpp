@@ -67,13 +67,16 @@ namespace librapid
 								   + " is out of range for array with "
 								   + std::to_string(dims) + " dimensions");
 
-		if (arrays.size() == 0) return Array();
+		if (arrays.empty()) return Array();
 		if (arrays.size() == 1) return arrays[0].clone();
 
 		// Check all arrays are the same size and compute the new dimension for the
 		// resulting array
 		int64_t newDim = arrays[0].extent()[axis];
 		const Extent &dim0 = arrays[0].extent();
+
+		Datatype resDtype = arrays[0].dtype();
+		Accelerator resLocn = arrays[0].location();
 
 		for (uint64_t i = 1; i < arrays.size(); ++i)
 		{
@@ -104,6 +107,27 @@ namespace librapid
 			}
 
 			newDim += arrays[i].extent()[axis];
+			if (arrays[i].dtype() > resDtype) resDtype = arrays[i].dtype();
+			if (arrays[i].location() > resLocn) resLocn = arrays[i].location();
 		}
+
+		int64_t step = 1;
+		for (int64_t d = axis; d < dims; ++d)
+			step *= dim0[d];
+
+		Extent resShape(arrays[0].extent());
+		resShape[axis] = newDim;
+
+		Array res(resShape, resDtype, resLocn);
+
+		// auto start = res.createRaw().data;
+		int64_t offset = 0;
+		res._offsetData(0);
+		for (const auto &arr : arrays)
+		{
+			Array::applyUnaryOp(res, arr, ops::Copy(), true, offset);
+			offset += step;
+		}
+		return res;
 	}
 }

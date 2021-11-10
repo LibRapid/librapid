@@ -453,11 +453,12 @@ namespace librapid
 
 		template<typename FUNC>
 		static inline void applyUnaryOp(Array &dst, const Array &src,
-										const FUNC &operation)
+										const FUNC &operation, bool permitInvalid = false,
+										int64_t dstOffset = 0)
 		{
 			// Operate on one array and store the result in another array
 
-			if (dst.m_references == nullptr || dst.m_extent != src.m_extent)
+			if (!permitInvalid && (dst.m_references == nullptr || dst.m_extent != src.m_extent))
 			{
 				throw std::invalid_argument("Cannot operate on array with "
 											+ src.m_extent.str()
@@ -465,11 +466,19 @@ namespace librapid
 											+ dst.m_extent.str());
 			}
 
-			auto srcPtr = src.createRaw();
 			auto dstPtr = dst.createRaw();
+			auto srcPtr = src.createRaw();
 			auto size = src.m_extent.size();
 
-			if (src.m_stride.isTrivial() && src.m_stride.isContiguous())
+			if (dstOffset)
+			{
+				dstPtr.data = std::visit([&](auto *data) -> RawArrayData
+				{
+					return data + dstOffset;
+				}, dstPtr.data);
+			}
+
+			if (!permitInvalid && src.m_stride.isTrivial() && src.m_stride.isContiguous())
 			{
 				// Trivial
 				imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation);
@@ -477,7 +486,7 @@ namespace librapid
 			else
 			{
 				// Not trivial, so use advanced method
-				imp::multiarrayUnaryOpComplex(dstPtr, srcPtr, size, dst.m_extent,
+				imp::multiarrayUnaryOpComplex(dstPtr, srcPtr, size, src.m_extent,
 											  dst.m_stride, src.m_stride, operation);
 			}
 
@@ -519,17 +528,17 @@ namespace librapid
 
 		template<class FUNC>
 		static inline void applyBinaryOp(Array &dst, const Array &srcA,
-										 const Array &srcB,
-										 const FUNC &operation)
+										 const Array &srcB, const FUNC &operation,
+										 bool permitInvalid = false)
 		{
 			// Operate on two arrays and store the result in another array
 
-			if (!srcA.m_isScalar && !srcB.m_isScalar && srcA.m_extent != srcB.m_extent)
+			if (!permitInvalid && (!srcA.m_isScalar && !srcB.m_isScalar && srcA.m_extent != srcB.m_extent))
 				throw std::invalid_argument("Cannot operate on two arrays with "
 											+ srcA.m_extent.str() + " and "
 											+ srcA.m_extent.str());
 
-			if (dst.m_references == nullptr || dst.m_extent != srcA.m_extent)
+			if (!permitInvalid && (dst.m_references == nullptr || dst.m_extent != srcA.m_extent))
 				throw std::invalid_argument("Cannot operate on two arrays with "
 											+ srcA.m_extent.str()
 											+ " and store the result in "
@@ -567,13 +576,12 @@ namespace librapid
 		}
 
 		template<class FUNC>
-		static inline Array applyBinaryOp(const Array &srcA,
-										  const Array &srcB,
-										  const FUNC &operation)
+		static inline Array applyBinaryOp(const Array &srcA, const Array &srcB,
+										  const FUNC &operation, bool permitInvalid = false)
 		{
 			// Operate on two arrays and store the result in another array
 
-			if (!(srcA.m_isScalar || srcB.m_isScalar) &&
+			if (!permitInvalid && !(srcA.m_isScalar || srcB.m_isScalar) &&
 				srcA.m_extent != srcB.m_extent)
 				throw std::invalid_argument("Cannot operate on two arrays with "
 											+ srcA.m_extent.str() + " and "
@@ -615,6 +623,38 @@ namespace librapid
 				dst.m_isScalar = true;
 
 			return dst;
+		}
+
+		/**
+		* \rst
+		*
+		* Internal function to offset the memory pointer within the array
+		*
+		* \endrst
+		*/
+		inline void _offsetData(int64_t elems)
+		{
+			m_dataStart = std::visit([&](auto *data) -> RawArrayData
+			{
+				return data + elems;
+			}, m_dataStart);
+			m_stride.setTrivial(false);
+			m_stride.setContiguity(false);
+		}
+
+		inline void _resetOffset(int64_t elems)
+		{
+			m_dataStart = std::visit([&](auto *data) -> RawArrayData
+			{
+				return data - elems;
+			}, m_dataStart);
+			m_stride.setTrivial(true);
+			m_stride.setContiguity(true);
+		}
+
+		inline void _setStart(const RawArrayData &data)
+		{
+			m_dataStart = data;
 		}
 
 	private:
