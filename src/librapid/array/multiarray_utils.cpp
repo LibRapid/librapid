@@ -9,7 +9,6 @@ namespace librapid
 				  locn == Accelerator::NONE ? m_location : locn);
 		res.m_isScalar = m_isScalar;
 		res.m_isChild = false;
-		// applyBinaryOp(res, *this, res, ops::Copy());
 		applyUnaryOp(res, *this, ops::Copy());
 		return res;
 	}

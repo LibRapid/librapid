@@ -199,6 +199,16 @@ namespace librapid
 		return "UNKNOWN";
 	}
 
+	inline std::string acceleratorToString(const Accelerator &a)
+	{
+		if (a == Accelerator::CPU)
+			return "CPU";
+		if (a == Accelerator::GPU)
+			return "GPU";
+		if (a == Accelerator::NONE)
+			return "NONE";
+	}
+
 	/**
 	 * \rst
 	 *
@@ -516,9 +526,9 @@ namespace librapid
 		#else
 			cudaSafeCall(cudaFree(memory));
 		#endif
-		}
-	#endif
 	}
+	#endif
+}
 
 	inline void rawArrayMemcpy(RawArray &dst,
 							   const RawArray &src, int64_t elems)
@@ -645,20 +655,42 @@ namespace librapid
 						using A = typename std::remove_pointer<decltype(a)>::type;
 						using B = typename std::remove_pointer<decltype(b)>::type;
 
-						for (int64_t i = 0; i < elems; ++i)
+						if (elems < THREAD_THREASHOLD)
 						{
-							B tmp;
+							for (int64_t i = 0; i < elems; ++i)
+							{
+								B tmp;
 
-						#ifdef LIBRAPID_CUDA_STREAM
-							cudaSafeCall(cudaMemcpyAsync(&tmp, b + i,
-										 sizeof(B), cudaMemcpyDeviceToHost,
-										 cudaStream));
-						#else
-							cudaSafeCall(cudaMemcpy(&tmp, b + i,
-										 sizeof(A), cudaMemcpyDeviceToHost));
-						#endif
+							#ifdef LIBRAPID_CUDA_STREAM
+								cudaSafeCall(cudaMemcpyAsync(&tmp, b + i,
+											 sizeof(B), cudaMemcpyDeviceToHost,
+											 cudaStream));
+							#else
+								cudaSafeCall(cudaMemcpy(&tmp, b + i,
+											 sizeof(A), cudaMemcpyDeviceToHost));
+							#endif
 
-							a[i] = (A) tmp;
+								a[i] = (A) tmp;
+							}
+						}
+						else
+						{
+						#pragma omp parallel for shared(a, b, cudaStream) default(none)
+							for (int64_t i = 0; i < elems; ++i)
+							{
+								B tmp;
+
+							#ifdef LIBRAPID_CUDA_STREAM
+								cudaSafeCall(cudaMemcpyAsync(&tmp, b + i,
+											 sizeof(B), cudaMemcpyDeviceToHost,
+											 cudaStream));
+							#else
+								cudaSafeCall(cudaMemcpy(&tmp, b + i,
+											 sizeof(A), cudaMemcpyDeviceToHost));
+							#endif
+
+								a[i] = (A) tmp;
+							}
 						}
 					}, dst.data, src.data);
 				}
@@ -730,9 +762,9 @@ namespace librapid
 		{
 			throw std::runtime_error("CUDA support was not enabled, so data "
 									 "cannot be copied to the GPU");
-		}
+				}
 	#endif
-	}
-}
+			}
+		}
 
 #endif // LIBRAPID_AUTOCAST
