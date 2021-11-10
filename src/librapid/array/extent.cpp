@@ -1,4 +1,5 @@
 #include <librapid/array/extent.hpp>
+#include <sstream>
 
 namespace librapid
 {
@@ -33,6 +34,23 @@ namespace librapid
 
 		for (uint64_t i = 0; i < data.size(); i++)
 			m_extent[i] = data[i];
+
+		update();
+	}
+
+	Extent::Extent(const Extent &other)
+	{
+		// Initialize the dimensions
+		m_dims = other.m_dims;
+
+		if (m_dims > LIBRAPID_MAX_DIMS)
+			throw std::runtime_error("Cannot create Extent with "
+									 + std::to_string(m_dims)
+									 + " dimensions. Limit is "
+									 + std::to_string(LIBRAPID_MAX_DIMS));
+
+		for (uint64_t i = 0; i < other.m_dims; i++)
+			m_extent[i] = other.m_extent[i];
 
 		update();
 	}
@@ -97,6 +115,11 @@ namespace librapid
 			throw std::out_of_range("Index " + std::to_string(index)
 									+ " is out of range for Extent with "
 									+ std::to_string(m_dims) + " dimensions");
+
+		if (m_isDirty)
+			update();
+
+		m_isDirty = true;
 
 		return m_extent[index];
 	}
@@ -225,5 +248,7 @@ namespace librapid
 										" automatic values were found.");
 		else
 			m_containsAutomatic = false;
+
+		m_isDirty = false;
 	}
 }

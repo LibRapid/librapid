@@ -1,4 +1,5 @@
 #include <librapid/array/stride.hpp>
+#include <sstream>
 
 namespace librapid
 {
@@ -94,6 +95,11 @@ namespace librapid
 		}
 
 		return res;
+	}
+
+	void Stride::setTrivial(bool newVal)
+	{
+		m_isTrivial = newVal;
 	}
 
 	void Stride::setContiguity(bool newVal)

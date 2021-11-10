@@ -115,7 +115,7 @@ PYBIND11_MODULE(_librapid, module)
 
 		.def_property_readonly("ndim", &librapid::Extent::ndim)
 		.def_property_readonly("containsAutomatic", &librapid::Extent::containsAutomatic)
-		.def_property_readonly("size", &librapid::Extent::size)
+		.def_property_readonly("size", [](const librapid::Extent &extent) { return static_cast<std::remove_const<librapid::Extent>::type>(extent).size(); })
 		.def("reorder", [](librapid::Extent &e, const std::vector<int64_t> &order) { e.reorder(order); })
 		.def("fixed", &librapid::Extent::fixed)
 
@@ -236,6 +236,8 @@ PYBIND11_MODULE(_librapid, module)
 	module.def("mul", [](const librapid::Array &a, const librapid::Array &b) { return librapid::mul(a, b); }, py::arg("a"), py::arg("b"));
 	module.def("div", [](const librapid::Array &a, const librapid::Array &b) { return librapid::div(a, b); }, py::arg("a"), py::arg("b"));
 	
+	module.def("concatenate", [](const std::vector<librapid::Array> &arrays, int64_t axis) { return librapid::concatenate(arrays, axis); }, py::arg("arrays"), py::arg("axis") = 0);
+
 	// Colours
 	py::class_<librapid::RGB>(module, "RGB")
 		.def(py::init<int, int, int>(), py::arg("red") = 0, py::arg("green") = 0, py::arg("blue") = 0)

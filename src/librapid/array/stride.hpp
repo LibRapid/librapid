@@ -68,6 +68,7 @@ namespace librapid
 		 */
 		static Stride fromExtent(const Extent &extent);
 
+		void setTrivial(bool newVal);
 		void setContiguity(bool newVal);
 
 		/**

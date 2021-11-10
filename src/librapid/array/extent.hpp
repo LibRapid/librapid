@@ -2,11 +2,8 @@
 #define LIBRAPID_EXTENT
 
 #include <librapid/config.hpp>
-#include <librapid/math/rapid_math.hpp>
 #include <librapid/array/iterators.hpp>
-#include <iostream>
-#include <sstream>
-#include <ostream>
+#include <librapid/array/extent_stride_proxy.hpp>
 #include <vector>
 
 namespace librapid
@@ -40,6 +37,7 @@ namespace librapid
 		 */
 		explicit Extent(const std::initializer_list<int64_t> &data);
 		explicit Extent(const std::vector<int64_t> &data);
+		Extent(const Extent &other);
 
 		/**
 		 * \rst
@@ -91,6 +89,21 @@ namespace librapid
 		 */
 		inline int64_t size() const
 		{
+			if (m_isDirty)
+			{
+				int64_t res = 1;
+				for (int64_t i = 0; i < m_dims; ++i) res *= m_extent[i];
+				return res;
+			}
+
+			return m_size;
+		}
+
+		inline int64_t size()
+		{
+			if (m_isDirty)
+				update();
+
 			return m_size;
 		}
 
@@ -254,7 +267,6 @@ namespace librapid
 			return ESIterator((int64_t *) m_extent + m_dims);
 		}
 
-	private:
 		void update();
 
 	private:
@@ -262,6 +274,8 @@ namespace librapid
 		int64_t m_dims = 0;
 		bool m_containsAutomatic = false;
 		int64_t m_size = 0;
+
+		bool m_isDirty = false;
 	};
 
 	inline std::ostream &operator<<(std::ostream &os, const Extent &extent)
