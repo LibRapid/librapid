@@ -220,7 +220,7 @@ namespace librapid {
 			std::vector<Array> toStack; \
 			for (const auto &sub : values) \
 				toStack.emplace_back(Array(sub)); \
-			auto stacked = librapid::stack(toStack); \
+			auto stacked = librapid::stack(toStack, 0); \
 			*this = (stacked); \
 		}
 
