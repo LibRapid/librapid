@@ -160,7 +160,27 @@ PYBIND11_MODULE(_librapid, module)
 		.def(py::init<const librapid::Extent &, const std::string &, const std::string &>(), py::arg("extent"), py::arg("dtype") = "float64", py::arg("location") = "CPU")
 		.def(py::init<const librapid::Array &>())
 		.def(py::init<int64_t>())
+		.def(py::init<V<int64_t>>())
+		.def(py::init<V<V<int64_t>>>())
+		.def(py::init<V<V<V<int64_t>>>>())
+		.def(py::init<V<V<V<V<int64_t>>>>>())
+		.def(py::init<V<V<V<V<V<int64_t>>>>>>())
+		.def(py::init<V<V<V<V<V<V<int64_t>>>>>>>())
+		.def(py::init<V<V<V<V<V<V<V<int64_t>>>>>>>>())
+		.def(py::init<V<V<V<V<V<V<V<V<int64_t>>>>>>>>>())
+		.def(py::init<V<V<V<V<V<V<V<V<V<int64_t>>>>>>>>>>())
+		.def(py::init<V<V<V<V<V<V<V<V<V<V<int64_t>>>>>>>>>>>())
 		.def(py::init<double>())
+		.def(py::init<V<double>>())
+		.def(py::init<V<V<double>>>())
+		.def(py::init<V<V<V<double>>>>())
+		.def(py::init<V<V<V<V<double>>>>>())
+		.def(py::init<V<V<V<V<V<double>>>>>>())
+		.def(py::init<V<V<V<V<V<V<double>>>>>>>())
+		.def(py::init<V<V<V<V<V<V<V<double>>>>>>>>())
+		.def(py::init<V<V<V<V<V<V<V<V<double>>>>>>>>>())
+		.def(py::init<V<V<V<V<V<V<V<V<V<double>>>>>>>>>>())
+		.def(py::init<V<V<V<V<V<V<V<V<V<V<double>>>>>>>>>>>())
 
 		.def_property_readonly("ndim", &librapid::Array::ndim)
 		.def_property_readonly("extent", &librapid::Array::extent)
@@ -207,6 +227,12 @@ PYBIND11_MODULE(_librapid, module)
 		.def("__mul__",     [](const librapid::Array &lhs, const librapid::Array &rhs) { return lhs * rhs; })
 		.def("__truediv__", [](const librapid::Array &lhs, const librapid::Array &rhs) { return lhs / rhs; })
 
+		.def("reshape", [](librapid::Array &arr, const librapid::Extent &shape) { arr.reshape(shape); })
+		.def("reshape", [](librapid::Array &arr, const std::vector<int64_t> &shape) { arr.reshape(shape); })
+
+		.def("reshaped", [](const librapid::Array &arr, const librapid::Extent &shape) { return arr.reshaped(shape); })
+		.def("reshaped", [](const librapid::Array &arr, const std::vector<int64_t> &shape) { return arr.reshaped(shape); })
+
 		.def("transpose", [](librapid::Array &arr, const librapid::Extent &order) { arr.transpose(order); }, py::arg("order") = librapid::Extent())
 
 		.def("str", [](const librapid::Array &arr, uint64_t indent, bool showCommas) { return arr.str(indent, showCommas); }, py::arg("indent") = 0, py::arg("showCommas") = false)
@@ -237,6 +263,7 @@ PYBIND11_MODULE(_librapid, module)
 	module.def("div", [](const librapid::Array &a, const librapid::Array &b) { return librapid::div(a, b); }, py::arg("a"), py::arg("b"));
 	
 	module.def("concatenate", [](const std::vector<librapid::Array> &arrays, int64_t axis) { return librapid::concatenate(arrays, axis); }, py::arg("arrays"), py::arg("axis") = 0);
+	module.def("stack", [](const std::vector<librapid::Array> &arrays, int64_t axis) { return librapid::stack(arrays, axis); }, py::arg("arrays"), py::arg("axis") = 0);
 
 	// Colours
 	py::class_<librapid::RGB>(module, "RGB")
