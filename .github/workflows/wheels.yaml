@@ -77,7 +77,7 @@ jobs:
         run: |
           python -m twine check wheelhouse/*
 
-      - if: github.actor == 'dependabot[bot]'
+      - if: github.actor != 'dependabot[bot]'
         name: Upload Source Distribution
         run: |
           python setup.py sdist
@@ -333,7 +333,7 @@ jobs:
           path: wheelhouse
 
       - if: github.actor == 'dependabot[bot]'
-      - name: Upload Built Wheels
+        name: Upload Built Wheels
         run: |
           python setup.py sdist
           ls wheelhouse
