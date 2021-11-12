@@ -216,16 +216,17 @@ namespace librapid
 	 *
 	 * \endrst
 	 */
-	 // template<typename T>
-	 // inline Datatype typeToDatatype(T x)
-	 // {
-	 // 	if constexpr (std::is_same<T, bool>::value) return Datatype::BOOL;
-	 // 	if constexpr (std::is_same<T, int64_t>::value) return Datatype::INT64;
-	 // 	if constexpr (std::is_same<T, float>::value) return Datatype::FLOAT32;
-	 // 	if constexpr (std::is_same<T, double>::value) return Datatype::FLOAT64;
-	 //
-	 // 	return Datatype::NONE;
-	 // }
+	 template<typename T>
+	 inline Datatype typeToDatatype()
+	 {
+	 	if constexpr (std::is_same_v<T, bool>) return Datatype::BOOL;
+	 	if constexpr (std::is_integral_v<T>) return Datatype::INT64;
+	 	if constexpr (std::is_same<T, float>::value) return Datatype::FLOAT32;
+	 	if constexpr (std::is_same<T, double>::value) return Datatype::FLOAT64;
+		if constexpr (std::is_same<T, Complex<double>>::value) return Datatype::CFLOAT64;
+	 
+	 	return Datatype::NONE;
+	 }
 
 	 /**
 	  * /rst
