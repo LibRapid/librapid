@@ -160,6 +160,14 @@ namespace librapid {
 		 * Note that if the input Array is not initialized, the function will
 		 * quick return and not initialize the new Array.
 		 *
+		 * Arguments can be passed to `dtype` and `locn` to cast the type of the
+		 * input array.
+		 *
+		 * .. Attention::
+		 *		If arguments are passed to `dtype` or `location`, the array might end up
+		 *		being copied, rather than referenced. Please be aware of this when making
+		 *		use of this functionality.
+		 *
 		 * .. Hint::
 		 *
 		 *		If you want to create an exact copy of an Array, but don't want the
@@ -170,10 +178,14 @@ namespace librapid {
 		 *
 		 * other: ``Array``
 		 *		The Array instance to construct from
+		 * dtype: ``Datatype``
+		 *		The datatype to construct with (defaults to input datatype)
+		 * locn: ``Accelerator``
+		 *		The location to construct with (defaults to input location)
 		 *
 		 * \endrst
 		 */
-		Array(const Array& other);
+		Array(const Array& other, Datatype dtype = Datatype::NONE, Accelerator locn = Accelerator::NONE);
 
 		/**
 		 * \rst
@@ -184,25 +196,135 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		Array(bool val);
-		Array(float val);
-		Array(double val);
+		Array(bool val, Datatype dtype = Datatype::BOOL, Accelerator locn = Accelerator::CPU);
+		Array(float val, Datatype dtype = Datatype::FLOAT32, Accelerator locn = Accelerator::CPU);
+		Array(double val, Datatype dtype = Datatype::FLOAT64, Accelerator locn = Accelerator::CPU);
+
+		inline Array(bool val, const std::string& dtype, Accelerator locn = Accelerator::CPU) : Array(val, stringToDatatype(dtype), locn) {}
+		inline Array(float val, const std::string& dtype, Accelerator locn = Accelerator::CPU) : Array(val, stringToDatatype(dtype), locn) {}
+		inline Array(double val, const std::string& dtype, Accelerator locn = Accelerator::CPU) : Array(val, stringToDatatype(dtype), locn) {}
+
+		inline Array(bool val, Datatype dtype, const std::string& locn) : Array(val, dtype, stringToAccelerator(locn)) {}
+		inline Array(float val, Datatype dtype, const std::string& locn) : Array(val, dtype, stringToAccelerator(locn)) {}
+		inline Array(double val, Datatype dtype, const std::string& locn) : Array(val, dtype, stringToAccelerator(locn)) {}
+
+		inline Array(bool val, const std::string& dtype, const std::string& locn) : Array(val, stringToDatatype(locn), stringToAccelerator(locn)) {}
+		inline Array(float val, const std::string& dtype, const std::string& locn) : Array(val, stringToDatatype(locn), stringToAccelerator(locn)) {}
+		inline Array(double val, const std::string& dtype, const std::string& locn) : Array(val, stringToDatatype(locn), stringToAccelerator(locn)) {}
 
 		template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
-		inline Array(T val) {
+		inline Array(T val, Datatype dtype = Datatype::INT64, Accelerator locn = Accelerator::CPU) {
 			initializeCudaStream();
 
-			constructNew(Extent(1), Stride(1), Datatype::INT64, Accelerator::CPU);
+			constructNew(Extent(1), Stride(1), dtype, locn);
 			m_isScalar = true;
-			std::visit([&](auto* data)
-				{
-					*data = val;
-				}, m_dataStart);
+			if (locn == Accelerator::CPU) {
+				std::visit([&](auto* data)
+					{
+						*data = val;
+					}, m_dataStart);
+			}
+#ifdef LIBRAPID_HAS_CUDA
+			else {
+				int64_t tempVal = val;
+				RawArray tempDst = RawArray{ m_dataStart, dtype, locn };
+				RawArray tempSrc = RawArray{ RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU };
+				rawArrayMemcpy(tempDst, tempSrc, 1);
+			}
+#else
+			else {
+				throw std::invalid_argument("CUDA support was not enabled, "
+					"so a value cannot be created on the GPU");
+			}
+#endif // LIBRAPID_HAS_CUDA
+		}
+
+		template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
+		inline Array(T val, const std::string& dtype, Accelerator locn = Accelerator::CPU) {
+			initializeCudaStream();
+
+			constructNew(Extent(1), Stride(1), stringToDatatype(dtype), locn);
+			m_isScalar = true;
+			if (locn == Accelerator::CPU) {
+				std::visit([&](auto* data)
+					{
+						*data = val;
+					}, m_dataStart);
+			}
+#ifdef LIBRAPID_HAS_CUDA
+			else {
+				int64_t tempVal = val;
+				RawArray tempDst = RawArray{ m_dataStart, stringToDatatype(dtype), locn };
+				RawArray tempSrc = RawArray{ RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU };
+				rawArrayMemcpy(tempDst, tempSrc, 1);
+			}
+#else
+			else {
+				throw std::invalid_argument("CUDA support was not enabled, "
+					"so a value cannot be created on the GPU");
+			}
+#endif // LIBRAPID_HAS_CUDA
+		}
+
+		template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
+		inline Array(T val, Datatype dtype, const std::string& locn) {
+			initializeCudaStream();
+			Accelerator accelerator = stringToAccelerator(locn);
+			constructNew(Extent(1), Stride(1), dtype, accelerator);
+			m_isScalar = true;
+			if (accelerator == Accelerator::CPU) {
+				std::visit([&](auto* data)
+					{
+						*data = val;
+					}, m_dataStart);
+			}
+#ifdef LIBRAPID_HAS_CUDA
+			else {
+				int64_t tempVal = val;
+				RawArray tempDst = RawArray{ m_dataStart, dtype, accelerator };
+				RawArray tempSrc = RawArray{ RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU };
+				rawArrayMemcpy(tempDst, tempSrc, 1);
+			}
+#else
+			else {
+				throw std::invalid_argument("CUDA support was not enabled, "
+					"so a value cannot be created on the GPU");
+			}
+#endif // LIBRAPID_HAS_CUDA
+		}
+
+		template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
+		inline Array(T val, const std::string& dtype, const std::string& locn) {
+			initializeCudaStream();
+			Datatype datatype = stringToDatatype(dtype);
+			Accelerator accelerator = stringToAccelerator(locn);
+			constructNew(Extent(1), Stride(1), datatype, accelerator);
+			m_isScalar = true;
+			if (accelerator == Accelerator::CPU) {
+				std::visit([&](auto* data)
+					{
+						*data = val;
+					}, m_dataStart);
+			}
+#ifdef LIBRAPID_HAS_CUDA
+			else {
+				int64_t tempVal = val;
+				RawArray tempDst = RawArray{ m_dataStart, datatype, accelerator };
+				RawArray tempSrc = RawArray{ RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU };
+				rawArrayMemcpy(tempDst, tempSrc, 1);
+			}
+#else
+			else {
+				throw std::invalid_argument("CUDA support was not enabled, "
+					"so a value cannot be created on the GPU");
+			}
+#endif // LIBRAPID_HAS_CUDA
 		}
 
 		// TODO: Make this do something useful
 		// inline Array(Array &&other) = default;
 
+#pragma region ENUM_CONSTRUCTORS
 #define CONSTRUCTOR_TEMPLATE \
 		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
 
@@ -215,11 +337,11 @@ namespace librapid {
 				(nonConst) subscript(i) = Array(values[i]); \
 		}
 
-#define CONSTRUCTOR_BODY_INIT(TYPE, VEC_TYPE)	\
-		Array(const TYPE &values) { \
+#define CONSTRUCTOR_BODY_INIT(TYPE)	\
+		Array(const TYPE &values, Datatype dtype = Datatype::NONE, Accelerator locn = Accelerator::CPU) { \
 			std::vector<Array> toStack; \
 			for (const auto &sub : values) \
-				toStack.emplace_back(Array(sub)); \
+				toStack.emplace_back(Array(sub, dtype == Datatype::NONE ? typeToDatatype<V>() : dtype, locn)); \
 			auto stacked = librapid::stack(toStack, 0); \
 			*this = (stacked); \
 		}
@@ -231,109 +353,405 @@ namespace librapid {
 			CONSTRUCTOR_BODY_VEC(CVEC<V>) // 1D
 
 			CONSTRUCTOR_TEMPLATE
-			CONSTRUCTOR_BODY_INIT(CINIT<V>, CVEC<V>)
+			CONSTRUCTOR_BODY_INIT(CINIT<V>)
 
 			// 2D
 			CONSTRUCTOR_TEMPLATE
 			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<V>>)
 
 			CONSTRUCTOR_TEMPLATE
-			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<V>>,
-				CVEC<CVEC<V>>)
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<V>>)
 
 			// 3D
 			CONSTRUCTOR_TEMPLATE
 			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<V>>>)
 
 			CONSTRUCTOR_TEMPLATE
-			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<V>>>,
-				CVEC<CVEC<CVEC<V>>>)
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<V>>>)
 
 			// 4D
 			CONSTRUCTOR_TEMPLATE
 			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<V>>>>)
 
 			CONSTRUCTOR_TEMPLATE
-			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<V>>>>,
-				CVEC<CVEC<CVEC<CVEC<V>>>>)
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<V>>>>)
 
 			// 5D
 			CONSTRUCTOR_TEMPLATE
 			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>)
 
 			CONSTRUCTOR_TEMPLATE
-			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>,
-				CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>)
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>)
 
 			// 6D
 			CONSTRUCTOR_TEMPLATE
 			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>)
 
 			CONSTRUCTOR_TEMPLATE
-			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>,
-				CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>)
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>)
 
 			// 7D
 			CONSTRUCTOR_TEMPLATE
 			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>)
 
 			CONSTRUCTOR_TEMPLATE
-			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>,
-				CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>)
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>)
 
 			// 8D
 			CONSTRUCTOR_TEMPLATE
 			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>)
 
 			CONSTRUCTOR_TEMPLATE
-			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>,
-				CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>)
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>)
 
 			//9D
 			CONSTRUCTOR_TEMPLATE
 			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>)
 
 			CONSTRUCTOR_TEMPLATE
-			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>,
-				CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>)
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>)
 
 			//10D
 			CONSTRUCTOR_TEMPLATE
 			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>>)
 
 			CONSTRUCTOR_TEMPLATE
-			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>>,
-				CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>>)
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>>)
 
 #undef CONSTRUCTOR_TEMPLATE
 #undef CONSTRUCTOR_BODY_VEC
 #undef CONSTRUCTOR_BODY_INIT
 #undef CVEC
 #undef CINIT
+#pragma endregion ENUM_CONSTRUCTORS
 
-			/**
-			 * \rst
-			 *
-			 * Set one Array equal to a value.
-			 *
-			 * If this Array on is invalid (i.e. it was created using the default
-			 * constructor), the array will be initialized and the relevant data
-			 * will be copied into it.
-			 *
-			 * If the left-hand-side of the operation is another Array instance, the
-			 * data from that array will be copied into this array. If the arrays are
-			 * identical in terms of their Extent, the data will be copied, otherwise
-			 * this array will be recreated with the correct size.
-			 *
-			 * .. Attention::
-			 *		There is a single exception to this, which occurs when this array is
-			 *		a direct subscript of another (e.g. ``myArray[0]``). If this is the
-			 *		case, the left-hand-side of this operation *must* have the same
-			 *		extent, otherwise an error will be thrown
-			 *
-			 * \endrst
-			 */
-			Array& operator=(const Array& other);
+#pragma region STRING_ENUM_CONSTRUCTORS
+#define CONSTRUCTOR_TEMPLATE \
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
+
+#define CONSTRUCTOR_BODY_VEC(TYPE) \
+		Array(const TYPE &values, const std::string &dtype, Accelerator locn = Accelerator::CPU) { \
+			using nonConst = typename std::remove_const<Array>::type; \
+			auto shape = utils::extractSize(values); \
+			constructNew(Extent(shape), Stride::fromExtent(Extent(shape)), dtype.empty() ? typeToDatatype<V>() : stringToDatatype(dtype), locn); \
+			for (uint64_t i = 0; i < values.size(); i++) \
+				(nonConst) subscript(i) = Array(values[i]); \
+		}
+
+#define CONSTRUCTOR_BODY_INIT(TYPE)	\
+		Array(const TYPE &values, const std::string &dtype, Accelerator locn = Accelerator::CPU) { \
+			std::vector<Array> toStack; \
+			for (const auto &sub : values) \
+				toStack.emplace_back(Array(sub, dtype.empty() ? typeToDatatype<V>() : stringToDatatype(dtype), locn)); \
+			auto stacked = librapid::stack(toStack, 0); \
+			*this = (stacked); \
+		}
+
+#define CVEC std::vector
+#define CINIT std::initializer_list
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<V>) // 1D
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<V>)
+
+			// 2D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<V>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<V>>)
+
+			// 3D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<V>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<V>>>)
+
+			// 4D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<V>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<V>>>>)
+
+			// 5D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>)
+
+			// 6D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>)
+
+			// 7D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>)
+
+			// 8D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>)
+
+			//9D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>)
+
+			//10D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>>)
+
+#undef CONSTRUCTOR_TEMPLATE
+#undef CONSTRUCTOR_BODY_VEC
+#undef CONSTRUCTOR_BODY_INIT
+#undef CVEC
+#undef CINIT
+#pragma endregion STRING_ENUM_CONSTRUCTORS
+
+#pragma region ENUM_STRING_CONSTUCTORS
+#define CONSTRUCTOR_TEMPLATE \
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
+
+#define CONSTRUCTOR_BODY_VEC(TYPE) \
+		Array(const TYPE &values, Datatype dtype, const std::string &locn) { \
+			using nonConst = typename std::remove_const<Array>::type; \
+			auto shape = utils::extractSize(values); \
+			constructNew(Extent(shape), Stride::fromExtent(Extent(shape)), dtype == Datatype::NONE ? typeToDatatype<V>() : dtype, locn.empty() ? Accelerator::CPU : stringToAccelerator(locn)); \
+			for (uint64_t i = 0; i < values.size(); i++) \
+				(nonConst) subscript(i) = Array(values[i]); \
+		}
+
+#define CONSTRUCTOR_BODY_INIT(TYPE)	\
+		Array(const TYPE &values, Datatype dtype, const std::string &locn) { \
+			std::vector<Array> toStack; \
+			for (const auto &sub : values) \
+				toStack.emplace_back(Array(sub, dtype == Datatype::NONE ? typeToDatatype<V>() : dtype, locn.empty() ? Accelerator::CPU : stringToAccelerator(locn))); \
+			auto stacked = librapid::stack(toStack, 0); \
+			*this = (stacked); \
+		}
+
+#define CVEC std::vector
+#define CINIT std::initializer_list
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<V>) // 1D
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<V>)
+
+			// 2D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<V>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<V>>)
+
+			// 3D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<V>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<V>>>)
+
+			// 4D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<V>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<V>>>>)
+
+			// 5D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>)
+
+			// 6D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>)
+
+			// 7D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>)
+
+			// 8D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>)
+
+			//9D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>)
+
+			//10D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>>)
+
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>>)
+
+#undef CONSTRUCTOR_TEMPLATE
+#undef CONSTRUCTOR_BODY_VEC
+#undef CONSTRUCTOR_BODY_INIT
+#undef CVEC
+#undef CINIT
+#pragma endregion ENUM_STRING_CONSTUCTORS
+
+#pragma region STRING_STRING_CONSTRUCTORS
+#define CONSTRUCTOR_TEMPLATE \
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
+
+#define CONSTRUCTOR_BODY_VEC(TYPE) \
+		Array(const TYPE &values, const std::string &dtype, const std::string &locn) { \
+			using nonConst = typename std::remove_const<Array>::type; \
+			auto shape = utils::extractSize(values); \
+			constructNew(Extent(shape), Stride::fromExtent(Extent(shape)), dtype.empty() ? typeToDatatype<V>() : stringToDatatype(dtype), locn.empty() ? Accelerator::CPU : stringToAccelerator(locn)); \
+			for (uint64_t i = 0; i < values.size(); i++) \
+				(nonConst) subscript(i) = Array(values[i]); \
+		}
+
+#define CONSTRUCTOR_BODY_INIT(TYPE)	\
+		Array(const TYPE &values, const std::string &dtype, const std::string &locn) { \
+			std::vector<Array> toStack; \
+			for (const auto &sub : values) \
+				toStack.emplace_back(Array(sub, dtype.empty() ? datatypeToString(typeToDatatype<V>()) : dtype, locn.empty() ? Accelerator::CPU : stringToAccelerator(locn))); \
+			auto stacked = librapid::stack(toStack, 0); \
+			*this = (stacked); \
+		}
+
+#define CVEC std::vector
+#define CINIT std::initializer_list
+
+	// 1D
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_VEC(CVEC<V>)
+
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_INIT(CINIT<V>)
+
+	// 2D
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<V>>)
+
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<V>>)
+
+	// 3D
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<V>>>)
+
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<V>>>)
+
+	// 4D
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<V>>>>)
+
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<V>>>>)
+
+	// 5D
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>)
+
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>)
+
+	// 6D
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>)
+
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>)
+
+	// 7D
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>)
+
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>)
+
+	// 8D
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>)
+
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>)
+
+	//9D
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>)
+
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>)
+
+	//10D
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>>)
+
+	CONSTRUCTOR_TEMPLATE
+	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>>)
+
+#undef CONSTRUCTOR_TEMPLATE
+#undef CONSTRUCTOR_BODY_VEC
+#undef CONSTRUCTOR_BODY_INIT
+#undef CVEC
+#undef CINIT
+#pragma endregion STRING_STRING_CONSTRUCTORS
+
+	/**
+	 * \rst
+	 *
+	 * Set one Array equal to a value.
+	 *
+	 * If this Array on is invalid (i.e. it was created using the default
+	 * constructor), the array will be initialized and the relevant data
+	 * will be copied into it.
+	 *
+	 * If the left-hand-side of the operation is another Array instance, the
+	 * data from that array will be copied into this array. If the arrays are
+	 * identical in terms of their Extent, the data will be copied, otherwise
+	 * this array will be recreated with the correct size.
+	 *
+	 * .. Attention::
+	 *		There is a single exception to this, which occurs when this array is
+	 *		a direct subscript of another (e.g. ``myArray[0]``). If this is the
+	 *		case, the left-hand-side of this operation *must* have the same
+	 *		extent, otherwise an error will be thrown
+	 *
+	 * \endrst
+	 */
+	Array& operator=(const Array& other);
 		Array& operator=(bool val);
 
 		template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
@@ -1075,7 +1493,7 @@ namespace librapid {
 	 */
 	Array stack(const std::vector<Array>(&arrays), int64_t axis = 0);
 
-	inline std::ostream &operator<<(std::ostream& os, const Array& arr) {
+	inline std::ostream& operator<<(std::ostream& os, const Array& arr) {
 		return os << arr.str();
 	}
 }

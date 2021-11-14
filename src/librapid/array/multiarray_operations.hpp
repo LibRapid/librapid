@@ -527,7 +527,9 @@ namespace librapid
 						}, dst.data, src.data);
 				}
 #else
-				throw std::runtime_error("CUDA support was not enabled. Invalid operation");
+				else {
+					throw std::runtime_error("CUDA support was not enabled. Invalid operation");
+				}
 #endif // LIBRAPID_HAS_CUDA
 			}
 		}
