@@ -89,40 +89,49 @@ namespace librapid
 	}
 
 	Array concatenate(const std::vector<Array>& arrays, int64_t axis) {
-		int64_t dims = arrays[0].ndim();
-		if (axis < 0 || axis > dims)
-			throw std::range_error("Axis " + std::to_string(axis)
-				+ " is out of range for array with "
-				+ std::to_string(dims) + " dimensions");
-
 		if (arrays.empty()) return Array();
 		if (arrays.size() == 1) return arrays[0].clone();
 
 		// Check all arrays are the same size and compute the new dimension for the
 		// resulting array
-		int64_t newDim = arrays[0].extent()[axis];
-		const Extent& dim0 = arrays[0].extent();
-
+		int64_t index = 0;
+		int64_t dims = 0;
 		Datatype resDtype = arrays[0].dtype();
 		Accelerator resLocn = arrays[0].location();
 
-		for (uint64_t i = 1; i < arrays.size(); ++i) {
-			// if (arrays[i].isScalar())
-			// 	throw std::invalid_argument("Cannot concatenate scalar values");
+		for (int64_t i = 0; i < arrays.size(); ++i)
+		{
+			if (arrays[i].ndim() > dims) {
+				dims = arrays[i].ndim();
+				index = i;
+			};
+			if (arrays[i].dtype() > resDtype) resDtype = arrays[i].dtype();
+			if (arrays[i].location() > resLocn) resLocn = arrays[i].location();
+		}
 
-			if (arrays[i].ndim() != dims)
+		if (axis < 0 || axis > dims)
+			throw std::range_error("Axis " + std::to_string(axis)
+				+ " is out of range for array with "
+				+ std::to_string(dims) + " dimensions");
+
+		int64_t newDim = arrays[index].extent()[axis];
+		const Extent& dim0 = arrays[index].extent();
+
+		for (uint64_t i = 1; i < arrays.size(); ++i) {
+			bool adjustCheck = false;
+			if (arrays[i].ndim() != dims && !(adjustCheck = arrays[i].ndim() == dims - 1))
 				throw std::invalid_argument("To concatenate arrays, all "
 					"values must have the same number of "
 					"dimensions, however (at least) one "
 					"array failed this condition. "
 					+ std::to_string(arrays[i].ndim())
-					+ " dimensions is not compatible with "
-					+ std::to_string(dims) + " dimensions");
+					+ " dimension(s) is not compatible with "
+					+ std::to_string(dims) + " dimension(s)");
 
 			// Ensure every dimension other than <axis> is equal
 			// (concatenating on <axis> allows for different size in that dimension)
-			for (int64_t j = 0; j < dims; ++j) {
-				if (j != axis && arrays[i].extent()[j] != dim0[j])
+			for (int64_t j = 0; j < dims - adjustCheck; ++j) {
+				if (j != axis && arrays[i].extent()[j] != dim0[j + (adjustCheck * (j > axis))])
 					throw std::invalid_argument("To concatenate arrays, all "
 						"dimensions other than index <axis> "
 						"must be equal, however (at least) "
@@ -132,27 +141,30 @@ namespace librapid
 						+ dim0.str());
 			}
 
-			newDim += arrays[i].extent()[axis];
-			if (arrays[i].dtype() > resDtype) resDtype = arrays[i].dtype();
-			if (arrays[i].location() > resLocn) resLocn = arrays[i].location();
+			newDim += adjustCheck ? 1 : arrays[i].extent()[axis];
 		}
 
 		int64_t step = 1;
 		for (int64_t d = axis; d < dims; ++d)
 			step *= dim0[d];
 
-		Extent resShape(arrays[0].extent());
+		Extent resShape = dim0;
 		resShape[axis] = newDim;
-		resShape.update();
+		// resShape.update();
 
 		Array res(resShape, resDtype, resLocn);
 
 		int64_t offset = 0;
 		if (axis) res._offsetData(0);
 
+		Extent fixed = dim0;
+		fixed[axis] = -1;
 		for (const auto& arr : arrays)
 		{
-			Array::applyUnaryOp(res, arr, ops::Copy(), true, offset);
+			if (arr.ndim() == dims)
+				Array::applyUnaryOp(res, arr, ops::Copy(), true, offset);
+			else if (arr.ndim() == dims - 1)
+				Array::applyUnaryOp(res, arr.reshaped(fixed), ops::Copy(), true, offset);
 			offset += step;
 		}
 		res._setScalar(false);

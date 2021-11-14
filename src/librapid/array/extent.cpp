@@ -137,7 +137,7 @@ namespace librapid
 										" automatic values were found.");
 
 		// If no automatic dimensions exist, quick return
-		if (!m_containsAutomatic)
+		if (!m_isDirty && !m_containsAutomatic)
 			return *this;
 
 		int64_t autoIndex = 0;
