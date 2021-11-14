@@ -3,7 +3,7 @@
 
 namespace librapid
 {
-	RawArray validRawArray = RawArray{(bool *) nullptr, Datatype::VALIDNONE, Accelerator::CPU};
+	RawArray validRawArray = RawArray{ (bool*) nullptr, Datatype::VALIDNONE, Accelerator::CPU };
 
 #ifdef LIBRAPID_HAS_CUDA
 #ifdef LIBRAPID_CUDA_STREAM
@@ -17,23 +17,48 @@ namespace librapid
 		initializeCudaStream();
 	}
 
-	Array::Array(const Extent &extent, Datatype dtype, Accelerator location)
+	Array::Array(const Extent& extent, Datatype dtype, Accelerator location)
 	{
 		initializeCudaStream();
 
 		if (extent.containsAutomatic())
 			throw std::invalid_argument("Cannot create an Array from an Extent"
-										" containing automatic values. "
-										"Extent was " + extent.str());
+				" containing automatic values. "
+				"Extent was " + extent.str());
 
 		constructNew(extent, Stride::fromExtent(extent), dtype, location);
 	}
 
-	Array::Array(const Array &other)
+	Array::Array(const Array& other, Datatype dtype, Accelerator locn)
 	{
 		// Quick return if possible
 		if (other.m_references == nullptr)
 			return;
+
+		if (dtype == Datatype::NONE) dtype = other.m_dtype;
+		if (locn == Accelerator::NONE) locn = other.m_location;
+
+		if (dtype != other.m_dtype || locn != other.m_location) {
+			// Must cast other to the correct value
+			Array tmp = other.clone(dtype, locn);
+
+			m_location = tmp.m_location;
+			m_dtype = tmp.m_dtype;
+			m_dataStart = tmp.m_dataStart;
+			m_dataOrigin = tmp.m_dataOrigin;
+
+			m_references = tmp.m_references;
+
+			m_extent = tmp.m_extent;
+			m_stride = tmp.m_stride;
+
+			m_isScalar = tmp.m_isScalar;
+			m_isChild = tmp.m_isChild;
+
+			increment();
+
+			return;
+		}
 
 		m_location = other.m_location;
 		m_dtype = other.m_dtype;
@@ -51,43 +76,82 @@ namespace librapid
 		increment();
 	}
 
-	Array::Array(bool val)
+	Array::Array(bool val, Datatype dtype, Accelerator locn)
 	{
 		initializeCudaStream();
 
-		constructNew(Extent(1), Stride(1), Datatype::BOOL, Accelerator::CPU);
+		constructNew(Extent(1), Stride(1), dtype, locn);
 		m_isScalar = true;
-		std::visit([&](auto *data)
-		{
-			*data = val;
-		}, m_dataStart);
+		if (locn == Accelerator::CPU) {
+			std::visit([&](auto* data)
+				{
+					*data = val;
+				}, m_dataStart);
+		}
+#ifdef LIBRAPID_HAS_CUDA
+		else {
+			RawArray temp = RawArray{ m_dataStart, dtype, locn };
+			rawArrayMemcpy(temp, { &val, Datatype::BOOL, Accelerator::CPU }, 1);
+		}
+#else
+		else {
+			throw std::invalid_argument("CUDA support was not enabled, "
+				"so a value cannot be created on the GPU");
+		}
+#endif // LIBRAPID_HAS_CUDA
 	}
 
-	Array::Array(float val)
+	Array::Array(float val, Datatype dtype, Accelerator locn)
 	{
 		initializeCudaStream();
 
-		constructNew(Extent(1), Stride(1), Datatype::FLOAT32, Accelerator::CPU);
+		constructNew(Extent(1), Stride(1), dtype, locn);
 		m_isScalar = true;
-		std::visit([&](auto *data)
-		{
-			*data = val;
-		}, m_dataStart);
+		if (locn == Accelerator::CPU) {
+			std::visit([&](auto* data)
+				{
+					*data = val;
+				}, m_dataStart);
+		}
+#ifdef LIBRAPID_HAS_CUDA
+		else {
+			RawArray temp = RawArray{ m_dataStart, dtype, locn };
+			rawArrayMemcpy(temp, { &val, Datatype::FLOAT32, Accelerator::CPU }, 1);
+		}
+#else
+		else {
+			throw std::invalid_argument("CUDA support was not enabled, "
+				"so a value cannot be created on the GPU");
+		}
+#endif // LIBRAPID_HAS_CUDA
 	}
 
-	Array::Array(double val)
+	Array::Array(double val, Datatype dtype, Accelerator locn)
 	{
 		initializeCudaStream();
 
-		constructNew(Extent(1), Stride(1), Datatype::FLOAT64, Accelerator::CPU);
+		constructNew(Extent(1), Stride(1), dtype, locn);
 		m_isScalar = true;
-		std::visit([&](auto *data)
-		{
-			*data = val;
-		}, m_dataStart);
+		if (locn == Accelerator::CPU) {
+			std::visit([&](auto* data)
+				{
+					*data = val;
+				}, m_dataStart);
+		}
+#ifdef LIBRAPID_HAS_CUDA
+		else {
+			RawArray temp = RawArray{ m_dataStart, dtype, locn };
+			rawArrayMemcpy(temp, { &val, Datatype::FLOAT64, Accelerator::CPU }, 1);
+		}
+#else
+		else {
+			throw std::invalid_argument("CUDA support was not enabled, "
+				"so a value cannot be created on the GPU");
+		}
+#endif // LIBRAPID_HAS_CUDA
 	}
 
-	Array &Array::operator=(const Array &other)
+	Array& Array::operator=(const Array& other)
 	{
 		// Quick return if possible
 		if (other.m_references == nullptr)
@@ -96,14 +160,14 @@ namespace librapid
 		if (m_isChild && m_extent != other.m_extent)
 		{
 			throw std::invalid_argument("Cannot set child array with "
-										+ m_extent.str() + " to "
-										+ other.m_extent.str());
+				+ m_extent.str() + " to "
+				+ other.m_extent.str());
 		}
 
 		if (m_references == nullptr)
 		{
 			constructNew(other.m_extent, other.m_stride,
-						 other.m_dtype, other.m_location);
+				other.m_dtype, other.m_location);
 		}
 		else
 		{
@@ -114,7 +178,7 @@ namespace librapid
 				// Extents are not equal, so memory can not be safely copied
 				decrement();
 				constructNew(other.m_extent, other.m_stride, other.m_dtype,
-							 other.m_location);
+					other.m_location);
 				m_isScalar = other.m_isScalar;
 			}
 		}
@@ -139,12 +203,12 @@ namespace librapid
 		return *this;
 	}
 
-	Array &Array::operator=(bool val)
+	Array& Array::operator=(bool val)
 	{
 		if (m_isChild && !m_isScalar)
 			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
+				" dimensions to a scalar value. Array must"
+				" have zero dimensions (i.e. scalar)");
 		if (!m_isChild)
 		{
 			if (m_references != nullptr) decrement();
@@ -152,18 +216,18 @@ namespace librapid
 		}
 
 		auto raw = createRaw();
-		rawArrayMemcpy(raw, RawArray{&val, Datatype::BOOL, Accelerator::CPU}, 1);
+		rawArrayMemcpy(raw, RawArray{ &val, Datatype::BOOL, Accelerator::CPU }, 1);
 
 		m_isScalar = true;
 		return *this;
 	}
 
-	Array &Array::operator=(float val)
+	Array& Array::operator=(float val)
 	{
 		if (m_isChild && !m_isScalar)
 			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
+				" dimensions to a scalar value. Array must"
+				" have zero dimensions (i.e. scalar)");
 		if (!m_isChild)
 		{
 			if (m_references != nullptr) decrement();
@@ -171,18 +235,18 @@ namespace librapid
 		}
 
 		auto raw = createRaw();
-		rawArrayMemcpy(raw, RawArray{&val, Datatype::FLOAT32, Accelerator::CPU}, 1);
+		rawArrayMemcpy(raw, RawArray{ &val, Datatype::FLOAT32, Accelerator::CPU }, 1);
 
 		m_isScalar = true;
 		return *this;
 	}
 
-	Array &Array::operator=(double val)
+	Array& Array::operator=(double val)
 	{
 		if (m_isChild && !m_isScalar)
 			throw std::invalid_argument("Cannot set an array with more than zero"
-										" dimensions to a scalar value. Array must"
-										" have zero dimensions (i.e. scalar)");
+				" dimensions to a scalar value. Array must"
+				" have zero dimensions (i.e. scalar)");
 		if (!m_isChild)
 		{
 			if (m_references != nullptr) decrement();
@@ -190,7 +254,7 @@ namespace librapid
 		}
 
 		auto raw = createRaw();
-		rawArrayMemcpy(raw, RawArray{&val, Datatype::FLOAT64, Accelerator::CPU}, 1);
+		rawArrayMemcpy(raw, RawArray{ &val, Datatype::FLOAT64, Accelerator::CPU }, 1);
 
 		m_isScalar = true;
 		return *this;
@@ -201,9 +265,9 @@ namespace librapid
 		decrement();
 	}
 
-	void Array::constructNew(const Extent &e, const Stride &s,
-							 const Datatype &dtype,
-							 const Accelerator &location)
+	void Array::constructNew(const Extent& e, const Stride& s,
+		const Datatype& dtype,
+		const Accelerator& location)
 	{
 		// Is scalar if extent is [0]
 		bool isScalar = (e.ndim() == 1) && (e[0] == 0);
@@ -213,7 +277,7 @@ namespace librapid
 		m_dtype = dtype;
 
 		// If array is scalar, allocate "sizeof(dtype)" bytes -- e.size() is 0
-		auto raw = RawArray{m_dataStart, dtype, location};
+		auto raw = RawArray{ m_dataStart, dtype, location };
 		m_dataStart = rawArrayMalloc(raw, e.size() + isScalar).data;
 		m_dataOrigin = m_dataStart;
 
@@ -226,8 +290,8 @@ namespace librapid
 		m_isChild = false;
 	}
 
-	void Array::constructHollow(const Extent &e, const Stride &s,
-								const Datatype &dtype, const Accelerator &location)
+	void Array::constructHollow(const Extent& e, const Stride& s,
+		const Datatype& dtype, const Accelerator& location)
 	{
 		m_extent = e;
 		m_stride = s;
@@ -237,8 +301,8 @@ namespace librapid
 
 		if (ndim() > LIBRAPID_MAX_DIMS)
 			throw std::domain_error("Cannot create an array with "
-									+ std::to_string(ndim()) + " dimensions. The "
-									"maximum allowed number of dimensions is "
-									+ std::to_string(LIBRAPID_MAX_DIMS));
+				+ std::to_string(ndim()) + " dimensions. The "
+				"maximum allowed number of dimensions is "
+				+ std::to_string(LIBRAPID_MAX_DIMS));
 	}
 }

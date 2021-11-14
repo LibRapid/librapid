@@ -53,7 +53,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		Extent(int64_t dims);
+		explicit Extent(int64_t dims);
 
 	#ifdef LIBRAPID_PYTHON
 		Extent(py::args args);
