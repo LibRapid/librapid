@@ -157,7 +157,7 @@ namespace librapid
 	// #endif // LIBRAPID_HAS_OPENBLAS
 	// }
 
-	inline void setNumThreads(int num)
+	inline void setNumThreads(int64_t num)
 	{
 	#if defined(LIBRAPID_HAS_OPENBLAS)
 		openblas_set_num_threads(num);
