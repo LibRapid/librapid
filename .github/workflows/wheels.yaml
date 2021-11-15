@@ -61,6 +61,11 @@ jobs:
           cd OpenBLAS
           make install PREFIX=../src/librapid/openblas_install
 
+      - name: Build Documentation
+        run: |
+          cd docs
+          make html
+
       - name: Build Source Distribution
         run: |
           python -m build --sdist --outdir wheelhouse
@@ -151,6 +156,11 @@ jobs:
         with:
           name: OpenBLAS on ${{ matrix.platform }}
           path: src/librapid/openblas_install
+
+      - name: Build Documentation
+        run: |
+          cd docs
+          make html
 
       - if: runner.os == 'macOS'
         name: Run cibuildwheel
@@ -301,6 +311,11 @@ jobs:
         with:
           name: OpenBLAS on windows-latest
           path: src/librapid/openblas_install
+
+      - name: Build Documentation
+        run: |
+          cd docs
+          make html
 
       - name: Run cibuildwheel
         run: |
