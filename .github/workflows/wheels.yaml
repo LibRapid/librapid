@@ -64,6 +64,7 @@ jobs:
       - name: Build Documentation
         run: |
           cd docs
+          pip install --user check-manifest -r requirements.txt
           make html
 
       - name: Build Source Distribution
@@ -160,6 +161,7 @@ jobs:
       - name: Build Documentation
         run: |
           cd docs
+          pip install --user check-manifest -r requirements.txt
           make html
 
       - if: runner.os == 'macOS'
@@ -315,6 +317,7 @@ jobs:
       - name: Build Documentation
         run: |
           cd docs
+          pip install --user check-manifest -r requirements.txt
           make html
 
       - name: Run cibuildwheel
