@@ -64,6 +64,7 @@ set(sources # Array library
         "src/librapid/array/multiarray_manipulation.cpp"
         "src/librapid/array/multiarray_arithmetic.cpp"
         "src/librapid/array/multiarray_utils.cpp"
+		"src/librapid/array/multiarray_matrixops.cpp"
         # Math library
         "src/librapid/math/core_math.cpp"
         # String methods
