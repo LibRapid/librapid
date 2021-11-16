@@ -61,11 +61,11 @@ jobs:
           cd OpenBLAS
           make install PREFIX=../src/librapid/openblas_install
 
-      - name: Build Documentation
-        run: |
-          cd docs
-          pip install --user check-manifest -r requirements.txt
-          make html
+      # - name: Build Documentation
+      #   run: |
+      #     cd docs
+      #     pip install --user check-manifest -r requirements.txt
+      #     make html
 
       - name: Build Source Distribution
         run: |
@@ -158,11 +158,11 @@ jobs:
           name: OpenBLAS on ${{ matrix.platform }}
           path: src/librapid/openblas_install
 
-      - name: Build Documentation
-        run: |
-          cd docs
-          pip install --user check-manifest -r requirements.txt
-          make html
+      # - name: Build Documentation
+      #   run: |
+      #     cd docs
+      #     pip install --user check-manifest -r requirements.txt
+      #     make html
 
       - if: runner.os == 'macOS'
         name: Run cibuildwheel
@@ -314,11 +314,11 @@ jobs:
           name: OpenBLAS on windows-latest
           path: src/librapid/openblas_install
 
-      - name: Build Documentation
-        run: |
-          cd docs
-          pip install --user check-manifest -r requirements.txt
-          make html
+      # - name: Build Documentation
+      #   run: |
+      #     cd docs
+      #     pip install --user check-manifest -r requirements.txt
+      #     make html
 
       - name: Run cibuildwheel
         run: |
