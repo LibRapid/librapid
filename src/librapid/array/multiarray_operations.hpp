@@ -769,7 +769,9 @@ namespace librapid
 #endif // LIBRAPID_CUDA_STREAM
 				}
 #else
-				throw std::runtime_error("CUDA support was not enabled");
+				else {
+					throw std::runtime_error("CUDA support was not enabled");
+				}
 #endif // LIBRAPID_HAS_CUDA
 			}
 		}

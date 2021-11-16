@@ -652,75 +652,75 @@ namespace librapid {
 #define CVEC std::vector
 #define CINIT std::initializer_list
 
-	// 1D
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_VEC(CVEC<V>)
+			// 1D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<V>)
 
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_INIT(CINIT<V>)
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<V>)
 
-	// 2D
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<V>>)
+			// 2D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<V>>)
 
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<V>>)
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<V>>)
 
-	// 3D
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<V>>>)
+			// 3D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<V>>>)
 
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<V>>>)
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<V>>>)
 
-	// 4D
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<V>>>>)
+			// 4D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<V>>>>)
 
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<V>>>>)
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<V>>>>)
 
-	// 5D
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>)
+			// 5D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>)
 
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>)
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>)
 
-	// 6D
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>)
+			// 6D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>)
 
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>)
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>)
 
-	// 7D
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>)
+			// 7D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>)
 
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>)
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>)
 
-	// 8D
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>)
+			// 8D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>)
 
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>)
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>)
 
-	//9D
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>)
+			//9D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>)
 
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>)
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>)
 
-	//10D
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>>)
+			//10D
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_VEC(CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<CVEC<V>>>>>>>>>>)
 
-	CONSTRUCTOR_TEMPLATE
-	CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>>)
+			CONSTRUCTOR_TEMPLATE
+			CONSTRUCTOR_BODY_INIT(CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<CINIT<V>>>>>>>>>>)
 
 #undef CONSTRUCTOR_TEMPLATE
 #undef CONSTRUCTOR_BODY_VEC
@@ -729,29 +729,29 @@ namespace librapid {
 #undef CINIT
 #pragma endregion STRING_STRING_CONSTRUCTORS
 
-	/**
-	 * \rst
-	 *
-	 * Set one Array equal to a value.
-	 *
-	 * If this Array on is invalid (i.e. it was created using the default
-	 * constructor), the array will be initialized and the relevant data
-	 * will be copied into it.
-	 *
-	 * If the left-hand-side of the operation is another Array instance, the
-	 * data from that array will be copied into this array. If the arrays are
-	 * identical in terms of their Extent, the data will be copied, otherwise
-	 * this array will be recreated with the correct size.
-	 *
-	 * .. Attention::
-	 *		There is a single exception to this, which occurs when this array is
-	 *		a direct subscript of another (e.g. ``myArray[0]``). If this is the
-	 *		case, the left-hand-side of this operation *must* have the same
-	 *		extent, otherwise an error will be thrown
-	 *
-	 * \endrst
-	 */
-	Array& operator=(const Array& other);
+			/**
+			 * \rst
+			 *
+			 * Set one Array equal to a value.
+			 *
+			 * If this Array on is invalid (i.e. it was created using the default
+			 * constructor), the array will be initialized and the relevant data
+			 * will be copied into it.
+			 *
+			 * If the left-hand-side of the operation is another Array instance, the
+			 * data from that array will be copied into this array. If the arrays are
+			 * identical in terms of their Extent, the data will be copied, otherwise
+			 * this array will be recreated with the correct size.
+			 *
+			 * .. Attention::
+			 *		There is a single exception to this, which occurs when this array is
+			 *		a direct subscript of another (e.g. ``myArray[0]``). If this is the
+			 *		case, the left-hand-side of this operation *must* have the same
+			 *		extent, otherwise an error will be thrown
+			 *
+			 * \endrst
+			 */
+			Array& operator=(const Array& other);
 		Array& operator=(bool val);
 
 		template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
@@ -993,6 +993,14 @@ namespace librapid {
 		Array operator/(const Array& other) const;
 
 		void transpose(const Extent& order = Extent());
+
+		inline Array transposed(const Extent& order = Extent()) {
+			auto res = clone();
+			res.transpose(order);
+			return res;
+		}
+
+		Array dot(const Array& other) const;
 
 		inline std::string str(int64_t indent = 0, bool showCommas = false) const {
 			static int64_t tmpRows, tmpCols;
