@@ -114,6 +114,9 @@ else:
 	print("Using 32bit Python (or unknown)")
 	cmake_args = []
 
+if not os.environ.get("LIBRAPID_NO_ARCH"):
+	cmake_args.append("-DLIBRAPID_NO_ARCH=yes")
+
 setup(
 	name="librapid",
 	version=__version__,
