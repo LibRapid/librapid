@@ -1,3 +1,3 @@
 #ifndef LIBRAPID_VERSION
-#define LIBRAPID_VERSION "0.2.18"
+#define LIBRAPID_VERSION "0.2.19"
 #endif
