@@ -7,12 +7,20 @@ from pathlib import Path
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# Try appending to the package directory
+
+try:
+	from distutils.sysconfig import get_python_lib
+	sys.path.append(os.path.join(get_python_lib(), "librapid"))
+except:
+	print("Was not able to append to system path")
+
 try:
 	try:
-		print("Attempting to load '._librapid' from {}".format(os.listdir(ROOT_DIR)))
 		from ._librapid import *
 	except ModuleNotFoundError:
-		print("Failed to load '._librapid'. Attempting to load '_librapid' globally")
+		print("Failed to load '._librapid' locally from {}".format(os.listdir(ROOT_DIR)))
+		print("Attempting to load '_librapid' globally")
 		from _librapid import *
 except ImportError:
 	print("Attempting to load librapid again, but using win32api to set the DLL directory")
@@ -34,10 +42,10 @@ except ImportError:
 
 	try:
 		try:
-			print("Attempting to load '._librapid' from {}".format(os.listdir(ROOT_DIR)))
 			from ._librapid import *
 		except ModuleNotFoundError:
-			print("Failed to load '._librapid'. Attempting to load '_librapid' globally")
+			print("Failed to load '._librapid' from {}".format(os.listdir(ROOT_DIR)))
+			print("Attempting to load '_librapid' globally")
 			from _librapid import *
 	except ImportError:
 		print("There was an error trying to load the librapid C++ module '_librapid'")
