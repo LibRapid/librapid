@@ -171,11 +171,14 @@ jobs:
         env:
           CC: gcc-11
           CXX: g++-11
+          LIBRAPID_NO_ARCH: yes
 
       - if: runner.os != 'macOS'
         name: Run cibuildwheel
         run: |
           cibuildwheel --output-dir wheelhouse
+        env:
+          LIBRAPID_NO_ARCH: yes
 
       # - name: Run cibuildwheel
       #   run: |
@@ -323,6 +326,8 @@ jobs:
       - name: Run cibuildwheel
         run: |
           cibuildwheel --output-dir wheelhouse
+        env:
+          LIBRAPID_NO_ARCH: yes
 
       - name: Install win32api
         run: |
