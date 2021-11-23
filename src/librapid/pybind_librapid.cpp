@@ -35,8 +35,7 @@ T testSum(const std::vector<T> &data)
 #undef max
 #endif
 
-PYBIND11_MODULE(_librapid, module)
-{
+PYBIND11_MODULE(_librapid, module) {
 	module.doc() = module_docstring;
 
 	py::module_ test = module.def_submodule("test", "Tests within the librapid library");
@@ -51,7 +50,7 @@ PYBIND11_MODULE(_librapid, module)
 
 	module.def("hasBlas", &librapid::hasBlas);
 	// module.def("setBlasThreads", &librapid::setBlasThreads);
-	// module.def("getBlasThreads", &librapid::getBlasThreads);	
+	// module.def("getBlasThreads", &librapid::getBlasThreads);
 	module.def("setNumThreads", &librapid::setNumThreads);
 	module.def("getNumThreads", &librapid::getNumThreads);
 
@@ -77,6 +76,7 @@ PYBIND11_MODULE(_librapid, module)
 	module.def("max", [](const std::vector<double> &vals) { return librapid::max(vals); }, py::arg("vals"));
 
 	module.def("map", [](double val, double start1, double stop1, double start2, double stop2) { return librapid::map(val, start1, stop1, start2, stop2); }, py::arg("val"), py::arg("start1") = double(0), py::arg("stop1") = double(1), py::arg("start2") = double(0), py::arg("stop2") = double(1));
+	module.def("random", [](int64_t min, int64_t max) { return librapid::random(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
 	module.def("random", [](double min, double max) { return librapid::random(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
 	module.def("randint", [](int64_t min, int64_t max) { return librapid::randint(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
 	module.def("pow10", &librapid::pow10);
@@ -85,17 +85,17 @@ PYBIND11_MODULE(_librapid, module)
 
 	// Create the Datatype enum
 	py::enum_<librapid::Datatype>(module, "Datatype")
-		.value("NONE", librapid::Datatype::NONE)
-		.value("VALIDNONE", librapid::Datatype::VALIDNONE)
-		.value("BOOL", librapid::Datatype::BOOL)
-		.value("INT64", librapid::Datatype::INT64)
-		.value("FLOAT32", librapid::Datatype::FLOAT32)
-		.value("FLOAT64", librapid::Datatype::FLOAT64);
+	.value("NONE", librapid::Datatype::NONE)
+	.value("VALIDNONE", librapid::Datatype::VALIDNONE)
+	.value("BOOL", librapid::Datatype::BOOL)
+	.value("INT64", librapid::Datatype::INT64)
+	.value("FLOAT32", librapid::Datatype::FLOAT32)
+	.value("FLOAT64", librapid::Datatype::FLOAT64);
 
 	// Create the Accelerator enum
 	py::enum_<librapid::Accelerator>(module, "Accelerator")
-		.value("CPU", librapid::Accelerator::CPU)
-		.value("GPU", librapid::Accelerator::GPU);
+	.value("CPU", librapid::Accelerator::CPU)
+	.value("GPU", librapid::Accelerator::GPU);
 
 	module.def("isIntegral", &librapid::isIntegral);
 	module.def("isUnsigned", &librapid::isUnsigned);
@@ -105,51 +105,51 @@ PYBIND11_MODULE(_librapid, module)
 
 	// The librapid Extent object
 	py::class_<librapid::Extent>(module, "Extent")
-		.def(py::init<>())
-		.def(py::init<const std::vector<int64_t> &>())
-		.def(py::init<const librapid::Extent &>())
-		.def(py::init<py::args>())
+	.def(py::init<>())
+	.def(py::init<const std::vector<int64_t> &>())
+	.def(py::init<const librapid::Extent &>())
+	.def(py::init<py::args>())
 
-		.def("__getitem__", [](const librapid::Extent &e, int64_t index) { return e[index]; })
-		.def("__setitem__", [](librapid::Extent &e, int64_t index, int64_t val) { e[index] = val; })
+	.def("__getitem__", [](const librapid::Extent &e, int64_t index) { return e[index]; })
+	.def("__setitem__", [](librapid::Extent &e, int64_t index, int64_t val) { e[index] = val; })
 
-		.def_property_readonly("ndim", &librapid::Extent::ndim)
-		.def_property_readonly("containsAutomatic", &librapid::Extent::containsAutomatic)
-		.def_property_readonly("size", [](const librapid::Extent &extent) { return static_cast<std::remove_const<librapid::Extent>::type>(extent).size(); })
-		.def("reorder", [](librapid::Extent &e, const std::vector<int64_t> &order) { e.reorder(order); })
-		.def("fixed", &librapid::Extent::fixed)
+	.def_property_readonly("ndim", &librapid::Extent::ndim)
+	.def_property_readonly("containsAutomatic", &librapid::Extent::containsAutomatic)
+	.def_property_readonly("size", [](const librapid::Extent &extent) { return static_cast<std::remove_const<librapid::Extent>::type>(extent).size(); })
+	.def("reorder", [](librapid::Extent &e, const std::vector<int64_t> &order) { e.reorder(order); })
+	.def("fixed", &librapid::Extent::fixed)
 
-		.def("__len__", &librapid::Extent::ndim)
-		.def("__iter__", [](const librapid::Extent &e) { return py::make_iterator(e.begin(), e.end()); }, py::keep_alive<0, 1>())
-		.def("__eq__", &librapid::Extent::operator==)
-		.def("__ne__", &librapid::Extent::operator!=)
-		.def("__str__", &librapid::Extent::str)
-		.def("__repr__", [](const librapid::Extent &e) { return "<librapid." + e.str() + ">"; });
+	.def("__len__", &librapid::Extent::ndim)
+	.def("__iter__", [](const librapid::Extent &e) { return py::make_iterator(e.begin(), e.end()); }, py::keep_alive<0, 1>())
+	.def("__eq__", &librapid::Extent::operator==)
+	.def("__ne__", &librapid::Extent::operator!=)
+	.def("__str__", &librapid::Extent::str)
+	.def("__repr__", [](const librapid::Extent &e) { return "<librapid." + e.str() + ">"; });
 
 	// The librapid Stride object
 	py::class_<librapid::Stride>(module, "Stride")
-		.def(py::init<>())
-		.def(py::init<std::vector<int64_t>>())
-		.def(py::init<int64_t>())
-		.def(py::init<const librapid::Stride &>())
-		.def(py::init<py::args>())
-		.def_static("fromExtent", &librapid::Stride::fromExtent)
+	.def(py::init<>())
+	.def(py::init<std::vector<int64_t>>())
+	.def(py::init<int64_t>())
+	.def(py::init<const librapid::Stride &>())
+	.def(py::init<py::args>())
+	.def_static("fromExtent", &librapid::Stride::fromExtent)
 
-		.def("__getitem__", [](const librapid::Stride &s, int64_t index) { return s[index]; })
-		.def("__setitem__", [](librapid::Stride &s, int64_t index, int64_t val) { s[index] = val; })
+	.def("__getitem__", [](const librapid::Stride &s, int64_t index) { return s[index]; })
+	.def("__setitem__", [](librapid::Stride &s, int64_t index, int64_t val) { s[index] = val; })
 
-		.def_property_readonly("ndim", &librapid::Stride::ndim)
-		.def_property_readonly("isTrivial", &librapid::Stride::isTrivial)
-		.def_property_readonly("isContiguous", &librapid::Stride::isContiguous)
-		.def("reorder", [](librapid::Stride &s, const std::vector<int64_t> &order) { s.reorder(order); })
+	.def_property_readonly("ndim", &librapid::Stride::ndim)
+	.def_property_readonly("isTrivial", &librapid::Stride::isTrivial)
+	.def_property_readonly("isContiguous", &librapid::Stride::isContiguous)
+	.def("reorder", [](librapid::Stride &s, const std::vector<int64_t> &order) { s.reorder(order); })
 
-		.def("__len__", &librapid::Stride::ndim)
+	.def("__len__", &librapid::Stride::ndim)
 
-		.def("__iter__", [](const librapid::Stride &s) { return py::make_iterator(s.begin(), s.end()); }, py::keep_alive<0, 1>())
+	.def("__iter__", [](const librapid::Stride &s) { return py::make_iterator(s.begin(), s.end()); }, py::keep_alive<0, 1>())
 
-		.def("__eq__", &librapid::Stride::operator==)
-		.def("__str__", &librapid::Stride::str)
-		.def("__repr__", [](const librapid::Stride &s) { return "<librapid." + s.str() + ">"; });
+	.def("__eq__", &librapid::Stride::operator==)
+	.def("__str__", &librapid::Stride::str)
+	.def("__repr__", [](const librapid::Stride &s) { return "<librapid." + s.str() + ">"; });
 
 	// The librapid ndarray object
 	py::class_<librapid::Array>(module, "Array")
@@ -308,7 +308,14 @@ PYBIND11_MODULE(_librapid, module)
 		.def("__setitem__", [](librapid::Array &arr, int64_t index, double val) { arr[index] = val; })
 		.def("__setitem__", [](librapid::Array &arr, int64_t index, const librapid::Array &val) { arr[index] = val; })
 
+		.def("fill", [](librapid::Array &arr, int64_t val) { arr.fill(val); })
+		.def("filled", [](librapid::Array &arr, int64_t val) { return arr.filled(val); })
 		.def("fill", [](librapid::Array &arr, double val) { arr.fill(val); })
+		.def("filled", [](librapid::Array &arr, double val) { return arr.filled(val); })
+		.def("fillRandom", [](librapid::Array &arr, int64_t min, int64_t max, int64_t seed) { arr.fillRandom(min, max, seed); }, py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1)
+		.def("filledRandom", [](librapid::Array &arr, int64_t min, int64_t max, int64_t seed) { return arr.filledRandom(min, max, seed); }, py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1)
+		.def("fillRandom", [](librapid::Array &arr, double min, double max, int64_t seed) { arr.fillRandom(min, max, seed); }, py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1)
+		.def("filledRandom", [](librapid::Array &arr, double min, double max, int64_t seed) { return arr.filledRandom(min, max, seed); }, py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1)
 
 		.def("clone", [](const librapid::Array &arr, librapid::Datatype dtype, librapid::Accelerator locn) { return arr.clone(dtype, locn); }, py::arg("dtype") = librapid::Datatype::NONE, py::arg("locn") = librapid::Accelerator::NONE)
 		.def("clone", [](const librapid::Array &arr, const std::string &dtype, librapid::Accelerator locn) { return arr.clone(dtype, locn); }, py::arg("dtype") = "none", py::arg("locn") = librapid::Accelerator::NONE)
@@ -319,7 +326,7 @@ PYBIND11_MODULE(_librapid, module)
 		.def("__sub__",     [](const librapid::Array &lhs, int64_t rhs) { return lhs - rhs; })
 		.def("__mul__",     [](const librapid::Array &lhs, int64_t rhs) { return lhs * rhs; })
 		.def("__truediv__", [](const librapid::Array &lhs, int64_t rhs) { return lhs / rhs; })
-		
+
 		.def("__add__",     [](const librapid::Array &lhs, double rhs) { return lhs + rhs; })
 		.def("__sub__",     [](const librapid::Array &lhs, double rhs) { return lhs - rhs; })
 		.def("__mul__",     [](const librapid::Array &lhs, double rhs) { return lhs * rhs; })
@@ -329,7 +336,7 @@ PYBIND11_MODULE(_librapid, module)
 		.def("__rsub__",     [](const librapid::Array &rhs, int64_t lhs) { return lhs - rhs; })
 		.def("__rmul__",     [](const librapid::Array &rhs, int64_t lhs) { return lhs * rhs; })
 		.def("__rtruediv__", [](const librapid::Array &rhs, int64_t lhs) { return lhs / rhs; })
-		
+
 		.def("__radd__",     [](const librapid::Array &rhs, double lhs) { return lhs + rhs; })
 		.def("__rsub__",     [](const librapid::Array &rhs, double lhs) { return lhs - rhs; })
 		.def("__rmul__",     [](const librapid::Array &rhs, double lhs) { return lhs * rhs; })
@@ -365,6 +372,11 @@ PYBIND11_MODULE(_librapid, module)
 			return res;
 		});
 
+	module.def("zerosLike", [](const librapid::Array &arr) { return librapid::zerosLike(arr); }, py::arg("array"));
+	module.def("onesLike", [](const librapid::Array &arr) { return librapid::onesLike(arr); }, py::arg("array"));
+	module.def("randomLike", [](const librapid::Array &arr, int64_t min, int64_t max, int64_t seed) { return librapid::randomLike(arr, min, max, seed); }, py::arg("array"), py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1);
+	module.def("randomLike", [](const librapid::Array &arr, double min, double max, int64_t seed) { return librapid::randomLike(arr, min, max, seed); }, py::arg("array"), py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1);
+
 	module.def("add", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::add(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
 	module.def("sub", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::sub(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
 	module.def("mul", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::mul(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
@@ -374,7 +386,7 @@ PYBIND11_MODULE(_librapid, module)
 	module.def("sub", [](const librapid::Array &a, const librapid::Array &b) { return librapid::sub(a, b); }, py::arg("a"), py::arg("b"));
 	module.def("mul", [](const librapid::Array &a, const librapid::Array &b) { return librapid::mul(a, b); }, py::arg("a"), py::arg("b"));
 	module.def("div", [](const librapid::Array &a, const librapid::Array &b) { return librapid::div(a, b); }, py::arg("a"), py::arg("b"));
-	
+
 	module.def("concatenate", [](const std::vector<librapid::Array> &arrays, int64_t axis) { return librapid::concatenate(arrays, axis); }, py::arg("arrays"), py::arg("axis") = 0);
 	module.def("stack", [](const std::vector<librapid::Array> &arrays, int64_t axis) { return librapid::stack(arrays, axis); }, py::arg("arrays"), py::arg("axis") = 0);
 
@@ -391,7 +403,7 @@ PYBIND11_MODULE(_librapid, module)
 
 	module.def("rgbToHsl", &librapid::rgbToHsl);
 	module.def("hslToRgb", &librapid::hslToRgb);
-	
+
 	module.def("mergeColors", [](const librapid::RGB &colorA, const librapid::RGB &colorB) { return librapid::mergeColors(colorA, colorB); });
 	module.def("mergeColors", [](const librapid::RGB &colorA, const librapid::HSL &colorB) { return librapid::mergeColors(colorA, colorB); });
 	module.def("mergeColors", [](const librapid::HSL &colorA, const librapid::RGB &colorB) { return librapid::mergeColors(colorA, colorB); });

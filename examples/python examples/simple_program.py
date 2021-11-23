@@ -6,12 +6,12 @@ import librapid as libr
 # doesn't work, but I've just fixed it, so it'll be updated
 # in the next version (0.0.11)
 my_vector = libr.ndarray(libr.extent([4]), 0)
-print(my_vector) # Print it out!
+print(my_vector)  # Print it out!
 # [0. 0. 0. 0.]
 
 # Fill it with values:
 for i in range(my_vector.extent[0]):
-	my_vector[i] = i + 1
+    my_vector[i] = i + 1
 
 print(my_vector)
 # [1. 2. 3. 4.]
