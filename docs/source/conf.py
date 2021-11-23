@@ -42,23 +42,23 @@ master_doc = "index"
 # extensions coming with Sphinx (named "sphinx.ext.*") or your custom
 # ones.
 extensions = [
-	"furo",
-	"sphinx.ext.autodoc",
-	"sphinx.ext.napoleon",
-	"sphinx.ext.coverage",
-	"sphinx.ext.autosectionlabel",
-	"sphinx.ext.intersphinx",
-	"sphinx_panels",
-	"breathe",
-	"exhale",
-	"numpydoc"
+    "furo",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.coverage",
+    "sphinx.ext.autosectionlabel",
+    "sphinx.ext.intersphinx",
+    "sphinx_panels",
+    "breathe",
+    "exhale",
+    "numpydoc"
 ]
 
 autosectionlabel_prefix_document = True
 
 # Set up the breathe extension
 breathe_projects = {
-	"librapid": "./doxygenoutput/xml"
+    "librapid": "./doxygenoutput/xml"
 }
 
 breathe_default_project = "librapid"
@@ -82,18 +82,18 @@ PREDEFINED            += __global__=
 
 # Set up the exhale extension
 exhale_args = {
-	# These arguments are required
-	"containmentFolder":	"./api",
-	"rootFileName":			"index.rst",
-	"rootFileTitle":		"LibRapid",
-	"doxygenStripFromPath":	"..",
-	# Suggested optional arguments
-	"createTreeView":		True,
-	# TIP: if using the sphinx-bootstrap-theme, you need
-	# "treeViewIsBootstrap": True,
-	"exhaleExecutesDoxygen": True,
-	"exhaleDoxygenStdin": textwrap.dedent(doxygen_inputs),
-	"verboseBuild": False
+    # These arguments are required
+    "containmentFolder": "./api",
+    "rootFileName": "index.rst",
+    "rootFileTitle": "LibRapid",
+    "doxygenStripFromPath": "..",
+    # Suggested optional arguments
+    "createTreeView": True,
+    # TIP: if using the sphinx-bootstrap-theme, you need
+    # "treeViewIsBootstrap": True,
+    "exhaleExecutesDoxygen": True,
+    "exhaleDoxygenStdin": textwrap.dedent(doxygen_inputs),
+    "verboseBuild": False
 }
 
 # Add any paths that contain templates here, relative to this directory.
@@ -103,7 +103,6 @@ exhale_args = {
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
-
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -124,8 +123,8 @@ html_context = {
 
 html_theme_options = {
     "logo_link": "https://librapid.readthedocs.io/en/latest/",
-	"github_url": "https://github.com/LibRapid/librapid",
-	"use_edit_page_button": True,
+    "github_url": "https://github.com/LibRapid/librapid",
+    "use_edit_page_button": True,
     "google_analytics_id": "G-LYHM6F499Q"
 }
 

@@ -4,10 +4,8 @@
 #include <librapid/config.hpp>
 #include <iterator>
 
-namespace librapid
-{
-	class ESIterator
-	{
+namespace librapid {
+	class ESIterator {
 	public:
 		using iteratorCategory = std::random_access_iterator_tag;
 		using valueType = int64_t;
@@ -186,8 +184,7 @@ namespace librapid
 		*/
 		const reference operator*() const;
 
-		pointer operator->()
-		{
+		pointer operator->() {
 			return m_ptr;
 		}
 

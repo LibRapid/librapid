@@ -27,7 +27,7 @@ jobs:
         with:
           submodules: recursive
           ref: ${{ steps.extract_branch.outputs.branch }}
-      
+
       - name: Set Up Python
         uses: actions/setup-python@v2
         with:
@@ -55,7 +55,7 @@ jobs:
         run: |
           cd OpenBLAS
           make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL'
-          
+
       - name: Install OpenBLAS
         run: |
           cd OpenBLAS
@@ -70,7 +70,7 @@ jobs:
       - name: Build Source Distribution
         run: |
           python -m build --sdist --outdir wheelhouse
-      
+
       - name: Install from Source Distribution
         run: |
           pip install --user wheelhouse/*.tar.gz -vvvv
@@ -93,12 +93,12 @@ jobs:
   unix_build:
     name: Python Wheels | Running on ${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
-    
+
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-10.15, ubuntu-latest]
-        targetplatform: [x64]
+        platform: [ macos-10.15, ubuntu-latest ]
+        targetplatform: [ x64 ]
     env:
       CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
       CIBW_SKIP: "*-win32 *-manylinux_i686 *-musllinux_i686"
@@ -251,7 +251,7 @@ jobs:
 
       - name: Set Up Miniconda
         uses: conda-incubator/setup-miniconda@v2.1.1
-      
+
       - name: Set Up Python
         uses: actions/setup-python@v2
         with:
@@ -286,7 +286,7 @@ jobs:
           set "CPATH=%CONDA_PREFIX%\Library\include;%CPATH%"
           mkdir build
           cd build
-          
+
           cmake .. -G "Ninja" -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=128 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DCMAKE_BUILD_TYPE=Release
         shell: pwsh
 

@@ -10,25 +10,24 @@
 #define LIBRAPID_REDEF_RGB
 #endif
 
-namespace librapid
-{
+namespace librapid {
 	// RGB color container
-	typedef struct RGB
-	{
+	typedef struct RGB {
 		int red = 0;
 		int green = 0;
 		int blue = 0;
 
 		RGB(int r, int g, int b);
 
-	#ifdef LIBRAPID_REDEF_RGB
+#ifdef LIBRAPID_REDEF_RGB
+
 		operator COLORREF() const;
-	#endif
+
+#endif
 	} RGB;
 
 	// HSL color container
-	typedef struct HSL
-	{
+	typedef struct HSL {
 		double hue = 0;
 		double saturation = 0;
 		double lightness = 0;
@@ -62,8 +61,11 @@ namespace librapid
 	 * \endrst
 	 */
 	RGB mergeColors(const RGB &colorA, const RGB &colorB);
+
 	RGB mergeColors(const RGB &colorA, const HSL &colorB);
+
 	HSL mergeColors(const HSL &colorA, const RGB &colorB);
+
 	HSL mergeColors(const HSL &colorA, const HSL &colorB);
 
 	constexpr char clear[] = "\033[0m";
@@ -105,23 +107,28 @@ namespace librapid
 	constexpr char brightWhiteBackground[] = "\033[107m";
 
 	std::string fore(const RGB &col);
+
 	std::string fore(const HSL &col);
+
 	std::string fore(int r, int g, int b);
+
 	std::string back(const RGB &col);
+
 	std::string back(const HSL &col);
+
 	std::string back(int r, int g, int b);
 
-	namespace imp
-	{
-		class ColorReset
-		{
+	namespace imp {
+		class ColorReset {
 		public:
 			ColorReset();
+
 			~ColorReset();
 		};
 	}
 
 	std::ostream &operator<<(std::ostream &os, const RGB &col);
+
 	std::ostream &operator<<(std::ostream &os, const HSL &col);
 }
 

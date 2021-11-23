@@ -1,55 +1,49 @@
 #include <librapid/utils/time_utils.hpp>
 #include <librapid/math/core_math.hpp>
+#include <librapid/autocast/custom_complex.hpp>
 
 #include <string>
 #include <vector>
 #include <random>
 #include <chrono>
 
-namespace librapid
-{
-	int64_t product(const std::vector<int64_t> &vals)
-	{
+namespace librapid {
+	int64_t product(const std::vector<int64_t> &vals) {
 		int64_t res = 1;
-		for (const auto &val : vals)
+		for (const auto &val: vals)
 			res *= val;
 		return res;
 	}
 
-	int64_t product(const int64_t *vals, int64_t num)
-	{
+	int64_t product(const int64_t *vals, int64_t num) {
 		int64_t res = 1;
 		for (int64_t i = 0; i < num; i++)
 			res *= vals[i];
 		return res;
 	}
 
-	double product(const std::vector<double> &vals)
-	{
+	double product(const std::vector<double> &vals) {
 		double res = 1;
-		for (const auto &val : vals)
+		for (const auto &val: vals)
 			res *= val;
 		return res;
 	}
 
-	double product(const double *vals, int64_t num)
-	{
+	double product(const double *vals, int64_t num) {
 		double res = 1;
 		for (int64_t i = 0; i < num; i++)
 			res *= vals[i];
 		return res;
 	}
 
-	bool anyBelow(const std::vector<int64_t> &vals, int64_t bound)
-	{
-		for (const auto &val : vals)
+	bool anyBelow(const std::vector<int64_t> &vals, int64_t bound) {
+		for (const auto &val: vals)
 			if (val < bound)
 				return true;
 		return false;
 	}
 
-	bool anyBelow(const int64_t *vals, int64_t dims, int64_t bound)
-	{
+	bool anyBelow(const int64_t *vals, int64_t dims, int64_t bound) {
 		for (int64_t i = 0; i < dims; i++)
 			if (vals[i] < bound)
 				return true;
@@ -58,29 +52,11 @@ namespace librapid
 
 	double map(double val,
 			   double start1, double stop1,
-			   double start2, double stop2)
-	{
-		return start2 + (stop2 - start2) *
-			((val - start1) / (stop1 - start1));
+			   double start2, double stop2) {
+		return start2 + (stop2 - start2) * ((val - start1) / (stop1 - start1));
 	}
 
-	double random(double lower, double upper)
-	{
-		// Random floating point value in range [lower, upper)
-
-		static std::uniform_real_distribution<double> distribution(0., 1.);
-		static std::mt19937 generator((unsigned int) (seconds() * 10));
-		return lower + (upper - lower) * distribution(generator);
-	}
-
-	int64_t randint(int64_t lower, int64_t upper)
-	{
-		// Random integral value in range [lower, upper]
-		return (int64_t) random((double) lower, (double) upper + 1);
-	}
-
-	double pow10(int64_t exponent)
-	{
+	double pow10(int64_t exponent) {
 		const static double pows[] = {0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000, 100000};
 		if (exponent >= -5 && exponent <= 5)
 			return pows[exponent + 5];
@@ -97,21 +73,19 @@ namespace librapid
 		return res;
 	}
 
-	double round(const double num, int64_t dp)
-	{
-		double alpha = pow10(dp);
-		double beta = pow10(-dp);
+	double round(double num, int64_t dp) {
+		const double alpha = pow10(dp);
+		const double beta = pow10(-dp);
 
-		double absx = abs(num * alpha);
+		const double absx = abs(num * alpha);
 		double y = floor(absx);
 
 		if (absx - y >= 0.5) y += 1;
 
-		return (num >= 0 ? y : -y) / alpha;
+		return (num >= 0 ? y : -y) * beta;
 	}
 
-	double roundSigFig(const double num, int64_t figs)
-	{
+	double roundSigFig(double num, int64_t figs) {
 		if (figs <= 0)
 			throw std::invalid_argument("Cannot round to "
 										+ std::to_string(figs)
@@ -120,14 +94,12 @@ namespace librapid
 		double tmp = num > 0 ? num : -num;
 		int64_t n = 0;
 
-		while (tmp > 10)
-		{
+		while (tmp > 10) {
 			tmp /= 10;
 			++n;
 		}
 
-		while (tmp < 1)
-		{
+		while (tmp < 1) {
 			tmp *= 10;
 			--n;
 		}

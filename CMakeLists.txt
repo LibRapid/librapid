@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(librapid VERSION "0.2.6")
+project(librapid VERSION "0.2.19")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts")
 
@@ -64,7 +64,7 @@ set(sources # Array library
         "src/librapid/array/multiarray_manipulation.cpp"
         "src/librapid/array/multiarray_arithmetic.cpp"
         "src/librapid/array/multiarray_utils.cpp"
-		"src/librapid/array/multiarray_matrixops.cpp"
+        "src/librapid/array/multiarray_matrixops.cpp"
         # Math library
         "src/librapid/math/core_math.cpp"
         # String methods
@@ -75,9 +75,9 @@ set(sources # Array library
         "src/librapid/utils/time_utils.cpp"
         # Tests
         "src/librapid/test/librapid_test.cpp"
-	# Dependencies
-	"version2/instrset_detect.cpp"
-)
+        # Dependencies
+        "version2/instrset_detect.cpp"
+        )
 
 if (${SKBUILD})
     set(module_name "_librapid")
@@ -230,31 +230,39 @@ if (${CUDAToolkit_FOUND})
     if (${USE_CUDA})
         message(STATUS "Using CUDA ${CUDAToolkit_VERSION}")
 
-        target_include_directories(${module_name} PRIVATE
-                ${CUDA_INCLUDE_DIRS}
+        target_include_directories(${module_name} PUBLIC
+                ${CUDAToolkit_INCLUDE_DIRS}
+                "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/cudahelpers"
                 )
 
-        target_link_directories(${module_name} PRIVATE
+        target_link_directories(${module_name} PUBLIC
                 ${CUDA_LIBRARIES}
                 ${CUDA_CUBLAS_LIBRARIES}
                 )
 
-        target_link_libraries(${module_name} PRIVATE
+        target_link_libraries(${module_name} PUBLIC
                 CUDA::cudart
                 CUDA::cuda_driver
                 CUDA::nvrtc
+                CUDA::cublas
+                CUDA::cufft
+                CUDA::cufftw
+                CUDA::curand
+                CUDA::cusolver
+                CUDA::cusparse
                 Dbghelp
                 )
 
-        add_compile_definitions(LIBRAPID_HAS_CUDA)
-        add_compile_definitions(LIBRAPID_CUDA_STREAM)
+        # add_compile_definitions(LIBRAPID_HAS_CUDA)
+        # add_compile_definitions(LIBRAPID_CUDA_STREAM)
+
+        target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_CUDA)
+        target_compile_definitions(${module_name} PUBLIC LIBRAPID_CUDA_STREAM)
+        message(STATUS "CUDA include directories: ${CUDAToolkit_INCLUDE_DIRS}")
+		target_compile_definitions(${module_name} PUBLIC CUDA_INCLUDE_DIRS="${CUDAToolkit_INCLUDE_DIRS}")
     else ()
         message(WARNING "CUDA was found but is not being linked against (Value <USE_CUDA> is " ${USE_CUDA} ")")
     endif ()
-
-    target_include_directories(${module_name} PRIVATE
-            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/cudahelpers"
-            )
 endif ()
 
 target_include_directories(${module_name} PRIVATE
@@ -272,17 +280,17 @@ target_include_directories(${module_name} PRIVATE
 if (${SKBUILD})
     install(TARGETS ${module_name} DESTINATION .)
 else ()
-	target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR})
+    target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR})
 endif ()
 
 if (NOT DEFINED LIBRAPID_NO_ARCH)
-	include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/FindAVX.cmake")
+    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/FindAVX.cmake")
 
-	message(STATUS "Found AVX: ${AVX_FOUND}")
-	message(STATUS "Compiler Options: ${AVX_FLAGS}")
-else()
-	message(STATUS "Not optimising for architecture")
-endif()
+    message(STATUS "Found AVX: ${AVX_FOUND}")
+    message(STATUS "Compiler Options: ${AVX_FLAGS}")
+else ()
+    message(STATUS "Not optimising for architecture")
+endif ()
 
 # Set the compiler to use maximum optimisations (SPEED!!!!)
 

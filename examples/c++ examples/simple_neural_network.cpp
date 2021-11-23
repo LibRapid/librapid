@@ -6,17 +6,16 @@
 
 #include <librapid/librapid.hpp>
 
-int main()
-{
+int main() {
 	double start, end;
 
 	librapid::network_config<float> config = {
-		{"input", 2},
-		{"hidden", {3}},
-		{"output", 1},
-		{"learning rate", {0.01, 0.01}},
-		{"activation", "leaky relu"},
-		{"optimizer", "adam"}
+			{"input",         2},
+			{"hidden",        {3}},
+			{"output",        1},
+			{"learning rate", {0.01, 0.01}},
+			{"activation",    "leaky relu"},
+			{"optimizer",     "adam"}
 	};
 
 	librapid::config_container<float> test;
@@ -31,21 +30,21 @@ int main()
 
 	// The training data input for XOR
 	auto train_input = librapid::from_data(
-		VEC<VEC<float>>{
-				{0, 0},
-				{0, 1},
-				{1, 0},
-				{1, 1}
-	});
+			VEC < VEC < float >> {
+					{0, 0},
+					{0, 1},
+					{1, 0},
+					{1, 1}
+			});
 
 	// The labeled data (x XOR y)
 	auto train_output = librapid::from_data(
-		VEC<VEC<float>>{
-				{0},
-				{1},
-				{1},
-				{0}
-	});
+			VEC < VEC < float >> {
+					{0},
+					{1},
+					{1},
+					{0}
+			});
 
 	// Reshape the data so it can be used by the neural network
 	train_input.reshape({4, 2, 1});
@@ -62,8 +61,7 @@ int main()
 	end = TIME;
 	std::cout << "Time: " << end - start << "\n";
 
-	for (int64_t i = 0; i < 4; i++)
-	{
+	for (int64_t i = 0; i < 4; i++) {
 		std::cout << "Input: " << train_input[i].str(7) << "\n";
 		std::cout << "Output: " << test_network.forward(train_input[i]) << "\n";
 	}

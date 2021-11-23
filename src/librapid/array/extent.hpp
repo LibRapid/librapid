@@ -6,10 +6,8 @@
 #include <librapid/array/extent_stride_proxy.hpp>
 #include <vector>
 
-namespace librapid
-{
-	class Extent
-	{
+namespace librapid {
+	class Extent {
 	public:
 		/**
 		 * \rst
@@ -36,7 +34,9 @@ namespace librapid
 		 * \endrst
 		 */
 		explicit Extent(const std::initializer_list<int64_t> &data);
+
 		explicit Extent(const std::vector<int64_t> &data);
+
 		Extent(const Extent &other);
 
 		/**
@@ -55,9 +55,9 @@ namespace librapid
 		 */
 		explicit Extent(int64_t dims);
 
-	#ifdef LIBRAPID_PYTHON
+#ifdef LIBRAPID_PYTHON
 		Extent(py::args args);
-	#endif // LIBRAPID_PYTHON
+#endif // LIBRAPID_PYTHON
 
 		Extent &operator=(const Extent &other);
 
@@ -68,8 +68,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline const int64_t &ndim() const
-		{
+		inline const int64_t &ndim() const {
 			return m_dims;
 		}
 
@@ -87,10 +86,8 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline int64_t size() const
-		{
-			if (m_isDirty)
-			{
+		inline int64_t size() const {
+			if (m_isDirty) {
 				int64_t res = 1;
 				for (int64_t i = 0; i < m_dims; ++i) res *= m_extent[i];
 				return res;
@@ -99,8 +96,7 @@ namespace librapid
 			return m_size;
 		}
 
-		inline int64_t size()
-		{
+		inline int64_t size() {
 			if (m_isDirty)
 				update();
 
@@ -114,8 +110,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline const int64_t *__restrict raw() const
-		{
+		inline const int64_t *__restrict raw() const {
 			return m_extent;
 		}
 
@@ -126,8 +121,7 @@ namespace librapid
 		*
 		* \endrst
 		*/
-		inline std::vector<int64_t> toVec() const
-		{
+		inline std::vector<int64_t> toVec() const {
 			std::vector<int64_t> res(m_dims);
 			for (int64_t i = 0; i < m_dims; ++i)
 				res[i] = m_extent[i];
@@ -145,8 +139,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline bool containsAutomatic() const
-		{
+		inline bool containsAutomatic() const {
 			return m_containsAutomatic;
 		}
 
@@ -218,8 +211,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline bool operator!=(const Extent &other) const
-		{
+		inline bool operator!=(const Extent &other) const {
 			return !(*this == other);
 		}
 
@@ -257,13 +249,11 @@ namespace librapid
 		 */
 		std::string str() const;
 
-		inline ESIterator begin() const
-		{
+		inline ESIterator begin() const {
 			return ESIterator((int64_t *) m_extent);
 		}
 
-		inline ESIterator end() const
-		{
+		inline ESIterator end() const {
 			return ESIterator((int64_t *) m_extent + m_dims);
 		}
 
@@ -278,8 +268,7 @@ namespace librapid
 		bool m_isDirty = false;
 	};
 
-	inline std::ostream &operator<<(std::ostream &os, const Extent &extent)
-	{
+	inline std::ostream &operator<<(std::ostream &os, const Extent &extent) {
 		return os << extent.str();
 	}
 }
