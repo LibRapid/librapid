@@ -12,7 +12,9 @@ namespace py = pybind11;
 #endif // LIBRAPID_PYTHON
 
 #ifdef LIBRAPID_HAS_BLAS
+
 #include <cblas.h>
+
 #endif
 
 #if defined(NDEBUG) || defined(LIBRAPID_NDEBUG)
@@ -27,7 +29,9 @@ namespace py = pybind11;
 #include <omp.h>
 #endif // _OPENMP
 #else // LIBRAPID_HAS_OMP
+
 #include <omp.h>
+
 #endif // LIBRAPID_HAS_OMP
 
 #ifndef LIBRAPID_MAX_DIMS
@@ -36,6 +40,7 @@ namespace py = pybind11;
 
 // SIMD instructions
 #define VCL_NAMESPACE vcl
+
 #include <version2/vectorclass.h>
 
 // Operating system defines
@@ -99,8 +104,7 @@ namespace py = pybind11;
 #define LIBRAPID_OS "unknown"
 #endif
 
-namespace librapid
-{
+namespace librapid {
 	constexpr int64_t AUTO = -1;
 }
 
@@ -111,24 +115,21 @@ namespace librapid
 #include <iostream>
 
 // BLAS config settings
-namespace librapid
-{
-	inline bool hasBlas()
-	{
-	#ifdef LIBRAPID_HAS_BLAS
+namespace librapid {
+	inline bool hasBlas() {
+#ifdef LIBRAPID_HAS_BLAS
 		return true;
-	#else
+#else
 		return false;
-	#endif // LIBRAPID_HAS_BLAS
+#endif // LIBRAPID_HAS_BLAS
 	}
 
-	inline bool hasCuda()
-	{
-	#ifdef LIBRAPID_HAS_CUDA
+	inline bool hasCuda() {
+#ifdef LIBRAPID_HAS_CUDA
 		return true;
-	#else
+#else
 		return false;
-	#endif
+#endif
 	}
 
 	// inline void setBlasThreads(int num)
@@ -157,35 +158,30 @@ namespace librapid
 	// #endif // LIBRAPID_HAS_OPENBLAS
 	// }
 
-	inline void setNumThreads(int64_t num)
-	{
-	#if defined(LIBRAPID_HAS_OPENBLAS)
+	inline void setNumThreads(int64_t num) {
+#if defined(LIBRAPID_HAS_OPENBLAS)
 		openblas_set_num_threads(num);
 		goto_set_num_threads(num);
-	#endif
+#endif
 
-	#if defined(_OPENMP)
+#if defined(_OPENMP)
 		omp_set_num_threads(num);
-	#endif
+#endif
 	}
 
-	inline int getNumThreads()
-	{
-	#if defined(LIBRAPID_HAS_OPENBLAS)
+	inline int getNumThreads() {
+#if defined(LIBRAPID_HAS_OPENBLAS)
 		return openblas_get_num_threads();
-	#elif defined(LR_HAS_OMP)
+#elif defined(LR_HAS_OMP)
 		return omp_get_num_threads();
-	#endif
+#endif
 		return 1;
 	}
 
-	namespace imp
-	{
-		class ThreadSetter
-		{
+	namespace imp {
+		class ThreadSetter {
 		public:
-			ThreadSetter(int64_t n)
-			{
+			ThreadSetter(int64_t n) {
 				setNumThreads(n);
 			}
 		};
@@ -209,20 +205,28 @@ namespace librapid
 #include <jitify/jitify.hpp>
 
 // cuBLAS API errors
-static const char *getCublasErrorEnum_(cublasStatus_t error)
-{
-	switch (error)
-	{
-		case CUBLAS_STATUS_SUCCESS:return "CUBLAS_STATUS_SUCCESS";
-		case CUBLAS_STATUS_NOT_INITIALIZED:return "CUBLAS_STATUS_NOT_INITIALIZED";
-		case CUBLAS_STATUS_ALLOC_FAILED:return "CUBLAS_STATUS_ALLOC_FAILED";
-		case CUBLAS_STATUS_INVALID_VALUE:return "CUBLAS_STATUS_INVALID_VALUE";
-		case CUBLAS_STATUS_ARCH_MISMATCH:return "CUBLAS_STATUS_ARCH_MISMATCH";
-		case CUBLAS_STATUS_MAPPING_ERROR:return "CUBLAS_STATUS_MAPPING_ERROR";
-		case CUBLAS_STATUS_EXECUTION_FAILED:return "CUBLAS_STATUS_EXECUTION_FAILED";
-		case CUBLAS_STATUS_INTERNAL_ERROR:return "CUBLAS_STATUS_INTERNAL_ERROR";
-		case CUBLAS_STATUS_NOT_SUPPORTED:return "CUBLAS_STATUS_NOT_SUPPORTED";
-		case CUBLAS_STATUS_LICENSE_ERROR:return "CUBLAS_STATUS_LICENSE_ERROR";
+static const char *getCublasErrorEnum_(cublasStatus_t error) {
+	switch (error) {
+		case CUBLAS_STATUS_SUCCESS:
+			return "CUBLAS_STATUS_SUCCESS";
+		case CUBLAS_STATUS_NOT_INITIALIZED:
+			return "CUBLAS_STATUS_NOT_INITIALIZED";
+		case CUBLAS_STATUS_ALLOC_FAILED:
+			return "CUBLAS_STATUS_ALLOC_FAILED";
+		case CUBLAS_STATUS_INVALID_VALUE:
+			return "CUBLAS_STATUS_INVALID_VALUE";
+		case CUBLAS_STATUS_ARCH_MISMATCH:
+			return "CUBLAS_STATUS_ARCH_MISMATCH";
+		case CUBLAS_STATUS_MAPPING_ERROR:
+			return "CUBLAS_STATUS_MAPPING_ERROR";
+		case CUBLAS_STATUS_EXECUTION_FAILED:
+			return "CUBLAS_STATUS_EXECUTION_FAILED";
+		case CUBLAS_STATUS_INTERNAL_ERROR:
+			return "CUBLAS_STATUS_INTERNAL_ERROR";
+		case CUBLAS_STATUS_NOT_SUPPORTED:
+			return "CUBLAS_STATUS_NOT_SUPPORTED";
+		case CUBLAS_STATUS_LICENSE_ERROR:
+			return "CUBLAS_STATUS_LICENSE_ERROR";
 	}
 
 	return "UNKNOWN ERROR";
@@ -235,8 +239,7 @@ static const char *getCublasErrorEnum_(cublasStatus_t error)
 #define cublasSafeCall(err)     cublasSafeCall_(err, __FILE__, __LINE__)
 #endif
 
-inline void cublasSafeCall_(cublasStatus_t err, const char *file, const int line)
-{
+inline void cublasSafeCall_(cublasStatus_t err, const char *file, const int line) {
 	if (err != CUBLAS_STATUS_SUCCESS)
 		throw std::runtime_error("cuBLAS error at (" + std::string(file) +
 								 ", line " + std::to_string(line) + "): "
@@ -250,21 +253,20 @@ inline void cublasSafeCall_(cublasStatus_t err, const char *file, const int line
 #define cudaSafeCall(err)     cudaSafeCall_(err, __FILE__, __LINE__)
 #endif
 
-inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
-{
+inline void cudaSafeCall_(cudaError_t err, const char *file, const int line) {
 	if (err != cudaSuccess)
 		throw std::runtime_error("CUDA error at (" + std::string(file) +
 								 ", line " + std::to_string(line) + "): "
 								 + cudaGetErrorString(err));
 }
 
-#define jitifyCall(call)												\
-  do {																	\
-    if (call != CUDA_SUCCESS) {											\
-      const char* str;													\
-      cuGetErrorName(call, &str);										\
-      throw std::runtime_error(std::string("CUDA JIT failed: ") + str);	\
-    }																	\
+#define jitifyCall(call)                                                \
+  do {                                                                    \
+    if (call != CUDA_SUCCESS) {                                            \
+      const char* str;                                                    \
+      cuGetErrorName(call, &str);                                        \
+      throw std::runtime_error(std::string("CUDA JIT failed: ") + str);    \
+    }                                                                    \
   } while (0)
 
 #ifdef _MSC_VER
@@ -307,11 +309,9 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
 #define THREAD_THREASHOLD 10000
 #endif // THREAD_THREASHOLD
 
-namespace librapid
-{
+namespace librapid {
 	inline void *alignedMalloc(int64_t requiredBytes,
-							   int64_t alignment = DATA_ALIGN)
-	{
+							   int64_t alignment = DATA_ALIGN) {
 		void *p1; // original block
 		void **p2; // aligned block
 		int64_t offset = alignment - 1 + sizeof(void *);
@@ -319,13 +319,12 @@ namespace librapid
 		if ((p1 = (void *) malloc(requiredBytes + offset)) == nullptr)
 			throw std::bad_alloc();
 
-		p2 = (void **) (((int64_t) (p1) +offset) & ~(alignment - 1));
+		p2 = (void **) (((int64_t) (p1) + offset) & ~(alignment - 1));
 		p2[-1] = p1;
 		return p2;
 	}
 
-	inline void alignedFree(void *p)
-	{
+	inline void alignedFree(void *p) {
 		free(((void **) p)[-1]);
 	}
 }

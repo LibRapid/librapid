@@ -4,8 +4,7 @@
 #include <librapid/config.hpp>
 #include <librapid/autocast/custom_complex.hpp>
 
-namespace librapid
-{
+namespace librapid {
 	std::string format_number(const double &val, bool floating = true);
 }
 

@@ -5,25 +5,24 @@
 // #define LIBRAPID_CBLAS
 #include <librapid/librapid.hpp>
 
-int main()
-{
+int main() {
 	// The training data input for XOR
 	auto train_input = librapid::ndarray::from_data(
-						  VEC<VEC<int>>{
-									   {0, 0},
-									   {0, 1},
-									   {1, 0},
-									   {1, 1}
-									   });
+			VEC < VEC < int >> {
+					{0, 0},
+					{0, 1},
+					{1, 0},
+					{1, 1}
+			});
 
 	// The labeled data (x XOR y)
 	auto train_output = librapid::ndarray::from_data(
-						   VEC<VEC<int>>{
-										{0},
-										{1},
-										{1},
-										{0}
-										});
+			VEC < VEC < int >> {
+					{0},
+					{1},
+					{1},
+					{0}
+			});
 
 	// Reshape the data so it can be used by the neural network
 	train_input.reshape({4, 2, 1});
@@ -68,8 +67,7 @@ int main()
 	std::cout << "Time: " << end - start << "\n";
 
 	// Print the output of the neural network
-	for (int64_t i = 0; i < 4; i++)
-	{
+	for (int64_t i = 0; i < 4; i++) {
 		std::cout << "Input: " << train_input[i].str(7) << "\n";
 		std::cout << "Output: " << network.forward(train_input[i]) << "\n";
 	}
@@ -85,15 +83,14 @@ int main()
 	std::cout << space;
 	std::cout << "/" << std::string(22, '=') << "\\\n";
 
-	for (int y = 0; y < 20; y++)
-	{
+	for (int y = 0; y < 20; y++) {
 		std::cout << "||";
-		for (int x = 0; x < 20; x++)
-		{
+		for (int x = 0; x < 20; x++) {
 			double x_coord = x / 20.;
 			double y_coord = y / 20.;
 
-			auto res = network.forward(librapid::ndarray::from_data(std::vector<double>{x_coord, y_coord}).reshaped({2, 1}));
+			auto res = network.forward(
+					librapid::ndarray::from_data(std::vector<double>{x_coord, y_coord}).reshaped({2, 1}));
 			double val = res[0][0].to_scalar();
 
 			//  . - * % & #
@@ -117,8 +114,7 @@ int main()
 		std::cout << space;
 
 		std::cout << "||";
-		for (int x = 0; x < 20; x++)
-		{
+		for (int x = 0; x < 20; x++) {
 			double x_coord = x / 20.;
 			double y_coord = y / 20.;
 

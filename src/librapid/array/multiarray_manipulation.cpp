@@ -1,10 +1,8 @@
 #include <librapid/array/multiarray.hpp>
 #include <librapid/array/multiarray_operations.hpp>
 
-namespace librapid
-{
-	void Array::transpose(const Extent& order)
-	{
+namespace librapid {
+	void Array::transpose(const Extent &order) {
 		Extent tempOrder;
 
 		if (order.ndim() == 0) {
@@ -12,17 +10,16 @@ namespace librapid
 			tempOrder = Extent(m_extent.ndim());
 			for (int64_t i = 0; i < m_extent.ndim(); ++i)
 				tempOrder[i] = m_extent.ndim() - i - 1;
-		}
-		else {
+		} else {
 			tempOrder = order;
 		}
 
 		// Check the dimensions are correct
 		if (tempOrder.ndim() != m_extent.ndim()) {
 			throw std::invalid_argument(std::to_string(tempOrder.ndim()) + " indices "
-				"were passed to Array transpose, though "
-				+ std::to_string(m_extent.ndim()) +
-				" indices are required");
+																		   "were passed to Array transpose, though "
+										+ std::to_string(m_extent.ndim()) +
+										" indices are required");
 		}
 
 		bool valid = true;
@@ -44,33 +41,32 @@ namespace librapid
 			std::string missing_str = "(" + stream.str() + ")";
 
 			throw std::runtime_error("Transpose requires that each index is passed "
-				"exactly once, but indices " + missing_str +
-				" were passed more than once or not at all");
+									 "exactly once, but indices " + missing_str +
+									 " were passed more than once or not at all");
 		}
 
 		m_extent.reorder(tempOrder.toVec());
 		m_stride.reorder(tempOrder.toVec());
 	}
 
-	void Array::reshape(const Extent& newShape) {
+	void Array::reshape(const Extent &newShape) {
 		if (m_isChild)
 			throw std::runtime_error("Cannot reshape child array. Either "
-				"assign it to a variable or copy the value first");
+									 "assign it to a variable or copy the value first");
 
-		if (!m_isScalar && (newShape.ndim() == 0 || (newShape.ndim() == 1 && newShape[0] == 0)))
-		{
+		if (!m_isScalar && (newShape.ndim() == 0 || (newShape.ndim() == 1 && newShape[0] == 0))) {
 			m_isScalar = true;
-			m_extent = Extent({ 1 });
-			m_stride = Stride({ 1 });
+			m_extent = Extent({1});
+			m_stride = Stride({1});
 		}
 
 		auto tempShape = newShape.fixed(m_extent.size());
 
 		if (tempShape.size() != m_extent.size())
 			throw std::domain_error("Cannot reshape array with "
-				+ m_extent.str() + " (" + std::to_string(m_extent.size())
-				+ " elements) to array with " + tempShape.str()
-				+ " (" + std::to_string(m_extent.size()) + " elements");
+									+ m_extent.str() + " (" + std::to_string(m_extent.size())
+									+ " elements) to array with " + tempShape.str()
+									+ " (" + std::to_string(m_extent.size()) + " elements");
 
 		if (!m_stride.isTrivial() || !m_stride.isContiguous()) {
 			Array res(tempShape, m_dtype, m_location);
@@ -88,7 +84,7 @@ namespace librapid
 		m_stride = Stride::fromExtent(tempShape);
 	}
 
-	Array concatenate(const std::vector<Array>& arrays, int64_t axis) {
+	Array concatenate(const std::vector<Array> &arrays, int64_t axis) {
 		if (arrays.empty()) return Array();
 		if (arrays.size() == 1) return arrays[0].clone();
 
@@ -99,8 +95,7 @@ namespace librapid
 		Datatype resDtype = arrays[0].dtype();
 		Accelerator resLocn = arrays[0].location();
 
-		for (int64_t i = 0; i < arrays.size(); ++i)
-		{
+		for (int64_t i = 0; i < arrays.size(); ++i) {
 			if (arrays[i].ndim() > dims) {
 				dims = arrays[i].ndim();
 				index = i;
@@ -111,34 +106,34 @@ namespace librapid
 
 		if (axis < 0 || axis > dims)
 			throw std::range_error("Axis " + std::to_string(axis)
-				+ " is out of range for array with "
-				+ std::to_string(dims) + " dimensions");
+								   + " is out of range for array with "
+								   + std::to_string(dims) + " dimensions");
 
 		int64_t newDim = arrays[index].extent()[axis];
-		const Extent& dim0 = arrays[index].extent();
+		const Extent &dim0 = arrays[index].extent();
 
 		for (uint64_t i = 1; i < arrays.size(); ++i) {
 			bool adjustCheck = false;
 			if (arrays[i].ndim() != dims && !(adjustCheck = arrays[i].ndim() == dims - 1))
 				throw std::invalid_argument("To concatenate arrays, all "
-					"values must have the same number of "
-					"dimensions, however (at least) one "
-					"array failed this condition. "
-					+ std::to_string(arrays[i].ndim())
-					+ " dimension(s) is not compatible with "
-					+ std::to_string(dims) + " dimension(s)");
+											"values must have the same number of "
+											"dimensions, however (at least) one "
+											"array failed this condition. "
+											+ std::to_string(arrays[i].ndim())
+											+ " dimension(s) is not compatible with "
+											+ std::to_string(dims) + " dimension(s)");
 
 			// Ensure every dimension other than <axis> is equal
 			// (concatenating on <axis> allows for different size in that dimension)
 			for (int64_t j = 0; j < dims - adjustCheck; ++j) {
 				if (j != axis && arrays[i].extent()[j] != dim0[j + (adjustCheck * (j > axis))])
 					throw std::invalid_argument("To concatenate arrays, all "
-						"dimensions other than index <axis> "
-						"must be equal, however (at least) "
-						"one array failed this condition. "
-						+ arrays[i].extent().str()
-						+ " is not compatible with "
-						+ dim0.str());
+												"dimensions other than index <axis> "
+												"must be equal, however (at least) "
+												"one array failed this condition. "
+												+ arrays[i].extent().str()
+												+ " is not compatible with "
+												+ dim0.str());
 			}
 
 			newDim += adjustCheck ? 1 : arrays[i].extent()[axis];
@@ -159,8 +154,7 @@ namespace librapid
 
 		Extent fixed = dim0;
 		fixed[axis] = -1;
-		for (const auto& arr : arrays)
-		{
+		for (const auto &arr: arrays) {
 			if (arr.ndim() == dims)
 				Array::applyUnaryOp(res, arr, ops::Copy(), true, offset);
 			else if (arr.ndim() == dims - 1)
@@ -172,15 +166,15 @@ namespace librapid
 		return res;
 	}
 
-	Array stack(const std::vector<Array>& arrays, int64_t axis) {
+	Array stack(const std::vector<Array> &arrays, int64_t axis) {
 		int64_t newDim = arrays.size();
 		int64_t dims = arrays[0].ndim();
 
 		// Perform some checks to make sure everything is going to work
 		if (axis < 0 || axis > arrays[0].ndim() + 1)
 			throw std::invalid_argument("Axis " + std::to_string(axis)
-				+ " is out of range for arrays with "
-				+ std::to_string(arrays[0].ndim()) + " dimensions");
+										+ " is out of range for arrays with "
+										+ std::to_string(arrays[0].ndim()) + " dimensions");
 
 		if (newDim == 0) return Array();
 		if (newDim == 1) return arrays[0].clone();
@@ -189,15 +183,14 @@ namespace librapid
 		for (int64_t i = 0; i < newDim; ++i) {
 			if (arrays[i].extent() != dim0)
 				throw std::invalid_argument("Array with " + arrays[i].extent().str()
-					+ " cannot be stacked with array with " + dim0.str()
-					+ ". All arrays must have the same extent");
+											+ " cannot be stacked with array with " + dim0.str()
+											+ ". All arrays must have the same extent");
 		}
 
 		Extent resShape(arrays[0].isScalar() ? 1 : dims + 1);
 		if (arrays[0].isScalar()) {
 			resShape[0] = arrays.size();
-		}
-		else {
+		} else {
 			for (int64_t i = 0; i < dims + 1; ++i) {
 				if (i < axis) resShape[i] = dim0[i];
 				else if (i == axis) resShape[i] = newDim;

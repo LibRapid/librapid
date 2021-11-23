@@ -3,10 +3,8 @@
 #include <string>
 #include <sstream>
 
-namespace librapid
-{
-	std::string format_number(const double &val, bool floating)
-	{
+namespace librapid {
+	std::string format_number(const double &val, bool floating) {
 		std::stringstream stream;
 		stream.precision(10);
 
