@@ -5,6 +5,7 @@
 #include <librapid/autocast/autocast.hpp>
 
 namespace librapid::imp {
+	#ifdef LIBRAPID_HAS_CUDA
 	inline const jitify::detail::vector<std::string> cudaHeaders = {// CUDA_INCLUDE_DIRS,
 			CUDA_INCLUDE_DIRS + std::string("/curand.h"),
 			CUDA_INCLUDE_DIRS + std::string("/curand_kernel.h"),
@@ -306,6 +307,7 @@ namespace librapid
 
 #endif
 		)V0G0N";
+	#endif // LIBRAPID_HAS_CUDA
 
 	inline int makeSameAccelerator(RawArray &dst,
 								   const RawArray &src,
@@ -499,7 +501,7 @@ namespace librapid
 				static curandState_t *curandGenerators = nullptr;
 				static int64_t numGenerators = 0;
 				if ((op.name == "fillRandom" || op.name == "fillRandomComplex") &&
-											   (numGenerators < threadsPerBlock * blocksPerGrid)) {
+					(numGenerators < threadsPerBlock * blocksPerGrid)) {
 					// Free curand generators and reallocate with a larger size
 					// Allocate the nearest power of two generators
 					cudaSafeCall(cudaFree(curandGenerators));
@@ -755,7 +757,8 @@ namespace librapid
 						if (kernelIndex < size) {
 					)V0G0N";
 
-				kernel += "dstData[dstIndex] = " + op.name + "(srcData[srcIndex], srcIndex, _curandStates + kernelIndex);";
+				kernel += "dstData[dstIndex] = " + op.name +
+						  "(srcData[srcIndex], srcIndex, _curandStates + kernelIndex);";
 				kernel += "\n}\n}";
 
 				static jitify::JitCache kernelCache;
