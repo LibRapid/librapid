@@ -38,9 +38,11 @@ feel without reducing the overall functionality.
 
 ### Python
 
-To install LibRapid as a Python library, simply run ```pip install librapid``` in the command line. Hopefully, there
-will be precompiled wheels available for your operating system and python version, meaning you will not need a C++
-compiler to install it (if this is not the case, a modern C++ compiler will be required)
+To install LibRapid as a Python library, simply run ```pip install librapid``` in the command line. Hopefully, there will be precompiled wheels available for your operating system and python version, meaning you will not need a C++ compiler to install it (if this is not the case, a modern C++ compiler will be required)
+
+#### Note
+
+Occasionally, the `pip install` version of LibRapid will cause a `segfault` error. This is a known bug we are trying to fix, but in the meantime, you can run `pip install librapid --no-binary librapid`
 
 #### Building from Source
 

@@ -38,8 +38,8 @@ namespace librapid {
 			int64_t *,
 			float *,
 			double *,
-			Complex<double> *
-			// int16_t *
+			Complex < double> *
+	// int16_t *
 	>;
 
 	/**
@@ -249,6 +249,7 @@ namespace librapid {
 
 		// Different types and their potential string representations
 		static std::vector<std::string> noneStr = {
+				"",
 				"n",
 				"none",
 				"null",
@@ -333,7 +334,8 @@ namespace librapid {
 						   return std::tolower(c);
 					   });
 
-		if (temp == "none" ||
+		if (temp.empty() ||
+			temp == "none" ||
 			temp == "null")
 			return Accelerator::NONE;
 
@@ -356,7 +358,7 @@ namespace librapid {
 	#ifdef LIBRAPID_CUDA_STREAM
 	extern cudaStream_t cudaStream;
 	extern bool streamCreated;
-#endif // LIBRAPID_CUDA_STREAM
+	#endif // LIBRAPID_CUDA_STREAM
 #endif // LIBRAPID_HAS_CUDA
 
 	/**
@@ -492,54 +494,51 @@ namespace librapid {
 			throw std::invalid_argument("Cannot copy data to or from a null "
 										"datatype");
 
-		if (dst.location == src.location &&
-			dst.dtype == src.dtype) {
-			if (dst.dtype == src.dtype) {
-				// A simple memcpy will suffice, as the datatypes are identical
+		if (dst.dtype == src.dtype) {
+			// A simple memcpy will suffice as the datatypes are identical
 
-				std::visit([&](auto *a, auto *b) {
-					if (src.location == Accelerator::CPU) {
-						// CPU to CPU memcpy
-						memcpy(a, b, datatypeBytes(src.dtype) * elems);
-					} else {
+			std::visit([&](auto *a, auto *b) {
+				if (src.location == Accelerator::CPU) {
+					// CPU to CPU memcpy
+					memcpy(a, b, datatypeBytes(src.dtype) * elems);
+				} else {
 #ifdef LIBRAPID_HAS_CUDA
 #ifdef LIBRAPID_CUDA_STREAM
-						if (src.location == Accelerator::CPU &&
-							dst.location == Accelerator::GPU)
-							cudaSafeCall(cudaMemcpyAsync(a, b,
-														 datatypeBytes(src.dtype) * elems,
-														 cudaMemcpyHostToDevice, cudaStream));
-						else if (src.location == Accelerator::GPU &&
-								 dst.location == Accelerator::CPU)
-							cudaSafeCall(cudaMemcpyAsync(a, b,
-														 datatypeBytes(src.dtype) * elems,
-														 cudaMemcpyDeviceToHost, cudaStream));
-						else if (src.location == Accelerator::GPU &&
-								 dst.location == Accelerator::GPU)
-							cudaSafeCall(cudaMemcpyAsync(a, b,
-														 datatypeBytes(src.dtype) * elems,
-														 cudaMemcpyDeviceToDevice, cudaStream));
+					if (src.location == Accelerator::CPU &&
+						dst.location == Accelerator::GPU)
+						cudaSafeCall(cudaMemcpyAsync(a, b,
+													 datatypeBytes(src.dtype) * elems,
+													 cudaMemcpyHostToDevice, cudaStream));
+					else if (src.location == Accelerator::GPU &&
+							 dst.location == Accelerator::CPU)
+						cudaSafeCall(cudaMemcpyAsync(a, b,
+													 datatypeBytes(src.dtype) * elems,
+													 cudaMemcpyDeviceToHost, cudaStream));
+					else if (src.location == Accelerator::GPU &&
+							 dst.location == Accelerator::GPU)
+						cudaSafeCall(cudaMemcpyAsync(a, b,
+													 datatypeBytes(src.dtype) * elems,
+													 cudaMemcpyDeviceToDevice, cudaStream));
 #else
-						if (src.location == Accelerator::CPU &&
-							dst.location == Accelerator::GPU)
-							cudaSafeCall(cudaMemcpy(a, b,
-										 datatypeBytes(src.dtype) * elems,
-										 cudaMemcpyHostToDevice));
-						else if (src.location == Accelerator::GPU &&
-								 dst.location == Accelerator::CPU)
-							cudaSafeCall(cudaMemcpy(a, b,
-										 datatypeBytes(src.dtype) * elems,
-										 cudaMemcpyDeviceToHost));
-						else if (src.location == Accelerator::GPU &
-								 dst.location == Accelerator::GPU)
-							cudaSafeCall(cudaMemcpy(a, b,
-										 datatypeBytes(src.dtype) * elems,
-										 cudaMemcpyDeviceToDevice));
-#endif // LIBRAPID_CUDA_STREAMS
+					if (src.location == Accelerator::CPU &&
+						dst.location == Accelerator::GPU)
+						cudaSafeCall(cudaMemcpy(a, b,
+									 datatypeBytes(src.dtype) * elems,
+									 cudaMemcpyHostToDevice));
+					else if (src.location == Accelerator::GPU &&
+							 dst.location == Accelerator::CPU)
+						cudaSafeCall(cudaMemcpy(a, b,
+									 datatypeBytes(src.dtype) * elems,
+									 cudaMemcpyDeviceToHost));
+					else if (src.location == Accelerator::GPU &
+							 dst.location == Accelerator::GPU)
+						cudaSafeCall(cudaMemcpy(a, b,
+									 datatypeBytes(src.dtype) * elems,
+									 cudaMemcpyDeviceToDevice));
+#endif // LIBRAPID_CUDA_STREAM
 #endif // LIBRAPID_HAS_CUDA
-					}
-				}, dst.data, src.data);
-			}
+				}
+			}, dst.data, src.data);
 		} else if (dst.location == Accelerator::CPU &&
 				   src.location == Accelerator::CPU) {
 			std::visit([&](auto *a, auto *b) {
