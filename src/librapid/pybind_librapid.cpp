@@ -355,6 +355,9 @@ PYBIND11_MODULE(_librapid, module) {
 
 		.def("transpose", [](librapid::Array &arr, const librapid::Extent &order) { arr.transpose(order); }, py::arg("order") = librapid::Extent())
 
+		.def("__bool__", [](const librapid::Array &arr) { return (bool) arr; })
+		.def("__int__", [](const librapid::Array &arr) { return (int64_t) arr; })
+		.def("__float__", [](const librapid::Array &arr) { return (double) arr; })
 		.def("str", [](const librapid::Array &arr, uint64_t indent, bool showCommas) { return arr.str(indent, showCommas); }, py::arg("indent") = 0, py::arg("showCommas") = false)
 		.def("__str__", [](const librapid::Array &arr) { return arr.str(); })
 		.def("__repr__", [](const librapid::Array &arr) {

@@ -28,17 +28,16 @@ namespace librapid::ops {
 
 	template<typename T = double>
 	struct FillRandom {
-		FillRandom(T min = 0, T max = 1, uint64_t seed = -1) : min(min), max(max),
-															   seed(seed == -1 ? (int64_t) (seconds() * 10) : seed) {
-			kernel = "double randNum = curand_uniform_double(_curandState) * ";
-
-			kernel += std::to_string(max - min - std::numeric_limits<T>::epsilon()) + " + ";
+		FillRandom(T minVal = 0, T maxVal = 1, uint64_t rngSeed = -1) : min(minVal), max(maxVal),
+																		seed(seed == -1 ? (int64_t) (seconds() * 10)
+																						: rngSeed) {
+			kernel = "double randNum = curand_uniform_double(_curandState) * (";
+			kernel += std::to_string(max - min - std::numeric_limits<T>::epsilon()) +
+					  " + std::is_integral<T_DST>::value) + ";
 			kernel += std::to_string(min) + ";\n";
 
 			kernel += R"V0G0N(
-            		// if constexpr (std::is_same<A, bool>::value)
-            		// 	return randNum > 0.5;
-            		return randNum; // randNum;
+            		return randNum;
             )V0G0N";
 		}
 
@@ -49,7 +48,7 @@ namespace librapid::ops {
 
 		template<typename A>
 		auto operator()(A, int64_t) const {
-			return random(min, max, seed);
+			return random((A) min, (A) max, seed);
 		}
 
 		T min;
@@ -62,9 +61,10 @@ namespace librapid::ops {
 	FillRandom(const Complex<double> &min = 0, const Complex<double> &max = 1, uint64_t seed = -1) : min(min),
 																									 max(max),
 																									 seed(seed) {
-		kernel = "double randNumReal = curand_uniform_double(_curandState) * ";
+		kernel = "double randNumReal = curand_uniform_double(_curandState) * (";
 
-		kernel += std::to_string(max.real() - min.real() - std::numeric_limits<double>::epsilon()) + " + ";
+		kernel += std::to_string(max.real() - min.real() - std::numeric_limits<double>::epsilon()) +
+				  " + std::is_integral<T_DST>::value) + ";
 		kernel += std::to_string(min.real()) + ";";
 
 		kernel += "\ndouble randNumImag = curand_uniform_double(&state[indexA / 64]) * ";
@@ -84,7 +84,7 @@ namespace librapid::ops {
 
 	template<typename A>
 	auto operator()(A, int64_t) const {
-		return random(min, max, seed);
+		return random((A) min, (A) max, seed);
 	}
 
 	Complex<double> min;

@@ -12,7 +12,7 @@ namespace librapid {
 
 	Array Array::copy(const Datatype &dtype, const Accelerator &locn) {
 		Datatype resDtype = (dtype == Datatype::NONE) ? m_dtype : dtype;
-		Accelerator resLocn = (locn == Accelerator::NONE) ? locn : locn;
+		Accelerator resLocn = (locn == Accelerator::NONE) ? m_location : locn;
 
 		Array res(m_extent, resDtype, resLocn);
 		auto ptrDst = res.createRaw();
