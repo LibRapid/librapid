@@ -871,6 +871,37 @@ namespace librapid {
 			return m_extent[0];
 		}
 
+		template<typename T>
+		[[nodiscard]] inline operator T() const {
+			if (!m_isScalar)
+				throw std::invalid_argument("Cannot convert Array with " + m_extent.str() + " to scalar value");
+
+			Datatype resType = typeToDatatype<T>();
+			RawArrayData raw;
+			auto tmp = RawArray{raw, resType, Accelerator::CPU};
+			rawArrayMalloc(tmp, 1);
+			rawArrayMemcpy(tmp, createRaw(), 1);
+
+			switch (resType) {
+				case Datatype::NONE:
+					throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
+				case Datatype::VALIDNONE:
+					throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
+				case Datatype::BOOL:
+					return (T) *std::get<bool *>(tmp.data);
+				case Datatype::INT64:
+					return (T) *std::get<int64_t *>(tmp.data);
+				case Datatype::FLOAT32:
+					return (T) *std::get<float *>(tmp.data);
+				case Datatype::FLOAT64:
+					return (T) *std::get<double *>(tmp.data);
+				case Datatype::CFLOAT64:
+					return (T) *std::get<Complex<double> *>(tmp.data);
+			}
+
+			throw std::runtime_error("Unknown error occurred when casting array to scalar value");
+		}
+
 		[[nodiscard]] const Array subscript(int64_t index) const;
 
 		/**
@@ -936,13 +967,16 @@ namespace librapid {
 		template<typename T = double>
 		inline void fillRandom(T min = 0, T max = 1, uint64_t seed = -1) {
 			static uint64_t statSeed = 0;
+			static uint64_t prevSeed = -1;
 			static bool statSeedSet = false;
-			if (!statSeedSet || seed != (uint64_t) -1) {
+
+			if (prevSeed != seed || !statSeedSet || seed != (uint64_t) -1) {
+				prevSeed = seed;
 				statSeed = seed == -1 ? (uint64_t) (seconds() * 10) : seed;
 				statSeedSet = true;
 			}
 			// applyUnaryOp(*this, *this, ops::FillRandom < T > (min, max, seed));
-			applyUnaryOp(*this, *this, ops::FillRandom < T > (min, max, statSeed));
+			applyUnaryOp(*this, *this, ops::FillRandom<T>(min, max, statSeed));
 		}
 
 		template<typename T = double>

@@ -454,7 +454,7 @@ namespace librapid
 				kernel += complexHpp;
 
 				kernel += R"V0G0N(
-					template<typename A>
+					template<typename T_DST, typename A>
 					__device__
 					inline auto )V0G0N";
 
@@ -478,7 +478,7 @@ namespace librapid
 						if (kernelIndex < size) {
 					)V0G0N";
 				kernel += "dstData[kernelIndex] = " + op.name +
-						  "(srcData[kernelIndex], kernelIndex, _curandStates + kernelIndex);";
+						  "<T_DST, T_SRC>(srcData[kernelIndex], kernelIndex, _curandStates + kernelIndex);";
 				kernel += "\n}\n}";
 
 				static jitify::JitCache kernelCache;
@@ -565,12 +565,12 @@ namespace librapid
 						jitifyCall(program.kernel("unaryFuncTrivial")
 										   .instantiate(Type<A>(), Type<B>())
 										   .configure(grid, block, 0, cudaStream)
-										   .launch(a, b, elems));
+										   .launch(a, b, elems, nullptr));
 #else
 						jitifyCall(program.kernel("unaryFuncTrivial")
 							.instantiate(Type<A>(), Type<B>())
 							.configure(grid, block)
-							.launch(a, b, elems));
+							.launch(a, b, elems, nullptr));
 #endif // LIBRAPID_CUDA_STREAM
 					}
 				}, dst.data, src.data);
