@@ -876,30 +876,67 @@ namespace librapid {
 			if (!m_isScalar)
 				throw std::invalid_argument("Cannot convert Array with " + m_extent.str() + " to scalar value");
 
-			Datatype resType = typeToDatatype<T>();
-			RawArrayData raw;
-			auto tmp = RawArray{raw, resType, Accelerator::CPU};
-			rawArrayMalloc(tmp, 1);
-			rawArrayMemcpy(tmp, createRaw(), 1);
+			if (m_location == Accelerator::CPU) {
+				switch (m_dtype) {
+					case Datatype::NONE:
+						throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
+					case Datatype::VALIDNONE:
+						throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
+					case Datatype::BOOL:
+						return (T) *std::get<bool *>(m_dataStart);
+					case Datatype::INT64:
+						return (T) *std::get<int64_t *>(m_dataStart);
+					case Datatype::FLOAT32:
+						return (T) *std::get<float *>(m_dataStart);
+					case Datatype::FLOAT64:
+						return (T) *std::get<double *>(m_dataStart);
+					case Datatype::CFLOAT64:
+						return (T) *std::get<Complex<double> *>(m_dataStart);
+				}
+			} else if (m_location == Accelerator::GPU) {
+				Datatype resType = typeToDatatype<T>();
+				RawArrayData raw;
+				auto tmp = RawArray{raw, resType, Accelerator::CPU};
+				rawArrayMalloc(tmp, 1);
+				rawArrayMemcpy(tmp, createRaw(), 1);
+				T res;
 
-			switch (resType) {
-				case Datatype::NONE:
-					throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
-				case Datatype::VALIDNONE:
-					throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
-				case Datatype::BOOL:
-					return (T) *std::get<bool *>(tmp.data);
-				case Datatype::INT64:
-					return (T) *std::get<int64_t *>(tmp.data);
-				case Datatype::FLOAT32:
-					return (T) *std::get<float *>(tmp.data);
-				case Datatype::FLOAT64:
-					return (T) *std::get<double *>(tmp.data);
-				case Datatype::CFLOAT64:
-					return (T) *std::get<Complex<double> *>(tmp.data);
+				switch (resType) {
+					case Datatype::NONE: {
+						rawArrayFree(tmp);
+						throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
+					}
+					case Datatype::VALIDNONE: {
+						rawArrayFree(tmp);
+						throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
+					}
+					case Datatype::BOOL: {
+						res = (T) *std::get<bool *>(tmp.data);
+						break;
+					}
+					case Datatype::INT64: {
+						res = (T) *std::get<int64_t *>(tmp.data);
+						break;
+					}
+					case Datatype::FLOAT32: {
+						res = (T) *std::get<float *>(tmp.data);
+						break;
+					}
+					case Datatype::FLOAT64: {
+						res = (T) *std::get<double *>(tmp.data);
+						break;
+					}
+					case Datatype::CFLOAT64: {
+						res = (T) *std::get<Complex<double> *>(tmp.data);
+						break;
+					}
+				}
+
+				rawArrayFree(tmp);
+				return res;
 			}
 
-			throw std::runtime_error("Unknown error occurred when casting array to scalar value");
+			throw std::runtime_error("Invalid accelerator used in Array.fillRandom");
 		}
 
 		[[nodiscard]] const Array subscript(int64_t index) const;
@@ -1306,7 +1343,7 @@ namespace librapid {
 
 			if (*m_references == 0) {
 				// Delete data
-				freeRawArray(createRaw());
+				rawArrayFree(createRaw());
 				delete m_references;
 			}
 		}

@@ -369,7 +369,7 @@ namespace librapid
 			return;
 
 		if (mode == 1 || mode == 2)
-			freeRawArray(raw);
+			rawArrayFree(raw);
 		else
 			throw std::invalid_argument("Invalid free mode for binary "
 										"operation");
