@@ -317,10 +317,10 @@ PYBIND11_MODULE(_librapid, module) {
 		.def("fillRandom", [](librapid::Array &arr, double min, double max, int64_t seed) { arr.fillRandom(min, max, seed); }, py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1)
 		.def("filledRandom", [](librapid::Array &arr, double min, double max, int64_t seed) { return arr.filledRandom(min, max, seed); }, py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1)
 
-		.def("clone", [](const librapid::Array &arr, librapid::Datatype dtype, librapid::Accelerator locn) { return arr.clone(dtype, locn); }, py::arg("dtype") = librapid::Datatype::NONE, py::arg("locn") = librapid::Accelerator::NONE)
-		.def("clone", [](const librapid::Array &arr, const std::string &dtype, librapid::Accelerator locn) { return arr.clone(dtype, locn); }, py::arg("dtype") = "none", py::arg("locn") = librapid::Accelerator::NONE)
-		.def("clone", [](const librapid::Array &arr, librapid::Datatype dtype, const std::string &locn) { return arr.clone(dtype, locn); }, py::arg("dtype") = librapid::Datatype::NONE, py::arg("locn") = "none")
-		.def("clone", [](const librapid::Array &arr, const std::string &dtype, const std::string &locn) { return arr.clone(dtype, locn); }, py::arg("dtype") = "none", py::arg("locn") = "none")
+		.def("clone", [](const librapid::Array &arr, librapid::Datatype dtype, librapid::Accelerator location) { return arr.clone(dtype, location); }, py::arg("dtype") = librapid::Datatype::NONE, py::arg("location") = librapid::Accelerator::NONE)
+		.def("clone", [](const librapid::Array &arr, const std::string &dtype, librapid::Accelerator location) { return arr.clone(dtype, location); }, py::arg("dtype") = "none", py::arg("location") = librapid::Accelerator::NONE)
+		.def("clone", [](const librapid::Array &arr, librapid::Datatype dtype, const std::string &location) { return arr.clone(dtype, location); }, py::arg("dtype") = librapid::Datatype::NONE, py::arg("location") = "none")
+		.def("clone", [](const librapid::Array &arr, const std::string &dtype, const std::string &location) { return arr.clone(dtype, location); }, py::arg("dtype") = "none", py::arg("location") = "none")
 
 		.def("__add__",     [](const librapid::Array &lhs, int64_t rhs) { return lhs + rhs; })
 		.def("__sub__",     [](const librapid::Array &lhs, int64_t rhs) { return lhs - rhs; })
@@ -363,14 +363,14 @@ PYBIND11_MODULE(_librapid, module) {
 		.def("__repr__", [](const librapid::Array &arr) {
 			int64_t rows, cols;
 
-			std::string locnStr = (arr.location() == librapid::Accelerator::CPU ? "CPU" : "GPU");
+			std::string locationStr = (arr.location() == librapid::Accelerator::CPU ? "CPU" : "GPU");
 
 			std::string res = "<librapid.Array ";
 			res += arr.str(16, true, rows, cols) + "\n\n";
 			res += std::string(16, ' ');
 			res += "dtype=\"" + librapid::datatypeToString(arr.dtype()) + "\"\n";
 			res += std::string(16, ' ');
-			res += "location=\"" + locnStr + "\">";
+			res += "location=\"" + locationStr + "\">";
 
 			return res;
 		});
