@@ -31,14 +31,21 @@ namespace librapid::ops {
 		FillRandom(T minVal = 0, T maxVal = 1, uint64_t rngSeed = -1) : min(minVal), max(maxVal),
 																		seed(seed == -1 ? (int64_t) (seconds() * 10)
 																						: rngSeed) {
-			kernel = "double randNum = curand_uniform_double(_curandState) * (";
+			kernel = "if constexpr (std::is_same<A, double>::value) {\n";
+			kernel += "double randNum = curand_uniform_double(_curandState) * (";
 			kernel += std::to_string(max - min - std::numeric_limits<T>::epsilon()) +
 					  " + std::is_integral<T_DST>::value) + ";
 			kernel += std::to_string(min) + ";\n";
 
-			kernel += R"V0G0N(
-            		return randNum;
-            )V0G0N";
+			kernel += "return randNum;\n}\n";
+
+			kernel += "else {\n";
+			kernel += "float randNum = curand_uniform(_curandState) * (";
+			kernel += std::to_string(max - min - std::numeric_limits<T>::epsilon()) +
+					  " + std::is_integral<T_DST>::value) + ";
+			kernel += std::to_string(min) + ";\n";
+
+			kernel += "return randNum;\n}\n";
 		}
 
 		std::string name = "fillRandom";

@@ -39,7 +39,6 @@ namespace librapid {
 			float *,
 			double *,
 			Complex < double> *
-	// int16_t *
 	>;
 
 	/**
@@ -164,6 +163,18 @@ namespace librapid {
 		return 0;
 	}
 
+	/**
+	 * \rst
+	 *
+	 * Convert a datatype to a string and return the result
+	 *
+	 * Parameters
+	 * ----------
+	 * t: Datatype
+	 * 		The datatype to convert to a string
+	 *
+	 * \endrst
+	 */
 	inline std::string datatypeToString(const Datatype &t) {
 		switch (t) {
 			case Datatype::NONE:
@@ -185,6 +196,19 @@ namespace librapid {
 		return "UNKNOWN";
 	}
 
+	/**
+	 * \rst
+	 *
+	 * Convert an accelerator to a string and return the result
+	 *
+	 * Parameters
+	 * ----------
+	 *
+	 * a: Accelerator
+	 * 		Accelerator to convert to string
+	 *
+	 * \endrst
+	 */
 	inline std::string acceleratorToString(const Accelerator &a) {
 		if (a == Accelerator::CPU)
 			return "CPU";
@@ -308,7 +332,7 @@ namespace librapid {
 			}
 		}
 
-		throw std::invalid_argument("Name \"" + str + "\" is invalid. See "
+		throw std::invalid_argument("Name \"" + str + "\" is an invalid datatype. See "
 													  "documentation for details and valid inputs");
 	}
 
@@ -350,7 +374,7 @@ namespace librapid {
 									" not a valid accelerator.");
 #endif // LIBRAPID_HAS_CUDA
 
-		throw std::invalid_argument("Accelerator \"" + str + "\" is invalid. See "
+		throw std::invalid_argument("Accelerator \"" + str + "\" is an invalid accelerator. See "
 															 "documentation for details and valid inputs");
 	}
 
@@ -370,7 +394,9 @@ namespace librapid {
 	 * ----------
 	 *
 	 * raw: RawArray
-	 *
+	 *		The array which will have memory allocated for
+	 * elems: unsigned integer
+	 * 		Number of elements to allocate
 	 *
 	 * \endrst
 	 */
@@ -444,7 +470,20 @@ namespace librapid {
 		return raw;
 	}
 
-	inline void freeRawArray(RawArray raw) {
+	/**
+	 * \rst
+	 *
+	 * Free the memory associated with the raw array
+	 *
+	 * Parameters
+	 * ----------
+	 *
+	 * raw: RawArray
+	 * 		Raw array to free
+	 *
+	 * \endrst
+	 */
+	inline void rawArrayFree(RawArray raw) {
 		void *memory = nullptr;
 
 		switch (raw.dtype) {
@@ -484,6 +523,18 @@ namespace librapid {
 #endif
 	}
 
+	/**
+	 * \rst
+	 *
+	 * Copy the raw content of one array to another, regardless of the accelerator or datatype of both arrays.
+	 *
+	 * Parameters
+	 * ----------
+	 *
+	 *
+	 *
+	 * \endrst
+	 */
 	inline void rawArrayMemcpy(RawArray &dst,
 							   const RawArray &src, int64_t elems) {
 		if (dst.location == Accelerator::NONE ||
@@ -498,7 +549,7 @@ namespace librapid {
 			// A simple memcpy will suffice as the datatypes are identical
 
 			std::visit([&](auto *a, auto *b) {
-				if (src.location == Accelerator::CPU) {
+				if (src.location == Accelerator::CPU && dst.location == Accelerator::CPU) {
 					// CPU to CPU memcpy
 					memcpy(a, b, datatypeBytes(src.dtype) * elems);
 				} else {
