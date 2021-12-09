@@ -128,14 +128,14 @@ of threads exceeds 12-16. To set the number of threads, use the following functi
 
 ``` cpp
 // C++
-librapid::setNumThreads(<num>); // Set threads to <num>. <num> must be positive integer
-librapid::getNumThreads();      // Get number of threads. If OpenMP was not found, returns 1
+librapid::setNumThreads(<num>); // Set threads to <num>. <num> must be  apositive integer.
+librapid::getNumThreads();      // Get the number of threads. If OpenMP was not found, it returns 1.
 ```
 
 ``` python
 # Python
-librapid.setNumThreads(<num>); # Set threads to <num>. <num> must be positive integer
-librapid.getNumThreads();      # Get number of threads. If OpenMP was not found, returns 1
+librapid.setNumThreads(<num>); # Set threads to <num>. <num> must be a positive integer.
+librapid.getNumThreads();      # Get the number of threads. If OpenMP was not found, it returns 1.
 ```
 
 The `CMakeLists.txt` file will attempt to find a Blas installation automatically, though it may fail if the files are
@@ -152,7 +152,7 @@ blas-dir
 ├── lib
 |   └── your-blas-lib.lib
 └── bin (Only on Windows)
-    └── your-blass-dll.dll
+    └── your-blas-dll.dll
 ```
 
 ### Recommended Setup for Optimal Performance
@@ -202,5 +202,5 @@ look similar to this (example is for Windows):
                 └── OpenBLASTargets.cmake
 ```
 
-With OpenBLAS setup in this way, LibRapid will automatically find and use it, whether you're in C++ or building from
+With OpenBLAS set up in this way, LibRapid will automatically find and use it, whether you're in C++ or building from
 source for Python. This will (most likely) also give the best performance for the library.
