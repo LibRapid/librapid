@@ -353,6 +353,7 @@ PYBIND11_MODULE(_librapid, module) {
 		.def("reshaped", [](const librapid::Array &arr, const librapid::Extent &shape) { return arr.reshaped(shape); })
 		.def("reshaped", [](const librapid::Array &arr, const std::vector<int64_t> &shape) { return arr.reshaped(shape); })
 
+		.def("dot", [](const librapid::Array &arr, const librapid::Array &other) { return arr.dot(other); }, py::arg("other"))
 		.def("transpose", [](librapid::Array &arr, const librapid::Extent &order) { arr.transpose(order); }, py::arg("order") = librapid::Extent())
 
 		.def("__bool__", [](const librapid::Array &arr) { return (bool) arr; })

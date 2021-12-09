@@ -879,7 +879,6 @@ namespace librapid {
 			if (m_location == Accelerator::CPU) {
 				switch (m_dtype) {
 					case Datatype::NONE:
-						throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
 					case Datatype::VALIDNONE:
 						throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
 					case Datatype::BOOL:
@@ -902,10 +901,7 @@ namespace librapid {
 				T res;
 
 				switch (resType) {
-					case Datatype::NONE: {
-						rawArrayFree(tmp);
-						throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
-					}
+					case Datatype::NONE:
 					case Datatype::VALIDNONE: {
 						rawArrayFree(tmp);
 						throw std::invalid_argument("Cannot convert uninitialized array to scalar value");

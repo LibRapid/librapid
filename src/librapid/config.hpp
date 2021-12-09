@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <cstring>
+#include <thread>
 
 #ifdef LIBRAPID_PYTHON
 // PyBind11 specific definitions and includes
@@ -37,6 +38,21 @@ namespace py = pybind11;
 #ifndef LIBRAPID_MAX_DIMS
 #define LIBRAPID_MAX_DIMS 32
 #endif // LIBRAPID_MAX_DIMS
+
+// Data alignment
+#ifndef DATA_ALIGN
+#define DATA_ALIGN 32 // 1024
+#endif
+
+// Number of threads for parallel regions
+#ifndef NUM_THREADS
+#define NUM_THREADS 8
+#endif // NUM_THREADS
+
+// For n < THREAD_THRESHOLD, code runs serially -- otherwise it'll run in parallel
+#ifndef THREAD_THREASHOLD
+#define THREAD_THREASHOLD 10000
+#endif // THREAD_THREASHOLD
 
 // SIMD instructions
 #define VCL_NAMESPACE vcl
@@ -183,10 +199,13 @@ namespace librapid {
 		public:
 			ThreadSetter(int64_t n) {
 				setNumThreads(n);
+				#ifdef LIBRAPID_HAS_OPENBLAS
+				openblas_set_num_threads(std::thread::hardware_concurrency());
+				#endif
 			}
 		};
 
-		inline ThreadSetter setter = ThreadSetter(4);
+		inline ThreadSetter setter = ThreadSetter(NUM_THREADS);
 	}
 }
 
@@ -293,21 +312,6 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line) {
 #pragma warning( disable : 4244 )
 #pragma warning( disable : 6386 )
 #endif
-
-// Data alignment
-#ifndef DATA_ALIGN
-#define DATA_ALIGN 32 // 1024
-#endif
-
-// Number of threads for parallel regions
-#ifndef NUM_THREADS
-#define NUM_THREADS 8
-#endif // NUM_THREADS
-
-// For n < THREAD_THRESHOLD, code runs serially -- otherwise it'll run in parallel
-#ifndef THREAD_THREASHOLD
-#define THREAD_THREASHOLD 10000
-#endif // THREAD_THREASHOLD
 
 namespace librapid {
 	inline void *alignedMalloc(int64_t requiredBytes,
