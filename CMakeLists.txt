@@ -77,7 +77,7 @@ set(sources # Array library
         "src/librapid/test/librapid_test.cpp"
         # Dependencies
         "version2/instrset_detect.cpp"
-        )
+        src/librapid/array/cblas_api.hpp)
 
 if (${SKBUILD})
     set(module_name "_librapid")

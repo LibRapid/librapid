@@ -148,6 +148,16 @@ namespace librapid {
 			return !(*this == other);
 		}
 
+		template<typename V>
+		bool operator==(const V &other) const {
+			return m_real == other && m_imag == 0;
+		}
+
+		template<typename V>
+		bool operator!=(const V &other) const {
+			return !(*this == other);
+		}
+
 		T mag() const {
 			return std::sqrt(m_real * m_real + m_imag * m_imag);
 		}
