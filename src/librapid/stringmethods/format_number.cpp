@@ -17,14 +17,12 @@ namespace librapid {
 			case true:
 				if (floating && str.find_last_of('.') == std::string::npos)
 					str += ".0";
-
-				return str;
 			case false:
 				if (floating && str.find_last_of('.') == std::string::npos)
 					str += ",0";
 				else
 					std::replace(str.begin(), str.end(), '.', ',');
-				return str;
 		}
+		return str;
 	}
 }
