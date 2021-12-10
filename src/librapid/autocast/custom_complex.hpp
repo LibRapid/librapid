@@ -36,46 +36,46 @@ namespace librapid {
 			return Complex<T>(-m_real, -m_imag);
 		}
 
-		template<typename V>
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
 		Complex operator+(const V &other) const {
 			return Complex<T>(m_real + other, m_imag);
 		}
 
-		template<typename V>
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
 		Complex operator-(const V &other) const {
 			return Complex<T>(m_real - other, m_imag);
 		}
 
-		template<typename V>
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
 		Complex operator*(const V &other) const {
 			return Complex<T>(m_real * other, m_imag * other);
 		}
 
-		template<typename V>
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
 		Complex operator/(const V &other) const {
 			return Complex<T>(m_real / other, m_imag / other);
 		}
 
-		template<typename V>
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
 		Complex &operator+=(const V &other) {
 			m_real += other;
 			return *this;
 		}
 
-		template<typename V>
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
 		Complex &operator-=(const V &other) {
 			m_real -= other;
 			return *this;
 		}
 
-		template<typename V>
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
 		Complex &operator*=(const V &other) {
 			m_real *= other;
 			m_imag *= other;
 			return *this;
 		}
 
-		template<typename V>
+		template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
 		Complex &operator/=(const V &other) {
 			m_real /= other;
 			m_imag /= other;
@@ -224,45 +224,45 @@ namespace librapid {
 		T m_imag = 0;
 	};
 
-	template<typename A, typename B>
+	template<typename A, typename B, typename std::enable_if<std::is_scalar<A>::value, int>::type = 0>
 	Complex<B> operator+(const A &a, const Complex<B> &b) {
 		return Complex<B>(a) + b;
 	}
 
-	template<typename A, typename B>
+	template<typename A, typename B, typename std::enable_if<std::is_scalar<A>::value, int>::type = 0>
 	Complex<B> operator-(const A &a, const Complex<B> &b) {
 		return Complex<B>(a) - b;
 	}
 
-	template<typename A, typename B>
+	template<typename A, typename B, typename std::enable_if<std::is_scalar<A>::value, int>::type = 0>
 	Complex<B> operator*(const A &a, const Complex<B> &b) {
 		return Complex<B>(a) * b;
 	}
 
-	template<typename A, typename B>
+	template<typename A, typename B, typename std::enable_if<std::is_scalar<A>::value, int>::type = 0>
 	Complex<B> operator/(const A &a, const Complex<B> &b) {
 		return Complex<B>(a) / b;
 	}
 
-	template<typename A, typename B>
+	template<typename A, typename B, typename std::enable_if<std::is_scalar<A>::value, int>::type = 0>
 	A &operator+=(A &a, const Complex<B> &b) {
 		a += b.real();
 		return a;
 	}
 
-	template<typename A, typename B>
+	template<typename A, typename B, typename std::enable_if<std::is_scalar<A>::value, int>::type = 0>
 	A &operator-=(A &a, const Complex<B> &b) {
 		a -= b.real();
 		return a;
 	}
 
-	template<typename A, typename B>
+	template<typename A, typename B, typename std::enable_if<std::is_scalar<A>::value, int>::type = 0>
 	A &operator*=(A &a, const Complex<B> &b) {
 		a *= b.real();
 		return a;
 	}
 
-	template<typename A, typename B>
+	template<typename A, typename B, typename std::enable_if<std::is_scalar<A>::value, int>::type = 0>
 	A &operator/=(A &a, const Complex<B> &b) {
 		a /= b.real();
 		return a;

@@ -45,7 +45,7 @@ namespace librapid {
 									 + " dimensions. Limit is "
 									 + std::to_string(LIBRAPID_MAX_DIMS));
 
-		for (uint64_t i = 0; i < other.m_dims; i++)
+		for (int64_t i = 0; i < other.m_dims; i++)
 			m_extent[i] = other.m_extent[i];
 
 		update();

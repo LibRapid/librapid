@@ -18,7 +18,7 @@ namespace librapid {
 	enum class Datatype {
 		NONE,            // no datatype
 		VALIDNONE,        // No datatype, but it is not required
-		BOOL,            // bool
+		// BOOL,            // bool
 		INT64,            // int64_t
 		FLOAT32,        // float
 		FLOAT64,        // double
@@ -34,7 +34,7 @@ namespace librapid {
 	 * \endrst
 	 */
 	using RawArrayData = std::variant<
-			bool *,
+			// bool *,
 			int64_t *,
 			float *,
 			double *,
@@ -82,8 +82,8 @@ namespace librapid {
 				return false;
 			case Datatype::VALIDNONE:
 				return false;
-			case Datatype::BOOL:
-				return true;
+			// case Datatype::BOOL:
+			// 	return true;
 			case Datatype::INT64:
 				return true;
 			default:
@@ -104,8 +104,8 @@ namespace librapid {
 				return false;
 			case Datatype::VALIDNONE:
 				return false;
-			case Datatype::BOOL:
-				return false;
+			// case Datatype::BOOL:
+			// 	return false;
 			case Datatype::INT64:
 				return false;
 			default:
@@ -148,8 +148,8 @@ namespace librapid {
 				return 0;
 			case Datatype::VALIDNONE:
 				return 1;
-			case Datatype::BOOL:
-				return sizeof(bool);
+			// case Datatype::BOOL:
+			// 	return sizeof(bool);
 			case Datatype::INT64:
 				return sizeof(int64_t);
 			case Datatype::FLOAT32:
@@ -181,8 +181,8 @@ namespace librapid {
 				return "NONE";
 			case Datatype::VALIDNONE:
 				return "VALIDNONE";
-			case Datatype::BOOL:
-				return "BOOL";
+			// case Datatype::BOOL:
+			// 	return "BOOL";
 			case Datatype::INT64:
 				return "INT64";
 			case Datatype::FLOAT32:
@@ -227,7 +227,7 @@ namespace librapid {
 	 */
 	template<typename T>
 	inline Datatype typeToDatatype() {
-		if constexpr (std::is_same_v<T, bool>) return Datatype::BOOL;
+		// if constexpr (std::is_same_v<T, bool>) return Datatype::BOOL;
 		if constexpr (std::is_integral_v<T>) return Datatype::INT64;
 		if constexpr (std::is_same<T, float>::value) return Datatype::FLOAT32;
 		if constexpr (std::is_same<T, double>::value) return Datatype::FLOAT64;
@@ -317,7 +317,7 @@ namespace librapid {
 
 		static std::map<Datatype, std::vector<std::string>> types = {
 				{Datatype::NONE,     noneStr},
-				{Datatype::BOOL,     boolStr},
+				// {Datatype::BOOL,     boolStr},
 				{Datatype::INT64,    int64Str},
 				{Datatype::FLOAT32,  float32Str},
 				{Datatype::FLOAT64,  float64Str},
@@ -403,11 +403,11 @@ namespace librapid {
 	inline RawArray rawArrayMalloc(RawArray &raw, uint64_t elems) {
 		if (raw.location == Accelerator::CPU) {
 			switch (raw.dtype) {
-				case Datatype::BOOL: {
-					raw.data = (bool *)
-							alignedMalloc(sizeof(bool) * elems);
-					break;
-				}
+				// case Datatype::BOOL: {
+				// 	raw.data = (bool *)
+				// 			alignedMalloc(sizeof(bool) * elems);
+				// 	break;
+				// }
 				case Datatype::INT64: {
 					raw.data = (int64_t *)
 							alignedMalloc(sizeof(int64_t) * elems);
@@ -442,10 +442,10 @@ namespace librapid {
 #endif // LIBRAPID_HAS_CUDA
 
 			switch (raw.dtype) {
-				case Datatype::BOOL: {
-					raw.data = (bool *) memory;
-					break;
-				}
+				// case Datatype::BOOL: {
+				// 	raw.data = (bool *) memory;
+				// 	break;
+				// }
 				case Datatype::INT64: {
 					raw.data = (int64_t *) memory;
 					break;
@@ -464,7 +464,7 @@ namespace librapid {
 				}
 			}
 		} else {
-			raw.data = (bool *) nullptr;
+			raw.data = (int64_t *) nullptr;
 		}
 
 		return raw;
@@ -487,10 +487,10 @@ namespace librapid {
 		void *memory = nullptr;
 
 		switch (raw.dtype) {
-			case Datatype::BOOL: {
-				memory = std::get<bool *>(raw.data);
-				break;
-			}
+			// case Datatype::BOOL: {
+			// 	memory = std::get<bool *>(raw.data);
+			// 	break;
+			// }
 			case Datatype::INT64: {
 				memory = std::get<int64_t *>(raw.data);
 				break;

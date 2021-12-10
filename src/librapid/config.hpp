@@ -176,12 +176,12 @@ namespace librapid {
 
 	inline void setNumThreads(int64_t num) {
 #if defined(LIBRAPID_HAS_OPENBLAS)
-		openblas_set_num_threads(num);
-		goto_set_num_threads(num);
+		openblas_set_num_threads((int) num);
+		goto_set_num_threads((int) num);
 #endif
 
 #if defined(_OPENMP)
-		omp_set_num_threads(num);
+		omp_set_num_threads((int) num);
 #endif
 	}
 
