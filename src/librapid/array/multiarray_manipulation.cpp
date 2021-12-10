@@ -95,11 +95,11 @@ namespace librapid {
 		Datatype resDtype = arrays[0].dtype();
 		Accelerator resLocn = arrays[0].location();
 
-		for (int64_t i = 0; i < arrays.size(); ++i) {
+		for (uint64_t i = 0; i < arrays.size(); ++i) {
 			if (arrays[i].ndim() > dims) {
 				dims = arrays[i].ndim();
 				index = i;
-			};
+			}
 			if (arrays[i].dtype() > resDtype) resDtype = arrays[i].dtype();
 			if (arrays[i].location() > resLocn) resLocn = arrays[i].location();
 		}
@@ -210,7 +210,7 @@ namespace librapid {
 			tempShape.update();
 
 			std::vector<Array> tempArrays(arrays.size());
-			for (int64_t i = 0; i < arrays.size(); ++i)
+			for (uint64_t i = 0; i < arrays.size(); ++i)
 				tempArrays[i] = arrays[i].reshaped(tempShape);
 
 			return concatenate(tempArrays, axis).reshaped(resShape);

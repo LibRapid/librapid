@@ -412,7 +412,7 @@ namespace librapid
 										 int64_t elems, const FUNC &op) {
 		if (dst.location != src.location) {
 			// Copy A to be on the same accelerator as B
-			RawArray tempSrc = {(bool *) nullptr, dst.dtype, dst.location};
+			RawArray tempSrc = {(int64_t *) nullptr, dst.dtype, dst.location};
 			rawArrayMalloc(tempSrc, elems);
 			int freeMode = makeSameAccelerator(tempSrc, src, elems);
 			multiarrayUnaryOpTrivial(dst, tempSrc, elems, op);
@@ -591,7 +591,7 @@ namespace librapid
 										 const FUNC &op, bool trivialDst = false) {
 		if (dst.location != src.location) {
 			// Copy A to be on the same accelerator as B
-			RawArray tempSrc = {(bool *) nullptr, dst.dtype, dst.location};
+			RawArray tempSrc = {(int64_t *) nullptr, dst.dtype, dst.location};
 			rawArrayMalloc(tempSrc, elems);
 			int freeMode = makeSameAccelerator(tempSrc, src, elems);
 			multiarrayUnaryOpTrivial(dst, tempSrc, elems, op);
@@ -916,8 +916,8 @@ namespace librapid
 			// accelerator as the result array (C)
 
 			// Copy A and B to be on the same accelerator as the destination
-			RawArray tempSrcA = {(bool *) nullptr, srcA.dtype, dst.location};
-			RawArray tempSrcB = {(bool *) nullptr, srcB.dtype, dst.location};
+			RawArray tempSrcA = {(int64_t *) nullptr, srcA.dtype, dst.location};
+			RawArray tempSrcB = {(int64_t *) nullptr, srcB.dtype, dst.location};
 
 			// Allocate memory for temporary sources
 			rawArrayMalloc(tempSrcA, srcAIsScalar ? 1 : elems);
@@ -974,7 +974,7 @@ namespace librapid
 						if constexpr (std::is_same_v<A, double> && std::is_same_v<B, double> &&
 									  std::is_same_v<C, double>) {
 							vcl::Vec8d a, b;
-							int64_t i = 0, diff;
+							int64_t i = 0;
 							auto tmpSrcA = (double *__restrict) srcDataA;
 							auto tmpSrcB = (double *__restrict) srcDataB;
 							auto tmpDst = (double *__restrict) dstData;
@@ -987,7 +987,7 @@ namespace librapid
 									c.store(tmpDst + i);
 								}
 							} else {
-#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b, diff) default(none) num_threads(NUM_THREADS)
+#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b) default(none) num_threads(NUM_THREADS)
 								for (i = 0; i < tempElems - 7; i += 8) {
                                     a.load(tmpSrcA + i);
                                     b.load(tmpSrcB + i);
@@ -995,7 +995,9 @@ namespace librapid
                                     c.store(tmpDst + i);
                                 }
 							}
-							if ((diff = tempElems - i) > 0) {
+
+							int64_t diff = tempElems - i;
+							if (diff > 0) {
 								a.load_partial((int) diff, tmpSrcA + i);
 								b.load_partial((int) diff, tmpSrcB + i);
 								vcl::Vec8d c = tempOp(a, b, i, i);
@@ -1026,7 +1028,8 @@ namespace librapid
 								}
 							}
 
-							if (int64_t diff = tempElems - i; diff > 0) {
+							int64_t diff = tempElems - i;
+							if (diff > 0) {
 								a.load_partial((int) diff, tmpSrcA + i);
 								b.load_partial((int) diff, tmpSrcB + i);
 								vcl::Vec16f c = tempOp(a, b, i, i);
@@ -1179,8 +1182,8 @@ namespace librapid
 			// accelerator as the result array (C)
 
 			// Copy A to be on the same accelerator as B
-			RawArray tempSrcA = {(bool *) nullptr, dst.dtype, dst.location};
-			RawArray tempSrcB = {(bool *) nullptr, dst.dtype, dst.location};
+			RawArray tempSrcA = {(int64_t *) nullptr, dst.dtype, dst.location};
+			RawArray tempSrcB = {(int64_t *) nullptr, dst.dtype, dst.location};
 
 			// Allocate memory for temporary sources
 			rawArrayMalloc(tempSrcA, elems);
