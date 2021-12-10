@@ -197,7 +197,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		Array(bool val, Datatype dtype = Datatype::BOOL, Accelerator locn = Accelerator::CPU);
+		Array(bool val, Datatype dtype = Datatype::INT64, Accelerator locn = Accelerator::CPU);
 
 		Array(float val, Datatype dtype = Datatype::FLOAT32, Accelerator locn = Accelerator::CPU);
 
@@ -881,8 +881,8 @@ namespace librapid {
 					case Datatype::NONE:
 					case Datatype::VALIDNONE:
 						throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
-					case Datatype::BOOL:
-						return (T) *std::get<bool *>(m_dataStart);
+					// case Datatype::BOOL:
+					// 	return (T) *std::get<bool *>(m_dataStart);
 					case Datatype::INT64:
 						return (T) *std::get<int64_t *>(m_dataStart);
 					case Datatype::FLOAT32:
@@ -906,10 +906,10 @@ namespace librapid {
 						rawArrayFree(tmp);
 						throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
 					}
-					case Datatype::BOOL: {
-						res = (T) *std::get<bool *>(tmp.data);
-						break;
-					}
+					// case Datatype::BOOL: {
+					// 	res = (T) *std::get<bool *>(tmp.data);
+					// 	break;
+					// }
 					case Datatype::INT64: {
 						res = (T) *std::get<int64_t *>(tmp.data);
 						break;

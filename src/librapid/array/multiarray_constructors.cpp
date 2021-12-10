@@ -2,7 +2,7 @@
 #include <librapid/utils/array_utils.hpp>
 
 namespace librapid {
-	RawArray validRawArray = RawArray{(bool *) nullptr, Datatype::VALIDNONE, Accelerator::CPU};
+	RawArray validRawArray = RawArray{(int64_t *) nullptr, Datatype::VALIDNONE, Accelerator::CPU};
 
 #ifdef LIBRAPID_HAS_CUDA
 #ifdef LIBRAPID_CUDA_STREAM
@@ -84,8 +84,9 @@ namespace librapid {
 		}
 #ifdef LIBRAPID_HAS_CUDA
 		else {
+			int64_t tmpVal = val;
 			RawArray temp = RawArray{m_dataStart, dtype, locn};
-			rawArrayMemcpy(temp, {&val, Datatype::BOOL, Accelerator::CPU}, 1);
+			rawArrayMemcpy(temp, {&tmpVal, Datatype::INT64, Accelerator::CPU}, 1);
 		}
 #else
 		else {
@@ -190,11 +191,12 @@ namespace librapid {
 										" have zero dimensions (i.e. scalar)");
 		if (!m_isChild) {
 			if (m_references != nullptr) decrement();
-			constructNew(Extent(1), Stride(1), Datatype::BOOL, Accelerator::CPU);
+			constructNew(Extent(1), Stride(1), Datatype::INT64, Accelerator::CPU);
 		}
 
+		int64_t tmpVal = val;
 		auto raw = createRaw();
-		rawArrayMemcpy(raw, RawArray{&val, Datatype::BOOL, Accelerator::CPU}, 1);
+		rawArrayMemcpy(raw, RawArray{&tmpVal, Datatype::INT64, Accelerator::CPU}, 1);
 
 		m_isScalar = true;
 		return *this;
