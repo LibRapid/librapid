@@ -299,8 +299,8 @@ PYBIND11_MODULE(_librapid, module) {
 		.def_property_readonly("stride", &librapid::Array::stride)
 		.def_property_readonly("dtype", &librapid::Array::dtype)
 		.def_property_readonly("isScalar", &librapid::Array::isScalar)
-		.def_property_readonly("locn", &librapid::Array::locn)
-		.def("__len__", [](const librapid::Array &arr) { return arr.extent()[0]; })
+		.def_property_readonly("location", &librapid::Array::location)
+		.def("__len__", [](const librapid::Array &arr) { return arr.len(); })
 
 		.def("__getitem__", [](const librapid::Array &arr, int64_t index) { return arr[index]; })
 		.def("__setitem__", [](librapid::Array &arr, int64_t index, int64_t val) { arr[index] = val; })
@@ -363,7 +363,7 @@ PYBIND11_MODULE(_librapid, module) {
 		.def("__repr__", [](const librapid::Array &arr) {
 			int64_t rows, cols;
 
-			std::string locnStr = (arr.locn() == librapid::Accelerator::CPU ? "CPU" : "GPU");
+			std::string locnStr = (arr.location() == librapid::Accelerator::CPU ? "CPU" : "GPU");
 
 			std::string res = "<librapid.Array ";
 			res += arr.str(16, true, rows, cols) + "\n\n";
