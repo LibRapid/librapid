@@ -10,6 +10,16 @@
 
 #endif // LIBRAPID_HAS_BLAS
 
+#ifdef LIBRAPID_HAS_CUDA
+
+#include <cuda.h>
+#include <cublas_v2.h>
+#include <curand.h>
+#include <curand_kernel.h>
+#include <library_types.h>
+
+#endif // LIBRAPID_HAS_CUDA
+
 namespace librapid::linalg {
 	template<typename A, typename B>
 	using common = typename std::common_type<A, B>::type;
@@ -239,6 +249,74 @@ namespace librapid::linalg {
 	}
 
 #endif // LIBRAPID_HAS_BLAS
+
+#ifdef LIBRAPID_HAS_CUDA
+
+	template<typename A, typename B, typename C>
+	inline void cblas_gemm_cuda(cublasHandle_t &handle, bool trans_a, bool trans_b, int64_t m,
+								int64_t n, int64_t k, A alpha,
+								A *__restrict a, int64_t lda, B *__restrict b,
+								int64_t ldb, C beta, C *__restrict c, int64_t ldc) {
+		cublasOperation_t blas_trans_a{};
+		if (trans_a)
+			blas_trans_a = CUBLAS_OP_T;
+		else
+			blas_trans_a = CUBLAS_OP_N;
+
+		cublasOperation_t blas_trans_b;
+		if (trans_b)
+			blas_trans_b = CUBLAS_OP_T;
+		else
+			blas_trans_b = CUBLAS_OP_N;
+	}
+
+	template<>
+	inline void cblas_gemm_cuda(cublasHandle_t &handle, bool trans_a, bool trans_b, int64_t m,
+								int64_t n, int64_t k, float alpha,
+								float *__restrict a, int64_t lda, float *__restrict b,
+								int64_t ldb, float beta, float *__restrict c, int64_t ldc) {
+		cublasOperation_t blas_trans_a{};
+		if (trans_a)
+			blas_trans_a = CUBLAS_OP_T;
+		else
+			blas_trans_a = CUBLAS_OP_N;
+
+		cublasOperation_t blas_trans_b;
+		if (trans_b)
+			blas_trans_b = CUBLAS_OP_T;
+		else
+			blas_trans_b = CUBLAS_OP_N;
+
+		// ublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, n, m, k, &al, d_b, n, d_a, k, &bet, d_c, n)
+		cublasSafeCall(cublasSgemm_v2(handle, blas_trans_a, blas_trans_b,
+									  (int) n, (int) m, (int) k, &alpha, b, (int) ldb, a, (int) lda, &beta, c,
+									  (int) ldc));
+	}
+
+	template<>
+	inline void cblas_gemm_cuda(cublasHandle_t &handle, bool trans_a, bool trans_b, int64_t m,
+								int64_t n, int64_t k, double alpha,
+								double *__restrict a, int64_t lda, double *__restrict b,
+								int64_t ldb, double beta, double *__restrict c, int64_t ldc) {
+		cublasOperation_t blas_trans_a{};
+		if (trans_a)
+			blas_trans_a = CUBLAS_OP_T;
+		else
+			blas_trans_a = CUBLAS_OP_N;
+
+		cublasOperation_t blas_trans_b;
+		if (trans_b)
+			blas_trans_b = CUBLAS_OP_T;
+		else
+			blas_trans_b = CUBLAS_OP_N;
+
+		// ublasSgemm(handle,CUBLAS_OP_N,CUBLAS_OP_N,n,m,k,&al,d_b,n,d_a,k,&bet,d_c,n)
+		cublasSafeCall(cublasDgemm_v2(handle, blas_trans_a, blas_trans_b,
+									  (int) n, (int) m, (int) k, &alpha, b, (int) ldb, a, (int) lda, &beta, c,
+									  (int) ldc));
+	}
+
+#endif // LIBRAPID_HAS_CUDA
 }
 
 #endif // LIBRAPID_HAS_BLAS_API
