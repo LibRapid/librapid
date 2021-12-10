@@ -10,7 +10,7 @@
 
 ## Credits
 
-Thanks to @TheWindoof for his help on the library. He and I collaborate to provide the best user experience possible, as
+Thanks to @NervousNullPtr for his help on the library. He and I collaborate to provide the best user experience possible, as
 well as to produce innovative new ideas and faster, more efficient code.
 
 ## Why Use Librapid?
