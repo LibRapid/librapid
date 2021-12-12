@@ -430,7 +430,7 @@ namespace librapid
 						for (int64_t i = 0; i < tempElems; ++i)
 							dstData[i] = tempOp(srcData[i], i);
 					} else {
-#pragma omp parallel for shared(dstData, srcData, tempElems, tempOp) num_threads(NUM_THREADS)
+#pragma omp parallel for shared(dstData, srcData, tempElems, tempOp)
 						for (int64_t i = 0; i < tempElems; ++i) {
 							dstData[i] = tempOp(srcData[i], i);
 						}
@@ -953,7 +953,7 @@ namespace librapid
 							for (int64_t i = 0; i < elems; ++i)
 								dstData[i] = static_cast<C>(tempOp(*srcDataA, srcDataB[i], 0, i));
 						} else {
-#pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) default(none) num_threads(NUM_THREADS)
+#pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) default(none)
 							for (int64_t i = 0; i < tempElems; ++i) {
 								dstData[i] = static_cast<C>(tempOp(*srcDataA, srcDataB[i], 0, i));
 							}
@@ -964,7 +964,7 @@ namespace librapid
 							for (int64_t i = 0; i < tempElems; ++i)
 								dstData[i] = static_cast<C>(tempOp(srcDataA[i], *srcDataB, i, 0));
 						} else {
-#pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) default(none) num_threads(NUM_THREADS)
+#pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) default(none)
 							for (int64_t i = 0; i < tempElems; ++i) {
 								dstData[i] = static_cast<C>(tempOp(srcDataA[i], *srcDataB, i, 0));
 							}
@@ -987,13 +987,13 @@ namespace librapid
 									c.store(tmpDst + i);
 								}
 							} else {
-#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b) default(none) num_threads(NUM_THREADS)
+#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b) default(none)
 								for (i = 0; i < tempElems - 7; i += 8) {
-                                    a.load(tmpSrcA + i);
-                                    b.load(tmpSrcB + i);
-                                    vcl::Vec8d c = tempOp(a, b, i, i);
-                                    c.store(tmpDst + i);
-                                }
+									a.load(tmpSrcA + i);
+									b.load(tmpSrcB + i);
+									vcl::Vec8d c = tempOp(a, b, i, i);
+									c.store(tmpDst + i);
+								}
 							}
 
 							int64_t diff = tempElems - i;
@@ -1019,7 +1019,7 @@ namespace librapid
 									c.store(tmpDst + i);
 								}
 							} else {
-#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b) default(none) num_threads(NUM_THREADS)
+#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b) default(none)
 								for (i = 0; i < tempElems - 15; i += 16) {
 									a.load(tmpSrcA + i);
 									b.load(tmpSrcB + i);
@@ -1040,7 +1040,7 @@ namespace librapid
 								dstData[i] = static_cast<C>(tempOp(srcDataA[i], srcDataB[i], i, i));
 							}
 						} else {
-#pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) default(none) num_threads(NUM_THREADS)
+#pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) default(none)
 							for (int64_t i = 0; i < tempElems; ++i) {
 								dstData[i] = static_cast<C>(tempOp(srcDataA[i], srcDataB[i], i, i));
 							}

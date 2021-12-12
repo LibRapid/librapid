@@ -18,7 +18,7 @@ namespace librapid {
 			cublasHandleCreated = true;
 			cublasCreate_v2(&cublasHandle);
 			cublasSetStream(cublasHandle, cudaStream);
-			// cublasSetMathMode(cublasHandle, CUBLAS_COMPUTE_32F_FAST_16F);
+			cublasSetMathMode(cublasHandle, CUBLAS_TENSOR_OP_MATH);
 		}
 #endif // LIBRAPID_HAS_CUDA
 
@@ -63,7 +63,7 @@ namespace librapid {
 				else {
 					linalg::cblas_gemm_cuda(cublasHandle, transA, transB, M, N, K, alpha, a, lda, b, ldb, beta, c, ldc);
 				}
-						#else
+				#else
 				else {
 					throw std::runtime_error("CUDA support was not enabled");
 				}

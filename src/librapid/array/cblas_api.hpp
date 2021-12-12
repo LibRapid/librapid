@@ -287,7 +287,6 @@ namespace librapid::linalg {
 		else
 			blas_trans_b = CUBLAS_OP_N;
 
-		// ublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, n, m, k, &al, d_b, n, d_a, k, &bet, d_c, n)
 		cublasSafeCall(cublasSgemm_v2(handle, blas_trans_a, blas_trans_b,
 									  (int) n, (int) m, (int) k, &alpha, b, (int) ldb, a, (int) lda, &beta, c,
 									  (int) ldc));
