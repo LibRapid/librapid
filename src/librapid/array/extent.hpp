@@ -3,7 +3,6 @@
 
 #include <librapid/config.hpp>
 #include <librapid/array/iterators.hpp>
-#include <librapid/array/extent_stride_proxy.hpp>
 #include <vector>
 
 namespace librapid {
@@ -68,7 +67,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		inline const int64_t &ndim() const {
+		[[nodiscard]] inline const int64_t &ndim() const {
 			return m_dims;
 		}
 
@@ -86,7 +85,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		inline int64_t size() const {
+		[[nodiscard]] inline int64_t size() const {
 			if (m_isDirty) {
 				int64_t res = 1;
 				for (int64_t i = 0; i < m_dims; ++i) res *= m_extent[i];
@@ -96,7 +95,7 @@ namespace librapid {
 			return m_size;
 		}
 
-		inline int64_t size() {
+		[[nodiscard]] inline int64_t size() {
 			if (m_isDirty)
 				update();
 
@@ -110,7 +109,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		inline const int64_t *__restrict raw() const {
+		[[nodiscard]] inline const int64_t *__restrict raw() const {
 			return m_extent;
 		}
 
@@ -121,7 +120,7 @@ namespace librapid {
 		*
 		* \endrst
 		*/
-		inline std::vector<int64_t> toVec() const {
+		[[nodiscard]] inline std::vector<int64_t> toVec() const {
 			std::vector<int64_t> res(m_dims);
 			for (int64_t i = 0; i < m_dims; ++i)
 				res[i] = m_extent[i];
@@ -139,7 +138,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		inline bool containsAutomatic() const {
+		[[nodiscard]] inline bool containsAutomatic() const {
 			return m_containsAutomatic;
 		}
 
@@ -189,7 +188,7 @@ namespace librapid {
 		 *		target number of elements
 		 * \endrst
 		 */
-		Extent fixed(int64_t target) const;
+		[[nodiscard]] Extent fixed(int64_t target) const;
 
 		/**
 		 * \rst
@@ -235,7 +234,7 @@ namespace librapid {
 		 */
 		void reorder(const std::vector<int64_t> &order);
 
-		Extent subExtent(int64_t start = -1, int64_t end = -1) const;
+		[[nodiscard]] Extent subExtent(int64_t start = -1, int64_t end = -1) const;
 
 		/**
 		 * \rst
@@ -247,14 +246,14 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		std::string str() const;
+		[[nodiscard]] std::string str() const;
 
-		inline ESIterator begin() const {
+		[[nodiscard]] inline ESIterator begin() const {
 			return ESIterator((int64_t *) m_extent);
 		}
 
-		inline ESIterator end() const {
-			return ESIterator((int64_t *) m_extent + m_dims);
+		[[nodiscard]] inline ESIterator end() const {
+			return {(int64_t *) m_extent + m_dims};
 		}
 
 		void update();
