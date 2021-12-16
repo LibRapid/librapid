@@ -796,6 +796,8 @@ namespace librapid {
 
 		Array &operator=(double val);
 
+		Array &operator=(Complex<double> val);
+
 		~Array();
 
 		/**
@@ -881,8 +883,8 @@ namespace librapid {
 					case Datatype::NONE:
 					case Datatype::VALIDNONE:
 						throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
-					// case Datatype::BOOL:
-					// 	return (T) *std::get<bool *>(m_dataStart);
+						// case Datatype::BOOL:
+						// 	return (T) *std::get<bool *>(m_dataStart);
 					case Datatype::INT64:
 						return (T) *std::get<int64_t *>(m_dataStart);
 					case Datatype::FLOAT32:
@@ -906,10 +908,10 @@ namespace librapid {
 						rawArrayFree(tmp);
 						throw std::invalid_argument("Cannot convert uninitialized array to scalar value");
 					}
-					// case Datatype::BOOL: {
-					// 	res = (T) *std::get<bool *>(tmp.data);
-					// 	break;
-					// }
+						// case Datatype::BOOL: {
+						// 	res = (T) *std::get<bool *>(tmp.data);
+						// 	break;
+						// }
 					case Datatype::INT64: {
 						res = (T) *std::get<int64_t *>(tmp.data);
 						break;
