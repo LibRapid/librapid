@@ -21,8 +21,9 @@ if os.path.exists("version2") and not os.path.exists(os.path.join("src", "librap
 if os.path.exists("openblas_install") and not os.path.exists(os.path.join("src", "librapid", "openblas_install")):
     shutil.copytree("openblas_install", os.path.join("src", "librapid", "openblas_install"))
 
-# if os.path.exists("_skbuild"):
-# 	shutil.rmtree("_skbuild")
+# Remove _skbuild directory if it already exists. It can lead to issues
+if os.path.exists("_skbuild"):
+    shutil.rmtree("_skbuild")
 
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
@@ -108,10 +109,10 @@ if sys.maxsize > 2 ** 32 and platform.system() == "Windows":
     print("Using 64bit Python")
     cmake_args = ["-DCMAKE_GENERATOR_PLATFORM=x64"]
 else:
-    print("Using 32bit Python (or unknown)")
+    print("Using 32bit Python (or an OS other than Windows)")
     cmake_args = []
 
-if not os.environ.get("LIBRAPID_NO_ARCH"):
+if os.environ.get("LIBRAPID_NO_ARCH"):
     cmake_args.append("-DLIBRAPID_NO_ARCH=yes")
 
 setup(
