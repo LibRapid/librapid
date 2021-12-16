@@ -253,27 +253,23 @@ namespace librapid::linalg {
 
 #ifdef LIBRAPID_HAS_CUDA
 
-	template<typename A, typename B>
-	inline common<A, B> cblas_dot_cuda(cublasHandle_t &handle, int64_t n, A *__restrict x, int64_t incx,
-									   B *__restrict y, int64_t incy) {
+	template<typename A, typename B, typename C>
+	inline void cblas_dot_cuda(cublasHandle_t &handle, int64_t n, A *__restrict x, int64_t incx,
+									   B *__restrict y, int64_t incy, C *__restrict c) {
 		// TODO: Write custom CUDA kernel for vector dot product
-		return 0;
+		*c = 0;
 	}
 
 	template<>
-	inline float cblas_dot_cuda(cublasHandle_t &handle, int64_t n, float *__restrict x, int64_t incx,
-								float *__restrict y, int64_t incy) {
-		float result;
-		cublasSdot_v2(handle, (int) n, x, (int) incx, y, (int) incy, &result);
-		return result;
+	inline void cblas_dot_cuda(cublasHandle_t &handle, int64_t n, float *__restrict x, int64_t incx,
+								float *__restrict y, int64_t incy, float *__restrict c) {
+		cublasSdot_v2(handle, (int) n, x, (int) incx, y, (int) incy, c);
 	}
 
 	template<>
-	inline double cblas_dot_cuda(cublasHandle_t &handle, int64_t n, double *__restrict x, int64_t incx,
-								 double *__restrict y, int64_t incy) {
-		double result;
-		cublasDdot_v2(handle, (int) n, x, (int) incx, y, (int) incy, &result);
-		return result;
+	inline void cblas_dot_cuda(cublasHandle_t &handle, int64_t n, double *__restrict x, int64_t incx,
+								 double *__restrict y, int64_t incy, double *__restrict c) {
+		cublasDdot_v2(handle, (int) n, x, (int) incx, y, (int) incy, c);
 	}
 
 	template<typename A, typename B, typename C>
