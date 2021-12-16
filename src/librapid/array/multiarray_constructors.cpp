@@ -236,6 +236,23 @@ namespace librapid {
 		return *this;
 	}
 
+	Array &Array::operator=(Complex<double> val) {
+		if (m_isChild && !m_isScalar)
+			throw std::invalid_argument("Cannot set an array with more than zero"
+										" dimensions to a scalar value. Array must"
+										" have zero dimensions (i.e. scalar)");
+		if (!m_isChild) {
+			if (m_references != nullptr) decrement();
+			constructNew(Extent(1), Stride(1), Datatype::CFLOAT64, Accelerator::CPU);
+		}
+
+		auto raw = createRaw();
+		rawArrayMemcpy(raw, RawArray{&val, Datatype::FLOAT64, Accelerator::CPU}, 1);
+
+		m_isScalar = true;
+		return *this;
+	}
+
 	Array::~Array() {
 		decrement();
 	}

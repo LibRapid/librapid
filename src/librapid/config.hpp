@@ -333,7 +333,36 @@ namespace librapid {
 	}
 }
 
-// Uncomment this to log Array reference changes
-// #define LIBRAPID_REFCHECK
+#include <type_traits>
+#include <librapid/autocast/custom_complex.hpp>
+
+namespace librapid {
+	template<typename A, typename B>
+	struct CommonType {
+		using type = typename std::common_type<A, B>::type;
+	};
+
+	template<typename A, typename B>
+	struct CommonType<Complex<A>, B> {
+		using type = typename Complex<typename std::common_type<A, B>::type>;
+	};
+
+	template<typename A, typename B>
+	struct CommonType<A, Complex<B>> {
+		using type = typename Complex<typename std::common_type<A, B>::type>;
+	};
+
+	template<typename A, typename B>
+	struct CommonType<Complex<A>, Complex<B>> {
+		using type = typename Complex<typename std::common_type<A, B>::type>;
+	};
+}
+
+//namespace std {
+//	template<typename A, typename B>
+//	struct common_type<Complex<A>, B> {
+//		using type = typename std::common
+//	};
+//}
 
 #endif // LIBRAPID_CONFIG
