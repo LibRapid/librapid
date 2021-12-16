@@ -375,6 +375,8 @@ PYBIND11_MODULE(_librapid, module) {
 			return res;
 		});
 
+	module.def("warmup", &librapid::warmup, py::arg("itersCPU") = 10, py::arg("itersGPU") = -1);
+
 	module.def("zerosLike", [](const librapid::Array &arr) { return librapid::zerosLike(arr); }, py::arg("array"));
 	module.def("onesLike", [](const librapid::Array &arr) { return librapid::onesLike(arr); }, py::arg("array"));
 	module.def("randomLike", [](const librapid::Array &arr, int64_t min, int64_t max, int64_t seed) { return librapid::randomLike(arr, min, max, seed); }, py::arg("array"), py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1);

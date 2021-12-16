@@ -314,8 +314,8 @@ namespace librapid
 								   int64_t size) {
 		// Freeing information
 		// 0 = no free
-		// 1 = free()
-		// 2 = cudaFree()
+		// 1 = cudaFree()
+		// 2 = free()
 
 		auto freeMode = -1;
 		if (dst.location == src.location) {
@@ -325,6 +325,7 @@ namespace librapid
 			if (src.location == Accelerator::CPU) {
 				// Copy from CPU to GPU
 				// Allocate memory
+
 				freeMode = 1;
 				rawArrayMalloc(dst, size);
 				rawArrayMemcpy(dst, src, size);
@@ -363,16 +364,15 @@ namespace librapid
 	inline void freeWithMode(RawArray &raw, int mode) {
 		// Freeing information
 		// 0 = no free
-		// 1 = free()
-		// 2 = cudaFree()
+		// 1 = cudaFree()
+		// 2 = free()
 		if (mode == 0)
 			return;
 
 		if (mode == 1 || mode == 2)
 			rawArrayFree(raw);
 		else
-			throw std::invalid_argument("Invalid free mode for binary "
-										"operation");
+			throw std::invalid_argument("Invalid free mode for binary operation");
 	}
 
 	/**
@@ -920,8 +920,8 @@ namespace librapid
 			RawArray tempSrcB = {(int64_t *) nullptr, srcB.dtype, dst.location};
 
 			// Allocate memory for temporary sources
-			rawArrayMalloc(tempSrcA, srcAIsScalar ? 1 : elems);
-			rawArrayMalloc(tempSrcB, srcBIsScalar ? 1 : elems);
+			// rawArrayMalloc(tempSrcA, srcAIsScalar ? 1 : elems);
+			// rawArrayMalloc(tempSrcB, srcBIsScalar ? 1 : elems);
 
 			// Copy the data from the original sources to the adjusted sources
 			int freeSrcA = makeSameAccelerator(tempSrcA, srcA, srcAIsScalar ? 1 : elems);
@@ -1006,7 +1006,7 @@ namespace librapid
 						} else if constexpr (std::is_same_v<A, float> && std::is_same_v<B, float> &&
 											 std::is_same_v<C, float>) {
 							vcl::Vec16f a, b;
-							int64_t i;
+							int64_t i = 0;
 							auto tmpSrcA = (float *__restrict) srcDataA;
 							auto tmpSrcB = (float *__restrict) srcDataB;
 							auto tmpDst = (float *__restrict) dstData;

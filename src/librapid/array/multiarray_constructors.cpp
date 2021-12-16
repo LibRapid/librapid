@@ -181,6 +181,12 @@ namespace librapid {
 			throw std::runtime_error("Haven't gotten to this yet...");
 		}
 
+		m_extent = other.m_extent;
+		m_stride = other.m_stride;
+		m_isScalar = other.m_isScalar;
+		m_dtype = other.m_dtype;
+		m_location = other.m_location;
+
 		return *this;
 	}
 
