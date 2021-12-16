@@ -344,17 +344,17 @@ namespace librapid {
 
 	template<typename A, typename B>
 	struct CommonType<Complex<A>, B> {
-		using type = typename Complex<typename std::common_type<A, B>::type>;
+		using type = Complex<typename std::common_type<A, B>::type>;
 	};
 
 	template<typename A, typename B>
 	struct CommonType<A, Complex<B>> {
-		using type = typename Complex<typename std::common_type<A, B>::type>;
+		using type = Complex<typename std::common_type<A, B>::type>;
 	};
 
 	template<typename A, typename B>
 	struct CommonType<Complex<A>, Complex<B>> {
-		using type = typename Complex<typename std::common_type<A, B>::type>;
+		using type = Complex<typename std::common_type<A, B>::type>;
 	};
 }
 
