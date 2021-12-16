@@ -22,7 +22,8 @@
 
 namespace librapid::linalg {
 	template<typename A, typename B>
-	using common = typename std::common_type<A, B>::type;
+	// using common = typename std::common_type<A, B>::type;
+	using common = typename CommonType<A, B>::type;
 
 	template<typename A, typename B>
 	inline common<A, B> cblas_dot(int64_t n, A *__restrict x, int64_t incx, B *__restrict y, int64_t incy) {
@@ -252,6 +253,29 @@ namespace librapid::linalg {
 
 #ifdef LIBRAPID_HAS_CUDA
 
+	template<typename A, typename B>
+	inline common<A, B> cblas_dot_cuda(cublasHandle_t &handle, int64_t n, A *__restrict x, int64_t incx,
+									   B *__restrict y, int64_t incy) {
+		// TODO: Write custom CUDA kernel for vector dot product
+		return 0;
+	}
+
+	template<>
+	inline float cblas_dot_cuda(cublasHandle_t &handle, int64_t n, float *__restrict x, int64_t incx,
+								float *__restrict y, int64_t incy) {
+		float result;
+		cublasSdot_v2(handle, (int) n, x, (int) incx, y, (int) incy, &result);
+		return result;
+	}
+
+	template<>
+	inline double cblas_dot_cuda(cublasHandle_t &handle, int64_t n, double *__restrict x, int64_t incx,
+								 double *__restrict y, int64_t incy) {
+		double result;
+		cublasDdot_v2(handle, (int) n, x, (int) incx, y, (int) incy, &result);
+		return result;
+	}
+
 	template<typename A, typename B, typename C>
 	inline void cblas_gemm_cuda(cublasHandle_t &handle, bool trans_a, bool trans_b, int64_t m,
 								int64_t n, int64_t k, A alpha,
@@ -268,6 +292,8 @@ namespace librapid::linalg {
 			blas_trans_b = CUBLAS_OP_T;
 		else
 			blas_trans_b = CUBLAS_OP_N;
+
+		// TODO: Create CUDA kernel for matrix multiplication with arbitrary datatypes
 	}
 
 	template<>
