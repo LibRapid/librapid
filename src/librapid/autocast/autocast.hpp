@@ -82,8 +82,8 @@ namespace librapid {
 				return false;
 			case Datatype::VALIDNONE:
 				return false;
-			// case Datatype::BOOL:
-			// 	return true;
+				// case Datatype::BOOL:
+				// 	return true;
 			case Datatype::INT64:
 				return true;
 			default:
@@ -104,8 +104,8 @@ namespace librapid {
 				return false;
 			case Datatype::VALIDNONE:
 				return false;
-			// case Datatype::BOOL:
-			// 	return false;
+				// case Datatype::BOOL:
+				// 	return false;
 			case Datatype::INT64:
 				return false;
 			default:
@@ -148,8 +148,8 @@ namespace librapid {
 				return 0;
 			case Datatype::VALIDNONE:
 				return 1;
-			// case Datatype::BOOL:
-			// 	return sizeof(bool);
+				// case Datatype::BOOL:
+				// 	return sizeof(bool);
 			case Datatype::INT64:
 				return sizeof(int64_t);
 			case Datatype::FLOAT32:
@@ -181,8 +181,8 @@ namespace librapid {
 				return "NONE";
 			case Datatype::VALIDNONE:
 				return "VALIDNONE";
-			// case Datatype::BOOL:
-			// 	return "BOOL";
+				// case Datatype::BOOL:
+				// 	return "BOOL";
 			case Datatype::INT64:
 				return "INT64";
 			case Datatype::FLOAT32:
@@ -216,6 +216,9 @@ namespace librapid {
 			return "GPU";
 		if (a == Accelerator::NONE)
 			return "NONE";
+
+		// Should never get to here
+		return "UNKNOWN";
 	}
 
 	/**
@@ -437,7 +440,8 @@ namespace librapid {
 #ifdef LIBRAPID_CUDA_STREAM
 			cudaSafeCall(cudaMallocAsync(&memory, bytes, cudaStream));
 #else
-			cudaSafeCall(cudaMalloc(&memory, datatypeBytes(raw.dtype) * elems));
+			cudaSafeCall(cudaDeviceSynchronize());
+			cudaSafeCall(cudaMalloc(&memory, bytes));
 #endif
 #endif // LIBRAPID_HAS_CUDA
 
@@ -507,6 +511,8 @@ namespace librapid {
 				memory = std::get<Complex<double> *>(raw.data);
 				break;
 			}
+			default:
+				break;
 		}
 
 		if (raw.location == Accelerator::CPU) {
@@ -517,6 +523,7 @@ namespace librapid {
 #ifdef LIBRAPID_CUDA_STREAM
 			cudaSafeCall(cudaFreeAsync(memory, cudaStream));
 #else
+			cudaSafeCall(cudaDeviceSynchronize());
 			cudaSafeCall(cudaFree(memory));
 #endif
 		}

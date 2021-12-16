@@ -1606,6 +1606,75 @@ namespace librapid {
 	[[nodiscard]] inline std::ostream &operator<<(std::ostream &os, const Array &arr) {
 		return os << arr.str();
 	}
+
+	/**
+	 * \rst
+	 *
+	 * Warmup the CPU and GPU (if applicable) by performing a variety of operations with different
+	 * datatypes repeatedly. This will ensure that most kernels are compiled and that the hardware
+	 * is running at a high clock-speed
+	 *
+	 * Parameters
+	 * ----------
+	 *
+	 * iters: Integer
+	 * 		Number of iterations to perform for each operation
+	 *
+	 * \endrst
+	 */
+	inline void warmup(int64_t itersCPU = 10, int64_t itersGPU = -1) {
+		std::cout << "Librapid Hardware Warmup\n";
+
+		const auto types = {Datatype::INT64, Datatype::FLOAT32, Datatype::FLOAT64, Datatype::CFLOAT64};
+	#ifdef LIBRAPID_HAS_CUDA
+		const auto locations = {Accelerator::CPU, Accelerator::GPU};
+	#else
+		const auto locations = {Accelerator::CPU};
+	#endif // LIBRAPID_HAS_CUDA
+
+		for (const auto &type: types) {
+			for (const auto &location: locations) {
+				std::cout << "Warming up " << acceleratorToString(location) <<
+						  " with " << datatypeToString(type);
+
+				double start = seconds();
+				auto tmp = Array(Extent({1000, 1000}), type, location);
+				int64_t iters;
+				if (location == Accelerator::CPU) {
+					iters = itersCPU;
+				} else if (location == Accelerator::GPU) {
+					if (itersGPU == -1) iters = itersCPU;
+					else iters = itersGPU;
+				}
+
+				for (int64_t i = 0; i < iters; ++i) {
+					tmp.fill(1);
+					auto res = tmp.clone();
+					res = tmp + res;
+					res = tmp - res;
+					res = tmp * res;
+					res = tmp / res;
+
+					res.fillRandom();
+					auto dotted = res.dot(res);
+
+					// Confuse the compiler
+					res = dotted * dotted / tmp - dotted + res * tmp;
+
+					if (location == Accelerator::GPU && i == 0)
+						std::cout << " || Kernels compiled";
+
+	// #ifdef LIBRAPID_HAS_CUDA
+	// 				if (location == Accelerator::GPU)
+	// 					cudaSafeCall(cudaStreamSynchronize(cudaStream));
+	// #endif
+				}
+				double end = seconds();
+
+				std::cout << " || Completed in " << (end - start) * 1000 << " ms\n";
+			}
+		}
+	}
 }
 
 #endif // LIBRAPID_ARRAY

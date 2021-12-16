@@ -116,11 +116,12 @@ namespace librapid {
 						int64_t incB = other.m_stride[0];
 
 						if (resLocn == Accelerator::CPU) {
-							res = (C) linalg::cblas_dot(N, a, incA, b, incB);
+							*c = (C) linalg::cblas_dot(N, a, incA, b, incB);
 						}
 								#ifdef LIBRAPID_HAS_CUDA
 						else {
-							res = (C) linalg::cblas_dot_cuda(cublasHandle, N, a, incA, b, incB);
+							// res = (C) linalg::cblas_dot_cuda(cublasHandle, N, a, incA, b, incB);
+							linalg::cblas_dot_cuda(cublasHandle, N, a, incA, b, incB, c);
 						}
 						#else
 						else {
@@ -158,8 +159,7 @@ namespace librapid {
 								#ifdef LIBRAPID_HAS_CUDA
 						else {
 							linalg::cblas_gemm_cuda(cublasHandle, transA, transB, M, N, K, alpha, a, lda, b,
-													ldb, beta, c,
-													ldc);
+													ldb, beta, c, ldc);
 						}
 						#else
 						else {

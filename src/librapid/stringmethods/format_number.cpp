@@ -13,16 +13,19 @@ namespace librapid {
 
 		std::string str = stream.str();
 
-		switch (international) {
-			case true:
-				if (floating && str.find_last_of('.') == std::string::npos)
-					str += ".0";
-			case false:
-				if (floating && str.find_last_of('.') == std::string::npos)
-					str += ",0";
-				else
-					std::replace(str.begin(), str.end(), '.', ',');
+		if (international) {
+			if (floating && str.find_last_of('.') == std::string::npos)
+				str += ".0";
+		} else {
+			if (floating && str.find_last_of('.') == std::string::npos)
+				str += ",0";
+			else
+				std::replace(str.begin(), str.end(), '.', ',');
 		}
 		return str;
+	}
+
+	std::string format_number(const Complex<double> &val, bool floating, bool international) {
+		return val.str();
 	}
 }
