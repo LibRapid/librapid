@@ -283,13 +283,14 @@ else ()
     target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR})
 endif ()
 
-if (NOT DEFINED LIBRAPID_NO_ARCH)
+# if (NOT DEFINED LIBRAPID_NO_ARCH)
+if ($ENV{LIBRAPID_NO_ARCH})
+    message(STATUS "Not optimising for architecture")
+else ()
     include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/FindAVX.cmake")
 
     message(STATUS "Found AVX: ${AVX_FOUND}")
     message(STATUS "Compiler Options: ${AVX_FLAGS}")
-else ()
-    message(STATUS "Not optimising for architecture")
 endif ()
 
 # Set the compiler to use maximum optimisations (SPEED!!!!)
