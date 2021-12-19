@@ -5,6 +5,14 @@
 #include <complex>
 
 namespace librapid {
+    template<typename T>
+    class Complex;
+
+    template<typename T>
+    std::string format_number(const T &val);
+    template<typename T>
+    std::string format_number(const Complex<T> &val);
+
 	template<class T>
 	class Complex {
 	public:
@@ -195,7 +203,7 @@ namespace librapid {
 			return m_imag;
 		}
 
-		operator std::string() const {
+		explicit operator std::string() const {
 			return str();
 		}
 
@@ -205,11 +213,11 @@ namespace librapid {
 		}
 
 		template<typename V>
-		operator std::complex<V>() const {
+		explicit operator std::complex<V>() const {
 			return std::complex<V>(m_real, m_imag);
 		}
 
-		std::string str() const {
+		[[nodiscard]] std::string str() const {
 			std::string res;
 			res += format_number(m_real);
 			if (m_imag >= 0)
