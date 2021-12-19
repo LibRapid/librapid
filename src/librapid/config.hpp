@@ -19,9 +19,9 @@ namespace py = pybind11;
 #endif
 
 #if defined(NDEBUG) || defined(LIBRAPID_NDEBUG)
-#define LIBRAPID_NDEBUG
+#define LIBRAPID_RELEASE
 #else
-#define LIBRAPID_NDEBUG
+#define LIBRAPID_DEBUG
 #endif // NDEBUG || LIBRAPID_NDEBUG
 
 #ifndef LIBRAPID_HAS_OMP
