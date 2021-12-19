@@ -334,7 +334,6 @@ jobs:
 
       - name: Run cibuildwheel
         run: |
-          export LIBRAPID_NO_ARCH=yes
           cibuildwheel --output-dir wheelhouse
         env:
           LIBRAPID_NO_ARCH: yes
@@ -345,7 +344,6 @@ jobs:
 
       - name: Install Library
         run: |
-          export LIBRAPID_NO_ARCH=yes
           python -m pip install . -vvvv
         env:
           LIBRAPID_NO_ARCH: yes
