@@ -167,6 +167,7 @@ jobs:
       - if: runner.os == 'macOS'
         name: Run cibuildwheel
         run: |
+          export LIBRAPID_NO_ARCH=yes
           cibuildwheel --output-dir wheelhouse
         env:
           CC: gcc-11
@@ -176,6 +177,7 @@ jobs:
       - if: runner.os != 'macOS'
         name: Run cibuildwheel
         run: |
+          export LIBRAPID_NO_ARCH=yes
           cibuildwheel --output-dir wheelhouse
         env:
           LIBRAPID_NO_ARCH: yes
@@ -325,6 +327,7 @@ jobs:
 
       - name: Run cibuildwheel
         run: |
+          export LIBRAPID_NO_ARCH=yes
           cibuildwheel --output-dir wheelhouse
         env:
           LIBRAPID_NO_ARCH: yes
