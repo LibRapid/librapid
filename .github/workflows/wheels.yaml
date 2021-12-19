@@ -104,6 +104,7 @@ jobs:
       CIBW_SKIP: "*-win32 *-manylinux_i686 *-musllinux_i686"
       CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
       CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2014
+      CIBW_ENVIRONMENT: LIBRAPID_NO_ARCH=yes
 
     steps:
       - name: Extract branch name
@@ -189,15 +190,20 @@ jobs:
       - if: runner.os == 'macOS'
         name: Install Library
         run: |
+          export LIBRAPID_NO_ARCH=yes
           python -m pip install . -vvvv
         env:
           CC: gcc-11
           CXX: g++-11
+          LIBRAPID_NO_ARCH: yes
 
       - if: runner.os != 'macOS'
         name: Install Library
         run: |
+          export LIBRAPID_NO_ARCH=yes
           python -m pip install . -vvvv
+        env:
+          LIBRAPID_NO_ARCH: yes
 
       # - name: Install Library
       #   run: |
@@ -233,8 +239,9 @@ jobs:
     runs-on: windows-latest
 
     env:
-      CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
+      CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310*"
       CIBW_SKIP: "*-win32"
+      CIBW_ENVIRONMENT: LIBRAPID_NO_ARCH=yes
 
     steps:
       - name: Extract branch name
@@ -338,7 +345,10 @@ jobs:
 
       - name: Install Library
         run: |
+          export LIBRAPID_NO_ARCH=yes
           python -m pip install . -vvvv
+        env:
+          LIBRAPID_NO_ARCH: yes
 
       - name: Show all files in librapid install
         run: |
