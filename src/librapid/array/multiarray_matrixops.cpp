@@ -105,7 +105,7 @@ namespace librapid {
 
 			switch (operationType) {
 				case imp::LinAlgOp::VectorVector : {
-					// 2D array -- matrix matrix multiplication
+					// Vector dot product
 					std::visit([&](auto *c, auto *a, auto *b) {
 						using A = typename std::remove_pointer<decltype(a)>::type;
 						using B = typename std::remove_pointer<decltype(b)>::type;
@@ -131,6 +131,13 @@ namespace librapid {
 					}, res.m_dataStart, lhs.m_dataStart, rhs.m_dataStart);
 					break;
 				}
+                case imp::LinAlgOp::MatrixVector : {
+                    // Matrix-vector multiplication
+                    std::visit([&](auto *c, auto *a, auto *b) {
+                        throw std::runtime_error("Not implemented yet");
+                    }, res.m_dataStart, lhs.m_dataStart, rhs.m_dataStart);
+                    break;
+                }
 				case imp::LinAlgOp::MatrixMatrix : {
 					// 2D array -- matrix matrix multiplication
 					std::visit([&](auto *c, auto *a, auto *b) {
