@@ -116,7 +116,7 @@ namespace py = pybind11;
 #endif
 
 namespace librapid {
-	constexpr int64_t AUTO = -1;
+    constexpr int64_t AUTO = -1;
 }
 
 #if defined(OPENBLAS_OPENMP) || defined(OPENBLAS_THREAD) || defined(OPENBLAS_SEQUENTIAL)
@@ -127,82 +127,82 @@ namespace librapid {
 
 // BLAS config settings
 namespace librapid {
-	inline bool hasBlas() {
+    inline bool hasBlas() {
 #ifdef LIBRAPID_HAS_BLAS
-		return true;
+        return true;
 #else
-		return false;
+        return false;
 #endif // LIBRAPID_HAS_BLAS
-	}
+    }
 
-	inline bool hasCuda() {
+    inline bool hasCuda() {
 #ifdef LIBRAPID_HAS_CUDA
-		return true;
+        return true;
 #else
-		return false;
+        return false;
 #endif
-	}
+    }
 
-	// inline void setBlasThreads(int num)
-	// {
-	// #ifdef LIBRAPID_HAS_OPENBLAS
-	// 	openblas_set_num_threads(num);
-	// 	goto_set_num_threads(num);
-	//
-	// #ifdef LR_HAS_OMP
-	// 	omp_set_num_threads(num);
-	// #endif // LR_HAS_OMP
-	// #else
-	// 	throw std::runtime_error("Cannot set BLAS threads because OpenBLAS was not "
-	// 							 "linked against");
-	// #endif // LIBRAPID_HAS_OPENBLAS
-	// }
-	//
-	// inline int getBlasThreads()
-	// {
-	// #ifdef LIBRAPID_HAS_OPENBLAS
-	// 	return openblas_get_num_threads();
-	// #else
-	// 	throw std::runtime_error("Cannot set BLAS threads because OpenBLAS was not "
-	// 							 "linked against");
-	// 	return -1;
-	// #endif // LIBRAPID_HAS_OPENBLAS
-	// }
+    // inline void setBlasThreads(int num)
+    // {
+    // #ifdef LIBRAPID_HAS_OPENBLAS
+    // 	openblas_set_num_threads(num);
+    // 	goto_set_num_threads(num);
+    //
+    // #ifdef LR_HAS_OMP
+    // 	omp_set_num_threads(num);
+    // #endif // LR_HAS_OMP
+    // #else
+    // 	throw std::runtime_error("Cannot set BLAS threads because OpenBLAS was not "
+    // 							 "linked against");
+    // #endif // LIBRAPID_HAS_OPENBLAS
+    // }
+    //
+    // inline int getBlasThreads()
+    // {
+    // #ifdef LIBRAPID_HAS_OPENBLAS
+    // 	return openblas_get_num_threads();
+    // #else
+    // 	throw std::runtime_error("Cannot set BLAS threads because OpenBLAS was not "
+    // 							 "linked against");
+    // 	return -1;
+    // #endif // LIBRAPID_HAS_OPENBLAS
+    // }
 
-	inline void setNumThreads(int64_t num) {
+    inline void setNumThreads(int64_t num) {
 #if defined(LIBRAPID_HAS_OPENBLAS)
-		openblas_set_num_threads((int) num);
-		goto_set_num_threads((int) num);
+        openblas_set_num_threads((int) num);
+        goto_set_num_threads((int) num);
 #endif
 
 #if defined(_OPENMP)
-		omp_set_num_threads((int) num);
+        omp_set_num_threads((int) num);
 #endif
-	}
+    }
 
-	inline int getNumThreads() {
+    inline int getNumThreads() {
 #if defined(LIBRAPID_HAS_OPENBLAS)
-		return openblas_get_num_threads();
+        return openblas_get_num_threads();
 #elif defined(LR_HAS_OMP)
-		return omp_get_num_threads();
+        return omp_get_num_threads();
 #endif
-		return 1;
-	}
+        return 1;
+    }
 
-	namespace imp {
-		class ThreadSetter {
-		public:
-			ThreadSetter(int64_t n) {
-                std::cout << "Initializing LibRapid with " << n << " threads\n";
-				setNumThreads(n);
-				#ifdef LIBRAPID_HAS_OPENBLAS
-				openblas_set_num_threads(n);
-				#endif
-			}
-		};
-
-		inline ThreadSetter setter = ThreadSetter(4);
-	}
+//	namespace imp {
+//		class ThreadSetter {
+//		public:
+//			ThreadSetter(int64_t n) {
+//                std::cout << "Initializing LibRapid with " << n << " threads\n";
+//				setNumThreads(n);
+//				#ifdef LIBRAPID_HAS_OPENBLAS
+//				openblas_set_num_threads(n);
+//				#endif
+//			}
+//		};
+//
+//		inline ThreadSetter setter = ThreadSetter(4);
+//	}
 }
 
 // CUDA enabled LibRapid
@@ -221,30 +221,30 @@ namespace librapid {
 
 // cuBLAS API errors
 static const char *getCublasErrorEnum_(cublasStatus_t error) {
-	switch (error) {
-		case CUBLAS_STATUS_SUCCESS:
-			return "CUBLAS_STATUS_SUCCESS";
-		case CUBLAS_STATUS_NOT_INITIALIZED:
-			return "CUBLAS_STATUS_NOT_INITIALIZED";
-		case CUBLAS_STATUS_ALLOC_FAILED:
-			return "CUBLAS_STATUS_ALLOC_FAILED";
-		case CUBLAS_STATUS_INVALID_VALUE:
-			return "CUBLAS_STATUS_INVALID_VALUE";
-		case CUBLAS_STATUS_ARCH_MISMATCH:
-			return "CUBLAS_STATUS_ARCH_MISMATCH";
-		case CUBLAS_STATUS_MAPPING_ERROR:
-			return "CUBLAS_STATUS_MAPPING_ERROR";
-		case CUBLAS_STATUS_EXECUTION_FAILED:
-			return "CUBLAS_STATUS_EXECUTION_FAILED";
-		case CUBLAS_STATUS_INTERNAL_ERROR:
-			return "CUBLAS_STATUS_INTERNAL_ERROR";
-		case CUBLAS_STATUS_NOT_SUPPORTED:
-			return "CUBLAS_STATUS_NOT_SUPPORTED";
-		case CUBLAS_STATUS_LICENSE_ERROR:
-			return "CUBLAS_STATUS_LICENSE_ERROR";
-	}
+    switch (error) {
+        case CUBLAS_STATUS_SUCCESS:
+            return "CUBLAS_STATUS_SUCCESS";
+        case CUBLAS_STATUS_NOT_INITIALIZED:
+            return "CUBLAS_STATUS_NOT_INITIALIZED";
+        case CUBLAS_STATUS_ALLOC_FAILED:
+            return "CUBLAS_STATUS_ALLOC_FAILED";
+        case CUBLAS_STATUS_INVALID_VALUE:
+            return "CUBLAS_STATUS_INVALID_VALUE";
+        case CUBLAS_STATUS_ARCH_MISMATCH:
+            return "CUBLAS_STATUS_ARCH_MISMATCH";
+        case CUBLAS_STATUS_MAPPING_ERROR:
+            return "CUBLAS_STATUS_MAPPING_ERROR";
+        case CUBLAS_STATUS_EXECUTION_FAILED:
+            return "CUBLAS_STATUS_EXECUTION_FAILED";
+        case CUBLAS_STATUS_INTERNAL_ERROR:
+            return "CUBLAS_STATUS_INTERNAL_ERROR";
+        case CUBLAS_STATUS_NOT_SUPPORTED:
+            return "CUBLAS_STATUS_NOT_SUPPORTED";
+        case CUBLAS_STATUS_LICENSE_ERROR:
+            return "CUBLAS_STATUS_LICENSE_ERROR";
+    }
 
-	return "UNKNOWN ERROR";
+    return "UNKNOWN ERROR";
 }
 
 //********************//
@@ -255,10 +255,10 @@ static const char *getCublasErrorEnum_(cublasStatus_t error) {
 #endif
 
 inline void cublasSafeCall_(cublasStatus_t err, const char *file, const int line) {
-	if (err != CUBLAS_STATUS_SUCCESS)
-		throw std::runtime_error("cuBLAS error at (" + std::string(file) +
-								 ", line " + std::to_string(line) + "): "
-								 + getCublasErrorEnum_(err));
+    if (err != CUBLAS_STATUS_SUCCESS)
+        throw std::runtime_error("cuBLAS error at (" + std::string(file) +
+                                 ", line " + std::to_string(line) + "): "
+                                 + getCublasErrorEnum_(err));
 }
 
 //********************//
@@ -269,10 +269,10 @@ inline void cublasSafeCall_(cublasStatus_t err, const char *file, const int line
 #endif
 
 inline void cudaSafeCall_(cudaError_t err, const char *file, const int line) {
-	if (err != cudaSuccess)
-		throw std::runtime_error("CUDA error at (" + std::string(file) +
-								 ", line " + std::to_string(line) + "): "
-								 + cudaGetErrorString(err));
+    if (err != cudaSuccess)
+        throw std::runtime_error("CUDA error at (" + std::string(file) +
+                                 ", line " + std::to_string(line) + "): "
+                                 + cudaGetErrorString(err));
 }
 
 #define jitifyCall(call)                                                \
@@ -310,48 +310,48 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line) {
 #endif
 
 namespace librapid {
-	inline void *alignedMalloc(int64_t requiredBytes,
-							   int64_t alignment = DATA_ALIGN) {
-		void *p1; // original block
-		void **p2; // aligned block
-		int64_t offset = alignment - 1 + sizeof(void *);
+    inline void *alignedMalloc(int64_t requiredBytes,
+                               int64_t alignment = DATA_ALIGN) {
+        void *p1; // original block
+        void **p2; // aligned block
+        int64_t offset = alignment - 1 + sizeof(void *);
 
-		if ((p1 = (void *) malloc(requiredBytes + offset)) == nullptr)
-			throw std::bad_alloc();
+        if ((p1 = (void *) malloc(requiredBytes + offset)) == nullptr)
+            throw std::bad_alloc();
 
-		p2 = (void **) (((int64_t) (p1) + offset) & ~(alignment - 1));
-		p2[-1] = p1;
-		return p2;
-	}
+        p2 = (void **) (((int64_t) (p1) + offset) & ~(alignment - 1));
+        p2[-1] = p1;
+        return p2;
+    }
 
-	inline void alignedFree(void *p) {
-		free(((void **) p)[-1]);
-	}
+    inline void alignedFree(void *p) {
+        free(((void **) p)[-1]);
+    }
 }
 
 #include <type_traits>
 #include <librapid/autocast/custom_complex.hpp>
 
 namespace librapid {
-	template<typename A, typename B>
-	struct CommonType {
-		using type = typename std::common_type<A, B>::type;
-	};
+    template<typename A, typename B>
+    struct CommonType {
+        using type = typename std::common_type<A, B>::type;
+    };
 
-	template<typename A, typename B>
-	struct CommonType<Complex<A>, B> {
-		using type = Complex<typename std::common_type<A, B>::type>;
-	};
+    template<typename A, typename B>
+    struct CommonType<Complex<A>, B> {
+        using type = Complex<typename std::common_type<A, B>::type>;
+    };
 
-	template<typename A, typename B>
-	struct CommonType<A, Complex<B>> {
-		using type = Complex<typename std::common_type<A, B>::type>;
-	};
+    template<typename A, typename B>
+    struct CommonType<A, Complex<B>> {
+        using type = Complex<typename std::common_type<A, B>::type>;
+    };
 
-	template<typename A, typename B>
-	struct CommonType<Complex<A>, Complex<B>> {
-		using type = Complex<typename std::common_type<A, B>::type>;
-	};
+    template<typename A, typename B>
+    struct CommonType<Complex<A>, Complex<B>> {
+        using type = Complex<typename std::common_type<A, B>::type>;
+    };
 }
 
 //namespace std {
