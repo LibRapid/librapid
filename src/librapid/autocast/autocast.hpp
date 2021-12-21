@@ -607,7 +607,7 @@ namespace librapid {
 					for (int64_t i = 0; i < elems; ++i)
 						a[i] = b[i];
 				} else {
-#pragma omp parallel for shared(a, b) num_threads(NUM_THREADS)
+#pragma omp parallel for shared(a, b)
 					for (int64_t i = 0; i < elems; ++i)
 						a[i] = b[i];
 				}
