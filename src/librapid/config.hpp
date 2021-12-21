@@ -44,11 +44,6 @@ namespace py = pybind11;
 #define DATA_ALIGN 32 // 1024
 #endif
 
-// Number of threads for parallel regions
-#ifndef NUM_THREADS
-#define NUM_THREADS 8
-#endif // NUM_THREADS
-
 // For n < THREAD_THRESHOLD, code runs serially -- otherwise it'll run in parallel
 #ifndef THREAD_THREASHOLD
 #define THREAD_THREASHOLD 10000
@@ -198,14 +193,15 @@ namespace librapid {
 		class ThreadSetter {
 		public:
 			ThreadSetter(int64_t n) {
+                std::cout << "Initializing LibRapid with " << n << " threads\n";
 				setNumThreads(n);
 				#ifdef LIBRAPID_HAS_OPENBLAS
-				openblas_set_num_threads(std::thread::hardware_concurrency());
+				openblas_set_num_threads(n);
 				#endif
 			}
 		};
 
-		inline ThreadSetter setter = ThreadSetter(NUM_THREADS);
+		inline ThreadSetter setter = ThreadSetter(4);
 	}
 }
 
