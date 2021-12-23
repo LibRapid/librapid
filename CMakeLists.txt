@@ -68,7 +68,6 @@ set(sources # Array library
         # Math library
         "src/librapid/math/core_math.cpp"
         # String methods
-        "src/librapid/stringmethods/format_number.cpp"
         # Utilities
         "src/librapid/utils/color.cpp"
         "src/librapid/utils/console_utils.cpp"

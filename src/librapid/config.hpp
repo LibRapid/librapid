@@ -56,13 +56,17 @@ namespace py = pybind11;
 
 // Operating system defines
 
-#if defined(_M_IX86)
-#define LIBRAPID_X86
-#elif defined(_M_X64)
+// Check for windows
+#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN64)
 #define LIBRAPID_X64
 #else
-#define LIBRAPID_PYTHON_UNKNOWN
+#define LIBRAPID_X86
 #endif
+#endif
+
+// Check for GCC
+
 
 #if defined(_WIN32)
 #define LIBRAPID_OS_WINDOWS // Windows

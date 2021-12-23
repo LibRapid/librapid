@@ -73,8 +73,6 @@ namespace librapid {
 	}
 
 	Array::Array(bool val, Datatype dtype, Accelerator locn) {
-        std::cout << "Debug Point: Bool Array Constructor\n";
-
 		initializeCudaStream();
 
 		constructNew(Extent(1), Stride(1), dtype, locn);
@@ -99,8 +97,6 @@ namespace librapid {
 	}
 
 	Array::Array(float val, Datatype dtype, Accelerator locn) {
-        std::cout << "Debug Point: Float Array Constructor\n";
-
 		initializeCudaStream();
 
 		constructNew(Extent(1), Stride(1), dtype, locn);
@@ -124,9 +120,6 @@ namespace librapid {
 	}
 
 	Array::Array(double val, Datatype dtype, Accelerator locn) {
-        std::cout << "Debug Point: Double Array Constructor\n";
-        std::cout << "Information: " << val << "\n";
-
 		initializeCudaStream();
 
 		constructNew(Extent(1), Stride(1), dtype, locn);

@@ -342,15 +342,6 @@ namespace librapid {
 #define CONSTRUCTOR_TEMPLATE \
         template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
 
-#define CONSTRUCTOR_BODY_VEC(TYPE) \
-        Array(const TYPE &values, Datatype dtype = Datatype::NONE, Accelerator locn = Accelerator::CPU) { \
-            using nonConst = typename std::remove_const<Array>::type; \
-            auto shape = utils::extractSize(values); \
-            constructNew(Extent(shape), Stride::fromExtent(Extent(shape)), dtype == Datatype::NONE ? typeToDatatype<V>() : dtype, locn); \
-            for (uint64_t i = 0; i < values.size(); i++) \
-                (nonConst) subscript(i) = Array(values[i]); \
-        }
-
 #define CONSTRUCTOR_BODY_INIT(TYPE)    \
         Array(const TYPE &values, Datatype dtype = Datatype::NONE, Accelerator locn = Accelerator::CPU) { \
             std::vector<Array> toStack; \
@@ -364,77 +355,77 @@ namespace librapid {
 #define CINIT std::initializer_list
 
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < V >) // 1D
+        CONSTRUCTOR_BODY_INIT(CVEC < V >) // 1D
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < V >)
 
         // 2D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < V >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < V >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < V >>)
 
         // 3D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < V>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < V>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < V>>>)
 
         // 4D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < V >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < V >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < V >> >>)
 
         // 5D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < V >>>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < V >>>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < V >>>>>)
 
         // 6D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>)
 
         // 7D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >>>>>)
 
         // 8D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >>)
 
         //9D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>>>>)
 
         //10D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(
                 CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >> >>)
 
 #undef CONSTRUCTOR_TEMPLATE
-#undef CONSTRUCTOR_BODY_VEC
+#undef CONSTRUCTOR_BODY_INIT
 #undef CONSTRUCTOR_BODY_INIT
 #undef CVEC
 #undef CINIT
@@ -443,15 +434,6 @@ namespace librapid {
 #pragma region STRING_ENUM_CONSTRUCTORS
 #define CONSTRUCTOR_TEMPLATE \
         template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
-
-#define CONSTRUCTOR_BODY_VEC(TYPE) \
-        Array(const TYPE &values, const std::string &dtype, Accelerator locn = Accelerator::CPU) { \
-            using nonConst = typename std::remove_const<Array>::type; \
-            auto shape = utils::extractSize(values); \
-            constructNew(Extent(shape), Stride::fromExtent(Extent(shape)), dtype.empty() ? typeToDatatype<V>() : stringToDatatype(dtype), locn); \
-            for (uint64_t i = 0; i < values.size(); i++) \
-                (nonConst) subscript(i) = Array(values[i]); \
-        }
 
 #define CONSTRUCTOR_BODY_INIT(TYPE)    \
         Array(const TYPE &values, const std::string &dtype, Accelerator locn = Accelerator::CPU) { \
@@ -466,77 +448,77 @@ namespace librapid {
 #define CINIT std::initializer_list
 
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < V >) // 1D
+        CONSTRUCTOR_BODY_INIT(CVEC < V >) // 1D
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < V >)
 
         // 2D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < V >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < V >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < V >>)
 
         // 3D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < V>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < V>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < V>>>)
 
         // 4D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < V >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < V >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < V >> >>)
 
         // 5D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < V >>>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < V >>>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < V >>>>>)
 
         // 6D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>)
 
         // 7D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >>>>>)
 
         // 8D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >>)
 
         //9D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>>>>)
 
         //10D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(
                 CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >> >>)
 
 #undef CONSTRUCTOR_TEMPLATE
-#undef CONSTRUCTOR_BODY_VEC
+#undef CONSTRUCTOR_BODY_INIT
 #undef CONSTRUCTOR_BODY_INIT
 #undef CVEC
 #undef CINIT
@@ -545,15 +527,6 @@ namespace librapid {
 #pragma region ENUM_STRING_CONSTUCTORS
 #define CONSTRUCTOR_TEMPLATE \
         template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
-
-#define CONSTRUCTOR_BODY_VEC(TYPE) \
-        Array(const TYPE &values, Datatype dtype, const std::string &locn) { \
-            using nonConst = typename std::remove_const<Array>::type; \
-            auto shape = utils::extractSize(values); \
-            constructNew(Extent(shape), Stride::fromExtent(Extent(shape)), dtype == Datatype::NONE ? typeToDatatype<V>() : dtype, locn.empty() ? Accelerator::CPU : stringToAccelerator(locn)); \
-            for (uint64_t i = 0; i < values.size(); i++) \
-                (nonConst) subscript(i) = Array(values[i]); \
-        }
 
 #define CONSTRUCTOR_BODY_INIT(TYPE)    \
         Array(const TYPE &values, Datatype dtype, const std::string &locn) { \
@@ -568,77 +541,77 @@ namespace librapid {
 #define CINIT std::initializer_list
 
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < V >) // 1D
+        CONSTRUCTOR_BODY_INIT(CVEC < V >) // 1D
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < V >)
 
         // 2D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < V >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < V >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < V >>)
 
         // 3D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < V>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < V>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < V>>>)
 
         // 4D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < V >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < V >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < V >> >>)
 
         // 5D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < V >>>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < V >>>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < V >>>>>)
 
         // 6D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>)
 
         // 7D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >>>>>)
 
         // 8D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >>)
 
         //9D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>>>>)
 
         //10D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(
                 CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >> >>)
 
 #undef CONSTRUCTOR_TEMPLATE
-#undef CONSTRUCTOR_BODY_VEC
+#undef CONSTRUCTOR_BODY_INIT
 #undef CONSTRUCTOR_BODY_INIT
 #undef CVEC
 #undef CINIT
@@ -647,15 +620,6 @@ namespace librapid {
 #pragma region STRING_STRING_CONSTRUCTORS
 #define CONSTRUCTOR_TEMPLATE \
         template<typename V, typename std::enable_if<std::is_scalar<V>::value, int>::type = 0>
-
-#define CONSTRUCTOR_BODY_VEC(TYPE) \
-        Array(const TYPE &values, const std::string &dtype, const std::string &locn) { \
-            using nonConst = typename std::remove_const<Array>::type; \
-            auto shape = utils::extractSize(values); \
-            constructNew(Extent(shape), Stride::fromExtent(Extent(shape)), dtype.empty() ? typeToDatatype<V>() : stringToDatatype(dtype), locn.empty() ? Accelerator::CPU : stringToAccelerator(locn)); \
-            for (uint64_t i = 0; i < values.size(); i++) \
-                (nonConst) subscript(i) = Array(values[i]); \
-        }
 
 #define CONSTRUCTOR_BODY_INIT(TYPE)    \
         Array(const TYPE &values, const std::string &dtype, const std::string &locn) { \
@@ -671,77 +635,77 @@ namespace librapid {
 
         // 1D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < V >)
+        CONSTRUCTOR_BODY_INIT(CVEC < V >)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < V >)
 
         // 2D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < V >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < V >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < V >>)
 
         // 3D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < V>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < V>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < V>>>)
 
         // 4D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < V >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < V >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < V >> >>)
 
         // 5D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < V >>>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < V >>>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < V >>>>>)
 
         // 6D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>)
 
         // 7D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >>>>>)
 
         // 8D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >>)
 
         //9D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>>>>)
 
         //10D
         CONSTRUCTOR_TEMPLATE
-        CONSTRUCTOR_BODY_VEC(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >> >>)
+        CONSTRUCTOR_BODY_INIT(CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >> >>)
 
         CONSTRUCTOR_TEMPLATE
         CONSTRUCTOR_BODY_INIT(
                 CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >> >>)
 
 #undef CONSTRUCTOR_TEMPLATE
-#undef CONSTRUCTOR_BODY_VEC
+#undef CONSTRUCTOR_BODY_INIT
 #undef CONSTRUCTOR_BODY_INIT
 #undef CVEC
 #undef CINIT
