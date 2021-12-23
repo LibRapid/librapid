@@ -395,6 +395,9 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("concatenate", [](const std::vector<librapid::Array> &arrays, int64_t axis) { return librapid::concatenate(arrays, axis); }, py::arg("arrays"), py::arg("axis") = 0);
 	module.def("stack", [](const std::vector<librapid::Array> &arrays, int64_t axis) { return librapid::stack(arrays, axis); }, py::arg("arrays"), py::arg("axis") = 0);
 
+	module.def("dot", [](const librapid::Array &lhs, const librapid::Array &rhs, librapid::Array &res) { librapid::dot(lhs, rhs, res); }, py::arg("lhs"), py::arg("rhs"), py::arg("res"));
+	module.def("dot", [](const librapid::Array &lhs, const librapid::Array &rhs) { return librapid::dot(lhs, rhs); }, py::arg("lhs"), py::arg("rhs"));
+
 	// Colours
 	py::class_<librapid::RGB>(module, "RGB")
 		.def(py::init<int, int, int>(), py::arg("red") = 0, py::arg("green") = 0, py::arg("blue") = 0)

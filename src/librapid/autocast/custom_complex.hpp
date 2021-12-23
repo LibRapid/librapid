@@ -5,14 +5,6 @@
 #include <complex>
 
 namespace librapid {
-    template<typename T>
-    class Complex;
-
-    template<typename T>
-    std::string format_number(const T &val);
-    template<typename T>
-    std::string format_number(const Complex<T> &val);
-
 	template<class T>
 	class Complex {
 	public:
@@ -219,6 +211,7 @@ namespace librapid {
 
 		[[nodiscard]] std::string str() const {
 			std::string res;
+            std::cout << "Information: " << m_real << "\n";
 			res += format_number(m_real);
 			if (m_imag >= 0)
 				res += "+";
@@ -279,14 +272,6 @@ namespace librapid {
 	template<class T>
 	std::ostream &operator<<(std::ostream &os, const Complex<T> &val) {
 		return os << val.str();
-	}
-
-	template<typename T>
-	std::string format_number(const Complex<T> &val) {
-		std::stringstream stream;
-		stream.precision(10);
-		stream << val;
-		return stream.str();
 	}
 }
 

@@ -1313,6 +1313,10 @@ namespace librapid {
             m_isScalar = val;
         }
 
+        [[nodiscard]] inline RawArrayData _dataStart() const {
+            return m_dataStart;
+        }
+
     private:
         inline void initializeCudaStream() const {
 #ifdef LIBRAPID_HAS_CUDA
@@ -1602,6 +1606,10 @@ namespace librapid {
      * \endrst
      */
     [[nodiscard]] Array stack(const std::vector<Array>(&arrays), int64_t axis = 0);
+
+    void dot(const Array &lhs, const Array &rhs, Array &res);
+
+    [[nodiscard]] Array dot(const Array &lhs, const Array &rhs);
 
     [[nodiscard]] inline std::ostream &operator<<(std::ostream &os, const Array &arr) {
         return os << arr.str();
