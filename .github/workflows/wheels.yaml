@@ -48,7 +48,7 @@ jobs:
         run: |
           git clone https://github.com/xianyi/OpenBLAS.git
           cd OpenBLAS
-          git reset --hard 253670383f15cd4d25c6be6b210dfa48a6dcc883
+          git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
         shell: bash
 
       - name: Build OpenBLAS
@@ -100,7 +100,7 @@ jobs:
         platform: [ macos-10.15, ubuntu-latest ]
         targetplatform: [ x64 ]
     env:
-      CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
+      CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310-*"
       CIBW_SKIP: "*-win32 *-manylinux_i686 *-musllinux_i686"
       CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
       CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2014
@@ -140,7 +140,7 @@ jobs:
         run: |
           git clone https://github.com/xianyi/OpenBLAS.git
           cd OpenBLAS
-          git reset --hard 253670383f15cd4d25c6be6b210dfa48a6dcc883
+          git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
         shell: bash
 
       - name: Build OpenBLAS
@@ -239,7 +239,7 @@ jobs:
     runs-on: windows-latest
 
     env:
-      CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310*"
+      CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310-*"
       CIBW_SKIP: "*-win32"
       CIBW_ENVIRONMENT: LIBRAPID_NO_ARCH=yes
 
@@ -284,7 +284,7 @@ jobs:
         run: |
           git clone https://github.com/xianyi/OpenBLAS.git
           cd OpenBLAS
-          git reset --hard 253670383f15cd4d25c6be6b210dfa48a6dcc883
+          git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
         shell: bash
 
       - name: Configure CMake
