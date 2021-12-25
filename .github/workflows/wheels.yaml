@@ -44,11 +44,12 @@ jobs:
           pip install --user check-manifest -r requirements.txt
 
       # git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
+      # 939452ea9dcb57abdcc3f1278c6db668a4690465
       - name: Clone OpenBLAS
         run: |
           git clone https://github.com/xianyi/OpenBLAS.git
           cd OpenBLAS
-          git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
+          git reset --hard 63b03efc2af332c88b86d4fd8079d00f4b439adf
         shell: bash
 
       - name: Build OpenBLAS
@@ -136,11 +137,12 @@ jobs:
           python -m pip install -r requirements.txt
 
       # git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
+      # 939452ea9dcb57abdcc3f1278c6db668a4690465
       - name: Clone OpenBLAS
         run: |
           git clone https://github.com/xianyi/OpenBLAS.git
           cd OpenBLAS
-          git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
+          git reset --hard 63b03efc2af332c88b86d4fd8079d00f4b439adf
         shell: bash
 
       - name: Build OpenBLAS
@@ -280,11 +282,12 @@ jobs:
           conda install --yes --quiet clangdev cmake ninja flang=11.0.1
 
      # git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
+     # 939452ea9dcb57abdcc3f1278c6db668a4690465
       - name: Clone OpenBLAS
         run: |
           git clone https://github.com/xianyi/OpenBLAS.git
           cd OpenBLAS
-          git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
+          git reset --hard 63b03efc2af332c88b86d4fd8079d00f4b439adf
         shell: bash
 
       - name: Configure CMake
