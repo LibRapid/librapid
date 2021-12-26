@@ -52,6 +52,33 @@ jobs:
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
+    - name: Get latest CMake and ninja
+      uses: lukka/get-cmake@latest
+
+    - name: Install Requirements
+      run: |
+        pip install --user check-manifest twine==3.4.1
+        pip install --user check-manifest pybind11==2.6.2
+        pip install --user check-manifest cpufeature==0.2.0
+        pip install --user check-manifest -r requirements.txt
+
+    - name: Clone OpenBLAS
+      run: |
+        git clone https://github.com/xianyi/OpenBLAS.git
+        cd OpenBLAS
+        git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
+      shell: bash
+
+    - name: Build OpenBLAS
+      run: |
+        cd OpenBLAS
+        make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL'
+
+    - name: Install OpenBLAS
+      run: |
+        cd OpenBLAS
+        make install PREFIX=../src/librapid/openblas_install
+
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
