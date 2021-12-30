@@ -41,9 +41,9 @@ if os.path.exists("../../src/librapid/version2"):
     shutil.rmtree("../../src/librapid/version2")
 
 # Remove BLAS subdirectory
-if os.path.exists("../../src/librapid/blas"):
-    print("Removing BLAS subdirectory")
-    shutil.rmtree("../../src/librapid/blas")
+# if os.path.exists("../../src/librapid/blas"):
+#     print("Removing BLAS subdirectory")
+#     shutil.rmtree("../../src/librapid/blas")
 
 # -- Project information -----------------------------------------------------
 
@@ -94,6 +94,7 @@ INPUT                 = ../../src/librapid
 ENABLE_PREPROCESSING  = YES
 MACRO_EXPANSION       = YES
 EXPAND_ONLY_PREDEF    = NO
+PREDEFINED            += LIBRAPID_DOXYGEN_BUILD
 PREDEFINED            += LR_INLINE=
 PREDEFINED            += __restrict=
 PREDEFINED            += LIBRAPID_MAX_DIMS=32
