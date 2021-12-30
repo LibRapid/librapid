@@ -215,6 +215,9 @@ namespace librapid {
 #ifdef _MSC_VER
 // Disable warnings about unsafe classes
 #pragma warning(disable : 4996)
+
+// Disable zero division errors
+#pragma warning(disable : 4723)
 #endif
 
 #include <cuda.h>

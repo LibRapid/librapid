@@ -82,6 +82,9 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("round", [](double val, int64_t places) { return librapid::round(val, places); }, py::arg("val"), py::arg("places") = 0);
 	module.def("roundSigFig", [](double val, int64_t figs) { return librapid::roundSigFig(val, figs); }, py::arg("val"), py::arg("figs") = 3);
 
+	// Create the Vector library
+	#include "./python/vec_interface.hpp"
+
 	// Create the Datatype enum
 	py::enum_<librapid::Datatype>(module, "Datatype")
 	.value("NONE", librapid::Datatype::NONE)
@@ -101,6 +104,9 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("isFloating", &librapid::isFloating);
 	module.def("datatypeBytes", &librapid::datatypeBytes);
 	module.def("datatypeToString", &librapid::datatypeToString);
+
+	// Include the vector library
+	#include "python/vec_interface.hpp"
 
 	// The librapid Extent object
 	py::class_<librapid::Extent>(module, "Extent")

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(librapid VERSION "0.2.19")
+project(librapid VERSION "0.3.0")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts")
 
@@ -24,11 +24,22 @@ find_package(BLAS)
 find_package(OpenMP)
 find_package(AVX)
 
+# Ensure VectorClass Version2 is accessible
+message(STATUS "CMake Source Directory: ${CMAKE_CURRENT_SOURCE_DIR}")
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/version2")
+    message(STATUS "VectorClass Version2 exists in LibRapid source tree")
+elseif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/version2")
+    message(STATUS "VectorClass Version2 exists in LibRapid root directory. Copying...")
+    file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/version2" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/version2")
+else ()
+    message(FATAL_ERROR "VectorClass Version2 not found. Ensure the full LibRapid GitHub repo is cloned!")
+endif ()
+
 if (${SKBUILD})
     # Ensure PyBind11 is accessible
-    if (EXISTS "${CMAKE_SOURCE_DIR}/pybind11")
+    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pybind11")
         add_subdirectory("pybind11")
-    elseif (EXISTS "${CMAKE_SOURCE_DIR}/src/librapid/pybind11")
+    elseif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/pybind11")
         add_subdirectory("src/librapid/pybind11")
     else ()
         include(FetchContent)
@@ -65,9 +76,9 @@ set(sources # Array library
         "src/librapid/array/multiarray_arithmetic.cpp"
         "src/librapid/array/multiarray_utils.cpp"
         "src/librapid/array/multiarray_matrixops.cpp"
+        "src/librapid/array/cblas_api.hpp"
         # Math library
         "src/librapid/math/core_math.cpp"
-        # String methods
         # Utilities
         "src/librapid/utils/color.cpp"
         "src/librapid/utils/console_utils.cpp"
@@ -76,7 +87,7 @@ set(sources # Array library
         "src/librapid/test/librapid_test.cpp"
         # Dependencies
         "version2/instrset_detect.cpp"
-        src/librapid/array/cblas_api.hpp)
+        )
 
 if (${SKBUILD})
     set(module_name "_librapid")
@@ -110,15 +121,15 @@ endif ()
 
 # Check if BLAS was built by CI for Python Wheels.
 # If so, use this instead of any other BLAS install found
-if (EXISTS "${CMAKE_SOURCE_DIR}/src/librapid/openblas_install")
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install")
     message(STATUS "Using OpenBLAS built by CI for Python Wheels")
     set(BLAS_FOUND TRUE)
     set(USE_BLAS TRUE)
 
     if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-        set(BLAS_LIBRARIES "${CMAKE_SOURCE_DIR}/src/librapid/openblas_install/lib/openblas.lib")
+        set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install/lib/openblas.lib")
     else ()
-        set(BLAS_LIBRARIES "${CMAKE_SOURCE_DIR}/src/librapid/openblas_install/lib/libopenblas.a")
+        set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install/lib/libopenblas.a")
     endif ()
 endif ()
 
@@ -179,7 +190,7 @@ if (${BLAS_FOUND})
                 foreach (file IN LISTS include_files)
                     message(STATUS "Found include file " ${file})
                     get_filename_component(inc_file ${file} NAME)
-                    configure_file(${file} "${CMAKE_SOURCE_DIR}/src/librapid/blas/${inc_file}" COPYONLY)
+                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${inc_file}" COPYONLY)
                 endforeach ()
             endif ()
         endif ()
@@ -228,6 +239,16 @@ endif ()
 if (${CUDAToolkit_FOUND})
     if (${USE_CUDA})
         message(STATUS "Using CUDA ${CUDAToolkit_VERSION}")
+
+        # Ensure jitify is accessible
+        if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/jitify")
+            message(STATUS "Jitify exists in LibRapid source tree")
+        elseif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/jitify")
+            message(STATUS "Jitify exists in LibRapid root directory. Copying...")
+            file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/jitify" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/jitify")
+        else ()
+            message(FATAL_ERROR "Jitify not found. Ensure the full LibRapid GitHub repo is cloned!")
+        endif ()
 
         target_include_directories(${module_name} PUBLIC
                 ${CUDAToolkit_INCLUDE_DIRS}
@@ -282,38 +303,31 @@ else ()
     target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR})
 endif ()
 
-if ($ENV{LIBRAPID_NO_ARCH})
-    message(STATUS "Not optimising for architecture")
-
-    set(GNU_OPTIM_FLAGS "-O2 ${ARCH_FLAGS} ${AVX_FLAGS}")
-    set(MSVC_OPTIM_FLAGS "/O2 /Ob2 /Oi /Ot /GT /GL ${ARCH_FLAGS} ${AVX_FLAGS}")
-else ()
+if (NOT DEFINED LIBRAPID_NO_ARCH)
     include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/FindAVX.cmake")
 
     message(STATUS "Found AVX: ${AVX_FOUND}")
     message(STATUS "Compiler Options: ${AVX_FLAGS}")
-
-    set(ARCH_FLAGS "-march=native -mtune=native")
-    set(GNU_OPTIM_FLAGS "-O3 ${ARCH_FLAGS} ${AVX_FLAGS}")
-    set(MSVC_OPTIM_FLAGS "/O2 /Ob2 /Oi /Ot /GT /GL ${AVX_FLAGS}")
+else ()
+    message(STATUS "Not optimising for architecture")
 endif ()
 
 # Set the compiler to use maximum optimisations (SPEED!!!!)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     # using Clang
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${GNU_OPTIM_FLAGS}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 ${AVX_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # using GCC
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${GNU_OPTIM_FLAGS}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 ${AVX_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     # using Intel C++
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${GNU_OPTIM_FLAGS}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 ${AVX_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     # using Visual Studio C++
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${MSVC_OPTIM_FLAGS}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /Ob2 /Oi /Ot /GT /GL ${AVX_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif ()
