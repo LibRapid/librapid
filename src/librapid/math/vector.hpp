@@ -9,6 +9,12 @@
 #include <type_traits>
 
 namespace librapid {
+#ifndef LIBRAPID_DOXYGEN_BUILD
+#define MAX_DIM_CLAMP ((dims > tmpDims) ? (dims) : (tmpDims))
+#else
+#define MAX_DIM_CLAMP dims
+#endif
+
     template<typename DTYPE, int64_t dims>
     class Vec {
         template<typename T>
@@ -70,33 +76,33 @@ namespace librapid {
          * Vectors must have same dimensions. To cast, use Vec.as<TYPE, DIMS>()
          */
         template<typename T, int64_t tmpDims>
-        Vec<Common<T>, (dims > tmpDims) ? (dims) : (tmpDims)> operator+(const Vec<T, tmpDims> &other) const {
-            Vec<Common<T>, (dims > tmpDims) ? (dims) : (tmpDims)> res;
-            for (int64_t i = 0; i < ((dims > tmpDims) ? (dims) : (tmpDims)); ++i)
+        Vec<Common<T>, MAX_DIM_CLAMP> operator+(const Vec<T, tmpDims> &other) const {
+            Vec<Common<T>, MAX_DIM_CLAMP> res;
+            for (int64_t i = 0; i < (MAX_DIM_CLAMP); ++i)
                 res[i] = ((i < dims) ? m_components[i] : 0) + ((i < tmpDims) ? other[i] : 0);
             return res;
         }
 
         template<typename T, int64_t tmpDims>
-        Vec<Common<T>, (dims > tmpDims) ? (dims) : (tmpDims)> operator-(const Vec<T, tmpDims> &other) const {
-            Vec<Common<T>, (dims > tmpDims) ? (dims) : (tmpDims)> res;
-            for (int64_t i = 0; i < ((dims > tmpDims) ? (dims) : (tmpDims)); ++i)
+        Vec<Common<T>, MAX_DIM_CLAMP> operator-(const Vec<T, tmpDims> &other) const {
+            Vec<Common<T>, MAX_DIM_CLAMP> res;
+            for (int64_t i = 0; i < (MAX_DIM_CLAMP); ++i)
                 res[i] = ((i < dims) ? m_components[i] : 0) - ((i < tmpDims) ? other[i] : 0);
             return res;
         }
 
         template<typename T, int64_t tmpDims>
-        Vec<Common<T>, (dims > tmpDims) ? (dims) : (tmpDims)> operator*(const Vec<T, tmpDims> &other) const {
-            Vec<Common<T>, (dims > tmpDims) ? (dims) : (tmpDims)> res;
-            for (int64_t i = 0; i < ((dims > tmpDims) ? (dims) : (tmpDims)); ++i)
+        Vec<Common<T>, MAX_DIM_CLAMP> operator*(const Vec<T, tmpDims> &other) const {
+            Vec<Common<T>, MAX_DIM_CLAMP> res;
+            for (int64_t i = 0; i < (MAX_DIM_CLAMP); ++i)
                 res[i] = ((i < dims) ? m_components[i] : 0) * ((i < tmpDims) ? other[i] : 0);
             return res;
         }
 
         template<typename T, int64_t tmpDims>
-        Vec<Common<T>, (dims > tmpDims) ? (dims) : (tmpDims)> operator/(const Vec<T, tmpDims> &other) const {
-            Vec<Common<T>, (dims > tmpDims) ? (dims) : (tmpDims)> res;
-            for (int64_t i = 0; i < ((dims > tmpDims) ? (dims) : (tmpDims)); ++i)
+        Vec<Common<T>, MAX_DIM_CLAMP> operator/(const Vec<T, tmpDims> &other) const {
+            Vec<Common<T>, MAX_DIM_CLAMP> res;
+            for (int64_t i = 0; i < (MAX_DIM_CLAMP); ++i)
                 res[i] = ((i < dims) ? m_components[i] : 0) / ((i < tmpDims) ? other[i] : 0);
             return res;
         }
