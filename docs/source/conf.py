@@ -13,6 +13,7 @@
 import os
 import sys
 import textwrap
+import shutil
 
 print("VERSION INFORMATION:")
 os.system("pip show sphinx")
@@ -21,6 +22,28 @@ os.system("pip show exhale")
 os.system("doxygen --version")
 
 sys.path.insert(0, os.path.abspath("../.."))
+
+# -- Remove some Directories -------------------------------------------------
+
+# Remove Jitify subdirectory
+if os.path.exists("../../src/librapid/jitify"):
+    print("Removing Jifify subdirectory")
+    shutil.rmtree("../../src/librapid/jitify")
+
+# Remove Pybind11 subdirectory
+if os.path.exists("../../src/librapid/pybind11"):
+    print("Removing Pybind11 subdirectory")
+    shutil.rmtree("../../src/librapid/pybind11")
+
+# Remove VectorClass Version2 subdirectory
+if os.path.exists("../../src/librapid/version2"):
+    print("Removing VectorClass Version2 subdirectory")
+    shutil.rmtree("../../src/librapid/version2")
+
+# Remove BLAS subdirectory
+if os.path.exists("../../src/librapid/blas"):
+    print("Removing BLAS subdirectory")
+    shutil.rmtree("../../src/librapid/blas")
 
 # -- Project information -----------------------------------------------------
 
@@ -43,7 +66,7 @@ master_doc = "index"
 # ones.
 extensions = [
     "furo",
-    "sphinx.ext.autodoc",
+    # "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx.ext.coverage",
     "sphinx.ext.autosectionlabel",
@@ -93,7 +116,7 @@ exhale_args = {
     # "treeViewIsBootstrap": True,
     "exhaleExecutesDoxygen": True,
     "exhaleDoxygenStdin": textwrap.dedent(doxygen_inputs),
-    "verboseBuild": False
+    "verboseBuild": True
 }
 
 # Add any paths that contain templates here, relative to this directory.
@@ -102,7 +125,11 @@ exhale_args = {
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns = [
+    "*pybind11*",
+    "*version2*",
+    "*jitify*"
+]
 
 # -- Options for HTML output -------------------------------------------------
 
