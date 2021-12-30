@@ -1373,22 +1373,22 @@ namespace librapid {
 
     [[nodiscard]] Array div(const Array &a, const Array &b);
 
-    template<typename T>
+    template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
     [[nodiscard]] inline Array operator+(T lhs, const Array &rhs) {
         return Array::applyBinaryOp(lhs, rhs, ops::Add());
     }
 
-    template<typename T>
+    template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
     [[nodiscard]] inline Array operator-(T lhs, const Array &rhs) {
         return Array::applyBinaryOp(lhs, rhs, ops::Sub());
     }
 
-    template<typename T>
+    template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
     [[nodiscard]] inline Array operator*(T lhs, const Array &rhs) {
         return Array::applyBinaryOp(lhs, rhs, ops::Mul());
     }
 
-    template<typename T>
+    template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
     [[nodiscard]] inline Array operator/(T lhs, const Array &rhs) {
         return Array::applyBinaryOp(lhs, rhs, ops::Div());
     }
