@@ -26,13 +26,11 @@ namespace py = pybind11;
 
 #ifndef LIBRAPID_HAS_OMP
 #ifdef _OPENMP
-#define LIBRAPID_HAS_OMP
 #include <omp.h>
+#define LIBRAPID_HAS_OMP
 #endif // _OPENMP
 #else // LIBRAPID_HAS_OMP
-
 #include <omp.h>
-
 #endif // LIBRAPID_HAS_OMP
 
 #ifndef LIBRAPID_MAX_DIMS

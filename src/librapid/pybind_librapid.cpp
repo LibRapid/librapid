@@ -48,10 +48,9 @@ PYBIND11_MODULE(_librapid, module) {
 	test.def("sum", [](const std::vector<char> &data) { return testSum(data); });
 
 	module.def("hasBlas", &librapid::hasBlas);
-	// module.def("setBlasThreads", &librapid::setBlasThreads);
-	// module.def("getBlasThreads", &librapid::getBlasThreads);
 	module.def("setNumThreads", &librapid::setNumThreads);
 	module.def("getNumThreads", &librapid::getNumThreads);
+	module.def("optimiseThreads", &librapid::optimiseThreads, py::arg("timePerThread") = 2, py::arg("verbose") = false);
 
 	module.def("seconds", [](){ return librapid::seconds(); });
 	module.def("sleep", &librapid::sleep);
