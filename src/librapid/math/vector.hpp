@@ -12,7 +12,7 @@ namespace librapid {
 #ifndef LIBRAPID_DOXYGEN_BUILD
 #define MAX_DIM_CLAMP(_dims, _tmpDims) (((_dims) > (_tmpDims)) ? (_dims) : (_tmpDims))
 #else
-#define MAX_DIM_CLAMP(_dims, _tmpDims) (_dims)
+#define MAX_DIM_CLAMP(_dims, _tmpDims) _dims
 #endif
 
     template<typename DTYPE, int64_t dims>
