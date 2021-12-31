@@ -975,7 +975,7 @@ namespace librapid {
                 statSeedSet = true;
             }
             // applyUnaryOp(*this, *this, ops::FillRandom < T > (min, max, seed));
-            applyUnaryOp(*this, *this, ops::FillRandom<T>(min, max, statSeed));
+            applyUnaryOp(*this, *this, ops::FillRandom < T > (min, max, statSeed));
         }
 
         template<typename T = double>
@@ -1659,6 +1659,8 @@ namespace librapid {
             }
         }
     }
+
+    void optimiseThreads(double timePerThread = 2, bool verbose = false);
 }
 
 #endif // LIBRAPID_ARRAY
