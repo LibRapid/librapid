@@ -1,60 +1,25 @@
-.. image:: ../../branding/logo_transparent_trimmed.png
-   :width: 800
+LibRapid
+########
 
-.. image:: https://github.com/pencilcaseman/librapid/actions/workflows/wheels.yaml/badge.svg
-	:target: https://github.com/Pencilcaseman/librapid/actions/workflows/wheels.yaml
-.. image:: https://readthedocs.org/projects/librapid/badge/?version=latest
-	:target: https://librapid.readthedocs.io/en/latest/?badge=latest
-.. image:: https://badge.fury.io/py/librapid.svg
-	:target: https://pypi.python.org/pypi/librapid/
-.. image:: https://img.shields.io/pypi/l/librapid.svg
-	:target: https://pypi.python.org/pypi/librapid/
-.. image:: https://img.shields.io/pypi/pyversions/librapid.svg
-	:target: https://pypi.python.org/pypi/librapid/
-.. image:: https://img.shields.io/pypi/dm/librapid.svg
-	:target: https://pypi.python.org/pypi/librapid/
-.. image:: https://img.shields.io/discord/848914274105557043
-	:target: https://discord.gg/cGxTFTgCAC
+What is LibRapid?
+------------------
 
+LibRapid is a fast and efficient library for accelerating mathematical calculations
+in Python and C++. LibRapid also provides an identical interface between C++ and Python,
+allowing any program to be easily translated between languages.
 
-The Aim
-=======
+The most fundamental component to LibRapid is it's `Array` object, capable of storing arrays
+with up to 32 dimensions, using runtime-defined datatypes and running code on multiple threads
+on the CPU, or in parallel on the GPU with CUDA. Every function is highly optimised for the
+best possible performance, meaning your code will be faster as a result. Benchmarks show that
+LibRapid is consistently faster than NumPy, and can, in some cases, exceed the performance of
+Eigen (even in Python!)
 
-LibRapid aims to provide fast and intuitive interface to mathematical functions and
-types, such as multi-dimensional arrays and neural networks.
+Additionally, LibRapid supports a wide range of utility classes and functions, such as common
+mathematical operations, a versatile Vector library, arbitrary-precision arithmetic, and more.
+The pre-built Python wheels even come with OpenBLAS to further accelerate matrix calculations
 
-LibRapid hopes to provide a functionally and interactively consistant interface in
-both C++ and Python, allowing high level code to run faster and more efficiently,
-while also ensuring low-level programs in C++ can be optimized in the same way.
-
-What LibRapid is
-----------------
-
-LibRapid is a lightweight alternative to other popular python libraries, intended
-to be used in both C++ and Python. It also supports NVIDIA CUDA (even in Python), so
-you can run array calculations orders of magnitude more quickly than on the CPU alone.
-It is designed to be as easy to use as possible while still supporting advanced
-functionality and high performance.
-
-What LibRapid is NOT
---------------------
-
-A replacement for the well-established Python and C++ libraries that already
-exist. It can be used in a wide range of applications, but there are no guarantees
-that all functions perform exactly the correct calculations in all situations,
-though increasing numbers of tests are being implemented, and any bugs discovered
-are fixed as quickly as possible.
-
-Licencing
-=========
-
-LibRapid is produced under the Boost Software License, so you are free to ``use,
-reproduce, display, distribute, execute and transmit`` the software, though this is
-subject to some conditions, which can be found in full here: `LibRapid License`_
-
-.. _LibRapid License: https://github.com/Pencilcaseman/librapid/blob/master/LICENSE
-
-Installing the Package
+Installing the Library
 ======================
 
 To install the Python package, simply open a command line window and type
@@ -63,34 +28,85 @@ To install the Python package, simply open a command line window and type
 
 	pip install librapid
 
-To install the library for C++ useage simply download the code and either copy the
-files to your program directory, or save them somewhere memorable (such as
-``C:\opt\librapid``) and add them to the include direcotires of your project.
 
-The simplest way to download the code is via Git, using the command
+To use the library in C++, there are a variety of methods you can use. The preferred method
+is to use ``CMake`` and ``FetchContent``, which will automatically clone, build and link the
+library for you. To do this, simply add the following lines to your ``CMakeLists.txt`` file:
+
+.. code-block:: cmake
+
+	add_executable(MyApp myapp.cpp)
+
+	include(FetchContent)
+	FetchContent_Declare(librapid GIT_REPOSITORY https://github.com/librapid/librapid.git)
+	FetchContent_MakeAvailable(librapid)
+
+	target_link_libraries(MyApp librapid)
+
+
+You can also clone the repository into your project (or add it as a submdoule) and add
+the LibRapid subdirectory:
 
 .. code-block:: shell
 
-	git clone https://github.com/Pencilcaseman/librapid.git
+	git clone https://github.com/librapid/librapid.git --recursive
+
+.. code-block:: cmake
+
+	add_executable(MyApp myapp.cpp)
+
+	add_subdirectory(librapid)
+
+	target_link_libraries(MyApp librapid)
+
+
+Advanced -- Installing LibRapid
+===============================
+
+.. important::
+	To build LibRapid from source, a C++17 compatible compiler is required
+
+If you want the best performance for Python, it is highly advised to build the library from source
+as opposed to installing a pre-built version of it. This is because the pre-built binaries need to
+function on a wide range of systems, and therefore cannot be as optimised as we would like. Luckily,
+building the library from source is very simple:
+
+1. Install the Python build requirements:
+	- ``pip install -r requirements.txt``
+2. (optional) Download/Build OpenBLAS and place the files somewhere LibRapid can find them
+	- LibRapid will search for common install locations such as ``C:\opt\OpenBLAS``, though to be
+	  entirely certain LibRapid will find the BLAS files, please place the build files in
+	  ``src/librapid/openblas_install``
+	- To download a platform-independent, optimised build of OpenBLAS for MacOS, Windows or Linux:
+		- Go to https://github.com/librapid/librapid
+		- Click on "Actions"
+		- Click on the latest one to have passed (ensure it is labeled "Wheels")
+		- Scroll down and select the OpenBLAS build for the desired platform (Note that the Ubuntu
+		  build should work on any Linux install)
+3. Option 1 -- Install source distribution (No OpenBLAS support unless installed on system)
+	- Simply run ``pip install librapid --no-binary librapid``
+4. Option 2 -- Install from source code
+	- Clone the repository: ``git clone https://github.com/librapid/librapid.git``
+	- Open a command line window in the LibRapid directory
+	- Run ``pip install .``
+
+.. hint::
+	The OpenBLAS information applies to C++ as well, as CMake will search for OpenBLAS on your
+	system as well as in the ``openblas_install`` directory!
 
 Using LibRapid
 ==============
-
-.. important::
-	To use LibRapid in Python, a modern C++ compiler may be needed to compile the code
-	during installation. To use LibRapid in a C++ program, a modern C++ compiler will
-	definitely be needed.
 
 LibRapid is intended to be incredibly easy to use in both C++ and Python. To include
 the library in one of your projects, simply do the following:
 
 
-.. code-block:: Python
+.. code-block:: python
 	:caption: For Python programs
 
 	import librapid
 
-.. code-block:: C++
+.. code-block:: cpp
 	:caption: For C++ programs
 
 	#include <librapid/librapid.hpp>
@@ -104,26 +120,31 @@ portion of the function definitions is actually relevant to most users.
 
 For example, take the function definition below:
 
-.. cpp:function:: template<typename T> inline double librapid::test_function(const test_struct &thing) const
+.. cpp:function:: double librapid::testFunction(const testStruct &thing) const
 
-It may appear complicated at first, but there are only a few key things to look out
-for. First, the name of the function (``test_function``) will be the same in the
-Python and C++ libraries, except in Python, the function will be accessed as
-``librapid.test_function``. Next, the arguments to the function are important to know,
-and should be self-explanatory. In C++, the type can be seen in the function definition,
-and passing the same type should give error-free code. In Python, however, things can be
-slightly different -- often, Python values can be cast into equivelent C++ types, though
-the types are not always clear. Below is a list of common datatypes that you may want to
-pass to functions:
+Using this function in C++ should be fairly self-explanatory, though using it in Python might
+seem a little more tricky. The important things to look out for are:
+- The name of the function -- this will be the same in Python and C++
+- The arguments to the function -- the same arguments with the same names and default values will be used in Python and C++
+- The return value -- The type of the value will be roughly the same in Python as it is in C++
+
+.. attention::
+	Some Python types need to be cast into C++ types. The type conversion is often obvious,
+	but some types can be a little more confusing. Some commonly used ones are shown in the
+	table below
 
 +---------------+------------------------+-----------------+
 | Type of value | C++ Datatype           | Python Datatype |
 +===============+========================+=================+
-| List          | ``std::vector<...>``   | ``list, tuple`` |
+| Decimal       | ``double, float``      | ``float``       |
 +---------------+------------------------+-----------------+
 | Integer       | ``int64_t, int, long`` | ``int``         |
 +---------------+------------------------+-----------------+
+| List          | ``std::vector<...>``   | ``list, tuple`` |
++---------------+------------------------+-----------------+
 | Dictionary    | ``std::map<a, b>``     | ``dict``        |
++---------------+------------------------+-----------------+
+| None-type     | ``void``               | ``None``        |
 +---------------+------------------------+-----------------+
 
 Contents
@@ -134,3 +155,13 @@ Contents
 	:glob:
 
 	array/array_overview
+
+
+Licencing
+=========
+
+LibRapid is produced under the MIT License, so you are free to use the library
+how you like for personal and commercial purposes, though this is subject to
+some conditions, which can be found in full here: `LibRapid License`_
+
+.. _LibRapid License: https://github.com/Pencilcaseman/librapid/blob/master/LICENSE
