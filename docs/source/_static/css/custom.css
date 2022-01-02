@@ -1,0 +1,11 @@
+/** css/yourtheme.css **/
+
+/* This line is theme specific - it includes the base theme CSS */
+@import "furo.scss";  /* for Furo */
+
+.wy-nav-content {
+    padding: 1.618em 3.236em;
+    height: 100%;
+    /* max-width: 800px; */
+    margin: auto;
+}

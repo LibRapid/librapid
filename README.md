@@ -15,10 +15,7 @@ well as to produce innovative new ideas and faster, more efficient code.
 
 ## Why Use Librapid?
 
-In short, LibRapid aims to allow for faster mathematical calculations, including multidimensional arrays, machine
-learning and arbitrary-precision arithmetic. LibRapid also includes some helper functions to reduce dependencies, such
-as basic colour manipulation and access to console properties. The entire library is highly optimised and supports GPU
-calculations where applicable.
+In short, LibRapid aims to allow for faster mathematical calculations, including multidimensional arrays, machine learning and arbitrary-precision arithmetic. LibRapid also includes some helper functions to reduce dependencies, such as basic colour manipulation and access to console properties. The entire library is highly optimised and supports GPU calculations where applicable.
 
 ## How it Works
 
