@@ -71,6 +71,9 @@ namespace librapid {
          * safe to use. Yellow represents a value which should be avoided if
          * possible, and red means the value is strongly advised not to be used.
          *
+         * Please also note that the None type array may be very buggy and should
+         * not be used if possible.
+         *
          * *Note: These warnings are more for readability than anything else*
          *
          * .. panels::
@@ -131,14 +134,14 @@ namespace librapid {
          *		The datatype for the Array
          * location: ``Accelerator = CPU``
          *		Where the Array will be stored. GPU is only allowed if CUDA support
-         *		is enabled at compiletime
+         *		is enabled at compile time
          *
          * \endrst
          */
         Array(const Extent &extent, Datatype dtype = Datatype::FLOAT64,
               Accelerator location = Accelerator::CPU);
 
-        inline Array(const Extent &extent, std::string dtype,
+        inline Array(const Extent &extent, const std::string& dtype,
                      Accelerator location = Accelerator::CPU)
                 : Array(extent, stringToDatatype(dtype), location) {}
 
