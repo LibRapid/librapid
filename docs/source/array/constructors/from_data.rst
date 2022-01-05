@@ -1,6 +1,5 @@
-ndarray(data)
-#############
+Array(data, dtype, locn)
+########################
 
-.. doxygenfunction:: librapid::Array::Array(const std::vector<V> &values)
-.. doxygenfunction:: librapid::Array::fromData(V scalar)
-.. doxygenfunction:: librapid::Array::fromData(const std::vector<V> &data)
+.. doxygenfunction:: librapid::Array::Array(double val, Datatype dtype = Datatype::INT64, Accelerator locn = Accelerator::CPU)
+.. doxygenfunction:: librapid::Array::Array(const std::vector<T> &values, Datatype dtype = Datatype::NONE, Accelerator locn = Accelerator::CPU)

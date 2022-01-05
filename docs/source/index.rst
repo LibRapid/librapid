@@ -151,11 +151,32 @@ Contents
 ========
 
 .. toctree::
+	:hidden:
 	:maxdepth: 2
 	:glob:
 
 	array/array_overview
 
+.. panels::
+    Array Overview
+
+    +++
+
+    .. link-button:: array/array_overview
+        :type: ref
+        :text: View Page
+        :classes: btn-outline-info btn-block stretched-link
+
+	---
+
+    Vector Overview
+
+    +++
+
+    .. link-button:: array/array_overview
+        :type: ref
+        :text: View Page
+        :classes: btn-outline-info btn-block stretched-link
 
 Licencing
 =========
