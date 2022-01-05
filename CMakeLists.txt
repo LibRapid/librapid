@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(librapid VERSION "0.3.0")
+project(librapid VERSION "0.3.3")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts")
 
@@ -16,7 +16,14 @@ set(LIBRAPID_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
 
-set(CMAKE_CXX_STANDARD 17)
+message(STATUS "C++ Version: ${CMAKE_CXX_STANDARD}")
+if (NOT CMAKE_CXX_STANDARD)
+    message(WARNING "CMAKE_CXX_STANDARD was not set, but LibRapid requires C++17. This will be set automatically")
+    set(CMAKE_CXX_STANDARD 17)
+elseif (${CMAKE_CXX_STANDARD} VERSION_LESS_EQUAL 17)
+    message(WARNING "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}, but LibRapid requires C++17. \
+                     LibRapid will set this automatically, but ensure you are aware of the consequences")
+endif ()
 
 # Attempt to locate the required packages
 find_package(CUDAToolkit)
@@ -24,8 +31,9 @@ find_package(BLAS)
 find_package(OpenMP)
 find_package(AVX)
 
-# Ensure VectorClass Version2 is accessible
 message(STATUS "CMake Source Directory: ${CMAKE_CURRENT_SOURCE_DIR}")
+
+# Ensure VectorClass Version2 is accessible
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/version2")
     message(STATUS "VectorClass Version2 exists in LibRapid source tree")
 elseif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/version2")
@@ -33,6 +41,19 @@ elseif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/version2")
     file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/version2" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/version2")
 else ()
     message(FATAL_ERROR "VectorClass Version2 not found. Ensure the full LibRapid GitHub repo is cloned!")
+endif ()
+
+# Ensure VectorClass Version2 is accessible
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/fmt")
+    add_subdirectory("src/librapid/fmt")
+elseif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/fmt")
+    add_subdirectory("fmt")
+else ()
+    FetchContent_Declare(
+            fmt
+            GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    )
+    FetchContent_MakeAvailable(fmt)
 endif ()
 
 if (${SKBUILD})
@@ -118,6 +139,11 @@ if (${OpenMP_FOUND})
         message(WARNING "OpenMP was found but is not being linked against (Value <USE_OMP> is " ${USE_OMP} ")")
     endif ()
 endif ()
+
+# Ensure {fmt} is available
+target_link_libraries(${module_name} PUBLIC
+        fmt::fmt
+        )
 
 # Check if BLAS was built by CI for Python Wheels.
 # If so, use this instead of any other BLAS install found

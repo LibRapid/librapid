@@ -151,13 +151,14 @@ html_context = {
 }
 
 html_theme_options = {
-    "announcement": """
-        <a style=\"text-decoration: none; color: white;\" 
-           href=\"https://www.patreon.com/librapid\">
-           <img src=\"_static/LR_icon.png\"
-           width=22.5/> Support LibRapid on Patreon
-        </a>
-    """,
+	# Show a banner at the top of the page
+    # "announcement": """
+    #     <a style=\"text-decoration: none; color: white;\" 
+    #        href=\"https://www.patreon.com/librapid\">
+    #        <img src=\"/en/latest/_static/LR_icon.png\"
+    #        width=22.5/> Support LibRapid on Patreon
+    #     </a>
+    # """,
     "sidebar_hide_name": True,
     "light_logo": "LibRapid_light.png",
     "dark_logo": "LibRapid_dark.png",
@@ -171,4 +172,4 @@ html_theme_options = {
 # These folders are copied to the documentation's HTML output
 html_static_path = ["_static"]
 
-html_favicon = "_static/LR_icon.png"
+html_favicon = "/en/latest/_static/LR_icon.png"

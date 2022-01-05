@@ -1,6 +1,7 @@
 #ifndef LIBRAPID_AUTOCAST
 #define LIBRAPID_AUTOCAST
 
+#include <librapid/config.hpp>
 #include <algorithm>
 #include <variant>
 #include <map>
@@ -17,12 +18,11 @@ namespace librapid {
 	 */
 	enum class Datatype {
 		NONE,            // no datatype
-		VALIDNONE,        // No datatype, but it is not required
-		// BOOL,            // bool
-		INT64,            // int64_t
-		FLOAT32,        // float
-		FLOAT64,        // double
-		CFLOAT64,        // complex double
+		VALIDNONE,       // No datatype, but it is not required
+		INT64,           // int64_t
+		FLOAT32,         // float
+		FLOAT64,         // double
+		CFLOAT64,       // complex double
 	};
 
 	/**
@@ -34,7 +34,6 @@ namespace librapid {
 	 * \endrst
 	 */
 	using RawArrayData = std::variant<
-			// bool *,
 			int64_t *,
 			float *,
 			double *,
@@ -607,8 +606,9 @@ namespace librapid {
 					for (int64_t i = 0; i < elems; ++i)
 						a[i] = b[i];
 				} else {
-#pragma omp parallel for shared(a, b)
-					for (int64_t i = 0; i < elems; ++i)
+					int64_t tmpElems = elems;
+#pragma omp parallel for shared(a, b, tmpElems) default(none)
+					for (int64_t i = 0; i < tmpElems; ++i)
 						a[i] = b[i];
 				}
 			}, dst.data, src.data);
@@ -659,8 +659,9 @@ namespace librapid {
 								a[i] = (A) tmp;
 							}
 						} else {
-#pragma omp parallel for shared(a, b, cudaStream) default(none)
-							for (int64_t i = 0; i < elems; ++i) {
+							int64_t tmpElems = elems;
+#pragma omp parallel for shared(a, b, cudaStream, tmpElems) default(none)
+							for (int64_t i = 0; i < tmpElems; ++i) {
 								B tmp;
 
 #ifdef LIBRAPID_CUDA_STREAM
