@@ -1217,7 +1217,8 @@ namespace librapid {
             Accelerator newLoc = max(srcA.m_location, srcB.m_location);
             Datatype newType = max(srcA.m_dtype, srcB.m_dtype);
 
-            Array dst(srcA.m_isScalar ? srcB.m_extent : srcA.m_extent, newType, newLoc);
+            // Array dst(srcA.m_isScalar ? srcB.m_extent : srcA.m_extent, newType, newLoc);
+			Array dst(Extent({1000, 1000}), newType, newLoc);
 
             auto ptrSrcA = srcA.createRaw();
             auto ptrSrcB = srcB.createRaw();

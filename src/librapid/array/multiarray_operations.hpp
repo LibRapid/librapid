@@ -1019,7 +1019,7 @@ namespace librapid
                                     c.store(tmpDst + i);
                                 }
                             } else {
-#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b) default(none)
+#pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp) private(a, b) default(none)
                                 for (i = 0; i < tempElems - 15; i += 16) {
                                     a.load(tmpSrcA + i);
                                     b.load(tmpSrcB + i);
@@ -1028,12 +1028,11 @@ namespace librapid
                                 }
                             }
 
-                            int64_t diff = tempElems - i;
-                            if (diff > 0) {
-                                a.load_partial((int) diff, tmpSrcA + i);
-                                b.load_partial((int) diff, tmpSrcB + i);
-                                vcl::Vec16f c = tempOp(a, b, i, i);
-                                c.store_partial((int) diff, tmpDst + i);
+                            if (elems & 15) {
+                                a.load(tmpSrcA + elems - 16);
+                                b.load(tmpSrcB + elems - 16);
+                                vcl::Vec16f c = tempOp(a, b, elems - 16, elems - 16);
+                                c.store(tmpDst + elems - 16);
                             }
                         } else if (elems < 2500) {
                             for (int64_t i = 0; i < tempElems; ++i) {

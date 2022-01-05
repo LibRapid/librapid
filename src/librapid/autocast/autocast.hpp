@@ -34,6 +34,7 @@ namespace librapid {
 	 * \endrst
 	 */
 	using RawArrayData = std::variant<
+			// int32_t *,
 			int64_t *,
 			float *,
 			double *,
