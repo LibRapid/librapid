@@ -1663,7 +1663,7 @@ namespace librapid {
         }
     }
 
-    void optimiseThreads(double timePerThread = 2, bool verbose = false);
+    void optimiseThreads(double timePerThread = 1, bool verbose = false);
 }
 
 #endif // LIBRAPID_ARRAY

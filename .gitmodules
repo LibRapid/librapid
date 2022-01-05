@@ -7,3 +7,6 @@
 [submodule "version2"] # VectorClass module for SIMD instructions
 	path = version2
 	url = https://github.com/vectorclass/version2.git
+[submodule "fmt"] # {fmt} module for fast formatting and IO
+	path = fmt
+	url = https://github.com/fmtlib/fmt.git
