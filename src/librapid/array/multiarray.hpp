@@ -141,7 +141,7 @@ namespace librapid {
         Array(const Extent &extent, Datatype dtype = Datatype::FLOAT64,
               Accelerator location = Accelerator::CPU);
 
-        inline Array(const Extent &extent, const std::string& dtype,
+        inline Array(const Extent &extent, const std::string &dtype,
                      Accelerator location = Accelerator::CPU)
                 : Array(extent, stringToDatatype(dtype), location) {}
 
@@ -1218,7 +1218,7 @@ namespace librapid {
             Datatype newType = max(srcA.m_dtype, srcB.m_dtype);
 
             // Array dst(srcA.m_isScalar ? srcB.m_extent : srcA.m_extent, newType, newLoc);
-			Array dst(Extent({1000, 1000}), newType, newLoc);
+            Array dst(Extent({1000, 1000}), newType, newLoc);
 
             auto ptrSrcA = srcA.createRaw();
             auto ptrSrcB = srcB.createRaw();
@@ -1666,5 +1666,18 @@ namespace librapid {
 
     void optimiseThreads(double timePerThread = 1, bool verbose = false);
 }
+
+template<>
+struct fmt::formatter<librapid::Array> {
+    template<typename ParseContext>
+    constexpr auto parse(ParseContext& ctx) {
+        return ctx.begin();
+    }
+
+    template<typename FormatContext>
+    auto format(const librapid::Array &arr, FormatContext& ctx) {
+        return fmt::format_to(ctx.out(), arr.str());
+    }
+};
 
 #endif // LIBRAPID_ARRAY

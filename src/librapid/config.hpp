@@ -52,6 +52,18 @@ namespace py = pybind11;
 
 #include <version2/vectorclass.h>
 
+// Include {fmt}
+#include <fmt/core.h>
+#include <fmt/format.h>
+#include <fmt/ranges.h>
+#include <fmt/chrono.h>
+#include <fmt/compile.h>
+#include <fmt/color.h>
+#include <fmt/os.h>
+#include <fmt/ostream.h>
+#include <fmt/printf.h>
+#include <fmt/xchar.h>
+
 // Operating system defines
 
 // Check for windows
