@@ -86,6 +86,7 @@ jobs:
 
       - if: github.actor != 'dependabot[bot]'
         name: Upload Source Distribution
+        continue-on-error: true
         run: |
           python setup.py sdist
           ls dist
@@ -231,6 +232,7 @@ jobs:
 
       - if: github.actor != 'dependabot[bot]'
         name: Upload Built Wheels
+        continue-on-error: true
         run: |
           python setup.py sdist
           ls wheelhouse
@@ -371,6 +373,7 @@ jobs:
 
       - if: github.actor != 'dependabot[bot]'
         name: Upload Built Wheels
+        continue-on-error: true
         run: |
           python setup.py sdist
           ls wheelhouse
