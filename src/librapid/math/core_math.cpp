@@ -106,4 +106,21 @@ namespace librapid {
 
 		return (tmp > 0 ? 1 : -1) * (round(tmp, figs - 1) * pow10(n));
 	}
+
+	__uint128_t nth_fibonacci(__uint128_t n) {
+		if(n >= 187)
+		{ throw new std::overflow_error("Numbers above 186 are not allowed as argument."); }
+
+		if (n <= 75) // As the C++ standard only defines long double to be at least 2x the 
+					 // precision of a regular double, we check if that limit is exceeded or not.
+		{ return (__uint128_t) roundl(pow(0.5 * (1.0 + sqrt5), (long double) n)) / sqrt5; }
+
+		int a = 0, b = 1, c, i;
+		for (i = 2; i <= n; i++) {
+		    c = a + b;
+		    a = b;
+		    b = c;
+		}
+		return b;
+	}
 }
