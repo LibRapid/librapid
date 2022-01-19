@@ -107,7 +107,7 @@ namespace librapid {
 		return (tmp > 0 ? 1 : -1) * (round(tmp, figs - 1) * pow10(n));
 	}
 
-	__uint128_t nth_fibonacci(__uint128_t n) {
+	__uint128_t nthFibonacci(__uint128_t n) {
 		if(n >= 187)
 		{ throw new std::overflow_error("Numbers above 186 are not allowed as argument."); }
 
