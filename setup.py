@@ -53,8 +53,8 @@ if platform.system() == "Windows":
             print("Attempting to open 'src/librapid/blas/bin{}".format(filename))
             with open(os.path.join("src", "librapid", "blas", "bin", filename), "r") as _:
                 files = [os.path.join("src", "librapid", "blas", "bin", filename)]
-                # data_files.append(("", files))
-                data_files.append(("lib/site-packages/librapid", files))
+                data_files.append(("", files))
+                # data_files.append(("lib/site-packages/librapid", files))
             # data_files.append((distutils.sysconfig.get_python_lib(), files))
         except:
             print("Failed to open 'src/librapid/blas/bin/{}".format(filename))
@@ -66,8 +66,8 @@ if platform.system() == "Windows":
                 print("Attempting to open 'src/librapid/openblas_install/bin/{}".format(filename))
                 with open(os.path.join("src", "librapid", "openblas_install", "bin", filename), "r") as _:
                     files = [os.path.join("src", "librapid", "openblas_install", "bin", filename)]
-                    # data_files.append(("", files))
-                    data_files.append(("lib/site-packages/librapid", files))
+                    data_files.append(("", files))
+                    # data_files.append(("lib/site-packages/librapid", files))
                 # data_files.append((distutils.sysconfig.get_python_lib(), files))
             except:
                 print("Failed to open 'src/librapid/openblas_install/bin/{}".format(filename))
@@ -106,10 +106,10 @@ with open(os.path.join(ROOT_DIR, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 if sys.maxsize > 2 ** 32 and platform.system() == "Windows":
-    print("Using 64bit Python")
+    # print("Using 64bit Python")
     cmake_args = ["-DCMAKE_GENERATOR_PLATFORM=x64"]
 else:
-    print("Using 32bit Python (or an OS other than Windows)")
+    # print("Using 32bit Python (or an OS other than Windows)")
     cmake_args = []
 
 if os.environ.get("LIBRAPID_NO_ARCH"):
