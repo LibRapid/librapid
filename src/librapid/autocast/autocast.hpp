@@ -34,11 +34,11 @@ namespace librapid {
 	 * \endrst
 	 */
 	using RawArrayData = std::variant<
-			// int32_t *,
-			int64_t *,
-			float *,
-			double *,
-			Complex < double> *
+		// int32_t *,
+		int64_t *,
+		float *,
+		double *,
+		Complex < double> *
 	>;
 
 	/**
@@ -78,16 +78,12 @@ namespace librapid {
 	 */
 	inline bool isIntegral(Datatype t) {
 		switch (t) {
-			case Datatype::NONE:
-				return false;
-			case Datatype::VALIDNONE:
-				return false;
+			case Datatype::NONE: return false;
+			case Datatype::VALIDNONE: return false;
 				// case Datatype::BOOL:
 				// 	return true;
-			case Datatype::INT64:
-				return true;
-			default:
-				return false;
+			case Datatype::INT64: return true;
+			default: return false;
 		}
 	}
 
@@ -100,16 +96,12 @@ namespace librapid {
 	*/
 	inline bool isUnsigned(Datatype t) {
 		switch (t) {
-			case Datatype::NONE:
-				return false;
-			case Datatype::VALIDNONE:
-				return false;
+			case Datatype::NONE: return false;
+			case Datatype::VALIDNONE: return false;
 				// case Datatype::BOOL:
 				// 	return false;
-			case Datatype::INT64:
-				return false;
-			default:
-				return false;
+			case Datatype::INT64: return false;
+			default: return false;
 		}
 	}
 
@@ -123,14 +115,10 @@ namespace librapid {
 	*/
 	inline bool isFloating(Datatype t) {
 		switch (t) {
-			case Datatype::FLOAT32:
-				return true;
-			case Datatype::FLOAT64:
-				return true;
-			case Datatype::CFLOAT64:
-				return true;
-			default:
-				return false;
+			case Datatype::FLOAT32: return true;
+			case Datatype::FLOAT64: return true;
+			case Datatype::CFLOAT64: return true;
+			default: return false;
 		}
 	}
 
@@ -144,20 +132,14 @@ namespace librapid {
 	*/
 	inline int64_t datatypeBytes(Datatype t) {
 		switch (t) {
-			case Datatype::NONE:
-				return 0;
-			case Datatype::VALIDNONE:
-				return 1;
+			case Datatype::NONE: return 0;
+			case Datatype::VALIDNONE: return 1;
 				// case Datatype::BOOL:
 				// 	return sizeof(bool);
-			case Datatype::INT64:
-				return sizeof(int64_t);
-			case Datatype::FLOAT32:
-				return sizeof(float);
-			case Datatype::FLOAT64:
-				return sizeof(double);
-			case Datatype::CFLOAT64:
-				return sizeof(Complex<double>);
+			case Datatype::INT64: return sizeof(int64_t);
+			case Datatype::FLOAT32: return sizeof(float);
+			case Datatype::FLOAT64: return sizeof(double);
+			case Datatype::CFLOAT64: return sizeof(Complex<double>);
 		}
 
 		return 0;
@@ -177,20 +159,14 @@ namespace librapid {
 	 */
 	inline std::string datatypeToString(const Datatype &t) {
 		switch (t) {
-			case Datatype::NONE:
-				return "NONE";
-			case Datatype::VALIDNONE:
-				return "VALIDNONE";
+			case Datatype::NONE: return "NONE";
+			case Datatype::VALIDNONE: return "VALIDNONE";
 				// case Datatype::BOOL:
 				// 	return "BOOL";
-			case Datatype::INT64:
-				return "INT64";
-			case Datatype::FLOAT32:
-				return "FLOAT32";
-			case Datatype::FLOAT64:
-				return "FLOAT64";
-			case Datatype::CFLOAT64:
-				return "CFLOAT64";
+			case Datatype::INT64: return "INT64";
+			case Datatype::FLOAT32: return "FLOAT32";
+			case Datatype::FLOAT64: return "FLOAT64";
+			case Datatype::CFLOAT64: return "CFLOAT64";
 		}
 
 		return "UNKNOWN";
@@ -276,60 +252,60 @@ namespace librapid {
 
 		// Different types and their potential string representations
 		static std::vector<std::string> noneStr = {
-				"",
-				"n",
-				"none",
-				"null",
-				"void"
+			"",
+			"n",
+			"none",
+			"null",
+			"void"
 		};
 
 		static std::vector<std::string> boolStr = {
-				"b",
-				"bool",
-				"boolean"
+			"b",
+			"bool",
+			"boolean"
 		};
 
 		static std::vector<std::string> int64Str = {
-				"i",
-				"int",
-				"int64",
-				"i64",
-				"long long"
+			"i",
+			"int",
+			"int64",
+			"i64",
+			"long long"
 		};
 
 		static std::vector<std::string> float32Str = {
-				"float32",
-				"f32",
-				"float"
+			"float32",
+			"f32",
+			"float"
 		};
 
 		static std::vector<std::string> float64Str = {
-				"f",
-				"float64",
-				"f64",
-				"double"
+			"f",
+			"float64",
+			"f64",
+			"double"
 		};
 
 		static std::vector<std::string> cfloat64Str = {
-				"cf",
-				"cfloat64",
-				"cf64",
-				"complex"
-				"complex double"
+			"cf",
+			"cfloat64",
+			"cf64",
+			"complex"
+			"complex double"
 		};
 
 		static std::map<Datatype, std::vector<std::string>> types = {
-				{Datatype::NONE,     noneStr},
-				// {Datatype::BOOL,     boolStr},
-				{Datatype::INT64,    int64Str},
-				{Datatype::FLOAT32,  float32Str},
-				{Datatype::FLOAT64,  float64Str},
-				{Datatype::CFLOAT64, cfloat64Str},
+			{Datatype::NONE, noneStr},
+			// {Datatype::BOOL,     boolStr},
+			{Datatype::INT64, int64Str},
+			{Datatype::FLOAT32, float32Str},
+			{Datatype::FLOAT64, float64Str},
+			{Datatype::CFLOAT64, cfloat64Str},
 		};
 
 		// Locate the datatype
-		for (const auto &dtypePair: types) {
-			for (const auto &name: dtypePair.second) {
+		for (const auto &dtypePair : types) {
+			for (const auto &name : dtypePair.second) {
 				if (name == temp)
 					return dtypePair.first;
 			}
@@ -381,6 +357,24 @@ namespace librapid {
 															 "documentation for details and valid inputs");
 	}
 
+	inline void *extractVoidPtr(const RawArray &raw) {
+		switch (raw.dtype) {
+			case Datatype::INT64: {
+				return std::get<int64_t *>(raw.data);
+			}
+			case Datatype::FLOAT32: {
+				return std::get<float *>(raw.data);
+			}
+			case Datatype::FLOAT64: {
+				return std::get<double *>(raw.data);
+			}
+			case Datatype::CFLOAT64: {
+				return std::get<Complex<double> *>(raw.data);
+			}
+		}
+		return nullptr;
+	}
+
 #ifdef LIBRAPID_HAS_CUDA
 	#ifdef LIBRAPID_CUDA_STREAM
 	extern cudaStream_t cudaStream;
@@ -413,22 +407,22 @@ namespace librapid {
 				// }
 				case Datatype::INT64: {
 					raw.data = (int64_t *)
-							alignedMalloc(sizeof(int64_t) * elems);
+						alignedMalloc(sizeof(int64_t) * elems);
 					break;
 				}
 				case Datatype::FLOAT32: {
 					raw.data = (float *)
-							alignedMalloc(sizeof(float) * elems);
+						alignedMalloc(sizeof(float) * elems);
 					break;
 				}
 				case Datatype::FLOAT64: {
 					raw.data = (double *)
-							alignedMalloc(sizeof(double) * elems);
+						alignedMalloc(sizeof(double) * elems);
 					break;
 				}
 				case Datatype::CFLOAT64: {
 					raw.data = (Complex<double> *)
-							alignedMalloc(sizeof(Complex<double>) * elems);
+						alignedMalloc(sizeof(Complex<double>) * elems);
 					break;
 				}
 			}
@@ -451,24 +445,24 @@ namespace librapid {
 				// 	break;
 				// }
 				case Datatype::INT64: {
-					raw.data = (int64_t *) memory;
+					raw.data = (int64_t *)memory;
 					break;
 				}
 				case Datatype::FLOAT32: {
-					raw.data = (float *) memory;
+					raw.data = (float *)memory;
 					break;
 				}
 				case Datatype::FLOAT64: {
-					raw.data = (double *) memory;
+					raw.data = (double *)memory;
 					break;
 				}
 				case Datatype::CFLOAT64: {
-					raw.data = (Complex<double> *) memory;
+					raw.data = (Complex<double> *)memory;
 					break;
 				}
 			}
 		} else {
-			raw.data = (int64_t *) nullptr;
+			raw.data = (int64_t *)nullptr;
 		}
 
 		return raw;
@@ -511,8 +505,7 @@ namespace librapid {
 				memory = std::get<Complex<double> *>(raw.data);
 				break;
 			}
-			default:
-				break;
+			default: break;
 		}
 
 		if (raw.location == Accelerator::CPU) {
@@ -548,7 +541,7 @@ namespace librapid {
 			src.location == Accelerator::NONE)
 			throw std::invalid_argument("Cannot copy to unknown device");
 
-		if ((int) dst.dtype < 2 || (int) src.dtype < 2)
+		if ((int)dst.dtype < 2 || (int)src.dtype < 2)
 			throw std::invalid_argument("Cannot copy data to or from a null "
 										"datatype");
 
@@ -568,12 +561,12 @@ namespace librapid {
 													 datatypeBytes(src.dtype) * elems,
 													 cudaMemcpyHostToDevice, cudaStream));
 					else if (src.location == Accelerator::GPU &&
-							 dst.location == Accelerator::CPU)
+						dst.location == Accelerator::CPU)
 						cudaSafeCall(cudaMemcpyAsync(a, b,
 													 datatypeBytes(src.dtype) * elems,
 													 cudaMemcpyDeviceToHost, cudaStream));
 					else if (src.location == Accelerator::GPU &&
-							 dst.location == Accelerator::GPU)
+						dst.location == Accelerator::GPU)
 						cudaSafeCall(cudaMemcpyAsync(a, b,
 													 datatypeBytes(src.dtype) * elems,
 													 cudaMemcpyDeviceToDevice, cudaStream));
@@ -598,7 +591,7 @@ namespace librapid {
 				}
 			}, dst.data, src.data);
 		} else if (dst.location == Accelerator::CPU &&
-				   src.location == Accelerator::CPU) {
+			src.location == Accelerator::CPU) {
 			std::visit([&](auto *a, auto *b) {
 				using A = typename std::remove_pointer<decltype(a)>::type;
 				using B = typename std::remove_pointer<decltype(b)>::type;
@@ -657,7 +650,7 @@ namespace librapid {
 											 sizeof(A), cudaMemcpyDeviceToHost));
 #endif
 
-								a[i] = (A) tmp;
+								a[i] = (A)tmp;
 							}
 						} else {
 							int64_t tmpElems = elems;
@@ -674,7 +667,7 @@ namespace librapid {
 											 sizeof(A), cudaMemcpyDeviceToHost));
 #endif
 
-								a[i] = (A) tmp;
+								a[i] = (A)tmp;
 							}
 						}
 					}, dst.data, src.data);
@@ -708,7 +701,7 @@ namespace librapid {
 
 				// Use 1 to 512 threads per block
 				if (elems < 512) {
-					threadsPerBlock = (uint16_t) elems;
+					threadsPerBlock = (uint16_t)elems;
 					blocksPerGrid = 1;
 				} else {
 					threadsPerBlock = 512;
@@ -724,9 +717,9 @@ namespace librapid {
 
 #ifdef LIBRAPID_CUDA_STREAM
 					jitifyCall(program.kernel("copyKernel")
-									   .instantiate(Type<A>(), Type<B>())
-									   .configure(grid, block, 0, cudaStream)
-									   .launch(a, b, elems));
+								   .instantiate(Type<A>(), Type<B>())
+								   .configure(grid, block, 0, cudaStream)
+								   .launch(a, b, elems));
 #else
 					jitifyCall(program.kernel("copyKernel")
 							   .instantiate(Type<A>(), Type<B>())

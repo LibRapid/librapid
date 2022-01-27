@@ -1,6 +1,7 @@
 #include <librapid/array/multiarray.hpp>
 #include <librapid/utils/array_utils.hpp>
 
+
 namespace librapid {
 	RawArray validRawArray = RawArray{(int64_t *) nullptr, Datatype::VALIDNONE, Accelerator::CPU};
 
@@ -18,21 +19,23 @@ namespace librapid {
 	Array::Array(const Extent &extent, Datatype dtype, Accelerator location) {
 		initializeCudaStream();
 
-		if (extent.containsAutomatic())
+		if (extent.containsAutomatic()) {
 			throw std::invalid_argument("Cannot create an Array from an Extent"
 										" containing automatic values. "
 										"Extent was " + extent.str());
+		}
 
 		constructNew(extent, Stride::fromExtent(extent), dtype, location);
 	}
 
 	Array::Array(const Array &other, Datatype dtype, Accelerator locn) {
 		// Quick return if possible
-		if (other.m_references == nullptr)
+		if (other.m_references == nullptr) {
 			return;
+		}
 
-		if (dtype == Datatype::NONE) dtype = other.m_dtype;
-		if (locn == Accelerator::NONE) locn = other.m_location;
+		if (dtype == Datatype::NONE) { dtype = other.m_dtype; }
+		if (locn == Accelerator::NONE) { locn = other.m_location; }
 
 		if (dtype != other.m_dtype || locn != other.m_location) {
 			// Must cast other to the correct value
@@ -144,26 +147,23 @@ namespace librapid {
 
 	Array &Array::operator=(const Array &other) {
 		// Quick return if possible
-		if (other.m_references == nullptr)
+		if (other.m_references == nullptr) {
 			return *this;
+		}
 
 		if (m_isChild && m_extent != other.m_extent) {
-			throw std::invalid_argument("Cannot set child array with "
-										+ m_extent.str() + " to "
-										+ other.m_extent.str());
+			throw std::invalid_argument("Cannot set child array with " + m_extent.str() + " to " +
+										other.m_extent.str());
 		}
 
 		if (m_references == nullptr) {
-			constructNew(other.m_extent, other.m_stride,
-						 other.m_dtype, other.m_location);
+			constructNew(other.m_extent, other.m_stride, other.m_dtype, other.m_location);
 		} else {
 			// Array already exists, so check if it must be reallocated
-			if (!m_isChild && m_extent != other.m_extent ||
-				m_dtype != other.m_dtype) {
+			if (!m_isChild && m_extent != other.m_extent || m_dtype != other.m_dtype) {
 				// Extents are not equal, so memory can not be safely copied
 				decrement();
-				constructNew(other.m_extent, other.m_stride, other.m_dtype,
-							 other.m_location);
+				constructNew(other.m_extent, other.m_stride, other.m_dtype, other.m_location);
 				m_isScalar = other.m_isScalar;
 			}
 		}
@@ -191,12 +191,13 @@ namespace librapid {
 	}
 
 	Array &Array::operator=(bool val) {
-		if (m_isChild && !m_isScalar)
+		if (m_isChild && !m_isScalar) {
 			throw std::invalid_argument("Cannot set an array with more than zero"
 										" dimensions to a scalar value. Array must"
 										" have zero dimensions (i.e. scalar)");
+		}
 		if (!m_isChild) {
-			if (m_references != nullptr) decrement();
+			if (m_references != nullptr) { decrement(); }
 			constructNew(Extent(1), Stride(1), Datatype::INT64, Accelerator::CPU);
 		}
 
@@ -209,12 +210,13 @@ namespace librapid {
 	}
 
 	Array &Array::operator=(float val) {
-		if (m_isChild && !m_isScalar)
+		if (m_isChild && !m_isScalar) {
 			throw std::invalid_argument("Cannot set an array with more than zero"
 										" dimensions to a scalar value. Array must"
 										" have zero dimensions (i.e. scalar)");
+		}
 		if (!m_isChild) {
-			if (m_references != nullptr) decrement();
+			if (m_references != nullptr) { decrement(); }
 			constructNew(Extent(1), Stride(1), Datatype::FLOAT32, Accelerator::CPU);
 		}
 
@@ -226,12 +228,13 @@ namespace librapid {
 	}
 
 	Array &Array::operator=(double val) {
-		if (m_isChild && !m_isScalar)
+		if (m_isChild && !m_isScalar) {
 			throw std::invalid_argument("Cannot set an array with more than zero"
 										" dimensions to a scalar value. Array must"
 										" have zero dimensions (i.e. scalar)");
+		}
 		if (!m_isChild) {
-			if (m_references != nullptr) decrement();
+			if (m_references != nullptr) { decrement(); }
 			constructNew(Extent(1), Stride(1), Datatype::FLOAT64, Accelerator::CPU);
 		}
 
@@ -243,12 +246,13 @@ namespace librapid {
 	}
 
 	Array &Array::operator=(Complex<double> val) {
-		if (m_isChild && !m_isScalar)
+		if (m_isChild && !m_isScalar) {
 			throw std::invalid_argument("Cannot set an array with more than zero"
 										" dimensions to a scalar value. Array must"
 										" have zero dimensions (i.e. scalar)");
+		}
 		if (!m_isChild) {
-			if (m_references != nullptr) decrement();
+			if (m_references != nullptr) { decrement(); }
 			constructNew(Extent(1), Stride(1), Datatype::CFLOAT64, Accelerator::CPU);
 		}
 
@@ -263,7 +267,8 @@ namespace librapid {
 		decrement();
 	}
 
-	void Array::constructNew(const Extent &e, const Stride &s,
+	void Array::constructNew(const Extent &e,
+							 const Stride &s,
 							 const Datatype &dtype,
 							 const Accelerator &location) {
 		// Is scalar if extent is [0]
@@ -287,19 +292,22 @@ namespace librapid {
 		m_isChild = false;
 	}
 
-	void Array::constructHollow(const Extent &e, const Stride &s,
-								const Datatype &dtype, const Accelerator &location) {
+	void Array::constructHollow(const Extent &e,
+								const Stride &s,
+								const Datatype &dtype,
+								const Accelerator &location) {
 		m_extent = e;
 		m_stride = s;
 		m_dtype = dtype;
 		m_location = location;
 		m_stride.setContiguity(m_stride.checkContiguous(m_extent));
 
-		if (ndim() > LIBRAPID_MAX_DIMS)
-			throw std::domain_error("Cannot create an array with "
-									+ std::to_string(ndim()) + " dimensions. The "
-															   "maximum allowed number of dimensions is "
-									+ std::to_string(LIBRAPID_MAX_DIMS));
+		if (ndim() > LIBRAPID_MAX_DIMS) {
+			throw std::domain_error(
+					"Cannot create an array with " + std::to_string(ndim()) + " dimensions. The "
+																			  "maximum allowed number of dimensions is " +
+					std::to_string(LIBRAPID_MAX_DIMS));
+		}
 	}
 
 	Array zerosLike(const Array &other) {
