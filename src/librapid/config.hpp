@@ -371,11 +371,4 @@ namespace librapid {
     };
 }
 
-//namespace std {
-//	template<typename A, typename B>
-//	struct common_type<Complex<A>, B> {
-//		using type = typename std::common
-//	};
-//}
-
 #endif // LIBRAPID_CONFIG
