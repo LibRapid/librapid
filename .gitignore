@@ -16,6 +16,7 @@ MANIFEST
 build
 build/*
 _skbuild
+_librapid_python_cmake
 
 tests/__pycache__
 
