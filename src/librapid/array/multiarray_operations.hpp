@@ -973,7 +973,8 @@ namespace librapid
                         // Use a[i] and b[i]
                         if constexpr (std::is_same_v<A, double> && std::is_same_v<B, double> &&
                                       std::is_same_v<C, double>) {
-                            vcl::Vec8d a, b;
+
+							vcl::Vec8d a, b;
                             int64_t i = 0;
                             auto tmpSrcA = (double *__restrict) srcDataA;
                             auto tmpSrcB = (double *__restrict) srcDataB;
