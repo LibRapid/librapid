@@ -7,7 +7,6 @@ import sys
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Try appending to the package directory
-
 try:
     from distutils.sysconfig import get_python_lib
 
@@ -28,17 +27,26 @@ except ImportError:
     # If using windows, tell the os where the DLL for blas is
     # If blas was not installed, this doesn't really do anything
     if platform.system() == "Windows":
-        import win32api
+        try:
+            import win32api
+        except:
+            print("Could not import win32api")
 
-        if "openblas.dll" in os.listdir(ROOT_DIR) or \
-                "libopenblas.dll" in os.listdir(ROOT_DIR):
-            print("Loading DLL from './'")
-            win32api.SetDllDirectory(ROOT_DIR)
-            sys.path.append(ROOT_DIR)
-        elif os.path.exists(os.path.join(ROOT_DIR, "blas")):
-            print("Loading DLL from './blas'")
-            win32api.SetDllDirectory(os.path.join(ROOT_DIR, "blas"))
-            sys.path.append(os.path.join(ROOT_DIR, "blas"))
+            if "openblas.dll" in os.listdir(ROOT_DIR) or \
+                    "libopenblas.dll" in os.listdir(ROOT_DIR):
+                print("Loading DLL from './'")
+                try:
+                    win32api.SetDllDirectory(ROOT_DIR)
+                except:
+                    pass
+                sys.path.append(ROOT_DIR)
+            elif os.path.exists(os.path.join(ROOT_DIR, "blas")):
+                print("Loading DLL from './blas'")
+                try:
+                    win32api.SetDllDirectory(os.path.join(ROOT_DIR, "blas"))
+                except:
+                    pass
+                sys.path.append(os.path.join(ROOT_DIR, "blas"))
 
     try:
         try:
