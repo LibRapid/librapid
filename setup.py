@@ -3,6 +3,7 @@ import os
 import platform
 import shutil
 import sys
+import site
 from packaging.version import LegacyVersion
 from skbuild import setup
 from skbuild.cmaker import get_cmake_version
@@ -25,6 +26,13 @@ if os.path.exists("openblas_install") and not os.path.exists(os.path.join("src",
 if os.path.exists("_skbuild"):
     shutil.rmtree("_skbuild")
 
+# If the directory "src/librapid/blas" is empty and "src/librapid/openblas_install" is empty,
+# run CMake to automatically detect BLAS before installing the Python library
+if not os.path.exists(os.path.join("src", "librapid", "blas")) and not os.path.exists(os.path.join("src", "librapid", "openblas_install")):
+    out = os.system("mkdir _librapid_python_cmake && cd _librapid_python_cmake && cmake ..")
+    if out != 0:
+        print("\nCMake failed to run correctly, so it is likely that BLAS will not be installed with LibRapid")
+
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
 install_requires = []
@@ -38,39 +46,43 @@ except SKBuildError:
     install_requires.append("cmake")
 
 # ======= Uncomment this to install win32api as well =======
-# if platform.system() == "Windows":
-# 	setup_requires.append('pypiwin32')
-# 	install_requires.append("pypiwin32")
+if platform.system() == "Windows":
+    setup_requires.append('pywin32')
+    install_requires.append("pywin32")
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-print("\n\n\n\n")
 
 data_files = []
 if platform.system() == "Windows":
     for filename in ["openblas.dll", "libopenblas.dll"]:
         try:
-            print("Attempting to open 'src/librapid/blas/bin{}".format(filename))
-            with open(os.path.join("src", "librapid", "blas", "bin", filename), "r") as _:
-                files = [os.path.join("src", "librapid", "blas", "bin", filename)]
-                data_files.append(("", files))
-                # data_files.append(("lib/site-packages/librapid", files))
+            print("Attempting to open 'src/librapid/blas/{}".format(filename))
+            with open(os.path.join("src", "librapid", "blas", filename), "r") as _:
+                files = [os.path.join("src", "librapid", "blas", filename)]
+                # data_files.append(("", files))
+
+                root, lib = site.getsitepackages()
+                libdir = lib.replace(root, "")
+                libdir = libdir.lstrip("\\")
+                libdir = libdir.lstrip("/")
+                data_files.append((os.path.join(".", libdir, "librapid"), files))
+                # data_files.append(("librapid", files))
             # data_files.append((distutils.sysconfig.get_python_lib(), files))
         except:
-            print("Failed to open 'src/librapid/blas/bin/{}".format(filename))
+            print("Failed to open 'src/librapid/blas/bin/{}'".format(filename))
             pass
 
     if data_files == []:
         for filename in ["openblas.dll", "libopenblas.dll"]:
             try:
-                print("Attempting to open 'src/librapid/openblas_install/bin/{}".format(filename))
+                print("Attempting to open 'src/librapid/openblas_install/bin/{}'".format(filename))
                 with open(os.path.join("src", "librapid", "openblas_install", "bin", filename), "r") as _:
                     files = [os.path.join("src", "librapid", "openblas_install", "bin", filename)]
                     data_files.append(("", files))
                     # data_files.append(("lib/site-packages/librapid", files))
                 # data_files.append((distutils.sysconfig.get_python_lib(), files))
             except:
-                print("Failed to open 'src/librapid/openblas_install/bin/{}".format(filename))
+                print("Failed to open 'src/librapid/openblas_install/bin/{}'".format(filename))
                 pass
 
     if data_files == []:
