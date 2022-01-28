@@ -1,0 +1,15 @@
+
+// ====================================================== //
+// The code in this file is GENERATED. DO NOT CHANGE IT.  //
+// To change this file's contents, please edit and run    //
+// "map_kernel_interface_generator.py" in the same directory     //
+// ====================================================== //
+
+.def_static("mapKernel", [](const std::function<double(double)> &kernel, const librapid::Array &a1, librapid::Array &dst) { librapid::Array::mapKernel(kernel, a1, dst); }, py::call_guard<py::gil_scoped_release>())
+.def_static("mapKernel", [](const std::function<double(double, double)> &kernel, const librapid::Array &a1, const librapid::Array &a2, librapid::Array &dst) { librapid::Array::mapKernel(kernel, a1, a2, dst); }, py::call_guard<py::gil_scoped_release>())
+.def_static("mapKernel", [](const std::function<double(double, double, double)> &kernel, const librapid::Array &a1, const librapid::Array &a2, const librapid::Array &a3, librapid::Array &dst) { librapid::Array::mapKernel(kernel, a1, a2, a3, dst); }, py::call_guard<py::gil_scoped_release>())
+.def_static("mapKernel", [](const std::function<double(double, double, double, double)> &kernel, const librapid::Array &a1, const librapid::Array &a2, const librapid::Array &a3, const librapid::Array &a4, librapid::Array &dst) { librapid::Array::mapKernel(kernel, a1, a2, a3, a4, dst); }, py::call_guard<py::gil_scoped_release>())
+.def_static("mapKernel", [](const std::function<double(double, double, double, double, double)> &kernel, const librapid::Array &a1, const librapid::Array &a2, const librapid::Array &a3, const librapid::Array &a4, const librapid::Array &a5, librapid::Array &dst) { librapid::Array::mapKernel(kernel, a1, a2, a3, a4, a5, dst); }, py::call_guard<py::gil_scoped_release>())
+.def_static("mapKernel", [](const std::function<double(double, double, double, double, double, double)> &kernel, const librapid::Array &a1, const librapid::Array &a2, const librapid::Array &a3, const librapid::Array &a4, const librapid::Array &a5, const librapid::Array &a6, librapid::Array &dst) { librapid::Array::mapKernel(kernel, a1, a2, a3, a4, a5, a6, dst); }, py::call_guard<py::gil_scoped_release>())
+.def_static("mapKernel", [](const std::function<double(double, double, double, double, double, double, double)> &kernel, const librapid::Array &a1, const librapid::Array &a2, const librapid::Array &a3, const librapid::Array &a4, const librapid::Array &a5, const librapid::Array &a6, const librapid::Array &a7, librapid::Array &dst) { librapid::Array::mapKernel(kernel, a1, a2, a3, a4, a5, a6, a7, dst); }, py::call_guard<py::gil_scoped_release>())
+.def_static("mapKernel", [](const std::function<double(double, double, double, double, double, double, double, double)> &kernel, const librapid::Array &a1, const librapid::Array &a2, const librapid::Array &a3, const librapid::Array &a4, const librapid::Array &a5, const librapid::Array &a6, const librapid::Array &a7, const librapid::Array &a8, librapid::Array &dst) { librapid::Array::mapKernel(kernel, a1, a2, a3, a4, a5, a6, a7, a8, dst); }, py::call_guard<py::gil_scoped_release>())

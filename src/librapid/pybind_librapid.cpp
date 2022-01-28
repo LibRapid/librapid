@@ -368,8 +368,8 @@ PYBIND11_MODULE(_librapid, module) {
 		.def("clone", [](const librapid::Array &arr, librapid::Datatype dtype, const std::string &locn) { return arr.clone(dtype, locn); }, py::arg("dtype") = librapid::Datatype::NONE, py::arg("locn") = "none")
 		.def("clone", [](const librapid::Array &arr, const std::string &dtype, const std::string &locn) { return arr.clone(dtype, locn); }, py::arg("dtype") = "none", py::arg("locn") = "none")
 
-		// .def_static("mapKernel", [](const std::function<double(double)> &kernel, const librapid::Array &a1, const librapid::Array &dst) { librapid::Array::mapKernel(kernel, a1, dst); })
-		// .def_static("mapKernel", [](const std::function<double(double, double)> &kernel, const librapid::Array &a1, const librapid::Array &a2, librapid::Array &dst) { librapid::Array::mapKernel(kernel, a1, a2, dst); })
+		// Include the vector library
+		#include "python/map_kernel_interface.hpp"
 
 		.def("__add__",     [](const librapid::Array &lhs, const librapid::Array &rhs) { return lhs + rhs; })
 		.def("__sub__",     [](const librapid::Array &lhs, const librapid::Array &rhs) { return lhs - rhs; })

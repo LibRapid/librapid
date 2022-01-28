@@ -15,6 +15,7 @@
 #include <librapid/array/ops.hpp>
 #include <librapid/array/mapKernelUtils.hpp>
 
+
 namespace librapid {
 	namespace utils {
 		template<typename V>
@@ -27,7 +28,7 @@ namespace librapid {
 		template<typename V>
 		inline std::vector<int64_t> extractSize(const std::vector<std::vector<V>> &vec) {
 			std::vector<int64_t> res(1);
-			for (const auto &subVec : vec) {
+			for (const auto &subVec: vec) {
 				if (subVec.size() != vec[0].size()) {
 					throw std::length_error("Not all vectors passed were the same length. Please"
 											" ensure that all sub-vectors have the same length");
@@ -46,7 +47,7 @@ namespace librapid {
 	Array stack(const std::vector<Array>(&arrays), int64_t axis);
 
 	class Array {
-	  public:
+	public:
 		/**
 		 * \rst
 		 *
@@ -153,11 +154,11 @@ namespace librapid {
 		}
 
 		inline Array(const Extent &extent, Datatype dtype, const std::string &accelerator = "cpu")
-			: Array(extent, dtype, stringToAccelerator(accelerator)) {
+				: Array(extent, dtype, stringToAccelerator(accelerator)) {
 		}
 
 		inline Array(const Extent &extent, const std::string &dtype, const std::string &accelerator)
-			: Array(extent, stringToDatatype(dtype), stringToAccelerator(accelerator)) {
+				: Array(extent, stringToDatatype(dtype), stringToAccelerator(accelerator)) {
 		}
 
 		/**
@@ -215,54 +216,54 @@ namespace librapid {
 		Array(double val, Datatype dtype = Datatype::FLOAT64, Accelerator locn = Accelerator::CPU);
 
 		inline Array(bool val, const std::string &dtype, Accelerator locn = Accelerator::CPU)
-			: Array(val, stringToDatatype(dtype), locn) {
+				: Array(val, stringToDatatype(dtype), locn) {
 		}
 
 		inline Array(float val, const std::string &dtype, Accelerator locn = Accelerator::CPU)
-			: Array(val, stringToDatatype(dtype), locn) {
+				: Array(val, stringToDatatype(dtype), locn) {
 		}
 
 		inline Array(double val, const std::string &dtype, Accelerator locn = Accelerator::CPU)
-			: Array(val, stringToDatatype(dtype), locn) {
+				: Array(val, stringToDatatype(dtype), locn) {
 		}
 
 		inline Array(bool val, Datatype dtype, const std::string &locn) : Array(val,
 																				dtype,
 																				stringToAccelerator(
-																					locn)) {
+																						locn)) {
 		}
 
 		inline Array(float val, Datatype dtype, const std::string &locn) : Array(val,
 																				 dtype,
 																				 stringToAccelerator(
-																					 locn)) {
+																						 locn)) {
 		}
 
 		inline Array(double val, Datatype dtype, const std::string &locn) : Array(val,
 																				  dtype,
 																				  stringToAccelerator(
-																					  locn)) {
+																						  locn)) {
 		}
 
 		inline Array(bool val, const std::string &dtype, const std::string &locn) : Array(val,
 																						  stringToDatatype(
-																							  locn),
+																								  locn),
 																						  stringToAccelerator(
-																							  locn)) {
+																								  locn)) {
 		}
 
 		inline Array(float val, const std::string &dtype, const std::string &locn) : Array(val,
 																						   stringToDatatype(
-																							   locn),
+																								   locn),
 																						   stringToAccelerator(
-																							   locn)) {
+																								   locn)) {
 		}
 
 		inline Array(double val, const std::string &dtype, const std::string &locn) : Array(val,
 																							stringToDatatype(
-																								locn),
+																									locn),
 																							stringToAccelerator(
-																								locn)) {
+																									locn)) {
 		}
 
 		template<typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
@@ -279,10 +280,10 @@ namespace librapid {
 #ifdef LIBRAPID_HAS_CUDA
 			else {
 				int64_t tempVal = val;
-				RawArray tempDst = RawArray {m_dataStart, dtype, locn};
+				RawArray tempDst = RawArray{m_dataStart, dtype, locn};
 				RawArray
-					tempSrc =
-					RawArray {RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU};
+						tempSrc =
+						RawArray{RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU};
 				rawArrayMemcpy(tempDst, tempSrc, 1);
 			}
 #else
@@ -307,10 +308,10 @@ namespace librapid {
 #ifdef LIBRAPID_HAS_CUDA
 			else {
 				int64_t tempVal = val;
-				RawArray tempDst = RawArray {m_dataStart, stringToDatatype(dtype), locn};
+				RawArray tempDst = RawArray{m_dataStart, stringToDatatype(dtype), locn};
 				RawArray
-					tempSrc =
-					RawArray {RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU};
+						tempSrc =
+						RawArray{RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU};
 				rawArrayMemcpy(tempDst, tempSrc, 1);
 			}
 #else
@@ -335,10 +336,10 @@ namespace librapid {
 #ifdef LIBRAPID_HAS_CUDA
 			else {
 				int64_t tempVal = val;
-				RawArray tempDst = RawArray {m_dataStart, dtype, accelerator};
+				RawArray tempDst = RawArray{m_dataStart, dtype, accelerator};
 				RawArray
-					tempSrc =
-					RawArray {RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU};
+						tempSrc =
+						RawArray{RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU};
 				rawArrayMemcpy(tempDst, tempSrc, 1);
 			}
 #else
@@ -364,10 +365,10 @@ namespace librapid {
 #ifdef LIBRAPID_HAS_CUDA
 			else {
 				int64_t tempVal = val;
-				RawArray tempDst = RawArray {m_dataStart, datatype, accelerator};
+				RawArray tempDst = RawArray{m_dataStart, datatype, accelerator};
 				RawArray
-					tempSrc =
-					RawArray {RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU};
+						tempSrc =
+						RawArray{RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU};
 				rawArrayMemcpy(tempDst, tempSrc, 1);
 			}
 #else
@@ -423,40 +424,40 @@ namespace librapid {
 
 		// 6D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>)
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>)
 
 		// 7D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >>>>>)
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >>>>>)
 
 		// 8D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >>)
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >>)
 
 		//9D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
 				V >> >> >>>>>)
 
 		//10D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC <
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC <
 				V >> >> >> >> >>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
 				V >> >> >> >> >>)
 
 #undef CONSTRUCTOR_TEMPLATE
@@ -508,40 +509,40 @@ namespace librapid {
 
 		// 6D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>)
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>)
 
 		// 7D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >>>>>)
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >>>>>)
 
 		// 8D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >>)
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >>)
 
 		//9D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
 				V >> >> >>>>>)
 
 		//10D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC <
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC <
 				V >> >> >> >> >>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
 				V >> >> >> >> >>)
 
 #undef CONSTRUCTOR_TEMPLATE
@@ -593,40 +594,40 @@ namespace librapid {
 
 		// 6D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>)
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>)
 
 		// 7D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >>>>>)
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >>>>>)
 
 		// 8D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >>)
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >>)
 
 		//9D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
 				V >> >> >>>>>)
 
 		//10D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC <
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC <
 				V >> >> >> >> >>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
 				V >> >> >> >> >>)
 
 #undef CONSTRUCTOR_TEMPLATE
@@ -679,40 +680,40 @@ namespace librapid {
 
 		// 6D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>)
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >>)
 
 		// 7D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >>>>>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >>>>>)
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >>>>>)
 
 		// 8D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >> >>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >>)
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < V >> >> >> >>)
 
 		//9D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < V >> >> >>>>>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
 				V >> >> >>>>>)
 
 		//10D
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC <
+				CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC < CVEC <
 				V >> >> >> >> >>)
 
 		CONSTRUCTOR_TEMPLATE CONSTRUCTOR_BODY_INIT(
-			CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
+				CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT < CINIT <
 				V >> >> >> >> >>)
 
 #undef CONSTRUCTOR_TEMPLATE
@@ -762,7 +763,7 @@ namespace librapid {
 
 			auto raw = createRaw();
 			int64_t tmp = val;
-			rawArrayMemcpy(raw, RawArray {&tmp, Datatype::INT64, Accelerator::CPU}, 1);
+			rawArrayMemcpy(raw, RawArray{&tmp, Datatype::INT64, Accelerator::CPU}, 1);
 
 			m_isScalar = true;
 			return *this;
@@ -853,7 +854,7 @@ namespace librapid {
 		[[nodiscard]] inline operator T() const {
 			if (!m_isScalar) {
 				throw std::invalid_argument(
-					"Cannot convert Array with " + m_extent.str() + " to scalar value");
+						"Cannot convert Array with " + m_extent.str() + " to scalar value");
 			}
 
 			if (m_location == Accelerator::CPU) {
@@ -861,18 +862,18 @@ namespace librapid {
 					case Datatype::NONE:
 					case Datatype::VALIDNONE:
 						throw std::invalid_argument(
-							"Cannot convert uninitialized array to scalar value");
+								"Cannot convert uninitialized array to scalar value");
 						// case Datatype::BOOL:
 						// 	return (T) *std::get<bool *>(m_dataStart);
-					case Datatype::INT64:return (T)*std::get<int64_t *>(m_dataStart);
-					case Datatype::FLOAT32:return (T)*std::get<float *>(m_dataStart);
-					case Datatype::FLOAT64:return (T)*std::get<double *>(m_dataStart);
-					case Datatype::CFLOAT64:return (T)*std::get<Complex<double> *>(m_dataStart);
+					case Datatype::INT64:return (T) *std::get<int64_t *>(m_dataStart);
+					case Datatype::FLOAT32:return (T) *std::get<float *>(m_dataStart);
+					case Datatype::FLOAT64:return (T) *std::get<double *>(m_dataStart);
+					case Datatype::CFLOAT64:return (T) *std::get<Complex<double> *>(m_dataStart);
 				}
 			} else if (m_location == Accelerator::GPU) {
 				Datatype resType = typeToDatatype<T>();
 				RawArrayData raw;
-				auto tmp = RawArray {raw, resType, Accelerator::CPU};
+				auto tmp = RawArray{raw, resType, Accelerator::CPU};
 				rawArrayMalloc(tmp, 1);
 				rawArrayMemcpy(tmp, createRaw(), 1);
 				T res;
@@ -882,26 +883,26 @@ namespace librapid {
 					case Datatype::VALIDNONE: {
 						rawArrayFree(tmp);
 						throw std::invalid_argument(
-							"Cannot convert uninitialized array to scalar value");
+								"Cannot convert uninitialized array to scalar value");
 					}
 						// case Datatype::BOOL: {
 						// 	res = (T) *std::get<bool *>(tmp.data);
 						// 	break;
 						// }
 					case Datatype::INT64: {
-						res = (T)*std::get<int64_t *>(tmp.data);
+						res = (T) *std::get<int64_t *>(tmp.data);
 						break;
 					}
 					case Datatype::FLOAT32: {
-						res = (T)*std::get<float *>(tmp.data);
+						res = (T) *std::get<float *>(tmp.data);
 						break;
 					}
 					case Datatype::FLOAT64: {
-						res = (T)*std::get<double *>(tmp.data);
+						res = (T) *std::get<double *>(tmp.data);
 						break;
 					}
 					case Datatype::CFLOAT64: {
-						res = (T)*std::get<Complex<double> *>(tmp.data);
+						res = (T) *std::get<Complex<double> *>(tmp.data);
 						break;
 					}
 				}
@@ -979,13 +980,13 @@ namespace librapid {
 			static uint64_t prevSeed = -1;
 			static bool statSeedSet = false;
 
-			if (prevSeed != seed || !statSeedSet || seed != (uint64_t)-1) {
+			if (prevSeed != seed || !statSeedSet || seed != (uint64_t) -1) {
 				prevSeed = seed;
-				statSeed = seed == -1 ? (uint64_t)(seconds() * 10) : seed;
+				statSeed = seed == -1 ? (uint64_t) (seconds() * 10) : seed;
 				statSeedSet = true;
 			}
 			// applyUnaryOp(*this, *this, ops::FillRandom < T > (min, max, seed));
-			applyUnaryOp(*this, *this, ops::FillRandom < T > (min, max, statSeed));
+			applyUnaryOp(*this, *this, ops::FillRandom<T>(min, max, statSeed));
 		}
 
 		template<typename T = double>
@@ -1075,16 +1076,29 @@ namespace librapid {
 								 const Accelerator &locn = Accelerator::NONE);
 
 		template<typename PTR, typename First>
-		static inline void mapKernelGetPointers(PTR **__restrict ptrVals, First first) {
-			*ptrVals = (PTR *)extractVoidPtr(first.createRaw());
+		static inline void mapKernelGetPointers(PTR **__restrict ptrVals,
+												const Extent &e,
+												const Datatype &d,
+												First first) {
+			*ptrVals = (PTR *) extractVoidPtr(first.createRaw());
 		}
 
 		template<typename PTR, typename First, typename... Pack>
 		static inline void mapKernelGetPointers(PTR **__restrict ptrVals,
+												const Extent &e,
+												const Datatype &d,
 												First first,
 												Pack... arrayPack) {
-			*ptrVals = (PTR *)extractVoidPtr(first.createRaw());
-			mapKernelGetPointers(ptrVals + 1, arrayPack...);
+			// Ensure all the arrays are on the CPU, have the same stride, are contiguous in memory,
+			// have the same extent and the same datatype
+			if (typeToDatatype<PTR>() != first.m_dtype || !first.m_stride.isContiguous() ||
+				first.m_extent != e || first.m_dtype != d) {
+				throw std::runtime_error("Please read the documentation for valid inputs to the "
+										 "mapKernel function");
+			}
+
+			*ptrVals = (PTR *) extractVoidPtr(first.createRaw());
+			mapKernelGetPointers(ptrVals + 1, e, d, arrayPack...);
 		}
 
 		template<typename Kernel, typename... Pack>
@@ -1098,17 +1112,42 @@ namespace librapid {
 			std::visit([&](auto *dstPtr) {
 				using TYPE = typename std::remove_pointer<decltype(dstPtr)>::type;
 				TYPE *pointers[sizeof...(Pack)];
-				mapKernelGetPointers(&(pointers[0]), arrayPack...);
+				mapKernelGetPointers(&(pointers[0]), dst.extent(), dst.dtype(), arrayPack...);
 
 				int64_t end = dst.extent().size();
-				auto localKernel = kernel;
-	#pragma omp parallel for shared(pointers, dstPtr, localKernel, end)
+
+	#ifdef LIBRAPID_PYTHON
 				for (int64_t i = 0; i < end; ++i) {
-					utils::ApplyKernelImpl<TYPE, Kernel, sizeof...(Pack) - 1>::run((TYPE **) pointers,
-																				   dstPtr,
-																				   localKernel,
-																				   i);
+						utils::ApplyKernelImpl<TYPE,
+											   Kernel,
+											   sizeof...(Pack) - 1>::run((TYPE **) pointers,
+																		 dstPtr,
+																		 kernel,
+																		 i);
+					}
+	#else
+				if (end < 2500) {
+					for (int64_t i = 0; i < end; ++i) {
+						utils::ApplyKernelImpl<TYPE,
+											   Kernel,
+											   sizeof...(Pack) - 1>::run((TYPE **) pointers,
+																		 dstPtr,
+																		 kernel,
+																		 i);
+					}
+				} else {
+					auto localKernel = kernel;
+	#pragma omp parallel for shared(pointers, dstPtr, localKernel, end)
+					for (int64_t i = 0; i < end; ++i) {
+						utils::ApplyKernelImpl<TYPE,
+											   Kernel,
+											   sizeof...(Pack) - 1>::run((TYPE **) pointers,
+																		 dstPtr,
+																		 localKernel,
+																		 i);
+					}
 				}
+	#endif // LIBRAPID_PYTHON
 			}, dst.m_dataStart);
 
 			return dst;
@@ -1152,7 +1191,7 @@ namespace librapid {
 
 			if (!permitInvalid && (dst.m_references == nullptr || dst.m_extent != src.m_extent)) {
 				throw std::invalid_argument("Cannot operate on array with " + src.m_extent.str() +
-					" and store the result in " + dst.m_extent.str());
+											" and store the result in " + dst.m_extent.str());
 			}
 
 			auto dstPtr = dst.createRaw();
@@ -1179,7 +1218,7 @@ namespace librapid {
 											  src.m_stride,
 											  operation,
 											  dst.m_stride.isTrivial() &&
-												  dst.m_stride.isContiguous());
+											  dst.m_stride.isContiguous());
 			}
 
 			dst.m_isScalar = src.m_isScalar;
@@ -1230,13 +1269,13 @@ namespace librapid {
 			if (!permitInvalid &&
 				(!srcA.m_isScalar && !srcB.m_isScalar && srcA.m_extent != srcB.m_extent)) {
 				throw std::invalid_argument(
-					"Cannot operate on two arrays with " + srcA.m_extent.str() + " and " +
+						"Cannot operate on two arrays with " + srcA.m_extent.str() + " and " +
 						srcA.m_extent.str());
 			}
 
 			if (!permitInvalid && (dst.m_references == nullptr || dst.m_extent != srcA.m_extent)) {
 				throw std::invalid_argument(
-					"Cannot operate on two arrays with " + srcA.m_extent.str() +
+						"Cannot operate on two arrays with " + srcA.m_extent.str() +
 						" and store the result in " + dst.m_extent.str());
 			}
 
@@ -1246,7 +1285,7 @@ namespace librapid {
 			auto size = dst.m_extent.size();
 
 			if ((srcA.m_stride.isTrivial() && srcA.m_stride.isContiguous() &&
-				srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
+				 srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
 				(srcA.m_stride == srcB.m_stride)) {
 				// Trivial
 				imp::multiarrayBinaryOpTrivial(ptrDst,
@@ -1289,7 +1328,7 @@ namespace librapid {
 			if (!permitInvalid && !(srcA.m_isScalar || srcB.m_isScalar) &&
 				srcA.m_extent != srcB.m_extent) {
 				throw std::invalid_argument(
-					"Cannot operate on two arrays with " + srcA.m_extent.str() + " and " +
+						"Cannot operate on two arrays with " + srcA.m_extent.str() + " and " +
 						srcB.m_extent.str());
 			}
 
@@ -1305,7 +1344,7 @@ namespace librapid {
 			auto size = dst.m_extent.size();
 
 			if ((srcA.m_stride.isTrivial() && srcA.m_stride.isContiguous() &&
-				srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
+				 srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
 				(srcA.m_stride == srcB.m_stride)) {
 				// Trivial
 				imp::multiarrayBinaryOpTrivial(ptrDst,
@@ -1375,7 +1414,7 @@ namespace librapid {
 			return m_dataStart;
 		}
 
-	  private:
+	private:
 		inline void initializeCudaStream() const {
 #ifdef LIBRAPID_HAS_CUDA
 #ifdef LIBRAPID_CUDA_STREAM
@@ -1430,7 +1469,7 @@ namespace librapid {
 							  int64_t &printedRows,
 							  int64_t &printedCols) const;
 
-	  private:
+	private:
 		Accelerator m_location = Accelerator::CPU;
 		Datatype m_dtype = Datatype::NONE;
 
@@ -1702,7 +1741,7 @@ namespace librapid {
 		std::cout << "Librapid Hardware Warmup\n";
 
 		const auto
-			types = {Datatype::INT64, Datatype::FLOAT32, Datatype::FLOAT64, Datatype::CFLOAT64};
+				types = {Datatype::INT64, Datatype::FLOAT32, Datatype::FLOAT64, Datatype::CFLOAT64};
 #ifdef LIBRAPID_HAS_CUDA
 		const auto locations = {Accelerator::CPU, Accelerator::GPU};
 #else
@@ -1715,8 +1754,8 @@ namespace librapid {
 		std::cout << "Running in RELEASE mode. Using 1000x1000 matrices\n";
 #endif
 
-		for (const auto &type : types) {
-			for (const auto &location : locations) {
+		for (const auto &type: types) {
+			for (const auto &location: locations) {
 #ifdef LIBRAPID_DEBUG
 				auto tmp = Array(Extent({100, 100}), type, location);
 #else
@@ -1769,8 +1808,7 @@ namespace librapid {
 	void optimiseThreads(double timePerThread = 1, bool verbose = false);
 }
 
-template<>
-struct fmt::formatter<librapid::Array> {
+template<> struct fmt::formatter<librapid::Array> {
 	template<typename ParseContext>
 	constexpr auto parse(ParseContext &ctx) {
 		return ctx.begin();
