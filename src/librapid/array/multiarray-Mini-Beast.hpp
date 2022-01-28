@@ -1094,12 +1094,28 @@ namespace librapid {
 
 			Array &dst = std::get<sizeof...(Pack) - 1>(arrays);
 			// For now, assume every array is trivial and on the CPU
+			// fmt::print("{}\n", std::get<0>(arrays));
+
+			// void *pointers[sizeof...(Pack)];
+			// std::pair<Extent, Stride> extentStrides[sizeof...(Pack)];
+
+			// mapKernelGetPointers(&(pointers[0]), arrayPack...);
+			// mapKernelGetExtentStride(&(extentStrides[0]), arrayPack...);
+
+			// for (uint64_t i = 0; i < sizeof...(Pack); ++i) {
+			// 	fmt::print("{} -> {}\n", i, *((double *) pointers[i]));
+			// }
 
 			std::visit([&](auto *dstPtr) {
 				using TYPE = typename std::remove_pointer<decltype(dstPtr)>::type;
 				TYPE *pointers[sizeof...(Pack)];
+				// std::pair<Extent, Stride> extentStrides[sizeof...(Pack)];
+
 				mapKernelGetPointers(&(pointers[0]), arrayPack...);
 
+				// *dst = kernel(1, 2, 3);
+				// std::bind(kernel, 1, 2, 3);
+				// std::vector<TYPE *>
 				int64_t end = dst.extent().size();
 				auto localKernel = kernel;
 	#pragma omp parallel for shared(pointers, dstPtr, localKernel, end)
@@ -1296,8 +1312,8 @@ namespace librapid {
 			Accelerator newLoc = max(srcA.m_location, srcB.m_location);
 			Datatype newType = max(srcA.m_dtype, srcB.m_dtype);
 
-			Array dst(srcA.m_isScalar ? srcB.m_extent : srcA.m_extent, newType, newLoc);
-			// Array dst(Extent({1000, 1000}), newType, newLoc);
+			// Array dst(srcA.m_isScalar ? srcB.m_extent : srcA.m_extent, newType, newLoc);
+			Array dst(Extent({1000, 1000}), newType, newLoc);
 
 			auto ptrSrcA = srcA.createRaw();
 			auto ptrSrcB = srcB.createRaw();
