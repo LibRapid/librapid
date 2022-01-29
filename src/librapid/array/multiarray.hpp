@@ -986,7 +986,7 @@ namespace librapid {
 				statSeedSet = true;
 			}
 			// applyUnaryOp(*this, *this, ops::FillRandom < T > (min, max, seed));
-			applyUnaryOp(*this, *this, ops::FillRandom<T>(min, max, statSeed));
+			applyUnaryOp(*this, *this, ops::FillRandom < T > (min, max, statSeed));
 		}
 
 		template<typename T = double>
@@ -1126,6 +1126,7 @@ namespace librapid {
 																		 i);
 					}
 	#else
+
 				if (end < 2500) {
 					for (int64_t i = 0; i < end; ++i) {
 						utils::ApplyKernelImpl<TYPE,
@@ -1137,7 +1138,7 @@ namespace librapid {
 					}
 				} else {
 					auto localKernel = kernel;
-	#pragma omp parallel for shared(pointers, dstPtr, localKernel, end)
+	#pragma omp parallel for shared(pointers, dstPtr, localKernel, end) default(none)
 					for (int64_t i = 0; i < end; ++i) {
 						utils::ApplyKernelImpl<TYPE,
 											   Kernel,
@@ -1147,6 +1148,7 @@ namespace librapid {
 																		 i);
 					}
 				}
+
 	#endif // LIBRAPID_PYTHON
 			}, dst.m_dataStart);
 
