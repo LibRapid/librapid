@@ -1117,6 +1117,8 @@ namespace librapid
                               "(srcA[kernelIndex], srcB[kernelIndex], kernelIndex, kernelIndex);";
                 kernel += "\n}\n}";
 
+				// fmt::print("Information:\n{}\n", kernel);
+
                 static const std::vector<std::string> params = {
                         "--disable-warnings", "-std=c++17", std::string("-I \"") + CUDA_INCLUDE_DIRS + "\""
                 };
