@@ -1,0 +1,275 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{datetime}
+\usepackage{graphicx}
+\usepackage[left=2.00cm, right=2.00cm, top=2.00cm, bottom=2.00cm]{geometry}
+\usepackage[english]{babel}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{xparse}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+	language=Java,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
+\def\CC{{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\tiny\bf ++ }}}
+
+\title{
+	\textsc{LibRapid High Performance Computing}\\[2.2cm]
+	
+	% Title and Subtitle
+	
+	{\LARGE \bfseries
+		Current Features}\\
+	{\Large\bfseries
+		LibRapid (C++/Python)}
+}
+
+% Authors
+
+\author{Toby ``Pencilcaseman'' Davis}
+
+\makeatletter
+\newcommand{\monthyeardate}{
+	\DTMenglishmonthname{\@dtm@month} \@dtm@year
+}
+\makeatother
+\date{\monthname\;\the\year}
+
+%----------------------------------
+
+\begin{document}
+	\maketitle
+	\thispagestyle{empty}
+	\hrule
+	\vfill
+	\newpage
+	\tableofcontents
+	\chapter{Array Storage, Operations and Calculations}
+	A multi-dimensional array library supporting runtime-defined datatypes, custom mapping functions and highly optimized routines.
+
+	\section{Extent}
+		\subsection{Constructors}
+			\subsubsection{Default Constructor}
+			\subsubsection{Construct from various STL types}
+			\subsubsection{Construct another Extent}
+		\subsection{Properties}
+			\subsubsection{Access dimensions, find automatic values, etc.}
+
+	\section{Stride}
+		\subsection{Constructors}
+			\subsubsection{Default Constructor}
+			\subsubsection{Construct from various STL types}
+			\subsubsection{Construct another Stride}
+			\subsubsection{Generate new stride from an Extent object}
+		\subsection{Properties}
+			\subsubsection{Access dimensions, triviality, contiguity, etc.}
+
+	\section{Array}
+		\subsection{Constructors}
+			\subsubsection{Construct from Extent object, with datatype and CPU/GPU parameters}
+			\subsubsection{Create from arbitrary input data}
+			\subsubsection{Create from an existing Array}
+		\subsection{Properties}
+			\subsubsection{Access dimensions, stride, location, datatype, etc.}
+			\subsubsection{Get and set items within the Array (array or scalar values)}
+		\subsection{Fill functions}
+			\subsubsection{Fill an array with a particular value, or with randomly generated values}
+		\subsection{Clone Functions}
+			\subsubsection{Create a raw clone of an array}
+			\subsubsection{Create a raw clone of an array and cast to a different datatype}
+			\subsubsection{Create a raw clone of an array on a different device (CPU/GPU)}
+		\subsection{Mapping Functions}
+			\subsubsection{Apply a kernel to any number of input arrays, optimizing the loops and resulting in a dramatic speed improvement}
+		\subsection{Arithmetic Operations}
+			\subsubsection{Binary operations where both the LHS and RHS are Arrays}
+			\subsubsection{Binary operations where only the LHS is an Array}
+			\subsubsection{Binary operations where only the RHS is an Array}
+			\subsubsection{In-place binary operations where both the LHS and RHS are Arrays}
+			\subsubsection{In-place binary operations where only the LHS is an Array}
+		\pagebreak
+		\subsection{Reshaping}
+			\subsubsection{Reshape an array in-place based on a list-like object (list, Extent, etc.)}
+			\subsubsection{Reshape an array based on a list-like object (list, Extent, etc.), returning the result}
+		\subsection{Matrix Operations}
+			\subsubsection{Transpose an array in-place, or return the transposed Array}
+			\subsubsection{Calculate vector-vector products, matrix-vector products, matrix-matrix products, and higher-dimensional products as well}
+		\subsection{Casting}
+			\subsubsection{Convert a value from an Array into a Boolean, integer, floating point or complex datatype}
+		\subsection{String Conversions}
+			\subsubsection{Return a string representation of an Array object, formatted so that decimal points align and large arrays have the middle values stripped out}
+			\subsubsection{Output an Array with Python's print() function, C++'s std::cout function or fmt::print()}
+		\subsection{BLAS, Warm-up and Multi-threaded Optimization}
+			\subsubsection{Check if LibRapid was compiled with BLAS}
+			\subsubsection{Set the number of threads LibRapid uses}
+			\subsubsection{Get the number of threads LibRapid uses}
+			\subsubsection{Run some benchmarks and optimize the number of threads LibRapid uses}
+		\subsection{Filled Array Construction}
+			\subsubsection{Create an exact replica of an Array, except filled with zeros, ones or random numbers}
+		\subsection{More Array Operations}
+			\subsubsection{Binary arithmetic on two Array-like objects, returning the result}
+			\subsubsection{Binary arithmetic on two Array-like objects, storing the result in a third Array}
+			\subsubsection{Compute the dot product on two Array-like objects, either returning the result or storing the result in a third Array}
+			\subsubsection{Stack and concatenate multiple Array into a single, larger Array}
+		\subsection{Implicit Casting}
+			\subsubsection{Implicit cast between scalar types and list-like types in C++ and Python}
+
+	\pagebreak
+
+	\section{Colors}
+		\subsection{RGB and HSL Classes}
+		\subsection{Conversions}
+			\subsection{Convert between RGB and HSL values}
+		\subsection{Merging}
+			\subsection{Simple merging functionality between two RGB/HSL values}
+		\subsection{Predefined Colors}
+			\subsubsection{clear}
+			\subsubsection{bold}
+			\subsubsection{blink}
+			\subsubsection{black}
+			\subsubsection{red}
+			\subsubsection{green}
+			\subsubsection{yellow}
+			\subsubsection{blue}
+			\subsubsection{magenta}
+			\subsubsection{cyan}
+			\subsubsection{white}
+			\subsubsection{brightBlack}
+			\subsubsection{brightRed}
+			\subsubsection{brightGreen}
+			\subsubsection{brightYellow}
+			\subsubsection{brightBlue}
+			\subsubsection{brightMagenta}
+			\subsubsection{brightCyan}
+			\subsubsection{brightWhite}
+			\subsubsection{blackBackground}
+			\subsubsection{redBackground}
+			\subsubsection{greenBackground}
+			\subsubsection{yellowBackground}
+			\subsubsection{blueBackground}
+			\subsubsection{magentaBackground}
+			\subsubsection{cyanBackground}
+			\subsubsection{whiteBackground}
+			\subsubsection{brightBlackBackground}
+			\subsubsection{brightRedBackground}
+			\subsubsection{brightGreenBackground}
+			\subsubsection{brightYellowBackground}
+		\pagebreak
+			\subsubsection{brightBlueBackground}
+			\subsubsection{brightMagentaBackground}
+			\subsubsection{brightCyanBackground}
+			\subsubsection{brightWhiteBackground}
+		\subsection{Foreground and Background Formatting}
+			\subsubsection{Automatically print a foreground or background color, allowing for colored printing}
+
+	\pagebreak
+
+	\section{Timing and General Utilities}
+		\subsection{Get the current number of seconds since the Unix Epoch as a 64-bit float}
+		\subsection{Halt program execution for a given number of seconds}
+		\subsection{Get the rows and columns of the current terminal window}
+
+	\pagebreak
+
+	\section{Mathematics}
+		\subsection{Constants}
+			\subsubsection{Convert between RGB and HSL values}
+			\subsubsection{Backhouse’s Constant}
+			\subsubsection{Bloch-Landau Constant}
+			\subsubsection{Cahen's Constant}
+			\subsubsection{$\sqrt[3]{2}$}
+			\subsubsection{$\sqrt[3]{3}$}
+			\subsubsection{$\pi / 180$}
+			\subsubsection{$180 / \pi$}
+			\subsubsection{Dottie Number}
+			\subsubsection{Euler's Number $e$}
+			\subsubsection{Gravity of Earth}
+			\subsubsection{$e^{\pi}$, Gelfond's Constant}
+			\subsubsection{Euler-Mascheroni Constant $\gamma$}
+			\subsubsection{Feller-Tornier Constant}
+			\subsubsection{Gauss's Constant}
+			\subsubsection{Gieseking Constant}
+			\subsubsection{Golden Angle}
+			\subsubsection{Golden Ratio $\phi$}
+			\subsubsection{Golomb-Dickman Constant}
+			\subsubsection{$2\pi$}
+			\subsubsection{$\pi / 2$}
+			\subsubsection{Khinchin's Constant}
+			\subsubsection{Laplace limit $\lambda$}
+			\subsubsection{Speed of Light}
+			\subsubsection{$\ln 2$}
+			\subsubsection{$\ln 3$}
+			\subsubsection{$\ln 5$}
+			\subsubsection{Loch's Constant}
+			\subsubsection{Area of the Mandelbrot Fractal}
+			\subsubsection{Meissel-Mertens Constant}
+			\subsubsection{Mill's Constant}
+			\subsubsection{MRB Constant}
+			\subsubsection{Niven's Constant}
+			\subsubsection{Parabolic Constant $P_2$}
+			\subsubsection{$\pi$}
+			\subsubsection{$\pi / \ln 2$}
+			\subsubsection{$\pi^2 / 6$}
+			\subsubsection{Plastic Number}
+
+			\pagebreak
+
+			\subsubsection{Somos' Quadratic Recurrence Constant}
+			\subsubsection{Reciprocal Fibonacci Constant}
+			\subsubsection{$\sqrt{2}$}
+			\subsubsection{$\sqrt{3}$}
+			\subsubsection{$\sqrt{5}$}
+			\subsubsection{$\sqrt{e}$}
+			\subsubsection{$\sqrt{\pi}$}
+			\subsubsection{$\tau$}
+			\subsubsection{Twin Primes Constant}
+			\subsubsection{$2^{\sqrt{2}}$}
+			\subsubsection{Wallis Constant}
+			\subsubsection{$\zeta(3)$}
+			\subsubsection{Conversions}
+		\subsection{List Calculations}
+			\subsubsection{Calculate the product of a list-like object}
+			\subsubsection{Find the minimum or maximum value of a list-like object}
+		\subsection{Mapping a Number to a Range}
+			$$\frac{(x - min_i)\cdot(max_o - min_o)}{max_i - min_i} + min_o$$
+		\subsection{Generate a random integer in a given range}
+		\subsection{Generate a random floating point value in a given range}
+		\subsection{An optimized function to calculate powers of 10}
+			$$10^n$$
+		\subsection{Round a number to a given number of decimal places}
+		\subsection{Round a number to a given number of significant figures}
+		\subsection{Vectors and Vector Arithmetic}
+			\subsubsection{Support for n-dimensional vectors with any datatype}
+			\subsubsection{Construct vectors from various objects and types}
+			\subsubsection{Binary Vector arithmetic with Vectors or scalar values as the RHS}
+			\subsubsection{In-place binary arithmetic}
+			\subsubsection{Vector magnitude}
+			\subsubsection{Vector magnitude squared}
+			\subsubsection{Inverse vector magnitude}
+			\subsubsection{Vector dot product}
+			\subsubsection{Vector cross product}
+			\subsubsection{Access to any component of vectors, including variables for x, y, z, and w}
+			\subsubsection{Explicit typedefs for Vec2i, Vec2f, Vec2d, Vec3i, Vec3f, Vec3d, Vec4i, Vec4f, and Vec4d}
+			\subsubsection{String formatting for Vector objects}
+\end{document}

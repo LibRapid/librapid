@@ -32,3 +32,5 @@ docs/source/doxygenoutput
 *.ptx
 *.cubin
 *.fatbin
+
+*.synctex.gz

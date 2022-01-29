@@ -52,10 +52,11 @@ jobs:
           git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
         shell: bash
 
+      # Double up the make command because sometimes OpenBLAS failes to detect the CPU, for some reason
       - name: Build OpenBLAS
         run: |
           cd OpenBLAS
-          make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL'
+          make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' || make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL'
 
       - name: Install OpenBLAS
         run: |
@@ -146,10 +147,11 @@ jobs:
           git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
         shell: bash
 
+      # Double up the make command. Explained above
       - name: Build OpenBLAS
         run: |
           cd OpenBLAS
-          make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL'
+          make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' || make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL'
 
       - name: Install OpenBLAS
         run: |
