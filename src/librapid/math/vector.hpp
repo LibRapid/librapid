@@ -21,12 +21,18 @@ namespace librapid {
         using Common = typename std::common_type<DTYPE, T>::type;
 
     public:
-        Vec() = default;;
+        Vec() = default;
 
         template<typename X, typename ...YZ>
         Vec(X x, YZ ... yz) : m_components{(DTYPE) x, (DTYPE) yz...} {
             static_assert(1 + sizeof...(YZ) <= dims, "Parameters cannot exceed vector dimensions");
         }
+
+		template<typename T, int64_t d>
+		Vec(const Vec<T, d> &other) {
+			int64_t i;
+			for (i = 0; i < dims < d ? dims : d; ++i) m_components[i] = other.m_components[i];
+		}
 
         Vec(const Vec<DTYPE, dims> &other) {
             int64_t i;
@@ -324,6 +330,13 @@ namespace librapid {
 
         template<typename X = DTYPE, typename Y = DTYPE, typename Z = DTYPE>
         Vec(X x, Y y = 0, Z z = 0) : x(x), y(y), z(z) {}
+
+		template<typename T, int64_t d>
+		Vec(const Vec<T, d> &other) {
+			x = other.x;
+			y = other.y;
+			z = other.z;
+		}
 
         Vec(const Vec<DTYPE, 3> &other) {
             x = other.x;

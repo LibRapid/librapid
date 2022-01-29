@@ -116,7 +116,7 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("max", [](const std::vector<double> &vals) { return librapid::max(vals); }, py::arg("vals"));
 
 	module.def("map", [](double val, double start1, double stop1, double start2, double stop2) { return librapid::map(val, start1, stop1, start2, stop2); }, py::arg("val"), py::arg("start1") = double(0), py::arg("stop1") = double(1), py::arg("start2") = double(0), py::arg("stop2") = double(1));
-	module.def("random", [](int64_t min, int64_t max) { return librapid::random(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
+	// module.def("random", [](int64_t min, int64_t max) { return librapid::random(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
 	module.def("random", [](double min, double max) { return librapid::random(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
 	module.def("randint", [](int64_t min, int64_t max) { return librapid::randint(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
 	module.def("pow10", &librapid::pow10);
