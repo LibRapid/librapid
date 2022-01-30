@@ -43,7 +43,13 @@ else ()
     message(FATAL_ERROR "VectorClass Version2 not found. Ensure the full LibRapid GitHub repo is cloned!")
 endif ()
 
-# Ensure VectorClass Version2 is accessible
+# Ensure {fmt} is available
+
+# {fmt} might fail to compile when building for python if this is not set
+if (${SKBUILD})
+	set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
+
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/fmt")
     add_subdirectory("src/librapid/fmt")
 elseif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/fmt")
