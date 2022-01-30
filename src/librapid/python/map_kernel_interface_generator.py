@@ -66,7 +66,9 @@ with open("../array/mapKernelUtils.hpp", "w") as f:
 namespace librapid::utils {
 	template<typename T, typename Kernel, uint64_t dims>
 	struct ApplyKernelImpl {
-		static inline void run(T **__restrict pointers, T *__restrict dst, const Kernel &kernel, uint64_t index) {}
+		static inline void run(T **__restrict pointers, T *__restrict dst, const Kernel &kernel, uint64_t index) {
+			throw std::runtime_error("Too many arguments passed to Array.mapKernel -- Please see the documentation for details");
+		}
 	};
 
 """)
