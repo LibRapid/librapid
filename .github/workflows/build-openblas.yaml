@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  unix_build:
+  openblas_unix:
     name: Build OpenBLAS on ${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
 
@@ -71,7 +71,7 @@ jobs:
           name: OpenBLAS on ${{ matrix.platform }}
           path: src/librapid/openblas_install
 
-  windows_build:
+  openblas_windows:
     name: Build OpenBLAS on Windows
     runs-on: windows-latest
 
