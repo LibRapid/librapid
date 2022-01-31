@@ -197,7 +197,7 @@ jobs:
           # will download all artifacts if not specified
           # and extract them in respective subdirectories
           # https://github.com/actions/download-artifact#download-all-artifacts
-          name: "OpenBLAS on ${{ matrix.platform }}"
+          name: OpenBLAS on ${{ matrix.platform }}
           # Optional, directory where to extract artifact. Defaults to the artifact name (see `name` input)
           path: src/librapid/openblas_install
           # Optional, defaults to current repo
@@ -332,59 +332,53 @@ jobs:
           conda config --set auto_update_conda false
           conda install --yes --quiet clangdev cmake ninja flang=11.0.1
 
-     # git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
-     # 939452ea9dcb57abdcc3f1278c6db668a4690465
-      - name: Clone OpenBLAS
-        run: |
-          git clone https://github.com/xianyi/OpenBLAS.git
-          cd OpenBLAS
-          git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
-        shell: bash
 
-      - name: Configure CMake
-        run: |
-          cd OpenBLAS
 
-          set "LIB=%CONDA_PREFIX%\Library\lib;%LIB%"
-          set "CPATH=%CONDA_PREFIX%\Library\include;%CPATH%"
-          mkdir build
-          cd build
-
-          cmake .. -G "Ninja" -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=128 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
-        shell: pwsh
-
-      - name: Build OpenBLAS
-        run: |
-          cd OpenBLAS
-          cd build
-          cmake --build . --config Release
-        shell: pwsh
-
-      - name: Install OpenBLAS
-        run: |
-          cd OpenBLAS
-          cd build
-          cmake --install . --prefix ../../src/librapid/openblas_install
-
-      - name: List Root Directories and files
-        run: |
-          dir
-          dir src
-          dir src/librapid
-          dir src/librapid/openblas_install
-          dir src/librapid/openblas_install/bin
-
-      - name: Archive OpenBLAS Build
-        uses: actions/upload-artifact@v2
+      # Download an OpenBLAS build
+      - name: Download OpenBLAS Build
+        uses: dawidd6/action-download-artifact@v2
         with:
-          name: OpenBLAS on windows-latest
+          # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
+          # Required, if artifact is from a different repo
+          # Required, if repo is private a Personal Access Token with `repo` scope is needed
+          # github_token: ${{secrets.GITHUB_TOKEN}}
+          # Required, workflow file name or ID
+          workflow: build-openblas.yaml
+          # Optional, the status or conclusion of a completed workflow to search for
+          # Can be one of a workflow conclusion:
+          #   "failure", "success", "neutral", "cancelled", "skipped", "timed_out", "action_required"
+          # Or a workflow status:
+          #   "completed", "in_progress", "queued"
+          workflow_conclusion: success
+          # Optional, will get head commit SHA
+          # pr: ${{github.event.pull_request.number}}
+          # Optional, no need to specify if PR is
+          # commit: ${{github.event.pull_request.head.sha}}
+          # Optional, will use the branch
+          branch: master
+          # Optional, defaults to all types
+          event: push
+          # Optional, will use specified workflow run
+          # run_id: 1122334455
+          # Optional, run number from the workflow
+          # run_number: 34
+          # Optional, uploaded artifact name,
+          # will download all artifacts if not specified
+          # and extract them in respective subdirectories
+          # https://github.com/actions/download-artifact#download-all-artifacts
+          name: OpenBLAS on ${{ matrix.platform }}
+          # Optional, directory where to extract artifact. Defaults to the artifact name (see `name` input)
           path: src/librapid/openblas_install
+          # Optional, defaults to current repo
+          # repo: ${{github.repository}}
+          # Optional, check the workflow run whether it has an artifact
+          # then will get the last available artifact from previous workflow
+          # default false, just try to download from the last one
+          check_artifacts:  true
+          # Optional, search for the last workflow run whose stored an artifact named as in `name` input
+          # default false
+          search_artifacts: true
 
-      # - name: Build Documentation
-      #   run: |
-      #     cd docs
-      #     pip install --user check-manifest -r requirements.txt
-      #     make html
 
       - name: Run cibuildwheel
         run: |
