@@ -130,7 +130,7 @@ jobs:
         with:
           workflow: build-openblas.yaml
           workflow_conclusion: success
-          name: OpenBLAS on ubuntu-latest
+          name: OpenBLAS on macos-latest
           path: src/librapid/openblas_install
 
 
@@ -387,9 +387,9 @@ jobs:
         with:
           workflow: build-openblas.yaml
           workflow_conclusion: success
-          name: OpenBLAS on ubuntu-latest
+          name: OpenBLAS on windows-latest
           path: src/librapid/openblas_install
-          
+
 
 
       - name: Run cibuildwheel
