@@ -1,6 +1,7 @@
 #include <librapid/utils/time_utils.hpp>
 #include <librapid/math/core_math.hpp>
 #include <librapid/autocast/custom_complex.hpp>
+#include <librapid/math/constants.hpp>
 
 #include <string>
 #include <vector>
@@ -113,7 +114,7 @@ namespace librapid {
 
 		if (n <= 75) // As the C++ standard only defines long double to be at least 2x the 
 					 // precision of a regular double, we check if that limit is exceeded or not.
-		{ return (uint64_t) roundl(pow(0.5 * (1.0 + sqrt5), (long double) n)) / sqrt5; }
+		{ return (uint64_t) roundl(pow(0.5 * (1.0 + SQRT5), (long double) n)) / SQRT5; }
 
 		int a = 0, b = 1, c, i;
 		for (i = 2; i <= n; i++) {
