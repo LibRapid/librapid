@@ -123,6 +123,8 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("round", [](double val, int64_t places) { return librapid::round(val, places); }, py::arg("val"), py::arg("places") = 0);
 	module.def("roundSigFig", [](double val, int64_t figs) { return librapid::roundSigFig(val, figs); }, py::arg("val"), py::arg("figs") = 3);
 
+	module.def("nthFibonacci", &librapid::nthFibonacci, py::arg("n"));
+
 	// Create the Vector library
 	#include "./python/vec_interface.hpp"
 

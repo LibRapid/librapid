@@ -111,6 +111,8 @@ namespace librapid {
 	[[nodiscard]] double round(double num, int64_t dp = 0);
 
 	[[nodiscard]] double roundSigFig(double num, int64_t figs = 3);
+
+	uint64_t nthFibonacci(uint8_t n);
 }
 
 #endif // NDARRAY_CORE_MATH
