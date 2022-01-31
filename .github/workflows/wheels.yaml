@@ -119,15 +119,10 @@ jobs:
           ls dist
           twine upload --skip-existing dist/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }} 
 
-  unix_build:
-    name: Python Wheels | Running on ${{ matrix.platform }}
-    runs-on: ${{ matrix.platform }}
+  macos-build:
+    name: Python Wheels on MacOS
+    runs-on: macos-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [ macos-10.15, ubuntu-latest ]
-        targetplatform: [ x64 ]
     env:
       CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310-*"
       CIBW_SKIP: "*-win32 *-manylinux_i686 *-musllinux_i686"
@@ -169,53 +164,14 @@ jobs:
       - name: Download OpenBLAS Build
         uses: dawidd6/action-download-artifact@v2
         with:
-          # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
-          # Required, if artifact is from a different repo
-          # Required, if repo is private a Personal Access Token with `repo` scope is needed
-          # github_token: ${{secrets.GITHUB_TOKEN}}
-          # Required, workflow file name or ID
           workflow: build-openblas.yaml
-          # Optional, the status or conclusion of a completed workflow to search for
-          # Can be one of a workflow conclusion:
-          #   "failure", "success", "neutral", "cancelled", "skipped", "timed_out", "action_required"
-          # Or a workflow status:
-          #   "completed", "in_progress", "queued"
           workflow_conclusion: success
-          # Optional, will get head commit SHA
-          # pr: ${{github.event.pull_request.number}}
-          # Optional, no need to specify if PR is
-          # commit: ${{github.event.pull_request.head.sha}}
-          # Optional, will use the branch
           branch: master
-          # Optional, defaults to all types
           event: push
-          # Optional, will use specified workflow run
-          # run_id: 1122334455
-          # Optional, run number from the workflow
-          # run_number: 34
-          # Optional, uploaded artifact name,
-          # will download all artifacts if not specified
-          # and extract them in respective subdirectories
-          # https://github.com/actions/download-artifact#download-all-artifacts
-          name: OpenBLAS on ${{ matrix.platform }}
-          # Optional, directory where to extract artifact. Defaults to the artifact name (see `name` input)
+          name: OpenBLAS on macos-latest
           path: src/librapid/openblas_install
-          # Optional, defaults to current repo
-          # repo: ${{github.repository}}
-          # Optional, check the workflow run whether it has an artifact
-          # then will get the last available artifact from previous workflow
-          # default false, just try to download from the last one
           check_artifacts:  true
-          # Optional, search for the last workflow run whose stored an artifact named as in `name` input
-          # default false
           search_artifacts: true
-
-
-      # - name: Build Documentation
-      #   run: |
-      #     cd docs
-      #     pip install --user check-manifest -r requirements.txt
-      #     make html
 
       - if: runner.os == 'macOS'
         name: Run cibuildwheel
@@ -287,6 +243,139 @@ jobs:
           ls wheelhouse
           twine upload --skip-existing wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
 
+  
+  
+  
+    
+  linux-build:
+    name: Python Wheels on Linux
+    runs-on: ubuntu-latest
+
+    env:
+      CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310-*"
+      CIBW_SKIP: "*-win32 *-manylinux_i686 *-musllinux_i686"
+      CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+      CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2014
+      CIBW_ENVIRONMENT: LIBRAPID_NO_ARCH=yes
+
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Set Up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      # - if: runner.os == 'macOS'
+      #   name: Set Up GCC
+      #   run: |
+      #     brew install gcc
+
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Install Requirements
+        run: |
+          python -m pip install -r requirements.txt
+
+
+      # Download an OpenBLAS build
+      - name: Download OpenBLAS Build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-openblas.yaml
+          workflow_conclusion: success
+          branch: master
+          event: push
+          name: OpenBLAS on ubuntu-latest
+          path: src/librapid/openblas_install
+          check_artifacts:  true
+          search_artifacts: true
+
+      - if: runner.os == 'macOS'
+        name: Run cibuildwheel
+        run: |
+          export LIBRAPID_NO_ARCH=yes
+          cibuildwheel --output-dir wheelhouse
+        env:
+          CC: gcc-11
+          CXX: g++-11
+          LIBRAPID_NO_ARCH: yes
+
+      - if: runner.os != 'macOS'
+        name: Run cibuildwheel
+        run: |
+          export LIBRAPID_NO_ARCH=yes
+          cibuildwheel --output-dir wheelhouse
+        env:
+          LIBRAPID_NO_ARCH: yes
+
+      # - name: Run cibuildwheel
+      #   run: |
+      #     cibuildwheel --output-dir wheelhouse
+
+      - if: runner.os == 'macOS'
+        name: Install Library
+        run: |
+          export LIBRAPID_NO_ARCH=yes
+          python -m pip install . -vvvv
+        env:
+          CC: gcc-11
+          CXX: g++-11
+          LIBRAPID_NO_ARCH: yes
+
+      - if: runner.os != 'macOS'
+        name: Install Library
+        run: |
+          export LIBRAPID_NO_ARCH=yes
+          python -m pip install . -vvvv
+        env:
+          LIBRAPID_NO_ARCH: yes
+
+      # - name: Install Library
+      #   run: |
+      #     python -m pip install . -vvvv
+
+      - name: Show all files in librapid install
+        run: |
+          python -m pip show -f librapid
+
+      # - name: Run Python Tests
+      #   run: |
+      #     pytest unit_tests
+
+      - name: Check Built Wheels
+        run: |
+          twine check wheelhouse/*
+
+      - name: Archive LibRapid Wheels
+        uses: actions/upload-artifact@v2
+        with:
+          name: LibRapid Wheels on ${{ matrix.platform }}
+          path: wheelhouse
+
+      - if: github.actor != 'dependabot[bot]'
+        name: Upload Built Wheels
+        continue-on-error: true
+        run: |
+          python setup.py sdist
+          ls wheelhouse
+          twine upload --skip-existing wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
+
+  
+  
+  
+  
+  
   windows_build:
     name: Python Wheels | Running on windows-latest
     runs-on: windows-latest
@@ -338,45 +427,13 @@ jobs:
       - name: Download OpenBLAS Build
         uses: dawidd6/action-download-artifact@v2
         with:
-          # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
-          # Required, if artifact is from a different repo
-          # Required, if repo is private a Personal Access Token with `repo` scope is needed
-          # github_token: ${{secrets.GITHUB_TOKEN}}
-          # Required, workflow file name or ID
           workflow: build-openblas.yaml
-          # Optional, the status or conclusion of a completed workflow to search for
-          # Can be one of a workflow conclusion:
-          #   "failure", "success", "neutral", "cancelled", "skipped", "timed_out", "action_required"
-          # Or a workflow status:
-          #   "completed", "in_progress", "queued"
           workflow_conclusion: success
-          # Optional, will get head commit SHA
-          # pr: ${{github.event.pull_request.number}}
-          # Optional, no need to specify if PR is
-          # commit: ${{github.event.pull_request.head.sha}}
-          # Optional, will use the branch
           branch: master
-          # Optional, defaults to all types
           event: push
-          # Optional, will use specified workflow run
-          # run_id: 1122334455
-          # Optional, run number from the workflow
-          # run_number: 34
-          # Optional, uploaded artifact name,
-          # will download all artifacts if not specified
-          # and extract them in respective subdirectories
-          # https://github.com/actions/download-artifact#download-all-artifacts
-          name: OpenBLAS on ${{ matrix.platform }}
-          # Optional, directory where to extract artifact. Defaults to the artifact name (see `name` input)
+          name: OpenBLAS on windows-latest
           path: src/librapid/openblas_install
-          # Optional, defaults to current repo
-          # repo: ${{github.repository}}
-          # Optional, check the workflow run whether it has an artifact
-          # then will get the last available artifact from previous workflow
-          # default false, just try to download from the last one
           check_artifacts:  true
-          # Optional, search for the last workflow run whose stored an artifact named as in `name` input
-          # default false
           search_artifacts: true
 
 
