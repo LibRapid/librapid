@@ -111,6 +111,7 @@ jobs:
           conda config --set auto_update_conda false
           conda install --yes --quiet clangdev cmake ninja flang=11.0.1
           conda install --yes -c conda-forge mpmath
+          conda install --yes openmp
 
      # git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
      # 939452ea9dcb57abdcc3f1278c6db668a4690465
@@ -148,9 +149,13 @@ jobs:
 
       - name: Copy required DLLs
         run: |
-          copy C:/Miniconda/Library/bin/flang.dll src/librapid/openblas_install
-          copy C:/Miniconda/Library/bin/flangrti.dll src/librapid/openblas_install
-          copy C:/Miniconda/Library/bin/pgmath.dll src/librapid/openblas_install
+          ls $CONDA
+          ls C:/Miniconda
+
+          copy $CONDA/Library/bin/flang.dll src/librapid/openblas_install
+          copy $CONDA/Library/bin/flangrti.dll src/librapid/openblas_install
+          copy $CONDA/Library/bin/pgmath.dll src/librapid/openblas_install
+          copy $CONDA/Library/bin/libomp.dll src/librapid/openblas_install
 
       - name: List Root Directories and files
         run: |
