@@ -90,8 +90,17 @@ jobs:
       - name: Set Up WSL
         uses: Vampire/setup-wsl@v1.1.1
 
-      - name: Set Up Miniconda
-        uses: conda-incubator/setup-miniconda@v2.1.1
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          activate-environment: foo
+
+      # - name: Setup conda
+      #   uses: s-weigand/setup-conda@v1
+      #   with:
+      #     update-conda: true
+      #     python-version: ${{ matrix.python-version }}
+      #     conda-channels: anaconda, conda-forge
 
       - name: Set Up Python
         uses: actions/setup-python@v2
@@ -112,17 +121,19 @@ jobs:
           C:/Miniconda/condabin/conda.bat env update --file environment.yml --name base
           C:/Miniconda/condabin/conda.bat init powershell
 
+          conda update conda --yes
+          conda update --all --yes
           conda config --add channels conda-forge --force
-          conda config --set auto_update_conda false
-          conda install --yes --quiet clangdev cmake ninja flang
-          conda install -c conda-forge flang
+          conda config --set auto_update_conda true
+          conda install clangdev cmake ninja flang --yes
+          conda install flang --yes
 
           ls C:/Miniconda
           ls C:/Miniconda/Library
           ls C:/Miniconda/Library/bin
 
-     # git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
-     # 939452ea9dcb57abdcc3f1278c6db668a4690465
+      # git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
+      # 939452ea9dcb57abdcc3f1278c6db668a4690465
       - name: Clone OpenBLAS
         run: |
           git clone https://github.com/xianyi/OpenBLAS.git
