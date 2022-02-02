@@ -90,8 +90,8 @@ jobs:
       - name: Set Up WSL
         uses: Vampire/setup-wsl@v1.1.1
 
-      - name: Set Up Miniconda
-        uses: conda-incubator/setup-miniconda@v2.1.1
+      # - name: Set Up Miniconda
+      #   uses: conda-incubator/setup-miniconda@v2.1.1
 
       - name: Set Up Python
         uses: actions/setup-python@v2
@@ -109,10 +109,17 @@ jobs:
       # conda install --yes openmp
       - name: Install Conda things
         run: |
+          C:/Miniconda/condabin/conda.bat env update --file environment.yml --name base
+          C:/Miniconda/condabin/conda.bat init powershell
+
           conda config --add channels conda-forge --force
           conda config --set auto_update_conda false
           conda install --yes --quiet clangdev cmake ninja flang
           conda install -c conda-forge flang
+
+          ls C:/Miniconda
+          ls C:/Miniconda/Library
+          ls C:/Miniconda/Library/bin
 
      # git reset --hard d909f9f3d4fc4ccff36d69f178558df154ba1002
      # 939452ea9dcb57abdcc3f1278c6db668a4690465
@@ -150,10 +157,6 @@ jobs:
 
       - name: Copy required DLLs
         run: |
-          ls C:/Miniconda
-          ls C:/Miniconda/Library
-          ls C:/Miniconda/Library/bin
-
           copy C:/Miniconda/Library/bin/flang.dll src/librapid/openblas_install
           copy C:/Miniconda/Library/bin/flangrti.dll src/librapid/openblas_install
           copy C:/Miniconda/Library/bin/pgmath.dll src/librapid/openblas_install
