@@ -90,8 +90,8 @@ jobs:
       - name: Set Up WSL
         uses: Vampire/setup-wsl@v1.1.1
 
-      # - name: Set Up Miniconda
-      #   uses: conda-incubator/setup-miniconda@v2.1.1
+      - name: Set Up Miniconda
+        uses: conda-incubator/setup-miniconda@v2.1.1
 
       - name: Set Up Python
         uses: actions/setup-python@v2
