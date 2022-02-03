@@ -9,10 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     name: Generate beautiful images for code blocks present in issues
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout Carbonite
+        uses: actions/checkout@master
+        with:
+          repository: callmekatootie/carbonate
+
       - name: Generate beautiful images for code blocks present in issues
-        uses: callmekatootie/carbonate@v1
+        uses: ./carbonite
         id: carbonate
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
