@@ -52,9 +52,10 @@ if platform.system() == "Windows":
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+dll_files = ["openblas.dll", "libopenblas.dll", "flang.dll", "flangrti.dll", "pgmath.dll", "libomp.dll"]
 data_files = []
 if platform.system() == "Windows":
-    for filename in ["openblas.dll", "libopenblas.dll"]:
+    for filename in dll_files:
         try:
             print("Attempting to open 'src/librapid/blas/{}".format(filename))
             with open(os.path.join("src", "librapid", "blas", filename), "r") as _:
@@ -73,7 +74,7 @@ if platform.system() == "Windows":
             pass
 
     if data_files == []:
-        for filename in ["openblas.dll", "libopenblas.dll"]:
+        for filename in dll_files:
             try:
                 print("Attempting to open 'src/librapid/openblas_install/bin/{}'".format(filename))
                 with open(os.path.join("src", "librapid", "openblas_install", "bin", filename), "r") as _:
@@ -153,6 +154,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+		"Programming Language :: Python :: 3.10",
     ],
     extras_require={"test": "pytest"},
     install_requires=install_requires,
