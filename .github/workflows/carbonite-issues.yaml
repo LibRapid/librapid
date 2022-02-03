@@ -9,9 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Generate beautiful images for code blocks present in issues
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Generate beautiful images for code blocks present in issues
         uses: callmekatootie/carbonate@v1
+        id: carbonate
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           imgur-client-id: ${{ secrets.IMGUR_CLIENT_ID }}
-          use-prettier: 'false'
