@@ -3,6 +3,6 @@ wheel
 twine
 cibuildwheel==2.3.1
 pytest
-pybind11==2.9.0
+pybind11==2.9.1
 cmake
 scikit-build
