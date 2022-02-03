@@ -25,6 +25,8 @@ elseif (${CMAKE_CXX_STANDARD} VERSION_LESS_EQUAL 17)
                      LibRapid will set this automatically, but ensure you are aware of the consequences")
 endif ()
 
+include(FetchContent)
+
 # Attempt to locate the required packages
 find_package(CUDAToolkit)
 find_package(BLAS)
@@ -69,8 +71,6 @@ if (${SKBUILD})
     elseif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/pybind11")
         add_subdirectory("src/librapid/pybind11")
     else ()
-        include(FetchContent)
-
         FetchContent_Declare(
                 pybind11
                 URL https://github.com/pybind/pybind11/archive/refs/tags/v2.6.2.tar.gz
@@ -242,6 +242,13 @@ if (${BLAS_FOUND})
             FILE(GLOB_RECURSE include_files "${bin_path}/*.dll")
             foreach (file IN LISTS include_files)
                 message(STATUS "Found binary file " ${file})
+                get_filename_component(filename ${file} NAME)
+                configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${filename}" COPYONLY)
+            endforeach ()
+
+			FILE(GLOB_RECURSE bin_files "${CMAKE_CURRENT_SOURCE_DIR}/*.dll")
+            foreach (file IN LISTS bin_files)
+                message(STATUS "Found packaged binary file " ${file})
                 get_filename_component(filename ${file} NAME)
                 configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${filename}" COPYONLY)
             endforeach ()
