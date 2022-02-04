@@ -5,9 +5,9 @@ src/librapid/librapid.egg-info
 
 build_config.txt
 
-src/librapid/blas
-src/librapid/pybind11
-src/librapid/jitify
+# src/librapid/blas
+# src/librapid/pybind11
+# src/librapid/jitify
 
 openblas_install
 

@@ -9,22 +9,17 @@ from skbuild import setup
 from skbuild.cmaker import get_cmake_version
 from skbuild.exceptions import SKBuildError
 
-# Copy dependencies
-if os.path.exists("pybind11") and not os.path.exists(os.path.join("src", "librapid", "pybind11")):
-    shutil.copytree("pybind11", os.path.join("src", "librapid", "pybind11"))
-
-if os.path.exists("jitify") and not os.path.exists(os.path.join("src", "librapid", "jitify")):
-    shutil.copytree("jitify", os.path.join("src", "librapid", "jitify"))
-
-if os.path.exists("version2") and not os.path.exists(os.path.join("src", "librapid", "version2")):
-    shutil.copytree("version2", os.path.join("src", "librapid", "version2"))
-
+# Copy OpenBLAS build if present in the root directory
 if os.path.exists("openblas_install") and not os.path.exists(os.path.join("src", "librapid", "openblas_install")):
     shutil.copytree("openblas_install", os.path.join("src", "librapid", "openblas_install"))
 
 # Remove _skbuild directory if it already exists. It can lead to issues
 if os.path.exists("_skbuild"):
     shutil.rmtree("_skbuild")
+
+# Remove the _librapid_python_cmake directory if it's present. This can cause more issues...
+if os.path.exists("_librapid_python_cmake"):
+    shutil.rmtree("_librapid_python_cmake")
 
 # If the directory "src/librapid/blas" is empty and "src/librapid/openblas_install" is empty,
 # run CMake to automatically detect BLAS before installing the Python library
@@ -52,6 +47,11 @@ if platform.system() == "Windows":
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+root, lib = site.getsitepackages()
+libdir = lib.replace(root, "")
+libdir = libdir.lstrip("\\")
+libdir = libdir.lstrip("/")
+
 dll_files = ["openblas.dll", "libopenblas.dll", "flang.dll", "flangrti.dll", "pgmath.dll", "libomp.dll"]
 data_files = []
 if platform.system() == "Windows":
@@ -60,15 +60,7 @@ if platform.system() == "Windows":
             print("Attempting to open 'src/librapid/blas/{}".format(filename))
             with open(os.path.join("src", "librapid", "blas", filename), "r") as _:
                 files = [os.path.join("src", "librapid", "blas", filename)]
-                # data_files.append(("", files))
-
-                root, lib = site.getsitepackages()
-                libdir = lib.replace(root, "")
-                libdir = libdir.lstrip("\\")
-                libdir = libdir.lstrip("/")
                 data_files.append((os.path.join(".", libdir, "librapid"), files))
-                # data_files.append(("librapid", files))
-            # data_files.append((distutils.sysconfig.get_python_lib(), files))
         except:
             print("Failed to open 'src/librapid/blas/bin/{}'".format(filename))
             pass
@@ -80,12 +72,11 @@ if platform.system() == "Windows":
                 with open(os.path.join("src", "librapid", "openblas_install", "bin", filename), "r") as _:
                     files = [os.path.join("src", "librapid", "openblas_install", "bin", filename)]
                     data_files.append(("", files))
-                    # data_files.append(("lib/site-packages/librapid", files))
-                # data_files.append((distutils.sysconfig.get_python_lib(), files))
             except:
                 print("Failed to open 'src/librapid/openblas_install/bin/{}'".format(filename))
                 pass
 
+	# Log some information
     if data_files == []:
         print("Was not able to load datafiles")
         print("File information:")
