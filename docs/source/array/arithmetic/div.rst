@@ -1,4 +1,12 @@
 div
 ###
 
-.. doxygenfunction:: librapid::div(const T_A &dividend, const T_B &divisor)
+.. doxygenfunction:: librapid::Array::operator/(const Array &other) const
+
+---
+
+.. doxygenfunction:: librapid::div(const Array &a, const Array &b)
+
+---
+
+.. doxygenfunction:: librapid::div(const Array &a, const Array &b, Array &res)

@@ -1,4 +1,12 @@
 mul
 ###
 
-.. doxygenfunction:: librapid::mul(const T_A &factor1, const T_B &factor2)
+.. doxygenfunction:: librapid::Array::operator*(const Array &other) const
+
+---
+
+.. doxygenfunction:: librapid::mul(const Array &a, const Array &b)
+
+---
+
+.. doxygenfunction:: librapid::mul(const Array &a, const Array &b, Array &res)

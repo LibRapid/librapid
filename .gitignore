@@ -21,6 +21,7 @@ tests/__pycache__
 docs/build
 docs/source/api
 docs/source/doxygenoutput
+docs/source/librapid_doc_copy
 
 *.pyc
 
