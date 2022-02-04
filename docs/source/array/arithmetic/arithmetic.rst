@@ -96,8 +96,4 @@ A full list of the arithmetic types is below:
 	sub
 	mul
 	div
-	array_addition
-	array_subtraction
-	array_multiplication
-	array_division
 	negate

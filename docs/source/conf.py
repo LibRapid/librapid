@@ -14,36 +14,42 @@ import os
 import sys
 import textwrap
 import shutil
+import regex
 
-print("VERSION INFORMATION:")
-os.system("pip show sphinx")
-os.system("pip show breathe")
-os.system("pip show exhale")
-os.system("doxygen --version")
+# print("VERSION INFORMATION:")
+# os.system("pip show sphinx")
+# os.system("pip show breathe")
+# os.system("pip show exhale")
+# os.system("doxygen --version")
 
 sys.path.insert(0, os.path.abspath("../.."))
 
-# -- Remove some Directories -------------------------------------------------
+# List of patterns, relative to source directory, that match files and
+# directories to ignore when looking for source files.
+# This pattern also affects html_static_path and html_extra_path.
+exclude_dirs = [
+    "pybind11",
+    "version2",
+    "jitify",
+	"fmt",
+	"blas"
+]
 
-# Remove Jitify subdirectory
-if os.path.exists("../../src/librapid/jitify"):
-    print("Removing Jifify subdirectory")
-    shutil.rmtree("../../src/librapid/jitify")
+file_match = regex.compile(".*\..*")
 
-# Remove Pybind11 subdirectory
-if os.path.exists("../../src/librapid/pybind11"):
-    print("Removing Pybind11 subdirectory")
-    shutil.rmtree("../../src/librapid/pybind11")
+# -- Copy LibRapid source directory ------------------------------------------
+# This is to avoid documenting Jitify, PyBind11, VectorClass and BLAS
+if os.path.exists("./librapid_doc_copy"):
+	shutil.rmtree("./librapid_doc_copy")
 
-# Remove VectorClass Version2 subdirectory
-if os.path.exists("../../src/librapid/version2"):
-    print("Removing VectorClass Version2 subdirectory")
-    shutil.rmtree("../../src/librapid/version2")
+for file in os.listdir("../../src/librapid"):
+	if file in exclude_dirs: continue
 
-# Remove BLAS subdirectory
-# if os.path.exists("../../src/librapid/blas"):
-#     print("Removing BLAS subdirectory")
-#     shutil.rmtree("../../src/librapid/blas")
+	print(f"../../src/librapid/{file}")
+	if file_match.match(file):
+		shutil.copyfile(f"../../src/librapid/{file}", f"./librapid_doc_copy/{file}")
+	else:
+		shutil.copytree(f"../../src/librapid/{file}", f"./librapid_doc_copy/{file}")
 
 # -- Project information -----------------------------------------------------
 
@@ -52,7 +58,7 @@ copyright = "2021, Toby Davis"
 author = "Toby Davis"
 
 # The full version, including alpha/beta/rc tags
-version_file = open("../../src/librapid/VERSION.hpp", "r")
+version_file = open("./librapid_doc_copy/VERSION.hpp", "r")
 release = version_file.readlines()[1].split()[2].replace("\"", "")
 version_file.close()
 
@@ -65,7 +71,7 @@ master_doc = "index"
 # extensions coming with Sphinx (named "sphinx.ext.*") or your custom
 # ones.
 extensions = [
-    # "furo",
+    # "furo", <= DO NOT comment back in -- it breaks everything
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx.ext.coverage",
@@ -89,7 +95,7 @@ breathe_default_project = "librapid"
 # Custom inputs to doxygen generator
 doxygen_inputs = """
 
-INPUT                 = ../../src/librapid
+INPUT                 = ./librapid_doc_copy
 	   
 ENABLE_PREPROCESSING  = YES
 MACRO_EXPANSION       = YES
@@ -127,9 +133,11 @@ exhale_args = {
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = [
-    "*pybind11*",
+    "*pybind*",
     "*version2*",
-    "*jitify*"
+    "*jitify*",
+	"*fmt*",
+	"*blas/*"
 ]
 
 # -- Options for HTML output -------------------------------------------------

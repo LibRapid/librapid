@@ -1,4 +1,12 @@
 negate
 ######
 
-.. doxygenfunction:: librapid::basic_ndarray::operator-() const
+.. doxygenfunction:: librapid::Array::operator-(int) const
+
+---
+
+.. doxygenfunction:: librapid::negate(const Array &a)
+
+---
+
+.. doxygenfunction:: librapid::negate(const Array &a, Array &res)

@@ -1,4 +1,12 @@
 sub
 ###
 
-.. doxygenfunction:: librapid::sub(const T_A &minuend, const T_B &subtrahend)
+.. doxygenfunction:: librapid::Array::operator-(const Array &other) const
+
+---
+
+.. doxygenfunction:: librapid::sub(const Array &a, const Array &b)
+
+---
+
+.. doxygenfunction:: librapid::sub(const Array &a, const Array &b, Array &res)
