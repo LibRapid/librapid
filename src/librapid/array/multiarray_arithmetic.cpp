@@ -14,7 +14,7 @@ namespace librapid {
 		return Array::applyUnaryOp(a, ops::Negate());
 	}
 
-	Array Array::operator-(int) const {
+	Array Array::operator-() const {
 		return Array::applyUnaryOp(*this, ops::Negate());
 	}
 

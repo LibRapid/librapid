@@ -436,7 +436,7 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("randomLike", [](const librapid::Array &arr, int64_t min, int64_t max, int64_t seed) { return librapid::randomLike(arr, min, max, seed); }, py::arg("array"), py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1);
 	module.def("randomLike", [](const librapid::Array &arr, double min, double max, int64_t seed) { return librapid::randomLike(arr, min, max, seed); }, py::arg("array"), py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1);
 
-	module.def("negate", [](const librapid::Array &a, librapid::Array &res) { librapid::negate(a, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
+	module.def("negate", [](const librapid::Array &a, librapid::Array &res) { librapid::negate(a, res); }, py::arg("a"), py::arg("res"));
 	module.def("add", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::add(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
 	module.def("sub", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::sub(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
 	module.def("mul", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::mul(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));

@@ -1155,7 +1155,7 @@ namespace librapid {
 			return dst;
 		}
 
-		Array operator-(int) const;
+		Array operator-() const;
 
 		Array operator+(const Array &other) const;
 
@@ -1267,7 +1267,7 @@ namespace librapid {
 
 			dst.m_isScalar = src.m_isScalar;
 
-			return res;
+			return dst;
 		}
 
 		template<typename FUNC>
