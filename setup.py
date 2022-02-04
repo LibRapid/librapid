@@ -48,14 +48,14 @@ if platform.system() == "Windows":
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 if platform.system() == "Windows":
-	root, lib = site.getsitepackages()
-	libdir = lib.replace(root, "")
-	libdir = libdir.lstrip("\\")
-	libdir = libdir.lstrip("/")
-
-	dll_files = ["openblas.dll", "libopenblas.dll", "flang.dll", "flangrti.dll", "pgmath.dll", "libomp.dll"]
-	data_files = []
-	
+    root, lib = site.getsitepackages()
+    libdir = lib.replace(root, "")
+    libdir = libdir.lstrip("\\")
+    libdir = libdir.lstrip("/")
+    
+    dll_files = ["openblas.dll", "libopenblas.dll", "flang.dll", "flangrti.dll", "pgmath.dll", "libomp.dll"]
+    data_files = []
+    
     for filename in dll_files:
         try:
             print("Attempting to open 'src/librapid/blas/{}".format(filename))
