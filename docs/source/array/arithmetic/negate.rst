@@ -1,7 +1,7 @@
 negate
 ######
 
-.. doxygenfunction:: librapid::Array::operator-(int) const
+.. doxygenfunction:: librapid::Array::operator-() const
 
 ---
 

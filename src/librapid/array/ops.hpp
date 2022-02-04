@@ -138,8 +138,8 @@ struct Negate {
 					return -a;
 				)V0G0N";
 
-	template<typename A, typename B>
-	auto operator()(A a, int64_t, int64_t) const {
+	template<typename A>
+	auto operator()(A a, int64_t) const {
 		return -a;
 	}
 };
