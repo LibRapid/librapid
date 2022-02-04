@@ -97,7 +97,7 @@ if platform.system() == "Windows":
 
 # Adjust the datafiles object
 if data_files != []:
-	data_files = (os.path.join(".", libdir, "librapid"), data_files[:])
+	data_files = [(os.path.join(".", libdir, "librapid"), data_files[:])]
 
 print("Operating System: {}".format(platform.system()))
 print("Additional files being included: {}".format(data_files))
