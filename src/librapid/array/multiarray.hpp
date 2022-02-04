@@ -1155,6 +1155,8 @@ namespace librapid {
 			return dst;
 		}
 
+		Array operator-(int) const;
+
 		Array operator+(const Array &other) const;
 
 		Array operator-(const Array &other) const;
@@ -1224,6 +1226,48 @@ namespace librapid {
 			}
 
 			dst.m_isScalar = src.m_isScalar;
+		}
+
+		template<typename FUNC>
+		static inline Array applyUnaryOp(const Array &src,
+										 const FUNC &operation,
+										 bool permitInvalid = false,
+										 int64_t dstOffset = 0) {
+			// Operate on a single array and return a new array
+
+			Array dst(src.m_extent, src.m_dtype, src.m_location);
+
+
+			auto dstPtr = dst.createRaw();
+			auto srcPtr = src.createRaw();
+			auto size = src.m_extent.size();
+
+			if (dstOffset) {
+				dstPtr.data = std::visit([&](auto *data) -> RawArrayData {
+					return data + dstOffset;
+				}, dstPtr.data);
+			}
+
+			if (!permitInvalid && dst.m_stride.isTrivial() && dst.m_stride.isContiguous() &&
+				src.m_stride.isTrivial() && src.m_stride.isContiguous()) {
+				// Trivial
+				imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation);
+			} else {
+				// Not trivial, so use advanced method
+				imp::multiarrayUnaryOpComplex(dstPtr,
+											  srcPtr,
+											  size,
+											  src.m_extent,
+											  dst.m_stride,
+											  src.m_stride,
+											  operation,
+											  dst.m_stride.isTrivial() &&
+											  dst.m_stride.isContiguous());
+			}
+
+			dst.m_isScalar = src.m_isScalar;
+
+			return res;
 		}
 
 		template<typename FUNC>
@@ -1338,7 +1382,6 @@ namespace librapid {
 			Datatype newType = max(srcA.m_dtype, srcB.m_dtype);
 
 			Array dst(srcA.m_isScalar ? srcB.m_extent : srcA.m_extent, newType, newLoc);
-			// Array dst(Extent({1000, 1000}), newType, newLoc);
 
 			auto ptrSrcA = srcA.createRaw();
 			auto ptrSrcB = srcB.createRaw();
@@ -1502,6 +1545,8 @@ namespace librapid {
 		return other.filledRandom(min, max, seed);
 	}
 
+	void negate(const Array &a, Array &res);
+
 	void add(const Array &a, const Array &b, Array &res);
 
 	void sub(const Array &a, const Array &b, Array &res);
@@ -1509,6 +1554,8 @@ namespace librapid {
 	void mul(const Array &a, const Array &b, Array &res);
 
 	void div(const Array &a, const Array &b, Array &res);
+
+	[[nodiscard]] Array negate(const Array &a);
 
 	[[nodiscard]] Array add(const Array &a, const Array &b);
 

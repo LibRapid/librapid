@@ -1,12 +1,12 @@
-zeros_like, ones_like, random_like
+zerosLike, onesLike, randomLike
 ###################
 
-.. doxygenfunction:: librapid::zeros_like
+.. doxygenfunction:: librapid::zerosLike
 
 ----
 
-.. doxygenfunction:: librapid::ones_like
+.. doxygenfunction:: librapid::onesLike
 
 ----
 
-.. doxygenfunction:: librapid::random_like
+.. doxygenfunction:: librapid::randomLike

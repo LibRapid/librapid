@@ -2,7 +2,22 @@
 #include <librapid/array/ops.hpp>
 #include <librapid/utils/array_utils.hpp>
 
+
 namespace librapid {
+	// ========= Negation =========
+
+	void negate(const Array &a, Array &res) {
+		Array::applyUnaryOp(res, a, ops::Negate());
+	}
+
+	Array negate(const Array &a) {
+		return Array::applyUnaryOp(a, ops::Negate());
+	}
+
+	Array Array::operator-(int) const {
+		return Array::applyUnaryOp(*this, ops::Negate());
+	}
+
 	// ========= Addition =========
 
 	void add(const Array &a, const Array &b, Array &res) {

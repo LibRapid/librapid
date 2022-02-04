@@ -60,8 +60,7 @@ if platform.system() == "Windows":
         try:
             print("Attempting to open 'src/librapid/blas/{}".format(filename))
             with open(os.path.join("src", "librapid", "blas", filename), "r") as _:
-                files = [os.path.join("src", "librapid", "blas", filename)]
-                data_files.append((os.path.join(".", libdir, "librapid"), files))
+                data_files.append(os.path.join("src", "librapid", "blas", filename))
         except:
             print("Failed to open 'src/librapid/blas/bin/{}'".format(filename))
             pass
@@ -71,8 +70,7 @@ if platform.system() == "Windows":
             try:
                 print("Attempting to open 'src/librapid/openblas_install/bin/{}'".format(filename))
                 with open(os.path.join("src", "librapid", "openblas_install", "bin", filename), "r") as _:
-                    files = [os.path.join("src", "librapid", "openblas_install", "bin", filename)]
-                    data_files.append(("", files))
+                    data_files.append(os.path.join("src", "librapid", "openblas_install", "bin", filename))
             except:
                 print("Failed to open 'src/librapid/openblas_install/bin/{}'".format(filename))
                 pass
@@ -96,6 +94,10 @@ if platform.system() == "Windows":
                     if (os.path.exists("src/librapid/openblas_install/bin")):
                         print("./src/librapid/openblas_install/bin")
                         print(os.listdir("./src/librapid/openblas_install/bin"))
+
+# Adjust the datafiles object
+if data_files != []:
+	data_files = (os.path.join(".", libdir, "librapid"), data_files[:])
 
 print("Operating System: {}".format(platform.system()))
 print("Additional files being included: {}".format(data_files))

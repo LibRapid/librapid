@@ -1,4 +1,12 @@
 add
 ###
 
-.. doxygenfunction:: librapid::add(const T_A &addend1, const T_B &addend2)
+.. doxygenfunction:: librapid::Array::operator+(const Array &other) const
+
+---
+
+.. doxygenfunction:: librapid::add(const Array &a, const Array &b)
+
+---
+
+.. doxygenfunction:: librapid::add(const Array &a, const Array &b, Array &res)

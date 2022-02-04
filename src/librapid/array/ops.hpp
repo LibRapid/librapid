@@ -104,17 +104,17 @@ namespace librapid::ops {
 //                        return librapid::Complex<double>(randNumReal, randNumImag);
 //                    )V0G0N";
 
-		 kernel = fmt::format(R"V0G0N(
+		kernel = fmt::format(R"V0G0N(
 		 						  double randNumReal = curand_uniform_double(_curandState) * {0}
 		 						  				 + int(std::is_integral<T_DST>::value) + {1};
 		 						  double randNumImag = curand_uniform_double(_curandState) * {2}
 		 						  				 + int(std::is_integral<T_DST>::value) + {3};
 		 						  return librapid::Complex<double>(randNumReal, randNumImag);
 		 						 )V0G0N",
-		 					 max.real() - min.real() - std::numeric_limits<double>::epsilon(),
-		 					 min.real(),
-		 					 max.imag() - min.imag() - std::numeric_limits<double>::epsilon(),
-		 					 min.imag());
+							 max.real() - min.real() - std::numeric_limits<double>::epsilon(),
+							 min.real(),
+							 max.imag() - min.imag() - std::numeric_limits<double>::epsilon(),
+							 min.imag());
 	}
 
 	std::string name = "fillRandomComplex";
@@ -130,6 +130,18 @@ namespace librapid::ops {
 	Complex<double> min;
 	Complex<double> max;
 	uint64_t seed;
+};
+
+struct Negate {
+	std::string name = "negate";
+	std::string kernel = R"V0G0N(
+					return -a;
+				)V0G0N";
+
+	template<typename A, typename B>
+	auto operator()(A a, int64_t, int64_t) const {
+		return -a;
+	}
 };
 
 struct Add {
