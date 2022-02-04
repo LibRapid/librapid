@@ -123,7 +123,8 @@ if (${SKBUILD})
             ${sources}
             )
 
-    add_compile_definitions(LIBRAPID_PYTHON)
+    # add_compile_definitions(LIBRAPID_PYTHON)
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_PYTHON)
 else ()
     set(module_name "librapid")
     add_library(${module_name} STATIC ${sources})
@@ -140,7 +141,8 @@ if (${OpenMP_FOUND})
                 )
 
         # Add the compile definition so LibRapid knows it has OpenMP
-        add_compile_definitions(LIBRAPID_HAS_OMP)
+        # add_compile_definitions(LIBRAPID_HAS_OMP)
+        target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_OMP)
     else ()
         message(WARNING "OpenMP was found but is not being linked against (Value <USE_OMP> is " ${USE_OMP} ")")
     endif ()
@@ -255,17 +257,18 @@ if (${BLAS_FOUND})
         endif ()
 
         # Link the required library
-        target_link_libraries(${module_name} PRIVATE
+        target_link_libraries(${module_name} PUBLIC
                 "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${lib_name}"
                 )
 
-        target_include_directories(${module_name} PRIVATE
+        target_include_directories(${module_name} PUBLIC
                 "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas"
                 )
 
         # Add the compile definition so LibRapid knows it has BLAS
         if (${has_cblas})
-            add_compile_definitions(LIBRAPID_HAS_BLAS)
+            # add_compile_definitions(LIBRAPID_HAS_BLAS)
+            target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
         else ()
             message(WARNING "Although BLAS was found, no cblas.h file was found, so BLAS support is not enabled")
         endif ()
@@ -339,7 +342,7 @@ target_include_directories(${module_name} PRIVATE
 if (${SKBUILD})
     install(TARGETS ${module_name} DESTINATION .)
 else ()
-    target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR})
+    target_include_directories(librapid PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR})
 endif ()
 
 if (NOT DEFINED LIBRAPID_NO_ARCH)
