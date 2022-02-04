@@ -47,6 +47,7 @@ if platform.system() == "Windows":
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+data_files = []
 if platform.system() == "Windows":
     root, lib = site.getsitepackages()
     libdir = lib.replace(root, "")
@@ -54,7 +55,6 @@ if platform.system() == "Windows":
     libdir = libdir.lstrip("/")
     
     dll_files = ["openblas.dll", "libopenblas.dll", "flang.dll", "flangrti.dll", "pgmath.dll", "libomp.dll"]
-    data_files = []
     
     for filename in dll_files:
         try:
