@@ -36,38 +36,31 @@ find_package(AVX)
 message(STATUS "CMake Source Directory: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 # Ensure VectorClass Version2 is accessible
-if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/version2" OR \
-	NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/pybind11" OR \
-	NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/fmt")
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/version2" OR
+        NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/pybind11" OR
+        NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/fmt")
     message(FATAL_ERROR "Missing dependency. Ensure the full LibRapid GitHub repo is cloned by \
 						using 'git clone https://github.com/LibRapid/librapid.git --recursive")
 endif ()
 
 # {fmt} might fail to compile when building for python if this is not set
 if (${SKBUILD})
-	set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-endif()
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif ()
 
 add_subdirectory("src/librapid/fmt")
 
-if(${SKBUILD})
+if (${SKBUILD})
     # Ensure PyBind11 is accessible
     add_subdirectory("src/librapid/pybind11")
-else()
-    message(STATUS "CMake Source Directory: ${CMAKE_CURRENT_SOURCE_DIR}")
-    include_directories(
-            ${CMAKE_CURRENT_SOURCE_DIR}
-            ${CMAKE_CURRENT_SOURCE_DIR}/src
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/cudahelpers
-    )
 endif ()
 
 option(USE_BLAS "Attempt to use a BLAS library" ON)
 option(USE_CUDA "Attempt to use CUDA" ON)
 option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 
-set(sources 
-		# Array library
+set(sources
+        # Array library
         "src/librapid/array/extent.cpp"
         "src/librapid/array/iterators.cpp"
         "src/librapid/array/stride.cpp"
@@ -89,15 +82,15 @@ set(sources
         # Tests
         "src/librapid/test/librapid_test.cpp"
         # Dependencies
-        "version2/instrset_detect.cpp"
-	)
+        "src/librapid/version2/instrset_detect.cpp"
+        )
 
 if (${SKBUILD})
     set(module_name "_librapid")
     pybind11_add_module(
-		${module_name} MODULE
-        "src/librapid/pybind_librapid.cpp"
-        ${sources}
+            ${module_name} MODULE
+            "src/librapid/pybind_librapid.cpp"
+            ${sources}
     )
 
     # add_compile_definitions(LIBRAPID_PYTHON)
@@ -106,6 +99,13 @@ else ()
     set(module_name "librapid")
     add_library(${module_name} STATIC ${sources})
 endif ()
+
+target_include_directories(${module_name} PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/librapid
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/cudahelpers
+        )
 
 # See if OpenMP should be linked against
 if (${OpenMP_FOUND})
@@ -218,7 +218,7 @@ if (${BLAS_FOUND})
                 configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${filename}" COPYONLY)
             endforeach ()
 
-			FILE(GLOB_RECURSE bin_files "${CMAKE_CURRENT_SOURCE_DIR}/*.dll")
+            FILE(GLOB_RECURSE bin_files "${CMAKE_CURRENT_SOURCE_DIR}/*.dll")
             foreach (file IN LISTS bin_files)
                 message(STATUS "Found packaged binary file " ${file})
                 get_filename_component(filename ${file} NAME)
@@ -299,8 +299,8 @@ endif ()
 
 # Link {fmt}
 target_link_libraries(${module_name} PUBLIC
-    fmt::fmt
-)
+        fmt::fmt
+        )
 
 target_include_directories(${module_name} PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid" # For wheel build
