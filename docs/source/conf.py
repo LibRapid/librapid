@@ -32,7 +32,8 @@ exclude_dirs = [
     "version2",
     "jitify",
 	"fmt",
-	"blas"
+	"blas",
+	"python"
 ]
 
 file_match = regex.compile(".*\..*")
