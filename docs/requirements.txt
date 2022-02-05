@@ -5,3 +5,4 @@ furo==2022.1.2
 pydata-sphinx-theme==0.8.0
 numpydoc==1.2
 sphinx-panels==0.6.0
+regex
