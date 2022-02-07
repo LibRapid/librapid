@@ -1385,22 +1385,19 @@ void binaryFuncTrivial(T_DST *__restrict dstData,
 #endif // LIBRAPID_CUDA_STREAM
 					}
 				}
+	#else
+			} else {
+				throw std::runtime_error("Cannot apply GPU kernel because CUDA was not enabled");
 			}
+	#endif
+		}
 
 		, dst.m_dataStart);
 
-		return
-		dst;
+		return dst;
 	}
-	#else
-				} else {
-					throw std::runtime_error("Cannot apply GPU kernel because CUDA was not enabled");
-				}
-	#endif
 
-			Array
-
-	operator-() const;
+	Array operator-() const;
 
 	Array operator+(const Array &other) const;
 
