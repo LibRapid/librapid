@@ -1,0 +1,4 @@
+name: docs
+dependencies:
+  - sphinx==3.4.3
+  - doxygen==1.9.1

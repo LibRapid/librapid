@@ -1116,745 +1116,1012 @@ namespace librapid {
 
 				int64_t end = dst.extent().size();
 
+				if (dst.location() == Accelerator::CPU) {
 	#ifdef LIBRAPID_PYTHON
-				for (int64_t i = 0; i < end; ++i) {
-						utils::ApplyKernelImpl<TYPE,
-											   Kernel,
-											   sizeof...(Pack) - 1>::run((TYPE **) pointers,
-																		 dstPtr,
-																		 kernel,
-																		 i);
-					}
-	#else
+					for (int64_t i = 0; i < end; ++i) {
+							utils::ApplyKernelImpl<TYPE,
+												   Kernel,
+												   sizeof...(Pack) - 1>::run((TYPE **) pointers,
+																			 dstPtr,
+																			 kernel,
+																			 i);
+						}
+	#else // LIBRAPID_PYTHON
 
-				if (end < 2500) {
-					for (int64_t i = 0; i < end; ++i) {
-						utils::ApplyKernelImpl<TYPE,
-											   Kernel,
-											   sizeof...(Pack) - 1>::run((TYPE **) pointers,
-																		 dstPtr,
-																		 kernel,
-																		 i);
-					}
-				} else {
-					auto localKernel = kernel;
+					if (end < 2500) {
+						for (int64_t i = 0; i < end; ++i) {
+							utils::ApplyKernelImpl<TYPE,
+												   Kernel,
+												   sizeof...(Pack) - 1>::run((TYPE **) pointers,
+																			 dstPtr,
+																			 kernel,
+																			 i);
+						}
+					} else {
+						auto localKernel = kernel;
 	#pragma omp parallel for shared(pointers, dstPtr, localKernel, end) default(none)
-					for (int64_t i = 0; i < end; ++i) {
-						utils::ApplyKernelImpl<TYPE,
-											   Kernel,
-											   sizeof...(Pack) - 1>::run((TYPE **) pointers,
-																		 dstPtr,
-																		 localKernel,
-																		 i);
+						for (int64_t i = 0; i < end; ++i) {
+							utils::ApplyKernelImpl<TYPE,
+												   Kernel,
+												   sizeof...(Pack) - 1>::run((TYPE **) pointers,
+																			 dstPtr,
+																			 localKernel,
+																			 i);
+						}
+					}
+	#endif // LIBRAPID_PYTHON
+				} else {
+					// Copy the pointers to the GPU
+					static TYPE **gpuPointers = nullptr; // Static storage space for pointers
+					static uint64_t maxPointers = 16; // Size of "gpuPointers"
+
+					if (gpuPointers == nullptr) {
+						#ifdef LIBRAPID_CUDA_STREAM
+						cudaSafeCall(cudaMallocAsync(&gpuPointers,
+													 sizeof(TYPE *) * maxPointers,
+													 cudaStream));
+						#else
+						cudaSafeCall(cudaMalloc(&gpuPointers, sizeof(TYPE *) * maxPointers));
+						#endif
+					}
+
+					if (sizeof...(Pack) - 1 > maxPointers) {
+						maxPointers <<= 1;
+
+							#ifdef LIBRAPID_CUDA_STREAM
+						cudaSafeCall(cudaFreeAsync(gpuPointers, cudaStream));
+							#else
+						cudaSafeCall(cudaFreeAsync(gpuPointers));
+							#endif
+
+							#ifdef LIBRAPID_CUDA_STREAM
+						cudaSafeCall(cudaMallocAsync(&gpuPointers,
+													 sizeof(TYPE *) * maxPointers,
+													 cudaStream));
+							#else
+						cudaSafeCall(cudaMalloc(&gpuPointers, sizeof(TYPE *) * maxPointers));
+							#endif
+					}
+
+							#ifdef LIBRAPID_CUDA_STREAM
+					cudaSafeCall(cudaMemcpyAsync(gpuPointers,
+												 static_cast<TYPE **>(pointers),
+												 sizeof(TYPE *) * (sizeof...(Pack) - 1),
+												 cudaMemcpyHostToDevice,
+												 cudaStream));
+#else
+					cudaSafeCall(cudaMemcpy(gpuPointers,
+											static_cast<TYPE **>(pointers),
+											sizeof(TYPE *) * (sizeof...(Pack) - 1),
+											cudaMemcpyHostToDevice));
+#endif
+
+					using jitify::reflection::Type;
+					// static uint64_t kernelCount = 0; // Number of kernels that have been compiled
+
+					// std::string gpuKernel = "mapKernel\n";
+					// gpuKernel
+					// 		+=
+					// 		"__constant__ int LIBRAPID_MAX_DIMS = " +
+					// 		std::to_string(LIBRAPID_MAX_DIMS) + ";\n";
+					// gpuKernel += "#include <stdint.h>\n"
+					// 			 "#include <type_traits>\n"
+					// 			 "#include <" CUDA_INCLUDE_DIRS "/curand_kernel.h>\n"
+					// 			 "#include <" CUDA_INCLUDE_DIRS "/curand.h>\n\n";
+
+					// gpuKernel += imp::complexHpp;
+
+					// // Insert the user-defined kernel into the main GPU kernel
+					// gpuKernel += R"V0G0N(
+					// template<typename A, typename B>
+					// __device__
+					// inline auto )V0G0N";
+
+
+					// gpuKernel += kernel.name;
+
+					// gpuKernel += R"V0G0N((A &a, B &b, int64_t indexA, int64_t indexB)
+					// {
+					// )V0G0N";
+
+					// gpuKernel += kernel.kernel;
+
+					// gpuKernel += R"V0G0N(}
+
+					// template<typename T, typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
+					// __global__
+					// inline T random(T lower, T upper, uint64_t seed = -1) {
+					//     // Random floating point value in range [lower, upper)
+
+					//     static std::uniform_real_distribution<T> distribution(0., 1.);
+					//     static std::mt19937 generator(seed == (uint64_t) -1 ? (unsigned int) (seconds() * 10) : seed);
+					//     return lower + (upper - lower) * distribution(generator);
+					// }
+
+					// template<typename T, typename std::enable_if<!std::is_floating_point<T>::value, int>::type = 0>
+					// __global__
+					// inline T random(T lower, T upper, uint64_t seed = -1) {
+					//     // Random integral value in range [lower, upper]
+					//     return (T) random((double) (lower - (lower < 0 ? 1 : 0)), (double) upper + 1, seed);
+					// }
+
+					// template<typename T_DST, typename T_SRCA, typename T_SRCB>
+					// __global__
+					// void binaryFuncTrivial(T_DST *__restrict dstData,
+					// 					   const T_SRCA *__restrict srcA,
+					// 					   const T_SRCB *__restrict srcB,
+					// 					   int64_t size)
+					// {
+					// 	const int64_t kernelIndex = blockDim.x * blockIdx.x
+					// 							   + threadIdx.x;
+
+					// 	if (kernelIndex < size) {
+					// )V0G0N";
+
+					// gpuKernel
+					// 		+=
+					// 		"dstData[kernelIndex] = " + kernel.name +
+					// 		"(srcA[kernelIndex], srcB[kernelIndex], kernelIndex, kernelIndex);";
+					// gpuKernel += "\n}\n}";
+
+					if constexpr(!utils::HasName<Kernel>{} || !utils::HasKernel<Kernel>{}) {
+						throw std::runtime_error(
+								"Invalid GPU Kernel! Must have name and kernel members");
+						return;
+					} else {
+						std::string args;
+						for (int64_t i = 0; i < sizeof...(Pack) - 1; ++i) {
+							args += fmt::format("T val{}", i);
+							if (i + 2 < sizeof...(Pack)) {
+								args += ", ";
+							}
+						}
+
+						std::string indices;
+						for (int64_t i = 0; i < sizeof...(Pack) - 1; ++i) {
+							indices += fmt::format("srcPointers[{}][kernelIndex]", i);
+							if (i + 2 < sizeof...(Pack)) {
+								indices += ", ";
+							}
+						}
+
+						std::string gpuKernel = fmt::format(R"V0G0N(mapKernel
+__constant__ int LIBRAPID_MAX_DIMS = {0};
+#include <stdint.h>
+#include <type_traits>
+#include <{1}/curand_kernel.h>
+#include <{1}/curand.h>
+
+// Complex numbers :)
+{2}
+
+template<typename T, typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
+__global__
+inline T random(T lower, T upper, uint64_t seed = -1) {{
+	// Random floating point value in range [lower, upper)
+
+	static std::uniform_real_distribution<T> distribution(0., 1.);
+	static std::mt19937 generator(seed == (uint64_t) -1 ? (unsigned int) (seconds() * 10) : seed);
+	return lower + (upper - lower) * distribution(generator);
+}}
+
+template<typename T, typename std::enable_if<!std::is_floating_point<T>::value, int>::type = 0>
+__global__
+inline T random(T lower, T upper, uint64_t seed = -1) {{
+	// Random integral value in range [lower, upper]
+	return (T) random((double) (lower - (lower < 0 ? 1 : 0)), (double) upper + 1, seed);
+}}
+
+template<typename T>
+__device__
+inline auto {3}({4}) {{
+	{6}
+}}
+
+template<typename T_DST, typename T_SRC>
+__global__
+void binaryFuncTrivial(T_DST *__restrict dstData,
+					   const T_SRC **__restrict srcPointers,
+					   int64_t numArrays,
+					   int64_t size)
+{{
+	const int64_t kernelIndex = blockDim.x * blockIdx.x
+							   + threadIdx.x;
+
+	if (kernelIndex < size) {{
+		dstData[kernelIndex] = {3}({5});
+	}}
+}}
+					)V0G0N",
+															LIBRAPID_MAX_DIMS,
+															CUDA_INCLUDE_DIRS,
+															imp::complexHpp,
+															kernel.name,
+															args,
+															indices,
+															kernel.kernel);
+
+						// fmt::print("Information:\n{}\n", gpuKernel);
+
+						static const std::vector<std::string>
+								params =
+								{"--disable-warnings", "-std=c++17",
+								 std::string("-I \"") + CUDA_INCLUDE_DIRS + "\""};
+
+						static jitify::JitCache kernelCache;
+						jitify::Program
+								program = kernelCache.program(gpuKernel, imp::cudaHeaders, params);
+
+						int64_t threadsPerBlock, blocksPerGrid;
+
+						// Use 1 to 512 threads per block
+						if (end < 512) {
+							threadsPerBlock = end;
+							blocksPerGrid = 1;
+						} else {
+							threadsPerBlock = 512;
+							blocksPerGrid = ceil(double(end) / double(threadsPerBlock));
+						}
+
+						dim3 grid(blocksPerGrid);
+						dim3 block(threadsPerBlock);
+
+#ifdef LIBRAPID_CUDA_STREAM
+						jitifyCall(program.kernel("binaryFuncTrivial").instantiate(Type<TYPE>(),
+																				   Type<TYPE>()).configure(
+								grid,
+								block,
+								0,
+								cudaStream).launch(dst.m_dataStart,
+												   gpuPointers,
+												   sizeof...(Pack),
+												   end));
+#else
+						jitifyCall(program.kernel("binaryFuncTrivial")
+								.instantiate(Type<TYPE>(), Type<TYPE>())
+								.configure(grid, block)
+								.launch(dst.m_dataStart, gpuPointers, sizeof...(Pack), end));
+#endif // LIBRAPID_CUDA_STREAM
 					}
 				}
-
-	#endif // LIBRAPID_PYTHON
-			}, dst.m_dataStart);
-
-			return dst;
-		}
-
-		Array operator-() const;
-
-		Array operator+(const Array &other) const;
-
-		Array operator-(const Array &other) const;
-
-		Array operator*(const Array &other) const;
-
-		Array operator/(const Array &other) const;
-
-		void transpose(const Extent &order = Extent());
-
-		[[nodiscard]] inline Array transposed(const Extent &order = Extent()) {
-			auto res = clone();
-			res.transpose(order);
-			return res;
-		}
-
-		[[nodiscard]] Array dot(const Array &other) const;
-
-		[[nodiscard]] inline std::string str(int64_t indent = 0, bool showCommas = false) const {
-			static int64_t tmpRows, tmpCols;
-			return str(indent, showCommas, tmpRows, tmpCols);
-		}
-
-		[[nodiscard]] std::string str(int64_t indent,
-									  bool showCommas,
-									  int64_t &printedRows,
-									  int64_t &printedCols) const;
-
-		template<typename FUNC>
-		static inline void applyUnaryOp(Array &dst,
-										const Array &src,
-										const FUNC &operation,
-										bool permitInvalid = false,
-										int64_t dstOffset = 0) {
-			// Operate on one array and store the result in another array
-
-			if (!permitInvalid && (dst.m_references == nullptr || dst.m_extent != src.m_extent)) {
-				throw std::invalid_argument("Cannot operate on array with " + src.m_extent.str() +
-											" and store the result in " + dst.m_extent.str());
 			}
 
-			auto dstPtr = dst.createRaw();
-			auto srcPtr = src.createRaw();
-			auto size = src.m_extent.size();
+		, dst.m_dataStart);
 
-			if (dstOffset) {
-				dstPtr.data = std::visit([&](auto *data) -> RawArrayData {
-					return data + dstOffset;
-				}, dstPtr.data);
-			}
+		return
+		dst;
+	}
 
-			if (!permitInvalid && dst.m_stride.isTrivial() && dst.m_stride.isContiguous() &&
-				src.m_stride.isTrivial() && src.m_stride.isContiguous()) {
-				// Trivial
-				imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation);
-			} else {
-				// Not trivial, so use advanced method
-				imp::multiarrayUnaryOpComplex(dstPtr,
-											  srcPtr,
-											  size,
-											  src.m_extent,
-											  dst.m_stride,
-											  src.m_stride,
-											  operation,
-											  dst.m_stride.isTrivial() &&
-											  dst.m_stride.isContiguous());
-			}
+			Array
 
-			dst.m_isScalar = src.m_isScalar;
-		}
+	operator-() const;
 
-		template<typename FUNC>
-		static inline Array applyUnaryOp(const Array &src,
-										 const FUNC &operation,
-										 bool permitInvalid = false,
-										 int64_t dstOffset = 0) {
-			// Operate on a single array and return a new array
+	Array operator+(const Array &other) const;
 
-			Array dst(src.m_extent, src.m_dtype, src.m_location);
+	Array operator-(const Array &other) const;
+
+	Array operator*(const Array &other) const;
+
+	Array operator/(const Array &other) const;
+
+	void transpose(const Extent &order = Extent());
+
+	[[nodiscard]] inline Array transposed(const Extent &order = Extent()) {
+		auto res = clone();
+		res.transpose(order);
+		return res;
+	}
+
+	[[nodiscard]] Array dot(const Array &other) const;
+
+	[[nodiscard]] inline std::string str(int64_t indent = 0, bool showCommas = false) const {
+		static int64_t tmpRows, tmpCols;
+		return str(indent, showCommas, tmpRows, tmpCols);
+	}
+
+	[[nodiscard]] std::string str(int64_t indent,
+								  bool showCommas,
+								  int64_t &printedRows,
+								  int64_t &printedCols) const;
+
+	template<typename FUNC> static inline void applyUnaryOp(Array & dst,
+	const Array &src,
+	const FUNC &operation,
+	bool permitInvalid = false, int64_t
+	dstOffset = 0
+	) {
+	// Operate on one array and store the result in another array
+
+	if (!
+	permitInvalid &&(dst
+	.m_references == nullptr || dst.m_extent != src.m_extent)) {
+	throw std::invalid_argument("Cannot operate on array with " + src.m_extent.
+
+	str()
+
+	+
+	" and store the result in " + dst.m_extent.
+
+	str()
+
+	);
+}
+
+auto dstPtr = dst.createRaw();
+auto srcPtr = src.createRaw();
+auto size = src.m_extent.size();
+
+if (dstOffset) {
+dstPtr.
+data = std::visit([&](auto *data) -> RawArrayData {
+	return data + dstOffset;
+}, dstPtr.data);
+}
+
+if (!
+permitInvalid &&dst
+.m_stride.
+
+isTrivial() &&
+
+dst.m_stride.
+
+isContiguous() &&
+
+src.m_stride.
+
+isTrivial() &&
+
+src.m_stride.
+
+isContiguous()
+
+) {
+// Trivial
+imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation
+);
+} else {
+// Not trivial, so use advanced method
+imp::multiarrayUnaryOpComplex(dstPtr, srcPtr, size, src
+.m_extent,
+dst.m_stride,
+src.m_stride,
+operation,
+dst.m_stride.
+
+isTrivial() &&
+
+dst.m_stride.
+
+isContiguous()
+
+);
+}
+
+dst.
+m_isScalar = src.m_isScalar;
+}
+
+template<typename FUNC>
+static inline Array applyUnaryOp(const Array &src,
+								 const FUNC &operation,
+								 bool permitInvalid = false,
+								 int64_t dstOffset = 0) {
+	// Operate on a single array and return a new array
+
+	Array dst(src.m_extent, src.m_dtype, src.m_location);
 
 
-			auto dstPtr = dst.createRaw();
-			auto srcPtr = src.createRaw();
-			auto size = src.m_extent.size();
+	auto dstPtr = dst.createRaw();
+	auto srcPtr = src.createRaw();
+	auto size = src.m_extent.size();
 
-			if (dstOffset) {
-				dstPtr.data = std::visit([&](auto *data) -> RawArrayData {
-					return data + dstOffset;
-				}, dstPtr.data);
-			}
+	if (dstOffset) {
+		dstPtr.data = std::visit([&](auto *data) -> RawArrayData {
+			return data + dstOffset;
+		}, dstPtr.data);
+	}
 
-			if (!permitInvalid && dst.m_stride.isTrivial() && dst.m_stride.isContiguous() &&
-				src.m_stride.isTrivial() && src.m_stride.isContiguous()) {
-				// Trivial
-				imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation);
-			} else {
-				// Not trivial, so use advanced method
-				imp::multiarrayUnaryOpComplex(dstPtr,
-											  srcPtr,
-											  size,
-											  src.m_extent,
-											  dst.m_stride,
-											  src.m_stride,
-											  operation,
-											  dst.m_stride.isTrivial() &&
-											  dst.m_stride.isContiguous());
-			}
+	if (!permitInvalid && dst.m_stride.isTrivial() && dst.m_stride.isContiguous() &&
+		src.m_stride.isTrivial() && src.m_stride.isContiguous()) {
+		// Trivial
+		imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation);
+	} else {
+		// Not trivial, so use advanced method
+		imp::multiarrayUnaryOpComplex(dstPtr,
+									  srcPtr,
+									  size,
+									  src.m_extent,
+									  dst.m_stride,
+									  src.m_stride,
+									  operation,
+									  dst.m_stride.isTrivial() && dst.m_stride.isContiguous());
+	}
 
-			dst.m_isScalar = src.m_isScalar;
+	dst.m_isScalar = src.m_isScalar;
 
-			return dst;
-		}
+	return dst;
+}
 
-		template<typename FUNC>
-		[[nodiscard]] static inline Array applyUnaryOp(Array &src, const FUNC &operation) {
-			// Operate on one array and store the result in another array
+template<typename FUNC>
+[[nodiscard]] static inline Array applyUnaryOp(Array &src, const FUNC &operation) {
+	// Operate on one array and store the result in another array
 
-			if (src.m_references == nullptr) {
-				throw std::invalid_argument("Cannot operate on an "
-											"uninitialized array");
-			}
+	if (src.m_references == nullptr) {
+		throw std::invalid_argument("Cannot operate on an "
+									"uninitialized array");
+	}
 
-			Array dst(src.m_extent, src.m_dtype, src.m_location);
-			auto srcPtr = src.createRaw();
-			auto dstPtr = dst.createRaw();
-			auto size = src.m_extent.size();
+	Array dst(src.m_extent, src.m_dtype, src.m_location);
+	auto srcPtr = src.createRaw();
+	auto dstPtr = dst.createRaw();
+	auto size = src.m_extent.size();
 
-			if (src.m_stride.isTrivial() && src.m_stride.isContiguous()) {
-				// Trivial
-				imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation);
-			} else {
-				// Not trivial, so use advanced method
-				imp::multiarrayUnaryOpComplex(dstPtr,
-											  srcPtr,
-											  size,
-											  dst.m_extent,
-											  dst.m_stride,
-											  src.m_stride,
-											  operation,
-											  true);
-			}
+	if (src.m_stride.isTrivial() && src.m_stride.isContiguous()) {
+		// Trivial
+		imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation);
+	} else {
+		// Not trivial, so use advanced method
+		imp::multiarrayUnaryOpComplex(dstPtr,
+									  srcPtr,
+									  size,
+									  dst.m_extent,
+									  dst.m_stride,
+									  src.m_stride,
+									  operation,
+									  true);
+	}
 
-			dst.m_isScalar = src.m_isScalar;
+	dst.m_isScalar = src.m_isScalar;
 
-			return dst;
-		}
+	return dst;
+}
 
-		template<class FUNC>
-		static inline void applyBinaryOp(Array &dst,
-										 const Array &srcA,
-										 const Array &srcB,
-										 const FUNC &operation,
-										 bool permitInvalid = false) {
-			// Operate on two arrays and store the result in another array
+template<class FUNC>
+static inline void applyBinaryOp(Array &dst,
+								 const Array &srcA,
+								 const Array &srcB,
+								 const FUNC &operation,
+								 bool permitInvalid = false) {
+	// Operate on two arrays and store the result in another array
 
-			if (!permitInvalid &&
-				(!srcA.m_isScalar && !srcB.m_isScalar && srcA.m_extent != srcB.m_extent)) {
-				throw std::invalid_argument(
-						"Cannot operate on two arrays with " + srcA.m_extent.str() + " and " +
-						srcA.m_extent.str());
-			}
+	if (!permitInvalid &&
+		(!srcA.m_isScalar && !srcB.m_isScalar && srcA.m_extent != srcB.m_extent)) {
+		throw std::invalid_argument(
+				"Cannot operate on two arrays with " + srcA.m_extent.str() + " and " +
+				srcA.m_extent.str());
+	}
 
-			if (!permitInvalid && (dst.m_references == nullptr || dst.m_extent != srcA.m_extent)) {
-				throw std::invalid_argument(
-						"Cannot operate on two arrays with " + srcA.m_extent.str() +
-						" and store the result in " + dst.m_extent.str());
-			}
+	if (!permitInvalid && (dst.m_references == nullptr || dst.m_extent != srcA.m_extent)) {
+		throw std::invalid_argument("Cannot operate on two arrays with " + srcA.m_extent.str() +
+									" and store the result in " + dst.m_extent.str());
+	}
 
-			auto ptrSrcA = srcA.createRaw();
-			auto ptrSrcB = srcB.createRaw();
-			auto ptrDst = dst.createRaw();
-			auto size = dst.m_extent.size();
+	auto ptrSrcA = srcA.createRaw();
+	auto ptrSrcB = srcB.createRaw();
+	auto ptrDst = dst.createRaw();
+	auto size = dst.m_extent.size();
 
-			if ((srcA.m_stride.isTrivial() && srcA.m_stride.isContiguous() &&
-				 srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
-				(srcA.m_stride == srcB.m_stride)) {
-				// Trivial
-				imp::multiarrayBinaryOpTrivial(ptrDst,
-											   ptrSrcA,
-											   ptrSrcB,
-											   srcA.m_isScalar,
-											   srcB.m_isScalar,
-											   size,
-											   operation);
+	if ((srcA.m_stride.isTrivial() && srcA.m_stride.isContiguous() && srcB.m_stride.isTrivial() &&
+		 srcB.m_stride.isContiguous()) || (srcA.m_stride == srcB.m_stride)) {
+		// Trivial
+		imp::multiarrayBinaryOpTrivial(ptrDst,
+									   ptrSrcA,
+									   ptrSrcB,
+									   srcA.m_isScalar,
+									   srcB.m_isScalar,
+									   size,
+									   operation);
 
-				// Update the result stride too
-				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
-			} else {
-				// Not trivial, so use advanced method
-				imp::multiarrayBinaryOpComplex(ptrDst,
-											   ptrSrcA,
-											   ptrSrcB,
-											   srcA.m_isScalar,
-											   srcB.m_isScalar,
-											   size,
-											   dst.m_extent,
-											   dst.m_stride,
-											   srcA.m_stride,
-											   srcB.m_stride,
-											   operation);
-			}
+		// Update the result stride too
+		dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
+	} else {
+		// Not trivial, so use advanced method
+		imp::multiarrayBinaryOpComplex(ptrDst,
+									   ptrSrcA,
+									   ptrSrcB,
+									   srcA.m_isScalar,
+									   srcB.m_isScalar,
+									   size,
+									   dst.m_extent,
+									   dst.m_stride,
+									   srcA.m_stride,
+									   srcB.m_stride,
+									   operation);
+	}
 
-			if (srcA.m_isScalar && srcB.m_isScalar) {
-				dst.m_isScalar = true;
-			}
-		}
+	if (srcA.m_isScalar && srcB.m_isScalar) {
+		dst.m_isScalar = true;
+	}
+}
 
-		template<class FUNC>
-		[[nodiscard]] static inline Array applyBinaryOp(const Array &srcA,
-														const Array &srcB,
-														const FUNC &operation,
-														bool permitInvalid = false) {
-			// Operate on two arrays and store the result in another array
+template<class FUNC>
+[[nodiscard]] static inline Array applyBinaryOp(const Array &srcA,
+												const Array &srcB,
+												const FUNC &operation,
+												bool permitInvalid = false) {
+	// Operate on two arrays and store the result in another array
 
-			if (!permitInvalid && !(srcA.m_isScalar || srcB.m_isScalar) &&
-				srcA.m_extent != srcB.m_extent) {
-				throw std::invalid_argument(
-						"Cannot operate on two arrays with " + srcA.m_extent.str() + " and " +
-						srcB.m_extent.str());
-			}
+	if (!permitInvalid && !(srcA.m_isScalar || srcB.m_isScalar) && srcA.m_extent != srcB.m_extent) {
+		throw std::invalid_argument(
+				"Cannot operate on two arrays with " + srcA.m_extent.str() + " and " +
+				srcB.m_extent.str());
+	}
 
-			Accelerator newLoc = max(srcA.m_location, srcB.m_location);
-			Datatype newType = max(srcA.m_dtype, srcB.m_dtype);
+	Accelerator newLoc = max(srcA.m_location, srcB.m_location);
+	Datatype newType = max(srcA.m_dtype, srcB.m_dtype);
 
-			Array dst(srcA.m_isScalar ? srcB.m_extent : srcA.m_extent, newType, newLoc);
+	Array dst(srcA.m_isScalar ? srcB.m_extent : srcA.m_extent, newType, newLoc);
 
-			auto ptrSrcA = srcA.createRaw();
-			auto ptrSrcB = srcB.createRaw();
-			auto ptrDst = dst.createRaw();
-			auto size = dst.m_extent.size();
+	auto ptrSrcA = srcA.createRaw();
+	auto ptrSrcB = srcB.createRaw();
+	auto ptrDst = dst.createRaw();
+	auto size = dst.m_extent.size();
 
-			if ((srcA.m_stride.isTrivial() && srcA.m_stride.isContiguous() &&
-				 srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
-				(srcA.m_stride == srcB.m_stride)) {
-				// Trivial
-				imp::multiarrayBinaryOpTrivial(ptrDst,
-											   ptrSrcA,
-											   ptrSrcB,
-											   srcA.m_isScalar,
-											   srcB.m_isScalar,
-											   size,
-											   operation);
+	if ((srcA.m_stride.isTrivial() && srcA.m_stride.isContiguous() && srcB.m_stride.isTrivial() &&
+		 srcB.m_stride.isContiguous()) || (srcA.m_stride == srcB.m_stride)) {
+		// Trivial
+		imp::multiarrayBinaryOpTrivial(ptrDst,
+									   ptrSrcA,
+									   ptrSrcB,
+									   srcA.m_isScalar,
+									   srcB.m_isScalar,
+									   size,
+									   operation);
 
-				// Update the result stride too
-				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
-			} else {
-				// Not trivial, so use advanced method
-				imp::multiarrayBinaryOpComplex(ptrDst,
-											   ptrSrcA,
-											   ptrSrcB,
-											   srcA.m_isScalar,
-											   srcB.m_isScalar,
-											   size,
-											   dst.m_extent,
-											   dst.m_stride,
-											   srcA.m_stride,
-											   srcB.m_stride,
-											   operation);
-			}
+		// Update the result stride too
+		dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
+	} else {
+		// Not trivial, so use advanced method
+		imp::multiarrayBinaryOpComplex(ptrDst,
+									   ptrSrcA,
+									   ptrSrcB,
+									   srcA.m_isScalar,
+									   srcB.m_isScalar,
+									   size,
+									   dst.m_extent,
+									   dst.m_stride,
+									   srcA.m_stride,
+									   srcB.m_stride,
+									   operation);
+	}
 
-			if (srcA.m_isScalar && srcB.m_isScalar) {
-				dst.m_isScalar = true;
-			}
+	if (srcA.m_isScalar && srcB.m_isScalar) {
+		dst.m_isScalar = true;
+	}
 
-			return dst;
-		}
+	return dst;
+}
 
-		/**
-		* \rst
-		*
-		* Internal function to offset the memory pointer within the array
-		*
-		* \endrst
-		*/
-		inline void _offsetData(int64_t elems) {
-			m_dataStart = std::visit([&](auto *data) -> RawArrayData {
-				return data + elems;
-			}, m_dataStart);
-			m_stride.setTrivial(false);
-			m_stride.setContiguity(false);
-		}
+/**
+* \rst
+*
+* Internal function to offset the memory pointer within the array
+*
+* \endrst
+*/
+inline void _offsetData(int64_t elems) {
+	m_dataStart = std::visit([&](auto *data) -> RawArrayData {
+		return data + elems;
+	}, m_dataStart);
+	m_stride.setTrivial(false);
+	m_stride.setContiguity(false);
+}
 
-		inline void _resetOffset(int64_t elems) {
-			m_dataStart = std::visit([&](auto *data) -> RawArrayData {
-				return data - elems;
-			}, m_dataStart);
-			m_stride.setTrivial(true);
-			m_stride.setContiguity(true);
-		}
+inline void _resetOffset(int64_t elems) {
+	m_dataStart = std::visit([&](auto *data) -> RawArrayData {
+		return data - elems;
+	}, m_dataStart);
+	m_stride.setTrivial(true);
+	m_stride.setContiguity(true);
+}
 
-		inline void _setStart(const RawArrayData &data) {
-			m_dataStart = data;
-		}
+inline void _setStart(const RawArrayData &data) {
+	m_dataStart = data;
+}
 
-		inline void _setScalar(bool val) {
-			m_isScalar = val;
-		}
+inline void _setScalar(bool val) {
+	m_isScalar = val;
+}
 
-		[[nodiscard]] inline RawArrayData _dataStart() const {
-			return m_dataStart;
-		}
+[[nodiscard]] inline RawArrayData _dataStart() const {
+	return m_dataStart;
+}
 
-	private:
-		inline void initializeCudaStream() const {
+private:
+
+inline void initializeCudaStream() const {
 #ifdef LIBRAPID_HAS_CUDA
 #ifdef LIBRAPID_CUDA_STREAM
-			if (!streamCreated) {
-				checkCudaErrors(cudaStreamCreateWithFlags(&cudaStream, cudaStreamNonBlocking));
-				streamCreated = true;
-			}
+	if (!streamCreated) {
+		checkCudaErrors(cudaStreamCreateWithFlags(&cudaStream, cudaStreamNonBlocking));
+		streamCreated = true;
+	}
 #endif // LIBRAPID_CUDA_STREAM
 #endif // LIBRAPID_HAS_CUDA
-		}
+}
 
-		inline void increment() const {
-			if (m_references == nullptr) {
-				return;
-			}
-
-			++(*m_references);
-		}
-
-		inline void decrement() {
-			if (m_references == nullptr) {
-				return;
-			}
-
-			--(*m_references);
-
-			if (*m_references == 0) {
-				// Delete data
-				rawArrayFree(createRaw());
-				delete m_references;
-			}
-		}
-
-		void constructNew(const Extent &e,
-						  const Stride &s,
-						  const Datatype &dtype,
-						  const Accelerator &location);
-
-		void constructHollow(const Extent &e,
-							 const Stride &s,
-							 const Datatype &dtype,
-							 const Accelerator &location);
-
-		[[nodiscard]] std::pair<int64_t, int64_t> stringifyFormatPreprocess(bool stripMiddle,
-																			bool autoStrip) const;
-
-		std::string stringify(int64_t indent,
-							  bool showCommas,
-							  bool stripMiddle,
-							  bool autoStrip,
-							  std::pair<int64_t, int64_t> &longest,
-							  int64_t &printedRows,
-							  int64_t &printedCols) const;
-
-	private:
-		Accelerator m_location = Accelerator::CPU;
-		Datatype m_dtype = Datatype::NONE;
-
-		RawArrayData m_dataStart;
-		RawArrayData m_dataOrigin;
-
-		// std::atomic to allow for multithreading, because multiple threads may
-		// increment/decrement at the same clock cycle, resulting in values being
-		// incorrect and errors turning up all over the place
-		std::atomic<int64_t> *m_references = nullptr;
-
-		Extent m_extent;
-		Stride m_stride;
-
-		bool m_isScalar = false; // Array is a scalar value
-		bool m_isChild = false; // Array is a direct subscript of another (e.g. x[0])
-	};
-
-	Array zerosLike(const Array &other);
-
-	Array onesLike(const Array &other);
-
-	template<typename T = double>
-	inline Array randomLike(const Array &other,
-							const T &min = 0,
-							const T &max = 0,
-							int64_t seed = -1) {
-		return other.filledRandom(min, max, seed);
+inline void increment() const {
+	if (m_references == nullptr) {
+		return;
 	}
 
-	void negate(const Array &a, Array &res);
+	++(*m_references);
+}
 
-	void add(const Array &a, const Array &b, Array &res);
-
-	void sub(const Array &a, const Array &b, Array &res);
-
-	void mul(const Array &a, const Array &b, Array &res);
-
-	void div(const Array &a, const Array &b, Array &res);
-
-	[[nodiscard]] Array negate(const Array &a);
-
-	[[nodiscard]] Array add(const Array &a, const Array &b);
-
-	[[nodiscard]] Array sub(const Array &a, const Array &b);
-
-	[[nodiscard]] Array mul(const Array &a, const Array &b);
-
-	[[nodiscard]] Array div(const Array &a, const Array &b);
-
-	template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
-	[[nodiscard]] inline Array operator+(T lhs, const Array &rhs) {
-		return Array::applyBinaryOp(lhs, rhs, ops::Add());
+inline void decrement() {
+	if (m_references == nullptr) {
+		return;
 	}
 
-	template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
-	[[nodiscard]] inline Array operator-(T lhs, const Array &rhs) {
-		return Array::applyBinaryOp(lhs, rhs, ops::Sub());
+	--(*m_references);
+
+	if (*m_references == 0) {
+		// Delete data
+		rawArrayFree(createRaw());
+		delete m_references;
 	}
+}
 
-	template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
-	[[nodiscard]] inline Array operator*(T lhs, const Array &rhs) {
-		return Array::applyBinaryOp(lhs, rhs, ops::Mul());
-	}
+void constructNew(const Extent &e,
+				  const Stride &s,
+				  const Datatype &dtype,
+				  const Accelerator &location);
 
-	template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
-	[[nodiscard]] inline Array operator/(T lhs, const Array &rhs) {
-		return Array::applyBinaryOp(lhs, rhs, ops::Div());
-	}
+void constructHollow(const Extent &e,
+					 const Stride &s,
+					 const Datatype &dtype,
+					 const Accelerator &location);
 
-	/**
-	* \rst
-	*
-	* Given a list of arrays, join them together along an existing axis, and return the
-	* result.
-	*
-	* Parameters
-	* ----------
-	*
-	* arrays: vector, list, tuple
-	*		The list of arrays to concatenate
-	* axis = 0: integer
-	*		The axis along which to concatenate the arrays
-	*
-	* Returns
-	* -------
-	*
-	* stacked: Array
-	*		The stacked array
-	*
-	* .. Attention::
-	*		The arrays must have exactly the same extent, other than the dimension for the
-	*		concatenating axis, which can be different for each array.
-	*
-	* Examples
-	* --------
-	*
-	* .. code-block:: python
-	*
-	*		# Create the example arrays
-	*		first = librapid.fromData(
-	*			[[1, 2, 3],
-	*			 [4, 5, 6]]
-	*		)
-	*
-	*		second = librapid.fromData(
-	*			[[7, 8, 9]]
-	*		)
-	*
-	*		# Concatenate the arrays and store the result
-	*		# (default axis is 0 -- stack along rows)
-	*		concatenated = librapid.concatenate((first, second))
-	*
-	*		print(concatenated)
-	*
-	*		"""
-	*		Gives:
-	*
-	*		[[1. 2. 3.]
-	* 		 [4. 5. 6.]
-	* 		 [7. 8. 9.]]
-	*		"""
-	*
-	* .. code-block:: python
-	*
-	*		# Create the example arrays
-	*		first = librapid.from_data(
-	*			[[1, 2, 3],
-	*			 [4, 5, 6],
-	*			 [7, 8, 9]]
-	*		)
-	*
-	*		second = librapid.Array(librapid.Extent(3, 2)).filledRandom(-1, 1)
-	*
-	*		# Concatenate the arrays and store the result
-	*		# (here, we are stacking on axis=1 -- along the columns)
-	*		concatenated = librapid.concatenate((first, second), 1)
-	*
-	*		print(concatenated)
-	*
-	*		"""
-	*		Could give:
-	*
-	*		[[ 1.             2.             3.             0.06195223331 -0.1879928112 ]
-	*		 [ 4.             5.             6.             0.3225619793  -0.1187359691 ]
-	*		 [ 7.             8.             9.             0.2637588978  -0.1868984699 ]]
-	*		"""
-	*
-	* .. Hint::
-	*		The resulting array is contiguous in memory, meaning the resulting array
-	*		can be operated on very quickly and efficiently. (see ``Array.clone`` for
-	*		more information)
-	*
-	* \endrst
-	*/
-	[[nodiscard]] Array concatenate(const std::vector<Array> &arrays, int64_t axis = 0);
+[[nodiscard]] std::pair<int64_t, int64_t> stringifyFormatPreprocess(bool stripMiddle,
+																	bool autoStrip) const;
 
-	/**
-	 * \rst
-	 *
-	 * Given a list of arrays, join them together along a new axis.
-	 *
-	 * Parameters
-	 * ----------
-	 *
-	 * arrays: vector, list, tuple
-	 *		The list of arrays to stack
-	 * axis = 0: integer
-	 *		The axis along which to stack the arrays
-	 *
-	 * Returns
-	 * -------
-	 * stacked: ndarray
-	 *		An array with one more dimension than the input arrays
-	 *
-	 * .. Attention::
-	 *		The arrays passed must all have exactly the same extent
-	 *
-	 * Examples
-	 * --------
-	 *
-	 * .. code-block:: python
-	 *
-	 *		# Create the example arrays
-	 *		first = librapid.from_data(
-	 *			[1, 2, 3]
-	 *		)
-	 *
-	 *		second = librapid.from_data(
-	 *			[4, 5, 6]
-	 *		)
-	 *
-	 *		# Stack the arrays and store the result
-	 *		# (default axis is 0)
-	 *		stacked = librapid.pack((first, second))
-	 *
-	 *		print(stacked)
-	 *
-	 *		"""
-	 *		Gives:
-	 *
-	 *		[[1. 2. 3.]
-	 * 		 [4. 5. 6.]]
-	 *		"""
-	 *
-	 * .. code-block:: python
-	 *
-	 *		# Create the example arrays
-	 *		first = librapid.from_data(
-	 *			[[1, 2, 3],
-	 *			 [4, 5, 6],
-	 *			 [7, 8, 9]]
-	 *		)
-	 *
-	 *		second = librapid.from_data(
-	 *			[[10, 11, 12],
-	 *			 [13, 14, 15],
-	 *			 [16, 17, 18]]
-	 *		)
-	 *
-	 *		# Stack the arrays and store the result
-	 *		# (here, we are stacking on axis=1 -- along the columns)
-	 *		stacked = librapid.stack((first, second), 1)
-	 *
-	 *		print(stacked)
-	 *
-	 *		"""
-	 *		Gives:
-	 *
-	 *		[[[ 1.  2.  3.]
-	 *		  [10. 11. 12.]]
-	 *
-	 *		 [[ 4.  5.  6.]
-	 *		  [13. 14. 15.]]
-	 *
-	 *		 [[ 7.  8.  9.]
-	 *		  [16. 17. 18.]]]
-	 *		"""
-	 *
-	 * .. Hint::
-	 *		The resulting array is contiguous in memory, meaning the resulting array
-	 *		can be operated on very quickly and efficiently. (see ``ndarray.clone`` for
-	 *		more information)
-	 *
-	 * \endrst
-	 */
-	[[nodiscard]] Array stack(const std::vector<Array>(&arrays), int64_t axis = 0);
+std::string stringify(int64_t indent,
+					  bool showCommas,
+					  bool stripMiddle,
+					  bool autoStrip,
+					  std::pair<int64_t, int64_t> &longest,
+					  int64_t &printedRows,
+					  int64_t &printedCols) const;
 
-	void dot(const Array &lhs, const Array &rhs, Array &res);
+private:
+Accelerator m_location = Accelerator::CPU;
+Datatype m_dtype = Datatype::NONE;
 
-	[[nodiscard]] Array dot(const Array &lhs, const Array &rhs);
+RawArrayData m_dataStart;
+RawArrayData m_dataOrigin;
 
-	[[nodiscard]] inline std::ostream &operator<<(std::ostream &os, const Array &arr) {
-		return os << arr.str();
-	}
+// std::atomic to allow for multithreading, because multiple threads may
+// increment/decrement at the same clock cycle, resulting in values being
+// incorrect and errors turning up all over the place
+std::atomic<int64_t> *m_references = nullptr;
 
-	/**
-	 * \rst
-	 *
-	 * Warmup the CPU and GPU (if applicable) by performing a variety of operations with different
-	 * datatypes repeatedly. This will ensure that most kernels are compiled and that the hardware
-	 * is running at a high clock-speed
-	 *
-	 * Parameters
-	 * ----------
-	 *
-	 * iters: Integer
-	 * 		Number of iterations to perform for each operation
-	 *
-	 * \endrst
-	 */
-	inline void warmup(int64_t itersCPU = 10, int64_t itersGPU = -1) {
-		std::cout << "Librapid Hardware Warmup\n";
+Extent m_extent;
+Stride m_stride;
 
-		const auto
-				types = {Datatype::INT64, Datatype::FLOAT32, Datatype::FLOAT64, Datatype::CFLOAT64};
+bool m_isScalar = false; // Array is a scalar value
+bool m_isChild = false; // Array is a direct subscript of another (e.g. x[0])
+};
+
+Array zerosLike(const Array &other);
+
+Array onesLike(const Array &other);
+
+template<typename T = double>
+inline Array randomLike(const Array &other, const T &min = 0, const T &max = 0, int64_t seed = -1) {
+	return other.filledRandom(min, max, seed);
+}
+
+void negate(const Array &a, Array &res);
+
+void add(const Array &a, const Array &b, Array &res);
+
+void sub(const Array &a, const Array &b, Array &res);
+
+void mul(const Array &a, const Array &b, Array &res);
+
+void div(const Array &a, const Array &b, Array &res);
+
+[[nodiscard]] Array negate(const Array &a);
+
+[[nodiscard]] Array add(const Array &a, const Array &b);
+
+[[nodiscard]] Array sub(const Array &a, const Array &b);
+
+[[nodiscard]] Array mul(const Array &a, const Array &b);
+
+[[nodiscard]] Array div(const Array &a, const Array &b);
+
+template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+[[nodiscard]] inline Array operator+(T lhs, const Array &rhs) {
+	return Array::applyBinaryOp(lhs, rhs, ops::Add());
+}
+
+template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+[[nodiscard]] inline Array operator-(T lhs, const Array &rhs) {
+	return Array::applyBinaryOp(lhs, rhs, ops::Sub());
+}
+
+template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+[[nodiscard]] inline Array operator*(T lhs, const Array &rhs) {
+	return Array::applyBinaryOp(lhs, rhs, ops::Mul());
+}
+
+template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+[[nodiscard]] inline Array operator/(T lhs, const Array &rhs) {
+	return Array::applyBinaryOp(lhs, rhs, ops::Div());
+}
+
+/**
+* \rst
+*
+* Given a list of arrays, join them together along an existing axis, and return the
+* result.
+*
+* Parameters
+* ----------
+*
+* arrays: vector, list, tuple
+*		The list of arrays to concatenate
+* axis = 0: integer
+*		The axis along which to concatenate the arrays
+*
+* Returns
+* -------
+*
+* stacked: Array
+*		The stacked array
+*
+* .. Attention::
+*		The arrays must have exactly the same extent, other than the dimension for the
+*		concatenating axis, which can be different for each array.
+*
+* Examples
+* --------
+*
+* .. code-block:: python
+*
+*		# Create the example arrays
+*		first = librapid.fromData(
+*			[[1, 2, 3],
+*			 [4, 5, 6]]
+*		)
+*
+*		second = librapid.fromData(
+*			[[7, 8, 9]]
+*		)
+*
+*		# Concatenate the arrays and store the result
+*		# (default axis is 0 -- stack along rows)
+*		concatenated = librapid.concatenate((first, second))
+*
+*		print(concatenated)
+*
+*		"""
+*		Gives:
+*
+*		[[1. 2. 3.]
+* 		 [4. 5. 6.]
+* 		 [7. 8. 9.]]
+*		"""
+*
+* .. code-block:: python
+*
+*		# Create the example arrays
+*		first = librapid.from_data(
+*			[[1, 2, 3],
+*			 [4, 5, 6],
+*			 [7, 8, 9]]
+*		)
+*
+*		second = librapid.Array(librapid.Extent(3, 2)).filledRandom(-1, 1)
+*
+*		# Concatenate the arrays and store the result
+*		# (here, we are stacking on axis=1 -- along the columns)
+*		concatenated = librapid.concatenate((first, second), 1)
+*
+*		print(concatenated)
+*
+*		"""
+*		Could give:
+*
+*		[[ 1.             2.             3.             0.06195223331 -0.1879928112 ]
+*		 [ 4.             5.             6.             0.3225619793  -0.1187359691 ]
+*		 [ 7.             8.             9.             0.2637588978  -0.1868984699 ]]
+*		"""
+*
+* .. Hint::
+*		The resulting array is contiguous in memory, meaning the resulting array
+*		can be operated on very quickly and efficiently. (see ``Array.clone`` for
+*		more information)
+*
+* \endrst
+*/
+[[nodiscard]] Array concatenate(const std::vector<Array> &arrays, int64_t axis = 0);
+
+/**
+ * \rst
+ *
+ * Given a list of arrays, join them together along a new axis.
+ *
+ * Parameters
+ * ----------
+ *
+ * arrays: vector, list, tuple
+ *		The list of arrays to stack
+ * axis = 0: integer
+ *		The axis along which to stack the arrays
+ *
+ * Returns
+ * -------
+ * stacked: ndarray
+ *		An array with one more dimension than the input arrays
+ *
+ * .. Attention::
+ *		The arrays passed must all have exactly the same extent
+ *
+ * Examples
+ * --------
+ *
+ * .. code-block:: python
+ *
+ *		# Create the example arrays
+ *		first = librapid.from_data(
+ *			[1, 2, 3]
+ *		)
+ *
+ *		second = librapid.from_data(
+ *			[4, 5, 6]
+ *		)
+ *
+ *		# Stack the arrays and store the result
+ *		# (default axis is 0)
+ *		stacked = librapid.pack((first, second))
+ *
+ *		print(stacked)
+ *
+ *		"""
+ *		Gives:
+ *
+ *		[[1. 2. 3.]
+ * 		 [4. 5. 6.]]
+ *		"""
+ *
+ * .. code-block:: python
+ *
+ *		# Create the example arrays
+ *		first = librapid.from_data(
+ *			[[1, 2, 3],
+ *			 [4, 5, 6],
+ *			 [7, 8, 9]]
+ *		)
+ *
+ *		second = librapid.from_data(
+ *			[[10, 11, 12],
+ *			 [13, 14, 15],
+ *			 [16, 17, 18]]
+ *		)
+ *
+ *		# Stack the arrays and store the result
+ *		# (here, we are stacking on axis=1 -- along the columns)
+ *		stacked = librapid.stack((first, second), 1)
+ *
+ *		print(stacked)
+ *
+ *		"""
+ *		Gives:
+ *
+ *		[[[ 1.  2.  3.]
+ *		  [10. 11. 12.]]
+ *
+ *		 [[ 4.  5.  6.]
+ *		  [13. 14. 15.]]
+ *
+ *		 [[ 7.  8.  9.]
+ *		  [16. 17. 18.]]]
+ *		"""
+ *
+ * .. Hint::
+ *		The resulting array is contiguous in memory, meaning the resulting array
+ *		can be operated on very quickly and efficiently. (see ``ndarray.clone`` for
+ *		more information)
+ *
+ * \endrst
+ */
+[[nodiscard]] Array stack(const std::vector<Array>(&arrays), int64_t axis = 0);
+
+void dot(const Array &lhs, const Array &rhs, Array &res);
+
+[[nodiscard]] Array dot(const Array &lhs, const Array &rhs);
+
+[[nodiscard]] inline std::ostream &operator<<(std::ostream &os, const Array &arr) {
+	return os << arr.str();
+}
+
+/**
+ * \rst
+ *
+ * Warmup the CPU and GPU (if applicable) by performing a variety of operations with different
+ * datatypes repeatedly. This will ensure that most kernels are compiled and that the hardware
+ * is running at a high clock-speed
+ *
+ * Parameters
+ * ----------
+ *
+ * iters: Integer
+ * 		Number of iterations to perform for each operation
+ *
+ * \endrst
+ */
+inline void warmup(int64_t itersCPU = 10, int64_t itersGPU = -1) {
+	std::cout << "Librapid Hardware Warmup\n";
+
+	const auto types = {Datatype::INT64, Datatype::FLOAT32, Datatype::FLOAT64, Datatype::CFLOAT64};
 #ifdef LIBRAPID_HAS_CUDA
-		const auto locations = {Accelerator::CPU, Accelerator::GPU};
+	const auto locations = {Accelerator::CPU, Accelerator::GPU};
 #else
-		const auto locations = {Accelerator::CPU};
+	const auto locations = {Accelerator::CPU};
 #endif // LIBRAPID_HAS_CUDA
 
 #ifdef LIBRAPID_DEBUG
-		std::cout << "Running in DEBUG mode. Using 100x100 matrices\n";
+	std::cout << "Running in DEBUG mode. Using 100x100 matrices\n";
 #else
-		std::cout << "Running in RELEASE mode. Using 1000x1000 matrices\n";
+	std::cout << "Running in RELEASE mode. Using 1000x1000 matrices\n";
 #endif
 
-		for (const auto &type: types) {
-			for (const auto &location: locations) {
+	for (const auto &type: types) {
+		for (const auto &location: locations) {
 #ifdef LIBRAPID_DEBUG
-				auto tmp = Array(Extent({100, 100}), type, location);
+			auto tmp = Array(Extent({100, 100}), type, location);
 #else
-				auto tmp = Array(Extent({1000, 1000}), type, location);
+			auto tmp = Array(Extent({1000, 1000}), type, location);
 #endif
 
-				std::cout << "Warming up " << acceleratorToString(location) << " with "
-						  << datatypeToString(type);
+			std::cout << "Warming up " << acceleratorToString(location) << " with "
+					  << datatypeToString(type);
 
-				double start = seconds();
+			double start = seconds();
 
-				int64_t iters;
-				if (location == Accelerator::CPU) {
-					iters = itersCPU;
-				} else if (location == Accelerator::GPU) {
-					if (itersGPU == -1) { iters = itersCPU; }
-					else { iters = itersGPU; }
-				}
-
-				for (int64_t i = 0; i < iters; ++i) {
-					tmp.fill(1);
-					auto res = tmp.clone();
-					res = tmp + res;
-					res = tmp - res;
-					res = tmp * res;
-					res = tmp / res;
-
-					res.fillRandom();
-					auto dotted = res.dot(res);
-
-					// Confuse the compiler
-					res = dotted * dotted / tmp - dotted + res * tmp;
-
-					if (location == Accelerator::GPU && i == 0) {
-						std::cout << " || Kernels compiled";
-					}
-
-					// #ifdef LIBRAPID_HAS_CUDA
-					// 				if (location == Accelerator::GPU)
-					// 					cudaSafeCall(cudaStreamSynchronize(cudaStream));
-					// #endif
-				}
-				double end = seconds();
-
-				std::cout << " || Completed in " << (end - start) * 1000 << " ms\n";
+			int64_t iters;
+			if (location == Accelerator::CPU) {
+				iters = itersCPU;
+			} else if (location == Accelerator::GPU) {
+				if (itersGPU == -1) { iters = itersCPU; }
+				else { iters = itersGPU; }
 			}
+
+			for (int64_t i = 0; i < iters; ++i) {
+				tmp.fill(1);
+				auto res = tmp.clone();
+				res = tmp + res;
+				res = tmp - res;
+				res = tmp * res;
+				res = tmp / res;
+
+				res.fillRandom();
+				auto dotted = res.dot(res);
+
+				// Confuse the compiler
+				res = dotted * dotted / tmp - dotted + res * tmp;
+
+				if (location == Accelerator::GPU && i == 0) {
+					std::cout << " || Kernels compiled";
+				}
+
+				// #ifdef LIBRAPID_HAS_CUDA
+				// 				if (location == Accelerator::GPU)
+				// 					cudaSafeCall(cudaStreamSynchronize(cudaStream));
+				// #endif
+			}
+			double end = seconds();
+
+			std::cout << " || Completed in " << (end - start) * 1000 << " ms\n";
 		}
 	}
+}
 
-	void optimiseThreads(double timePerThread = 1, bool verbose = false);
+void optimiseThreads(double timePerThread = 1, bool verbose = false);
+
 }
 
 template<> struct fmt::formatter<librapid::Array> {

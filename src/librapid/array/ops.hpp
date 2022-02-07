@@ -206,4 +206,49 @@ uint64_t getSeed(const FillRandom <T> &x) {
 
 #endif // DOXYGEN_BUILD
 
+namespace librapid {
+
+// A lightweight wrapper for a GPU kernel
+	class GPUKernel {
+	public:
+		static uint64_t kernelsCreated;
+
+		GPUKernel() = default;
+
+		explicit GPUKernel(const std::string &kernel_) {
+			name = fmt::format("gpuKernel{}", kernelsCreated++);
+			kernel = kernel_;
+		}
+
+		GPUKernel(const std::string &name_, const std::string &kernel_) {
+			name = name_;
+			kernel = kernel_;
+		}
+
+		template<typename... Pack>
+		double operator()(Pack...) const {
+			throw std::runtime_error(fmt::format(
+					"Cannot apply GPUKernel '{}' operation to a CPU-based array",
+					kernel));
+		}
+
+		[[nodiscard]] std::string str() const {
+			return fmt::format("Name => {}\n{}", name, kernel);
+		}
+
+		[[nodiscard]] inline const std::string &getName() const {
+			return name;
+		}
+
+		[[nodiscard]] inline const std::string &getKernel() const {
+			return kernel;
+		}
+
+		std::string name;
+		std::string kernel;
+	};
+
+	inline uint64_t GPUKernel::kernelsCreated = 0;
+}
+
 #endif // LIBRAPID_OPS

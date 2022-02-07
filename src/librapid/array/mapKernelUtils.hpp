@@ -11,6 +11,18 @@
 #include <cstdint>
 
 namespace librapid::utils {
+	template <typename T, typename = void>
+	struct HasName : std::false_type{};
+
+	template <typename T>
+	struct HasName<T, decltype((void)T::name, void())> : std::true_type {};
+
+	template <typename T, typename = void>
+	struct HasKernel : std::false_type{};
+
+	template <typename T>
+	struct HasKernel<T, decltype((void)T::kernel, void())> : std::true_type {};
+
 	template<typename T, typename Kernel, uint64_t dims>
 	struct ApplyKernelImpl {
 		static inline void run(T **__restrict pointers, T *__restrict dst, const Kernel &kernel, uint64_t index) {
