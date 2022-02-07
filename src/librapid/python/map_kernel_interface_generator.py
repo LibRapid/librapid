@@ -7,7 +7,8 @@ dtypes = [
 
 maxInputs = 15
 
-fstring = ".def_static(\"mapKernel\", [](const std::function<{}({})> &kernel, {}, librapid::Array &dst) {{ librapid::Array::mapKernel(kernel, {}, dst); }}, py::call_guard<py::gil_scoped_release>())"
+fstringCPU = ".def_static(\"mapKernel\", [](const std::function<{}({})> &kernel, {}, librapid::Array &dst) {{ librapid::Array::mapKernel(kernel, {}, dst); }}, py::call_guard<py::gil_scoped_release>())"
+fstringGPU = ".def_static(\"mapKernel\", [](const librapid::GPUKernel &kernel, {}, librapid::Array &dst) {{ librapid::Array::mapKernel(kernel, {}, dst); }})"
 
 print("Running")
 with open("map_kernel_interface.hpp", "w") as f:
@@ -24,6 +25,7 @@ with open("map_kernel_interface.hpp", "w") as f:
 		print("Generating for", dtype)
 		for i in range(1, maxInputs + 1):
 			typelist = ", ".join([dtype] * i)
+			arraylist = ", ".join(["const librapid::Array &a" + str(i + 1) for i in range(i)])
 			
 			arrlist = ""
 			for j in range(i):
@@ -37,10 +39,11 @@ with open("map_kernel_interface.hpp", "w") as f:
 				if j + 1 < i:
 					varlist += ", "
 
-			f.write(fstring.format(dtype, typelist, arrlist, varlist) + "\n")
+			f.write(fstringCPU.format(dtype, typelist, arrlist, varlist) + "\n")
+			# f.write(fstringGPU.format(arraylist, varlist) + "\n\n")
 
 
-fstring = """
+fstringCPU = """
 	template<typename T, typename Kernel>
 	struct ApplyKernelImpl<T, Kernel, {}> {{
 		static inline void run(T **__restrict pointers, T *__restrict dst, const Kernel &kernel, uint64_t index) {{
@@ -64,6 +67,18 @@ with open("../array/mapKernelUtils.hpp", "w") as f:
 #include <cstdint>
 
 namespace librapid::utils {
+	template <typename T, typename = void>
+	struct HasName : std::false_type{};
+
+	template <typename T>
+	struct HasName<T, decltype((void)T::name, void())> : std::true_type {};
+
+	template <typename T, typename = void>
+	struct HasKernel : std::false_type{};
+
+	template <typename T>
+	struct HasKernel<T, decltype((void)T::kernel, void())> : std::true_type {};
+
 	template<typename T, typename Kernel, uint64_t dims>
 	struct ApplyKernelImpl {
 		static inline void run(T **__restrict pointers, T *__restrict dst, const Kernel &kernel, uint64_t index) {
@@ -76,6 +91,6 @@ namespace librapid::utils {
 	for i in range(1, maxInputs + 1):
 		arglist = ", ".join(["pointers[{}][index]".format(ind) for ind in range(i)])
 
-		f.write(fstring.format(i, arglist) + "\n")
+		f.write(fstringCPU.format(i, arglist) + "\n")
 
 	f.write("\n}")

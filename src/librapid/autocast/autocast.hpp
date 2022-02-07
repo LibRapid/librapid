@@ -372,6 +372,8 @@ namespace librapid {
 				return std::get<Complex<double> *>(raw.data);
 			}
 		}
+
+		// throw std::runtime_error("Array contained nullptr data. Could not fetch origin");
 		return nullptr;
 	}
 
