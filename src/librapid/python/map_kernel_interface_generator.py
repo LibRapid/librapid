@@ -40,7 +40,7 @@ with open("map_kernel_interface.hpp", "w") as f:
 					varlist += ", "
 
 			f.write(fstringCPU.format(dtype, typelist, arrlist, varlist) + "\n")
-			# f.write(fstringGPU.format(arraylist, varlist) + "\n\n")
+			f.write(fstringGPU.format(arraylist, varlist) + "\n\n")
 
 
 fstringCPU = """
