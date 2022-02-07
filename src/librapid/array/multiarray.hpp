@@ -986,7 +986,7 @@ namespace librapid {
 				statSeedSet = true;
 			}
 			// applyUnaryOp(*this, *this, ops::FillRandom < T > (min, max, seed));
-			applyUnaryOp(*this, *this, ops::FillRandom < T > (min, max, statSeed));
+			applyUnaryOp(*this, *this, ops::FillRandom<T>(min, max, statSeed));
 		}
 
 		template<typename T = double>
@@ -1117,7 +1117,7 @@ namespace librapid {
 				int64_t end = dst.extent().size();
 
 				if (dst.location() == Accelerator::CPU) {
-	#ifdef LIBRAPID_PYTHON
+					#ifdef LIBRAPID_PYTHON
 					for (int64_t i = 0; i < end; ++i) {
 							utils::ApplyKernelImpl<TYPE,
 												   Kernel,
@@ -1126,7 +1126,7 @@ namespace librapid {
 																			 kernel,
 																			 i);
 						}
-	#else // LIBRAPID_PYTHON
+					#else // LIBRAPID_PYTHON
 
 					if (end < 2500) {
 						for (int64_t i = 0; i < end; ++i) {
@@ -1139,7 +1139,7 @@ namespace librapid {
 						}
 					} else {
 						auto localKernel = kernel;
-	#pragma omp parallel for shared(pointers, dstPtr, localKernel, end) default(none)
+							#pragma omp parallel for shared(pointers, dstPtr, localKernel, end) default(none)
 						for (int64_t i = 0; i < end; ++i) {
 							utils::ApplyKernelImpl<TYPE,
 												   Kernel,
@@ -1149,8 +1149,8 @@ namespace librapid {
 																			 i);
 						}
 					}
-	#endif // LIBRAPID_PYTHON
-	#ifdef LIBRAPID_CUDA
+				#endif // LIBRAPID_PYTHON
+				#ifdef LIBRAPID_HAS_CUDA
 				} else {
 					// Copy the pointers to the GPU
 					static TYPE **gpuPointers = nullptr; // Static storage space for pointers
@@ -1161,7 +1161,7 @@ namespace librapid {
 						cudaSafeCall(cudaMallocAsync(&gpuPointers,
 													 sizeof(TYPE *) * maxPointers,
 													 cudaStream));
-						#else
+													 #else
 						cudaSafeCall(cudaMalloc(&gpuPointers, sizeof(TYPE *) * maxPointers));
 						#endif
 					}
@@ -1169,101 +1169,35 @@ namespace librapid {
 					if (sizeof...(Pack) - 1 > maxPointers) {
 						maxPointers <<= 1;
 
-							#ifdef LIBRAPID_CUDA_STREAM
+						#ifdef LIBRAPID_CUDA_STREAM
 						cudaSafeCall(cudaFreeAsync(gpuPointers, cudaStream));
-							#else
+						#else
 						cudaSafeCall(cudaFreeAsync(gpuPointers));
-							#endif
+						#endif
 
 							#ifdef LIBRAPID_CUDA_STREAM
 						cudaSafeCall(cudaMallocAsync(&gpuPointers,
 													 sizeof(TYPE *) * maxPointers,
 													 cudaStream));
-							#else
+														 #else
 						cudaSafeCall(cudaMalloc(&gpuPointers, sizeof(TYPE *) * maxPointers));
 							#endif
 					}
 
-							#ifdef LIBRAPID_CUDA_STREAM
+					#ifdef LIBRAPID_CUDA_STREAM
 					cudaSafeCall(cudaMemcpyAsync(gpuPointers,
 												 static_cast<TYPE **>(pointers),
 												 sizeof(TYPE *) * (sizeof...(Pack) - 1),
 												 cudaMemcpyHostToDevice,
 												 cudaStream));
-#else
+												 #else
 					cudaSafeCall(cudaMemcpy(gpuPointers,
 											static_cast<TYPE **>(pointers),
 											sizeof(TYPE *) * (sizeof...(Pack) - 1),
 											cudaMemcpyHostToDevice));
-#endif
+											#endif
 
 					using jitify::reflection::Type;
-					// static uint64_t kernelCount = 0; // Number of kernels that have been compiled
-
-					// std::string gpuKernel = "mapKernel\n";
-					// gpuKernel
-					// 		+=
-					// 		"__constant__ int LIBRAPID_MAX_DIMS = " +
-					// 		std::to_string(LIBRAPID_MAX_DIMS) + ";\n";
-					// gpuKernel += "#include <stdint.h>\n"
-					// 			 "#include <type_traits>\n"
-					// 			 "#include <" CUDA_INCLUDE_DIRS "/curand_kernel.h>\n"
-					// 			 "#include <" CUDA_INCLUDE_DIRS "/curand.h>\n\n";
-
-					// gpuKernel += imp::complexHpp;
-
-					// // Insert the user-defined kernel into the main GPU kernel
-					// gpuKernel += R"V0G0N(
-					// template<typename A, typename B>
-					// __device__
-					// inline auto )V0G0N";
-
-
-					// gpuKernel += kernel.name;
-
-					// gpuKernel += R"V0G0N((A &a, B &b, int64_t indexA, int64_t indexB)
-					// {
-					// )V0G0N";
-
-					// gpuKernel += kernel.kernel;
-
-					// gpuKernel += R"V0G0N(}
-
-					// template<typename T, typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
-					// __global__
-					// inline T random(T lower, T upper, uint64_t seed = -1) {
-					//     // Random floating point value in range [lower, upper)
-
-					//     static std::uniform_real_distribution<T> distribution(0., 1.);
-					//     static std::mt19937 generator(seed == (uint64_t) -1 ? (unsigned int) (seconds() * 10) : seed);
-					//     return lower + (upper - lower) * distribution(generator);
-					// }
-
-					// template<typename T, typename std::enable_if<!std::is_floating_point<T>::value, int>::type = 0>
-					// __global__
-					// inline T random(T lower, T upper, uint64_t seed = -1) {
-					//     // Random integral value in range [lower, upper]
-					//     return (T) random((double) (lower - (lower < 0 ? 1 : 0)), (double) upper + 1, seed);
-					// }
-
-					// template<typename T_DST, typename T_SRCA, typename T_SRCB>
-					// __global__
-					// void binaryFuncTrivial(T_DST *__restrict dstData,
-					// 					   const T_SRCA *__restrict srcA,
-					// 					   const T_SRCB *__restrict srcB,
-					// 					   int64_t size)
-					// {
-					// 	const int64_t kernelIndex = blockDim.x * blockIdx.x
-					// 							   + threadIdx.x;
-
-					// 	if (kernelIndex < size) {
-					// )V0G0N";
-
-					// gpuKernel
-					// 		+=
-					// 		"dstData[kernelIndex] = " + kernel.name +
-					// 		"(srcA[kernelIndex], srcB[kernelIndex], kernelIndex, kernelIndex);";
-					// gpuKernel += "\n}\n}";
 
 					if constexpr(!utils::HasName<Kernel>{} || !utils::HasKernel<Kernel>{}) {
 						throw std::runtime_error(
@@ -1299,41 +1233,41 @@ __constant__ int LIBRAPID_MAX_DIMS = {0};
 template<typename T, typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
 __global__
 inline T random(T lower, T upper, uint64_t seed = -1) {{
-	// Random floating point value in range [lower, upper)
+// Random floating point value in range [lower, upper)
 
-	static std::uniform_real_distribution<T> distribution(0., 1.);
-	static std::mt19937 generator(seed == (uint64_t) -1 ? (unsigned int) (seconds() * 10) : seed);
-	return lower + (upper - lower) * distribution(generator);
+static std::uniform_real_distribution<T> distribution(0., 1.);
+static std::mt19937 generator(seed == (uint64_t) -1 ? (unsigned int) (seconds() * 10) : seed);
+return lower + (upper - lower) * distribution(generator);
 }}
 
 template<typename T, typename std::enable_if<!std::is_floating_point<T>::value, int>::type = 0>
 __global__
 inline T random(T lower, T upper, uint64_t seed = -1) {{
-	// Random integral value in range [lower, upper]
-	return (T) random((double) (lower - (lower < 0 ? 1 : 0)), (double) upper + 1, seed);
+// Random integral value in range [lower, upper]
+return (T) random((double) (lower - (lower < 0 ? 1 : 0)), (double) upper + 1, seed);
 }}
 
 template<typename T>
 __device__
 inline auto {3}({4}) {{
-	{6}
+{6}
 }}
 
 template<typename T_DST, typename T_SRC>
 __global__
 void binaryFuncTrivial(T_DST *__restrict dstData,
-					   const T_SRC **__restrict srcPointers,
-					   int64_t numArrays,
-					   int64_t size)
+				   const T_SRC **__restrict srcPointers,
+				   int64_t numArrays,
+				   int64_t size)
 {{
-	const int64_t kernelIndex = blockDim.x * blockIdx.x
-							   + threadIdx.x;
+const int64_t kernelIndex = blockDim.x * blockIdx.x
+						   + threadIdx.x;
 
-	if (kernelIndex < size) {{
-		dstData[kernelIndex] = {3}({5});
-	}}
+if (kernelIndex < size) {{
+	dstData[kernelIndex] = {3}({5});
 }}
-					)V0G0N",
+}}
+				)V0G0N",
 															LIBRAPID_MAX_DIMS,
 															CUDA_INCLUDE_DIRS,
 															imp::complexHpp,
@@ -1385,16 +1319,17 @@ void binaryFuncTrivial(T_DST *__restrict dstData,
 #endif // LIBRAPID_CUDA_STREAM
 					}
 				}
-	#else
-			} else {
-				throw std::runtime_error("Cannot apply GPU kernel because CUDA was not enabled");
+				#else
+				} else {
+					throw std::runtime_error("Cannot apply GPU kernel because CUDA was not enabled");
+				}
+#endif
 			}
-	#endif
-		}
 
 		, dst.m_dataStart);
 
-		return dst;
+		return
+		dst;
 	}
 
 	Array operator-() const;
