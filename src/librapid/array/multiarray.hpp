@@ -1150,6 +1150,7 @@ namespace librapid {
 						}
 					}
 	#endif // LIBRAPID_PYTHON
+	#ifdef LIBRAPID_CUDA
 				} else {
 					// Copy the pointers to the GPU
 					static TYPE **gpuPointers = nullptr; // Static storage space for pointers
@@ -1391,6 +1392,11 @@ void binaryFuncTrivial(T_DST *__restrict dstData,
 		return
 		dst;
 	}
+	#else
+				} else {
+					throw std::runtime_error("Cannot apply GPU kernel because CUDA was not enabled");
+				}
+	#endif
 
 			Array
 
