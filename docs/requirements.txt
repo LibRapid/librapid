@@ -1,5 +1,5 @@
 sphinx==4.4.0
-breathe==4.32.0
+breathe==4.33.0
 exhale==0.2.4
 furo==2022.1.2
 pydata-sphinx-theme==0.8.0
