@@ -49,10 +49,14 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 data_files = []
 if platform.system() == "Windows":
-    root, lib = site.getsitepackages()
-    libdir = lib.replace(root, "")
-    libdir = libdir.lstrip("\\")
-    libdir = libdir.lstrip("/")
+    try:
+        root, lib = site.getsitepackages()
+        libdir = lib.replace(root, "")
+        libdir = libdir.lstrip("\\")
+        libdir = libdir.lstrip("/")
+    except:
+        from distutils.sysconfig import get_python_lib
+        libdir = get_python_lib()
     
     dll_files = ["openblas.dll", "libopenblas.dll", "flang.dll", "flangrti.dll", "pgmath.dll", "libomp.dll"]
     
