@@ -1,7 +1,7 @@
 sphinx==4.4.0
-breathe==4.32.0
-exhale==0.2.4
-furo==2022.1.2
+breathe==4.33.1
+exhale==0.3.1
+furo==2022.2.14.1
 pydata-sphinx-theme==0.8.0
 numpydoc==1.2
 sphinx-panels==0.6.0
