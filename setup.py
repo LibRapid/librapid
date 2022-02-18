@@ -9,6 +9,8 @@ from skbuild import setup
 from skbuild.cmaker import get_cmake_version
 from skbuild.exceptions import SKBuildError
 
+LR_PYTHON_IMPL = platform.python_implementation()
+
 # Copy OpenBLAS build if present in the root directory
 if os.path.exists("openblas_install") and not os.path.exists(os.path.join("src", "librapid", "openblas_install")):
     shutil.copytree("openblas_install", os.path.join("src", "librapid", "openblas_install"))
@@ -41,7 +43,7 @@ except SKBuildError:
     install_requires.append("cmake")
 
 # ======= Uncomment this to install win32api as well =======
-if platform.system() == "Windows":
+if platform.system() == "Windows" and LR_PYTHON_IMPL == "CPython":
     setup_requires.append('pywin32')
     install_requires.append("pywin32")
 
