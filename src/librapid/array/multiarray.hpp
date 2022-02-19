@@ -1149,8 +1149,8 @@ namespace librapid {
 																			 i);
 						}
 					}
-				#endif // LIBRAPID_PYTHON
-				#ifdef LIBRAPID_HAS_CUDA
+					#endif // LIBRAPID_PYTHON
+					#ifdef LIBRAPID_HAS_CUDA
 				} else {
 					// Copy the pointers to the GPU
 					static TYPE **gpuPointers = nullptr; // Static storage space for pointers
@@ -1161,7 +1161,7 @@ namespace librapid {
 						cudaSafeCall(cudaMallocAsync(&gpuPointers,
 													 sizeof(TYPE *) * maxPointers,
 													 cudaStream));
-													 #else
+						#else
 						cudaSafeCall(cudaMalloc(&gpuPointers, sizeof(TYPE *) * maxPointers));
 						#endif
 					}
@@ -1169,33 +1169,33 @@ namespace librapid {
 					if (sizeof...(Pack) - 1 > maxPointers) {
 						maxPointers <<= 1;
 
-						#ifdef LIBRAPID_CUDA_STREAM
+							#ifdef LIBRAPID_CUDA_STREAM
 						cudaSafeCall(cudaFreeAsync(gpuPointers, cudaStream));
-						#else
+							#else
 						cudaSafeCall(cudaFreeAsync(gpuPointers));
-						#endif
+							#endif
 
 							#ifdef LIBRAPID_CUDA_STREAM
 						cudaSafeCall(cudaMallocAsync(&gpuPointers,
 													 sizeof(TYPE *) * maxPointers,
 													 cudaStream));
-														 #else
+							#else
 						cudaSafeCall(cudaMalloc(&gpuPointers, sizeof(TYPE *) * maxPointers));
 							#endif
 					}
 
-					#ifdef LIBRAPID_CUDA_STREAM
+							#ifdef LIBRAPID_CUDA_STREAM
 					cudaSafeCall(cudaMemcpyAsync(gpuPointers,
 												 static_cast<TYPE **>(pointers),
 												 sizeof(TYPE *) * (sizeof...(Pack) - 1),
 												 cudaMemcpyHostToDevice,
 												 cudaStream));
-												 #else
+					#else
 					cudaSafeCall(cudaMemcpy(gpuPointers,
 											static_cast<TYPE **>(pointers),
 											sizeof(TYPE *) * (sizeof...(Pack) - 1),
 											cudaMemcpyHostToDevice));
-											#endif
+					#endif
 
 					using jitify::reflection::Type;
 
@@ -1205,18 +1205,74 @@ namespace librapid {
 						return;
 					} else {
 						std::string args;
-						for (int64_t i = 0; i < sizeof...(Pack) - 1; ++i) {
-							args += fmt::format("T val{}", i);
-							if (i + 2 < sizeof...(Pack)) {
-								args += ", ";
-							}
-						}
-
 						std::string indices;
-						for (int64_t i = 0; i < sizeof...(Pack) - 1; ++i) {
-							indices += fmt::format("srcPointers[{}][kernelIndex]", i);
-							if (i + 2 < sizeof...(Pack)) {
-								indices += ", ";
+
+						switch (sizeof...(Pack) - 1) {
+							case 0: {
+								args = "";
+								indices = "";
+								break;
+							}
+							case 1: {
+								args = "T val0";
+								indices = "srcPointers[0][kernelIndex]";
+								break;
+							}
+							case 2: {
+								args = "T val0,"
+									   "T val1";
+								indices = "srcPointers[0][kernelIndex],"
+										  "srcPointers[1][kernelIndex]";
+								break;
+							}
+							case 3: {
+								args = "T val0,"
+									   "T val1,"
+									   "T val2";
+								indices = "srcPointers[0][kernelIndex],"
+										  "srcPointers[1][kernelIndex],"
+										  "srcPointers[2][kernelIndex]";
+								break;
+							}
+							case 4: {
+								args = "T val0,"
+									   "T val1,"
+									   "T val2,"
+									   "T val3";
+								indices = "srcPointers[0][kernelIndex],"
+										  "srcPointers[1][kernelIndex],"
+										  "srcPointers[2][kernelIndex],"
+										  "srcPointers[3][kernelIndex]";
+								break;
+							}
+							case 5: {
+								args = "T val0,"
+									   "T val1,"
+									   "T val2,"
+									   "T val3,"
+									   "T val4";
+								indices = "srcPointers[0][kernelIndex],"
+										  "srcPointers[1][kernelIndex],"
+										  "srcPointers[2][kernelIndex],"
+										  "srcPointers[3][kernelIndex],"
+										  "srcPointers[4][kernelIndex]";
+								break;
+							}
+							default: {
+								for (int64_t i = 0; i < sizeof...(Pack) - 1; ++i) {
+									args += fmt::format("T val{}", i);
+									if (i + 2 < sizeof...(Pack)) {
+										args += ", ";
+									}
+								}
+
+								for (int64_t i = 0; i < sizeof...(Pack) - 1; ++i) {
+									indices += fmt::format("srcPointers[{}][kernelIndex]", i);
+									if (i + 2 < sizeof...(Pack)) {
+										indices += ", ";
+									}
+								}
+								break;
 							}
 						}
 
@@ -1258,14 +1314,13 @@ __global__
 void binaryFuncTrivial(T_DST *__restrict dstData,
 				   const T_SRC **__restrict srcPointers,
 				   int64_t numArrays,
-				   int64_t size)
-{{
-const int64_t kernelIndex = blockDim.x * blockIdx.x
-						   + threadIdx.x;
+				   int64_t size) {{
+	const int64_t kernelIndex = blockDim.x * blockIdx.x
+							   + threadIdx.x;
 
-if (kernelIndex < size) {{
-	dstData[kernelIndex] = {3}({5});
-}}
+	if (kernelIndex < size) {{
+		dstData[kernelIndex] = {3}({5});
+	}}
 }}
 				)V0G0N",
 															LIBRAPID_MAX_DIMS,
@@ -1275,8 +1330,6 @@ if (kernelIndex < size) {{
 															args,
 															indices,
 															kernel.kernel);
-
-						// fmt::print("Information:\n{}\n", gpuKernel);
 
 						static const std::vector<std::string>
 								params =
@@ -1319,7 +1372,7 @@ if (kernelIndex < size) {{
 #endif // LIBRAPID_CUDA_STREAM
 					}
 				}
-				#else
+#else
 				} else {
 					throw std::runtime_error("Cannot apply GPU kernel because CUDA was not enabled");
 				}
@@ -1332,7 +1385,9 @@ if (kernelIndex < size) {{
 		dst;
 	}
 
-	Array operator-() const;
+			Array
+
+	operator-() const;
 
 	Array operator+(const Array &other) const;
 
