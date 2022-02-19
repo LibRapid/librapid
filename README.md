@@ -39,7 +39,7 @@ To install LibRapid as a Python library, simply run `pip install librapid` in th
 
 #### *Note*
 
-Occasionally, the `pip` binary version of LibRapid will cause a `segfault` error. This is a known bug we are trying to fix, but in the meantime, you can run `pip install librapid --no-binary librapid`.
+When using a source-build of LibRapid with CUDA under PyPy, the garbage collection system can lead to some problems with running out of memory. We're not sure how to get around this as we believe it is just a quirk of PyPy to improve performance, but it can lead to substantial problems if you're not careful.
 
 #### Building from Source
 
