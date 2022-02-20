@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(librapid VERSION "0.3.3")
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 if ()
     message(STATUS "Building library for Python")
@@ -321,7 +321,7 @@ else ()
 endif ()
 
 if (NOT DEFINED LIBRAPID_NO_ARCH)
-    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts/FindAVX.cmake")
+    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindAVX.cmake")
 
     message(STATUS "Found AVX: ${AVX_FOUND}")
     message(STATUS "Compiler Options: ${AVX_FLAGS}")
