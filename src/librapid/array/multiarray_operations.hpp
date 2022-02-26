@@ -4,21 +4,23 @@
 #include <librapid/config.hpp>
 #include <librapid/autocast/autocast.hpp>
 
-namespace librapid::imp {
+namespace librapid::imp
+{
 #ifdef LIBRAPID_HAS_CUDA
+
 	inline const jitify::detail::vector<std::string> cudaHeaders = {// CUDA_INCLUDE_DIRS,
-			CUDA_INCLUDE_DIRS + std::string("/curand.h"),
-			CUDA_INCLUDE_DIRS + std::string("/curand_kernel.h"),
-			CUDA_INCLUDE_DIRS + std::string("/cublas_v2.h"),
-			CUDA_INCLUDE_DIRS + std::string("/cublas_api.h"),
-			CUDA_INCLUDE_DIRS + std::string("/cuda_fp16.h"),
-			CUDA_INCLUDE_DIRS + std::string("/cuda_bf16.h")
+		CUDA_INCLUDE_DIRS + std::string("/curand.h"),
+		CUDA_INCLUDE_DIRS + std::string("/curand_kernel.h"),
+		CUDA_INCLUDE_DIRS + std::string("/cublas_v2.h"),
+		CUDA_INCLUDE_DIRS + std::string("/cublas_api.h"),
+		CUDA_INCLUDE_DIRS + std::string("/cuda_fp16.h"),
+		CUDA_INCLUDE_DIRS + std::string("/cuda_bf16.h")
 	};
 
 	inline const std::vector<std::string> cudaParams = {
-			"--disable-warnings",
-			"-std=c++17",
-			std::string("-I") + CUDA_INCLUDE_DIRS
+		"--disable-warnings",
+		"-std=c++17",
+		std::string("-I") + CUDA_INCLUDE_DIRS
 	};
 
 	inline constexpr char complexHpp[] = R"V0G0N(
@@ -263,22 +265,28 @@ namespace librapid
 }
 #endif
 		)V0G0N";
+
 #endif // LIBRAPID_HAS_CUDA
 
-	inline int makeSameAccelerator(RawArray &dst,
-								   const RawArray &src,
-								   int64_t size) {
+	inline int makeSameAccelerator(RawArray& dst,
+		const RawArray& src,
+		int64_t size)
+	{
 		// Freeing information
 		// 0 = no free
 		// 1 = cudaFree()
 		// 2 = free()
 
 		auto freeMode = -1;
-		if (dst.location == src.location) {
+		if (dst.location == src.location)
+		{
 			freeMode = 0;
 			dst = src;
-		} else {
-			if (src.location == Accelerator::CPU) {
+		}
+		else
+		{
+			if (src.location == Accelerator::CPU)
+			{
 				// Copy from CPU to GPU
 				// Allocate memory
 
@@ -287,7 +295,8 @@ namespace librapid
 				rawArrayMemcpy(dst, src, size);
 			}
 #ifdef LIBRAPID_HAS_CUDA
-			else if (src.location == Accelerator::GPU) {
+			else if (src.location == Accelerator::GPU)
+			{
 				// Copy A from GPU to CPU
 
 				freeMode = 2;
@@ -296,10 +305,10 @@ namespace librapid
 			}
 #else
 			else {
-                throw std::invalid_argument("GPU support was not enabled, so"
-                                            " calculations involving the GPU"
-                                            " are not possible");
-            }
+				throw std::invalid_argument("GPU support was not enabled, so"
+											" calculations involving the GPU"
+											" are not possible");
+			}
 #endif // LIBRAPID_HAS_CUDA
 		}
 
@@ -317,7 +326,8 @@ namespace librapid
 	 *
 	 * \endrst
 	 */
-	inline void freeWithMode(RawArray &raw, int mode) {
+	inline void freeWithMode(RawArray& raw, int mode)
+	{
 		// Freeing information
 		// 0 = no free
 		// 1 = cudaFree()
@@ -364,44 +374,55 @@ namespace librapid
 	 * \endrst
 	 */
 	template<typename FUNC>
-	inline void multiarrayUnaryOpTrivial(RawArray dst, const RawArray &src,
-										 int64_t elems, const FUNC &op) {
-		if (dst.location != src.location) {
+	inline void multiarrayUnaryOpTrivial(RawArray dst, const RawArray& src,
+		int64_t elems, const FUNC& op)
+	{
+		if (dst.location != src.location)
+		{
 			// Copy A to be on the same accelerator as B
-			RawArray tempSrc = {(int64_t *) nullptr, dst.dtype, dst.location};
+			RawArray tempSrc = { (int64_t*)nullptr, dst.dtype, dst.location };
 			rawArrayMalloc(tempSrc, elems);
 			int freeMode = makeSameAccelerator(tempSrc, src, elems);
 			multiarrayUnaryOpTrivial(dst, tempSrc, elems, op);
 			freeWithMode(tempSrc, freeMode);
-		} else {
-			if (dst.location == Accelerator::CPU) {
-				std::visit([&](auto *dstData, auto *srcData) {
+		}
+		else
+		{
+			if (dst.location == Accelerator::CPU)
+			{
+				std::visit([&](auto* dstData, auto* srcData)
+				{
 					auto tempElems = elems;
 					auto tempOp = op;
 
 					using A = typename std::remove_pointer<decltype(dstData)>::type;
 					using B = typename std::remove_pointer<decltype(srcData)>::type;
 
-					if (elems < THREAD_THREASHOLD) {
+					if (elems < THREAD_THREASHOLD)
+					{
 						for (int64_t i = 0; i < tempElems; ++i)
 							dstData[i] = tempOp(srcData[i], i);
-					} else {
+					}
+					else
+					{
 #pragma omp parallel for shared(dstData, srcData, tempElems, tempOp)
-						for (int64_t i = 0; i < tempElems; ++i) {
+						for (int64_t i = 0; i < tempElems; ++i)
+						{
 							dstData[i] = tempOp(srcData[i], i);
 						}
 					}
 				}, dst.data, src.data);
 			}
 #ifdef LIBRAPID_HAS_CUDA
-			else {
+			else
+			{
 				using jitify::reflection::Type;
 
 				static double randSeed = seconds() * 10;
 
 				std::string kernel = "unaryKernelTrivial\n";
 				kernel += "__constant__ int LIBRAPID_MAX_DIMS = "
-						  + std::to_string(LIBRAPID_MAX_DIMS) + ";\n";
+					+ std::to_string(LIBRAPID_MAX_DIMS) + ";\n";
 				kernel += "#include <stdint.h>\n"
 						  "#include <type_traits>\n"
 						  "#include <" CUDA_INCLUDE_DIRS "/curand_kernel.h>\n"
@@ -432,7 +453,7 @@ namespace librapid
 						if (kernelIndex < size) {
 					)V0G0N";
 				kernel += "dstData[kernelIndex] = " + op.name +
-						  "<T_DST, T_SRC>(srcData[kernelIndex], kernelIndex, _curandStates + kernelIndex);";
+					"<T_DST, T_SRC>(srcData[kernelIndex], kernelIndex, _curandStates + kernelIndex);";
 				kernel += "\n}\n}";
 
 				static jitify::JitCache kernelCache;
@@ -441,10 +462,13 @@ namespace librapid
 				unsigned int threadsPerBlock, blocksPerGrid;
 
 				// Use 1 to 512 threads per block
-				if (elems < 512) {
-					threadsPerBlock = (unsigned int) elems;
+				if (elems < 512)
+				{
+					threadsPerBlock = (unsigned int)elems;
 					blocksPerGrid = 1;
-				} else {
+				}
+				else
+				{
 					threadsPerBlock = 512;
 					blocksPerGrid = ceil(double(elems) / double(threadsPerBlock));
 				}
@@ -452,10 +476,11 @@ namespace librapid
 				dim3 grid(blocksPerGrid);
 				dim3 block(threadsPerBlock);
 
-				static curandState_t *curandGenerators = nullptr;
+				static curandState_t* curandGenerators = nullptr;
 				static int64_t numGenerators = 0;
 				if ((op.name == "fillRandom" || op.name == "fillRandomComplex") &&
-					(numGenerators < threadsPerBlock * blocksPerGrid)) {
+					(numGenerators < threadsPerBlock * blocksPerGrid))
+				{
 					// Free curand generators and reallocate with a larger size
 					// Allocate the nearest power of two generators
 					cudaSafeCall(cudaFree(curandGenerators));
@@ -464,26 +489,30 @@ namespace librapid
 					while (numGenerators < threadsPerBlock * blocksPerGrid) numGenerators <<= 1;
 
 #ifdef LIBRAPID_CUDA_STREAM
-					cudaSafeCall(cudaMallocAsync(&curandGenerators, sizeof(curandState_t) * numGenerators, cudaStream));
+					cudaSafeCall(cudaMallocAsync(&curandGenerators,
+						sizeof(curandState_t) * numGenerators,
+						cudaStream));
 #else
 					cudaSafeCall(cudaMallocAsync(&curandGenerators, sizeof(curandState_t) * numGenerators));
 #endif // LIBRAPID_CUDA_STREAM
 
 					std::string randomKernel = std::string("randomKernel\n") +
-											   "#include <stdint.h>\n" +
-											   "#include <type_traits>\n" +
-											   "#include <" + CUDA_INCLUDE_DIRS + "/curand_kernel.h>\n" +
-											   "#include <" + CUDA_INCLUDE_DIRS + "/curand.h>\n\n";
+						"#include <stdint.h>\n" +
+						"#include <type_traits>\n" +
+						"#include <" + CUDA_INCLUDE_DIRS + "/curand_kernel.h>\n" +
+						"#include <" + CUDA_INCLUDE_DIRS + "/curand.h>\n\n";
 
 					randomKernel += R"V0G0N(
 						__global__
 						void populateGenerators(curandState_t *states, int64_t numStates) {
 							int64_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
 							curand_init()V0G0N";
-					randomKernel += std::to_string(getSeed(op)) + ", kernelIndex, 0, &states[kernelIndex]);}\n";
+					randomKernel +=
+						std::to_string(getSeed(op)) + ", kernelIndex, 0, &states[kernelIndex]);}\n";
 
 					static jitify::JitCache randomCache;
-					jitify::Program randomProgram = kernelCache.program(randomKernel, cudaHeaders, cudaParams);
+					jitify::Program
+						randomProgram = kernelCache.program(randomKernel, cudaHeaders, cudaParams);
 
 #ifdef LIBRAPID_CUDA_STREAM
 					jitifyCall(randomProgram.kernel("populateGenerators")
@@ -492,17 +521,19 @@ namespace librapid
 											.launch(curandGenerators, numGenerators));
 #else
 					jitifyCall(program.kernel("populateGenerators")
-                        .instantiate()
-                        .configure(grid, block)
-                        .launch(curandGenerators, numGenerators));
+						.instantiate()
+						.configure(grid, block)
+						.launch(curandGenerators, numGenerators));
 #endif // LIBRAPID_CUDA_STREAM
 				}
 
-				std::visit([&](auto *a, auto *b) {
+				std::visit([&](auto* a, auto* b)
+				{
 					using A = typename std::remove_pointer<decltype(a)>::type;
 					using B = typename std::remove_pointer<decltype(b)>::type;
 
-					if (op.name == "fillRandom" || op.name == "fillRandomComplex") {
+					if (op.name == "fillRandom" || op.name == "fillRandomComplex")
+					{
 #ifdef LIBRAPID_CUDA_STREAM
 						jitifyCall(program.kernel("unaryFuncTrivial")
 										  .instantiate(Type<A>(), Type<B>())
@@ -510,11 +541,13 @@ namespace librapid
 										  .launch(a, b, elems, curandGenerators));
 #else
 						jitifyCall(program.kernel("unaryFuncTrivial")
-                        .instantiate(Type<A>(), Type<B>())
-                        .configure(grid, block)
-                        .launch(a, b, elems, curandGenerators));
+						.instantiate(Type<A>(), Type<B>())
+						.configure(grid, block)
+						.launch(a, b, elems, curandGenerators));
 #endif // LIBRAPID_CUDA_STREAM
-					} else {
+					}
+					else
+					{
 #ifdef LIBRAPID_CUDA_STREAM
 						jitifyCall(program.kernel("unaryFuncTrivial")
 										  .instantiate(Type<A>(), Type<B>())
@@ -522,37 +555,42 @@ namespace librapid
 										  .launch(a, b, elems, nullptr));
 #else
 						jitifyCall(program.kernel("unaryFuncTrivial")
-                            .instantiate(Type<A>(), Type<B>())
-                            .configure(grid, block)
-                            .launch(a, b, elems, nullptr));
+							.instantiate(Type<A>(), Type<B>())
+							.configure(grid, block)
+							.launch(a, b, elems, nullptr));
 #endif // LIBRAPID_CUDA_STREAM
 					}
 				}, dst.data, src.data);
 			}
 #else
 			else {
-                throw std::runtime_error("CUDA support was not enabled. Invalid operation");
-            }
+				throw std::runtime_error("CUDA support was not enabled. Invalid operation");
+			}
 #endif // LIBRAPID_HAS_CUDA
 		}
 	}
 
 	template<typename FUNC>
 	inline void multiarrayUnaryOpComplex(RawArray dst, RawArray src,
-										 int64_t elems, const Extent &extent,
-										 const Stride &dstStride,
-										 const Stride &srcStride,
-										 const FUNC &op, bool trivialDst = false) {
-		if (dst.location != src.location) {
+		int64_t elems, const Extent& extent,
+		const Stride& dstStride,
+		const Stride& srcStride,
+		const FUNC& op, bool trivialDst = false)
+	{
+		if (dst.location != src.location)
+		{
 			// Copy A to be on the same accelerator as B
-			RawArray tempSrc = {(int64_t *) nullptr, dst.dtype, dst.location};
+			RawArray tempSrc = { (int64_t*)nullptr, dst.dtype, dst.location };
 			rawArrayMalloc(tempSrc, elems);
 			int freeMode = makeSameAccelerator(tempSrc, src, elems);
 			multiarrayUnaryOpTrivial(dst, tempSrc, elems, op);
 			freeWithMode(tempSrc, freeMode);
-		} else {
+		}
+		else
+		{
 			// Locations are equal
-			if (dst.location == Accelerator::CPU) {
+			if (dst.location == Accelerator::CPU)
+			{
 				// Iterate over the array using its stride and extent
 
 				// Counters
@@ -565,30 +603,37 @@ namespace librapid
 				static int64_t rawDstStride[LIBRAPID_MAX_DIMS];
 				static int64_t rawSrcStride[LIBRAPID_MAX_DIMS];
 
-				for (int64_t i = 0; i < ndim; ++i) {
+				for (int64_t i = 0; i < ndim; ++i)
+				{
 					rawExtent[ndim - i - 1] = extent.raw()[i];
 					rawDstStride[ndim - i - 1] = dstStride[i];
 					rawSrcStride[ndim - i - 1] = srcStride[i];
 				}
 
-				std::visit([&](auto *dstData, auto *srcData) {
+				std::visit([&](auto* dstData, auto* srcData)
+				{
 					using A = std::remove_pointer<decltype(dstData)>;
 					using B = std::remove_pointer<decltype(srcData)>;
 					int64_t dstIndex = 0, srcIndex = 0;
 					int64_t coord[LIBRAPID_MAX_DIMS]{};
 
-					do {
+					do
+					{
 						// *dstData = op(*srcData);
 						dstData[dstIndex] = op(srcData[srcIndex], srcIndex);
 
-						for (idim = 0; idim < ndim; ++idim) {
-							if (++coord[idim] == rawExtent[idim]) {
+						for (idim = 0; idim < ndim; ++idim)
+						{
+							if (++coord[idim] == rawExtent[idim])
+							{
 								coord[idim] = 0;
 								// srcData = srcData - (rawExtent[idim] - 1) * rawSrcStride[idim];
 								// dstData = dstData - (rawExtent[idim] - 1) * rawDstStride[idim];
 								srcIndex = srcIndex - (rawExtent[idim] - 1) * rawSrcStride[idim];
 								dstIndex = dstIndex - (rawExtent[idim] - 1) * rawDstStride[idim];
-							} else {
+							}
+							else
+							{
 								// srcData = srcData + rawSrcStride[idim];
 								// dstData = dstData + rawDstStride[idim];
 								srcIndex = srcIndex + rawSrcStride[idim];
@@ -600,35 +645,51 @@ namespace librapid
 				}, dst.data, src.data);
 			}
 #ifdef LIBRAPID_HAS_CUDA
-			else {
+			else
+			{
 				using jitify::reflection::Type;
 
 				// Buffers for extent and strides
 				int64_t dims = extent.ndim();
-				int64_t *deviceExtent, *deviceDstStride = nullptr, *deviceSrcStride;
+				int64_t* deviceExtent, * deviceDstStride = nullptr, * deviceSrcStride;
 
 				// Copy all the required data, including extents and strides
 #ifdef LIBRAPID_CUDA_STREAM
-				cudaSafeCall(cudaMallocAsync(&deviceExtent, sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaStream));
+				cudaSafeCall(cudaMallocAsync(&deviceExtent,
+					sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+					cudaStream));
 				if (!trivialDst)
-					cudaSafeCall(cudaMallocAsync(&deviceDstStride, sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaStream));
-				cudaSafeCall(cudaMallocAsync(&deviceSrcStride, sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaStream));
+					cudaSafeCall(cudaMallocAsync(&deviceDstStride,
+						sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+						cudaStream));
+				cudaSafeCall(cudaMallocAsync(&deviceSrcStride,
+					sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+					cudaStream));
 
-				cudaSafeCall(cudaMemcpyAsync(deviceExtent, extent.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS,
-											 cudaMemcpyHostToDevice, cudaStream));
+				cudaSafeCall(cudaMemcpyAsync(deviceExtent,
+					extent.raw(),
+					sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+					cudaMemcpyHostToDevice,
+					cudaStream));
 				if (!trivialDst)
-					cudaSafeCall(cudaMemcpyAsync(deviceDstStride, dstStride.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS,
-												 cudaMemcpyHostToDevice, cudaStream));
-				cudaSafeCall(cudaMemcpyAsync(deviceSrcStride, srcStride.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS,
-											 cudaMemcpyHostToDevice, cudaStream));
+					cudaSafeCall(cudaMemcpyAsync(deviceDstStride,
+						dstStride.raw(),
+						sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+						cudaMemcpyHostToDevice,
+						cudaStream));
+				cudaSafeCall(cudaMemcpyAsync(deviceSrcStride,
+					srcStride.raw(),
+					sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+					cudaMemcpyHostToDevice,
+					cudaStream));
 #else
 				cudaSafeCall(cudaMalloc(&deviceExtent, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
-                if (!trivialDst) cudaSafeCall(cudaMalloc(&deviceDstStride, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
-                cudaSafeCall(cudaMalloc(&deviceSrcStride, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
+				if (!trivialDst) cudaSafeCall(cudaMalloc(&deviceDstStride, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
+				cudaSafeCall(cudaMalloc(&deviceSrcStride, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
 
-                cudaSafeCall(cudaMemcpy(deviceExtent, extent.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
-                if (!trivialDst) cudaSafeCall(cudaMemcpy(deviceDstStride, dstStride.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
-                cudaSafeCall(cudaMemcpy(deviceSrcStride, srcStride.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
+				cudaSafeCall(cudaMemcpy(deviceExtent, extent.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
+				if (!trivialDst) cudaSafeCall(cudaMemcpy(deviceDstStride, dstStride.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
+				cudaSafeCall(cudaMemcpy(deviceSrcStride, srcStride.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
 #endif // LIBRAPID_CUDA_STREAM
 
 				std::string kernel = "unaryKernelComplex\n";
@@ -638,7 +699,7 @@ namespace librapid
 						  "#include <" CUDA_INCLUDE_DIRS "/curand.h>\n\n";
 
 				kernel += "const int64_t LIBRAPID_MAX_DIMS = "
-						  + std::to_string(LIBRAPID_MAX_DIMS) + ";";
+					+ std::to_string(LIBRAPID_MAX_DIMS) + ";";
 				kernel += R"V0G0N(
 					__device__
 					inline int64_t indexToIndex(uint64_t index,
@@ -700,14 +761,15 @@ namespace librapid
 				if (trivialDst)
 					kernel += "uint64_t dstIndex = kernelIndex;";
 				else
-					kernel += "uint64_t dstIndex = indexToIndex(kernelIndex, extent, dstStride, dims);";
+					kernel +=
+						"uint64_t dstIndex = indexToIndex(kernelIndex, extent, dstStride, dims);";
 
 				kernel += R"V0G0N(
 						if (kernelIndex < size) {
 					)V0G0N";
 
 				kernel += "dstData[dstIndex] = " + op.name +
-						  "(srcData[srcIndex], srcIndex, _curandStates + kernelIndex);";
+					"(srcData[srcIndex], srcIndex, _curandStates + kernelIndex);";
 				kernel += "\n}\n}";
 
 				static jitify::JitCache kernelCache;
@@ -716,10 +778,13 @@ namespace librapid
 				unsigned int threadsPerBlock, blocksPerGrid;
 
 				// Use 1 to 512 threads per block
-				if (elems < 512) {
-					threadsPerBlock = (unsigned int) elems;
+				if (elems < 512)
+				{
+					threadsPerBlock = (unsigned int)elems;
 					blocksPerGrid = 1;
-				} else {
+				}
+				else
+				{
 					threadsPerBlock = 512;
 					blocksPerGrid = ceil(double(elems) / double(threadsPerBlock));
 				}
@@ -727,10 +792,11 @@ namespace librapid
 				dim3 grid(blocksPerGrid);
 				dim3 block(threadsPerBlock);
 
-				static curandState_t *curandGenerators = nullptr;
+				static curandState_t* curandGenerators = nullptr;
 				static int64_t numGenerators = 0;
 				if ((op.name == "fillRandom" || op.name == "fillRandomComplex") &&
-					(numGenerators < threadsPerBlock * blocksPerGrid)) {
+					(numGenerators < threadsPerBlock * blocksPerGrid))
+				{
 					// Free curand generators and reallocate with a larger size
 					// Allocate the nearest power of two generators
 					cudaSafeCall(cudaFree(curandGenerators));
@@ -739,26 +805,30 @@ namespace librapid
 					while (numGenerators < threadsPerBlock * blocksPerGrid) numGenerators <<= 1;
 
 #ifdef LIBRAPID_CUDA_STREAM
-					cudaSafeCall(cudaMallocAsync(&curandGenerators, sizeof(curandState_t) * numGenerators, cudaStream));
+					cudaSafeCall(cudaMallocAsync(&curandGenerators,
+						sizeof(curandState_t) * numGenerators,
+						cudaStream));
 #else
 					cudaSafeCall(cudaMallocAsync(&curandGenerators, sizeof(curandState_t) * numGenerators));
 #endif // LIBRAPID_CUDA_STREAM
 
 					std::string randomKernel = std::string("randomKernel\n") +
-											   "#include <stdint.h>\n" +
-											   "#include <type_traits>\n" +
-											   "#include <" + CUDA_INCLUDE_DIRS + "/curand_kernel.h>\n" +
-											   "#include <" + CUDA_INCLUDE_DIRS + "/curand.h>\n\n";
+						"#include <stdint.h>\n" +
+						"#include <type_traits>\n" +
+						"#include <" + CUDA_INCLUDE_DIRS + "/curand_kernel.h>\n" +
+						"#include <" + CUDA_INCLUDE_DIRS + "/curand.h>\n\n";
 
 					randomKernel += R"V0G0N(
 						__global__
 						void populateGenerators(curandState_t *states, int64_t numStates) {
 							int64_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
 							curand_init()V0G0N";
-					randomKernel += std::to_string(getSeed(op)) + ", kernelIndex, 0, &states[kernelIndex]);}\n";
+					randomKernel +=
+						std::to_string(getSeed(op)) + ", kernelIndex, 0, &states[kernelIndex]);}\n";
 
 					static jitify::JitCache randomCache;
-					jitify::Program randomProgram = kernelCache.program(randomKernel, cudaHeaders, cudaParams);
+					jitify::Program
+						randomProgram = kernelCache.program(randomKernel, cudaHeaders, cudaParams);
 
 #ifdef LIBRAPID_CUDA_STREAM
 					jitifyCall(randomProgram.kernel("populateGenerators")
@@ -767,13 +837,14 @@ namespace librapid
 											.launch(curandGenerators, numGenerators));
 #else
 					jitifyCall(program.kernel("populateGenerators")
-                        .instantiate()
-                        .configure(grid, block)
-                        .launch(curandGenerators, numGenerators));
+						.instantiate()
+						.configure(grid, block)
+						.launch(curandGenerators, numGenerators));
 #endif // LIBRAPID_CUDA_STREAM
 				}
 
-				std::visit([&](auto *dstData, auto *srcData) {
+				std::visit([&](auto* dstData, auto* srcData)
+				{
 					using T_DST = typename std::remove_pointer<decltype(dstData)>::type;
 					using T_SRC = typename std::remove_pointer<decltype(srcData)>::type;
 
@@ -782,15 +853,15 @@ namespace librapid
 									  .instantiate(Type<T_DST>(), Type<T_SRC>())
 									  .configure(grid, block, 0, cudaStream)
 									  .launch(dstData, srcData, elems, deviceExtent,
-											  deviceDstStride, deviceSrcStride,
-											  dims, curandGenerators));
+										  deviceDstStride, deviceSrcStride,
+										  dims, curandGenerators));
 #else
 					jitifyCall(program.kernel("unaryFuncComplex")
-                        .instantiate(Type<T_DST>(), Type<T_SRC>())
-                        .configure(grid, block)
-                        .launch(dstData, srcData, elems, deviceExtent,
-                            deviceDstStride, deviceSrcStride,
-                            dims, curandGenerators));
+						.instantiate(Type<T_DST>(), Type<T_SRC>())
+						.configure(grid, block)
+						.launch(dstData, srcData, elems, deviceExtent,
+							deviceDstStride, deviceSrcStride,
+							dims, curandGenerators));
 #endif // LIBRAPID_CUDA_STREAM
 				}, dst.data, src.data);
 
@@ -800,15 +871,15 @@ namespace librapid
 				cudaSafeCall(cudaFreeAsync(deviceSrcStride, cudaStream));
 #else
 				cudaSafeCall(cudaDeviceSynchronize());
-                cudaSafeCall(cudaFree(deviceExtent));
-                if (!trivialDst) cudaSafeCall(cudaFree(deviceDstStride));
-                cudaSafeCall(cudaFree(deviceSrcStride));
+				cudaSafeCall(cudaFree(deviceExtent));
+				if (!trivialDst) cudaSafeCall(cudaFree(deviceDstStride));
+				cudaSafeCall(cudaFree(deviceSrcStride));
 #endif // LIBRAPID_CUDA_STREAM
 			}
 #else
 			else {
-                throw std::runtime_error("CUDA support was not enabled");
-            }
+				throw std::runtime_error("CUDA support was not enabled");
+			}
 #endif // LIBRAPID_HAS_CUDA
 		}
 	}
@@ -856,17 +927,19 @@ namespace librapid
 	 * \endrst
 	 */
 	template<typename FUNC>
-	inline void multiarrayBinaryOpTrivial(RawArray &dst, const RawArray &srcA,
-										  const RawArray &srcB, bool srcAIsScalar,
-										  bool srcBIsScalar, int64_t elems,
-										  const FUNC &op) {
-		if (dst.location != srcA.location || dst.location != srcB.location) {
+	inline void multiarrayBinaryOpTrivial(RawArray& dst, const RawArray& srcA,
+		const RawArray& srcB, bool srcAIsScalar,
+		bool srcBIsScalar, int64_t elems,
+		const FUNC& op)
+	{
+		if (dst.location != srcA.location || dst.location != srcB.location)
+		{
 			// Locations are different, so make A and B have the same
 			// accelerator as the result array (C)
 
 			// Copy A and B to be on the same accelerator as the destination
-			RawArray tempSrcA = {(int64_t *) nullptr, srcA.dtype, dst.location};
-			RawArray tempSrcB = {(int64_t *) nullptr, srcB.dtype, dst.location};
+			RawArray tempSrcA = { (int64_t*)nullptr, srcA.dtype, dst.location };
+			RawArray tempSrcB = { (int64_t*)nullptr, srcB.dtype, dst.location };
 
 			// Allocate memory for temporary sources
 			// rawArrayMalloc(tempSrcA, srcAIsScalar ? 1 : elems);
@@ -877,17 +950,27 @@ namespace librapid
 			int freeSrcB = makeSameAccelerator(tempSrcB, srcB, srcBIsScalar ? 1 : elems);
 
 			// Apply the operation again, using the new sources
-			multiarrayBinaryOpTrivial(dst, tempSrcA, tempSrcB, srcAIsScalar, srcBIsScalar, elems, op);
+			multiarrayBinaryOpTrivial(dst,
+				tempSrcA,
+				tempSrcB,
+				srcAIsScalar,
+				srcBIsScalar,
+				elems,
+				op);
 
 			// Free the allocated data -- may not be freed if a pointer was
 			// simply copied. See the different free modes further up in this
 			// file
 			freeWithMode(tempSrcA, freeSrcA);
 			freeWithMode(tempSrcB, freeSrcB);
-		} else {
+		}
+		else
+		{
 			// Locations are the same, so apply a single, unified operation
-			if (dst.location == Accelerator::CPU) {
-				std::visit([&](auto *dstData, auto *srcDataA, auto *srcDataB) {
+			if (dst.location == Accelerator::CPU)
+			{
+				std::visit([&](auto* dstData, auto* srcDataA, auto* srcDataB)
+				{
 					auto tempOp = op;
 					auto tempElems = elems;
 
@@ -896,49 +979,68 @@ namespace librapid
 					using A = typename std::remove_pointer<decltype(srcDataA)>::type;
 					using B = typename std::remove_pointer<decltype(srcDataB)>::type;
 
-					if (srcAIsScalar) {
+					if (srcAIsScalar)
+					{
 						// Use *a rather than a[i]
-						if (elems < 2500) {
+						if (elems < 2500)
+						{
 							for (int64_t i = 0; i < elems; ++i)
 								dstData[i] = static_cast<C>(tempOp(*srcDataA, srcDataB[i], 0, i));
-						} else {
+						}
+						else
+						{
 #pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) default(none)
-							for (int64_t i = 0; i < tempElems; ++i) {
+							for (int64_t i = 0; i < tempElems; ++i)
+							{
 								dstData[i] = static_cast<C>(tempOp(*srcDataA, srcDataB[i], 0, i));
 							}
 						}
-					} else if (srcBIsScalar) {
+					}
+					else if (srcBIsScalar)
+					{
 						// Use *b rather than b[i]
-						if (elems < 2500) {
+						if (elems < 2500)
+						{
 							for (int64_t i = 0; i < tempElems; ++i)
 								dstData[i] = static_cast<C>(tempOp(srcDataA[i], *srcDataB, i, 0));
-						} else {
+						}
+						else
+						{
 #pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) default(none)
-							for (int64_t i = 0; i < tempElems; ++i) {
+							for (int64_t i = 0; i < tempElems; ++i)
+							{
 								dstData[i] = static_cast<C>(tempOp(srcDataA[i], *srcDataB, i, 0));
 							}
 						}
-					} else {
+					}
+					else
+					{
 						// Use a[i] and b[i]
 						if constexpr (std::is_same_v<A, double> && std::is_same_v<B, double> &&
-									  std::is_same_v<C, double>) {
+							std::is_same_v<C, double>)
+						{
 
 							vcl::Vec8d a, b;
 							int64_t i = 0;
-							auto tmpSrcA = (double *__restrict) srcDataA;
-							auto tmpSrcB = (double *__restrict) srcDataB;
-							auto tmpDst = (double *__restrict) dstData;
+							auto tmpSrcA = (double* __restrict)srcDataA;
+							auto tmpSrcB = (double* __restrict)srcDataB;
+							auto tmpDst = (double* __restrict)dstData;
 
-							if (elems < 2500) {
-								for (i = 0; i < tempElems - 7; i += 8) {
+							if (elems < 2500)
+							{
+								for (i = 0; i < tempElems - 7; i += 8)
+								{
 									a.load(tmpSrcA + i);
 									b.load(tmpSrcB + i);
 									vcl::Vec8d c = tempOp(a, b, i, i);
 									c.store(tmpDst + i);
 								}
-							} else {
+							}
+							else
+							{
 #pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp, i) private(a, b) default(none)
-								for (i = 0; i < tempElems - 7; i += 8) {
+								for (i = 0; i < tempElems - 7; i += 8)
+								{
 									a.load(tmpSrcA + i);
 									b.load(tmpSrcB + i);
 									vcl::Vec8d c = tempOp(a, b, i, i);
@@ -947,29 +1049,37 @@ namespace librapid
 							}
 
 							int64_t diff = tempElems - i;
-							if (diff > 0) {
-								a.load_partial((int) diff, tmpSrcA + i);
-								b.load_partial((int) diff, tmpSrcB + i);
+							if (diff > 0)
+							{
+								a.load_partial((int)diff, tmpSrcA + i);
+								b.load_partial((int)diff, tmpSrcB + i);
 								vcl::Vec8d c = tempOp(a, b, i, i);
-								c.store_partial((int) diff, tmpDst + i);
+								c.store_partial((int)diff, tmpDst + i);
 							}
-						} else if constexpr (std::is_same_v<A, float> && std::is_same_v<B, float> &&
-											 std::is_same_v<C, float>) {
+						}
+						else if constexpr (std::is_same_v<A, float> && std::is_same_v<B, float> &&
+							std::is_same_v<C, float>)
+						{
 							vcl::Vec16f a, b;
-							auto tmpSrcA = (float *__restrict) srcDataA;
-							auto tmpSrcB = (float *__restrict) srcDataB;
-							auto tmpDst = (float *__restrict) dstData;
+							auto tmpSrcA = (float* __restrict)srcDataA;
+							auto tmpSrcB = (float* __restrict)srcDataB;
+							auto tmpDst = (float* __restrict)dstData;
 
-							if (elems < 2500) {
-								for (int64_t i = 0; i < tempElems - 15; i += 16) {
+							if (elems < 2500)
+							{
+								for (int64_t i = 0; i < tempElems - 15; i += 16)
+								{
 									a.load(tmpSrcA + i);
 									b.load(tmpSrcB + i);
 									vcl::Vec16f c = tempOp(a, b, i, i);
 									c.store(tmpDst + i);
 								}
-							} else {
+							}
+							else
+							{
 #pragma omp parallel for shared(tmpDst, tmpSrcA, tmpSrcB, tempElems, tempOp) private(a, b) default(none)
-								for (int64_t i = 0; i < tempElems - 15; i += 16) {
+								for (int64_t i = 0; i < tempElems - 15; i += 16)
+								{
 									a.load(tmpSrcA + i);
 									b.load(tmpSrcB + i);
 									vcl::Vec16f c = tempOp(a, b, i, i);
@@ -977,19 +1087,26 @@ namespace librapid
 								}
 							}
 
-							if (elems & 15) {
+							if (elems & 15)
+							{
 								a.load(tmpSrcA + elems - 16);
 								b.load(tmpSrcB + elems - 16);
 								vcl::Vec16f c = tempOp(a, b, elems - 16, elems - 16);
 								c.store(tmpDst + elems - 16);
 							}
-						} else if (elems < 2500) {
-							for (int64_t i = 0; i < tempElems; ++i) {
+						}
+						else if (elems < 2500)
+						{
+							for (int64_t i = 0; i < tempElems; ++i)
+							{
 								dstData[i] = static_cast<C>(tempOp(srcDataA[i], srcDataB[i], i, i));
 							}
-						} else {
+						}
+						else
+						{
 #pragma omp parallel for shared(dstData, srcDataA, srcDataB, tempElems, tempOp) default(none)
-							for (int64_t i = 0; i < tempElems; ++i) {
+							for (int64_t i = 0; i < tempElems; ++i)
+							{
 								dstData[i] = static_cast<C>(tempOp(srcDataA[i], srcDataB[i], i, i));
 							}
 						}
@@ -997,12 +1114,13 @@ namespace librapid
 				}, dst.data, srcA.data, srcB.data);
 			}
 #ifdef LIBRAPID_HAS_CUDA
-			else {
+			else
+			{
 				using jitify::reflection::Type;
 
 				std::string kernel = "binaryKernelTrivial\n";
 				kernel += "__constant__ int LIBRAPID_MAX_DIMS = "
-						  + std::to_string(LIBRAPID_MAX_DIMS) + ";\n";
+					+ std::to_string(LIBRAPID_MAX_DIMS) + ";\n";
 				kernel += "#include <stdint.h>\n"
 						  "#include <type_traits>\n"
 						  "#include <" CUDA_INCLUDE_DIRS "/curand_kernel.h>\n"
@@ -1052,18 +1170,21 @@ namespace librapid
 					)V0G0N";
 
 				if (srcAIsScalar)
-					kernel += "dstData[kernelIndex] = " + op.name + "(*srcA, srcB[kernelIndex], 0, kernelIndex);";
+					kernel += "dstData[kernelIndex] = " + op.name
+						+ "(*srcA, srcB[kernelIndex], 0, kernelIndex);";
 				else if (srcBIsScalar)
-					kernel += "dstData[kernelIndex] = " + op.name + "(srcA[kernelIndex], *srcB, kernelIndex, 0);";
+					kernel += "dstData[kernelIndex] = " + op.name
+						+ "(srcA[kernelIndex], *srcB, kernelIndex, 0);";
 				else
 					kernel += "dstData[kernelIndex] = " + op.name +
-							  "(srcA[kernelIndex], srcB[kernelIndex], kernelIndex, kernelIndex);";
+						"(srcA[kernelIndex], srcB[kernelIndex], kernelIndex, kernelIndex);";
 				kernel += "\n}\n}";
 
 				// fmt::print("Information:\n{}\n", kernel);
 
 				static const std::vector<std::string> params = {
-						"--disable-warnings", "-std=c++17", std::string("-I \"") + CUDA_INCLUDE_DIRS + "\""
+					"--disable-warnings", "-std=c++17",
+					std::string("-I \"") + CUDA_INCLUDE_DIRS + "\""
 				};
 
 				static jitify::JitCache kernelCache;
@@ -1072,10 +1193,13 @@ namespace librapid
 				int64_t threadsPerBlock, blocksPerGrid;
 
 				// Use 1 to 512 threads per block
-				if (elems < 512) {
+				if (elems < 512)
+				{
 					threadsPerBlock = elems;
 					blocksPerGrid = 1;
-				} else {
+				}
+				else
+				{
 					threadsPerBlock = 512;
 					blocksPerGrid = ceil(double(elems) / double(threadsPerBlock));
 				}
@@ -1083,9 +1207,10 @@ namespace librapid
 				dim3 grid(blocksPerGrid);
 				dim3 block(threadsPerBlock);
 
-				std::visit([&](auto *__restrict dstData,
-							   auto *__restrict srcDataA,
-							   auto *__restrict srcDataB) {
+				std::visit([&](auto* __restrict dstData,
+					auto* __restrict srcDataA,
+					auto* __restrict srcDataB)
+				{
 					using T_DST = typename std::remove_pointer_t<decltype(dstData)>;
 					using T_SRCA = typename std::remove_pointer_t<decltype(srcDataA)>;
 					using T_SRCB = typename std::remove_pointer_t<decltype(srcDataB)>;
@@ -1100,9 +1225,9 @@ namespace librapid
 									  .launch(dstData, srcDataA, srcDataB, elems));
 #else
 					jitifyCall(program.kernel("binaryFuncTrivial")
-                        .instantiate(Type<T_DST>(), Type<T_SRCA>(), Type<T_SRCB>())
-                        .configure(grid, block)
-                        .launch(dstData, srcDataA, srcDataB, elems));
+						.instantiate(Type<T_DST>(), Type<T_SRCA>(), Type<T_SRCB>())
+						.configure(grid, block)
+						.launch(dstData, srcDataA, srcDataB, elems));
 #endif // LIBRAPID_CUDA_STREAM
 				}, dst.data, srcA.data, srcB.data);
 			}
@@ -1111,24 +1236,26 @@ namespace librapid
 	}
 
 	template<typename FUNC>
-	inline void multiarrayBinaryOpComplex(RawArray &dst,
-										  const RawArray &srcA,
-										  const RawArray &srcB,
-										  bool srcAIsScalar,
-										  bool srcBIsScalar,
-										  const int64_t elems,
-										  const Extent &extent,
-										  const Stride &strideDst,
-										  const Stride &strideSrcA,
-										  const Stride &strideSrcB,
-										  const FUNC &op) {
-		if (dst.location != srcA.location || dst.location != srcB.location) {
+	inline void multiarrayBinaryOpComplex(RawArray& dst,
+		const RawArray& srcA,
+		const RawArray& srcB,
+		bool srcAIsScalar,
+		bool srcBIsScalar,
+		const int64_t elems,
+		const Extent& extent,
+		const Stride& strideDst,
+		const Stride& strideSrcA,
+		const Stride& strideSrcB,
+		const FUNC& op)
+	{
+		if (dst.location != srcA.location || dst.location != srcB.location)
+		{
 			// Locations are different, so make A and B have the same
 			// accelerator as the result array (C)
 
 			// Copy A to be on the same accelerator as B
-			RawArray tempSrcA = {(int64_t *) nullptr, dst.dtype, dst.location};
-			RawArray tempSrcB = {(int64_t *) nullptr, dst.dtype, dst.location};
+			RawArray tempSrcA = { (int64_t*)nullptr, dst.dtype, dst.location };
+			RawArray tempSrcB = { (int64_t*)nullptr, dst.dtype, dst.location };
 
 			// Allocate memory for temporary sources
 			rawArrayMalloc(tempSrcA, elems);
@@ -1140,16 +1267,19 @@ namespace librapid
 
 			// Apply the operation again, using the new sources
 			multiarrayBinaryOpComplex(dst, tempSrcA, tempSrcB, srcAIsScalar,
-									  srcBIsScalar, elems, extent,
-									  strideDst, strideSrcA, strideSrcB, op);
+				srcBIsScalar, elems, extent,
+				strideDst, strideSrcA, strideSrcB, op);
 
 			// Free the allocated data -- may not be freed if a pointer was
 			// simply copied. See the different free modes further up in this
 			// file
 			freeWithMode(tempSrcA, freeSrcA);
 			freeWithMode(tempSrcB, freeSrcB);
-		} else {
-			if (dst.location == Accelerator::CPU) {
+		}
+		else
+		{
+			if (dst.location == Accelerator::CPU)
+			{
 				// Iterate over the array using its stride and extent
 				int64_t coord[LIBRAPID_MAX_DIMS]{};
 
@@ -1164,33 +1294,42 @@ namespace librapid
 				static int64_t _strideSrcA[LIBRAPID_MAX_DIMS];
 				static int64_t _strideSrcB[LIBRAPID_MAX_DIMS];
 
-				for (int64_t i = 0; i < ndim; ++i) {
+				for (int64_t i = 0; i < ndim; ++i)
+				{
 					rawExtent[ndim - i - 1] = extent[i];
 					_strideDst[ndim - i - 1] = strideDst[i];
 					_strideSrcA[ndim - i - 1] = strideSrcA[i];
 					_strideSrcB[ndim - i - 1] = strideSrcB[i];
 				}
 
-				std::visit([&](auto *dstData, auto *srcA, auto *srcB) {
+				std::visit([&](auto* dstData, auto* srcA, auto* srcB)
+				{
 					using C = typename std::remove_pointer<decltype(dstData)>::type;
 					using A = typename std::remove_pointer<decltype(srcA)>::type;
 					using B = typename std::remove_pointer<decltype(srcB)>::type;
 
 					int64_t dstIndex = 0, srcAIndex = 0, srcBIndex = 0;
-					if (srcAIsScalar) {
+					if (srcAIsScalar)
+					{
 						// Use *a rather than a[i]
-						do {
+						do
+						{
 							// *dstData = (C) op(*srcA, *srcB);
-							dstData[dstIndex] = (C) op(*srcA, srcB[srcBIndex], 0, srcBIndex);
+							dstData[dstIndex] = (C)op(*srcA, srcB[srcBIndex], 0, srcBIndex);
 
-							for (idim = 0; idim < ndim; ++idim) {
-								if (++coord[idim] == rawExtent[idim]) {
+							for (idim = 0; idim < ndim; ++idim)
+							{
+								if (++coord[idim] == rawExtent[idim])
+								{
 									coord[idim] = 0;
 									// srcB = srcB - (rawExtent[idim] - 1) * _strideSrcB[idim];
 									// dstData = dstData - (rawExtent[idim] - 1) * _strideDst[idim];
-									srcBIndex = srcBIndex - (rawExtent[idim] - 1) * _strideSrcB[idim];
+									srcBIndex =
+										srcBIndex - (rawExtent[idim] - 1) * _strideSrcB[idim];
 									dstIndex = dstIndex - (rawExtent[idim] - 1) * _strideDst[idim];
-								} else {
+								}
+								else
+								{
 									// srcB = srcB + _strideSrcB[idim];
 									// dstData = dstData + _strideDst[idim];
 									srcBIndex = srcBIndex + _strideSrcB[idim];
@@ -1199,20 +1338,28 @@ namespace librapid
 								}
 							}
 						} while (idim < ndim);
-					} else if (srcBIsScalar) {
+					}
+					else if (srcBIsScalar)
+					{
 						// Use *b rather than b[i]
-						do {
+						do
+						{
 							// *dstData = (C) op(*srcA, *srcB);
 							dstData[dstIndex] = op(srcA[srcAIndex], *srcB, srcAIndex, 0);
 
-							for (idim = 0; idim < ndim; ++idim) {
-								if (++coord[idim] == rawExtent[idim]) {
+							for (idim = 0; idim < ndim; ++idim)
+							{
+								if (++coord[idim] == rawExtent[idim])
+								{
 									coord[idim] = 0;
 									// srcA = srcA - (rawExtent[idim] - 1) * _strideSrcA[idim];
 									// dstData = dstData - (rawExtent[idim] - 1) * _strideDst[idim];
-									srcAIndex = srcAIndex - (rawExtent[idim] - 1) * _strideSrcA[idim];
+									srcAIndex =
+										srcAIndex - (rawExtent[idim] - 1) * _strideSrcA[idim];
 									dstIndex = dstIndex - (rawExtent[idim] - 1) * _strideDst[idim];
-								} else {
+								}
+								else
+								{
 									// srcA = srcA + _strideSrcA[idim];
 									// dstData = dstData + _strideDst[idim];
 									srcAIndex = srcAIndex + _strideSrcA[idim];
@@ -1221,22 +1368,31 @@ namespace librapid
 								}
 							}
 						} while (idim < ndim);
-					} else {
+					}
+					else
+					{
 						// Use a[i] and b[i]
-						do {
+						do
+						{
 							// *dstData = (C) op(*srcA, *srcB);
-							dstData[dstIndex] = (C) op(srcA[srcAIndex], srcB[srcBIndex], srcAIndex, srcBIndex);
+							dstData[dstIndex] =
+								(C)op(srcA[srcAIndex], srcB[srcBIndex], srcAIndex, srcBIndex);
 
-							for (idim = 0; idim < ndim; ++idim) {
-								if (++coord[idim] == rawExtent[idim]) {
+							for (idim = 0; idim < ndim; ++idim)
+							{
+								if (++coord[idim] == rawExtent[idim])
+								{
 									coord[idim] = 0;
 									// dstData = dstData - (rawExtent[idim] - 1) * _strideDst[idim];
 									// srcA = srcA - (rawExtent[idim] - 1) * _strideSrcA[idim];
 									// srcB = srcB - (rawExtent[idim] - 1) * _strideSrcB[idim];
 									dstIndex = dstIndex - (rawExtent[idim] - 1) * _strideDst[idim];
-									srcAIndex = srcAIndex - (rawExtent[idim] - 1) * _strideSrcA[idim];
+									srcAIndex =
+										srcAIndex - (rawExtent[idim] - 1) * _strideSrcA[idim];
 									srcB = srcB - (rawExtent[idim] - 1) * _strideSrcB[idim];
-								} else {
+								}
+								else
+								{
 									// dstData = dstData + _strideDst[idim];
 									// srcA = srcA + _strideSrcA[idim];
 									// srcB = srcB + _strideSrcB[idim];
@@ -1251,43 +1407,64 @@ namespace librapid
 				}, dst.data, srcA.data, srcB.data);
 			}
 #ifdef LIBRAPID_HAS_CUDA
-			else {
+			else
+			{
 				using jitify::reflection::Type;
 
 				// Buffers for extent and strides
 				int64_t dims = extent.ndim();
-				int64_t *deviceExtent, *deviceStrideSrcA,
-						*deviceStrideSrcB, *deviceStrideDst;
+				int64_t* deviceExtent, * deviceStrideSrcA,
+					* deviceStrideSrcB, * deviceStrideDst;
 
 #ifdef LIBRAPID_CUDA_STREAM
-				cudaSafeCall(cudaMallocAsync(&deviceExtent, sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaStream));
-				cudaSafeCall(cudaMallocAsync(&deviceStrideSrcA, sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaStream));
-				cudaSafeCall(cudaMallocAsync(&deviceStrideSrcB, sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaStream));
-				cudaSafeCall(cudaMallocAsync(&deviceStrideDst, sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaStream));
+				cudaSafeCall(cudaMallocAsync(&deviceExtent,
+					sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+					cudaStream));
+				cudaSafeCall(cudaMallocAsync(&deviceStrideSrcA,
+					sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+					cudaStream));
+				cudaSafeCall(cudaMallocAsync(&deviceStrideSrcB,
+					sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+					cudaStream));
+				cudaSafeCall(cudaMallocAsync(&deviceStrideDst,
+					sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+					cudaStream));
 
-				cudaSafeCall(cudaMemcpyAsync(deviceExtent, extent.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS,
-											 cudaMemcpyHostToDevice, cudaStream));
-				cudaSafeCall(cudaMemcpyAsync(deviceStrideSrcA, strideSrcA.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS,
-											 cudaMemcpyHostToDevice, cudaStream));
-				cudaSafeCall(cudaMemcpyAsync(deviceStrideSrcB, strideSrcB.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS,
-											 cudaMemcpyHostToDevice, cudaStream));
-				cudaSafeCall(cudaMemcpyAsync(deviceStrideDst, strideDst.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS,
-											 cudaMemcpyHostToDevice, cudaStream));
+				cudaSafeCall(cudaMemcpyAsync(deviceExtent,
+					extent.raw(),
+					sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+					cudaMemcpyHostToDevice,
+					cudaStream));
+				cudaSafeCall(cudaMemcpyAsync(deviceStrideSrcA,
+					strideSrcA.raw(),
+					sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+					cudaMemcpyHostToDevice,
+					cudaStream));
+				cudaSafeCall(cudaMemcpyAsync(deviceStrideSrcB,
+					strideSrcB.raw(),
+					sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+					cudaMemcpyHostToDevice,
+					cudaStream));
+				cudaSafeCall(cudaMemcpyAsync(deviceStrideDst,
+					strideDst.raw(),
+					sizeof(int64_t) * LIBRAPID_MAX_DIMS,
+					cudaMemcpyHostToDevice,
+					cudaStream));
 #else
 				cudaSafeCall(cudaMalloc(&deviceExtent, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
-                cudaSafeCall(cudaMalloc(&deviceStrideSrcA, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
-                cudaSafeCall(cudaMalloc(&deviceStrideSrcB, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
-                cudaSafeCall(cudaMalloc(&deviceStrideDst, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
+				cudaSafeCall(cudaMalloc(&deviceStrideSrcA, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
+				cudaSafeCall(cudaMalloc(&deviceStrideSrcB, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
+				cudaSafeCall(cudaMalloc(&deviceStrideDst, sizeof(int64_t) * LIBRAPID_MAX_DIMS));
 
-                cudaSafeCall(cudaMemcpy(deviceExtent, extent.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
-                cudaSafeCall(cudaMemcpy(deviceStrideSrcA, _strideSrcA.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
-                cudaSafeCall(cudaMemcpy(deviceStrideSrcB, strideSrcB.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
-                cudaSafeCall(cudaMemcpy(deviceStrideDst, strideDst.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
+				cudaSafeCall(cudaMemcpy(deviceExtent, extent.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
+				cudaSafeCall(cudaMemcpy(deviceStrideSrcA, _strideSrcA.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
+				cudaSafeCall(cudaMemcpy(deviceStrideSrcB, strideSrcB.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
+				cudaSafeCall(cudaMemcpy(deviceStrideDst, strideDst.raw(), sizeof(int64_t) * LIBRAPID_MAX_DIMS, cudaMemcpyHostToDevice));
 #endif // LIBRAPID_CUDA_STREAM
 
 				std::string kernel = "binaryKernelComplex\n";
 				kernel += "const int64_t LIBRAPID_MAX_DIMS = "
-						  + std::to_string(LIBRAPID_MAX_DIMS) + ";\n";
+					+ std::to_string(LIBRAPID_MAX_DIMS) + ";\n";
 
 				kernel += "#include <stdint.h>\n"
 						  "#include <type_traits>\n"
@@ -1372,12 +1549,14 @@ namespace librapid
 					)V0G0N";
 
 				if (srcAIsScalar)
-					kernel += "dstData[indexDst] = " + op.name + "(*srcA, srcB[indexSrcB], 0, indexSrcB);";
+					kernel += "dstData[indexDst] = " + op.name
+						+ "(*srcA, srcB[indexSrcB], 0, indexSrcB);";
 				else if (srcBIsScalar)
-					kernel += "dstData[indexDst] = " + op.name + "(srcA[indexSrcA], *srcB, indexSrcA, 0);";
+					kernel += "dstData[indexDst] = " + op.name
+						+ "(srcA[indexSrcA], *srcB, indexSrcA, 0);";
 				else
 					kernel += "dstData[indexDst] = " + op.name +
-							  "(srcA[indexSrcA], srcB[indexSrcB], indexSrcA, indexSrcB);";
+						"(srcA[indexSrcA], srcB[indexSrcB], indexSrcA, indexSrcB);";
 
 				kernel += "\n}\n}";
 
@@ -1387,10 +1566,13 @@ namespace librapid
 				unsigned int threadsPerBlock, blocksPerGrid;
 
 				// Use 1 to 512 threads per block
-				if (elems < 512) {
-					threadsPerBlock = (unsigned int) elems;
+				if (elems < 512)
+				{
+					threadsPerBlock = (unsigned int)elems;
 					blocksPerGrid = 1;
-				} else {
+				}
+				else
+				{
 					threadsPerBlock = 512;
 					blocksPerGrid = ceil(double(elems) / double(threadsPerBlock));
 				}
@@ -1398,7 +1580,8 @@ namespace librapid
 				dim3 grid(blocksPerGrid);
 				dim3 block(threadsPerBlock);
 
-				std::visit([&](auto *dstData, auto *srcDataA, auto *srcDataB) {
+				std::visit([&](auto* dstData, auto* srcDataA, auto* srcDataB)
+				{
 					using T_SRCA = typename std::remove_pointer<decltype(srcDataA)>::type;
 					using T_SRCB = typename std::remove_pointer<decltype(srcDataB)>::type;
 					using T_DST = typename std::remove_pointer<decltype(dstData)>::type;
@@ -1408,25 +1591,25 @@ namespace librapid
 									  .instantiate(Type<T_DST>(), Type<T_SRCA>(), Type<T_SRCB>())
 									  .configure(grid, block, 0, cudaStream)
 									  .launch(
-											  dstData,
-											  srcDataA,
-											  srcDataB,
-											  elems,
-											  deviceExtent,
-											  deviceStrideDst,
-											  deviceStrideSrcA,
-											  deviceStrideSrcB,
-											  dims));
+										  dstData,
+										  srcDataA,
+										  srcDataB,
+										  elems,
+										  deviceExtent,
+										  deviceStrideDst,
+										  deviceStrideSrcA,
+										  deviceStrideSrcB,
+										  dims));
 #else
 					jitifyCall(program.kernel("binaryFuncComplex")
-                        .instantiate(Type<T_DST>(), Type<T_SRCA>(), Type<T_SRCB>())
-                        .configure(grid, block)
-                        .launch(dstData, srcDataA, srcDataB, elems,
-                            deviceExtent,
-                            deviceStrideSrcA,
-                            deviceStrideSrcB,
-                            deviceStrideDst,
-                            dims));
+						.instantiate(Type<T_DST>(), Type<T_SRCA>(), Type<T_SRCB>())
+						.configure(grid, block)
+						.launch(dstData, srcDataA, srcDataB, elems,
+							deviceExtent,
+							deviceStrideSrcA,
+							deviceStrideSrcB,
+							deviceStrideDst,
+							dims));
 #endif // LIBRAPID_CUDA_STREAM
 				}, dst.data, srcA.data, srcB.data);
 
@@ -1437,9 +1620,9 @@ namespace librapid
 				cudaSafeCall(cudaFreeAsync(deviceStrideDst, cudaStream));
 #else
 				cudaSafeCall(cudaFree(deviceExtent));
-                cudaSafeCall(cudaFree(deviceStrideSrcA));
-                cudaSafeCall(cudaFree(deviceStrideSrcB));
-                cudaSafeCall(cudaFree(deviceStrideDst));
+				cudaSafeCall(cudaFree(deviceStrideSrcA));
+				cudaSafeCall(cudaFree(deviceStrideSrcB));
+				cudaSafeCall(cudaFree(deviceStrideDst));
 #endif // LIBRAPID_CUDA_STREAM
 			}
 #endif // LIBRAPID_HAS_CUDA

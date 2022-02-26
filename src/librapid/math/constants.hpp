@@ -3,8 +3,9 @@
 #include <librapid/config.hpp>
 
 
-namespace librapid {
-	#define CTYPED [[maybe_unused]] static const long double
+namespace librapid
+{
+#define CTYPED [[maybe_unused]] static const long double
 
 	// π² / 6.
 	CTYPED PISQRDIV6 = 1.6449340668482264364724151666460251892189499012067984377355582293;
