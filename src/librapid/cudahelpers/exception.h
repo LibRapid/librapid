@@ -48,7 +48,7 @@ public:
 	//! @param line line in which the Exception occurs
 	//! @param detailed details on the code fragment causing the Exception
 	static void throw_it(const char* file, const int line,
-		const char* detailed = "-");
+						 const char* detailed = "-");
 
 	//! Static construction interface
 	//! @return Alwayss throws ( Located_Exception<Exception>)
@@ -56,7 +56,7 @@ public:
 	//! @param line line in which the Exception occurs
 	//! @param detailed details on the code fragment causing the Exception
 	static void throw_it(const char* file, const int line,
-		const std::string& detailed);
+						 const std::string& detailed);
 
 	//! Destructor
 	virtual ~Exception() throw();
@@ -108,7 +108,7 @@ inline void handleException(const Exception_Typ& ex)
 ////////////////////////////////////////////////////////////////////////////////
 /*static*/ template<class Std_Exception>
 void Exception<Std_Exception>::throw_it(const char* file, const int line,
-	const char* detailed)
+										const char* detailed)
 {
 	std::stringstream s;
 
@@ -126,7 +126,7 @@ void Exception<Std_Exception>::throw_it(const char* file, const int line,
 ////////////////////////////////////////////////////////////////////////////////
 /*static*/ template<class Std_Exception>
 void Exception<Std_Exception>::throw_it(const char* file, const int line,
-	const std::string& msg)
+										const std::string& msg)
 {
 	throw_it(file, line, msg.c_str());
 }

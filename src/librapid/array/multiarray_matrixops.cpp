@@ -146,154 +146,165 @@ namespace librapid
 
 			switch (operationType)
 			{
-			case imp::LinAlgOp::VectorVector :
-			{
-				// Vector dot product
-				std::visit([&](auto* c, auto* a, auto* b)
+				case imp::LinAlgOp::VectorVector :
 				{
-					using A = typename std::remove_pointer<decltype(a)>::type;
-					using B = typename std::remove_pointer<decltype(b)>::type;
-					using C = typename std::remove_pointer<decltype(c)>::type;
+					// Vector dot product
+					std::visit([&](auto* c, auto* a, auto* b)
+							   {
+								   using A = typename std::remove_pointer<decltype(a)>::type;
+								   using B = typename std::remove_pointer<decltype(b)>::type;
+								   using C = typename std::remove_pointer<decltype(c)>::type;
 
-					int64_t N = lhs.extent()[0];
-					int64_t incA = lhs.stride()[0];
-					int64_t incB = rhs.stride()[0];
+								   int64_t N = lhs.extent()[0];
+								   int64_t incA = lhs.stride()[0];
+								   int64_t incB = rhs.stride()[0];
 
-					if (resLocn == Accelerator::CPU)
-					{
-						*c = (C)linalg::cblas_dot(N, a, incA, b, incB);
-					}
+								   if (resLocn == Accelerator::CPU)
+								   {
+									   *c = (C)linalg::cblas_dot(N, a, incA, b, incB);
+								   }
 #ifdef LIBRAPID_HAS_CUDA
-					else
-					{
-						// res = (C) linalg::cblas_dot_cuda(cublasHandle, N, a, incA, b, incB);
-						linalg::cblas_dot_cuda(cublasHandle, N, a, incA, b, incB, c);
-					}
+								   else
+								   {
+									   // res = (C) linalg::cblas_dot_cuda(cublasHandle, N, a, incA, b, incB);
+									   linalg::cblas_dot_cuda(cublasHandle, N, a, incA, b, incB, c);
+								   }
 #else
-					else {
-						throw std::runtime_error("CUDA support was not enabled");
-					}
+								   else {
+									   throw std::runtime_error("CUDA support was not enabled");
+								   }
 #endif
-				}, res._dataStart(), lhs._dataStart(), rhs._dataStart());
-				break;
-			}
-			case imp::LinAlgOp::MatrixVector :
-			{
-				// Matrix-vector multiplication
-				std::visit([&](auto* c, auto* a, auto* b)
+							   }, res._dataStart(), lhs._dataStart(), rhs._dataStart());
+					break;
+				}
+				case imp::LinAlgOp::MatrixVector :
 				{
-					using A = typename std::remove_pointer<decltype(a)>::type;
-					using B = typename std::remove_pointer<decltype(b)>::type;
-					using C = typename std::remove_pointer<decltype(c)>::type;
+					// Matrix-vector multiplication
+					std::visit([&](auto* c, auto* a, auto* b)
+							   {
+								   using A = typename std::remove_pointer<decltype(a)>::type;
+								   using B = typename std::remove_pointer<decltype(b)>::type;
+								   using C = typename std::remove_pointer<decltype(c)>::type;
 
-					bool trans = !lhs.stride().isTrivial();
-					int64_t M = lhs.extent()[0];
-					int64_t N = rhs.extent()[0];
-					int64_t K = lhs.extent()[1];
+								   bool trans = !lhs.stride().isTrivial();
+								   int64_t M = lhs.extent()[0];
+								   int64_t N = rhs.extent()[0];
+								   int64_t K = lhs.extent()[1];
 
-					int64_t incX = rhs.stride()[0];
-					int64_t incY = res.stride()[0];
+								   int64_t incX = rhs.stride()[0];
+								   int64_t incY = res.stride()[0];
 
-					A alpha = 1.0;
-					C beta = 0.0;
+								   A alpha = 1.0;
+								   C beta = 0.0;
 
-					int64_t lda = trans ? M : K;
+								   int64_t lda = trans ? M : K;
 
-					if (resLocn == Accelerator::CPU)
-					{
-						linalg::cblas_gemv('r', trans, M, N, alpha, a, lda, b, incX, beta, c, incY);
-					}
+								   if (resLocn == Accelerator::CPU)
+								   {
+									   linalg::cblas_gemv('r',
+														  trans,
+														  M,
+														  N,
+														  alpha,
+														  a,
+														  lda,
+														  b,
+														  incX,
+														  beta,
+														  c,
+														  incY);
+								   }
 #ifdef LIBRAPID_HAS_CUDA
-					else
-					{
-						linalg::cblas_gemv_cuda(cublasHandle,
-							'r',
-							trans,
-							M,
-							N,
-							alpha,
-							a,
-							lda,
-							b,
-							incX,
-							beta,
-							c,
-							incY);
-					}
+								   else
+								   {
+									   linalg::cblas_gemv_cuda(cublasHandle,
+															   'r',
+															   trans,
+															   M,
+															   N,
+															   alpha,
+															   a,
+															   lda,
+															   b,
+															   incX,
+															   beta,
+															   c,
+															   incY);
+								   }
 #else
-					else {
-						throw std::runtime_error("CUDA support was not enabled");
-					}
+								   else {
+									   throw std::runtime_error("CUDA support was not enabled");
+								   }
 #endif
-				}, res._dataStart(), lhs._dataStart(), rhs._dataStart());
-				break;
-			}
-			case imp::LinAlgOp::MatrixMatrix :
-			{
-				// 2D array -- matrix matrix multiplication
-				std::visit([&](auto* c, auto* a, auto* b)
+							   }, res._dataStart(), lhs._dataStart(), rhs._dataStart());
+					break;
+				}
+				case imp::LinAlgOp::MatrixMatrix :
 				{
-					using A = typename std::remove_pointer<decltype(a)>::type;
-					using B = typename std::remove_pointer<decltype(b)>::type;
-					using C = typename std::remove_pointer<decltype(c)>::type;
+					// 2D array -- matrix matrix multiplication
+					std::visit([&](auto* c, auto* a, auto* b)
+							   {
+								   using A = typename std::remove_pointer<decltype(a)>::type;
+								   using B = typename std::remove_pointer<decltype(b)>::type;
+								   using C = typename std::remove_pointer<decltype(c)>::type;
 
-					int64_t M = lhs.extent()[0];
-					int64_t N = rhs.extent()[1];
-					int64_t K = lhs.extent()[1];
+								   int64_t M = lhs.extent()[0];
+								   int64_t N = rhs.extent()[1];
+								   int64_t K = lhs.extent()[1];
 
-					bool transA = !lhs.stride().isTrivial();
-					bool transB = !rhs.stride().isTrivial();
+								   bool transA = !lhs.stride().isTrivial();
+								   bool transB = !rhs.stride().isTrivial();
 
-					int64_t lda = transA ? M : K;
-					int64_t ldb = transB ? K : N;
-					int64_t ldc = transB ? M : N;
+								   int64_t lda = transA ? M : K;
+								   int64_t ldb = transB ? K : N;
+								   int64_t ldc = transB ? M : N;
 
-					A alpha = 1.0;
-					C beta = 0.0;
+								   A alpha = 1.0;
+								   C beta = 0.0;
 
-					if (resLocn == Accelerator::CPU)
-					{
-						linalg::cblas_gemm('r',
-							transA,
-							transB,
-							M,
-							N,
-							K,
-							alpha,
-							a,
-							lda,
-							b,
-							ldb,
-							beta,
-							c,
-							ldc);
-					}
+								   if (resLocn == Accelerator::CPU)
+								   {
+									   linalg::cblas_gemm('r',
+														  transA,
+														  transB,
+														  M,
+														  N,
+														  K,
+														  alpha,
+														  a,
+														  lda,
+														  b,
+														  ldb,
+														  beta,
+														  c,
+														  ldc);
+								   }
 #ifdef LIBRAPID_HAS_CUDA
-					else
-					{
-						linalg::cblas_gemm_cuda(cublasHandle,
-							transA,
-							transB,
-							M,
-							N,
-							K,
-							alpha,
-							a,
-							lda,
-							b,
-							ldb,
-							beta,
-							c,
-							ldc);
-					}
+								   else
+								   {
+									   linalg::cblas_gemm_cuda(cublasHandle,
+															   transA,
+															   transB,
+															   M,
+															   N,
+															   K,
+															   alpha,
+															   a,
+															   lda,
+															   b,
+															   ldb,
+															   beta,
+															   c,
+															   ldc);
+								   }
 #else
-					else {
-						throw std::runtime_error("CUDA support was not enabled");
-					}
+								   else {
+									   throw std::runtime_error("CUDA support was not enabled");
+								   }
 #endif
-				}, res._dataStart(), lhs._dataStart(), rhs._dataStart());
-				break;
-			}
+							   }, res._dataStart(), lhs._dataStart(), rhs._dataStart());
+					break;
+				}
 			}
 		}
 	}

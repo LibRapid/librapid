@@ -81,8 +81,8 @@ double mat_norminf(int m, int n, const double* A, int lda)
  * |A| = max { |A|*ones(m,1) }
  */
 double csr_mat_norminf(int m, int n, int nnzA, const cusparseMatDescr_t descrA,
-	const double* csrValA, const int* csrRowPtrA,
-	const int* csrColIndA)
+					   const double* csrValA, const int* csrRowPtrA,
+					   const int* csrColIndA)
 {
 	const int baseA =
 		(CUSPARSE_INDEX_BASE_ONE == cusparseGetMatIndexBase(descrA)) ? 1 : 0;
@@ -105,8 +105,8 @@ double csr_mat_norminf(int m, int n, int nnzA, const cusparseMatDescr_t descrA,
 }
 
 void display_matrix(int m, int n, int nnzA, const cusparseMatDescr_t descrA,
-	const double* csrValA, const int* csrRowPtrA,
-	const int* csrColIndA)
+					const double* csrValA, const int* csrRowPtrA,
+					const int* csrColIndA)
 {
 	const int baseA =
 		(CUSPARSE_INDEX_BASE_ONE == cusparseGetMatIndexBase(descrA)) ? 1 : 0;
