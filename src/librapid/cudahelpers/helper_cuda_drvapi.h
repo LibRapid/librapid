@@ -45,7 +45,8 @@
 
 #ifndef COMMON_HELPER_CUDA_H_
 
-inline int ftoi(float value) {
+inline int ftoi(float value)
+{
 	return (value >= 0 ? static_cast<int>(value + 0.5)
 					   : static_cast<int>(value - 0.5));
 }
@@ -90,37 +91,41 @@ inline void getCudaAttribute(T *attribute, CUdevice_attribute device_attribute,
 #endif
 
 // Beginning of GPU Architecture definitions
-inline int _ConvertSMVer2CoresDRV(int major, int minor) {
+inline int _ConvertSMVer2CoresDRV(int major, int minor)
+{
 	// Defines for GPU Architecture types (using the SM version to determine the #
 	// of cores per SM
-	typedef struct {
+	typedef struct
+	{
 		int SM;  // 0xMm (hexidecimal notation), M = SM Major version, and m = SM
 		// minor version
 		int Cores;
 	} sSMtoCores;
 
 	sSMtoCores nGpuArchCoresPerSM[] = {
-			{0x30, 192},
-			{0x32, 192},
-			{0x35, 192},
-			{0x37, 192},
-			{0x50, 128},
-			{0x52, 128},
-			{0x53, 128},
-			{0x60, 64},
-			{0x61, 128},
-			{0x62, 128},
-			{0x70, 64},
-			{0x72, 64},
-			{0x75, 64},
-			{0x80, 64},
-			{0x86, 128},
-			{-1,   -1}};
+		{ 0x30, 192 },
+		{ 0x32, 192 },
+		{ 0x35, 192 },
+		{ 0x37, 192 },
+		{ 0x50, 128 },
+		{ 0x52, 128 },
+		{ 0x53, 128 },
+		{ 0x60, 64 },
+		{ 0x61, 128 },
+		{ 0x62, 128 },
+		{ 0x70, 64 },
+		{ 0x72, 64 },
+		{ 0x75, 64 },
+		{ 0x80, 64 },
+		{ 0x86, 128 },
+		{ -1, -1 }};
 
 	int index = 0;
 
-	while (nGpuArchCoresPerSM[index].SM != -1) {
-		if (nGpuArchCoresPerSM[index].SM == ((major << 4) + minor)) {
+	while (nGpuArchCoresPerSM[index].SM != -1)
+	{
+		if (nGpuArchCoresPerSM[index].SM == ((major << 4) + minor))
+		{
 			return nGpuArchCoresPerSM[index].Cores;
 		}
 
@@ -130,8 +135,8 @@ inline int _ConvertSMVer2CoresDRV(int major, int minor) {
 	// If we don't find the values, we default use the previous one to run
 	// properly
 	printf(
-			"MapSMtoCores for SM %d.%d is undefined.  Default to use %d Cores/SM\n",
-			major, minor, nGpuArchCoresPerSM[index - 1].Cores);
+		"MapSMtoCores for SM %d.%d is undefined.  Default to use %d Cores/SM\n",
+		major, minor, nGpuArchCoresPerSM[index - 1].Cores);
 	return nGpuArchCoresPerSM[index - 1].Cores;
 }
 // end of GPU Architecture definitions
@@ -370,22 +375,33 @@ inline bool checkCudaCapabilitiesDRV(int major_version, int minor_version,
 }
 #endif
 
-bool inline findFatbinPath(const char *module_file, std::string &module_path, char **argv, std::ostringstream &ostrm) {
-	char *actual_path = sdkFindFilePath(module_file, argv[0]);
+bool inline findFatbinPath(const char* module_file,
+	std::string& module_path,
+	char** argv,
+	std::ostringstream& ostrm)
+{
+	char* actual_path = sdkFindFilePath(module_file, argv[0]);
 
-	if (actual_path) {
+	if (actual_path)
+	{
 		module_path = actual_path;
-	} else {
+	}
+	else
+	{
 		printf("> findModulePath file not found: <%s> \n", module_file);
 		return false;
 	}
 
-	if (module_path.empty()) {
+	if (module_path.empty())
+	{
 		printf("> findModulePath could not find file: <%s> \n", module_file);
 		return false;
-	} else {
+	}
+	else
+	{
 		printf("> findModulePath found file at <%s>\n", module_path.c_str());
-		if (module_path.rfind("fatbin") != std::string::npos) {
+		if (module_path.rfind("fatbin") != std::string::npos)
+		{
 			std::ifstream fileIn(module_path.c_str(), std::ios::binary);
 			ostrm << fileIn.rdbuf();
 			fileIn.close();

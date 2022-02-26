@@ -3,36 +3,43 @@
 
 #ifndef DOXYGEN_BUILD
 
-namespace librapid::ops {
-	struct Copy {
+namespace librapid::ops
+{
+	struct Copy
+	{
 		std::string name = "copy";
 		std::string kernel = R"V0G0N(
 				return a;
 			)V0G0N";
 
 		template<typename A>
-		auto operator()(A a, int64_t) const {
+		auto operator()(A a, int64_t) const
+		{
 			return a;
 		}
 	};
 
-	struct Fill {
+	struct Fill
+	{
 		std::string name = "fill";
 		std::string kernel = R"V0G0N(
 				return b;
 			)V0G0N";
 
 		template<typename A, typename B>
-		auto operator()(A, B b, int64_t, int64_t) const {
+		auto operator()(A, B b, int64_t, int64_t) const
+		{
 			return b;
 		}
 	};
 
-	template<typename T = double> struct FillRandom {
+	template<typename T = double> struct FillRandom
+	{
 		FillRandom(T minVal = 0, T maxVal = 1, uint64_t rngSeed = -1)
-				: min(minVal),
-				  max(maxVal),
-				  seed(seed == -1 ? (int64_t) (seconds() * 10) : rngSeed) {
+			: min(minVal),
+			  max(maxVal),
+			  seed(seed == -1 ? (int64_t)(seconds() * 10) : rngSeed)
+		{
 			// No format   => 0.081 us
 			// std::string => 1.965 us
 			// fmt::format => 0.680 us
@@ -72,8 +79,9 @@ namespace librapid::ops {
 			)V0G0N";
 
 		template<typename A>
-		auto operator()(A, int64_t) const {
-			return random((A) min, (A) max, seed);
+		auto operator()(A, int64_t) const
+		{
+			return random((A)min, (A)max, seed);
 		}
 
 		T min;
@@ -81,9 +89,11 @@ namespace librapid::ops {
 		uint64_t seed;
 	};
 
-	template<> struct FillRandom<Complex < double>> {
-	FillRandom(const Complex<double> &min = 0, const Complex<double> &max = 1, uint64_t seed = -1)
-			: min(min), max(max), seed(seed) {
+	template<> struct FillRandom<Complex < double>>
+{
+	FillRandom(const Complex<double>& min = 0, const Complex<double>& max = 1, uint64_t seed = -1)
+		: min(min), max(max), seed(seed)
+	{
 //		kernel = "double randNumReal = curand_uniform_double(_curandState) * (";
 //
 //		kernel
@@ -111,94 +121,110 @@ namespace librapid::ops {
 		 						  				 + int(std::is_integral<T_DST>::value) + {3};
 		 						  return librapid::Complex<double>(randNumReal, randNumImag);
 		 						 )V0G0N",
-							 max.real() - min.real() - std::numeric_limits<double>::epsilon(),
-							 min.real(),
-							 max.imag() - min.imag() - std::numeric_limits<double>::epsilon(),
-							 min.imag());
+			max.real() - min.real() - std::numeric_limits<double>::epsilon(),
+			min.real(),
+			max.imag() - min.imag() - std::numeric_limits<double>::epsilon(),
+			min.imag());
 	}
 
 	std::string name = "fillRandomComplex";
+
 	std::string kernel = R"V0G0N(
                         return 0;
                     )V0G0N";
 
 	template<typename A>
-	auto operator()(A, int64_t) const {
-		return random((A) min, (A) max, seed);
+	auto operator()(A, int64_t) const
+	{
+		return random((A)min, (A)max, seed);
 	}
 
 	Complex<double> min;
+
 	Complex<double> max;
+
 	uint64_t seed;
 };
 
-struct Negate {
+struct Negate
+{
 	std::string name = "negate";
 	std::string kernel = R"V0G0N(
 					return -a;
 				)V0G0N";
 
 	template<typename A>
-	auto operator()(A a, int64_t) const {
+	auto operator()(A a, int64_t) const
+	{
 		return -a;
 	}
 };
 
-struct Add {
+struct Add
+{
 	std::string name = "add";
 	std::string kernel = R"V0G0N(
 					return a + b;
 				)V0G0N";
 
 	template<typename A, typename B>
-	auto operator()(A a, B b, int64_t, int64_t) const {
+	auto operator()(A a, B b, int64_t, int64_t) const
+	{
 		return a + b;
 	}
 };
 
-struct Sub {
+struct Sub
+{
 	std::string name = "sub";
 	std::string kernel = R"V0G0N(
 					return a - b;
 				)V0G0N";
 
 	template<typename A, typename B>
-	auto operator()(A a, B b, int64_t, int64_t) const {
+	auto operator()(A a, B b, int64_t, int64_t) const
+	{
 		return a - b;
 	}
 };
 
-struct Mul {
+struct Mul
+{
 	std::string name = "mul";
 	std::string kernel = R"V0G0N(
 					return a * b;
 				)V0G0N";
 
 	template<typename A, typename B>
-	auto operator()(A a, B b, int64_t, int64_t) const {
+	auto operator()(A a, B b, int64_t, int64_t) const
+	{
 		return a * b;
 	}
 };
 
-struct Div {
+struct Div
+{
 	std::string name = "div";
 	std::string kernel = R"V0G0N(
 					return a / b;
 				)V0G0N";
 
 	template<typename A, typename B>
-	auto operator()(A a, B b, int64_t, int64_t) const {
+	auto operator()(A a, B b, int64_t, int64_t) const
+	{
 		return a / b;
 	}
 };
 
 template<typename T>
-uint64_t getSeed(T x) {
+uint64_t getSeed(T x)
+{
 	return 0;
 }
 
 template<typename T>
-uint64_t getSeed(const FillRandom <T> &x) {
+uint64_t getSeed(const FillRandom<T>& x)
+{
 	return x.seed;
 }
 
@@ -206,41 +232,49 @@ uint64_t getSeed(const FillRandom <T> &x) {
 
 #endif // DOXYGEN_BUILD
 
-namespace librapid {
+namespace librapid
+{
 
 // A lightweight wrapper for a GPU kernel
-	class GPUKernel {
+	class GPUKernel
+	{
 	public:
 		static uint64_t kernelsCreated;
 
 		GPUKernel() = default;
 
-		explicit GPUKernel(const std::string &kernel_) {
+		explicit GPUKernel(const std::string& kernel_)
+		{
 			name = fmt::format("gpuKernel{}", kernelsCreated++);
 			kernel = kernel_;
 		}
 
-		GPUKernel(const std::string &name_, const std::string &kernel_) {
+		GPUKernel(const std::string& name_, const std::string& kernel_)
+		{
 			name = name_;
 			kernel = kernel_;
 		}
 
 		template<typename... Pack>
-		double operator()(Pack...) const {
+		double operator()(Pack...) const
+		{
 			throw std::runtime_error(fmt::format(
-					"Cannot apply GPUKernel '{}' operation to a CPU-based array",
-					kernel));
+				"Cannot apply GPUKernel '{}' operation to a CPU-based array",
+				kernel));
 		}
 
-		[[nodiscard]] std::string str() const {
+		[[nodiscard]] std::string str() const
+		{
 			return fmt::format("Name => {}\n{}", name, kernel);
 		}
 
-		[[nodiscard]] inline const std::string &getName() const {
+		[[nodiscard]] inline const std::string& getName() const
+		{
 			return name;
 		}
 
-		[[nodiscard]] inline const std::string &getKernel() const {
+		[[nodiscard]] inline const std::string& getKernel() const
+		{
 			return kernel;
 		}
 

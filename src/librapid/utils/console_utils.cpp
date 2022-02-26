@@ -1,9 +1,11 @@
 #include <librapid/utils/console_utils.hpp>
 
-namespace librapid {
+namespace librapid
+{
 #if defined(LIBRAPID_OS_WINDOWS)
 
-	consoleSize getConsoleSize() {
+	consoleSize getConsoleSize()
+	{
 		static CONSOLE_SCREEN_BUFFER_INFO csbi;
 		int cols, rows;
 
@@ -11,7 +13,7 @@ namespace librapid {
 		cols = csbi.srWindow.Right - csbi.srWindow.Left + 1;
 		rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 
-		return {rows, cols};
+		return { rows, cols };
 	}
 
 #elif defined(LIBRAPID_OS_UNIX)

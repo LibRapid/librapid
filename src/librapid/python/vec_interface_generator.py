@@ -96,20 +96,24 @@ py::class_<librapid::{dtype[0]}>(module, \"{dtype[0]}\")
 
     return res
 
+
 types = [
     ["Vec2i", "int64_t x, int64_t y", "py::arg(\"x\"), py::arg(\"y\") = 0", "int64_t", 2],
     ["Vec2f", "float x, float y", "py::arg(\"x\"), py::arg(\"y\") = 0", "float", 2],
     ["Vec2d", "double x, double y", "py::arg(\"x\"), py::arg(\"y\") = 0", "double", 2],
 
-    ["Vec3i", "int64_t x, int64_t y, int64_t z", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0", "int64_t", 3],
+    ["Vec3i", "int64_t x, int64_t y, int64_t z", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0", "int64_t",
+     3],
     ["Vec3f", "float x, float y, float z", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0", "float", 3],
     ["Vec3d", "double x, double y, double z", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0", "double", 3],
 
-    ["Vec4i", "int64_t x, int64_t y, int64_t z, int64_t w", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0, py::arg(\"w\") = 0", "int64_t", 4],
-    ["Vec4f", "float x, float y, float z, float w", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0, py::arg(\"w\") = 0", "float", 4],
-    ["Vec4d", "double x, double y, double z, double w", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0, py::arg(\"w\") = 0", "double", 4]
+    ["Vec4i", "int64_t x, int64_t y, int64_t z, int64_t w",
+     "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0, py::arg(\"w\") = 0", "int64_t", 4],
+    ["Vec4f", "float x, float y, float z, float w",
+     "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0, py::arg(\"w\") = 0", "float", 4],
+    ["Vec4d", "double x, double y, double z, double w",
+     "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0, py::arg(\"w\") = 0", "double", 4]
 ]
-
 
 with open("./vec_interface.hpp", "w") as file:
     print("Writing contents")
