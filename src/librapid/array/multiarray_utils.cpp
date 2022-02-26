@@ -6,7 +6,7 @@ namespace librapid
 	Array Array::clone(Datatype dtype, Accelerator locn) const
 	{
 		Array res(m_extent, dtype == Datatype::NONE ? m_dtype : dtype,
-			locn == Accelerator::NONE ? m_location : locn);
+				  locn == Accelerator::NONE ? m_location : locn);
 		res.m_isScalar = m_isScalar;
 		res.m_isChild = false;
 		applyUnaryOp(res, *this, ops::Copy());

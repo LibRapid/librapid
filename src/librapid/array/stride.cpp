@@ -13,9 +13,9 @@ namespace librapid
 		// Check for a valid number of dimensions
 		if (m_dims > LIBRAPID_MAX_DIMS)
 			throw std::runtime_error("Cannot create Stride with "
-				+ std::to_string(m_dims)
-				+ " dimensions. Maximum allowed is "
-				+ std::to_string(LIBRAPID_MAX_DIMS));
+										 + std::to_string(m_dims)
+										 + " dimensions. Maximum allowed is "
+										 + std::to_string(LIBRAPID_MAX_DIMS));
 
 		uint64_t index = 0;
 		for (const auto& val : data)
@@ -32,9 +32,9 @@ namespace librapid
 		// Check for a valid number of dimensions
 		if (m_dims > LIBRAPID_MAX_DIMS)
 			throw std::runtime_error("Cannot create Stride with "
-				+ std::to_string(m_dims)
-				+ " dimensions. Maximum allowed is "
-				+ std::to_string(LIBRAPID_MAX_DIMS));
+										 + std::to_string(m_dims)
+										 + " dimensions. Maximum allowed is "
+										 + std::to_string(LIBRAPID_MAX_DIMS));
 
 		for (uint64_t i = 0; i < data.size(); ++i)
 			m_stride[i] = data[i];
@@ -45,9 +45,9 @@ namespace librapid
 		m_dims = dims;
 		if (m_dims > LIBRAPID_MAX_DIMS)
 			throw std::runtime_error("Cannot create Stride with "
-				+ std::to_string(m_dims)
-				+ " dimensions. Limit is "
-				+ std::to_string(LIBRAPID_MAX_DIMS));
+										 + std::to_string(m_dims)
+										 + " dimensions. Limit is "
+										 + std::to_string(LIBRAPID_MAX_DIMS));
 
 		for (int64_t i = 0; i < m_dims; ++i)
 			m_stride[i] = 1;
@@ -129,9 +129,9 @@ namespace librapid
 	{
 		if (index > m_dims)
 			throw std::out_of_range("Cannot access index "
-				+ std::to_string(index)
-				+ " of Stride with "
-				+ std::to_string(m_dims) + " dimensions");
+										+ std::to_string(index)
+										+ " of Stride with "
+										+ std::to_string(m_dims) + " dimensions");
 
 		return m_stride[index];
 	}
@@ -140,9 +140,9 @@ namespace librapid
 	{
 		if (index > m_dims)
 			throw std::out_of_range("Cannot access index "
-				+ std::to_string(index)
-				+ " of Stride with "
-				+ std::to_string(m_dims) + " dimensions");
+										+ std::to_string(index)
+										+ " of Stride with "
+										+ std::to_string(m_dims) + " dimensions");
 
 		return m_stride[index];
 	}
@@ -164,8 +164,8 @@ namespace librapid
 
 		if (start >= end)
 			throw std::invalid_argument("Cannot create subStride from range ["
-				+ std::to_string(start) + ", "
-				+ std::to_string(end) + ")");
+											+ std::to_string(start) + ", "
+											+ std::to_string(end) + ")");
 
 		Stride res(end - start);
 		for (int64_t i = start; i < end; ++i)

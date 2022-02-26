@@ -105,30 +105,30 @@ namespace librapid
 		inline Complex operator+(const Complex<V>& other) const
 		{
 			return Complex(m_real + other.real(),
-				m_imag + other.imag());
+						   m_imag + other.imag());
 		}
 
 		template<typename V>
 		inline Complex operator-(const Complex<V>& other) const
 		{
 			return Complex(m_real - other.real(),
-				m_imag - other.imag());
+						   m_imag - other.imag());
 		}
 
 		template<typename V>
 		inline Complex operator*(const Complex<V>& other) const
 		{
 			return Complex((m_real * other.real()) - (m_imag * other.imag()),
-				(m_real * other.imag()) + (m_imag * other.real()));
+						   (m_real * other.imag()) + (m_imag * other.real()));
 		}
 
 		template<typename V>
 		inline Complex operator/(const Complex<V>& other) const
 		{
 			return Complex((m_real * other.real()) + (m_imag * other.imag()) /
-					((other.real() * other.real()) + (other.imag() * other.imag())),
-				(m_real * other.real()) - (m_imag * other.imag()) /
-					((other.real() * other.real()) + (other.imag() * other.imag())));
+							   ((other.real() * other.real()) + (other.imag() * other.imag())),
+						   (m_real * other.real()) - (m_imag * other.imag()) /
+							   ((other.real() * other.real()) + (other.imag() * other.imag())));
 		}
 
 		template<typename V>
@@ -212,7 +212,7 @@ namespace librapid
 		inline Complex<T> reciprocal() const
 		{
 			return Complex<T>((m_real) / (m_real * m_real + m_imag * m_imag),
-				-(m_imag) / (m_real * m_real + m_imag * m_imag));
+							  -(m_imag) / (m_real * m_real + m_imag * m_imag));
 		}
 
 		inline const T& real() const

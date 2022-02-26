@@ -123,7 +123,7 @@ ipcRecvShareableHandles(ipcHandle* handle, std::vector<ShareableHandle>& shareab
 
 int
 ipcSendShareableHandles(ipcHandle* handle, const std::vector<ShareableHandle>& shareableHandles,
-	const std::vector<Process>& processes);
+						const std::vector<Process>& processes);
 
 int
 ipcCloseShareableHandle(ShareableHandle shHandle);

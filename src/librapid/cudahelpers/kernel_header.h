@@ -287,6 +287,6 @@ namespace librapid {{
 
 #endif // LIBRAPID_CUSTOM_COMPLEX
 		)V0G0N",
-			CUDA_INCLUDE_DIRS);
+						   CUDA_INCLUDE_DIRS);
 	}
 }

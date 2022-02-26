@@ -36,9 +36,9 @@ namespace librapid::utils
 	struct ApplyKernelImpl
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			throw std::runtime_error(
 				"Too many arguments passed to Array.mapKernel -- Please see the documentation for details");
@@ -49,9 +49,9 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 1>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index]);
 		}
@@ -61,9 +61,9 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 2>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index], pointers[1][index]);
 		}
@@ -73,9 +73,9 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 3>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index], pointers[1][index], pointers[2][index]);
 		}
@@ -85,14 +85,14 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 4>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index],
-				pointers[1][index],
-				pointers[2][index],
-				pointers[3][index]);
+								pointers[1][index],
+								pointers[2][index],
+								pointers[3][index]);
 		}
 	};
 
@@ -100,15 +100,15 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 5>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index],
-				pointers[1][index],
-				pointers[2][index],
-				pointers[3][index],
-				pointers[4][index]);
+								pointers[1][index],
+								pointers[2][index],
+								pointers[3][index],
+								pointers[4][index]);
 		}
 	};
 
@@ -116,16 +116,16 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 6>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index],
-				pointers[1][index],
-				pointers[2][index],
-				pointers[3][index],
-				pointers[4][index],
-				pointers[5][index]);
+								pointers[1][index],
+								pointers[2][index],
+								pointers[3][index],
+								pointers[4][index],
+								pointers[5][index]);
 		}
 	};
 
@@ -133,17 +133,17 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 7>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index],
-				pointers[1][index],
-				pointers[2][index],
-				pointers[3][index],
-				pointers[4][index],
-				pointers[5][index],
-				pointers[6][index]);
+								pointers[1][index],
+								pointers[2][index],
+								pointers[3][index],
+								pointers[4][index],
+								pointers[5][index],
+								pointers[6][index]);
 		}
 	};
 
@@ -151,18 +151,18 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 8>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index],
-				pointers[1][index],
-				pointers[2][index],
-				pointers[3][index],
-				pointers[4][index],
-				pointers[5][index],
-				pointers[6][index],
-				pointers[7][index]);
+								pointers[1][index],
+								pointers[2][index],
+								pointers[3][index],
+								pointers[4][index],
+								pointers[5][index],
+								pointers[6][index],
+								pointers[7][index]);
 		}
 	};
 
@@ -170,19 +170,19 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 9>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index],
-				pointers[1][index],
-				pointers[2][index],
-				pointers[3][index],
-				pointers[4][index],
-				pointers[5][index],
-				pointers[6][index],
-				pointers[7][index],
-				pointers[8][index]);
+								pointers[1][index],
+								pointers[2][index],
+								pointers[3][index],
+								pointers[4][index],
+								pointers[5][index],
+								pointers[6][index],
+								pointers[7][index],
+								pointers[8][index]);
 		}
 	};
 
@@ -190,20 +190,20 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 10>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index],
-				pointers[1][index],
-				pointers[2][index],
-				pointers[3][index],
-				pointers[4][index],
-				pointers[5][index],
-				pointers[6][index],
-				pointers[7][index],
-				pointers[8][index],
-				pointers[9][index]);
+								pointers[1][index],
+								pointers[2][index],
+								pointers[3][index],
+								pointers[4][index],
+								pointers[5][index],
+								pointers[6][index],
+								pointers[7][index],
+								pointers[8][index],
+								pointers[9][index]);
 		}
 	};
 
@@ -211,21 +211,21 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 11>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index],
-				pointers[1][index],
-				pointers[2][index],
-				pointers[3][index],
-				pointers[4][index],
-				pointers[5][index],
-				pointers[6][index],
-				pointers[7][index],
-				pointers[8][index],
-				pointers[9][index],
-				pointers[10][index]);
+								pointers[1][index],
+								pointers[2][index],
+								pointers[3][index],
+								pointers[4][index],
+								pointers[5][index],
+								pointers[6][index],
+								pointers[7][index],
+								pointers[8][index],
+								pointers[9][index],
+								pointers[10][index]);
 		}
 	};
 
@@ -233,22 +233,22 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 12>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index],
-				pointers[1][index],
-				pointers[2][index],
-				pointers[3][index],
-				pointers[4][index],
-				pointers[5][index],
-				pointers[6][index],
-				pointers[7][index],
-				pointers[8][index],
-				pointers[9][index],
-				pointers[10][index],
-				pointers[11][index]);
+								pointers[1][index],
+								pointers[2][index],
+								pointers[3][index],
+								pointers[4][index],
+								pointers[5][index],
+								pointers[6][index],
+								pointers[7][index],
+								pointers[8][index],
+								pointers[9][index],
+								pointers[10][index],
+								pointers[11][index]);
 		}
 	};
 
@@ -256,23 +256,23 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 13>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index],
-				pointers[1][index],
-				pointers[2][index],
-				pointers[3][index],
-				pointers[4][index],
-				pointers[5][index],
-				pointers[6][index],
-				pointers[7][index],
-				pointers[8][index],
-				pointers[9][index],
-				pointers[10][index],
-				pointers[11][index],
-				pointers[12][index]);
+								pointers[1][index],
+								pointers[2][index],
+								pointers[3][index],
+								pointers[4][index],
+								pointers[5][index],
+								pointers[6][index],
+								pointers[7][index],
+								pointers[8][index],
+								pointers[9][index],
+								pointers[10][index],
+								pointers[11][index],
+								pointers[12][index]);
 		}
 	};
 
@@ -280,24 +280,24 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 14>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index],
-				pointers[1][index],
-				pointers[2][index],
-				pointers[3][index],
-				pointers[4][index],
-				pointers[5][index],
-				pointers[6][index],
-				pointers[7][index],
-				pointers[8][index],
-				pointers[9][index],
-				pointers[10][index],
-				pointers[11][index],
-				pointers[12][index],
-				pointers[13][index]);
+								pointers[1][index],
+								pointers[2][index],
+								pointers[3][index],
+								pointers[4][index],
+								pointers[5][index],
+								pointers[6][index],
+								pointers[7][index],
+								pointers[8][index],
+								pointers[9][index],
+								pointers[10][index],
+								pointers[11][index],
+								pointers[12][index],
+								pointers[13][index]);
 		}
 	};
 
@@ -305,25 +305,25 @@ namespace librapid::utils
 	struct ApplyKernelImpl<T, Kernel, 15>
 	{
 		static inline void run(T** __restrict pointers,
-			T* __restrict dst,
-			const Kernel& kernel,
-			uint64_t index)
+							   T* __restrict dst,
+							   const Kernel& kernel,
+							   uint64_t index)
 		{
 			dst[index] = kernel(pointers[0][index],
-				pointers[1][index],
-				pointers[2][index],
-				pointers[3][index],
-				pointers[4][index],
-				pointers[5][index],
-				pointers[6][index],
-				pointers[7][index],
-				pointers[8][index],
-				pointers[9][index],
-				pointers[10][index],
-				pointers[11][index],
-				pointers[12][index],
-				pointers[13][index],
-				pointers[14][index]);
+								pointers[1][index],
+								pointers[2][index],
+								pointers[3][index],
+								pointers[4][index],
+								pointers[5][index],
+								pointers[6][index],
+								pointers[7][index],
+								pointers[8][index],
+								pointers[9][index],
+								pointers[10][index],
+								pointers[11][index],
+								pointers[12][index],
+								pointers[13][index],
+								pointers[14][index]);
 		}
 	};
 

@@ -302,7 +302,7 @@ namespace librapid
 		Vec<Common<T>, dims> cross(const Vec<T, dims>& other) const
 		{
 			static_assert(dims == 2 || dims == 3,
-				"Only 2D and 3D vectors support the cross product");
+						  "Only 2D and 3D vectors support the cross product");
 
 			Vec<Common<T>, dims> res;
 
@@ -385,10 +385,10 @@ namespace librapid
 	 */
 
 	template<typename T,
-			 typename DTYPE, int64_t dims, typename std::enable_if<std::is_scalar<T>::value,
-																   int>::type = 0>
+		typename DTYPE, int64_t dims, typename std::enable_if<std::is_scalar<T>::value,
+															  int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator+(const T& value,
-		const Vec<DTYPE, dims>& vec)
+																   const Vec<DTYPE, dims>& vec)
 	{
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
 		for (int64_t i = 0; i < dims; ++i)
@@ -397,10 +397,10 @@ namespace librapid
 	}
 
 	template<typename T,
-			 typename DTYPE, int64_t dims, typename std::enable_if<std::is_scalar<T>::value,
-																   int>::type = 0>
+		typename DTYPE, int64_t dims, typename std::enable_if<std::is_scalar<T>::value,
+															  int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator-(const T& value,
-		const Vec<DTYPE, dims>& vec)
+																   const Vec<DTYPE, dims>& vec)
 	{
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
 		for (int64_t i = 0; i < dims; ++i)
@@ -409,10 +409,10 @@ namespace librapid
 	}
 
 	template<typename T,
-			 typename DTYPE, int64_t dims, typename std::enable_if<std::is_scalar<T>::value,
-																   int>::type = 0>
+		typename DTYPE, int64_t dims, typename std::enable_if<std::is_scalar<T>::value,
+															  int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator*(const T& value,
-		const Vec<DTYPE, dims>& vec)
+																   const Vec<DTYPE, dims>& vec)
 	{
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
 		for (int64_t i = 0; i < dims; ++i)
@@ -421,10 +421,10 @@ namespace librapid
 	}
 
 	template<typename T,
-			 typename DTYPE, int64_t dims, typename std::enable_if<std::is_scalar<T>::value,
-																   int>::type = 0>
+		typename DTYPE, int64_t dims, typename std::enable_if<std::is_scalar<T>::value,
+															  int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator/(const T& value,
-		const Vec<DTYPE, dims>& vec)
+																   const Vec<DTYPE, dims>& vec)
 	{
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
 		for (int64_t i = 0; i < dims; ++i)
@@ -735,8 +735,8 @@ namespace librapid
 		Vec<Common<T>, 3> cross(const Vec<T, 3>& other) const
 		{
 			return Vec<Common<T>, 3>(y * other.z - z * other.y,
-				z * other.x - x * other.z,
-				x * other.y - y * other.x);
+									 z * other.x - x * other.z,
+									 x * other.y - y * other.x);
 		}
 
 		[[nodiscard]] std::string str() const
@@ -801,41 +801,41 @@ namespace librapid
 	template<typename T, typename DTYPE, typename std::enable_if<std::is_scalar<T>::value,
 																 int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, 3> operator+(const T& value,
-		const Vec<DTYPE, 3>& vec)
+																const Vec<DTYPE, 3>& vec)
 	{
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(value + vec.x,
-			value + vec.y,
-			value + vec.z);
+																 value + vec.y,
+																 value + vec.z);
 	}
 
 	template<typename T, typename DTYPE, typename std::enable_if<std::is_scalar<T>::value,
 																 int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, 3> operator-(const T& value,
-		const Vec<DTYPE, 3>& vec)
+																const Vec<DTYPE, 3>& vec)
 	{
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(value - vec.x,
-			value - vec.y,
-			value - vec.z);
+																 value - vec.y,
+																 value - vec.z);
 	}
 
 	template<typename T, typename DTYPE, typename std::enable_if<std::is_scalar<T>::value,
 																 int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, 3> operator*(const T& value,
-		const Vec<DTYPE, 3>& vec)
+																const Vec<DTYPE, 3>& vec)
 	{
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(value * vec.x,
-			value * vec.y,
-			value * vec.z);
+																 value * vec.y,
+																 value * vec.z);
 	}
 
 	template<typename T, typename DTYPE, typename std::enable_if<std::is_scalar<T>::value,
 																 int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, 3> operator/(const T& value,
-		const Vec<DTYPE, 3>& vec)
+																const Vec<DTYPE, 3>& vec)
 	{
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(value / vec.x,
-			value / vec.y,
-			value / vec.z);
+																 value / vec.y,
+																 value / vec.z);
 	}
 
 	using Vec2i = Vec<int64_t, 2>;

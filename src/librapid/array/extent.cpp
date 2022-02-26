@@ -10,9 +10,9 @@ namespace librapid
 
 		if (m_dims > LIBRAPID_MAX_DIMS)
 			throw std::runtime_error("Cannot create Extent with "
-				+ std::to_string(m_dims)
-				+ " dimensions. Limit is "
-				+ std::to_string(LIBRAPID_MAX_DIMS));
+										 + std::to_string(m_dims)
+										 + " dimensions. Limit is "
+										 + std::to_string(LIBRAPID_MAX_DIMS));
 
 		uint64_t index = 0;
 		for (const auto& val : data)
@@ -28,9 +28,9 @@ namespace librapid
 
 		if (m_dims > LIBRAPID_MAX_DIMS)
 			throw std::runtime_error("Cannot create Extent with "
-				+ std::to_string(m_dims)
-				+ " dimensions. Limit is "
-				+ std::to_string(LIBRAPID_MAX_DIMS));
+										 + std::to_string(m_dims)
+										 + " dimensions. Limit is "
+										 + std::to_string(LIBRAPID_MAX_DIMS));
 
 		for (uint64_t i = 0; i < data.size(); i++)
 			m_extent[i] = data[i];
@@ -45,9 +45,9 @@ namespace librapid
 
 		if (m_dims > LIBRAPID_MAX_DIMS)
 			throw std::runtime_error("Cannot create Extent with "
-				+ std::to_string(m_dims)
-				+ " dimensions. Limit is "
-				+ std::to_string(LIBRAPID_MAX_DIMS));
+										 + std::to_string(m_dims)
+										 + " dimensions. Limit is "
+										 + std::to_string(LIBRAPID_MAX_DIMS));
 
 		for (int64_t i = 0; i < other.m_dims; i++)
 			m_extent[i] = other.m_extent[i];
@@ -61,9 +61,9 @@ namespace librapid
 		m_size = dims;
 		if (m_dims > LIBRAPID_MAX_DIMS)
 			throw std::runtime_error("Cannot create Extent with "
-				+ std::to_string(m_dims)
-				+ " dimensions. Limit is "
-				+ std::to_string(LIBRAPID_MAX_DIMS));
+										 + std::to_string(m_dims)
+										 + " dimensions. Limit is "
+										 + std::to_string(LIBRAPID_MAX_DIMS));
 
 		for (int64_t i = 0; i < m_dims; ++i)
 			m_extent[i] = 1;
@@ -103,8 +103,8 @@ namespace librapid
 	{
 		if (index >= m_dims)
 			throw std::out_of_range("Index " + std::to_string(index)
-				+ " is out of range for Extent with "
-				+ std::to_string(m_dims) + " dimensions");
+										+ " is out of range for Extent with "
+										+ std::to_string(m_dims) + " dimensions");
 
 		return m_extent[index];
 	}
@@ -113,8 +113,8 @@ namespace librapid
 	{
 		if (index >= m_dims)
 			throw std::out_of_range("Index " + std::to_string(index)
-				+ " is out of range for Extent with "
-				+ std::to_string(m_dims) + " dimensions");
+										+ " is out of range for Extent with "
+										+ std::to_string(m_dims) + " dimensions");
 
 		if (m_isDirty)
 			update();
@@ -160,7 +160,7 @@ namespace librapid
 
 		throw std::runtime_error("Could not resolve automatic dimension of "
 								 " Extent to fit " + std::to_string(target)
-			+ " elements");
+									 + " elements");
 	}
 
 	Extent Extent::subExtent(int64_t start, int64_t end) const
@@ -170,8 +170,8 @@ namespace librapid
 
 		if (start >= end)
 			throw std::invalid_argument("Cannot create subExtent from range ["
-				+ std::to_string(start) + ", "
-				+ std::to_string(end) + ")");
+											+ std::to_string(start) + ", "
+											+ std::to_string(end) + ")");
 
 		Extent res(end - start);
 		for (int64_t i = start; i < end; ++i)

@@ -24,7 +24,7 @@ namespace librapid
 		{
 			throw std::invalid_argument(std::to_string(tempOrder.ndim()) + " indices "
 																		   "were passed to Array transpose, though "
-				+ std::to_string(m_extent.ndim()) +
+											+ std::to_string(m_extent.ndim()) +
 				" indices are required");
 		}
 
@@ -76,9 +76,9 @@ namespace librapid
 
 		if (tempShape.size() != m_extent.size())
 			throw std::domain_error("Cannot reshape array with "
-				+ m_extent.str() + " (" + std::to_string(m_extent.size())
-				+ " elements) to array with " + tempShape.str()
-				+ " (" + std::to_string(m_extent.size()) + " elements");
+										+ m_extent.str() + " (" + std::to_string(m_extent.size())
+										+ " elements) to array with " + tempShape.str()
+										+ " (" + std::to_string(m_extent.size()) + " elements");
 
 		if (!m_stride.isTrivial() || !m_stride.isContiguous())
 		{
@@ -122,8 +122,8 @@ namespace librapid
 
 		if (axis < 0 || axis > dims)
 			throw std::range_error("Axis " + std::to_string(axis)
-				+ " is out of range for array with "
-				+ std::to_string(dims) + " dimensions");
+									   + " is out of range for array with "
+									   + std::to_string(dims) + " dimensions");
 
 		int64_t newDim = arrays[index].extent()[axis];
 		const Extent& dim0 = arrays[index].extent();
@@ -136,9 +136,9 @@ namespace librapid
 											"values must have the same number of "
 											"dimensions, however (at least) one "
 											"array failed this condition. "
-					+ std::to_string(arrays[i].ndim())
-					+ " dimension(s) is not compatible with "
-					+ std::to_string(dims) + " dimension(s)");
+												+ std::to_string(arrays[i].ndim())
+												+ " dimension(s) is not compatible with "
+												+ std::to_string(dims) + " dimension(s)");
 
 			// Ensure every dimension other than <axis> is equal
 			// (concatenating on <axis> allows for different size in that dimension)
@@ -149,9 +149,9 @@ namespace librapid
 												"dimensions other than index <axis> "
 												"must be equal, however (at least) "
 												"one array failed this condition. "
-						+ arrays[i].extent().str()
-						+ " is not compatible with "
-						+ dim0.str());
+													+ arrays[i].extent().str()
+													+ " is not compatible with "
+													+ dim0.str());
 			}
 
 			newDim += adjustCheck ? 1 : arrays[i].extent()[axis];
@@ -193,8 +193,8 @@ namespace librapid
 		// Perform some checks to make sure everything is going to work
 		if (axis < 0 || axis > arrays[0].ndim() + 1)
 			throw std::invalid_argument("Axis " + std::to_string(axis)
-				+ " is out of range for arrays with "
-				+ std::to_string(arrays[0].ndim()) + " dimensions");
+											+ " is out of range for arrays with "
+											+ std::to_string(arrays[0].ndim()) + " dimensions");
 
 		if (newDim == 0) return Array();
 		if (newDim == 1) return arrays[0].clone();
@@ -204,8 +204,8 @@ namespace librapid
 		{
 			if (arrays[i].extent() != dim0)
 				throw std::invalid_argument("Array with " + arrays[i].extent().str()
-					+ " cannot be stacked with array with " + dim0.str()
-					+ ". All arrays must have the same extent");
+												+ " cannot be stacked with array with " + dim0.str()
+												+ ". All arrays must have the same extent");
 		}
 
 		Extent resShape(arrays[0].isScalar() ? 1 : dims + 1);
