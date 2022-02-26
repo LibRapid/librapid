@@ -130,7 +130,7 @@ inline int getFileExtension(char* filename, char** extension)
 }
 
 inline bool checkCmdLineFlag(const int argc, const char** argv,
-	const char* string_ref)
+							 const char* string_ref)
 {
 	bool bFound = false;
 
@@ -162,7 +162,7 @@ inline bool checkCmdLineFlag(const int argc, const char** argv,
 // This function wraps the CUDA Driver API into a template function
 template<class T>
 inline bool getCmdLineArgumentValue(const int argc, const char** argv,
-	const char* string_ref, T* value)
+									const char* string_ref, T* value)
 {
 	bool bFound = false;
 
@@ -192,7 +192,7 @@ inline bool getCmdLineArgumentValue(const int argc, const char** argv,
 }
 
 inline int getCmdLineArgumentInt(const int argc, const char** argv,
-	const char* string_ref)
+								 const char* string_ref)
 {
 	bool bFound = false;
 	int value = -1;
@@ -234,7 +234,7 @@ inline int getCmdLineArgumentInt(const int argc, const char** argv,
 }
 
 inline float getCmdLineArgumentFloat(const int argc, const char** argv,
-	const char* string_ref)
+									 const char* string_ref)
 {
 	bool bFound = false;
 	float value = -1;
@@ -276,8 +276,8 @@ inline float getCmdLineArgumentFloat(const int argc, const char** argv,
 }
 
 inline bool getCmdLineArgumentString(const int argc, const char** argv,
-	const char* string_ref,
-	char** string_retval)
+									 const char* string_ref,
+									 char** string_retval)
 {
 	bool bFound = false;
 
@@ -315,7 +315,7 @@ inline bool getCmdLineArgumentString(const int argc, const char** argv,
 //! @param executable_path  optional absolute path of the executable
 //////////////////////////////////////////////////////////////////////////////
 inline char* sdkFindFilePath(const char* filename,
-	const char* executable_path)
+							 const char* executable_path)
 {
 	// <executable_name> defines a variable that is replaced with the name of the
 	// executable
@@ -376,7 +376,7 @@ inline char* sdkFindFilePath(const char* filename,
 			if (executable_path != 0)
 			{
 				path.replace(executable_name_pos, strlen("<executable_name>"),
-					executable_name);
+							 executable_name);
 			}
 			else
 			{

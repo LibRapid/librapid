@@ -4,7 +4,7 @@
 namespace librapid
 {
 	std::pair<int64_t, int64_t> Array::stringifyFormatPreprocess(bool stripMiddle,
-		bool autoStrip) const
+																 bool autoStrip) const
 	{
 		if (autoStrip)
 		{
@@ -41,7 +41,7 @@ namespace librapid
 					i = m_extent.size() - 3;
 
 				auto sublongest = subscript(i).stringifyFormatPreprocess(stripMiddle,
-					false);
+																		 false);
 
 				if (sublongest.first > longestIntegral)
 					longestIntegral = sublongest.first;
@@ -64,7 +64,7 @@ namespace librapid
 				i = m_extent[0] - 3;
 
 			auto sublongest = subscript(i).stringifyFormatPreprocess(stripMiddle,
-				false);
+																	 false);
 
 			if (sublongest.first > longestIntegral)
 				longestIntegral = sublongest.first;
@@ -77,9 +77,9 @@ namespace librapid
 	}
 
 	std::string Array::stringify(int64_t indent, bool showCommas,
-		bool stripMiddle, bool autoStrip,
-		std::pair<int64_t, int64_t>& longest,
-		int64_t& printedRows, int64_t& printedCols) const
+								 bool stripMiddle, bool autoStrip,
+								 std::pair<int64_t, int64_t>& longest,
+								 int64_t& printedRows, int64_t& printedCols) const
 	{
 		printedRows = 0;
 		printedCols = 0;
@@ -128,10 +128,10 @@ namespace librapid
 
 				int64_t tmpRows, tmpCols;
 				std::string tempVal = subscript(i).stringify(indent + 1,
-					showCommas,
-					stripMiddle,
-					false, longest,
-					tmpRows, tmpCols);
+															 showCommas,
+															 stripMiddle,
+															 false, longest,
+															 tmpRows, tmpCols);
 
 				// Locate the decimal point and calculate
 				// the number of digits before and after it
@@ -191,8 +191,8 @@ namespace librapid
 
 			int64_t tmpRows, tmpCols;
 			res += subscript(i).stringify(indent + 1, showCommas,
-				stripMiddle, false, longest,
-				tmpRows, tmpCols);
+										  stripMiddle, false, longest,
+										  tmpRows, tmpCols);
 
 			printedRows++;
 			printedCols = tmpCols;
@@ -210,10 +210,10 @@ namespace librapid
 	}
 
 	std::string Array::str(int64_t indent, bool showCommas,
-		int64_t& printedRows, int64_t& printedCols) const
+						   int64_t& printedRows, int64_t& printedCols) const
 	{
 		std::pair<int64_t, int64_t> longest;
 		return stringify(indent, showCommas, false, true, longest,
-			printedRows, printedCols);
+						 printedRows, printedCols);
 	}
 }

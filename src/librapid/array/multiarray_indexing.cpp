@@ -18,9 +18,9 @@ namespace librapid
 		res.m_dataOrigin = m_dataOrigin;
 
 		res.m_dataStart = std::visit([&](auto* __restrict data) -> RawArrayData
-		{
-			return data + m_stride[0] * index;
-		}, m_dataStart);
+									 {
+										 return data + m_stride[0] * index;
+									 }, m_dataStart);
 
 		res.m_references = m_references;
 
@@ -33,8 +33,8 @@ namespace librapid
 		else
 		{
 			res.constructHollow(m_extent.subExtent(1, AUTO),
-				m_stride.subStride(1, AUTO),
-				m_dtype, m_location);
+								m_stride.subStride(1, AUTO),
+								m_dtype, m_location);
 
 			res.m_isScalar = false;
 		}

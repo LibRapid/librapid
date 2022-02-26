@@ -48,10 +48,10 @@
   } while (0)
 
 void compileFileToCUBIN(char* filename, int argc, char** argv, char** cubinResult,
-	size_t* cubinResultSize, int requiresCGheaders)
+						size_t* cubinResultSize, int requiresCGheaders)
 {
 	std::ifstream inputFile(filename,
-		std::ios::in | std::ios::binary | std::ios::ate);
+							std::ios::in | std::ios::binary | std::ios::ate);
 
 	if (!inputFile.is_open())
 	{
@@ -93,7 +93,7 @@ void compileFileToCUBIN(char* filename, int argc, char** argv, char** cubinResul
 			malloc(sizeof(char) * (compileOptions.length() + 10)));
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 		sprintf_s(compileParams[numCompileOptions], sizeof(char) * (compileOptions.length() + 10),
-			"%s%d%d", compileOptions.c_str(), major, minor);
+				  "%s%d%d", compileOptions.c_str(), major, minor);
 #else
 		snprintf(compileParams[numCompileOptions], compileOptions.size() + 10, "%s%d%d",
 				 compileOptions.c_str(), major, minor);
@@ -132,7 +132,7 @@ void compileFileToCUBIN(char* filename, int argc, char** argv, char** cubinResul
 			malloc(sizeof(char) * (compileOptions.length() + 1)));
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 		sprintf_s(compileParams[numCompileOptions], sizeof(char) * (compileOptions.length() + 1),
-			"%s", compileOptions.c_str());
+				  "%s", compileOptions.c_str());
 #else
 		snprintf(compileParams[numCompileOptions], compileOptions.size(), "%s",
 				 compileOptions.c_str());
@@ -143,14 +143,14 @@ void compileFileToCUBIN(char* filename, int argc, char** argv, char** cubinResul
 	// compile
 	nvrtcProgram prog;
 	NVRTC_SAFE_CALL("nvrtcCreateProgram",
-		nvrtcCreateProgram(&prog, memBlock, filename, 0, NULL, NULL));
+					nvrtcCreateProgram(&prog, memBlock, filename, 0, NULL, NULL));
 
 	nvrtcResult res = nvrtcCompileProgram(prog, numCompileOptions, compileParams);
 
 	// dump log
 	size_t logSize;
 	NVRTC_SAFE_CALL("nvrtcGetProgramLogSize",
-		nvrtcGetProgramLogSize(prog, &logSize));
+					nvrtcGetProgramLogSize(prog, &logSize));
 	char* log = reinterpret_cast<char*>(malloc(sizeof(char) * logSize + 1));
 	NVRTC_SAFE_CALL("nvrtcGetProgramLog", nvrtcGetProgramLog(prog, log));
 	log[logSize] = '\x0';

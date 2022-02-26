@@ -1,12 +1,16 @@
 #include <librapid/test/librapid_test.hpp>
 
-namespace librapid {
-	namespace test {
-		int testLibrapid(int x) {
+namespace librapid
+{
+	namespace test
+	{
+		int testLibrapid(int x)
+		{
 			return x * x;
 		}
 
-		void streamTest() {
+		void streamTest()
+		{
 #ifdef LIBRAPID_HAS_CUDA
 			cudaStream_t stream;
 

@@ -1833,9 +1833,9 @@ inline __device__ __host__
 float4 clamp(float4 v, float4 a, float4 b)
 {
 	return make_float4(clamp(v.x, a.x, b.x),
-		clamp(v.y, a.y, b.y),
-		clamp(v.z, a.z, b.z),
-		clamp(v.w, a.w, b.w));
+					   clamp(v.y, a.y, b.y),
+					   clamp(v.z, a.z, b.z),
+					   clamp(v.w, a.w, b.w));
 }
 
 inline __device__ __host__
@@ -1878,9 +1878,9 @@ inline __device__ __host__
 int4 clamp(int4 v, int4 a, int4 b)
 {
 	return make_int4(clamp(v.x, a.x, b.x),
-		clamp(v.y, a.y, b.y),
-		clamp(v.z, a.z, b.z),
-		clamp(v.w, a.w, b.w));
+					 clamp(v.y, a.y, b.y),
+					 clamp(v.z, a.z, b.z),
+					 clamp(v.w, a.w, b.w));
 }
 
 inline __device__ __host__
@@ -1923,9 +1923,9 @@ inline __device__ __host__
 uint4 clamp(uint4 v, uint4 a, uint4 b)
 {
 	return make_uint4(clamp(v.x, a.x, b.x),
-		clamp(v.y, a.y, b.y),
-		clamp(v.z, a.z, b.z),
-		clamp(v.w, a.w, b.w));
+					  clamp(v.y, a.y, b.y),
+					  clamp(v.z, a.z, b.z),
+					  clamp(v.w, a.w, b.w));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

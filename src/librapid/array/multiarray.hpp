@@ -150,15 +150,15 @@ namespace librapid
 		 * \endrst
 		 */
 		Array(const Extent& extent,
-			Datatype dtype = Datatype::FLOAT64,
-			Accelerator location = Accelerator::CPU);
+			  Datatype dtype = Datatype::FLOAT64,
+			  Accelerator location = Accelerator::CPU);
 
 		inline Array(const Extent& extent,
-			const std::string& dtype,
-			Accelerator location = Accelerator::CPU)
+					 const std::string& dtype,
+					 Accelerator location = Accelerator::CPU)
 			: Array(extent,
-			stringToDatatype(dtype),
-			location)
+					stringToDatatype(dtype),
+					location)
 		{
 		}
 
@@ -208,8 +208,8 @@ namespace librapid
 		 * \endrst
 		 */
 		Array(const Array& other,
-			Datatype dtype = Datatype::NONE,
-			Accelerator locn = Accelerator::NONE);
+			  Datatype dtype = Datatype::NONE,
+			  Accelerator locn = Accelerator::NONE);
 
 		/**
 		 * \rst
@@ -243,52 +243,52 @@ namespace librapid
 
 		inline Array(bool val, Datatype dtype, const std::string& locn)
 			: Array(val,
-			dtype,
-			stringToAccelerator(
-				locn))
+					dtype,
+					stringToAccelerator(
+						locn))
 		{
 		}
 
 		inline Array(float val, Datatype dtype, const std::string& locn)
 			: Array(val,
-			dtype,
-			stringToAccelerator(
-				locn))
+					dtype,
+					stringToAccelerator(
+						locn))
 		{
 		}
 
 		inline Array(double val, Datatype dtype, const std::string& locn)
 			: Array(val,
-			dtype,
-			stringToAccelerator(
-				locn))
+					dtype,
+					stringToAccelerator(
+						locn))
 		{
 		}
 
 		inline Array(bool val, const std::string& dtype, const std::string& locn)
 			: Array(val,
-			stringToDatatype(
-				locn),
-			stringToAccelerator(
-				locn))
+					stringToDatatype(
+						locn),
+					stringToAccelerator(
+						locn))
 		{
 		}
 
 		inline Array(float val, const std::string& dtype, const std::string& locn)
 			: Array(val,
-			stringToDatatype(
-				locn),
-			stringToAccelerator(
-				locn))
+					stringToDatatype(
+						locn),
+					stringToAccelerator(
+						locn))
 		{
 		}
 
 		inline Array(double val, const std::string& dtype, const std::string& locn)
 			: Array(val,
-			stringToDatatype(
-				locn),
-			stringToAccelerator(
-				locn))
+					stringToDatatype(
+						locn),
+					stringToAccelerator(
+						locn))
 		{
 		}
 
@@ -302,9 +302,9 @@ namespace librapid
 			if (locn == Accelerator::CPU)
 			{
 				std::visit([&](auto* data)
-				{
-					*data = val;
-				}, m_dataStart);
+						   {
+							   *data = val;
+						   }, m_dataStart);
 			}
 #ifdef LIBRAPID_HAS_CUDA
 			else
@@ -333,9 +333,9 @@ namespace librapid
 			if (locn == Accelerator::CPU)
 			{
 				std::visit([&](auto* data)
-				{
-					*data = val;
-				}, m_dataStart);
+						   {
+							   *data = val;
+						   }, m_dataStart);
 			}
 #ifdef LIBRAPID_HAS_CUDA
 			else
@@ -364,9 +364,9 @@ namespace librapid
 			if (accelerator == Accelerator::CPU)
 			{
 				std::visit([&](auto* data)
-				{
-					*data = val;
-				}, m_dataStart);
+						   {
+							   *data = val;
+						   }, m_dataStart);
 			}
 #ifdef LIBRAPID_HAS_CUDA
 			else
@@ -396,9 +396,9 @@ namespace librapid
 			if (accelerator == Accelerator::CPU)
 			{
 				std::visit([&](auto* data)
-				{
-					*data = val;
-				}, m_dataStart);
+						   {
+							   *data = val;
+						   }, m_dataStart);
 			}
 #ifdef LIBRAPID_HAS_CUDA
 			else
@@ -912,20 +912,20 @@ namespace librapid
 			{
 				switch (m_dtype)
 				{
-				case Datatype::NONE:
-				case Datatype::VALIDNONE:
-					throw std::invalid_argument(
-						"Cannot convert uninitialized array to scalar value");
-					// case Datatype::BOOL:
-					// 	return (T) *std::get<bool *>(m_dataStart);
-				case Datatype::INT64:
-					return (T)*std::get<int64_t*>(m_dataStart);
-				case Datatype::FLOAT32:
-					return (T)*std::get<float*>(m_dataStart);
-				case Datatype::FLOAT64:
-					return (T)*std::get<double*>(m_dataStart);
-				case Datatype::CFLOAT64:
-					return (T)*std::get<Complex<double>*>(m_dataStart);
+					case Datatype::NONE:
+					case Datatype::VALIDNONE:
+						throw std::invalid_argument(
+							"Cannot convert uninitialized array to scalar value");
+						// case Datatype::BOOL:
+						// 	return (T) *std::get<bool *>(m_dataStart);
+					case Datatype::INT64:
+						return (T)*std::get<int64_t*>(m_dataStart);
+					case Datatype::FLOAT32:
+						return (T)*std::get<float*>(m_dataStart);
+					case Datatype::FLOAT64:
+						return (T)*std::get<double*>(m_dataStart);
+					case Datatype::CFLOAT64:
+						return (T)*std::get<Complex<double>*>(m_dataStart);
 				}
 			}
 			else if (m_location == Accelerator::GPU)
@@ -939,37 +939,37 @@ namespace librapid
 
 				switch (resType)
 				{
-				case Datatype::NONE:
-				case Datatype::VALIDNONE:
-				{
-					rawArrayFree(tmp);
-					throw std::invalid_argument(
-						"Cannot convert uninitialized array to scalar value");
-				}
-					// case Datatype::BOOL: {
-					// 	res = (T) *std::get<bool *>(tmp.data);
-					// 	break;
-					// }
-				case Datatype::INT64:
-				{
-					res = (T)*std::get<int64_t*>(tmp.data);
-					break;
-				}
-				case Datatype::FLOAT32:
-				{
-					res = (T)*std::get<float*>(tmp.data);
-					break;
-				}
-				case Datatype::FLOAT64:
-				{
-					res = (T)*std::get<double*>(tmp.data);
-					break;
-				}
-				case Datatype::CFLOAT64:
-				{
-					res = (T)*std::get<Complex<double>*>(tmp.data);
-					break;
-				}
+					case Datatype::NONE:
+					case Datatype::VALIDNONE:
+					{
+						rawArrayFree(tmp);
+						throw std::invalid_argument(
+							"Cannot convert uninitialized array to scalar value");
+					}
+						// case Datatype::BOOL: {
+						// 	res = (T) *std::get<bool *>(tmp.data);
+						// 	break;
+						// }
+					case Datatype::INT64:
+					{
+						res = (T)*std::get<int64_t*>(tmp.data);
+						break;
+					}
+					case Datatype::FLOAT32:
+					{
+						res = (T)*std::get<float*>(tmp.data);
+						break;
+					}
+					case Datatype::FLOAT64:
+					{
+						res = (T)*std::get<double*>(tmp.data);
+						break;
+					}
+					case Datatype::CFLOAT64:
+					{
+						res = (T)*std::get<Complex<double>*>(tmp.data);
+						break;
+					}
 				}
 
 				rawArrayFree(tmp);
@@ -1017,10 +1017,10 @@ namespace librapid
 		 * \endrst
 		 */
 		[[nodiscard]] Array clone(Datatype dtype = Datatype::NONE,
-			Accelerator locn = Accelerator::NONE) const;
+								  Accelerator locn = Accelerator::NONE) const;
 
 		[[nodiscard]] Array clone(const std::string& dtype,
-			Accelerator locn = Accelerator::NONE) const;
+								  Accelerator locn = Accelerator::NONE) const;
 
 		[[nodiscard]] Array clone(Datatype dtype, const std::string& locn = "none") const;
 
@@ -1147,23 +1147,23 @@ namespace librapid
 		}
 
 		[[nodiscard]] Array copy(const Datatype& dtype = Datatype::NONE,
-			const Accelerator& locn = Accelerator::NONE);
+								 const Accelerator& locn = Accelerator::NONE);
 
 		template<typename PTR, typename First>
 		static inline void mapKernelGetPointers(PTR** __restrict ptrVals,
-			const Extent& e,
-			const Datatype& d,
-			First first)
+												const Extent& e,
+												const Datatype& d,
+												First first)
 		{
 			*ptrVals = (PTR*)extractVoidPtr(first.createRaw());
 		}
 
 		template<typename PTR, typename First, typename... Pack>
 		static inline void mapKernelGetPointers(PTR** __restrict ptrVals,
-			const Extent& e,
-			const Datatype& d,
-			First first,
-			Pack... arrayPack)
+												const Extent& e,
+												const Datatype& d,
+												First first,
+												Pack... arrayPack)
 		{
 			// Ensure all the arrays are on the CPU, have the same stride, are contiguous in memory,
 			// have the same extent and the same datatype
@@ -1188,204 +1188,207 @@ namespace librapid
 			// For now, assume every array is trivial and on the CPU
 
 			std::visit([&](auto* dstPtr)
-			{
-				using TYPE = typename std::remove_pointer<decltype(dstPtr)>::type;
-				TYPE* pointers[sizeof...(Pack)];
-				mapKernelGetPointers(&(pointers[0]),
-					dst.extent(),
-					dst.dtype(),
-					arrayPack...);
+					   {
+						   using TYPE = typename std::remove_pointer<decltype(dstPtr)>::type;
+						   TYPE* pointers[sizeof...(Pack)];
+						   mapKernelGetPointers(&(pointers[0]),
+												dst.extent(),
+												dst.dtype(),
+												arrayPack...);
 
-				int64_t end = dst.extent().size();
+						   int64_t end = dst.extent().size();
 
-				if (dst.location() == Accelerator::CPU)
-				{
+						   if (dst.location() == Accelerator::CPU)
+						   {
 #ifdef LIBRAPID_PYTHON
-					for (int64_t i = 0; i < end; ++i) {
-							utils::ApplyKernelImpl<TYPE,
-												   Kernel,
-												   sizeof...(Pack) - 1>::run((TYPE **) pointers,
-																			 dstPtr,
-																			 kernel,
-																			 i);
-						}
+							   for (int64_t i = 0; i < end; ++i) {
+									   utils::ApplyKernelImpl<TYPE,
+															  Kernel,
+															  sizeof...(Pack) - 1>::run((TYPE **) pointers,
+																						dstPtr,
+																						kernel,
+																						i);
+								   }
 #else // LIBRAPID_PYTHON
 
-					if (end < 2500)
-					{
-						for (int64_t i = 0; i < end; ++i)
-						{
-							utils::ApplyKernelImpl<TYPE,
-												   Kernel,
-												   sizeof...(Pack)
-													   - 1>::run((TYPE**)pointers,
-								dstPtr,
-								kernel,
-								i);
-						}
-					}
-					else
-					{
-						auto localKernel = kernel;
+							   if (end < 2500)
+							   {
+								   for (int64_t i = 0; i < end; ++i)
+								   {
+									   utils::ApplyKernelImpl<TYPE,
+															  Kernel,
+															  sizeof...(Pack)
+																  - 1>::run((TYPE**)pointers,
+																			dstPtr,
+																			kernel,
+																			i);
+								   }
+							   }
+							   else
+							   {
+								   auto localKernel = kernel;
 #pragma omp parallel for shared(pointers, dstPtr, localKernel, end) default(none)
-						for (int64_t i = 0; i < end; ++i)
-						{
-							utils::ApplyKernelImpl<TYPE,
-												   Kernel,
-												   sizeof...(Pack)
-													   - 1>::run((TYPE**)pointers,
-								dstPtr,
-								localKernel,
-								i);
-						}
-					}
+								   for (int64_t i = 0; i < end; ++i)
+								   {
+									   utils::ApplyKernelImpl<TYPE,
+															  Kernel,
+															  sizeof...(Pack)
+																  - 1>::run((TYPE**)pointers,
+																			dstPtr,
+																			localKernel,
+																			i);
+								   }
+							   }
 #endif // LIBRAPID_PYTHON
 #ifdef LIBRAPID_HAS_CUDA
-				}
-				else
-				{
-					// Copy the pointers to the GPU
-					static TYPE** gpuPointers = nullptr; // Static storage space for pointers
-					static uint64_t maxPointers = 16; // Size of "gpuPointers"
+						   }
+						   else
+						   {
+							   // Copy the pointers to the GPU
+							   static TYPE
+								   ** gpuPointers = nullptr; // Static storage space for pointers
+							   static uint64_t maxPointers = 16; // Size of "gpuPointers"
 
-					if (gpuPointers == nullptr)
-					{
+							   if (gpuPointers == nullptr)
+							   {
 #ifdef LIBRAPID_CUDA_STREAM
-						cudaSafeCall(cudaMallocAsync(&gpuPointers,
-							sizeof(TYPE*) * maxPointers,
-							cudaStream));
+								   cudaSafeCall(cudaMallocAsync(&gpuPointers,
+																sizeof(TYPE*) * maxPointers,
+																cudaStream));
 #else
-						cudaSafeCall(cudaMalloc(&gpuPointers, sizeof(TYPE *) * maxPointers));
+								   cudaSafeCall(cudaMalloc(&gpuPointers, sizeof(TYPE *) * maxPointers));
 #endif
-					}
+							   }
 
-					if (sizeof...(Pack) - 1 > maxPointers)
-					{
-						maxPointers <<= 1;
-
-#ifdef LIBRAPID_CUDA_STREAM
-						cudaSafeCall(cudaFreeAsync(gpuPointers, cudaStream));
-#else
-						cudaSafeCall(cudaFreeAsync(gpuPointers));
-#endif
+							   if (sizeof...(Pack) - 1 > maxPointers)
+							   {
+								   maxPointers <<= 1;
 
 #ifdef LIBRAPID_CUDA_STREAM
-						cudaSafeCall(cudaMallocAsync(&gpuPointers,
-							sizeof(TYPE*) * maxPointers,
-							cudaStream));
+								   cudaSafeCall(cudaFreeAsync(gpuPointers, cudaStream));
 #else
-						cudaSafeCall(cudaMalloc(&gpuPointers, sizeof(TYPE *) * maxPointers));
+								   cudaSafeCall(cudaFreeAsync(gpuPointers));
 #endif
-					}
 
 #ifdef LIBRAPID_CUDA_STREAM
-					cudaSafeCall(cudaMemcpyAsync(gpuPointers,
-						static_cast<TYPE**>(pointers),
-						sizeof(TYPE*) * (sizeof...(Pack) - 1),
-						cudaMemcpyHostToDevice,
-						cudaStream));
+								   cudaSafeCall(cudaMallocAsync(&gpuPointers,
+																sizeof(TYPE*) * maxPointers,
+																cudaStream));
 #else
-					cudaSafeCall(cudaMemcpy(gpuPointers,
-											static_cast<TYPE **>(pointers),
-											sizeof(TYPE *) * (sizeof...(Pack) - 1),
-											cudaMemcpyHostToDevice));
+								   cudaSafeCall(cudaMalloc(&gpuPointers, sizeof(TYPE *) * maxPointers));
+#endif
+							   }
+
+#ifdef LIBRAPID_CUDA_STREAM
+							   cudaSafeCall(cudaMemcpyAsync(gpuPointers,
+															static_cast<TYPE**>(pointers),
+															sizeof(TYPE*) * (sizeof...(Pack) - 1),
+															cudaMemcpyHostToDevice,
+															cudaStream));
+#else
+							   cudaSafeCall(cudaMemcpy(gpuPointers,
+													   static_cast<TYPE **>(pointers),
+													   sizeof(TYPE *) * (sizeof...(Pack) - 1),
+													   cudaMemcpyHostToDevice));
 #endif
 
-					using jitify::reflection::Type;
+							   using jitify::reflection::Type;
 
-					if constexpr(!utils::HasName<Kernel>{} || !utils::HasKernel<Kernel>{})
-					{
-						throw std::runtime_error(
-							"Invalid GPU Kernel! Must have name and kernel members");
-						return;
-					}
-					else
-					{
-						std::string args;
-						std::string indices;
+							   if constexpr(!utils::HasName<Kernel>{}
+								   || !utils::HasKernel<Kernel>{})
+							   {
+								   throw std::runtime_error(
+									   "Invalid GPU Kernel! Must have name and kernel members");
+								   return;
+							   }
+							   else
+							   {
+								   std::string args;
+								   std::string indices;
 
-						switch (sizeof...(Pack) - 1)
-						{
-						case 0:
-						{
-							args = "";
-							indices = "";
-							break;
-						}
-						case 1:
-						{
-							args = "T val0";
-							indices = "srcPointers[0][kernelIndex]";
-							break;
-						}
-						case 2:
-						{
-							args = "T val0,"
-								   "T val1";
-							indices = "srcPointers[0][kernelIndex],"
-									  "srcPointers[1][kernelIndex]";
-							break;
-						}
-						case 3:
-						{
-							args = "T val0,"
-								   "T val1,"
-								   "T val2";
-							indices = "srcPointers[0][kernelIndex],"
-									  "srcPointers[1][kernelIndex],"
-									  "srcPointers[2][kernelIndex]";
-							break;
-						}
-						case 4:
-						{
-							args = "T val0,"
-								   "T val1,"
-								   "T val2,"
-								   "T val3";
-							indices = "srcPointers[0][kernelIndex],"
-									  "srcPointers[1][kernelIndex],"
-									  "srcPointers[2][kernelIndex],"
-									  "srcPointers[3][kernelIndex]";
-							break;
-						}
-						case 5:
-						{
-							args = "T val0,"
-								   "T val1,"
-								   "T val2,"
-								   "T val3,"
-								   "T val4";
-							indices = "srcPointers[0][kernelIndex],"
-									  "srcPointers[1][kernelIndex],"
-									  "srcPointers[2][kernelIndex],"
-									  "srcPointers[3][kernelIndex],"
-									  "srcPointers[4][kernelIndex]";
-							break;
-						}
-						default:
-						{
-							for (int64_t i = 0; i < sizeof...(Pack) - 1; ++i)
-							{
-								args += fmt::format("T val{}", i);
-								if (i + 2 < sizeof...(Pack))
-								{
-									args += ", ";
-								}
-							}
+								   switch (sizeof...(Pack) - 1)
+								   {
+									   case 0:
+									   {
+										   args = "";
+										   indices = "";
+										   break;
+									   }
+									   case 1:
+									   {
+										   args = "T val0";
+										   indices = "srcPointers[0][kernelIndex]";
+										   break;
+									   }
+									   case 2:
+									   {
+										   args = "T val0,"
+												  "T val1";
+										   indices = "srcPointers[0][kernelIndex],"
+													 "srcPointers[1][kernelIndex]";
+										   break;
+									   }
+									   case 3:
+									   {
+										   args = "T val0,"
+												  "T val1,"
+												  "T val2";
+										   indices = "srcPointers[0][kernelIndex],"
+													 "srcPointers[1][kernelIndex],"
+													 "srcPointers[2][kernelIndex]";
+										   break;
+									   }
+									   case 4:
+									   {
+										   args = "T val0,"
+												  "T val1,"
+												  "T val2,"
+												  "T val3";
+										   indices = "srcPointers[0][kernelIndex],"
+													 "srcPointers[1][kernelIndex],"
+													 "srcPointers[2][kernelIndex],"
+													 "srcPointers[3][kernelIndex]";
+										   break;
+									   }
+									   case 5:
+									   {
+										   args = "T val0,"
+												  "T val1,"
+												  "T val2,"
+												  "T val3,"
+												  "T val4";
+										   indices = "srcPointers[0][kernelIndex],"
+													 "srcPointers[1][kernelIndex],"
+													 "srcPointers[2][kernelIndex],"
+													 "srcPointers[3][kernelIndex],"
+													 "srcPointers[4][kernelIndex]";
+										   break;
+									   }
+									   default:
+									   {
+										   for (int64_t i = 0; i < sizeof...(Pack) - 1; ++i)
+										   {
+											   args += fmt::format("T val{}", i);
+											   if (i + 2 < sizeof...(Pack))
+											   {
+												   args += ", ";
+											   }
+										   }
 
-							for (int64_t i = 0; i < sizeof...(Pack) - 1; ++i)
-							{
-								indices += fmt::format("srcPointers[{}][kernelIndex]", i);
-								if (i + 2 < sizeof...(Pack))
-								{
-									indices += ", ";
-								}
-							}
-							break;
-						}
-						}
+										   for (int64_t i = 0; i < sizeof...(Pack) - 1; ++i)
+										   {
+											   indices +=
+												   fmt::format("srcPointers[{}][kernelIndex]", i);
+											   if (i + 2 < sizeof...(Pack))
+											   {
+												   indices += ", ";
+											   }
+										   }
+										   break;
+									   }
+								   }
 
-						std::string gpuKernel = fmt::format(R"V0G0N(mapKernel
+								   std::string gpuKernel = fmt::format(R"V0G0N(mapKernel
 						__constant__ int LIBRAPID_MAX_DIMS = {0};
 						#include <stdint.h>
 						#include <type_traits>
@@ -1431,68 +1434,69 @@ namespace librapid
 								dstData[kernelIndex] = {3}({5});
 							}}
 						}})V0G0N",
-							LIBRAPID_MAX_DIMS,
-							CUDA_INCLUDE_DIRS,
-							imp::complexHpp,
-							kernel.name,
-							args,
-							indices,
-							kernel.kernel);
+																	   LIBRAPID_MAX_DIMS,
+																	   CUDA_INCLUDE_DIRS,
+																	   imp::complexHpp,
+																	   kernel.name,
+																	   args,
+																	   indices,
+																	   kernel.kernel);
 
-						static const std::vector<std::string> params = { "--disable-warnings",
-																		 "-std=c++17",
-																		 std::string("-I \"")
-																			 +
-																				 CUDA_INCLUDE_DIRS
-																			 + "\"" };
+								   static const std::vector<std::string>
+									   params = { "--disable-warnings",
+												  "-std=c++17",
+												  std::string("-I \"")
+													  +
+														  CUDA_INCLUDE_DIRS
+													  + "\"" };
 
-						static jitify::JitCache kernelCache;
-						jitify::Program program = kernelCache.program(gpuKernel,
-							imp::cudaHeaders,
-							params);
+								   static jitify::JitCache kernelCache;
+								   jitify::Program program = kernelCache.program(gpuKernel,
+																				 imp::cudaHeaders,
+																				 params);
 
-						int64_t threadsPerBlock, blocksPerGrid;
+								   int64_t threadsPerBlock, blocksPerGrid;
 
-						// Use 1 to 512 threads per block
-						if (end < 512)
-						{
-							threadsPerBlock = end;
-							blocksPerGrid = 1;
-						}
-						else
-						{
-							threadsPerBlock = 512;
-							blocksPerGrid = ceil(double(end) / double(threadsPerBlock));
-						}
+								   // Use 1 to 512 threads per block
+								   if (end < 512)
+								   {
+									   threadsPerBlock = end;
+									   blocksPerGrid = 1;
+								   }
+								   else
+								   {
+									   threadsPerBlock = 512;
+									   blocksPerGrid = ceil(double(end) / double(threadsPerBlock));
+								   }
 
-						dim3 grid(blocksPerGrid);
-						dim3 block(threadsPerBlock);
+								   dim3 grid(blocksPerGrid);
+								   dim3 block(threadsPerBlock);
 
 #ifdef LIBRAPID_CUDA_STREAM
-						jitifyCall(program.kernel("binaryFuncTrivial")
-										  .instantiate(Type<TYPE>(),
-											  Type<TYPE>()).configure(
-								grid,
-								block,
-								0,
-								cudaStream).launch(dst.m_dataStart,
-								gpuPointers,
-								sizeof...(Pack),
-								end));
+								   jitifyCall(program.kernel("binaryFuncTrivial")
+													 .instantiate(Type<TYPE>(),
+																  Type<TYPE>()).configure(
+										   grid,
+										   block,
+										   0,
+										   cudaStream).launch(dst.m_dataStart,
+															  gpuPointers,
+															  sizeof...(Pack),
+															  end));
 #else // LIBRAPID_CUDA_STREAM
-						jitifyCall(program.kernel("binaryFuncTrivial")
-								.instantiate(Type<TYPE>(), Type<TYPE>())
-								.configure(grid, block)
-								.launch(dst.m_dataStart, gpuPointers, sizeof...(Pack), end));
+								   jitifyCall(program.kernel("binaryFuncTrivial")
+										   .instantiate(Type<TYPE>(), Type<TYPE>())
+										   .configure(grid, block)
+										   .launch(dst.m_dataStart, gpuPointers, sizeof...(Pack), end));
 #endif // LIBRAPID_CUDA_STREAM
-					}
-				}
+							   }
+						   }
 #else // LIBRAPID_HAS_CUDA
-				} else {
-					throw std::runtime_error("Cannot apply GPU kernel because CUDA was not enabled");
-				}
+						   } else {
+							   throw std::runtime_error("Cannot apply GPU kernel because CUDA was not enabled");
+						   }
 #endif // LIBRAPID_HAS_CUDA
-			}, dst.m_dataStart);
+					   }, dst.m_dataStart);
 
 			return dst;
 		}
@@ -1527,16 +1531,16 @@ namespace librapid
 		}
 
 		[[nodiscard]] std::string str(int64_t indent,
-			bool showCommas,
-			int64_t& printedRows,
-			int64_t& printedCols) const;
+									  bool showCommas,
+									  int64_t& printedRows,
+									  int64_t& printedCols) const;
 
 		template<typename FUNC>
 		static inline void applyUnaryOp(Array& dst,
-			const Array& src,
-			const FUNC& operation,
-			bool permitInvalid = false,
-			int64_t dstOffset = 0)
+										const Array& src,
+										const FUNC& operation,
+										bool permitInvalid = false,
+										int64_t dstOffset = 0)
 		{
 			// Operate on one array and store the result in another array
 
@@ -1546,7 +1550,7 @@ namespace librapid
 
 					str()
 
-					+ " and store the result in " + dst.m_extent.
+												+ " and store the result in " + dst.m_extent.
 
 					str()
 
@@ -1560,9 +1564,9 @@ namespace librapid
 			if (dstOffset)
 			{
 				dstPtr.data = std::visit([&](auto* data) -> RawArrayData
-				{
-					return data + dstOffset;
-				}, dstPtr.data);
+										 {
+											 return data + dstOffset;
+										 }, dstPtr.data);
 			}
 
 			if (!permitInvalid && dst.m_stride.
@@ -1590,19 +1594,19 @@ namespace librapid
 			{
 				// Not trivial, so use advanced method
 				imp::multiarrayUnaryOpComplex(dstPtr,
-					srcPtr,
-					size,
-					src.m_extent,
-					dst.m_stride,
-					src.m_stride,
-					operation,
-					dst.m_stride.
+											  srcPtr,
+											  size,
+											  src.m_extent,
+											  dst.m_stride,
+											  src.m_stride,
+											  operation,
+											  dst.m_stride.
 
-						isTrivial() &&
+												  isTrivial() &&
 
-						dst.m_stride.
+												  dst.m_stride.
 
-							isContiguous()
+													  isContiguous()
 
 				);
 			}
@@ -1612,9 +1616,9 @@ namespace librapid
 
 		template<typename FUNC>
 		static inline Array applyUnaryOp(const Array& src,
-			const FUNC& operation,
-			bool permitInvalid = false,
-			int64_t dstOffset = 0)
+										 const FUNC& operation,
+										 bool permitInvalid = false,
+										 int64_t dstOffset = 0)
 		{
 			// Operate on a single array and return a new array
 
@@ -1627,9 +1631,9 @@ namespace librapid
 			if (dstOffset)
 			{
 				dstPtr.data = std::visit([&](auto* data) -> RawArrayData
-				{
-					return data + dstOffset;
-				}, dstPtr.data);
+										 {
+											 return data + dstOffset;
+										 }, dstPtr.data);
 			}
 
 			if (!permitInvalid && dst.m_stride.isTrivial() && dst.m_stride.isContiguous() &&
@@ -1642,14 +1646,14 @@ namespace librapid
 			{
 				// Not trivial, so use advanced method
 				imp::multiarrayUnaryOpComplex(dstPtr,
-					srcPtr,
-					size,
-					src.m_extent,
-					dst.m_stride,
-					src.m_stride,
-					operation,
-					dst.m_stride.isTrivial() &&
-						dst.m_stride.isContiguous());
+											  srcPtr,
+											  size,
+											  src.m_extent,
+											  dst.m_stride,
+											  src.m_stride,
+											  operation,
+											  dst.m_stride.isTrivial() &&
+												  dst.m_stride.isContiguous());
 			}
 
 			dst.m_isScalar = src.m_isScalar;
@@ -1682,13 +1686,13 @@ namespace librapid
 			{
 				// Not trivial, so use advanced method
 				imp::multiarrayUnaryOpComplex(dstPtr,
-					srcPtr,
-					size,
-					dst.m_extent,
-					dst.m_stride,
-					src.m_stride,
-					operation,
-					true);
+											  srcPtr,
+											  size,
+											  dst.m_extent,
+											  dst.m_stride,
+											  src.m_stride,
+											  operation,
+											  true);
 			}
 
 			dst.m_isScalar = src.m_isScalar;
@@ -1698,10 +1702,10 @@ namespace librapid
 
 		template<class FUNC>
 		static inline void applyBinaryOp(Array& dst,
-			const Array& srcA,
-			const Array& srcB,
-			const FUNC& operation,
-			bool permitInvalid = false)
+										 const Array& srcA,
+										 const Array& srcB,
+										 const FUNC& operation,
+										 bool permitInvalid = false)
 		{
 			// Operate on two arrays and store the result in another array
 
@@ -1731,12 +1735,12 @@ namespace librapid
 			{
 				// Trivial
 				imp::multiarrayBinaryOpTrivial(ptrDst,
-					ptrSrcA,
-					ptrSrcB,
-					srcA.m_isScalar,
-					srcB.m_isScalar,
-					size,
-					operation);
+											   ptrSrcA,
+											   ptrSrcB,
+											   srcA.m_isScalar,
+											   srcB.m_isScalar,
+											   size,
+											   operation);
 
 				// Update the result stride too
 				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
@@ -1745,16 +1749,16 @@ namespace librapid
 			{
 				// Not trivial, so use advanced method
 				imp::multiarrayBinaryOpComplex(ptrDst,
-					ptrSrcA,
-					ptrSrcB,
-					srcA.m_isScalar,
-					srcB.m_isScalar,
-					size,
-					dst.m_extent,
-					dst.m_stride,
-					srcA.m_stride,
-					srcB.m_stride,
-					operation);
+											   ptrSrcA,
+											   ptrSrcB,
+											   srcA.m_isScalar,
+											   srcB.m_isScalar,
+											   size,
+											   dst.m_extent,
+											   dst.m_stride,
+											   srcA.m_stride,
+											   srcB.m_stride,
+											   operation);
 			}
 
 			if (srcA.m_isScalar && srcB.m_isScalar)
@@ -1765,9 +1769,9 @@ namespace librapid
 
 		template<class FUNC>
 		[[nodiscard]] static inline Array applyBinaryOp(const Array& srcA,
-			const Array& srcB,
-			const FUNC& operation,
-			bool permitInvalid = false)
+														const Array& srcB,
+														const FUNC& operation,
+														bool permitInvalid = false)
 		{
 			// Operate on two arrays and store the result in another array
 
@@ -1795,12 +1799,12 @@ namespace librapid
 			{
 				// Trivial
 				imp::multiarrayBinaryOpTrivial(ptrDst,
-					ptrSrcA,
-					ptrSrcB,
-					srcA.m_isScalar,
-					srcB.m_isScalar,
-					size,
-					operation);
+											   ptrSrcA,
+											   ptrSrcB,
+											   srcA.m_isScalar,
+											   srcB.m_isScalar,
+											   size,
+											   operation);
 
 				// Update the result stride too
 				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
@@ -1809,16 +1813,16 @@ namespace librapid
 			{
 				// Not trivial, so use advanced method
 				imp::multiarrayBinaryOpComplex(ptrDst,
-					ptrSrcA,
-					ptrSrcB,
-					srcA.m_isScalar,
-					srcB.m_isScalar,
-					size,
-					dst.m_extent,
-					dst.m_stride,
-					srcA.m_stride,
-					srcB.m_stride,
-					operation);
+											   ptrSrcA,
+											   ptrSrcB,
+											   srcA.m_isScalar,
+											   srcB.m_isScalar,
+											   size,
+											   dst.m_extent,
+											   dst.m_stride,
+											   srcA.m_stride,
+											   srcB.m_stride,
+											   operation);
 			}
 
 			if (srcA.m_isScalar && srcB.m_isScalar)
@@ -1839,9 +1843,9 @@ namespace librapid
 		inline void _offsetData(int64_t elems)
 		{
 			m_dataStart = std::visit([&](auto* data) -> RawArrayData
-			{
-				return data + elems;
-			}, m_dataStart);
+									 {
+										 return data + elems;
+									 }, m_dataStart);
 			m_stride.setTrivial(false);
 			m_stride.setContiguity(false);
 		}
@@ -1849,9 +1853,9 @@ namespace librapid
 		inline void _resetOffset(int64_t elems)
 		{
 			m_dataStart = std::visit([&](auto* data) -> RawArrayData
-			{
-				return data - elems;
-			}, m_dataStart);
+									 {
+										 return data - elems;
+									 }, m_dataStart);
 			m_stride.setTrivial(true);
 			m_stride.setContiguity(true);
 		}
@@ -1914,25 +1918,25 @@ namespace librapid
 		}
 
 		void constructNew(const Extent& e,
-			const Stride& s,
-			const Datatype& dtype,
-			const Accelerator& location);
+						  const Stride& s,
+						  const Datatype& dtype,
+						  const Accelerator& location);
 
 		void constructHollow(const Extent& e,
-			const Stride& s,
-			const Datatype& dtype,
-			const Accelerator& location);
+							 const Stride& s,
+							 const Datatype& dtype,
+							 const Accelerator& location);
 
 		[[nodiscard]] std::pair<int64_t, int64_t> stringifyFormatPreprocess(bool stripMiddle,
-			bool autoStrip) const;
+																			bool autoStrip) const;
 
 		std::string stringify(int64_t indent,
-			bool showCommas,
-			bool stripMiddle,
-			bool autoStrip,
-			std::pair<int64_t, int64_t>& longest,
-			int64_t& printedRows,
-			int64_t& printedCols) const;
+							  bool showCommas,
+							  bool stripMiddle,
+							  bool autoStrip,
+							  std::pair<int64_t, int64_t>& longest,
+							  int64_t& printedRows,
+							  int64_t& printedCols) const;
 
 	private:
 		Accelerator m_location = Accelerator::CPU;
@@ -1959,9 +1963,9 @@ namespace librapid
 
 	template<typename T = double>
 	inline Array randomLike(const Array& other,
-		const T& min = 0,
-		const T& max = 0,
-		int64_t seed = -1)
+							const T& min = 0,
+							const T& max = 0,
+							int64_t seed = -1)
 	{
 		return other.filledRandom(min, max, seed);
 	}
@@ -2237,7 +2241,7 @@ namespace librapid
 #ifdef LIBRAPID_DEBUG
 				auto tmp = Array(Extent({ 100, 100 }), type, location);
 #else
-				auto tmp = Array(Extent({1000, 1000}), type, location);
+				auto tmp = Array(Extent({ 1000, 1000 }), type, location);
 #endif
 
 				std::cout << "Warming up " << acceleratorToString(location) << " with "

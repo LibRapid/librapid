@@ -86,8 +86,8 @@ namespace librapid
 	}
 
 	[[nodiscard]] double map(double val,
-		double start1, double stop1,
-		double start2, double stop2);
+							 double start1, double stop1,
+							 double start2, double stop2);
 
 	template<typename T, typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
 	inline T random(T lower, T upper, uint64_t seed = -1)

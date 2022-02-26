@@ -376,9 +376,9 @@ inline bool checkCudaCapabilitiesDRV(int major_version, int minor_version,
 #endif
 
 bool inline findFatbinPath(const char* module_file,
-	std::string& module_path,
-	char** argv,
-	std::ostringstream& ostrm)
+						   std::string& module_path,
+						   char** argv,
+						   std::ostringstream& ostrm)
 {
 	char* actual_path = sdkFindFilePath(module_file, argv[0]);
 

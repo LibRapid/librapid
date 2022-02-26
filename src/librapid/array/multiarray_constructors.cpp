@@ -96,9 +96,9 @@ namespace librapid
 		if (locn == Accelerator::CPU)
 		{
 			std::visit([&](auto* data)
-			{
-				*data = val;
-			}, m_dataStart);
+					   {
+						   *data = val;
+					   }, m_dataStart);
 		}
 #ifdef LIBRAPID_HAS_CUDA
 		else
@@ -124,9 +124,9 @@ namespace librapid
 		if (locn == Accelerator::CPU)
 		{
 			std::visit([&](auto* data)
-			{
-				*data = val;
-			}, m_dataStart);
+					   {
+						   *data = val;
+					   }, m_dataStart);
 		}
 #ifdef LIBRAPID_HAS_CUDA
 		else
@@ -151,9 +151,9 @@ namespace librapid
 		if (locn == Accelerator::CPU)
 		{
 			std::visit([&](auto* data)
-			{
-				*data = val;
-			}, m_dataStart);
+					   {
+						   *data = val;
+					   }, m_dataStart);
 		}
 #ifdef LIBRAPID_HAS_CUDA
 		else
@@ -320,9 +320,9 @@ namespace librapid
 	}
 
 	void Array::constructNew(const Extent& e,
-		const Stride& s,
-		const Datatype& dtype,
-		const Accelerator& location)
+							 const Stride& s,
+							 const Datatype& dtype,
+							 const Accelerator& location)
 	{
 		// Is scalar if extent is [0]
 		bool isScalar = (e.ndim() == 1) && (e[0] == 0);
@@ -346,9 +346,9 @@ namespace librapid
 	}
 
 	void Array::constructHollow(const Extent& e,
-		const Stride& s,
-		const Datatype& dtype,
-		const Accelerator& location)
+								const Stride& s,
+								const Datatype& dtype,
+								const Accelerator& location)
 	{
 		m_extent = e;
 		m_stride = s;

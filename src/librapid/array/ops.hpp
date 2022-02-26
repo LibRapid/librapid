@@ -121,10 +121,10 @@ namespace librapid::ops
 		 						  				 + int(std::is_integral<T_DST>::value) + {3};
 		 						  return librapid::Complex<double>(randNumReal, randNumImag);
 		 						 )V0G0N",
-			max.real() - min.real() - std::numeric_limits<double>::epsilon(),
-			min.real(),
-			max.imag() - min.imag() - std::numeric_limits<double>::epsilon(),
-			min.imag());
+							 max.real() - min.real() - std::numeric_limits<double>::epsilon(),
+							 min.real(),
+							 max.imag() - min.imag() - std::numeric_limits<double>::epsilon(),
+							 min.imag());
 	}
 
 	std::string name = "fillRandomComplex";

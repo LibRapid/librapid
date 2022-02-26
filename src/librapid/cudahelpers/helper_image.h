@@ -145,7 +145,7 @@ namespace helper_image_internal
 #endif
 
 inline bool __loadPPM(const char* file, unsigned char** data, unsigned int* w,
-	unsigned int* h, unsigned int* channels)
+					  unsigned int* h, unsigned int* channels)
 {
 	FILE* fp = NULL;
 
@@ -243,7 +243,7 @@ inline bool __loadPPM(const char* file, unsigned char** data, unsigned int* w,
 
 template<class T>
 inline bool sdkLoadPGM(const char* file, T** data, unsigned int* w,
-	unsigned int* h)
+					   unsigned int* h)
 {
 	unsigned char* idata = NULL;
 	unsigned int channels;
@@ -264,7 +264,7 @@ inline bool sdkLoadPGM(const char* file, T** data, unsigned int* w,
 
 	// copy and cast data
 	std::transform(idata, idata + size, *data,
-		helper_image_internal::ConverterFromUByte<T>());
+				   helper_image_internal::ConverterFromUByte<T>());
 
 	free(idata);
 
@@ -273,7 +273,7 @@ inline bool sdkLoadPGM(const char* file, T** data, unsigned int* w,
 
 template<class T>
 inline bool sdkLoadPPM4(const char* file, T** data, unsigned int* w,
-	unsigned int* h)
+						unsigned int* h)
 {
 	unsigned char* idata = 0;
 	unsigned int channels;
@@ -306,7 +306,7 @@ inline bool sdkLoadPPM4(const char* file, T** data, unsigned int* w,
 }
 
 inline bool __savePPM(const char* file, unsigned char* data, unsigned int w,
-	unsigned int h, unsigned int channels)
+					  unsigned int h, unsigned int channels)
 {
 	assert(NULL != data);
 	assert(w > 0);
@@ -356,13 +356,13 @@ inline bool __savePPM(const char* file, unsigned char* data, unsigned int w,
 
 template<class T>
 inline bool sdkSavePGM(const char* file, T* data, unsigned int w,
-	unsigned int h)
+					   unsigned int h)
 {
 	unsigned int size = w * h;
 	unsigned char* idata = (unsigned char*)malloc(sizeof(unsigned char) * size);
 
 	std::transform(data, data + size, idata,
-		helper_image_internal::ConverterToUByte<T>());
+				   helper_image_internal::ConverterToUByte<T>());
 
 	// write file
 	bool result = __savePPM(file, idata, w, h, 1);
@@ -374,7 +374,7 @@ inline bool sdkSavePGM(const char* file, T* data, unsigned int w,
 }
 
 inline bool sdkSavePPM4ub(const char* file, unsigned char* data, unsigned int w,
-	unsigned int h)
+						  unsigned int h)
 {
 	// strip 4th component
 	int size = w * h;
@@ -405,7 +405,7 @@ inline bool sdkSavePPM4ub(const char* file, unsigned char* data, unsigned int w,
 //////////////////////////////////////////////////////////////////////////////
 template<class T>
 inline bool sdkReadFile(const char* filename, T** data, unsigned int* len,
-	bool verbose)
+						bool verbose)
 {
 	// check input arguments
 	assert(NULL != filename);
@@ -474,8 +474,8 @@ inline bool sdkReadFile(const char* filename, T** data, unsigned int* len,
 //////////////////////////////////////////////////////////////////////////////
 template<class T>
 inline bool sdkReadFileBlocks(const char* filename, T** data, unsigned int* len,
-	unsigned int block_num, unsigned int block_size,
-	bool verbose)
+							  unsigned int block_num, unsigned int block_size,
+							  bool verbose)
 {
 	// check input arguments
 	assert(NULL != filename);
@@ -513,7 +513,7 @@ inline bool sdkReadFileBlocks(const char* filename, T** data, unsigned int* len,
 //////////////////////////////////////////////////////////////////////////////
 template<class T, class S>
 inline bool sdkWriteFile(const char* filename, const T* data, unsigned int len,
-	const S epsilon, bool verbose, bool append = false)
+						 const S epsilon, bool verbose, bool append = false)
 {
 	assert(NULL != filename);
 	assert(NULL != data);
@@ -584,8 +584,8 @@ inline bool sdkWriteFile(const char* filename, const T* data, unsigned int len,
 //////////////////////////////////////////////////////////////////////////////
 template<class T, class S>
 inline bool compareData(const T* reference, const T* data,
-	const unsigned int len, const S epsilon,
-	const float threshold)
+						const unsigned int len, const S epsilon,
+						const float threshold)
 {
 	assert(epsilon >= 0);
 
@@ -621,8 +621,8 @@ inline bool compareData(const T* reference, const T* data,
 		if (error_count)
 		{
 			printf("%4.2f(%%) of bytes mismatched (count=%d)\n",
-				static_cast<float>(error_count) * 100 / static_cast<float>(len),
-				error_count);
+				   static_cast<float>(error_count) * 100 / static_cast<float>(len),
+				   error_count);
 		}
 
 		return (len * threshold > error_count) ? true : false;
@@ -644,8 +644,8 @@ inline bool compareData(const T* reference, const T* data,
 //////////////////////////////////////////////////////////////////////////////
 template<class T, class S>
 inline bool compareDataAsFloatThreshold(const T* reference, const T* data,
-	const unsigned int len, const S epsilon,
-	const float threshold)
+										const unsigned int len, const S epsilon,
+										const float threshold)
 {
 	assert(epsilon >= 0);
 
@@ -681,8 +681,8 @@ inline bool compareDataAsFloatThreshold(const T* reference, const T* data,
 		if (error_count)
 		{
 			printf("%4.2f(%%) of bytes mismatched (count=%d)\n",
-				static_cast<float>(error_count) * 100 / static_cast<float>(len),
-				error_count);
+				   static_cast<float>(error_count) * 100 / static_cast<float>(len),
+				   error_count);
 		}
 
 		return ((len * threshold > error_count) ? true : false);
@@ -700,8 +700,8 @@ inline void sdkDumpBin(void* data, unsigned int bytes, const char* filename)
 }
 
 inline bool sdkCompareBin2BinUint(const char* src_file, const char* ref_file,
-	unsigned int nelements, const float epsilon,
-	const float threshold, char* exec_path)
+								  unsigned int nelements, const float epsilon,
+								  const float threshold, char* exec_path)
 {
 	unsigned int* src_buffer, * ref_buffer;
 	FILE* src_fp = NULL, * ref_fp = NULL;
@@ -712,7 +712,7 @@ inline bool sdkCompareBin2BinUint(const char* src_file, const char* ref_file,
 	if (FOPEN_FAIL(FOPEN(src_fp, src_file, "rb")))
 	{
 		printf("compareBin2Bin <unsigned int> unable to open src_file: %s\n",
-			src_file);
+			   src_file);
 		error_count++;
 	}
 
@@ -721,9 +721,9 @@ inline bool sdkCompareBin2BinUint(const char* src_file, const char* ref_file,
 	if (ref_file_path == NULL)
 	{
 		printf("compareBin2Bin <unsigned int>  unable to find <%s> in <%s>\n",
-			ref_file, exec_path);
+			   ref_file, exec_path);
 		printf(">>> Check info.xml and [project//data] folder <%s> <<<\n",
-			ref_file);
+			   ref_file);
 		printf("Aborting comparison!\n");
 		printf("  FAILED\n");
 		error_count++;
@@ -762,12 +762,12 @@ inline bool sdkCompareBin2BinUint(const char* src_file, const char* ref_file,
 				" epsilon=%4.2f, threshold=%4.2f\n",
 				nelements, epsilon, threshold);
 			printf("   src_file <%s>, size=%d bytes\n", src_file,
-				static_cast<int>(fsize));
+				   static_cast<int>(fsize));
 			printf("   ref_file <%s>, size=%d bytes\n", ref_file_path,
-				static_cast<int>(fsize));
+				   static_cast<int>(fsize));
 
 			if (!compareData<unsigned int, float>(ref_buffer, src_buffer, nelements,
-				epsilon, threshold))
+												  epsilon, threshold))
 			{
 				error_count++;
 			}
@@ -805,8 +805,8 @@ inline bool sdkCompareBin2BinUint(const char* src_file, const char* ref_file,
 }
 
 inline bool sdkCompareBin2BinFloat(const char* src_file, const char* ref_file,
-	unsigned int nelements, const float epsilon,
-	const float threshold, char* exec_path)
+								   unsigned int nelements, const float epsilon,
+								   const float threshold, char* exec_path)
 {
 	float* src_buffer = NULL, * ref_buffer = NULL;
 	FILE* src_fp = NULL, * ref_fp = NULL;
@@ -825,9 +825,9 @@ inline bool sdkCompareBin2BinFloat(const char* src_file, const char* ref_file,
 	if (ref_file_path == NULL)
 	{
 		printf("compareBin2Bin <float> unable to find <%s> in <%s>\n", ref_file,
-			exec_path);
+			   exec_path);
 		printf(">>> Check info.xml and [project//data] folder <%s> <<<\n",
-			exec_path);
+			   exec_path);
 		printf("Aborting comparison!\n");
 		printf("  FAILED\n");
 		error_count++;
@@ -847,7 +847,7 @@ inline bool sdkCompareBin2BinFloat(const char* src_file, const char* ref_file,
 		if (FOPEN_FAIL(FOPEN(ref_fp, ref_file_path, "rb")))
 		{
 			printf("compareBin2Bin <float> unable to open ref_file: %s\n",
-				ref_file_path);
+				   ref_file_path);
 			error_count = 1;
 		}
 
@@ -862,10 +862,10 @@ inline bool sdkCompareBin2BinFloat(const char* src_file, const char* ref_file,
 				nelements, epsilon, threshold);
 			fsize = fread(src_buffer, sizeof(float), nelements, src_fp);
 			printf("   src_file <%s>, size=%d bytes\n", src_file,
-				static_cast<int>(fsize * sizeof(float)));
+				   static_cast<int>(fsize * sizeof(float)));
 			fsize = fread(ref_buffer, sizeof(float), nelements, ref_fp);
 			printf("   ref_file <%s>, size=%d bytes\n", ref_file_path,
-				static_cast<int>(fsize * sizeof(float)));
+				   static_cast<int>(fsize * sizeof(float)));
 
 			if (!compareDataAsFloatThreshold<float, float>(
 				ref_buffer, src_buffer, nelements, epsilon, threshold))
@@ -906,7 +906,7 @@ inline bool sdkCompareBin2BinFloat(const char* src_file, const char* ref_file,
 }
 
 inline bool sdkCompareL2fe(const float* reference, const float* data,
-	const unsigned int len, const float epsilon)
+						   const unsigned int len, const float epsilon)
 {
 	assert(epsilon >= 0);
 
@@ -947,14 +947,14 @@ inline bool sdkCompareL2fe(const float* reference, const float* data,
 }
 
 inline bool sdkLoadPPMub(const char* file, unsigned char** data,
-	unsigned int* w, unsigned int* h)
+						 unsigned int* w, unsigned int* h)
 {
 	unsigned int channels;
 	return __loadPPM(file, data, w, h, &channels);
 }
 
 inline bool sdkLoadPPM4ub(const char* file, unsigned char** data,
-	unsigned int* w, unsigned int* h)
+						  unsigned int* w, unsigned int* h)
 {
 	unsigned char* idata = 0;
 	unsigned int channels;
@@ -987,8 +987,8 @@ inline bool sdkLoadPPM4ub(const char* file, unsigned char** data,
 }
 
 inline bool sdkComparePPM(const char* src_file, const char* ref_file,
-	const float epsilon, const float threshold,
-	bool verboseErrors)
+						  const float epsilon, const float threshold,
+						  bool verboseErrors)
 {
 	unsigned char* src_data, * ref_data;
 	uint64_t error_count = 0;
@@ -1048,7 +1048,7 @@ inline bool sdkComparePPM(const char* src_file, const char* ref_file,
 	}
 
 	if (compareData(ref_data, src_data, src_width * src_height * 4, epsilon,
-		threshold) == false)
+					threshold) == false)
 	{
 		error_count = 1;
 	}
@@ -1073,8 +1073,8 @@ inline bool sdkComparePPM(const char* src_file, const char* ref_file,
 }
 
 inline bool sdkComparePGM(const char* src_file, const char* ref_file,
-	const float epsilon, const float threshold,
-	bool verboseErrors)
+						  const float epsilon, const float threshold,
+						  bool verboseErrors)
 {
 	unsigned char* src_data = 0, * ref_data = 0;
 	uint64_t error_count = 0;
@@ -1132,7 +1132,7 @@ inline bool sdkComparePGM(const char* src_file, const char* ref_file,
 				  << threshold * 100 << "%)\n";
 
 	if (compareData(ref_data, src_data, src_width * src_height, epsilon,
-		threshold) == false)
+					threshold) == false)
 	{
 		error_count = 1;
 	}

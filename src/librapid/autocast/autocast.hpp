@@ -84,16 +84,16 @@ namespace librapid
 	{
 		switch (t)
 		{
-		case Datatype::NONE:
-			return false;
-		case Datatype::VALIDNONE:
-			return false;
-			// case Datatype::BOOL:
-			// 	return true;
-		case Datatype::INT64:
-			return true;
-		default:
-			return false;
+			case Datatype::NONE:
+				return false;
+			case Datatype::VALIDNONE:
+				return false;
+				// case Datatype::BOOL:
+				// 	return true;
+			case Datatype::INT64:
+				return true;
+			default:
+				return false;
 		}
 	}
 
@@ -108,16 +108,16 @@ namespace librapid
 	{
 		switch (t)
 		{
-		case Datatype::NONE:
-			return false;
-		case Datatype::VALIDNONE:
-			return false;
-			// case Datatype::BOOL:
-			// 	return false;
-		case Datatype::INT64:
-			return false;
-		default:
-			return false;
+			case Datatype::NONE:
+				return false;
+			case Datatype::VALIDNONE:
+				return false;
+				// case Datatype::BOOL:
+				// 	return false;
+			case Datatype::INT64:
+				return false;
+			default:
+				return false;
 		}
 	}
 
@@ -133,14 +133,14 @@ namespace librapid
 	{
 		switch (t)
 		{
-		case Datatype::FLOAT32:
-			return true;
-		case Datatype::FLOAT64:
-			return true;
-		case Datatype::CFLOAT64:
-			return true;
-		default:
-			return false;
+			case Datatype::FLOAT32:
+				return true;
+			case Datatype::FLOAT64:
+				return true;
+			case Datatype::CFLOAT64:
+				return true;
+			default:
+				return false;
 		}
 	}
 
@@ -156,20 +156,20 @@ namespace librapid
 	{
 		switch (t)
 		{
-		case Datatype::NONE:
-			return 0;
-		case Datatype::VALIDNONE:
-			return 1;
-			// case Datatype::BOOL:
-			// 	return sizeof(bool);
-		case Datatype::INT64:
-			return sizeof(int64_t);
-		case Datatype::FLOAT32:
-			return sizeof(float);
-		case Datatype::FLOAT64:
-			return sizeof(double);
-		case Datatype::CFLOAT64:
-			return sizeof(Complex<double>);
+			case Datatype::NONE:
+				return 0;
+			case Datatype::VALIDNONE:
+				return 1;
+				// case Datatype::BOOL:
+				// 	return sizeof(bool);
+			case Datatype::INT64:
+				return sizeof(int64_t);
+			case Datatype::FLOAT32:
+				return sizeof(float);
+			case Datatype::FLOAT64:
+				return sizeof(double);
+			case Datatype::CFLOAT64:
+				return sizeof(Complex<double>);
 		}
 
 		return 0;
@@ -191,20 +191,20 @@ namespace librapid
 	{
 		switch (t)
 		{
-		case Datatype::NONE:
-			return "NONE";
-		case Datatype::VALIDNONE:
-			return "VALIDNONE";
-			// case Datatype::BOOL:
-			// 	return "BOOL";
-		case Datatype::INT64:
-			return "INT64";
-		case Datatype::FLOAT32:
-			return "FLOAT32";
-		case Datatype::FLOAT64:
-			return "FLOAT64";
-		case Datatype::CFLOAT64:
-			return "CFLOAT64";
+			case Datatype::NONE:
+				return "NONE";
+			case Datatype::VALIDNONE:
+				return "VALIDNONE";
+				// case Datatype::BOOL:
+				// 	return "BOOL";
+			case Datatype::INT64:
+				return "INT64";
+			case Datatype::FLOAT32:
+				return "FLOAT32";
+			case Datatype::FLOAT64:
+				return "FLOAT64";
+			case Datatype::CFLOAT64:
+				return "CFLOAT64";
 		}
 
 		return "UNKNOWN";
@@ -287,10 +287,10 @@ namespace librapid
 		// Force the string to be lower case
 		std::string temp = str;
 		std::transform(temp.begin(), temp.end(), temp.begin(),
-			[](unsigned char c)
-			{
-				return std::tolower(c);
-			});
+					   [](unsigned char c)
+					   {
+						   return std::tolower(c);
+					   });
 
 		// Different types and their potential string representations
 		static std::vector<std::string> noneStr = {
@@ -378,10 +378,10 @@ namespace librapid
 		// Force the string to be lower case
 		std::string temp = str;
 		std::transform(temp.begin(), temp.end(), temp.begin(),
-			[](unsigned char c)
-			{
-				return std::tolower(c);
-			});
+					   [](unsigned char c)
+					   {
+						   return std::tolower(c);
+					   });
 
 		if (temp.empty() ||
 			temp == "none" ||
@@ -407,22 +407,22 @@ namespace librapid
 	{
 		switch (raw.dtype)
 		{
-		case Datatype::INT64:
-		{
-			return std::get<int64_t*>(raw.data);
-		}
-		case Datatype::FLOAT32:
-		{
-			return std::get<float*>(raw.data);
-		}
-		case Datatype::FLOAT64:
-		{
-			return std::get<double*>(raw.data);
-		}
-		case Datatype::CFLOAT64:
-		{
-			return std::get<Complex<double>*>(raw.data);
-		}
+			case Datatype::INT64:
+			{
+				return std::get<int64_t*>(raw.data);
+			}
+			case Datatype::FLOAT32:
+			{
+				return std::get<float*>(raw.data);
+			}
+			case Datatype::FLOAT64:
+			{
+				return std::get<double*>(raw.data);
+			}
+			case Datatype::CFLOAT64:
+			{
+				return std::get<Complex<double>*>(raw.data);
+			}
 		}
 
 		// throw std::runtime_error("Array contained nullptr data. Could not fetch origin");
@@ -465,30 +465,30 @@ namespace librapid
 				// 			alignedMalloc(sizeof(bool) * elems);
 				// 	break;
 				// }
-			case Datatype::INT64:
-			{
-				raw.data = (int64_t*)
-					alignedMalloc(sizeof(int64_t) * elems);
-				break;
-			}
-			case Datatype::FLOAT32:
-			{
-				raw.data = (float*)
-					alignedMalloc(sizeof(float) * elems);
-				break;
-			}
-			case Datatype::FLOAT64:
-			{
-				raw.data = (double*)
-					alignedMalloc(sizeof(double) * elems);
-				break;
-			}
-			case Datatype::CFLOAT64:
-			{
-				raw.data = (Complex<double>*)
-					alignedMalloc(sizeof(Complex<double>) * elems);
-				break;
-			}
+				case Datatype::INT64:
+				{
+					raw.data = (int64_t*)
+						alignedMalloc(sizeof(int64_t) * elems);
+					break;
+				}
+				case Datatype::FLOAT32:
+				{
+					raw.data = (float*)
+						alignedMalloc(sizeof(float) * elems);
+					break;
+				}
+				case Datatype::FLOAT64:
+				{
+					raw.data = (double*)
+						alignedMalloc(sizeof(double) * elems);
+					break;
+				}
+				case Datatype::CFLOAT64:
+				{
+					raw.data = (Complex<double>*)
+						alignedMalloc(sizeof(Complex<double>) * elems);
+					break;
+				}
 			}
 		}
 		else if (raw.location == Accelerator::GPU)
@@ -511,26 +511,26 @@ namespace librapid
 				// 	raw.data = (bool *) memory;
 				// 	break;
 				// }
-			case Datatype::INT64:
-			{
-				raw.data = (int64_t*)memory;
-				break;
-			}
-			case Datatype::FLOAT32:
-			{
-				raw.data = (float*)memory;
-				break;
-			}
-			case Datatype::FLOAT64:
-			{
-				raw.data = (double*)memory;
-				break;
-			}
-			case Datatype::CFLOAT64:
-			{
-				raw.data = (Complex<double>*)memory;
-				break;
-			}
+				case Datatype::INT64:
+				{
+					raw.data = (int64_t*)memory;
+					break;
+				}
+				case Datatype::FLOAT32:
+				{
+					raw.data = (float*)memory;
+					break;
+				}
+				case Datatype::FLOAT64:
+				{
+					raw.data = (double*)memory;
+					break;
+				}
+				case Datatype::CFLOAT64:
+				{
+					raw.data = (Complex<double>*)memory;
+					break;
+				}
 			}
 		}
 		else
@@ -564,28 +564,28 @@ namespace librapid
 			// 	memory = std::get<bool *>(raw.data);
 			// 	break;
 			// }
-		case Datatype::INT64:
-		{
-			memory = std::get<int64_t*>(raw.data);
-			break;
-		}
-		case Datatype::FLOAT32:
-		{
-			memory = std::get<float*>(raw.data);
-			break;
-		}
-		case Datatype::FLOAT64:
-		{
-			memory = std::get<double*>(raw.data);
-			break;
-		}
-		case Datatype::CFLOAT64:
-		{
-			memory = std::get<Complex<double>*>(raw.data);
-			break;
-		}
-		default:
-			break;
+			case Datatype::INT64:
+			{
+				memory = std::get<int64_t*>(raw.data);
+				break;
+			}
+			case Datatype::FLOAT32:
+			{
+				memory = std::get<float*>(raw.data);
+				break;
+			}
+			case Datatype::FLOAT64:
+			{
+				memory = std::get<double*>(raw.data);
+				break;
+			}
+			case Datatype::CFLOAT64:
+			{
+				memory = std::get<Complex<double>*>(raw.data);
+				break;
+			}
+			default:
+				break;
 		}
 
 		if (raw.location == Accelerator::CPU)
@@ -618,7 +618,7 @@ namespace librapid
 	 * \endrst
 	 */
 	inline void rawArrayMemcpy(RawArray& dst,
-		const RawArray& src, int64_t elems)
+							   const RawArray& src, int64_t elems)
 	{
 		if (dst.location == Accelerator::NONE ||
 			src.location == Accelerator::NONE)
@@ -633,73 +633,79 @@ namespace librapid
 			// A simple memcpy will suffice as the datatypes are identical
 
 			std::visit([&](auto* a, auto* b)
-			{
-				if (src.location == Accelerator::CPU && dst.location == Accelerator::CPU)
-				{
-					// CPU to CPU memcpy
-					memcpy(a, b, datatypeBytes(src.dtype) * elems);
-				}
-				else
-				{
+					   {
+						   if (src.location == Accelerator::CPU && dst.location == Accelerator::CPU)
+						   {
+							   // CPU to CPU memcpy
+							   memcpy(a, b, datatypeBytes(src.dtype) * elems);
+						   }
+						   else
+						   {
 #ifdef LIBRAPID_HAS_CUDA
 #ifdef LIBRAPID_CUDA_STREAM
-					if (src.location == Accelerator::CPU &&
-						dst.location == Accelerator::GPU)
-						cudaSafeCall(cudaMemcpyAsync(a, b,
-							datatypeBytes(src.dtype) * elems,
-							cudaMemcpyHostToDevice, cudaStream));
-					else if (src.location == Accelerator::GPU &&
-						dst.location == Accelerator::CPU)
-						cudaSafeCall(cudaMemcpyAsync(a, b,
-							datatypeBytes(src.dtype) * elems,
-							cudaMemcpyDeviceToHost, cudaStream));
-					else if (src.location == Accelerator::GPU &&
-						dst.location == Accelerator::GPU)
-						cudaSafeCall(cudaMemcpyAsync(a, b,
-							datatypeBytes(src.dtype) * elems,
-							cudaMemcpyDeviceToDevice, cudaStream));
+							   if (src.location == Accelerator::CPU &&
+								   dst.location == Accelerator::GPU)
+								   cudaSafeCall(cudaMemcpyAsync(a,
+																b,
+																datatypeBytes(src.dtype) * elems,
+																cudaMemcpyHostToDevice,
+																cudaStream));
+							   else if (src.location == Accelerator::GPU &&
+								   dst.location == Accelerator::CPU)
+								   cudaSafeCall(cudaMemcpyAsync(a,
+																b,
+																datatypeBytes(src.dtype) * elems,
+																cudaMemcpyDeviceToHost,
+																cudaStream));
+							   else if (src.location == Accelerator::GPU &&
+								   dst.location == Accelerator::GPU)
+								   cudaSafeCall(cudaMemcpyAsync(a,
+																b,
+																datatypeBytes(src.dtype) * elems,
+																cudaMemcpyDeviceToDevice,
+																cudaStream));
 #else
-					if (src.location == Accelerator::CPU &&
-						dst.location == Accelerator::GPU)
-						cudaSafeCall(cudaMemcpy(a, b,
-									 datatypeBytes(src.dtype) * elems,
-									 cudaMemcpyHostToDevice));
-					else if (src.location == Accelerator::GPU &&
-							 dst.location == Accelerator::CPU)
-						cudaSafeCall(cudaMemcpy(a, b,
-									 datatypeBytes(src.dtype) * elems,
-									 cudaMemcpyDeviceToHost));
-					else if (src.location == Accelerator::GPU &
-							 dst.location == Accelerator::GPU)
-						cudaSafeCall(cudaMemcpy(a, b,
-									 datatypeBytes(src.dtype) * elems,
-									 cudaMemcpyDeviceToDevice));
+							   if (src.location == Accelerator::CPU &&
+								   dst.location == Accelerator::GPU)
+								   cudaSafeCall(cudaMemcpy(a, b,
+												datatypeBytes(src.dtype) * elems,
+												cudaMemcpyHostToDevice));
+							   else if (src.location == Accelerator::GPU &&
+										dst.location == Accelerator::CPU)
+								   cudaSafeCall(cudaMemcpy(a, b,
+												datatypeBytes(src.dtype) * elems,
+												cudaMemcpyDeviceToHost));
+							   else if (src.location == Accelerator::GPU &
+										dst.location == Accelerator::GPU)
+								   cudaSafeCall(cudaMemcpy(a, b,
+												datatypeBytes(src.dtype) * elems,
+												cudaMemcpyDeviceToDevice));
 #endif // LIBRAPID_CUDA_STREAM
 #endif // LIBRAPID_HAS_CUDA
-				}
-			}, dst.data, src.data);
+						   }
+					   }, dst.data, src.data);
 		}
 		else if (dst.location == Accelerator::CPU &&
 			src.location == Accelerator::CPU)
 		{
 			std::visit([&](auto* a, auto* b)
-			{
-				using A = typename std::remove_pointer<decltype(a)>::type;
-				using B = typename std::remove_pointer<decltype(b)>::type;
+					   {
+						   using A = typename std::remove_pointer<decltype(a)>::type;
+						   using B = typename std::remove_pointer<decltype(b)>::type;
 
-				if (elems < THREAD_THREASHOLD)
-				{
-					for (int64_t i = 0; i < elems; ++i)
-						a[i] = b[i];
-				}
-				else
-				{
-					int64_t tmpElems = elems;
+						   if (elems < THREAD_THREASHOLD)
+						   {
+							   for (int64_t i = 0; i < elems; ++i)
+								   a[i] = b[i];
+						   }
+						   else
+						   {
+							   int64_t tmpElems = elems;
 #pragma omp parallel for shared(a, b, tmpElems) default(none)
-					for (int64_t i = 0; i < tmpElems; ++i)
-						a[i] = b[i];
-				}
-			}, dst.data, src.data);
+							   for (int64_t i = 0; i < tmpElems; ++i)
+								   a[i] = b[i];
+						   }
+					   }, dst.data, src.data);
 		}
 #ifdef LIBRAPID_HAS_CUDA
 		else
@@ -711,73 +717,79 @@ namespace librapid
 					// Copy from CPU to GPU
 
 					std::visit([&](auto* a, auto* b)
-					{
-						using A = typename std::remove_pointer<decltype(a)>::type;
-						using B = typename std::remove_pointer<decltype(b)>::type;
+							   {
+								   using A = typename std::remove_pointer<decltype(a)>::type;
+								   using B = typename std::remove_pointer<decltype(b)>::type;
 
-						for (int64_t i = 0; i < elems; ++i)
-						{
-							A tmpVal = A(b[i]);
+								   for (int64_t i = 0; i < elems; ++i)
+								   {
+									   A tmpVal = A(b[i]);
 
 #ifdef LIBRAPID_CUDA_STREAM
-							cudaSafeCall(cudaMemcpyAsync(a + i, &tmpVal,
-								sizeof(A), cudaMemcpyHostToDevice,
-								cudaStream));
+									   cudaSafeCall(cudaMemcpyAsync(a + i,
+																	&tmpVal,
+																	sizeof(A),
+																	cudaMemcpyHostToDevice,
+																	cudaStream));
 #else
-							cudaSafeCall(cudaMemcpy(a + i, &tmpVal,
-										 sizeof(A), cudaMemcpyHostToDevice));
+									   cudaSafeCall(cudaMemcpy(a + i, &tmpVal,
+													sizeof(A), cudaMemcpyHostToDevice));
 #endif
-						}
-					}, dst.data, src.data);
+								   }
+							   }, dst.data, src.data);
 				}
 				else if (src.location == Accelerator::GPU)
 				{
 					// Copy from GPU to CPU
 
 					std::visit([&](auto* a, auto* b)
-					{
-						using A = typename std::remove_pointer<decltype(a)>::type;
-						using B = typename std::remove_pointer<decltype(b)>::type;
+							   {
+								   using A = typename std::remove_pointer<decltype(a)>::type;
+								   using B = typename std::remove_pointer<decltype(b)>::type;
 
-						if (elems < THREAD_THREASHOLD)
-						{
-							for (int64_t i = 0; i < elems; ++i)
-							{
-								B tmp;
+								   if (elems < THREAD_THREASHOLD)
+								   {
+									   for (int64_t i = 0; i < elems; ++i)
+									   {
+										   B tmp;
 
 #ifdef LIBRAPID_CUDA_STREAM
-								cudaSafeCall(cudaMemcpyAsync(&tmp, b + i,
-									sizeof(B), cudaMemcpyDeviceToHost,
-									cudaStream));
+										   cudaSafeCall(cudaMemcpyAsync(&tmp,
+																		b + i,
+																		sizeof(B),
+																		cudaMemcpyDeviceToHost,
+																		cudaStream));
 #else
-								cudaSafeCall(cudaMemcpy(&tmp, b + i,
-											 sizeof(A), cudaMemcpyDeviceToHost));
+										   cudaSafeCall(cudaMemcpy(&tmp, b + i,
+														sizeof(A), cudaMemcpyDeviceToHost));
 #endif
 
-								a[i] = (A)tmp;
-							}
-						}
-						else
-						{
-							int64_t tmpElems = elems;
+										   a[i] = (A)tmp;
+									   }
+								   }
+								   else
+								   {
+									   int64_t tmpElems = elems;
 #pragma omp parallel for shared(a, b, cudaStream, tmpElems) default(none)
-							for (int64_t i = 0; i < tmpElems; ++i)
-							{
-								B tmp;
+									   for (int64_t i = 0; i < tmpElems; ++i)
+									   {
+										   B tmp;
 
 #ifdef LIBRAPID_CUDA_STREAM
-								cudaSafeCall(cudaMemcpyAsync(&tmp, b + i,
-									sizeof(B), cudaMemcpyDeviceToHost,
-									cudaStream));
+										   cudaSafeCall(cudaMemcpyAsync(&tmp,
+																		b + i,
+																		sizeof(B),
+																		cudaMemcpyDeviceToHost,
+																		cudaStream));
 #else
-								cudaSafeCall(cudaMemcpy(&tmp, b + i,
-											 sizeof(A), cudaMemcpyDeviceToHost));
+										   cudaSafeCall(cudaMemcpy(&tmp, b + i,
+														sizeof(A), cudaMemcpyDeviceToHost));
 #endif
 
-								a[i] = (A)tmp;
-							}
-						}
-					}, dst.data, src.data);
+										   a[i] = (A)tmp;
+									   }
+								   }
+							   }, dst.data, src.data);
 				}
 			}
 			else
@@ -824,22 +836,22 @@ namespace librapid
 				dim3 block(threadsPerBlock);
 
 				std::visit([&](auto* a, auto* b)
-				{
-					using A = typename std::remove_pointer<decltype(a)>::type;
-					using B = typename std::remove_pointer<decltype(b)>::type;
+						   {
+							   using A = typename std::remove_pointer<decltype(a)>::type;
+							   using B = typename std::remove_pointer<decltype(b)>::type;
 
 #ifdef LIBRAPID_CUDA_STREAM
-					jitifyCall(program.kernel("copyKernel")
-									  .instantiate(Type<A>(), Type<B>())
-									  .configure(grid, block, 0, cudaStream)
-									  .launch(a, b, elems));
+							   jitifyCall(program.kernel("copyKernel")
+												 .instantiate(Type<A>(), Type<B>())
+												 .configure(grid, block, 0, cudaStream)
+												 .launch(a, b, elems));
 #else
-					jitifyCall(program.kernel("copyKernel")
-							   .instantiate(Type<A>(), Type<B>())
-							   .configure(grid, block)
-							   .launch(a, b, elems));
+							   jitifyCall(program.kernel("copyKernel")
+										  .instantiate(Type<A>(), Type<B>())
+										  .configure(grid, block)
+										  .launch(a, b, elems));
 #endif // LIBRAPID_CUDA_STREAM
-				}, dst.data, src.data);
+						   }, dst.data, src.data);
 			}
 		}
 #else
