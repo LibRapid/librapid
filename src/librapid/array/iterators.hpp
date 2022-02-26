@@ -4,14 +4,16 @@
 #include <librapid/config.hpp>
 #include <iterator>
 
-namespace librapid {
-	class ESIterator {
+namespace librapid
+{
+	class ESIterator
+	{
 	public:
 		using iteratorCategory = std::random_access_iterator_tag;
 		using valueType = int64_t;
 		using differenceType = std::ptrdiff_t;
-		using pointer = valueType *;
-		using reference = valueType &;
+		using pointer = valueType*;
+		using reference = valueType&;
 
 		/**
 		 * \rst
@@ -41,7 +43,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		ESIterator &operator=(const ESIterator &other);
+		ESIterator& operator=(const ESIterator& other);
 
 		/**
 		 * \rst
@@ -50,7 +52,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		ESIterator &operator=(pointer ptr);
+		ESIterator& operator=(pointer ptr);
 
 		/**
 		 * \rst
@@ -71,7 +73,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		bool operator==(const ESIterator &other) const;
+		bool operator==(const ESIterator& other) const;
 
 		/**
 		 * \rst
@@ -81,7 +83,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		bool operator!=(const ESIterator &other) const;
+		bool operator!=(const ESIterator& other) const;
 
 		/**
 		 * \rst
@@ -90,7 +92,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		ESIterator &operator+=(const differenceType &movement);
+		ESIterator& operator+=(const differenceType& movement);
 
 		/**
 		 * \rst
@@ -99,7 +101,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		ESIterator &operator-=(const differenceType &movement);
+		ESIterator& operator-=(const differenceType& movement);
 
 		/**
 		 * \rst
@@ -108,7 +110,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		ESIterator &operator++();
+		ESIterator& operator++();
 
 		/**
 		 * \rst
@@ -117,7 +119,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		ESIterator &operator--();
+		ESIterator& operator--();
 
 		/**
 		 * \rst
@@ -145,7 +147,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		ESIterator operator+(const differenceType &movement) const;
+		ESIterator operator+(const differenceType& movement) const;
 
 		/**
 		 * \rst
@@ -155,7 +157,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		ESIterator operator-(const differenceType &movement) const;
+		ESIterator operator-(const differenceType& movement) const;
 
 		/**
 		 * \rst
@@ -164,7 +166,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		differenceType operator-(const ESIterator &rawIterator) const;
+		differenceType operator-(const ESIterator& rawIterator) const;
 
 		/**
 		 * \rst
@@ -184,7 +186,8 @@ namespace librapid {
 		*/
 		const reference operator*() const;
 
-		pointer operator->() {
+		pointer operator->()
+		{
 			return m_ptr;
 		}
 

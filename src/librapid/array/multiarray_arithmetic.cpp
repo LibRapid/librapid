@@ -3,74 +3,90 @@
 #include <librapid/utils/array_utils.hpp>
 
 
-namespace librapid {
+namespace librapid
+{
 	// ========= Negation =========
 
-	void negate(const Array &a, Array &res) {
+	void negate(const Array& a, Array& res)
+	{
 		Array::applyUnaryOp(res, a, ops::Negate());
 	}
 
-	Array negate(const Array &a) {
+	Array negate(const Array& a)
+	{
 		return Array::applyUnaryOp(a, ops::Negate());
 	}
 
-	Array Array::operator-() const {
+	Array Array::operator-() const
+	{
 		return Array::applyUnaryOp(*this, ops::Negate());
 	}
 
 	// ========= Addition =========
 
-	void add(const Array &a, const Array &b, Array &res) {
+	void add(const Array& a, const Array& b, Array& res)
+	{
 		Array::applyBinaryOp(res, a, b, ops::Add());
 	}
 
-	Array add(const Array &a, const Array &b) {
+	Array add(const Array& a, const Array& b)
+	{
 		return Array::applyBinaryOp(a, b, ops::Add());
 	}
 
-	Array Array::operator+(const Array &other) const {
+	Array Array::operator+(const Array& other) const
+	{
 		return add(*this, other);
 	}
 
 	// ========= Subtraction =========
 
-	void sub(const Array &a, const Array &b, Array &res) {
+	void sub(const Array& a, const Array& b, Array& res)
+	{
 		Array::applyBinaryOp(res, a, b, ops::Sub());
 	}
 
-	Array sub(const Array &a, const Array &b) {
+	Array sub(const Array& a, const Array& b)
+	{
 		return Array::applyBinaryOp(a, b, ops::Sub());
 	}
 
-	Array Array::operator-(const Array &other) const {
+	Array Array::operator-(const Array& other) const
+	{
 		return sub(*this, other);
 	}
 
 	// ========= Multiplication =========
 
-	void mul(const Array &a, const Array &b, Array &res) {
+	void mul(const Array& a, const Array& b, Array& res)
+	{
 		Array::applyBinaryOp(res, a, b, ops::Mul());
 	}
 
-	Array mul(const Array &a, const Array &b) {
+	Array mul(const Array& a, const Array& b)
+	{
 		return Array::applyBinaryOp(a, b, ops::Mul());
 	}
 
-	Array Array::operator*(const Array &other) const {
+	Array Array::operator*(const Array& other) const
+	{
 		return mul(*this, other);
 	}
 
 	// ========= Division =========
 
-	void div(const Array &a, const Array &b, Array &res) {
+	void div(const Array& a, const Array& b, Array& res)
+	{
 		Array::applyBinaryOp(res, a, b, ops::Div());
 	}
 
-	Array div(const Array &a, const Array &b) {
+	Array div(const Array& a, const Array& b)
+	{
 		return Array::applyBinaryOp(a, b, ops::Div());
 	}
 
-	Array Array::operator/(const Array &other) const {
+	Array Array::operator/(const Array& other) const
+	{
 		return div(*this, other);
 	}
 }

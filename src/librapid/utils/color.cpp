@@ -1,22 +1,32 @@
 #include <librapid/utils/color.hpp>
 #include <librapid/math/rapid_math.hpp>
 
-namespace librapid {
-	RGB::RGB(int r, int g, int b) :
-			red(r), green(g), blue(b) {}
+namespace librapid
+{
+	RGB::RGB(int r, int g, int b)
+		:
+		red(r), green(g), blue(b)
+	{
+	}
 
 #ifdef LIBRAPID_REDEF_RGB
 
-	RGB::operator COLORREF() const {
-		return (COLORREF) (((BYTE) (red) | ((WORD) ((BYTE) (green)) << 8)) | (((DWORD) (BYTE) (blue)) << 16));
+	RGB::operator COLORREF() const
+	{
+		return (COLORREF)(((BYTE)(red) | ((WORD)((BYTE)(green)) << 8))
+			| (((DWORD)(BYTE)(blue)) << 16));
 	}
 
 #endif
 
-	HSL::HSL(double h, double s, double l) :
-			hue(h), saturation(s), lightness(l) {}
+	HSL::HSL(double h, double s, double l)
+		:
+		hue(h), saturation(s), lightness(l)
+	{
+	}
 
-	HSL rgbToHsl(const RGB &col) {
+	HSL rgbToHsl(const RGB& col)
+	{
 		const double rp = col.red / 255.0;
 		const double gp = col.green / 255.0;
 		const double bp = col.blue / 255.0;
@@ -40,10 +50,11 @@ namespace librapid {
 		if (delta != 0)
 			saturation = delta / (1 - std::abs(2 * lightness - 1));
 
-		return {hue, saturation, lightness};
+		return { hue, saturation, lightness };
 	}
 
-	RGB hslToRgb(const HSL &col) {
+	RGB hslToRgb(const HSL& col)
+	{
 		const double c = (1 - abs(2 * col.lightness - 1)) * col.saturation;
 		const double x = c * (1 - abs(fmod(col.hue / 60, 2) - 1));
 		const double m = col.lightness - c / 2;
@@ -59,18 +70,20 @@ namespace librapid {
 		else if (h >= 300 && h < 360) rp = c, gp = 0, bp = x;
 
 		return {
-				(int) ((rp + m) * 255),
-				(int) ((gp + m) * 255),
-				(int) ((bp + m) * 255)
+			(int)((rp + m) * 255),
+			(int)((gp + m) * 255),
+			(int)((bp + m) * 255)
 		};
 	}
 
-	RGB mergeColors(const RGB &colorA, const RGB &colorB) {
+	RGB mergeColors(const RGB& colorA, const RGB& colorB)
+	{
 		int r = colorA.red + colorB.red;
 		int g = colorA.green + colorB.green;
 		int b = colorA.blue + colorB.blue;
 
-		if (r > 255 || g > 255 || b > 255) {
+		if (r > 255 || g > 255 || b > 255)
+		{
 			double max = r;
 
 			if (g > max) max = g;
@@ -78,25 +91,29 @@ namespace librapid {
 
 			max = 255 / max;
 
-			return {(int) (r * max), (int) (g * max), (int) (b * max)};
+			return { (int)(r * max), (int)(g * max), (int)(b * max) };
 		}
 
-		return {r / 2, g / 2, b / 2};
+		return { r / 2, g / 2, b / 2 };
 	}
 
-	RGB mergeColors(const RGB &colorA, const HSL &colorB) {
+	RGB mergeColors(const RGB& colorA, const HSL& colorB)
+	{
 		return mergeColors(colorA, hslToRgb(colorB));
 	}
 
-	HSL mergeColors(const HSL &colorA, const RGB &colorB) {
+	HSL mergeColors(const HSL& colorA, const RGB& colorB)
+	{
 		return rgbToHsl(mergeColors(hslToRgb(colorA), colorB));
 	}
 
-	HSL mergeColors(const HSL &colorA, const HSL &colorB) {
+	HSL mergeColors(const HSL& colorA, const HSL& colorB)
+	{
 		return rgbToHsl(mergeColors(hslToRgb(colorA), hslToRgb(colorB)));
 	}
 
-	std::string fore(const RGB &col) {
+	std::string fore(const RGB& col)
+	{
 		std::string result = "\033[38;2;";
 
 		result += std::to_string(col.red) + ";";
@@ -106,15 +123,18 @@ namespace librapid {
 		return result + "m";
 	}
 
-	std::string fore(const HSL &col) {
+	std::string fore(const HSL& col)
+	{
 		return fore(hslToRgb(col));
 	}
 
-	std::string fore(int r, int g, int b) {
+	std::string fore(int r, int g, int b)
+	{
 		return fore(RGB(r, g, b));
 	}
 
-	std::string back(const RGB &col) {
+	std::string back(const RGB& col)
+	{
 		std::string result = "\033[48;2;";
 
 		result += std::to_string(col.red) + ";";
@@ -124,31 +144,38 @@ namespace librapid {
 		return result + "m";
 	}
 
-	std::string back(const HSL &col) {
+	std::string back(const HSL& col)
+	{
 		return back(hslToRgb(col));
 	}
 
-	std::string back(int r, int g, int b) {
+	std::string back(int r, int g, int b)
+	{
 		return back(RGB(r, g, b));
 	}
 
-	namespace imp {
-		ColorReset::ColorReset() {
+	namespace imp
+	{
+		ColorReset::ColorReset()
+		{
 			std::cout << "\033[0m";
 		}
 
-		ColorReset::~ColorReset() {
+		ColorReset::~ColorReset()
+		{
 			std::cout << "\033[0m";
 		}
 
 		ColorReset reset_after_close = ColorReset();
 	}
 
-	std::ostream &operator<<(std::ostream &os, const RGB &col) {
+	std::ostream& operator<<(std::ostream& os, const RGB& col)
+	{
 		return os << fore(col);
 	}
 
-	std::ostream &operator<<(std::ostream &os, const HSL &col) {
+	std::ostream& operator<<(std::ostream& os, const HSL& col)
+	{
 		return os << fore(hslToRgb(col));
 	}
 }

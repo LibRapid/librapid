@@ -4,8 +4,10 @@
 #include <sstream>
 #include <algorithm>
 
-namespace librapid {
-	std::string format_number(const double &val, bool floating, bool international) {
+namespace librapid
+{
+	std::string format_number(const double& val, bool floating, bool international)
+	{
 		std::stringstream stream;
 		stream.precision(10);
 
@@ -13,10 +15,13 @@ namespace librapid {
 
 		std::string str = stream.str();
 
-		if (international) {
+		if (international)
+		{
 			if (floating && str.find_last_of('.') == std::string::npos)
 				str += ".0";
-		} else {
+		}
+		else
+		{
 			if (floating && str.find_last_of('.') == std::string::npos)
 				str += ",0";
 			else
@@ -25,7 +30,8 @@ namespace librapid {
 		return str;
 	}
 
-	std::string format_number(const Complex<double> &val, bool floating, bool international) {
+	std::string format_number(const Complex<double>& val, bool floating, bool international)
+	{
 		return val.str();
 	}
 }

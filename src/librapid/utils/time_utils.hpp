@@ -4,7 +4,8 @@
 #include <chrono>
 #include <librapid/config.hpp>
 
-namespace librapid {
+namespace librapid
+{
 	/**
 	 * \rst
 	 *

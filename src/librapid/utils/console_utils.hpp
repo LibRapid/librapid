@@ -13,8 +13,10 @@
 #include <unistd.h>
 #endif
 
-namespace librapid {
-	struct consoleSize {
+namespace librapid
+{
+	struct consoleSize
+	{
 		int64_t rows;
 		int64_t cols;
 	};
