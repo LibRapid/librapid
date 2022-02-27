@@ -5,10 +5,8 @@
 #include <librapid/array/iterators.hpp>
 #include <vector>
 
-namespace librapid
-{
-	class Extent
-	{
+namespace librapid {
+	class Extent {
 	public:
 		/**
 		 * \rst
@@ -34,11 +32,11 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		explicit Extent(const std::initializer_list<int64_t>& data);
+		explicit Extent(const std::initializer_list<int64_t> &data);
 
-		explicit Extent(const std::vector<int64_t>& data);
+		explicit Extent(const std::vector<int64_t> &data);
 
-		Extent(const Extent& other);
+		Extent(const Extent &other);
 
 		/**
 		 * \rst
@@ -60,7 +58,7 @@ namespace librapid
 		Extent(py::args args);
 #endif // LIBRAPID_PYTHON
 
-		Extent& operator=(const Extent& other);
+		Extent &operator=(const Extent &other);
 
 		/**
 		 * \rst
@@ -69,8 +67,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		[[nodiscard]] inline const int64_t& ndim() const
-		{
+		[[nodiscard]] inline const int64_t &ndim() const {
 			return m_dims;
 		}
 
@@ -88,10 +85,8 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		[[nodiscard]] inline int64_t size() const
-		{
-			if (m_isDirty)
-			{
+		[[nodiscard]] inline int64_t size() const {
+			if (m_isDirty) {
 				int64_t res = 1;
 				for (int64_t i = 0; i < m_dims; ++i) res *= m_extent[i];
 				return res;
@@ -100,8 +95,7 @@ namespace librapid
 			return m_size;
 		}
 
-		[[nodiscard]] inline int64_t size()
-		{
+		[[nodiscard]] inline int64_t size() {
 			if (m_isDirty)
 				update();
 
@@ -115,8 +109,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		[[nodiscard]] inline const int64_t* __restrict raw() const
-		{
+		[[nodiscard]] inline const int64_t *__restrict raw() const {
 			return m_extent;
 		}
 
@@ -127,8 +120,7 @@ namespace librapid
 		*
 		* \endrst
 		*/
-		[[nodiscard]] inline std::vector<int64_t> toVec() const
-		{
+		[[nodiscard]] inline std::vector<int64_t> toVec() const {
 			std::vector<int64_t> res(m_dims);
 			for (int64_t i = 0; i < m_dims; ++i)
 				res[i] = m_extent[i];
@@ -146,8 +138,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		[[nodiscard]] inline bool containsAutomatic() const
-		{
+		[[nodiscard]] inline bool containsAutomatic() const {
 			return m_containsAutomatic;
 		}
 
@@ -172,9 +163,9 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		const int64_t& operator[](int64_t index) const;
+		const int64_t &operator[](int64_t index) const;
 
-		int64_t& operator[](int64_t index);
+		int64_t &operator[](int64_t index);
 
 		/**
 		 * \rst
@@ -208,7 +199,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		bool operator==(const Extent& other) const;
+		bool operator==(const Extent &other) const;
 
 		/**
 		 * \rst
@@ -219,8 +210,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline bool operator!=(const Extent& other) const
-		{
+		inline bool operator!=(const Extent &other) const {
 			return !(*this == other);
 		}
 
@@ -242,7 +232,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		void reorder(const std::vector<int64_t>& order);
+		void reorder(const std::vector<int64_t> &order);
 
 		[[nodiscard]] Extent subExtent(int64_t start = -1, int64_t end = -1) const;
 
@@ -258,14 +248,12 @@ namespace librapid
 		 */
 		[[nodiscard]] std::string str() const;
 
-		[[nodiscard]] inline ESIterator begin() const
-		{
-			return ESIterator((int64_t*)m_extent);
+		[[nodiscard]] inline ESIterator begin() const {
+			return ESIterator((int64_t *) m_extent);
 		}
 
-		[[nodiscard]] inline ESIterator end() const
-		{
-			return { (int64_t*)m_extent + m_dims };
+		[[nodiscard]] inline ESIterator end() const {
+			return {(int64_t *) m_extent + m_dims};
 		}
 
 		void update();
@@ -279,8 +267,7 @@ namespace librapid
 		bool m_isDirty = false;
 	};
 
-	inline std::ostream& operator<<(std::ostream& os, const Extent& extent)
-	{
+	inline std::ostream &operator<<(std::ostream &os, const Extent &extent) {
 		return os << extent.str();
 	}
 }

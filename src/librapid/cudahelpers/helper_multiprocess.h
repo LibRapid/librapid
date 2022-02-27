@@ -57,9 +57,8 @@
 
 #include <vector>
 
-typedef struct sharedMemoryInfo_st
-{
-	void* addr;
+typedef struct sharedMemoryInfo_st {
+	void *addr;
 	size_t size;
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 	HANDLE shmHandle;
@@ -68,24 +67,22 @@ typedef struct sharedMemoryInfo_st
 #endif
 } sharedMemoryInfo;
 
-int sharedMemoryCreate(const char* name, size_t sz, sharedMemoryInfo* info);
+int sharedMemoryCreate(const char *name, size_t sz, sharedMemoryInfo *info);
 
-int sharedMemoryOpen(const char* name, size_t sz, sharedMemoryInfo* info);
+int sharedMemoryOpen(const char *name, size_t sz, sharedMemoryInfo *info);
 
-void sharedMemoryClose(sharedMemoryInfo* info);
+void sharedMemoryClose(sharedMemoryInfo *info);
 
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-
 typedef PROCESS_INFORMATION Process;
-
 #else
 typedef pid_t Process;
 #endif
 
-int spawnProcess(Process* process, const char* app, char* const* args);
+int spawnProcess(Process *process, const char *app, char *const *args);
 
-int waitProcess(Process* process);
+int waitProcess(Process *process);
 
 #define checkIpcErrors(ipcFuncResult) \
     if (ipcFuncResult == -1) { fprintf(stderr, "Failure at %u %s\n", __LINE__, __FILE__); exit(EXIT_FAILURE); }
@@ -97,33 +94,29 @@ struct ipcHandle_st {
 };
 typedef int ShareableHandle;
 #elif defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-struct ipcHandle_st
-{
-	std::vector<HANDLE>
-		hMailslot; // 1 Handle in case of child and `num children` Handles for parent.
+struct ipcHandle_st {
+	std::vector<HANDLE> hMailslot; // 1 Handle in case of child and `num children` Handles for parent.
 };
-
 typedef HANDLE ShareableHandle;
-
 #endif
 
 typedef struct ipcHandle_st ipcHandle;
 
 int
-ipcCreateSocket(ipcHandle*& handle, const char* name, const std::vector<Process>& processes);
+ipcCreateSocket(ipcHandle *&handle, const char *name, const std::vector<Process> &processes);
 
 int
-ipcOpenSocket(ipcHandle*& handle);
+ipcOpenSocket(ipcHandle *&handle);
 
 int
-ipcCloseSocket(ipcHandle* handle);
+ipcCloseSocket(ipcHandle *handle);
 
 int
-ipcRecvShareableHandles(ipcHandle* handle, std::vector<ShareableHandle>& shareableHandles);
+ipcRecvShareableHandles(ipcHandle *handle, std::vector<ShareableHandle> &shareableHandles);
 
 int
-ipcSendShareableHandles(ipcHandle* handle, const std::vector<ShareableHandle>& shareableHandles,
-						const std::vector<Process>& processes);
+ipcSendShareableHandles(ipcHandle *handle, const std::vector<ShareableHandle> &shareableHandles,
+						const std::vector<Process> &processes);
 
 int
 ipcCloseShareableHandle(ShareableHandle shHandle);
