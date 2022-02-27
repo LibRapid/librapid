@@ -1,8 +1,8 @@
 dtypes = [
-    # "int64_t",
-    # "float",
-    "double",
-    # "librapid::Complex<double>"
+	# "int64_t",
+	# "float",
+	"double",
+	# "librapid::Complex<double>"
 ]
 
 maxInputs = 15
@@ -12,7 +12,7 @@ fstringGPU = ".def_static(\"mapKernel\", [](const librapid::GPUKernel &kernel, {
 
 print("Running")
 with open("map_kernel_interface.hpp", "w") as f:
-    f.write("""
+	f.write("""
 // ====================================================== //
 // The code in this file is GENERATED. DO NOT CHANGE IT.  //
 // To change this file's contents, please edit and run    //
@@ -21,26 +21,27 @@ with open("map_kernel_interface.hpp", "w") as f:
 
 """)
 
-    for dtype in dtypes:
-        print("Generating for", dtype)
-        for i in range(1, maxInputs + 1):
-            typelist = ", ".join([dtype] * i)
-            arraylist = ", ".join(["const librapid::Array &a" + str(i + 1) for i in range(i)])
+	for dtype in dtypes:
+		print("Generating for", dtype)
+		for i in range(1, maxInputs + 1):
+			typelist = ", ".join([dtype] * i)
+			arraylist = ", ".join(["const librapid::Array &a" + str(i + 1) for i in range(i)])
+			
+			arrlist = ""
+			for j in range(i):
+				arrlist += "const librapid::Array &a{}".format(j + 1)
+				if j + 1 < i:
+					arrlist += ", "
 
-            arrlist = ""
-            for j in range(i):
-                arrlist += "const librapid::Array &a{}".format(j + 1)
-                if j + 1 < i:
-                    arrlist += ", "
+			varlist = ""
+			for j in range(i):
+				varlist += "a{}".format(j + 1)
+				if j + 1 < i:
+					varlist += ", "
 
-            varlist = ""
-            for j in range(i):
-                varlist += "a{}".format(j + 1)
-                if j + 1 < i:
-                    varlist += ", "
+			f.write(fstringCPU.format(dtype, typelist, arrlist, varlist) + "\n")
+			f.write(fstringGPU.format(arraylist, varlist) + "\n\n")
 
-            f.write(fstringCPU.format(dtype, typelist, arrlist, varlist) + "\n")
-            f.write(fstringGPU.format(arraylist, varlist) + "\n\n")
 
 fstringCPU = """
 	template<typename T, typename Kernel>
@@ -53,7 +54,7 @@ fstringCPU = """
 
 print("Running")
 with open("../array/mapKernelUtils.hpp", "w") as f:
-    f.write("""
+	f.write("""
 // ====================================================== //
 // The code in this file is GENERATED. DO NOT CHANGE IT.  //
 // To change this file's contents, please edit and run    //
@@ -87,9 +88,9 @@ namespace librapid::utils {
 
 """)
 
-    for i in range(1, maxInputs + 1):
-        arglist = ", ".join(["pointers[{}][index]".format(ind) for ind in range(i)])
+	for i in range(1, maxInputs + 1):
+		arglist = ", ".join(["pointers[{}][index]".format(ind) for ind in range(i)])
 
-        f.write(fstringCPU.format(i, arglist) + "\n")
+		f.write(fstringCPU.format(i, arglist) + "\n")
 
-    f.write("\n}")
+	f.write("\n}")

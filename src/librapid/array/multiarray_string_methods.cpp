@@ -1,13 +1,10 @@
 #include <librapid/array/multiarray.hpp>
 #include <librapid/utils/array_utils.hpp>
 
-namespace librapid
-{
+namespace librapid {
 	std::pair<int64_t, int64_t> Array::stringifyFormatPreprocess(bool stripMiddle,
-																 bool autoStrip) const
-	{
-		if (autoStrip)
-		{
+																 bool autoStrip) const {
+		if (autoStrip) {
 			if (m_extent.size() >= 1000) stripMiddle = true;
 
 			// Edge case for row and column vectors
@@ -17,8 +14,7 @@ namespace librapid
 		}
 
 		// Scalar values
-		if (m_isScalar)
-		{
+		if (m_isScalar) {
 			// std::pair<int64_t, int64_t> res;
 			// AUTOCAST_UNARY(imp::autocastBeforeAfterDecimal, makeVoidPtr(),
 			// 			   validRawArray, res);
@@ -31,12 +27,10 @@ namespace librapid
 		int64_t longestIntegral = 0, longestDecimal = 0;
 
 		// Vectors
-		if (ndim() == 1)
-		{
+		if (ndim() == 1) {
 			int64_t index = 0;
 
-			for (int64_t i = 0; i < m_extent.size(); ++i, ++index)
-			{
+			for (int64_t i = 0; i < m_extent.size(); ++i, ++index) {
 				if (stripMiddle && i == 3)
 					i = m_extent.size() - 3;
 
@@ -50,7 +44,7 @@ namespace librapid
 					longestDecimal = sublongest.second;
 			}
 
-			return { longestIntegral, longestDecimal };
+			return {longestIntegral, longestDecimal};
 		}
 
 		// Everything else
@@ -58,8 +52,7 @@ namespace librapid
 		int64_t vec_size = stripMiddle ? 6 : m_extent[0];
 		std::string res = "[";
 
-		for (int64_t i = 0; i < m_extent[0]; ++i, ++index)
-		{
+		for (int64_t i = 0; i < m_extent[0]; ++i, ++index) {
 			if (stripMiddle && i == 3)
 				i = m_extent[0] - 3;
 
@@ -73,14 +66,13 @@ namespace librapid
 				longestDecimal = sublongest.second;
 		}
 
-		return { longestIntegral, longestDecimal };
+		return {longestIntegral, longestDecimal};
 	}
 
 	std::string Array::stringify(int64_t indent, bool showCommas,
 								 bool stripMiddle, bool autoStrip,
-								 std::pair<int64_t, int64_t>& longest,
-								 int64_t& printedRows, int64_t& printedCols) const
-	{
+								 std::pair<int64_t, int64_t> &longest,
+								 int64_t &printedRows, int64_t &printedCols) const {
 		printedRows = 0;
 		printedCols = 0;
 
@@ -88,8 +80,7 @@ namespace librapid
 		if (m_references == nullptr)
 			return "[NONE]";
 
-		if (autoStrip)
-		{
+		if (autoStrip) {
 			if (m_extent.size() >= 1000) stripMiddle = true;
 
 			// Edge case for row and column vectors
@@ -99,8 +90,7 @@ namespace librapid
 		}
 
 		// Scalar values
-		if (m_isScalar)
-		{
+		if (m_isScalar) {
 			std::string res;
 			imp::autocastFormatValue(createRaw(), res);
 			return res;
@@ -112,15 +102,12 @@ namespace librapid
 			longest = stringifyFormatPreprocess(false, true);
 
 		// Vectors
-		if (ndim() == 1)
-		{
+		if (ndim() == 1) {
 			int64_t index = 0;
 			std::string res = "[";
 
-			for (int64_t i = 0; i < m_extent.size(); ++i, ++index)
-			{
-				if (stripMiddle && i == 3)
-				{
+			for (int64_t i = 0; i < m_extent.size(); ++i, ++index) {
+				if (stripMiddle && i == 3) {
 					i = m_extent.size() - 3;
 					res += "... ";
 					printedCols += 4;
@@ -139,21 +126,17 @@ namespace librapid
 				index = tempVal.find('.');
 
 				// Align the +/- for complex datatypes
-				if (m_dtype == Datatype::CFLOAT64)
-				{
+				if (m_dtype == Datatype::CFLOAT64) {
 					index = tempVal.find('+', 1);
 					if (index == std::string::npos)
 						index = tempVal.find('-', 1);
 				}
 
-				if (index == std::string::npos)
-				{
+				if (index == std::string::npos) {
 					// No decimal point
 					before = tempVal.length();
 					after = 0;
-				}
-				else
-				{
+				} else {
 					before = index;
 					after = tempVal.length() - index - 1;
 				}
@@ -180,10 +163,8 @@ namespace librapid
 		int64_t index = 0;
 		std::string res = "[";
 
-		for (int64_t i = 0; i < m_extent[0]; ++i, ++index)
-		{
-			if (stripMiddle && i == 3)
-			{
+		for (int64_t i = 0; i < m_extent[0]; ++i, ++index) {
+			if (stripMiddle && i == 3) {
 				i = m_extent[0] - 3;
 				res += "...\n" + std::string(indent + 1, ' ');
 				printedRows++;
@@ -197,8 +178,7 @@ namespace librapid
 			printedRows++;
 			printedCols = tmpCols;
 
-			if (i + 1 < m_extent[0])
-			{
+			if (i + 1 < m_extent[0]) {
 				res += std::string((ndim() > 2) + 1, '\n');
 				res += std::string(indent + 1, ' ');
 			}
@@ -210,8 +190,7 @@ namespace librapid
 	}
 
 	std::string Array::str(int64_t indent, bool showCommas,
-						   int64_t& printedRows, int64_t& printedCols) const
-	{
+						   int64_t &printedRows, int64_t &printedCols) const {
 		std::pair<int64_t, int64_t> longest;
 		return stringify(indent, showCommas, false, true, longest,
 						 printedRows, printedCols);

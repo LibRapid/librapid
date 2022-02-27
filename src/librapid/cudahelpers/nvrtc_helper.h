@@ -47,21 +47,19 @@
     }                                                           \
   } while (0)
 
-void compileFileToCUBIN(char* filename, int argc, char** argv, char** cubinResult,
-						size_t* cubinResultSize, int requiresCGheaders)
-{
+void compileFileToCUBIN(char *filename, int argc, char **argv, char **cubinResult,
+						size_t *cubinResultSize, int requiresCGheaders) {
 	std::ifstream inputFile(filename,
 							std::ios::in | std::ios::binary | std::ios::ate);
 
-	if (!inputFile.is_open())
-	{
+	if (!inputFile.is_open()) {
 		std::cerr << "\nerror: unable to open " << filename << " for reading!\n";
 		exit(1);
 	}
 
 	std::streampos pos = inputFile.tellg();
-	size_t inputSize = (size_t)pos;
-	char* memBlock = new char[inputSize + 1];
+	size_t inputSize = (size_t) pos;
+	char *memBlock = new char[inputSize + 1];
 
 	inputFile.seekg(0, std::ios::beg);
 	inputFile.read(memBlock, inputSize);
@@ -70,27 +68,27 @@ void compileFileToCUBIN(char* filename, int argc, char** argv, char** cubinResul
 
 	int numCompileOptions = 0;
 
-	char* compileParams[2];
+	char *compileParams[2];
 
 	int major = 0, minor = 0;
 	char deviceName[256];
 
 	// Picks the best CUDA device available
-	CUdevice cuDevice = findCudaDeviceDRV(argc, (const char**)argv);
+	CUdevice cuDevice = findCudaDeviceDRV(argc, (const char **) argv);
 
 	// get compute capabilities and the devicename
 	checkCudaErrors(cuDeviceGetAttribute(
-		&major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
+			&major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
 	checkCudaErrors(cuDeviceGetAttribute(
-		&minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
+			&minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
 
 	{
 		// Compile cubin for the GPU arch on which are going to run cuda kernel.
 		std::string compileOptions;
 		compileOptions = "--gpu-architecture=sm_";
 
-		compileParams[numCompileOptions] = reinterpret_cast<char*>(
-			malloc(sizeof(char) * (compileOptions.length() + 10)));
+		compileParams[numCompileOptions] = reinterpret_cast<char *>(
+				malloc(sizeof(char) * (compileOptions.length() + 10)));
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 		sprintf_s(compileParams[numCompileOptions], sizeof(char) * (compileOptions.length() + 10),
 				  "%s%d%d", compileOptions.c_str(), major, minor);
@@ -102,8 +100,7 @@ void compileFileToCUBIN(char* filename, int argc, char** argv, char** cubinResul
 
 	numCompileOptions++;
 
-	if (requiresCGheaders)
-	{
+	if (requiresCGheaders) {
 		std::string compileOptions;
 		char HeaderNames[256];
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
@@ -115,21 +112,18 @@ void compileFileToCUBIN(char* filename, int argc, char** argv, char** cubinResul
 		compileOptions = "--include-path=";
 
 		std::string path = sdkFindFilePath(HeaderNames, argv[0]);
-		if (!path.empty())
-		{
+		if (!path.empty()) {
 			std::size_t found = path.find(HeaderNames);
 			path.erase(found);
-		}
-		else
-		{
+		} else {
 			printf(
-				"\nCooperativeGroups headers not found, please install it in %s "
-				"sample directory..\n Exiting..\n",
-				argv[0]);
+					"\nCooperativeGroups headers not found, please install it in %s "
+					"sample directory..\n Exiting..\n",
+					argv[0]);
 		}
 		compileOptions += path.c_str();
-		compileParams[numCompileOptions] = reinterpret_cast<char*>(
-			malloc(sizeof(char) * (compileOptions.length() + 1)));
+		compileParams[numCompileOptions] = reinterpret_cast<char *>(
+				malloc(sizeof(char) * (compileOptions.length() + 1)));
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 		sprintf_s(compileParams[numCompileOptions], sizeof(char) * (compileOptions.length() + 1),
 				  "%s", compileOptions.c_str());
@@ -151,12 +145,11 @@ void compileFileToCUBIN(char* filename, int argc, char** argv, char** cubinResul
 	size_t logSize;
 	NVRTC_SAFE_CALL("nvrtcGetProgramLogSize",
 					nvrtcGetProgramLogSize(prog, &logSize));
-	char* log = reinterpret_cast<char*>(malloc(sizeof(char) * logSize + 1));
+	char *log = reinterpret_cast<char *>(malloc(sizeof(char) * logSize + 1));
 	NVRTC_SAFE_CALL("nvrtcGetProgramLog", nvrtcGetProgramLog(prog, log));
 	log[logSize] = '\x0';
 
-	if (strlen(log) >= 2)
-	{
+	if (strlen(log) >= 2) {
 		std::cerr << "\n compilation log ---\n";
 		std::cerr << log;
 		std::cerr << "\n end log ---\n";
@@ -168,32 +161,30 @@ void compileFileToCUBIN(char* filename, int argc, char** argv, char** cubinResul
 
 	size_t codeSize;
 	NVRTC_SAFE_CALL("nvrtcGetCUBINSize", nvrtcGetCUBINSize(prog, &codeSize));
-	char* code = new char[codeSize];
+	char *code = new char[codeSize];
 	NVRTC_SAFE_CALL("nvrtcGetCUBIN", nvrtcGetCUBIN(prog, code));
 	*cubinResult = code;
 	*cubinResultSize = codeSize;
 
-	for (int i = 0; i < numCompileOptions; i++)
-	{
+	for (int i = 0; i < numCompileOptions; i++) {
 		free(compileParams[i]);
 	}
 }
 
-CUmodule loadCUBIN(char* cubin, int argc, char** argv)
-{
+CUmodule loadCUBIN(char *cubin, int argc, char **argv) {
 	CUmodule module;
 	CUcontext context;
 	int major = 0, minor = 0;
 	char deviceName[256];
 
 	// Picks the best CUDA device available
-	CUdevice cuDevice = findCudaDeviceDRV(argc, (const char**)argv);
+	CUdevice cuDevice = findCudaDeviceDRV(argc, (const char **) argv);
 
 	// get compute capabilities and the devicename
 	checkCudaErrors(cuDeviceGetAttribute(
-		&major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
+			&major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
 	checkCudaErrors(cuDeviceGetAttribute(
-		&minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
+			&minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
 	checkCudaErrors(cuDeviceGetName(deviceName, 256, cuDevice));
 	printf("> GPU Device has SM %d.%d compute capability\n", major, minor);
 
