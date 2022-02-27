@@ -4,10 +4,8 @@
 #include <librapid/config.hpp>
 #include <librapid/array/extent.hpp>
 
-namespace librapid
-{
-	class Stride
-	{
+namespace librapid {
+	class Stride {
 	public:
 		Stride() = default;
 
@@ -36,9 +34,9 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		explicit Stride(const std::initializer_list<int64_t>& data);
+		explicit Stride(const std::initializer_list<int64_t> &data);
 
-		explicit Stride(const std::vector<int64_t>& data);
+		explicit Stride(const std::vector<int64_t> &data);
 
 		explicit Stride(int64_t dims);
 
@@ -68,7 +66,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		static Stride fromExtent(const Extent& extent);
+		static Stride fromExtent(const Extent &extent);
 
 		void setTrivial(bool newVal);
 
@@ -81,8 +79,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline int64_t ndim() const
-		{
+		inline int64_t ndim() const {
 			return m_dims;
 		}
 
@@ -93,8 +90,7 @@ namespace librapid
 		*
 		* \endrst
 		*/
-		inline const int64_t* __restrict raw() const
-		{
+		inline const int64_t *__restrict raw() const {
 			return m_stride;
 		}
 
@@ -105,8 +101,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline std::vector<int64_t> toVec() const
-		{
+		inline std::vector<int64_t> toVec() const {
 			std::vector<int64_t> res(m_dims);
 			for (int64_t i = 0; i < m_dims; ++i)
 				res[i] = m_stride[i];
@@ -124,8 +119,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline bool isTrivial() const
-		{
+		inline bool isTrivial() const {
 			return m_isTrivial;
 		}
 
@@ -140,8 +134,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline bool isContiguous() const
-		{
+		inline bool isContiguous() const {
 			return m_isContiguous;
 		}
 
@@ -154,7 +147,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		bool operator==(const Stride& other) const;
+		bool operator==(const Stride &other) const;
 
 		/**
 		 * \rst
@@ -165,8 +158,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		inline bool operator!=(const Stride& other) const
-		{
+		inline bool operator!=(const Stride &other) const {
 			return !(*this == other);
 		}
 
@@ -179,9 +171,9 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		const int64_t& operator[](const int64_t index) const;
+		const int64_t &operator[](const int64_t index) const;
 
-		int64_t& operator[](const int64_t index);
+		int64_t &operator[](const int64_t index);
 
 		/**
 		 * \rst
@@ -202,7 +194,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		void reorder(const std::vector<int64_t>& order);
+		void reorder(const std::vector<int64_t> &order);
 
 		/**
 		 * \rst
@@ -253,7 +245,7 @@ namespace librapid
 		 *
 		 * \endrst
 		 */
-		bool checkContiguous(const Extent& extent) const;
+		bool checkContiguous(const Extent &extent) const;
 
 		/**
 		* \rst
@@ -267,14 +259,12 @@ namespace librapid
 		*/
 		std::string str() const;
 
-		inline ESIterator begin() const
-		{
-			return ESIterator((int64_t*)m_stride);
+		inline ESIterator begin() const {
+			return ESIterator((int64_t *) m_stride);
 		}
 
-		inline ESIterator end() const
-		{
-			return ESIterator((int64_t*)m_stride + m_dims);
+		inline ESIterator end() const {
+			return ESIterator((int64_t *) m_stride + m_dims);
 		}
 
 	private:
@@ -285,8 +275,7 @@ namespace librapid
 		bool m_isContiguous = true; // Data is contiguous in memory
 	};
 
-	inline std::ostream& operator<<(std::ostream& os, const Stride& stride)
-	{
+	inline std::ostream &operator<<(std::ostream &os, const Stride &stride) {
 		return os << stride.str();
 	}
 }
