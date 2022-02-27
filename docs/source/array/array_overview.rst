@@ -69,6 +69,17 @@ Documentation
 	manipulation/manipulation
 
 .. panels::
+    Properties
+
+    +++
+
+    .. link-button:: properties/properties
+        :type: ref
+        :text: View Page
+        :classes: btn-outline-info btn-block stretched-link
+
+	---
+
     Array Creation
 
     +++
