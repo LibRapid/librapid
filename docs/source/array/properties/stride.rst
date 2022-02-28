@@ -1,4 +1,4 @@
 stride
 ######
 
-.. doxygenfunction:: librapid::Array::stride()
+.. doxygenfunction:: librapid::Array::stride() const

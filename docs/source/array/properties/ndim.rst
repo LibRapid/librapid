@@ -1,4 +1,4 @@
 ndim
 ####
 
-.. doxygenfunction:: librapid::Array::ndim()
+.. doxygenfunction:: librapid::Array::ndim() const

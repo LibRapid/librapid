@@ -67,7 +67,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		[[nodiscard]] inline const int64_t &ndim() const {
+		[[nodiscard]] inline int64_t ndim() const {
 			return m_dims;
 		}
 

@@ -1,4 +1,4 @@
 dtype
 #####
 
-.. doxygenfunction:: librapid::Array::dtype()
+.. doxygenfunction:: librapid::Array::dtype() const

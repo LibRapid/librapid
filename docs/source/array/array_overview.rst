@@ -64,6 +64,7 @@ Documentation
 	:maxdepth: 2
 	:glob:
 
+    properties/properties
 	constructors/array_creation
 	arithmetic/arithmetic
 	manipulation/manipulation
