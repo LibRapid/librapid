@@ -1,4 +1,4 @@
 isScalar
 ########
 
-.. doxygenfunction:: librapid::Array::isScalar()
+.. doxygenfunction:: librapid::Array::isScalar() const

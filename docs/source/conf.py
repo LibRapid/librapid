@@ -22,6 +22,51 @@ import regex
 # os.system("pip show exhale")
 # os.system("doxygen --version")
 
+# Update the environment file based on the requirements.txt file
+# Note: requirements.txt is automatically udpated by dependabot, while
+# the environment file is not. This allows the updates to actually take
+# effect
+template = """
+name: docs # doxygen
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - doxygen=1.9.1
+  - pip
+  - pip:
+"""
+
+# try:
+#     with open("../requirements.txt", "r") as requirements:
+#         template += "\n" + requirements.readline()
+# except FileNotFoundError:
+#     template = """
+# name: docs # doxygen
+# channels:
+#   - conda-forge
+# dependencies:
+#   - python=3.9
+#   - doxygen=1.9.1
+#   - pip
+#   - pip:
+#       - sphinx==4.4.0
+#       - breathe==4.33.1
+#       - exhale==0.3.1
+#       - furo==2022.2.14.1
+#       - pydata-sphinx-theme==0.8.0
+#       - numpydoc==1.2
+#       - sphinx-panels==0.6.0
+#       - regex
+# 
+#     """
+# 
+# try:
+#     with open("../environment.txt", "w") as environment:
+#         environment.write(template)
+# except FileNotFoundError:
+#     
+
 sys.path.insert(0, os.path.abspath("../.."))
 
 # List of patterns, relative to source directory, that match files and

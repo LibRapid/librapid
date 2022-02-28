@@ -1,4 +1,4 @@
 extent
 ######
 
-.. doxygenfunction:: librapid::Array::extent()
+.. doxygenfunction:: librapid::Array::extent() const
