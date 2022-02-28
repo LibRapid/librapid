@@ -1,4 +1,4 @@
 len
 ###
 
-.. doxygenfunction:: librapid::Array::len()
+.. doxygenfunction:: librapid::Array::len() const

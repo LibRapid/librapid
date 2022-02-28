@@ -1,4 +1,4 @@
 location
 ########
 
-.. doxygenfunction:: librapid::Array::location()
+.. doxygenfunction:: librapid::Array::location() const

@@ -1,4 +1,4 @@
 createRaw
 #########
 
-.. doxygenfunction:: librapid::Array::createRaw()
+.. doxygenfunction:: librapid::Array::createRaw() const

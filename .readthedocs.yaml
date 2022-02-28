@@ -25,4 +25,4 @@ submodules:
   exclude: all
 
 conda:
-  environment: environment.yaml
+  environment: docs/environment.yaml
