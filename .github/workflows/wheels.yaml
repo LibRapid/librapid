@@ -37,7 +37,7 @@ jobs:
           ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Set Up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.8
 
@@ -129,7 +129,7 @@ jobs:
           ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Set Up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.8
 
@@ -240,7 +240,7 @@ jobs:
           ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Set Up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.8
 
@@ -354,7 +354,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2.1.1
 
       - name: Set Up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.8
 
