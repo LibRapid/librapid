@@ -92,8 +92,8 @@ A full list of the arithmetic types is below:
 	:maxdepth: 2
 	:glob:
 
-	add
-	sub
-	mul
-	div
-	negate
+	array_arithmetic_add
+	array_arithmetic_sub
+	array_arithmetic_mul
+	array_arithmetic_div
+	array_arithmetic_negate

@@ -17,4 +17,4 @@ easily, and data accesses to be simplified dramatically.
 	:maxdepth: 2
 	:glob:
 
-	reshape
+	array_manipulation_reshape
