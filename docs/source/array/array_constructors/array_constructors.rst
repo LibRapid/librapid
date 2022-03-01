@@ -29,10 +29,10 @@ Array containing `[5, 7, 9]`.
 	:maxdepth: 1
 	:glob:
 
-	default_constructor
-	extent_constructor
-	from_array
-	from_data
-	val_like
-	linear
-	range
+	array_constuctor_default
+	array_constuctor_extent
+	array_constuctor_array
+	array_constuctor_data
+	array_constuctor_like
+	array_constuctor_linear
+	array_constuctor_range

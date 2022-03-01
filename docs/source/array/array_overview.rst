@@ -64,28 +64,40 @@ Documentation
 	:maxdepth: 2
 	:glob:
 
-    properties/properties
-	constructors/array_creation
-	arithmetic/arithmetic
-	manipulation/manipulation
+	array_properties/array_properties
+	array_constructors/array_constructors
+	array_arithmetic/array_arithmetic
+	array_general_utilities/array_general_utilities
+	array_manipulation/array_manipulation
 
 .. panels::
     Properties
 
     +++
 
-    .. link-button:: properties/properties
+    .. link-button:: array_properties/array_properties
         :type: ref
         :text: View Page
         :classes: btn-outline-info btn-block stretched-link
 
 	---
 
-    Array Creation
+    Constructors
 
     +++
 
-    .. link-button:: constructors/array_creation
+    .. link-button:: array_constructors/array_constructors
+        :type: ref
+        :text: View Page
+        :classes: btn-outline-info btn-block stretched-link
+
+	---
+
+	General Utilities
+
+    +++
+
+    .. link-button:: array_general_utilities/array_general_utilities
         :type: ref
         :text: View Page
         :classes: btn-outline-info btn-block stretched-link
@@ -96,7 +108,7 @@ Documentation
 
     +++
 
-    .. link-button:: arithmetic/arithmetic
+    .. link-button:: array_arithmetic/array_arithmetic
         :type: ref
         :text: View Page
         :classes: btn-outline-info btn-block stretched-link
@@ -107,7 +119,7 @@ Documentation
 
     +++
 
-    .. link-button:: manipulation/manipulation
+    .. link-button:: array_manipulation/array_manipulation
         :type: ref
         :text: View Page
         :classes: btn-outline-info btn-block stretched-link

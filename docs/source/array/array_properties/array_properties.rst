@@ -10,11 +10,11 @@ access this data.
 	:maxdepth: 2
 	:glob:
 
-	ndim
-	extent
-	stride
-	isScalar
-	createRaw
-	dtype
-	location
-	len
+	array_property_ndim
+	array_property_extent
+	array_property_stride
+	array_property_isScalar
+	array_property_createRaw
+	array_property_dtype
+	array_property_location
+	array_property_len
