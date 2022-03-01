@@ -899,6 +899,13 @@ namespace librapid
 			return m_extent[0];
 		}
 
+		/**
+		 * \rst
+		 *
+		 * Cast a scalar array into a specific type
+		 *
+		 * \endrst
+		 */
 		template<typename T>
 		[[nodiscard]] inline operator T() const
 		{
@@ -976,7 +983,7 @@ namespace librapid
 				return res;
 			}
 
-			throw std::runtime_error("Invalid accelerator used in Array.fillRandom");
+			throw std::runtime_error("Invalid accelerator used in Array cast");
 		}
 
 		[[nodiscard]] const Array subscript(int64_t index) const;
