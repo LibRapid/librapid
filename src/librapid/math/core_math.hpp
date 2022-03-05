@@ -86,8 +86,8 @@ namespace librapid
 	}
 
 	[[nodiscard]] double map(double val,
-							 double start1, double stop1,
-							 double start2, double stop2);
+		double start1, double stop1,
+		double start2, double stop2);
 
 	template<typename T, typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
 	inline T random(T lower, T upper, uint64_t seed = -1)
@@ -116,6 +116,35 @@ namespace librapid
 	{
 		// Random integral value in range [lower, upper]
 		return random(lower, upper, seed);
+	}
+
+	inline double trueRandomEntropy()
+	{
+		// Truly random value in range [lower, upper)
+		static std::random_device rd;
+		return rd.entropy();
+	}
+
+	template<typename T, typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
+	inline T trueRandom(T lower, T upper)
+	{
+		// Truly random value in range [lower, upper)
+		static std::random_device rd;
+		std::uniform_real_distribution<T> dist(lower, upper);
+		return dist(rd);
+	}
+
+	template<typename T, typename std::enable_if<!std::is_floating_point<T>::value, int>::type = 0>
+	inline T trueRandom(T lower, T upper)
+	{
+		// Truly random value in range [lower, upper]
+		return (int64_t)trueRandom((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1);
+	}
+
+	inline int64_t trueRandint(int64_t lower, int64_t upper)
+	{
+		// Truly random value in range [lower, upper)
+		return (int64_t)trueRandom((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1);
 	}
 
 	[[nodiscard]] double pow10(int64_t exponent);
