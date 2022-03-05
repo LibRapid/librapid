@@ -20,6 +20,9 @@ Another simple type of Array is a matrix, which is a grid of values.
 	[[1 2 3]
 	 [4 5 6]]
 
+	// This is a 1x1x1x1 array
+	[[[[123]]]]
+
 The LibRapid Array type can store arrays with any number of dimensions, though the
 default limit is 32D.
 
@@ -71,55 +74,55 @@ Documentation
 	array_manipulation/array_manipulation
 
 .. panels::
-    Properties
+	Properties
 
-    +++
+	+++
 
-    .. link-button:: array_properties/array_properties
-        :type: ref
-        :text: View Page
-        :classes: btn-outline-info btn-block stretched-link
+	.. link-button:: array_properties/array_properties
+		:type: ref
+		:text: View Page
+		:classes: btn-outline-info btn-block stretched-link
 
 	---
 
-    Constructors
+	Constructors
 
-    +++
+	+++
 
-    .. link-button:: array_constructors/array_constructors
-        :type: ref
-        :text: View Page
-        :classes: btn-outline-info btn-block stretched-link
+	.. link-button:: array_constructors/array_constructors
+		:type: ref
+		:text: View Page
+		:classes: btn-outline-info btn-block stretched-link
 
 	---
 
 	General Utilities
 
-    +++
+	+++
 
-    .. link-button:: array_general_utilities/array_general_utilities
-        :type: ref
-        :text: View Page
-        :classes: btn-outline-info btn-block stretched-link
-
-	---
-
-    Arithmetic
-
-    +++
-
-    .. link-button:: array_arithmetic/array_arithmetic
-        :type: ref
-        :text: View Page
-        :classes: btn-outline-info btn-block stretched-link
+	.. link-button:: array_general_utilities/array_general_utilities
+		:type: ref
+		:text: View Page
+		:classes: btn-outline-info btn-block stretched-link
 
 	---
 
-    Manipulation
+	Arithmetic
 
-    +++
+	+++
 
-    .. link-button:: array_manipulation/array_manipulation
-        :type: ref
-        :text: View Page
-        :classes: btn-outline-info btn-block stretched-link
+	.. link-button:: array_arithmetic/array_arithmetic
+		:type: ref
+		:text: View Page
+		:classes: btn-outline-info btn-block stretched-link
+
+	---
+
+	Manipulation
+
+	+++
+
+	.. link-button:: array_manipulation/array_manipulation
+		:type: ref
+		:text: View Page
+		:classes: btn-outline-info btn-block stretched-link

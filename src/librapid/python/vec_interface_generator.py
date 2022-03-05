@@ -1,3 +1,5 @@
+import itertools
+
 def generate(types):
     res = """
 // ====================================================== //
@@ -91,8 +93,16 @@ py::class_<librapid::{dtype[0]}>(module, \"{dtype[0]}\")
     .def_property("x", &librapid::{dtype[0]}::getX, &librapid::{dtype[0]}::setX)
     .def_property("y", &librapid::{dtype[0]}::getY, &librapid::{dtype[0]}::setY)
     .def_property("z", &librapid::{dtype[0]}::getZ, &librapid::{dtype[0]}::setZ)
-    .def_property("w", &librapid::{dtype[0]}::getW, &librapid::{dtype[0]}::setW);
+    .def_property("w", &librapid::{dtype[0]}::getW, &librapid::{dtype[0]}::setW)
 """
+
+        toSwizzle = ["xy", "xyz", "xyzw"]
+        for swiz in toSwizzle:
+            for perm in itertools.permutations(list(swiz)):
+                joined = "".join(perm)
+                res += f"\t.def(\"{joined}\", &librapid::{dtype[0]}::{joined})\n"
+        res = res[:-1]
+        res += ";"
 
     return res
 
