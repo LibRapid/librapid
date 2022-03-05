@@ -39,6 +39,14 @@ namespace librapid
 			{ m_components[i] = other.m_components[i]; }
 		}
 
+		template<typename T>
+		Vec(const Vec<T, 3>& other)
+		{
+			x = other.x;
+			y = other.y;
+			z = other.z;
+		}
+
 		Vec(const Vec<DTYPE, dims>& other)
 		{
 			int64_t i;
@@ -302,7 +310,7 @@ namespace librapid
 		Vec<Common<T>, dims> cross(const Vec<T, dims>& other) const
 		{
 			static_assert(dims == 2 || dims == 3,
-						  "Only 2D and 3D vectors support the cross product");
+				"Only 2D and 3D vectors support the cross product");
 
 			Vec<Common<T>, dims> res;
 
@@ -317,6 +325,166 @@ namespace librapid
 			res.z = x * other.y - y * other.x;
 
 			return res;
+		}
+
+		inline Vec<DTYPE, 2> xy() const
+		{
+			return { x, y };
+		}
+
+		inline Vec<DTYPE, 2> yx() const
+		{
+			return { y, x };
+		}
+
+		inline Vec<DTYPE, 3> xyz() const
+		{
+			return { x, y, z };
+		}
+
+		inline Vec<DTYPE, 3> xzy() const
+		{
+			return { x, z, y };
+		}
+
+		inline Vec<DTYPE, 3> yxz() const
+		{
+			return { y, x, z };
+		}
+
+		inline Vec<DTYPE, 3> yzx() const
+		{
+			return { y, z, x };
+		}
+
+		inline Vec<DTYPE, 3> zxy() const
+		{
+			return { z, x, y };
+		}
+
+		inline Vec<DTYPE, 3> zyx() const
+		{
+			return { z, y, x };
+		}
+
+		inline Vec<DTYPE, 4> xyzw() const
+		{
+			return { x, y, z, w };
+		}
+
+		inline Vec<DTYPE, 4> xywz() const
+		{
+			return { x, y, w, z };
+		}
+
+		inline Vec<DTYPE, 4> xzyw() const
+		{
+			return { x, z, y, w };
+		}
+
+		inline Vec<DTYPE, 4> xzwy() const
+		{
+			return { x, z, w, y };
+		}
+
+		inline Vec<DTYPE, 4> xwyz() const
+		{
+			return { x, w, y, z };
+		}
+
+		inline Vec<DTYPE, 4> xwzy() const
+		{
+			return { x, w, z, y };
+		}
+
+		inline Vec<DTYPE, 4> yxzw() const
+		{
+			return { y, x, z, w };
+		}
+
+		inline Vec<DTYPE, 4> yxwz() const
+		{
+			return { y, x, w, z };
+		}
+
+		inline Vec<DTYPE, 4> yzxw() const
+		{
+			return { y, z, x, w };
+		}
+
+		inline Vec<DTYPE, 4> yzwx() const
+		{
+			return { y, z, w, x };
+		}
+
+		inline Vec<DTYPE, 4> ywxz() const
+		{
+			return { y, w, x, z };
+		}
+
+		inline Vec<DTYPE, 4> ywzx() const
+		{
+			return { y, w, z, x };
+		}
+
+		inline Vec<DTYPE, 4> zxyw() const
+		{
+			return { z, x, y, w };
+		}
+
+		inline Vec<DTYPE, 4> zxwy() const
+		{
+			return { z, x, w, y };
+		}
+
+		inline Vec<DTYPE, 4> zyxw() const
+		{
+			return { z, y, x, w };
+		}
+
+		inline Vec<DTYPE, 4> zywx() const
+		{
+			return { z, y, w, x };
+		}
+
+		inline Vec<DTYPE, 4> zwxy() const
+		{
+			return { z, w, x, y };
+		}
+
+		inline Vec<DTYPE, 4> zwyx() const
+		{
+			return { z, w, y, x };
+		}
+
+		inline Vec<DTYPE, 4> wxyz() const
+		{
+			return { w, x, y, z };
+		}
+
+		inline Vec<DTYPE, 4> wxzy() const
+		{
+			return { w, x, z, y };
+		}
+
+		inline Vec<DTYPE, 4> wyxz() const
+		{
+			return { w, y, x, z };
+		}
+
+		inline Vec<DTYPE, 4> wyzx() const
+		{
+			return { w, y, z, x };
+		}
+
+		inline Vec<DTYPE, 4> wzxy() const
+		{
+			return { w, z, x, y };
+		}
+
+		inline Vec<DTYPE, 4> wzyx() const
+		{
+			return { w, z, y, x };
 		}
 
 		[[nodiscard]] std::string str() const
@@ -388,7 +556,7 @@ namespace librapid
 		typename DTYPE, int64_t dims, typename std::enable_if<std::is_scalar<T>::value,
 															  int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator+(const T& value,
-																   const Vec<DTYPE, dims>& vec)
+		const Vec<DTYPE, dims>& vec)
 	{
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
 		for (int64_t i = 0; i < dims; ++i)
@@ -400,7 +568,7 @@ namespace librapid
 		typename DTYPE, int64_t dims, typename std::enable_if<std::is_scalar<T>::value,
 															  int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator-(const T& value,
-																   const Vec<DTYPE, dims>& vec)
+		const Vec<DTYPE, dims>& vec)
 	{
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
 		for (int64_t i = 0; i < dims; ++i)
@@ -412,7 +580,7 @@ namespace librapid
 		typename DTYPE, int64_t dims, typename std::enable_if<std::is_scalar<T>::value,
 															  int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator*(const T& value,
-																   const Vec<DTYPE, dims>& vec)
+		const Vec<DTYPE, dims>& vec)
 	{
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
 		for (int64_t i = 0; i < dims; ++i)
@@ -424,7 +592,7 @@ namespace librapid
 		typename DTYPE, int64_t dims, typename std::enable_if<std::is_scalar<T>::value,
 															  int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator/(const T& value,
-																   const Vec<DTYPE, dims>& vec)
+		const Vec<DTYPE, dims>& vec)
 	{
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
 		for (int64_t i = 0; i < dims; ++i)
@@ -735,8 +903,201 @@ namespace librapid
 		Vec<Common<T>, 3> cross(const Vec<T, 3>& other) const
 		{
 			return Vec<Common<T>, 3>(y * other.z - z * other.y,
-									 z * other.x - x * other.z,
-									 x * other.y - y * other.x);
+				z * other.x - x * other.z,
+				x * other.y - y * other.x);
+		}
+
+		// Swizzle Operations
+
+		inline Vec<DTYPE, 2> xy() const
+		{
+			return { x, y };
+		}
+
+
+		inline Vec<DTYPE, 2> yx() const
+		{
+			return { y, x };
+		}
+
+
+		inline Vec<DTYPE, 3> xyz() const
+		{
+			return { x, y, z };
+		}
+
+
+		inline Vec<DTYPE, 3> xzy() const
+		{
+			return { x, z, y };
+		}
+
+
+		inline Vec<DTYPE, 3> yxz() const
+		{
+			return { y, x, z };
+		}
+
+
+		inline Vec<DTYPE, 3> yzx() const
+		{
+			return { y, z, x };
+		}
+
+
+		inline Vec<DTYPE, 3> zxy() const
+		{
+			return { z, x, y };
+		}
+
+
+		inline Vec<DTYPE, 3> zyx() const
+		{
+			return { z, y, x };
+		}
+
+
+		inline Vec<DTYPE, 4> xyzw() const
+		{
+			return { x, y, z, w };
+		}
+
+
+		inline Vec<DTYPE, 4> xywz() const
+		{
+			return { x, y, w, z };
+		}
+
+
+		inline Vec<DTYPE, 4> xzyw() const
+		{
+			return { x, z, y, w };
+		}
+
+
+		inline Vec<DTYPE, 4> xzwy() const
+		{
+			return { x, z, w, y };
+		}
+
+
+		inline Vec<DTYPE, 4> xwyz() const
+		{
+			return { x, w, y, z };
+		}
+
+
+		inline Vec<DTYPE, 4> xwzy() const
+		{
+			return { x, w, z, y };
+		}
+
+
+		inline Vec<DTYPE, 4> yxzw() const
+		{
+			return { y, x, z, w };
+		}
+
+
+		inline Vec<DTYPE, 4> yxwz() const
+		{
+			return { y, x, w, z };
+		}
+
+
+		inline Vec<DTYPE, 4> yzxw() const
+		{
+			return { y, z, x, w };
+		}
+
+
+		inline Vec<DTYPE, 4> yzwx() const
+		{
+			return { y, z, w, x };
+		}
+
+
+		inline Vec<DTYPE, 4> ywxz() const
+		{
+			return { y, w, x, z };
+		}
+
+
+		inline Vec<DTYPE, 4> ywzx() const
+		{
+			return { y, w, z, x };
+		}
+
+
+		inline Vec<DTYPE, 4> zxyw() const
+		{
+			return { z, x, y, w };
+		}
+
+
+		inline Vec<DTYPE, 4> zxwy() const
+		{
+			return { z, x, w, y };
+		}
+
+
+		inline Vec<DTYPE, 4> zyxw() const
+		{
+			return { z, y, x, w };
+		}
+
+
+		inline Vec<DTYPE, 4> zywx() const
+		{
+			return { z, y, w, x };
+		}
+
+
+		inline Vec<DTYPE, 4> zwxy() const
+		{
+			return { z, w, x, y };
+		}
+
+
+		inline Vec<DTYPE, 4> zwyx() const
+		{
+			return { z, w, y, x };
+		}
+
+
+		inline Vec<DTYPE, 4> wxyz() const
+		{
+			return { w, x, y, z };
+		}
+
+
+		inline Vec<DTYPE, 4> wxzy() const
+		{
+			return { w, x, z, y };
+		}
+
+
+		inline Vec<DTYPE, 4> wyxz() const
+		{
+			return { w, y, x, z };
+		}
+
+
+		inline Vec<DTYPE, 4> wyzx() const
+		{
+			return { w, y, z, x };
+		}
+
+
+		inline Vec<DTYPE, 4> wzxy() const
+		{
+			return { w, z, x, y };
+		}
+
+
+		inline Vec<DTYPE, 4> wzyx() const
+		{
+			return { w, z, y, x };
 		}
 
 		[[nodiscard]] std::string str() const
@@ -801,41 +1162,41 @@ namespace librapid
 	template<typename T, typename DTYPE, typename std::enable_if<std::is_scalar<T>::value,
 																 int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, 3> operator+(const T& value,
-																const Vec<DTYPE, 3>& vec)
+		const Vec<DTYPE, 3>& vec)
 	{
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(value + vec.x,
-																 value + vec.y,
-																 value + vec.z);
+			value + vec.y,
+			value + vec.z);
 	}
 
 	template<typename T, typename DTYPE, typename std::enable_if<std::is_scalar<T>::value,
 																 int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, 3> operator-(const T& value,
-																const Vec<DTYPE, 3>& vec)
+		const Vec<DTYPE, 3>& vec)
 	{
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(value - vec.x,
-																 value - vec.y,
-																 value - vec.z);
+			value - vec.y,
+			value - vec.z);
 	}
 
 	template<typename T, typename DTYPE, typename std::enable_if<std::is_scalar<T>::value,
 																 int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, 3> operator*(const T& value,
-																const Vec<DTYPE, 3>& vec)
+		const Vec<DTYPE, 3>& vec)
 	{
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(value * vec.x,
-																 value * vec.y,
-																 value * vec.z);
+			value * vec.y,
+			value * vec.z);
 	}
 
 	template<typename T, typename DTYPE, typename std::enable_if<std::is_scalar<T>::value,
 																 int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, 3> operator/(const T& value,
-																const Vec<DTYPE, 3>& vec)
+		const Vec<DTYPE, 3>& vec)
 	{
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(value / vec.x,
-																 value / vec.y,
-																 value / vec.z);
+			value / vec.y,
+			value / vec.z);
 	}
 
 	using Vec2i = Vec<int64_t, 2>;
@@ -856,5 +1217,20 @@ namespace librapid
 		return os << vec.str();
 	}
 }
+
+template<typename T, int64_t D> struct fmt::formatter<librapid::Vec<T, D>>
+{
+	template<typename ParseContext>
+	constexpr auto parse(ParseContext& ctx)
+	{
+		return ctx.begin();
+	}
+
+	template<typename FormatContext>
+	auto format(const librapid::Vec<T, D>& arr, FormatContext& ctx)
+	{
+		return fmt::format_to(ctx.out(), arr.str());
+	}
+};
 
 #endif // LIBRAPID_VECTOR

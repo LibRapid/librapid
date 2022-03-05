@@ -38,10 +38,10 @@ dependencies:
 """
 
 # try:
-#     with open("../requirements.txt", "r") as requirements:
-#         template += "\n" + requirements.readline()
+#	 with open("../requirements.txt", "r") as requirements:
+#		 template += "\n" + requirements.readline()
 # except FileNotFoundError:
-#     template = """
+#	 template = """
 # name: docs # doxygen
 # channels:
 #   - conda-forge
@@ -50,22 +50,22 @@ dependencies:
 #   - doxygen=1.9.1
 #   - pip
 #   - pip:
-#       - sphinx==4.4.0
-#       - breathe==4.33.1
-#       - exhale==0.3.1
-#       - furo==2022.2.14.1
-#       - pydata-sphinx-theme==0.8.0
-#       - numpydoc==1.2
-#       - sphinx-panels==0.6.0
-#       - regex
+#	   - sphinx==4.4.0
+#	   - breathe==4.33.1
+#	   - exhale==0.3.1
+#	   - furo==2022.2.14.1
+#	   - pydata-sphinx-theme==0.8.0
+#	   - numpydoc==1.2
+#	   - sphinx-panels==0.6.0
+#	   - regex
 # 
-#     """
+#	 """
 # 
 # try:
-#     with open("../environment.txt", "w") as environment:
-#         environment.write(template)
+#	 with open("../environment.txt", "w") as environment:
+#		 environment.write(template)
 # except FileNotFoundError:
-#     
+#	 
 
 sys.path.insert(0, os.path.abspath("../.."))
 
@@ -73,9 +73,9 @@ sys.path.insert(0, os.path.abspath("../.."))
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_dirs = [
-    "pybind11",
-    "version2",
-    "jitify",
+	"pybind11",
+	"version2",
+	"jitify",
 	"fmt",
 	"blas",
 	"python"
@@ -117,23 +117,23 @@ master_doc = "index"
 # extensions coming with Sphinx (named "sphinx.ext.*") or your custom
 # ones.
 extensions = [
-    # "furo", <= DO NOT comment back in -- it breaks everything
-    "sphinx.ext.autodoc",
-    "sphinx.ext.napoleon",
-    "sphinx.ext.coverage",
-    "sphinx.ext.autosectionlabel",
-    "sphinx.ext.intersphinx",
-    "sphinx_panels",
-    "breathe",
-    "exhale",
-    "numpydoc"
+	# "furo", <= DO NOT comment back in -- it breaks everything
+	"sphinx.ext.autodoc",
+	"sphinx.ext.napoleon",
+	"sphinx.ext.coverage",
+	"sphinx.ext.autosectionlabel",
+	"sphinx.ext.intersphinx",
+	"sphinx_panels",
+	"breathe",
+	"exhale",
+	"numpydoc"
 ]
 
 autosectionlabel_prefix_document = True
 
 # Set up the breathe extension
 breathe_projects = {
-    "librapid": "./doxygenoutput/xml"
+	"librapid": "./doxygenoutput/xml"
 }
 
 breathe_default_project = "librapid"
@@ -141,35 +141,35 @@ breathe_default_project = "librapid"
 # Custom inputs to doxygen generator
 doxygen_inputs = """
 
-INPUT                 = ./librapid_doc_copy
+INPUT				 = ./librapid_doc_copy
 	   
 ENABLE_PREPROCESSING  = YES
-MACRO_EXPANSION       = YES
-EXPAND_ONLY_PREDEF    = NO
-PREDEFINED            += LIBRAPID_DOXYGEN_BUILD
-PREDEFINED            += LR_INLINE=
-PREDEFINED            += __restrict=
-PREDEFINED            += LIBRAPID_MAX_DIMS=32
-PREDEFINED            += __host__=
-PREDEFINED            += __device__=
-PREDEFINED            += __global__=
+MACRO_EXPANSION	   = YES
+EXPAND_ONLY_PREDEF	= NO
+PREDEFINED			+= LIBRAPID_DOXYGEN_BUILD
+PREDEFINED			+= LR_INLINE=
+PREDEFINED			+= __restrict=
+PREDEFINED			+= LIBRAPID_MAX_DIMS=32
+PREDEFINED			+= __host__=
+PREDEFINED			+= __device__=
+PREDEFINED			+= __global__=
 
 """
 
 # Set up the exhale extension
 exhale_args = {
-    # These arguments are required
-    "containmentFolder": "./api",
-    "rootFileName": "index.rst",
-    "rootFileTitle": "LibRapid",
-    "doxygenStripFromPath": "..",
-    # Suggested optional arguments
-    "createTreeView": True,
-    # TIP: if using the sphinx-bootstrap-theme, you need
-    # "treeViewIsBootstrap": True,
-    "exhaleExecutesDoxygen": True,
-    "exhaleDoxygenStdin": textwrap.dedent(doxygen_inputs),
-    "verboseBuild": True
+	# These arguments are required
+	"containmentFolder": "./api",
+	"rootFileName": "index.rst",
+	"rootFileTitle": "LibRapid",
+	"doxygenStripFromPath": "..",
+	# Suggested optional arguments
+	"createTreeView": True,
+	# TIP: if using the sphinx-bootstrap-theme, you need
+	# "treeViewIsBootstrap": True,
+	"exhaleExecutesDoxygen": True,
+	"exhaleDoxygenStdin": textwrap.dedent(doxygen_inputs),
+	"verboseBuild": True
 }
 
 # Add any paths that contain templates here, relative to this directory.
@@ -179,9 +179,9 @@ exhale_args = {
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = [
-    "*pybind*",
-    "*version2*",
-    "*jitify*",
+	"*pybind*",
+	"*version2*",
+	"*jitify*",
 	"*fmt*",
 	"*blas/*"
 ]
@@ -198,24 +198,24 @@ html_theme = "furo"
 # html_logo = "../../branding/LibRapid small space.png"
 
 html_context = {
-    "github_user": "LibRapid",
-    "github_repo": "librapid",
-    "github_version": "master",
-    "doc_path": "docs/source",
+	"github_user": "LibRapid",
+	"github_repo": "librapid",
+	"github_version": "master",
+	"doc_path": "docs/source",
 }
 
 html_theme_options = {
 	# Show a banner at the top of the page
-    # "announcement": """
-    #     <a style=\"text-decoration: none; color: white;\" 
-    #        href=\"https://www.patreon.com/librapid\">
-    #        <img src=\"/en/latest/_static/LR_icon.png\"
-    #        width=22.5/> Support LibRapid on Patreon
-    #     </a>
-    # """,
-    "sidebar_hide_name": True,
-    "light_logo": "LibRapid_light.png",
-    "dark_logo": "LibRapid_dark.png",
+	# "announcement": """
+	#	 <a style=\"text-decoration: none; color: white;\" 
+	#		href=\"https://www.patreon.com/librapid\">
+	#		<img src=\"/en/latest/_static/LR_icon.png\"
+	#		width=22.5/> Support LibRapid on Patreon
+	#	 </a>
+	# """,
+	"sidebar_hide_name": True,
+	"light_logo": "LibRapid_light.png",
+	"dark_logo": "LibRapid_dark.png",
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

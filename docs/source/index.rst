@@ -158,25 +158,25 @@ Contents
 	array/array_overview
 
 .. panels::
-    Array Overview
+	Array Overview
 
-    +++
+	+++
 
-    .. link-button:: array/array_overview
-        :type: ref
-        :text: View Page
-        :classes: btn-outline-info btn-block stretched-link
+	.. link-button:: array/array_overview
+		:type: ref
+		:text: View Page
+		:classes: btn-outline-info btn-block stretched-link
 
 	---
 
-    Vector Overview
+	Vector Overview
 
-    +++
+	+++
 
-    .. link-button:: array/array_overview
-        :type: ref
-        :text: View Page
-        :classes: btn-outline-info btn-block stretched-link
+	.. link-button:: array/array_overview
+		:type: ref
+		:text: View Page
+		:classes: btn-outline-info btn-block stretched-link
 
 Licencing
 =========
