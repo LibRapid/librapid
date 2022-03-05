@@ -32,8 +32,8 @@ For example, adding two arrays works as follows:
 
 	[1 2 3] + [4 5 6] = [5 7 9]
 	# Because 1 + 4 = 5
-	#     and 2 + 5 = 7
-	#     and 3 + 6 = 9
+	#	 and 2 + 5 = 7
+	#	 and 3 + 6 = 9
 
 .. array_shapes:
 
@@ -46,39 +46,39 @@ which vary based on the extents of the input arrays.
 A full list of the arithmetic types is below:
 
 +------------------+-------------------------------+-----------------------------------+
-| Name             | Requirement                   | Example                           |
+| Name			 | Requirement				   | Example						   |
 +==================+===============================+===================================+
-| Exact match      | The arrays are identical      | .. code-block:: python            |
-|                  | in their extents              |                                   |
-|                  |                               |     [[1 2]  + [[5 6]  = [[ 6  8]  |
-|                  |                               |      [3 4]]    [7 8]]    [10 12]] |
+| Exact match	  | The arrays are identical	  | .. code-block:: python			|
+|				  | in their extents			  |								   |
+|				  |							   |	 [[1 2]  + [[5 6]  = [[ 6  8]  |
+|				  |							   |	  [3 4]]	[7 8]]	[10 12]] |
 +------------------+-------------------------------+-----------------------------------+
-| Outer dimensions | The arrays have the same      | .. code-block:: python            |
-| match            | extent, but have leading      |                                   |
-|                  | or trailing 1s                |     [1 2] + [[[3 4]]] = [4 6]     |
-|                  |                               |                                   |
-|                  |                               |     [[[1 2]]] + [3 4] = [[[4 6]]] |
+| Outer dimensions | The arrays have the same	  | .. code-block:: python			|
+| match			| extent, but have leading	  |								   |
+|				  | or trailing 1s				|	 [1 2] + [[[3 4]]] = [4 6]	 |
+|				  |							   |								   |
+|				  |							   |	 [[[1 2]]] + [3 4] = [[[4 6]]] |
 +------------------+-------------------------------+-----------------------------------+
-| Single value     | One of the addends is an      | .. code-block:: python            |
-| array            | array with only a single      |                                   |
-|                  | value                         |     [1 2 3] + [10] => [11 12 13]  |
-|                  |                               |                                   |
-|                  |                               |     [10] + [1 2 3] => [11 12 13]  |
+| Single value	 | One of the addends is an	  | .. code-block:: python			|
+| array			| array with only a single	  |								   |
+|				  | value						 |	 [1 2 3] + [10] => [11 12 13]  |
+|				  |							   |								   |
+|				  |							   |	 [10] + [1 2 3] => [11 12 13]  |
 +------------------+-------------------------------+-----------------------------------+
-| Row-by-row       | The dimensions ``[0 .. n-1]`` | .. code-block:: python            |
-|                  | of one array match the        |                                   |
-|                  | dimensions of the other       |     [[1 2]  + [5 6] = [[ 6  8]    |
-|                  |                               |      [3 4]]            [ 8 10]]   |
+| Row-by-row	   | The dimensions ``[0 .. n-1]`` | .. code-block:: python			|
+|				  | of one array match the		|								   |
+|				  | dimensions of the other	   |	 [[1 2]  + [5 6] = [[ 6  8]	|
+|				  |							   |	  [3 4]]			[ 8 10]]   |
 +------------------+-------------------------------+-----------------------------------+
-| Grid             | Array with extent ``[... 1]`` | .. code-block:: python            |
-|                  | and array with extent         |                                   |
-|                  | ``[1 ...]``                   |     [1 2] + [[3]  = [[4 5]        |
-|                  |                               |              [4]]    [5 6]]       |
+| Grid			 | Array with extent ``[... 1]`` | .. code-block:: python			|
+|				  | and array with extent		 |								   |
+|				  | ``[1 ...]``				   |	 [1 2] + [[3]  = [[4 5]		|
+|				  |							   |			  [4]]	[5 6]]	   |
 +------------------+-------------------------------+-----------------------------------+
-| Column-by-column | The dimensions ``[1 .. n]``   | .. code-block:: python            |
-|                  | of one array match the        |                                   |
-|                  | dimensions ``[0 .. m-1]`` of  |     [[1 2]  + [[5]  = [[ 6  7]    |
-|                  | the other                     |      [3 4]]    [6]]    [ 9 10]]   |
+| Column-by-column | The dimensions ``[1 .. n]``   | .. code-block:: python			|
+|				  | of one array match the		|								   |
+|				  | dimensions ``[0 .. m-1]`` of  |	 [[1 2]  + [[5]  = [[ 6  7]	|
+|				  | the other					 |	  [3 4]]	[6]]	[ 9 10]]   |
 +------------------+-------------------------------+-----------------------------------+
 
 .. Attention::

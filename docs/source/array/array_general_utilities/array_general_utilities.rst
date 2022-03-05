@@ -8,3 +8,4 @@ General Array utilities and functions
 	:glob:
 
 	array_general_utilities_subscript
+	array_general_utilities_casting
