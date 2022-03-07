@@ -89,25 +89,19 @@ namespace librapid
 		double start1, double stop1,
 		double start2, double stop2);
 
-	template<typename T, typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
-	inline T random(T lower, T upper, uint64_t seed = -1)
+	template<typename T = double>
+	inline double random(T lower = 0, T upper = 1, uint64_t seed = -1)
 	{
 		// Random floating point value in range [lower, upper)
 
-		static std::uniform_real_distribution<T> distribution(0., 1.);
+		static std::uniform_real_distribution<double> distribution(0., 1.);
 		static std::mt19937 generator(seed == (uint64_t)-1 ? (unsigned int)(seconds() * 10) : seed);
 		return lower + (upper - lower) * distribution(generator);
 	}
 
-	template<typename T, typename std::enable_if<!std::is_floating_point<T>::value, int>::type = 0>
-	inline T random(T lower, T upper, uint64_t seed = -1)
-	{
-		// Random integral value in range [lower, upper]
-		return (T)random((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1, seed);
-	}
-
-	template<typename T>
-	inline Complex<T> random(const Complex<T>& min, const Complex<T>& max, uint64_t seed = -1)
+	template<typename T = double>
+	inline Complex<T> random(const Complex<T>& min, const Complex<T>& max,
+		uint64_t seed = -1)
 	{
 		return { random<T>(min.real(), max.real(), seed), random<T>(min.imag(), max.imag(), seed) };
 	}
@@ -115,7 +109,7 @@ namespace librapid
 	inline int64_t randint(int64_t lower, int64_t upper, uint64_t seed = -1)
 	{
 		// Random integral value in range [lower, upper]
-		return random(lower, upper, seed);
+		return (int64_t)random((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1, seed);
 	}
 
 	inline double trueRandomEntropy()
@@ -125,26 +119,51 @@ namespace librapid
 		return rd.entropy();
 	}
 
-	template<typename T, typename std::enable_if<std::is_floating_point<T>::value, int>::type = 0>
-	inline T trueRandom(T lower, T upper)
+	template<typename T = double>
+	inline double trueRandom(T lower = 0, T upper = 1)
 	{
 		// Truly random value in range [lower, upper)
 		static std::random_device rd;
-		std::uniform_real_distribution<T> dist(lower, upper);
+		std::uniform_real_distribution<double> dist((double)lower, (double)upper);
 		return dist(rd);
-	}
-
-	template<typename T, typename std::enable_if<!std::is_floating_point<T>::value, int>::type = 0>
-	inline T trueRandom(T lower, T upper)
-	{
-		// Truly random value in range [lower, upper]
-		return (int64_t)trueRandom((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1);
 	}
 
 	inline int64_t trueRandint(int64_t lower, int64_t upper)
 	{
 		// Truly random value in range [lower, upper)
 		return (int64_t)trueRandom((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1);
+	}
+
+	/**
+	 * Adapted from https://docs.oracle.com/javase/6/docs/api/java/util/Random.html#nextGaussian()
+	 */
+	inline double randomGaussian()
+	{
+		static double nextGaussian;
+		static bool hasNextGaussian = false;
+
+		double res;
+		if (hasNextGaussian)
+		{
+			hasNextGaussian = false;
+			res = nextGaussian;
+		}
+		else
+		{
+			double v1, v2, s;
+			do
+			{
+				v1 = 2 * random() - 1;   // between -1.0 and 1.0
+				v2 = 2 * random() - 1;   // between -1.0 and 1.0
+				s = v1 * v1 + v2 * v2;
+			} while (s >= 1 || s == 0);
+			double multiplier = sqrt(-2 * log(s) / s);
+			nextGaussian = v2 * multiplier;
+			hasNextGaussian = true;
+			res = v1 * multiplier;
+		}
+
+		return res;
 	}
 
 	[[nodiscard]] double pow10(int64_t exponent);
