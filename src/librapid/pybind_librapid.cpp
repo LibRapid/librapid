@@ -123,6 +123,7 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("trueRandomEntropy", []() { return librapid::trueRandomEntropy(); });
 	module.def("trueRandom", [](double min, double max) { return librapid::trueRandom(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
 	module.def("trueRandint", [](int64_t min, int64_t max) { return librapid::trueRandint(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
+	module.def("randomGaussian", []() { return librapid::randomGaussian(); });
 	module.def("pow10", &librapid::pow10);
 	module.def("round", [](double val, int64_t places) { return librapid::round(val, places); }, py::arg("val"), py::arg("places") = 0);
 	module.def("roundSigFig", [](double val, int64_t figs) { return librapid::roundSigFig(val, figs); }, py::arg("val"), py::arg("figs") = 3);
