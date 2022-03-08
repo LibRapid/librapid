@@ -1,5 +1,5 @@
-#ifndef NDARRAY_CORE_MATH
-#define NDARRAY_CORE_MATH
+#ifndef LIBRAPID_CORE_MATH
+#define LIBRAPID_CORE_MATH
 
 #include <librapid/config.hpp>
 #include <librapid/autocast/custom_complex.hpp>
@@ -134,9 +134,9 @@ namespace librapid
 		return (int64_t)trueRandom((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1);
 	}
 
-	/**
-	 * Adapted from https://docs.oracle.com/javase/6/docs/api/java/util/Random.html#nextGaussian()
-	 */
+/**
+ * Adapted from https://docs.oracle.com/javase/6/docs/api/java/util/Random.html#nextGaussian()
+ */
 	inline double randomGaussian()
 	{
 		static double nextGaussian;
@@ -175,4 +175,4 @@ namespace librapid
 	uint64_t nthFibonacci(uint8_t n);
 }
 
-#endif // NDARRAY_CORE_MATH
+#endif // LIBRAPID_CORE_MATH
