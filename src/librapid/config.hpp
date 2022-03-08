@@ -5,6 +5,12 @@
 #include <cstring>
 #include <thread>
 
+#ifdef _WIN32
+#include <intrin.h>
+#else
+#include <x86intrin.h>
+#endif
+
 #ifdef LIBRAPID_PYTHON
 // PyBind11 specific definitions and includes
 #include <pybind11/pybind11.h>
