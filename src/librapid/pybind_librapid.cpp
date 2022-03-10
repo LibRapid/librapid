@@ -60,6 +60,8 @@ PYBIND11_MODULE(_librapid, module) {
 
 	module.attr("AUTO") = (int64_t) -1;
 
+	module.attr("EPSILON32") = librapid::EPSILON32;
+	module.attr("EPSILON64") = librapid::EPSILON64;
 	module.attr("PISQRDIV6") = librapid::PISQRDIV6;
 	module.attr("RADTODEG") = librapid::RADTODEG;
 	module.attr("DEGTORAD") = librapid::DEGTORAD;

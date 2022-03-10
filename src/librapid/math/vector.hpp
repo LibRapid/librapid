@@ -12,6 +12,12 @@
 namespace librapid
 {
 #ifndef LIBRAPID_DOXYGEN_BUILD
+#define MIN_DIM_CLAMP(_dims, _tmpDims) (((_dims) < (_tmpDims)) ? (_dims) : (_tmpDims))
+#else
+#define MIN_DIM_CLAMP(_dims, _tmpDims) _dims
+#endif
+
+#ifndef LIBRAPID_DOXYGEN_BUILD
 #define MAX_DIM_CLAMP(_dims, _tmpDims) (((_dims) > (_tmpDims)) ? (_dims) : (_tmpDims))
 #else
 #define MAX_DIM_CLAMP(_dims, _tmpDims) _dims
@@ -97,6 +103,34 @@ namespace librapid
 		DTYPE& operator[](int64_t index)
 		{
 			return m_components[index];
+		}
+
+		template<typename T, int64_t tmpDims>
+		bool operator==(const Vec<T, tmpDims>& other) const
+		{
+			// For vectors with different dimensions, return true if the excess values are all zero
+			for (int64_t i = 0; i < MIN_DIM_CLAMP(dims, tmpDims); ++i)
+			{
+				if (m_components[i] != other[i])
+					return false;
+			}
+
+			// Quick return to avoid excess checks
+			if (dims == tmpDims) return true;
+
+			for (int64_t i = MIN_DIM_CLAMP(dims, tmpDims); i < MAX_DIM_CLAMP(dims, tmpDims); ++i)
+			{
+				if (i < dims && m_components[i]) return false;
+				if (i < tmpDims && other[i]) return false;
+			}
+
+			return true;
+		}
+
+		template<typename T, int64_t tmpDims>
+		bool operator!=(const Vec<T, tmpDims>& other) const
+		{
+			return !(*this == other);
 		}
 
 		/**
@@ -685,6 +719,28 @@ namespace librapid
 			return (&x)[index];
 		}
 
+		template<typename T, int64_t tmpDims>
+		bool operator==(const Vec<T, tmpDims>& other) const
+		{
+			if (tmpDims <= 3)
+			{
+				return x == other.x && y == other.y && z == other.z && w == other.w;
+			}
+
+			for (int64_t i = 3; i < tmpDims; ++i)
+			{
+				if (other[i]) return false;
+			}
+
+			return true;
+		}
+
+		template<typename T, int64_t tmpDims>
+		bool operator!=(const Vec<T, tmpDims>& other) const
+		{
+			return !(*this == other);
+		}
+
 		/**
 		 * Implement simple arithmetic operators + - * /
 		 *
@@ -914,186 +970,155 @@ namespace librapid
 			return { x, y };
 		}
 
-
 		inline Vec<DTYPE, 2> yx() const
 		{
 			return { y, x };
 		}
-
 
 		inline Vec<DTYPE, 3> xyz() const
 		{
 			return { x, y, z };
 		}
 
-
 		inline Vec<DTYPE, 3> xzy() const
 		{
 			return { x, z, y };
 		}
-
 
 		inline Vec<DTYPE, 3> yxz() const
 		{
 			return { y, x, z };
 		}
 
-
 		inline Vec<DTYPE, 3> yzx() const
 		{
 			return { y, z, x };
 		}
-
 
 		inline Vec<DTYPE, 3> zxy() const
 		{
 			return { z, x, y };
 		}
 
-
 		inline Vec<DTYPE, 3> zyx() const
 		{
 			return { z, y, x };
 		}
-
 
 		inline Vec<DTYPE, 4> xyzw() const
 		{
 			return { x, y, z, w };
 		}
 
-
 		inline Vec<DTYPE, 4> xywz() const
 		{
 			return { x, y, w, z };
 		}
-
 
 		inline Vec<DTYPE, 4> xzyw() const
 		{
 			return { x, z, y, w };
 		}
 
-
 		inline Vec<DTYPE, 4> xzwy() const
 		{
 			return { x, z, w, y };
 		}
-
 
 		inline Vec<DTYPE, 4> xwyz() const
 		{
 			return { x, w, y, z };
 		}
 
-
 		inline Vec<DTYPE, 4> xwzy() const
 		{
 			return { x, w, z, y };
 		}
-
 
 		inline Vec<DTYPE, 4> yxzw() const
 		{
 			return { y, x, z, w };
 		}
 
-
 		inline Vec<DTYPE, 4> yxwz() const
 		{
 			return { y, x, w, z };
 		}
-
 
 		inline Vec<DTYPE, 4> yzxw() const
 		{
 			return { y, z, x, w };
 		}
 
-
 		inline Vec<DTYPE, 4> yzwx() const
 		{
 			return { y, z, w, x };
 		}
-
 
 		inline Vec<DTYPE, 4> ywxz() const
 		{
 			return { y, w, x, z };
 		}
 
-
 		inline Vec<DTYPE, 4> ywzx() const
 		{
 			return { y, w, z, x };
 		}
-
 
 		inline Vec<DTYPE, 4> zxyw() const
 		{
 			return { z, x, y, w };
 		}
 
-
 		inline Vec<DTYPE, 4> zxwy() const
 		{
 			return { z, x, w, y };
 		}
-
 
 		inline Vec<DTYPE, 4> zyxw() const
 		{
 			return { z, y, x, w };
 		}
 
-
 		inline Vec<DTYPE, 4> zywx() const
 		{
 			return { z, y, w, x };
 		}
-
 
 		inline Vec<DTYPE, 4> zwxy() const
 		{
 			return { z, w, x, y };
 		}
 
-
 		inline Vec<DTYPE, 4> zwyx() const
 		{
 			return { z, w, y, x };
 		}
-
 
 		inline Vec<DTYPE, 4> wxyz() const
 		{
 			return { w, x, y, z };
 		}
 
-
 		inline Vec<DTYPE, 4> wxzy() const
 		{
 			return { w, x, z, y };
 		}
-
 
 		inline Vec<DTYPE, 4> wyxz() const
 		{
 			return { w, y, x, z };
 		}
 
-
 		inline Vec<DTYPE, 4> wyzx() const
 		{
 			return { w, y, z, x };
 		}
 
-
 		inline Vec<DTYPE, 4> wzxy() const
 		{
 			return { w, z, x, y };
 		}
-
 
 		inline Vec<DTYPE, 4> wzyx() const
 		{
