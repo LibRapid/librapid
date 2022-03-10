@@ -6,6 +6,10 @@
 namespace librapid {
 	#define CTYPED [[maybe_unused]] static const long double
 
+	// 32bit float minimum value
+	CTYPED EPSILON32 = FLT_MIN;
+	// 64bit float minimum value
+	CTYPED EPSILON64 = DBL_MIN;
 	// π² / 6.
 	CTYPED PISQRDIV6 = 1.6449340668482264364724151666460251892189499012067984377355582293;
 	// 180 / π.

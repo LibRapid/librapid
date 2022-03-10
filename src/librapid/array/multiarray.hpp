@@ -20,6 +20,13 @@ namespace librapid
 {
 	namespace utils
 	{
+		/**
+		 * \rst
+		 *
+		 *
+		 *
+		 * \endrst
+		 */
 		template<typename V>
 		inline std::vector<int64_t> extractSize(const std::vector<V>& vec)
 		{
