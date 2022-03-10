@@ -26,6 +26,13 @@ namespace librapid::linalg
 	// using common = typename std::common_type<A, B>::type;
 	using common = typename CommonType<A, B>::type;
 
+	/**
+	 * \rst
+	 *
+	 * Please see http://www.netlib.org/lapack/explore-html/de/da4/group__double__blas__level1_ga75066c4825cb6ff1c8ec4403ef8c843a.html#ga75066c4825cb6ff1c8ec4403ef8c843a
+	 *
+	 * \endrst
+	 */
 	template<typename A, typename B>
 	inline common<A, B> cblas_dot(int64_t n,
 								  A* __restrict x,
@@ -41,6 +48,15 @@ namespace librapid::linalg
 
 #ifdef LIBRAPID_HAS_BLAS
 
+	/**
+	 * \rst
+	 *
+	 * Call to cblas_sdot
+	 *
+	 * See cblas_dot (general)
+	 *
+	 * \endrst
+	 */
 	template<>
 	inline float cblas_dot(int64_t n, float* __restrict x, int64_t incx,
 						   float* __restrict y, int64_t incy)
@@ -48,6 +64,15 @@ namespace librapid::linalg
 		return cblas_sdot((int)n, x, (int)incx, y, (int)incy);
 	}
 
+	/**
+	 * \rst
+	 *
+	 * Call to cblas_ddot
+	 *
+	 * See cblas_dot (general)
+	 *
+	 * \endrst
+	 */
 	template<>
 	inline double cblas_dot(int64_t n, double* __restrict x, int64_t incx,
 							double* __restrict y, int64_t incy)
@@ -57,6 +82,15 @@ namespace librapid::linalg
 
 #endif // LIBRAPID_HAS_BLAS
 
+	/**
+	 * \rst
+	 *
+	 * Calculate a matrix-vector product without using BLAS routines
+	 *
+	 * See cblas_gemv (general)
+	 *
+	 * \endrst
+	 */
 	template<typename A, typename B, typename C>
 	inline void cblas_gemv_no_blas(char order, bool trans, int64_t m, int64_t n,
 								   A alpha, A* __restrict a, int64_t lda,
@@ -91,6 +125,13 @@ namespace librapid::linalg
 		}
 	}
 
+	/**
+	 * \rst
+	 *
+	 * Please see http://www.netlib.org/lapack/explore-html/d7/d15/group__double__blas__level2_gadd421a107a488d524859b4a64c1901a9.html
+	 *
+	 * \endrst
+	 */
 	template<typename A, typename B, typename C>
 	inline void cblas_gemv(char order, bool trans, int64_t m, int64_t n, A alpha,
 						   A* __restrict a, int64_t lda, B* __restrict x, int64_t incx,
@@ -101,6 +142,14 @@ namespace librapid::linalg
 
 #ifdef LIBRAPID_HAS_BLAS
 
+
+	/**
+	 * \rst
+	 *
+	 * See cblas_gemv (general)
+	 *
+	 * \endrst
+	 */
 	template<>
 	inline void cblas_gemv(char order, bool trans, int64_t m, int64_t n,
 						   float alpha, float* __restrict a, int64_t lda,
@@ -133,6 +182,13 @@ namespace librapid::linalg
 					(int)incy);
 	}
 
+	/**
+	 * \rst
+	 *
+	 * See cblas_gemv (general)
+	 *
+	 * \endrst
+	 */
 	template<>
 	inline void cblas_gemv(char order, bool trans, int64_t m, int64_t n,
 						   double alpha, double* __restrict a, int64_t lda,
@@ -167,6 +223,13 @@ namespace librapid::linalg
 
 #endif // LIBRAPID_HAS_BLAS
 
+	/**
+	 * \rst
+	 *
+	 * See cblas_gemm (general)
+	 *
+	 * \endrst
+	 */
 	template<typename A, typename B, typename C>
 	inline void cblas_gemm_no_blas(char order, bool trans_a, bool trans_b, int64_t m,
 								   int64_t n, int64_t k, A alpha,
@@ -230,6 +293,13 @@ namespace librapid::linalg
 		}
 	}
 
+	/**
+	 * \rst
+	 *
+	 * Please see http://www.netlib.org/lapack/explore-html/d1/d54/group__double__blas__level3_gaeda3cbd99c8fb834a60a6412878226e1.html#gaeda3cbd99c8fb834a60a6412878226e1
+	 *
+	 * \endrst
+	 */
 	template<typename A, typename B, typename C>
 	inline void cblas_gemm(char order, bool trans_a, bool trans_b, int64_t m,
 						   int64_t n, int64_t k, A alpha,
@@ -242,6 +312,13 @@ namespace librapid::linalg
 
 #ifdef LIBRAPID_HAS_BLAS
 
+	/**
+	 * \rst
+	 *
+	 * See cblas_gemm (general)
+	 *
+	 * \endrst
+	 */
 	template<>
 	inline void cblas_gemm(char order, bool trans_a, bool trans_b, int64_t m,
 						   int64_t n, int64_t k, float alpha,
@@ -270,6 +347,13 @@ namespace librapid::linalg
 					(int)m, (int)n, (int)k, alpha, a, (int)lda, b, (int)ldb, beta, c, (int)ldc);
 	}
 
+	/**
+	 * \rst
+	 *
+	 * See cblas_gemm (general)
+	 *
+	 * \endrst
+	 */
 	template<>
 	inline void cblas_gemm(char order, bool trans_a, bool trans_b, int64_t m,
 						   int64_t n, int64_t k, double alpha,

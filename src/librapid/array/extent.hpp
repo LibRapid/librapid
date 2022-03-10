@@ -34,8 +34,23 @@ namespace librapid {
 		 */
 		explicit Extent(const std::initializer_list<int64_t> &data);
 
+		/**
+		 * \rst
+		 *
+		 * Please see
+		 * .. doxygenfunction:: librapid::Extent(const std::initializer_list<int64_t> &)
+		 *
+		 * \endrst
+		 */
 		explicit Extent(const std::vector<int64_t> &data);
 
+		/**
+		 * \rst
+		 *
+		 * Create an extent from an existing object. All data is copied as is.
+		 *
+		 * \endrst
+		 */
 		Extent(const Extent &other);
 
 		/**
@@ -58,6 +73,13 @@ namespace librapid {
 		Extent(py::args args);
 #endif // LIBRAPID_PYTHON
 
+		/**
+		 * \rst
+		 *
+		 * Set one ``Extent`` object equal to another
+		 *
+		 * \endrst
+		 */
 		Extent &operator=(const Extent &other);
 
 		/**
