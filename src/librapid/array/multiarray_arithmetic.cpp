@@ -2,7 +2,6 @@
 #include <librapid/array/ops.hpp>
 #include <librapid/utils/array_utils.hpp>
 
-
 namespace librapid {
 	// ========= Negation =========
 
@@ -73,4 +72,4 @@ namespace librapid {
 	Array Array::operator/(const Array &other) const {
 		return div(*this, other);
 	}
-}
+} // namespace librapid

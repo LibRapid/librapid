@@ -11,5 +11,3 @@ inline Vec<DTYPE, {len(perm)}> {"".join(perm)}() const
     return {{ {term} }};
 }}
 """)
-
-

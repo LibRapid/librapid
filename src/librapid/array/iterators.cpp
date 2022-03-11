@@ -14,9 +14,7 @@ namespace librapid {
 		return *this;
 	}
 
-	ESIterator::operator bool() const {
-		return m_ptr ? true : false;
-	}
+	ESIterator::operator bool() const { return m_ptr ? true : false; }
 
 	bool ESIterator::operator==(const ESIterator &other) const {
 		return m_ptr == other.getConstPointer();
@@ -66,23 +64,18 @@ namespace librapid {
 		return ESIterator(m_ptr - movement);
 	}
 
-	ESIterator::differenceType ESIterator::operator-(const ESIterator &rawIterator) const {
+	ESIterator::differenceType
+	ESIterator::operator-(const ESIterator &rawIterator) const {
 		return std::distance(rawIterator.getPointer(), getPointer());
 	}
 
-	ESIterator::reference ESIterator::operator*() {
-		return *m_ptr;
-	}
+	ESIterator::reference ESIterator::operator*() { return *m_ptr; }
 
-	const ESIterator::reference ESIterator::operator*() const {
-		return *m_ptr;
-	}
+	const ESIterator::reference ESIterator::operator*() const { return *m_ptr; }
 
 	const ESIterator::pointer ESIterator::getConstPointer() const {
 		return m_ptr;
 	}
 
-	ESIterator::pointer ESIterator::getPointer() const {
-		return m_ptr;
-	}
-}
+	ESIterator::pointer ESIterator::getPointer() const { return m_ptr; }
+} // namespace librapid

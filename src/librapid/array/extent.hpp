@@ -1,13 +1,13 @@
 #ifndef LIBRAPID_EXTENT
 #define LIBRAPID_EXTENT
 
-#include <librapid/config.hpp>
 #include <librapid/array/iterators.hpp>
+#include <librapid/config.hpp>
 #include <vector>
 
 namespace librapid {
 	class Extent {
-	public:
+	  public:
 		/**
 		 * \rst
 		 *
@@ -20,9 +20,10 @@ namespace librapid {
 		/**
 		 * \rst
 		 *
-		 * Construct an Extent from the provided data, where the number of elements
-		 * passed defines the *number* of dimensions of the Extent, and the integer
-		 * values passed represent the size of each dimension respectively.
+		 * Construct an Extent from the provided data, where the number of
+		 *elements passed defines the *number* of dimensions of the Extent, and
+		 *the integer values passed represent the size of each dimension
+		 *respectively.
 		 *
 		 * Parameters
 		 * ----------
@@ -38,7 +39,9 @@ namespace librapid {
 		 * \rst
 		 *
 		 * Please see
-		 * .. doxygenfunction:: librapid::Extent(const std::initializer_list<int64_t> &)
+		 * .. doxygenfunction:: librapid::Extent(const
+		 * std::initializer_list<int64_t>
+		 * &)
 		 *
 		 * \endrst
 		 */
@@ -89,21 +92,19 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		[[nodiscard]] inline int64_t ndim() const {
-			return m_dims;
-		}
+		[[nodiscard]] inline int64_t ndim() const { return m_dims; }
 
 		/**
 		 * \rst
 		 *
-		 * Returns the number of elements the Extent object represents. This is the
-		 * product ``dim1 * dim2 * dim3 ... ``.
+		 * Returns the number of elements the Extent object represents. This is
+		 *the product ``dim1 * dim2 * dim3 ... ``.
 		 *
 		 * .. Attention::
 		 *
 		 *		If an automatic dimension (``librapid.AUTO``) is included in the
-		 *		Extent, the size value will be negative. Ensure your program takes
-		 *		this into account
+		 *		Extent, the size value will be negative. Ensure your program
+		 *takes this into account
 		 *
 		 * \endrst
 		 */
@@ -118,8 +119,7 @@ namespace librapid {
 		}
 
 		[[nodiscard]] inline int64_t size() {
-			if (m_isDirty)
-				update();
+			if (m_isDirty) update();
 
 			return m_size;
 		}
@@ -136,16 +136,15 @@ namespace librapid {
 		}
 
 		/**
-		* \rst
-		*
-		* Convert the Stride object to an std::vector and return the result
-		*
-		* \endrst
-		*/
+		 * \rst
+		 *
+		 * Convert the Stride object to an std::vector and return the result
+		 *
+		 * \endrst
+		 */
 		[[nodiscard]] inline std::vector<int64_t> toVec() const {
 			std::vector<int64_t> res(m_dims);
-			for (int64_t i = 0; i < m_dims; ++i)
-				res[i] = m_extent[i];
+			for (int64_t i = 0; i < m_dims; ++i) res[i] = m_extent[i];
 			return res;
 		}
 
@@ -156,7 +155,8 @@ namespace librapid {
 		 *
 		 * .. Hint::
 		 *
-		 *		An automatic dimension is any negative value or ``librapid.AUTO``
+		 *		An automatic dimension is any negative value or
+		 *``librapid.AUTO``
 		 *
 		 * \endrst
 		 */
@@ -206,9 +206,8 @@ namespace librapid {
 		 * -------
 		 *
 		 * fixed: ``Extent``
-		 *		An Extent object with any automatic dimensions resolved to fit the
-		 *		target number of elements
-		 * \endrst
+		 *		An Extent object with any automatic dimensions resolved to fit
+		 *the target number of elements \endrst
 		 */
 		[[nodiscard]] Extent fixed(int64_t target) const;
 
@@ -216,8 +215,8 @@ namespace librapid {
 		 * \rst
 		 *
 		 * Returns true if two extents are identical. This involves number of
-		 * dimensions, automatic dimensions, and the sizes of each dimension in the
-		 * Extents.
+		 * dimensions, automatic dimensions, and the sizes of each dimension in
+		 * the Extents.
 		 *
 		 * \endrst
 		 */
@@ -256,7 +255,8 @@ namespace librapid {
 		 */
 		void reorder(const std::vector<int64_t> &order);
 
-		[[nodiscard]] Extent subExtent(int64_t start = -1, int64_t end = -1) const;
+		[[nodiscard]] Extent subExtent(int64_t start = -1,
+									   int64_t end	 = -1) const;
 
 		/**
 		 * \rst
@@ -264,27 +264,28 @@ namespace librapid {
 		 * Generate a string representation of the Extent. The result takes the
 		 * following general form:
 		 *
-		 * :math:`\text{Extent}(\text{dim}_0, \text{dim}_1, ... , \text{dim}_{n-1})`
+		 * :math:`\text{Extent}(\text{dim}_0, \text{dim}_1, ... ,
+		 * \text{dim}_{n-1})`
 		 *
 		 * \endrst
 		 */
 		[[nodiscard]] std::string str() const;
 
 		[[nodiscard]] inline ESIterator begin() const {
-			return ESIterator((int64_t *) m_extent);
+			return ESIterator((int64_t *)m_extent);
 		}
 
 		[[nodiscard]] inline ESIterator end() const {
-			return {(int64_t *) m_extent + m_dims};
+			return {(int64_t *)m_extent + m_dims};
 		}
 
 		void update();
 
-	private:
+	  private:
 		int64_t m_extent[LIBRAPID_MAX_DIMS];
-		int64_t m_dims = 0;
+		int64_t m_dims			 = 0;
 		bool m_containsAutomatic = false;
-		int64_t m_size = 0;
+		int64_t m_size			 = 0;
 
 		bool m_isDirty = false;
 	};
@@ -292,6 +293,6 @@ namespace librapid {
 	inline std::ostream &operator<<(std::ostream &os, const Extent &extent) {
 		return os << extent.str();
 	}
-}
+} // namespace librapid
 
 #endif // LIBRAPID_EXTENT

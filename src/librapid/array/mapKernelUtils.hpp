@@ -7,88 +7,61 @@
 
 #pragma once
 
-#include <librapid/config.hpp>
 #include <cstdint>
+#include <librapid/config.hpp>
 
-namespace librapid::utils
-{
+namespace librapid::utils {
 	template<typename T, typename = void>
-	struct HasName : std::false_type
-	{
-	};
+	struct HasName : std::false_type {};
 
 	template<typename T>
-	struct HasName<T, decltype((void)T::name, void())> : std::true_type
-	{
-	};
+	struct HasName<T, decltype((void)T::name, void())> : std::true_type {};
 
 	template<typename T, typename = void>
-	struct HasKernel : std::false_type
-	{
-	};
+	struct HasKernel : std::false_type {};
 
 	template<typename T>
-	struct HasKernel<T, decltype((void)T::kernel, void())> : std::true_type
-	{
-	};
+	struct HasKernel<T, decltype((void)T::kernel, void())> : std::true_type {};
 
 	template<typename T, typename Kernel, uint64_t dims>
-	struct ApplyKernelImpl
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			throw std::runtime_error(
-				"Too many arguments passed to Array.mapKernel -- Please see the documentation for details");
+			  "Too many arguments passed to Array.mapKernel -- "
+			  "Please see the documentation for details");
 		}
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 1>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 1> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index]);
 		}
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 2>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 2> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index], pointers[1][index]);
 		}
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 3>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
-			dst[index] = kernel(pointers[0][index], pointers[1][index], pointers[2][index]);
+	struct ApplyKernelImpl<T, Kernel, 3> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
+			dst[index] = kernel(
+			  pointers[0][index], pointers[1][index], pointers[2][index]);
 		}
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 4>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 4> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index],
 								pointers[1][index],
 								pointers[2][index],
@@ -97,13 +70,9 @@ namespace librapid::utils
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 5>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 5> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index],
 								pointers[1][index],
 								pointers[2][index],
@@ -113,13 +82,9 @@ namespace librapid::utils
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 6>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 6> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index],
 								pointers[1][index],
 								pointers[2][index],
@@ -130,13 +95,9 @@ namespace librapid::utils
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 7>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 7> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index],
 								pointers[1][index],
 								pointers[2][index],
@@ -148,13 +109,9 @@ namespace librapid::utils
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 8>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 8> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index],
 								pointers[1][index],
 								pointers[2][index],
@@ -167,13 +124,9 @@ namespace librapid::utils
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 9>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 9> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index],
 								pointers[1][index],
 								pointers[2][index],
@@ -187,13 +140,9 @@ namespace librapid::utils
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 10>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 10> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index],
 								pointers[1][index],
 								pointers[2][index],
@@ -208,13 +157,9 @@ namespace librapid::utils
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 11>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 11> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index],
 								pointers[1][index],
 								pointers[2][index],
@@ -230,13 +175,9 @@ namespace librapid::utils
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 12>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 12> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index],
 								pointers[1][index],
 								pointers[2][index],
@@ -253,13 +194,9 @@ namespace librapid::utils
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 13>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 13> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index],
 								pointers[1][index],
 								pointers[2][index],
@@ -277,13 +214,9 @@ namespace librapid::utils
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 14>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 14> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index],
 								pointers[1][index],
 								pointers[2][index],
@@ -302,13 +235,9 @@ namespace librapid::utils
 	};
 
 	template<typename T, typename Kernel>
-	struct ApplyKernelImpl<T, Kernel, 15>
-	{
-		static inline void run(T** __restrict pointers,
-							   T* __restrict dst,
-							   const Kernel& kernel,
-							   uint64_t index)
-		{
+	struct ApplyKernelImpl<T, Kernel, 15> {
+		static inline void run(T **__restrict pointers, T *__restrict dst,
+							   const Kernel &kernel, uint64_t index) {
 			dst[index] = kernel(pointers[0][index],
 								pointers[1][index],
 								pointers[2][index],
@@ -327,4 +256,4 @@ namespace librapid::utils
 		}
 	};
 
-}
+} // namespace librapid::utils
