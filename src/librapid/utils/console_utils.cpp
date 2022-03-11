@@ -15,20 +15,18 @@ namespace librapid {
 	}
 
 #elif defined(LIBRAPID_OS_UNIX)
-	consoleSize getConsoleSize()
-	{
+	consoleSize getConsoleSize() {
 		static struct winsize w;
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
 		return {w.ws_row, w.ws_col};
 	}
 #else
-	consoleSize getConsoleSize()
-	{
+	consoleSize getConsoleSize() {
 		// Not a clue what this would run on, or how it would be done
 		// correctly, so just return some arbitrary values...
 
 		return {80, 120};
 	}
 #endif
-}
+} // namespace librapid

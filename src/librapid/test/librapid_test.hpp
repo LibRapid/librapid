@@ -3,14 +3,10 @@
 
 #include <librapid/config.hpp>
 
-namespace librapid
-{
-	namespace test
-	{
-		int testLibrapid(int x);
+namespace librapid { namespace test {
+	int testLibrapid(int x);
 
-		void streamTest();
-	}
-}
+	void streamTest();
+}} // namespace librapid::test
 
 #endif // LIBRAPID_TEST

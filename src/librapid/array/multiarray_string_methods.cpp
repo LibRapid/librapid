@@ -2,15 +2,18 @@
 #include <librapid/utils/array_utils.hpp>
 
 namespace librapid {
-	std::pair<int64_t, int64_t> Array::stringifyFormatPreprocess(bool stripMiddle,
-																 bool autoStrip) const {
+	std::pair<int64_t, int64_t>
+	Array::stringifyFormatPreprocess(bool stripMiddle, bool autoStrip) const {
 		if (autoStrip) {
 			if (m_extent.size() >= 1000) stripMiddle = true;
 
 			// Edge case for row and column vectors
-			if (ndim() == 1) stripMiddle = false;
-			else if (ndim() == 2 && m_extent[1] == 1) stripMiddle = false;
-			else if (ndim() == 2 && m_extent[0] == 1) stripMiddle = false;
+			if (ndim() == 1)
+				stripMiddle = false;
+			else if (ndim() == 2 && m_extent[1] == 1)
+				stripMiddle = false;
+			else if (ndim() == 2 && m_extent[0] == 1)
+				stripMiddle = false;
 		}
 
 		// Scalar values
@@ -31,11 +34,10 @@ namespace librapid {
 			int64_t index = 0;
 
 			for (int64_t i = 0; i < m_extent.size(); ++i, ++index) {
-				if (stripMiddle && i == 3)
-					i = m_extent.size() - 3;
+				if (stripMiddle && i == 3) i = m_extent.size() - 3;
 
-				auto sublongest = subscript(i).stringifyFormatPreprocess(stripMiddle,
-																		 false);
+				auto sublongest =
+				  subscript(i).stringifyFormatPreprocess(stripMiddle, false);
 
 				if (sublongest.first > longestIntegral)
 					longestIntegral = sublongest.first;
@@ -48,16 +50,15 @@ namespace librapid {
 		}
 
 		// Everything else
-		int64_t index = 0;
+		int64_t index	 = 0;
 		int64_t vec_size = stripMiddle ? 6 : m_extent[0];
-		std::string res = "[";
+		std::string res	 = "[";
 
 		for (int64_t i = 0; i < m_extent[0]; ++i, ++index) {
-			if (stripMiddle && i == 3)
-				i = m_extent[0] - 3;
+			if (stripMiddle && i == 3) i = m_extent[0] - 3;
 
-			auto sublongest = subscript(i).stringifyFormatPreprocess(stripMiddle,
-																	 false);
+			auto sublongest =
+			  subscript(i).stringifyFormatPreprocess(stripMiddle, false);
 
 			if (sublongest.first > longestIntegral)
 				longestIntegral = sublongest.first;
@@ -72,21 +73,24 @@ namespace librapid {
 	std::string Array::stringify(int64_t indent, bool showCommas,
 								 bool stripMiddle, bool autoStrip,
 								 std::pair<int64_t, int64_t> &longest,
-								 int64_t &printedRows, int64_t &printedCols) const {
+								 int64_t &printedRows,
+								 int64_t &printedCols) const {
 		printedRows = 0;
 		printedCols = 0;
 
 		// Non-initialized arrays
-		if (m_references == nullptr)
-			return "[NONE]";
+		if (m_references == nullptr) return "[NONE]";
 
 		if (autoStrip) {
 			if (m_extent.size() >= 1000) stripMiddle = true;
 
 			// Edge case for row and column vectors
-			if (ndim() == 1) stripMiddle = false;
-			else if (ndim() == 2 && m_extent[1] == 1) stripMiddle = false;
-			else if (ndim() == 2 && m_extent[0] == 1) stripMiddle = false;
+			if (ndim() == 1)
+				stripMiddle = false;
+			else if (ndim() == 2 && m_extent[1] == 1)
+				stripMiddle = false;
+			else if (ndim() == 2 && m_extent[0] == 1)
+				stripMiddle = false;
 		}
 
 		// Scalar values
@@ -103,7 +107,7 @@ namespace librapid {
 
 		// Vectors
 		if (ndim() == 1) {
-			int64_t index = 0;
+			int64_t index	= 0;
 			std::string res = "[";
 
 			for (int64_t i = 0; i < m_extent.size(); ++i, ++index) {
@@ -117,8 +121,10 @@ namespace librapid {
 				std::string tempVal = subscript(i).stringify(indent + 1,
 															 showCommas,
 															 stripMiddle,
-															 false, longest,
-															 tmpRows, tmpCols);
+															 false,
+															 longest,
+															 tmpRows,
+															 tmpCols);
 
 				// Locate the decimal point and calculate
 				// the number of digits before and after it
@@ -135,22 +141,23 @@ namespace librapid {
 				if (index == std::string::npos) {
 					// No decimal point
 					before = tempVal.length();
-					after = 0;
+					after  = 0;
 				} else {
 					before = index;
-					after = tempVal.length() - index - 1;
+					after  = tempVal.length() - index - 1;
 				}
 
 				int64_t addBefore, addAfter;
 				addBefore = longest.first - before;
-				addAfter = longest.second - after;
+				addAfter  = longest.second - after;
 
 				std::string formatted;
 				formatted += std::string(addBefore, ' ');
 				formatted += tempVal;
 				formatted += std::string(addAfter, ' ');
 
-				if (i + 1 < m_extent.size()) formatted += showCommas ? ", " : " ";
+				if (i + 1 < m_extent.size())
+					formatted += showCommas ? ", " : " ";
 
 				printedCols += formatted.length();
 				res += formatted;
@@ -160,7 +167,7 @@ namespace librapid {
 		}
 
 		// Everything else
-		int64_t index = 0;
+		int64_t index	= 0;
 		std::string res = "[";
 
 		for (int64_t i = 0; i < m_extent[0]; ++i, ++index) {
@@ -171,9 +178,13 @@ namespace librapid {
 			}
 
 			int64_t tmpRows, tmpCols;
-			res += subscript(i).stringify(indent + 1, showCommas,
-										  stripMiddle, false, longest,
-										  tmpRows, tmpCols);
+			res += subscript(i).stringify(indent + 1,
+										  showCommas,
+										  stripMiddle,
+										  false,
+										  longest,
+										  tmpRows,
+										  tmpCols);
 
 			printedRows++;
 			printedCols = tmpCols;
@@ -192,7 +203,7 @@ namespace librapid {
 	std::string Array::str(int64_t indent, bool showCommas,
 						   int64_t &printedRows, int64_t &printedCols) const {
 		std::pair<int64_t, int64_t> longest;
-		return stringify(indent, showCommas, false, true, longest,
-						 printedRows, printedCols);
+		return stringify(
+		  indent, showCommas, false, true, longest, printedRows, printedCols);
 	}
-}
+} // namespace librapid

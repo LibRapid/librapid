@@ -1,23 +1,25 @@
 #ifndef LIBRAPID_STRIDE
 #define LIBRAPID_STRIDE
 
-#include <librapid/config.hpp>
 #include <librapid/array/extent.hpp>
+#include <librapid/config.hpp>
 
 namespace librapid {
 	class Stride {
-	public:
+	  public:
 		Stride() = default;
 
 		/**
 		 * \rst
 		 *
-		 * Create a Stride from the provided values. The number of dimensions will
-		 * be equal to the number of elements in the provided list, and the stride
-		 * for each dimension will be the corresponding value in the data provided
+		 * Create a Stride from the provided values. The number of dimensions
+		 *will be equal to the number of elements in the provided list, and the
+		 *stride for each dimension will be the corresponding value in the data
+		 *provided
 		 *
 		 * If the provided value is a single scalar, the Stride object will
-		 * be created with that number of dimensions, with each value set to one.
+		 * be created with that number of dimensions, with each value set to
+		 *one.
 		 *
 		 * .. Attention::
 		 *
@@ -79,20 +81,16 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		inline int64_t ndim() const {
-			return m_dims;
-		}
+		[[nodiscard]] inline int64_t ndim() const { return m_dims; }
 
 		/**
-		* \rst
-		*
-		* Return a pointer to the raw data of this stride
-		*
-		* \endrst
-		*/
-		inline const int64_t *__restrict raw() const {
-			return m_stride;
-		}
+		 * \rst
+		 *
+		 * Return a pointer to the raw data of this stride
+		 *
+		 * \endrst
+		 */
+		[[nodiscard]] inline const int64_t *__restrict raw() const { return m_stride; }
 
 		/**
 		 * \rst
@@ -103,8 +101,7 @@ namespace librapid {
 		 */
 		inline std::vector<int64_t> toVec() const {
 			std::vector<int64_t> res(m_dims);
-			for (int64_t i = 0; i < m_dims; ++i)
-				res[i] = m_stride[i];
+			for (int64_t i = 0; i < m_dims; ++i) res[i] = m_stride[i];
 			return res;
 		}
 
@@ -119,9 +116,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		inline bool isTrivial() const {
-			return m_isTrivial;
-		}
+		[[nodiscard]] inline bool isTrivial() const { return m_isTrivial; }
 
 		/**
 		 * \rst
@@ -134,16 +129,14 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		inline bool isContiguous() const {
-			return m_isContiguous;
-		}
+		[[nodiscard]] inline bool isContiguous() const { return m_isContiguous; }
 
 		/**
 		 * \rst
 		 *
 		 * Returns true if the Stride matches another Stride *exactly*. This
-		 * requires the dimensions, trivial-ness and contiguity to match, as well as
-		 * the actual values for the stride.
+		 * requires the dimensions, trivial-ness and contiguity to match, as
+		 * well as the actual values for the stride.
 		 *
 		 * \endrst
 		 */
@@ -171,9 +164,9 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		const int64_t &operator[](const int64_t index) const;
+		const int64_t &operator[](int64_t index) const;
 
-		int64_t &operator[](const int64_t index);
+		int64_t &operator[](int64_t index);
 
 		/**
 		 * \rst
@@ -199,15 +192,12 @@ namespace librapid {
 		/**
 		 * \rst
 		 *
-		 * Return a new Stride object containing the values from this Stride in the
-		 * range :math:`[\text{start}, \text{end})`
+		 * Return a new Stride object containing the values from this Stride in
+		 * the range :math:`[\text{start}, \text{end})`
 		 *
 		 * \endrst
 		 */
-		Stride subStride(int64_t start = -1, int64_t end = -1) const;
-
-		// void scaleBytes(int64_t bytes);
-		// Stride scaledBytes(int64_t bytes) const;
+		[[nodiscard]] Stride subStride(int64_t start = -1, int64_t end = -1) const;
 
 		/**
 		 * \rst
@@ -218,66 +208,65 @@ namespace librapid {
 		 *
 		 *		A stride is trivial if every value in the stride is greater than
 		 *		the following value. This is a crude method of detecting what
-		 *		algorithms can be used on a given Array, but, when combined with the
-		 *		``isContiguous()`` function, provides an effective classifier for
-		 *		algorithm selection.
+		 *		algorithms can be used on a given Array, but, when combined with
+		 *the
+		 *		``isContiguous()`` function, provides an effective classifier
+		 *for algorithm selection.
 		 *
 		 * \endrst
 		 */
-		bool checkTrivial() const;
+		[[nodiscard]] bool checkTrivial() const;
 
 		/**
 		 * \rst
 		 *
-		 * Returns true if the Stride and Extent (passed as a parameter) represent
+		 * Returns true if the Stride and Extent (passed as a parameter)
+		 * represent
 		 * an Array whose data is contiguous in memory.
-		 *
-		 * Let :math:`A` be an array with extent :math:`E=\{E_n, E_{n-1}, ... E_2, E_1\}`
+		 * Let :math:`A` be an array with extent :math:`E=\{E_n, E_{n-1}, ...
+		 * E_2, E_1\}`
 		 * and stride :math:`S=\{S_n, S_{n-1}, ... S_2, S_1\}`. :math:`A` is
 		 * contiguous in memory if, and only if, :math:`S' \cap D' = \emptyset`,
 		 * where
 		 *
-		 * .. Math::
-				D_n = \begin{cases}
-					x \geq 2  &\quad \prod_{i=2}^{\text{dims}_a}{S_i} \\
-					otherwise &\quad 1 \\
-				\end{cases}
+		 * .. Math:: D_n = \begin{cases} x \geq 2  &\quad
+		 * \prod_{i=2}^{\text{dims}_a}{S_i} \\ otherwise &\quad 1 \\ \end{cases}
 		 *
 		 * \endrst
 		 */
-		bool checkContiguous(const Extent &extent) const;
+		[[nodiscard]] bool checkContiguous(const Extent &extent) const;
 
 		/**
-		* \rst
-		*
-		* Generate a string representation of the Stride. The result takes the
-		* following general form:
-		*
-		* :math:`\text{Stride}(\text{stride}_0, \text{stride}_1, ... , \text{stride}_{n-1})`
-		*
-		* \endrst
-		*/
-		std::string str() const;
+		 * \rst
+		 *
+		 * Generate a string representation of the Stride. The result takes the
+		 * following general form:
+		 *
+		 * :math:`\text{Stride}(\text{stride}_0, \text{stride}_1, ... ,
+		 * \text{stride}_{n-1})`
+		 *
+		 * \endrst
+		 */
+		[[nodiscard]] std::string str() const;
 
-		inline ESIterator begin() const {
-			return ESIterator((int64_t *) m_stride);
+		[[nodiscard]] inline ESIterator begin() const {
+			return {(int64_t *)m_stride};
 		}
 
-		inline ESIterator end() const {
-			return ESIterator((int64_t *) m_stride + m_dims);
+		[[nodiscard]] inline ESIterator end() const {
+			return {(int64_t *)m_stride + m_dims};
 		}
 
-	private:
-
-		int64_t m_stride[LIBRAPID_MAX_DIMS];
-		int64_t m_dims = 0;
-		bool m_isTrivial = true; // Trivial stride
+	  private:
+		int64_t m_stride[LIBRAPID_MAX_DIMS]{};
+		int64_t m_dims		= 0;
+		bool m_isTrivial	= true; // Trivial stride
 		bool m_isContiguous = true; // Data is contiguous in memory
 	};
 
 	inline std::ostream &operator<<(std::ostream &os, const Stride &stride) {
 		return os << stride.str();
 	}
-}
+} // namespace librapid
 
 #endif // LIBRAPID_STRIDE
