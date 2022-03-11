@@ -1,11 +1,12 @@
-#include <librapid/stringmethods/format_number.hpp>
-#include <librapid/autocast/custom_complex.hpp>
-#include <string>
-#include <sstream>
 #include <algorithm>
+#include <librapid/autocast/custom_complex.hpp>
+#include <librapid/stringmethods/format_number.hpp>
+#include <sstream>
+#include <string>
 
 namespace librapid {
-	std::string format_number(const double &val, bool floating, bool international) {
+	std::string format_number(const double &val, bool floating,
+							  bool international) {
 		std::stringstream stream;
 		stream.precision(10);
 
@@ -25,7 +26,8 @@ namespace librapid {
 		return str;
 	}
 
-	std::string format_number(const Complex<double> &val, bool floating, bool international) {
+	std::string format_number(const Complex<double> &val, bool floating,
+							  bool international) {
 		return val.str();
 	}
-}
+} // namespace librapid

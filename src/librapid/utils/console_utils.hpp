@@ -6,11 +6,11 @@
 // Console width and height information
 #if defined(LIBRAPID_OS_WINDOWS)
 
-#include <windows.h>
+#	include <windows.h>
 
 #elif defined(LIBRAPID_OS_UNIX)
-#include <sys/ioctl.h>
-#include <unistd.h>
+#	include <sys/ioctl.h>
+#	include <unistd.h>
 #endif
 
 namespace librapid {
@@ -20,6 +20,6 @@ namespace librapid {
 	};
 
 	consoleSize getConsoleSize();
-}
+} // namespace librapid
 
 #endif // LIBRAPID_CONSOLE_UTILS

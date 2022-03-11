@@ -1,24 +1,15 @@
 #include <librapid/test/librapid_test.hpp>
 
-namespace librapid
-{
-	namespace test
-	{
-		int testLibrapid(int x)
-		{
-			return x * x;
-		}
+namespace librapid { namespace test {
+	int testLibrapid(int x) { return x * x; }
 
-		void streamTest()
-		{
+	void streamTest() {
 #ifdef LIBRAPID_HAS_CUDA
-			cudaStream_t stream;
+		cudaStream_t stream;
 
-			cudaSafeCall(cudaStreamCreateWithFlags(&stream,
-												   cudaStreamNonBlocking));
+		cudaSafeCall(cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking));
 
-			cudaSafeCall(cudaStreamDestroy(stream));
+		cudaSafeCall(cudaStreamDestroy(stream));
 #endif // LIBRAPID_HAS_CUDA
-		}
 	}
-}
+}} // namespace librapid::test

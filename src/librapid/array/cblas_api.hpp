@@ -1,27 +1,26 @@
 #ifndef LIBRAPID_HAS_BLAS_API
 #define LIBRAPID_HAS_BLAS_API
 
-#include <thread>
 #include <librapid/config.hpp>
+#include <thread>
 
 #ifdef LIBRAPID_HAS_BLAS
 
-#include <cblas.h>
+#	include <cblas.h>
 
 #endif // LIBRAPID_HAS_BLAS
 
 #ifdef LIBRAPID_HAS_CUDA
 
-#include <cuda.h>
-#include <cublas_v2.h>
-#include <curand.h>
-#include <curand_kernel.h>
-#include <library_types.h>
+#	include <cublas_v2.h>
+#	include <cuda.h>
+#	include <curand.h>
+#	include <curand_kernel.h>
+#	include <library_types.h>
 
 #endif // LIBRAPID_HAS_CUDA
 
-namespace librapid::linalg
-{
+namespace librapid::linalg {
 	template<typename A, typename B>
 	// using common = typename std::common_type<A, B>::type;
 	using common = typename CommonType<A, B>::type;
@@ -29,20 +28,16 @@ namespace librapid::linalg
 	/**
 	 * \rst
 	 *
-	 * Please see http://www.netlib.org/lapack/explore-html/de/da4/group__double__blas__level1_ga75066c4825cb6ff1c8ec4403ef8c843a.html#ga75066c4825cb6ff1c8ec4403ef8c843a
+	 * Please see
+	 * http://www.netlib.org/lapack/explore-html/de/da4/group__double__blas__level1_ga75066c4825cb6ff1c8ec4403ef8c843a.html#ga75066c4825cb6ff1c8ec4403ef8c843a
 	 *
 	 * \endrst
 	 */
 	template<typename A, typename B>
-	inline common<A, B> cblas_dot(int64_t n,
-								  A* __restrict x,
-								  int64_t incx,
-								  B* __restrict y,
-								  int64_t incy)
-	{
+	inline common<A, B> cblas_dot(int64_t n, A *__restrict x, int64_t incx,
+								  B *__restrict y, int64_t incy) {
 		common<A, B> res = 0;
-		for (int64_t i = 0; i < n; i++)
-			res += x[i * incx] * y[i * incy];
+		for (int64_t i = 0; i < n; i++) res += x[i * incx] * y[i * incy];
 		return res;
 	}
 
@@ -58,9 +53,8 @@ namespace librapid::linalg
 	 * \endrst
 	 */
 	template<>
-	inline float cblas_dot(int64_t n, float* __restrict x, int64_t incx,
-						   float* __restrict y, int64_t incy)
-	{
+	inline float cblas_dot(int64_t n, float *__restrict x, int64_t incx,
+						   float *__restrict y, int64_t incy) {
 		return cblas_sdot((int)n, x, (int)incx, y, (int)incy);
 	}
 
@@ -74,9 +68,8 @@ namespace librapid::linalg
 	 * \endrst
 	 */
 	template<>
-	inline double cblas_dot(int64_t n, double* __restrict x, int64_t incx,
-							double* __restrict y, int64_t incy)
-	{
+	inline double cblas_dot(int64_t n, double *__restrict x, int64_t incx,
+							double *__restrict y, int64_t incy) {
 		return cblas_ddot((int)n, x, (int)incx, y, (int)incy);
 	}
 
@@ -93,10 +86,9 @@ namespace librapid::linalg
 	 */
 	template<typename A, typename B, typename C>
 	inline void cblas_gemv_no_blas(char order, bool trans, int64_t m, int64_t n,
-								   A alpha, A* __restrict a, int64_t lda,
-								   B* __restrict x, int64_t incx, C beta,
-								   C* __restrict y, int64_t incy)
-	{
+								   A alpha, A *__restrict a, int64_t lda,
+								   B *__restrict x, int64_t incx, C beta,
+								   C *__restrict y, int64_t incy) {
 		int64_t _lda = trans ? 1 : lda;
 		int64_t _fda = trans ? lda : 1;
 
@@ -104,16 +96,14 @@ namespace librapid::linalg
 		int64_t index_x = 0;
 		int64_t index_y = 0;
 
-		for (int64_t outer = 0; outer < m; outer++)
-		{
+		for (int64_t outer = 0; outer < m; outer++) {
 			if (beta == 0)
 				y[index_y] = 0;
 			else
 				y[index_y] += y[index_y] * beta;
 
 			index_x = 0;
-			for (int64_t inner = 0; inner < n; inner++)
-			{
+			for (int64_t inner = 0; inner < n; inner++) {
 				index_a = outer * _lda + inner * _fda;
 
 				y[index_y] += a[index_a] * x[index_x];
@@ -128,20 +118,21 @@ namespace librapid::linalg
 	/**
 	 * \rst
 	 *
-	 * Please see http://www.netlib.org/lapack/explore-html/d7/d15/group__double__blas__level2_gadd421a107a488d524859b4a64c1901a9.html
+	 * Please see
+	 * http://www.netlib.org/lapack/explore-html/d7/d15/group__double__blas__level2_gadd421a107a488d524859b4a64c1901a9.html
 	 *
 	 * \endrst
 	 */
 	template<typename A, typename B, typename C>
-	inline void cblas_gemv(char order, bool trans, int64_t m, int64_t n, A alpha,
-						   A* __restrict a, int64_t lda, B* __restrict x, int64_t incx,
-						   C beta, C* __restrict y, int64_t incy)
-	{
-		cblas_gemv_no_blas(order, trans, m, n, alpha, a, lda, x, incx, beta, y, incy);
+	inline void cblas_gemv(char order, bool trans, int64_t m, int64_t n,
+						   A alpha, A *__restrict a, int64_t lda,
+						   B *__restrict x, int64_t incx, C beta,
+						   C *__restrict y, int64_t incy) {
+		cblas_gemv_no_blas(
+		  order, trans, m, n, alpha, a, lda, x, incx, beta, y, incy);
 	}
 
 #ifdef LIBRAPID_HAS_BLAS
-
 
 	/**
 	 * \rst
@@ -152,17 +143,16 @@ namespace librapid::linalg
 	 */
 	template<>
 	inline void cblas_gemv(char order, bool trans, int64_t m, int64_t n,
-						   float alpha, float* __restrict a, int64_t lda,
-						   float* __restrict x, int64_t incx, float beta,
-						   float* __restrict y, int64_t incy)
-	{
-		CBLAS_ORDER blas_order{};
+						   float alpha, float *__restrict a, int64_t lda,
+						   float *__restrict x, int64_t incx, float beta,
+						   float *__restrict y, int64_t incy) {
+		CBLAS_ORDER blas_order {};
 		if (order == 'r')
 			blas_order = CblasRowMajor;
 		else
 			blas_order = CblasColMajor;
 
-		CBLAS_TRANSPOSE blas_trans{};
+		CBLAS_TRANSPOSE blas_trans {};
 		if (trans)
 			blas_trans = CblasTrans;
 		else
@@ -191,17 +181,16 @@ namespace librapid::linalg
 	 */
 	template<>
 	inline void cblas_gemv(char order, bool trans, int64_t m, int64_t n,
-						   double alpha, double* __restrict a, int64_t lda,
-						   double* __restrict x, int64_t incx, double beta,
-						   double* __restrict y, int64_t incy)
-	{
-		CBLAS_ORDER blas_order{};
+						   double alpha, double *__restrict a, int64_t lda,
+						   double *__restrict x, int64_t incx, double beta,
+						   double *__restrict y, int64_t incy) {
+		CBLAS_ORDER blas_order {};
 		if (order == 'r')
 			blas_order = CblasRowMajor;
 		else
 			blas_order = CblasColMajor;
 
-		CBLAS_TRANSPOSE blas_trans{};
+		CBLAS_TRANSPOSE blas_trans {};
 		if (trans)
 			blas_trans = CblasTrans;
 		else
@@ -231,11 +220,11 @@ namespace librapid::linalg
 	 * \endrst
 	 */
 	template<typename A, typename B, typename C>
-	inline void cblas_gemm_no_blas(char order, bool trans_a, bool trans_b, int64_t m,
-								   int64_t n, int64_t k, A alpha,
-								   A* __restrict a, int64_t lda, B* __restrict b,
-								   int64_t ldb, C beta, C* __restrict c, int64_t ldc)
-	{
+	inline void cblas_gemm_no_blas(char order, bool trans_a, bool trans_b,
+								   int64_t m, int64_t n, int64_t k, A alpha,
+								   A *__restrict a, int64_t lda,
+								   B *__restrict b, int64_t ldb, C beta,
+								   C *__restrict c, int64_t ldc) {
 		int64_t outer, inner, sub;
 		int64_t temp_a, index_c;
 
@@ -248,13 +237,10 @@ namespace librapid::linalg
 		int64_t _ldc = trans_b ? 1 : ldc;
 		int64_t _fdc = trans_b ? ldc : 1;
 
-		if (m * n * k < 2500)
-		{
-			for (outer = 0; outer < m; ++outer)
-			{
-				for (inner = 0; inner < n; ++inner)
-				{
-					temp_a = outer * _lda;
+		if (m * n * k < 2500) {
+			for (outer = 0; outer < m; ++outer) {
+				for (inner = 0; inner < n; ++inner) {
+					temp_a	= outer * _lda;
 					index_c = inner * _fdc + outer * _ldc;
 
 					if (beta == 0)
@@ -262,21 +248,31 @@ namespace librapid::linalg
 					else
 						c[index_c] += c[index_c] * beta;
 
-					for (sub = 0; sub < k; ++sub)
-					{
-						c[index_c] += a[temp_a + sub * _fda] * b[sub * _ldb + inner * _fdb];
+					for (sub = 0; sub < k; ++sub) {
+						c[index_c] +=
+						  a[temp_a + sub * _fda] * b[sub * _ldb + inner * _fdb];
 					}
 				}
 			}
-		}
-		else
-		{
-#pragma omp parallel for shared(m, n, k, _lda, _fda, _ldb, _fdb, _ldc, _fdc, alpha, beta, a, b, c) private(outer, inner, sub, temp_a, index_c) default(none)
-			for (outer = 0; outer < m; ++outer)
-			{
-				for (inner = 0; inner < n; ++inner)
-				{
-					temp_a = outer * _lda;
+		} else {
+#pragma omp parallel for shared(                                               \
+  m,                                                                           \
+  n,                                                                           \
+  k,                                                                           \
+  _lda,                                                                        \
+  _fda,                                                                        \
+  _ldb,                                                                        \
+  _fdb,                                                                        \
+  _ldc,                                                                        \
+  _fdc,                                                                        \
+  alpha,                                                                       \
+  beta,                                                                        \
+  a,                                                                           \
+  b,                                                                           \
+  c) private(outer, inner, sub, temp_a, index_c) default(none)
+			for (outer = 0; outer < m; ++outer) {
+				for (inner = 0; inner < n; ++inner) {
+					temp_a	= outer * _lda;
 					index_c = inner * _fdc + outer * _ldc;
 
 					if (beta == 0)
@@ -284,9 +280,9 @@ namespace librapid::linalg
 					else
 						c[index_c] += c[index_c] * beta;
 
-					for (sub = 0; sub < k; ++sub)
-					{
-						c[index_c] += a[temp_a + sub * _fda] * b[sub * _ldb + inner * _fdb];
+					for (sub = 0; sub < k; ++sub) {
+						c[index_c] +=
+						  a[temp_a + sub * _fda] * b[sub * _ldb + inner * _fdb];
 					}
 				}
 			}
@@ -296,18 +292,30 @@ namespace librapid::linalg
 	/**
 	 * \rst
 	 *
-	 * Please see http://www.netlib.org/lapack/explore-html/d1/d54/group__double__blas__level3_gaeda3cbd99c8fb834a60a6412878226e1.html#gaeda3cbd99c8fb834a60a6412878226e1
+	 * Please see
+	 * http://www.netlib.org/lapack/explore-html/d1/d54/group__double__blas__level3_gaeda3cbd99c8fb834a60a6412878226e1.html#gaeda3cbd99c8fb834a60a6412878226e1
 	 *
 	 * \endrst
 	 */
 	template<typename A, typename B, typename C>
 	inline void cblas_gemm(char order, bool trans_a, bool trans_b, int64_t m,
-						   int64_t n, int64_t k, A alpha,
-						   A* __restrict a, int64_t lda, B* __restrict b,
-						   int64_t ldb, C beta, C* __restrict c, int64_t ldc)
-	{
-		cblas_gemm_no_blas(order, trans_a, trans_b, m, n, k,
-						   alpha, a, lda, b, ldb, beta, c, ldc);
+						   int64_t n, int64_t k, A alpha, A *__restrict a,
+						   int64_t lda, B *__restrict b, int64_t ldb, C beta,
+						   C *__restrict c, int64_t ldc) {
+		cblas_gemm_no_blas(order,
+						   trans_a,
+						   trans_b,
+						   m,
+						   n,
+						   k,
+						   alpha,
+						   a,
+						   lda,
+						   b,
+						   ldb,
+						   beta,
+						   c,
+						   ldc);
 	}
 
 #ifdef LIBRAPID_HAS_BLAS
@@ -322,16 +330,16 @@ namespace librapid::linalg
 	template<>
 	inline void cblas_gemm(char order, bool trans_a, bool trans_b, int64_t m,
 						   int64_t n, int64_t k, float alpha,
-						   float* __restrict a, int64_t lda, float* __restrict b,
-						   int64_t ldb, float beta, float* __restrict c, int64_t ldc)
-	{
-		CBLAS_ORDER blas_order{};
+						   float *__restrict a, int64_t lda,
+						   float *__restrict b, int64_t ldb, float beta,
+						   float *__restrict c, int64_t ldc) {
+		CBLAS_ORDER blas_order {};
 		if (order == 'r')
 			blas_order = CblasRowMajor;
 		else
 			blas_order = CblasColMajor;
 
-		CBLAS_TRANSPOSE blas_trans_a{};
+		CBLAS_TRANSPOSE blas_trans_a {};
 		if (trans_a)
 			blas_trans_a = CblasTrans;
 		else
@@ -343,8 +351,20 @@ namespace librapid::linalg
 		else
 			blas_trans_b = CblasNoTrans;
 
-		cblas_sgemm(blas_order, blas_trans_a, blas_trans_b,
-					(int)m, (int)n, (int)k, alpha, a, (int)lda, b, (int)ldb, beta, c, (int)ldc);
+		cblas_sgemm(blas_order,
+					blas_trans_a,
+					blas_trans_b,
+					(int)m,
+					(int)n,
+					(int)k,
+					alpha,
+					a,
+					(int)lda,
+					b,
+					(int)ldb,
+					beta,
+					c,
+					(int)ldc);
 	}
 
 	/**
@@ -357,16 +377,16 @@ namespace librapid::linalg
 	template<>
 	inline void cblas_gemm(char order, bool trans_a, bool trans_b, int64_t m,
 						   int64_t n, int64_t k, double alpha,
-						   double* __restrict a, int64_t lda, double* __restrict b,
-						   int64_t ldb, double beta, double* __restrict c, int64_t ldc)
-	{
-		CBLAS_ORDER blas_order{};
+						   double *__restrict a, int64_t lda,
+						   double *__restrict b, int64_t ldb, double beta,
+						   double *__restrict c, int64_t ldc) {
+		CBLAS_ORDER blas_order {};
 		if (order == 'r')
 			blas_order = CblasRowMajor;
 		else
 			blas_order = CblasColMajor;
 
-		CBLAS_TRANSPOSE blas_trans_a{};
+		CBLAS_TRANSPOSE blas_trans_a {};
 		if (trans_a)
 			blas_trans_a = CblasTrans;
 		else
@@ -378,8 +398,20 @@ namespace librapid::linalg
 		else
 			blas_trans_b = CblasNoTrans;
 
-		cblas_dgemm(blas_order, blas_trans_a, blas_trans_b, (int)m, (int)n, (int)k,
-					alpha, a, (int)lda, b, (int)ldb, beta, c, (int)ldc);
+		cblas_dgemm(blas_order,
+					blas_trans_a,
+					blas_trans_b,
+					(int)m,
+					(int)n,
+					(int)k,
+					alpha,
+					a,
+					(int)lda,
+					b,
+					(int)ldb,
+					beta,
+					c,
+					(int)ldc);
 	}
 
 #endif // LIBRAPID_HAS_BLAS
@@ -387,128 +419,79 @@ namespace librapid::linalg
 #ifdef LIBRAPID_HAS_CUDA
 
 	template<typename A, typename B, typename C>
-	inline void cblas_dot_cuda(cublasHandle_t& handle, int64_t n, A* __restrict x, int64_t incx,
-							   B* __restrict y, int64_t incy, C* __restrict c)
-	{
+	inline void cblas_dot_cuda(cublasHandle_t &handle, int64_t n,
+							   A *__restrict x, int64_t incx, B *__restrict y,
+							   int64_t incy, C *__restrict c) {
 		// TODO: Write custom CUDA kernel for vector dot product
 		*c = 0;
 	}
 
 	template<>
-	inline void cblas_dot_cuda(cublasHandle_t& handle, int64_t n, float* __restrict x, int64_t incx,
-							   float* __restrict y, int64_t incy, float* __restrict c)
-	{
-		cublasSafeCall(cublasSdot_v2(handle, (int)n, x, (int)incx, y, (int)incy, c));
+	inline void cblas_dot_cuda(cublasHandle_t &handle, int64_t n,
+							   float *__restrict x, int64_t incx,
+							   float *__restrict y, int64_t incy,
+							   float *__restrict c) {
+		cublasSafeCall(
+		  cublasSdot_v2(handle, (int)n, x, (int)incx, y, (int)incy, c));
 	}
 
 	template<>
-	inline void cblas_dot_cuda(cublasHandle_t& handle,
-							   int64_t n,
-							   double* __restrict x,
-							   int64_t incx,
-							   double* __restrict y,
-							   int64_t incy,
-							   double* __restrict c)
-	{
-		cublasSafeCall(cublasDdot_v2(handle, (int)n, x, (int)incx, y, (int)incy, c));
+	inline void cblas_dot_cuda(cublasHandle_t &handle, int64_t n,
+							   double *__restrict x, int64_t incx,
+							   double *__restrict y, int64_t incy,
+							   double *__restrict c) {
+		cublasSafeCall(
+		  cublasDdot_v2(handle, (int)n, x, (int)incx, y, (int)incy, c));
 	}
 
 	template<typename A, typename B, typename C>
-	inline void cblas_gemv_cuda(cublasHandle_t& handle,
-								char order,
-								bool trans,
-								int64_t m,
-								int64_t n,
-								A alpha,
-								A* __restrict a,
-								int64_t lda,
-								B* __restrict x,
-								int64_t incx,
-								C beta,
-								C* __restrict y,
-								int64_t incy)
-	{
+	inline void cblas_gemv_cuda(cublasHandle_t &handle, char order, bool trans,
+								int64_t m, int64_t n, A alpha, A *__restrict a,
+								int64_t lda, B *__restrict x, int64_t incx,
+								C beta, C *__restrict y, int64_t incy) {
 		// TODO: Write custom kernel for gemv calculation
 		*y = 0;
 	}
 
 	template<>
-	inline void cblas_gemv_cuda(cublasHandle_t& handle,
-								char order,
-								bool trans,
-								int64_t m,
-								int64_t n,
-								float alpha,
-								float* __restrict a,
-								int64_t lda,
-								float* __restrict x,
-								int64_t incx,
-								float beta,
-								float* __restrict y,
-								int64_t incy)
-	{
-		cublasOperation_t blas_trans{};
+	inline void cblas_gemv_cuda(cublasHandle_t &handle, char order, bool trans,
+								int64_t m, int64_t n, float alpha,
+								float *__restrict a, int64_t lda,
+								float *__restrict x, int64_t incx, float beta,
+								float *__restrict y, int64_t incy) {
+		cublasOperation_t blas_trans {};
 		if (trans)
 			blas_trans = CUBLAS_OP_N;
 		else
 			blas_trans = CUBLAS_OP_T;
 
-		cublasSafeCall(cublasSgemv_v2(handle,
-									  blas_trans,
-									  n,
-									  m,
-									  &alpha,
-									  a,
-									  lda,
-									  x,
-									  incx,
-									  &beta,
-									  y,
-									  incy));
+		cublasSafeCall(cublasSgemv_v2(
+		  handle, blas_trans, n, m, &alpha, a, lda, x, incx, &beta, y, incy));
 	}
 
 	template<>
-	inline void cblas_gemv_cuda(cublasHandle_t& handle,
-								char order,
-								bool trans,
-								int64_t m,
-								int64_t n,
-								double alpha,
-								double* __restrict a,
-								int64_t lda,
-								double* __restrict x,
-								int64_t incx,
-								double beta,
-								double* __restrict y,
-								int64_t incy)
-	{
-		cublasOperation_t blas_trans{};
+	inline void cblas_gemv_cuda(cublasHandle_t &handle, char order, bool trans,
+								int64_t m, int64_t n, double alpha,
+								double *__restrict a, int64_t lda,
+								double *__restrict x, int64_t incx, double beta,
+								double *__restrict y, int64_t incy) {
+		cublasOperation_t blas_trans {};
 		if (trans)
 			blas_trans = CUBLAS_OP_T;
 		else
 			blas_trans = CUBLAS_OP_N;
 
-		cublasSafeCall(cublasDgemv_v2(handle,
-									  blas_trans,
-									  n,
-									  m,
-									  &alpha,
-									  a,
-									  lda,
-									  x,
-									  incx,
-									  &beta,
-									  y,
-									  incy));
+		cublasSafeCall(cublasDgemv_v2(
+		  handle, blas_trans, n, m, &alpha, a, lda, x, incx, &beta, y, incy));
 	}
 
 	template<typename A, typename B, typename C>
-	inline void cblas_gemm_cuda(cublasHandle_t& handle, bool trans_a, bool trans_b, int64_t m,
-								int64_t n, int64_t k, A alpha,
-								A* __restrict a, int64_t lda, B* __restrict b,
-								int64_t ldb, C beta, C* __restrict c, int64_t ldc)
-	{
-		cublasOperation_t blas_trans_a{};
+	inline void cblas_gemm_cuda(cublasHandle_t &handle, bool trans_a,
+								bool trans_b, int64_t m, int64_t n, int64_t k,
+								A alpha, A *__restrict a, int64_t lda,
+								B *__restrict b, int64_t ldb, C beta,
+								C *__restrict c, int64_t ldc) {
+		cublasOperation_t blas_trans_a {};
 		if (trans_a)
 			blas_trans_a = CUBLAS_OP_T;
 		else
@@ -520,16 +503,17 @@ namespace librapid::linalg
 		else
 			blas_trans_b = CUBLAS_OP_N;
 
-		// TODO: Create CUDA kernel for matrix multiplication with arbitrary datatypes
+		// TODO: Create CUDA kernel for matrix multiplication with arbitrary
+		// datatypes
 	}
 
 	template<>
-	inline void cblas_gemm_cuda(cublasHandle_t& handle, bool trans_a, bool trans_b, int64_t m,
-								int64_t n, int64_t k, float alpha,
-								float* __restrict a, int64_t lda, float* __restrict b,
-								int64_t ldb, float beta, float* __restrict c, int64_t ldc)
-	{
-		cublasOperation_t blas_trans_a{};
+	inline void cblas_gemm_cuda(cublasHandle_t &handle, bool trans_a,
+								bool trans_b, int64_t m, int64_t n, int64_t k,
+								float alpha, float *__restrict a, int64_t lda,
+								float *__restrict b, int64_t ldb, float beta,
+								float *__restrict c, int64_t ldc) {
+		cublasOperation_t blas_trans_a {};
 		if (trans_a)
 			blas_trans_a = CUBLAS_OP_T;
 		else
@@ -558,12 +542,12 @@ namespace librapid::linalg
 	}
 
 	template<>
-	inline void cblas_gemm_cuda(cublasHandle_t& handle, bool trans_a, bool trans_b, int64_t m,
-								int64_t n, int64_t k, double alpha,
-								double* __restrict a, int64_t lda, double* __restrict b,
-								int64_t ldb, double beta, double* __restrict c, int64_t ldc)
-	{
-		cublasOperation_t blas_trans_a{};
+	inline void cblas_gemm_cuda(cublasHandle_t &handle, bool trans_a,
+								bool trans_b, int64_t m, int64_t n, int64_t k,
+								double alpha, double *__restrict a, int64_t lda,
+								double *__restrict b, int64_t ldb, double beta,
+								double *__restrict c, int64_t ldc) {
+		cublasOperation_t blas_trans_a {};
 		if (trans_a)
 			blas_trans_a = CUBLAS_OP_T;
 		else
@@ -593,6 +577,6 @@ namespace librapid::linalg
 	}
 
 #endif // LIBRAPID_HAS_CUDA
-}
+} // namespace librapid::linalg
 
 #endif // LIBRAPID_HAS_BLAS_API

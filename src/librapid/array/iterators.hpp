@@ -1,17 +1,17 @@
 #ifndef LIBRAPID_ARRAY_ITERATORS
 #define LIBRAPID_ARRAY_ITERATORS
 
-#include <librapid/config.hpp>
 #include <iterator>
+#include <librapid/config.hpp>
 
 namespace librapid {
 	class ESIterator {
-	public:
+	  public:
 		using iteratorCategory = std::random_access_iterator_tag;
-		using valueType = int64_t;
-		using differenceType = std::ptrdiff_t;
-		using pointer = valueType *;
-		using reference = valueType &;
+		using valueType		   = int64_t;
+		using differenceType   = std::ptrdiff_t;
+		using pointer		   = valueType *;
+		using reference		   = valueType &;
 
 		/**
 		 * \rst
@@ -176,17 +176,15 @@ namespace librapid {
 		reference operator*();
 
 		/**
-		* \rst
-		*
-		* Dereference this ESIterator's pointer (const)
-		*
-		* \endrst
-		*/
+		 * \rst
+		 *
+		 * Dereference this ESIterator's pointer (const)
+		 *
+		 * \endrst
+		 */
 		const reference operator*() const;
 
-		pointer operator->() {
-			return m_ptr;
-		}
+		pointer operator->() { return m_ptr; }
 
 		/**
 		 * \rst
@@ -206,9 +204,9 @@ namespace librapid {
 		 */
 		pointer getPointer() const;
 
-	private:
+	  private:
 		pointer m_ptr = nullptr;
 	};
-}
+} // namespace librapid
 
 #endif // LIBRAPID_ARRAY_ITERATORS

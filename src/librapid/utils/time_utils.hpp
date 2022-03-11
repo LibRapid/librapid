@@ -22,6 +22,6 @@ namespace librapid {
 	 * \endrst
 	 */
 	void sleep(double s);
-}
+} // namespace librapid
 
 #endif // LIBRAPID_TIME_UTILS
