@@ -161,8 +161,9 @@ namespace librapid {
 			  other.m_extent, other.m_stride, other.m_dtype, other.m_location);
 		} else {
 			// Array already exists, so check if it must be reallocated
-			if (!m_isChild && m_extent != other.m_extent ||
-				m_dtype != other.m_dtype) {
+
+			// This condition might be needed? => || m_dtype != other.m_dtype
+			if (!m_isChild && m_extent != other.m_extent) {
 				// Extents are not equal, so memory can not be safely copied
 				decrement();
 				constructNew(other.m_extent,

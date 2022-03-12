@@ -1,6 +1,7 @@
 #pragma once
 
 #include <librapid/config.hpp>
+#include <cfloat>
 
 namespace librapid {
 #define CTYPED [[maybe_unused]] static const long double

@@ -1,6 +1,9 @@
 #ifndef LIBRAPID_OPS
 #define LIBRAPID_OPS
 
+#include <librapid/config.hpp>
+#include <librapid/math/rapid_math.hpp>
+
 #ifndef DOXYGEN_BUILD
 
 namespace librapid::ops {

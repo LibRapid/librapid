@@ -369,10 +369,11 @@ PYBIND11_MODULE(_librapid, module) {
 		.def_property_readonly("location", &librapid::Array::location)
 		.def("__len__", [](const librapid::Array &arr) { return arr.len(); })
 
-		.def("__getitem__", [](const librapid::Array &arr, int64_t index) { return arr[index]; })
-		.def("__setitem__", [](librapid::Array &arr, int64_t index, int64_t val) { arr[index] = val; })
-		.def("__setitem__", [](librapid::Array &arr, int64_t index, double val) { arr[index] = val; })
-		.def("__setitem__", [](librapid::Array &arr, int64_t index, const librapid::Array &val) { arr[index] = val; })
+		.def("subscript", [](const librapid::Array &arr, int64_t index) { return arr.subscript(index); }, py::arg("index"))
+		.def("__getitem__", [](const librapid::Array &arr, int64_t index) { return arr[index]; }, py::arg("index"))
+		.def("__setitem__", [](librapid::Array &arr, int64_t index, int64_t val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
+		.def("__setitem__", [](librapid::Array &arr, int64_t index, double val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
+		.def("__setitem__", [](librapid::Array &arr, int64_t index, const librapid::Array &val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
 
 		.def("fill", [](librapid::Array &arr, int64_t val) { arr.fill(val); })
 		.def("filled", [](librapid::Array &arr, int64_t val) { return arr.filled(val); })
