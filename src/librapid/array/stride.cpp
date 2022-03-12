@@ -23,7 +23,7 @@ namespace librapid {
 		// Initialize members
 		m_isTrivial	   = true;
 		m_isContiguous = true;
-		m_dims		   = data.size();
+		m_dims		   = (int64_t)data.size();
 
 		// Check for a valid number of dimensions
 		if (m_dims > LIBRAPID_MAX_DIMS)
