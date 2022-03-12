@@ -964,7 +964,7 @@ namespace librapid {
 		 * Array.
 		 *
 		 * .. Hint::
-		 * 		The ``subscript`` function is overloaded as `[<index>]` in
+		 * 		The ``subscript`` function is overloaded as ``[<index>]`` in
 		 * 		both C++ and Python, and it is strongly advised to use normal
 		 * 		indexing over this function to improve readability.
 		 *
@@ -977,6 +977,7 @@ namespace librapid {
 		 * Examples
 		 * --------
 		 *
+		 *
 		 * .. code-block:: python
 		 * 		:caption: A Python Example
 		 *
@@ -985,7 +986,7 @@ namespace librapid {
 		 * 		x = lrp.Array([[1, 2, 3],
 		 * 		                    [4, 5, 6]])
 		 *
-		 *      #########################
+		 * 		#########################
 		 * 		# Accessing a sub-array #
 		 * 		#########################
 		 * 		print(x.subscript(0)) # Outputs [1, 2, 3]
@@ -995,12 +996,12 @@ namespace librapid {
 		 * 		print(x[1]) # Outputs [4, 5, 6]
 		 *
 		 * 		############################
-		 *		# Accessing a single value #
-		 *		############################
-		 *		print(x.subscript(0).subscript(0)) # Outputs 1
-		 *		print(x[0][0]) # Also outputs 1 -- much neater code though :)
+		 * 		# Accessing a single value #
+		 * 		############################
+		 * 		print(x.subscript(0).subscript(0)) # Outputs 1
+		 * 		print(x[0][0]) # Also outputs 1 -- much neater code though :)
 		 *
-		 *		print(x[1][2]) # Outputs 6
+		 * 		print(x[1][2]) # Outputs 6
 		 *
 		 *
 		 * .. code-block:: cpp
