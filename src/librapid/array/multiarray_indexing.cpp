@@ -14,12 +14,11 @@ namespace librapid {
 		Array res;
 
 		res.m_dataOrigin = m_dataOrigin;
-
-		res.m_dataStart = std::visit(
-		  [&](auto *__restrict data) -> RawArrayData {
-			  return data + m_stride[0] * index;
-		  },
-		  m_dataStart);
+		res.m_dataStart	 = std::visit(
+		   [&](auto *__restrict data) -> RawArrayData {
+			   return data + m_stride[0] * index;
+		   },
+		   m_dataStart);
 
 		res.m_references = m_references;
 

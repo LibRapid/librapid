@@ -19,7 +19,13 @@ namespace librapid {
 		/**
 		 * \rst
 		 *
+		 * Extract the dimensions of a nested list of vectors. For example,
+		 * the following input would give the output specified below:
 		 *
+		 * .. code:: cpp
+		 *
+		 * 		{{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}, {{9, 10}, {11, 12}}}
+		 * 		// Outputs {3, 2, 2}
 		 *
 		 * \endrst
 		 */
@@ -71,20 +77,20 @@ namespace librapid {
 		 *
 		 * Create a new Array from an Extent and an optional Datatype and
 		 * Accelerator. The Extent defines the number of dimensions of the
-		 *Array, as well as the size of each dimension.
+		 * Array, as well as the size of each dimension.
 		 *
 		 * String values can also be passed as input parameters for the datatype
 		 * and accelerator.
 		 *
 		 * The datatype can be constructed in many ways. For example, all of
-		 *"i32", "int32" and "int" represent a 32-bit signed integer.
+		 * "i32", "int32" and "int" represent a 32-bit signed integer.
 		 *
 		 * All possible names are listed below. A green label means that name is
 		 * safe to use. Yellow represents a value which should be avoided if
 		 * possible, and red means the value is strongly advised not to be used.
 		 *
 		 * Please also note that the None type array may be very buggy and
-		 *should not be used if possible.
+		 * should not be used if possible.
 		 *
 		 * *Note: These warnings are more for readability than anything else*
 		 *
@@ -153,6 +159,7 @@ namespace librapid {
 		Array(const Extent &extent, Datatype dtype = Datatype::FLOAT64,
 			  Accelerator location = Accelerator::CPU);
 
+#ifndef LIBRAPID_DOXYGEN_BUILD
 		inline Array(const Extent &extent, const std::string &dtype,
 					 Accelerator location = Accelerator::CPU) :
 			Array(extent, stringToDatatype(dtype), location) {}
@@ -165,13 +172,14 @@ namespace librapid {
 					 const std::string &accelerator) :
 			Array(extent, stringToDatatype(dtype),
 				  stringToAccelerator(accelerator)) {}
+#endif // LIBRAPID_DOXYGEN_BUILD
 
 		/**
 		 * \rst
 		 *
 		 * Create an Array object from an existing one. This constructor copies
-		 *all values, and the new Array shares the data of the Array passed to
-		 *it, so an update in one will result in an update in the other.
+		 * all values, and the new Array shares the data of the Array passed to
+		 * it, so an update in one will result in an update in the other.
 		 *
 		 * Note that if the input Array is not initialized, the function will
 		 * quick return and not initialize the new Array.
@@ -181,13 +189,12 @@ namespace librapid {
 		 *
 		 * .. Attention::
 		 *		If arguments are passed to `dtype` or `location`, the array
-		 *might end up being copied, rather than referenced. Please be aware of
-		 *this when making use of this functionality.
+		 * 		might end up being copied, rather than referenced. Please be
+		 * 		aware of this when making use of this functionality.
 		 *
 		 * .. Hint::
-		 *
 		 *		If you want to create an exact copy of an Array, but don't want
-		 *the data to be linked, see the ``Array::copy()`` function.
+		 *		the data to be linked, see the ``Array::copy()`` function.
 		 *
 		 * Parameters
 		 * ----------
@@ -216,6 +223,7 @@ namespace librapid {
 		Array(bool val, Datatype dtype = Datatype::INT64,
 			  Accelerator locn = Accelerator::CPU);
 
+#ifndef LIBRAPID_DOXYGEN_BUILD
 		Array(float val, Datatype dtype = Datatype::FLOAT32,
 			  Accelerator locn = Accelerator::CPU);
 
@@ -266,7 +274,7 @@ namespace librapid {
 			if (locn == Accelerator::CPU) {
 				std::visit([&](auto *data) { *data = val; }, m_dataStart);
 			}
-#ifdef LIBRAPID_HAS_CUDA
+#	ifdef LIBRAPID_HAS_CUDA
 			else {
 				int64_t tempVal	 = val;
 				RawArray tempDst = RawArray {m_dataStart, dtype, locn};
@@ -274,99 +282,32 @@ namespace librapid {
 				  RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU};
 				rawArrayMemcpy(tempDst, tempSrc, 1);
 			}
-#else
+#	else
 			else {
 				throw std::invalid_argument(
 				  "CUDA support was not enabled, "
 				  "so a value cannot be created on the GPU");
 			}
-#endif // LIBRAPID_HAS_CUDA
+#	endif // LIBRAPID_HAS_CUDA
 		}
 
 		template<typename T, typename std::enable_if<std::is_integral<T>::value,
 													 int>::type = 0>
 		inline Array(T val, const std::string &dtype,
-					 Accelerator locn = Accelerator::CPU) {
-			initializeCudaStream();
-
-			constructNew(Extent(1), Stride(1), stringToDatatype(dtype), locn);
-			m_isScalar = true;
-			if (locn == Accelerator::CPU) {
-				std::visit([&](auto *data) { *data = val; }, m_dataStart);
-			}
-#ifdef LIBRAPID_HAS_CUDA
-			else {
-				int64_t tempVal = val;
-				RawArray tempDst =
-				  RawArray {m_dataStart, stringToDatatype(dtype), locn};
-				RawArray tempSrc = RawArray {
-				  RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU};
-				rawArrayMemcpy(tempDst, tempSrc, 1);
-			}
-#else
-			else {
-				throw std::invalid_argument(
-				  "CUDA support was not enabled, "
-				  "so a value cannot be created on the GPU");
-			}
-#endif // LIBRAPID_HAS_CUDA
-		}
+					 Accelerator locn = Accelerator::CPU) :
+			Array(val, stringToDatatype(dtype), locn) {}
 
 		template<typename T, typename std::enable_if<std::is_integral<T>::value,
 													 int>::type = 0>
-		inline Array(T val, Datatype dtype, const std::string &locn) {
-			initializeCudaStream();
-			Accelerator accelerator = stringToAccelerator(locn);
-			constructNew(Extent(1), Stride(1), dtype, accelerator);
-			m_isScalar = true;
-			if (accelerator == Accelerator::CPU) {
-				std::visit([&](auto *data) { *data = val; }, m_dataStart);
-			}
-#ifdef LIBRAPID_HAS_CUDA
-			else {
-				int64_t tempVal	 = val;
-				RawArray tempDst = RawArray {m_dataStart, dtype, accelerator};
-				RawArray tempSrc = RawArray {
-				  RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU};
-				rawArrayMemcpy(tempDst, tempSrc, 1);
-			}
-#else
-			else {
-				throw std::invalid_argument(
-				  "CUDA support was not enabled, "
-				  "so a value cannot be created on the GPU");
-			}
-#endif // LIBRAPID_HAS_CUDA
-		}
+		inline Array(T val, Datatype dtype, const std::string &locn) :
+			Array(val, dtype, stringToAccelerator(locn)) {}
 
 		template<typename T, typename std::enable_if<std::is_integral<T>::value,
 													 int>::type = 0>
-		inline Array(T val, const std::string &dtype, const std::string &locn) {
-			initializeCudaStream();
-			Datatype datatype		= stringToDatatype(dtype);
-			Accelerator accelerator = stringToAccelerator(locn);
-			constructNew(Extent(1), Stride(1), datatype, accelerator);
-			m_isScalar = true;
-			if (accelerator == Accelerator::CPU) {
-				std::visit([&](auto *data) { *data = val; }, m_dataStart);
-			}
-#ifdef LIBRAPID_HAS_CUDA
-			else {
-				int64_t tempVal = val;
-				RawArray tempDst =
-				  RawArray {m_dataStart, datatype, accelerator};
-				RawArray tempSrc = RawArray {
-				  RawArrayData(&tempVal), Datatype::INT64, Accelerator::CPU};
-				rawArrayMemcpy(tempDst, tempSrc, 1);
-			}
-#else
-			else {
-				throw std::invalid_argument(
-				  "CUDA support was not enabled, "
-				  "so a value cannot be created on the GPU");
-			}
-#endif // LIBRAPID_HAS_CUDA
-		}
+		inline Array(T val, const std::string &dtype, const std::string &locn) :
+			Array(val, stringToDatatype(dtype), stringToAccelerator(locn)) {}
+
+#endif // LIBRAPID_DOXYGEN_BUILD
 
 		// TODO: Make this do something useful
 		// inline Array(Array &&other) = default;
@@ -796,16 +737,22 @@ namespace librapid {
 		   * will be copied into it.
 		   *
 		   * If the left-hand-side of the operation is another Array instance,
-		   *the data from that array will be copied into this array. If the
-		   *arrays are identical in terms of their Extent, the data will be
-		   *copied, otherwise this array will be recreated with the correct
-		   *size.
+		   * the data from that array will be copied into this array. If the
+		   * arrays are identical in terms of their Extent, the data will be
+		   * copied, otherwise this array will be recreated with the correct
+		   * size.
 		   *
 		   * .. Attention::
 		   *		There is a single exception to this, which occurs when
-		   *this array is a direct subscript of another (e.g. ``myArray[0]``).
-		   *If this is the case, the left-hand-side of this operation *must*
-		   *have the same extent, otherwise an error will be thrown
+		   * 		this array is a direct subscript of another (e.g.
+		   * 		``myArray[0]``). If this is the case, the left-hand-side
+		   * 		of this operation *must* have the same extent, otherwise
+		   * 		an error will be thrown
+		   *
+		   * Parameters
+		   * ----------
+		   * other: Basically anything
+		   * 		The value to set the array to
 		   *
 		   * \endrst
 		   */
@@ -858,7 +805,7 @@ namespace librapid {
 		/**
 		 * \rst
 		 *
-		 * Return the Extent of the Array
+		 * Return the shape of the Array as an ``Extent`` object
 		 *
 		 * \endrst
 		 */
@@ -867,19 +814,39 @@ namespace librapid {
 		/**
 		 * \rst
 		 *
-		 * Return the Stride of the Array
+		 * Return the strides of the Array as a ``Stride`` object
 		 *
 		 * \endrst
 		 */
 		[[nodiscard]] inline Stride stride() const { return m_stride; }
 
+		/**
+		 * \rst
+		 *
+		 * Return true if this Array object is zero-dimensional (i.e. a scalar
+		 * value)
+		 *
+		 * For example:
+		 *
+		 * .. code:: cpp
+		 *
+		 * 		auto x = librapid::Array(librapid::Extent({2, 3, 4}));
+		 * 		x.isScalar(); // false -- array is multi-dimensional
+		 * 		x[0].isScalar(); // false -- this is a matrix
+		 * 		x[0][0].isScalar(); // false -- this is a vector
+		 * 		x[0][0][0].isScalar(); // true -- this is a single value
+		 *
+		 * \endrst
+		 */
 		[[nodiscard]] inline bool isScalar() const { return m_isScalar; }
 
 		/**
 		 * \rst
 		 *
 		 * For C++ use only -- returns a VoidPtr object containing the memory
-		 * location of the Array's data, its datatype and its location
+		 * location of the Array's data, its datatype and its location. This
+		 * is intended mainly for internal usage, but may be useful for
+		 * lower-level access to the underlying data of the Array.
 		 *
 		 * \endrst
 		 */
@@ -888,7 +855,8 @@ namespace librapid {
 		/**
 		 * \rst
 		 *
-		 * Return the datatype of the Array
+		 * Return the datatype of the Array (``INT64``, ``FLOAT32``,
+		 * ``FLOAT64``, etc.)
 		 *
 		 * \endrst
 		 */
@@ -897,18 +865,30 @@ namespace librapid {
 		/**
 		 * \rst
 		 *
-		 * Return the accelerator of the Array
+		 * Return the accelerator of the Array (``CPU``/``GPU``)
 		 *
 		 * \endrst
 		 */
 		[[nodiscard]] inline Accelerator location() const { return m_location; }
 
+		/**
+		 * \rst
+		 *
+		 * Return the size of the first axis of the array. This can be used
+		 * for iterating over an array, for example.
+		 *
+		 * This is equivalent to ``myArray.extent()[0]``
+		 *
+		 * \endrst
+		 */
 		[[nodiscard]] inline int64_t len() const { return m_extent[0]; }
 
 		/**
 		 * \rst
 		 *
-		 * Cast a scalar array into a specific type
+		 * Cast a scalar array into a specific type.
+		 *
+		 * If this array is not a scalar, this function will throw an exception
 		 *
 		 * \endrst
 		 */
@@ -952,10 +932,6 @@ namespace librapid {
 						throw std::invalid_argument(
 						  "Cannot convert uninitialized array to scalar value");
 					}
-						// case Datatype::BOOL: {
-						// 	res = (T) *std::get<bool *>(tmp.data);
-						// 	break;
-						// }
 					case Datatype::INT64: {
 						res = (T)*std::get<int64_t *>(tmp.data);
 						break;
@@ -981,14 +957,93 @@ namespace librapid {
 			throw std::runtime_error("Invalid accelerator used in Array cast");
 		}
 
+		/**
+		 * \rst
+		 *
+		 * Return a sub-array or scalar value at a particular index in the
+		 * Array.
+		 *
+		 * .. Hint::
+		 * 		The ``subscript`` function is overloaded as `[<index>]` in
+		 * 		both C++ and Python, and it is strongly advised to use normal
+		 * 		indexing over this function to improve readability.
+		 *
+		 * .. Attention::
+		 * 		The index must be in the range ``[0, array.len())``,
+		 * 		otherwise an exception will be thrown. This may be changed in
+		 * 		the future to support negative indices, but there are
+		 * 		currently no plans to do so.
+		 *
+		 * Examples
+		 * --------
+		 *
+		 * .. code-block:: python
+		 * 		:caption: A Python Example
+		 *
+		 * 		import librapid as lrp
+		 *
+		 * 		x = lrp.Array([[1, 2, 3],
+		 * 		                    [4, 5, 6]])
+		 *
+		 *      #########################
+		 * 		# Accessing a sub-array #
+		 * 		#########################
+		 * 		print(x.subscript(0)) # Outputs [1, 2, 3]
+		 * 		print(x[0]) # Also outputs [1, 2, 3]
+		 *
+		 * 		print(x.subscript(1)) # Outputs [4, 5, 6]
+		 * 		print(x[1]) # Outputs [4, 5, 6]
+		 *
+		 * 		############################
+		 *		# Accessing a single value #
+		 *		############################
+		 *		print(x.subscript(0).subscript(0)) # Outputs 1
+		 *		print(x[0][0]) # Also outputs 1 -- much neater code though :)
+		 *
+		 *		print(x[1][2]) # Outputs 6
+		 *
+		 *
+		 * .. code-block:: cpp
+	 	 *  	:caption: A C++ Example
+		 *
+		 * 		#include <librapid/librapid.hpp>
+		 *
+		 * 		using namespace lrc = librapid;
+		 *
+		 * 		// ............
+		 *
+		 * 		auto x = lrc::Array({{1, 2, 3},
+		 * 		                     {4, 5, 6}});
+		 *
+		 * 		//=======================//
+		 * 		// Accessing a sub-array //
+		 * 		//=======================//
+		 * 		fmt::print("{}\n", x.subscript(0)); // Outputs [1, 2, 3]
+		 * 		fmt::print("{}\n", x[0]; // Also outputs [1, 2, 3]
+		 *
+		 * 		fmt::print("{}\n", x.subscript(1)); // Outputs [4, 5, 6]
+		 * 		fmt::print("{}\n", x[1]; // Also outputs [4, 5, 6]
+		 *
+		 * 		//==========================//
+		 * 		// Accessing a single value //
+		 * 		//==========================//
+		 * 		fmt::print("{}\n", x.subscript(0).subscript(0)); // Outputs 1
+		 * 		fmt::print("{}\n", x[0][0]); // Also outputs 1 -- neater code
+		 *
+		 * 		fmt::print("{}\n", x.subscript(1).subscript(2)); // Outputs 6
+		 * 		fmt::print("{}\n", x[1][2]); // Also outputs 6
+		 *
+		 * 		// ............
+		 *
+		 * \endrst
+		 */
 		[[nodiscard]] const Array subscript(int64_t index) const;
 
 		/**
 		 * \rst
 		 *
-		 * Return a sub-array or scalar value at a particular index in the
-		 * Array. If the index is below zero or is greater than the size of the
-		 * first dimension of the Array, an exception will be thrown
+		 * Please see:
+		 * .. doxygenfunction:: librapid::Array::subscript(int64_t) const
 		 *
 		 * \endrst
 		 */
@@ -996,10 +1051,17 @@ namespace librapid {
 			return subscript(index);
 		}
 
+		/**
+		 * \rst
+		 *
+		 * Please see:
+		 * .. doxygenfunction:: librapid::Array::subscript(int64_t) const
+		 *
+		 * \endrst
+		 */
 		inline Array operator[](int64_t index) {
-			// using nonConst = typename std::remove_const<Array>::type;
-			// return static_cast<nonConst>(subscript(index));
-			return subscript(index);
+			using nonConst = typename std::remove_const<Array>::type;
+			return static_cast<nonConst>(subscript(index));
 		}
 
 		/**
@@ -1019,6 +1081,8 @@ namespace librapid {
 		[[nodiscard]] Array clone(Datatype dtype   = Datatype::NONE,
 								  Accelerator locn = Accelerator::NONE) const;
 
+		// Don't show these in the documentation if we don't need to
+#ifndef LIBRAPID_DOXYGEN_BUILD
 		[[nodiscard]] Array clone(const std::string &dtype,
 								  Accelerator locn = Accelerator::NONE) const;
 
@@ -1027,6 +1091,7 @@ namespace librapid {
 
 		[[nodiscard]] Array clone(const std::string &dtype,
 								  const std::string &locn) const;
+#endif // LIBRAPID_DOXYGEN_BUILD
 
 		/**
 		 * \rst
@@ -1037,12 +1102,42 @@ namespace librapid {
 		 */
 		void fill(double val);
 
+		/**
+		 * \rst
+		 *
+		 * Return a copy of this array filled with a particular value
+		 *
+		 * \endrst
+		 */
 		[[nodiscard]] inline Array filled(double val) {
 			auto res = Array(m_extent, m_dtype, m_location);
 			res.fill(val);
 			return res;
 		}
 
+		/**
+		 * \rst
+		 *
+		 * Fill an array with uniformly random numbers ranging from ``min``
+		 * to ``max``. You can also set the ``seed`` parameter to get
+		 * predictable outcomes.
+		 *
+		 * .. Hint::
+		 * 		For floating point arrays, the range of values that can be
+		 * 		taken range from :math:`[min, max)`, while for integer
+		 * 		arrays, the output range is from :math:`[min, max]`
+		 *
+		 * Parameters
+		 * ----------
+		 * min: Scalar value (integer, floating point, etc.)
+		 * 		The minimum value for the random value
+		 * max: Scalar value
+		 * 		The maximum value for the random value
+		 * seed: uint64_t
+		 * 		The seed for the PRNG
+		 *
+		 * \endrst
+		 */
 		template<typename T = double>
 		inline void fillRandom(T min = 0, T max = 1, uint64_t seed = -1) {
 			static uint64_t statSeed = 0;
@@ -1054,8 +1149,7 @@ namespace librapid {
 				statSeed	= seed == -1 ? (uint64_t)(seconds() * 10) : seed;
 				statSeedSet = true;
 			}
-			// applyUnaryOp(*this, *this, ops::FillRandom < T > (min, max,
-			// seed));
+
 			applyUnaryOp(*this, *this, ops::FillRandom<T>(min, max, statSeed));
 		}
 
