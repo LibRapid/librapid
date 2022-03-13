@@ -10,7 +10,7 @@ namespace librapid {
 	template<class T>
 	class Complex {
 	  public:
-		Complex(const T &real_val = T(), const T &imag_val = T()) :
+		Complex(T real_val = 0, T imag_val = 0) :
 			m_real(real_val), m_imag(imag_val) {}
 
 		Complex &operator=(const T &val) {
@@ -189,11 +189,11 @@ namespace librapid {
 							  -(m_imag) / (m_real * m_real + m_imag * m_imag));
 		}
 
-		inline const T &real() const { return m_real; }
+		[[nodiscard]] inline T real() const { return m_real; }
 
 		inline T &real() { return m_real; }
 
-		inline const T &imag() const { return m_imag; }
+		[[nodiscard]] inline T imag() const { return m_imag; }
 
 		inline T &imag() { return m_imag; }
 

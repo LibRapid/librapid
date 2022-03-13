@@ -105,13 +105,13 @@ namespace librapid {
 		 *		:badge:`null, badge-warning`
 		 *		:badge:`void, badge-warning`
 		 *
-		 *		---
+		 * 		---
 		 *
-		 *		Boolean
+		 *		Signed 32-bit integer
 		 *
-		 *		:badge:`b, badge-danger`
-		 *		:badge:`bool, badge-success`
-		 *		:badge:`boolean, badge-success`
+		 *		:badge:`i32, badge-success`
+		 *		:badge:`int32, badge-success`
+		 *		:badge:`long, badge-warning`
 		 *
 		 *		---
 		 *
@@ -140,6 +140,23 @@ namespace librapid {
 		 *		:badge:`float64, badge-success`
 		 *		:badge:`double, badge-warning`
 		 *
+		 *		---
+		 *
+		 *		32-bit complex number
+		 * 		:badge:`cf32, badge-success`
+		 * 		:badge:`cfloat32, badge-success`
+		 * 		:badge:`complex float, badge-success`
+		 *
+		 *		---
+		 *
+		 *		64-bit complex number
+		 * 		:badge:`c, badge-danger`
+		 * 		:badge:`cf, badge-danger`
+		 * 		:badge:`cf64, badge-success`
+		 * 		:badge:`cfloat64, badge-success`
+		 * 		:badge:`complex, badge-warning`
+		 * 		:badge:`complex double, badge-success`
+		 *
 		 *
 		 * The accelerator value must be "CPU" or "GPU".
 		 *
@@ -162,16 +179,16 @@ namespace librapid {
 #ifndef LIBRAPID_DOXYGEN_BUILD
 		inline Array(const Extent &extent, const std::string &dtype,
 					 Accelerator location = Accelerator::CPU) :
-			Array(extent, stringToDatatype(dtype), location) {}
+				Array(extent, stringToDatatype(dtype), location) {}
 
 		inline Array(const Extent &extent, Datatype dtype,
 					 const std::string &accelerator = "cpu") :
-			Array(extent, dtype, stringToAccelerator(accelerator)) {}
+				Array(extent, dtype, stringToAccelerator(accelerator)) {}
 
 		inline Array(const Extent &extent, const std::string &dtype,
 					 const std::string &accelerator) :
-			Array(extent, stringToDatatype(dtype),
-				  stringToAccelerator(accelerator)) {}
+				Array(extent, stringToDatatype(dtype),
+					  stringToAccelerator(accelerator)) {}
 #endif // LIBRAPID_DOXYGEN_BUILD
 
 		/**
@@ -232,36 +249,36 @@ namespace librapid {
 
 		inline Array(bool val, const std::string &dtype,
 					 Accelerator locn = Accelerator::CPU) :
-			Array(val, stringToDatatype(dtype), locn) {}
+				Array(val, stringToDatatype(dtype), locn) {}
 
 		inline Array(float val, const std::string &dtype,
 					 Accelerator locn = Accelerator::CPU) :
-			Array(val, stringToDatatype(dtype), locn) {}
+				Array(val, stringToDatatype(dtype), locn) {}
 
 		inline Array(double val, const std::string &dtype,
 					 Accelerator locn = Accelerator::CPU) :
-			Array(val, stringToDatatype(dtype), locn) {}
+				Array(val, stringToDatatype(dtype), locn) {}
 
 		inline Array(bool val, Datatype dtype, const std::string &locn) :
-			Array(val, dtype, stringToAccelerator(locn)) {}
+				Array(val, dtype, stringToAccelerator(locn)) {}
 
 		inline Array(float val, Datatype dtype, const std::string &locn) :
-			Array(val, dtype, stringToAccelerator(locn)) {}
+				Array(val, dtype, stringToAccelerator(locn)) {}
 
 		inline Array(double val, Datatype dtype, const std::string &locn) :
-			Array(val, dtype, stringToAccelerator(locn)) {}
+				Array(val, dtype, stringToAccelerator(locn)) {}
 
 		inline Array(bool val, const std::string &dtype,
 					 const std::string &locn) :
-			Array(val, stringToDatatype(locn), stringToAccelerator(locn)) {}
+				Array(val, stringToDatatype(locn), stringToAccelerator(locn)) {}
 
 		inline Array(float val, const std::string &dtype,
 					 const std::string &locn) :
-			Array(val, stringToDatatype(locn), stringToAccelerator(locn)) {}
+				Array(val, stringToDatatype(locn), stringToAccelerator(locn)) {}
 
 		inline Array(double val, const std::string &dtype,
 					 const std::string &locn) :
-			Array(val, stringToDatatype(locn), stringToAccelerator(locn)) {}
+				Array(val, stringToDatatype(locn), stringToAccelerator(locn)) {}
 
 		template<typename T, typename std::enable_if<std::is_integral<T>::value,
 													 int>::type = 0>
@@ -295,17 +312,18 @@ namespace librapid {
 													 int>::type = 0>
 		inline Array(T val, const std::string &dtype,
 					 Accelerator locn = Accelerator::CPU) :
-			Array(val, stringToDatatype(dtype), locn) {}
+				Array(val, stringToDatatype(dtype), locn) {}
 
 		template<typename T, typename std::enable_if<std::is_integral<T>::value,
 													 int>::type = 0>
 		inline Array(T val, Datatype dtype, const std::string &locn) :
-			Array(val, dtype, stringToAccelerator(locn)) {}
+				Array(val, dtype, stringToAccelerator(locn)) {}
 
 		template<typename T, typename std::enable_if<std::is_integral<T>::value,
 													 int>::type = 0>
 		inline Array(T val, const std::string &dtype, const std::string &locn) :
-			Array(val, stringToDatatype(dtype), stringToAccelerator(locn)) {}
+				Array(val, stringToDatatype(dtype), stringToAccelerator(locn)) {
+		}
 
 #endif // LIBRAPID_DOXYGEN_BUILD
 
@@ -984,7 +1002,7 @@ namespace librapid {
 		 * 		import librapid as lrp
 		 *
 		 * 		x = lrp.Array([[1, 2, 3],
-		 * 		                    [4, 5, 6]])
+		 * 		               [4, 5, 6]])
 		 *
 		 * 		#########################
 		 * 		# Accessing a sub-array #
@@ -1005,7 +1023,7 @@ namespace librapid {
 		 *
 		 *
 		 * .. code-block:: cpp
-	 	 *  	:caption: A C++ Example
+		 *  	:caption: A C++ Example
 		 *
 		 * 		#include <librapid/librapid.hpp>
 		 *
@@ -2094,8 +2112,7 @@ namespace librapid {
 	 *			 [7, 8, 9]]
 	 *		)
 	 *
-	 *		second = librapid.Array(librapid.Extent(3, 2)).filledRandom(-1,
-	 *1)
+	 *		second = librapid.Array(librapid.Extent(3, 2)).filledRandom(-1, 1)
 	 *
 	 *		# Concatenate the arrays and store the result
 	 *		# (here, we are stacking on axis=1 -- along the columns)
@@ -2285,10 +2302,11 @@ namespace librapid {
 				for (int64_t i = 0; i < iters; ++i) {
 					tmp.fill(1);
 					auto res = tmp.clone();
-					res		 = tmp + res;
-					res		 = tmp - res;
-					res		 = tmp * res;
-					res		 = tmp / res;
+
+					res = tmp + res;
+					res = tmp - res;
+					res = tmp * res;
+					res = tmp / res;
 
 					res.fillRandom();
 					auto dotted = res.dot(res);
@@ -2300,10 +2318,12 @@ namespace librapid {
 						std::cout << " || Kernels compiled";
 					}
 
-					// #ifdef LIBRAPID_HAS_CUDA
-					// 				if (location == Accelerator::GPU)
-					// 					cudaSafeCall(cudaStreamSynchronize(cudaStream));
-					// #endif
+#ifdef LIBRAPID_HAS_CUDA
+#	ifdef LIBRAPID_CUDA_STREAM
+					if (location == Accelerator::GPU)
+						cudaSafeCall(cudaStreamSynchronize(cudaStream));
+#	endif
+#endif
 				}
 				double end = seconds();
 
