@@ -139,10 +139,12 @@ PYBIND11_MODULE(_librapid, module) {
 	py::enum_<librapid::Datatype>(module, "Datatype")
 	.value("NONE", librapid::Datatype::NONE)
 	.value("VALIDNONE", librapid::Datatype::VALIDNONE)
-	// .value("BOOL", librapid::Datatype::BOOL)
+	.value("INT32", librapid::Datatype::INT32)
 	.value("INT64", librapid::Datatype::INT64)
 	.value("FLOAT32", librapid::Datatype::FLOAT32)
-	.value("FLOAT64", librapid::Datatype::FLOAT64);
+	.value("FLOAT64", librapid::Datatype::FLOAT64)
+	.value("CFLOAT32", librapid::Datatype::CFLOAT32)
+	.value("CFLOAT64", librapid::Datatype::CFLOAT64);
 
 	// Create the Accelerator enum
 	py::enum_<librapid::Accelerator>(module, "Accelerator")
@@ -150,7 +152,6 @@ PYBIND11_MODULE(_librapid, module) {
 	.value("GPU", librapid::Accelerator::GPU);
 
 	module.def("isIntegral", &librapid::isIntegral);
-	module.def("isUnsigned", &librapid::isUnsigned);
 	module.def("isFloating", &librapid::isFloating);
 	module.def("datatypeBytes", &librapid::datatypeBytes);
 	module.def("datatypeToString", &librapid::datatypeToString);

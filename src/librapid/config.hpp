@@ -331,8 +331,8 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line) {
 #endif
 
 namespace librapid {
-	inline void *alignedMalloc(int64_t requiredBytes,
-							   int64_t alignment = DATA_ALIGN) {
+	inline void *alignedMalloc(uint64_t requiredBytes,
+							   uint64_t alignment = DATA_ALIGN) {
 		void *p1;  // original block
 		void **p2; // aligned block
 		int64_t offset = alignment - 1 + sizeof(void *);

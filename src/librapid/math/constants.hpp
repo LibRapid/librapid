@@ -4,7 +4,7 @@
 #include <cfloat>
 
 namespace librapid {
-#define CTYPED [[maybe_unused]] static const long double
+#define CTYPED [[maybe_unused]] static const double
 
 	// 32bit float minimum value
 	CTYPED EPSILON32 = FLT_MIN;

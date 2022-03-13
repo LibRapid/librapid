@@ -19,9 +19,11 @@ namespace librapid {
 	enum class Datatype {
 		NONE,	   // no datatype
 		VALIDNONE, // No datatype, but it is not required
+		INT32,	   // int32_t
 		INT64,	   // int64_t
 		FLOAT32,   // float
 		FLOAT64,   // double
+		CFLOAT32,  // complex float
 		CFLOAT64,  // complex double
 	};
 
@@ -33,9 +35,8 @@ namespace librapid {
 	 *
 	 * \endrst
 	 */
-	using RawArrayData = std::variant<
-	  // int32_t *,
-	  int64_t *, float *, double *, Complex<double> *>;
+	using RawArrayData = std::variant<int32_t *, int64_t *, float *, double *,
+									  Complex<float> *, Complex<double> *>;
 
 	/**
 	 * \rst
@@ -70,31 +71,10 @@ namespace librapid {
 	 */
 	inline bool isIntegral(Datatype t) {
 		switch (t) {
-			case Datatype::NONE: return false;
-			case Datatype::VALIDNONE:
-				return false;
-				// case Datatype::BOOL:
-				// 	return true;
+			case Datatype::NONE:;
+			case Datatype::VALIDNONE: return false;
+			case Datatype::INT32:;
 			case Datatype::INT64: return true;
-			default: return false;
-		}
-	}
-
-	/**
-	 * \rst
-	 *
-	 * Returns true if the provided datatype represents an unsigned value.
-	 *
-	 * \endrst
-	 */
-	inline bool isUnsigned(Datatype t) {
-		switch (t) {
-			case Datatype::NONE: return false;
-			case Datatype::VALIDNONE:
-				return false;
-				// case Datatype::BOOL:
-				// 	return false;
-			case Datatype::INT64: return false;
 			default: return false;
 		}
 	}
@@ -109,8 +89,9 @@ namespace librapid {
 	 */
 	inline bool isFloating(Datatype t) {
 		switch (t) {
-			case Datatype::FLOAT32: return true;
-			case Datatype::FLOAT64: return true;
+			case Datatype::FLOAT32:;
+			case Datatype::FLOAT64:;
+			case Datatype::CFLOAT32:;
 			case Datatype::CFLOAT64: return true;
 			default: return false;
 		}
@@ -127,13 +108,12 @@ namespace librapid {
 	inline int64_t datatypeBytes(Datatype t) {
 		switch (t) {
 			case Datatype::NONE: return 0;
-			case Datatype::VALIDNONE:
-				return 1;
-				// case Datatype::BOOL:
-				// 	return sizeof(bool);
+			case Datatype::VALIDNONE: return 1;
+			case Datatype::INT32: return sizeof(int32_t);
 			case Datatype::INT64: return sizeof(int64_t);
 			case Datatype::FLOAT32: return sizeof(float);
 			case Datatype::FLOAT64: return sizeof(double);
+			case Datatype::CFLOAT32: return sizeof(Complex<float>);
 			case Datatype::CFLOAT64: return sizeof(Complex<double>);
 		}
 
@@ -155,13 +135,12 @@ namespace librapid {
 	inline std::string datatypeToString(const Datatype &t) {
 		switch (t) {
 			case Datatype::NONE: return "NONE";
-			case Datatype::VALIDNONE:
-				return "VALIDNONE";
-				// case Datatype::BOOL:
-				// 	return "BOOL";
+			case Datatype::VALIDNONE: return "VALIDNONE";
+			case Datatype::INT32: return "INT32";
 			case Datatype::INT64: return "INT64";
 			case Datatype::FLOAT32: return "FLOAT32";
 			case Datatype::FLOAT64: return "FLOAT64";
+			case Datatype::CFLOAT32: return "CFLOAT32";
 			case Datatype::CFLOAT64: return "CFLOAT64";
 		}
 
@@ -199,10 +178,12 @@ namespace librapid {
 	 */
 	template<typename T>
 	inline Datatype typeToDatatype() {
-		// if constexpr (std::is_same_v<T, bool>) return Datatype::BOOL;
+		if constexpr (std::is_same_v<T, int32_t>) return Datatype::INT32;
 		if constexpr (std::is_integral_v<T>) return Datatype::INT64;
 		if constexpr (std::is_same<T, float>::value) return Datatype::FLOAT32;
 		if constexpr (std::is_same<T, double>::value) return Datatype::FLOAT64;
+		if constexpr (std::is_same<T, Complex<float>>::value)
+			return Datatype::CFLOAT32;
 		if constexpr (std::is_same<T, Complex<double>>::value)
 			return Datatype::CFLOAT64;
 
@@ -248,7 +229,7 @@ namespace librapid {
 		static std::vector<std::string> noneStr = {
 		  "", "n", "none", "null", "void"};
 
-		static std::vector<std::string> boolStr = {"b", "bool", "boolean"};
+		static std::vector<std::string> int32Str = {"int32", "i32", "long"};
 
 		static std::vector<std::string> int64Str = {
 		  "i", "int", "int64", "i64", "long long"};
@@ -259,6 +240,9 @@ namespace librapid {
 		static std::vector<std::string> float64Str = {
 		  "f", "float64", "f64", "double"};
 
+		static std::vector<std::string> cfloat32Str = {
+		  "cfloat32", "cf32", "complex float"};
+
 		static std::vector<std::string> cfloat64Str = {"cf",
 													   "cfloat64",
 													   "cf64",
@@ -267,10 +251,11 @@ namespace librapid {
 
 		static std::map<Datatype, std::vector<std::string>> types = {
 		  {Datatype::NONE, noneStr},
-		  // {Datatype::BOOL,     boolStr},
+		  {Datatype::INT32, int32Str},
 		  {Datatype::INT64, int64Str},
 		  {Datatype::FLOAT32, float32Str},
 		  {Datatype::FLOAT64, float64Str},
+		  {Datatype::CFLOAT32, cfloat32Str},
 		  {Datatype::CFLOAT64, cfloat64Str},
 		};
 
@@ -331,23 +316,16 @@ namespace librapid {
 
 	inline void *extractVoidPtr(const RawArray &raw) {
 		switch (raw.dtype) {
-			case Datatype::INT64: {
-				return std::get<int64_t *>(raw.data);
-			}
-			case Datatype::FLOAT32: {
-				return std::get<float *>(raw.data);
-			}
-			case Datatype::FLOAT64: {
-				return std::get<double *>(raw.data);
-			}
-			case Datatype::CFLOAT64: {
+			case Datatype::INT32: return std::get<int32_t *>(raw.data);
+			case Datatype::INT64: return std::get<int64_t *>(raw.data);
+			case Datatype::FLOAT32: return std::get<float *>(raw.data);
+			case Datatype::FLOAT64: return std::get<double *>(raw.data);
+			case Datatype::CFLOAT32:
+				return std::get<Complex<float> *>(raw.data);
+			case Datatype::CFLOAT64:
 				return std::get<Complex<double> *>(raw.data);
-			}
+			default: return nullptr;
 		}
-
-		// throw std::runtime_error("Array contained nullptr data. Could not
-		// fetch origin");
-		return nullptr;
 	}
 
 #ifdef LIBRAPID_HAS_CUDA
@@ -378,11 +356,11 @@ namespace librapid {
 	inline RawArray rawArrayMalloc(RawArray &raw, uint64_t elems) {
 		if (raw.location == Accelerator::CPU) {
 			switch (raw.dtype) {
-				// case Datatype::BOOL: {
-				// 	raw.data = (bool *)
-				// 			alignedMalloc(sizeof(bool) * elems);
-				// 	break;
-				// }
+				case Datatype::INT32: {
+					raw.data =
+					  (int32_t *)alignedMalloc(sizeof(int32_t) * elems);
+					break;
+				}
 				case Datatype::INT64: {
 					raw.data =
 					  (int64_t *)alignedMalloc(sizeof(int64_t) * elems);
@@ -394,6 +372,11 @@ namespace librapid {
 				}
 				case Datatype::FLOAT64: {
 					raw.data = (double *)alignedMalloc(sizeof(double) * elems);
+					break;
+				}
+				case Datatype::CFLOAT32: {
+					raw.data = (Complex<float> *)alignedMalloc(
+					  sizeof(Complex<float>) * elems);
 					break;
 				}
 				case Datatype::CFLOAT64: {
@@ -416,10 +399,10 @@ namespace librapid {
 #endif // LIBRAPID_HAS_CUDA
 
 			switch (raw.dtype) {
-				// case Datatype::BOOL: {
-				// 	raw.data = (bool *) memory;
-				// 	break;
-				// }
+				case Datatype::INT32: {
+					raw.data = (int32_t *)memory;
+					break;
+				}
 				case Datatype::INT64: {
 					raw.data = (int64_t *)memory;
 					break;
@@ -430,6 +413,10 @@ namespace librapid {
 				}
 				case Datatype::FLOAT64: {
 					raw.data = (double *)memory;
+					break;
+				}
+				case Datatype::CFLOAT32: {
+					raw.data = (Complex<float> *)memory;
 					break;
 				}
 				case Datatype::CFLOAT64: {
@@ -461,10 +448,10 @@ namespace librapid {
 		void *memory = nullptr;
 
 		switch (raw.dtype) {
-			// case Datatype::BOOL: {
-			// 	memory = std::get<bool *>(raw.data);
-			// 	break;
-			// }
+			case Datatype::INT32: {
+				memory = std::get<int32_t *>(raw.data);
+				break;
+			}
 			case Datatype::INT64: {
 				memory = std::get<int64_t *>(raw.data);
 				break;
@@ -475,6 +462,10 @@ namespace librapid {
 			}
 			case Datatype::FLOAT64: {
 				memory = std::get<double *>(raw.data);
+				break;
+			}
+			case Datatype::CFLOAT32: {
+				memory = std::get<Complex<float> *>(raw.data);
 				break;
 			}
 			case Datatype::CFLOAT64: {
