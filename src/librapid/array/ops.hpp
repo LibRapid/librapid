@@ -34,8 +34,8 @@ namespace librapid::ops {
 	template<typename T = double>
 	struct FillRandom {
 		FillRandom(T minVal = 0, T maxVal = 1, uint64_t rngSeed = -1) :
-			min(minVal), max(maxVal),
-			seed(seed == -1 ? (int64_t)(seconds() * 10) : rngSeed) {
+				min(minVal), max(maxVal),
+				seed(seed == -1 ? (int64_t)(seconds() * 10) : rngSeed) {
 			// No format   => 0.081 us
 			// std::string => 1.965 us
 			// fmt::format => 0.680 us
@@ -93,38 +93,10 @@ namespace librapid::ops {
 
 	template<>
 	struct FillRandom<Complex<double>> {
-		FillRandom(const Complex<double> &min = 0,
-				   const Complex<double> &max = 1, uint64_t seed = -1) :
-			min(min),
-			max(max), seed(seed) {
-			//		kernel = "double randNumReal =
-			//curand_uniform_double(_curandState) *
-			//(";
-			//
-			//		kernel
-			//				+=
-			//				std::to_string(max.real() - min.real() -
-			// std::numeric_limits<double>::epsilon()) + 				" +
-			// std::is_integral<T_DST>::value) + "; 		kernel +=
-			// std::to_string(min.real())
-			//+ ";";
-			//
-			//		kernel += "\ndouble randNumImag =
-			//curand_uniform_double(&state[indexA
-			/// 64]) * ";
-			//
-			//		kernel
-			//				+=
-			//				std::to_string(max.imag() - min.imag() -
-			// std::numeric_limits<double>::epsilon()) + 				" + "; 		kernel
-			// += std::to_string(min.imag()) + ";";
-			//
-			//		kernel += R"V0G0N(
-			//                        return
-			//                        librapid::Complex<double>(randNumReal,
-			//                        randNumImag);
-			//                    )V0G0N";
-
+		FillRandom(const Complex<double> &min = 0, const Complex<double> &max = 1,
+				   uint64_t seed = -1) :
+				min(min),
+				max(max), seed(seed) {
 			kernel = fmt::format(
 			  R"V0G0N(
 		 						  double randNumReal = curand_uniform_double(_curandState) * {0}
@@ -146,7 +118,7 @@ namespace librapid::ops {
 
 		template<typename A>
 		auto operator()(A, int64_t) const {
-			return random((A)min, (A)max, seed);
+			return random(min, max, seed);
 		}
 
 		Complex<double> min;

@@ -83,16 +83,16 @@ namespace librapid {
 							 double start2, double stop2);
 
 	template<typename T = double>
-	inline double random(T lower = 0, T upper = 1, uint64_t seed = -1) {
+	inline T random(T lower = 0, T upper = 1, uint64_t seed = -1) {
 		// Random floating point value in range [lower, upper)
 
 		static std::uniform_real_distribution<double> distribution(0., 1.);
 		static std::mt19937 generator(
 		  seed == (uint64_t)-1 ? (unsigned int)(seconds() * 10) : seed);
-		return lower + (upper - lower) * distribution(generator);
+		return (T) (lower + (upper - lower) * distribution(generator));
 	}
 
-	template<typename T = double>
+	template<typename T>
 	inline Complex<T> random(const Complex<T> &min, const Complex<T> &max,
 							 uint64_t seed = -1) {
 		return {random<T>(min.real(), max.real(), seed),
