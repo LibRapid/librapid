@@ -143,6 +143,7 @@ namespace librapid {
 		 *		---
 		 *
 		 *		32-bit complex number
+		 
 		 * 		:badge:`cf32, badge-success`
 		 * 		:badge:`cfloat32, badge-success`
 		 * 		:badge:`complex float, badge-success`
@@ -150,6 +151,7 @@ namespace librapid {
 		 *		---
 		 *
 		 *		64-bit complex number
+
 		 * 		:badge:`c, badge-danger`
 		 * 		:badge:`cf, badge-danger`
 		 * 		:badge:`cf64, badge-success`
