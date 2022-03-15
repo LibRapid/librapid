@@ -65,6 +65,9 @@ py::class_<librapid::{dtype[0]}>(module, \"{dtype[0]}\")
     .def("__isub__", [](librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ lhs -= rhs; }})
     .def("__imul__", [](librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ lhs *= rhs; }})
     .def("__itruediv__", [](librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ lhs /= rhs; }})
+
+    .def("dist2", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ return lhs.dist2(rhs); }})
+    .def("dist", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ return lhs.dist(rhs); }})
 """
 
         res += f"""

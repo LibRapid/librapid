@@ -1,14 +1,35 @@
 #ifndef LIBRAPID_CONFIG
 #define LIBRAPID_CONFIG
 
-#include <cstdint>
-#include <cstring>
-#include <thread>
+// STL headers
+#include <cstdlib>
+#include <string>
+#include <vector>
+#include <type_traits>
+#include <algorithm>
+#include <complex>
+#include <memory>
 
+// Include some intrinsic functions
 #ifdef _WIN32
 #	include <intrin.h>
 #else
 #	include <x86intrin.h>
+#endif
+
+// Include OpenMP if possible
+#ifndef LIBRAPID_HAS_OMP
+#	ifdef _OPENMP
+#		include <omp.h>
+#		define LIBRAPID_HAS_OMP
+#	endif // _OPENMP
+#else	   // LIBRAPID_HAS_OMP
+#	include <omp.h>
+#endif // LIBRAPID_HAS_OMP
+
+// Include CBLAS if possible
+#ifdef LIBRAPID_HAS_BLAS
+#	include <cblas.h>
 #endif
 
 #ifdef LIBRAPID_PYTHON
@@ -18,26 +39,13 @@
 namespace py = pybind11;
 #endif // LIBRAPID_PYTHON
 
-#ifdef LIBRAPID_HAS_BLAS
 
-#	include <cblas.h>
-
-#endif
-
+// Provide definitions for Release and Debug builds
 #if defined(NDEBUG) || defined(LIBRAPID_NDEBUG)
 #	define LIBRAPID_RELEASE
 #else
 #	define LIBRAPID_DEBUG
 #endif // NDEBUG || LIBRAPID_NDEBUG
-
-#ifndef LIBRAPID_HAS_OMP
-#	ifdef _OPENMP
-#		include <omp.h>
-#		define LIBRAPID_HAS_OMP
-#	endif // _OPENMP
-#else	   // LIBRAPID_HAS_OMP
-#	include <omp.h>
-#endif // LIBRAPID_HAS_OMP
 
 #ifndef LIBRAPID_MAX_DIMS
 #	define LIBRAPID_MAX_DIMS 32
@@ -187,8 +195,9 @@ namespace librapid {
 	// 	return openblas_get_num_threads();
 	// #else
 	// 	throw std::runtime_error("Cannot set BLAS threads because OpenBLAS was
-	// not " 							 "linked against"); 	return -1; #endif //
-	// LIBRAPID_HAS_OPENBLAS
+	// not " 							 "linked against"); 	return -1;
+	// #endif
+	// // LIBRAPID_HAS_OPENBLAS
 	// }
 
 	inline void setNumThreads(int64_t num) {
@@ -208,24 +217,7 @@ namespace librapid {
 #elif defined(LR_HAS_OMP)
 		return omp_get_num_threads();
 #endif
-		return 1;
 	}
-
-	//	namespace imp {
-	//		class ThreadSetter {
-	//		public:
-	//			ThreadSetter(int64_t n) {
-	//                std::cout << "Initializing LibRapid with " << n << "
-	//                threads\n";
-	//				setNumThreads(n);
-	//				#ifdef LIBRAPID_HAS_OPENBLAS
-	//				openblas_set_num_threads(n);
-	//				#endif
-	//			}
-	//		};
-	//
-	//		inline ThreadSetter setter = ThreadSetter(4);
-	//	}
 } // namespace librapid
 
 // CUDA enabled LibRapid
