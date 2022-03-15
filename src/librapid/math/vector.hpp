@@ -40,7 +40,7 @@ namespace librapid {
 		Vec(const Vec<T, d> &other) {
 			int64_t i;
 			for (i = 0; i < dims < d ? dims : d; ++i) {
-				m_components[i] = other.m_components[i];
+				m_components[i] = other[i];
 			}
 		}
 
@@ -53,16 +53,12 @@ namespace librapid {
 
 		Vec(const Vec<DTYPE, dims> &other) {
 			int64_t i;
-			for (i = 0; i < dims; ++i) {
-				m_components[i] = other.m_components[i];
-			}
+			for (i = 0; i < dims; ++i) { m_components[i] = other[i]; }
 		}
 
 		Vec<DTYPE, dims> &operator=(const Vec<DTYPE, dims> &other) {
 			if (this == &other) { return *this; }
-			for (int64_t i = 0; i < dims; ++i) {
-				m_components[i] = other.m_components[i];
-			}
+			for (int64_t i = 0; i < dims; ++i) { m_components[i] = other[i]; }
 			return *this;
 		}
 
@@ -294,6 +290,39 @@ namespace librapid {
 		DTYPE mag() const { return sqrt(mag2()); }
 
 		DTYPE invMag() const { return DTYPE(1) / sqrt(mag2()); }
+
+		template<typename T, int64_t tmpDims>
+		typename std::common_type<DTYPE, T>::type
+		dist2(const Vec<T, tmpDims> &other) const {
+			using RET	= typename std::common_type<DTYPE, T>::type;
+			RET squared = 0;
+			int64_t i	= 0;
+
+			// Compute the squares of the differences for the matching
+			// components
+			for (; i < MIN_DIM_CLAMP(dims, tmpDims); ++i) {
+				squared +=
+				  (m_components[i] - other[i]) * (m_components[i] - other[i]);
+			}
+
+			// Compute the squares of the values for the remaining values.
+			// This just enables calculating the distance between two vectors
+			// with different dimensions
+			for (; i < MAX_DIM_CLAMP(dims, tmpDims); ++i) {
+				if (i < dims)
+					squared += m_components[i] * m_components[i];
+				else
+					squared += other[i] * other[i];
+			}
+
+			return squared;
+		}
+
+		template<typename T, int64_t tmpDims>
+		typename std::common_type<DTYPE, T>::type
+		dist(const Vec<T, tmpDims> &other) const {
+			return sqrt(dist2(other));
+		}
 
 		/**
 		 * Compute the vector dot product
@@ -567,10 +596,11 @@ namespace librapid {
 		/**
 		 * Implement simple arithmetic operators + - * /
 		 *
-		 * Operations take two Vec objects and return a new vector (with common
-		 * type) containing the result of the element-wise operation.
+		 * Operations take two Vec objects and return a new vector (with
+		 * common type) containing the result of the element-wise operation.
 		 *
-		 * Vectors must have same dimensions. To cast, use Vec.as<TYPE, DIMS>()
+		 * Vectors must have same dimensions. To cast, use Vec.as<TYPE,
+		 * DIMS>()
 		 */
 		template<typename T>
 		Vec<Common<T>, 3> operator+(const Vec<T, 3> &other) const {
@@ -639,8 +669,9 @@ namespace librapid {
 		/**
 		 * Implement simple arithmetic operators + - * /
 		 *
-		 * Operations take a vector and a scalar, and return a new vector (with
-		 * common type) containing the result of the element-wise operation.
+		 * Operations take a vector and a scalar, and return a new vector
+		 * (with common type) containing the result of the element-wise
+		 * operation.
 		 */
 
 		template<typename T>
@@ -740,6 +771,57 @@ namespace librapid {
 		DTYPE invMag() const {
 			DTYPE mag = x * x + y * y + z * z;
 			return DTYPE(1) / mag;
+		}
+
+		template<typename T, int64_t tmpDims>
+		typename std::common_type<DTYPE, T>::type
+		dist2(const Vec<T, tmpDims> &other) const {
+			// Specific case for a 2D vector
+			if constexpr (tmpDims == 2) {
+				return ((x - other.x) * (x - other.x)) +
+					   ((y - other.y) * (y - other.y)) + (z * z);
+			}
+
+			// Specific case for a 3D vector
+			if constexpr (tmpDims == 3) {
+				return ((x - other.x) * (x - other.x)) +
+					   ((y - other.y) * (y - other.y)) +
+					   ((z - other.z) * (z - other.z));
+			}
+
+			// Specific case for a 4D vector
+			if constexpr (tmpDims == 4) {
+				return ((x - other.x) * (x - other.x)) +
+					   ((y - other.y) * (y - other.y)) +
+					   ((z - other.z) * (z - other.z)) + (other.w * other.w);
+			}
+
+			// General case for 1, 5, 6, 7, ... dimensional vectors
+			using RET	= typename std::common_type<DTYPE, T>::type;
+			RET squared = 0;
+			int64_t i	= 0;
+
+			// Compute the squares of the differences for the matching
+			// components
+			for (; i < MIN_DIM_CLAMP(3, tmpDims); ++i) {
+				squared += ((&x)[i] - other[i]) * ((&x)[i] - other[i]);
+			}
+
+			// Compute the squares of the values for the remaining values.
+			// This just enables calculating the distance between two vectors
+			// with different dimensions
+			for (; i < MAX_DIM_CLAMP(3, tmpDims); ++i) {
+				if (i < 3)
+					squared += (&x)[i] * (&x)[i];
+				else
+					squared += other[i] * other[i];
+			}
+		}
+
+		template<typename T, int64_t tmpDims>
+		typename std::common_type<DTYPE, T>::type
+		dist(const Vec<T, tmpDims> &other) const {
+			return sqrt(dist2(other));
 		}
 
 		/**
@@ -911,6 +993,7 @@ namespace librapid {
 	}
 } // namespace librapid
 
+#ifdef FMT_API
 template<typename T, int64_t D>
 struct fmt::formatter<librapid::Vec<T, D>> {
 	template<typename ParseContext>
@@ -923,5 +1006,6 @@ struct fmt::formatter<librapid::Vec<T, D>> {
 		return fmt::format_to(ctx.out(), arr.str());
 	}
 };
+#endif // FMT_API
 
 #endif // LIBRAPID_VECTOR
