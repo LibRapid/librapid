@@ -1,5 +1,8 @@
+#include <librapid/config.hpp>
 #include <librapid/array/multiarray.hpp>
 #include <librapid/array/multiarray_operations.hpp>
+
+#include <thread>
 
 namespace librapid {
 	void Array::fill(double val) {
