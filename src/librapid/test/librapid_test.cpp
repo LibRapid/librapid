@@ -1,4 +1,6 @@
 #include <librapid/test/librapid_test.hpp>
+#include <librapid/array/extent.hpp>
+#include <librapid/array/multiarray.hpp>
 
 namespace librapid { namespace test {
 	int testLibrapid(int x) { return x * x; }

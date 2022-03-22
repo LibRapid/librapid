@@ -40,21 +40,21 @@ namespace librapid {
 	}
 
 	void optimiseThreads(double timePerThread, bool verbose) {
-		std::cout
-		  << "Optimising LibRapid's thread count. This should take around "
-		  << timePerThread << " seconds per thread\n";
+		fmt::print(
+		  "Optimising LibRapid's thread count. This should take around {} "
+		  "seconds per thread\n",
+		  timePerThread);
 
 		int threadCount = (int)std::thread::hardware_concurrency();
 
 #ifdef LIBRAPID_HAS_OMP
-		std::cout << "Optimising OpenMP Threads: ";
-		if (verbose) std::cout << "\n";
+		fmt::print("Optimising OpenMP Threads:{}", verbose ? "\n" : "");
 
 		int optimalOmpThreads = 1;
 		double fastestOmpTime = 1E10;
 
 		for (int i = 1; i <= threadCount; ++i) {
-			if (!verbose) std::cout << "#";
+			if (!verbose) fmt::print("#");
 
 			omp_set_num_threads(i);
 
@@ -77,15 +77,17 @@ namespace librapid {
 			}
 
 			if (verbose) {
-				std::cout << i << " threads: " << (end - start)
-						  << " seconds total | " << iters << " iters | "
-						  << ((end - start) / (double)iters) * 1000
-						  << " ms average\n";
+				fmt::print(
+				  "{} threads: {} seconds total | {} iters | {} ms average",
+				  i,
+				  (end - start),
+				  iters,
+				  (end - start) / (double)iters * 1000);
 			}
 		}
 
-		std::cout << "\nOptimal number of threads is " << optimalOmpThreads
-				  << ", at " << fastestOmpTime * 1000 << " ms per operation\n";
+		fmt::print("\nOptimal number of threads is {}, at {} ms per operation\n",
+				   optimalOmpThreads, fastestOmpTime * 1000);
 		omp_set_num_threads(optimalOmpThreads);
 #else
 		std::cout
