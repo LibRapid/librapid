@@ -83,7 +83,7 @@ set(sources
         "src/librapid/test/librapid_test.cpp"
         # Dependencies
         "src/librapid/version2/instrset_detect.cpp"
-        src/librapid/cudahelpers/kernel_header.h)
+        src/librapid/cudahelpers/kernel_header.h src/librapid/array/fillops.cpp)
 
 if (${SKBUILD})
     set(module_name "_librapid")

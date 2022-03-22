@@ -1788,7 +1788,8 @@ namespace librapid {
 		template<class FUNC>
 		static inline void
 		applyBinaryOp(Array &dst, const Array &srcA, const Array &srcB,
-					  const FUNC &operation, bool permitInvalid = false) {
+					  const FUNC &operation, bool permitInvalid = false,
+					  bool allowVectorize = true) {
 			// Operate on two arrays and store the result in another array
 
 			if (!permitInvalid && (!srcA.m_isScalar && !srcB.m_isScalar &&
@@ -1820,7 +1821,8 @@ namespace librapid {
 											   srcA.m_isScalar,
 											   srcB.m_isScalar,
 											   size,
-											   operation);
+											   operation,
+											   allowVectorize);
 
 				// Update the result stride too
 				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
@@ -2006,6 +2008,14 @@ namespace librapid {
 							const T &max = 0, int64_t seed = -1) {
 		return other.filledRandom(min, max, seed);
 	}
+
+	Array linear(double start, double end, int64_t num,
+				 const Datatype &dtype	 = Datatype::FLOAT64,
+				 const Accelerator &locn = Accelerator::CPU);
+
+	Array range(double start, double end, double inc,
+				const Datatype &dtype	= Datatype::FLOAT64,
+				const Accelerator &locn = Accelerator::CPU);
 
 	void negate(const Array &a, Array &res);
 
