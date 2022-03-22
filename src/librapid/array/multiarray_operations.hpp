@@ -10,14 +10,14 @@
 
 namespace librapid::imp {
 #ifdef LIBRAPID_HAS_CUDA
-	inline const jitify::detail::vector<std::string> cudaHeaders =
-	  { // CUDA_INCLUDE_DIRS,
-		CUDA_INCLUDE_DIRS + std::string("/curand.h"),
-		CUDA_INCLUDE_DIRS + std::string("/curand_kernel.h"),
-		CUDA_INCLUDE_DIRS + std::string("/cublas_v2.h"),
-		CUDA_INCLUDE_DIRS + std::string("/cublas_api.h"),
-		CUDA_INCLUDE_DIRS + std::string("/cuda_fp16.h"),
-		CUDA_INCLUDE_DIRS + std::string("/cuda_bf16.h")};
+	// CUDA_INCLUDE_DIRS
+	inline const jitify::detail::vector<std::string> cudaHeaders = {
+	  CUDA_INCLUDE_DIRS + std::string("/curand.h"),
+	  CUDA_INCLUDE_DIRS + std::string("/curand_kernel.h"),
+	  CUDA_INCLUDE_DIRS + std::string("/cublas_v2.h"),
+	  CUDA_INCLUDE_DIRS + std::string("/cublas_api.h"),
+	  CUDA_INCLUDE_DIRS + std::string("/cuda_fp16.h"),
+	  CUDA_INCLUDE_DIRS + std::string("/cuda_bf16.h")};
 
 	inline const std::vector<std::string> cudaParams = {"--disable-warnings",
 														"-std=c++17",
@@ -964,7 +964,8 @@ namespace librapid
 	inline void multiarrayBinaryOpTrivial(RawArray &dst, const RawArray &srcA,
 										  const RawArray &srcB,
 										  bool srcAIsScalar, bool srcBIsScalar,
-										  int64_t elems, const FUNC &op) {
+										  int64_t elems, const FUNC &op,
+										  bool allowVectorize = true) {
 		if (dst.location != srcA.location || dst.location != srcB.location) {
 			// Locations are different, so make A and B have the same
 			// accelerator as the result array (C)
@@ -1038,9 +1039,9 @@ namespace librapid
 						  }
 					  } else {
 						  // Use a[i] and b[i]
-						  if constexpr (std::is_same_v<A, double> &&
-										std::is_same_v<B, double> &&
-										std::is_same_v<C, double>) {
+						  if (allowVectorize && std::is_same_v<A, double> &&
+							  std::is_same_v<B, double> &&
+							  std::is_same_v<C, double>) {
 							  vcl::Vec8d a, b;
 							  int64_t i	   = 0;
 							  auto tmpSrcA = (double *__restrict)srcDataA;
