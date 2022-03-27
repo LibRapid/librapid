@@ -128,6 +128,8 @@ else:
 if os.environ.get("LIBRAPID_NO_ARCH"):
     cmake_args.append("-DLIBRAPID_NO_ARCH=yes")
 
+# cmake_args.append("-DCMAKE_BUILD_TYPE=DEBUG")
+
 setup(
     name="librapid",
     version=__version__,

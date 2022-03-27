@@ -2,7 +2,7 @@
 #include <librapid/array/extent.hpp>
 #include <librapid/array/multiarray.hpp>
 
-namespace librapid { namespace test {
+namespace librapid::test {
 	int testLibrapid(int x) { return x * x; }
 
 	void streamTest() {
@@ -14,4 +14,4 @@ namespace librapid { namespace test {
 		cudaSafeCall(cudaStreamDestroy(stream));
 #endif // LIBRAPID_HAS_CUDA
 	}
-}} // namespace librapid::test
+} // namespace librapid::test

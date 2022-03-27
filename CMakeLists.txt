@@ -62,9 +62,10 @@ option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 set(sources
         # Array library
         "src/librapid/array/extent.cpp"
-        "src/librapid/array/iterators.cpp"
         "src/librapid/array/stride.cpp"
         "src/librapid/array/multiarray.cpp"
+        "src/librapid/array/esiterator.cpp"
+        "src/librapid/array/array_iterator.cpp"
         "src/librapid/array/multiarray_constructors.cpp"
         "src/librapid/array/multiarray_string_methods.cpp"
         "src/librapid/array/multiarray_indexing.cpp"
@@ -72,6 +73,7 @@ set(sources
         "src/librapid/array/multiarray_arithmetic.cpp"
         "src/librapid/array/multiarray_utils.cpp"
         "src/librapid/array/multiarray_matrixops.cpp"
+        "src/librapid/array/multiarray_rangeops.cpp"
         "src/librapid/array/cblas_api.hpp"
         # Math library
         "src/librapid/math/core_math.cpp"
@@ -82,8 +84,7 @@ set(sources
         # Tests
         "src/librapid/test/librapid_test.cpp"
         # Dependencies
-        "src/librapid/version2/instrset_detect.cpp"
-        src/librapid/cudahelpers/kernel_header.h src/librapid/array/fillops.cpp)
+        "src/librapid/version2/instrset_detect.cpp")
 
 if (${SKBUILD})
     set(module_name "_librapid")

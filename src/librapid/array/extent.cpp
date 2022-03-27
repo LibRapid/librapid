@@ -1,4 +1,5 @@
 #include <librapid/array/extent.hpp>
+#include <librapid/array/esiterator.hpp>
 #include <sstream>
 
 namespace librapid {

@@ -6,7 +6,7 @@
 
 namespace librapid {
 	void Array::fill(double val) {
-		Array::applyBinaryOp(*this, *this, val, ops::Fill());
+		Array::applyBinaryOp(*this, *this, Array(val), ops::Fill());
 	}
 
 	RawArray Array::createRaw() const {
