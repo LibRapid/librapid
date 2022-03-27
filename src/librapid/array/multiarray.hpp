@@ -11,6 +11,7 @@
 #include <librapid/autocast/autocast.hpp>
 #include <librapid/config.hpp>
 #include <librapid/math/rapid_math.hpp>
+#include <librapid/array/array_iterator.hpp>
 #include <ostream>
 #include <variant>
 
@@ -60,7 +61,7 @@ namespace librapid {
 	Array stack(const std::vector<Array>(&arrays), int64_t axis);
 
 	class Array {
-	  public:
+	public:
 		/**
 		 * \rst
 		 *
@@ -811,7 +812,83 @@ namespace librapid {
 
 		Array &operator=(Complex<double> val);
 
+		/**
+		 * \rst
+		 *
+		 * Set this array to another array. The only use I can think of for this
+		 * is for iterators in Python, where changing the iterated variable
+		 * doesn't actually update the value in the Array being iterated over.
+		 * It quite literally just wrapps the C++ ``operator=()`` function...
+		 *
+		 * Examples
+		 * --------
+		 *
+		 * .. code-block:: python
+		 * 		:caption: This code works as expected
+		 *
+		 * 		import librapid as lrp
+		 *
+		 * 		myArray = lrp.Array([[1, 2, 3],
+		 * 		                     [4, 5, 6]])
+		 *
+		 * 		for val in myArray:
+		 * 			val[1] = 12345
+		 *
+		 * 		print(myArray)
+		 * 		"""
+		 * 		Outputs:
+		 * 		[[    1 12345     3]
+		 *       [    4 12345     6]]
+		 * 		"""
+		 *
+		 * .. code-block:: python
+		 * 		:caption: This code DOES NOT work as expected
+		 *
+		 * 		import librapid as lrp
+		 *
+		 * 		myArray = lrp.Array([[1, 2, 3],
+		 * 		                     [4, 5, 6]])
+		 *
+		 * 		# Notice we are directly setting $val
+		 * 		for val in myArray:
+		 * 			val = lrp.Array([10, 20, 30])
+		 *
+		 * 			# Instead, you should do something like:
+		 * 			# val.set(lrp.Array([10, 20, 30]))
+		 *
+		 * 		print(myArray)
+		 * 		"""
+		 * 		Outputs:
+		 * 		[[1 2 3]
+		 *       [4 5 6]]
+		 * 		"""
+		 *
+		 * \endrst
+		 */
+		inline void set(const Array &other) { *this = other; }
+
+		template<typename T>
+		inline void set(const T &other) {
+			*this = other;
+		}
+
 		~Array();
+
+		/**
+		 * \rst
+		 *
+		 * Returns true if and only if the two arrays are actually the same
+		 * thing. For example, you could have two arrays x and y with the same
+		 * stride, extent and data, but if the arrays don't share the same data
+		 * (in memory), this function will return false.
+		 *
+		 * \endrst
+		 */
+		[[nodiscard]] bool isSame(const Array &other) const {
+			return m_dataStart == other.m_dataStart &&
+				   m_extent == other.m_extent && m_stride == other.m_stride &&
+				   m_isScalar == other.m_isScalar;
+		}
 
 		/**
 		 * \rst
@@ -1607,12 +1684,29 @@ namespace librapid {
 		operator-() const;
 
 		Array operator+(const Array &other) const;
-
 		Array operator-(const Array &other) const;
-
 		Array operator*(const Array &other) const;
-
 		Array operator/(const Array &other) const;
+
+		template<typename T>
+		inline Array operator+(const T &other) const {
+			return *this + Array(other);
+		}
+
+		template<typename T>
+		inline Array operator-(const T &other) const {
+			return *this - Array(other);
+		}
+
+		template<typename T>
+		inline Array operator*(const T &other) const {
+			return *this * Array(other);
+		}
+
+		template<typename T>
+		inline Array operator/(const T &other) const {
+			return *this / Array(other);
+		}
 
 		void transpose(const Extent &order = Extent());
 
@@ -1665,22 +1759,9 @@ namespace librapid {
 				  dstPtr.data);
 			}
 
-			if (!permitInvalid &&
-				dst.m_stride.
-
-				isTrivial() &&
-
-				dst.m_stride.
-
-				isContiguous() &&
-
-				src.m_stride.
-
-				isTrivial() &&
-
-				src.m_stride.
-
-				isContiguous()
+			if (!permitInvalid && dst.m_stride.isTrivial() &&
+				dst.m_stride.isContiguous() && src.m_stride.isTrivial() &&
+				src.m_stride.isContiguous()
 
 			) {
 				// Trivial
@@ -1789,7 +1870,7 @@ namespace librapid {
 		static inline void
 		applyBinaryOp(Array &dst, const Array &srcA, const Array &srcB,
 					  const FUNC &operation, bool permitInvalid = false,
-					  bool allowVectorize = true) {
+					  bool permitVectorize = true) {
 			// Operate on two arrays and store the result in another array
 
 			if (!permitInvalid && (!srcA.m_isScalar && !srcB.m_isScalar &&
@@ -1822,7 +1903,7 @@ namespace librapid {
 											   srcB.m_isScalar,
 											   size,
 											   operation,
-											   allowVectorize);
+											   permitVectorize);
 
 				// Update the result stride too
 				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
@@ -1847,7 +1928,8 @@ namespace librapid {
 		template<class FUNC>
 		[[nodiscard]] static inline Array
 		applyBinaryOp(const Array &srcA, const Array &srcB,
-					  const FUNC &operation, bool permitInvalid = false) {
+					  const FUNC &operation, bool permitInvalid = false,
+					  bool permitVectorize = false) {
 			// Operate on two arrays and store the result in another array
 
 			if (!permitInvalid && !(srcA.m_isScalar || srcB.m_isScalar) &&
@@ -1878,7 +1960,8 @@ namespace librapid {
 											   srcA.m_isScalar,
 											   srcB.m_isScalar,
 											   size,
-											   operation);
+											   operation,
+											   permitVectorize);
 
 				// Update the result stride too
 				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
@@ -1933,7 +2016,24 @@ namespace librapid {
 			return m_dataStart;
 		}
 
-	  private:
+#ifdef LIBRAPID_PYTHON
+		// These are only useful for the Python library
+		inline void _increment() { increment(); }
+		inline void _decrement() { decrement(); }
+		[[nodiscard]] inline int64_t _references() const {
+			return *m_references;
+		}
+#endif // LIBRAPID_PYTHON
+
+		[[nodiscard]] inline AIterator<Array> begin() const {
+			return AIterator<Array>(*this);
+		}
+
+		[[nodiscard]] inline AIterator<Array> end() const {
+			return AIterator<Array>(len());
+		}
+
+	private:
 		inline void initializeCudaStream() const {
 #ifdef LIBRAPID_HAS_CUDA
 #	ifdef LIBRAPID_CUDA_STREAM
@@ -1979,7 +2079,7 @@ namespace librapid {
 							  std::pair<int64_t, int64_t> &longest,
 							  int64_t &printedRows, int64_t &printedCols) const;
 
-	  private:
+	private:
 		Accelerator m_location = Accelerator::CPU;
 		Datatype m_dtype	   = Datatype::NONE;
 
@@ -2013,9 +2113,29 @@ namespace librapid {
 				 const Datatype &dtype	 = Datatype::FLOAT64,
 				 const Accelerator &locn = Accelerator::CPU);
 
-	Array range(double start, double end, double inc,
-				const Datatype &dtype	= Datatype::FLOAT64,
+	Array linear(double start, double end, int64_t num,
+				 const std::string &dtype,
+				 const Accelerator &locn = Accelerator::CPU);
+
+	Array linear(double start, double end, int64_t num, const Datatype &dtype,
+				 const std::string &locn = "CPU");
+
+	Array linear(double start, double end, int64_t num,
+				 const std::string &dtype, const std::string &locn);
+
+	Array range(double start,
+				double end = std::numeric_limits<double>::infinity(),
+				double inc = 1, const Datatype &dtype = Datatype::FLOAT64,
 				const Accelerator &locn = Accelerator::CPU);
+
+	Array range(double start, double end, double inc, const std::string &dtype,
+				const Accelerator &locn = Accelerator::CPU);
+
+	Array range(double start, double end, double inc, const Datatype &dtype,
+				const std::string &locn = "CPU");
+
+	Array range(double start, double end, double inc,
+				const std::string &dtype, const std::string &locn);
 
 	void negate(const Array &a, Array &res);
 

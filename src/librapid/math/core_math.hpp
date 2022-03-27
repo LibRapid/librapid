@@ -161,6 +161,8 @@ namespace librapid {
 	[[nodiscard]] double roundSigFig(double num, int64_t figs = 3);
 
 	uint64_t nthFibonacci(uint8_t n);
+
+    void betterFcknBeEven(int64_t n);
 } // namespace librapid
 
 #endif // LIBRAPID_CORE_MATH

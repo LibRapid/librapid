@@ -1,5 +1,5 @@
-#ifndef LIBRAPID_ARRAY_ITERATORS
-#define LIBRAPID_ARRAY_ITERATORS
+#ifndef LIBRAPID_ES_ITERATORS
+#define LIBRAPID_ES_ITERATORS
 
 #include <iterator>
 #include <librapid/config.hpp>
@@ -209,4 +209,4 @@ namespace librapid {
 	};
 } // namespace librapid
 
-#endif // LIBRAPID_ARRAY_ITERATORS
+#endif // LIBRAPID_ES_ITERATORS

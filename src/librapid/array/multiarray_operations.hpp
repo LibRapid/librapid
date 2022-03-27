@@ -965,7 +965,7 @@ namespace librapid
 										  const RawArray &srcB,
 										  bool srcAIsScalar, bool srcBIsScalar,
 										  int64_t elems, const FUNC &op,
-										  bool allowVectorize = true) {
+										  bool permitVectorize = true) {
 		if (dst.location != srcA.location || dst.location != srcB.location) {
 			// Locations are different, so make A and B have the same
 			// accelerator as the result array (C)
@@ -1039,7 +1039,7 @@ namespace librapid
 						  }
 					  } else {
 						  // Use a[i] and b[i]
-						  if (allowVectorize && std::is_same_v<A, double> &&
+						  if (permitVectorize && std::is_same_v<A, double> &&
 							  std::is_same_v<B, double> &&
 							  std::is_same_v<C, double>) {
 							  vcl::Vec8d a, b;
@@ -1073,9 +1073,10 @@ namespace librapid
 								  vcl::Vec8d c = tempOp(a, b, i, i);
 								  c.store_partial((int)diff, tmpDst + i);
 							  }
-						  } else if constexpr (std::is_same_v<A, float> &&
-											   std::is_same_v<B, float> &&
-											   std::is_same_v<C, float>) {
+						  } else if (permitVectorize &&
+									 std::is_same_v<A, float> &&
+									 std::is_same_v<B, float> &&
+									 std::is_same_v<C, float>) {
 							  vcl::Vec16f a, b;
 							  auto tmpSrcA = (float *__restrict)srcDataA;
 							  auto tmpSrcB = (float *__restrict)srcDataB;

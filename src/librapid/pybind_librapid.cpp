@@ -131,6 +131,7 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("roundSigFig", [](double val, int64_t figs) { return librapid::roundSigFig(val, figs); }, py::arg("val"), py::arg("figs") = 3);
 
 	module.def("nthFibonacci", &librapid::nthFibonacci, py::arg("n"));
+	module.def("betterFcknBeEven", &librapid::betterFcknBeEven, py::arg("n"));
 
 	// Create the Vector library
 	#include "./python/vec_interface.hpp"
@@ -319,6 +320,13 @@ PYBIND11_MODULE(_librapid, module) {
 		.def(py::init<V<V<V<V<V<V<V<V<V<double>>>>>>>>>, const std::string &, const std::string &>(), py::arg("data"), py::arg("dtype"), py::arg("locn"))
 		.def(py::init<V<V<V<V<V<V<V<V<V<V<double>>>>>>>>>>, const std::string &, const std::string &>(), py::arg("data"), py::arg("dtype"), py::arg("locn"))
 
+		.def("set", [](librapid::Array &arr, const librapid::Array &other) { arr.set(other); }, py::arg("other"))
+		.def("set", [](librapid::Array &arr, double other) { arr.set(other); }, py::arg("other"))
+		.def("set", [](librapid::Array &arr, int64_t other) { arr.set(other); }, py::arg("other"))
+		.def("set", [](librapid::Array &arr, librapid::Complex<double> other) { arr.set(other); }, py::arg("other"))
+
+		.def("isSame", [](const librapid::Array &arr, const librapid::Array &other) { return arr.isSame(other); }, py::arg("other"))
+
 		.def_property_readonly("ndim", &librapid::Array::ndim)
 		.def_property_readonly("extent", &librapid::Array::extent)
 		.def_property_readonly("stride", &librapid::Array::stride)
@@ -326,6 +334,8 @@ PYBIND11_MODULE(_librapid, module) {
 		.def_property_readonly("isScalar", &librapid::Array::isScalar)
 		.def_property_readonly("location", &librapid::Array::location)
 		.def("__len__", [](const librapid::Array &arr) { return arr.len(); })
+
+		.def("__iter__", [](librapid::Array &arr) { arr._increment(); return py::make_iterator(arr.begin(), arr.end()); }) // , py::keep_alive<0, 1>())
 
 		.def("subscript", [](const librapid::Array &arr, int64_t index) { return arr.subscript(index); }, py::arg("index"))
 		.def("__getitem__", [](const librapid::Array &arr, int64_t index) { return arr[index]; }, py::arg("index"))
@@ -413,7 +423,15 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("randomLike", [](const librapid::Array &arr, int64_t min, int64_t max, int64_t seed) { return librapid::randomLike(arr, min, max, seed); }, py::arg("array"), py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1);
 	module.def("randomLike", [](const librapid::Array &arr, double min, double max, int64_t seed) { return librapid::randomLike(arr, min, max, seed); }, py::arg("array"), py::arg("min") = 0, py::arg("max") = 1, py::arg("seed") = -1);
 
-	module.def("linear", [](double min, double max, int64_t size) { return librapid::linear(min, max, size); }, py::arg("min"), py::arg("max"), py::arg("size"));
+	module.def("linear", [](double start, double end, int64_t num, const librapid::Datatype &dtype, const librapid::Accelerator &locn) { return librapid::linear(start, end, num, dtype, locn); }, py::arg("start"), py::arg("end"), py::arg("num"), py::arg("dtype") = librapid::Datatype::FLOAT64, py::arg("locn") = librapid::Accelerator::CPU);
+	module.def("linear", [](double start, double end, int64_t num, const std::string &dtype, const librapid::Accelerator &locn) { return librapid::linear(start, end, num, dtype, locn); }, py::arg("start"), py::arg("end"), py::arg("num"), py::arg("dtype"), py::arg("locn") = librapid::Accelerator::CPU);
+	module.def("linear", [](double start, double end, int64_t num, const librapid::Datatype &dtype, const std::string &locn) { return librapid::linear(start, end, num, dtype, locn); }, py::arg("start"), py::arg("end"), py::arg("num"), py::arg("dtype"), py::arg("locn") = "CPU");
+	module.def("linear", [](double start, double end, int64_t num, const std::string &dtype, const std::string &locn) { return librapid::linear(start, end, num, dtype, locn); }, py::arg("start"), py::arg("end"), py::arg("num"), py::arg("dtype"), py::arg("locn"));
+
+	module.def("range", [](double start, double end, double inc, const librapid::Datatype &dtype, const librapid::Accelerator &locn) { return librapid::range(start, end, inc, dtype, locn); }, py::arg("start") = 0, py::arg("end") = std::numeric_limits<double>::infinity(), py::arg("inc") = 1, py::arg("dtype") = librapid::Datatype::FLOAT64, py::arg("locn") = librapid::Accelerator::CPU);
+	module.def("range", [](double start, double end, double inc, const std::string &dtype, const librapid::Accelerator &locn) { return librapid::range(start, end, inc, dtype, locn); }, py::arg("start"), py::arg("end"), py::arg("inc"), py::arg("dtype"), py::arg("locn") = librapid::Accelerator::CPU);
+	module.def("range", [](double start, double end, double inc, const librapid::Datatype &dtype, const std::string &locn) { return librapid::range(start, end, inc, dtype, locn); }, py::arg("start"), py::arg("end"), py::arg("inc"), py::arg("dtype"), py::arg("locn") = "CPU");
+	module.def("range", [](double start, double end, double inc, const std::string &dtype, const std::string &locn) { return librapid::range(start, end, inc, dtype, locn); }, py::arg("start"), py::arg("end"), py::arg("inc"), py::arg("dtype"), py::arg("locn"));
 
 	module.def("negate", [](const librapid::Array &a, librapid::Array &res) { librapid::negate(a, res); }, py::arg("a"), py::arg("res"));
 	module.def("add", [](const librapid::Array &a, const librapid::Array &b, librapid::Array &res) { librapid::add(a, b, res); }, py::arg("a"), py::arg("b"), py::arg("res"));
