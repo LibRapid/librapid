@@ -31,27 +31,6 @@ namespace librapid::ops {
 		}
 	};
 
-	template<typename T>
-	struct FillLinear {
-		FillLinear(T begin, T increment) : start(begin), inc(increment) {
-			kernel = fmt::format(R"V0G0N(
-				return {} + {} * indexB;
-			)V0G0N", start, inc);
-		}
-
-		T start;
-		T inc;
-		std::string name   = "fill";
-		std::string kernel = R"V0G0N(
-				return 0;
-			)V0G0N";
-
-		template<typename A, typename B>
-		auto operator()(A, B, int64_t, int64_t index) const {
-			return start + index * inc;
-		}
-	};
-
 	template<typename T = double>
 	struct FillLinear {
 		FillLinear(T start, T inc) : m_start(start), m_inc(inc) {
