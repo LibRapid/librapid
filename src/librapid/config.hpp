@@ -39,7 +39,6 @@
 namespace py = pybind11;
 #endif // LIBRAPID_PYTHON
 
-
 // Provide definitions for Release and Debug builds
 #if defined(NDEBUG) || defined(LIBRAPID_NDEBUG)
 #	define LIBRAPID_RELEASE

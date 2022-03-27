@@ -120,4 +120,10 @@ namespace librapid {
 		}
 		return b;
 	}
+
+    void betterFcknBeEven(int64_t n) {
+        if (!(n & 1)) return;
+        fmt::print("[ ERROR ] Number was not even\n");
+        std::exit(69);
+    }
 } // namespace librapid

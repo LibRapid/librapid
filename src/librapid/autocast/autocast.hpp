@@ -314,6 +314,14 @@ namespace librapid {
 		  "documentation for details and valid inputs");
 	}
 
+//	inline Datatype operator Datatype(const std::string &str) {
+//		return stringToDatatype(str);
+//	}
+//
+//	inline Accelerator operator Accelerator(const std::string &str) {
+//		return stringToAccelerator(str);
+//	}
+
 	inline void *extractVoidPtr(const RawArray &raw) {
 		switch (raw.dtype) {
 			case Datatype::INT32: return std::get<int32_t *>(raw.data);

@@ -1,7 +1,7 @@
 #ifndef LIBRAPID_EXTENT
 #define LIBRAPID_EXTENT
 
-#include <librapid/array/iterators.hpp>
+#include <librapid/array/esiterator.hpp>
 #include <librapid/config.hpp>
 #include <vector>
 

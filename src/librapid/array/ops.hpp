@@ -53,35 +53,34 @@ namespace librapid::ops {
 	};
 
 	template<typename T = double>
+	struct FillLinear {
+		FillLinear(T start, T inc) : m_start(start), m_inc(inc) {
+			kernel = fmt::format(R"V0G0N(
+				return (double) {} + (double) {} * (double) indexB;
+								 )V0G0N",
+								 m_start,
+								 m_inc);
+		}
+
+		std::string name   = "linearFill";
+		std::string kernel = R"V0G0N(
+				return 0;
+			)V0G0N";
+
+		template<typename A, typename B>
+		auto operator()(A, B, int64_t, int64_t index) const {
+			return m_start + m_inc * (double)index;
+		}
+
+		double m_start = 0;
+		double m_inc   = 0;
+	};
+
+	template<typename T = double>
 	struct FillRandom {
 		FillRandom(T minVal = 0, T maxVal = 1, uint64_t rngSeed = -1) :
 				min(minVal), max(maxVal),
 				seed(seed == -1 ? (int64_t)(seconds() * 10) : rngSeed) {
-			// No format   => 0.081 us
-			// std::string => 1.965 us
-			// fmt::format => 0.680 us
-
-			//            kernel = "if constexpr (std::is_same<A,
-			//            double>::value) {\n"; kernel += "double randNum =
-			//            curand_uniform_double(_curandState) * ("; kernel +=
-			//            std::to_string(max - min -
-			//            std::numeric_limits<T>::epsilon())
-			//            +
-			//                      " + std::is_integral<T_DST>::value) + ";
-			//            kernel += std::to_string(min) + ";\n";
-			//
-			//            kernel += "return randNum;\n}\n";
-			//
-			//            kernel += "else {\n";
-			//            kernel += "float randNum =
-			//            curand_uniform(_curandState) * ("; kernel +=
-			//            std::to_string(max - min -
-			//            std::numeric_limits<T>::epsilon()) +
-			//                      " + std::is_integral<T_DST>::value) + ";
-			//            kernel += std::to_string(min) + ";\n";
-			//
-			//            kernel += "return randNum;\n}\n";
-
 			kernel = fmt::format(R"V0G0N(
 									if constexpr (std::is_same<A, double>::value) {{
 										double randNum = curand_uniform_double(_curandState) * {0}
@@ -114,8 +113,8 @@ namespace librapid::ops {
 
 	template<>
 	struct FillRandom<Complex<double>> {
-		FillRandom(const Complex<double> &min = 0, const Complex<double> &max = 1,
-				   uint64_t seed = -1) :
+		FillRandom(const Complex<double> &min = 0,
+				   const Complex<double> &max = 1, uint64_t seed = -1) :
 				min(min),
 				max(max), seed(seed) {
 			kernel = fmt::format(
@@ -225,7 +224,7 @@ namespace librapid {
 
 	// A lightweight wrapper for a GPU kernel
 	class GPUKernel {
-	  public:
+	public:
 		static uint64_t kernelsCreated;
 
 		GPUKernel() = default;
