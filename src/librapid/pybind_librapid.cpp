@@ -336,6 +336,8 @@ PYBIND11_MODULE(_librapid, module) {
 		.def("__len__", [](const librapid::Array &arr) { return arr.len(); })
 
 		.def("__iter__", [](librapid::Array &arr) { arr._increment(); return py::make_iterator(arr.begin(), arr.end()); }) // , py::keep_alive<0, 1>())
+		// .def("__iter__", [](librapid::Array &arr) { /*arr._increment();*/ return py::make_iterator(arr.begin(true), arr.end()); }, py::keep_alive<0, 1>())
+		// .def("__iter__", [](librapid::Array &arr) { return py::make_iterator(arr); })
 
 		.def("subscript", [](const librapid::Array &arr, int64_t index) { return arr.subscript(index); }, py::arg("index"))
 		.def("__getitem__", [](const librapid::Array &arr, int64_t index) { return arr[index]; }, py::arg("index"))
@@ -414,7 +416,9 @@ PYBIND11_MODULE(_librapid, module) {
 			res += "locn=\"" + locnStr + "\">";
 
 			return res;
-		});
+		})
+
+		.def("refCount", &librapid::Array::refCount);
 
 	module.def("warmup", &librapid::warmup, py::arg("itersCPU") = 10, py::arg("itersGPU") = -1);
 
