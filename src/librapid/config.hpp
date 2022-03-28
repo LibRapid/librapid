@@ -215,6 +215,8 @@ namespace librapid {
 		return openblas_get_num_threads();
 #elif defined(LR_HAS_OMP)
 		return omp_get_num_threads();
+#else
+		return 1;
 #endif
 	}
 } // namespace librapid

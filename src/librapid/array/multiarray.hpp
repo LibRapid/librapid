@@ -11,11 +11,12 @@
 #include <librapid/autocast/autocast.hpp>
 #include <librapid/config.hpp>
 #include <librapid/math/rapid_math.hpp>
-#include <librapid/array/array_iterator.hpp>
 #include <ostream>
 #include <variant>
 
 namespace librapid {
+	class AIterator;
+
 	namespace utils {
 		/**
 		 * \rst
@@ -2016,22 +2017,12 @@ namespace librapid {
 			return m_dataStart;
 		}
 
-#ifdef LIBRAPID_PYTHON
-		// These are only useful for the Python library
-		inline void _increment() { increment(); }
+		inline int64_t refCount() const { return *m_references; }
+		inline void _increment() const { increment(); }
 		inline void _decrement() { decrement(); }
-		[[nodiscard]] inline int64_t _references() const {
-			return *m_references;
-		}
-#endif // LIBRAPID_PYTHON
 
-		[[nodiscard]] inline AIterator<Array> begin() const {
-			return AIterator<Array>(*this);
-		}
-
-		[[nodiscard]] inline AIterator<Array> end() const {
-			return AIterator<Array>(len());
-		}
+		[[nodiscard]] AIterator begin() const;
+		[[nodiscard]] AIterator end() const;
 
 	private:
 		inline void initializeCudaStream() const {
@@ -2048,13 +2039,11 @@ namespace librapid {
 
 		inline void increment() const {
 			if (m_references == nullptr) { return; }
-
 			++(*m_references);
 		}
 
 		inline void decrement() {
 			if (m_references == nullptr) { return; }
-
 			--(*m_references);
 
 			if (*m_references == 0) {
@@ -2134,8 +2123,8 @@ namespace librapid {
 	Array range(double start, double end, double inc, const Datatype &dtype,
 				const std::string &locn = "CPU");
 
-	Array range(double start, double end, double inc,
-				const std::string &dtype, const std::string &locn);
+	Array range(double start, double end, double inc, const std::string &dtype,
+				const std::string &locn);
 
 	void negate(const Array &a, Array &res);
 
@@ -2482,5 +2471,7 @@ struct fmt::formatter<librapid::Array> {
 	}
 };
 #endif // FMT_API
+
+#include <librapid/array/array_iterator.hpp>
 
 #endif // LIBRAPID_ARRAY

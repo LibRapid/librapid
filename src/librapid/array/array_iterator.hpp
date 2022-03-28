@@ -6,15 +6,13 @@
 
 namespace librapid {
 	class Array;
-}
 
-namespace librapid {
 	// An iterator for the Array class
-	template<typename T>
+	// template<typename T>
 	class AIterator {
 	public:
 		using iteratorCategory = std::random_access_iterator_tag;
-		using valueType		   = T;
+		using valueType		   = Array;
 		using differenceType   = uint64_t;
 		using indexType		   = int64_t;
 		using reference		   = valueType &;
@@ -49,7 +47,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		AIterator<T> &operator=(const AIterator<T> &other);
+		AIterator &operator=(const AIterator &other);
 
 		/**
 		 * \rst
@@ -186,7 +184,6 @@ namespace librapid {
 	private:
 		indexType m_index = 0;
 		valueType m_array;
-		bool m_decrementOnFree = false;
 	};
 } // namespace librapid
 
