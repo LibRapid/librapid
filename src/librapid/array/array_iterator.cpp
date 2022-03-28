@@ -4,106 +4,83 @@
 #include <librapid/math/rapid_math.hpp>
 
 namespace librapid {
-	template<>
-	AIterator<Array>::AIterator() = default;
+	AIterator::AIterator() = default;
 
-	template<>
-	AIterator<Array>::~AIterator() {
-		// if (m_decrementOnFree) m_array._decrement();
-	}
+	AIterator::~AIterator() = default;
 
-	template<>
-	AIterator<Array>::AIterator(const valueType &arr, indexType index) :
+	AIterator::AIterator(const valueType &arr, indexType index) :
 			m_array(arr), m_index(index) {}
 
-	template<>
-	AIterator<Array>::AIterator(indexType index) : m_index(index) {}
+	AIterator::AIterator(indexType index) : m_index(index) {}
 
-	template<>
-	AIterator<Array> &
-	AIterator<Array>::operator=(const AIterator<Array> &other) = default;
+	AIterator &AIterator::operator=(const AIterator &other) = default;
 
-	template<>
-	AIterator<Array>::operator bool() const {
+	AIterator::operator bool() const {
 		return m_index >= 0 && m_index < m_array.len();
 	}
 
-	template<>
-	bool AIterator<Array>::operator==(const AIterator<Array> &other) const {
-		// return m_array.isSame(other.m_array) && m_index == other.m_index;
+	bool AIterator::operator==(const AIterator &other) const {
 		return m_index == other.m_index;
 	}
 
-	template<>
-	bool AIterator<Array>::operator!=(const AIterator<Array> &other) const {
+	bool AIterator::operator!=(const AIterator &other) const {
 		return !(*this == other);
 	}
 
-	template<>
-	AIterator<Array> &
-	AIterator<Array>::operator+=(const differenceType &movement) {
+	AIterator &AIterator::operator+=(const differenceType &movement) {
 		m_index += movement;
 		return *this;
 	}
 
-	template<>
-	AIterator<Array> &
-	AIterator<Array>::operator-=(const differenceType &movement) {
+	AIterator &AIterator::operator-=(const differenceType &movement) {
 		m_index -= movement;
 		return *this;
 	}
 
-	template<>
-	AIterator<Array> &AIterator<Array>::operator++() {
+	AIterator &AIterator::operator++() {
 		++m_index;
 		return *this;
 	}
 
-	template<>
-	AIterator<Array> &AIterator<Array>::operator--() {
+	AIterator &AIterator::operator--() {
 		--m_index;
 		return *this;
 	}
 
-	template<>
-	AIterator<Array> AIterator<Array>::operator++(int) {
-		auto temp(*this);
+	AIterator AIterator::operator++(int) {
+		AIterator temp(m_array, m_index);
 		++m_index;
 		return temp;
 	}
 
-	template<>
-	AIterator<Array> AIterator<Array>::operator--(int) {
-		auto temp(*this);
+	AIterator AIterator::operator--(int) {
+		AIterator temp(m_array, m_index);
 		--m_index;
 		return temp;
 	}
 
-	template<>
-	AIterator<Array>
-	AIterator<Array>::operator+(const differenceType &movement) const {
+	AIterator AIterator::operator+(const differenceType &movement) const {
 		return AIterator(m_array, m_index + movement);
 	}
 
-	template<>
-	AIterator<Array>
-	AIterator<Array>::operator-(const differenceType &movement) const {
+	AIterator AIterator::operator-(const differenceType &movement) const {
 		return AIterator(m_array, m_index - movement);
 	}
 
-	template<>
-	AIterator<Array>::differenceType
-	AIterator<Array>::operator-(const AIterator<Array> &rawIterator) const {
+	AIterator::differenceType
+	AIterator::operator-(const AIterator &rawIterator) const {
 		return abs(rawIterator.m_index - m_index);
 	}
 
-	template<>
-	AIterator<Array>::valueType AIterator<Array>::operator*() {
+	AIterator::valueType AIterator::operator*() { return m_array[m_index]; }
+
+	AIterator::valueType AIterator::operator*() const {
 		return m_array[m_index];
 	}
 
-	template<>
-	AIterator<Array>::valueType AIterator<Array>::operator*() const {
-		return m_array[m_index];
+	AIterator Array::begin() const {
+		return AIterator(*this);
 	}
+
+	AIterator Array::end() const { return AIterator(len()); }
 } // namespace librapid
