@@ -459,7 +459,7 @@ namespace librapid::linalg {
 								float *__restrict a, int64_t lda,
 								float *__restrict x, int64_t incx, float beta,
 								float *__restrict y, int64_t incy) {
-		cublasOperation_t blas_trans {};
+		cublasOperation_t blas_trans;
 		if (trans)
 			blas_trans = CUBLAS_OP_N;
 		else
@@ -475,7 +475,7 @@ namespace librapid::linalg {
 								double *__restrict a, int64_t lda,
 								double *__restrict x, int64_t incx, double beta,
 								double *__restrict y, int64_t incy) {
-		cublasOperation_t blas_trans {};
+		cublasOperation_t blas_trans;
 		if (trans)
 			blas_trans = CUBLAS_OP_T;
 		else

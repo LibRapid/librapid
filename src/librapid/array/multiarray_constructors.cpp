@@ -148,52 +148,88 @@ namespace librapid {
 
 	Array &Array::operator=(const Array &other) {
 		// Quick return if possible
+		if (this == &other) return *this;
 		if (other.m_references == nullptr) { return *this; }
 
-		if (m_isChild && m_extent != other.m_extent) {
-			throw std::invalid_argument("Cannot set child array with " +
-										m_extent.str() + " to " +
-										other.m_extent.str());
-		}
-
-		if (m_references == nullptr) {
-			constructNew(
-			  other.m_extent, other.m_stride, other.m_dtype, other.m_location);
-		} else {
-			// Array already exists, so check if it must be reallocated
-
-			// This condition might be needed? => || m_dtype != other.m_dtype
-			if (!m_isChild && m_extent != other.m_extent) {
-				// Extents are not equal, so memory can not be safely copied
-				decrement();
-				constructNew(other.m_extent,
-							 other.m_stride,
-							 other.m_dtype,
-							 other.m_location);
-				m_isScalar = other.m_isScalar;
-			}
-		}
-
 		if (!m_isChild) {
-			m_extent = other.m_extent;
-			m_stride = other.m_stride;
-		}
+			// If the array is not a child, decrement it and copy the relevant
+			// data, then increment this
+			decrement();
 
-		// Attempt to copy the data from other into *this
-		if (m_stride.isContiguous() && other.m_stride.isContiguous()) {
-			auto raw = createRaw();
-			rawArrayMemcpy(raw, other.createRaw(), m_extent.size());
+			m_location	 = other.m_location;
+			m_dtype		 = other.m_dtype;
+			m_dataStart	 = other.m_dataStart;
+			m_dataOrigin = other.m_dataOrigin;
+			m_references = other.m_references;
+			m_extent	 = other.m_extent;
+			m_stride	 = other.m_stride;
+			m_isScalar	 = other.m_isScalar;
+			m_isChild	 = other.m_isChild;
+
+			increment();
 		} else {
-			throw std::runtime_error("Haven't gotten to this yet...");
-		}
+			// The array is a child, so the data MUST be copied by value, not by
+			// reference
 
-		m_extent   = other.m_extent;
-		m_stride   = other.m_stride;
-		m_isScalar = other.m_isScalar;
-		m_dtype	   = other.m_dtype;
-		m_location = other.m_location;
+			// Ensure the Arrays have the same extent
+			if (m_extent != other.m_extent) {
+				std::string err =
+				  fmt::format("Cannot set child array with {} to {}",
+							  m_extent.str(),
+							  other.m_extent.str());
+				throw std::invalid_argument(err);
+			}
+
+			if (m_stride.isContiguous() && other.m_stride.isContiguous()) {
+				// If both arrays are contiguous in memory, copy the data with
+				// memcpy to speed things up
+				rawArrayMemcpy(createRaw(), other.createRaw(), m_extent.size());
+			} else {
+				applyUnaryOp(*this, other, ops::Copy());
+			}
+
+			// No need to increment as the data was copied directly
+		}
 
 		return *this;
+
+		//		if (m_references == nullptr) {
+		//			constructNew(
+		//			  other.m_extent, other.m_stride, other.m_dtype,
+		// other.m_location); 		} else {
+		//			// Array already exists, so check if it must be reallocated
+		//
+		//			// This condition might be needed? => || m_dtype !=
+		// other.m_dtype 			if (!m_isChild && m_extent !=
+		// other.m_extent)
+		// {
+		//				// Extents are not equal, so memory can not be safely
+		// copied 				decrement();
+		// constructNew(other.m_extent, other.m_stride,
+		// other.m_dtype, 							 other.m_location); 				m_isScalar
+		// =
+		// other.m_isScalar; 			} else { 				increment();
+		//			}
+		//		}
+		//
+		//		if (!m_isChild) {
+		//			m_extent = other.m_extent;
+		//			m_stride = other.m_stride;
+		//		}
+		//
+		//		// Attempt to copy the data from other into *this
+		//		if (m_stride.isContiguous() && other.m_stride.isContiguous()) {
+		//			// auto raw = createRaw();
+		//			rawArrayMemcpy(createRaw(), other.createRaw(),
+		// m_extent.size()); 		} else { 			throw
+		// std::runtime_error("Haven't gotten to this yet...");
+		//		}
+		//
+		//		m_isScalar = other.m_isScalar;
+		//		m_dtype	   = other.m_dtype;
+		//		m_location = other.m_location;
+		//
+		//		return *this;
 	}
 
 	Array &Array::operator=(bool val) {

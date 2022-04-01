@@ -50,9 +50,7 @@ namespace librapid {
 		}
 
 		// Everything else
-		int64_t index	 = 0;
-		int64_t vec_size = stripMiddle ? 6 : m_extent[0];
-		std::string res	 = "[";
+		int64_t index = 0;
 
 		for (int64_t i = 0; i < m_extent[0]; ++i, ++index) {
 			if (stripMiddle && i == 3) i = m_extent[0] - 3;
@@ -107,10 +105,10 @@ namespace librapid {
 
 		// Vectors
 		if (ndim() == 1) {
-			int64_t index	= 0;
+			size_t index;
 			std::string res = "[";
 
-			for (int64_t i = 0; i < m_extent.size(); ++i, ++index) {
+			for (int64_t i = 0; i < m_extent.size(); ++i) {
 				if (stripMiddle && i == 3) {
 					i = m_extent.size() - 3;
 					res += "... ";

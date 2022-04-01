@@ -1,7 +1,7 @@
 #include <librapid/array/multiarray.hpp>
 
 namespace librapid {
-	const Array Array::subscript(int64_t index) const {
+	Array Array::subscript(int64_t index) const {
 		if (index >= m_extent[0]) {
 			std::string msg =
 			  "Index " + std::to_string(index) +
@@ -10,6 +10,9 @@ namespace librapid {
 
 			throw std::out_of_range(msg);
 		}
+
+		if (m_isScalar)
+			throw std::invalid_argument("Cannot index a scalar Array");
 
 		Array res;
 

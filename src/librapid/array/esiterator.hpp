@@ -32,6 +32,8 @@ namespace librapid {
 		 */
 		ESIterator(pointer start);
 
+		ESIterator(const ESIterator &other);
+
 		~ESIterator();
 
 		/**
