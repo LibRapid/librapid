@@ -59,7 +59,7 @@ namespace librapid::ops {
 	struct FillRandom {
 		FillRandom(T minVal = 0, T maxVal = 1, uint64_t rngSeed = -1) :
 				min(minVal), max(maxVal),
-				seed(seed == -1 ? (int64_t)(seconds() * 10) : rngSeed) {
+				seed(rngSeed == -1 ? (int64_t)(seconds() * 10) : rngSeed) {
 			kernel = fmt::format(R"V0G0N(
 									if constexpr (std::is_same<A, double>::value) {{
 										double randNum = curand_uniform_double(_curandState) * {0}
@@ -208,15 +208,12 @@ namespace librapid {
 
 		GPUKernel() = default;
 
-		explicit GPUKernel(const std::string &kernel_) {
-			name   = fmt::format("gpuKernel{}", kernelsCreated++);
-			kernel = kernel_;
-		}
+		explicit GPUKernel(const std::string &kernel_) :
+				name(fmt::format("gpuKernel{}", kernelsCreated++)),
+				kernel(kernel_) {}
 
-		GPUKernel(const std::string &name_, const std::string &kernel_) {
-			name   = name_;
-			kernel = kernel_;
-		}
+		GPUKernel(const std::string &name_, const std::string &kernel_) :
+				name(name_), kernel(kernel_) {}
 
 		template<typename... Pack>
 		double operator()(Pack...) const {

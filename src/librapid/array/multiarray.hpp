@@ -752,24 +752,47 @@ namespace librapid {
 		  /**
 		   * \rst
 		   *
-		   * Set one Array equal to a value.
+		   * Set one Array equal to another Array or to a scalar.
 		   *
-		   * If this Array on is invalid (i.e. it was created using the default
-		   * constructor), the array will be initialized and the relevant data
-		   * will be copied into it.
+		   * This function will link two arrays together. This means that
+		   * changing a value in one array might end up changing an array in
+		   * another. The arrays are not required to have the same extent
+		   * (dimensions), stride, datatype or accelerator (location).
 		   *
-		   * If the left-hand-side of the operation is another Array instance,
-		   * the data from that array will be copied into this array. If the
-		   * arrays are identical in terms of their Extent, the data will be
-		   * copied, otherwise this array will be recreated with the correct
-		   * size.
+		   * .. code-block::
+		   * 	:caption: A C++ Example
+		   *
+		   * 	... // Set everything up
+		   *
+		   * 	namespace lrc = librapid;
+		   *
+		   * 	lrc::Array myFirstArray({1, 2, 3, 4, 5});
+		   * 	lrc::Array mySecondArray({10, 20, 30});
+		   *
+		   * 	mySecondArray = myFirstArray; // Copies data by reference
+		   *
+		   * 	std::cout << mySecondArray << "\n"; // [1 2 3 4 5]
+		   *
+		   * 	mySecondArray[0] = 123; // Updates myFirstArray too :)
+		   *
+		   * 	std::cout << myFirstArray << "\n"; // [123 2 3 4 5]
+		   *
+		   * 	... // Clean everything up
 		   *
 		   * .. Attention::
 		   *		There is a single exception to this, which occurs when
 		   * 		this array is a direct subscript of another (e.g.
 		   * 		``myArray[0]``). If this is the case, the left-hand-side
 		   * 		of this operation *must* have the same extent, otherwise
-		   * 		an error will be thrown
+		   * 		an error will be thrown. Additionally, data will be COPIED
+		   * 		instead of references being made. This means updates will
+		   * 		not carry across multiple Arrays.
+		   *
+		   * .. Attention::
+		   *		Be VERY careful when using this feature, as it can lead to
+		   *		unwanted side effects. Take a look at ``lrc::Array::copy()``
+		   *		for a function which will make an exact clone of an Array
+		   *		without making any new references.
 		   *
 		   * Parameters
 		   * ----------
@@ -1004,14 +1027,16 @@ namespace librapid {
 					case Datatype::VALIDNONE:
 						throw std::invalid_argument(
 						  "Cannot convert uninitialized array to scalar value");
-						// case Datatype::BOOL:
-						// 	return (T) *std::get<bool *>(m_dataStart);
+					case Datatype::INT32:
+						return (T)*std::get<int32_t *>(m_dataStart);
 					case Datatype::INT64:
 						return (T)*std::get<int64_t *>(m_dataStart);
 					case Datatype::FLOAT32:
 						return (T)*std::get<float *>(m_dataStart);
 					case Datatype::FLOAT64:
 						return (T)*std::get<double *>(m_dataStart);
+					case Datatype::CFLOAT32:
+						return (T)*std::get<Complex<float> *>(m_dataStart);
 					case Datatype::CFLOAT64:
 						return (T)*std::get<Complex<double> *>(m_dataStart);
 				}
@@ -1030,6 +1055,10 @@ namespace librapid {
 						throw std::invalid_argument(
 						  "Cannot convert uninitialized array to scalar value");
 					}
+					case Datatype::INT32: {
+						res = (T)*std::get<int32_t *>(tmp.data);
+						break;
+					}
 					case Datatype::INT64: {
 						res = (T)*std::get<int64_t *>(tmp.data);
 						break;
@@ -1040,6 +1069,10 @@ namespace librapid {
 					}
 					case Datatype::FLOAT64: {
 						res = (T)*std::get<double *>(tmp.data);
+						break;
+					}
+					case Datatype::CFLOAT32: {
+						res = (T)*std::get<Complex<float> *>(tmp.data);
 						break;
 					}
 					case Datatype::CFLOAT64: {
@@ -1136,7 +1169,7 @@ namespace librapid {
 		 *
 		 * \endrst
 		 */
-		[[nodiscard]] const Array subscript(int64_t index) const;
+		[[nodiscard]] Array subscript(int64_t index) const;
 
 		/**
 		 * \rst
@@ -2418,6 +2451,8 @@ namespace librapid {
 					} else {
 						iters = itersGPU;
 					}
+				} else {
+					throw std::invalid_argument("Unknown Accelerator");
 				}
 
 				for (int64_t i = 0; i < iters; ++i) {

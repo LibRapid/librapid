@@ -5,6 +5,8 @@ namespace librapid {
 
 	ESIterator::ESIterator(pointer start) : m_ptr(start) {}
 
+	ESIterator::ESIterator(const ESIterator &other) = default;
+
 	ESIterator::~ESIterator() = default;
 
 	ESIterator &ESIterator::operator=(const ESIterator &other) = default;

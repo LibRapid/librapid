@@ -314,13 +314,13 @@ namespace librapid {
 		  "documentation for details and valid inputs");
 	}
 
-//	inline Datatype operator Datatype(const std::string &str) {
-//		return stringToDatatype(str);
-//	}
-//
-//	inline Accelerator operator Accelerator(const std::string &str) {
-//		return stringToAccelerator(str);
-//	}
+	//	inline Datatype operator Datatype(const std::string &str) {
+	//		return stringToDatatype(str);
+	//	}
+	//
+	//	inline Accelerator operator Accelerator(const std::string &str) {
+	//		return stringToAccelerator(str);
+	//	}
 
 	inline void *extractVoidPtr(const RawArray &raw) {
 		switch (raw.dtype) {
@@ -392,6 +392,10 @@ namespace librapid {
 					  sizeof(Complex<double>) * elems);
 					break;
 				}
+				default: {
+					raw.data = (int32_t *)nullptr;
+					break;
+				}
 			}
 		} else if (raw.location == Accelerator::GPU) {
 			void *memory  = nullptr;
@@ -429,6 +433,10 @@ namespace librapid {
 				}
 				case Datatype::CFLOAT64: {
 					raw.data = (Complex<double> *)memory;
+					break;
+				}
+				default: {
+					raw.data = (int64_t *)nullptr;
 					break;
 				}
 			}
@@ -511,7 +519,7 @@ namespace librapid {
 	 *
 	 * \endrst
 	 */
-	inline void rawArrayMemcpy(RawArray &dst, const RawArray &src,
+	inline void rawArrayMemcpy(const RawArray &dst, const RawArray &src,
 							   int64_t elems) {
 		if (dst.location == Accelerator::NONE ||
 			src.location == Accelerator::NONE)
@@ -609,7 +617,6 @@ namespace librapid {
 			if (dst.location != src.location) {
 				if (src.location == Accelerator::CPU) {
 					// Copy from CPU to GPU
-
 					std::visit(
 					  [&](auto *a, auto *b) {
 						  using A =
@@ -701,8 +708,7 @@ namespace librapid {
 
 				using jitify::reflection::Type;
 
-				std::string kernel = "copyKernel\n";
-				kernel			   = R"V0G0N(
+				std::string kernel = R"V0G0N(copyKernel
 							template<typename A, typename B>
 							__global__
 							void copyKernel(const A *__restrict arrayA,
