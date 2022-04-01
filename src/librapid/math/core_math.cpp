@@ -2,7 +2,6 @@
 #include <librapid/autocast/custom_complex.hpp>
 #include <librapid/math/constants.hpp>
 #include <librapid/math/core_math.hpp>
-#include <librapid/utils/time_utils.hpp>
 #include <random>
 #include <string>
 #include <vector>
@@ -100,7 +99,7 @@ namespace librapid {
 
 	uint64_t nthFibonacci(uint8_t n) {
 		if (n >= 100) {
-			throw new std::overflow_error(
+			throw std::overflow_error(
 			  "Numbers above 100 are not allowed as argument.");
 		}
 
@@ -108,8 +107,7 @@ namespace librapid {
 					 // least 2x the precision of a regular double, we check if
 					 // that limit is exceeded or not.
 		{
-			return (uint64_t)roundl(pow(0.5 * (1.0 + SQRT5), (long double)n)) /
-				   SQRT5;
+			return (uint64_t) roundl(pow(0.5 * (1.0 + SQRT5), (long double) n)) / SQRT5;
 		}
 
 		int a = 0, b = 1, c, i;
@@ -121,9 +119,9 @@ namespace librapid {
 		return b;
 	}
 
-    void betterFcknBeEven(int64_t n) {
-        if (!(n & 1)) return;
-        fmt::print("[ ERROR ] Number was not even\n");
-        std::exit(69);
-    }
+	void betterFcknBeEven(int64_t n) {
+		if (!(n & 1)) return;
+		fmt::print("[ ERROR ] Number was not even\n");
+		std::exit(69);
+	}
 } // namespace librapid
