@@ -78,7 +78,7 @@ namespace librapid {
 
 			if (verbose) {
 				fmt::print(
-				  "{} threads: {} seconds total | {} iters | {} ms average",
+				  "{} threads: {} seconds total | {} iters | {} ms average\n",
 				  i,
 				  (end - start),
 				  iters,
