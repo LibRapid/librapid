@@ -1,7 +1,7 @@
 LibRapidCPy 0.4.0 Release Targets
 
 - GPU accelerated mapKernel . . . . . . . . . . . . . . . . . . . . . . COMPLETE
-- Simplify code-base to reduce compile times and ease development
+- Simplify code-base to reduce compile times and ease development . . . COMPLETE
 - Optimize some matrix calculations to avoid temporary copies
 - Complete documentation of all library features . . . . . . . . . . . .In Progress
 - Other features needed for neural networks?
