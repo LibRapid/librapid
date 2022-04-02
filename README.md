@@ -208,5 +208,4 @@ look similar to this (example on Windows):
                 └── OpenBLASTargets.cmake
 ```
 
-With OpenBLAS set up in this way, LibRapid will automatically find and use it, whether you're in C++ or building from
-source for Python. This will (most likely) also give the best performance for the library.
+With OpenBLAS set up in this way, LibRapid will automatically find and use it, whether you're in C++ or building from source for Python. This will (most likely) also give the best performance for the library.
