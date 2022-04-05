@@ -119,6 +119,44 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("max", [](const std::vector<double> &vals) { return librapid::max(vals); }, py::arg("vals"));
 	module.def("abs", [](double val) { return librapid::abs(val); }, py::arg("val"));
 	module.def("abs", [](int64_t val) { return librapid::abs(val); }, py::arg("val"));
+
+	module.def("pow", [](double val, double pow) { return librapid::pow(val, pow); }, py::arg("val"), py::arg("power"));
+	module.def("pow", [](const librapid::Complex<double> &val, double pow) { return librapid::pow(val, pow); }, py::arg("val"), py::arg("power"));
+	module.def("pow", [](double val, const librapid::Complex<double> pow) { return librapid::pow(val, pow); }, py::arg("val"), py::arg("power"));
+	module.def("pow", [](const librapid::Complex<double> &val, const librapid::Complex<double> &pow) { return librapid::pow(val, pow); }, py::arg("val"), py::arg("power"));
+	module.def("sqrt", [](double val) { return librapid::sqrt(val); }, py::arg("val"));
+	module.def("sqrt", [](const librapid::Complex<double> &val) { return librapid::sqrt(val); }, py::arg("val"));
+	module.def("exp", [](double val) { return librapid::exp(val); }, py::arg("val"));
+	module.def("exp", [](const librapid::Complex<double> &val) { return librapid::exp(val); }, py::arg("val"));
+
+	module.def("sin", [](double val) { return librapid::sin(val); }, py::arg("val"));
+	module.def("cos", [](double val) { return librapid::cos(val); }, py::arg("val"));
+	module.def("tan", [](double val) { return librapid::tan(val); }, py::arg("val"));
+	module.def("sin", [](const librapid::Complex<double> &val) { return librapid::sin(val); }, py::arg("val"));
+	module.def("cos", [](const librapid::Complex<double> &val) { return librapid::cos(val); }, py::arg("val"));
+	module.def("tan", [](const librapid::Complex<double> &val) { return librapid::tan(val); }, py::arg("val"));
+
+	module.def("asin", [](double val) { return librapid::asin(val); }, py::arg("val"));
+	module.def("acos", [](double val) { return librapid::acos(val); }, py::arg("val"));
+	module.def("atan", [](double val) { return librapid::atan(val); }, py::arg("val"));
+	module.def("asin", [](const librapid::Complex<double> &val) { return librapid::asin(val); }, py::arg("val"));
+	module.def("acos", [](const librapid::Complex<double> &val) { return librapid::acos(val); }, py::arg("val"));
+	module.def("atan", [](const librapid::Complex<double> &val) { return librapid::atan(val); }, py::arg("val"));
+
+	module.def("sinh", [](double val) { return librapid::sinh(val); }, py::arg("val"));
+	module.def("cosh", [](double val) { return librapid::cosh(val); }, py::arg("val"));
+	module.def("tanh", [](double val) { return librapid::tanh(val); }, py::arg("val"));
+	module.def("sinh", [](const librapid::Complex<double> &val) { return librapid::sinh(val); }, py::arg("val"));
+	module.def("cosh", [](const librapid::Complex<double> &val) { return librapid::cosh(val); }, py::arg("val"));
+	module.def("tanh", [](const librapid::Complex<double> &val) { return librapid::tanh(val); }, py::arg("val"));
+
+	module.def("asinh", [](double val) { return librapid::asinh(val); }, py::arg("val"));
+	module.def("acosh", [](double val) { return librapid::acosh(val); }, py::arg("val"));
+	module.def("atanh", [](double val) { return librapid::atanh(val); }, py::arg("val"));
+	module.def("asinh", [](const librapid::Complex<double> &val) { return librapid::asinh(val); }, py::arg("val"));
+	module.def("acosh", [](const librapid::Complex<double> &val) { return librapid::acosh(val); }, py::arg("val"));
+	module.def("atanh", [](const librapid::Complex<double> &val) { return librapid::atanh(val); }, py::arg("val"));
+
 	module.def("map", [](double val, double start1, double stop1, double start2, double stop2) { return librapid::map(val, start1, stop1, start2, stop2); }, py::arg("val"), py::arg("start1") = double(0), py::arg("stop1") = double(1), py::arg("start2") = double(0), py::arg("stop2") = double(1));
 	module.def("random", [](double min, double max) { return librapid::random(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
 	module.def("randint", [](int64_t min, int64_t max) { return librapid::randint(min, max); }, py::arg("min") = 0, py::arg("max") = 1);
@@ -138,19 +176,19 @@ PYBIND11_MODULE(_librapid, module) {
 
 	// Create the Datatype enum
 	py::enum_<librapid::Datatype>(module, "Datatype")
-	.value("NONE", librapid::Datatype::NONE)
-	.value("VALIDNONE", librapid::Datatype::VALIDNONE)
-	.value("INT32", librapid::Datatype::INT32)
-	.value("INT64", librapid::Datatype::INT64)
-	.value("FLOAT32", librapid::Datatype::FLOAT32)
-	.value("FLOAT64", librapid::Datatype::FLOAT64)
-	.value("CFLOAT32", librapid::Datatype::CFLOAT32)
-	.value("CFLOAT64", librapid::Datatype::CFLOAT64);
+		.value("NONE", librapid::Datatype::NONE)
+		.value("VALIDNONE", librapid::Datatype::VALIDNONE)
+		.value("INT32", librapid::Datatype::INT32)
+		.value("INT64", librapid::Datatype::INT64)
+		.value("FLOAT32", librapid::Datatype::FLOAT32)
+		.value("FLOAT64", librapid::Datatype::FLOAT64)
+		.value("CFLOAT32", librapid::Datatype::CFLOAT32)
+		.value("CFLOAT64", librapid::Datatype::CFLOAT64);
 
 	// Create the Accelerator enum
 	py::enum_<librapid::Accelerator>(module, "Accelerator")
-	.value("CPU", librapid::Accelerator::CPU)
-	.value("GPU", librapid::Accelerator::GPU);
+		.value("CPU", librapid::Accelerator::CPU)
+		.value("GPU", librapid::Accelerator::GPU);
 
 	module.def("isIntegral", &librapid::isIntegral);
 	module.def("isFloating", &librapid::isFloating);
@@ -418,6 +456,26 @@ PYBIND11_MODULE(_librapid, module) {
 		})
 
 		.def("refCount", &librapid::Array::refCount);
+
+	module.def("sin", [](const librapid::Array &val) { return librapid::sin(val); }, py::arg("val"));
+	module.def("cos", [](const librapid::Array &val) { return librapid::cos(val); }, py::arg("val"));
+	module.def("tan", [](const librapid::Array &val) { return librapid::tan(val); }, py::arg("val"));
+
+	module.def("asin", [](const librapid::Array &val) { return librapid::asin(val); }, py::arg("val"));
+	module.def("acos", [](const librapid::Array &val) { return librapid::acos(val); }, py::arg("val"));
+	module.def("atan", [](const librapid::Array &val) { return librapid::atan(val); }, py::arg("val"));
+
+	module.def("sinh", [](const librapid::Array &val) { return librapid::sinh(val); }, py::arg("val"));
+	module.def("cosh", [](const librapid::Array &val) { return librapid::cosh(val); }, py::arg("val"));
+	module.def("tanh", [](const librapid::Array &val) { return librapid::tanh(val); }, py::arg("val"));
+
+	module.def("asinh", [](const librapid::Array &val) { return librapid::asinh(val); }, py::arg("val"));
+	module.def("acosh", [](const librapid::Array &val) { return librapid::acosh(val); }, py::arg("val"));
+	module.def("atanh", [](const librapid::Array &val) { return librapid::atanh(val); }, py::arg("val"));
+
+	module.def("pow", [](const librapid::Array &arr, double exponent) { return librapid::pow(arr, exponent); }, py::arg("val"), py::arg("power"));
+	module.def("sqrt", [](const librapid::Array &arr) { return librapid::sqrt(arr); }, py::arg("val"));
+	module.def("exp", [](const librapid::Array &arr) { return librapid::exp(arr); }, py::arg("val"));
 
 	module.def("warmup", &librapid::warmup, py::arg("itersCPU") = 10, py::arg("itersGPU") = -1);
 

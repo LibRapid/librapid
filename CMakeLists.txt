@@ -74,7 +74,10 @@ set(sources
         "src/librapid/array/multiarray_utils.cpp"
         "src/librapid/array/multiarray_matrixops.cpp"
         "src/librapid/array/multiarray_rangeops.cpp"
-        "src/librapid/array/cblas_api.hpp"
+        "src/librapid/array/multiarray_trig.cpp"
+        "src/librapid/array/multiarray_exponents.cpp"
+        # Neural Network Library
+        "src/librapid/neuralnet/activations/sigmoid/sigmoid.cpp"
         # Math library
         "src/librapid/math/core_math.cpp"
         # Utilities

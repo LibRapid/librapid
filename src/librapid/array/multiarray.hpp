@@ -1400,6 +1400,18 @@ namespace librapid {
 			mapKernelGetPointers(ptrVals + 1, e, d, arrayPack...);
 		}
 
+		template<typename Kernel>
+		inline void map(const Kernel &kernel) {
+			applyUnaryOp(*this, *this, kernel);
+		}
+
+		template<typename Kernel>
+		inline Array mapped(const Kernel &kernel) const {
+			Array res(m_extent, m_dtype, m_location);
+			applyUnaryOp(res, *this, kernel);
+			return res;
+		}
+
 		template<typename Kernel, typename... Pack>
 		static inline Array &mapKernel(const Kernel &kernel,
 									   Pack... arrayPack) {
@@ -1795,9 +1807,7 @@ namespace librapid {
 
 			if (!permitInvalid && dst.m_stride.isTrivial() &&
 				dst.m_stride.isContiguous() && src.m_stride.isTrivial() &&
-				src.m_stride.isContiguous()
-
-			) {
+				src.m_stride.isContiguous()) {
 				// Trivial
 				imp::multiarrayUnaryOpTrivial(dstPtr, srcPtr, size, operation);
 			} else {
@@ -1900,11 +1910,11 @@ namespace librapid {
 			return dst;
 		}
 
-		template<class FUNC>
-		static inline void
-		applyBinaryOp(Array &dst, const Array &srcA, const Array &srcB,
-					  const FUNC &operation, bool permitInvalid = false,
-					  bool permitVectorize = true) {
+		template<bool permitInvalid = false, bool permitVectorize = false,
+				 class FUNC>
+		static inline void applyBinaryOp(Array &dst, const Array &srcA,
+										 const Array &srcB,
+										 const FUNC &operation) {
 			// Operate on two arrays and store the result in another array
 
 			if (!permitInvalid && (!srcA.m_isScalar && !srcB.m_isScalar &&
@@ -1930,14 +1940,13 @@ namespace librapid {
 				 srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
 				(srcA.m_stride == srcB.m_stride)) {
 				// Trivial
-				imp::multiarrayBinaryOpTrivial(ptrDst,
-											   ptrSrcA,
-											   ptrSrcB,
-											   srcA.m_isScalar,
-											   srcB.m_isScalar,
-											   size,
-											   operation,
-											   permitVectorize);
+				imp::multiarrayBinaryOpTrivial<permitVectorize>(ptrDst,
+																ptrSrcA,
+																ptrSrcB,
+																srcA.m_isScalar,
+																srcB.m_isScalar,
+																size,
+																operation);
 
 				// Update the result stride too
 				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
@@ -1959,11 +1968,11 @@ namespace librapid {
 			if (srcA.m_isScalar && srcB.m_isScalar) { dst.m_isScalar = true; }
 		}
 
-		template<class FUNC>
-		[[nodiscard]] static inline Array
-		applyBinaryOp(const Array &srcA, const Array &srcB,
-					  const FUNC &operation, bool permitInvalid = false,
-					  bool permitVectorize = false) {
+		template<bool permitInvalid = false, bool permitVectorize = true,
+				 class FUNC>
+		[[nodiscard]] static inline Array applyBinaryOp(const Array &srcA,
+														const Array &srcB,
+														const FUNC &operation) {
 			// Operate on two arrays and store the result in another array
 
 			if (!permitInvalid && !(srcA.m_isScalar || srcB.m_isScalar) &&
@@ -1988,14 +1997,14 @@ namespace librapid {
 				 srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
 				(srcA.m_stride == srcB.m_stride)) {
 				// Trivial
-				imp::multiarrayBinaryOpTrivial(ptrDst,
-											   ptrSrcA,
-											   ptrSrcB,
-											   srcA.m_isScalar,
-											   srcB.m_isScalar,
-											   size,
-											   operation,
-											   permitVectorize);
+				imp::multiarrayBinaryOpTrivial<permitVectorize>(
+				  ptrDst,
+				  ptrSrcA,
+				  ptrSrcB,
+				  srcA.m_isScalar,
+				  srcB.m_isScalar,
+				  size,
+				  operation);
 
 				// Update the result stride too
 				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
@@ -2506,7 +2515,5 @@ struct fmt::formatter<librapid::Array> {
 	}
 };
 #endif // FMT_API
-
-#include <librapid/array/array_iterator.hpp>
 
 #endif // LIBRAPID_ARRAY
