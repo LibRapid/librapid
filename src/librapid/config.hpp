@@ -366,4 +366,11 @@ namespace librapid {
 	};
 } // namespace librapid
 
+namespace librapid {
+	template<typename T>
+	uint64_t getSeed(T) {
+		return 0;
+	}
+}
+
 #endif // LIBRAPID_CONFIG

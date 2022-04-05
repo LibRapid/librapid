@@ -186,11 +186,6 @@ namespace librapid::ops {
 	};
 
 	template<typename T>
-	uint64_t getSeed(T x) {
-		return 0;
-	}
-
-	template<typename T>
 	uint64_t getSeed(const FillRandom<T> &x) {
 		return x.seed;
 	}
