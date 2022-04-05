@@ -7,6 +7,7 @@
 #include <librapid/config.hpp>
 #include <librapid/array/stride.hpp>
 #include <librapid/array/extent.hpp>
+#include <librapid/math/rapid_math.hpp>
 
 namespace librapid::imp {
 #ifdef LIBRAPID_HAS_CUDA
@@ -960,12 +961,11 @@ namespace librapid
 	 *
 	 * \endrst
 	 */
-	template<typename FUNC>
+	template<bool permitVectorize = true, typename FUNC>
 	inline void multiarrayBinaryOpTrivial(RawArray &dst, const RawArray &srcA,
 										  const RawArray &srcB,
 										  bool srcAIsScalar, bool srcBIsScalar,
-										  int64_t elems, const FUNC &op,
-										  bool permitVectorize = true) {
+										  int64_t elems, const FUNC &op) {
 		if (dst.location != srcA.location || dst.location != srcB.location) {
 			// Locations are different, so make A and B have the same
 			// accelerator as the result array (C)
@@ -973,10 +973,6 @@ namespace librapid
 			// Copy A and B to be on the same accelerator as the destination
 			RawArray tempSrcA = {(int64_t *)nullptr, srcA.dtype, dst.location};
 			RawArray tempSrcB = {(int64_t *)nullptr, srcB.dtype, dst.location};
-
-			// Allocate memory for temporary sources
-			// rawArrayMalloc(tempSrcA, srcAIsScalar ? 1 : elems);
-			// rawArrayMalloc(tempSrcB, srcBIsScalar ? 1 : elems);
 
 			// Copy the data from the original sources to the adjusted sources
 			int freeSrcA =
@@ -1039,9 +1035,10 @@ namespace librapid
 						  }
 					  } else {
 						  // Use a[i] and b[i]
-						  if (permitVectorize && std::is_same_v<A, double> &&
-							  std::is_same_v<B, double> &&
-							  std::is_same_v<C, double>) {
+						  if constexpr (permitVectorize &&
+										std::is_same_v<A, double> &&
+										std::is_same_v<B, double> &&
+										std::is_same_v<C, double>) {
 							  vcl::Vec8d a, b;
 							  int64_t i	   = 0;
 							  auto tmpSrcA = (double *__restrict)srcDataA;
@@ -1073,10 +1070,10 @@ namespace librapid
 								  vcl::Vec8d c = tempOp(a, b, i, i);
 								  c.store_partial((int)diff, tmpDst + i);
 							  }
-						  } else if (permitVectorize &&
-									 std::is_same_v<A, float> &&
-									 std::is_same_v<B, float> &&
-									 std::is_same_v<C, float>) {
+						  } else if constexpr (permitVectorize &&
+											   std::is_same_v<A, float> &&
+											   std::is_same_v<B, float> &&
+											   std::is_same_v<C, float>) {
 							  vcl::Vec16f a, b;
 							  auto tmpSrcA = (float *__restrict)srcDataA;
 							  auto tmpSrcB = (float *__restrict)srcDataB;

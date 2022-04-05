@@ -17,7 +17,7 @@ namespace librapid {
 
 		Array res(librapid::Extent({num}), resType, locn);
 		ops::FillLinear<double> op(start, (double)(end - start) / (double)num);
-		Array::applyBinaryOp(res, res, res, op, false, false);
+		Array::applyBinaryOp(res, res, res, op);
 		return res;
 	}
 
@@ -31,7 +31,7 @@ namespace librapid {
 		Array res(
 		  librapid::Extent({(int64_t)ceil((end - start) / inc)}), dtype, locn);
 		ops::FillLinear<double> op(start, inc);
-		Array::applyBinaryOp(res, res, res, op, false, false);
+		Array::applyBinaryOp(res, res, res, op);
 		return res;
 	}
 

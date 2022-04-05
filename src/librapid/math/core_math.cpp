@@ -107,7 +107,7 @@ namespace librapid {
 					 // least 2x the precision of a regular double, we check if
 					 // that limit is exceeded or not.
 		{
-			return (uint64_t) roundl(pow(0.5 * (1.0 + SQRT5), (long double) n)) / SQRT5;
+			return (uint64_t) roundl(std::pow(0.5 * (1.0 + SQRT5), (long double) n)) / SQRT5;
 		}
 
 		int a = 0, b = 1, c, i;
