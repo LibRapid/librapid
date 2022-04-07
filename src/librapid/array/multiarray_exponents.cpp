@@ -42,7 +42,7 @@ namespace librapid {
 	} // namespace kernels
 
 	Array pow(const Array &arr, double power) {
-		return Array::applyBinaryOp<false, false>(arr, Array(power), kernels::pow(power));
+		return Array::applyBinaryOp(arr, Array(power), kernels::pow(power));
 	}
 
 	Array sqrt(const Array &arr) { return arr.mapped(kernels::sqrt()); }
