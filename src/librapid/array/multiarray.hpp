@@ -1910,11 +1910,12 @@ namespace librapid {
 			return dst;
 		}
 
-		template<bool permitInvalid = false, bool permitVectorize = false,
-				 class FUNC>
+		template<class FUNC>
 		static inline void applyBinaryOp(Array &dst, const Array &srcA,
 										 const Array &srcB,
-										 const FUNC &operation) {
+										 const FUNC &operation,
+										 bool permitInvalid = false,
+										 bool permitVectorize = true) {
 			// Operate on two arrays and store the result in another array
 
 			if (!permitInvalid && (!srcA.m_isScalar && !srcB.m_isScalar &&
@@ -1940,13 +1941,14 @@ namespace librapid {
 				 srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
 				(srcA.m_stride == srcB.m_stride)) {
 				// Trivial
-				imp::multiarrayBinaryOpTrivial<permitVectorize>(ptrDst,
-																ptrSrcA,
-																ptrSrcB,
-																srcA.m_isScalar,
-																srcB.m_isScalar,
-																size,
-																operation);
+				imp::multiarrayBinaryOpTrivial(ptrDst,
+											   ptrSrcA,
+											   ptrSrcB,
+											   srcA.m_isScalar,
+											   srcB.m_isScalar,
+											   size,
+											   operation,
+											   permitVectorize);
 
 				// Update the result stride too
 				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
@@ -1968,11 +1970,11 @@ namespace librapid {
 			if (srcA.m_isScalar && srcB.m_isScalar) { dst.m_isScalar = true; }
 		}
 
-		template<bool permitInvalid = false, bool permitVectorize = true,
-				 class FUNC>
-		[[nodiscard]] static inline Array applyBinaryOp(const Array &srcA,
-														const Array &srcB,
-														const FUNC &operation) {
+		template<class FUNC>
+		[[nodiscard]] static inline Array
+		applyBinaryOp(const Array &srcA, const Array &srcB,
+					  const FUNC &operation, bool permitInvalid = false,
+					  bool permitVectorize = true) {
 			// Operate on two arrays and store the result in another array
 
 			if (!permitInvalid && !(srcA.m_isScalar || srcB.m_isScalar) &&
@@ -1997,14 +1999,14 @@ namespace librapid {
 				 srcB.m_stride.isTrivial() && srcB.m_stride.isContiguous()) ||
 				(srcA.m_stride == srcB.m_stride)) {
 				// Trivial
-				imp::multiarrayBinaryOpTrivial<permitVectorize>(
-				  ptrDst,
-				  ptrSrcA,
-				  ptrSrcB,
-				  srcA.m_isScalar,
-				  srcB.m_isScalar,
-				  size,
-				  operation);
+				imp::multiarrayBinaryOpTrivial(ptrDst,
+											   ptrSrcA,
+											   ptrSrcB,
+											   srcA.m_isScalar,
+											   srcB.m_isScalar,
+											   size,
+											   operation,
+											   permitVectorize);
 
 				// Update the result stride too
 				dst.m_stride = srcA.m_isScalar ? srcB.m_stride : srcA.m_stride;
