@@ -31,7 +31,7 @@
 #define COMMON_HELPER_CUDA_DRVAPI_H_
 
 #include <cstring>
-#include <helper_string.h>
+#include "helper_string.h"
 #include <iostream>
 #include <sstream>
 #include <stdio.h>

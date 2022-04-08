@@ -31,7 +31,7 @@
 
 #include <algorithm>
 #include <assert.h>
-#include <exception.h>
+#include "exception.h"
 #include <fstream>
 #include <iostream>
 #include <math.h>
@@ -50,7 +50,7 @@
 #	define EXIT_WAIVED 2
 #endif
 
-#include <helper_string.h>
+#include "helper_string.h"
 
 // namespace unnamed (internal)
 namespace helper_image_internal {

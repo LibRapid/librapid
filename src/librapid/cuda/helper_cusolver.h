@@ -118,7 +118,7 @@ void display_matrix(int m, int n, int nnzA, const cusparseMatDescr_t descrA,
 #		define WIN32_LEAN_AND_MEAN
 #	endif
 
-#	include <windows.h>
+#	include <Windows.h>
 
 double second(void) {
 	LARGE_INTEGER t;
