@@ -1,12 +1,12 @@
-[submodule "src/librapid/pybind11"] # PyBind11 module for Python Library
-	path = src/librapid/pybind11
+[submodule "src/librapid/vendor/pybind11"] # PyBind11 module for Python Library
+	path = src/librapid/vendor/pybind11
 	url = https://github.com/pybind/pybind11.git
-[submodule "src/librapid/jitify"] # Jitify module for CUDA JIT compilation
-	path = src/librapid/jitify
+[submodule "src/librapid/vendor/jitify"] # Jitify module for CUDA JIT compilation
+	path = src/librapid/vendor/jitify
 	url = https://github.com/Pencilcaseman/jitify.git
-[submodule "src/librapid/version2"] # VectorClass module for SIMD instructions
-	path = src/librapid/version2
+[submodule "src/librapid/vendor/version2"] # VectorClass module for SIMD instructions
+	path = src/librapid/vendor/version2
 	url = https://github.com/vectorclass/version2.git
-[submodule "src/librapid/fmt"] # {fmt} module for fast formatting and IO
-	path = src/librapid/fmt
+[submodule "src/librapid/vendor/fmt"] # {fmt} module for fast formatting and IO
+	path = src/librapid/vendor/fmt
 	url = https://github.com/fmtlib/fmt.git

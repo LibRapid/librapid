@@ -37,7 +37,7 @@
 // includes, project
 #include <algorithm>
 #include <assert.h>
-#include <exception.h>
+#include "src/librapid/cuda/exception.h"
 #include <fstream>
 #include <iostream>
 #include <math.h>
@@ -47,9 +47,9 @@
 #include <vector>
 
 // includes, timer, string parsing, image helpers
-#include <helper_image.h> // helper functions for image compare, dump, data comparisons
-#include <helper_string.h> // helper functions for string parsing
-#include <helper_timer.h>  // helper functions for timers
+#include "src/librapid/cuda/helper_image.h" // helper functions for image compare, dump, data comparisons
+#include "src/librapid/cuda/helper_string.h" // helper functions for string parsing
+#include "src/librapid/cuda/helper_timer.h"	 // helper functions for timers
 
 #ifndef EXIT_WAIVED
 #	define EXIT_WAIVED 2

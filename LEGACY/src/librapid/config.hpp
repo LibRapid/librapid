@@ -302,8 +302,8 @@ inline void cudaSafeCall_(cudaError_t err, const char *file, const int line) {
 #		pragma warning(default : 4996)
 #	endif
 
-#	include <helper_cuda.h>
-#	include <helper_functions.h>
+#	include "src/librapid/cuda/helper_cuda.h"
+#	include "src/librapid/cuda/helper_functions.h"
 
 #endif // LIBRAPID_HAS_CUDA
 
