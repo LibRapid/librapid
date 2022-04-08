@@ -1,0 +1,12 @@
+sub
+###
+
+.. doxygenfunction:: librapid::Array::operator-(const Array &other) const
+
+---
+
+.. doxygenfunction:: librapid::sub(const Array &a, const Array &b)
+
+---
+
+.. doxygenfunction:: librapid::sub(const Array &a, const Array &b, Array &res)

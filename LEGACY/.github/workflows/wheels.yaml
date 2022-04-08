@@ -1,0 +1,419 @@
+name: Wheels (master)
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: "0 12 1-31 * *"
+  workflow_dispatch:
+
+jobs:
+  #
+  # ░██████╗░█████╗░██╗░░░██╗██████╗░░█████╗░███████╗  ██████╗░██╗░██████╗████████╗
+  # ██╔════╝██╔══██╗██║░░░██║██╔══██╗██╔══██╗██╔════╝  ██╔══██╗██║██╔════╝╚══██╔══╝
+  # ╚█████╗░██║░░██║██║░░░██║██████╔╝██║░░╚═╝█████╗░░  ██║░░██║██║╚█████╗░░░░██║░░░
+  # ░╚═══██╗██║░░██║██║░░░██║██╔══██╗██║░░██╗██╔══╝░░  ██║░░██║██║░╚═══██╗░░░██║░░░
+  # ██████╔╝╚█████╔╝╚██████╔╝██║░░██║╚█████╔╝███████╗  ██████╔╝██║██████╔╝░░░██║░░░
+  # ╚═════╝░░╚════╝░░╚═════╝░╚═╝░░╚═╝░╚════╝░╚══════╝  ╚═════╝░╚═╝╚═════╝░░░░╚═╝░░░
+
+  sdist:
+    name: Source Distribution
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Set Up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Install Requirements
+        run: |
+          pip install --user check-manifest twine==3.4.1
+          pip install --user check-manifest pybind11==2.6.2
+          pip install --user check-manifest cpufeature==0.2.0
+          pip install --user check-manifest -r requirements.txt
+
+      # Download an OpenBLAS build
+      - name: Download OpenBLAS Build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-openblas.yaml
+          workflow_conclusion: success
+          name: OpenBLAS on ubuntu-latest
+          path: src/librapid/openblas_install
+
+
+      # - name: Build Documentation
+      #   run: |
+      #     cd docs
+      #     pip install --user check-manifest -r requirements.txt
+      #     make html
+
+      - name: Build Source Distribution
+        run: |
+          python -m build --sdist --outdir wheelhouse
+
+      - name: Install from Source Distribution
+        run: |
+          pip install --user wheelhouse/*.tar.gz -vvvv
+
+      - name: Run Python Tests
+        run: |
+          python -m pytest unit_tests
+
+      - name: Check Source Distribution
+        run: |
+          python -m twine check wheelhouse/*
+
+      - name: Archive LibRapid Source Distribution
+        uses: actions/upload-artifact@v2
+        with:
+          name: LibRapid Source Distribution
+          path: wheelhouse
+
+      - if: github.actor != 'dependabot[bot]'
+        name: Upload Source Distribution
+        continue-on-error: true
+        run: |
+          python setup.py sdist
+          ls dist
+          twine upload --skip-existing dist/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }} 
+
+  # 
+  # ░█████╗░░██████╗██╗░░██╗
+  # ██╔══██╗██╔════╝╚██╗██╔╝
+  # ██║░░██║╚█████╗░░╚███╔╝░
+  # ██║░░██║░╚═══██╗░██╔██╗░
+  # ╚█████╔╝██████╔╝██╔╝╚██╗
+  # ░╚════╝░╚═════╝░╚═╝░░╚═╝
+
+  macos-build:
+    name: Python Wheels on MacOS
+    runs-on: macos-latest
+
+    env:
+      CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310-* pp37-* pp38-*"
+      CIBW_SKIP: "*-win32 *-manylinux_i686 *-musllinux_i686"
+      CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+      CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2014
+      CIBW_ENVIRONMENT: LIBRAPID_NO_ARCH=yes
+
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Set Up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Install Requirements
+        run: |
+          python -m pip install -r requirements.txt
+
+      # Download an OpenBLAS build
+      - name: Download OpenBLAS Build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-openblas.yaml
+          workflow_conclusion: success
+          name: OpenBLAS on macos-latest
+          path: src/librapid/openblas_install
+
+      - if: runner.os == 'macOS'
+        name: Run cibuildwheel
+        run: |
+          export LIBRAPID_NO_ARCH=yes
+          cibuildwheel --output-dir wheelhouse
+        env:
+          CC: gcc-11
+          CXX: g++-11
+          LIBRAPID_NO_ARCH: yes
+
+      - if: runner.os != 'macOS'
+        name: Run cibuildwheel
+        run: |
+          export LIBRAPID_NO_ARCH=yes
+          cibuildwheel --output-dir wheelhouse
+        env:
+          LIBRAPID_NO_ARCH: yes
+
+      - if: runner.os == 'macOS'
+        name: Install Library
+        run: |
+          export LIBRAPID_NO_ARCH=yes
+          python -m pip install . -vvvv
+        env:
+          CC: gcc-11
+          CXX: g++-11
+          LIBRAPID_NO_ARCH: yes
+
+      - if: runner.os != 'macOS'
+        name: Install Library
+        run: |
+          export LIBRAPID_NO_ARCH=yes
+          python -m pip install . -vvvv
+        env:
+          LIBRAPID_NO_ARCH: yes
+
+      - name: Show all files in librapid install
+        run: |
+          python -m pip show -f librapid
+
+      - name: Check Built Wheels
+        run: |
+          twine check wheelhouse/*
+
+      - name: Archive LibRapid Wheels
+        uses: actions/upload-artifact@v2
+        with:
+          name: LibRapid Wheels on MacOS
+          path: wheelhouse
+
+      - if: github.actor != 'dependabot[bot]'
+        name: Upload Built Wheels
+        continue-on-error: true
+        run: |
+          python setup.py sdist
+          ls wheelhouse
+          twine upload --skip-existing wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
+    
+
+  # 
+  # ██╗░░░░░██╗███╗░░██╗██╗░░░██╗██╗░░██╗
+  # ██║░░░░░██║████╗░██║██║░░░██║╚██╗██╔╝
+  # ██║░░░░░██║██╔██╗██║██║░░░██║░╚███╔╝░
+  # ██║░░░░░██║██║╚████║██║░░░██║░██╔██╗░
+  # ███████╗██║██║░╚███║╚██████╔╝██╔╝╚██╗
+  # ╚══════╝╚═╝╚═╝░░╚══╝░╚═════╝░╚═╝░░╚═╝
+
+  linux-build:
+    name: Python Wheels on Linux
+    runs-on: ubuntu-latest
+
+    env:
+      CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310-* pp37-* pp38-*"
+      CIBW_SKIP: "*-win32 *-manylinux_i686 *-musllinux_i686"
+      CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+      CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2014
+      CIBW_ENVIRONMENT: LIBRAPID_NO_ARCH=yes
+
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Set Up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Install Requirements
+        run: |
+          python -m pip install -r requirements.txt
+
+      # Download an OpenBLAS build
+      - name: Download OpenBLAS Build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-openblas.yaml
+          workflow_conclusion: success
+          name: OpenBLAS on ubuntu-latest
+          path: src/librapid/openblas_install
+
+      - if: runner.os == 'macOS'
+        name: Run cibuildwheel
+        run: |
+          export LIBRAPID_NO_ARCH=yes
+          cibuildwheel --output-dir wheelhouse
+        env:
+          CC: gcc-11
+          CXX: g++-11
+          LIBRAPID_NO_ARCH: yes
+
+      - if: runner.os != 'macOS'
+        name: Run cibuildwheel
+        run: |
+          export LIBRAPID_NO_ARCH=yes
+          cibuildwheel --output-dir wheelhouse
+        env:
+          LIBRAPID_NO_ARCH: yes
+
+      - if: runner.os == 'macOS'
+        name: Install Library
+        run: |
+          export LIBRAPID_NO_ARCH=yes
+          python -m pip install . -vvvv
+        env:
+          CC: gcc-11
+          CXX: g++-11
+          LIBRAPID_NO_ARCH: yes
+
+      - if: runner.os != 'macOS'
+        name: Install Library
+        run: |
+          export LIBRAPID_NO_ARCH=yes
+          python -m pip install . -vvvv
+        env:
+          LIBRAPID_NO_ARCH: yes
+
+      - name: Show all files in librapid install
+        run: |
+          python -m pip show -f librapid
+
+      - name: Check Built Wheels
+        run: |
+          twine check wheelhouse/*
+
+      - name: Archive LibRapid Wheels
+        uses: actions/upload-artifact@v2
+        with:
+          name: LibRapid Wheels on Linux
+          path: wheelhouse
+
+      - if: github.actor != 'dependabot[bot]'
+        name: Upload Built Wheels
+        continue-on-error: true
+        run: |
+          python setup.py sdist
+          ls wheelhouse
+          twine upload --skip-existing wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
+
+  # 
+  # ░██╗░░░░░░░██╗██╗███╗░░██╗██████╗░░█████╗░░██╗░░░░░░░██╗░██████╗
+  # ░██║░░██╗░░██║██║████╗░██║██╔══██╗██╔══██╗░██║░░██╗░░██║██╔════╝
+  # ░╚██╗████╗██╔╝██║██╔██╗██║██║░░██║██║░░██║░╚██╗████╗██╔╝╚█████╗░
+  # ░░████╔═████║░██║██║╚████║██║░░██║██║░░██║░░████╔═████║░░╚═══██╗
+  # ░░╚██╔╝░╚██╔╝░██║██║░╚███║██████╔╝╚█████╔╝░░╚██╔╝░╚██╔╝░██████╔╝
+  # ░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚══╝╚═════╝░░╚════╝░░░░╚═╝░░░╚═╝░░╚═════╝░
+
+  windows_build:
+    name: Python Wheels on Windows
+    runs-on: windows-latest
+
+    env:
+      CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310-* pp37-* pp38-*"
+      CIBW_SKIP: "*-win32"
+      CIBW_ENVIRONMENT: LIBRAPID_NO_ARCH=yes
+
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Set Up WSL
+        uses: Vampire/setup-wsl@v1.2.0
+
+      - name: Set Up Miniconda
+        uses: conda-incubator/setup-miniconda@v2.1.1
+
+      - name: Set Up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+
+      - name: Set Up Visual Studio shell
+        uses: egor-tensin/vs-shell@v2
+
+      - name: Install Requirements
+        run: |
+          python -m pip install -r requirements.txt
+
+      - name: Install Conda things
+        run: |
+          conda config --add channels conda-forge --force
+          conda config --set auto_update_conda false
+          conda install --yes --quiet clangdev cmake ninja flang=11.0.1
+
+      # Download an OpenBLAS build
+      - name: Download OpenBLAS Build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-openblas.yaml
+          workflow_conclusion: success
+          name: OpenBLAS on windows-latest
+          path: src/librapid/openblas_install
+
+      - name: Run cibuildwheel
+        run: |
+          cibuildwheel --output-dir wheelhouse
+        env:
+          LIBRAPID_NO_ARCH: yes
+
+      - name: Install win32api
+        run: |
+          python -m pip install pypiwin32
+
+      - name: Install Library
+        run: |
+          python -m pip install . -vvvv
+        env:
+          LIBRAPID_NO_ARCH: yes
+
+      - name: Show all files in librapid install
+        run: |
+          python -m pip show -f librapid
+
+      - name: Check Built Wheels
+        run: |
+          twine check wheelhouse/*
+
+      - name: Archive LibRapid Wheels
+        uses: actions/upload-artifact@v2
+        with:
+          name: LibRapid Wheels on Windows
+          path: wheelhouse
+
+      - if: github.actor != 'dependabot[bot]'
+        name: Upload Built Wheels
+        continue-on-error: true
+        run: |
+          python setup.py sdist
+          ls wheelhouse
+          twine upload --skip-existing wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}

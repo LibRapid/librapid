@@ -1,0 +1,8 @@
+sphinx==4.5.0
+breathe==4.33.1
+exhale==0.3.1
+furo==2022.3.4
+pydata-sphinx-theme==0.8.1
+numpydoc==1.2.1
+sphinx-panels==0.6.0
+regex

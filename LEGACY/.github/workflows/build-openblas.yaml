@@ -1,0 +1,153 @@
+name: Build OpenBLAS
+
+on:
+  schedule:
+    - cron: "0 12 1/5 * *"
+  workflow_dispatch:
+
+# OpenBLAS builds
+# - 939452ea9dcb57abdcc3f1278c6db668a4690465 <= Fast and works, but there might be a bug?
+
+jobs:
+  openblas_unix:
+    name: Build OpenBLAS on ${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ macos-latest, ubuntu-latest ]
+        targetplatform: [ x64 ]
+
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Set Up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+
+      # - if: runner.os == 'macOS'
+      #   name: Set Up GCC
+      #   run: |
+      #     brew install gcc
+
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Install Requirements
+        run: |
+          python -m pip install -r requirements.txt
+    
+      - name: Clone OpenBLAS
+        run: |
+          git clone https://github.com/xianyi/OpenBLAS.git
+          cd OpenBLAS
+        # git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
+        shell: bash
+
+      # Double up the make command. Explained above
+      - name: Build OpenBLAS
+        run: |
+          cd OpenBLAS
+          make NUM_THREADS=128 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' TARGET=NEHALEM
+      - name: Install OpenBLAS
+        run: |
+          cd OpenBLAS
+          make install PREFIX=../src/librapid/openblas_install
+      - name: Archive OpenBLAS Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenBLAS on ${{ matrix.platform }}
+          path: src/librapid/openblas_install
+
+  openblas_windows:
+    name: Build OpenBLAS on Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Set Up WSL
+        uses: Vampire/setup-wsl@v1.2.0
+
+      - name: Set Up Miniconda
+        uses: conda-incubator/setup-miniconda@v2.1.1
+
+      - name: Set Up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+
+      - name: Set Up Visual Studio shell
+        uses: egor-tensin/vs-shell@v2
+
+      - name: Install Requirements
+        run: |
+          python -m pip install -r requirements.txt
+
+      - name: Install Conda things
+        run: |
+          conda config --add channels conda-forge --force
+          conda config --set auto_update_conda false
+          conda install --yes --quiet clangdev cmake ninja flang=11.0.1
+  
+      - name: Clone OpenBLAS
+        run: |
+          git clone https://github.com/xianyi/OpenBLAS.git
+          cd OpenBLAS
+        # git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
+        shell: bash
+
+      - name: Configure CMake
+        run: |
+          cd OpenBLAS
+          set "LIB=%CONDA_PREFIX%\Library\lib;%LIB%"
+          set "CPATH=%CONDA_PREFIX%\Library\include;%CPATH%"
+          mkdir build
+          cd build
+          cmake .. -G "Ninja" -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=128 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
+        shell: pwsh
+
+      - name: Build OpenBLAS
+        run: |
+          cd OpenBLAS
+          cd build
+          cmake --build . --config Release
+        shell: pwsh
+
+      - name: Install OpenBLAS
+        run: |
+          cd OpenBLAS
+          cd build
+          cmake --install . --prefix ../../src/librapid/openblas_install
+      - name: List Root Directories and files
+        run: |
+          dir
+          dir src
+          dir src/librapid
+          dir src/librapid/openblas_install
+          dir src/librapid/openblas_install/bin
+      - name: Archive OpenBLAS Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenBLAS on windows-latest
+          path: src/librapid/openblas_install
