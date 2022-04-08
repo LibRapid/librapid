@@ -31,7 +31,7 @@
 
 #include <cuda.h>
 #include <fstream>
-#include <helper_cuda_drvapi.h>
+#include "helper_cuda_drvapi.h"
 #include <iostream>
 #include <nvrtc.h>
 #include <sstream>
