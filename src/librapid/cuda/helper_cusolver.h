@@ -74,10 +74,8 @@ double mat_norminf(int m, int n, const double *A, int lda) {
  * |A| = max { |A|*ones(m,1) }
  */
 double csr_mat_norminf(int m, int n, int nnzA, const cusparseMatDescr_t descrA,
-					   const double *csrValA, const int *csrRowPtrA,
-					   const int *csrColIndA) {
-	const int baseA =
-	  (CUSPARSE_INDEX_BASE_ONE == cusparseGetMatIndexBase(descrA)) ? 1 : 0;
+					   const double *csrValA, const int *csrRowPtrA, const int *csrColIndA) {
+	const int baseA = (CUSPARSE_INDEX_BASE_ONE == cusparseGetMatIndexBase(descrA)) ? 1 : 0;
 
 	double norminf = 0;
 	for (int i = 0; i < m; i++) {
@@ -94,11 +92,9 @@ double csr_mat_norminf(int m, int n, int nnzA, const cusparseMatDescr_t descrA,
 	return norminf;
 }
 
-void display_matrix(int m, int n, int nnzA, const cusparseMatDescr_t descrA,
-					const double *csrValA, const int *csrRowPtrA,
-					const int *csrColIndA) {
-	const int baseA =
-	  (CUSPARSE_INDEX_BASE_ONE == cusparseGetMatIndexBase(descrA)) ? 1 : 0;
+void display_matrix(int m, int n, int nnzA, const cusparseMatDescr_t descrA, const double *csrValA,
+					const int *csrRowPtrA, const int *csrColIndA) {
+	const int baseA = (CUSPARSE_INDEX_BASE_ONE == cusparseGetMatIndexBase(descrA)) ? 1 : 0;
 
 	printf("m = %d, n = %d, nnz = %d, matlab base-1\n", m, n, nnzA);
 

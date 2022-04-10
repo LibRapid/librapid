@@ -3,19 +3,16 @@
 #include <string>
 
 namespace librapid::imp {
-	inline const jitify::detail::vector<std::string> cudaHeaders =
-	  { // CUDA_INCLUDE_DIRS,
-		CUDA_INCLUDE_DIRS + std::string("/curand.h"),
-		CUDA_INCLUDE_DIRS + std::string("/curand_kernel.h"),
-		CUDA_INCLUDE_DIRS + std::string("/cublas_v2.h"),
-		CUDA_INCLUDE_DIRS + std::string("/cublas_api.h"),
-		CUDA_INCLUDE_DIRS + std::string("/cuda_fp16.h"),
-		CUDA_INCLUDE_DIRS + std::string("/cuda_bf16.h")};
+	inline const jitify::detail::vector<std::string> cudaHeaders = { // CUDA_INCLUDE_DIRS,
+	  CUDA_INCLUDE_DIRS + std::string("/curand.h"),
+	  CUDA_INCLUDE_DIRS + std::string("/curand_kernel.h"),
+	  CUDA_INCLUDE_DIRS + std::string("/cublas_v2.h"),
+	  CUDA_INCLUDE_DIRS + std::string("/cublas_api.h"),
+	  CUDA_INCLUDE_DIRS + std::string("/cuda_fp16.h"),
+	  CUDA_INCLUDE_DIRS + std::string("/cuda_bf16.h")};
 
-	inline const std::vector<std::string> cudaParams = {"--disable-warnings",
-														"-std=c++17",
-														std::string("-I") +
-														  CUDA_INCLUDE_DIRS};
+	inline const std::vector<std::string> cudaParams = {
+	  "--disable-warnings", "-std=c++17", std::string("-I") + CUDA_INCLUDE_DIRS};
 
 	inline std::string genKernelHeader() {
 		return fmt::format(R"V0G0N(

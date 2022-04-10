@@ -50,9 +50,7 @@
 // CUDA Runtime error messages
 #ifdef __DRIVER_TYPES_H__
 
-static const char *_cudaGetErrorEnum(cudaError_t error) {
-	return cudaGetErrorName(error);
-}
+static const char *_cudaGetErrorEnum(cudaError_t error) { return cudaGetErrorName(error); }
 
 #endif
 
@@ -73,8 +71,7 @@ static const char *_cudaGetErrorEnum(cublasStatus_t error) {
 	switch (error) {
 		case CUBLAS_STATUS_SUCCESS: return "CUBLAS_STATUS_SUCCESS";
 
-		case CUBLAS_STATUS_NOT_INITIALIZED:
-			return "CUBLAS_STATUS_NOT_INITIALIZED";
+		case CUBLAS_STATUS_NOT_INITIALIZED: return "CUBLAS_STATUS_NOT_INITIALIZED";
 
 		case CUBLAS_STATUS_ALLOC_FAILED: return "CUBLAS_STATUS_ALLOC_FAILED";
 
@@ -84,11 +81,9 @@ static const char *_cudaGetErrorEnum(cublasStatus_t error) {
 
 		case CUBLAS_STATUS_MAPPING_ERROR: return "CUBLAS_STATUS_MAPPING_ERROR";
 
-		case CUBLAS_STATUS_EXECUTION_FAILED:
-			return "CUBLAS_STATUS_EXECUTION_FAILED";
+		case CUBLAS_STATUS_EXECUTION_FAILED: return "CUBLAS_STATUS_EXECUTION_FAILED";
 
-		case CUBLAS_STATUS_INTERNAL_ERROR:
-			return "CUBLAS_STATUS_INTERNAL_ERROR";
+		case CUBLAS_STATUS_INTERNAL_ERROR: return "CUBLAS_STATUS_INTERNAL_ERROR";
 
 		case CUBLAS_STATUS_NOT_SUPPORTED: return "CUBLAS_STATUS_NOT_SUPPORTED";
 
@@ -124,8 +119,7 @@ static const char *_cudaGetErrorEnum(cufftResult error) {
 
 		case CUFFT_UNALIGNED_DATA: return "CUFFT_UNALIGNED_DATA";
 
-		case CUFFT_INCOMPLETE_PARAMETER_LIST:
-			return "CUFFT_INCOMPLETE_PARAMETER_LIST";
+		case CUFFT_INCOMPLETE_PARAMETER_LIST: return "CUFFT_INCOMPLETE_PARAMETER_LIST";
 
 		case CUFFT_INVALID_DEVICE: return "CUFFT_INVALID_DEVICE";
 
@@ -150,26 +144,19 @@ static const char *_cudaGetErrorEnum(cusparseStatus_t error) {
 	switch (error) {
 		case CUSPARSE_STATUS_SUCCESS: return "CUSPARSE_STATUS_SUCCESS";
 
-		case CUSPARSE_STATUS_NOT_INITIALIZED:
-			return "CUSPARSE_STATUS_NOT_INITIALIZED";
+		case CUSPARSE_STATUS_NOT_INITIALIZED: return "CUSPARSE_STATUS_NOT_INITIALIZED";
 
-		case CUSPARSE_STATUS_ALLOC_FAILED:
-			return "CUSPARSE_STATUS_ALLOC_FAILED";
+		case CUSPARSE_STATUS_ALLOC_FAILED: return "CUSPARSE_STATUS_ALLOC_FAILED";
 
-		case CUSPARSE_STATUS_INVALID_VALUE:
-			return "CUSPARSE_STATUS_INVALID_VALUE";
+		case CUSPARSE_STATUS_INVALID_VALUE: return "CUSPARSE_STATUS_INVALID_VALUE";
 
-		case CUSPARSE_STATUS_ARCH_MISMATCH:
-			return "CUSPARSE_STATUS_ARCH_MISMATCH";
+		case CUSPARSE_STATUS_ARCH_MISMATCH: return "CUSPARSE_STATUS_ARCH_MISMATCH";
 
-		case CUSPARSE_STATUS_MAPPING_ERROR:
-			return "CUSPARSE_STATUS_MAPPING_ERROR";
+		case CUSPARSE_STATUS_MAPPING_ERROR: return "CUSPARSE_STATUS_MAPPING_ERROR";
 
-		case CUSPARSE_STATUS_EXECUTION_FAILED:
-			return "CUSPARSE_STATUS_EXECUTION_FAILED";
+		case CUSPARSE_STATUS_EXECUTION_FAILED: return "CUSPARSE_STATUS_EXECUTION_FAILED";
 
-		case CUSPARSE_STATUS_INTERNAL_ERROR:
-			return "CUSPARSE_STATUS_INTERNAL_ERROR";
+		case CUSPARSE_STATUS_INTERNAL_ERROR: return "CUSPARSE_STATUS_INTERNAL_ERROR";
 
 		case CUSPARSE_STATUS_MATRIX_TYPE_NOT_SUPPORTED:
 			return "CUSPARSE_STATUS_MATRIX_TYPE_NOT_SUPPORTED";
@@ -184,27 +171,18 @@ static const char *_cudaGetErrorEnum(cusparseStatus_t error) {
 static const char *_cudaGetErrorEnum(cusolverStatus_t error) {
 	switch (error) {
 		case CUSOLVER_STATUS_SUCCESS: return "CUSOLVER_STATUS_SUCCESS";
-		case CUSOLVER_STATUS_NOT_INITIALIZED:
-			return "CUSOLVER_STATUS_NOT_INITIALIZED";
-		case CUSOLVER_STATUS_ALLOC_FAILED:
-			return "CUSOLVER_STATUS_ALLOC_FAILED";
-		case CUSOLVER_STATUS_INVALID_VALUE:
-			return "CUSOLVER_STATUS_INVALID_VALUE";
-		case CUSOLVER_STATUS_ARCH_MISMATCH:
-			return "CUSOLVER_STATUS_ARCH_MISMATCH";
-		case CUSOLVER_STATUS_MAPPING_ERROR:
-			return "CUSOLVER_STATUS_MAPPING_ERROR";
-		case CUSOLVER_STATUS_EXECUTION_FAILED:
-			return "CUSOLVER_STATUS_EXECUTION_FAILED";
-		case CUSOLVER_STATUS_INTERNAL_ERROR:
-			return "CUSOLVER_STATUS_INTERNAL_ERROR";
+		case CUSOLVER_STATUS_NOT_INITIALIZED: return "CUSOLVER_STATUS_NOT_INITIALIZED";
+		case CUSOLVER_STATUS_ALLOC_FAILED: return "CUSOLVER_STATUS_ALLOC_FAILED";
+		case CUSOLVER_STATUS_INVALID_VALUE: return "CUSOLVER_STATUS_INVALID_VALUE";
+		case CUSOLVER_STATUS_ARCH_MISMATCH: return "CUSOLVER_STATUS_ARCH_MISMATCH";
+		case CUSOLVER_STATUS_MAPPING_ERROR: return "CUSOLVER_STATUS_MAPPING_ERROR";
+		case CUSOLVER_STATUS_EXECUTION_FAILED: return "CUSOLVER_STATUS_EXECUTION_FAILED";
+		case CUSOLVER_STATUS_INTERNAL_ERROR: return "CUSOLVER_STATUS_INTERNAL_ERROR";
 		case CUSOLVER_STATUS_MATRIX_TYPE_NOT_SUPPORTED:
 			return "CUSOLVER_STATUS_MATRIX_TYPE_NOT_SUPPORTED";
-		case CUSOLVER_STATUS_NOT_SUPPORTED:
-			return "CUSOLVER_STATUS_NOT_SUPPORTED ";
+		case CUSOLVER_STATUS_NOT_SUPPORTED: return "CUSOLVER_STATUS_NOT_SUPPORTED ";
 		case CUSOLVER_STATUS_ZERO_PIVOT: return "CUSOLVER_STATUS_ZERO_PIVOT";
-		case CUSOLVER_STATUS_INVALID_LICENSE:
-			return "CUSOLVER_STATUS_INVALID_LICENSE";
+		case CUSOLVER_STATUS_INVALID_LICENSE: return "CUSOLVER_STATUS_INVALID_LICENSE";
 	}
 
 	return "<unknown>";
@@ -218,38 +196,30 @@ static const char *_cudaGetErrorEnum(curandStatus_t error) {
 	switch (error) {
 		case CURAND_STATUS_SUCCESS: return "CURAND_STATUS_SUCCESS";
 
-		case CURAND_STATUS_VERSION_MISMATCH:
-			return "CURAND_STATUS_VERSION_MISMATCH";
+		case CURAND_STATUS_VERSION_MISMATCH: return "CURAND_STATUS_VERSION_MISMATCH";
 
-		case CURAND_STATUS_NOT_INITIALIZED:
-			return "CURAND_STATUS_NOT_INITIALIZED";
+		case CURAND_STATUS_NOT_INITIALIZED: return "CURAND_STATUS_NOT_INITIALIZED";
 
-		case CURAND_STATUS_ALLOCATION_FAILED:
-			return "CURAND_STATUS_ALLOCATION_FAILED";
+		case CURAND_STATUS_ALLOCATION_FAILED: return "CURAND_STATUS_ALLOCATION_FAILED";
 
 		case CURAND_STATUS_TYPE_ERROR: return "CURAND_STATUS_TYPE_ERROR";
 
 		case CURAND_STATUS_OUT_OF_RANGE: return "CURAND_STATUS_OUT_OF_RANGE";
 
-		case CURAND_STATUS_LENGTH_NOT_MULTIPLE:
-			return "CURAND_STATUS_LENGTH_NOT_MULTIPLE";
+		case CURAND_STATUS_LENGTH_NOT_MULTIPLE: return "CURAND_STATUS_LENGTH_NOT_MULTIPLE";
 
 		case CURAND_STATUS_DOUBLE_PRECISION_REQUIRED:
 			return "CURAND_STATUS_DOUBLE_PRECISION_REQUIRED";
 
-		case CURAND_STATUS_LAUNCH_FAILURE:
-			return "CURAND_STATUS_LAUNCH_FAILURE";
+		case CURAND_STATUS_LAUNCH_FAILURE: return "CURAND_STATUS_LAUNCH_FAILURE";
 
-		case CURAND_STATUS_PREEXISTING_FAILURE:
-			return "CURAND_STATUS_PREEXISTING_FAILURE";
+		case CURAND_STATUS_PREEXISTING_FAILURE: return "CURAND_STATUS_PREEXISTING_FAILURE";
 
-		case CURAND_STATUS_INITIALIZATION_FAILED:
-			return "CURAND_STATUS_INITIALIZATION_FAILED";
+		case CURAND_STATUS_INITIALIZATION_FAILED: return "CURAND_STATUS_INITIALIZATION_FAILED";
 
 		case CURAND_STATUS_ARCH_MISMATCH: return "CURAND_STATUS_ARCH_MISMATCH";
 
-		case CURAND_STATUS_INTERNAL_ERROR:
-			return "CURAND_STATUS_INTERNAL_ERROR";
+		case CURAND_STATUS_INTERNAL_ERROR: return "CURAND_STATUS_INTERNAL_ERROR";
 	}
 
 	return "<unknown>";
@@ -263,27 +233,21 @@ static const char *_cudaGetErrorEnum(nvjpegStatus_t error) {
 	switch (error) {
 		case NVJPEG_STATUS_SUCCESS: return "NVJPEG_STATUS_SUCCESS";
 
-		case NVJPEG_STATUS_NOT_INITIALIZED:
-			return "NVJPEG_STATUS_NOT_INITIALIZED";
+		case NVJPEG_STATUS_NOT_INITIALIZED: return "NVJPEG_STATUS_NOT_INITIALIZED";
 
-		case NVJPEG_STATUS_INVALID_PARAMETER:
-			return "NVJPEG_STATUS_INVALID_PARAMETER";
+		case NVJPEG_STATUS_INVALID_PARAMETER: return "NVJPEG_STATUS_INVALID_PARAMETER";
 
 		case NVJPEG_STATUS_BAD_JPEG: return "NVJPEG_STATUS_BAD_JPEG";
 
-		case NVJPEG_STATUS_JPEG_NOT_SUPPORTED:
-			return "NVJPEG_STATUS_JPEG_NOT_SUPPORTED";
+		case NVJPEG_STATUS_JPEG_NOT_SUPPORTED: return "NVJPEG_STATUS_JPEG_NOT_SUPPORTED";
 
-		case NVJPEG_STATUS_ALLOCATOR_FAILURE:
-			return "NVJPEG_STATUS_ALLOCATOR_FAILURE";
+		case NVJPEG_STATUS_ALLOCATOR_FAILURE: return "NVJPEG_STATUS_ALLOCATOR_FAILURE";
 
-		case NVJPEG_STATUS_EXECUTION_FAILED:
-			return "NVJPEG_STATUS_EXECUTION_FAILED";
+		case NVJPEG_STATUS_EXECUTION_FAILED: return "NVJPEG_STATUS_EXECUTION_FAILED";
 
 		case NVJPEG_STATUS_ARCH_MISMATCH: return "NVJPEG_STATUS_ARCH_MISMATCH";
 
-		case NVJPEG_STATUS_INTERNAL_ERROR:
-			return "NVJPEG_STATUS_INTERNAL_ERROR";
+		case NVJPEG_STATUS_INTERNAL_ERROR: return "NVJPEG_STATUS_INTERNAL_ERROR";
 	}
 
 	return "<unknown>";
@@ -294,17 +258,13 @@ static const char *_cudaGetErrorEnum(nvjpegStatus_t error) {
 // NPP API errors
 static const char *_cudaGetErrorEnum(NppStatus error) {
 	switch (error) {
-		case NPP_NOT_SUPPORTED_MODE_ERROR:
-			return "NPP_NOT_SUPPORTED_MODE_ERROR";
+		case NPP_NOT_SUPPORTED_MODE_ERROR: return "NPP_NOT_SUPPORTED_MODE_ERROR";
 
-		case NPP_ROUND_MODE_NOT_SUPPORTED_ERROR:
-			return "NPP_ROUND_MODE_NOT_SUPPORTED_ERROR";
+		case NPP_ROUND_MODE_NOT_SUPPORTED_ERROR: return "NPP_ROUND_MODE_NOT_SUPPORTED_ERROR";
 
-		case NPP_RESIZE_NO_OPERATION_ERROR:
-			return "NPP_RESIZE_NO_OPERATION_ERROR";
+		case NPP_RESIZE_NO_OPERATION_ERROR: return "NPP_RESIZE_NO_OPERATION_ERROR";
 
-		case NPP_NOT_SUFFICIENT_COMPUTE_CAPABILITY:
-			return "NPP_NOT_SUFFICIENT_COMPUTE_CAPABILITY";
+		case NPP_NOT_SUFFICIENT_COMPUTE_CAPABILITY: return "NPP_NOT_SUFFICIENT_COMPUTE_CAPABILITY";
 
 #	if ((NPP_VERSION_MAJOR << 12) + (NPP_VERSION_MINOR << 4)) <= 0x5000
 
@@ -318,8 +278,7 @@ static const char *_cudaGetErrorEnum(NppStatus error) {
 
 		case NPP_MEM_ALLOC_ERR: return "NPP_MEMORY_ALLOCATION_ERROR";
 
-		case NPP_HISTO_NUMBER_OF_LEVELS_ERROR:
-			return "NPP_HISTOGRAM_NUMBER_OF_LEVELS_ERROR";
+		case NPP_HISTO_NUMBER_OF_LEVELS_ERROR: return "NPP_HISTOGRAM_NUMBER_OF_LEVELS_ERROR";
 
 		case NPP_INVALID_INPUT: return "NPP_INVALID_INPUT";
 
@@ -341,23 +300,18 @@ static const char *_cudaGetErrorEnum(NppStatus error) {
 
 		case NPP_MEMORY_ALLOCATION_ERR: return "NPP_MEMORY_ALLOCATION_ERROR";
 
-		case NPP_HISTOGRAM_NUMBER_OF_LEVELS_ERROR:
-			return "NPP_HISTOGRAM_NUMBER_OF_LEVELS_ERROR";
+		case NPP_HISTOGRAM_NUMBER_OF_LEVELS_ERROR: return "NPP_HISTOGRAM_NUMBER_OF_LEVELS_ERROR";
 
-		case NPP_INVALID_HOST_POINTER_ERROR:
-			return "NPP_INVALID_HOST_POINTER_ERROR";
+		case NPP_INVALID_HOST_POINTER_ERROR: return "NPP_INVALID_HOST_POINTER_ERROR";
 
-		case NPP_INVALID_DEVICE_POINTER_ERROR:
-			return "NPP_INVALID_DEVICE_POINTER_ERROR";
+		case NPP_INVALID_DEVICE_POINTER_ERROR: return "NPP_INVALID_DEVICE_POINTER_ERROR";
 #	endif
 
-		case NPP_LUT_NUMBER_OF_LEVELS_ERROR:
-			return "NPP_LUT_NUMBER_OF_LEVELS_ERROR";
+		case NPP_LUT_NUMBER_OF_LEVELS_ERROR: return "NPP_LUT_NUMBER_OF_LEVELS_ERROR";
 
 		case NPP_TEXTURE_BIND_ERROR: return "NPP_TEXTURE_BIND_ERROR";
 
-		case NPP_WRONG_INTERSECTION_ROI_ERROR:
-			return "NPP_WRONG_INTERSECTION_ROI_ERROR";
+		case NPP_WRONG_INTERSECTION_ROI_ERROR: return "NPP_WRONG_INTERSECTION_ROI_ERROR";
 
 		case NPP_NOT_EVEN_STEP_ERROR: return "NPP_NOT_EVEN_STEP_ERROR";
 
@@ -365,8 +319,7 @@ static const char *_cudaGetErrorEnum(NppStatus error) {
 
 		case NPP_RESIZE_FACTOR_ERROR: return "NPP_RESIZE_FACTOR_ERROR";
 
-		case NPP_HAAR_CLASSIFIER_PIXEL_MATCH_ERROR:
-			return "NPP_HAAR_CLASSIFIER_PIXEL_MATCH_ERROR";
+		case NPP_HAAR_CLASSIFIER_PIXEL_MATCH_ERROR: return "NPP_HAAR_CLASSIFIER_PIXEL_MATCH_ERROR";
 
 #	if ((NPP_VERSION_MAJOR << 12) + (NPP_VERSION_MINOR << 4)) <= 0x5000
 
@@ -396,8 +349,7 @@ static const char *_cudaGetErrorEnum(NppStatus error) {
 
 		case NPP_NULL_POINTER_ERROR: return "NPP_NULL_POINTER_ERROR";
 
-		case NPP_CUDA_KERNEL_EXECUTION_ERROR:
-			return "NPP_CUDA_KERNEL_EXECUTION_ERROR";
+		case NPP_CUDA_KERNEL_EXECUTION_ERROR: return "NPP_CUDA_KERNEL_EXECUTION_ERROR";
 
 		case NPP_NOT_IMPLEMENTED_ERROR: return "NPP_NOT_IMPLEMENTED_ERROR";
 
@@ -405,27 +357,21 @@ static const char *_cudaGetErrorEnum(NppStatus error) {
 
 		case NPP_SUCCESS: return "NPP_SUCCESS";
 
-		case NPP_WRONG_INTERSECTION_QUAD_WARNING:
-			return "NPP_WRONG_INTERSECTION_QUAD_WARNING";
+		case NPP_WRONG_INTERSECTION_QUAD_WARNING: return "NPP_WRONG_INTERSECTION_QUAD_WARNING";
 
-		case NPP_MISALIGNED_DST_ROI_WARNING:
-			return "NPP_MISALIGNED_DST_ROI_WARNING";
+		case NPP_MISALIGNED_DST_ROI_WARNING: return "NPP_MISALIGNED_DST_ROI_WARNING";
 
-		case NPP_AFFINE_QUAD_INCORRECT_WARNING:
-			return "NPP_AFFINE_QUAD_INCORRECT_WARNING";
+		case NPP_AFFINE_QUAD_INCORRECT_WARNING: return "NPP_AFFINE_QUAD_INCORRECT_WARNING";
 
 		case NPP_DOUBLE_SIZE_WARNING: return "NPP_DOUBLE_SIZE_WARNING";
 
-		case NPP_WRONG_INTERSECTION_ROI_WARNING:
-			return "NPP_WRONG_INTERSECTION_ROI_WARNING";
+		case NPP_WRONG_INTERSECTION_ROI_WARNING: return "NPP_WRONG_INTERSECTION_ROI_WARNING";
 
 #	if ((NPP_VERSION_MAJOR << 12) + (NPP_VERSION_MINOR << 4)) >= 0x6000
 		/* These are 6.0 or higher */
-		case NPP_LUT_PALETTE_BITSIZE_ERROR:
-			return "NPP_LUT_PALETTE_BITSIZE_ERROR";
+		case NPP_LUT_PALETTE_BITSIZE_ERROR: return "NPP_LUT_PALETTE_BITSIZE_ERROR";
 
-		case NPP_ZC_MODE_NOT_SUPPORTED_ERROR:
-			return "NPP_ZC_MODE_NOT_SUPPORTED_ERROR";
+		case NPP_ZC_MODE_NOT_SUPPORTED_ERROR: return "NPP_ZC_MODE_NOT_SUPPORTED_ERROR";
 
 		case NPP_QUALITY_INDEX_ERROR: return "NPP_QUALITY_INDEX_ERROR";
 
@@ -433,8 +379,7 @@ static const char *_cudaGetErrorEnum(NppStatus error) {
 
 		case NPP_ZERO_MASK_VALUE_ERROR: return "NPP_ZERO_MASK_VALUE_ERROR";
 
-		case NPP_NUMBER_OF_CHANNELS_ERROR:
-			return "NPP_NUMBER_OF_CHANNELS_ERROR";
+		case NPP_NUMBER_OF_CHANNELS_ERROR: return "NPP_NUMBER_OF_CHANNELS_ERROR";
 
 		case NPP_COI_ERROR: return "NPP_COI_ERROR";
 
@@ -450,8 +395,7 @@ static const char *_cudaGetErrorEnum(NppStatus error) {
 
 		case NPP_MOMENT_00_ZERO_ERROR: return "NPP_MOMENT_00_ZERO_ERROR";
 
-		case NPP_THRESHOLD_NEGATIVE_LEVEL_ERROR:
-			return "NPP_THRESHOLD_NEGATIVE_LEVEL_ERROR";
+		case NPP_THRESHOLD_NEGATIVE_LEVEL_ERROR: return "NPP_THRESHOLD_NEGATIVE_LEVEL_ERROR";
 
 		case NPP_THRESHOLD_ERROR: return "NPP_THRESHOLD_ERROR";
 
@@ -493,8 +437,7 @@ static const char *_cudaGetErrorEnum(NppStatus error) {
 #endif
 
 template<typename T>
-void check(T result, char const *const func, const char *const file,
-		   int const line) {
+void check(T result, char const *const func, const char *const file, int const line) {
 	if (result) {
 		fprintf(stderr,
 				"CUDA error at %s:%d code=%d(%s) \"%s\" \n",
@@ -515,8 +458,7 @@ void check(T result, char const *const func, const char *const file,
 // This will output the proper error string when calling cudaGetLastError
 #	define getLastCudaError(msg) __getLastCudaError(msg, __FILE__, __LINE__)
 
-inline void __getLastCudaError(const char *errorMessage, const char *file,
-							   const int line) {
+inline void __getLastCudaError(const char *errorMessage, const char *file, const int line) {
 	cudaError_t err = cudaGetLastError();
 
 	if (cudaSuccess != err) {
@@ -534,11 +476,9 @@ inline void __getLastCudaError(const char *errorMessage, const char *file,
 
 // This will only print the proper error string when calling cudaGetLastError
 // but not exit program incase error detected.
-#	define printLastCudaError(msg)                                            \
-		__printLastCudaError(msg, __FILE__, __LINE__)
+#	define printLastCudaError(msg) __printLastCudaError(msg, __FILE__, __LINE__)
 
-inline void __printLastCudaError(const char *errorMessage, const char *file,
-								 const int line) {
+inline void __printLastCudaError(const char *errorMessage, const char *file, const int line) {
 	cudaError_t err = cudaGetLastError();
 
 	if (cudaSuccess != err) {
@@ -561,8 +501,7 @@ inline void __printLastCudaError(const char *errorMessage, const char *file,
 
 // Float To Int conversion
 inline int ftoi(float value) {
-	return (value >= 0 ? static_cast<int>(value + 0.5)
-					   : static_cast<int>(value - 0.5));
+	return (value >= 0 ? static_cast<int>(value + 0.5) : static_cast<int>(value - 0.5));
 }
 
 // Beginning of GPU Architecture definitions
@@ -679,9 +618,7 @@ inline int gpuDeviceInit(int devID) {
 
 	if (devID > device_count - 1) {
 		fprintf(stderr, "\n");
-		fprintf(stderr,
-				">> %d CUDA capable GPU device(s) detected. <<\n",
-				device_count);
+		fprintf(stderr, ">> %d CUDA capable GPU device(s) detected. <<\n", device_count);
 		fprintf(stderr,
 				">> gpuDeviceInit (-device=%d) is not a valid"
 				" GPU device. <<\n",
@@ -691,12 +628,9 @@ inline int gpuDeviceInit(int devID) {
 	}
 
 	int computeMode = -1, major = 0, minor = 0;
-	checkCudaErrors(
-	  cudaDeviceGetAttribute(&computeMode, cudaDevAttrComputeMode, devID));
-	checkCudaErrors(
-	  cudaDeviceGetAttribute(&major, cudaDevAttrComputeCapabilityMajor, devID));
-	checkCudaErrors(
-	  cudaDeviceGetAttribute(&minor, cudaDevAttrComputeCapabilityMinor, devID));
+	checkCudaErrors(cudaDeviceGetAttribute(&computeMode, cudaDevAttrComputeMode, devID));
+	checkCudaErrors(cudaDeviceGetAttribute(&major, cudaDevAttrComputeCapabilityMajor, devID));
+	checkCudaErrors(cudaDeviceGetAttribute(&minor, cudaDevAttrComputeCapabilityMinor, devID));
 	if (computeMode == cudaComputeModeProhibited) {
 		fprintf(stderr,
 				"Error: device is running in <Compute Mode "
@@ -710,9 +644,7 @@ inline int gpuDeviceInit(int devID) {
 	}
 
 	checkCudaErrors(cudaSetDevice(devID));
-	printf("gpuDeviceInit() CUDA Device [%d]: \"%s\n",
-		   devID,
-		   _ConvertSMVer2ArchName(major, minor));
+	printf("gpuDeviceInit() CUDA Device [%d]: \"%s\n", devID, _ConvertSMVer2ArchName(major, minor));
 
 	return devID;
 }
@@ -739,12 +671,12 @@ inline int gpuGetMaxGflopsDeviceId() {
 
 	while (current_device < device_count) {
 		int computeMode = -1, major = 0, minor = 0;
-		checkCudaErrors(cudaDeviceGetAttribute(
-		  &computeMode, cudaDevAttrComputeMode, current_device));
-		checkCudaErrors(cudaDeviceGetAttribute(
-		  &major, cudaDevAttrComputeCapabilityMajor, current_device));
-		checkCudaErrors(cudaDeviceGetAttribute(
-		  &minor, cudaDevAttrComputeCapabilityMinor, current_device));
+		checkCudaErrors(
+		  cudaDeviceGetAttribute(&computeMode, cudaDevAttrComputeMode, current_device));
+		checkCudaErrors(
+		  cudaDeviceGetAttribute(&major, cudaDevAttrComputeCapabilityMajor, current_device));
+		checkCudaErrors(
+		  cudaDeviceGetAttribute(&minor, cudaDevAttrComputeCapabilityMinor, current_device));
 
 		// If this GPU is not running on Compute Mode prohibited,
 		// then we can add it to the list
@@ -755,12 +687,10 @@ inline int gpuGetMaxGflopsDeviceId() {
 				sm_per_multiproc = _ConvertSMVer2Cores(major, minor);
 			}
 			int multiProcessorCount = 0, clockRate = 0;
-			checkCudaErrors(
-			  cudaDeviceGetAttribute(&multiProcessorCount,
-									 cudaDevAttrMultiProcessorCount,
-									 current_device));
-			cudaError_t result = cudaDeviceGetAttribute(
-			  &clockRate, cudaDevAttrClockRate, current_device);
+			checkCudaErrors(cudaDeviceGetAttribute(
+			  &multiProcessorCount, cudaDevAttrMultiProcessorCount, current_device));
+			cudaError_t result =
+			  cudaDeviceGetAttribute(&clockRate, cudaDevAttrClockRate, current_device);
 			if (result != cudaSuccess) {
 				// If cudaDevAttrClockRate attribute is not supported we
 				// set clockRate as 1, to consider GPU with most SMs and CUDA
@@ -777,8 +707,7 @@ inline int gpuGetMaxGflopsDeviceId() {
 					exit(EXIT_FAILURE);
 				}
 			}
-			uint64_t compute_perf =
-			  (uint64_t)multiProcessorCount * sm_per_multiproc * clockRate;
+			uint64_t compute_perf = (uint64_t)multiProcessorCount * sm_per_multiproc * clockRate;
 
 			if (compute_perf > max_compute_perf) {
 				max_compute_perf = compute_perf;
@@ -825,10 +754,8 @@ inline int findCudaDevice(int argc, const char **argv) {
 		devID = gpuGetMaxGflopsDeviceId();
 		checkCudaErrors(cudaSetDevice(devID));
 		int major = 0, minor = 0;
-		checkCudaErrors(cudaDeviceGetAttribute(
-		  &major, cudaDevAttrComputeCapabilityMajor, devID));
-		checkCudaErrors(cudaDeviceGetAttribute(
-		  &minor, cudaDevAttrComputeCapabilityMinor, devID));
+		checkCudaErrors(cudaDeviceGetAttribute(&major, cudaDevAttrComputeCapabilityMajor, devID));
+		checkCudaErrors(cudaDeviceGetAttribute(&minor, cudaDevAttrComputeCapabilityMinor, devID));
 		printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n",
 			   devID,
 			   _ConvertSMVer2ArchName(major, minor),
@@ -854,20 +781,19 @@ inline int findIntegratedGPU() {
 	// Find the integrated GPU which is compute capable
 	while (current_device < device_count) {
 		int computeMode = -1, integrated = -1;
-		checkCudaErrors(cudaDeviceGetAttribute(
-		  &computeMode, cudaDevAttrComputeMode, current_device));
-		checkCudaErrors(cudaDeviceGetAttribute(
-		  &integrated, cudaDevAttrIntegrated, current_device));
+		checkCudaErrors(
+		  cudaDeviceGetAttribute(&computeMode, cudaDevAttrComputeMode, current_device));
+		checkCudaErrors(cudaDeviceGetAttribute(&integrated, cudaDevAttrIntegrated, current_device));
 		// If GPU is integrated and is not running on Compute Mode prohibited,
 		// then cuda can map to GLES resource
 		if (integrated && (computeMode != cudaComputeModeProhibited)) {
 			checkCudaErrors(cudaSetDevice(current_device));
 
 			int major = 0, minor = 0;
-			checkCudaErrors(cudaDeviceGetAttribute(
-			  &major, cudaDevAttrComputeCapabilityMajor, current_device));
-			checkCudaErrors(cudaDeviceGetAttribute(
-			  &minor, cudaDevAttrComputeCapabilityMinor, current_device));
+			checkCudaErrors(
+			  cudaDeviceGetAttribute(&major, cudaDevAttrComputeCapabilityMajor, current_device));
+			checkCudaErrors(
+			  cudaDeviceGetAttribute(&minor, cudaDevAttrComputeCapabilityMinor, current_device));
 			printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n",
 				   current_device,
 				   _ConvertSMVer2ArchName(major, minor),
@@ -898,13 +824,10 @@ inline bool checkCudaCapabilities(int major_version, int minor_version) {
 	int major = 0, minor = 0;
 
 	checkCudaErrors(cudaGetDevice(&dev));
-	checkCudaErrors(
-	  cudaDeviceGetAttribute(&major, cudaDevAttrComputeCapabilityMajor, dev));
-	checkCudaErrors(
-	  cudaDeviceGetAttribute(&minor, cudaDevAttrComputeCapabilityMinor, dev));
+	checkCudaErrors(cudaDeviceGetAttribute(&major, cudaDevAttrComputeCapabilityMajor, dev));
+	checkCudaErrors(cudaDeviceGetAttribute(&minor, cudaDevAttrComputeCapabilityMinor, dev));
 
-	if ((major > major_version) ||
-		(major == major_version && minor >= minor_version)) {
+	if ((major > major_version) || (major == major_version && minor >= minor_version)) {
 		printf("  Device %d: <%16s >, Compute SM %d.%d detected\n",
 			   dev,
 			   _ConvertSMVer2ArchName(major, minor),

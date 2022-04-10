@@ -45,8 +45,7 @@
 #ifndef COMMON_HELPER_CUDA_H_
 
 inline int ftoi(float value) {
-	return (value >= 0 ? static_cast<int>(value + 0.5)
-					   : static_cast<int>(value - 0.5));
+	return (value >= 0 ? static_cast<int>(value + 0.5) : static_cast<int>(value - 0.5));
 }
 
 #endif
@@ -71,14 +70,13 @@ inline void __checkCudaErrors(CUresult err, const char *file, const int line) {
 	if (CUDA_SUCCESS != err) {
 		const char *errorStr = NULL;
 		cuGetErrorString(err, &errorStr);
-		fprintf(
-		  stderr,
-		  "checkCudaErrors() Driver API error = %04d \"%s\" from file <%s>, "
-		  "line %i.\n",
-		  err,
-		  errorStr,
-		  file,
-		  line);
+		fprintf(stderr,
+				"checkCudaErrors() Driver API error = %04d \"%s\" from file <%s>, "
+				"line %i.\n",
+				err,
+				errorStr,
+				file,
+				line);
 		exit(EXIT_FAILURE);
 	}
 }
@@ -86,8 +84,7 @@ inline void __checkCudaErrors(CUresult err, const char *file, const int line) {
 
 // This function wraps the CUDA Driver API into a template function
 template<class T>
-inline void getCudaAttribute(T *attribute, CUdevice_attribute device_attribute,
-							 int device) {
+inline void getCudaAttribute(T *attribute, CUdevice_attribute device_attribute, int device) {
 	checkCudaErrors(cuDeviceGetAttribute(attribute, device_attribute, device));
 }
 #endif
@@ -131,11 +128,10 @@ inline int _ConvertSMVer2CoresDRV(int major, int minor) {
 
 	// If we don't find the values, we default use the previous one to run
 	// properly
-	printf(
-	  "MapSMtoCores for SM %d.%d is undefined.  Default to use %d Cores/SM\n",
-	  major,
-	  minor,
-	  nGpuArchCoresPerSM[index - 1].Cores);
+	printf("MapSMtoCores for SM %d.%d is undefined.  Default to use %d Cores/SM\n",
+		   major,
+		   minor,
+		   nGpuArchCoresPerSM[index - 1].Cores);
 	return nGpuArchCoresPerSM[index - 1].Cores;
 }
 // end of GPU Architecture definitions
@@ -161,13 +157,8 @@ inline int gpuDeviceInitDRV(int ARGC, const char **ARGV) {
 
 	if (dev > deviceCount - 1) {
 		fprintf(stderr, "\n");
-		fprintf(stderr,
-				">> %d CUDA capable GPU device(s) detected. <<\n",
-				deviceCount);
-		fprintf(
-		  stderr,
-		  ">> cudaDeviceInit (-device=%d) is not a valid GPU device. <<\n",
-		  dev);
+		fprintf(stderr, ">> %d CUDA capable GPU device(s) detected. <<\n", deviceCount);
+		fprintf(stderr, ">> cudaDeviceInit (-device=%d) is not a valid GPU device. <<\n", dev);
 		fprintf(stderr, "\n");
 		return -dev;
 	}
@@ -210,9 +201,7 @@ inline int gpuGetMaxGflopsDeviceIdDRV() {
 	checkCudaErrors(cuDeviceGetCount(&device_count));
 
 	if (device_count == 0) {
-		fprintf(
-		  stderr,
-		  "gpuGetMaxGflopsDeviceIdDRV error: no devices supporting CUDA\n");
+		fprintf(stderr, "gpuGetMaxGflopsDeviceIdDRV error: no devices supporting CUDA\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -220,24 +209,17 @@ inline int gpuGetMaxGflopsDeviceIdDRV() {
 	current_device = 0;
 
 	while (current_device < device_count) {
-		checkCudaErrors(
-		  cuDeviceGetAttribute(&multiProcessorCount,
-							   CU_DEVICE_ATTRIBUTE_MULTIPROCESSOR_COUNT,
-							   current_device));
 		checkCudaErrors(cuDeviceGetAttribute(
-		  &clockRate, CU_DEVICE_ATTRIBUTE_CLOCK_RATE, current_device));
+		  &multiProcessorCount, CU_DEVICE_ATTRIBUTE_MULTIPROCESSOR_COUNT, current_device));
 		checkCudaErrors(
-		  cuDeviceGetAttribute(&major,
-							   CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR,
-							   current_device));
-		checkCudaErrors(
-		  cuDeviceGetAttribute(&minor,
-							   CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR,
-							   current_device));
+		  cuDeviceGetAttribute(&clockRate, CU_DEVICE_ATTRIBUTE_CLOCK_RATE, current_device));
+		checkCudaErrors(cuDeviceGetAttribute(
+		  &major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, current_device));
+		checkCudaErrors(cuDeviceGetAttribute(
+		  &minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, current_device));
 
 		int computeMode;
-		getCudaAttribute<int>(
-		  &computeMode, CU_DEVICE_ATTRIBUTE_COMPUTE_MODE, current_device);
+		getCudaAttribute<int>(&computeMode, CU_DEVICE_ATTRIBUTE_COMPUTE_MODE, current_device);
 
 		if (computeMode != CU_COMPUTEMODE_PROHIBITED) {
 			if (major == 9999 && minor == 9999) {
@@ -247,8 +229,7 @@ inline int gpuGetMaxGflopsDeviceIdDRV() {
 			}
 
 			unsigned long long compute_perf =
-			  (unsigned long long)(multiProcessorCount * sm_per_multiproc *
-								   clockRate);
+			  (unsigned long long)(multiProcessorCount * sm_per_multiproc * clockRate);
 
 			if (compute_perf > max_compute_perf) {
 				max_compute_perf = compute_perf;
@@ -262,10 +243,9 @@ inline int gpuGetMaxGflopsDeviceIdDRV() {
 	}
 
 	if (devices_prohibited == device_count) {
-		fprintf(
-		  stderr,
-		  "gpuGetMaxGflopsDeviceIdDRV error: all devices have compute mode "
-		  "prohibited.\n");
+		fprintf(stderr,
+				"gpuGetMaxGflopsDeviceIdDRV error: all devices have compute mode "
+				"prohibited.\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -316,24 +296,20 @@ inline CUdevice findIntegratedGPUDrv() {
 	// Find the integrated GPU which is compute capable
 	while (current_device < device_count) {
 		int computeMode = -1;
-		checkCudaErrors(cuDeviceGetAttribute(
-		  &isIntegrated, CU_DEVICE_ATTRIBUTE_INTEGRATED, current_device));
-		checkCudaErrors(cuDeviceGetAttribute(
-		  &computeMode, CU_DEVICE_ATTRIBUTE_COMPUTE_MODE, current_device));
+		checkCudaErrors(
+		  cuDeviceGetAttribute(&isIntegrated, CU_DEVICE_ATTRIBUTE_INTEGRATED, current_device));
+		checkCudaErrors(
+		  cuDeviceGetAttribute(&computeMode, CU_DEVICE_ATTRIBUTE_COMPUTE_MODE, current_device));
 
 		// If GPU is integrated and is not running on Compute Mode prohibited
 		// use that
 		if (isIntegrated && (computeMode != CU_COMPUTEMODE_PROHIBITED)) {
 			int major = 0, minor = 0;
 			char deviceName[256];
-			checkCudaErrors(
-			  cuDeviceGetAttribute(&major,
-								   CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR,
-								   current_device));
-			checkCudaErrors(
-			  cuDeviceGetAttribute(&minor,
-								   CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR,
-								   current_device));
+			checkCudaErrors(cuDeviceGetAttribute(
+			  &major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, current_device));
+			checkCudaErrors(cuDeviceGetAttribute(
+			  &minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, current_device));
 			checkCudaErrors(cuDeviceGetName(deviceName, 256, current_device));
 			printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n",
 				   current_device,
@@ -358,26 +334,20 @@ inline CUdevice findIntegratedGPUDrv() {
 }
 
 // General check for CUDA GPU SM Capabilities
-inline bool checkCudaCapabilitiesDRV(int major_version, int minor_version,
-									 int devID) {
+inline bool checkCudaCapabilitiesDRV(int major_version, int minor_version, int devID) {
 	CUdevice cuDevice;
 	char name[256];
 	int major = 0, minor = 0;
 
 	checkCudaErrors(cuDeviceGet(&cuDevice, devID));
 	checkCudaErrors(cuDeviceGetName(name, 100, cuDevice));
-	checkCudaErrors(cuDeviceGetAttribute(
-	  &major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
-	checkCudaErrors(cuDeviceGetAttribute(
-	  &minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
+	checkCudaErrors(
+	  cuDeviceGetAttribute(&major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
+	checkCudaErrors(
+	  cuDeviceGetAttribute(&minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
 
-	if ((major > major_version) ||
-		(major == major_version && minor >= minor_version)) {
-		printf("> Device %d: <%16s >, Compute SM %d.%d detected\n",
-			   devID,
-			   name,
-			   major,
-			   minor);
+	if ((major > major_version) || (major == major_version && minor >= minor_version)) {
+		printf("> Device %d: <%16s >, Compute SM %d.%d detected\n", devID, name, major, minor);
 		return true;
 	} else {
 		printf(
@@ -390,8 +360,8 @@ inline bool checkCudaCapabilitiesDRV(int major_version, int minor_version,
 }
 #endif
 
-bool inline findFatbinPath(const char *module_file, std::string &module_path,
-						   char **argv, std::ostringstream &ostrm) {
+bool inline findFatbinPath(const char *module_file, std::string &module_path, char **argv,
+						   std::ostringstream &ostrm) {
 	char *actual_path = sdkFindFilePath(module_file, argv[0]);
 
 	if (actual_path) {

@@ -37,25 +37,22 @@
 #include <sstream>
 #include <string>
 
-#define NVRTC_SAFE_CALL(Name, x)                                               \
-	do {                                                                       \
-		nvrtcResult result = x;                                                \
-		if (result != NVRTC_SUCCESS) {                                         \
-			std::cerr << "\nerror: " << Name << " failed with error "          \
-					  << nvrtcGetErrorString(result);                          \
-			exit(1);                                                           \
-		}                                                                      \
+#define NVRTC_SAFE_CALL(Name, x)                                                                   \
+	do {                                                                                           \
+		nvrtcResult result = x;                                                                    \
+		if (result != NVRTC_SUCCESS) {                                                             \
+			std::cerr << "\nerror: " << Name << " failed with error "                              \
+					  << nvrtcGetErrorString(result);                                              \
+			exit(1);                                                                               \
+		}                                                                                          \
 	} while (0)
 
-void compileFileToCUBIN(char *filename, int argc, char **argv,
-						char **cubinResult, size_t *cubinResultSize,
-						int requiresCGheaders) {
-	std::ifstream inputFile(filename,
-							std::ios::in | std::ios::binary | std::ios::ate);
+void compileFileToCUBIN(char *filename, int argc, char **argv, char **cubinResult,
+						size_t *cubinResultSize, int requiresCGheaders) {
+	std::ifstream inputFile(filename, std::ios::in | std::ios::binary | std::ios::ate);
 
 	if (!inputFile.is_open()) {
-		std::cerr << "\nerror: unable to open " << filename
-				  << " for reading!\n";
+		std::cerr << "\nerror: unable to open " << filename << " for reading!\n";
 		exit(1);
 	}
 
@@ -79,18 +76,18 @@ void compileFileToCUBIN(char *filename, int argc, char **argv,
 	CUdevice cuDevice = findCudaDeviceDRV(argc, (const char **)argv);
 
 	// get compute capabilities and the devicename
-	checkCudaErrors(cuDeviceGetAttribute(
-	  &major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
-	checkCudaErrors(cuDeviceGetAttribute(
-	  &minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
+	checkCudaErrors(
+	  cuDeviceGetAttribute(&major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
+	checkCudaErrors(
+	  cuDeviceGetAttribute(&minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
 
 	{
 		// Compile cubin for the GPU arch on which are going to run cuda kernel.
 		std::string compileOptions;
 		compileOptions = "--gpu-architecture=sm_";
 
-		compileParams[numCompileOptions] = reinterpret_cast<char *>(
-		  malloc(sizeof(char) * (compileOptions.length() + 10)));
+		compileParams[numCompileOptions] =
+		  reinterpret_cast<char *>(malloc(sizeof(char) * (compileOptions.length() + 10)));
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 		sprintf_s(compileParams[numCompileOptions],
 				  sizeof(char) * (compileOptions.length() + 10),
@@ -114,11 +111,9 @@ void compileFileToCUBIN(char *filename, int argc, char **argv,
 		std::string compileOptions;
 		char HeaderNames[256];
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-		sprintf_s(
-		  HeaderNames, sizeof(HeaderNames), "%s", "cooperative_groups.h");
+		sprintf_s(HeaderNames, sizeof(HeaderNames), "%s", "cooperative_groups.h");
 #else
-		snprintf(
-		  HeaderNames, sizeof(HeaderNames), "%s", "cooperative_groups.h");
+		snprintf(HeaderNames, sizeof(HeaderNames), "%s", "cooperative_groups.h");
 #endif
 
 		compileOptions = "--include-path=";
@@ -134,35 +129,30 @@ void compileFileToCUBIN(char *filename, int argc, char **argv,
 			  argv[0]);
 		}
 		compileOptions += path.c_str();
-		compileParams[numCompileOptions] = reinterpret_cast<char *>(
-		  malloc(sizeof(char) * (compileOptions.length() + 1)));
+		compileParams[numCompileOptions] =
+		  reinterpret_cast<char *>(malloc(sizeof(char) * (compileOptions.length() + 1)));
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 		sprintf_s(compileParams[numCompileOptions],
 				  sizeof(char) * (compileOptions.length() + 1),
 				  "%s",
 				  compileOptions.c_str());
 #else
-		snprintf(compileParams[numCompileOptions],
-				 compileOptions.size(),
-				 "%s",
-				 compileOptions.c_str());
+		snprintf(
+		  compileParams[numCompileOptions], compileOptions.size(), "%s", compileOptions.c_str());
 #endif
 		numCompileOptions++;
 	}
 
 	// compile
 	nvrtcProgram prog;
-	NVRTC_SAFE_CALL(
-	  "nvrtcCreateProgram",
-	  nvrtcCreateProgram(&prog, memBlock, filename, 0, NULL, NULL));
+	NVRTC_SAFE_CALL("nvrtcCreateProgram",
+					nvrtcCreateProgram(&prog, memBlock, filename, 0, NULL, NULL));
 
-	nvrtcResult res =
-	  nvrtcCompileProgram(prog, numCompileOptions, compileParams);
+	nvrtcResult res = nvrtcCompileProgram(prog, numCompileOptions, compileParams);
 
 	// dump log
 	size_t logSize;
-	NVRTC_SAFE_CALL("nvrtcGetProgramLogSize",
-					nvrtcGetProgramLogSize(prog, &logSize));
+	NVRTC_SAFE_CALL("nvrtcGetProgramLogSize", nvrtcGetProgramLogSize(prog, &logSize));
 	char *log = reinterpret_cast<char *>(malloc(sizeof(char) * logSize + 1));
 	NVRTC_SAFE_CALL("nvrtcGetProgramLog", nvrtcGetProgramLog(prog, log));
 	log[logSize] = '\x0';
@@ -197,10 +187,10 @@ CUmodule loadCUBIN(char *cubin, int argc, char **argv) {
 	CUdevice cuDevice = findCudaDeviceDRV(argc, (const char **)argv);
 
 	// get compute capabilities and the devicename
-	checkCudaErrors(cuDeviceGetAttribute(
-	  &major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
-	checkCudaErrors(cuDeviceGetAttribute(
-	  &minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
+	checkCudaErrors(
+	  cuDeviceGetAttribute(&major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
+	checkCudaErrors(
+	  cuDeviceGetAttribute(&minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
 	checkCudaErrors(cuDeviceGetName(deviceName, 256, cuDevice));
 	printf("> GPU Device has SM %d.%d compute capability\n", major, minor);
 
