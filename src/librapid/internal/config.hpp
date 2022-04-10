@@ -1,8 +1,6 @@
 #pragma once
 
 // Include required headers
-
-// STL headers
 #include <cstdlib>
 #include <cstddef>
 #include <string>
@@ -111,14 +109,12 @@
 
 #if defined(__MINGW32__)
 #	define LIBRAPID_MINGW_CXX
-#	define LIBRAPID_COMPILER                                                  \
-		"Mingw or GNU C/C++ Compiler ported for Windows NT"
+#	define LIBRAPID_COMPILER "Mingw or GNU C/C++ Compiler ported for Windows NT"
 #endif
 
 #if defined(__MINGW64__)
 #	define LIBRAPID_MINGW_CXX
-#	define LIBRAPID_COMPILER                                                  \
-		"Mingw or GNU C/C++ Compiler ported for Windows NT - 64 bits only"
+#	define LIBRAPID_COMPILER "Mingw or GNU C/C++ Compiler ported for Windows NT - 64 bits only"
 #endif
 
 #if defined(__GFORTRAN__)
@@ -198,8 +194,7 @@
 
 #if defined(__BIONIC__)
 #	define LIBRAPID_BIONIC
-#	define LIBRAPID_STL                                                       \
-		"Bionic LibC runtime. (Android's C-library modified from BSD)"
+#	define LIBRAPID_STL "Bionic LibC runtime. (Android's C-library modified from BSD)"
 #endif
 
 // Check for 32bit vs 64bit
@@ -276,26 +271,23 @@
 #endif
 
 #if defined(FILENAME)
-#	warning                                                                    \
+#	warning                                                                                        \
 	  "The macro 'FILENAME' is already defined. LibRapid's logging system might not function correctly as a result"
 #else
 #	ifdef LIBRAPID_OS_WINDOWS
-#		define FILENAME                                                       \
-			(strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#		define FILENAME (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 #	else
-#		define FILENAME                                                       \
-			(strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#		define FILENAME (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 #	endif
 #endif
 
 #if defined(FUNCTION)
-#	warning                                                                    \
+#	warning                                                                                        \
 	  "The macro 'FUNCTION' is already defined. LibRapid's logging system might not function correctly as a result"
 #else
 #	if defined(LIBRAPID_MSVC_CXX)
 #		define FUNCTION __FUNCSIG__
-#	elif defined(LIBRAPID_GNU_CXX) || defined(LIBRAPID_CLANG_CXX) ||          \
-	  defined(LIBRAPID_CLING_CXX)
+#	elif defined(LIBRAPID_GNU_CXX) || defined(LIBRAPID_CLANG_CXX) || defined(LIBRAPID_CLING_CXX)
 #		define FUNCTION __PRETTY_FUNCTION__
 #	else
 #		define FUNCTION "Function Signature Unknown"
@@ -312,9 +304,8 @@
 
 #	if defined(LIBRAPID_MSVC_CXX)
 #		define LR_FORCE_INLINE __forceinline
-#	elif defined(LIBRAPID_GNU_CXX) || defined(LIBRAPID_CLANG_CXX) ||          \
-	  defined(LIBRAPID_INTEL_CXX) || defined(LIBRAPID_CLING_CXX) ||            \
-	  defined(LIBRAPID_MINGW_CXX)
+#	elif defined(LIBRAPID_GNU_CXX) || defined(LIBRAPID_CLANG_CXX) ||                              \
+	  defined(LIBRAPID_INTEL_CXX) || defined(LIBRAPID_CLING_CXX) || defined(LIBRAPID_MINGW_CXX)
 #		define LR_FORCE_INLINE inline __attribute__((always_inline))
 #	else
 #		define LR_FORCE_INLINE inline
@@ -352,52 +343,48 @@ namespace librapid::internal {
 
 #if defined(LIBRAPID_ASSERT) || defined(LIBRAPID_LOG) || defined(LIBRAPID_DEBUG)
 #	ifdef LIBRAPID_MSVC_CXX
-#		define LR_LOG_STATUS(msg, ...)                                        \
-			do {                                                               \
-				fmt::print(                                                    \
-				  "{} {}\n",                                                   \
-				  fmt::format(fmt::fg(fmt::color::green), "[STATUS]"),         \
-				  fmt::format(msg, __VA_ARGS__));                              \
+#		define LR_LOG_STATUS(msg, ...)                                                            \
+			do {                                                                                   \
+				fmt::print("{} {}\n",                                                              \
+						   fmt::format(fmt::fg(fmt::color::green), "[STATUS]"),                    \
+						   fmt::format(msg, __VA_ARGS__));                                         \
 			} while (0)
 
-#		define LR_LOG_WARN(msg, ...)                                          \
-			do {                                                               \
-				fmt::print(                                                    \
-				  "{} {}\n",                                                   \
-				  fmt::format(fmt::fg(fmt::color::yellow), "[WARNING]"),       \
-				  fmt::format(msg, __VA_ARGS__));                              \
+#		define LR_LOG_WARN(msg, ...)                                                              \
+			do {                                                                                   \
+				fmt::print("{} {}\n",                                                              \
+						   fmt::format(fmt::fg(fmt::color::yellow), "[WARNING]"),                  \
+						   fmt::format(msg, __VA_ARGS__));                                         \
 			} while (0)
 
-#		define LR_LOG_ERROR(msg, ...)                                         \
-			do {                                                               \
-				fmt::print("{} {}\n",                                          \
-						   fmt::format(fmt::fg(fmt::color::red), "[ERROR]"),   \
-						   fmt::format(msg, __VA_ARGS__));                     \
-				std::exit(1);                                                  \
+#		define LR_LOG_ERROR(msg, ...)                                                             \
+			do {                                                                                   \
+				fmt::print("{} {}\n",                                                              \
+						   fmt::format(fmt::fg(fmt::color::red), "[ERROR]"),                       \
+						   fmt::format(msg, __VA_ARGS__));                                         \
+				std::exit(1);                                                                      \
 			} while (0)
 #	else
-#		define LR_LOG_STATUS(msg, ...)                                        \
-			do {                                                               \
-				fmt::print(                                                    \
-				  "{} {}\n",                                                   \
-				  fmt::format(fmt::fg(fmt::color::green), "[STATUS]"),         \
-				  fmt::format(msg __VA_OPT__(, ) __VA_ARGS__));                \
+#		define LR_LOG_STATUS(msg, ...)                                                            \
+			do {                                                                                   \
+				fmt::print("{} {}\n",                                                              \
+						   fmt::format(fmt::fg(fmt::color::green), "[STATUS]"),                    \
+						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__));                           \
 			} while (0)
 
-#		define LR_LOG_WARN(msg, ...)                                          \
-			do {                                                               \
-				fmt::print(                                                    \
-				  "{} {}\n",                                                   \
-				  fmt::format(fmt::fg(fmt::color::yellow), "[WARNING]"),       \
-				  fmt::format(msg __VA_OPT__(, ) __VA_ARGS__));                \
+#		define LR_LOG_WARN(msg, ...)                                                              \
+			do {                                                                                   \
+				fmt::print("{} {}\n",                                                              \
+						   fmt::format(fmt::fg(fmt::color::yellow), "[WARNING]"),                  \
+						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__));                           \
 			} while (0)
 
-#		define LR_LOG_ERROR(msg, ...)                                         \
-			do {                                                               \
-				fmt::print("{} {}\n",                                          \
-						   fmt::format(fmt::fg(fmt::color::red), "[ERROR]"),   \
-						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__));       \
-				std::exit(1);                                                  \
+#		define LR_LOG_ERROR(msg, ...)                                                             \
+			do {                                                                                   \
+				fmt::print("{} {}\n",                                                              \
+						   fmt::format(fmt::fg(fmt::color::red), "[ERROR]"),                       \
+						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__));                           \
+				std::exit(1);                                                                      \
 			} while (0)
 #	endif // LIBRAPID_MSVC_CXX
 #else
@@ -429,328 +416,328 @@ namespace librapid::internal {
 #if defined(LIBRAPID_ASSERT)
 
 #	ifdef LIBRAPID_MSVC_CXX
-#		define LR_STATUS(msg, ...)                                            \
-			do {                                                               \
-				int maxLen = librapid::internal::smallMax_internal(            \
-				  (int)std::ceil(std::log(__LINE__)) + 6,                      \
-				  (int)strlen(FILENAME) + 6,                                   \
-				  (int)strlen(FUNCTION) + 6,                                   \
-				  (int)strlen("WARN ASSERTION FAILED"));                       \
-				fmt::print(fmt::fg(fmt::color::green),                         \
-						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "          \
-						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                \
-						   "STATUS",                                           \
-						   FILENAME,                                           \
-						   FUNCTION,                                           \
-						   __LINE__,                                           \
-						   fmt::format(msg, __VA_ARGS__),                      \
-						   maxLen + 5,                                         \
-						   maxLen + 0,                                         \
-						   maxLen - 4,                                         \
-						   maxLen);                                            \
+#		define LR_STATUS(msg, ...)                                                                \
+			do {                                                                                   \
+				int maxLen =                                                                       \
+				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)) + 6,    \
+														(int)strlen(FILENAME) + 6,                 \
+														(int)strlen(FUNCTION) + 6,                 \
+														(int)strlen("WARN ASSERTION FAILED"));     \
+				fmt::print(fmt::fg(fmt::color::green),                                             \
+						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                              \
+						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                    \
+						   "STATUS",                                                               \
+						   FILENAME,                                                               \
+						   FUNCTION,                                                               \
+						   __LINE__,                                                               \
+						   fmt::format(msg, __VA_ARGS__),                                          \
+						   maxLen + 5,                                                             \
+						   maxLen + 0,                                                             \
+						   maxLen - 4,                                                             \
+						   maxLen);                                                                \
 			} while (0)
 
-#		define LR_WARN(msg, ...)                                              \
-			do {                                                               \
-				int maxLen = librapid::internal::smallMax_internal(            \
-				  (int)std::ceil(std::log(__LINE__)) + 6,                      \
-				  (int)strlen(FILENAME) + 6,                                   \
-				  (int)strlen(FUNCTION) + 6,                                   \
-				  (int)strlen("WARN ASSERTION FAILED"));                       \
-				fmt::print(fmt::fg(fmt::color::yellow),                        \
-						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "          \
-						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                \
-						   "WARNING",                                          \
-						   FILENAME,                                           \
-						   FUNCTION,                                           \
-						   __LINE__,                                           \
-						   fmt::format(msg, __VA_ARGS__),                      \
-						   maxLen + 5,                                         \
-						   maxLen + 0,                                         \
-						   maxLen - 4,                                         \
-						   maxLen);                                            \
+#		define LR_WARN(msg, ...)                                                                  \
+			do {                                                                                   \
+				int maxLen =                                                                       \
+				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)) + 6,    \
+														(int)strlen(FILENAME) + 6,                 \
+														(int)strlen(FUNCTION) + 6,                 \
+														(int)strlen("WARN ASSERTION FAILED"));     \
+				fmt::print(fmt::fg(fmt::color::yellow),                                            \
+						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                              \
+						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                    \
+						   "WARNING",                                                              \
+						   FILENAME,                                                               \
+						   FUNCTION,                                                               \
+						   __LINE__,                                                               \
+						   fmt::format(msg, __VA_ARGS__),                                          \
+						   maxLen + 5,                                                             \
+						   maxLen + 0,                                                             \
+						   maxLen - 4,                                                             \
+						   maxLen);                                                                \
 			} while (0)
 
-#		define LR_ERROR(msg, ...)                                             \
-			do {                                                               \
-				int maxLen = librapid::internal::smallMax_internal(            \
-				  (int)std::ceil(std::log(__LINE__)) + 6,                      \
-				  (int)strlen(FILENAME) + 6,                                   \
-				  (int)strlen(FUNCTION) + 6,                                   \
-				  (int)strlen("WARN ASSERTION FAILED"));                       \
-				fmt::print(fmt::fg(fmt::color::red),                           \
-						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "          \
-						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                \
-						   "ERROR",                                            \
-						   FILENAME,                                           \
-						   FUNCTION,                                           \
-						   __LINE__,                                           \
-						   fmt::format(msg, __VA_ARGS__),                      \
-						   maxLen + 5,                                         \
-						   maxLen + 0,                                         \
-						   maxLen - 4,                                         \
-						   maxLen);                                            \
-				std::exit(1);                                                  \
+#		define LR_ERROR(msg, ...)                                                                 \
+			do {                                                                                   \
+				int maxLen =                                                                       \
+				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)) + 6,    \
+														(int)strlen(FILENAME) + 6,                 \
+														(int)strlen(FUNCTION) + 6,                 \
+														(int)strlen("WARN ASSERTION FAILED"));     \
+				fmt::print(fmt::fg(fmt::color::red),                                               \
+						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                              \
+						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                    \
+						   "ERROR",                                                                \
+						   FILENAME,                                                               \
+						   FUNCTION,                                                               \
+						   __LINE__,                                                               \
+						   fmt::format(msg, __VA_ARGS__),                                          \
+						   maxLen + 5,                                                             \
+						   maxLen + 0,                                                             \
+						   maxLen - 4,                                                             \
+						   maxLen);                                                                \
+				std::exit(1);                                                                      \
 			} while (0)
 
-#		define LR_WASSERT(cond, msg, ...)                                     \
-			do {                                                               \
-				if (!(cond)) {                                                 \
-					int maxLen = librapid::internal::smallMax_internal(        \
-					  (int)std::ceil(std::log(__LINE__)) + 6,                  \
-					  (int)strlen(FILENAME) + 6,                               \
-					  (int)strlen(FUNCTION) + 6,                               \
-					  (int)strlen(#cond) + 6,                                  \
-					  (int)strlen("WARN ASSERTION FAILED"));                   \
-					fmt::print(fmt::fg(fmt::color::yellow),                    \
-							   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "      \
-							   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "       \
-							   "{4:>{10}}]\n{5}\n",                            \
-							   "WARN ASSERTION FAILED",                        \
-							   FILENAME,                                       \
-							   FUNCTION,                                       \
-							   __LINE__,                                       \
-							   #cond,                                          \
-							   fmt::format(msg, __VA_ARGS__),                  \
-							   maxLen + 5,                                     \
-							   maxLen + 0,                                     \
-							   maxLen - 4,                                     \
-							   maxLen + 0,                                     \
-							   maxLen - 5);                                    \
-				}                                                              \
+#		define LR_WASSERT(cond, msg, ...)                                                         \
+			do {                                                                                   \
+				if (!(cond)) {                                                                     \
+					int maxLen = librapid::internal::smallMax_internal(                            \
+					  (int)std::ceil(std::log(__LINE__)) + 6,                                      \
+					  (int)strlen(FILENAME) + 6,                                                   \
+					  (int)strlen(FUNCTION) + 6,                                                   \
+					  (int)strlen(#cond) + 6,                                                      \
+					  (int)strlen("WARN ASSERTION FAILED"));                                       \
+					fmt::print(fmt::fg(fmt::color::yellow),                                        \
+							   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                          \
+							   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                           \
+							   "{4:>{10}}]\n{5}\n",                                                \
+							   "WARN ASSERTION FAILED",                                            \
+							   FILENAME,                                                           \
+							   FUNCTION,                                                           \
+							   __LINE__,                                                           \
+							   #cond,                                                              \
+							   fmt::format(msg, __VA_ARGS__),                                      \
+							   maxLen + 5,                                                         \
+							   maxLen + 0,                                                         \
+							   maxLen - 4,                                                         \
+							   maxLen + 0,                                                         \
+							   maxLen - 5);                                                        \
+				}                                                                                  \
 			} while (0)
 
-#		define LR_ASSERT(cond, msg, ...)                                      \
-			do {                                                               \
-				if (!(cond)) {                                                 \
-					int maxLen = librapid::internal::smallMax_internal(        \
-					  (int)std::ceil(std::log(__LINE__)),                      \
-					  (int)strlen(FILENAME),                                   \
-					  (int)strlen(FUNCTION),                                   \
-					  (int)strlen(#cond),                                      \
-					  (int)strlen("ASSERTION FAILED"));                        \
-					fmt::print(fmt::fg(fmt::color::red),                       \
-							   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "      \
-							   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "       \
-							   "{4:>{10}}]\n{5}\n",                            \
-							   "ASSERTION FAILED",                             \
-							   FILENAME,                                       \
-							   FUNCTION,                                       \
-							   __LINE__,                                       \
-							   #cond,                                          \
-							   fmt::format(msg, __VA_ARGS__),                  \
-							   maxLen + 14,                                    \
-							   maxLen + 9,                                     \
-							   maxLen + 5,                                     \
-							   maxLen + 9,                                     \
-							   maxLen + 4);                                    \
-					std::exit(1);                                              \
-				}                                                              \
+#		define LR_ASSERT(cond, msg, ...)                                                          \
+			do {                                                                                   \
+				if (!(cond)) {                                                                     \
+					int maxLen =                                                                   \
+					  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)),    \
+															(int)strlen(FILENAME),                 \
+															(int)strlen(FUNCTION),                 \
+															(int)strlen(#cond),                    \
+															(int)strlen("ASSERTION FAILED"));      \
+					fmt::print(fmt::fg(fmt::color::red),                                           \
+							   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                          \
+							   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                           \
+							   "{4:>{10}}]\n{5}\n",                                                \
+							   "ASSERTION FAILED",                                                 \
+							   FILENAME,                                                           \
+							   FUNCTION,                                                           \
+							   __LINE__,                                                           \
+							   #cond,                                                              \
+							   fmt::format(msg, __VA_ARGS__),                                      \
+							   maxLen + 14,                                                        \
+							   maxLen + 9,                                                         \
+							   maxLen + 5,                                                         \
+							   maxLen + 9,                                                         \
+							   maxLen + 4);                                                        \
+					std::exit(1);                                                                  \
+				}                                                                                  \
 			} while (0)
 #	else
-#		define LR_STATUS(msg, ...)                                            \
-			do {                                                               \
-				int maxLen = librapid::internal::smallMax_internal(            \
-				  (int)std::ceil(std::log(__LINE__)) + 6,                      \
-				  (int)strlen(FILENAME) + 6,                                   \
-				  (int)strlen(FUNCTION) + 6,                                   \
-				  (int)strlen("WARN ASSERTION FAILED"));                       \
-				fmt::print(fmt::fg(fmt::color::green),                         \
-						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "          \
-						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                \
-						   "STATUS",                                           \
-						   FILENAME,                                           \
-						   FUNCTION,                                           \
-						   __LINE__,                                           \
-						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),        \
-						   maxLen + 5,                                         \
-						   maxLen + 0,                                         \
-						   maxLen - 4,                                         \
-						   maxLen);                                            \
+#		define LR_STATUS(msg, ...)                                                                \
+			do {                                                                                   \
+				int maxLen =                                                                       \
+				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)) + 6,    \
+														(int)strlen(FILENAME) + 6,                 \
+														(int)strlen(FUNCTION) + 6,                 \
+														(int)strlen("WARN ASSERTION FAILED"));     \
+				fmt::print(fmt::fg(fmt::color::green),                                             \
+						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                              \
+						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                    \
+						   "STATUS",                                                               \
+						   FILENAME,                                                               \
+						   FUNCTION,                                                               \
+						   __LINE__,                                                               \
+						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                            \
+						   maxLen + 5,                                                             \
+						   maxLen + 0,                                                             \
+						   maxLen - 4,                                                             \
+						   maxLen);                                                                \
 			} while (0)
 
-#		define LR_WARN(msg, ...)                                              \
-			do {                                                               \
-				int maxLen = librapid::internal::smallMax_internal(            \
-				  (int)std::ceil(std::log(__LINE__)) + 6,                      \
-				  (int)strlen(FILENAME) + 6,                                   \
-				  (int)strlen(FUNCTION) + 6,                                   \
-				  (int)strlen("WARN ASSERTION FAILED"));                       \
-				fmt::print(fmt::fg(fmt::color::yellow),                        \
-						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "          \
-						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                \
-						   "WARNING",                                          \
-						   FILENAME,                                           \
-						   FUNCTION,                                           \
-						   __LINE__,                                           \
-						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),        \
-						   maxLen + 5,                                         \
-						   maxLen + 0,                                         \
-						   maxLen - 4,                                         \
-						   maxLen);                                            \
+#		define LR_WARN(msg, ...)                                                                  \
+			do {                                                                                   \
+				int maxLen =                                                                       \
+				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)) + 6,    \
+														(int)strlen(FILENAME) + 6,                 \
+														(int)strlen(FUNCTION) + 6,                 \
+														(int)strlen("WARN ASSERTION FAILED"));     \
+				fmt::print(fmt::fg(fmt::color::yellow),                                            \
+						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                              \
+						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                    \
+						   "WARNING",                                                              \
+						   FILENAME,                                                               \
+						   FUNCTION,                                                               \
+						   __LINE__,                                                               \
+						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                            \
+						   maxLen + 5,                                                             \
+						   maxLen + 0,                                                             \
+						   maxLen - 4,                                                             \
+						   maxLen);                                                                \
 			} while (0)
 
-#		define LR_ERROR(msg, ...)                                             \
-			do {                                                               \
-				int maxLen = librapiod::internal::smallMax_internal(           \
-				  (int)std::ceil(std::log(__LINE__)) + 6,                      \
-				  (int)strlen(FILENAME) + 6,                                   \
-				  (int)strlen(FUNCTION) + 6,                                   \
-				  (int)strlen("WARN ASSERTION FAILED"));                       \
-				fmt::print(fmt::fg(fmt::color::red),                           \
-						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "          \
-						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                \
-						   "ERROR",                                            \
-						   FILENAME,                                           \
-						   FUNCTION,                                           \
-						   __LINE__,                                           \
-						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),        \
-						   maxLen + 5,                                         \
-						   maxLen + 0,                                         \
-						   maxLen - 4,                                         \
-						   maxLen);                                            \
-				std::exit(1);                                                  \
+#		define LR_ERROR(msg, ...)                                                                 \
+			do {                                                                                   \
+				int maxLen =                                                                       \
+				  librapiod::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)) + 6,   \
+														 (int)strlen(FILENAME) + 6,                \
+														 (int)strlen(FUNCTION) + 6,                \
+														 (int)strlen("WARN ASSERTION FAILED"));    \
+				fmt::print(fmt::fg(fmt::color::red),                                               \
+						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                              \
+						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                    \
+						   "ERROR",                                                                \
+						   FILENAME,                                                               \
+						   FUNCTION,                                                               \
+						   __LINE__,                                                               \
+						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                            \
+						   maxLen + 5,                                                             \
+						   maxLen + 0,                                                             \
+						   maxLen - 4,                                                             \
+						   maxLen);                                                                \
+				std::exit(1);                                                                      \
 			} while (0)
 
-#		define LR_WASSERT(cond, msg, ...)                                     \
-			do {                                                               \
-				if (!(cond)) {                                                 \
-					int maxLen = librapid::internal::smallMax_internal(        \
-					  (int)std::ceil(std::log(__LINE__)) + 6,                  \
-					  (int)strlen(FILENAME) + 6,                               \
-					  (int)strlen(FUNCTION) + 6,                               \
-					  (int)strlen(#cond) + 6,                                  \
-					  (int)strlen("WARN ASSERTION FAILED"));                   \
-					fmt::print(fmt::fg(fmt::color::yellow),                    \
-							   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "      \
-							   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "       \
-							   "{4:>{10}}]\n{5}\n",                            \
-							   "WARN ASSERTION FAILED",                        \
-							   FILENAME,                                       \
-							   FUNCTION,                                       \
-							   __LINE__,                                       \
-							   #cond,                                          \
-							   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),    \
-							   maxLen + 5,                                     \
-							   maxLen + 0,                                     \
-							   maxLen - 4,                                     \
-							   maxLen + 0,                                     \
-							   maxLen - 5);                                    \
-				}                                                              \
+#		define LR_WASSERT(cond, msg, ...)                                                         \
+			do {                                                                                   \
+				if (!(cond)) {                                                                     \
+					int maxLen = librapid::internal::smallMax_internal(                            \
+					  (int)std::ceil(std::log(__LINE__)) + 6,                                      \
+					  (int)strlen(FILENAME) + 6,                                                   \
+					  (int)strlen(FUNCTION) + 6,                                                   \
+					  (int)strlen(#cond) + 6,                                                      \
+					  (int)strlen("WARN ASSERTION FAILED"));                                       \
+					fmt::print(fmt::fg(fmt::color::yellow),                                        \
+							   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                          \
+							   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                           \
+							   "{4:>{10}}]\n{5}\n",                                                \
+							   "WARN ASSERTION FAILED",                                            \
+							   FILENAME,                                                           \
+							   FUNCTION,                                                           \
+							   __LINE__,                                                           \
+							   #cond,                                                              \
+							   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                        \
+							   maxLen + 5,                                                         \
+							   maxLen + 0,                                                         \
+							   maxLen - 4,                                                         \
+							   maxLen + 0,                                                         \
+							   maxLen - 5);                                                        \
+				}                                                                                  \
 			} while (0)
 
-#		define LR_ASSERT(cond, msg, ...)                                      \
-			do {                                                               \
-				if (!(cond)) {                                                 \
-					int maxLen = librapid::internal::smallMax_internal(        \
-					  (int)std::ceil(std::log(__LINE__)),                      \
-					  (int)strlen(FILENAME),                                   \
-					  (int)strlen(FUNCTION),                                   \
-					  (int)strlen(#cond),                                      \
-					  (int)strlen("ASSERTION FAILED"));                        \
-					fmt::print(fmt::fg(fmt::color::red),                       \
-							   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "      \
-							   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "       \
-							   "{4:>{10}}]\n{5}\n",                            \
-							   "ASSERTION FAILED",                             \
-							   FILENAME,                                       \
-							   FUNCTION,                                       \
-							   __LINE__,                                       \
-							   #cond,                                          \
-							   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),    \
-							   maxLen + 14,                                    \
-							   maxLen + 9,                                     \
-							   maxLen + 5,                                     \
-							   maxLen + 9,                                     \
-							   maxLen + 4);                                    \
-					std::exit(1);                                              \
-				}                                                              \
+#		define LR_ASSERT(cond, msg, ...)                                                          \
+			do {                                                                                   \
+				if (!(cond)) {                                                                     \
+					int maxLen =                                                                   \
+					  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)),    \
+															(int)strlen(FILENAME),                 \
+															(int)strlen(FUNCTION),                 \
+															(int)strlen(#cond),                    \
+															(int)strlen("ASSERTION FAILED"));      \
+					fmt::print(fmt::fg(fmt::color::red),                                           \
+							   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                          \
+							   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                           \
+							   "{4:>{10}}]\n{5}\n",                                                \
+							   "ASSERTION FAILED",                                                 \
+							   FILENAME,                                                           \
+							   FUNCTION,                                                           \
+							   __LINE__,                                                           \
+							   #cond,                                                              \
+							   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                        \
+							   maxLen + 14,                                                        \
+							   maxLen + 9,                                                         \
+							   maxLen + 5,                                                         \
+							   maxLen + 9,                                                         \
+							   maxLen + 4);                                                        \
+					std::exit(1);                                                                  \
+				}                                                                                  \
 			} while (0)
 #	endif // LIBRAPID_MSVC_CXX
 #else
-#	define LR_STATUS(msg, ...)                                                \
-		do {                                                                   \
+#	define LR_STATUS(msg, ...)                                                                    \
+		do {                                                                                       \
 		} while (0)
-#	define LR_WARN(msg, ...)                                                  \
-		do {                                                                   \
+#	define LR_WARN(msg, ...)                                                                      \
+		do {                                                                                       \
 		} while (0)
-#	define LR_ERROR(msg, ...)                                                 \
-		do {                                                                   \
+#	define LR_ERROR(msg, ...)                                                                     \
+		do {                                                                                       \
 		} while (0)
-#	define LR_LOG(msg, ...)                                                   \
-		do {                                                                   \
+#	define LR_LOG(msg, ...)                                                                       \
+		do {                                                                                       \
 		} while (0)
-#	define LR_WASSERT(cond, ...)                                              \
-		do {                                                                   \
+#	define LR_WASSERT(cond, ...)                                                                  \
+		do {                                                                                       \
 		} while (0)
-#	define LR_ASSERT(cond, ...)                                               \
-		do {                                                                   \
+#	define LR_ASSERT(cond, ...)                                                                   \
+		do {                                                                                       \
 		} while (0)
 #endif
 
 #if defined(LIBRAPID_MSVC_CXX)
-#	define LR_ASSERT_ALWAYS(cond, msg, ...)                                   \
-		do {                                                                   \
-			if (!(cond)) {                                                     \
-				int maxLen = librapid::internal::smallMax_internal(            \
-				  (int)std::ceil(std::log(__LINE__)),                          \
-				  (int)strlen(FILENAME),                                       \
-				  (int)strlen(FUNCTION),                                       \
-				  (int)strlen(#cond),                                          \
-				  (int)strlen("ASSERTION FAILED"));                            \
-				fmt::print(fmt::fg(fmt::color::red),                           \
-						   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "          \
-						   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "           \
-						   "{4:>{10}}]\n{5}\n",                                \
-						   "ASSERTION FAILED",                                 \
-						   FILENAME,                                           \
-						   FUNCTION,                                           \
-						   __LINE__,                                           \
-						   #cond,                                              \
-						   fmt::format(msg, __VA_ARGS__),                      \
-						   maxLen + 14,                                        \
-						   maxLen + 9,                                         \
-						   maxLen + 5,                                         \
-						   maxLen + 9,                                         \
-						   maxLen + 4);                                        \
-				std::exit(1);                                                  \
-			}                                                                  \
+#	define LR_ASSERT_ALWAYS(cond, msg, ...)                                                       \
+		do {                                                                                       \
+			if (!(cond)) {                                                                         \
+				int maxLen =                                                                       \
+				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)),        \
+														(int)strlen(FILENAME),                     \
+														(int)strlen(FUNCTION),                     \
+														(int)strlen(#cond),                        \
+														(int)strlen("ASSERTION FAILED"));          \
+				fmt::print(fmt::fg(fmt::color::red),                                               \
+						   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                              \
+						   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                               \
+						   "{4:>{10}}]\n{5}\n",                                                    \
+						   "ASSERTION FAILED",                                                     \
+						   FILENAME,                                                               \
+						   FUNCTION,                                                               \
+						   __LINE__,                                                               \
+						   #cond,                                                                  \
+						   fmt::format(msg, __VA_ARGS__),                                          \
+						   maxLen + 14,                                                            \
+						   maxLen + 9,                                                             \
+						   maxLen + 5,                                                             \
+						   maxLen + 9,                                                             \
+						   maxLen + 4);                                                            \
+				std::exit(1);                                                                      \
+			}                                                                                      \
 		} while (0)
 #else
-#	define LR_ASSERT(cond, msg, ...)                                          \
-		do {                                                                   \
-			if (!(cond)) {                                                     \
-				int maxLen = librapid::internal::smallMax_internal(            \
-				  (int)std::ceil(std::log(__LINE__)),                          \
-				  (int)strlen(FILENAME),                                       \
-				  (int)strlen(FUNCTION),                                       \
-				  (int)strlen(#cond),                                          \
-				  (int)strlen("ASSERTION FAILED"));                            \
-				fmt::print(fmt::fg(fmt::color::red),                           \
-						   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "          \
-						   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "           \
-						   "{4:>{10}}]\n{5}\n",                                \
-						   "ASSERTION FAILED",                                 \
-						   FILENAME,                                           \
-						   FUNCTION,                                           \
-						   __LINE__,                                           \
-						   #cond,                                              \
-						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),        \
-						   maxLen + 14,                                        \
-						   maxLen + 9,                                         \
-						   maxLen + 5,                                         \
-						   maxLen + 9,                                         \
-						   maxLen + 4);                                        \
-				std::exit(1);                                                  \
-			}                                                                  \
+#	define LR_ASSERT(cond, msg, ...)                                                              \
+		do {                                                                                       \
+			if (!(cond)) {                                                                         \
+				int maxLen =                                                                       \
+				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)),        \
+														(int)strlen(FILENAME),                     \
+														(int)strlen(FUNCTION),                     \
+														(int)strlen(#cond),                        \
+														(int)strlen("ASSERTION FAILED"));          \
+				fmt::print(fmt::fg(fmt::color::red),                                               \
+						   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                              \
+						   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                               \
+						   "{4:>{10}}]\n{5}\n",                                                    \
+						   "ASSERTION FAILED",                                                     \
+						   FILENAME,                                                               \
+						   FUNCTION,                                                               \
+						   __LINE__,                                                               \
+						   #cond,                                                                  \
+						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                            \
+						   maxLen + 14,                                                            \
+						   maxLen + 9,                                                             \
+						   maxLen + 5,                                                             \
+						   maxLen + 9,                                                             \
+						   maxLen + 4);                                                            \
+				std::exit(1);                                                                      \
+			}                                                                                      \
 		} while (0)
 #endif
 
 #if defined(LIBRAPID_TRACEBACK)
 #	define LR_TRACE LR_STATUS("LIBRAPID TRACEBACK")
 #else
-#	define LR_TRACE                                                           \
-		do {                                                                   \
+#	define LR_TRACE                                                                               \
+		do {                                                                                       \
 		} while (0)
 #endif
 
@@ -775,16 +762,13 @@ namespace librapid::internal {
 static const char *getCublasErrorEnum_(cublasStatus_t error) {
 	switch (error) {
 		case CUBLAS_STATUS_SUCCESS: return "CUBLAS_STATUS_SUCCESS";
-		case CUBLAS_STATUS_NOT_INITIALIZED:
-			return "CUBLAS_STATUS_NOT_INITIALIZED";
+		case CUBLAS_STATUS_NOT_INITIALIZED: return "CUBLAS_STATUS_NOT_INITIALIZED";
 		case CUBLAS_STATUS_ALLOC_FAILED: return "CUBLAS_STATUS_ALLOC_FAILED";
 		case CUBLAS_STATUS_INVALID_VALUE: return "CUBLAS_STATUS_INVALID_VALUE";
 		case CUBLAS_STATUS_ARCH_MISMATCH: return "CUBLAS_STATUS_ARCH_MISMATCH";
 		case CUBLAS_STATUS_MAPPING_ERROR: return "CUBLAS_STATUS_MAPPING_ERROR";
-		case CUBLAS_STATUS_EXECUTION_FAILED:
-			return "CUBLAS_STATUS_EXECUTION_FAILED";
-		case CUBLAS_STATUS_INTERNAL_ERROR:
-			return "CUBLAS_STATUS_INTERNAL_ERROR";
+		case CUBLAS_STATUS_EXECUTION_FAILED: return "CUBLAS_STATUS_EXECUTION_FAILED";
+		case CUBLAS_STATUS_INTERNAL_ERROR: return "CUBLAS_STATUS_INTERNAL_ERROR";
 		case CUBLAS_STATUS_NOT_SUPPORTED: return "CUBLAS_STATUS_NOT_SUPPORTED";
 		case CUBLAS_STATUS_LICENSE_ERROR: return "CUBLAS_STATUS_LICENSE_ERROR";
 	}
@@ -800,10 +784,9 @@ static const char *getCublasErrorEnum_(cublasStatus_t error) {
 // #	endif
 
 #	if !defined(cublasSafeCall)
-#		define cublasSafeCall(err)                                            \
-			LR_ASSERT_ALWAYS(err == CUBLAS_STATUS_SUCCESS,                     \
-							 "cuBLAS error: {}",                               \
-							 getCublasErrorEnum_(err))
+#		define cublasSafeCall(err)                                                                \
+			LR_ASSERT_ALWAYS(                                                                      \
+			  err == CUBLAS_STATUS_SUCCESS, "cuBLAS error: {}", getCublasErrorEnum_(err))
 #	endif
 
 // inline void cublasSafeCall_(cublasStatus_t err, const char *file,
@@ -830,20 +813,18 @@ static const char *getCublasErrorEnum_(cublasStatus_t error) {
 //}
 
 #	if !defined(cudaSafeCall)
-#		define cudaSafeCall(err)                                              \
-			LR_ASSERT_ALWAYS(err == CUBLAS_STATUS_SUCCESS,                     \
-							 "CUDA error: {}",                                 \
-							 cudaGetErrorString(err))
+#		define cudaSafeCall(err)                                                                  \
+			LR_ASSERT_ALWAYS(                                                                      \
+			  err == CUBLAS_STATUS_SUCCESS, "CUDA error: {}", cudaGetErrorString(err))
 #	endif
 
-#	define jitifyCall(call)                                                   \
-		do {                                                                   \
-			if (call != CUDA_SUCCESS) {                                        \
-				const char *str;                                               \
-				cuGetErrorName(call, &str);                                    \
-				throw std::runtime_error(std::string("CUDA JIT failed: ") +    \
-										 str);                                 \
-			}                                                                  \
+#	define jitifyCall(call)                                                                       \
+		do {                                                                                       \
+			if (call != CUDA_SUCCESS) {                                                            \
+				const char *str;                                                                   \
+				cuGetErrorName(call, &str);                                                        \
+				throw std::runtime_error(std::string("CUDA JIT failed: ") + str);                  \
+			}                                                                                      \
 		} while (0)
 
 #	ifdef _MSC_VER

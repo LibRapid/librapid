@@ -42,12 +42,12 @@
 // Definition of the StopWatch Interface, this is used if we don't want to use
 // the CUT functions But rather in a self contained class interface
 class StopWatchInterface {
-  public:
+public:
 	StopWatchInterface() {}
 
 	virtual ~StopWatchInterface() {}
 
-  public:
+public:
 	//! Start time measurement
 	virtual void start() = 0;
 
@@ -81,11 +81,11 @@ class StopWatchInterface {
 
 //! Windows specific implementation of StopWatch
 class StopWatchWin : public StopWatchInterface {
-  public:
+public:
 	//! Constructor, default
 	StopWatchWin() :
-		start_time(), end_time(), diff_time(0.0f), total_time(0.0f),
-		running(false), clock_sessions(0), freq(0), freq_set(false) {
+			start_time(), end_time(), diff_time(0.0f), total_time(0.0f), running(false),
+			clock_sessions(0), freq(0), freq_set(false) {
 		if (!freq_set) {
 			// helper variable
 			LARGE_INTEGER temp;
@@ -104,7 +104,7 @@ class StopWatchWin : public StopWatchInterface {
 	// Destructor
 	~StopWatchWin() {}
 
-  public:
+public:
 	//! Start time measurement
 	inline void start();
 
@@ -123,7 +123,7 @@ class StopWatchWin : public StopWatchInterface {
 	//! _stopped_ (ie finished sessions) and the current total time
 	inline float getAverageTime();
 
-  private:
+private:
 	// member variables
 
 	//! Start of measurement
@@ -167,9 +167,8 @@ inline void StopWatchWin::start() {
 ////////////////////////////////////////////////////////////////////////////////
 inline void StopWatchWin::stop() {
 	QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER *>(&end_time));
-	diff_time = static_cast<float>(((static_cast<double>(end_time.QuadPart) -
-									 static_cast<double>(start_time.QuadPart)) /
-									freq));
+	diff_time = static_cast<float>(
+	  ((static_cast<double>(end_time.QuadPart) - static_cast<double>(start_time.QuadPart)) / freq));
 
 	total_time += diff_time;
 	clock_sessions++;
@@ -185,9 +184,7 @@ inline void StopWatchWin::reset() {
 	total_time	   = 0;
 	clock_sessions = 0;
 
-	if (running) {
-		QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER *>(&start_time));
-	}
+	if (running) { QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER *>(&start_time)); }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -203,10 +200,8 @@ inline float StopWatchWin::getTime() {
 	if (running) {
 		LARGE_INTEGER temp;
 		QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER *>(&temp));
-		retval +=
-		  static_cast<float>(((static_cast<double>(temp.QuadPart) -
-							   static_cast<double>(start_time.QuadPart)) /
-							  freq));
+		retval += static_cast<float>(
+		  ((static_cast<double>(temp.QuadPart) - static_cast<double>(start_time.QuadPart)) / freq));
 	}
 
 	return retval;
@@ -228,16 +223,15 @@ inline float StopWatchWin::getAverageTime() {
 
 //! Windows specific implementation of StopWatch
 class StopWatchLinux : public StopWatchInterface {
-  public:
+public:
 	//! Constructor, default
 	StopWatchLinux() :
-		start_time(), diff_time(0.0), total_time(0.0), running(false),
-		clock_sessions(0) {}
+			start_time(), diff_time(0.0), total_time(0.0), running(false), clock_sessions(0) {}
 
 	// Destructor
 	virtual ~StopWatchLinux() {}
 
-  public:
+public:
 	//! Start time measurement
 	inline void start();
 
@@ -256,13 +250,13 @@ class StopWatchLinux : public StopWatchInterface {
 	//! _stopped_ (ie finished sessions) and the current total time
 	inline float getAverageTime();
 
-  private:
+private:
 	// helper functions
 
 	//! Get difference between start time and current time
 	inline float getDiffTime();
 
-  private:
+private:
 	// member variables
 
 	//! Start of measurement
@@ -361,11 +355,9 @@ inline float StopWatchLinux::getDiffTime() {
 inline bool sdkCreateTimer(StopWatchInterface **timer_interface) {
 // printf("sdkCreateTimer called object %08x\n", (void *)*timer_interface);
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-	*timer_interface =
-	  reinterpret_cast<StopWatchInterface *>(new StopWatchWin());
+	*timer_interface = reinterpret_cast<StopWatchInterface *>(new StopWatchWin());
 #else
-	*timer_interface =
-	  reinterpret_cast<StopWatchInterface *>(new StopWatchLinux());
+	*timer_interface = reinterpret_cast<StopWatchInterface *>(new StopWatchLinux());
 #endif
 	return (*timer_interface != NULL) ? true : false;
 }

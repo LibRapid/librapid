@@ -45,8 +45,7 @@
 #		define STRNCASECMP _strnicmp
 #	endif
 #	ifndef STRCPY
-#		define STRCPY(sFilePath, nLength, sPath)                              \
-			strcpy_s(sFilePath, nLength, sPath)
+#		define STRCPY(sFilePath, nLength, sPath) strcpy_s(sFilePath, nLength, sPath)
 #	endif
 
 #	ifndef FOPEN
@@ -121,8 +120,7 @@ inline int getFileExtension(char *filename, char **extension) {
 	return string_length;
 }
 
-inline bool checkCmdLineFlag(const int argc, const char **argv,
-							 const char *string_ref) {
+inline bool checkCmdLineFlag(const int argc, const char **argv, const char *string_ref) {
 	bool bFound = false;
 
 	if (argc >= 1) {
@@ -131,13 +129,12 @@ inline bool checkCmdLineFlag(const int argc, const char **argv,
 			const char *string_argv = &argv[i][string_start];
 
 			const char *equal_pos = strchr(string_argv, '=');
-			int argv_length		  = static_cast<int>(
-				equal_pos == 0 ? strlen(string_argv) : equal_pos - string_argv);
+			int argv_length =
+			  static_cast<int>(equal_pos == 0 ? strlen(string_argv) : equal_pos - string_argv);
 
 			int length = static_cast<int>(strlen(string_ref));
 
-			if (length == argv_length &&
-				!STRNCASECMP(string_argv, string_ref, length)) {
+			if (length == argv_length && !STRNCASECMP(string_argv, string_ref, length)) {
 				bFound = true;
 				continue;
 			}
@@ -149,8 +146,8 @@ inline bool checkCmdLineFlag(const int argc, const char **argv,
 
 // This function wraps the CUDA Driver API into a template function
 template<class T>
-inline bool getCmdLineArgumentValue(const int argc, const char **argv,
-									const char *string_ref, T *value) {
+inline bool getCmdLineArgumentValue(const int argc, const char **argv, const char *string_ref,
+									T *value) {
 	bool bFound = false;
 
 	if (argc >= 1) {
@@ -174,8 +171,7 @@ inline bool getCmdLineArgumentValue(const int argc, const char **argv,
 	return bFound;
 }
 
-inline int getCmdLineArgumentInt(const int argc, const char **argv,
-								 const char *string_ref) {
+inline int getCmdLineArgumentInt(const int argc, const char **argv, const char *string_ref) {
 	bool bFound = false;
 	int value	= -1;
 
@@ -206,8 +202,7 @@ inline int getCmdLineArgumentInt(const int argc, const char **argv,
 	}
 }
 
-inline float getCmdLineArgumentFloat(const int argc, const char **argv,
-									 const char *string_ref) {
+inline float getCmdLineArgumentFloat(const int argc, const char **argv, const char *string_ref) {
 	bool bFound = false;
 	float value = -1;
 
@@ -220,8 +215,7 @@ inline float getCmdLineArgumentFloat(const int argc, const char **argv,
 			if (!STRNCASECMP(string_argv, string_ref, length)) {
 				if (length + 1 <= static_cast<int>(strlen(string_argv))) {
 					int auto_inc = (string_argv[length] == '=') ? 1 : 0;
-					value =
-					  static_cast<float>(atof(&string_argv[length + auto_inc]));
+					value		 = static_cast<float>(atof(&string_argv[length + auto_inc]));
 				} else {
 					value = 0.f;
 				}
@@ -239,8 +233,7 @@ inline float getCmdLineArgumentFloat(const int argc, const char **argv,
 	}
 }
 
-inline bool getCmdLineArgumentString(const int argc, const char **argv,
-									 const char *string_ref,
+inline bool getCmdLineArgumentString(const int argc, const char **argv, const char *string_ref,
 									 char **string_retval) {
 	bool bFound = false;
 
@@ -271,8 +264,7 @@ inline bool getCmdLineArgumentString(const int argc, const char **argv,
 //! @param filename         name of the file
 //! @param executable_path  optional absolute path of the executable
 //////////////////////////////////////////////////////////////////////////////
-inline char *sdkFindFilePath(const char *filename,
-							 const char *executable_path) {
+inline char *sdkFindFilePath(const char *filename, const char *executable_path) {
 	// <executable_name> defines a variable that is replaced with the name of
 	// the executable
 
@@ -326,9 +318,7 @@ inline char *sdkFindFilePath(const char *filename,
 		// replace it with the value
 		if (executable_name_pos != std::string::npos) {
 			if (executable_path != 0) {
-				path.replace(executable_name_pos,
-							 strlen("<executable_name>"),
-							 executable_name);
+				path.replace(executable_name_pos, strlen("<executable_name>"), executable_name);
 			} else {
 				// Skip this path entry if no executable argument is given
 				continue;
@@ -349,8 +339,7 @@ inline char *sdkFindFilePath(const char *filename,
 			// File found
 			// returning an allocated array here for backwards compatibility
 			// reasons
-			char *file_path =
-			  reinterpret_cast<char *>(malloc(path.length() + 1));
+			char *file_path = reinterpret_cast<char *>(malloc(path.length() + 1));
 			STRCPY(file_path, path.length() + 1, path.c_str());
 			return file_path;
 		}
