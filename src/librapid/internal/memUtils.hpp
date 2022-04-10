@@ -11,12 +11,10 @@ namespace librapid::memory {
 	template<typename T, typename d,
 			 typename std::enable_if_t<std::is_same_v<d, device::CPU>, int> = 0>
 	LR_NODISCARD("Do not leave a dangling pointer")
-	LR_FORCE_INLINE T *malloc(size_t num, size_t alignment = memAlign,
-							  bool zero = false) {
+	LR_FORCE_INLINE T *malloc(size_t num, size_t alignment = memAlign, bool zero = false) {
 		size_t size		   = sizeof(T) * num;
 		size_t requestSize = size + alignment;
-		auto *buf =
-		  (u_char *)(zero ? calloc(1, requestSize) : std::malloc(requestSize));
+		auto *buf		   = (u_char *)(zero ? calloc(1, requestSize) : std::malloc(requestSize));
 
 		LR_ASSERT(buf != nullptr,
 				  "Memory allocation failed. Cannot allocate {} items of size "
@@ -35,8 +33,7 @@ namespace librapid::memory {
 
 // Slightly altered traceback call to log u_chars being allocated
 #ifdef LIBRAPID_TRACEBACK
-		LR_STATUS(
-		  "LIBRAPID TRACEBACK -- MALLOC {} u_charS -> {}", size, (void *)buf);
+		LR_STATUS("LIBRAPID TRACEBACK -- MALLOC {} u_charS -> {}", size, (void *)buf);
 #endif
 
 		return (T *)ret;
@@ -55,9 +52,8 @@ namespace librapid::memory {
 
 	// Only supports copying between host pointers
 	template<typename T, typename d, typename T_, typename d_,
-			 typename std::enable_if_t<std::is_same_v<d, device::CPU> &&
-										 std::is_same_v<d_, device::CPU>,
-									   int> = 0>
+			 typename std::enable_if_t<
+			   std::is_same_v<d, device::CPU> && std::is_same_v<d_, device::CPU>, int> = 0>
 	LR_FORCE_INLINE void memcpy(T *dst, T_ *src, int64_t size) {
 		if constexpr (std::is_same_v<T, T_>) {
 			std::copy(src, src + size, dst);

@@ -85,10 +85,10 @@ int spawnProcess(Process *process, const char *app, char *const *args);
 
 int waitProcess(Process *process);
 
-#define checkIpcErrors(ipcFuncResult)                                          \
-	if (ipcFuncResult == -1) {                                                 \
-		fprintf(stderr, "Failure at %u %s\n", __LINE__, __FILE__);             \
-		exit(EXIT_FAILURE);                                                    \
+#define checkIpcErrors(ipcFuncResult)                                                              \
+	if (ipcFuncResult == -1) {                                                                     \
+		fprintf(stderr, "Failure at %u %s\n", __LINE__, __FILE__);                                 \
+		exit(EXIT_FAILURE);                                                                        \
 	}
 
 #if defined(__linux__)
@@ -109,19 +109,16 @@ typedef HANDLE ShareableHandle;
 
 typedef struct ipcHandle_st ipcHandle;
 
-int ipcCreateSocket(ipcHandle *&handle, const char *name,
-					const std::vector<Process> &processes);
+int ipcCreateSocket(ipcHandle *&handle, const char *name, const std::vector<Process> &processes);
 
 int ipcOpenSocket(ipcHandle *&handle);
 
 int ipcCloseSocket(ipcHandle *handle);
 
-int ipcRecvShareableHandles(ipcHandle *handle,
-							std::vector<ShareableHandle> &shareableHandles);
+int ipcRecvShareableHandles(ipcHandle *handle, std::vector<ShareableHandle> &shareableHandles);
 
-int ipcSendShareableHandles(
-  ipcHandle *handle, const std::vector<ShareableHandle> &shareableHandles,
-  const std::vector<Process> &processes);
+int ipcSendShareableHandles(ipcHandle *handle, const std::vector<ShareableHandle> &shareableHandles,
+							const std::vector<Process> &processes);
 
 int ipcCloseShareableHandle(ShareableHandle shHandle);
 
