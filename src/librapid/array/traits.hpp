@@ -3,7 +3,7 @@
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
 
-namespace librapid::packet {
+namespace librapid::internal {
 	//------- 8bit Signed Integer ---------------------------------------------
 	template<>
 	struct traits<int8_t> {
@@ -92,5 +92,12 @@ namespace librapid::packet {
 		using StorageType					 = memory::DenseStorage<double>;
 		using Packet						 = vcl::Vec8d;
 		static constexpr int64_t PacketWidth = 8;
+	};
+
+	template<typename LHS, typename RHS>
+	struct PropagateDeviceType {
+		using DeviceLHS = typename traits<LHS>::Device;
+		using DeviceRHS = typename traits<RHS>::Device;
+		using Device = typename memory::PromoteDevice<DeviceLHS, DeviceRHS>::type;
 	};
 } // namespace librapid::packet

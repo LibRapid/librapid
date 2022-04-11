@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <iostream>
 #include <atomic>
+#include <thread>
 
 #if defined(_OPENMP)
 #	include <omp.h>
@@ -840,3 +841,10 @@ namespace librapid::device {
 	struct CPU {};
 	struct GPU {};
 } // namespace librapid::device
+
+// User Config Variables
+
+// Prefer using the GPU over the CPU -- promote arrays to the GPU where possible
+#if !defined(LIBRAPID_PREFER_CPU)
+#	define LIBRAPID_PREFER_GPU
+#endif
