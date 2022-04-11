@@ -62,4 +62,35 @@ namespace librapid::memory {
 			for (int64_t i = 0; i < size; ++i) { dst[i] = src[i]; }
 		}
 	}
+
+	template<typename A, typename B>
+	struct PromoteDevice {};
+
+	template<>
+	struct PromoteDevice<device::CPU, device::CPU> {
+		using type = device::CPU;
+	};
+
+	template<>
+	struct PromoteDevice<device::CPU, device::GPU> {
+#if defined(LIBRAPID_PREFER_GPU)
+		using type = device::GPU;
+#else
+		using type = device::CPU;
+#endif
+	};
+
+	template<>
+	struct PromoteDevice<device::GPU, device::CPU> {
+#if defined(LIBRAPID_PREFER_GPU)
+		using type = device::GPU;
+#else
+		using type = device::CPU;
+#endif
+	};
+
+	template<>
+	struct PromoteDevice<device::GPU, device::GPU> {
+		using type = device::GPU;
+	};
 } // namespace librapid::memory

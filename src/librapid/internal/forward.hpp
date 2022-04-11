@@ -8,7 +8,7 @@ namespace librapid {
 		class DenseStorage;
 	}
 
-	namespace packet {
+	namespace internal {
 		template<typename T>
 		struct traits;
 	}
@@ -18,4 +18,9 @@ namespace librapid {
 
 	template<typename Derived, typename device>
 	class ArrayBase;
+
+	namespace binop {
+		template<typename Binop, typename Derived, typename OtherDerived>
+		class CWiseBinop;
+	}
 } // namespace librapid

@@ -7,9 +7,9 @@
 namespace librapid::memory {
 	template<typename T, typename d>
 	class DenseStorage {
+	public:
 		using Type = T;
 
-	public:
 		DenseStorage() = default;
 
 		explicit DenseStorage(int64_t size) : m_size(size), m_heap(memory::malloc<T, d>(size)) {
@@ -31,7 +31,10 @@ namespace librapid::memory {
 			memory::memcpy<T, T_, d, d_>(m_heap, other.m_heap, m_size);
 		}
 
-		~DenseStorage() { memory::free<T, d>(m_heap); }
+		~DenseStorage() {
+			if (!m_heap) return;
+			memory::free<T, d>(m_heap);
+		}
 
 		LR_NODISCARD("") T *heap() const { return m_heap; }
 
