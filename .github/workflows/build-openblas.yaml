@@ -65,7 +65,7 @@ jobs:
           cd OpenBLAS
           make install PREFIX=../src/librapid/openblas_install
       - name: Archive OpenBLAS Build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: OpenBLAS on ${{ matrix.platform }}
           path: src/librapid/openblas_install
@@ -147,7 +147,7 @@ jobs:
           dir src/librapid/openblas_install
           dir src/librapid/openblas_install/bin
       - name: Archive OpenBLAS Build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: OpenBLAS on windows-latest
           path: src/librapid/openblas_install
