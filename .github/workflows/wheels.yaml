@@ -84,7 +84,7 @@ jobs:
           python -m twine check wheelhouse/*
 
       - name: Archive LibRapid Source Distribution
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: LibRapid Source Distribution
           path: wheelhouse
@@ -194,7 +194,7 @@ jobs:
           twine check wheelhouse/*
 
       - name: Archive LibRapid Wheels
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: LibRapid Wheels on MacOS
           path: wheelhouse
@@ -305,7 +305,7 @@ jobs:
           twine check wheelhouse/*
 
       - name: Archive LibRapid Wheels
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: LibRapid Wheels on Linux
           path: wheelhouse
@@ -405,7 +405,7 @@ jobs:
           twine check wheelhouse/*
 
       - name: Archive LibRapid Wheels
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: LibRapid Wheels on Windows
           path: wheelhouse
