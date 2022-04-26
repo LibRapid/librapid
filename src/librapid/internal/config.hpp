@@ -705,7 +705,7 @@ namespace librapid::internal {
 			}                                                                                      \
 		} while (0)
 #else
-#	define LR_ASSERT(cond, msg, ...)                                                              \
+#	define LR_ASSERT_ALWAYS(cond, msg, ...)                                                       \
 		do {                                                                                       \
 			if (!(cond)) {                                                                         \
 				int maxLen =                                                                       \
@@ -843,6 +843,14 @@ namespace librapid::device {
 } // namespace librapid::device
 
 // User Config Variables
+
+namespace librapid {
+#ifdef LIBRAPID_HAS_OMP
+	inline static unsigned int numThreads = 8;
+#else
+	inline static unsigned int numThreads = 1;
+#endif
+} // namespace librapid
 
 // Prefer using the GPU over the CPU -- promote arrays to the GPU where possible
 #if !defined(LIBRAPID_PREFER_CPU)
