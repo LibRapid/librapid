@@ -18,22 +18,45 @@ namespace librapid::memory {
 #endif
 		}
 
-		DenseStorage(const DenseStorage<T, d> &other) {
-			m_size = other.m_size;
-			m_heap = memory::malloc<T, d>(m_size);
-			memory::memcpy<T, d>(m_heap, other.m_heap, m_size);
-		}
-
 		template<typename T_, typename d_>
 		explicit DenseStorage(const DenseStorage<T_, d_> &other) {
 			m_size = other.m_size;
 			m_heap = memory::malloc<T, d>(m_size);
+			LR_ASSERT(m_heap, "Memory Error -- malloc failed");
 			memory::memcpy<T, T_, d, d_>(m_heap, other.m_heap, m_size);
+		}
+
+		template<typename T_, typename d_>
+		DenseStorage &operator=(const DenseStorage<T_, d_> &other) {
+			if (this == &other) return *this;
+
+			m_size = other.m_size;
+			m_heap = memory::malloc<T, d>(m_size);
+			LR_ASSERT(m_heap, "Memory Error -- malloc failed");
+			memory::memcpy<T, T_, d, d_>(m_heap, other.m_heap, m_size);
+
+			return *this;
 		}
 
 		~DenseStorage() {
 			if (!m_heap) return;
 			memory::free<T, d>(m_heap);
+		}
+
+		T &operator[](int64_t index) const {
+			LR_ASSERT(index >= 0 && index < m_size,
+					  "Index {} is out of range for DenseStorage object with size {}",
+					  index,
+					  m_size);
+			return m_heap[index];
+		}
+
+		T &operator[](int64_t index) {
+			LR_ASSERT(index >= 0 && index < m_size,
+					  "Index {} is out of range for DenseStorage object with size {}",
+					  index,
+					  m_size);
+			return m_heap[index];
 		}
 
 		LR_NODISCARD("") T *heap() const { return m_heap; }

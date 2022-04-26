@@ -45,8 +45,8 @@ namespace librapid::internal {
 	struct traits<int32_t> {
 		using Scalar						 = int32_t;
 		using StorageType					 = memory::DenseStorage<int32_t>;
-		using Packet						 = vcl::Vec16s;
-		static constexpr int64_t PacketWidth = 16;
+		using Packet						 = vcl::Vec8i;
+		static constexpr int64_t PacketWidth = 8;
 	};
 
 	//------- 32bit Unsigned Integer ------------------------------------------
@@ -54,8 +54,8 @@ namespace librapid::internal {
 	struct traits<uint32_t> {
 		using Scalar						 = uint32_t;
 		using StorageType					 = memory::DenseStorage<uint32_t>;
-		using Packet						 = vcl::Vec16us;
-		static constexpr int64_t PacketWidth = 16;
+		using Packet						 = vcl::Vec8ui;
+		static constexpr int64_t PacketWidth = 4;
 	};
 
 	//------- 64bit Signed Integer --------------------------------------------
@@ -100,4 +100,14 @@ namespace librapid::internal {
 		using DeviceRHS = typename traits<RHS>::Device;
 		using Device = typename memory::PromoteDevice<DeviceLHS, DeviceRHS>::type;
 	};
-} // namespace librapid::packet
+
+	template<typename LHS, typename RHS>
+	struct ReturnType {
+		using LhsType = LHS;
+		using RhsType = RHS;
+		using RetType = typename std::common_type<LhsType, RhsType>::type;
+	};
+
+	template<typename T>
+	using stripQualifiers = typename std::remove_const_t<typename std::remove_reference_t<T>>;
+} // namespace librapid::internal

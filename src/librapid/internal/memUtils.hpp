@@ -6,7 +6,7 @@
 // https://gist.github.com/dblalock/255e76195676daa5cbc57b9b36d1c99a
 
 namespace librapid::memory {
-	constexpr uint64_t memAlign = 128;
+	constexpr uint64_t memAlign = 32;
 
 	template<typename T, typename d,
 			 typename std::enable_if_t<std::is_same_v<d, device::CPU>, int> = 0>
