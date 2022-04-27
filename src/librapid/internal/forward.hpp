@@ -19,6 +19,11 @@ namespace librapid {
 	template<typename Derived, typename device>
 	class ArrayBase;
 
+	namespace unary {
+		template<typename DST, typename OtherDerived>
+		class Cast;
+	}
+
 	namespace binop {
 		template<typename Binop, typename Derived, typename OtherDerived>
 		class CWiseBinop;

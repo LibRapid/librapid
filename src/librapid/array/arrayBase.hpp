@@ -5,6 +5,7 @@
 #include "helpers/extent.hpp"
 #include "traits.hpp"
 #include "functors/functors.hpp"
+#include "cast.hpp"
 
 namespace librapid {
 	namespace internal {
@@ -45,6 +46,14 @@ namespace librapid {
 			return assign(other);
 		}
 
+		template<typename T>
+		LR_NODISCARD("")
+		auto cast() const {
+			using ScalarType	= typename internal::traits<T>::Scalar;
+			using RetType	= unary::Cast<ScalarType, Derived>;
+			return RetType(derived());
+		}
+
 		template<typename OtherDerived, typename OtherDevice>
 		LR_NODISCARD("Do not ignore the result of an arithmetic operation")
 		auto operator+(const ArrayBase<OtherDerived, OtherDevice> &other) const {
@@ -73,11 +82,10 @@ namespace librapid {
 
 		template<typename OtherDerived>
 		LR_FORCE_INLINE Derived &assign(const OtherDerived &other) {
-			LR_ASSERT(
-			  m_extent == other.extent(),
-			  "Cannot perform operation on Arrays with {} and {}. Extents must be equal",
-			  m_extent.str(),
-			  other.extent().str());
+			LR_ASSERT(m_extent == other.extent(),
+					  "Cannot perform operation on Arrays with {} and {}. Extents must be equal",
+					  m_extent.str(),
+					  other.extent().str());
 
 			using Selector = functors::AssignSelector<Derived, OtherDerived, false>;
 			return Selector::run(derived(), other.derived());
@@ -85,11 +93,10 @@ namespace librapid {
 
 		template<typename OtherDerived>
 		LR_FORCE_INLINE Derived &assignLazy(const OtherDerived &other) {
-			LR_ASSERT(
-			  m_extent == other.extent(),
-			  "Cannot perform operation on Arrays with {} and {}. Extents must be equal",
-			  m_extent.str(),
-			  other.extent().str());
+			LR_ASSERT(m_extent == other.extent(),
+					  "Cannot perform operation on Arrays with {} and {}. Extents must be equal",
+					  m_extent.str(),
+					  other.extent().str());
 
 			using Selector = functors::AssignOp<Derived, OtherDerived>;
 			Selector::run(derived(), other.derived());
@@ -100,13 +107,13 @@ namespace librapid {
 			return *static_cast<const Derived *>(this);
 		}
 
-		LR_FORCE_INLINE Packet packet(int64_t index) const {
+		LR_FORCE_INLINE virtual Packet packet(int64_t index) const {
 			Packet p;
 			p.load(m_storage.heap() + index);
 			return p;
 		}
 
-		LR_FORCE_INLINE Scalar scalar(int64_t index) const { return m_storage[index]; }
+		LR_FORCE_INLINE virtual Scalar scalar(int64_t index) const { return m_storage[index]; }
 
 		LR_NODISCARD("") LR_FORCE_INLINE Derived &derived() {
 			return *static_cast<Derived *>(this);
