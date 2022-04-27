@@ -43,7 +43,8 @@ namespace librapid {
 		}
 
 		LR_FORCE_INLINE void writePacket(int64_t index, const Packet &p) {
-			LR_ASSERT(index >= 0 && index < Base::extent().size(), "Index {} is out of range", index);
+			LR_ASSERT(
+			  index >= 0 && index < Base::extent().size(), "Index {} is out of range", index);
 			p.store(Base::storage().heap() + index);
 		}
 
