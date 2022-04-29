@@ -47,8 +47,8 @@ namespace librapid {
 			CWiseBinop &operator=(const Type &op) {
 				if (this == &op) return *this;
 
-				Base::m_extent = op.m_extent;
-				Base::m_data   = op.m_data;
+				Base::m_extent	= op.m_extent;
+				Base::m_data	= op.m_data;
 
 				m_lhs		= op.m_lhs;
 				m_rhs		= op.m_rhs;
@@ -63,6 +63,14 @@ namespace librapid {
 
 			LR_FORCE_INLINE Scalar scalar(int64_t index) const {
 				return m_operation.scalarOp(m_lhs.scalar(index), m_rhs.scalar(index));
+			}
+
+			template<typename T>
+			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
+				std::string leftKernel	= m_lhs.genKernel(vec, index);
+				std::string rightKernel = m_rhs.genKernel(vec, index);
+				std::string op			= m_operation.genKernel();
+				return fmt::format("({} {} {})", leftKernel, op, rightKernel);
 			}
 
 		private:

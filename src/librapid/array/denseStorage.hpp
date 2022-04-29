@@ -41,8 +41,39 @@ namespace librapid::memory {
 		~DenseStorage() {
 			if (!m_heap) return;
 			memory::free<T, d>(m_heap);
+			m_heap = nullptr;
 		}
 
+		LR_NODISCARD("") T get(int64_t index) const {
+			LR_ASSERT(index >= 0 && index < m_size,
+					  "Index {} is out of range for DenseStorage object with size {}",
+					  index,
+					  m_size);
+
+			// Host data
+			if constexpr (std::is_same_v<d, device::CPU>) return m_heap[index];
+
+			// Device data
+			T tmp;
+			memory::memcpy<T, device::CPU, T, device::GPU>(&tmp, m_heap + index, 1);
+			return tmp;
+		}
+
+		void set(int64_t index, const T &value) const {
+			LR_ASSERT(index >= 0 && index < m_size,
+					  "Index {} is out of range for DenseStorage object with size {}",
+					  index,
+					  m_size);
+
+			// Host data
+			if constexpr (std::is_same_v<d, device::CPU>) m_heap[index] = value;
+
+			// Device data
+			T tmp = value;
+			memory::memcpy<T, device::GPU, T, device::CPU>(m_heap + index, &tmp, 1);
+		}
+
+		// WARNING: ONLY WORKS FOR HOST ACCESSES
 		T &operator[](int64_t index) const {
 			LR_ASSERT(index >= 0 && index < m_size,
 					  "Index {} is out of range for DenseStorage object with size {}",
@@ -51,6 +82,7 @@ namespace librapid::memory {
 			return m_heap[index];
 		}
 
+		// WARNING: ONLY WORKS FOR HOST ACCESSES
 		T &operator[](int64_t index) {
 			LR_ASSERT(index >= 0 && index < m_size,
 					  "Index {} is out of range for DenseStorage object with size {}",

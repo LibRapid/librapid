@@ -44,6 +44,9 @@ namespace librapid {
 			}
 
 			LR_FORCE_INLINE Packet packet(int64_t index) const {
+				// Quick return if possible
+				if constexpr (std::is_same_v<Scalar, InputScalar>) return m_toCast.packet(index);
+
 				if constexpr (internal::traits<Scalar>::PacketWidth == 8) {
 					return Packet(m_toCast.scalar(index + 0),
 								  m_toCast.scalar(index + 1),
