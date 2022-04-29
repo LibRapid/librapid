@@ -1,4 +1,4 @@
 #pragma once
 
-#include "binary/scalarSum.hpp"
+#include "binary/scalarArithmetic.hpp"
 #include "assignOp.hpp"

@@ -329,7 +329,7 @@
 #endif
 
 #ifdef LIBRAPID_OS_WINDOWS
-#	include <windows.h>
+#	include <Windows.h>
 
 // Construct a class to force ANSI sequences to work
 namespace librapid::internal {
@@ -780,48 +780,26 @@ static const char *getCublasErrorEnum_(cublasStatus_t error) {
 //********************//
 // cuBLAS ERROR CHECK //
 //********************//
-// #	ifndef cublasSafeCall
-// #		define cublasSafeCall(err) cublasSafeCall_(err, __FILE__, __LINE__)
-// #	endif
 
 #	if !defined(cublasSafeCall)
 #		define cublasSafeCall(err)                                                                \
 			LR_ASSERT_ALWAYS(                                                                      \
-			  err == CUBLAS_STATUS_SUCCESS, "cuBLAS error: {}", getCublasErrorEnum_(err))
+			  (err) == CUBLAS_STATUS_SUCCESS, "cuBLAS error: {}", getCublasErrorEnum_(err))
 #	endif
-
-// inline void cublasSafeCall_(cublasStatus_t err, const char *file,
-//							const int line) {
-//	if (err != CUBLAS_STATUS_SUCCESS)
-//		throw std::runtime_error("cuBLAS error at (" + std::string(file) +
-//								 ", line " + std::to_string(line) +
-//								 "): " + getCublasErrorEnum_(err));
-// }
 
 //********************//
 //  CUDA ERROR CHECK  //
 //********************//
-//#	ifndef cudaSafeCall
-//#		define cudaSafeCall(err) cudaSafeCall_(err, __FILE__, __LINE__)
-//#	endif
-//
-// inline void cudaSafeCall_(cudaError_t err, const char *file, const int line)
-// { 	if (err != cudaSuccess) 		throw std::runtime_error("CUDA error at ("
-// +
-// std::string(file) +
-//								 ", line " + std::to_string(line) +
-//								 "): " + cudaGetErrorString(err));
-//}
 
 #	if !defined(cudaSafeCall)
 #		define cudaSafeCall(err)                                                                  \
 			LR_ASSERT_ALWAYS(                                                                      \
-			  err == CUBLAS_STATUS_SUCCESS, "CUDA error: {}", cudaGetErrorString(err))
+			  !(err), "CUDA error: {}", cudaGetErrorString(err))
 #	endif
 
 #	define jitifyCall(call)                                                                       \
 		do {                                                                                       \
-			if (call != CUDA_SUCCESS) {                                                            \
+			if ((call) != CUDA_SUCCESS) {                                                            \
 				const char *str;                                                                   \
 				cuGetErrorName(call, &str);                                                        \
 				throw std::runtime_error(std::string("CUDA JIT failed: ") + str);                  \

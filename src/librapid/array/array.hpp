@@ -14,18 +14,20 @@ namespace librapid {
 			using Scalar = Scalar_;
 			using Device = Device_;
 			using Packet = typename traits<Scalar>::Packet;
+			using StorageType = memory::DenseStorage<Scalar, Device>;
 		};
 	} // namespace internal
 
 	template<typename Scalar_, typename Device_>
 	class Array : public ArrayBase<Array<Scalar_, Device_>, Device_> {
 	public:
-		using Scalar	 = Scalar_;
-		using Device	 = Device_;
-		using Packet	 = typename internal::traits<Scalar>::Packet;
-		using Type		 = Array<Scalar, Device>;
-		using Base		 = ArrayBase<Type, Device>;
-		using ExtentType = Extent<int64_t, 32>;
+		using Scalar	  = Scalar_;
+		using Device	  = Device_;
+		using Packet	  = typename internal::traits<Scalar>::Packet;
+		using Type		  = Array<Scalar, Device>;
+		using Base		  = ArrayBase<Type, Device>;
+		using ExtentType  = Extent<int64_t, 32>;
+		using StorageType = typename internal::traits<Type>::StorageType;
 
 		Array() = default;
 
@@ -37,8 +39,16 @@ namespace librapid {
 			Base::assign(other);
 		}
 
+		Array &operator=(const Array<Scalar, Device> &other) {
+			return Base::assign(other);
+		}
+
 		template<typename OtherDerived>
 		Array &operator=(const OtherDerived &other) {
+			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
+			static_assert(std::is_same_v<Scalar, ScalarOther>,
+						  "Cannot assign Arrays with different types. Please use Array::cast<T>()");
+
 			return Base::assign(other);
 		}
 
@@ -55,7 +65,7 @@ namespace librapid {
 		LR_NODISCARD("") std::string str() const {
 			std::string res = "[";
 			for (int64_t i = 0; i < Base::extent().size(); ++i) {
-				res += fmt::format("{}, ", Base::storage().heap()[i]);
+				res += fmt::format("{}, ", Base::storage().get(i));
 			}
 			return res;
 		}

@@ -18,30 +18,135 @@ namespace librapid { namespace functors {
 	template<typename Derived, typename OtherDerived>
 	struct AssignOp {
 		LR_FORCE_INLINE static void run(Derived &dst, const OtherDerived &src) {
+			constexpr bool dstIsHost =
+			  std::is_same_v<typename internal::traits<Derived>::Device, device::CPU>;
+			constexpr bool srcIsHost =
+			  std::is_same_v<typename internal::traits<OtherDerived>::Device, device::CPU>;
 			using Scalar = typename internal::traits<Derived>::Scalar;
 			using Packet = typename internal::traits<Scalar>::Packet;
 
-			int64_t packetWidth = internal::traits<Scalar>::PacketWidth;
-			int64_t len			= dst.extent().size();
-			int64_t alignedLen =
-			  len -
-			  (len % packetWidth); // len - (len & (packetWidth - 1)); // len - (len % packetWidth)
+			if constexpr (dstIsHost && srcIsHost) {
+				int64_t packetWidth = internal::traits<Scalar>::PacketWidth;
+				int64_t len			= dst.extent().size();
+				int64_t alignedLen	= len - (len % packetWidth);
+				if (alignedLen < 0) alignedLen = 0;
 
-			// Use the entire packet width where possible
-			if (numThreads < 2 || len < 500) {
-				for (int64_t i = 0; i < alignedLen - packetWidth; i += packetWidth) {
-					dst.loadFrom(i, src);
+				// Use the entire packet width where possible
+				if (numThreads < 2 || len < 500) {
+					for (int64_t i = 0; i < alignedLen - packetWidth; i += packetWidth) {
+						dst.loadFrom(i, src);
+					}
+				} else {
+					// Multi-threaded approach
+#pragma omp parallel for shared(dst, src, alignedLen, packetWidth) default(none)                   \
+  num_threads(numThreads)
+					for (int64_t i = 0; i < alignedLen - packetWidth; i += packetWidth) {
+						dst.loadFrom(i, src);
+					}
+				}
+
+				// Ensure the remaining values are filled
+				int64_t start = alignedLen - packetWidth;
+				for (int64_t i = start < 0 ? 0 : start; i < len; ++i) {
+					dst.loadFromScalar(i, src);
 				}
 			} else {
-				// Multi-threaded approach
-#pragma omp parallel for shared(dst, src, alignedLen, packetWidth) default(none) num_threads(numThreads)
-				for (int64_t i = 0; i < alignedLen - packetWidth; i += packetWidth) {
-					dst.loadFrom(i, src);
-				}
-			}
+				int64_t elems				 = src.extent().size();
+				std::vector<Scalar *> arrays = {dst.storage().heap()};
+				std::string scalarName		 = internal::traits<Scalar>::Name;
+				int64_t index				 = 0;
+				std::string microKernel		 = src.genKernel(arrays, index);
 
-			// Ensure the remaining values are filled
-			for (int64_t i = alignedLen - packetWidth; i < len; ++i) { dst.loadFromScalar(i, src); }
+				std::string mainArgs;
+				for (int64_t i = 0; i < index; ++i) {
+					mainArgs += fmt::format("{} *{}{}", scalarName, "arg", i);
+					if (i + 1 < index) mainArgs += ", ";
+				}
+
+				std::string functionArgs;
+				for (int64_t i = 0; i < index; ++i) {
+					functionArgs += fmt::format("{} arg{}", scalarName, i);
+					if (i + 1 < index) functionArgs += ", ";
+				}
+
+				std::string indArgs;
+				for (int64_t i = 0; i < index; ++i) {
+					indArgs += fmt::format("arg{}[kernelIndex]", i);
+					if (i + 1 < index) indArgs += ", ";
+				}
+
+				std::string varExtractor;
+				for (int64_t i = 0; i < index; ++i)
+					varExtractor +=
+					  fmt::format("{} *arg{} = pointers[{}];\n\t", scalarName, i, i + 1);
+
+				std::string varArgs;
+				for (int64_t i = 0; i < index; ++i) {
+					varArgs += fmt::format("src{}", i);
+					if (i + 1 < index) varArgs += ", ";
+				}
+
+				std::string kernel = fmt::format(R"V0G0N(kernelOp
+#include<stdint.h>
+
+__device__
+inline {4} function({0}) {{
+	return {3};
+}}
+
+__device__
+void kernel({4} *dst, {1}, int64_t size) {{
+
+}}
+
+__global__
+void applyOp({4} **pointers, int64_t numPtr, int64_t size) {{
+	const int64_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
+	float *dst = pointers[0];
+	{5}
+	if (kernelIndex < size) {{
+		dst[kernelIndex] = function({2});
+	}}
+}}
+				)V0G0N",
+												 functionArgs,
+												 mainArgs,
+												 indArgs,
+												 microKernel,
+												 scalarName,
+												 varExtractor,
+												 varArgs);
+
+				static jitify::JitCache kernelCache;
+				jitify::Program program = kernelCache.program(kernel);
+
+				int64_t threadsPerBlock, blocksPerGrid;
+
+				// Use 1 to 512 threads per block
+				if (elems < 512) {
+					threadsPerBlock = elems;
+					blocksPerGrid	= 1;
+				} else {
+					threadsPerBlock = 512;
+					blocksPerGrid	= ceil(double(elems) / double(threadsPerBlock));
+				}
+
+				dim3 grid(blocksPerGrid);
+				dim3 block(threadsPerBlock);
+
+				// Copy the pointer array to the device
+				Scalar **devicePointers = memory::malloc<Scalar *, device::GPU>(index + 1);
+				memory::memcpy<Scalar *, device::GPU, Scalar *, device::CPU>(
+				  devicePointers, &arrays[0], index + 1);
+
+				jitifyCall(program.kernel("applyOp")
+							 .instantiate()
+							 .configure(grid, block, 0, memory::cudaStream)
+							 .launch(devicePointers, index, elems));
+
+				// Free device pointers
+				memory::free<Scalar *, device::GPU>(devicePointers);
+			}
 		}
 	};
 }} // namespace librapid::functors
