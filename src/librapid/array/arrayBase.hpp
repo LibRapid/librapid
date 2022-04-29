@@ -32,7 +32,7 @@ namespace librapid {
 		using Scalar				= typename internal::traits<Derived>::Scalar;
 		using This					= ArrayBase<Derived, Device>;
 		using Packet				= typename internal::traits<Derived>::Packet;
-		using StorageType			= typename internal::traits<This>::StorageType;
+		using StorageType			= typename internal::traits<Derived>::StorageType;
 		static const uint64_t Flags = internal::traits<This>::Flags;
 
 		ArrayBase() = default;
@@ -48,9 +48,9 @@ namespace librapid {
 
 		template<typename T>
 		LR_NODISCARD("")
-		auto cast() const {
-			using ScalarType	= typename internal::traits<T>::Scalar;
-			using RetType	= unary::Cast<ScalarType, Derived>;
+		LR_FORCE_INLINE auto cast() const {
+			using ScalarType = typename internal::traits<T>::Scalar;
+			using RetType	 = unary::Cast<ScalarType, Derived>;
 			return RetType(derived());
 		}
 
@@ -61,6 +61,56 @@ namespace librapid {
 			using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;
 			using RetType	  = binop::
 			  CWiseBinop<functors::binary::ScalarSum<Scalar, ScalarOther>, Derived, OtherDerived>;
+
+			static_assert(
+			  std::is_same_v<Scalar, ScalarOther>,
+			  "Cannot add Arrays with different data types. Please use Array::cast<T>()");
+
+			return RetType(derived(), other.derived());
+		}
+
+		template<typename OtherDerived, typename OtherDevice>
+		LR_NODISCARD("Do not ignore the result of an arithmetic operation")
+		auto operator-(const ArrayBase<OtherDerived, OtherDevice> &other) const {
+			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
+			using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;
+			using RetType	  = binop::
+			  CWiseBinop<functors::binary::ScalarDiff<Scalar, ScalarOther>, Derived, OtherDerived>;
+
+			static_assert(
+			  std::is_same_v<Scalar, ScalarOther>,
+			  "Cannot add Arrays with different data types. Please use Array::cast<T>()");
+
+			return RetType(derived(), other.derived());
+		}
+
+		template<typename OtherDerived, typename OtherDevice>
+		LR_NODISCARD("Do not ignore the result of an arithmetic operation")
+		auto operator*(const ArrayBase<OtherDerived, OtherDevice> &other) const {
+			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
+			using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;
+			using RetType	  = binop::
+			  CWiseBinop<functors::binary::ScalarProd<Scalar, ScalarOther>, Derived, OtherDerived>;
+
+			static_assert(
+			  std::is_same_v<Scalar, ScalarOther>,
+			  "Cannot add Arrays with different data types. Please use Array::cast<T>()");
+
+			return RetType(derived(), other.derived());
+		}
+
+		template<typename OtherDerived, typename OtherDevice>
+		LR_NODISCARD("Do not ignore the result of an arithmetic operation")
+		auto operator/(const ArrayBase<OtherDerived, OtherDevice> &other) const {
+			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
+			using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;
+			using RetType	  = binop::
+			  CWiseBinop<functors::binary::ScalarDiv<Scalar, ScalarOther>, Derived, OtherDerived>;
+
+			static_assert(
+			  std::is_same_v<Scalar, ScalarOther>,
+			  "Cannot add Arrays with different data types. Please use Array::cast<T>()");
+
 			return RetType(derived(), other.derived());
 		}
 
@@ -68,7 +118,7 @@ namespace librapid {
 		LR_FORCE_INLINE void loadFrom(int64_t index, const OtherDerived &other) {
 			LR_ASSERT(index >= 0 && index < m_extent.size(),
 					  "Index {} is out of range for Array with extent {}",
-					  m_extent.str());
+					  index, m_extent.str());
 			derived().writePacket(index, other.packet(index));
 		}
 
@@ -76,7 +126,7 @@ namespace librapid {
 		LR_FORCE_INLINE void loadFromScalar(int64_t index, const ScalarType &other) {
 			LR_ASSERT(index >= 0 && index < m_extent.size(),
 					  "Index {} is out of range for Array with extent {}",
-					  m_extent.str());
+					  index, m_extent.str());
 			derived().writeScalar(index, other.scalar(index));
 		}
 
@@ -111,6 +161,12 @@ namespace librapid {
 			Packet p;
 			p.load(m_storage.heap() + index);
 			return p;
+		}
+
+		template<typename T>
+		std::string genKernel(std::vector<T> &vec, int64_t &index) const {
+			vec.emplace_back(m_storage.heap());
+			return fmt::format("arg{}", index++);
 		}
 
 		LR_FORCE_INLINE virtual Scalar scalar(int64_t index) const { return m_storage[index]; }
