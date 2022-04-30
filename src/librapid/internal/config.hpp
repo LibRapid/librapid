@@ -793,13 +793,12 @@ static const char *getCublasErrorEnum_(cublasStatus_t error) {
 
 #	if !defined(cudaSafeCall)
 #		define cudaSafeCall(err)                                                                  \
-			LR_ASSERT_ALWAYS(                                                                      \
-			  !(err), "CUDA error: {}", cudaGetErrorString(err))
+			LR_ASSERT_ALWAYS(!(err), "CUDA error: {}", cudaGetErrorString(err))
 #	endif
 
 #	define jitifyCall(call)                                                                       \
 		do {                                                                                       \
-			if ((call) != CUDA_SUCCESS) {                                                            \
+			if ((call) != CUDA_SUCCESS) {                                                          \
 				const char *str;                                                                   \
 				cuGetErrorName(call, &str);                                                        \
 				throw std::runtime_error(std::string("CUDA JIT failed: ") + str);                  \

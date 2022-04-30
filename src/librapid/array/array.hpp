@@ -21,6 +21,10 @@ namespace librapid {
 	template<typename Scalar_, typename Device_>
 	class Array : public ArrayBase<Array<Scalar_, Device_>, Device_> {
 	public:
+#if !defined(LIBRAPID_HAS_CUDA)
+		static_assert(std::is_same_v<Device_, device::CPU>, "CUDA support was not enabled");
+#endif
+
 		using Scalar	  = Scalar_;
 		using Device	  = Device_;
 		using Packet	  = typename internal::traits<Scalar>::Packet;
