@@ -25,6 +25,10 @@ namespace librapid { namespace functors {
 			using Scalar = typename internal::traits<Derived>::Scalar;
 			using Packet = typename internal::traits<Scalar>::Packet;
 
+#if !defined(LIBRAPID_HAS_CUDA)
+			static_assert(dstIsHost && srcIsHost, "CUDA support was not enabled");
+#endif
+
 			if constexpr (dstIsHost && srcIsHost) {
 				int64_t packetWidth = internal::traits<Scalar>::PacketWidth;
 				int64_t len			= dst.extent().size();
@@ -51,6 +55,11 @@ namespace librapid { namespace functors {
 					dst.loadFromScalar(i, src);
 				}
 			} else {
+#if defined(LIBRAPID_HAS_CUDA)
+				static_assert(sizeof(OtherDerived) < 30000,
+							  "Calculation is too large to be run in a single call. Please call "
+							  "eval() somewhere earlier");
+
 				int64_t elems				 = src.extent().size();
 				std::vector<Scalar *> arrays = {dst.storage().heap()};
 				std::string scalarName		 = internal::traits<Scalar>::Name;
@@ -97,7 +106,7 @@ __device__
 __global__
 void applyOp({4} **pointers, int64_t size) {{
 	const int64_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
-	float *dst = pointers[0];
+	{4} *dst = pointers[0];
 	{5}
 
 	if (kernelIndex < size) {{
@@ -150,6 +159,7 @@ void applyOp({4} **pointers, int64_t size) {{
 
 				// Free device pointers
 				memory::free<Scalar *, device::GPU>(devicePointers);
+#endif
 			}
 		}
 	};

@@ -57,6 +57,13 @@ namespace librapid {
 				return *this;
 			}
 
+			LR_NODISCARD("Do not ignore the result of an evaluated calculation")
+			Array<Scalar, Device> eval() const {
+				Array<Scalar, Device> res(Base::extent());
+				res.assign(*this);
+				return res;
+			}
+
 			LR_FORCE_INLINE Packet packet(int64_t index) const {
 				return m_operation.packetOp(m_lhs.packet(index), m_rhs.packet(index));
 			}
