@@ -41,6 +41,10 @@ namespace librapid {
 		explicit ArrayBase(const Extent<T_, d_> &extent) :
 				m_isScalar(extent.size() == 0), m_extent(extent), m_storage(extent.size()) {}
 
+		template<typename T_, int64_t d_>
+		explicit ArrayBase(const Extent<T_, d_> &extent, int) :
+				m_isScalar(extent.size() == 0), m_extent(extent) {}
+
 		template<typename OtherDerived>
 		LR_INLINE Derived &operator=(const OtherDerived &other) {
 			return assign(other);
@@ -157,19 +161,19 @@ namespace librapid {
 			return *static_cast<const Derived *>(this);
 		}
 
-		LR_FORCE_INLINE virtual Packet packet(int64_t index) const {
+		LR_FORCE_INLINE Packet packet(int64_t index) const {
 			Packet p;
 			p.load(m_storage.heap() + index);
 			return p;
 		}
+
+		LR_FORCE_INLINE Scalar scalar(int64_t index) const { return m_storage[index]; }
 
 		template<typename T>
 		std::string genKernel(std::vector<T> &vec, int64_t &index) const {
 			vec.emplace_back(m_storage.heap());
 			return fmt::format("arg{}", index++);
 		}
-
-		LR_FORCE_INLINE virtual Scalar scalar(int64_t index) const { return m_storage[index]; }
 
 		LR_NODISCARD("") LR_FORCE_INLINE Derived &derived() {
 			return *static_cast<Derived *>(this);
