@@ -12,36 +12,35 @@ namespace librapid::memory {
 
 		DenseStorage() = default;
 
-		explicit DenseStorage(int64_t size) : m_size(size), m_heap(memory::malloc<T, d>(size)) {
+		explicit DenseStorage(int64_t size) :
+				m_size(size), m_heap(memory::malloc<T, d>(size)),
+				m_refCount(new std::atomic<int64_t>(1)) {
 #if defined(LIBRAPID_HAS_CUDA)
 			if constexpr (std::is_same_v<d, device::GPU>) initializeCudaStream();
 #endif
 		}
 
-		template<typename T_, typename d_>
-		explicit DenseStorage(const DenseStorage<T_, d_> &other) {
-			m_size = other.m_size;
-			m_heap = memory::malloc<T, d>(m_size);
-			LR_ASSERT(m_heap, "Memory Error -- malloc failed");
-			memory::memcpy<T, T_, d, d_>(m_heap, other.m_heap, m_size);
+		explicit DenseStorage(const DenseStorage<T, d> &other) {
+			m_refCount = other.m_refCount;
+			m_size	   = other.m_size;
+			m_heap	   = other.m_heap;
+			increment();
 		}
 
-		template<typename T_, typename d_>
-		DenseStorage &operator=(const DenseStorage<T_, d_> &other) {
+		DenseStorage &operator=(const DenseStorage<T, d> &other) {
 			if (this == &other) return *this;
 
-			m_size = other.m_size;
-			m_heap = memory::malloc<T, d>(m_size);
-			LR_ASSERT(m_heap, "Memory Error -- malloc failed");
-			memory::memcpy<T, T_, d, d_>(m_heap, other.m_heap, m_size);
+			decrement();
+			m_size	   = other.m_size;
+			m_heap	   = other.m_heap;
+			m_refCount = other.m_refCount;
+			increment();
 
 			return *this;
 		}
 
 		~DenseStorage() {
-			if (!m_heap) return;
-			memory::free<T, d>(m_heap);
-			m_heap = nullptr;
+			decrement();
 		}
 
 		LR_NODISCARD("") T get(int64_t index) const {
@@ -66,7 +65,10 @@ namespace librapid::memory {
 					  m_size);
 
 			// Host data
-			if constexpr (std::is_same_v<d, device::CPU>) m_heap[index] = value;
+			if constexpr (std::is_same_v<d, device::CPU>) {
+				m_heap[index] = value;
+				return;
+			}
 
 			// Device data
 			T tmp = value;
@@ -97,9 +99,25 @@ namespace librapid::memory {
 
 		LR_NODISCARD("") int64_t bytes() const { return sizeof(T) * m_size; }
 
+		void increment() const {
+			// LR_LOG_STATUS("Incrementing");
+			(*m_refCount)++; }
+
+		void decrement() {
+			// LR_LOG_STATUS("Decrementing");
+			if (!m_refCount) return;
+			(*m_refCount)--;
+			if (*m_refCount == 0) {
+				// LR_LOG_WARN("Freeing Memory At: {}", (void *) m_heap);
+				delete m_refCount;
+				memory::free<T, d>(m_heap);
+			}
+		}
+
 	private:
-		int64_t m_size = 0;
-		T *m_heap	   = nullptr;
+		int64_t m_size					 = 0;
+		T *m_heap						 = nullptr;
+		std::atomic<int64_t> *m_refCount = nullptr;
 	};
 
 	template<typename T, typename d, typename T_, typename d_>

@@ -119,5 +119,5 @@ namespace librapid::internal {
 	};
 
 	template<typename T>
-	using stripQualifiers = typename std::remove_const_t<typename std::remove_reference_t<T>>;
+	using StripQualifiers = typename std::remove_cv_t<typename std::remove_reference_t<T>>;
 } // namespace librapid::internal

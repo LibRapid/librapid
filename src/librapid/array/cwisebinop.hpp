@@ -27,8 +27,8 @@ namespace librapid {
 			using Operation = Binop;
 			using Scalar	= typename Binop::RetType;
 			using Packet	= typename internal::traits<Scalar>::Packet;
-			using LeftType	= typename internal::stripQualifiers<LHS>;
-			using RightType = typename internal::stripQualifiers<RHS>;
+			using LeftType	= typename internal::StripQualifiers<LHS>;
+			using RightType = typename internal::StripQualifiers<RHS>;
 			using DeviceLHS = typename internal::traits<LHS>::Device;
 			using DeviceRHS = typename internal::traits<RHS>::Device;
 			using Device	= typename memory::PromoteDevice<DeviceRHS, DeviceLHS>::type;
@@ -38,11 +38,11 @@ namespace librapid {
 			CWiseBinop() = delete;
 
 			CWiseBinop(const LeftType &lhs, const RightType &rhs) :
-					Base(lhs.extent()), m_lhs(lhs), m_rhs(rhs) {}
+					Base(lhs.extent(), 0), m_lhs(lhs), m_rhs(rhs) {}
 
 			CWiseBinop(const Type &op) :
-					Base(op.extent()), m_lhs(op.m_lhs), m_rhs(op.m_rhs),
-					m_operation(op.m_operaion) {}
+					Base(op.extent(), 0), m_lhs(op.m_lhs), m_rhs(op.m_rhs),
+					m_operation(op.m_operation) {}
 
 			CWiseBinop &operator=(const Type &op) {
 				if (this == &op) return *this;
@@ -74,8 +74,10 @@ namespace librapid {
 			}
 
 		private:
-			const LeftType &m_lhs;
-			const RightType &m_rhs;
+			// const LeftType &m_lhs;
+			// const RightType &m_rhs;
+			LeftType m_lhs;
+			RightType m_rhs;
 			const Binop m_operation {};
 		};
 	} // namespace binop
