@@ -90,20 +90,16 @@ namespace librapid { namespace functors {
 #include<stdint.h>
 
 __device__
-inline {4} function({0}) {{
+{4} function({0}) {{
 	return {3};
 }}
 
-__device__
-void kernel({4} *dst, {1}, int64_t size) {{
-
-}}
-
 __global__
-void applyOp({4} **pointers, int64_t numPtr, int64_t size) {{
+void applyOp({4} **pointers, int64_t size) {{
 	const int64_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
 	float *dst = pointers[0];
 	{5}
+
 	if (kernelIndex < size) {{
 		dst[kernelIndex] = function({2});
 	}}
@@ -116,6 +112,14 @@ void applyOp({4} **pointers, int64_t numPtr, int64_t size) {{
 												 scalarName,
 												 varExtractor,
 												 varArgs);
+
+				// LR_LOG_STATUS("Kernel: {}\n", kernel);
+
+				// for (int64_t i = 0; i < arrays.size(); ++i) {
+				// 	Scalar tmpVal = 0;
+				// 	memory::memcpy<Scalar, device::CPU, Scalar, device::GPU>(&tmpVal, arrays[i], 1);
+				// 	LR_LOG_STATUS("Array[{}]: {}", i, tmpVal);
+				// }
 
 				static jitify::JitCache kernelCache;
 				jitify::Program program = kernelCache.program(kernel);
@@ -142,7 +146,7 @@ void applyOp({4} **pointers, int64_t numPtr, int64_t size) {{
 				jitifyCall(program.kernel("applyOp")
 							 .instantiate()
 							 .configure(grid, block, 0, memory::cudaStream)
-							 .launch(devicePointers, index, elems));
+							 .launch(devicePointers, elems));
 
 				// Free device pointers
 				memory::free<Scalar *, device::GPU>(devicePointers);

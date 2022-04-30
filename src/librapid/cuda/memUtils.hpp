@@ -46,14 +46,26 @@ namespace librapid::memory {
 		cudaSafeCall(cudaFreeAsync(ptr, cudaStream));
 	}
 
-	// Only supports copying between host pointers
 	template<typename T, typename d, typename T_, typename d_,
 			 typename std::enable_if_t<
 			   !(std::is_same_v<d, device::CPU> && std::is_same_v<d_, device::CPU>), int> = 0>
 	LR_FORCE_INLINE void memcpy(T *dst, T_ *src, int64_t size) {
 		if constexpr (std::is_same_v<T, T_>) {
-			cudaSafeCall(
-			  cudaMemcpyAsync(dst, src, sizeof(T) * size, cudaMemcpyDefault, cudaStream));
+			if constexpr (std::is_same_v<d, device::CPU> && std::is_same_v<d_, device::GPU>) {
+				// Device to Host
+				cudaSafeCall(
+				  cudaMemcpyAsync(dst, src, sizeof(T) * size, cudaMemcpyDeviceToHost, cudaStream));
+			} else if constexpr (std::is_same_v<d, device::GPU> &&
+								 std::is_same_v<d_, device::CPU>) {
+				// Host to Device
+				cudaSafeCall(
+				  cudaMemcpyAsync(dst, src, sizeof(T) * size, cudaMemcpyHostToDevice, cudaStream));
+			} else if constexpr (std::is_same_v<d, device::GPU> &&
+								 std::is_same_v<d_, device::GPU>) {
+				// Host to Device
+				cudaSafeCall(cudaMemcpyAsync(
+				  dst, src, sizeof(T) * size, cudaMemcpyDeviceToDevice, cudaStream));
+			}
 		} else {
 			// TODO: Optimise this
 
