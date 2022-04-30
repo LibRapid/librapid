@@ -11,7 +11,7 @@ namespace librapid::internal {
 		using StorageType					 = memory::DenseStorage<int8_t, device::CPU>;
 		using Packet						 = vcl::Vec64c;
 		static constexpr int64_t PacketWidth = 64;
-		static constexpr char * Name = "int8_t";
+		static constexpr char Name[] = "int8_t";
 	};
 
 	//------- 8bit Unsigned Integer -------------------------------------------
@@ -21,7 +21,7 @@ namespace librapid::internal {
 		using StorageType					 = memory::DenseStorage<uint8_t>;
 		using Packet						 = vcl::Vec64uc;
 		static constexpr int64_t PacketWidth = 64;
-		static constexpr char * Name = "uint8_t";
+		static constexpr char Name[] = "uint8_t";
 	};
 
 	//------- 16bit Signed Integer --------------------------------------------
@@ -31,7 +31,7 @@ namespace librapid::internal {
 		using StorageType					 = memory::DenseStorage<int16_t>;
 		using Packet						 = vcl::Vec32s;
 		static constexpr int64_t PacketWidth = 32;
-		static constexpr char * Name = "int16_t";
+		static constexpr char Name[] = "int16_t";
 	};
 
 	//------- 16bit Unsigned Integer ------------------------------------------
@@ -41,7 +41,7 @@ namespace librapid::internal {
 		using StorageType					 = memory::DenseStorage<uint16_t>;
 		using Packet						 = vcl::Vec32us;
 		static constexpr int64_t PacketWidth = 32;
-		static constexpr char * Name = "uint16_t";
+		static constexpr char Name[] = "uint16_t";
 	};
 
 	//------- 32bit Signed Integer --------------------------------------------
@@ -51,7 +51,7 @@ namespace librapid::internal {
 		using StorageType					 = memory::DenseStorage<int32_t>;
 		using Packet						 = vcl::Vec8i;
 		static constexpr int64_t PacketWidth = 8;
-		static constexpr char * Name = "int32_t";
+		static constexpr char Name[] = "int32_t";
 	};
 
 	//------- 32bit Unsigned Integer ------------------------------------------
@@ -61,7 +61,7 @@ namespace librapid::internal {
 		using StorageType					 = memory::DenseStorage<uint32_t>;
 		using Packet						 = vcl::Vec8ui;
 		static constexpr int64_t PacketWidth = 4;
-		static constexpr char * Name = "uint32_t";
+		static constexpr char Name[] = "uint32_t";
 	};
 
 	//------- 64bit Signed Integer --------------------------------------------
@@ -71,7 +71,7 @@ namespace librapid::internal {
 		using StorageType					 = memory::DenseStorage<int64_t>;
 		using Packet						 = vcl::Vec8q;
 		static constexpr int64_t PacketWidth = 8;
-		static constexpr char * Name = "int64_t";
+		static constexpr char Name[] = "int64_t";
 	};
 
 	//------- 64bit Unsigned Integer ------------------------------------------
@@ -81,7 +81,7 @@ namespace librapid::internal {
 		using StorageType					 = memory::DenseStorage<uint64_t>;
 		using Packet						 = vcl::Vec8uq;
 		static constexpr int64_t PacketWidth = 8;
-		static constexpr char * Name = "uint64_t";
+		static constexpr char Name[] = "uint64_t";
 	};
 
 	//------- 32bit Floating Point --------------------------------------------
@@ -91,7 +91,7 @@ namespace librapid::internal {
 		using StorageType					 = memory::DenseStorage<float>;
 		using Packet						 = vcl::Vec16f;
 		static constexpr int64_t PacketWidth = 16;
-		static constexpr char * Name = "float";
+		static constexpr char Name[] = "float";
 	};
 
 	//------- 64bit Floating Point --------------------------------------------
@@ -101,7 +101,7 @@ namespace librapid::internal {
 		using StorageType					 = memory::DenseStorage<double>;
 		using Packet						 = vcl::Vec8d;
 		static constexpr int64_t PacketWidth = 8;
-		static constexpr char * Name = "double";
+		static constexpr char Name[] = "double";
 	};
 
 	template<typename LHS, typename RHS>

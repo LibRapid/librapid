@@ -163,7 +163,8 @@ namespace librapid {
 
 		LR_FORCE_INLINE Packet packet(int64_t index) const {
 			Packet p;
-			p.load(m_storage.heap() + index);
+			p.load_a(m_storage.heap() + index);
+			// p.load(m_storage.heap() + index);
 			return p;
 		}
 

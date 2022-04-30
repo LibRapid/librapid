@@ -39,9 +39,7 @@ namespace librapid::memory {
 			return *this;
 		}
 
-		~DenseStorage() {
-			decrement();
-		}
+		~DenseStorage() { decrement(); }
 
 		LR_NODISCARD("") T get(int64_t index) const {
 			LR_ASSERT(index >= 0 && index < m_size,
@@ -52,10 +50,12 @@ namespace librapid::memory {
 			// Host data
 			if constexpr (std::is_same_v<d, device::CPU>) return m_heap[index];
 
+#if defined(LIBRAPID_HAS_CUDA)
 			// Device data
 			T tmp;
 			memory::memcpy<T, device::CPU, T, device::GPU>(&tmp, m_heap + index, 1);
 			return tmp;
+#endif
 		}
 
 		void set(int64_t index, const T &value) const {
@@ -70,9 +70,11 @@ namespace librapid::memory {
 				return;
 			}
 
+#if defined(LIBRAPID_HAS_CUDA)
 			// Device data
 			T tmp = value;
 			memory::memcpy<T, device::GPU, T, device::CPU>(m_heap + index, &tmp, 1);
+#endif
 		}
 
 		// WARNING: ONLY WORKS FOR HOST ACCESSES
@@ -101,7 +103,8 @@ namespace librapid::memory {
 
 		void increment() const {
 			// LR_LOG_STATUS("Incrementing");
-			(*m_refCount)++; }
+			(*m_refCount)++;
+		}
 
 		void decrement() {
 			// LR_LOG_STATUS("Decrementing");
