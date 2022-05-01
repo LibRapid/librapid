@@ -56,7 +56,8 @@ namespace librapid { namespace functors {
 				}
 			} else {
 #if defined(LIBRAPID_HAS_CUDA)
-				static_assert(sizeof(OtherDerived) < 30000,
+				// LR_LOG_STATUS("Size of Type: {}", sizeof(OtherDerived));
+				static_assert(sizeof(OtherDerived) < (1 << 15), // Defines the max op size
 							  "Calculation is too large to be run in a single call. Please call "
 							  "eval() somewhere earlier");
 

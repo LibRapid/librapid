@@ -8,13 +8,14 @@ namespace librapid {
 	namespace internal {
 		template<typename Binop, typename LHS, typename RHS>
 		struct traits<binop::CWiseBinop<Binop, LHS, RHS>> {
+			using Type		  = binop::CWiseBinop<Binop, LHS, RHS>;
 			using Scalar	  = typename Binop::RetType;
 			using Packet	  = typename traits<Scalar>::Packet;
 			using DeviceLHS	  = typename traits<LHS>::Device;
 			using DeviceRHS	  = typename traits<RHS>::Device;
 			using Device	  = typename memory::PromoteDevice<DeviceLHS, DeviceRHS>::type;
 			using StorageType = memory::DenseStorage<Scalar, Device>;
-			static const uint64_t Flags = 0;
+			static constexpr uint64_t Flags = Binop::Flags;
 		};
 	} // namespace internal
 
@@ -34,6 +35,7 @@ namespace librapid {
 			using Device	= typename memory::PromoteDevice<DeviceRHS, DeviceLHS>::type;
 			using Type		= CWiseBinop<Binop, LHS, RHS>;
 			using Base		= ArrayBase<Type, Device>;
+			static constexpr uint64_t Flags = internal::traits<Type>::Flags;
 
 			CWiseBinop() = delete;
 
@@ -47,8 +49,8 @@ namespace librapid {
 			CWiseBinop &operator=(const Type &op) {
 				if (this == &op) return *this;
 
-				Base::m_extent	= op.m_extent;
-				Base::m_data	= op.m_data;
+				Base::m_extent = op.m_extent;
+				Base::m_data   = op.m_data;
 
 				m_lhs		= op.m_lhs;
 				m_rhs		= op.m_rhs;

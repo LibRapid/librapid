@@ -4,6 +4,8 @@
 #include "../internal/forward.hpp"
 
 namespace librapid::internal {
+	inline constexpr uint64_t Flag_RequireEval = 1 << 0;
+
 	//------- 8bit Signed Integer ---------------------------------------------
 	template<>
 	struct traits<int8_t> {
