@@ -11,29 +11,29 @@ namespace librapid {
 	namespace internal {
 		template<typename Derived>
 		struct traits<ArrayBase<Derived, device::CPU>> {
-			using Scalar				= typename traits<Derived>::Scalar;
-			using Device				= device::CPU;
-			using StorageType			= memory::DenseStorage<Scalar, device::CPU>;
-			static const uint64_t Flags = 0;
+			using Scalar					= typename traits<Derived>::Scalar;
+			using Device					= device::CPU;
+			using StorageType				= memory::DenseStorage<Scalar, device::CPU>;
+			static constexpr uint64_t Flags = traits<Derived>::Flags;
 		};
 
 		template<typename Derived>
 		struct traits<ArrayBase<Derived, device::GPU>> {
-			using Scalar				= typename traits<Derived>::Scalar;
-			using Device				= device::GPU;
-			using StorageType			= memory::DenseStorage<Scalar, device::CPU>;
-			static const uint64_t Flags = 0;
+			using Scalar					= typename traits<Derived>::Scalar;
+			using Device					= device::GPU;
+			using StorageType				= memory::DenseStorage<Scalar, device::CPU>;
+			static constexpr uint64_t Flags = traits<Derived>::Flags;
 		};
 	} // namespace internal
 
 	template<typename Derived, typename Device>
 	class ArrayBase {
 	public:
-		using Scalar				= typename internal::traits<Derived>::Scalar;
-		using This					= ArrayBase<Derived, Device>;
-		using Packet				= typename internal::traits<Derived>::Packet;
-		using StorageType			= typename internal::traits<Derived>::StorageType;
-		static const uint64_t Flags = internal::traits<This>::Flags;
+		using Scalar					= typename internal::traits<Derived>::Scalar;
+		using This						= ArrayBase<Derived, Device>;
+		using Packet					= typename internal::traits<Derived>::Packet;
+		using StorageType				= typename internal::traits<Derived>::StorageType;
+		static constexpr uint64_t Flags = internal::traits<This>::Flags;
 
 		ArrayBase() = default;
 
@@ -70,7 +70,10 @@ namespace librapid {
 			  std::is_same_v<Scalar, ScalarOther>,
 			  "Cannot add Arrays with different data types. Please use Array::cast<T>()");
 
-			return RetType(derived(), other.derived());
+			if constexpr (Flags & internal::Flag_RequireEval)
+				return RetType(derived(), other.derived()).eval();
+			else if constexpr (!(Flags & internal::Flag_RequireEval))
+				return RetType(derived(), other.derived());
 		}
 
 		template<typename OtherDerived, typename OtherDevice>
@@ -122,7 +125,8 @@ namespace librapid {
 		LR_FORCE_INLINE void loadFrom(int64_t index, const OtherDerived &other) {
 			LR_ASSERT(index >= 0 && index < m_extent.size(),
 					  "Index {} is out of range for Array with extent {}",
-					  index, m_extent.str());
+					  index,
+					  m_extent.str());
 			derived().writePacket(index, other.packet(index));
 		}
 
@@ -130,7 +134,8 @@ namespace librapid {
 		LR_FORCE_INLINE void loadFromScalar(int64_t index, const ScalarType &other) {
 			LR_ASSERT(index >= 0 && index < m_extent.size(),
 					  "Index {} is out of range for Array with extent {}",
-					  index, m_extent.str());
+					  index,
+					  m_extent.str());
 			derived().writeScalar(index, other.scalar(index));
 		}
 

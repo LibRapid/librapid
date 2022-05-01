@@ -9,6 +9,7 @@ namespace librapid::functors::binary {
 		using LhsType = LHS;
 		using RhsType = RHS;
 		using RetType = std::false_type;
+		static constexpr int64_t Flags = 0;
 	};
 
 	template<typename LHS, typename RHS>
@@ -18,6 +19,7 @@ namespace librapid::functors::binary {
 		using RhsType = typename internal::traits<RHS>::Scalar;
 		using RetType = typename std::common_type<LhsType, RhsType>::type;
 		using Packet  = typename internal::traits<RetType>::Packet;
+		static constexpr int64_t Flags = 0; // internal::Flag_RequireEval;
 
 		ScalarSum() = default;
 
@@ -44,6 +46,7 @@ namespace librapid::functors::binary {
 		using RhsType = typename internal::traits<RHS>::Scalar;
 		using RetType = typename std::common_type<LhsType, RhsType>::type;
 		using Packet  = typename internal::traits<RetType>::Packet;
+		static constexpr int64_t Flags = 0;
 
 		ScalarDiff() = default;
 
@@ -70,6 +73,7 @@ namespace librapid::functors::binary {
 		using RhsType = typename internal::traits<RHS>::Scalar;
 		using RetType = typename std::common_type<LhsType, RhsType>::type;
 		using Packet  = typename internal::traits<RetType>::Packet;
+		static constexpr int64_t Flags = 0;
 
 		ScalarProd() = default;
 
@@ -96,6 +100,7 @@ namespace librapid::functors::binary {
 		using RhsType = typename internal::traits<RHS>::Scalar;
 		using RetType = typename std::common_type<LhsType, RhsType>::type;
 		using Packet  = typename internal::traits<RetType>::Packet;
+		static constexpr int64_t Flags = 0;
 
 		ScalarDiv() = default;
 
