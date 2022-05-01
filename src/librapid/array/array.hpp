@@ -15,6 +15,7 @@ namespace librapid {
 			using Device = Device_;
 			using Packet = typename traits<Scalar>::Packet;
 			using StorageType = memory::DenseStorage<Scalar, Device>;
+			static constexpr int64_t Flags = 0;
 		};
 	} // namespace internal
 
