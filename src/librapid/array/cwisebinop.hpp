@@ -15,7 +15,9 @@ namespace librapid {
 			using DeviceRHS	  = typename traits<RHS>::Device;
 			using Device	  = typename memory::PromoteDevice<DeviceLHS, DeviceRHS>::type;
 			using StorageType = memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags = Binop::Flags;
+			static constexpr uint64_t LhsRhsSize = sizeof(LHS) + sizeof(RHS);
+			static constexpr bool IsGPU			 = std::is_same_v<Device, device::GPU>;
+			static constexpr uint64_t Flags		 = Binop::Flags;
 		};
 	} // namespace internal
 
