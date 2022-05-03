@@ -13,6 +13,7 @@
 #include <iostream>
 #include <atomic>
 #include <thread>
+#include <random>
 
 #if defined(_OPENMP)
 #	include <omp.h>
