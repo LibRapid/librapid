@@ -30,22 +30,25 @@ namespace librapid { namespace functors {
 #endif
 
 			if constexpr (dstIsHost && srcIsHost) {
-				int64_t packetWidth = internal::traits<Scalar>::PacketWidth;
-				int64_t len			= dst.extent().size();
-				int64_t alignedLen	= len - (len % packetWidth);
-				if (alignedLen < 0) alignedLen = 0;
+				// Only use a Packet type if possible
+				if constexpr (!std::is_same_v<Packet, std::false_type>) {
+					int64_t packetWidth = internal::traits<Scalar>::PacketWidth;
+					int64_t len			= dst.extent().size();
+					int64_t alignedLen	= len - (len % packetWidth);
+					if (alignedLen < 0) alignedLen = 0;
 
-				// Use the entire packet width where possible
-				if (numThreads < 2 || len < 500) {
-					for (int64_t i = 0; i < alignedLen - packetWidth; i += packetWidth) {
-						dst.loadFrom(i, src);
-					}
-				} else {
-					// Multi-threaded approach
+					// Use the entire packet width where possible
+					if (numThreads < 2 || len < 500) {
+						for (int64_t i = 0; i < alignedLen - packetWidth; i += packetWidth) {
+							dst.loadFrom(i, src);
+						}
+					} else {
+						// Multi-threaded approach
 #pragma omp parallel for shared(dst, src, alignedLen, packetWidth) default(none)                   \
   num_threads(numThreads)
-					for (int64_t i = 0; i < alignedLen - packetWidth; i += packetWidth) {
-						dst.loadFrom(i, src);
+						for (int64_t i = 0; i < alignedLen - packetWidth; i += packetWidth) {
+							dst.loadFrom(i, src);
+						}
 					}
 				}
 
