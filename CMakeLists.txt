@@ -48,8 +48,6 @@ if (${SKBUILD})
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif ()
 
-add_subdirectory("src/librapid/vendor/fmt")
-
 if (${SKBUILD})
     # Ensure PyBind11 is accessible
     add_subdirectory("src/librapid/vendor/pybind11")
