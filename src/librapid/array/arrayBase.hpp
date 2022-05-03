@@ -150,6 +150,12 @@ namespace librapid {
 
 		template<typename OtherDerived>
 		LR_FORCE_INLINE Derived &assign(const OtherDerived &other) {
+			// Construct if necessary
+			if (!m_storage) {
+				m_extent = other.extent();
+				m_storage = StorageType(m_extent.size());
+			}
+
 			LR_ASSERT(m_extent == other.extent(),
 					  "Cannot perform operation on Arrays with {} and {}. Extents must be equal",
 					  m_extent.str(),
