@@ -1,7 +1,7 @@
 #include <chrono>
 #include <librapid/autocast/custom_complex.hpp>
 #include <librapid/math/constants.hpp>
-#include <librapid/math/core_math.hpp>
+#include <librapid/math/coreMath.hpp>
 #include <random>
 #include <string>
 #include <vector>

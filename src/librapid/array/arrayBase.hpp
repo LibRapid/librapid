@@ -86,9 +86,12 @@ namespace librapid {
 
 			static_assert(
 			  std::is_same_v<Scalar, ScalarOther>,
-			  "Cannot add Arrays with different data types. Please use Array::cast<T>()");
+			  "Cannot subtract Arrays with different data types. Please use Array::cast<T>()");
 
-			return RetType(derived(), other.derived());
+			if constexpr (Flags & internal::Flag_RequireEval)
+				return RetType(derived(), other.derived()).eval();
+			else if constexpr (!(Flags & internal::Flag_RequireEval))
+				return RetType(derived(), other.derived());
 		}
 
 		template<typename OtherDerived, typename OtherDevice>
@@ -101,9 +104,12 @@ namespace librapid {
 
 			static_assert(
 			  std::is_same_v<Scalar, ScalarOther>,
-			  "Cannot add Arrays with different data types. Please use Array::cast<T>()");
+			  "Cannot multiply Arrays with different data types. Please use Array::cast<T>()");
 
-			return RetType(derived(), other.derived());
+			if constexpr (Flags & internal::Flag_RequireEval)
+				return RetType(derived(), other.derived()).eval();
+			else if constexpr (!(Flags & internal::Flag_RequireEval))
+				return RetType(derived(), other.derived());
 		}
 
 		template<typename OtherDerived, typename OtherDevice>
@@ -116,9 +122,12 @@ namespace librapid {
 
 			static_assert(
 			  std::is_same_v<Scalar, ScalarOther>,
-			  "Cannot add Arrays with different data types. Please use Array::cast<T>()");
+			  "Cannot divide Arrays with different data types. Please use Array::cast<T>()");
 
-			return RetType(derived(), other.derived());
+			if constexpr (Flags & internal::Flag_RequireEval)
+				return RetType(derived(), other.derived()).eval();
+			else if constexpr (!(Flags & internal::Flag_RequireEval))
+				return RetType(derived(), other.derived());
 		}
 
 		template<typename OtherDerived>

@@ -3,7 +3,7 @@
 
 #include <librapid/config.hpp>
 #include <librapid/math/constants.hpp>
-#include <librapid/math/core_math.hpp>
+#include <librapid/math/coreMath.hpp>
 
 // Disable zero-division warnings for the vector library
 #pragma warning(push)

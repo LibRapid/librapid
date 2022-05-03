@@ -5,6 +5,15 @@
 #include "internal/config.hpp"
 #include "internal/memUtils.hpp"
 #include "utils/time.hpp"
+#include "math/constants.hpp"
+#include "math/coreMath.hpp"
+
+// Disable zero-division warnings for the vector library
+#pragma warning(push)
+#pragma warning(disable : 4723)
+#include "math/vector.hpp"
+#pragma warning(pop)
+
 #include "internal/forward.hpp"
 #include "array/traits.hpp"
 #include "array/denseStorage.hpp"
