@@ -20,7 +20,7 @@ namespace librapid {
 		};
 	} // namespace internal
 
-	template<typename Scalar_, typename Device_>
+	template<typename Scalar_, typename Device_ = device::CPU>
 	class Array : public ArrayBase<Array<Scalar_, Device_>, Device_> {
 	public:
 #if !defined(LIBRAPID_HAS_CUDA)
