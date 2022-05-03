@@ -30,12 +30,12 @@ namespace librapid { namespace functors {
 #endif
 
 			if constexpr (dstIsHost && srcIsHost) {
+				int64_t packetWidth = internal::traits<Scalar>::PacketWidth;
+				int64_t len			= dst.extent().size();
+				int64_t alignedLen	= len - (len % packetWidth);
+				if (alignedLen < 0) alignedLen = 0;
 				// Only use a Packet type if possible
 				if constexpr (!std::is_same_v<Packet, std::false_type>) {
-					int64_t packetWidth = internal::traits<Scalar>::PacketWidth;
-					int64_t len			= dst.extent().size();
-					int64_t alignedLen	= len - (len % packetWidth);
-					if (alignedLen < 0) alignedLen = 0;
 
 					// Use the entire packet width where possible
 					if (numThreads < 2 || len < 500) {
