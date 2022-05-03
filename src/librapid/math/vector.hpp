@@ -25,12 +25,12 @@ namespace librapid {
 		Vec() = default;
 
 		template<typename X, typename... YZ>
-		Vec(X x, YZ... yz) : m_components {(DTYPE)x, (DTYPE)yz...} {
+		explicit Vec(X x, YZ... yz) : m_components {(DTYPE)x, (DTYPE)yz...} {
 			static_assert(1 + sizeof...(YZ) <= dims, "Parameters cannot exceed vector dimensions");
 		}
 
 		template<typename T, int64_t d>
-		Vec(const Vec<T, d> &other) {
+		explicit Vec(const Vec<T, d> &other) {
 			int64_t i;
 			for (i = 0; i < dims < d ? dims : d; ++i) { m_components[i] = other[i]; }
 		}
@@ -473,13 +473,12 @@ namespace librapid {
 
 	public:
 		Vec() = default;
-		;
 
 		template<typename X = DTYPE, typename Y = DTYPE, typename Z = DTYPE>
-		Vec(X x, Y y = 0, Z z = 0) : x(x), y(y), z(z) {}
+		explicit Vec(X x, Y y = 0, Z z = 0) : x(x), y(y), z(z) {}
 
 		template<typename T, int64_t d>
-		Vec(const Vec<T, d> &other) {
+		explicit Vec(const Vec<T, d> &other) {
 			x = other.x;
 			y = other.y;
 			z = other.z;
