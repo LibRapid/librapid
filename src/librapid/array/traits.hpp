@@ -12,7 +12,7 @@ namespace librapid::internal {
 		using Scalar						 = char;
 		using StorageType					 = memory::DenseStorage<char, device::CPU>;
 		using Packet						 = std::false_type;
-		static constexpr int64_t PacketWidth = 0;
+		static constexpr int64_t PacketWidth = 1;
 		static constexpr char Name[]		 = "char";
 	};
 
