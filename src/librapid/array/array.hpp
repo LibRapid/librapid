@@ -6,15 +6,16 @@
 #include "arrayBase.hpp"
 #include "cwisebinop.hpp"
 #include "denseStorage.hpp"
+#include "commaInitializer.hpp"
 
 namespace librapid {
 	namespace internal {
 		template<typename Scalar_, typename Device_>
 		struct traits<Array<Scalar_, Device_>> {
-			using Scalar = Scalar_;
-			using Device = Device_;
-			using Packet = typename traits<Scalar>::Packet;
-			using StorageType = memory::DenseStorage<Scalar, Device>;
+			using Scalar				   = Scalar_;
+			using Device				   = Device_;
+			using Packet				   = typename traits<Scalar>::Packet;
+			using StorageType			   = memory::DenseStorage<Scalar, Device>;
 			static constexpr int64_t Flags = 0;
 		};
 	} // namespace internal
@@ -44,9 +45,7 @@ namespace librapid {
 			Base::assign(other);
 		}
 
-		Array &operator=(const Array<Scalar, Device> &other) {
-			return Base::assign(other);
-		}
+		Array &operator=(const Array<Scalar, Device> &other) { return Base::assign(other); }
 
 		template<typename OtherDerived>
 		Array &operator=(const OtherDerived &other) {
@@ -55,6 +54,10 @@ namespace librapid {
 						  "Cannot assign Arrays with different types. Please use Array::cast<T>()");
 
 			return Base::assign(other);
+		}
+
+		internal::CommaInitializer<Type> operator<<(const Scalar &value) {
+			return internal::CommaInitializer<Type>(*this, value);
 		}
 
 		LR_FORCE_INLINE void writePacket(int64_t index, const Packet &p) {
