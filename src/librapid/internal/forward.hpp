@@ -16,6 +16,9 @@ namespace librapid {
 	template<typename T = int64_t, int64_t maxDims = 32>
 	class Extent;
 
+	template<typename ArrT>
+	class CommaInitializer;
+
 	template<typename Derived, typename device>
 	class ArrayBase;
 
