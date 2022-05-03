@@ -32,7 +32,7 @@ namespace librapid {
 		template<typename T, int64_t d>
 		explicit Vec(const Vec<T, d> &other) {
 			int64_t i;
-			for (i = 0; i < dims < d ? dims : d; ++i) { m_components[i] = other[i]; }
+			for (i = 0; i < MIN_DIM_CLAMP(dims, d); ++i) { m_components[i] = other[i]; }
 		}
 
 		template<typename T>
@@ -63,7 +63,7 @@ namespace librapid {
 			}
 		}
 
-		template<typename T, int tmpDim, glm::qualifier p = glm::defaultp>
+		template<typename T = DTYPE, int tmpDim = dims, glm::qualifier p = glm::defaultp>
 		operator glm::vec<tmpDim, T, p>() const {
 			glm::vec<tmpDim, T, p> res;
 			for (int64_t i = 0; i < dims; ++i) {
@@ -247,7 +247,7 @@ namespace librapid {
 		 */
 		DTYPE mag2() const {
 			DTYPE res = 0;
-			for (const auto &val : m_components) { res += val * val; }
+			for (int64_t i = 0; i < dims; ++i) { res += m_components[i] * m_components[i]; }
 			return res;
 		}
 
