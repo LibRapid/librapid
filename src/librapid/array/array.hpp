@@ -67,7 +67,7 @@ namespace librapid {
 
 		template<typename... T>
 		LR_NODISCARD("")
-		Scalar &operator()(T... indices) const {
+		const Scalar &operator()(T... indices) const {
 			LR_ASSERT(sizeof...(T) == Base::extent().dims(),
 					  "Array with {0} dimensions requires {0} access indices. Received {1}",
 					  Base::extent().dims(),
