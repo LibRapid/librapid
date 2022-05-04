@@ -43,7 +43,7 @@ namespace librapid::memory {
 
 		operator bool() const { return (bool)m_refCount; }
 
-		LR_NODISCARD("") T get(int64_t index) const {
+		LR_NODISCARD("") const T &get(int64_t index) const {
 			LR_ASSERT(index >= 0 && index < m_size,
 					  "Index {} is out of range for DenseStorage object with size {}",
 					  index,
