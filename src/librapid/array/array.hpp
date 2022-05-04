@@ -3,6 +3,7 @@
 #include "../internal/config.hpp"
 #include "traits.hpp"
 #include "helpers/extent.hpp"
+#include "helpers/internalUtils.hpp"
 #include "arrayBase.hpp"
 #include "cwisebinop.hpp"
 #include "denseStorage.hpp"
@@ -58,6 +59,34 @@ namespace librapid {
 
 		internal::CommaInitializer<Type> operator<<(const Scalar &value) {
 			return internal::CommaInitializer<Type>(*this, value);
+		}
+
+		LR_NODISCARD("") Scalar &operator[](int64_t index) const {
+			return Base::storage().get(index);
+		}
+
+		template<typename... T>
+		LR_NODISCARD("")
+		Scalar &operator()(T... indices) const {
+			LR_ASSERT(sizeof...(T) == Base::extent().dims(),
+					  "Array with {0} dimensions requires {0} access indices. Received {1}",
+					  Base::extent().dims(),
+					  sizeof...(indices));
+
+			int64_t index = internal::extentIndexProd(Base::extent(), 0, indices...);
+			return Base::storage().get(index);
+		}
+
+		template<typename... T>
+		LR_NODISCARD("")
+		Scalar &operator()(T... indices) {
+			LR_ASSERT(sizeof...(T) == Base::extent().dims(),
+					  "Array with {0} dimensions requires {0} access indices. Received {1}",
+					  Base::extent().dims(),
+					  sizeof...(indices));
+
+			int64_t index = internal::extentIndexProd(Base::extent(), 0, indices...);
+			return Base::storage().get(index);
 		}
 
 		LR_FORCE_INLINE void writePacket(int64_t index, const Packet &p) {

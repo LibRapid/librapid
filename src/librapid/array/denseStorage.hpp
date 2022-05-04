@@ -60,6 +60,17 @@ namespace librapid::memory {
 #endif
 		}
 
+		LR_NODISCARD("") T &get(int64_t index) {
+			LR_ASSERT(index >= 0 && index < m_size,
+					  "Index {} is out of range for DenseStorage object with size {}",
+					  index,
+					  m_size);
+
+			// Host data
+			if constexpr (std::is_same_v<d, device::CPU>) return m_heap[index];
+			LR_ASSERT(false, "Non-const access is not valid on Device Array");
+		}
+
 		void set(int64_t index, const T &value) const {
 			LR_ASSERT(index >= 0 && index < m_size,
 					  "Index {} is out of range for DenseStorage object with size {}",
