@@ -202,6 +202,7 @@ namespace librapid {
 
 		LR_NODISCARD("") bool isScalar() const { return m_isScalar; }
 		LR_NODISCARD("") const StorageType &storage() const { return m_storage; }
+		LR_NODISCARD("") StorageType &storage() { return m_storage; }
 		LR_NODISCARD("") Extent<int64_t, 32> extent() const { return m_extent; }
 
 	private:
