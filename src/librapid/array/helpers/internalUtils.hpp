@@ -11,7 +11,7 @@ namespace librapid::internal {
 	template<typename T, int64_t dims, typename First, typename... Other>
 	T extentIndexProd(const Extent<T, dims> &extent, int64_t index, First first, Other... others) {
 		int64_t extentProd = 1;
-		for (int64_t i = index; i < extent.dims() - 1; ++i) extentProd *= extent[i];
+		for (int64_t i = index + 1; i < extent.dims(); ++i) extentProd *= extent[i];
 		return extentProd * first + extentIndexProd(extent, index + 1, others...);
 	}
 } // namespace librapid::internal
