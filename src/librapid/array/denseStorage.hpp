@@ -54,9 +54,8 @@ namespace librapid::memory {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			// Device data
-			T tmp;
-			memory::memcpy<T, device::CPU, T, device::GPU>(&tmp, m_heap + index, 1);
-			return tmp;
+			memory::memcpy<T, device::CPU, T, device::GPU>((T *)(&m_tmp), m_heap + index, 1);
+			return m_tmp;
 #endif
 		}
 
@@ -134,6 +133,7 @@ namespace librapid::memory {
 		int64_t m_size					 = 0;
 		T *m_heap						 = nullptr;
 		std::atomic<int64_t> *m_refCount = nullptr;
+		T m_tmp;
 	};
 
 	template<typename T, typename d, typename T_, typename d_>
