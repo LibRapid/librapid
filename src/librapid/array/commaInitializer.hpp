@@ -21,7 +21,7 @@ namespace librapid::internal {
 		}
 
 		void next(const Scalar &other) {
-			m_array.storage().set(m_index, other);
+			m_array.storage()[m_index] = other;
 			++m_index;
 		}
 

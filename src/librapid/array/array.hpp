@@ -67,26 +67,26 @@ namespace librapid {
 
 		template<typename... T>
 		LR_NODISCARD("")
-		const Scalar &operator()(T... indices) const {
+		auto operator()(T... indices) const {
 			LR_ASSERT(sizeof...(T) == Base::extent().dims(),
 					  "Array with {0} dimensions requires {0} access indices. Received {1}",
 					  Base::extent().dims(),
 					  sizeof...(indices));
 
 			int64_t index = internal::extentIndexProd(Base::extent(), 0, indices...);
-			return Base::storage().get(index);
+			return Base::storage()[index];
 		}
 
 		template<typename... T>
 		LR_NODISCARD("")
-		Scalar &operator()(T... indices) {
+		auto operator()(T... indices) {
 			LR_ASSERT(sizeof...(T) == Base::extent().dims(),
 					  "Array with {0} dimensions requires {0} access indices. Received {1}",
 					  Base::extent().dims(),
 					  sizeof...(indices));
 
 			int64_t index = internal::extentIndexProd(Base::extent(), 0, indices...);
-			return Base::storage().get(index);
+			return Base::storage()[index];
 		}
 
 		LR_FORCE_INLINE void writePacket(int64_t index, const Packet &p) {
@@ -102,7 +102,7 @@ namespace librapid {
 		LR_NODISCARD("") std::string str() const {
 			std::string res = "[";
 			for (int64_t i = 0; i < Base::extent().size(); ++i) {
-				res += fmt::format("{}, ", Base::storage().get(i));
+				res += fmt::format("{}, ", Base::storage()[i]);
 			}
 			return res;
 		}

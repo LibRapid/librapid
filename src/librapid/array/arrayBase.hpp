@@ -8,6 +8,25 @@
 #include "cast.hpp"
 
 namespace librapid {
+#define IMPL_BINOP(NAME, TYPE)                                                                     \
+	template<typename OtherDerived, typename OtherDevice>                                          \
+	LR_NODISCARD("")                                                                               \
+	auto NAME(const ArrayBase<OtherDerived, OtherDevice> &other) const {                           \
+		using ScalarOther = typename internal::traits<OtherDerived>::Scalar;                       \
+		using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;             \
+		using RetType =                                                                            \
+		  binop::CWiseBinop<functors::binary::TYPE<Scalar, ScalarOther>, Derived, OtherDerived>;   \
+                                                                                                   \
+		static_assert(                                                                             \
+		  std::is_same_v<Scalar, ScalarOther>,                                                     \
+		  "Cannot operate on Arrays with different types. Please use Array::cast<T>()");           \
+                                                                                                   \
+		if constexpr (Flags & internal::Flag_RequireEval)                                          \
+			return RetType(derived(), other.derived()).eval();                                     \
+		else if constexpr (!(Flags & internal::Flag_RequireEval))                                  \
+			return RetType(derived(), other.derived());                                            \
+	}
+
 	namespace internal {
 		template<typename Derived>
 		struct traits<ArrayBase<Derived, device::CPU>> {
@@ -58,77 +77,14 @@ namespace librapid {
 			return RetType(derived());
 		}
 
-		template<typename OtherDerived, typename OtherDevice>
-		LR_NODISCARD("Do not ignore the result of an arithmetic operation")
-		auto operator+(const ArrayBase<OtherDerived, OtherDevice> &other) const {
-			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
-			using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;
-			using RetType	  = binop::
-			  CWiseBinop<functors::binary::ScalarSum<Scalar, ScalarOther>, Derived, OtherDerived>;
+		IMPL_BINOP(operator+, ScalarSum)
+		IMPL_BINOP(operator-, ScalarDiff)
+		IMPL_BINOP(operator*, ScalarProd)
+		IMPL_BINOP(operator/, ScalarDiv)
 
-			static_assert(
-			  std::is_same_v<Scalar, ScalarOther>,
-			  "Cannot add Arrays with different data types. Please use Array::cast<T>()");
-
-			if constexpr (Flags & internal::Flag_RequireEval)
-				return RetType(derived(), other.derived()).eval();
-			else if constexpr (!(Flags & internal::Flag_RequireEval))
-				return RetType(derived(), other.derived());
-		}
-
-		template<typename OtherDerived, typename OtherDevice>
-		LR_NODISCARD("Do not ignore the result of an arithmetic operation")
-		auto operator-(const ArrayBase<OtherDerived, OtherDevice> &other) const {
-			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
-			using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;
-			using RetType	  = binop::
-			  CWiseBinop<functors::binary::ScalarDiff<Scalar, ScalarOther>, Derived, OtherDerived>;
-
-			static_assert(
-			  std::is_same_v<Scalar, ScalarOther>,
-			  "Cannot subtract Arrays with different data types. Please use Array::cast<T>()");
-
-			if constexpr (Flags & internal::Flag_RequireEval)
-				return RetType(derived(), other.derived()).eval();
-			else if constexpr (!(Flags & internal::Flag_RequireEval))
-				return RetType(derived(), other.derived());
-		}
-
-		template<typename OtherDerived, typename OtherDevice>
-		LR_NODISCARD("Do not ignore the result of an arithmetic operation")
-		auto operator*(const ArrayBase<OtherDerived, OtherDevice> &other) const {
-			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
-			using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;
-			using RetType	  = binop::
-			  CWiseBinop<functors::binary::ScalarProd<Scalar, ScalarOther>, Derived, OtherDerived>;
-
-			static_assert(
-			  std::is_same_v<Scalar, ScalarOther>,
-			  "Cannot multiply Arrays with different data types. Please use Array::cast<T>()");
-
-			if constexpr (Flags & internal::Flag_RequireEval)
-				return RetType(derived(), other.derived()).eval();
-			else if constexpr (!(Flags & internal::Flag_RequireEval))
-				return RetType(derived(), other.derived());
-		}
-
-		template<typename OtherDerived, typename OtherDevice>
-		LR_NODISCARD("Do not ignore the result of an arithmetic operation")
-		auto operator/(const ArrayBase<OtherDerived, OtherDevice> &other) const {
-			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
-			using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;
-			using RetType	  = binop::
-			  CWiseBinop<functors::binary::ScalarDiv<Scalar, ScalarOther>, Derived, OtherDerived>;
-
-			static_assert(
-			  std::is_same_v<Scalar, ScalarOther>,
-			  "Cannot divide Arrays with different data types. Please use Array::cast<T>()");
-
-			if constexpr (Flags & internal::Flag_RequireEval)
-				return RetType(derived(), other.derived()).eval();
-			else if constexpr (!(Flags & internal::Flag_RequireEval))
-				return RetType(derived(), other.derived());
-		}
+		IMPL_BINOP(operator|, BitwiseOr)
+		IMPL_BINOP(operator&, BitwiseAnd)
+		IMPL_BINOP(operator^, BitwiseXor)
 
 		template<typename OtherDerived>
 		LR_FORCE_INLINE void loadFrom(int64_t index, const OtherDerived &other) {
@@ -152,7 +108,7 @@ namespace librapid {
 		LR_FORCE_INLINE Derived &assign(const OtherDerived &other) {
 			// Construct if necessary
 			if (!m_storage) {
-				m_extent = other.extent();
+				m_extent  = other.extent();
 				m_storage = StorageType(m_extent.size());
 			}
 
@@ -183,8 +139,10 @@ namespace librapid {
 
 		LR_FORCE_INLINE Packet packet(int64_t index) const {
 			Packet p;
-			p.load_a(m_storage.heap() + index);
-			// p.load(m_storage.heap() + index);
+			if constexpr (std::is_same_v<Scalar, bool>)
+				p.load(m_storage.heap() + (index / 64));
+			else
+				p.load(m_storage.heap() + index);
 			return p;
 		}
 
