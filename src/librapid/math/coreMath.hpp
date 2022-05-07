@@ -216,24 +216,60 @@ namespace librapid {
 		return res;
 	}
 
+	template<typename T, typename std::enable_if_t<std::is_integral_v<T>, int> = 0>
+	T mod(T val, T divisor) {
+		return val % divisor;
+	}
+
+	template<typename T, typename std::enable_if_t<std::is_floating_point_v<T>, int> = 0>
+	T mod(T val, T divisor) {
+		return std::fmod(val, divisor);
+	}
+
+	namespace roundMode {
+		// Rounding Mode Information:
+		// Bit mask:
+		// [0] -> Round up if difference >= 0.5
+		// [1] -> Round up if difference < 0.5
+		// [2] -> Round to nearest even
+		// [3] -> Round to nearest odd
+		// [4] -> Round only if difference == 0.5
+
+		static constexpr int8_t UP		  = 0b00000011;
+		static constexpr int8_t DOWN	  = 0b00000000;
+		static constexpr int8_t TRUNC	  = 0b00000000;
+		static constexpr int8_t HALF_EVEN = 0b00010100;
+		static constexpr int8_t MATH	  = 0b00000001;
+	} // namespace roundMode
+
 	template<typename T = double>
-	T round(T num, int64_t dp) {
+	T round(T num, int64_t dp, int8_t mode = roundMode::MATH) {
 		const T alpha = pow10<T>(dp);
 		const T beta  = pow10<T>(-dp);
-
-		const T absx = abs(num * alpha);
-		T y			 = floor(absx);
-
-		if (absx - y >= 0.5) y += 1;
-
+		const T absx  = abs(num * alpha);
+		T y			  = floor(absx);
+		T diff		  = absx - y;
+		if (mode & (1 << 0) && diff >= 0.5) y += 1;
+		if (mode & (1 << 2)) {
+			auto integer  = (uint64_t)y;
+			T nearestEven = (integer & 1) ? (y + 1) : (T)integer;
+			if (mode & (1 << 4) && diff == 0.5) y = nearestEven;
+		}
 		return (num >= 0 ? y : -y) * beta;
+	}
+
+	template<typename T = double>
+	T roundTo(T num, T val) {
+		T rem = mod(num, val);
+		if (rem >= val / 2) return (num + val) - rem;
+		return num - rem;
 	}
 
 	template<typename T>
 	T roundSigFig(T num, int64_t figs) {
-		if (figs <= 0)
-			throw std::invalid_argument("Cannot round to " + std::to_string(figs) +
-										" significant figures. Must be greater than 0");
+		LR_ASSERT(figs > 0,
+				  "Cannot round to {} significant figures. Value must be greater than zero",
+				  figs);
 
 		T tmp	  = num > 0 ? num : -num;
 		int64_t n = 0;
