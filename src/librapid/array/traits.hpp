@@ -16,6 +16,16 @@ namespace librapid::internal {
 		static constexpr char Name[]		 = "char";
 	};
 
+	//------- Boolean ---------------------------------------------------------
+	template<>
+	struct traits<bool> {
+		using Scalar						 = bool;
+		using StorageType					 = memory::DenseStorage<bool, device::CPU>;
+		using Packet						 = vcl::Vec512b;
+		static constexpr int64_t PacketWidth = 512;
+		static constexpr char Name[]		 = "bool";
+	};
+
 	//------- 8bit Signed Integer ---------------------------------------------
 	template<>
 	struct traits<int8_t> {
