@@ -5,6 +5,18 @@
 #include "../internal/memUtils.hpp"
 #include "arrayBase.hpp"
 
+// TODO: Optimise this for GPU accesses
+#define IMPL_BINOP(NAME, ASSIGN, OP)                                                               \
+	template<typename Other>                                                                       \
+	auto NAME(const Other &other) const {                                                          \
+		return get() OP((T)other);                                                                 \
+	}                                                                                              \
+                                                                                                   \
+	template<typename Other>                                                                       \
+	void ASSIGN(const Other &other) {                                                              \
+		set(get() OP(T) other);                                                                    \
+	}
+
 namespace librapid::memory {
 	template<typename T, typename d>
 	class ValueReference {
@@ -55,6 +67,18 @@ namespace librapid::memory {
 			}
 		}
 
+		LR_NODISCARD("") T get() const { return *m_value; }
+		void set(T value) { *m_value = value; }
+
+		IMPL_BINOP(operator+, operator+=, +);
+		IMPL_BINOP(operator-, operator-=, -);
+		IMPL_BINOP(operator*, operator*=, *);
+		IMPL_BINOP(operator/, operator/=, /);
+
+		IMPL_BINOP(operator|, operator|=, |);
+		IMPL_BINOP(operator&, operator&=, &);
+		IMPL_BINOP(operator^, operator^=, ^);
+
 		LR_NODISCARD("") T *get_() const { return m_value; }
 
 	protected:
@@ -65,47 +89,45 @@ namespace librapid::memory {
 	class ValueReference<bool, d> : public ValueReference<uint64_t, d> {
 	public:
 		using Base = ValueReference<uint64_t, d>;
+		using T = bool;
 
 		ValueReference() : Base() {}
 
-		explicit ValueReference(uint64_t *val, uint16_t bit) : Base(val), m_bit(bit) {}
+		explicit ValueReference(uint64_t *val, uint16_t bit) : Base(val), m_bit(bit) {
+			LR_ASSERT(bit >= 0 && bit < 512,
+					  "Bit {} is out of range for ValueReference<bool>. Bit index must be in the "
+					  "range [0, 64)",
+					  bit);
+		}
 
 		ValueReference(const ValueReference<bool, d> &other) : Base(other), m_bit(other.m_bit) {}
 
 		template<typename Type, typename Device>
 		ValueReference &operator=(const ValueReference<Type, Device> &other) {
 			if (&other == this) return *this;
-			set(m_bit, (bool)other);
+			set((bool)other);
 			return *this;
 		}
 
 		ValueReference &operator=(const bool &val) {
-			set(m_bit, val);
+			set(val);
 			return *this;
 		}
 
-		LR_NODISCARD("") LR_FORCE_INLINE bool get(uint16_t bit) const {
-			LR_ASSERT(bit >= 0 && bit < 512,
-					  "Bit {} is out of range for ValueReference<bool>. Bit index must be in the "
-					  "range [0, 64)",
-					  bit);
-			if constexpr (std::is_same_v<d, device::CPU>) return *(this->m_value) & (1ull << bit);
+		LR_NODISCARD("") LR_FORCE_INLINE bool get() const {
+			if constexpr (std::is_same_v<d, device::CPU>) return *(this->m_value) & (1ull << m_bit);
 
 			uint64_t tmp;
 			memcpy<uint64_t, device::CPU, uint64_t, d>(&tmp, this->m_value, 1);
-			return tmp & (1ull << bit);
+			return tmp & (1ull << m_bit);
 		}
 
-		LR_FORCE_INLINE void set(uint16_t bit, bool value) {
-			LR_ASSERT(bit >= 0 && bit < 512,
-					  "Bit {} is out of range for ValueReference<bool>. Bit index must be in the "
-					  "range [0, 64)");
+		LR_FORCE_INLINE void set(bool value) {
 			if constexpr (std::is_same_v<d, device::CPU>) {
 				if (value)
-					*(this->m_value) |= (1ull << bit);
+					*(this->m_value) |= (1ull << m_bit);
 				else
-					*(this->m_value) &= ~(1ull << bit);
-
+					*(this->m_value) &= ~(1ull << m_bit);
 			} else {
 				const char *kernel = R"V0G0N(bitSetKernel
 					#include <stdint.h>
@@ -125,17 +147,26 @@ namespace librapid::memory {
 				dim3 block(1);
 
 				using jitify::reflection::Type;
-				jitifyCall(program.kernel("memcpyKernel")
+				jitifyCall(program.kernel("bitSetKernel")
 							 .instantiate()
 							 .configure(grid, block, 0, cudaStream)
-							 .launch(this->m_value, bit, value));
+							 .launch(this->m_value, m_bit, value));
 			}
 		}
+
+		IMPL_BINOP(operator+, operator+=, +);
+		IMPL_BINOP(operator-, operator-=, -);
+		IMPL_BINOP(operator*, operator*=, *);
+		IMPL_BINOP(operator/, operator/=, /);
+
+		IMPL_BINOP(operator|, operator|=, |);
+		IMPL_BINOP(operator&, operator&=, &);
+		IMPL_BINOP(operator^, operator^=, ^);
 
 		template<typename Type>
 		LR_NODISCARD("")
 		LR_INLINE operator Type() const {
-			return (Type)get(m_bit);
+			return (Type)get();
 		}
 
 	private:
@@ -157,3 +188,5 @@ struct fmt::formatter<librapid::memory::ValueReference<T, d>> {
 	}
 };
 #endif // FMT_API
+
+#undef IMPL_BINOP

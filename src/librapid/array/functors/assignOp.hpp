@@ -22,8 +22,9 @@ namespace librapid { namespace functors {
 			  std::is_same_v<typename internal::traits<Derived>::Device, device::CPU>;
 			constexpr bool srcIsHost =
 			  std::is_same_v<typename internal::traits<OtherDerived>::Device, device::CPU>;
-			using Scalar = typename internal::traits<Derived>::Scalar;
-			using Packet = typename internal::traits<Scalar>::Packet;
+			using Scalar	 = typename internal::traits<Derived>::Scalar;
+			using BaseScalar = typename internal::traits<Derived>::BaseScalar;
+			using Packet	 = typename internal::traits<Scalar>::Packet;
 
 #if !defined(LIBRAPID_HAS_CUDA)
 			static_assert(dstIsHost && srcIsHost, "CUDA support was not enabled");
@@ -39,7 +40,7 @@ namespace librapid { namespace functors {
 					len += 512;
 					len /= 512;
 					packetWidth = 1;
-					alignedLen = len;
+					alignedLen	= len;
 				}
 
 				// Only use a Packet type if possible
@@ -71,11 +72,17 @@ namespace librapid { namespace functors {
 							  "Calculation is too large to be run in a single call. Please call "
 							  "eval() somewhere earlier");
 
-				int64_t elems				 = src.extent().size();
-				std::vector<Scalar *> arrays = {dst.storage().heap()};
-				std::string scalarName		 = internal::traits<Scalar>::Name;
-				int64_t index				 = 0;
-				std::string microKernel		 = src.genKernel(arrays, index);
+				int64_t elems = src.extent().size();
+
+				if constexpr (std::is_same_v<Scalar, bool>) {
+					elems += 512;
+					elems /= 512;
+				}
+
+				std::vector<BaseScalar *> arrays = {dst.storage().heap()};
+				std::string scalarName			 = internal::traits<BaseScalar>::Name;
+				int64_t index					 = 0;
+				std::string microKernel			 = src.genKernel(arrays, index);
 
 				std::string mainArgs;
 				for (int64_t i = 0; i < index; ++i) {
@@ -133,14 +140,6 @@ void applyOp({4} **pointers, int64_t size) {{
 												 varExtractor,
 												 varArgs);
 
-				// LR_LOG_STATUS("Kernel: {}\n", kernel);
-
-				// for (int64_t i = 0; i < arrays.size(); ++i) {
-				// 	Scalar tmpVal = 0;
-				// 	memory::memcpy<Scalar, device::CPU, Scalar, device::GPU>(&tmpVal, arrays[i], 1);
-				// 	LR_LOG_STATUS("Array[{}]: {}", i, tmpVal);
-				// }
-
 				static jitify::JitCache kernelCache;
 				jitify::Program program = kernelCache.program(kernel);
 
@@ -159,8 +158,8 @@ void applyOp({4} **pointers, int64_t size) {{
 				dim3 block(threadsPerBlock);
 
 				// Copy the pointer array to the device
-				Scalar **devicePointers = memory::malloc<Scalar *, device::GPU>(index + 1);
-				memory::memcpy<Scalar *, device::GPU, Scalar *, device::CPU>(
+				BaseScalar **devicePointers = memory::malloc<BaseScalar *, device::GPU>(index + 1);
+				memory::memcpy<BaseScalar *, device::GPU, BaseScalar *, device::CPU>(
 				  devicePointers, &arrays[0], index + 1);
 
 				jitifyCall(program.kernel("applyOp")
@@ -169,7 +168,7 @@ void applyOp({4} **pointers, int64_t size) {{
 							 .launch(devicePointers, elems));
 
 				// Free device pointers
-				memory::free<Scalar *, device::GPU>(devicePointers);
+				memory::free<BaseScalar *, device::GPU>(devicePointers);
 #endif
 			}
 		}
