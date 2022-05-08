@@ -17,6 +17,12 @@
 		set(get() OP(T) other);                                                                    \
 	}
 
+#define IMPL_UNOP(NAME, OP)                                                                        \
+	template<typename Other>                                                                       \
+	auto NAME() const {                                                                            \
+		return OP get();                                                                           \
+	}
+
 namespace librapid::memory {
 	template<typename T, typename d>
 	class ValueReference {
@@ -70,6 +76,8 @@ namespace librapid::memory {
 		LR_NODISCARD("") T get() const { return *m_value; }
 		void set(T value) { *m_value = value; }
 
+		IMPL_BINOP(operator==, operator==, ==);
+		
 		IMPL_BINOP(operator+, operator+=, +);
 		IMPL_BINOP(operator-, operator-=, -);
 		IMPL_BINOP(operator*, operator*=, *);
@@ -78,6 +86,9 @@ namespace librapid::memory {
 		IMPL_BINOP(operator|, operator|=, |);
 		IMPL_BINOP(operator&, operator&=, &);
 		IMPL_BINOP(operator^, operator^=, ^);
+
+		IMPL_UNOP(operator!, !);
+		IMPL_UNOP(operator~, ~);
 
 		LR_NODISCARD("") T *get_() const { return m_value; }
 
@@ -89,7 +100,7 @@ namespace librapid::memory {
 	class ValueReference<bool, d> : public ValueReference<uint64_t, d> {
 	public:
 		using Base = ValueReference<uint64_t, d>;
-		using T = bool;
+		using T	   = bool;
 
 		ValueReference() : Base() {}
 
@@ -154,6 +165,8 @@ namespace librapid::memory {
 			}
 		}
 
+		IMPL_BINOP(operator==, operator==, ==);
+
 		IMPL_BINOP(operator+, operator+=, +);
 		IMPL_BINOP(operator-, operator-=, -);
 		IMPL_BINOP(operator*, operator*=, *);
@@ -162,6 +175,9 @@ namespace librapid::memory {
 		IMPL_BINOP(operator|, operator|=, |);
 		IMPL_BINOP(operator&, operator&=, &);
 		IMPL_BINOP(operator^, operator^=, ^);
+
+		IMPL_UNOP(operator!, !);
+		IMPL_UNOP(operator~, ~);
 
 		template<typename Type>
 		LR_NODISCARD("")
@@ -190,3 +206,4 @@ struct fmt::formatter<librapid::memory::ValueReference<T, d>> {
 #endif // FMT_API
 
 #undef IMPL_BINOP
+#undef IMPL_UNOP
