@@ -77,7 +77,8 @@ namespace librapid::memory {
 		void set(T value) { *m_value = value; }
 
 		IMPL_BINOP(operator==, operator==, ==);
-		
+		IMPL_BINOP(operator!=, operator!=, !=);
+
 		IMPL_BINOP(operator+, operator+=, +);
 		IMPL_BINOP(operator-, operator-=, -);
 		IMPL_BINOP(operator*, operator*=, *);
