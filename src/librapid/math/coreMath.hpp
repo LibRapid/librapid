@@ -2,6 +2,7 @@
 #define LIBRAPID_CORE_MATH
 
 #include "../internal/config.hpp"
+#include "../internal/forward.hpp"
 
 namespace librapid {
 	int64_t product(const std::vector<int64_t> &vals) {
@@ -201,12 +202,14 @@ namespace librapid {
 	}
 
 	template<typename T = double>
-	T pow10(int64_t exponent) {
-		const static T pows[] = {
+	auto pow10(int64_t exponent) {
+		using Scalar = typename internal::traits<T>::Scalar;
+
+		const static Scalar pows[] = {
 		  0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000, 100000};
 		if (exponent >= -5 && exponent <= 5) return pows[exponent + 5];
 
-		T res = 1;
+		Scalar res = 1;
 
 		if (exponent > 0)
 			for (int64_t i = 0; i < exponent; i++) res *= 10;
@@ -243,16 +246,18 @@ namespace librapid {
 	} // namespace roundMode
 
 	template<typename T = double>
-	T round(T num, int64_t dp, int8_t mode = roundMode::MATH) {
-		const T alpha = pow10<T>(dp);
-		const T beta  = pow10<T>(-dp);
-		const T absx  = abs(num * alpha);
-		T y			  = floor(absx);
-		T diff		  = absx - y;
+	auto round(T num, int64_t dp, int8_t mode = roundMode::MATH) {
+		using Scalar = typename internal::traits<T>::Scalar;
+
+		const Scalar alpha = pow10<T>(dp);
+		const Scalar beta  = pow10<T>(-dp);
+		const Scalar absx  = abs(num * alpha);
+		Scalar y		   = floor(absx);
+		Scalar diff		   = absx - y;
 		if (mode & (1 << 0) && diff >= 0.5) y += 1;
 		if (mode & (1 << 2)) {
-			auto integer  = (uint64_t)y;
-			T nearestEven = (integer & 1) ? (y + 1) : (T)integer;
+			auto integer	 = (uint64_t)y;
+			auto nearestEven = (integer & 1) ? (y + 1) : (Scalar)integer;
 			if (mode & (1 << 4) && diff == 0.5) y = nearestEven;
 		}
 		return (num >= 0 ? y : -y) * beta;
