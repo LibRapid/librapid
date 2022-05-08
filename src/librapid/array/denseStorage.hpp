@@ -95,7 +95,7 @@ namespace librapid::memory {
 
 		DenseStorage() : Base() {};
 
-		explicit DenseStorage(int64_t size) : Base((size + 512) / 16) {
+		explicit DenseStorage(int64_t size) : Base((size + 512) / 64) {
 			this->m_size = size;
 #if defined(LIBRAPID_HAS_CUDA)
 			if constexpr (std::is_same_v<d, device::GPU>) initializeCudaStream();
@@ -107,8 +107,8 @@ namespace librapid::memory {
 					  "Index {} is out of range for DenseStorage object with size {}",
 					  index,
 					  this->m_size);
-			uint64_t block = index / 512;
-			uint16_t bit   = mod<uint64_t>(index, 512);
+			uint64_t block = index / 64;
+			uint16_t bit   = mod<uint64_t>(index, 64);
 			return ValueReference<bool, d>(this->m_heap + block, bit);
 		}
 
@@ -117,8 +117,8 @@ namespace librapid::memory {
 					  "Index {} is out of range for DenseStorage object with size {}",
 					  index,
 					  this->m_size);
-			uint64_t block = index / 512;
-			uint16_t bit   = mod<uint64_t>(index, 512);
+			uint64_t block = index / 64;
+			uint16_t bit   = mod<uint64_t>(index, 64);
 			return ValueReference<bool, d>(this->m_heap + block, bit);
 		}
 	};

@@ -10,6 +10,7 @@ namespace librapid {
 		struct traits<binop::CWiseBinop<Binop, LHS, RHS>> {
 			using Type		  = binop::CWiseBinop<Binop, LHS, RHS>;
 			using Scalar	  = typename Binop::RetType;
+			using BaseScalar  = typename traits<Scalar>::BaseScalar;
 			using Packet	  = typename traits<Scalar>::Packet;
 			using DeviceLHS	  = typename traits<LHS>::Device;
 			using DeviceRHS	  = typename traits<RHS>::Device;

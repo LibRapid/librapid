@@ -10,6 +10,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<char> {
 		using Scalar						 = char;
+		using BaseScalar					 = char;
 		using StorageType					 = memory::DenseStorage<char, device::CPU>;
 		using Packet						 = std::false_type;
 		static constexpr int64_t PacketWidth = 1;
@@ -20,6 +21,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<bool> {
 		using Scalar						 = bool;
+		using BaseScalar					 = uint64_t;
 		using StorageType					 = memory::DenseStorage<bool, device::CPU>;
 		using Packet						 = vcl::Vec512b;
 		static constexpr int64_t PacketWidth = 512;
@@ -30,6 +32,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<int8_t> {
 		using Scalar						 = int8_t;
+		using BaseScalar					 = int8_t;
 		using StorageType					 = memory::DenseStorage<int8_t, device::CPU>;
 		using Packet						 = vcl::Vec64c;
 		static constexpr int64_t PacketWidth = 64;
@@ -40,6 +43,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<uint8_t> {
 		using Scalar						 = uint8_t;
+		using BaseScalar					 = uint8_t;
 		using StorageType					 = memory::DenseStorage<uint8_t>;
 		using Packet						 = vcl::Vec64uc;
 		static constexpr int64_t PacketWidth = 64;
@@ -50,6 +54,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<int16_t> {
 		using Scalar						 = int16_t;
+		using BaseScalar					 = int16_t;
 		using StorageType					 = memory::DenseStorage<int16_t>;
 		using Packet						 = vcl::Vec32s;
 		static constexpr int64_t PacketWidth = 32;
@@ -60,6 +65,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<uint16_t> {
 		using Scalar						 = uint16_t;
+		using BaseScalar					 = uint16_t;
 		using StorageType					 = memory::DenseStorage<uint16_t>;
 		using Packet						 = vcl::Vec32us;
 		static constexpr int64_t PacketWidth = 32;
@@ -70,6 +76,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<int32_t> {
 		using Scalar						 = int32_t;
+		using BaseScalar					 = int32_t;
 		using StorageType					 = memory::DenseStorage<int32_t>;
 		using Packet						 = vcl::Vec8i;
 		static constexpr int64_t PacketWidth = 8;
@@ -80,6 +87,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<uint32_t> {
 		using Scalar						 = uint32_t;
+		using BaseScalar					 = uint32_t;
 		using StorageType					 = memory::DenseStorage<uint32_t>;
 		using Packet						 = vcl::Vec8ui;
 		static constexpr int64_t PacketWidth = 4;
@@ -90,6 +98,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<int64_t> {
 		using Scalar						 = int64_t;
+		using BaseScalar					 = int64_t;
 		using StorageType					 = memory::DenseStorage<int64_t>;
 		using Packet						 = vcl::Vec8q;
 		static constexpr int64_t PacketWidth = 8;
@@ -100,6 +109,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<uint64_t> {
 		using Scalar						 = uint64_t;
+		using BaseScalar					 = uint64_t;
 		using StorageType					 = memory::DenseStorage<uint64_t>;
 		using Packet						 = vcl::Vec8uq;
 		static constexpr int64_t PacketWidth = 8;
@@ -110,6 +120,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<float> {
 		using Scalar						 = float;
+		using BaseScalar					 = float;
 		using StorageType					 = memory::DenseStorage<float>;
 		using Packet						 = vcl::Vec16f;
 		static constexpr int64_t PacketWidth = 16;
@@ -120,6 +131,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<double> {
 		using Scalar						 = double;
+		using BaseScalar					 = double;
 		using StorageType					 = memory::DenseStorage<double>;
 		using Packet						 = vcl::Vec8d;
 		static constexpr int64_t PacketWidth = 8;
