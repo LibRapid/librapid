@@ -14,6 +14,7 @@ namespace librapid {
 		template<typename Scalar_, typename Device_>
 		struct traits<Array<Scalar_, Device_>> {
 			using Scalar				   = Scalar_;
+			using BaseScalar			   = typename traits<Scalar>::BaseScalar;
 			using Device				   = Device_;
 			using Packet				   = typename traits<Scalar>::Packet;
 			using StorageType			   = memory::DenseStorage<Scalar, Device>;
@@ -61,8 +62,8 @@ namespace librapid {
 			return internal::CommaInitializer<Type>(*this, value);
 		}
 
-		LR_NODISCARD("") Scalar &operator[](int64_t index) const {
-			return Base::storage().get(index);
+		LR_NODISCARD("") auto operator[](int64_t index) const {
+			return Base::storage()[index];
 		}
 
 		template<typename... T>

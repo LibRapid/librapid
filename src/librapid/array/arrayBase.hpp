@@ -7,7 +7,6 @@
 #include "functors/functors.hpp"
 #include "cast.hpp"
 
-namespace librapid {
 #define IMPL_BINOP(NAME, TYPE)                                                                     \
 	template<typename OtherDerived, typename OtherDevice>                                          \
 	LR_NODISCARD("")                                                                               \
@@ -27,10 +26,12 @@ namespace librapid {
 			return RetType(derived(), other.derived());                                            \
 	}
 
+namespace librapid {
 	namespace internal {
 		template<typename Derived>
 		struct traits<ArrayBase<Derived, device::CPU>> {
 			using Scalar					= typename traits<Derived>::Scalar;
+			using BaseScalar				= typename traits<Scalar>::BaseScalar;
 			using Device					= device::CPU;
 			using StorageType				= memory::DenseStorage<Scalar, device::CPU>;
 			static constexpr uint64_t Flags = traits<Derived>::Flags;
@@ -169,3 +170,5 @@ namespace librapid {
 		StorageType m_storage;
 	};
 } // namespace librapid
+
+#undef IMPL_BINOP
