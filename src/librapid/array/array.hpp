@@ -62,6 +62,10 @@ namespace librapid {
 			return internal::CommaInitializer<Type>(*this, value);
 		}
 
+		Array copy() const {
+			return Base::template cast<Scalar>().eval();
+		}
+
 		LR_NODISCARD("") auto operator[](int64_t index) const {
 			return Base::storage()[index];
 		}

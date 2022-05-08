@@ -43,6 +43,13 @@ namespace librapid {
 				return *this;
 			}
 
+			LR_NODISCARD("Do not ignore the result of an evaluated calculation")
+			Array<Scalar, Device> eval() const {
+				Array<Scalar, Device> res(Base::extent());
+				res.assign(*this);
+				return res;
+			}
+
 			LR_FORCE_INLINE Packet packet(int64_t index) const {
 				// Quick return if possible
 				if constexpr (std::is_same_v<Scalar, InputScalar>) return m_toCast.packet(index);

@@ -54,14 +54,14 @@ namespace librapid { namespace functors {
 						// Multi-threaded approach
 #pragma omp parallel for shared(dst, src, alignedLen, packetWidth) default(none)                   \
   num_threads(numThreads)
-						for (int64_t i = 0; i < alignedLen - packetWidth; i += packetWidth) {
+						for (int64_t i = 0; i < alignedLen; i += packetWidth) {
 							dst.loadFrom(i, src);
 						}
 					}
 				}
 
 				// Ensure the remaining values are filled
-				int64_t start = alignedLen - packetWidth;
+				int64_t start = alignedLen;
 				for (int64_t i = start < 0 ? 0 : start; i < len; ++i) {
 					dst.loadFromScalar(i, src);
 				}
