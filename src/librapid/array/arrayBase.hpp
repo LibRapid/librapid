@@ -70,6 +70,14 @@ namespace librapid {
 			return assign(other);
 		}
 
+//		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
+//		Array<Scalar, Device> eval() const {
+//			Array<Scalar, Device> res(m_extent);
+//			memory::memcpy<Scalar, Device, Scalar, Device>(
+//			  res.storage().heap(), storage().heap(), m_extent.size());
+//			return res;
+//		}
+
 		template<typename T>
 		LR_NODISCARD("")
 		LR_FORCE_INLINE auto cast() const {
