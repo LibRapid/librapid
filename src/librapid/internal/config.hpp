@@ -420,17 +420,19 @@ namespace librapid::internal {
 #	ifdef LIBRAPID_MSVC_CXX
 #		define LR_STATUS(msg, ...)                                                                \
 			do {                                                                                   \
+				std::string funcName = FUNCTION;                                                   \
+				if (funcName.length() > 75) funcName = "<Signature too Long>";                     \
 				int maxLen =                                                                       \
 				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)) + 6,    \
 														(int)strlen(FILENAME) + 6,                 \
-														(int)strlen(FUNCTION) + 6,                 \
+														(int)funcName.length() + 6,                \
 														(int)strlen("WARN ASSERTION FAILED"));     \
 				fmt::print(fmt::fg(fmt::color::green),                                             \
 						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                              \
 						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                    \
 						   "STATUS",                                                               \
 						   FILENAME,                                                               \
-						   FUNCTION,                                                               \
+						   funcName,                                                               \
 						   __LINE__,                                                               \
 						   fmt::format(msg, __VA_ARGS__),                                          \
 						   maxLen + 5,                                                             \
@@ -441,17 +443,19 @@ namespace librapid::internal {
 
 #		define LR_WARN(msg, ...)                                                                  \
 			do {                                                                                   \
+				std::string funcName = FUNCTION;                                                   \
+				if (funcName.length() > 75) funcName = "<Signature too Long>";                     \
 				int maxLen =                                                                       \
 				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)) + 6,    \
 														(int)strlen(FILENAME) + 6,                 \
-														(int)strlen(FUNCTION) + 6,                 \
+														(int)funcName.length() + 6,                \
 														(int)strlen("WARN ASSERTION FAILED"));     \
 				fmt::print(fmt::fg(fmt::color::yellow),                                            \
 						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                              \
 						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                    \
 						   "WARNING",                                                              \
 						   FILENAME,                                                               \
-						   FUNCTION,                                                               \
+						   funcName,                                                               \
 						   __LINE__,                                                               \
 						   fmt::format(msg, __VA_ARGS__),                                          \
 						   maxLen + 5,                                                             \
@@ -462,24 +466,25 @@ namespace librapid::internal {
 
 #		define LR_ERROR(msg, ...)                                                                 \
 			do {                                                                                   \
+				std::string funcName = FUNCTION;                                                   \
+				if (funcName.length() > 75) funcName = "<Signature too Long>";                     \
 				int maxLen =                                                                       \
 				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)) + 6,    \
 														(int)strlen(FILENAME) + 6,                 \
-														(int)strlen(FUNCTION) + 6,                 \
+														(int)funcName.length() + 6,                \
 														(int)strlen("WARN ASSERTION FAILED"));     \
 				std::string formatted = fmt::format(                                               \
 				  "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                                       \
 				  "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                             \
 				  "ERROR",                                                                         \
 				  FILENAME,                                                                        \
-				  FUNCTION,                                                                        \
+				  funcName,                                                                        \
 				  __LINE__,                                                                        \
 				  fmt::format(msg, __VA_ARGS__),                                                   \
 				  maxLen + 5,                                                                      \
 				  maxLen + 0,                                                                      \
 				  maxLen - 4,                                                                      \
-				  maxLen);                                                                         \
-				fmt::print(fmt::fg(fmt::color::red), formatted);                                   \
+				  maxLen);                                                                               \
 				if (librapid::throwOnAssert) {                                                     \
 					throw std::runtime_error(formatted);                                           \
 				} else {                                                                           \
@@ -489,12 +494,14 @@ namespace librapid::internal {
 			} while (0)
 
 #		define LR_WASSERT(cond, msg, ...)                                                         \
+			std::string funcName = FUNCTION;                                                       \
+			if (funcName.length() > 75) funcName = "<Signature too Long>";                         \
 			do {                                                                                   \
 				if (!(cond)) {                                                                     \
 					int maxLen = librapid::internal::smallMax_internal(                            \
 					  (int)std::ceil(std::log(__LINE__)) + 6,                                      \
 					  (int)strlen(FILENAME) + 6,                                                   \
-					  (int)strlen(FUNCTION) + 6,                                                   \
+					  (int)funcName.length() + 6,                                                  \
 					  (int)strlen(#cond) + 6,                                                      \
 					  (int)strlen("WARN ASSERTION FAILED"));                                       \
 					fmt::print(fmt::fg(fmt::color::yellow),                                        \
@@ -503,7 +510,7 @@ namespace librapid::internal {
 							   "{4:>{10}}]\n{5}\n",                                                \
 							   "WARN ASSERTION FAILED",                                            \
 							   FILENAME,                                                           \
-							   FUNCTION,                                                           \
+							   funcName,                                                           \
 							   __LINE__,                                                           \
 							   #cond,                                                              \
 							   fmt::format(msg, __VA_ARGS__),                                      \
@@ -518,10 +525,12 @@ namespace librapid::internal {
 #		define LR_ASSERT(cond, msg, ...)                                                          \
 			do {                                                                                   \
 				if (!(cond)) {                                                                     \
+					std::string funcName = FUNCTION;                                               \
+					if (funcName.length() > 75) funcName = "<Signature too Long>";                 \
 					int maxLen =                                                                   \
 					  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)),    \
 															(int)strlen(FILENAME),                 \
-															(int)strlen(FUNCTION),                 \
+															(int)funcName.length(),                \
 															(int)strlen(#cond),                    \
 															(int)strlen("ASSERTION FAILED"));      \
 					std::string formatted = fmt::format(                                           \
@@ -530,7 +539,7 @@ namespace librapid::internal {
 					  "{4:>{10}}]\n{5}\n",                                                         \
 					  "ASSERTION FAILED",                                                          \
 					  FILENAME,                                                                    \
-					  FUNCTION,                                                                    \
+					  funcName,                                                                    \
 					  __LINE__,                                                                    \
 					  #cond,                                                                       \
 					  fmt::format(msg, __VA_ARGS__),                                               \
@@ -550,17 +559,19 @@ namespace librapid::internal {
 #	else
 #		define LR_STATUS(msg, ...)                                                                \
 			do {                                                                                   \
+				std::string funcName = FUNCTION;                                                   \
+				if (funcName.length() > 75) funcName = "<Signature too Long>";                     \
 				int maxLen =                                                                       \
 				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)) + 6,    \
 														(int)strlen(FILENAME) + 6,                 \
-														(int)strlen(FUNCTION) + 6,                 \
+														(int)funcName.length() + 6,                \
 														(int)strlen("WARN ASSERTION FAILED"));     \
 				fmt::print(fmt::fg(fmt::color::green),                                             \
 						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                              \
 						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                    \
 						   "STATUS",                                                               \
 						   FILENAME,                                                               \
-						   FUNCTION,                                                               \
+						   funcName,                                                               \
 						   __LINE__,                                                               \
 						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                            \
 						   maxLen + 5,                                                             \
@@ -571,17 +582,19 @@ namespace librapid::internal {
 
 #		define LR_WARN(msg, ...)                                                                  \
 			do {                                                                                   \
+				std::string funcName = FUNCTION;                                                   \
+				if (funcName.length() > 75) funcName = "<Signature too Long>";                     \
 				int maxLen =                                                                       \
 				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)) + 6,    \
 														(int)strlen(FILENAME) + 6,                 \
-														(int)strlen(FUNCTION) + 6,                 \
+														(int)funcName.length() + 6,                \
 														(int)strlen("WARN ASSERTION FAILED"));     \
 				fmt::print(fmt::fg(fmt::color::yellow),                                            \
 						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                              \
 						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                    \
 						   "WARNING",                                                              \
 						   FILENAME,                                                               \
-						   FUNCTION,                                                               \
+						   funcName,                                                               \
 						   __LINE__,                                                               \
 						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                            \
 						   maxLen + 5,                                                             \
@@ -592,17 +605,19 @@ namespace librapid::internal {
 
 #		define LR_ERROR(msg, ...)                                                                 \
 			do {                                                                                   \
+				std::string funcName = FUNCTION;                                                   \
+				if (funcName.length() > 75) funcName = "<Signature too Long>";                     \
 				int maxLen =                                                                       \
 				  librapiod::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)) + 6,   \
 														 (int)strlen(FILENAME) + 6,                \
-														 (int)strlen(FUNCTION) + 6,                \
+														 (int)funcName.length() + 6,               \
 														 (int)strlen("WARN ASSERTION FAILED"));    \
 				fmt::print(fmt::fg(fmt::color::red),                                               \
 						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                              \
 						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                    \
 						   "ERROR",                                                                \
 						   FILENAME,                                                               \
-						   FUNCTION,                                                               \
+						   funcName,                                                               \
 						   __LINE__,                                                               \
 						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                            \
 						   maxLen + 5,                                                             \
@@ -615,10 +630,12 @@ namespace librapid::internal {
 #		define LR_WASSERT(cond, msg, ...)                                                         \
 			do {                                                                                   \
 				if (!(cond)) {                                                                     \
-					int maxLen = librapid::internal::smallMax_internal(                            \
+					std::string funcName = FUNCTION;                                               \
+					if (funcName.length() > 75) funcName = "<Signature too Long>";                 \
+					\ int maxLen = librapid::internal::smallMax_internal(                          \
 					  (int)std::ceil(std::log(__LINE__)) + 6,                                      \
 					  (int)strlen(FILENAME) + 6,                                                   \
-					  (int)strlen(FUNCTION) + 6,                                                   \
+					  (int)funcName.length() + 6,                                                  \
 					  (int)strlen(#cond) + 6,                                                      \
 					  (int)strlen("WARN ASSERTION FAILED"));                                       \
 					fmt::print(fmt::fg(fmt::color::yellow),                                        \
@@ -627,7 +644,7 @@ namespace librapid::internal {
 							   "{4:>{10}}]\n{5}\n",                                                \
 							   "WARN ASSERTION FAILED",                                            \
 							   FILENAME,                                                           \
-							   FUNCTION,                                                           \
+							   funcName,                                                           \
 							   __LINE__,                                                           \
 							   #cond,                                                              \
 							   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                        \
@@ -641,11 +658,13 @@ namespace librapid::internal {
 
 #		define LR_ASSERT(cond, msg, ...)                                                          \
 			do {                                                                                   \
+				std::string funcName = FUNCTION;                                                   \
+				if (funcName.length() > 75) funcName = "<Signature too Long>";                     \
 				if (!(cond)) {                                                                     \
 					int maxLen =                                                                   \
 					  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)),    \
 															(int)strlen(FILENAME),                 \
-															(int)strlen(FUNCTION),                 \
+															(int)funcName.length(),                \
 															(int)strlen(#cond),                    \
 															(int)strlen("ASSERTION FAILED"));      \
 					std::string formatted = fmt::format(                                           \
@@ -654,7 +673,7 @@ namespace librapid::internal {
 					  "{4:>{10}}]\n{5}\n",                                                         \
 					  "ASSERTION FAILED",                                                          \
 					  FILENAME,                                                                    \
-					  FUNCTION,                                                                    \
+					  funcName,                                                                    \
 					  __LINE__,                                                                    \
 					  #cond,                                                                       \
 					  fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                                 \
@@ -697,10 +716,12 @@ namespace librapid::internal {
 #	define LR_ASSERT_ALWAYS(cond, msg, ...)                                                       \
 		do {                                                                                       \
 			if (!(cond)) {                                                                         \
+				std::string funcName = FUNCTION;                                                   \
+				if (funcName.length() > 75) funcName = "<Signature too Long>";                     \
 				int maxLen =                                                                       \
 				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)),        \
 														(int)strlen(FILENAME),                     \
-														(int)strlen(FUNCTION),                     \
+														(int)funcName.length(),                    \
 														(int)strlen(#cond),                        \
 														(int)strlen("ASSERTION FAILED"));          \
 				std::string formatted = fmt::format(                                               \
@@ -709,7 +730,7 @@ namespace librapid::internal {
 				  "{4:>{10}}]\n{5}\n",                                                             \
 				  "ASSERTION FAILED",                                                              \
 				  FILENAME,                                                                        \
-				  FUNCTION,                                                                        \
+				  funcName,                                                                        \
 				  __LINE__,                                                                        \
 				  #cond,                                                                           \
 				  fmt::format(msg, __VA_ARGS__),                                                   \
@@ -729,11 +750,13 @@ namespace librapid::internal {
 #else
 #	define LR_ASSERT_ALWAYS(cond, msg, ...)                                                       \
 		do {                                                                                       \
+			std::string funcName = FUNCTION;                                                       \
+			if (funcName.length() > 75) funcName = "<Signature too Long>";                         \
 			if (!(cond)) {                                                                         \
 				int maxLen =                                                                       \
 				  librapid::internal::smallMax_internal((int)std::ceil(std::log(__LINE__)),        \
 														(int)strlen(FILENAME),                     \
-														(int)strlen(FUNCTION),                     \
+														(int)funcName.length(),                    \
 														(int)strlen(#cond),                        \
 														(int)strlen("ASSERTION FAILED"));          \
 				fmt::print(fmt::fg(fmt::color::red),                                               \
@@ -742,7 +765,7 @@ namespace librapid::internal {
 						   "{4:>{10}}]\n{5}\n",                                                    \
 						   "ASSERTION FAILED",                                                     \
 						   FILENAME,                                                               \
-						   FUNCTION,                                                               \
+						   funcName,                                                               \
 						   __LINE__,                                                               \
 						   #cond,                                                                  \
 						   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                            \
