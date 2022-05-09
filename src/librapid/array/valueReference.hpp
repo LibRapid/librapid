@@ -64,7 +64,7 @@ namespace librapid {
 			using Device = d;
 			using Packet = typename traits<Scalar>::Packet;
 		};
-	}
+	} // namespace internal
 
 	namespace memory {
 		template<typename T, typename d>
@@ -97,10 +97,12 @@ namespace librapid {
 			}
 
 			ValueReference &operator=(const T &val) {
-				if constexpr (std::is_same_v<d, device::CPU>)
+				if constexpr (std::is_same_v<d, device::CPU>) {
 					*m_value = val;
-				else
-					memcpy<T, d, T, device::CPU>(m_value, &val, 1);
+				} else {
+					T tmp = val;
+					memcpy<T, d, T, device::CPU>(m_value, &tmp, 1);
+				}
 				return *this;
 			}
 
