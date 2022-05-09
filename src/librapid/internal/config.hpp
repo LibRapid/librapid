@@ -467,19 +467,25 @@ namespace librapid::internal {
 														(int)strlen(FILENAME) + 6,                 \
 														(int)strlen(FUNCTION) + 6,                 \
 														(int)strlen("WARN ASSERTION FAILED"));     \
-				fmt::print(fmt::fg(fmt::color::red),                                               \
-						   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                              \
-						   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                    \
-						   "ERROR",                                                                \
-						   FILENAME,                                                               \
-						   FUNCTION,                                                               \
-						   __LINE__,                                                               \
-						   fmt::format(msg, __VA_ARGS__),                                          \
-						   maxLen + 5,                                                             \
-						   maxLen + 0,                                                             \
-						   maxLen - 4,                                                             \
-						   maxLen);                                                                \
-				std::exit(1);                                                                      \
+				std::string formatted = fmt::format(                                               \
+				  "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                                       \
+				  "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                             \
+				  "ERROR",                                                                         \
+				  FILENAME,                                                                        \
+				  FUNCTION,                                                                        \
+				  __LINE__,                                                                        \
+				  fmt::format(msg, __VA_ARGS__),                                                   \
+				  maxLen + 5,                                                                      \
+				  maxLen + 0,                                                                      \
+				  maxLen - 4,                                                                      \
+				  maxLen);                                                                         \
+				fmt::print(fmt::fg(fmt::color::red), formatted);                                   \
+				if (librapid::throwOnAssert) {                                                     \
+					throw std::runtime_error(formatted);                                           \
+				} else {                                                                           \
+					fmt::print(fmt::fg(fmt::color::red), formatted);                               \
+					std::exit(1);                                                                  \
+				}                                                                                  \
 			} while (0)
 
 #		define LR_WASSERT(cond, msg, ...)                                                         \
@@ -518,22 +524,27 @@ namespace librapid::internal {
 															(int)strlen(FUNCTION),                 \
 															(int)strlen(#cond),                    \
 															(int)strlen("ASSERTION FAILED"));      \
-					fmt::print(fmt::fg(fmt::color::red),                                           \
-							   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                          \
-							   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                           \
-							   "{4:>{10}}]\n{5}\n",                                                \
-							   "ASSERTION FAILED",                                                 \
-							   FILENAME,                                                           \
-							   FUNCTION,                                                           \
-							   __LINE__,                                                           \
-							   #cond,                                                              \
-							   fmt::format(msg, __VA_ARGS__),                                      \
-							   maxLen + 14,                                                        \
-							   maxLen + 9,                                                         \
-							   maxLen + 5,                                                         \
-							   maxLen + 9,                                                         \
-							   maxLen + 4);                                                        \
-					std::exit(1);                                                                  \
+					std::string formatted = fmt::format(                                           \
+					  "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                                   \
+					  "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                                    \
+					  "{4:>{10}}]\n{5}\n",                                                         \
+					  "ASSERTION FAILED",                                                          \
+					  FILENAME,                                                                    \
+					  FUNCTION,                                                                    \
+					  __LINE__,                                                                    \
+					  #cond,                                                                       \
+					  fmt::format(msg, __VA_ARGS__),                                               \
+					  maxLen + 14,                                                                 \
+					  maxLen + 9,                                                                  \
+					  maxLen + 5,                                                                  \
+					  maxLen + 9,                                                                  \
+					  maxLen + 4);                                                                 \
+					if (librapid::throwOnAssert) {                                                 \
+						throw std::runtime_error(formatted);                                       \
+					} else {                                                                       \
+						fmt::print(fmt::fg(fmt::color::red), formatted);                           \
+						std::exit(1);                                                              \
+					}                                                                              \
 				}                                                                                  \
 			} while (0)
 #	else
@@ -637,22 +648,27 @@ namespace librapid::internal {
 															(int)strlen(FUNCTION),                 \
 															(int)strlen(#cond),                    \
 															(int)strlen("ASSERTION FAILED"));      \
-					fmt::print(fmt::fg(fmt::color::red),                                           \
-							   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                          \
-							   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                           \
-							   "{4:>{10}}]\n{5}\n",                                                \
-							   "ASSERTION FAILED",                                                 \
-							   FILENAME,                                                           \
-							   FUNCTION,                                                           \
-							   __LINE__,                                                           \
-							   #cond,                                                              \
-							   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                        \
-							   maxLen + 14,                                                        \
-							   maxLen + 9,                                                         \
-							   maxLen + 5,                                                         \
-							   maxLen + 9,                                                         \
-							   maxLen + 4);                                                        \
-					std::exit(1);                                                                  \
+					std::string formatted = fmt::format(                                           \
+					  "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                                   \
+					  "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                                    \
+					  "{4:>{10}}]\n{5}\n",                                                         \
+					  "ASSERTION FAILED",                                                          \
+					  FILENAME,                                                                    \
+					  FUNCTION,                                                                    \
+					  __LINE__,                                                                    \
+					  #cond,                                                                       \
+					  fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                                 \
+					  maxLen + 14,                                                                 \
+					  maxLen + 9,                                                                  \
+					  maxLen + 5,                                                                  \
+					  maxLen + 9,                                                                  \
+					  maxLen + 4);                                                                 \
+					if (librapid::throwOnAssert) {                                                 \
+						throw std::runtime_error(formatted);                                       \
+					} else {                                                                       \
+						fmt::print(fmt::fg(fmt::color::red), formatted);                           \
+						std::exit(1);                                                              \
+					}                                                                              \
 				}                                                                                  \
 			} while (0)
 #	endif // LIBRAPID_MSVC_CXX
@@ -687,22 +703,27 @@ namespace librapid::internal {
 														(int)strlen(FUNCTION),                     \
 														(int)strlen(#cond),                        \
 														(int)strlen("ASSERTION FAILED"));          \
-				fmt::print(fmt::fg(fmt::color::red),                                               \
-						   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                              \
-						   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                               \
-						   "{4:>{10}}]\n{5}\n",                                                    \
-						   "ASSERTION FAILED",                                                     \
-						   FILENAME,                                                               \
-						   FUNCTION,                                                               \
-						   __LINE__,                                                               \
-						   #cond,                                                                  \
-						   fmt::format(msg, __VA_ARGS__),                                          \
-						   maxLen + 14,                                                            \
-						   maxLen + 9,                                                             \
-						   maxLen + 5,                                                             \
-						   maxLen + 9,                                                             \
-						   maxLen + 4);                                                            \
-				std::exit(1);                                                                      \
+				std::string formatted = fmt::format(                                               \
+				  "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                                       \
+				  "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                                        \
+				  "{4:>{10}}]\n{5}\n",                                                             \
+				  "ASSERTION FAILED",                                                              \
+				  FILENAME,                                                                        \
+				  FUNCTION,                                                                        \
+				  __LINE__,                                                                        \
+				  #cond,                                                                           \
+				  fmt::format(msg, __VA_ARGS__),                                                   \
+				  maxLen + 14,                                                                     \
+				  maxLen + 9,                                                                      \
+				  maxLen + 5,                                                                      \
+				  maxLen + 9,                                                                      \
+				  maxLen + 4);                                                                     \
+				if (librapid::throwOnAssert) {                                                     \
+					throw std::runtime_error(formatted);                                           \
+				} else {                                                                           \
+					fmt::print(fmt::fg(fmt::color::red), formatted);                               \
+					std::exit(1);                                                                  \
+				}                                                                                  \
 			}                                                                                      \
 		} while (0)
 #else
@@ -825,6 +846,7 @@ namespace librapid::device {
 namespace librapid {
 #ifdef LIBRAPID_HAS_OMP
 	inline static unsigned int numThreads = 8;
+	inline static bool throwOnAssert	  = false;
 #else
 	inline static unsigned int numThreads = 1;
 #endif
