@@ -31,7 +31,13 @@ namespace librapid {
 		return sum;
 	}
 
-	LR_NODISCARD("") double gamma(double z, double upper = 50, double inc = 0.0001) {
+	LR_NODISCARD("") double gamma(double z, double upper = -1, double inc = 0.0001) {
+		if (upper == -1) {
+			if (z < 10) upper = 50;
+			if (z < 100) upper = 650;
+			if (z >= 100) upper = 1000;
+		}
+
 		auto integrand = [&](double x) { return pow(x, z - 1) * exp(-x); };
 		return integrate(integrand, 0, upper, inc);
 	}
@@ -109,6 +115,9 @@ namespace librapid {
 	}
 
 	double invGamma(double x, double guess = 2) {
+		// Run a very coarse calculation to get a guess for the guess
+		while (gamma(guess + 1) < x) guess += 0.5;
+
 		double dx = 10000;
 		while (abs(dx) > 1e-10) {
 			double num		= gamma(guess + 1) - x;
