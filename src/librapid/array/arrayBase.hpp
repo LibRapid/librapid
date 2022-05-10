@@ -30,6 +30,7 @@ namespace librapid {
 	namespace internal {
 		template<typename Derived>
 		struct traits<ArrayBase<Derived, device::CPU>> {
+			using Valid						= std::true_type;
 			using Scalar					= typename traits<Derived>::Scalar;
 			using BaseScalar				= typename traits<Scalar>::BaseScalar;
 			using Device					= device::CPU;
@@ -55,6 +56,8 @@ namespace librapid {
 		using StorageType				= typename internal::traits<Derived>::StorageType;
 		static constexpr uint64_t Flags = internal::traits<This>::Flags;
 
+		friend Derived;
+
 		ArrayBase() = default;
 
 		template<typename T_, int64_t d_>
@@ -70,13 +73,13 @@ namespace librapid {
 			return assign(other);
 		}
 
-//		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
-//		Array<Scalar, Device> eval() const {
-//			Array<Scalar, Device> res(m_extent);
-//			memory::memcpy<Scalar, Device, Scalar, Device>(
-//			  res.storage().heap(), storage().heap(), m_extent.size());
-//			return res;
-//		}
+		//		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
+		//		Array<Scalar, Device> eval() const {
+		//			Array<Scalar, Device> res(m_extent);
+		//			memory::memcpy<Scalar, Device, Scalar, Device>(
+		//			  res.storage().heap(), storage().heap(), m_extent.size());
+		//			return res;
+		//		}
 
 		template<typename T>
 		LR_NODISCARD("")
@@ -113,6 +116,19 @@ namespace librapid {
 			derived().writeScalar(index, other.scalar(index));
 		}
 
+		LR_FORCE_INLINE Derived &assign(const Scalar &other) {
+			// Construct if necessary
+			if (!m_storage) {
+				m_extent   = Extent(1);
+				m_storage  = StorageType(m_extent.size());
+				m_isScalar = true;
+			}
+
+			LR_ASSERT(m_isScalar, "Cannot assign Scalar to non-scalar Array");
+			m_storage[0] = other;
+			return derived();
+		}
+
 		template<typename OtherDerived>
 		LR_FORCE_INLINE Derived &assign(const OtherDerived &other) {
 			// Construct if necessary
@@ -126,6 +142,7 @@ namespace librapid {
 					  m_extent.str(),
 					  other.extent().str());
 
+			m_isScalar	   = other.isScalar();
 			using Selector = functors::AssignSelector<Derived, OtherDerived, false>;
 			return Selector::run(derived(), other.derived());
 		}

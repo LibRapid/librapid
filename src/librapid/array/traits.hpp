@@ -9,6 +9,7 @@ namespace librapid::internal {
 	//------- Just a  Character -----------------------------------------------
 	template<>
 	struct traits<char> {
+		using Valid							 = std::true_type;
 		using Scalar						 = char;
 		using BaseScalar					 = char;
 		using StorageType					 = memory::DenseStorage<char, device::CPU>;
@@ -20,6 +21,7 @@ namespace librapid::internal {
 	//------- Boolean ---------------------------------------------------------
 	template<>
 	struct traits<bool> {
+		using Valid							 = std::true_type;
 		using Scalar						 = bool;
 		using BaseScalar					 = uint64_t;
 		using StorageType					 = memory::DenseStorage<bool, device::CPU>;
@@ -31,6 +33,7 @@ namespace librapid::internal {
 	//------- 8bit Signed Integer ---------------------------------------------
 	template<>
 	struct traits<int8_t> {
+		using Valid							 = std::true_type;
 		using Scalar						 = int8_t;
 		using BaseScalar					 = int8_t;
 		using StorageType					 = memory::DenseStorage<int8_t, device::CPU>;
@@ -42,6 +45,7 @@ namespace librapid::internal {
 	//------- 8bit Unsigned Integer -------------------------------------------
 	template<>
 	struct traits<uint8_t> {
+		using Valid							 = std::true_type;
 		using Scalar						 = uint8_t;
 		using BaseScalar					 = uint8_t;
 		using StorageType					 = memory::DenseStorage<uint8_t>;
@@ -53,6 +57,7 @@ namespace librapid::internal {
 	//------- 16bit Signed Integer --------------------------------------------
 	template<>
 	struct traits<int16_t> {
+		using Valid							 = std::true_type;
 		using Scalar						 = int16_t;
 		using BaseScalar					 = int16_t;
 		using StorageType					 = memory::DenseStorage<int16_t>;
@@ -64,6 +69,7 @@ namespace librapid::internal {
 	//------- 16bit Unsigned Integer ------------------------------------------
 	template<>
 	struct traits<uint16_t> {
+		using Valid							 = std::true_type;
 		using Scalar						 = uint16_t;
 		using BaseScalar					 = uint16_t;
 		using StorageType					 = memory::DenseStorage<uint16_t>;
@@ -75,6 +81,7 @@ namespace librapid::internal {
 	//------- 32bit Signed Integer --------------------------------------------
 	template<>
 	struct traits<int32_t> {
+		using Valid							 = std::true_type;
 		using Scalar						 = int32_t;
 		using BaseScalar					 = int32_t;
 		using StorageType					 = memory::DenseStorage<int32_t>;
@@ -86,6 +93,7 @@ namespace librapid::internal {
 	//------- 32bit Unsigned Integer ------------------------------------------
 	template<>
 	struct traits<uint32_t> {
+		using Valid							 = std::true_type;
 		using Scalar						 = uint32_t;
 		using BaseScalar					 = uint32_t;
 		using StorageType					 = memory::DenseStorage<uint32_t>;
@@ -97,6 +105,7 @@ namespace librapid::internal {
 	//------- 64bit Signed Integer --------------------------------------------
 	template<>
 	struct traits<int64_t> {
+		using Valid							 = std::true_type;
 		using Scalar						 = int64_t;
 		using BaseScalar					 = int64_t;
 		using StorageType					 = memory::DenseStorage<int64_t>;
@@ -108,6 +117,7 @@ namespace librapid::internal {
 	//------- 64bit Unsigned Integer ------------------------------------------
 	template<>
 	struct traits<uint64_t> {
+		using Valid							 = std::true_type;
 		using Scalar						 = uint64_t;
 		using BaseScalar					 = uint64_t;
 		using StorageType					 = memory::DenseStorage<uint64_t>;
@@ -119,6 +129,7 @@ namespace librapid::internal {
 	//------- 32bit Floating Point --------------------------------------------
 	template<>
 	struct traits<float> {
+		using Valid							 = std::true_type;
 		using Scalar						 = float;
 		using BaseScalar					 = float;
 		using StorageType					 = memory::DenseStorage<float>;
@@ -130,6 +141,7 @@ namespace librapid::internal {
 	//------- 64bit Floating Point --------------------------------------------
 	template<>
 	struct traits<double> {
+		using Valid							 = std::true_type;
 		using Scalar						 = double;
 		using BaseScalar					 = double;
 		using StorageType					 = memory::DenseStorage<double>;
