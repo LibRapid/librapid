@@ -71,6 +71,36 @@ namespace librapid {
 		return std::sqrt(a);
 	}
 
+	template<typename T>
+	inline T exp(T a) {
+		return std::exp(a);
+	}
+
+	template<typename T>
+	inline T pow(T a, T power) {
+		return std::pow(a, power);
+	}
+
+	template<typename T>
+	inline T ln(T a) {
+		return std::log(a);
+	}
+
+	template<typename T>
+	inline T log2(T a) {
+		return std::log2(a);
+	}
+
+	template<typename T>
+	inline T log10(T a) {
+		return std::log10(a);
+	}
+
+	template<typename T>
+	inline T log(T a, T base) {
+		return ln(a) / ln(base);
+	}
+
 	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>> = 0>
 	inline T exp(T a) {
 		return std::exp(a);
@@ -192,7 +222,7 @@ namespace librapid {
 				v2 = 2 * random() - 1; // between -1.0 and 1.0
 				s  = v1 * v1 + v2 * v2;
 			} while (s >= 1 || s == 0);
-			double multiplier = sqrt(-2 * log(s) / s);
+			double multiplier = sqrt(-2 * ln(s) / s);
 			nextGaussian	  = v2 * multiplier;
 			hasNextGaussian	  = true;
 			res				  = v1 * multiplier;
