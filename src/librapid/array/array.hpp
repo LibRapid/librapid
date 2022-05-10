@@ -13,6 +13,7 @@ namespace librapid {
 	namespace internal {
 		template<typename Scalar_, typename Device_>
 		struct traits<Array<Scalar_, Device_>> {
+			using Valid					   = std::true_type;
 			using Scalar				   = Scalar_;
 			using BaseScalar			   = typename traits<Scalar>::BaseScalar;
 			using Device				   = Device_;
@@ -47,6 +48,8 @@ namespace librapid {
 			Base::assign(other);
 		}
 
+		Array &operator=(const Scalar &other) { return Base::assign(other); }
+
 		Array &operator=(const Array<Scalar, Device> &other) { return Base::assign(other); }
 
 		template<typename OtherDerived>
@@ -62,35 +65,55 @@ namespace librapid {
 			return internal::CommaInitializer<Type>(*this, value);
 		}
 
-		Array copy() const {
-			return Base::template cast<Scalar>().eval();
+		Array copy() const { return Base::template cast<Scalar>().eval(); }
+
+		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
+			int64_t memIndex = internal::extentIndexProd(Base::extent(), this->m_isScalar, 0, index);
+			Array<Scalar, Device> res;
+			res.m_extent   = Base::extent().partial(1);
+			res.m_isScalar = Base::extent().dims() == 1;
+			res.m_storage  = Base::storage();
+			res.m_storage.offsetMemory(memIndex);
+
+			return res;
 		}
 
-		LR_NODISCARD("") auto operator[](int64_t index) const {
-			return Base::storage()[index];
+		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) {
+			int64_t memIndex = internal::extentIndexProd(Base::extent(), this->m_isScalar, 0, index);
+			Array<Scalar, Device> res;
+			res.m_extent   = Base::extent().partial(1);
+			res.m_isScalar = res.m_extent.dims() == 0;
+			res.m_storage  = Base::storage();
+			res.m_storage.offsetMemory(memIndex);
+
+			return res;
 		}
 
 		template<typename... T>
 		LR_NODISCARD("")
 		auto operator()(T... indices) const {
-			LR_ASSERT(sizeof...(T) == Base::extent().dims(),
+			LR_ASSERT((this->m_isScalar && sizeof...(T) == 1) ||
+						sizeof...(T) == Base::extent().dims(),
 					  "Array with {0} dimensions requires {0} access indices. Received {1}",
 					  Base::extent().dims(),
 					  sizeof...(indices));
 
-			int64_t index = internal::extentIndexProd(Base::extent(), 0, indices...);
+			int64_t index =
+			  internal::extentIndexProd(Base::extent(), this->m_isScalar, 0, indices...);
 			return Base::storage()[index];
 		}
 
 		template<typename... T>
 		LR_NODISCARD("")
 		auto operator()(T... indices) {
-			LR_ASSERT(sizeof...(T) == Base::extent().dims(),
+			LR_ASSERT((this->m_isScalar && sizeof...(T) == 1) ||
+						sizeof...(T) == Base::extent().dims(),
 					  "Array with {0} dimensions requires {0} access indices. Received {1}",
 					  Base::extent().dims(),
 					  sizeof...(indices));
 
-			int64_t index = internal::extentIndexProd(Base::extent(), 0, indices...);
+			int64_t index =
+			  internal::extentIndexProd(Base::extent(), this->m_isScalar, 0, indices...);
 			return Base::storage()[index];
 		}
 
@@ -104,7 +127,15 @@ namespace librapid {
 			Base::storage()[index] = s;
 		}
 
+		template<typename T>
+		LR_FORCE_INLINE operator T() const {
+			LR_ASSERT(Base::isScalar(), "Cannot cast non-scalar Array to scalar value");
+			return operator()(0);
+		}
+
 		LR_NODISCARD("") std::string str() const {
+			if (Base::isScalar()) return fmt::format("{}", Base::storage()[0]);
+
 			std::string res = "[";
 			for (int64_t i = 0; i < Base::extent().size(); ++i) {
 				res += fmt::format("{}, ", Base::storage()[i]);

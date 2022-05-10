@@ -52,6 +52,14 @@ namespace librapid {
 			return *this;
 		}
 
+		Extent<T, maxDims> partial(int64_t start = 0, int64_t end = -1) const {
+			if (end == -1) end = m_dims;
+			Extent<T, maxDims> res;
+			res.m_dims = m_dims - 1;
+			for (int64_t i = start; i < end; ++i) res[i - start] = m_data[i];
+			return res;
+		}
+
 		LR_NODISCARD("") LR_FORCE_INLINE int64_t size() const {
 			int64_t res = 1;
 			for (int64_t i = 0; i < m_dims; ++i) res *= m_data[i];

@@ -7,6 +7,7 @@
 #include "utils/time.hpp"
 #include "math/constants.hpp"
 #include "math/coreMath.hpp"
+#include "math/advanced.hpp"
 
 // Disable zero-division warnings for the vector library
 #pragma warning(push)

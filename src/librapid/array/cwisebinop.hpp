@@ -8,6 +8,7 @@ namespace librapid {
 	namespace internal {
 		template<typename Binop, typename LHS, typename RHS>
 		struct traits<binop::CWiseBinop<Binop, LHS, RHS>> {
+			using Valid = std::true_type;
 			using Type		  = binop::CWiseBinop<Binop, LHS, RHS>;
 			using Scalar	  = typename Binop::RetType;
 			using BaseScalar  = typename traits<Scalar>::BaseScalar;

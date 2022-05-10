@@ -24,9 +24,10 @@ namespace librapid::memory {
 		}
 
 		DenseStorage(const DenseStorage<T, d> &other) {
-			m_refCount = other.m_refCount;
-			m_size	   = other.m_size;
-			m_heap	   = other.m_heap;
+			m_refCount	= other.m_refCount;
+			m_size		= other.m_size;
+			m_heap		= other.m_heap;
+			m_memOffset = other.m_memOffset;
 			increment();
 		}
 
@@ -34,9 +35,10 @@ namespace librapid::memory {
 			if (this == &other) return *this;
 
 			decrement();
-			m_size	   = other.m_size;
-			m_heap	   = other.m_heap;
-			m_refCount = other.m_refCount;
+			m_size		= other.m_size;
+			m_heap		= other.m_heap;
+			m_refCount	= other.m_refCount;
+			m_memOffset = other.m_memOffset;
 			increment();
 
 			return *this;
@@ -51,7 +53,7 @@ namespace librapid::memory {
 					  "Index {} is out of range for DenseStorage object with size {}",
 					  index,
 					  m_size);
-			return ValueReference<T, d>(m_heap + index);
+			return ValueReference<T, d>(m_heap + m_memOffset + index);
 		}
 
 		ValueReference<T, d> operator[](int64_t index) {
@@ -59,12 +61,12 @@ namespace librapid::memory {
 					  "Index {} is out of range for DenseStorage object with size {}",
 					  index,
 					  m_size);
-			return ValueReference<T, d>(m_heap + index);
+			return ValueReference<T, d>(m_heap + m_memOffset + index);
 		}
 
-		void setSize_(int64_t newSize) { m_size = newSize; }
+		void offsetMemory(int64_t off) { m_memOffset += off; }
 
-		LR_NODISCARD("") T *heap() const { return m_heap; }
+		LR_NODISCARD("") T *heap() const { return m_heap + m_memOffset; }
 
 		LR_NODISCARD("") int64_t size() const { return m_size; }
 
@@ -85,6 +87,7 @@ namespace librapid::memory {
 		int64_t m_size					 = 0;
 		T *m_heap						 = nullptr;
 		std::atomic<int64_t> *m_refCount = nullptr;
+		int64_t m_memOffset				 = 0;
 	};
 
 	template<typename d>
@@ -107,6 +110,7 @@ namespace librapid::memory {
 					  "Index {} is out of range for DenseStorage object with size {}",
 					  index,
 					  this->m_size);
+			index += this->m_memOffset;
 			uint64_t block = index / 64;
 			uint16_t bit   = mod<uint64_t>(index, 64);
 			return ValueReference<bool, d>(this->m_heap + block, bit);
@@ -117,10 +121,13 @@ namespace librapid::memory {
 					  "Index {} is out of range for DenseStorage object with size {}",
 					  index,
 					  this->m_size);
+			index += this->m_memOffset;
 			uint64_t block = index / 64;
 			uint16_t bit   = mod<uint64_t>(index, 64);
 			return ValueReference<bool, d>(this->m_heap + block, bit);
 		}
+
+		LR_NODISCARD("") uint64_t *heap() const { return this->m_heap + (this->m_memOffset / 64); }
 	};
 
 	template<typename T, typename d, typename T_, typename d_>
