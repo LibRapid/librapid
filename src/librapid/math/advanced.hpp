@@ -116,10 +116,11 @@ namespace librapid {
 
 	double invGamma(double x, double guess = 2) {
 		// Run a very coarse calculation to get a guess for the guess
-		while (gamma(guess + 1) < x) guess += 0.5;
+		double tmp = gamma(guess + 1, 50, 0.001);
+		while (abs(gamma(guess + 1, 50, 0.001) - x) > 0.001) guess += (tmp > x) ? -1 : 1;
 
 		double dx = 10000;
-		while (abs(dx) > 1e-10) {
+		while (abs(dx) > 1e-8) {
 			double num		= gamma(guess + 1) - x;
 			double den		= gamma(guess + 1) * polygamma(0, guess + 1);
 			double frac		= num / den;
@@ -127,6 +128,6 @@ namespace librapid {
 			dx				= guess - newGuess;
 			guess			= newGuess;
 		}
-		return guess;
+		return round(guess, 7);
 	}
 } // namespace librapid
