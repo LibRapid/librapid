@@ -3,6 +3,7 @@
 
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
+#include "../array/traits.hpp"
 
 namespace librapid {
 	int64_t product(const std::vector<int64_t> &vals) {
