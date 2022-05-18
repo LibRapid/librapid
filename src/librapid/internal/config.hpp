@@ -42,6 +42,11 @@
 #include "../vendor/fmt/include/fmt/printf.h"
 #include "../vendor/fmt/include/fmt/xchar.h"
 
+// Include scnlib -- fast string scanning and IO
+#define SCN_HEADER_ONLY 1
+#include "../vendor/scnlib/include/scn/scn.h"
+#include "../vendor/scnlib/include/scn/tuple_return/tuple_return.h"
+
 // LibRapid definitions
 
 #if !defined(NDEBUG)
