@@ -31,15 +31,49 @@ namespace librapid {
 		return sum;
 	}
 
-	LR_NODISCARD("") double gamma(double z, double upper = -1, double inc = 0.0001) {
-		if (upper == -1) {
-			if (z < 10) upper = 50;
-			if (z < 100) upper = 650;
-			if (z >= 100) upper = 1000;
+	namespace gammaImpl {
+		static int64_t elemsP				   = 8;
+		static inline std::complex<double> p[] = {676.5203681218851,
+												  -1259.1392167224028,
+												  771.32342877765313,
+												  -176.61502916214059,
+												  12.507343278686905,
+												  -0.13857109526572012,
+												  9.9843695780195716e-6,
+												  1.5056327351493116e-7};
+
+		static double epsilon = 1e-7;
+		LR_NODISCARD("") auto dropImag(const std::complex<double> &z) {
+			if (abs(z.imag()) < epsilon) std::complex<double>(z.real());
+			return z;
 		}
 
-		auto integrand = [&](double x) { return pow(x, z - 1) * exp(-x); };
-		return integrate(integrand, 0, upper, inc);
+		template<typename T>
+		LR_NODISCARD("")
+		double gamma(T z_) {
+			auto z = std::complex<double>(z_);
+			std::complex<double> y;
+			if (z.real() < 0.5) {
+				y = PI / (sin(PI * z) * gamma(std::complex<double>(1) - z));
+			} else {
+				z -= 1;
+				std::complex<double> x = 0.99999999999980993;
+				for (int64_t i = 0; i < elemsP; ++i) {
+					auto pVal = p[i];
+					x += std::complex<double>(pVal) /
+						 (z + std::complex<double>(i) + std::complex<double>(1));
+				}
+				auto t = z + std::complex<double>(elemsP) - std::complex<double>(0.5);
+				y	   = sqrt(2 * PI) * pow(t, z + 0.5) * exp(-t) * x;
+			}
+
+			return dropImag(y).real();
+		}
+	} // namespace gammaImpl
+
+	LR_NODISCARD("") double gamma(double x) {
+		LR_ASSERT(x < 143, "Gamma(x = {}) exceeds 64bit floating point range when x >= 143", x);
+		return gammaImpl::gamma(x);
 	}
 
 	LR_NODISCARD("") double digamma(double z) {
@@ -114,20 +148,33 @@ namespace librapid {
 		return 0;
 	}
 
-	double invGamma(double x, double guess = 2) {
+	double invGamma(double x, int64_t prec = 5) {
 		// Run a very coarse calculation to get a guess for the guess
-		double tmp = gamma(guess + 1, 50, 0.001);
-		while (abs(gamma(guess + 1, 50, 0.001) - x) > 0.001) guess += (tmp > x) ? -1 : 1;
+		double guess = 2;
+		// double tmp	 = gamma(guess);
+		// while (abs(gamma(guess) / x) > 0.5) guess += (x < tmp) ? 1 : -1;
 
-		double dx = 10000;
-		while (abs(dx) > 1e-8) {
-			double num		= gamma(guess + 1) - x;
-			double den		= gamma(guess + 1) * polygamma(0, guess + 1);
-			double frac		= num / den;
-			double newGuess = guess - frac;
-			dx				= guess - newGuess;
-			guess			= newGuess;
+		double dx = DBL_MAX;
+		while (abs(dx) > pow10(-prec - 1)) {
+			double gammaGuess = gamma(guess);
+			double num		  = gammaGuess - x;
+			double den		  = gammaGuess * polygamma(0, guess);
+			double frac		  = num / den;
+			double newGuess	  = guess - frac;
+			dx				  = guess - newGuess;
+
+			// Avoid nan problems
+			if (newGuess > 142) {
+				if (newGuess > guess)
+					guess *= 2;
+				else
+					guess /= 2;
+
+				if (guess > 142) guess = 140;
+			} else {
+				guess = newGuess;
+			}
 		}
-		return round(guess, 7);
+		return round(guess, prec);
 	}
 } // namespace librapid

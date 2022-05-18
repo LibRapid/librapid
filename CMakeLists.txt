@@ -260,3 +260,8 @@ if (${SKBUILD})
 else ()
     target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR})
 endif ()
+
+# Include scnlib directory...
+target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib/src)
+target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib/src/deps/fast_float/single_include)
+target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib/include)

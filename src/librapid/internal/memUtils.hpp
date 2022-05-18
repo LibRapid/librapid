@@ -14,7 +14,7 @@ namespace librapid::memory {
 	LR_FORCE_INLINE T *malloc(size_t num, size_t alignment = memAlign, bool zero = false) {
 		size_t size		   = sizeof(T) * num;
 		size_t requestSize = size + alignment;
-		auto *buf		   = (u_char *)(zero ? calloc(1, requestSize) : std::malloc(requestSize));
+		auto *buf		   = (unsigned char *)(zero ? calloc(1, requestSize) : std::malloc(requestSize));
 
 		LR_ASSERT(buf != nullptr,
 				  "Memory allocation failed. Cannot allocate {} items of size "
@@ -25,15 +25,15 @@ namespace librapid::memory {
 
 		size_t remainder = ((size_t)buf) % alignment;
 		size_t offset	 = alignment - remainder;
-		u_char *ret		 = buf + (u_char)offset;
+		unsigned char *ret		 = buf + (unsigned char)offset;
 
-		// store how many extra u_chars we allocated in the u_char just before
+		// store how many extra unsigned chars we allocated in the unsigned char just before
 		// the pointer we return
-		*(u_char *)(ret - 1) = (u_char)offset;
+		*(unsigned char *)(ret - 1) = (unsigned char)offset;
 
-// Slightly altered traceback call to log u_chars being allocated
+// Slightly altered traceback call to log unsigned chars being allocated
 #ifdef LIBRAPID_TRACEBACK
-		LR_STATUS("LIBRAPID TRACEBACK -- MALLOC {} u_charS -> {}", size, (void *)buf);
+		LR_STATUS("LIBRAPID TRACEBACK -- MALLOC {} unsigned charS -> {}", size, (void *)buf);
 #endif
 
 		return (T *)ret;
@@ -46,8 +46,8 @@ namespace librapid::memory {
 		LR_STATUS("LIBRAPID TRACEBACK -- FREE {}", (void *)alignedPtr);
 #endif
 
-		int offset = *(((u_char *)alignedPtr) - 1);
-		std::free(((u_char *)alignedPtr) - offset);
+		int offset = *(((unsigned char *)alignedPtr) - 1);
+		std::free(((unsigned char *)alignedPtr) - offset);
 	}
 
 	// Only supports copying between host pointers
