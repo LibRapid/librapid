@@ -91,14 +91,15 @@ namespace librapid::memory {
 	};
 
 	template<typename d>
-	class DenseStorage<bool, d> : public DenseStorage<uint64_t, d> {
+	class DenseStorage<bool, d> : public DenseStorage<typename internal::traits<bool>::BaseScalar, d> {
 	public:
 		using Type = bool;
-		using Base = DenseStorage<uint64_t, d>;
+		using BaseScalar = typename internal::traits<bool>::BaseScalar;
+		using Base = DenseStorage<BaseScalar, d>;
 
 		DenseStorage() : Base() {};
 
-		explicit DenseStorage(int64_t size) : Base((size + 512) / 64) {
+		explicit DenseStorage(int64_t size) : Base((size + 512) / (sizeof(BaseScalar) * 8)) {
 			this->m_size = size;
 #if defined(LIBRAPID_HAS_CUDA)
 			if constexpr (std::is_same_v<d, device::GPU>) initializeCudaStream();
@@ -111,8 +112,8 @@ namespace librapid::memory {
 					  index,
 					  this->m_size);
 			index += this->m_memOffset;
-			uint64_t block = index / 64;
-			uint16_t bit   = mod<uint64_t>(index, 64);
+			uint64_t block = index / (sizeof(BaseScalar) * 8);
+			uint16_t bit   = mod<BaseScalar>(index, sizeof(BaseScalar) * 8);
 			return ValueReference<bool, d>(this->m_heap + block, bit);
 		}
 
@@ -122,12 +123,12 @@ namespace librapid::memory {
 					  index,
 					  this->m_size);
 			index += this->m_memOffset;
-			uint64_t block = index / 64;
-			uint16_t bit   = mod<uint64_t>(index, 64);
+			uint64_t block = index / (sizeof(BaseScalar) * 8);
+			uint16_t bit   = mod<BaseScalar>(index, sizeof(BaseScalar) * 8);
 			return ValueReference<bool, d>(this->m_heap + block, bit);
 		}
 
-		LR_NODISCARD("") uint64_t *heap() const { return this->m_heap + (this->m_memOffset / 64); }
+		LR_NODISCARD("") BaseScalar *heap() const { return this->m_heap + (this->m_memOffset / (sizeof(BaseScalar) * 8)); }
 	};
 
 	template<typename T, typename d, typename T_, typename d_>

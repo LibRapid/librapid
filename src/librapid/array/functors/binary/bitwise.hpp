@@ -10,7 +10,9 @@ namespace librapid::functors::binary {
 		using RhsType				   = typename internal::traits<RHS>::Scalar;
 		using RetType				   = typename std::common_type<LhsType, RhsType>::type;
 		using Packet				   = typename internal::traits<RetType>::Packet;
-		static constexpr int64_t Flags = 0; // internal::Flag_RequireEval;
+		static constexpr int64_t Flags = internal::flags::Binary | internal::flags::Bitwise |
+										 internal::flags::PacketBitwise |
+										 internal::flags::ScalarBitwise;
 
 		BitwiseOr() = default;
 
@@ -37,7 +39,9 @@ namespace librapid::functors::binary {
 		using RhsType				   = typename internal::traits<RHS>::Scalar;
 		using RetType				   = typename std::common_type<LhsType, RhsType>::type;
 		using Packet				   = typename internal::traits<RetType>::Packet;
-		static constexpr int64_t Flags = 0; // internal::Flag_RequireEval;
+		static constexpr int64_t Flags = internal::flags::Binary | internal::flags::Bitwise |
+										 internal::flags::PacketBitwise |
+										 internal::flags::ScalarBitwise;
 
 		BitwiseAnd() = default;
 
@@ -64,7 +68,9 @@ namespace librapid::functors::binary {
 		using RhsType				   = typename internal::traits<RHS>::Scalar;
 		using RetType				   = typename std::common_type<LhsType, RhsType>::type;
 		using Packet				   = typename internal::traits<RetType>::Packet;
-		static constexpr int64_t Flags = 0;
+		static constexpr int64_t Flags = internal::flags::Binary | internal::flags::Bitwise |
+										 internal::flags::PacketBitwise |
+										 internal::flags::ScalarBitwise;
 
 		BitwiseXor() = default;
 

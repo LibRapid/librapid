@@ -15,14 +15,19 @@
 		using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;             \
 		using RetType =                                                                            \
 		  binop::CWiseBinop<functors::binary::TYPE<Scalar, ScalarOther>, Derived, OtherDerived>;   \
+		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                      \
+		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
                                                                                                    \
 		static_assert(                                                                             \
 		  std::is_same_v<Scalar, ScalarOther>,                                                     \
 		  "Cannot operate on Arrays with different types. Please use Array::cast<T>()");           \
                                                                                                    \
-		if constexpr (Flags & internal::Flag_RequireEval)                                          \
+		static_assert(!(Required & ~(Flags & Required)),                                           \
+					  "Scalar type is incompatible with Functor");                                 \
+                                                                                                   \
+		if constexpr (Flags & internal::flags::RequireEval)                                        \
 			return RetType(derived(), other.derived()).eval();                                     \
-		else if constexpr (!(Flags & internal::Flag_RequireEval))                                  \
+		else if constexpr (!(Flags & internal::flags::RequireEval))                                \
 			return RetType(derived(), other.derived());                                            \
 	}
 
