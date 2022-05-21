@@ -4,7 +4,36 @@
 #include "../internal/forward.hpp"
 
 namespace librapid::internal {
-	inline constexpr uint64_t Flag_RequireEval = 1 << 0;
+	namespace flags {
+		/**
+		 * Flag Configuration:
+		 *
+		 * [0, 9]     -> Requirement flags
+		 * [10, 31]   -> Operation type flags
+		 * [32]       -> Unary operation
+		 * [33]       -> Binary operation
+		 * [34]       -> Matrix operation
+		 */
+		inline constexpr uint64_t RequireEval = 1 << 0;
+
+		inline constexpr uint64_t Bitwise	 = 1 < 10;
+		inline constexpr uint64_t Arithmetic = 1 < 11;
+		inline constexpr uint64_t Logical	 = 1 < 12;
+
+		inline constexpr uint64_t OperationMask = 0b111111111111111111110000000000;
+
+		inline constexpr uint64_t PacketBitwise	   = 1 << 13;
+		inline constexpr uint64_t PacketArithmetic = 1 << 14;
+		inline constexpr uint64_t PacketLogical	   = 1 << 15;
+
+		inline constexpr uint64_t ScalarBitwise	   = 1 << 16;
+		inline constexpr uint64_t ScalarArithmetic = 1 << 17;
+		inline constexpr uint64_t ScalarLogical	   = 1 << 18;
+
+		inline constexpr uint64_t Unary	 = 1 < 32;
+		inline constexpr uint64_t Binary = 1 < 33;
+		inline constexpr uint64_t Matrix = 1 < 34;
+	} // namespace flags
 
 	//------- Just a  Character -----------------------------------------------
 	template<>
@@ -16,6 +45,8 @@ namespace librapid::internal {
 		using Packet						 = std::false_type;
 		static constexpr int64_t PacketWidth = 1;
 		static constexpr char Name[]		 = "char";
+		static constexpr uint64_t Flags =
+		  flags::ScalarBitwise | flags::ScalarArithmetic | flags::ScalarLogical;
 	};
 
 	//------- Boolean ---------------------------------------------------------
@@ -28,6 +59,8 @@ namespace librapid::internal {
 		using Packet						 = vcl::Vec512b;
 		static constexpr int64_t PacketWidth = 512;
 		static constexpr char Name[]		 = "bool";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
+										  flags::ScalarArithmetic | flags::ScalarLogical;
 	};
 
 	//------- 8bit Signed Integer ---------------------------------------------
@@ -40,6 +73,9 @@ namespace librapid::internal {
 		using Packet						 = vcl::Vec64c;
 		static constexpr int64_t PacketWidth = 64;
 		static constexpr char Name[]		 = "int8_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
+										  flags::PacketLogical | flags::ScalarBitwise |
+										  flags::ScalarArithmetic | flags::ScalarLogical;
 	};
 
 	//------- 8bit Unsigned Integer -------------------------------------------
@@ -52,6 +88,9 @@ namespace librapid::internal {
 		using Packet						 = vcl::Vec64uc;
 		static constexpr int64_t PacketWidth = 64;
 		static constexpr char Name[]		 = "uint8_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
+										  flags::PacketLogical | flags::ScalarBitwise |
+										  flags::ScalarArithmetic | flags::ScalarLogical;
 	};
 
 	//------- 16bit Signed Integer --------------------------------------------
@@ -64,6 +103,9 @@ namespace librapid::internal {
 		using Packet						 = vcl::Vec32s;
 		static constexpr int64_t PacketWidth = 32;
 		static constexpr char Name[]		 = "int16_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
+										  flags::PacketLogical | flags::ScalarBitwise |
+										  flags::ScalarArithmetic | flags::ScalarLogical;
 	};
 
 	//------- 16bit Unsigned Integer ------------------------------------------
@@ -76,6 +118,9 @@ namespace librapid::internal {
 		using Packet						 = vcl::Vec32us;
 		static constexpr int64_t PacketWidth = 32;
 		static constexpr char Name[]		 = "uint16_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
+										  flags::PacketLogical | flags::ScalarBitwise |
+										  flags::ScalarArithmetic | flags::ScalarLogical;
 	};
 
 	//------- 32bit Signed Integer --------------------------------------------
@@ -88,6 +133,9 @@ namespace librapid::internal {
 		using Packet						 = vcl::Vec8i;
 		static constexpr int64_t PacketWidth = 8;
 		static constexpr char Name[]		 = "int32_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
+										  flags::PacketLogical | flags::ScalarBitwise |
+										  flags::ScalarArithmetic | flags::ScalarLogical;
 	};
 
 	//------- 32bit Unsigned Integer ------------------------------------------
@@ -100,6 +148,9 @@ namespace librapid::internal {
 		using Packet						 = vcl::Vec8ui;
 		static constexpr int64_t PacketWidth = 4;
 		static constexpr char Name[]		 = "uint32_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
+										  flags::PacketLogical | flags::ScalarBitwise |
+										  flags::ScalarArithmetic | flags::ScalarLogical;
 	};
 
 	//------- 64bit Signed Integer --------------------------------------------
@@ -112,6 +163,9 @@ namespace librapid::internal {
 		using Packet						 = vcl::Vec8q;
 		static constexpr int64_t PacketWidth = 8;
 		static constexpr char Name[]		 = "int64_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
+										  flags::PacketLogical | flags::ScalarBitwise |
+										  flags::ScalarArithmetic | flags::ScalarLogical;
 	};
 
 	//------- 64bit Unsigned Integer ------------------------------------------
@@ -124,6 +178,9 @@ namespace librapid::internal {
 		using Packet						 = vcl::Vec8uq;
 		static constexpr int64_t PacketWidth = 8;
 		static constexpr char Name[]		 = "uint64_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
+										  flags::PacketLogical | flags::ScalarBitwise |
+										  flags::ScalarArithmetic | flags::ScalarLogical;
 	};
 
 	//------- 32bit Floating Point --------------------------------------------
@@ -136,6 +193,8 @@ namespace librapid::internal {
 		using Packet						 = vcl::Vec16f;
 		static constexpr int64_t PacketWidth = 16;
 		static constexpr char Name[]		 = "float";
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::PacketLogical |
+										  flags::ScalarArithmetic | flags::ScalarLogical;
 	};
 
 	//------- 64bit Floating Point --------------------------------------------
@@ -148,6 +207,8 @@ namespace librapid::internal {
 		using Packet						 = vcl::Vec8d;
 		static constexpr int64_t PacketWidth = 8;
 		static constexpr char Name[]		 = "double";
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::PacketLogical |
+										  flags::ScalarArithmetic | flags::ScalarLogical;
 	};
 
 	template<typename LHS, typename RHS>

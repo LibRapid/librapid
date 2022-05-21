@@ -144,19 +144,22 @@ namespace librapid {
 		};
 
 		template<typename d>
-		class ValueReference<bool, d> : public ValueReference<uint64_t, d> {
+		class ValueReference<bool, d>
+				: public ValueReference<typename internal::traits<bool>::BaseScalar, d> {
 		public:
-			using Base = ValueReference<uint64_t, d>;
-			using T	   = bool;
+			using BaseScalar = typename internal::traits<bool>::BaseScalar;
+			using Base		 = ValueReference<BaseScalar, d>;
+			using T			 = bool;
 
 			ValueReference() : Base() {}
 
-			explicit ValueReference(uint64_t *val, uint16_t bit) : Base(val), m_bit(bit) {
+			explicit ValueReference(BaseScalar *val, uint16_t bit) : Base(val), m_bit(bit) {
 				LR_ASSERT(
-				  bit >= 0 && bit < 512,
+				  bit >= 0 && bit < (sizeof(BaseScalar) * 8),
 				  "Bit {} is out of range for ValueReference<bool>. Bit index must be in the "
-				  "range [0, 64)",
-				  bit);
+				  "range [0, {})",
+				  bit,
+				  sizeof(BaseScalar) * 8);
 			}
 
 			ValueReference(const ValueReference<bool, d> &other) :
@@ -178,8 +181,8 @@ namespace librapid {
 				if constexpr (std::is_same_v<d, device::CPU>)
 					return *(this->m_value) & (1ull << m_bit);
 
-				uint64_t tmp;
-				memcpy<uint64_t, device::CPU, uint64_t, d>(&tmp, this->m_value, 1);
+				BaseScalar tmp;
+				memcpy<BaseScalar, device::CPU, BaseScalar, d>(&tmp, this->m_value, 1);
 				return tmp & (1ull << m_bit);
 			}
 
@@ -190,16 +193,17 @@ namespace librapid {
 					else
 						*(this->m_value) &= ~(1ull << m_bit);
 				} else {
-					const char *kernel = R"V0G0N(bitSetKernel
+					std::string kernel = fmt::format(R"V0G0N(bitSetKernel
 					#include <stdint.h>
 					__global__
-					void bitSetKernel(uint64_t *block, uint16_t bit, bool value) {
+					void bitSetKernel({} *block, uint16_t bit, bool value) {{
 						if (value)
 							*block |= (1ull << bit);
 						else
 							*block &= ~(1ull << bit);
-					}
-				)V0G0N";
+					}}
+				)V0G0N",
+													 internal::traits<BaseScalar>::Name);
 
 					static jitify::JitCache kernelCache;
 					jitify::Program program = kernelCache.program(kernel);
