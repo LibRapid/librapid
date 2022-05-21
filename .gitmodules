@@ -10,6 +10,6 @@
 [submodule "src/librapid/vendor/fmt"] # {fmt} module for fast formatting and IO
 	path = src/librapid/vendor/fmt
 	url = https://github.com/fmtlib/fmt.git
-[submodule "src/librapid/vendor/fmt"] # {scnlib} module for fast reverse formatting and IO
+[submodule "src/librapid/vendor/scnlib"] # {scnlib} module for fast reverse formatting and IO
 	path = src/librapid/vendor/scnlib
 	url = https://github.com/eliaskosunen/scnlib.git
