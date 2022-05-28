@@ -172,13 +172,11 @@ namespace librapid {
 		return start2 + (stop2 - start2) * ((val - start1) / (stop1 - start1));
 	}
 
-	template<typename T = double>
-	inline T random(T lower = 0, T upper = 1, uint64_t seed = -1) {
+	inline double random(double lower = 0, double upper = 1, uint64_t seed = -1) {
 		// Random floating point value in range [lower, upper)
-
 		static std::uniform_real_distribution<double> distribution(0., 1.);
 		static std::mt19937 generator(seed == (uint64_t)-1 ? (unsigned int)(now() * 10) : seed);
-		return (T)(lower + (upper - lower) * distribution(generator));
+		return lower + (upper - lower) * distribution(generator);
 	}
 
 	inline int64_t randint(int64_t lower, int64_t upper, uint64_t seed = -1) {

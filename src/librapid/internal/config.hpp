@@ -2,6 +2,7 @@
 
 // Include required headers
 #include <cstdlib>
+#include <cmath>
 #include <cstddef>
 #include <string>
 #include <vector>
