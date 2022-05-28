@@ -5,8 +5,10 @@
 #include "internal/config.hpp"
 #include "internal/memUtils.hpp"
 #include "utils/time.hpp"
+#include "utils/console.hpp"
 #include "math/constants.hpp"
 #include "math/coreMath.hpp"
+#include "math/statistics.hpp"
 #include "math/advanced.hpp"
 
 // Disable zero-division warnings for the vector library
@@ -21,6 +23,7 @@
 #include "array/helpers/extent.hpp"
 #include "array/arrayBase.hpp"
 #include "array/cwisebinop.hpp"
+#include "array/cwiseunop.hpp"
 #include "array/array.hpp"
 
 #endif // LIBRAPID_INCLUDE

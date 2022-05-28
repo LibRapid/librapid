@@ -68,7 +68,8 @@ namespace librapid {
 		Array copy() const { return Base::template cast<Scalar>().eval(); }
 
 		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
-			int64_t memIndex = internal::extentIndexProd(Base::extent(), this->m_isScalar, 0, index);
+			int64_t memIndex =
+			  internal::extentIndexProd(Base::extent(), this->m_isScalar, 0, index);
 			Array<Scalar, Device> res;
 			res.m_extent   = Base::extent().partial(1);
 			res.m_isScalar = Base::extent().dims() == 1;
@@ -79,7 +80,8 @@ namespace librapid {
 		}
 
 		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) {
-			int64_t memIndex = internal::extentIndexProd(Base::extent(), this->m_isScalar, 0, index);
+			int64_t memIndex =
+			  internal::extentIndexProd(Base::extent(), this->m_isScalar, 0, index);
 			Array<Scalar, Device> res;
 			res.m_extent   = Base::extent().partial(1);
 			res.m_isScalar = res.m_extent.dims() == 0;
@@ -133,16 +135,129 @@ namespace librapid {
 			return operator()(0);
 		}
 
-		LR_NODISCARD("") std::string str() const {
-			if (Base::isScalar()) return fmt::format("{}", Base::storage()[0]);
+		void findLongest(const std::string &format, bool strip, int64_t stripWidth,
+						 int64_t &longestInteger, int64_t &longestFloating) const {
+			int64_t dims	= Base::extent().dims();
+			int64_t zeroDim = Base::extent()[0];
+			if (dims > 1) {
+				for (int64_t i = 0; i < zeroDim; ++i)
+					this->operator[](i).findLongest(
+					  format, strip, stripWidth, longestInteger, longestFloating);
+			} else {
+				// Stringify vector
+				for (int64_t i = 0; i < zeroDim; ++i) {
+					if (stripWidth != 0 && strip && i == stripWidth && zeroDim > stripWidth * 2)
+						i = zeroDim - stripWidth;
 
-			std::string res = "[";
-			for (int64_t i = 0; i < Base::extent().size(); ++i) {
-				res += fmt::format("{}, ", Base::storage()[i]);
+					Scalar val			  = this->operator()(i);
+					std::string formatted = fmt::format(format, val);
+					auto findIter		  = std::find(formatted.begin(), formatted.end(), '.');
+					int64_t pointPos	  = findIter - formatted.begin();
+					if (findIter == formatted.end()) {
+						// No decimal point present
+						if (formatted.length() > longestInteger)
+							longestInteger = formatted.length();
+					} else {
+						// Decimal point present
+						auto integer  = formatted.substr(0, pointPos);
+						auto floating = formatted.substr(pointPos);
+						if (integer.length() > longestInteger) longestInteger = integer.length();
+						if (floating.length() - 1 > longestFloating)
+							longestFloating = floating.length() - 1;
+					}
+				}
 			}
-			return res;
 		}
 
-	private:
+		// Strip modes:
+		// stripWidth == -1 => Default
+		// stripWidth == 0  => Never strip
+		// stripWidth >= 1  => n values are shown
+		LR_NODISCARD("")
+		std::string str(std::string format = "", int64_t stripWidth = -1, int64_t beforePoint = -1,
+						int64_t afterPoint = -1, int64_t depth = 0) const {
+			bool strip = stripWidth > 0;
+			if (depth == 0) {
+				strip = false;
+				// Configure the strip width
+
+				// Always print the full vector if the array has all dimensions as 1 except a single
+				// axis, unless specified otherwise
+				int64_t nonOneDims = 0;
+				for (int64_t i = 0; i < Base::extent().dims(); ++i)
+					if (Base::extent()[i] != 1) ++nonOneDims;
+
+				if (nonOneDims == 1 && stripWidth == -1) {
+					strip	   = false;
+					stripWidth = 0;
+				}
+
+				if (stripWidth == -1) {
+					if (Base::extent().size() >= 1000) {
+						// Strip the middle values
+						strip	   = true;
+						stripWidth = 3;
+					}
+				} else if (stripWidth > 0) {
+					strip = true;
+				}
+
+				if (format.empty()) {
+					if constexpr (std::is_floating_point_v<Scalar>)
+						format = "{:.6f}";
+					else
+						format = "{}";
+				}
+
+				int64_t tmpBeforePoint = 0, tmpAfterPoint = 0;
+				findLongest(format, strip, stripWidth, tmpBeforePoint, tmpAfterPoint);
+				if (beforePoint == -1) beforePoint = tmpBeforePoint;
+				if (afterPoint == -1) afterPoint = tmpAfterPoint;
+			}
+
+			std::string res = "[";
+			int64_t dims	= Base::extent().dims();
+			int64_t zeroDim = Base::extent()[0];
+			if (dims > 1) {
+				for (int64_t i = 0; i < zeroDim; ++i) {
+					if (stripWidth != 0 && strip && i == stripWidth && zeroDim > stripWidth * 2) {
+						i = zeroDim - stripWidth;
+						res += std::string(depth + 1, ' ') + "...\n";
+						if (dims > 2) res += "\n";
+					}
+
+					if (i > 0) res += std::string(depth + 1, ' ');
+					res += this->operator[](i).str(
+					  format, stripWidth, beforePoint, afterPoint, depth + 1);
+					if (i + 1 < zeroDim) res += "\n";
+					if (i + 1 < zeroDim && dims > 2) res += "\n";
+				}
+			} else {
+				// Stringify vector
+				for (int64_t i = 0; i < zeroDim; ++i) {
+					if (stripWidth != 0 && strip && i == stripWidth && zeroDim > stripWidth * 2) {
+						i = zeroDim - stripWidth;
+						res += "... ";
+					}
+
+					Scalar val			  = this->operator()(i);
+					std::string formatted = fmt::format(format, val);
+					auto findIter		  = std::find(formatted.begin(), formatted.end(), '.');
+					int64_t pointPos	  = findIter - formatted.begin();
+					if (findIter == formatted.end()) {
+						// No decimal point present
+						res += fmt::format("{:>{}}", formatted, beforePoint);
+					} else {
+						// Decimal point present
+						auto integer  = formatted.substr(0, pointPos);
+						auto floating = formatted.substr(pointPos);
+						res +=
+						  fmt::format("{:>{}}{:<{}}", integer, beforePoint, floating, afterPoint);
+					}
+					if (i + 1 < zeroDim) res += " ";
+				}
+			}
+			return res + "]";
+		}
 	};
 } // namespace librapid
