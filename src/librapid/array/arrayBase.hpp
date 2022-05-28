@@ -31,6 +31,22 @@
 			return RetType(derived(), other.derived());                                            \
 	}
 
+#define IMPL_UNOP(NAME, TYPE)                                                                      \
+	LR_NODISCARD("")                                                                               \
+	auto NAME() const {                                                                            \
+		using RetType					= unop::CWiseUnop<functors::unop::TYPE<Scalar>, Derived>; \
+		static constexpr uint64_t Flags = internal::traits<Scalar>::Flags;                         \
+		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
+                                                                                                   \
+		static_assert(!(Required & ~(Flags & Required)),                                           \
+					  "Scalar type is incompatible with Functor");                                 \
+                                                                                                   \
+		if constexpr (Flags & internal::flags::RequireEval)                                        \
+			return RetType(derived()).eval();                                                      \
+		else if constexpr (!(Flags & internal::flags::RequireEval))                                \
+			return RetType(derived());                                                             \
+	}
+
 namespace librapid {
 	namespace internal {
 		template<typename Derived>
@@ -102,6 +118,8 @@ namespace librapid {
 		IMPL_BINOP(operator|, BitwiseOr)
 		IMPL_BINOP(operator&, BitwiseAnd)
 		IMPL_BINOP(operator^, BitwiseXor)
+
+		IMPL_UNOP(operator-, UnaryMinus)
 
 		template<typename OtherDerived>
 		LR_FORCE_INLINE void loadFrom(int64_t index, const OtherDerived &other) {
@@ -202,3 +220,4 @@ namespace librapid {
 } // namespace librapid
 
 #undef IMPL_BINOP
+#undef IMPL_UNOP

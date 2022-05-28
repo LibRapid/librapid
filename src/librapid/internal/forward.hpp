@@ -37,6 +37,11 @@ namespace librapid {
 		class CWiseBinop;
 	}
 
+	namespace unop {
+		template<typename Unop, typename Derived>
+		class CWiseUnop;
+	}
+
 	template<typename Scalar_, typename Device_>
 	class Array;
 } // namespace librapid
