@@ -37,74 +37,25 @@ dependencies:
   - pip:
 """
 
-# try:
-#	 with open("../requirements.txt", "r") as requirements:
-#		 template += "\n" + requirements.readline()
-# except FileNotFoundError:
-#	 template = """
-# name: docs # doxygen
-# channels:
-#   - conda-forge
-# dependencies:
-#   - python=3.9
-#   - doxygen=1.9.1
-#   - pip
-#   - pip:
-#	   - sphinx==4.4.0
-#	   - breathe==4.33.1
-#	   - exhale==0.3.1
-#	   - furo==2022.2.14.1
-#	   - pydata-sphinx-theme==0.8.0
-#	   - numpydoc==1.2
-#	   - sphinx-panels==0.6.0
-#	   - regex
-# 
-#	 """
-# 
-# try:
-#	 with open("../environment.txt", "w") as environment:
-#		 environment.write(template)
-# except FileNotFoundError:
-#	 
-
 sys.path.insert(0, os.path.abspath("../.."))
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_dirs = [
-	"pybind11",
-	"version2",
-	"jitify",
-	"fmt",
-	"blas",
-	"python"
+	"src/librapid/vendor"
 ]
 
 file_match = regex.compile(".*\..*")
 
-# -- Copy LibRapid source directory ------------------------------------------
-# This is to avoid documenting Jitify, PyBind11, VectorClass and BLAS
-if os.path.exists("./librapid_doc_copy"):
-	shutil.rmtree("./librapid_doc_copy")
-
-for file in os.listdir("../../src/librapid"):
-	if file in exclude_dirs: continue
-
-	print(f"../../src/librapid/{file}")
-	if file_match.match(file):
-		shutil.copyfile(f"../../src/librapid/{file}", f"./librapid_doc_copy/{file}")
-	else:
-		shutil.copytree(f"../../src/librapid/{file}", f"./librapid_doc_copy/{file}")
-
 # -- Project information -----------------------------------------------------
 
 project = "librapid"
-copyright = "2021, Toby Davis"
+copyright = "2022, Toby Davis"
 author = "Toby Davis"
 
 # The full version, including alpha/beta/rc tags
-version_file = open("./librapid_doc_copy/VERSION.hpp", "r")
+version_file = open("../../src/librapid/VERSION.hpp", "r")
 release = version_file.readlines()[1].split()[2].replace("\"", "")
 version_file.close()
 

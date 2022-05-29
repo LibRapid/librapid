@@ -40,11 +40,16 @@ namespace librapid {
 			CWiseUnop(const Type &op) :
 					Base(op.extent(), 0), m_value(op.m_value), m_operation(op.m_operation) {}
 
-			CWiseUnop &operator=(const Type &op) {
+			template<typename T>
+			CWiseUnop &operator=(const T &op) {
+				static_assert(
+				  std::is_same_v<T, Type>,
+				  "Lazy-evaluated result cannot be assigned a different type. Please either "
+				  "evaluate the result (using 'eval()') or create a new variable");
+
 				if (this == &op) return *this;
 
 				Base::m_extent = op.m_extent;
-				Base::m_data   = op.m_data;
 
 				m_value		= op.m_value;
 				m_operation = op.m_operation;
@@ -74,9 +79,9 @@ namespace librapid {
 				return fmt::format("({}{})", op, kernel);
 			}
 
-		private:
+		protected:
 			ValType m_value;
-			const Operation m_operation {};
+			Operation m_operation {};
 		};
 	} // namespace unop
 } // namespace librapid

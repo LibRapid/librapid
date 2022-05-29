@@ -6,6 +6,7 @@ namespace librapid::functors::unop {
 	template<typename Type_>
 	class UnaryMinus : public UnaryOp<Type_> {
 	public:
+		using Type					   = Type_;
 		using Scalar				   = typename internal::traits<Type_>::Scalar;
 		using RetType				   = Scalar;
 		using Packet				   = typename internal::traits<Scalar>::Packet;
@@ -14,6 +15,10 @@ namespace librapid::functors::unop {
 										 internal::flags::ScalarArithmetic;
 
 		UnaryMinus() = default;
+
+		UnaryMinus(const UnaryMinus<Type> &other) = default;
+
+		UnaryMinus<Type> &operator=(const UnaryMinus<Type> &other) { return *this; }
 
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const Scalar &val) const { return -val; }
