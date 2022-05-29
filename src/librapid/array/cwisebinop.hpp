@@ -8,7 +8,7 @@ namespace librapid {
 	namespace internal {
 		template<typename Binop, typename LHS, typename RHS>
 		struct traits<binop::CWiseBinop<Binop, LHS, RHS>> {
-			using Valid = std::true_type;
+			using Valid		  = std::true_type;
 			using Type		  = binop::CWiseBinop<Binop, LHS, RHS>;
 			using Scalar	  = typename Binop::RetType;
 			using BaseScalar  = typename traits<Scalar>::BaseScalar;
@@ -17,7 +17,7 @@ namespace librapid {
 			using DeviceRHS	  = typename traits<RHS>::Device;
 			using Device	  = typename memory::PromoteDevice<DeviceLHS, DeviceRHS>::type;
 			using StorageType = memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags		 = Binop::Flags;
+			static constexpr uint64_t Flags = Binop::Flags;
 		};
 	} // namespace internal
 
@@ -52,7 +52,6 @@ namespace librapid {
 				if (this == &op) return *this;
 
 				Base::m_extent = op.m_extent;
-				Base::m_data   = op.m_data;
 
 				m_lhs		= op.m_lhs;
 				m_rhs		= op.m_rhs;
@@ -85,11 +84,9 @@ namespace librapid {
 			}
 
 		private:
-			// const LeftType &m_lhs;
-			// const RightType &m_rhs;
 			LeftType m_lhs;
 			RightType m_rhs;
-			const Binop m_operation {};
+			Binop m_operation {};
 		};
 	} // namespace binop
 } // namespace librapid

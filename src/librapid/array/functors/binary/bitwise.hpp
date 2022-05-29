@@ -16,6 +16,10 @@ namespace librapid::functors::binary {
 
 		BitwiseOr() = default;
 
+		BitwiseOr(const BitwiseOr<LHS, RHS> &other) = default;
+
+		BitwiseOr<LHS, RHS> &operator=(const BitwiseOr<LHS, RHS> &other) { return *this; }
+
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {
 			return left | right;
@@ -45,6 +49,10 @@ namespace librapid::functors::binary {
 
 		BitwiseAnd() = default;
 
+		BitwiseAnd(const BitwiseAnd<LHS, RHS> &other) = default;
+
+		BitwiseAnd<LHS, RHS> &operator=(const BitwiseAnd<LHS, RHS> &other) { return *this; }
+
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {
 			return left & right;
@@ -73,6 +81,10 @@ namespace librapid::functors::binary {
 										 internal::flags::ScalarBitwise;
 
 		BitwiseXor() = default;
+
+		BitwiseXor(const BitwiseXor<LHS, RHS> &other) = default;
+
+		BitwiseXor<LHS, RHS> &operator=(const BitwiseXor<LHS, RHS> &other) { return *this; }
 
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {

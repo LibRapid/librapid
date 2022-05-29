@@ -16,6 +16,10 @@ namespace librapid::functors::binary {
 
 		ScalarSum() = default;
 
+		ScalarSum(const ScalarSum<LHS, RHS> &other) = default;
+
+		ScalarSum<LHS, RHS> &operator=(const ScalarSum<LHS, RHS> &other) { return *this; }
+
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {
 			return left + right;
@@ -44,6 +48,10 @@ namespace librapid::functors::binary {
 										 internal::flags::ScalarArithmetic;
 
 		ScalarDiff() = default;
+
+		ScalarDiff(const ScalarDiff<LHS, RHS> &other) = default;
+
+		ScalarDiff<LHS, RHS> &operator=(const ScalarDiff<LHS, RHS> &other) { return *this; }
 
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {
@@ -74,6 +82,10 @@ namespace librapid::functors::binary {
 
 		ScalarProd() = default;
 
+		ScalarProd(const ScalarProd<LHS, RHS> &other) = default;
+
+		ScalarProd<LHS, RHS> &operator=(const ScalarProd<LHS, RHS> &other) { return *this; }
+
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {
 			return left * right;
@@ -102,6 +114,10 @@ namespace librapid::functors::binary {
 										 internal::flags::ScalarArithmetic;
 
 		ScalarDiv() = default;
+
+		ScalarDiv(const ScalarDiv<LHS, RHS> &other) = default;
+
+		ScalarDiv<LHS, RHS> &operator=(const ScalarDiv<LHS, RHS> &other) { return *this; }
 
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {

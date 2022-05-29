@@ -74,30 +74,45 @@ namespace librapid {
 
 		if (iters < 1) {
 			// Run the function once and time it to see how many iterations make sense
-			double start = now<time::nanosecond>();
+			int64_t tmpIters = 1;
+			double start	 = now<time::nanosecond>();
 			op(vals...);
 			double end = now<time::nanosecond>();
 
+			if (end - start < 1000) {
+				tmpIters = 1000;
+				start	 = now<time::nanosecond>();
+				for (int64_t i = 0; i < tmpIters; ++i) op(vals...);
+				end = now<time::nanosecond>();
+			}
+
 			// Make each sample take around 1 second
-			iters = 5.0e8 / (end - start);
+			iters = 5.0e8 / ((end - start) / (double)tmpIters);
 			if (iters < 1) iters = 1;
 		}
 		std::vector<double> times;
 
+		double globalStart = now();
 		for (int64_t sample = 0; sample < samples; ++sample) {
 			double start = now<time::nanosecond>();
 			for (int64_t iter = 0; iter < iters; ++iter) { op(vals...); }
 			double end = now<time::nanosecond>();
 			times.emplace_back((end - start) / (double)iters);
+
+			if (now() - globalStart > 15) {
+				samples = sample + 1;
+				break;
+			}
 		}
 
 		// Calculate average (mean) time and standard deviation
 		double avg = mean(times);
 		double std = standardDeviation(times);
-		fmt::print("Mean {} ± {} after {} samples\n",
+		fmt::print("Mean {} ± {} after {} samples, each with {} iterations\n",
 				   formatTime<time::nanosecond>(avg),
 				   formatTime<time::nanosecond>(std),
-				   samples);
+				   samples,
+				   iters);
 		return avg;
 	}
 } // namespace librapid
