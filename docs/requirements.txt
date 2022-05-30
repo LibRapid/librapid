@@ -3,6 +3,6 @@ breathe==4.33.1
 exhale==0.3.1
 furo==2022.4.7
 pydata-sphinx-theme==0.8.1
-numpydoc==1.2.1
+numpydoc==1.3.1
 sphinx-panels==0.6.0
 regex
