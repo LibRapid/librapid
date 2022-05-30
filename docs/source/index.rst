@@ -1,6 +1,33 @@
 LibRapid
 ########
 
+.. plot::
+
+	import matplotlib.pyplot as plt
+	import matplotlib as mpl
+	import librapid as lrp
+
+	mpl.style.use("seaborn")
+	plt.figure(facecolor=(0.07, 0.08, 0.09))
+
+	vals = []
+	for i in range(1000000):
+		vals.append(lrp.randomGaussian())
+	plt.hist(vals, 50)
+	plt.title("Hello")
+
+	# Plotting Style
+	ax = plt.gca()
+	ax.tick_params(axis='x', colors='white')
+	ax.tick_params(axis='y', colors='white')
+	ax.spines['left'].set_color('white')
+	ax.spines['right'].set_color('white')
+	ax.spines['top'].set_color('white') 
+	ax.spines['bottom'].set_color('white')
+	ax.title.set_color('white')
+	ax.set_facecolor((0.07, 0.08, 0.09))
+	plt.show()
+
 Contents
 ========
 
