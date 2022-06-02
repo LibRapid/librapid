@@ -38,7 +38,7 @@ namespace librapid {
 	}
 
 	template<int64_t scale = time::second>
-	std::string formatTime(double time, const std::string &format = "{:6f}") {
+	std::string formatTime(double time, const std::string &format = "{:3f}") {
 		double ns					= time * scale;
 		int numUnits				= 8;
 		static std::string prefix[] = {"ns", "µs", "ms", "s", "m", "h", "d", "y"};
@@ -72,32 +72,25 @@ namespace librapid {
 		// Call the function to compile any kernels
 		op(vals...);
 
+		double loopTime		   = 1e300;
+		int64_t itersCompleted = 0;
 		if (iters < 1) {
-			// Run the function once and time it to see how many iterations make sense
-			int64_t tmpIters = 1;
-			double start	 = now<time::nanosecond>();
-			op(vals...);
-			double end = now<time::nanosecond>();
-
-			if (end - start < 1000) {
-				tmpIters = 1000;
-				start	 = now<time::nanosecond>();
-				for (int64_t i = 0; i < tmpIters; ++i) op(vals...);
-				end = now<time::nanosecond>();
-			}
-
-			// Make each sample take around 1 second
-			iters = 5.0e8 / ((end - start) / (double)tmpIters);
-			if (iters < 1) iters = 1;
+			loopTime	   = 5e9 / (double)samples;
+			iters		   = 1e10;
+			itersCompleted = 0;
 		}
+
 		std::vector<double> times;
 
 		double globalStart = now();
 		for (int64_t sample = 0; sample < samples; ++sample) {
-			double start = now<time::nanosecond>();
-			for (int64_t iter = 0; iter < iters; ++iter) { op(vals...); }
+			itersCompleted = 0;
+			double start   = now<time::nanosecond>();
+			while (itersCompleted++ < iters && now<time::nanosecond>() - start < loopTime) {
+				op(vals...);
+			}
 			double end = now<time::nanosecond>();
-			times.emplace_back((end - start) / (double)iters);
+			times.emplace_back((end - start) / (double)itersCompleted);
 
 			if (now() - globalStart > 15) {
 				samples = sample + 1;
@@ -108,11 +101,11 @@ namespace librapid {
 		// Calculate average (mean) time and standard deviation
 		double avg = mean(times);
 		double std = standardDeviation(times);
-		fmt::print("Mean {} ± {} after {} samples, each with {} iterations\n",
-				   formatTime<time::nanosecond>(avg),
-				   formatTime<time::nanosecond>(std),
+		fmt::print("Mean {:>9} ± {:>9} after {} samples, each with {} iterations\n",
+				   formatTime<time::nanosecond>(avg, "{:.3f}"),
+				   formatTime<time::nanosecond>(std, "{:.3f}"),
 				   samples,
-				   iters);
+				   itersCompleted - 1);
 		return avg;
 	}
 } // namespace librapid

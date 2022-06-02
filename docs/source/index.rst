@@ -1,6 +1,47 @@
 LibRapid
 ########
 
+#######################
+librapid > Array > eval
+#######################
+
+.. cpp:function:: Array librapid::Array::eval(int fakeArg1, int fakeArg2)
+
+Parameters:
+
+	- ``fakeArg1`` -- ``int``
+	- ``fakeArg2`` -- ``int``
+
+#####
+Title
+#####
+
+Filler Text
+
+*******
+Chapter
+*******
+
+Filler Text
+
+Section
+=======
+
+Filler Text
+
+Subsection
+----------
+
+Filler Text
+
+Subsubsection
+^^^^^^^^^^^^^
+
+Filler Text
+
+
+Paramaters
+
 Contents
 ========
 

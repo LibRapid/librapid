@@ -3,6 +3,7 @@
 #include "../internal/config.hpp"
 
 namespace librapid::internal {
+	/*
 	template<typename T, int64_t dims, typename First>
 	T extentIndexProd(const Extent<T, dims> &extent, bool scalar, int64_t index, First first) {
 		LR_ASSERT(scalar || first >= 0 && first < extent[index],
@@ -28,4 +29,5 @@ namespace librapid::internal {
 		for (int64_t i = index + 1; i < extent.dims(); ++i) extentProd *= extent[i];
 		return extentProd * first + extentIndexProd(extent, scalar, index + 1, others...);
 	}
+	 */
 } // namespace librapid::internal

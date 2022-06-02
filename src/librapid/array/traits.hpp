@@ -14,25 +14,33 @@ namespace librapid::internal {
 		 * [33]       -> Binary operation
 		 * [34]       -> Matrix operation
 		 */
-		inline constexpr uint64_t RequireEval = 1 << 0;
 
-		inline constexpr uint64_t Bitwise	 = 1 < 10;
-		inline constexpr uint64_t Arithmetic = 1 < 11;
-		inline constexpr uint64_t Logical	 = 1 < 12;
+		inline constexpr uint64_t Evaluated		 = 1 << 0; // Result is already evaluated
+		inline constexpr uint64_t RequireEval	 = 1 << 1; // Result must be evaluated
+		inline constexpr uint64_t RequireInput	 = 1 << 2; // Requires the entire array (not scalar)
+		inline constexpr uint64_t HasCustomEval	 = 1 << 3; // Has a custom eval function
+		inline constexpr uint64_t SupportsScalar = 1 << 4; // Has a custom eval function
+		inline constexpr uint64_t SupportsPacket = 1 << 5; // Has a custom eval function
 
+		inline constexpr uint64_t Bitwise	 = 1 < 10; // Bitwise functions
+		inline constexpr uint64_t Arithmetic = 1 < 11; // Arithmetic functions
+		inline constexpr uint64_t Logical	 = 1 < 12; // Logical functions
+		inline constexpr uint64_t Matrix	 = 1 < 13; // Matrix operation
+
+		// Extract only operation information
 		inline constexpr uint64_t OperationMask = 0b111111111111111111110000000000;
 
-		inline constexpr uint64_t PacketBitwise	   = 1 << 13;
-		inline constexpr uint64_t PacketArithmetic = 1 << 14;
-		inline constexpr uint64_t PacketLogical	   = 1 << 15;
+		inline constexpr uint64_t PacketBitwise	   = 1 << 13; // Packet needs bitwise
+		inline constexpr uint64_t PacketArithmetic = 1 << 14; // Packet needs arithmetic
+		inline constexpr uint64_t PacketLogical	   = 1 << 15; // Packet needs logical
 
-		inline constexpr uint64_t ScalarBitwise	   = 1 << 16;
-		inline constexpr uint64_t ScalarArithmetic = 1 << 17;
-		inline constexpr uint64_t ScalarLogical	   = 1 << 18;
+		inline constexpr uint64_t ScalarBitwise	   = 1 << 16; // Scalar needs bitwise
+		inline constexpr uint64_t ScalarArithmetic = 1 << 17; // Scalar needs arithmetic
+		inline constexpr uint64_t ScalarLogical	   = 1 << 18; // Scalar needs logical
 
-		inline constexpr uint64_t Unary	 = 1 < 32;
-		inline constexpr uint64_t Binary = 1 < 33;
-		inline constexpr uint64_t Matrix = 1 < 34;
+		inline constexpr uint64_t Unary	 = 1 < 32; // Operation takes one argument
+		inline constexpr uint64_t Binary = 1 < 33; // Operation takes two arguments
+
 	} // namespace flags
 
 	//------- Just a  Character -----------------------------------------------

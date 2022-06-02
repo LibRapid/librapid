@@ -1,6 +1,13 @@
 #ifndef LIBRAPID_INCLUDE
 #define LIBRAPID_INCLUDE
 
+#pragma warning(push)
+// Disable zero-division warnings for the vector library
+#pragma warning(disable : 4723)
+
+// Disable zero-division warnings for the vector library
+#pragma warning(disable : 4804)
+
 #include "VERSION.hpp"
 #include "internal/config.hpp"
 #include "internal/memUtils.hpp"
@@ -10,13 +17,8 @@
 #include "math/coreMath.hpp"
 #include "math/statistics.hpp"
 #include "math/advanced.hpp"
-
-// Disable zero-division warnings for the vector library
-#pragma warning(push)
-#pragma warning(disable : 4723)
+#include "math/fastMath.hpp"
 #include "math/vector.hpp"
-#pragma warning(pop)
-
 #include "internal/forward.hpp"
 #include "array/traits.hpp"
 #include "array/denseStorage.hpp"
@@ -25,5 +27,7 @@
 #include "array/cwisebinop.hpp"
 #include "array/cwiseunop.hpp"
 #include "array/array.hpp"
+
+#pragma warning(pop)
 
 #endif // LIBRAPID_INCLUDE

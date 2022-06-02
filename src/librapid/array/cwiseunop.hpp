@@ -15,7 +15,7 @@ namespace librapid {
 			using Packet					= typename traits<Scalar>::Packet;
 			using Device					= typename traits<TYPE>::Device;
 			using StorageType				= memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags = Unop::Flags;
+			static constexpr uint64_t Flags = Unop::Flags | traits<TYPE>::Flags;
 		};
 	} // namespace internal
 
@@ -35,7 +35,9 @@ namespace librapid {
 
 			CWiseUnop() = delete;
 
-			explicit CWiseUnop(const ValType &value) : Base(value.extent(), 0), m_value(value) {}
+			template<typename... Args>
+			explicit CWiseUnop(const ValType &value, Args... opArgs) :
+					Base(value.extent(), 0), m_value(value), m_operation(opArgs...) {}
 
 			CWiseUnop(const Type &op) :
 					Base(op.extent(), 0), m_value(op.m_value), m_operation(op.m_operation) {}
@@ -59,7 +61,13 @@ namespace librapid {
 
 			LR_NODISCARD("Do not ignore the result of an evaluated calculation")
 			Array<Scalar, Device> eval() const {
-				Array<Scalar, Device> res(Base::extent());
+				Array<Scalar, Device> res(m_operation.genExtent(m_value.extent()));
+
+				if constexpr ((bool)(Flags & internal::flags::HasCustomEval)) {
+					m_operation.customEval(m_value, res);
+					return res;
+				}
+
 				res.assign(*this);
 				return res;
 			}
@@ -73,10 +81,18 @@ namespace librapid {
 			}
 
 			template<typename T>
+			LR_NODISCARD("")
 			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
 				std::string kernel = m_value.genKernel(vec, index);
 				std::string op	   = m_operation.genKernel();
 				return fmt::format("({}{})", op, kernel);
+			}
+
+			LR_NODISCARD("")
+			std::string str(std::string format = "", const std::string &delim = " ",
+							int64_t stripWidth = -1, int64_t beforePoint = -1,
+							int64_t afterPoint = -1, int64_t depth = 0) const {
+				return eval().str(format, delim, stripWidth, beforePoint, afterPoint, depth);
 			}
 
 		protected:
