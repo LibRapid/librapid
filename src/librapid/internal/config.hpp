@@ -875,6 +875,7 @@ namespace librapid::device {
 namespace librapid {
 #ifdef LIBRAPID_HAS_OMP
 	inline static unsigned int numThreads = 8;
+	inline static unsigned int matrixThreads = 8;
 	inline static bool throwOnAssert	  = false;
 #else
 	inline static unsigned int numThreads = 1;

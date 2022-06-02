@@ -30,13 +30,14 @@ namespace librapid {
 		static_assert(std::is_same_v<Device_, device::CPU>, "CUDA support was not enabled");
 #endif
 
-		using Scalar	  = Scalar_;
-		using Device	  = Device_;
-		using Packet	  = typename internal::traits<Scalar>::Packet;
-		using Type		  = Array<Scalar, Device>;
-		using Base		  = ArrayBase<Type, Device>;
-		using ExtentType  = Extent<int64_t, 32>;
-		using StorageType = typename internal::traits<Type>::StorageType;
+		using Scalar					= Scalar_;
+		using Device					= Device_;
+		using Packet					= typename internal::traits<Scalar>::Packet;
+		using Type						= Array<Scalar, Device>;
+		using Base						= ArrayBase<Type, Device>;
+		using ExtentType				= Extent<int64_t, 32>;
+		using StorageType				= typename internal::traits<Type>::StorageType;
+		static constexpr uint64_t Flags = internal::flags::Evaluated;
 
 		Array() = default;
 
@@ -68,8 +69,7 @@ namespace librapid {
 		Array copy() const { return Base::template cast<Scalar>().eval(); }
 
 		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
-			int64_t memIndex =
-			  internal::extentIndexProd(Base::extent(), this->m_isScalar, 0, index);
+			int64_t memIndex = this->m_isScalar ? 0 : Base::extent().index(index);
 			Array<Scalar, Device> res;
 			res.m_extent   = Base::extent().partial(1);
 			res.m_isScalar = Base::extent().dims() == 1;
@@ -80,8 +80,7 @@ namespace librapid {
 		}
 
 		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) {
-			int64_t memIndex =
-			  internal::extentIndexProd(Base::extent(), this->m_isScalar, 0, index);
+			int64_t memIndex = this->m_isScalar ? 0 : Base::extent().index(index);
 			Array<Scalar, Device> res;
 			res.m_extent   = Base::extent().partial(1);
 			res.m_isScalar = res.m_extent.dims() == 0;
@@ -100,8 +99,7 @@ namespace librapid {
 					  Base::extent().dims(),
 					  sizeof...(indices));
 
-			int64_t index =
-			  internal::extentIndexProd(Base::extent(), this->m_isScalar, 0, indices...);
+			int64_t index = Base::isScalar() ? 0 : Base::extent().index(indices...);
 			return Base::storage()[index];
 		}
 
@@ -114,8 +112,7 @@ namespace librapid {
 					  Base::extent().dims(),
 					  sizeof...(indices));
 
-			int64_t index =
-			  internal::extentIndexProd(Base::extent(), this->m_isScalar, 0, indices...);
+			int64_t index = Base::isScalar() ? 0 : Base::extent().index(indices...);
 			return Base::storage()[index];
 		}
 
@@ -140,9 +137,13 @@ namespace librapid {
 			int64_t dims	= Base::extent().dims();
 			int64_t zeroDim = Base::extent()[0];
 			if (dims > 1) {
-				for (int64_t i = 0; i < zeroDim; ++i)
+				for (int64_t i = 0; i < zeroDim; ++i) {
+					if (stripWidth != 0 && strip && i == stripWidth && zeroDim > stripWidth * 2)
+						i = zeroDim - stripWidth;
+
 					this->operator[](i).findLongest(
 					  format, strip, stripWidth, longestInteger, longestFloating);
+				}
 			} else {
 				// Stringify vector
 				for (int64_t i = 0; i < zeroDim; ++i) {
@@ -174,8 +175,9 @@ namespace librapid {
 		// stripWidth == 0  => Never strip
 		// stripWidth >= 1  => n values are shown
 		LR_NODISCARD("")
-		std::string str(std::string format = "", int64_t stripWidth = -1, int64_t beforePoint = -1,
-						int64_t afterPoint = -1, int64_t depth = 0) const {
+		std::string str(std::string format = "", const std::string &delim = " ",
+						int64_t stripWidth = -1, int64_t beforePoint = -1, int64_t afterPoint = -1,
+						int64_t depth = 0) const {
 			bool strip = stripWidth > 0;
 			if (depth == 0) {
 				strip = false;
@@ -209,6 +211,9 @@ namespace librapid {
 						format = "{}";
 				}
 
+				// Scalars
+				if (Base::isScalar()) return fmt::format(format, this->operator()(0));
+
 				int64_t tmpBeforePoint = 0, tmpAfterPoint = 0;
 				findLongest(format, strip, stripWidth, tmpBeforePoint, tmpAfterPoint);
 				if (beforePoint == -1) beforePoint = tmpBeforePoint;
@@ -228,7 +233,7 @@ namespace librapid {
 
 					if (i > 0) res += std::string(depth + 1, ' ');
 					res += this->operator[](i).str(
-					  format, stripWidth, beforePoint, afterPoint, depth + 1);
+					  format, delim, stripWidth, beforePoint, afterPoint, depth + 1);
 					if (i + 1 < zeroDim) res += "\n";
 					if (i + 1 < zeroDim && dims > 2) res += "\n";
 				}
@@ -254,7 +259,7 @@ namespace librapid {
 						res +=
 						  fmt::format("{:>{}}{:<{}}", integer, beforePoint, floating, afterPoint);
 					}
-					if (i + 1 < zeroDim) res += " ";
+					if (i + 1 < zeroDim) res += delim;
 				}
 			}
 			return res + "]";
