@@ -17,7 +17,8 @@ namespace librapid {
 			using DeviceRHS	  = typename traits<RHS>::Device;
 			using Device	  = typename memory::PromoteDevice<DeviceLHS, DeviceRHS>::type;
 			using StorageType = memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags = Binop::Flags;
+			static constexpr uint64_t Flags =
+			  Binop::Flags | traits<LHS>::Flags | traits<RHS>::Flags;
 		};
 	} // namespace internal
 
@@ -41,8 +42,9 @@ namespace librapid {
 
 			CWiseBinop() = delete;
 
-			CWiseBinop(const LeftType &lhs, const RightType &rhs) :
-					Base(lhs.extent(), 0), m_lhs(lhs), m_rhs(rhs) {}
+			template<typename... Args>
+			CWiseBinop(const LeftType &lhs, const RightType &rhs, Args... opArgs) :
+					Base(lhs.extent(), 0), m_lhs(lhs), m_rhs(rhs), m_operation(opArgs...) {}
 
 			CWiseBinop(const Type &op) :
 					Base(op.extent(), 0), m_lhs(op.m_lhs), m_rhs(op.m_rhs),
@@ -62,7 +64,13 @@ namespace librapid {
 
 			LR_NODISCARD("Do not ignore the result of an evaluated calculation")
 			Array<Scalar, Device> eval() const {
-				Array<Scalar, Device> res(Base::extent());
+				Array<Scalar, Device> res(m_operation.genExtent(m_lhs.extent(), m_rhs.extent()));
+
+				if constexpr ((bool)(Flags & internal::flags::HasCustomEval)) {
+					m_operation.customEval(m_lhs, m_rhs, res);
+					return res;
+				}
+
 				res.assign(*this);
 				return res;
 			}
@@ -81,6 +89,13 @@ namespace librapid {
 				std::string rightKernel = m_rhs.genKernel(vec, index);
 				std::string op			= m_operation.genKernel();
 				return fmt::format("({} {} {})", leftKernel, op, rightKernel);
+			}
+
+			LR_NODISCARD("")
+			std::string str(std::string format = "", const std::string &delim = " ",
+							int64_t stripWidth = -1, int64_t beforePoint = -1,
+							int64_t afterPoint = -1, int64_t depth = 0) const {
+				return eval().str(format, delim, stripWidth, beforePoint, afterPoint, depth);
 			}
 
 		private:

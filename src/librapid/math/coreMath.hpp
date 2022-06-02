@@ -179,7 +179,8 @@ namespace librapid {
 		return lower + (upper - lower) * distribution(generator);
 	}
 
-	inline int64_t randint(int64_t lower, int64_t upper, uint64_t seed = -1) {
+	template<typename T, typename std::enable_if_t<std::is_integral_v<T>, int> = 0>
+	inline T randint(T lower, T upper, uint64_t seed = -1) {
 		// Random integral value in range [lower, upper]
 		return (int64_t)random((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1, seed);
 	}

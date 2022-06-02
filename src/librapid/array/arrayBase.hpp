@@ -25,26 +25,31 @@
 		static_assert(!(Required & ~(Flags & Required)),                                           \
 					  "Scalar type is incompatible with Functor");                                 \
                                                                                                    \
-		if constexpr (Flags & internal::flags::RequireEval)                                        \
+		LR_ASSERT(extent() == other.extent(),                                                      \
+				  "Arrays must have equal extents. Cannot operate on Arrays with {} and {}",       \
+				  extent().str(),                                                                  \
+				  other.extent().str());                                                           \
+                                                                                                   \
+		if constexpr ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval))             \
 			return RetType(derived(), other.derived()).eval();                                     \
-		else if constexpr (!(Flags & internal::flags::RequireEval))                                \
+		else                                                                                       \
 			return RetType(derived(), other.derived());                                            \
 	}
 
-#define IMPL_UNOP(NAME, TYPE)                                                                      \
-	LR_NODISCARD("")                                                                               \
-	auto NAME() const {                                                                            \
-		using RetType					= unop::CWiseUnop<functors::unop::TYPE<Scalar>, Derived>; \
-		static constexpr uint64_t Flags = internal::traits<Scalar>::Flags;                         \
-		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
-                                                                                                   \
-		static_assert(!(Required & ~(Flags & Required)),                                           \
-					  "Scalar type is incompatible with Functor");                                 \
-                                                                                                   \
-		if constexpr (Flags & internal::flags::RequireEval)                                        \
-			return RetType(derived()).eval();                                                      \
-		else if constexpr (!(Flags & internal::flags::RequireEval))                                \
-			return RetType(derived());                                                             \
+#define IMPL_UNOP(NAME, TYPE)                                                                        \
+	LR_NODISCARD("")                                                                                 \
+	auto NAME() const {                                                                              \
+		using RetType					   = unop::CWiseUnop<functors::unop::TYPE<Scalar>, Derived>; \
+		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                        \
+		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;        \
+                                                                                                     \
+		static_assert(!(Required & ~(Flags & Required)),                                             \
+					  "Scalar type is incompatible with Functor");                                   \
+                                                                                                     \
+		if constexpr ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval))               \
+			return RetType(derived()).eval();                                                        \
+		else                                                                                         \
+			return RetType(derived());                                                               \
 	}
 
 namespace librapid {
@@ -94,14 +99,6 @@ namespace librapid {
 			return assign(other);
 		}
 
-		//		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
-		//		Array<Scalar, Device> eval() const {
-		//			Array<Scalar, Device> res(m_extent);
-		//			memory::memcpy<Scalar, Device, Scalar, Device>(
-		//			  res.storage().heap(), storage().heap(), m_extent.size());
-		//			return res;
-		//		}
-
 		template<typename T>
 		LR_NODISCARD("")
 		LR_FORCE_INLINE auto cast() const {
@@ -120,6 +117,38 @@ namespace librapid {
 		IMPL_BINOP(operator^, BitwiseXor)
 
 		IMPL_UNOP(operator-, UnaryMinus)
+		IMPL_UNOP(operator~, BitwiseNot)
+		IMPL_UNOP(operator!, UnaryNot)
+
+		template<typename T = int64_t, int64_t d = 32>
+		auto transpose(const Extent<T, d> &order_ = {}) const {
+			using RetType = unop::CWiseUnop<functors::matrix::Transpose<Derived>, Derived>;
+			static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
+			static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;
+
+			static_assert(!(Required & ~(Flags & Required)),
+						  "Scalar type is incompatible with Functor");
+
+			Extent<int64_t, 32> order;
+			if (order_.dims() == -1) {
+				// Default order is to reverse all indices
+				order = Extent<int64_t, 32>::zero(m_extent.dims());
+				for (int64_t i = 0; i < m_extent.dims(); ++i) {
+					order[m_extent.dims() - i - 1] = i;
+				}
+			} else {
+				order = order_;
+			}
+
+			if constexpr ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval)) {
+				return RetType(derived(), order).eval();
+			} else {
+				return RetType(derived(), order);
+			}
+		}
+
+		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
+		auto eval() const { return derived(); }
 
 		template<typename OtherDerived>
 		LR_FORCE_INLINE void loadFrom(int64_t index, const OtherDerived &other) {
