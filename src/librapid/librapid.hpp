@@ -10,6 +10,7 @@
 
 #include "VERSION.hpp"
 #include "internal/config.hpp"
+#include "modified/modified.hpp"
 #include "internal/memUtils.hpp"
 #include "utils/time.hpp"
 #include "utils/console.hpp"
@@ -18,6 +19,7 @@
 #include "math/statistics.hpp"
 #include "math/advanced.hpp"
 #include "math/fastMath.hpp"
+#include "math/zTheory.hpp"
 #include "math/vector.hpp"
 #include "internal/forward.hpp"
 #include "array/traits.hpp"

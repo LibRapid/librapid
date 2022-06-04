@@ -876,10 +876,13 @@ namespace librapid {
 #ifdef LIBRAPID_HAS_OMP
 	inline static unsigned int numThreads = 8;
 	inline static unsigned int matrixThreads = 8;
-	inline static bool throwOnAssert	  = false;
 #else
 	inline static unsigned int numThreads = 1;
+	inline static unsigned int matrixThreads = 1;
 #endif
+	inline static bool throwOnAssert	  = false;
+	inline static std::vector<std::string> cudaHeaders = {};
+	inline static std::vector<std::string> nvccOptions = {};
 } // namespace librapid
 
 // Prefer using the GPU over the CPU -- promote arrays to the GPU where possible

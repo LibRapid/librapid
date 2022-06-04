@@ -36,6 +36,26 @@
 			return RetType(derived(), other.derived());                                            \
 	}
 
+#define IMPL_BINOP_SCALAR(NAME, TYPE)                                                              \
+	template<typename OtherScalar,                                                                 \
+			 typename std::enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
+	LR_NODISCARD("")                                                                               \
+	auto NAME(const OtherScalar &other) const {                                                    \
+		using ResDevice = Device;                                                                  \
+		using RetType =                                                                            \
+		  binop::CWiseBinop<functors::binary::TYPE<Scalar, OtherScalar>, Derived, OtherScalar>;    \
+		static constexpr uint64_t Flags	   = internal::traits<OtherScalar>::Flags;                 \
+		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
+                                                                                                   \
+		static_assert(!(Required & ~(Flags & Required)),                                           \
+					  "Scalar type is incompatible with Functor");                                 \
+                                                                                                   \
+		if constexpr ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval))             \
+			return RetType(derived(), other).eval();                                               \
+		else                                                                                       \
+			return RetType(derived(), other);                                                      \
+	}
+
 #define IMPL_UNOP(NAME, TYPE)                                                                        \
 	LR_NODISCARD("")                                                                                 \
 	auto NAME() const {                                                                              \
@@ -56,6 +76,7 @@ namespace librapid {
 	namespace internal {
 		template<typename Derived>
 		struct traits<ArrayBase<Derived, device::CPU>> {
+			static constexpr bool IsScalar	= false;
 			using Valid						= std::true_type;
 			using Scalar					= typename traits<Derived>::Scalar;
 			using BaseScalar				= typename traits<Scalar>::BaseScalar;
@@ -95,6 +116,11 @@ namespace librapid {
 				m_isScalar(extent.size() == 0), m_extent(extent) {}
 
 		template<typename OtherDerived>
+		ArrayBase(const OtherDerived &other) {
+			assign(other);
+		}
+
+		template<typename OtherDerived>
 		LR_INLINE Derived &operator=(const OtherDerived &other) {
 			return assign(other);
 		}
@@ -112,6 +138,11 @@ namespace librapid {
 		IMPL_BINOP(operator*, ScalarProd)
 		IMPL_BINOP(operator/, ScalarDiv)
 
+		IMPL_BINOP_SCALAR(operator+, ScalarSum)
+		IMPL_BINOP_SCALAR(operator-, ScalarDiff)
+		IMPL_BINOP_SCALAR(operator*, ScalarProd)
+		IMPL_BINOP_SCALAR(operator/, ScalarDiv)
+
 		IMPL_BINOP(operator|, BitwiseOr)
 		IMPL_BINOP(operator&, BitwiseAnd)
 		IMPL_BINOP(operator^, BitwiseXor)
@@ -121,7 +152,7 @@ namespace librapid {
 		IMPL_UNOP(operator!, UnaryNot)
 
 		template<typename T = int64_t, int64_t d = 32>
-		auto transpose(const Extent<T, d> &order_ = {}) const {
+		auto transposed(const Extent<T, d> &order_ = {}) const {
 			using RetType = unop::CWiseUnop<functors::matrix::Transpose<Derived>, Derived>;
 			static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
 			static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;
@@ -140,11 +171,9 @@ namespace librapid {
 				order = order_;
 			}
 
-			if constexpr ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval)) {
-				return RetType(derived(), order).eval();
-			} else {
-				return RetType(derived(), order);
-			}
+			auto res = eval();
+			res.transpose();
+			return res;
 		}
 
 		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
@@ -240,6 +269,7 @@ namespace librapid {
 		LR_NODISCARD("") const StorageType &storage() const { return m_storage; }
 		LR_NODISCARD("") StorageType &storage() { return m_storage; }
 		LR_NODISCARD("") Extent<int64_t, 32> extent() const { return m_extent; }
+		LR_NODISCARD("") Extent<int64_t, 32> &extent() { return m_extent; }
 
 	private:
 		bool m_isScalar = false;

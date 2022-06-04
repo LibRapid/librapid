@@ -66,8 +66,12 @@ namespace librapid {
 	};
 
 	template<typename LAMBDA, typename... Args>
-	double timeFunction(const LAMBDA &op, int64_t iters = -1, int64_t samples = -1, Args... vals) {
-		if (samples < 1) samples = 10;
+	double timeFunction(const LAMBDA &op, int64_t samples = -1, int64_t iters = -1, Args... vals) {
+		bool forceSamples = false;
+		if (samples < 1) {
+			samples		 = 10;
+			forceSamples = true;
+		}
 
 		// Call the function to compile any kernels
 		op(vals...);
@@ -92,10 +96,7 @@ namespace librapid {
 			double end = now<time::nanosecond>();
 			times.emplace_back((end - start) / (double)itersCompleted);
 
-			if (now() - globalStart > 15) {
-				samples = sample + 1;
-				break;
-			}
+			if (now() - globalStart > 15 && forceSamples) break;
 		}
 
 		// Calculate average (mean) time and standard deviation
