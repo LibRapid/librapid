@@ -66,7 +66,7 @@ namespace librapid::memory {
 
 		void offsetMemory(int64_t off) { m_memOffset += off; }
 
-		LR_NODISCARD("") T *heap() const { return m_heap + m_memOffset; }
+		LR_NODISCARD("") LR_FORCE_INLINE T *__restrict heap() const { return m_heap + m_memOffset; }
 
 		LR_NODISCARD("") int64_t size() const { return m_size; }
 
@@ -91,11 +91,12 @@ namespace librapid::memory {
 	};
 
 	template<typename d>
-	class DenseStorage<bool, d> : public DenseStorage<typename internal::traits<bool>::BaseScalar, d> {
+	class DenseStorage<bool, d>
+			: public DenseStorage<typename internal::traits<bool>::BaseScalar, d> {
 	public:
-		using Type = bool;
+		using Type		 = bool;
 		using BaseScalar = typename internal::traits<bool>::BaseScalar;
-		using Base = DenseStorage<BaseScalar, d>;
+		using Base		 = DenseStorage<BaseScalar, d>;
 
 		DenseStorage() : Base() {};
 
@@ -128,7 +129,9 @@ namespace librapid::memory {
 			return ValueReference<bool, d>(this->m_heap + block, bit);
 		}
 
-		LR_NODISCARD("") BaseScalar *heap() const { return this->m_heap + (this->m_memOffset / (sizeof(BaseScalar) * 8)); }
+		LR_NODISCARD("") BaseScalar *heap() const {
+			return this->m_heap + (this->m_memOffset / (sizeof(BaseScalar) * 8));
+		}
 	};
 
 	template<typename T, typename d, typename T_, typename d_>

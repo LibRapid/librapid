@@ -26,10 +26,10 @@ namespace librapid::functors::binary {
 			return left + right;
 		}
 
-		template<typename PacketType>
+		template<typename PacketTypeLHS, typename PacketTypeRHS>
 		LR_NODISCARD("")
 		LR_FORCE_INLINE Packet
-		  packetOp(const PacketType &left, const PacketType &right) const {
+		  packetOp(const PacketTypeLHS &left, const PacketTypeRHS &right) const {
 			return left + right;
 		}
 
@@ -61,10 +61,10 @@ namespace librapid::functors::binary {
 			return left - right;
 		}
 
-		template<typename PacketType>
+		template<typename PacketTypeLHS, typename PacketTypeRHS>
 		LR_NODISCARD("")
 		LR_FORCE_INLINE Packet
-		  packetOp(const PacketType &left, const PacketType &right) const {
+		  packetOp(const PacketTypeLHS &left, const PacketTypeRHS &right) const {
 			return left - right;
 		}
 
@@ -96,10 +96,10 @@ namespace librapid::functors::binary {
 			return left * right;
 		}
 
-		template<typename PacketType>
+		template<typename PacketTypeLHS, typename PacketTypeRHS>
 		LR_NODISCARD("")
 		LR_FORCE_INLINE Packet
-		  packetOp(const PacketType &left, const PacketType &right) const {
+		  packetOp(const PacketTypeLHS &left, const PacketTypeRHS &right) const {
 			return left * right;
 		}
 
@@ -131,10 +131,10 @@ namespace librapid::functors::binary {
 			return left / right;
 		}
 
-		template<typename PacketType>
+		template<typename PacketTypeLHS, typename PacketTypeRHS>
 		LR_NODISCARD("")
 		LR_FORCE_INLINE Packet
-		  packetOp(const PacketType &left, const PacketType &right) const {
+		  packetOp(const PacketTypeLHS &left, const PacketTypeRHS &right) const {
 			return left / right;
 		}
 

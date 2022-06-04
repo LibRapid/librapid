@@ -2,19 +2,21 @@
 
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
+#include "helpers/kernelFormat.hpp"
 #include "arrayBase.hpp"
 
 namespace librapid {
 	namespace internal {
 		template<typename Binop, typename LHS, typename RHS>
 		struct traits<binop::CWiseBinop<Binop, LHS, RHS>> {
-			using Valid		  = std::true_type;
-			using Type		  = binop::CWiseBinop<Binop, LHS, RHS>;
-			using Scalar	  = typename Binop::RetType;
-			using BaseScalar  = typename traits<Scalar>::BaseScalar;
-			using Packet	  = typename traits<Scalar>::Packet;
-			using DeviceLHS	  = typename traits<LHS>::Device;
-			using DeviceRHS	  = typename traits<RHS>::Device;
+			static constexpr bool IsScalar = false;
+			using Valid					   = std::true_type;
+			using Type					   = binop::CWiseBinop<Binop, LHS, RHS>;
+			using Scalar				   = typename Binop::RetType;
+			using BaseScalar			   = typename traits<Scalar>::BaseScalar;
+			using Packet				   = typename traits<Scalar>::Packet;
+			using DeviceLHS				   = typename traits<LHS>::Device;
+			using DeviceRHS				   = typename traits<RHS>::Device;
 			using Device	  = typename memory::PromoteDevice<DeviceLHS, DeviceRHS>::type;
 			using StorageType = memory::DenseStorage<Scalar, Device>;
 			static constexpr uint64_t Flags =
@@ -38,7 +40,9 @@ namespace librapid {
 			using Device	= typename memory::PromoteDevice<DeviceRHS, DeviceLHS>::type;
 			using Type		= CWiseBinop<Binop, LHS, RHS>;
 			using Base		= ArrayBase<Type, Device>;
-			static constexpr uint64_t Flags = internal::traits<Type>::Flags;
+			static constexpr bool LhsIsScalar = internal::traits<LeftType>::IsScalar;
+			static constexpr bool RhsIsScalar = internal::traits<RightType>::IsScalar;
+			static constexpr uint64_t Flags	  = internal::traits<Type>::Flags;
 
 			CWiseBinop() = delete;
 
@@ -64,7 +68,18 @@ namespace librapid {
 
 			LR_NODISCARD("Do not ignore the result of an evaluated calculation")
 			Array<Scalar, Device> eval() const {
-				Array<Scalar, Device> res(m_operation.genExtent(m_lhs.extent(), m_rhs.extent()));
+				Extent<int64_t, 32> resExtent;
+				if constexpr (LhsIsScalar && RhsIsScalar) {
+					LR_ASSERT(false, "This should never happen");
+				} else if constexpr (LhsIsScalar && !RhsIsScalar) {
+					resExtent = m_operation.genExtent(m_rhs.extent());
+				} else if constexpr (!LhsIsScalar && RhsIsScalar) {
+					resExtent = m_operation.genExtent(m_lhs.extent());
+				} else {
+					resExtent = m_operation.genExtent(m_lhs.extent(), m_rhs.extent());
+				}
+
+				Array<Scalar, Device> res(resExtent);
 
 				if constexpr ((bool)(Flags & internal::flags::HasCustomEval)) {
 					m_operation.customEval(m_lhs, m_rhs, res);
@@ -76,18 +91,49 @@ namespace librapid {
 			}
 
 			LR_FORCE_INLINE Packet packet(int64_t index) const {
-				return m_operation.packetOp(m_lhs.packet(index), m_rhs.packet(index));
+				if constexpr (LhsIsScalar && RhsIsScalar)
+					return m_operation.packetOp(m_lhs, m_rhs);
+				else if constexpr (LhsIsScalar && !RhsIsScalar)
+					return m_operation.packetOp(m_lhs, m_rhs.packet(index));
+				else if constexpr (!LhsIsScalar && RhsIsScalar)
+					return m_operation.packetOp(m_lhs.packet(index), m_rhs);
+				else
+					return m_operation.packetOp(m_lhs.packet(index), m_rhs.packet(index));
 			}
 
 			LR_FORCE_INLINE Scalar scalar(int64_t index) const {
-				return m_operation.scalarOp(m_lhs.scalar(index), m_rhs.scalar(index));
+				if constexpr (LhsIsScalar && RhsIsScalar)
+					return m_operation.scalarOp(m_lhs, m_rhs);
+				else if constexpr (LhsIsScalar && !RhsIsScalar)
+					return m_operation.scalarOp(m_lhs, m_rhs.scalar(index));
+				else if constexpr (!LhsIsScalar && RhsIsScalar)
+					return m_operation.scalarOp(m_lhs.scalar(index), m_rhs);
+				else
+					return m_operation.scalarOp(m_lhs.scalar(index), m_rhs.scalar(index));
 			}
 
 			template<typename T>
 			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
-				std::string leftKernel	= m_lhs.genKernel(vec, index);
-				std::string rightKernel = m_rhs.genKernel(vec, index);
-				std::string op			= m_operation.genKernel();
+				// std::string leftKernel	= m_lhs.genKernel(vec, index);
+				// std::string rightKernel = m_rhs.genKernel(vec, index);
+
+				std::string leftKernel, rightKernel;
+
+				if constexpr (LhsIsScalar && RhsIsScalar) {
+					leftKernel	= detail::kernelFormat(m_lhs);
+					rightKernel = detail::kernelFormat(m_rhs);
+				} else if constexpr (LhsIsScalar && !RhsIsScalar) {
+					leftKernel	= detail::kernelFormat(m_lhs);
+					rightKernel = m_rhs.genKernel(vec, index);
+				} else if constexpr (!LhsIsScalar && RhsIsScalar) {
+					leftKernel	= m_lhs.genKernel(vec, index);
+					rightKernel = detail::kernelFormat(m_rhs);
+				} else {
+					leftKernel	= m_lhs.genKernel(vec, index);
+					rightKernel = m_rhs.genKernel(vec, index);
+				}
+
+				std::string op = m_operation.genKernel();
 				return fmt::format("({} {} {})", leftKernel, op, rightKernel);
 			}
 

@@ -3,7 +3,6 @@
 #include "../internal/config.hpp"
 #include "traits.hpp"
 #include "helpers/extent.hpp"
-#include "helpers/internalUtils.hpp"
 #include "arrayBase.hpp"
 #include "cwisebinop.hpp"
 #include "denseStorage.hpp"
@@ -13,6 +12,7 @@ namespace librapid {
 	namespace internal {
 		template<typename Scalar_, typename Device_>
 		struct traits<Array<Scalar_, Device_>> {
+			static constexpr bool IsScalar = false;
 			using Valid					   = std::true_type;
 			using Scalar				   = Scalar_;
 			using BaseScalar			   = typename traits<Scalar>::BaseScalar;
@@ -45,7 +45,7 @@ namespace librapid {
 		explicit Array(const Extent<T, d> &extent) : Base(extent) {}
 
 		template<typename OtherDerived>
-		explicit Array(const OtherDerived &other) : Base(other.extent()) {
+		Array(const OtherDerived &other) : Base(other.extent()) {
 			Base::assign(other);
 		}
 
@@ -53,7 +53,8 @@ namespace librapid {
 
 		Array &operator=(const Array<Scalar, Device> &other) { return Base::assign(other); }
 
-		template<typename OtherDerived>
+		template<typename OtherDerived,
+				 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>
 		Array &operator=(const OtherDerived &other) {
 			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
 			static_assert(std::is_same_v<Scalar, ScalarOther>,
@@ -66,7 +67,13 @@ namespace librapid {
 			return internal::CommaInitializer<Type>(*this, value);
 		}
 
-		Array copy() const { return Base::template cast<Scalar>().eval(); }
+		Array copy() const {
+			Array res(Base::extent());
+			res = *this * 1;
+			return res;
+		}
+
+		auto copyLazy() const { return *this * 1; }
 
 		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
 			int64_t memIndex = this->m_isScalar ? 0 : Base::extent().index(index);
@@ -114,6 +121,32 @@ namespace librapid {
 
 			int64_t index = Base::isScalar() ? 0 : Base::extent().index(indices...);
 			return Base::storage()[index];
+		}
+
+		template<typename T = int64_t, int64_t d = 32>
+		void transpose(const Extent<T, d> &order_ = {}) {
+			// Transpose inplace
+			auto &extent = Base::extent();
+			Extent<int64_t, 32> order;
+			if (order_.dims() == -1) {
+				// Default order is to reverse all indices
+				order = Extent<int64_t, 32>::zero(extent.dims());
+				for (int64_t i = 0; i < extent.dims(); ++i) { order[extent.dims() - i - 1] = i; }
+			} else {
+				order = order_;
+			}
+
+			if constexpr (std::is_same_v<Device, device::CPU>) {
+				Scalar *buffer = memory::malloc<Scalar, Device>(extent.size());
+
+				detail::transpose(true, Base::storage().heap(), extent[0], extent[1], buffer);
+
+				memory::free<Scalar, Device>(buffer);
+			} else {
+				LR_ASSERT(false, "CUDA support was not enabled");
+			}
+
+			extent.swivelInplace(order);
 		}
 
 		LR_FORCE_INLINE void writePacket(int64_t index, const Packet &p) {
