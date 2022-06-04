@@ -137,6 +137,11 @@ namespace librapid {
 			return res;
 		}
 
+		template<typename T_ = T, int64_t d = maxDims>
+		void swivelInplace(const Extent<T_, d> &order) {
+			*this = swivel(order);
+		}
+
 		LR_NODISCARD("") LR_FORCE_INLINE int64_t size() const {
 			int64_t res = 1;
 			for (int64_t i = 0; i < m_dims; ++i) res *= m_data[i];

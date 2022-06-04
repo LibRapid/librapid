@@ -18,5 +18,12 @@ namespace librapid::functors::binary {
 		Extent<T, d> genExtent(const Extent<T, d> &lhs, const Extent<T, d> &rhs) const {
 			return lhs;
 		}
+
+		// For a scalar operation
+		template<typename T, int64_t d>
+		LR_NODISCARD("")
+		Extent<T, d> genExtent(const Extent<T, d> &generic) const {
+			return generic;
+		}
 	};
 } // namespace librapid::functors::binary

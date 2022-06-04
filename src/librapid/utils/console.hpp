@@ -3,6 +3,10 @@
 #include "../internal/config.hpp"
 #include "../math/vector.hpp"
 
+#if defined(LIBRAPID_OS_UNIX)
+#	include <sys/ioctl.h>
+#endif
+
 namespace librapid {
 	struct ConsoleSize {
 		int rows, cols;

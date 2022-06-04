@@ -193,6 +193,7 @@ namespace librapid {
 					else
 						*(this->m_value) &= ~(1ull << m_bit);
 				} else {
+#if defined(LIBRAPID_HAS_CUDA)
 					std::string kernel = fmt::format(R"V0G0N(bitSetKernel
 					#include <stdint.h>
 					__global__
@@ -216,6 +217,9 @@ namespace librapid {
 								 .instantiate()
 								 .configure(grid, block, 0, cudaStream)
 								 .launch(this->m_value, m_bit, value));
+#else
+					LR_ASSERT(false, "CUDA support was not enabled");
+#endif
 				}
 			}
 

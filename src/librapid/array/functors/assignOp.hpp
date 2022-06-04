@@ -146,7 +146,7 @@ void applyOp({4} **pointers, int64_t size) {{
 												 varArgs);
 
 				static jitify::JitCache kernelCache;
-				jitify::Program program = kernelCache.program(kernel);
+				jitify::Program program = kernelCache.program(kernel, cudaHeaders, nvccOptions);
 
 				int64_t threadsPerBlock, blocksPerGrid;
 
