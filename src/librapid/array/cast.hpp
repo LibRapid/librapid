@@ -8,11 +8,14 @@ namespace librapid {
 	namespace internal {
 		template<typename DST, typename OtherDerived>
 		struct traits<unary::Cast<DST, OtherDerived>> {
-			using Scalar				= DST;
-			using Packet				= typename traits<Scalar>::Packet;
-			using Device				= typename internal::traits<OtherDerived>::Device;
-			using StorageType			= memory::DenseStorage<Scalar, Device>;
-			static const uint64_t Flags = 0;
+			static constexpr bool IsScalar = false;
+			using Valid					   = std::true_type;
+			using Type					   = unary::Cast<DST, OtherDerived>;
+			using Scalar				   = DST;
+			using Packet				   = typename traits<Scalar>::Packet;
+			using Device				   = typename internal::traits<OtherDerived>::Device;
+			using StorageType			   = memory::DenseStorage<Scalar, Device>;
+			static const uint64_t Flags	   = 0;
 		};
 	} // namespace internal
 
@@ -33,7 +36,7 @@ namespace librapid {
 
 			Cast(const InputType &toCast) : Base(toCast.extent()), m_toCast(toCast) {}
 
-			Cast(const Type &caster) : Base(caster.extent()), m_toCast(caster) {}
+			Cast(const Type &caster) : Base(caster.extent()), m_toCast(caster.m_toCast) {}
 
 			Cast &operator=(const Type &caster) {
 				if (this == &caster) return *this;
@@ -1105,8 +1108,15 @@ namespace librapid {
 				return Scalar(m_toCast.scalar(index));
 			}
 
+			LR_NODISCARD("")
+			std::string str(std::string format = "", const std::string &delim = " ",
+							int64_t stripWidth = -1, int64_t beforePoint = -1,
+							int64_t afterPoint = -1, int64_t depth = 0) const {
+				return eval().str(format, delim, stripWidth, beforePoint, afterPoint, depth);
+			}
+
 		private:
-			const InputType &m_toCast;
+			InputType m_toCast;
 		};
 	} // namespace unary
 } // namespace librapid

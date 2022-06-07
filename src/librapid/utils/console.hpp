@@ -3,7 +3,10 @@
 #include "../internal/config.hpp"
 #include "../math/vector.hpp"
 
-#if defined(LIBRAPID_OS_UNIX)
+#if defined(LIBRAPID_OS_WINDOWS)
+#	define WIN32_LEAN_AND_MEAN
+#	include <Windows.h>
+#elif defined(LIBRAPID_OS_UNIX)
 #	include <sys/ioctl.h>
 #endif
 
