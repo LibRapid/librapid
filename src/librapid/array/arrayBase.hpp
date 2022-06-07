@@ -56,6 +56,29 @@
 			return RetType(derived(), other);                                                      \
 	}
 
+#define IMPL_BINOP_SCALAR_EXTERNAL(NAME, TYPE)                                                     \
+	template<typename OtherScalar,                                                                 \
+			 typename Derived,                                                                     \
+			 typename Device,                                                                      \
+			 typename std::enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
+	LR_NODISCARD("")                                                                               \
+	auto NAME(const OtherScalar &other, const ArrayBase<Derived, Device> &arr) {                   \
+		using Scalar	= typename internal::traits<Derived>::Scalar;                              \
+		using ResDevice = Device;                                                                  \
+		using RetType =                                                                            \
+		  binop::CWiseBinop<functors::binary::TYPE<Scalar, OtherScalar>, OtherScalar, Derived>;    \
+		static constexpr uint64_t Flags	   = internal::traits<OtherScalar>::Flags;                 \
+		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
+                                                                                                   \
+		static_assert(!(Required & ~(Flags & Required)),                                           \
+					  "Scalar type is incompatible with Functor");                                 \
+                                                                                                   \
+		if constexpr ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval))             \
+			return RetType(other, arr.derived()).eval();                                           \
+		else                                                                                       \
+			return RetType(other, arr.derived());                                                  \
+	}
+
 #define IMPL_UNOP(NAME, TYPE)                                                                        \
 	LR_NODISCARD("")                                                                                 \
 	auto NAME() const {                                                                              \
@@ -276,7 +299,14 @@ namespace librapid {
 		Extent<int64_t, 32> m_extent;
 		StorageType m_storage;
 	};
+
+	IMPL_BINOP_SCALAR_EXTERNAL(operator+, ScalarSum)
+	IMPL_BINOP_SCALAR_EXTERNAL(operator-, ScalarDiff)
+	IMPL_BINOP_SCALAR_EXTERNAL(operator*, ScalarProd)
+	IMPL_BINOP_SCALAR_EXTERNAL(operator/, ScalarDiv)
 } // namespace librapid
 
 #undef IMPL_BINOP
+#undef IMPL_BINOP_SCALAR
+#undef IMPL_BINOP_SCALAR_EXTERNAL
 #undef IMPL_UNOP

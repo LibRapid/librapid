@@ -335,8 +335,8 @@
 #	define LIBRAPID_LOG
 #endif
 
-#ifdef LIBRAPID_OS_WINDOWS
-#	include <Windows.h>
+#if defined(LIBRAPID_OS_WINDOWS) && defined(LIBRAPID_MSVC_CXX)
+#	define WIN32_LEAN_AND_MEAN
 
 // Construct a class to force ANSI sequences to work
 namespace librapid::internal {
@@ -490,7 +490,7 @@ namespace librapid::internal {
 				  maxLen + 5,                                                                      \
 				  maxLen + 0,                                                                      \
 				  maxLen - 4,                                                                      \
-				  maxLen);                                                                               \
+				  maxLen);                                                                         \
 				if (librapid::throwOnAssert) {                                                     \
 					throw std::runtime_error(formatted);                                           \
 				} else {                                                                           \
@@ -874,13 +874,13 @@ namespace librapid::device {
 
 namespace librapid {
 #ifdef LIBRAPID_HAS_OMP
-	inline static unsigned int numThreads = 8;
+	inline static unsigned int numThreads	 = 8;
 	inline static unsigned int matrixThreads = 8;
 #else
-	inline static unsigned int numThreads = 1;
+	inline static unsigned int numThreads	 = 1;
 	inline static unsigned int matrixThreads = 1;
 #endif
-	inline static bool throwOnAssert	  = false;
+	inline static bool throwOnAssert				   = false;
 	inline static std::vector<std::string> cudaHeaders = {};
 	inline static std::vector<std::string> nvccOptions = {};
 } // namespace librapid
