@@ -48,7 +48,13 @@ namespace librapid {
 
 			template<typename... Args>
 			CWiseBinop(const LeftType &lhs, const RightType &rhs, Args... opArgs) :
-					Base(lhs.extent(), 0), m_lhs(lhs), m_rhs(rhs), m_operation(opArgs...) {}
+					Base(
+					  [&]() {
+						  if constexpr (LhsIsScalar) return rhs.extent();
+						  else return lhs.extent();
+					  }(),
+					  0),
+					m_lhs(lhs), m_rhs(rhs), m_operation(opArgs...) {}
 
 			CWiseBinop(const Type &op) :
 					Base(op.extent(), 0), m_lhs(op.m_lhs), m_rhs(op.m_rhs),
