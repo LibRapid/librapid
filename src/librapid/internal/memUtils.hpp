@@ -8,7 +8,7 @@
 namespace librapid::memory {
 	constexpr uint64_t memAlign = 32;
 
-	template<typename T, typename d,
+	template<typename T = char, typename d = device::CPU,
 			 typename std::enable_if_t<std::is_same_v<d, device::CPU>, int> = 0>
 	LR_NODISCARD("Do not leave a dangling pointer")
 	LR_FORCE_INLINE T *malloc(size_t num, size_t alignment = memAlign, bool zero = false) {
@@ -39,7 +39,7 @@ namespace librapid::memory {
 		return (T *)ret;
 	}
 
-	template<typename T, typename d,
+	template<typename T = char, typename d = device::CPU,
 			 typename std::enable_if_t<std::is_same_v<d, device::CPU>, int> = 0>
 	LR_FORCE_INLINE void free(T *alignedPtr) {
 #ifdef LIBRAPID_TRACEBACK
