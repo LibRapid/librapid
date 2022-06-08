@@ -3,21 +3,17 @@
  * operations that can be applied to it
  */
 
-// You can replace this with "#include <librapid/librapid.hpp>"
-// #include "../../src/librapid/librapid.hpp"
 #include <librapid/librapid.hpp>
 
 namespace lrc = librapid;
 
 int main() {
 	lrc::numThreads = 8;
-	
-	lrc::Array myArr = lrc::Array<float>(lrc::Extent(3, 5));
+
+	lrc::Array myArr = lrc::Array<int>(lrc::Extent(3, 5));
 
 	for (int i = 0; i < myArr.extent()[0]; ++i) {
-		for (int j = 0; j < myArr.extent()[1]; j++) {
-			myArr[i][j] = j + i * myArr.extent()[1] + 1;
-		}
+		for (int j = 0; j < myArr.extent()[1]; j++) { myArr[i][j] = lrc::randint(1, 10); }
 	}
 
 	fmt::print("My array:\n");
