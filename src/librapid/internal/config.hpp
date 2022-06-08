@@ -860,8 +860,8 @@ static const char *getCublasErrorEnum_(cublasStatus_t error) {
 #		pragma warning(default : 4996)
 #	endif
 
-#	include "src/librapid/cuda/helper_cuda.h"
-#	include "src/librapid/cuda/helper_functions.h"
+#	include "../cuda/helper_cuda.h"
+#	include "../cuda/helper_functions.h"
 
 #endif // LIBRAPID_HAS_CUDA
 

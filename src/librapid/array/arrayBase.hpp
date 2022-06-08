@@ -194,8 +194,8 @@ namespace librapid {
 				order = order_;
 			}
 
-			auto res = eval();
-			res.transpose();
+			auto res = (1 * *this).eval();
+			res.transpose(order);
 			return res;
 		}
 

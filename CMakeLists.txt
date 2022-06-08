@@ -3,14 +3,6 @@ project(librapid VERSION "0.3.3")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-if ()
-    message(STATUS "Building library for Python")
-else ()
-    message(STATUS "Building static C++ library")
-endif ()
-
-message(STATUS "CMake Version: ${CMAKE_VERSION}")
-
 set(LIBRAPID_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -25,14 +17,12 @@ elseif (${CMAKE_CXX_STANDARD} VERSION_LESS 17)
                      LibRapid will set this automatically, but ensure you are aware of the consequences")
 endif ()
 
-include(FetchContent)
 
 # Attempt to locate the required packages
+include(FetchContent)
 find_package(CUDAToolkit)
 find_package(BLAS)
 find_package(OpenMP)
-
-message(STATUS "CMake Source Directory: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 # Ensure VectorClass Version2 is accessible
 if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/version2" OR
@@ -264,6 +254,9 @@ endif ()
 target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib/src)
 target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib/src/deps/fast_float/single_include)
 target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib/include)
+
+message(STATUS "Building LibRapid Examples")
+add_subdirectory(examples)
 
 # Optimise for the current device architecture
 include("cmake/OptimizeForArch.cmake")
