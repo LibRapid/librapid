@@ -26,7 +26,6 @@ find_package(OpenMP)
 
 # Ensure VectorClass Version2 is accessible
 if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/version2" OR
-        NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/pybind11" OR
         NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/fmt")
     message(FATAL_ERROR "Missing dependency. Ensure the full LibRapid GitHub repo is cloned by \
 						using 'git clone https://github.com/LibRapid/librapid.git --recursive")
