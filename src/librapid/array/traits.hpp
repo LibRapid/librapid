@@ -16,31 +16,31 @@ namespace librapid::internal {
 		 * [34]       -> Matrix operation
 		 */
 
-		inline constexpr uint64_t Evaluated		 = 1 << 0; // Result is already evaluated
-		inline constexpr uint64_t RequireEval	 = 1 << 1; // Result must be evaluated
-		inline constexpr uint64_t RequireInput	 = 1 << 2; // Requires the entire array (not scalar)
-		inline constexpr uint64_t HasCustomEval	 = 1 << 3; // Has a custom eval function
-		inline constexpr uint64_t SupportsScalar = 1 << 4; // Has a custom eval function
-		inline constexpr uint64_t SupportsPacket = 1 << 5; // Has a custom eval function
+		inline constexpr uint64_t Evaluated	   = 1ll << 0; // Result is already evaluated
+		inline constexpr uint64_t RequireEval  = 1ll << 1; // Result must be evaluated
+		inline constexpr uint64_t RequireInput = 1ll << 2; // Requires the entire array (not scalar)
+		inline constexpr uint64_t HasCustomEval	 = 1ll << 3; // Has a custom eval function
+		inline constexpr uint64_t SupportsScalar = 1ll << 4; // Has a custom eval function
+		inline constexpr uint64_t SupportsPacket = 1ll << 5; // Has a custom eval function
 
-		inline constexpr uint64_t Bitwise	 = 1 < 10; // Bitwise functions
-		inline constexpr uint64_t Arithmetic = 1 < 11; // Arithmetic functions
-		inline constexpr uint64_t Logical	 = 1 < 12; // Logical functions
-		inline constexpr uint64_t Matrix	 = 1 < 13; // Matrix operation
+		inline constexpr uint64_t Bitwise	 = 1ll << 10; // Bitwise functions
+		inline constexpr uint64_t Arithmetic = 1ll << 11; // Arithmetic functions
+		inline constexpr uint64_t Logical	 = 1ll << 12; // Logical functions
+		inline constexpr uint64_t Matrix	 = 1ll << 13; // Matrix operation
 
 		// Extract only operation information
-		inline constexpr uint64_t OperationMask = 0b111111111111111111110000000000;
+		inline constexpr uint64_t OperationMask = 0b1111111111111111100000000000000;
 
-		inline constexpr uint64_t PacketBitwise	   = 1 << 13; // Packet needs bitwise
-		inline constexpr uint64_t PacketArithmetic = 1 << 14; // Packet needs arithmetic
-		inline constexpr uint64_t PacketLogical	   = 1 << 15; // Packet needs logical
+		inline constexpr uint64_t PacketBitwise	   = 1ll << 14; // Packet needs bitwise
+		inline constexpr uint64_t PacketArithmetic = 1ll << 15; // Packet needs arithmetic
+		inline constexpr uint64_t PacketLogical	   = 1ll << 16; // Packet needs logical
 
-		inline constexpr uint64_t ScalarBitwise	   = 1 << 16; // Scalar needs bitwise
-		inline constexpr uint64_t ScalarArithmetic = 1 << 17; // Scalar needs arithmetic
-		inline constexpr uint64_t ScalarLogical	   = 1 << 18; // Scalar needs logical
+		inline constexpr uint64_t ScalarBitwise	   = 1ll << 17; // Scalar needs bitwise
+		inline constexpr uint64_t ScalarArithmetic = 1ll << 18; // Scalar needs arithmetic
+		inline constexpr uint64_t ScalarLogical	   = 1ll << 19; // Scalar needs logical
 
-		inline constexpr uint64_t Unary	 = 1 < 32; // Operation takes one argument
-		inline constexpr uint64_t Binary = 1 < 33; // Operation takes two arguments
+		inline constexpr uint64_t Unary	 = 1ll << 32; // Operation takes one argument
+		inline constexpr uint64_t Binary = 1ll << 33; // Operation takes two arguments
 
 	} // namespace flags
 
@@ -88,9 +88,9 @@ namespace librapid::internal {
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = 64;
 		static constexpr char Name[]		 = "int8_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
-										  flags::PacketLogical | flags::ScalarBitwise |
-										  flags::ScalarArithmetic | flags::ScalarLogical;
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
+										  flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
 	};
 
 	//------- 8bit Unsigned Integer -------------------------------------------
@@ -105,9 +105,9 @@ namespace librapid::internal {
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = 64;
 		static constexpr char Name[]		 = "uint8_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
-										  flags::PacketLogical | flags::ScalarBitwise |
-										  flags::ScalarArithmetic | flags::ScalarLogical;
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
+										  flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
 	};
 
 	//------- 16bit Signed Integer --------------------------------------------
@@ -122,9 +122,9 @@ namespace librapid::internal {
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = 32;
 		static constexpr char Name[]		 = "int16_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
-										  flags::PacketLogical | flags::ScalarBitwise |
-										  flags::ScalarArithmetic | flags::ScalarLogical;
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
+										  flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
 	};
 
 	//------- 16bit Unsigned Integer ------------------------------------------
@@ -139,9 +139,9 @@ namespace librapid::internal {
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = 32;
 		static constexpr char Name[]		 = "uint16_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
-										  flags::PacketLogical | flags::ScalarBitwise |
-										  flags::ScalarArithmetic | flags::ScalarLogical;
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
+										  flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
 	};
 
 	//------- 32bit Signed Integer --------------------------------------------
@@ -156,9 +156,9 @@ namespace librapid::internal {
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = 8;
 		static constexpr char Name[]		 = "int32_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
-										  flags::PacketLogical | flags::ScalarBitwise |
-										  flags::ScalarArithmetic | flags::ScalarLogical;
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
+										  flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
 	};
 
 	//------- 32bit Unsigned Integer ------------------------------------------
@@ -173,9 +173,9 @@ namespace librapid::internal {
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = 4;
 		static constexpr char Name[]		 = "uint32_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
-										  flags::PacketLogical | flags::ScalarBitwise |
-										  flags::ScalarArithmetic | flags::ScalarLogical;
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
+										  flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
 	};
 
 	//------- 64bit Signed Integer --------------------------------------------
@@ -190,9 +190,9 @@ namespace librapid::internal {
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = 8;
 		static constexpr char Name[]		 = "int64_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
-										  flags::PacketLogical | flags::ScalarBitwise |
-										  flags::ScalarArithmetic | flags::ScalarLogical;
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
+										  flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
 	};
 
 	//------- 64bit Unsigned Integer ------------------------------------------
@@ -207,9 +207,9 @@ namespace librapid::internal {
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = 8;
 		static constexpr char Name[]		 = "uint64_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::PacketArithmetic |
-										  flags::PacketLogical | flags::ScalarBitwise |
-										  flags::ScalarArithmetic | flags::ScalarLogical;
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
+										  flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
 	};
 
 	//------- 32bit Floating Point --------------------------------------------
@@ -224,8 +224,8 @@ namespace librapid::internal {
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = 16;
 		static constexpr char Name[]		 = "float";
-		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::PacketLogical |
-										  flags::ScalarArithmetic | flags::ScalarLogical;
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
 	};
 
 	//------- 64bit Floating Point --------------------------------------------
@@ -240,8 +240,8 @@ namespace librapid::internal {
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = 8;
 		static constexpr char Name[]		 = "double";
-		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::PacketLogical |
-										  flags::ScalarArithmetic | flags::ScalarLogical;
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
 	};
 
 	template<typename LHS, typename RHS>

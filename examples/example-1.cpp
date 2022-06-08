@@ -4,15 +4,20 @@
  */
 
 // You can replace this with "#include <librapid/librapid.hpp>"
-#include "../../src/librapid/librapid.hpp"
+// #include "../../src/librapid/librapid.hpp"
+#include <librapid/librapid.hpp>
 
 namespace lrc = librapid;
 
 int main() {
-	lrc::Array myArr = lrc::Array<int>(lrc::Extent(3, 5));
+	lrc::numThreads = 8;
+	
+	lrc::Array myArr = lrc::Array<float>(lrc::Extent(3, 5));
 
 	for (int i = 0; i < myArr.extent()[0]; ++i) {
-		for (int j = 0; j < myArr.extent()[1]; j++) { myArr[i][j] = lrc::randint(1, 10); }
+		for (int j = 0; j < myArr.extent()[1]; j++) {
+			myArr[i][j] = j + i * myArr.extent()[1] + 1;
+		}
 	}
 
 	fmt::print("My array:\n");
@@ -39,13 +44,13 @@ int main() {
 	fmt::print("{}\n", reciprocal.str());
 
 	fmt::print("\n\n\n");
-	fmt::print("Running a short benchmark to whet your appetite :)\n");
-	int rows, cols;
-	scn::prompt("Enter '<rows>x<cols>' >>>", "{}x{}", rows, cols);
+	fmt::print("Running a short benchmark\n");
+	int rows = 1000, cols = 1000;
+	// if (!scn::prompt("Enter '<rows>x<cols>' >>>", "{}x{}", rows, cols)) exit(1);
 	fmt::print("Lazily evaluated result:\n");
 	lrc::Array<float> bench(lrc::Extent(rows, cols));
 	lrc::timeFunction([&]() { auto res = bench + bench; });
-	fmt::print("Actually evaluating the restlt:\n");
+	fmt::print("Actually evaluating the result:\n");
 	lrc::Array<float> res;
 	lrc::timeFunction([&]() { res = bench + bench; });
 
