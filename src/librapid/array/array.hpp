@@ -299,3 +299,30 @@ namespace librapid {
 		}
 	};
 } // namespace librapid
+
+// Provide {fmt} printing capabilities
+#ifdef FMT_API
+template<typename Scalar, typename Device>
+struct fmt::formatter<librapid::Array<Scalar, Device>> {
+	std::string formatStr = "{}";
+
+	template<typename ParseContext>
+	constexpr auto parse(ParseContext &ctx) {
+		formatStr = "{:";
+		auto it = ctx.begin();
+		for (; it != ctx.end(); ++it) {
+			if (*it == '}') break;
+			formatStr += *it;
+		}
+		formatStr += "}";
+		return it;
+	}
+
+	template<typename FormatContext>
+	auto format(const librapid::Array<Scalar, Device> &arr, FormatContext &ctx) {
+		try {
+			return fmt::format_to(ctx.out(), arr.str(formatStr));
+		} catch (std::exception &e) { return fmt::format_to(ctx.out(), e.what()); }
+	}
+};
+#endif // FMT_API

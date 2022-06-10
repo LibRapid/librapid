@@ -46,6 +46,7 @@
 // SIMD instructions
 #include <Vc/Vc>
 #include <Vc/algorithm>
+#include <Vc/cpuid.h>
 
 // LibRapid definitions
 
