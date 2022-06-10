@@ -24,10 +24,6 @@
 #	define LIBRAPID_OPENMP_VAL 0
 #endif
 
-// SIMD instructions
-#define VCL_NAMESPACE vcl
-
-#include "../vendor/version2/vectorclass.h"
 
 // Include {fmt} -- fast IO and formatting
 #define FMT_HEADER_ONLY
@@ -47,6 +43,7 @@
 #include <scn/scn.h>
 #include <scn/tuple_return/tuple_return.h>
 
+// SIMD instructions
 #include <Vc/Vc>
 #include <Vc/algorithm>
 
