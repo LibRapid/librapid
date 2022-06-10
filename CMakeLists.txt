@@ -11,9 +11,9 @@ set(LIBRAPID_INCLUDE_DIRS
 message(STATUS "C++ Version: ${CMAKE_CXX_STANDARD}")
 if (NOT CMAKE_CXX_STANDARD)
     message(WARNING "CMAKE_CXX_STANDARD was not set, but LibRapid requires C++17. This will be set automatically")
-    set(CMAKE_CXX_STANDARD 17)
-elseif (${CMAKE_CXX_STANDARD} VERSION_LESS 17)
-    message(WARNING "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}, but LibRapid requires C++17. \
+    set(CMAKE_CXX_STANDARD 14)
+elseif (${CMAKE_CXX_STANDARD} VERSION_LESS 14)
+    message(WARNING "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}, but LibRapid requires C++14. \
                      LibRapid will set this automatically, but ensure you are aware of the consequences")
 endif ()
 
@@ -23,13 +23,6 @@ include(FetchContent)
 find_package(CUDAToolkit)
 find_package(BLAS)
 find_package(OpenMP)
-
-# Ensure VectorClass Version2 is accessible
-if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/version2" OR
-        NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/fmt")
-    message(FATAL_ERROR "Missing dependency. Ensure the full LibRapid GitHub repo is cloned by \
-						using 'git clone https://github.com/LibRapid/librapid.git --recursive")
-endif ()
 
 # {fmt} might fail to compile when building for python if this is not set
 if (${SKBUILD})
@@ -249,17 +242,13 @@ else ()
     target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR})
 endif ()
 
-# Include scnlib directory...
-target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib/src)
-target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib/src/deps/fast_float/single_include)
-target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib/include)
+# Add dependencies
+add_subdirectory(src/librapid/vendor/fmt)
+add_subdirectory(src/librapid/vendor/scnlib)
+add_subdirectory(src/librapid/vendor/Vc)
+
+target_link_libraries(librapid INTERFACE fmt scn Vc)
 
 message(STATUS "Building LibRapid Examples")
 add_subdirectory(examples)
 
-# Optimise for the current device architecture
-include("cmake/OptimizeForArch.cmake")
-OptimizeForArchitecture()
-
-set("CMAKE_CXX_FLAGS" "${CMAKE_CXX_FLAGS} ${ARCHITECTURE_FLAGS}")
-message(STATUS "Compiler Flags: ${CMAKE_CXX_FLAGS}")

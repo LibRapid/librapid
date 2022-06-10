@@ -16,7 +16,7 @@ namespace librapid::memory {
 		DenseStorage() = default;
 
 		explicit DenseStorage(int64_t size) :
-				m_size(size), m_heap(memory::malloc<T, d>(size)),
+				m_size(roundTo(size, Vc::Vector<T>::size())), m_heap(memory::malloc<T, d>(m_size)),
 				m_refCount(new std::atomic<int64_t>(1)) {
 #if defined(LIBRAPID_HAS_CUDA)
 			if constexpr (std::is_same_v<d, device::GPU>) initializeCudaStream();

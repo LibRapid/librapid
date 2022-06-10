@@ -1,12 +1,12 @@
 [submodule "src/librapid/vendor/jitify"] # Jitify module for CUDA JIT compilation
 	path = src/librapid/vendor/jitify
 	url = https://github.com/Pencilcaseman/jitify.git
-[submodule "src/librapid/vendor/version2"] # VectorClass module for SIMD instructions
-	path = src/librapid/vendor/version2
-	url = https://github.com/Pencilcaseman/version2
+[submodule "src/librapid/vendor/Vc"] # VectorClass module for SIMD instructions
+	path = src/librapid/vendor/Vc
+	url = https://github.com/VcDevel/Vc.git
 [submodule "src/librapid/vendor/fmt"] # {fmt} module for fast formatting and IO
 	path = src/librapid/vendor/fmt
-	url = https://github.com/Pencilcaseman/fmt.git
+	url = https://github.com/fmtlib/fmt.git
 [submodule "src/librapid/vendor/scnlib"] # {scnlib} module for fast reverse formatting and IO
 	path = src/librapid/vendor/scnlib
-	url = https://github.com/Pencilcaseman/scnlib.git
+	url = https://github.com/eliaskosunen/scnlib.git
