@@ -6,14 +6,13 @@ namespace librapid::functors::binary {
 	template<typename LHS, typename RHS>
 	class ScalarSum : public ScalarOp<LHS, RHS> {
 	public:
-		using LhsType = typename internal::traits<LHS>::Scalar;
-		using RhsType = typename internal::traits<RHS>::Scalar;
-		using RetType = typename std::common_type<LhsType, RhsType>::type;
-		using Packet  = typename internal::traits<RetType>::Packet;
-		static constexpr int64_t Flags =
-		  internal::flags::Binary | internal::flags::Arithmetic |
-		  internal::flags::PacketArithmetic | internal::flags::ScalarArithmetic |
-		  internal::flags::SupportsPacket | internal::flags::SupportsScalar;
+		using LhsType				   = typename internal::traits<LHS>::Scalar;
+		using RhsType				   = typename internal::traits<RHS>::Scalar;
+		using RetType				   = typename std::common_type<LhsType, RhsType>::type;
+		using Packet				   = typename internal::traits<RetType>::Packet;
+		static constexpr int64_t Flags = internal::flags::Binary | internal::flags::Arithmetic |
+										 internal::flags::PacketArithmetic |
+										 internal::flags::ScalarArithmetic;
 
 		ScalarSum() = default;
 
@@ -41,14 +40,13 @@ namespace librapid::functors::binary {
 	template<typename LHS, typename RHS>
 	class ScalarDiff : public ScalarOp<LHS, RHS> {
 	public:
-		using LhsType = typename internal::traits<LHS>::Scalar;
-		using RhsType = typename internal::traits<RHS>::Scalar;
-		using RetType = typename std::common_type<LhsType, RhsType>::type;
-		using Packet  = typename internal::traits<RetType>::Packet;
-		static constexpr int64_t Flags =
-		  internal::flags::Binary | internal::flags::Arithmetic |
-		  internal::flags::PacketArithmetic | internal::flags::ScalarArithmetic |
-		  internal::flags::SupportsPacket | internal::flags::SupportsScalar;
+		using LhsType				   = typename internal::traits<LHS>::Scalar;
+		using RhsType				   = typename internal::traits<RHS>::Scalar;
+		using RetType				   = typename std::common_type<LhsType, RhsType>::type;
+		using Packet				   = typename internal::traits<RetType>::Packet;
+		static constexpr int64_t Flags = internal::flags::Binary | internal::flags::Arithmetic |
+										 internal::flags::PacketArithmetic |
+										 internal::flags::ScalarArithmetic;
 
 		ScalarDiff() = default;
 
@@ -76,14 +74,13 @@ namespace librapid::functors::binary {
 	template<typename LHS, typename RHS>
 	class ScalarProd : public ScalarOp<LHS, RHS> {
 	public:
-		using LhsType = typename internal::traits<LHS>::Scalar;
-		using RhsType = typename internal::traits<RHS>::Scalar;
-		using RetType = typename std::common_type<LhsType, RhsType>::type;
-		using Packet  = typename internal::traits<RetType>::Packet;
-		static constexpr int64_t Flags =
-		  internal::flags::Binary | internal::flags::Arithmetic |
-		  internal::flags::PacketArithmetic | internal::flags::ScalarArithmetic |
-		  internal::flags::SupportsPacket | internal::flags::SupportsScalar;
+		using LhsType				   = typename internal::traits<LHS>::Scalar;
+		using RhsType				   = typename internal::traits<RHS>::Scalar;
+		using RetType				   = typename std::common_type<LhsType, RhsType>::type;
+		using Packet				   = typename internal::traits<RetType>::Packet;
+		static constexpr int64_t Flags = internal::flags::Binary | internal::flags::Arithmetic |
+										 internal::flags::PacketArithmetic |
+										 internal::flags::ScalarArithmetic;
 
 		ScalarProd() = default;
 
@@ -111,14 +108,13 @@ namespace librapid::functors::binary {
 	template<typename LHS, typename RHS>
 	class ScalarDiv : public ScalarOp<LHS, RHS> {
 	public:
-		using LhsType = typename internal::traits<LHS>::Scalar;
-		using RhsType = typename internal::traits<RHS>::Scalar;
-		using RetType = typename std::common_type<LhsType, RhsType>::type;
-		using Packet  = typename internal::traits<RetType>::Packet;
-		static constexpr int64_t Flags =
-		  internal::flags::Binary | internal::flags::Arithmetic |
-		  internal::flags::PacketArithmetic | internal::flags::ScalarArithmetic |
-		  internal::flags::SupportsPacket | internal::flags::SupportsScalar;
+		using LhsType				   = typename internal::traits<LHS>::Scalar;
+		using RhsType				   = typename internal::traits<RHS>::Scalar;
+		using RetType				   = typename std::common_type<LhsType, RhsType>::type;
+		using Packet				   = typename internal::traits<RetType>::Packet;
+		static constexpr int64_t Flags = internal::flags::Binary | internal::flags::Arithmetic |
+										 internal::flags::PacketArithmetic |
+										 internal::flags::ScalarArithmetic;
 
 		ScalarDiv() = default;
 

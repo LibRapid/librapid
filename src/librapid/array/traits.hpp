@@ -20,8 +20,6 @@ namespace librapid::internal {
 		inline constexpr uint64_t RequireEval  = 1ll << 1; // Result must be evaluated
 		inline constexpr uint64_t RequireInput = 1ll << 2; // Requires the entire array (not scalar)
 		inline constexpr uint64_t HasCustomEval	 = 1ll << 3; // Has a custom eval function
-		inline constexpr uint64_t SupportsScalar = 1ll << 4; // Has a custom eval function
-		inline constexpr uint64_t SupportsPacket = 1ll << 5; // Has a custom eval function
 
 		inline constexpr uint64_t Bitwise	 = 1ll << 10; // Bitwise functions
 		inline constexpr uint64_t Arithmetic = 1ll << 11; // Arithmetic functions

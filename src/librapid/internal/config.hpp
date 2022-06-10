@@ -32,21 +32,23 @@
 // Include {fmt} -- fast IO and formatting
 #define FMT_HEADER_ONLY
 
-#include "../vendor/fmt/include/fmt/core.h"
-#include "../vendor/fmt/include/fmt/format.h"
-#include "../vendor/fmt/include/fmt/ranges.h"
-#include "../vendor/fmt/include/fmt/chrono.h"
-#include "../vendor/fmt/include/fmt/compile.h"
-#include "../vendor/fmt/include/fmt/color.h"
-#include "../vendor/fmt/include/fmt/os.h"
-#include "../vendor/fmt/include/fmt/ostream.h"
-#include "../vendor/fmt/include/fmt/printf.h"
-#include "../vendor/fmt/include/fmt/xchar.h"
+#include <fmt/core.h>
+#include <fmt/format.h>
+#include <fmt/ranges.h>
+#include <fmt/chrono.h>
+#include <fmt/compile.h>
+#include <fmt/color.h>
+#include <fmt/os.h>
+#include <fmt/ostream.h>
+#include <fmt/printf.h>
+#include <fmt/xchar.h>
 
 // Include scnlib -- fast string scanning and IO
-#define SCN_HEADER_ONLY 1
-#include "../vendor/scnlib/include/scn/scn.h"
-#include "../vendor/scnlib/include/scn/tuple_return/tuple_return.h"
+#include <scn/scn.h>
+#include <scn/tuple_return/tuple_return.h>
+
+#include <Vc/Vc>
+#include <Vc/algorithm>
 
 // LibRapid definitions
 
@@ -205,6 +207,16 @@
 #	define LIBRAPID_STL "Bionic LibC runtime. (Android's C-library modified from BSD)"
 #endif
 
+#if !defined(LIBRAPID_HAS_OMP) && defined(_OPENMP)
+#	define LIBRAPID_HAS_OMP
+#endif
+
+#if defined(LIBRAPID_HAS_OMP)
+#	define LIBRAPID_OMP_VAL 1
+#else
+#	define LIBRAPID_OMP_VAL 0
+#endif
+
 // Check for 32bit vs 64bit
 // Check windows
 #if _WIN32 || _WIN64
@@ -337,6 +349,7 @@
 
 #if defined(LIBRAPID_OS_WINDOWS) && defined(LIBRAPID_MSVC_CXX)
 #	define WIN32_LEAN_AND_MEAN
+#	include <Windows.h>
 
 // Construct a class to force ANSI sequences to work
 namespace librapid::internal {
