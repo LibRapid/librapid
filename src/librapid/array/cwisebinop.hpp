@@ -50,8 +50,10 @@ namespace librapid {
 			CWiseBinop(const LeftType &lhs, const RightType &rhs, Args... opArgs) :
 					Base(
 					  [&]() {
-						  if constexpr (LhsIsScalar) return rhs.extent();
-						  else return lhs.extent();
+						  if constexpr (LhsIsScalar)
+							  return rhs.extent();
+						  else
+							  return lhs.extent();
 					  }(),
 					  0),
 					m_lhs(lhs), m_rhs(rhs), m_operation(opArgs...) {}
@@ -157,3 +159,30 @@ namespace librapid {
 		};
 	} // namespace binop
 } // namespace librapid
+
+// Provide {fmt} printing capabilities
+#ifdef FMT_API
+template<typename Binop, typename LHS, typename RHS>
+struct fmt::formatter<librapid::binop::CWiseBinop<Binop, LHS, RHS>> {
+	std::string formatStr = "{}";
+
+	template<typename ParseContext>
+	constexpr auto parse(ParseContext &ctx) {
+		formatStr = "{:";
+		auto it = ctx.begin();
+		for (; it != ctx.end(); ++it) {
+			if (*it == '}') break;
+			formatStr += *it;
+		}
+		formatStr += "}";
+		return it;
+	}
+
+	template<typename FormatContext>
+	auto format(const librapid::binop::CWiseBinop<Binop, LHS, RHS> &arr, FormatContext &ctx) {
+		try {
+			return fmt::format_to(ctx.out(), arr.str(formatStr));
+		} catch (std::exception &e) { return fmt::format_to(ctx.out(), e.what()); }
+	}
+};
+#endif // FMT_API
