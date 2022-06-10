@@ -12,7 +12,7 @@ LibRapid is a high performance Array library, supporting a wide range of optimis
 
 There are also a wide range of helper functions and classes to aid the development of your own project.
 
-LibRapid is fully templated and is header-only, meaning it can conform to exactly your needs with minimal compile-times and even support for custom datatypes.
+LibRapid is highly templated, meaning it can conform to exactly your needs with minimal compile-times and even support for custom datatypes.
 
 # Current Development Stage
 
