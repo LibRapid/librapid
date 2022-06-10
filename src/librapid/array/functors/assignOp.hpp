@@ -44,29 +44,27 @@ namespace librapid::functors {
 				}
 
 				// Only use a Packet type if possible
-				if constexpr (!std::is_same_v<Packet, std::false_type> &&
-							  (internal::traits<OtherDerived>::Flags &
-							   internal::flags::SupportsPacket)) {
+				if constexpr (!std::is_same_v<Packet, std::false_type>) {
 					// Use the entire packet width where possible
-					if (numThreads < 2 || len < 500) {
-						for (int64_t i = 0; i < alignedLen; i += packetWidth) {
-							dst.loadFrom(i, src);
-						}
-					} else {
-						// Multi-threaded approach
-#pragma omp parallel for shared(dst, src, alignedLen, packetWidth) default(none)                   \
-  num_threads(numThreads)
+					if (LIBRAPID_OMP_VAL && (numThreads < 2 || len < 500)) {
 						for (int64_t i = 0; i < alignedLen; i += packetWidth) {
 							dst.loadFrom(i, src);
 						}
 					}
+#if defined(LIBRAPID_HAS_OMP)
+					else {
+						// Multi-threaded approach
+#	pragma omp parallel for shared(dst, src, alignedLen, packetWidth) default(none)               \
+	  num_threads(numThreads)
+						for (int64_t i = 0; i < alignedLen; i += packetWidth) {
+							dst.loadFrom(i, src);
+						}
+					}
+#endif
 				}
 
 				// Ensure the remaining values are filled
 				int64_t start = alignedLen;
-				if constexpr (!(internal::traits<OtherDerived>::Flags &
-								internal::flags::SupportsPacket))
-					start = 0;
 				for (int64_t i = start < 0 ? 0 : start; i < len; ++i) {
 					dst.loadFromScalar(i, src);
 				}
