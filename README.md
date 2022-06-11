@@ -1,8 +1,21 @@
 <p align="center">
-<img src="https://github.com/Pencilcaseman/librapid/blob/master/branding/LibRapid_light.png" width="800">
+<img src="https://github.com/LibRapid/librapid_bin/blob/master/branding/LibRapid_light.png" width="800">
 </p>
 
-[![Wheels (master)](https://github.com/LibRapid/librapid/actions/workflows/wheels.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/wheels_master.yaml) [![Documentation Status](https://readthedocs.org/projects/librapid/badge/?version=latest)](https://librapid.readthedocs.io/en/latest/?badge=latest) ![PyPI](https://img.shields.io/pypi/v/librapid?color=green&label=Release&logo=python&logoColor=green) ![PyPI - License](https://img.shields.io/pypi/l/librapid?color=gray&label=Licensed%20under) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/librapid?color=blue&label=Version&logo=python&logoColor=green) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC) ![PyPI - Downloads](https://img.shields.io/pypi/dm/librapid?color=blue&label=Downloads&logo=python&logoColor=green)
+![PyPI](https://img.shields.io/pypi/v/librapid?color=green&label=Release&logo=python&logoColor=green) ![PyPI - License](https://img.shields.io/pypi/l/librapid?color=gray&label=Licensed%20under) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/librapid?color=blue&label=Version&logo=python&logoColor=green) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC) ![PyPI - Downloads](https://img.shields.io/pypi/dm/librapid?color=blue&label=Downloads&logo=python&logoColor=green) ![C++ Version](https://img.shields.io/badge/Language-C%2B%2B%2011%2F14-orange)
+
+
+---
+
+[![Build (Windows)](https://github.com/LibRapid/librapid/actions/workflows/build-windows.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/build-windows.yaml)
+
+[![Build (Linux)](https://github.com/LibRapid/librapid/actions/workflows/build-linux.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/build-linux.yaml)
+
+[![Build (MacOS)](https://github.com/LibRapid/librapid/actions/workflows/build-macos.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/build-macos.yaml)
+
+[![Wheels](https://github.com/LibRapid/librapid/actions/workflows/wheels.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/wheels.yaml)
+
+[![Documentation Status](https://readthedocs.org/projects/librapid/badge/?version=latest)](https://librapid.readthedocs.io/en/latest/?badge=latest)
 
 ---
 
