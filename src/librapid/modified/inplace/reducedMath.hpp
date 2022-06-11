@@ -11,7 +11,7 @@
 
 #define IS_POW_2(x) (0 == ((x) & ((x)-1)))
 
-namespace librapid::detail {
+namespace librapid { namespace detail {
 	void findDivisor(unsigned int denom, unsigned int &mulCoeff, unsigned int &shiftCoeff);
 
 	LR_FORCE_INLINE unsigned int umulhi(unsigned int x, unsigned int y) {
@@ -77,7 +77,7 @@ namespace librapid::detail {
 		LR_ASSERT(denom != 0, "Trying to find reduced divisor for zero is invalid");
 
 		if (denom == 1) {
-			mulCoeff	= 0;
+			mulCoeff   = 0;
 			shiftCoeff = 0;
 			return;
 		}
@@ -87,4 +87,4 @@ namespace librapid::detail {
 		mulCoeff	   = m;
 		shiftCoeff	   = p - 32;
 	}
-} // namespace librapid::detail
+}} // namespace librapid::detail

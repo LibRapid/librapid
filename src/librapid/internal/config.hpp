@@ -24,7 +24,6 @@
 #	define LIBRAPID_OPENMP_VAL 0
 #endif
 
-
 // Include {fmt} -- fast IO and formatting
 #define FMT_HEADER_ONLY
 
@@ -350,14 +349,14 @@
 #	include <Windows.h>
 
 // Construct a class to force ANSI sequences to work
-namespace librapid::internal {
+namespace librapid { namespace internal {
 	class ForceANSI {
 	public:
 		ForceANSI() { system(("chcp " + std::to_string(CP_UTF8)).c_str()); }
 	};
 
-	const inline auto ansiForcer = ForceANSI();
-} // namespace librapid::internal
+	const auto ansiForcer = ForceANSI();
+}} // namespace librapid::internal
 #endif
 
 #if defined(LIBRAPID_ASSERT) || defined(LIBRAPID_LOG) || defined(LIBRAPID_DEBUG)
@@ -413,7 +412,7 @@ namespace librapid::internal {
 #endif
 
 // Lightweight min max functions
-namespace librapid::internal {
+namespace librapid { namespace internal {
 	/*
 	 * We can't use the librapid::max function here, because it's defined in
 	 * math.hh, which also includes config.hh, so we'd have a circular include
@@ -430,7 +429,7 @@ namespace librapid::internal {
 		auto maxOther = smallMax_internal(vals...);
 		return val < maxOther ? maxOther : val;
 	}
-} // namespace librapid::internal
+}} // namespace librapid::internal
 
 #if defined(LIBRAPID_ASSERT)
 
@@ -876,27 +875,35 @@ static const char *getCublasErrorEnum_(cublasStatus_t error) {
 
 #endif // LIBRAPID_HAS_CUDA
 
-namespace librapid::device {
+namespace librapid { namespace device {
 	struct CPU {};
 	struct GPU {};
-} // namespace librapid::device
+}} // namespace librapid::device
 
 // User Config Variables
 
 namespace librapid {
 #ifdef LIBRAPID_HAS_OMP
-	inline static unsigned int numThreads	 = 8;
-	inline static unsigned int matrixThreads = 8;
+	static unsigned int numThreads	  = 8;
+	static unsigned int matrixThreads = 8;
 #else
-	inline static unsigned int numThreads	 = 1;
-	inline static unsigned int matrixThreads = 1;
+	static unsigned int numThreads	  = 1;
+	static unsigned int matrixThreads = 1;
 #endif
-	inline static bool throwOnAssert				   = false;
-	inline static std::vector<std::string> cudaHeaders = {};
-	inline static std::vector<std::string> nvccOptions = {};
+	static bool throwOnAssert					= false;
+	static std::vector<std::string> cudaHeaders = {};
+	static std::vector<std::string> nvccOptions = {};
 } // namespace librapid
 
 // Prefer using the GPU over the CPU -- promote arrays to the GPU where possible
 #if !defined(LIBRAPID_PREFER_CPU)
 #	define LIBRAPID_PREFER_GPU
 #endif
+
+namespace librapid {
+	template<bool B, typename T = void>
+	using enable_if_t = typename std::enable_if<B, T>::type;
+
+	template<class T, class U>
+	constexpr bool is_same_v = std::is_same<T, U>::value;
+} // namespace librapid

@@ -18,8 +18,8 @@ namespace librapid {
 		};
 	}
 
-	template<typename T = int64_t, int64_t maxDims = 32>
-	class Extent;
+	template<typename T, int64_t maxDims>
+	class ExtentType;
 
 	template<typename ArrT>
 	class CommaInitializer;

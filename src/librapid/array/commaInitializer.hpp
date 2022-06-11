@@ -4,7 +4,7 @@
 #include "../internal/forward.hpp"
 #include "arrayBase.hpp"
 
-namespace librapid::internal {
+namespace librapid { namespace internal {
 	template<typename ArrT>
 	class CommaInitializer {
 	public:
@@ -29,4 +29,4 @@ namespace librapid::internal {
 		ArrT &m_array;
 		int64_t m_index = 0;
 	};
-} // namespace librapid::internal
+} } // namespace librapid::internal

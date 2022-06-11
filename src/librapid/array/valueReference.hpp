@@ -21,7 +21,7 @@
 	template<typename Other,                                                                       \
 			 typename T,                                                                           \
 			 typename d,                                                                           \
-			 typename std::enable_if_t<!std::is_same_v<Other, ValueReference<T, d>>, int> = 0>     \
+			 typename enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>               \
 	auto NAME(const Other &other, const ValueReference<T, d> &val) {                               \
 		return other OP((T)val);                                                                   \
 	}                                                                                              \
@@ -29,7 +29,7 @@
 	template<typename Other,                                                                       \
 			 typename T,                                                                           \
 			 typename d,                                                                           \
-			 typename std::enable_if_t<!std::is_same_v<Other, ValueReference<T, d>>, int> = 0>     \
+			 typename enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>               \
 	void ASSIGN(Other &other, const ValueReference<T, d> &val) {                                   \
 		other = other OP((T)val);                                                                  \
 	}
@@ -45,7 +45,7 @@
 	template<typename Other,                                                                       \
 			 typename T,                                                                           \
 			 typename d,                                                                           \
-			 typename std::enable_if_t<!std::is_same_v<Other, ValueReference<T, d>>, int> = 0>     \
+			 typename enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>               \
 	auto NAME(const Other &other, const ValueReference<T, d> &val) {                               \
 		return other OP((T)val);                                                                   \
 	}
@@ -75,7 +75,7 @@ namespace librapid {
 			explicit ValueReference(T *val) : m_value(val) {}
 
 			explicit ValueReference(T &val) : m_value(&val) {
-				static_assert(std::is_same_v<d, device::CPU>,
+				static_assert(std::is_same<d, device::CPU>::value,
 							  "Cannot construct Device ValueReference from Host scalar");
 			}
 
@@ -89,7 +89,7 @@ namespace librapid {
 
 			template<typename Type, typename Device>
 			ValueReference &operator=(const ValueReference<Type, Device> &other) {
-				if constexpr (std::is_same_v<d, device::CPU>)
+				if constexpr (std::is_same<d, device::CPU>::value)
 					*m_value = *other.get_();
 				else
 					memcpy<T, d, Type, Device>(m_value, other.get_(), 1);
@@ -97,7 +97,7 @@ namespace librapid {
 			}
 
 			ValueReference &operator=(const T &val) {
-				if constexpr (std::is_same_v<d, device::CPU>) {
+				if constexpr (std::is_same<d, device::CPU>::value) {
 					*m_value = val;
 				} else {
 					T tmp = val;
@@ -109,7 +109,7 @@ namespace librapid {
 			template<typename Type>
 			LR_NODISCARD("")
 			LR_INLINE operator Type() const {
-				if constexpr (std::is_same_v<d, device::CPU>) {
+				if constexpr (std::is_same<d, device::CPU>::value) {
 					return *m_value;
 				} else {
 					T res;
@@ -178,8 +178,7 @@ namespace librapid {
 			}
 
 			LR_NODISCARD("") LR_FORCE_INLINE bool get() const {
-				if constexpr (std::is_same_v<d, device::CPU>)
-					return *(this->m_value) & (1ull << m_bit);
+				if constexpr (is_same_v<d, device::CPU>) return *(this->m_value) & (1ull << m_bit);
 
 				BaseScalar tmp;
 				memcpy<BaseScalar, device::CPU, BaseScalar, d>(&tmp, this->m_value, 1);
@@ -187,7 +186,7 @@ namespace librapid {
 			}
 
 			LR_FORCE_INLINE void set(bool value) {
-				if constexpr (std::is_same_v<d, device::CPU>) {
+				if constexpr (is_same_v<d, device::CPU>) {
 					if (value)
 						*(this->m_value) |= (1ull << m_bit);
 					else

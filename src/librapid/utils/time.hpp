@@ -27,7 +27,7 @@ namespace librapid {
 		return (double)high_resolution_clock::now().time_since_epoch().count() / (double)scale;
 	}
 
-	static inline double sleepOffset = 0;
+	static double sleepOffset = 0;
 
 	template<int64_t scale = time::second>
 	LR_FORCE_INLINE void sleep(double time) {

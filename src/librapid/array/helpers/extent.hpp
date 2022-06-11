@@ -4,15 +4,15 @@
 
 namespace librapid {
 	template<typename T, int64_t maxDims>
-	class Extent {
+	class ExtentType {
 	public:
-		Extent() = default;
+		ExtentType() = default;
 
 		template<typename... T_>
-		explicit Extent(T_... args) : m_dims(sizeof...(T_)), m_data {args...} {}
+		explicit ExtentType(T_... args) : m_dims(sizeof...(T_)), m_data {args...} {}
 
 		template<typename T_>
-		Extent(const std::initializer_list<T_> &args) : m_dims(args.size()) {
+		ExtentType(const std::initializer_list<T_> &args) : m_dims(args.size()) {
 			LR_ASSERT(args.size() <= maxDims,
 					  "A maximum of {} dimensions are allowed in an Extent object",
 					  maxDims);
@@ -21,7 +21,7 @@ namespace librapid {
 		}
 
 		template<typename T_>
-		Extent(const std::vector<T_> &args) : m_dims(args.size()) {
+		ExtentType(const std::vector<T_> &args) : m_dims(args.size()) {
 			LR_ASSERT(args.size() <= maxDims,
 					  "A maximum of {} dimensions are allowed in an Extent object",
 					  maxDims);
@@ -29,7 +29,7 @@ namespace librapid {
 		}
 
 		template<typename T_, int64_t d_>
-		Extent(const Extent &e) {
+		ExtentType(const ExtentType<T_, d_> &e) {
 			LR_ASSERT(e.dims() < maxDims,
 					  "Extent with {} dimensions cannot be stored in an extent with a maximum of "
 					  "{} dimensions",
@@ -40,7 +40,7 @@ namespace librapid {
 		}
 
 		template<typename T_, int64_t d_>
-		Extent &operator=(const Extent<T_, d_> &other) {
+		ExtentType &operator=(const ExtentType<T_, d_> &other) {
 			if (this == &other) return *this;
 			LR_ASSERT(other.dims() < maxDims,
 					  "Extent with {} dimensions cannot be stored in an extent with a maximum of "
@@ -52,15 +52,15 @@ namespace librapid {
 			return *this;
 		}
 
-		static Extent zero(int64_t dims) {
+		static ExtentType zero(int64_t dims) {
 			// Data is already zeroed
-			Extent res;
+			ExtentType res;
 			res.m_dims = dims;
 			return res;
 		}
 
-		Extent stride() const {
-			Extent res	 = zero(m_dims);
+		ExtentType stride() const {
+			ExtentType res	 = zero(m_dims);
 			int64_t prod = 1;
 			for (int64_t i = m_dims - 1; i >= 0; --i) {
 				res[i] = prod;
@@ -74,7 +74,7 @@ namespace librapid {
 			return indexImpl(0, index, others...);
 		}
 
-		T index(const Extent &index) const {
+		T index(const ExtentType &index) const {
 			LR_ASSERT(
 			  index.dims() == m_dims,
 			  "Cannot get index of Extent with {} dimensions using Extent with {} dimensions",
@@ -82,7 +82,7 @@ namespace librapid {
 			  index.dims());
 
 			T res		   = 0;
-			Extent strides = stride();
+			ExtentType strides = stride();
 			for (int64_t i = 0; i < index.dims(); ++i) {
 				LR_ASSERT(index.m_data[i] >= 0 && index.m_data[i] <= m_data[i],
 						  "Index {} is out of range for Extent with dimension {}",
@@ -93,9 +93,9 @@ namespace librapid {
 			return res;
 		}
 
-		Extent reverseIndex(int64_t index) const {
-			Extent res	   = zero(m_dims);
-			Extent strides = stride();
+		ExtentType reverseIndex(int64_t index) const {
+			ExtentType res	   = zero(m_dims);
+			ExtentType strides = stride();
 			for (int64_t i = 0; i < m_dims; ++i) {
 				res[i] = index / strides[i];
 				index -= strides[i] * res[i];
@@ -103,9 +103,9 @@ namespace librapid {
 			return res;
 		}
 
-		Extent partial(int64_t start = 0, int64_t end = -1) const {
+		ExtentType partial(int64_t start = 0, int64_t end = -1) const {
 			if (end == -1) end = m_dims;
-			Extent<T, maxDims> res;
+			ExtentType<T, maxDims> res;
 			res.m_dims = m_dims - 1;
 			for (int64_t i = start; i < end; ++i) res[i - start] = m_data[i];
 			return res;
@@ -113,7 +113,7 @@ namespace librapid {
 
 		template<typename T_ = T, int64_t d = maxDims>
 		LR_NODISCARD("")
-		Extent swivel(const Extent<T_, d> &order) const {
+		ExtentType swivel(const ExtentType<T_, d> &order) const {
 			LR_ASSERT(
 			  order.dims() == m_dims,
 			  "Swivel order must contain the same number of dimensions as the Extent to swivel");
@@ -132,13 +132,13 @@ namespace librapid {
 			}
 #endif
 
-			Extent res = zero(m_dims);
+			ExtentType res = zero(m_dims);
 			for (int64_t i = 0; i < order.dims(); ++i) res[order[i]] = m_data[i];
 			return res;
 		}
 
 		template<typename T_ = T, int64_t d = maxDims>
-		void swivelInplace(const Extent<T_, d> &order) {
+		void swivelInplace(const ExtentType<T_, d> &order) {
 			*this = swivel(order);
 		}
 
@@ -168,7 +168,7 @@ namespace librapid {
 
 		template<typename T_, int64_t d_>
 		LR_NODISCARD("")
-		bool operator==(const Extent<T_, d_> &other) const {
+		bool operator==(const ExtentType<T_, d_> &other) const {
 			if (m_dims != other.m_dims) return false;
 			for (int64_t i = 0; i < m_dims; ++i)
 				if (m_data[i] != other.m_data[i]) return false;
@@ -212,4 +212,6 @@ namespace librapid {
 		T m_dims = -1;
 		T m_data[maxDims] {};
 	};
+
+	using Extent = ExtentType<int64_t, 32>;
 } // namespace librapid

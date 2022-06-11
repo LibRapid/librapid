@@ -4,7 +4,7 @@
 #include "../../internal/forward.hpp"
 #include "../traits.hpp"
 
-namespace librapid::functors {
+namespace librapid { namespace functors {
 	template<typename Derived, typename OtherDerived, bool evalBeforeAssign>
 	struct AssignSelector;
 
@@ -19,9 +19,9 @@ namespace librapid::functors {
 	struct AssignOp {
 		LR_FORCE_INLINE static void run(Derived &dst, const OtherDerived &src) {
 			constexpr bool dstIsHost =
-			  std::is_same_v<typename internal::traits<Derived>::Device, device::CPU>;
+			  is_same_v<typename internal::traits<Derived>::Device, device::CPU>;
 			constexpr bool srcIsHost =
-			  std::is_same_v<typename internal::traits<OtherDerived>::Device, device::CPU>;
+			  is_same_v<typename internal::traits<OtherDerived>::Device, device::CPU>;
 			using Scalar	 = typename internal::traits<Derived>::Scalar;
 			using BaseScalar = typename internal::traits<Derived>::BaseScalar;
 			using Packet	 = typename internal::traits<Scalar>::Packet;
@@ -36,7 +36,7 @@ namespace librapid::functors {
 				int64_t alignedLen	= len - (len % packetWidth);
 				if (alignedLen < 0) alignedLen = 0;
 
-				if constexpr (std::is_same_v<Scalar, bool>) {
+				if constexpr (is_same_v<Scalar, bool>) {
 					len += 512;
 					len /= 512;
 					packetWidth = 1;
@@ -44,7 +44,7 @@ namespace librapid::functors {
 				}
 
 				// Only use a Packet type if possible
-				if constexpr (!std::is_same_v<Packet, std::false_type>) {
+				if constexpr (!is_same_v<Packet, std::false_type>) {
 					// Use the entire packet width where possible
 					if (LIBRAPID_OMP_VAL && (numThreads < 2 || len < 500)) {
 						for (int64_t i = 0; i < alignedLen; i += packetWidth) {
@@ -77,7 +77,7 @@ namespace librapid::functors {
 
 				int64_t elems = src.extent().size();
 
-				if constexpr (std::is_same_v<Scalar, bool>) {
+				if constexpr (is_same_v<Scalar, bool>) {
 					elems += 512;
 					elems /= 512;
 				}
@@ -176,4 +176,4 @@ void applyOp({4} **pointers, int64_t size) {{
 			}
 		}
 	};
-} // namespace librapid::functors
+} } // namespace librapid::functors

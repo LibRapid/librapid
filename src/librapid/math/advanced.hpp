@@ -33,7 +33,7 @@ namespace librapid {
 
 	namespace gammaImpl {
 		static int64_t elemsP				   = 8;
-		static inline std::complex<double> p[] = {676.5203681218851,
+		static std::complex<double> p[] = {676.5203681218851,
 												  -1259.1392167224028,
 												  771.32342877765313,
 												  -176.61502916214059,
