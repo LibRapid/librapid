@@ -13,7 +13,7 @@ on:
 
 jobs:
   macos-build:
-    name: Buil LibRapid on MacOS
+    name: Build LibRapid on MacOS
     runs-on: macos-latest
 
     steps:
