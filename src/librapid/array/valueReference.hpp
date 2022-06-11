@@ -21,7 +21,7 @@
 	template<typename Other,                                                                       \
 			 typename T,                                                                           \
 			 typename d,                                                                           \
-			 typename enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>               \
+			 typename std::enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>               \
 	auto NAME(const Other &other, const ValueReference<T, d> &val) {                               \
 		return other OP((T)val);                                                                   \
 	}                                                                                              \
@@ -29,7 +29,7 @@
 	template<typename Other,                                                                       \
 			 typename T,                                                                           \
 			 typename d,                                                                           \
-			 typename enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>               \
+			 typename std::enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>               \
 	void ASSIGN(Other &other, const ValueReference<T, d> &val) {                                   \
 		other = other OP((T)val);                                                                  \
 	}
@@ -45,7 +45,7 @@
 	template<typename Other,                                                                       \
 			 typename T,                                                                           \
 			 typename d,                                                                           \
-			 typename enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>               \
+			 typename std::enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>               \
 	auto NAME(const Other &other, const ValueReference<T, d> &val) {                               \
 		return other OP((T)val);                                                                   \
 	}

@@ -38,7 +38,7 @@
 
 #define IMPL_BINOP_SCALAR(NAME, TYPE)                                                              \
 	template<typename OtherScalar,                                                                 \
-			 typename enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
+			 typename std::enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
 	LR_NODISCARD("")                                                                               \
 	auto NAME(const OtherScalar &other) const {                                                    \
 		using ResDevice = Device;                                                                  \
@@ -60,7 +60,7 @@
 	template<typename OtherScalar,                                                                 \
 			 typename Derived,                                                                     \
 			 typename Device,                                                                      \
-			 typename enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
+			 typename std::enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
 	LR_NODISCARD("")                                                                               \
 	auto NAME(const OtherScalar &other, const ArrayBase<Derived, Device> &arr) {                   \
 		using Scalar	= typename internal::traits<Derived>::Scalar;                              \
