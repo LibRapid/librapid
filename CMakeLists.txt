@@ -3,6 +3,8 @@ project(librapid VERSION "0.3.3")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+set(CMAKE_CXX_STANDARD 17)
+
 set(LIBRAPID_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -10,8 +12,8 @@ set(LIBRAPID_INCLUDE_DIRS
 
 # Attempt to locate the required packages
 include(FetchContent)
-find_package(CUDAToolkit)
-find_package(BLAS)
+find_package(CUDAToolkit QUIET)
+find_package(BLAS QUIET)
 find_package(OpenMP)
 
 # {fmt} might fail to compile when building for python if this is not set

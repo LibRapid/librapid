@@ -64,7 +64,7 @@ namespace librapid { namespace internal {
 		static constexpr bool IsScalar		 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = bool;
-		using BaseScalar					 = uint64_t;
+		using BaseScalar					 = uint32_t;
 		using StorageType					 = memory::DenseStorage<bool, device::CPU>;
 		using Packet						 = Vc::Vector<BaseScalar>; // vcl::Vec512b;
 		using Device						 = device::CPU;
