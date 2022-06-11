@@ -2,7 +2,7 @@
 
 #include "reducedMath.hpp"
 
-namespace librapid::detail {
+namespace librapid { namespace detail {
 	template<typename T>
 	struct ColumnMajorOrder {
 		typedef T result_type;
@@ -87,4 +87,4 @@ namespace librapid::detail {
 
 		int operator()(const int &i, const int &j) const { return j + i * n; }
 	};
-} // namespace librapid::detail
+} } // namespace librapid::detail

@@ -19,7 +19,7 @@
 		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
                                                                                                    \
 		static_assert(                                                                             \
-		  std::is_same_v<Scalar, ScalarOther>,                                                     \
+		  is_same_v<Scalar, ScalarOther>,                                                     \
 		  "Cannot operate on Arrays with different types. Please use Array::cast<T>()");           \
                                                                                                    \
 		static_assert(!(Required & ~(Flags & Required)),                                           \
@@ -38,7 +38,7 @@
 
 #define IMPL_BINOP_SCALAR(NAME, TYPE)                                                              \
 	template<typename OtherScalar,                                                                 \
-			 typename std::enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
+			 typename enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
 	LR_NODISCARD("")                                                                               \
 	auto NAME(const OtherScalar &other) const {                                                    \
 		using ResDevice = Device;                                                                  \
@@ -60,7 +60,7 @@
 	template<typename OtherScalar,                                                                 \
 			 typename Derived,                                                                     \
 			 typename Device,                                                                      \
-			 typename std::enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
+			 typename enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
 	LR_NODISCARD("")                                                                               \
 	auto NAME(const OtherScalar &other, const ArrayBase<Derived, Device> &arr) {                   \
 		using Scalar	= typename internal::traits<Derived>::Scalar;                              \
@@ -131,11 +131,11 @@ namespace librapid {
 		ArrayBase() = default;
 
 		template<typename T_, int64_t d_>
-		explicit ArrayBase(const Extent<T_, d_> &extent) :
+		explicit ArrayBase(const ExtentType<T_, d_> &extent) :
 				m_isScalar(extent.size() == 0), m_extent(extent), m_storage(extent.size()) {}
 
 		template<typename T_, int64_t d_>
-		explicit ArrayBase(const Extent<T_, d_> &extent, int) :
+		explicit ArrayBase(const ExtentType<T_, d_> &extent, int) :
 				m_isScalar(extent.size() == 0), m_extent(extent) {}
 
 		template<typename OtherDerived>
@@ -175,7 +175,7 @@ namespace librapid {
 		IMPL_UNOP(operator!, UnaryNot)
 
 		template<typename T = int64_t, int64_t d = 32>
-		auto transposed(const Extent<T, d> &order_ = {}) const {
+		auto transposed(const ExtentType<T, d> &order_ = {}) const {
 			using RetType = unop::CWiseUnop<functors::matrix::Transpose<Derived>, Derived>;
 			static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
 			static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;
@@ -183,10 +183,10 @@ namespace librapid {
 			static_assert(!(Required & ~(Flags & Required)),
 						  "Scalar type is incompatible with Functor");
 
-			Extent<int64_t, 32> order;
+			ExtentType<int64_t, 32> order;
 			if (order_.dims() == -1) {
 				// Default order is to reverse all indices
-				order = Extent<int64_t, 32>::zero(m_extent.dims());
+				order = ExtentType<int64_t, 32>::zero(m_extent.dims());
 				for (int64_t i = 0; i < m_extent.dims(); ++i) {
 					order[m_extent.dims() - i - 1] = i;
 				}
@@ -269,7 +269,7 @@ namespace librapid {
 
 		LR_FORCE_INLINE Packet packet(int64_t index) const {
 			Packet p;
-			if constexpr (std::is_same_v<Scalar, bool>)
+			if constexpr (is_same_v<Scalar, bool>)
 				p.load(m_storage.heap() + (index / 64));
 			else
 				p.load(m_storage.heap() + index);
@@ -291,12 +291,12 @@ namespace librapid {
 		LR_NODISCARD("") bool isScalar() const { return m_isScalar; }
 		LR_NODISCARD("") const StorageType &storage() const { return m_storage; }
 		LR_NODISCARD("") StorageType &storage() { return m_storage; }
-		LR_NODISCARD("") Extent<int64_t, 32> extent() const { return m_extent; }
-		LR_NODISCARD("") Extent<int64_t, 32> &extent() { return m_extent; }
+		LR_NODISCARD("") ExtentType<int64_t, 32> extent() const { return m_extent; }
+		LR_NODISCARD("") ExtentType<int64_t, 32> &extent() { return m_extent; }
 
 	private:
 		bool m_isScalar = false;
-		Extent<int64_t, 32> m_extent;
+		ExtentType<int64_t, 32> m_extent;
 		StorageType m_storage;
 	};
 

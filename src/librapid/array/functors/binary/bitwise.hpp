@@ -2,7 +2,7 @@
 
 #include "binary.hpp"
 
-namespace librapid::functors::binary {
+namespace librapid { namespace functors { namespace binary {
 	template<typename LHS, typename RHS>
 	class BitwiseOr : public ScalarOp<LHS, RHS> {
 	public:
@@ -101,4 +101,4 @@ namespace librapid::functors::binary {
 
 	private:
 	};
-} // namespace librapid::functors::binary
+} } } // namespace librapid::functors::binary

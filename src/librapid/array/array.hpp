@@ -27,7 +27,7 @@ namespace librapid {
 	class Array : public ArrayBase<Array<Scalar_, Device_>, Device_> {
 	public:
 #if !defined(LIBRAPID_HAS_CUDA)
-		static_assert(std::is_same_v<Device_, device::CPU>, "CUDA support was not enabled");
+		static_assert(is_same_v<Device_, device::CPU>, "CUDA support was not enabled");
 #endif
 
 		using Scalar					= Scalar_;
@@ -35,14 +35,13 @@ namespace librapid {
 		using Packet					= typename internal::traits<Scalar>::Packet;
 		using Type						= Array<Scalar, Device>;
 		using Base						= ArrayBase<Type, Device>;
-		using ExtentType				= Extent<int64_t, 32>;
 		using StorageType				= typename internal::traits<Type>::StorageType;
 		static constexpr uint64_t Flags = internal::flags::Evaluated;
 
 		Array() = default;
 
 		template<typename T, int64_t d>
-		explicit Array(const Extent<T, d> &extent) : Base(extent) {}
+		explicit Array(const ExtentType<T, d> &extent) : Base(extent) {}
 
 		template<typename OtherDerived>
 		Array(const OtherDerived &other) : Base(other.extent()) {
@@ -54,10 +53,10 @@ namespace librapid {
 		Array &operator=(const Array<Scalar, Device> &other) { return Base::assign(other); }
 
 		template<typename OtherDerived,
-				 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>
+				 typename enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>
 		Array &operator=(const OtherDerived &other) {
 			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
-			static_assert(std::is_same_v<Scalar, ScalarOther>,
+			static_assert(is_same_v<Scalar, ScalarOther>,
 						  "Cannot assign Arrays with different types. Please use Array::cast<T>()");
 
 			return Base::assign(other);
@@ -124,19 +123,19 @@ namespace librapid {
 		}
 
 		template<typename T = int64_t, int64_t d = 32>
-		void transpose(const Extent<T, d> &order_ = {}) {
+		void transpose(const ExtentType<T, d> &order_ = {}) {
 			// Transpose inplace
 			auto &extent = Base::extent();
-			Extent<int64_t, 32> order;
+			ExtentType<int64_t, 32> order;
 			if (order_.dims() == -1) {
 				// Default order is to reverse all indices
-				order = Extent<int64_t, 32>::zero(extent.dims());
+				order = ExtentType<int64_t, 32>::zero(extent.dims());
 				for (int64_t i = 0; i < extent.dims(); ++i) { order[extent.dims() - i - 1] = i; }
 			} else {
 				order = order_;
 			}
 
-			if constexpr (std::is_same_v<Device, device::CPU>) {
+			if constexpr (is_same_v<Device, device::CPU>) {
 				Scalar *buffer = memory::malloc<Scalar, Device>(extent.size());
 
 				detail::transpose(true, Base::storage().heap(), extent[0], extent[1], buffer);

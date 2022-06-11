@@ -55,7 +55,7 @@ namespace librapid {
 
 			LR_FORCE_INLINE Packet packet(int64_t index) const {
 				// Quick return if possible
-				if constexpr (std::is_same_v<Scalar, InputScalar>) return m_toCast.packet(index);
+				if constexpr (is_same_v<Scalar, InputScalar>) return m_toCast.packet(index);
 				static Scalar buffer[Packet::size()];
 				for (int64_t i = 0; i < Packet::size(); ++i) buffer[i] = m_toCast.scalar(index + i);
 				return Packet(&(buffer[0]));

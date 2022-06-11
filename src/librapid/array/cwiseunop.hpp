@@ -46,7 +46,7 @@ namespace librapid {
 			template<typename T>
 			CWiseUnop &operator=(const T &op) {
 				static_assert(
-				  std::is_same_v<T, Type>,
+				  is_same_v<T, Type>,
 				  "Lazy-evaluated result cannot be assigned a different type. Please either "
 				  "evaluate the result (using 'eval()') or create a new variable");
 
