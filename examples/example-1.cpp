@@ -10,7 +10,7 @@ namespace lrc = librapid;
 int main() {
 	lrc::numThreads = 8;
 
-	lrc::Array myArr = lrc::Array<int>(lrc::ExtentType(3, 5));
+	lrc::Array myArr = lrc::Array<int>(lrc::Extent(3, 5));
 
 	for (int i = 0; i < myArr.extent()[0]; ++i) {
 		for (int j = 0; j < myArr.extent()[1]; j++) { myArr[i][j] = lrc::randint(1, 10); }
@@ -44,7 +44,7 @@ int main() {
 	int rows = 1000, cols = 1000;
 	// if (!scn::prompt("Enter '<rows>x<cols>' >>>", "{}x{}", rows, cols)) exit(1);
 	fmt::print("Lazily evaluated result:\n");
-	lrc::Array<float> bench(lrc::ExtentType(rows, cols));
+	lrc::Array<float> bench(lrc::Extent(rows, cols));
 	lrc::timeFunction([&]() { auto res = bench + bench; });
 	fmt::print("Actually evaluating the result:\n");
 	lrc::Array<float> res;

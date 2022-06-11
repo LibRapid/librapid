@@ -53,7 +53,7 @@ namespace librapid {
 		Array &operator=(const Array<Scalar, Device> &other) { return Base::assign(other); }
 
 		template<typename OtherDerived,
-				 typename enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>
+				 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>
 		Array &operator=(const OtherDerived &other) {
 			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
 			static_assert(is_same_v<Scalar, ScalarOther>,
