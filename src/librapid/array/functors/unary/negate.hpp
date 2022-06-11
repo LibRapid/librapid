@@ -2,7 +2,7 @@
 
 #include "unary.hpp"
 
-namespace librapid::functors::unop {
+namespace librapid { namespace functors { namespace unop {
 	template<typename Type_>
 	class UnaryMinus : public UnaryOp<Type_> {
 	public:
@@ -95,4 +95,4 @@ namespace librapid::functors::unop {
 
 	private:
 	};
-} // namespace librapid::functors::unop
+} } } // namespace librapid::functors::unop

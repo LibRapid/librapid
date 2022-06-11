@@ -6,7 +6,7 @@
 #include "valueReference.hpp"
 #include "../math/coreMath.hpp"
 
-namespace librapid::memory {
+namespace librapid { namespace memory {
 	template<typename T, typename d>
 	class DenseStorage {
 	public:
@@ -19,7 +19,7 @@ namespace librapid::memory {
 				m_size(roundTo(size, Vc::Vector<T>::size())), m_heap(memory::malloc<T, d>(m_size)),
 				m_refCount(new std::atomic<int64_t>(1)) {
 #if defined(LIBRAPID_HAS_CUDA)
-			if constexpr (std::is_same_v<d, device::GPU>) initializeCudaStream();
+			if constexpr (is_same_v<d, device::GPU>) initializeCudaStream();
 #endif
 		}
 
@@ -103,7 +103,7 @@ namespace librapid::memory {
 		explicit DenseStorage(int64_t size) : Base((size + 512) / (sizeof(BaseScalar) * 8)) {
 			this->m_size = size;
 #if defined(LIBRAPID_HAS_CUDA)
-			if constexpr (std::is_same_v<d, device::GPU>) initializeCudaStream();
+			if constexpr (is_same_v<d, device::GPU>) initializeCudaStream();
 #endif
 		}
 
@@ -140,4 +140,4 @@ namespace librapid::memory {
 				  "Cannot copy data between DenseStorage objects with different sizes");
 		memcpy<T, d, T_, d_>(dst.heap(), src.heap(), dst.size());
 	}
-} // namespace librapid::memory
+} } // namespace librapid::memory

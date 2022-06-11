@@ -5,7 +5,7 @@
 #include "../../helpers/extent.hpp"
 #include "../../../modified/modified.hpp"
 
-namespace librapid::functors::matrix {
+namespace librapid { namespace functors { namespace matrix {
 	template<typename Type_>
 	class Transpose {
 	public:
@@ -20,7 +20,7 @@ namespace librapid::functors::matrix {
 		Transpose() = default;
 
 		template<typename T, int64_t d>
-		explicit Transpose(const Extent<T, d> &order) : m_order(order) {};
+		explicit Transpose(const ExtentType<T, d> &order) : m_order(order) {};
 
 		Transpose(const Transpose<Type> &other) = default;
 
@@ -39,13 +39,13 @@ namespace librapid::functors::matrix {
 		void customEval(const Input &input_, Output &output) const {
 			auto input = input_.eval();
 
-			Extent<int64_t, 32> extent = input.extent();
+			ExtentType<int64_t, 32> extent = input.extent();
 			int64_t dims			   = extent.dims();
 
-			Extent<int64_t, 32> inputStride	 = extent.stride();
-			Extent<int64_t, 32> outputStride = output.extent().stride().swivel(m_order);
+			ExtentType<int64_t, 32> inputStride	 = extent.stride();
+			ExtentType<int64_t, 32> outputStride = output.extent().stride().swivel(m_order);
 
-			auto coord = Extent<int64_t, 32>::zero(dims);
+			auto coord = ExtentType<int64_t, 32>::zero(dims);
 			int64_t idim;
 			int64_t ndim = dims;
 
@@ -110,7 +110,7 @@ namespace librapid::functors::matrix {
 
 		template<typename T, int64_t d>
 		LR_NODISCARD("")
-		Extent<T, d> genExtent(const Extent<T, d> &extent) const {
+		ExtentType<T, d> genExtent(const ExtentType<T, d> &extent) const {
 			return extent.swivel(m_order);
 		}
 
@@ -120,6 +120,6 @@ namespace librapid::functors::matrix {
 		}
 
 	private:
-		Extent<int64_t, 32> m_order;
+		ExtentType<int64_t, 32> m_order;
 	};
-} // namespace librapid::functors::matrix
+} } } // namespace librapid::functors::matrix

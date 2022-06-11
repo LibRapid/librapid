@@ -3,7 +3,7 @@
 #include "../../../internal/config.hpp"
 #include "../../traits.hpp"
 
-namespace librapid::functors::binary {
+namespace librapid { namespace functors { namespace binary {
 	template<typename LHS, typename RHS>
 	class ScalarOp {
 	public:
@@ -15,15 +15,15 @@ namespace librapid::functors::binary {
 
 		template<typename T, int64_t d>
 		LR_NODISCARD("")
-		Extent<T, d> genExtent(const Extent<T, d> &lhs, const Extent<T, d> &rhs) const {
+		ExtentType<T, d> genExtent(const ExtentType<T, d> &lhs, const ExtentType<T, d> &rhs) const {
 			return lhs;
 		}
 
 		// For a scalar operation
 		template<typename T, int64_t d>
 		LR_NODISCARD("")
-		Extent<T, d> genExtent(const Extent<T, d> &generic) const {
+		ExtentType<T, d> genExtent(const ExtentType<T, d> &generic) const {
 			return generic;
 		}
 	};
-} // namespace librapid::functors::binary
+} } } // namespace librapid::functors::binary

@@ -76,7 +76,7 @@ namespace librapid {
 
 			LR_NODISCARD("Do not ignore the result of an evaluated calculation")
 			Array<Scalar, Device> eval() const {
-				Extent<int64_t, 32> resExtent;
+				ExtentType<int64_t, 32> resExtent;
 				if constexpr (LhsIsScalar && RhsIsScalar) {
 					LR_ASSERT(false, "This should never happen");
 				} else if constexpr (LhsIsScalar && !RhsIsScalar) {

@@ -7,7 +7,7 @@
 // Memory alignment adapted from
 // https://gist.github.com/dblalock/255e76195676daa5cbc57b9b36d1c99a
 
-namespace librapid::memory {
+namespace librapid { namespace memory {
 	static bool streamCreated = false;
 	static cudaStream_t cudaStream;
 
@@ -123,5 +123,5 @@ namespace librapid::memory {
 			}
 		}
 	}
-} // namespace librapid::memory
+} } // namespace librapid::memory
 #endif // LIBRAPID_HAS_CUDA

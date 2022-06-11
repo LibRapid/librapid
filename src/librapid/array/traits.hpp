@@ -4,7 +4,7 @@
 #include "../internal/forward.hpp"
 #include "../internal/memUtils.hpp"
 
-namespace librapid::internal {
+namespace librapid { namespace internal {
 	namespace flags {
 		/**
 		 * Flag Configuration:
@@ -16,29 +16,29 @@ namespace librapid::internal {
 		 * [34]       -> Matrix operation
 		 */
 
-		inline constexpr uint64_t Evaluated	   = 1ll << 0; // Result is already evaluated
-		inline constexpr uint64_t RequireEval  = 1ll << 1; // Result must be evaluated
-		inline constexpr uint64_t RequireInput = 1ll << 2; // Requires the entire array (not scalar)
-		inline constexpr uint64_t HasCustomEval = 1ll << 3; // Has a custom eval function
+		constexpr uint64_t Evaluated	   = 1ll << 0; // Result is already evaluated
+		constexpr uint64_t RequireEval  = 1ll << 1; // Result must be evaluated
+		constexpr uint64_t RequireInput = 1ll << 2; // Requires the entire array (not scalar)
+		constexpr uint64_t HasCustomEval = 1ll << 3; // Has a custom eval function
 
-		inline constexpr uint64_t Bitwise	 = 1ll << 10; // Bitwise functions
-		inline constexpr uint64_t Arithmetic = 1ll << 11; // Arithmetic functions
-		inline constexpr uint64_t Logical	 = 1ll << 12; // Logical functions
-		inline constexpr uint64_t Matrix	 = 1ll << 13; // Matrix operation
+		constexpr uint64_t Bitwise	 = 1ll << 10; // Bitwise functions
+		constexpr uint64_t Arithmetic = 1ll << 11; // Arithmetic functions
+		constexpr uint64_t Logical	 = 1ll << 12; // Logical functions
+		constexpr uint64_t Matrix	 = 1ll << 13; // Matrix operation
 
 		// Extract only operation information
-		inline constexpr uint64_t OperationMask = 0b1111111111111111100000000000000;
+		constexpr uint64_t OperationMask = 0b1111111111111111100000000000000;
 
-		inline constexpr uint64_t PacketBitwise	   = 1ll << 14; // Packet needs bitwise
-		inline constexpr uint64_t PacketArithmetic = 1ll << 15; // Packet needs arithmetic
-		inline constexpr uint64_t PacketLogical	   = 1ll << 16; // Packet needs logical
+		constexpr uint64_t PacketBitwise	   = 1ll << 14; // Packet needs bitwise
+		constexpr uint64_t PacketArithmetic = 1ll << 15; // Packet needs arithmetic
+		constexpr uint64_t PacketLogical	   = 1ll << 16; // Packet needs logical
 
-		inline constexpr uint64_t ScalarBitwise	   = 1ll << 17; // Scalar needs bitwise
-		inline constexpr uint64_t ScalarArithmetic = 1ll << 18; // Scalar needs arithmetic
-		inline constexpr uint64_t ScalarLogical	   = 1ll << 19; // Scalar needs logical
+		constexpr uint64_t ScalarBitwise	   = 1ll << 17; // Scalar needs bitwise
+		constexpr uint64_t ScalarArithmetic = 1ll << 18; // Scalar needs arithmetic
+		constexpr uint64_t ScalarLogical	   = 1ll << 19; // Scalar needs logical
 
-		inline constexpr uint64_t Unary	 = 1ll << 32; // Operation takes one argument
-		inline constexpr uint64_t Binary = 1ll << 33; // Operation takes two arguments
+		constexpr uint64_t Unary	 = 1ll << 32; // Operation takes one argument
+		constexpr uint64_t Binary = 1ll << 33; // Operation takes two arguments
 
 	} // namespace flags
 
@@ -268,4 +268,4 @@ namespace librapid::internal {
 
 	template<typename T>
 	using StripQualifiers = typename std::remove_cv_t<typename std::remove_reference_t<T>>;
-} // namespace librapid::internal
+} } // namespace librapid::internal
