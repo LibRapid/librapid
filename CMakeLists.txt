@@ -8,16 +8,6 @@ set(LIBRAPID_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
 
-message(STATUS "C++ Version: ${CMAKE_CXX_STANDARD}")
-if (NOT CMAKE_CXX_STANDARD)
-    message(WARNING "CMAKE_CXX_STANDARD was not set, but LibRapid requires C++17. This will be set automatically")
-    set(CMAKE_CXX_STANDARD 14)
-elseif (${CMAKE_CXX_STANDARD} VERSION_LESS 14)
-    message(WARNING "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}, but LibRapid requires C++14. \
-                     LibRapid will set this automatically, but ensure you are aware of the consequences")
-endif ()
-
-
 # Attempt to locate the required packages
 include(FetchContent)
 find_package(CUDAToolkit)
@@ -144,10 +134,12 @@ if (${BLAS_FOUND})
             endif ()
         endif ()
 
-        # Copy library files
-        get_filename_component(lib_name ${LIBRAPID_BLAS} NAME)
-        # message(STATUS "Found library file ${lib_name}")
-        configure_file(${LIBRAPID_BLAS} "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${lib_name}" COPYONLY)
+        if (${has_cblas})
+            # Copy library files
+            get_filename_component(lib_name ${LIBRAPID_BLAS} NAME)
+            # message(STATUS "Found library file ${lib_name}")
+            configure_file(${LIBRAPID_BLAS} "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${lib_name}" COPYONLY)
+        endif()
 
         # Copy binary files if on Windows
         if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
