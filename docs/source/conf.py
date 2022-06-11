@@ -78,11 +78,9 @@ extensions = [
 	"breathe",
 	"exhale",
 	"numpydoc",
-    'matplotlib.sphinxext.plot_directive',
     'IPython.sphinxext.ipython_directive',
     'IPython.sphinxext.ipython_console_highlighting',
     'sphinx.ext.mathjax',
-    'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.inheritance_diagram'
 ]
