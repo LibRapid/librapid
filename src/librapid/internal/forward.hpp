@@ -7,7 +7,7 @@ namespace librapid {
 		template<typename T, typename d>
 		class ValueReference;
 
-		template<typename T = u_char, typename d = device::CPU>
+		template<typename T = unsigned char, typename d = device::CPU>
 		class DenseStorage;
 	}
 
