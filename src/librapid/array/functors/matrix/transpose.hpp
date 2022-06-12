@@ -5,17 +5,17 @@
 #include "../../helpers/extent.hpp"
 #include "../../../modified/modified.hpp"
 
-namespace librapid { namespace functors { namespace matrix {
+namespace librapid::functors::matrix {
 	template<typename Type_>
 	class Transpose {
 	public:
-		using Type					   = Type_;
-		using Scalar				   = typename internal::traits<Type_>::Scalar;
-		using RetType				   = Scalar;
-		using Packet				   = typename internal::traits<Scalar>::Packet;
-		static constexpr int64_t Flags = internal::flags::Matrix | internal::flags::Unary |
-										 internal::flags::HasCustomEval |
-										 internal::flags::RequireEval;
+		using Type	  = Type_;
+		using Scalar  = typename internal::traits<Type_>::Scalar;
+		using RetType = Scalar;
+		using Packet  = typename internal::traits<Scalar>::Packet;
+		static constexpr int64_t Flags =
+		  internal::flags::Matrix | internal::flags::Unary | internal::flags::HasCustomEval;
+		// | internal::flags::RequireEval;
 
 		Transpose() = default;
 
@@ -24,23 +24,30 @@ namespace librapid { namespace functors { namespace matrix {
 
 		Transpose(const Transpose<Type> &other) = default;
 
-		Transpose<Type> &operator=(const Transpose<Type> &other) { return *this; }
+		Transpose<Type> &operator=(const Transpose<Type> &other) {
+			m_order = other.m_order;
+			return *this;
+		}
 
 		LR_NODISCARD("")
-		LR_FORCE_INLINE RetType scalarOp(const Scalar &val) const { return val; }
+		LR_FORCE_INLINE RetType scalarOp(const Scalar &val) const { return 0; }
 
 		template<typename PacketType>
 		LR_NODISCARD("")
 		LR_FORCE_INLINE Packet packetOp(const PacketType &val) const {
-			return val;
+			return 1;
 		}
 
 		template<typename Input, typename Output>
 		void customEval(const Input &input_, Output &output) const {
 			auto input = input_.eval();
 
+			using InputDevice  = typename internal::traits<Input>::Device;
+			using OutputDevice = typename internal::traits<Output>::Device;
+			using Device	   = typename memory::PromoteDevice<InputDevice, OutputDevice>;
+
 			ExtentType<int64_t, 32> extent = input.extent();
-			int64_t dims			   = extent.dims();
+			int64_t dims				   = extent.dims();
 
 			ExtentType<int64_t, 32> inputStride	 = extent.stride();
 			ExtentType<int64_t, 32> outputStride = output.extent().stride().swivel(m_order);
@@ -85,8 +92,12 @@ namespace librapid { namespace functors { namespace matrix {
 				return;
 				 */
 
-				// detail::transpose(true, )
+				// Only works in-place
+
+				// Scalar *buffer = memory::malloc<Scalar, Device>(extent.size());
+				detail::transpose(true, inputData, extent[0], extent[1], outputData);
 				return;
+				// memory::free<Scalar, Device>(buffer);
 			}
 
 			int64_t inputIndex	= 0;
@@ -122,4 +133,4 @@ namespace librapid { namespace functors { namespace matrix {
 	private:
 		ExtentType<int64_t, 32> m_order;
 	};
-} } } // namespace librapid::functors::matrix
+} // namespace librapid::functors::matrix
