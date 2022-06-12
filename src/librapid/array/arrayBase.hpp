@@ -19,7 +19,7 @@
 		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
                                                                                                    \
 		static_assert(                                                                             \
-		  is_same_v<Scalar, ScalarOther>,                                                     \
+		  is_same_v<Scalar, ScalarOther>,                                                          \
 		  "Cannot operate on Arrays with different types. Please use Array::cast<T>()");           \
                                                                                                    \
 		static_assert(!(Required & ~(Flags & Required)),                                           \
@@ -246,7 +246,8 @@ namespace librapid {
 					  m_extent.str(),
 					  other.extent().str());
 
-			m_isScalar	   = other.isScalar();
+			m_isScalar = other.isScalar();
+
 			using Selector = functors::AssignSelector<Derived, OtherDerived, false>;
 			return Selector::run(derived(), other.derived());
 		}

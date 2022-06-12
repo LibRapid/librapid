@@ -249,13 +249,16 @@ namespace librapid {
 		return res;
 	}
 
-	template<typename T, typename std::enable_if_t<std::is_integral_v<T>, int> = 0>
-	T mod(T val, T divisor) {
+	template<typename T1, typename T2,
+			 typename std::enable_if_t<std::is_integral_v<T1> && std::is_integral_v<T2>, int> = 0>
+	auto mod(T1 val, T2 divisor) {
 		return val % divisor;
 	}
 
-	template<typename T, typename std::enable_if_t<std::is_floating_point_v<T>, int> = 0>
-	T mod(T val, T divisor) {
+	template<typename T1, typename T2,
+			 typename std::enable_if_t<std::is_floating_point_v<T1> || std::is_floating_point_v<T2>,
+									   int> = 0>
+	auto mod(T1 val, T2 divisor) {
 		return std::fmod(val, divisor);
 	}
 
@@ -293,11 +296,17 @@ namespace librapid {
 		return (num >= 0 ? y : -y) * beta;
 	}
 
-	template<typename T = double>
-	T roundTo(T num, T val) {
-		T rem = mod(num, val);
+	template<typename T1 = double, typename T2 = double>
+	auto roundTo(T1 num, T2 val) {
+		auto rem = mod(num, val);
 		if (rem >= val / 2) return (num + val) - rem;
 		return num - rem;
+	}
+
+	template<typename T1 = double, typename T2 = double>
+	auto roundUpTo(T1 num, T2 val) {
+		auto rem = mod(num, val);
+		return (num + val) - rem;
 	}
 
 	template<typename T>
