@@ -137,9 +137,7 @@ namespace librapid {
 
 			if constexpr (is_same_v<Device, device::CPU>) {
 				Scalar *buffer = memory::malloc<Scalar, Device>(extent.size());
-
 				detail::transpose(true, Base::storage().heap(), extent[0], extent[1], buffer);
-
 				memory::free<Scalar, Device>(buffer);
 			} else {
 				LR_ASSERT(false, "CUDA support was not enabled");
@@ -308,7 +306,7 @@ struct fmt::formatter<librapid::Array<Scalar, Device>> {
 	template<typename ParseContext>
 	constexpr auto parse(ParseContext &ctx) {
 		formatStr = "{:";
-		auto it = ctx.begin();
+		auto it	  = ctx.begin();
 		for (; it != ctx.end(); ++it) {
 			if (*it == '}') break;
 			formatStr += *it;

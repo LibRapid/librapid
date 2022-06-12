@@ -13,9 +13,7 @@ namespace librapid {
 
 	namespace internal {
 		template<typename T>
-		struct traits {
-			using Valid = std::false_type;
-		};
+		struct traits;
 	}
 
 	template<typename T, int64_t maxDims>

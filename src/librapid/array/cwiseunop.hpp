@@ -73,6 +73,15 @@ namespace librapid {
 				return res;
 			}
 
+			template<typename Input, typename Output>
+			void customEval(const Input &input, Output &output) {
+				if constexpr ((bool)(Flags & internal::flags::HasCustomEval)) {
+					m_operation.customEval(input, output);
+				} else {
+					LR_ASSERT(false, "Type does not support custom eval");
+				}
+			}
+
 			LR_FORCE_INLINE Packet packet(int64_t index) const {
 				return m_operation.packetOp(m_value.packet(index));
 			}
@@ -112,7 +121,7 @@ struct fmt::formatter<librapid::unop::CWiseUnop<Unop, TYPE>> {
 	template<typename ParseContext>
 	constexpr auto parse(ParseContext &ctx) {
 		formatStr = "{:";
-		auto it = ctx.begin();
+		auto it	  = ctx.begin();
 		for (; it != ctx.end(); ++it) {
 			if (*it == '}') break;
 			formatStr += *it;

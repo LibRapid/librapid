@@ -4,7 +4,7 @@
 #include "../../internal/forward.hpp"
 #include "../traits.hpp"
 
-namespace librapid { namespace functors {
+namespace librapid::functors {
 	template<typename Derived, typename OtherDerived, bool evalBeforeAssign>
 	struct AssignSelector;
 
@@ -176,4 +176,4 @@ void applyOp({4} **pointers, int64_t size) {{
 			}
 		}
 	};
-} } // namespace librapid::functors
+} // namespace librapid::functors
