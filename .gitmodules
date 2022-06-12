@@ -4,6 +4,7 @@
 [submodule "src/librapid/vendor/Vc"] # VectorClass module for SIMD instructions
 	path = src/librapid/vendor/Vc
 	url = https://github.com/VcDevel/Vc.git
+	fetchRecurseSubmodules = false
 [submodule "src/librapid/vendor/fmt"] # {fmt} module for fast formatting and IO
 	path = src/librapid/vendor/fmt
 	url = https://github.com/fmtlib/fmt.git
