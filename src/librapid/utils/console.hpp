@@ -8,6 +8,7 @@
 #	include <Windows.h>
 #elif defined(LIBRAPID_OS_UNIX)
 #	include <sys/ioctl.h>
+#	include <unistd.h>
 #endif
 
 namespace librapid {
