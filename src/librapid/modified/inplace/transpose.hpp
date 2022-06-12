@@ -83,7 +83,11 @@ namespace librapid { namespace detail {
 
 #pragma omp parallel private(tid, privTmp, privFn, i) num_threads(matrixThreads)
 		{
-			tid		= omp_get_thread_num();
+#if defined(LIBRAPID_HAS_OMP)
+			tid = omp_get_thread_num();
+#else
+			tid = 0;
+#endif
 			privFn	= fn;
 			privTmp = tmp + m * tid;
 #pragma omp for
@@ -106,7 +110,11 @@ namespace librapid { namespace detail {
 
 #pragma omp parallel private(tid, privTmp, privFn, j) num_threads(matrixThreads)
 		{
-			tid		= omp_get_thread_num();
+#if defined(LIBRAPID_HAS_OMP)
+			tid = omp_get_thread_num();
+#else
+			tid = 0;
+#endif
 			privFn	= fn;
 			privTmp = tmp + n * tid;
 #pragma omp for
@@ -133,4 +141,4 @@ namespace librapid { namespace detail {
 		rowShuffle(m, n, data, tmp, Shuffle(m, n, c, k));
 		colShuffle(m, n, data, tmp, Postpermuter(m, n, m / c));
 	}
-} } // namespace librapid::detail
+}} // namespace librapid::detail
