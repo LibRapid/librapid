@@ -9,12 +9,13 @@ namespace librapid::functors::matrix {
 	template<typename Type_>
 	class Transpose {
 	public:
-		using Type	  = Type_;
-		using Scalar  = typename internal::traits<Type_>::Scalar;
-		using RetType = Scalar;
-		using Packet  = typename internal::traits<Scalar>::Packet;
-		static constexpr int64_t Flags =
-		  internal::flags::Matrix | internal::flags::Unary | internal::flags::HasCustomEval;
+		using Type					   = Type_;
+		using Scalar				   = typename internal::traits<Type_>::Scalar;
+		using RetType				   = Scalar;
+		using Packet				   = typename internal::traits<Scalar>::Packet;
+		static constexpr int64_t Flags = internal::flags::Matrix | internal::flags::Unary |
+										 internal::flags::HasCustomEval |
+										 internal::flags::RequireInput;
 		// | internal::flags::RequireEval;
 
 		Transpose() = default;
@@ -36,6 +37,36 @@ namespace librapid::functors::matrix {
 		LR_NODISCARD("")
 		LR_FORCE_INLINE Packet packetOp(const PacketType &val) const {
 			return 1;
+		}
+
+		template<typename Derived>
+		LR_NODISCARD("")
+		LR_FORCE_INLINE RetType scalarOpInput(const Derived &other, int64_t index) const {
+			return 123;
+
+			auto extent = other.extent();
+			auto size = extent.size();
+			auto swivelled = extent.reverseIndex(index).swivel(m_order);
+			auto first = extent.index(swivelled);
+			return other.scalar(first);
+		}
+
+		template<typename Derived>
+		LR_NODISCARD("")
+		LR_FORCE_INLINE Packet packetOpInput(const Derived &other, int64_t index) const {
+			Scalar buffer[internal::traits<Scalar>::PacketWidth];
+			auto extent = other.extent();
+			auto size = extent.size();
+			auto swivelled = extent.reverseIndex(index).swivel(m_order);
+			auto first = extent.index(swivelled);
+
+			for (int64_t i = 0; i < internal::traits<Scalar>::PacketWidth; ++i) {
+				buffer[i] = other.scalar(first);
+				first += extent[1];
+			}
+
+			Packet res(&(buffer[0]));
+			return res;
 		}
 
 		template<typename Input, typename Output>
@@ -74,7 +105,6 @@ namespace librapid::functors::matrix {
 				// Faster for matrix transposition
 				// This is disgusting, but it's faster than using OMPs "if"
 
-				/*
 				if (extent.size() < 500) {
 					for (int64_t i = 0; i < extent.size(); ++i) {
 						int64_t a	  = i / extent[0];
@@ -90,13 +120,12 @@ namespace librapid::functors::matrix {
 					}
 				}
 				return;
-				 */
 
 				// Only works in-place
 
 				// Scalar *buffer = memory::malloc<Scalar, Device>(extent.size());
-				detail::transpose(true, inputData, extent[0], extent[1], outputData);
-				return;
+				// detail::transpose(true, inputData, extent[0], extent[1], outputData);
+				// return;
 				// memory::free<Scalar, Device>(buffer);
 			}
 

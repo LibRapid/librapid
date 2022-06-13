@@ -137,6 +137,7 @@ namespace librapid { namespace detail {
 		} else {
 			k = t;
 		}
+
 		if (c > 1) { colShuffle(m, n, data, tmp, Prerotator(m, n / c)); }
 		rowShuffle(m, n, data, tmp, Shuffle(m, n, c, k));
 		colShuffle(m, n, data, tmp, Postpermuter(m, n, m / c));
