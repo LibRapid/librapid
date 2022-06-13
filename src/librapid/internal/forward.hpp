@@ -16,7 +16,7 @@ namespace librapid {
 		struct traits;
 	}
 
-	template<typename T, int64_t maxDims>
+	template<typename T, int64_t maxDims, int64_t align>
 	class ExtentType;
 
 	template<typename ArrT>

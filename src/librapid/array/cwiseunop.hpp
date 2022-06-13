@@ -83,11 +83,19 @@ namespace librapid {
 			}
 
 			LR_FORCE_INLINE Packet packet(int64_t index) const {
-				return m_operation.packetOp(m_value.packet(index));
+				if constexpr ((bool) (Flags & internal::flags::RequireInput)) {
+					return m_operation.packetOpInput(m_value, index);
+				} else {
+					return m_operation.packetOp(m_value.packet(index));
+				}
 			}
 
 			LR_FORCE_INLINE Scalar scalar(int64_t index) const {
-				return m_operation.scalarOp(m_value.scalar(index));
+				if constexpr ((bool) (Flags & internal::flags::RequireInput)) {
+					return m_operation.scalarOpInput(m_value, index);
+				} else {
+					return m_operation.scalarOp(m_value.scalar(index));
+				}
 			}
 
 			template<typename T>
