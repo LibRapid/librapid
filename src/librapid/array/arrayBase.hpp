@@ -125,7 +125,6 @@ namespace librapid {
 		using Packet	  = typename internal::traits<Derived>::Packet;
 		using StorageType = typename internal::traits<Derived>::StorageType;
 		using ArrayExtent = ExtentType<int64_t, 32, internal::traits<Scalar>::PacketWidth>;
-		// using ArrayExtent = ExtentType<int64_t, 32, 8>;
 		static constexpr uint64_t Flags = internal::traits<This>::Flags;
 
 		friend Derived;
