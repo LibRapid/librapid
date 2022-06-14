@@ -16,7 +16,6 @@ namespace librapid::functors::matrix {
 		static constexpr int64_t Flags = internal::flags::Matrix | internal::flags::Unary |
 										 internal::flags::HasCustomEval |
 										 internal::flags::RequireInput;
-		// | internal::flags::RequireEval;
 
 		Transpose() = default;
 
@@ -42,12 +41,9 @@ namespace librapid::functors::matrix {
 		template<typename Derived>
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOpInput(const Derived &other, int64_t index) const {
-			return 123;
-
-			auto extent = other.extent();
-			auto size = extent.size();
+			auto extent	   = other.extent();
 			auto swivelled = extent.reverseIndex(index).swivel(m_order);
-			auto first = extent.index(swivelled);
+			auto first	   = extent.index(swivelled);
 			return other.scalar(first);
 		}
 
@@ -55,14 +51,14 @@ namespace librapid::functors::matrix {
 		LR_NODISCARD("")
 		LR_FORCE_INLINE Packet packetOpInput(const Derived &other, int64_t index) const {
 			Scalar buffer[internal::traits<Scalar>::PacketWidth];
-			auto extent = other.extent();
-			auto size = extent.size();
-			auto swivelled = extent.reverseIndex(index).swivel(m_order);
-			auto first = extent.index(swivelled);
+			auto extent	   = other.extent();
+			auto swivelled = extent.reverseIndexAdjusted(index).swivel(m_order);
+			auto first	   = extent.indexAdjusted(swivelled);
+			auto stride = extent.strideAdjusted();
 
 			for (int64_t i = 0; i < internal::traits<Scalar>::PacketWidth; ++i) {
 				buffer[i] = other.scalar(first);
-				first += extent[1];
+				first += stride[m_order[extent.dims() - 1]];
 			}
 
 			Packet res(&(buffer[0]));
