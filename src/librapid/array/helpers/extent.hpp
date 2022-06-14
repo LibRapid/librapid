@@ -3,15 +3,15 @@
 #include "../../internal/config.hpp"
 
 namespace librapid {
-	template<typename T, int64_t maxDims, int64_t align = internal::traits<T>::PacketWidth>
+	template<typename T, int64_t maxDims, int64_t align_ = 4>
 	class ExtentType {
 	public:
+		static constexpr int64_t Align = align_;
+
 		ExtentType() = default;
 
 		template<typename... T_>
-		explicit ExtentType(T_... args) : m_dims(sizeof...(T_)), m_data {args...} {
-			for (int64_t i = 0; i < m_dims; ++i) m_dataAdjusted[i++] = roundUpTo(m_dims[i], align);
-		}
+		explicit ExtentType(T_... args) : m_dims(sizeof...(T_)), m_data {args...} {}
 
 		template<typename T_>
 		ExtentType(const std::initializer_list<T_> &args) : m_dims(args.size()) {
@@ -19,10 +19,7 @@ namespace librapid {
 					  "A maximum of {} dimensions are allowed in an Extent object",
 					  maxDims);
 			int64_t i = 0;
-			for (const auto &val : args) {
-				m_data[i]			= val;
-				m_dataAdjusted[i++] = roundUpTo(val, align);
-			}
+			for (const auto &val : args) m_data[i++] = val;
 		}
 
 		template<typename T_>
@@ -30,10 +27,7 @@ namespace librapid {
 			LR_ASSERT(args.size() <= maxDims,
 					  "A maximum of {} dimensions are allowed in an Extent object",
 					  maxDims);
-			for (int64_t i = 0; i < m_dims; ++i) {
-				m_data[i]		  = args[i];
-				m_dataAdjusted[i] = roundUpTo(args[i], align);
-			}
+			for (int64_t i = 0; i < m_dims; ++i) m_data[i] = args[i];
 		}
 
 		template<typename T_, int64_t d_, int64_t a_>
@@ -44,25 +38,25 @@ namespace librapid {
 					  d_,
 					  maxDims);
 			m_dims = e.dims();
-			for (int64_t i = 0; i < m_dims; ++i) {
-				m_data[i] = e[i];
-				m_data[i] = e.adjusted(i);
-			}
+			for (int64_t i = 0; i < m_dims; ++i) { m_data[i] = e[i]; }
+		}
+
+		ExtentType &operator=(const ExtentType &other) {
+			if (this == &other) return *this;
+			m_dims = other.dims();
+			for (int64_t i = 0; i < m_dims; ++i) { m_data[i] = other[i]; }
+			return *this;
 		}
 
 		template<typename T_, int64_t d_, int64_t a_>
 		ExtentType &operator=(const ExtentType<T_, d_, a_> &other) {
-			if (this == &other) return *this;
 			LR_ASSERT(other.dims() < maxDims,
 					  "Extent with {} dimensions cannot be stored in an extent with a maximum of "
 					  "{} dimensions",
 					  d_,
 					  maxDims);
 			m_dims = other.dims();
-			for (int64_t i = 0; i < m_dims; ++i) {
-				m_data[i] = other[i];
-				m_data[i] = other.adjusted(i);
-			}
+			for (int64_t i = 0; i < m_dims; ++i) { m_data[i] = other[i]; }
 			return *this;
 		}
 
@@ -88,7 +82,7 @@ namespace librapid {
 			int64_t prod   = 1;
 			for (int64_t i = m_dims - 1; i >= 0; --i) {
 				res[i] = prod;
-				prod *= m_dataAdjusted[i];
+				prod *= adjusted(i);
 			}
 			return res;
 		}
@@ -132,10 +126,10 @@ namespace librapid {
 			T res			   = 0;
 			ExtentType strides = strideAdjusted();
 			for (int64_t i = 0; i < index.dims(); ++i) {
-				LR_ASSERT(index.m_data[i] >= 0 && index.m_data[i] <= m_data[i],
-						  "Index {} is out of range for Extent with dimension {}",
-						  index.m_data[i],
-						  m_data[i]);
+				LR_ASSERT(index.m_data[i] >= 0 && index[i] <= adjusted(i),
+						  "Index {} is out of range for Extent with adjusted dimension {}",
+						  index[i],
+						  adjusted(i));
 				res += strides[i] * index[i];
 			}
 			return res;
@@ -163,12 +157,9 @@ namespace librapid {
 
 		ExtentType partial(int64_t start = 0, int64_t end = -1) const {
 			if (end == -1) end = m_dims;
-			ExtentType<T, maxDims> res;
+			ExtentType res;
 			res.m_dims = m_dims - 1;
-			for (int64_t i = start; i < end; ++i) {
-				res[i - start]			= m_data[i];
-				res.adjusted(i - start) = m_dataAdjusted[i];
-			}
+			for (int64_t i = start; i < end; ++i) { res[i - start] = m_data[i]; }
 			return res;
 		}
 
@@ -194,10 +185,7 @@ namespace librapid {
 #endif
 
 			ExtentType res = zero(m_dims);
-			for (int64_t i = 0; i < order.dims(); ++i) {
-				res[order[i]]		   = m_data[i];
-				res.adjusted(order[i]) = m_dataAdjusted[i];
-			}
+			for (int64_t i = 0; i < order.dims(); ++i) { res[order[i]] = m_data[i]; }
 			return res;
 		}
 
@@ -214,7 +202,7 @@ namespace librapid {
 
 		LR_NODISCARD("") LR_FORCE_INLINE int64_t sizeAdjusted() const {
 			int64_t res = 1;
-			for (int64_t i = 0; i < m_dims; ++i) res *= m_dataAdjusted[i];
+			for (int64_t i = 0; i < m_dims; ++i) res *= adjusted(i);
 			return res;
 		}
 
@@ -236,25 +224,17 @@ namespace librapid {
 			return m_data[index];
 		}
 
-		const T &adjusted(int64_t index) const {
+		T adjusted(int64_t index) const {
 			LR_ASSERT(index >= 0 && index < m_dims,
 					  "Index {} is out of range for Extent with {} dimensions",
 					  index,
 					  m_dims);
-			return m_dataAdjusted[index];
+			return roundUpTo(m_data[index], Align);
 		}
 
-		T &adjusted(int64_t index) {
-			LR_ASSERT(index >= 0 && index < m_dims,
-					  "Index {} is out of range for Extent with {} dimensions",
-					  index,
-					  m_dims);
-			return m_dataAdjusted[index];
-		}
-
-		template<typename T_, int64_t d_>
+		template<typename T_, int64_t d_, int64_t a_>
 		LR_NODISCARD("")
-		bool operator==(const ExtentType<T_, d_> &other) const {
+		bool operator==(const ExtentType<T_, d_, a_> &other) const {
 			if (m_dims != other.m_dims) return false;
 			for (int64_t i = 0; i < m_dims; ++i)
 				if (m_data[i] != other.m_data[i]) return false;
@@ -277,7 +257,7 @@ namespace librapid {
 					  str());
 
 			int64_t extentProd = 1;
-			for (int64_t i = index + 1; i < m_dims; ++i) extentProd *= m_data[i];
+			for (int64_t i = index + 1; i < m_dims; ++i) extentProd *= adjusted(i);
 			return extentProd * first;
 		}
 
@@ -290,40 +270,39 @@ namespace librapid {
 					  str());
 
 			int64_t extentProd = 1;
-			for (int64_t i = index + 1; i < m_dims; ++i) extentProd *= m_data[i];
+			for (int64_t i = index + 1; i < m_dims; ++i) extentProd *= adjusted(i);
 			return extentProd * first + indexImpl(index + 1, others...);
 		}
 
 		template<typename First>
 		T indexImplAdjusted(T index, First first) const {
-			LR_ASSERT(first >= 0 && first < m_dataAdjusted[index],
+			LR_ASSERT(first >= 0 && first < adjusted(index),
 					  "Index {} is out of range for dimension {} of an Array with {}",
 					  first,
 					  index,
 					  str());
 
 			int64_t extentProd = 1;
-			for (int64_t i = index + 1; i < m_dims; ++i) extentProd *= m_dataAdjusted[i];
+			for (int64_t i = index + 1; i < m_dims; ++i) extentProd *= adjusted(i);
 			return extentProd * first;
 		}
 
 		template<typename First, typename... Other>
 		T indexImplAdjusted(T index, First first, Other... others) const {
-			LR_ASSERT(first >= 0 && first < m_dataAdjusted[index],
+			LR_ASSERT(first >= 0 && first < adjusted(index),
 					  "Index {} is out of range for dimension {} of an Array with {}",
 					  first,
 					  index,
 					  str());
 
 			int64_t extentProd = 1;
-			for (int64_t i = index + 1; i < m_dims; ++i) extentProd *= m_dataAdjusted[i];
+			for (int64_t i = index + 1; i < m_dims; ++i) extentProd *= adjusted(i);
 			return extentProd * first + indexImpl(index + 1, others...);
 		}
 
 	private:
 		T m_dims = -1;
 		T m_data[maxDims] {};
-		T m_dataAdjusted[maxDims] {align};
 	};
 
 	using Extent = ExtentType<int64_t, 32>;
