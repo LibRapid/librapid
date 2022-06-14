@@ -306,6 +306,7 @@ namespace librapid {
 	template<typename T1 = double, typename T2 = double>
 	auto roundUpTo(T1 num, T2 val) {
 		auto rem = mod(num, val);
+		if (rem == 0) return num;
 		return (num + val) - rem;
 	}
 

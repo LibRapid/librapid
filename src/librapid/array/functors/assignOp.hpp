@@ -22,9 +22,11 @@ namespace librapid::functors {
 			  is_same_v<typename internal::traits<Derived>::Device, device::CPU>;
 			constexpr bool srcIsHost =
 			  is_same_v<typename internal::traits<OtherDerived>::Device, device::CPU>;
-			using Scalar	 = typename internal::traits<Derived>::Scalar;
-			using BaseScalar = typename internal::traits<Derived>::BaseScalar;
-			using Packet	 = typename internal::traits<Scalar>::Packet;
+			using Scalar				   = typename internal::traits<Derived>::Scalar;
+			using BaseScalar			   = typename internal::traits<Derived>::BaseScalar;
+			using Packet				   = typename internal::traits<Scalar>::Packet;
+			static constexpr int64_t Flags = internal::traits<OtherDerived>::Flags;
+			constexpr bool isMatrixOp	   = Flags & internal::flags::Matrix;
 
 #if !defined(LIBRAPID_HAS_CUDA)
 			static_assert(dstIsHost && srcIsHost, "CUDA support was not enabled");
@@ -32,9 +34,10 @@ namespace librapid::functors {
 
 			if constexpr (dstIsHost && srcIsHost) {
 				int64_t packetWidth = internal::traits<Scalar>::PacketWidth;
-				int64_t len			= dst.extent().size();
+				int64_t len			= dst.extent().sizeAdjusted();
 				int64_t alignedLen	= len - (len % packetWidth);
 				if (alignedLen < 0) alignedLen = 0;
+				int64_t processThreads = isMatrixOp ? matrixThreads : numThreads;
 
 				if constexpr (is_same_v<Scalar, bool>) {
 					len += 512;
@@ -46,7 +49,7 @@ namespace librapid::functors {
 				// Only use a Packet type if possible
 				if constexpr (!is_same_v<Packet, std::false_type>) {
 					// Use the entire packet width where possible
-					if (LIBRAPID_OMP_VAL && (numThreads < 2 || len < 500)) {
+					if (LIBRAPID_OMP_VAL && (processThreads < 2 || len < 500)) {
 						for (int64_t i = 0; i < alignedLen; i += packetWidth) {
 							dst.loadFrom(i, src);
 						}
@@ -55,7 +58,7 @@ namespace librapid::functors {
 					else {
 						// Multi-threaded approach
 #	pragma omp parallel for shared(dst, src, alignedLen, packetWidth) default(none)               \
-	  num_threads(numThreads)
+	  num_threads(processThreads)
 						for (int64_t i = 0; i < alignedLen; i += packetWidth) {
 							dst.loadFrom(i, src);
 						}

@@ -120,22 +120,25 @@ namespace librapid {
 	template<typename Derived, typename Device>
 	class ArrayBase {
 	public:
-		using Scalar					= typename internal::traits<Derived>::Scalar;
-		using This						= ArrayBase<Derived, Device>;
-		using Packet					= typename internal::traits<Derived>::Packet;
-		using StorageType				= typename internal::traits<Derived>::StorageType;
+		using Scalar	  = typename internal::traits<Derived>::Scalar;
+		using This		  = ArrayBase<Derived, Device>;
+		using Packet	  = typename internal::traits<Derived>::Packet;
+		using StorageType = typename internal::traits<Derived>::StorageType;
+		using ArrayExtent = ExtentType<int64_t, 32, internal::traits<Scalar>::PacketWidth>;
+		// using ArrayExtent = ExtentType<int64_t, 32, 8>;
 		static constexpr uint64_t Flags = internal::traits<This>::Flags;
 
 		friend Derived;
 
 		ArrayBase() = default;
 
-		template<typename T_, int64_t d_>
-		explicit ArrayBase(const ExtentType<T_, d_> &extent) :
-				m_isScalar(extent.size() == 0), m_extent(extent), m_storage(extent.size()) {}
+		template<typename T_, int64_t d_, int64_t a_>
+		explicit ArrayBase(const ExtentType<T_, d_, a_> &extent) :
+				m_isScalar(extent.size() == 0), m_extent(extent), m_storage(extent.sizeAdjusted()) {
+		}
 
-		template<typename T_, int64_t d_>
-		explicit ArrayBase(const ExtentType<T_, d_> &extent, int) :
+		template<typename T_, int64_t d_, int64_t a_>
+		explicit ArrayBase(const ExtentType<T_, d_, a_> &extent, int) :
 				m_isScalar(extent.size() == 0), m_extent(extent) {}
 
 		template<typename OtherDerived>
@@ -174,8 +177,8 @@ namespace librapid {
 		IMPL_UNOP(operator~, BitwiseNot)
 		IMPL_UNOP(operator!, UnaryNot)
 
-		template<typename T = int64_t, int64_t d = 32>
-		auto transposed(const ExtentType<T, d> &order_ = {}) const {
+		template<typename T_ = int64_t, int64_t d_ = 32, int64_t a_ = 1>
+		auto transposed(const ExtentType<T_, d_, a_> &order_ = {}) const {
 			using RetType = unop::CWiseUnop<functors::matrix::Transpose<Derived>, Derived>;
 			static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
 			static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;
@@ -183,10 +186,10 @@ namespace librapid {
 			static_assert(!(Required & ~(Flags & Required)),
 						  "Scalar type is incompatible with Functor");
 
-			ExtentType<int64_t, 32> order;
+			ArrayExtent order;
 			if (order_.dims() == -1) {
 				// Default order is to reverse all indices
-				order = ExtentType<int64_t, 32>::zero(m_extent.dims());
+				order = ArrayExtent::zero(m_extent.dims());
 				for (int64_t i = 0; i < m_extent.dims(); ++i) {
 					order[m_extent.dims() - i - 1] = i;
 				}
@@ -206,7 +209,7 @@ namespace librapid {
 
 		template<typename OtherDerived>
 		LR_FORCE_INLINE void loadFrom(int64_t index, const OtherDerived &other) {
-			LR_ASSERT(index >= 0 && index < m_extent.size(),
+			LR_ASSERT(index >= 0 && index < m_extent.sizeAdjusted(),
 					  "Index {} is out of range for Array with extent {}",
 					  index,
 					  m_extent.str());
@@ -215,7 +218,7 @@ namespace librapid {
 
 		template<typename ScalarType>
 		LR_FORCE_INLINE void loadFromScalar(int64_t index, const ScalarType &other) {
-			LR_ASSERT(index >= 0 && index < m_extent.size(),
+			LR_ASSERT(index >= 0 && index < m_extent.sizeAdjusted(),
 					  "Index {} is out of range for Array with extent {}",
 					  index,
 					  m_extent.str());
@@ -225,8 +228,8 @@ namespace librapid {
 		LR_FORCE_INLINE Derived &assign(const Scalar &other) {
 			// Construct if necessary
 			if (!m_storage) {
-				m_extent   = Extent(1);
-				m_storage  = StorageType(m_extent.size());
+				m_extent   = ArrayExtent(1);
+				m_storage  = StorageType(m_extent.sizeAdjusted());
 				m_isScalar = true;
 			}
 
@@ -240,7 +243,7 @@ namespace librapid {
 			// Construct if necessary
 			if (!m_storage) {
 				m_extent  = other.extent();
-				m_storage = StorageType(m_extent.size());
+				m_storage = StorageType(m_extent.sizeAdjusted());
 			}
 
 			LR_ASSERT(m_extent == other.extent(),
@@ -294,12 +297,12 @@ namespace librapid {
 		LR_NODISCARD("") bool isScalar() const { return m_isScalar; }
 		LR_NODISCARD("") const StorageType &storage() const { return m_storage; }
 		LR_NODISCARD("") StorageType &storage() { return m_storage; }
-		LR_NODISCARD("") ExtentType<int64_t, 32> extent() const { return m_extent; }
-		LR_NODISCARD("") ExtentType<int64_t, 32> &extent() { return m_extent; }
+		LR_NODISCARD("") ArrayExtent extent() const { return m_extent; }
+		LR_NODISCARD("") ArrayExtent &extent() { return m_extent; }
 
 	private:
 		bool m_isScalar = false;
-		ExtentType<int64_t, 32> m_extent;
+		ArrayExtent m_extent;
 		StorageType m_storage;
 	};
 

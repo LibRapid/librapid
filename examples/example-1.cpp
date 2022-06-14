@@ -23,8 +23,18 @@ int main() {
 	auto row = myArr[0];
 	fmt::print("{}\n", row);
 
+	/*
+	 At this point in time, this won't work because 'transposed()' has been altered to return a
+	 lazy-evaluation object, which do not yet support indexing. This is a work-in-progress and
+	 will probably be implemented relatively soon.
+
 	fmt::print("\nGetting a single column of the matrix\n");
 	auto col = myArr.transposed()[0];
+	fmt::print("{}\n", col);
+	 */
+
+	fmt::print("\nGetting a single column of the matrix\n");
+	auto col = myArr.transposed().eval()[0];
 	fmt::print("{}\n", col);
 
 	fmt::print("\nAdding two arrays together:\n");

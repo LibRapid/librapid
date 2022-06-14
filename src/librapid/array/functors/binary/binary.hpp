@@ -13,16 +13,16 @@ namespace librapid { namespace functors { namespace binary {
 		using RetType				   = std::false_type;
 		static constexpr int64_t Flags = 0;
 
-		template<typename T, int64_t d>
+		template<typename T, int64_t d, int64_t a>
 		LR_NODISCARD("")
-		ExtentType<T, d> genExtent(const ExtentType<T, d> &lhs, const ExtentType<T, d> &rhs) const {
+		ExtentType<T, d> genExtent(const ExtentType<T, d, a> &lhs, const ExtentType<T, d, a> &rhs) const {
 			return lhs;
 		}
 
 		// For a scalar operation
-		template<typename T, int64_t d>
+		template<typename T, int64_t d, int64_t a>
 		LR_NODISCARD("")
-		ExtentType<T, d> genExtent(const ExtentType<T, d> &generic) const {
+		ExtentType<T, d> genExtent(const ExtentType<T, d, a> &generic) const {
 			return generic;
 		}
 	};
