@@ -282,11 +282,11 @@ namespace librapid {
 	auto round(T num, int64_t dp, int8_t mode = roundMode::MATH) {
 		using Scalar = typename internal::traits<T>::Scalar;
 
-		const Scalar alpha = pow10<T>(dp);
-		const Scalar beta  = pow10<T>(-dp);
-		const Scalar absx  = abs(num * alpha);
-		Scalar y		   = floor(absx);
-		Scalar diff		   = absx - y;
+		const Scalar alpha	= pow10<T>(dp);
+		const Scalar beta	= pow10<T>(-dp);
+		const Scalar absNum = abs(num * alpha);
+		Scalar y			= floor(absNum);
+		Scalar diff			= absNum - y;
 		if (mode & (1 << 0) && diff >= 0.5) y += 1;
 		if (mode & (1 << 2)) {
 			auto integer	 = (uint64_t)y;
@@ -297,14 +297,14 @@ namespace librapid {
 	}
 
 	template<typename T1 = double, typename T2 = double>
-	auto roundTo(T1 num, T2 val) {
+	typename std::common_type_t<T1, T2> roundTo(T1 num, T2 val) {
 		auto rem = mod(num, val);
 		if (rem >= val / 2) return (num + val) - rem;
 		return num - rem;
 	}
 
 	template<typename T1 = double, typename T2 = double>
-	auto roundUpTo(T1 num, T2 val) {
+	typename std::common_type_t<T1, T2> roundUpTo(T1 num, T2 val) {
 		auto rem = mod(num, val);
 		if (rem == 0) return num;
 		return (num + val) - rem;
