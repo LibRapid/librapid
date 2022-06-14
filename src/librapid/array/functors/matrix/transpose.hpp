@@ -9,13 +9,12 @@ namespace librapid::functors::matrix {
 	template<typename Type_>
 	class Transpose {
 	public:
-		using Type					   = Type_;
-		using Scalar				   = typename internal::traits<Type_>::Scalar;
-		using RetType				   = Scalar;
-		using Packet				   = typename internal::traits<Scalar>::Packet;
-		static constexpr int64_t Flags = internal::flags::Matrix | internal::flags::Unary |
-										 internal::flags::HasCustomEval |
-										 internal::flags::RequireInput;
+		using Type	  = Type_;
+		using Scalar  = typename internal::traits<Type_>::Scalar;
+		using RetType = Scalar;
+		using Packet  = typename internal::traits<Scalar>::Packet;
+		static constexpr int64_t Flags =
+		  internal::flags::Matrix | internal::flags::Unary | internal::flags::RequireInput;
 
 		Transpose() = default;
 
@@ -54,7 +53,7 @@ namespace librapid::functors::matrix {
 			auto extent	   = other.extent();
 			auto swivelled = extent.reverseIndexAdjusted(index).swivel(m_order);
 			auto first	   = extent.indexAdjusted(swivelled);
-			auto stride = extent.strideAdjusted();
+			auto stride	   = extent.strideAdjusted();
 
 			for (int64_t i = 0; i < internal::traits<Scalar>::PacketWidth; ++i) {
 				buffer[i] = other.scalar(first);
