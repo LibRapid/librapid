@@ -26,7 +26,7 @@ namespace librapid::functors {
 			using BaseScalar			   = typename internal::traits<Derived>::BaseScalar;
 			using Packet				   = typename internal::traits<Scalar>::Packet;
 			static constexpr int64_t Flags = internal::traits<OtherDerived>::Flags;
-			constexpr bool isMatrixOp	   = Flags & internal::flags::Matrix;
+			constexpr bool isMatrixOp	   = (bool) (Flags & internal::flags::Matrix);
 
 #if !defined(LIBRAPID_HAS_CUDA)
 			static_assert(dstIsHost && srcIsHost, "CUDA support was not enabled");
@@ -40,8 +40,8 @@ namespace librapid::functors {
 				int64_t processThreads = isMatrixOp ? matrixThreads : numThreads;
 
 				if constexpr (is_same_v<Scalar, bool>) {
-					len += 512;
-					len /= 512;
+					len += internal::traits<Scalar>::PacketWidth;
+					len /= internal::traits<Scalar>::PacketWidth;
 					packetWidth = 1;
 					alignedLen	= len;
 				}

@@ -60,6 +60,28 @@ namespace librapid {
 				return *this;
 			}
 
+			LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
+				LR_WARN_ONCE(
+				  "Calling operator[] on a lazy-evaluation object forces evaluation every time. "
+				  "Consider using operator() instead");
+
+				auto res = eval();
+				return res[index];
+			}
+
+			template<typename... T>
+			LR_NODISCARD("")
+			auto operator()(T... indices) const {
+				LR_ASSERT((this->m_isScalar && sizeof...(T) == 1) ||
+							sizeof...(T) == Base::extent().dims(),
+						  "Array with {0} dimensions requires {0} access indices. Received {1}",
+						  Base::extent().dims(),
+						  sizeof...(indices));
+
+				int64_t index = Base::isScalar() ? 0 : Base::extent().index(indices...);
+				return scalar(index);
+			}
+
 			LR_NODISCARD("Do not ignore the result of an evaluated calculation")
 			Array<Scalar, Device> eval() const {
 				Array<Scalar, Device> res(m_operation.genExtent(m_value.extent()));
