@@ -717,6 +717,9 @@ namespace librapid { namespace internal {
 			} while (0)
 #	endif // LIBRAPID_MSVC_CXX
 #else
+#	define LR_WARN_ONCE(msg, ...)                                                                 \
+		do {                                                                                       \
+		} while (0)
 #	define LR_STATUS(msg, ...)                                                                    \
 		do {                                                                                       \
 		} while (0)
