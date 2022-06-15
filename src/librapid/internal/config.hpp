@@ -433,6 +433,15 @@ namespace librapid { namespace internal {
 
 #if defined(LIBRAPID_ASSERT)
 
+#	define LR_WARN_ONCE(msg, ...)                                                                 \
+		do {                                                                                       \
+			static bool _alerted = false;                                                          \
+			if (!_alerted) {                                                                       \
+				LR_WARN(msg, __VA_ARGS__);                                                         \
+				_alerted = true;                                                                   \
+			}                                                                                      \
+		} while (false)
+
 #	ifdef LIBRAPID_MSVC_CXX
 #		define LR_STATUS(msg, ...)                                                                \
 			do {                                                                                   \

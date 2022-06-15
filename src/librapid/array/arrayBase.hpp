@@ -197,10 +197,6 @@ namespace librapid {
 			}
 
 			return RetType(derived(), order);
-
-			// auto res = (1 * *this).eval();
-			// res.transpose(order);
-			// return res;
 		}
 
 		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
