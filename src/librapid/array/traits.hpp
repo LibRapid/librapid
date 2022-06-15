@@ -82,7 +82,7 @@ namespace librapid { namespace internal {
 		using Scalar						 = bool;
 		using BaseScalar					 = uint32_t;
 		using StorageType					 = memory::DenseStorage<bool, device::CPU>;
-		using Packet						 = Vc::Vector<BaseScalar>; // vcl::Vec512b;
+		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
 		static constexpr char Name[]		 = "bool";

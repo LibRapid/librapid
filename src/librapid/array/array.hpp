@@ -89,7 +89,7 @@ namespace librapid {
 			int64_t memIndex = this->m_isScalar ? 0 : Base::extent().indexAdjusted(index);
 			Array<Scalar, Device> res;
 			res.m_extent   = Base::extent().partial(1);
-			res.m_isScalar = res.m_extent.dims() == 0;
+			res.m_isScalar = Base::extent().dims() == 1;
 			res.m_storage  = Base::storage();
 			res.m_storage.offsetMemory(memIndex);
 
@@ -147,8 +147,9 @@ namespace librapid {
 		}
 
 		LR_FORCE_INLINE void writePacket(int64_t index, const Packet &p) {
-			LR_ASSERT(
-			  index >= 0 && index < Base::extent().sizeAdjusted(), "Index {} is out of range", index);
+			LR_ASSERT(index >= 0 && index < Base::extent().sizeAdjusted(),
+					  "Index {} is out of range",
+					  index);
 			p.store(Base::storage().heap() + index);
 		}
 
