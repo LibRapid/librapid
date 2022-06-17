@@ -27,7 +27,7 @@ jobs:
           ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Set Up WSL
-        uses: Vampire/setup-wsl@v1.2.0
+        uses: Vampire/setup-wsl@v1.2.1
 
       - name: Set Up Miniconda
         uses: conda-incubator/setup-miniconda@v2.1.1
