@@ -16,32 +16,38 @@ find_package(CUDAToolkit QUIET)
 find_package(BLAS QUIET)
 find_package(OpenMP)
 
-# {fmt} might fail to compile when building for python if this is not set
-if (${SKBUILD})
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-endif ()
-
-if (${SKBUILD})
-    # Ensure PyBind11 is accessible
-    add_subdirectory("src/librapid/vendor/pybind11")
-endif ()
-
 option(USE_BLAS "Attempt to use a BLAS library" ON)
 option(USE_CUDA "Attempt to use CUDA" ON)
 option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 
+set(LIBRAPID_SOURCES "")
+
+# {fmt} might fail to compile when building for python if this is not set
 if (${SKBUILD})
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+    # Ensure PyBind11 is accessible
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/pybind11")
+
     set(module_name "_librapid")
     pybind11_add_module(
             ${module_name} MODULE
-            "src/librapid/pybind_librapid.cpp"
+            "python/librapidPythonInterface.cpp"
     )
 
     # add_compile_definitions(LIBRAPID_PYTHON)
     target_compile_definitions(${module_name} INTERFACE LIBRAPID_PYTHON)
 else ()
     set(module_name "librapid")
-    add_library(${module_name} INTERFACE)
+    if (LIBRAPID_SOURCES)
+        add_library(${module_name} STATIC)
+    else ()
+        add_library(${module_name} INTERFACE)
+    endif ()
+endif ()
+
+if (LIBRAPID_SOURCES)
+    target_sources(${module_name} PUBLIC ${LIBRAPID_SOURCES})
 endif ()
 
 # See if OpenMP should be linked against
@@ -141,7 +147,7 @@ if (${BLAS_FOUND})
             get_filename_component(lib_name ${LIBRAPID_BLAS} NAME)
             # message(STATUS "Found library file ${lib_name}")
             configure_file(${LIBRAPID_BLAS} "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${lib_name}" COPYONLY)
-        endif()
+        endif ()
 
         # Copy binary files if on Windows
         if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
@@ -230,19 +236,19 @@ if (${CUDAToolkit_FOUND})
     endif ()
 endif ()
 
+# Add dependencies
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/fmt")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/Vc")
+
 if (${SKBUILD})
+    target_link_libraries(${module_name} PUBLIC fmt scn Vc)
+    target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
     install(TARGETS ${module_name} DESTINATION .)
 else ()
-    target_include_directories(librapid INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR})
+    target_link_libraries(${module_name} INTERFACE fmt scn Vc)
+    target_include_directories(${module_name} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
 endif ()
-
-# Add dependencies
-add_subdirectory(src/librapid/vendor/fmt)
-add_subdirectory(src/librapid/vendor/scnlib)
-add_subdirectory(src/librapid/vendor/Vc)
-
-target_link_libraries(librapid INTERFACE fmt scn Vc)
 
 message(STATUS "Building LibRapid Examples")
 add_subdirectory(examples)
-

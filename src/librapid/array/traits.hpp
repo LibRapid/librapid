@@ -4,7 +4,7 @@
 #include "../internal/forward.hpp"
 #include "../internal/memUtils.hpp"
 
-namespace librapid { namespace internal {
+namespace librapid::internal {
 	namespace flags {
 		/**
 		 * Flag Configuration:
@@ -98,10 +98,9 @@ namespace librapid { namespace internal {
 		using Scalar						 = int8_t;
 		using BaseScalar					 = int8_t;
 		using StorageType					 = memory::DenseStorage<int8_t, device::CPU>;
-		using Packet						 = Vc::Vector<BaseScalar>; // vcl::Vec64c;
+		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		;
 		static constexpr char Name[]	= "int8_t";
 		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
@@ -116,10 +115,9 @@ namespace librapid { namespace internal {
 		using Scalar						 = uint8_t;
 		using BaseScalar					 = uint8_t;
 		using StorageType					 = memory::DenseStorage<uint8_t>;
-		using Packet						 = Vc::Vector<BaseScalar>; // vcl::Vec64uc;
+		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		;
 		static constexpr char Name[]	= "uint8_t";
 		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
@@ -134,10 +132,9 @@ namespace librapid { namespace internal {
 		using Scalar						 = int16_t;
 		using BaseScalar					 = int16_t;
 		using StorageType					 = memory::DenseStorage<int16_t>;
-		using Packet						 = Vc::Vector<BaseScalar>; // vcl::Vec32s;
+		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		;
 		static constexpr char Name[]	= "int16_t";
 		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
@@ -152,10 +149,9 @@ namespace librapid { namespace internal {
 		using Scalar						 = uint16_t;
 		using BaseScalar					 = uint16_t;
 		using StorageType					 = memory::DenseStorage<uint16_t>;
-		using Packet						 = Vc::Vector<BaseScalar>; // vcl::Vec32us;
+		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		;
 		static constexpr char Name[]	= "uint16_t";
 		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
@@ -170,10 +166,9 @@ namespace librapid { namespace internal {
 		using Scalar						 = int32_t;
 		using BaseScalar					 = int32_t;
 		using StorageType					 = memory::DenseStorage<int32_t>;
-		using Packet						 = Vc::Vector<BaseScalar>; // vcl::Vec8i;
+		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		;
 		static constexpr char Name[]	= "int32_t";
 		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
@@ -188,10 +183,9 @@ namespace librapid { namespace internal {
 		using Scalar						 = uint32_t;
 		using BaseScalar					 = uint32_t;
 		using StorageType					 = memory::DenseStorage<uint32_t>;
-		using Packet						 = Vc::Vector<BaseScalar>; // vcl::Vec8ui;
+		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		;
 		static constexpr char Name[]	= "uint32_t";
 		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
@@ -206,10 +200,9 @@ namespace librapid { namespace internal {
 		using Scalar						 = int64_t;
 		using BaseScalar					 = int64_t;
 		using StorageType					 = memory::DenseStorage<int64_t>;
-		using Packet						 = Vc::Vector<BaseScalar>; // vcl::Vec8q;
+		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		;
 		static constexpr char Name[]	= "int64_t";
 		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
@@ -224,10 +217,9 @@ namespace librapid { namespace internal {
 		using Scalar						 = uint64_t;
 		using BaseScalar					 = uint64_t;
 		using StorageType					 = memory::DenseStorage<uint64_t>;
-		using Packet						 = Vc::Vector<BaseScalar>; // vcl::Vec8uq;
+		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		;
 		static constexpr char Name[]	= "uint64_t";
 		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
@@ -242,10 +234,9 @@ namespace librapid { namespace internal {
 		using Scalar						 = float;
 		using BaseScalar					 = float;
 		using StorageType					 = memory::DenseStorage<float>;
-		using Packet						 = Vc::Vector<BaseScalar>; // vcl::Vec16f;
+		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		;
 		static constexpr char Name[]	= "float";
 		static constexpr uint64_t Flags = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
@@ -259,10 +250,9 @@ namespace librapid { namespace internal {
 		using Scalar						 = double;
 		using BaseScalar					 = double;
 		using StorageType					 = memory::DenseStorage<double>;
-		using Packet						 = Vc::Vector<BaseScalar>; // vcl::Vec8d;
+		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		;
 		static constexpr char Name[]	= "double";
 		static constexpr uint64_t Flags = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
@@ -284,4 +274,4 @@ namespace librapid { namespace internal {
 
 	template<typename T>
 	using StripQualifiers = typename std::remove_cv_t<typename std::remove_reference_t<T>>;
-}} // namespace librapid::internal
+} // namespace librapid::internal

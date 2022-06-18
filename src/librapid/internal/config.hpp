@@ -887,10 +887,10 @@ static const char *getCublasErrorEnum_(cublasStatus_t error) {
 
 #endif // LIBRAPID_HAS_CUDA
 
-namespace librapid { namespace device {
+namespace librapid::device {
 	struct CPU {};
 	struct GPU {};
-}} // namespace librapid::device
+} // namespace librapid::device
 
 // User Config Variables
 
@@ -898,13 +898,15 @@ namespace librapid {
 #ifdef LIBRAPID_HAS_OMP
 	static unsigned int numThreads	  = 8;
 	static unsigned int matrixThreads = 8;
+	static unsigned int threadThreshold = 2500;
 #else
 	static unsigned int numThreads	  = 1;
 	static unsigned int matrixThreads = 1;
+	static unsigned int threadThreshold = 0;
 #endif
 	static bool throwOnAssert					= false;
 	static std::vector<std::string> cudaHeaders = {};
-	static std::vector<std::string> nvccOptions = {};
+	static std::vector<std::string> nvccOptions = {"--device-int128"};
 } // namespace librapid
 
 // Prefer using the GPU over the CPU -- promote arrays to the GPU where possible

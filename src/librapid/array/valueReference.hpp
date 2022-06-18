@@ -110,11 +110,11 @@ namespace librapid {
 			LR_NODISCARD("")
 			LR_INLINE operator Type() const {
 				if constexpr (std::is_same<d, device::CPU>::value) {
-					return *m_value;
+					return (Type) *m_value;
 				} else {
 					T res;
 					memcpy<T, device::CPU, T, d>(&res, m_value, 1);
-					return res;
+					return (Type) res;
 				}
 			}
 
@@ -279,7 +279,7 @@ struct fmt::formatter<librapid::memory::ValueReference<T, d>> {
 
 	template<typename FormatContext>
 	auto format(const librapid::memory::ValueReference<T, d> &val, FormatContext &ctx) {
-		return fmt::format_to(ctx.out(), fmt::format("{}", (T)val));
+		return fmt::format_to(ctx.out(), fmt::format("{}", val.get()));
 	}
 };
 #endif // FMT_API

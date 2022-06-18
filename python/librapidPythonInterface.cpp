@@ -1,4 +1,4 @@
-#include <librapid/librapid.hpp>
+#include "../src/librapid/librapid.hpp"
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>

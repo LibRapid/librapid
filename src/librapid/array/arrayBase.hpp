@@ -66,7 +66,7 @@
 		using Scalar	= typename internal::traits<Derived>::Scalar;                              \
 		using ResDevice = Device;                                                                  \
 		using RetType =                                                                            \
-		  binop::CWiseBinop<functors::binary::TYPE<Scalar, OtherScalar>, OtherScalar, Derived>;    \
+		  binop::CWiseBinop<functors::binary::TYPE<OtherScalar, Scalar>, OtherScalar, Derived>;    \
 		static constexpr uint64_t Flags	   = internal::traits<OtherScalar>::Flags;                 \
 		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
                                                                                                    \
