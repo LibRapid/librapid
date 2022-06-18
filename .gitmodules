@@ -10,3 +10,6 @@
 [submodule "src/librapid/vendor/scnlib"] # {scnlib} module for fast reverse formatting and IO
 	path = src/librapid/vendor/scnlib
 	url = https://github.com/eliaskosunen/scnlib.git
+[submodule "src/librapid/vendor/pybind11"]
+	path = src/librapid/vendor/pybind11
+	url = https://github.com/pybind/pybind11.git

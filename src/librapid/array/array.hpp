@@ -43,7 +43,8 @@ namespace librapid {
 		template<typename T, int64_t d, int64_t a_>
 		explicit Array(const ExtentType<T, d, a_> &extent) : Base(extent) {}
 
-		template<typename OtherDerived>
+		template<typename OtherDerived,
+				 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>
 		Array(const OtherDerived &other) : Base(other.extent()) {
 			Base::assign(other);
 		}
@@ -276,7 +277,7 @@ namespace librapid {
 						res += "... ";
 					}
 
-					Scalar val			  = this->operator()(i);
+					Scalar val			  = (Scalar) this->operator()(i);
 					std::string formatted = fmt::format(format, val);
 					auto findIter		  = std::find(formatted.begin(), formatted.end(), '.');
 					int64_t pointPos	  = findIter - formatted.begin();

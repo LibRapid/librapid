@@ -2,7 +2,7 @@
 
 #include "binary.hpp"
 
-namespace librapid { namespace functors { namespace binary {
+namespace librapid::functors::binary {
 	template<typename LHS, typename RHS>
 	class ScalarSum : public ScalarOp<LHS, RHS> {
 	public:
@@ -138,4 +138,4 @@ namespace librapid { namespace functors { namespace binary {
 
 	private:
 	};
-} } } // namespace librapid::functors::binary
+} // namespace librapid::functors::binary

@@ -144,9 +144,6 @@ namespace librapid {
 
 			template<typename T>
 			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
-				// std::string leftKernel	= m_lhs.genKernel(vec, index);
-				// std::string rightKernel = m_rhs.genKernel(vec, index);
-
 				std::string leftKernel, rightKernel;
 
 				if constexpr (LhsIsScalar && RhsIsScalar) {
