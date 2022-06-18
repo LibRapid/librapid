@@ -55,13 +55,14 @@ namespace librapid::functors::matrix {
 			auto swivelled = extent.reverseIndexAdjusted(index).swivel(m_order);
 			auto first	   = extent.indexAdjusted(swivelled);
 			auto stride	   = extent.strideAdjusted();
+			auto inc	   = stride[m_order[extent.dims() - 1]];
 
 			if constexpr (std::is_same_v<Scalar, bool>) {
 				LR_ASSERT(false, "Boolean Arrays do not currently support Matrix operations");
 			} else {
 				for (int64_t i = 0; i < internal::traits<BaseScalar>::PacketWidth; ++i) {
 					buffer[i] = other.scalar(first);
-					first += stride[m_order[extent.dims() - 1]];
+					first += inc;
 				}
 			}
 
