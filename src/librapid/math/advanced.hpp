@@ -17,7 +17,7 @@ namespace librapid {
 
 	template<typename LAMBDA>
 	LR_NODISCARD("")
-	LR_INLINEdouble integrate(const LAMBDA &fx, double lower, double upper, double inc = 1e-6) {
+	LR_INLINE double integrate(const LAMBDA &fx, double lower, double upper, double inc = 1e-6) {
 		double sum	= inc * inc; // Small error correction
 		auto blocks = (int64_t)((upper - lower) / inc);
 		for (int64_t i = 0; i < blocks; ++i) {
