@@ -349,14 +349,14 @@
 #	include <Windows.h>
 
 // Construct a class to force ANSI sequences to work
-namespace librapid { namespace internal {
+namespace librapid::internal {
 	class ForceANSI {
 	public:
 		ForceANSI() { system(("chcp " + std::to_string(CP_UTF8)).c_str()); }
 	};
 
 	const auto ansiForcer = ForceANSI();
-}} // namespace librapid::internal
+} // namespace librapid::internal
 #endif
 
 #if defined(LIBRAPID_ASSERT) || defined(LIBRAPID_LOG) || defined(LIBRAPID_DEBUG)
@@ -896,17 +896,29 @@ namespace librapid::device {
 
 namespace librapid {
 #ifdef LIBRAPID_HAS_OMP
-	static unsigned int numThreads	  = 8;
-	static unsigned int matrixThreads = 8;
-	static unsigned int threadThreshold = 2500;
+	static inline unsigned int numThreads	   = 8;
+	static inline unsigned int matrixThreads   = 8;
+	static inline unsigned int threadThreshold = 2500;
 #else
-	static unsigned int numThreads	  = 1;
-	static unsigned int matrixThreads = 1;
+	static unsigned int numThreads		= 1;
+	static unsigned int matrixThreads	= 1;
 	static unsigned int threadThreshold = 0;
 #endif
-	static bool throwOnAssert					= false;
-	static std::vector<std::string> cudaHeaders = {};
-	static std::vector<std::string> nvccOptions = {"--device-int128"};
+	static bool throwOnAssert						   = false;
+	static inline std::vector<std::string> cudaHeaders = {};
+	static inline std::vector<std::string> nvccOptions = {"--device-int128"};
+
+	namespace internal {
+		class SetThreads {
+		public:
+			SetThreads() {
+				numThreads	  = std::thread::hardware_concurrency() * (3. / 4.);
+				matrixThreads = std::thread::hardware_concurrency();
+			}
+		};
+
+		const auto threadSetter = SetThreads();
+	} // namespace internal
 } // namespace librapid
 
 // Prefer using the GPU over the CPU -- promote arrays to the GPU where possible
