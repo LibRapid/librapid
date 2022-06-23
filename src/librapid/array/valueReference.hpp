@@ -21,15 +21,15 @@
 	template<typename Other,                                                                       \
 			 typename T,                                                                           \
 			 typename d,                                                                           \
-			 typename std::enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>               \
-	auto NAME(const Other &other, const ValueReference<T, d> &val) {                               \
+			 typename std::enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>          \
+	LR_INLINE auto NAME(const Other &other, const ValueReference<T, d> &val) {                     \
 		return other OP((T)val);                                                                   \
 	}                                                                                              \
                                                                                                    \
 	template<typename Other,                                                                       \
 			 typename T,                                                                           \
 			 typename d,                                                                           \
-			 typename std::enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>               \
+			 typename std::enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>          \
 	void ASSIGN(Other &other, const ValueReference<T, d> &val) {                                   \
 		other = other OP((T)val);                                                                  \
 	}
@@ -45,8 +45,8 @@
 	template<typename Other,                                                                       \
 			 typename T,                                                                           \
 			 typename d,                                                                           \
-			 typename std::enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>               \
-	auto NAME(const Other &other, const ValueReference<T, d> &val) {                               \
+			 typename std::enable_if_t<!is_same_v<Other, ValueReference<T, d>>, int> = 0>          \
+	LR_INLINE auto NAME(const Other &other, const ValueReference<T, d> &val) {                     \
 		return other OP((T)val);                                                                   \
 	}
 
@@ -110,11 +110,11 @@ namespace librapid {
 			LR_NODISCARD("")
 			LR_INLINE operator Type() const {
 				if constexpr (std::is_same<d, device::CPU>::value) {
-					return (Type) *m_value;
+					return (Type)*m_value;
 				} else {
 					T res;
 					memcpy<T, device::CPU, T, d>(&res, m_value, 1);
-					return (Type) res;
+					return (Type)res;
 				}
 			}
 

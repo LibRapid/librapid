@@ -2,9 +2,9 @@
 
 #include "../../internal/config.hpp"
 
-namespace librapid { namespace detail {
+namespace librapid::detail {
 	template<typename T>
-	std::string kernelFormat(const T &val) {
+	LR_INLINE std::string kernelFormat(const T &val) {
 		return fmt::format("{}", val);
 	}
-} }
+}

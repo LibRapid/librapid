@@ -101,8 +101,8 @@ namespace librapid::internal {
 		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		static constexpr char Name[]	= "int8_t";
-		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
+		static constexpr char Name[]		 = "int8_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 	};
@@ -118,8 +118,8 @@ namespace librapid::internal {
 		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		static constexpr char Name[]	= "uint8_t";
-		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
+		static constexpr char Name[]		 = "uint8_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 	};
@@ -135,8 +135,8 @@ namespace librapid::internal {
 		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		static constexpr char Name[]	= "int16_t";
-		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
+		static constexpr char Name[]		 = "int16_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 	};
@@ -152,8 +152,8 @@ namespace librapid::internal {
 		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		static constexpr char Name[]	= "uint16_t";
-		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
+		static constexpr char Name[]		 = "uint16_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 	};
@@ -169,8 +169,8 @@ namespace librapid::internal {
 		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		static constexpr char Name[]	= "int32_t";
-		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
+		static constexpr char Name[]		 = "int32_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 	};
@@ -186,8 +186,8 @@ namespace librapid::internal {
 		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		static constexpr char Name[]	= "uint32_t";
-		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
+		static constexpr char Name[]		 = "uint32_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 	};
@@ -200,11 +200,11 @@ namespace librapid::internal {
 		using Scalar						 = int64_t;
 		using BaseScalar					 = int64_t;
 		using StorageType					 = memory::DenseStorage<int64_t>;
-		using Packet						 = Vc::Vector<BaseScalar>;
+		using Packet						 = std::false_type; // Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		static constexpr char Name[]	= "int64_t";
-		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
+		static constexpr int64_t PacketWidth = 1; // Vc::Vector<BaseScalar>::size();
+		static constexpr char Name[]		 = "int64_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 	};
@@ -217,11 +217,11 @@ namespace librapid::internal {
 		using Scalar						 = uint64_t;
 		using BaseScalar					 = uint64_t;
 		using StorageType					 = memory::DenseStorage<uint64_t>;
-		using Packet						 = Vc::Vector<BaseScalar>;
+		using Packet						 = std::false_type; // Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		static constexpr char Name[]	= "uint64_t";
-		static constexpr uint64_t Flags = flags::PacketBitwise | flags::ScalarBitwise |
+		static constexpr int64_t PacketWidth = 1; // Vc::Vector<BaseScalar>::size();
+		static constexpr char Name[]		 = "uint64_t";
+		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 	};
@@ -237,8 +237,8 @@ namespace librapid::internal {
 		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		static constexpr char Name[]	= "float";
-		static constexpr uint64_t Flags = flags::PacketArithmetic | flags::ScalarArithmetic |
+		static constexpr char Name[]		 = "float";
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 	};
 
@@ -253,8 +253,8 @@ namespace librapid::internal {
 		using Packet						 = Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
-		static constexpr char Name[]	= "double";
-		static constexpr uint64_t Flags = flags::PacketArithmetic | flags::ScalarArithmetic |
+		static constexpr char Name[]		 = "double";
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 	};
 
