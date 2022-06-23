@@ -7,7 +7,7 @@
 namespace librapid {
 	template<typename LAMBDA>
 	LR_NODISCARD("")
-	double differentiate(const LAMBDA &fx, double x, double h = 1e-5) {
+	LR_INLINE double differentiate(const LAMBDA &fx, double x, double h = 1e-5) {
 		double t1 = fx(x - 2 * h) / 12;
 		double t2 = 2 * fx(x - h) / 3;
 		double t3 = 2 * fx(x + h) / 3;
@@ -17,7 +17,7 @@ namespace librapid {
 
 	template<typename LAMBDA>
 	LR_NODISCARD("")
-	double integrate(const LAMBDA &fx, double lower, double upper, double inc = 1e-6) {
+	LR_INLINEdouble integrate(const LAMBDA &fx, double lower, double upper, double inc = 1e-6) {
 		double sum	= inc * inc; // Small error correction
 		auto blocks = (int64_t)((upper - lower) / inc);
 		for (int64_t i = 0; i < blocks; ++i) {
@@ -32,25 +32,25 @@ namespace librapid {
 	}
 
 	namespace gammaImpl {
-		static int64_t elemsP				   = 8;
-		static std::complex<double> p[] = {676.5203681218851,
-												  -1259.1392167224028,
-												  771.32342877765313,
-												  -176.61502916214059,
-												  12.507343278686905,
-												  -0.13857109526572012,
-												  9.9843695780195716e-6,
-												  1.5056327351493116e-7};
+		static int64_t elemsP					  = 8;
+		static LR_INLINE std::complex<double> p[] = {676.5203681218851,
+													 -1259.1392167224028,
+													 771.32342877765313,
+													 -176.61502916214059,
+													 12.507343278686905,
+													 -0.13857109526572012,
+													 9.9843695780195716e-6,
+													 1.5056327351493116e-7};
 
 		static double epsilon = 1e-7;
-		LR_NODISCARD("") auto dropImag(const std::complex<double> &z) {
+		LR_NODISCARD("") LR_INLINE auto dropImag(const std::complex<double> &z) {
 			if (abs(z.imag()) < epsilon) std::complex<double>(z.real());
 			return z;
 		}
 
 		template<typename T>
 		LR_NODISCARD("")
-		double gamma(T z_) {
+		LR_INLINE double gamma(T z_) {
 			auto z = std::complex<double>(z_);
 			std::complex<double> y;
 			if (z.real() < 0.5) {
@@ -71,18 +71,18 @@ namespace librapid {
 		}
 	} // namespace gammaImpl
 
-	LR_NODISCARD("") double gamma(double x) {
+	LR_NODISCARD("") LR_INLINE double gamma(double x) {
 		LR_ASSERT(x < 143, "Gamma(x = {}) exceeds 64bit floating point range when x >= 143", x);
 		return gammaImpl::gamma(x);
 	}
 
-	LR_NODISCARD("") double digamma(double z) {
+	LR_NODISCARD("") LR_INLINE double digamma(double z) {
 		double sum = 0;
 		for (int64_t k = 0; k < 7500; ++k) { sum += (z - 1) / ((double)(k + 1) * ((double)k + z)); }
 		return -EULERMASCHERONI + sum;
 	}
 
-	LR_NODISCARD("") double polygamma(int64_t n, double z, int64_t lim = 100) {
+	LR_NODISCARD("") LR_INLINE double polygamma(int64_t n, double z, int64_t lim = 100) {
 		if (n == 0) return digamma(z);
 
 		double t1	= n & 1 ? 1 : -1;
@@ -92,7 +92,7 @@ namespace librapid {
 		return t1 * fact * sum;
 	}
 
-	LR_NODISCARD("") double lambertW(double z) {
+	LR_NODISCARD("") LR_INLINE double lambertW(double z) {
 		/*
 		 * Lambert W function, principal branch.
 		 * See http://en.wikipedia.org/wiki/Lambert_W_function
@@ -148,7 +148,7 @@ namespace librapid {
 		return 0;
 	}
 
-	double invGamma(double x, int64_t prec = 5) {
+	double LR_INLINE invGamma(double x, int64_t prec = 5) {
 		// Run a very coarse calculation to get a guess for the guess
 		double guess = 2;
 		// double tmp	 = gamma(guess);

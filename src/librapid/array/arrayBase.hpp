@@ -62,7 +62,7 @@
 			 typename Device,                                                                      \
 			 typename std::enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
 	LR_NODISCARD("")                                                                               \
-	auto NAME(const OtherScalar &other, const ArrayBase<Derived, Device> &arr) {                   \
+	LR_INLINE auto NAME(const OtherScalar &other, const ArrayBase<Derived, Device> &arr) {         \
 		using Scalar	= typename internal::traits<Derived>::Scalar;                              \
 		using ResDevice = Device;                                                                  \
 		using RetType =                                                                            \
