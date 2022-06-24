@@ -15,6 +15,8 @@
 #include <atomic>
 #include <thread>
 #include <random>
+#include <fstream>
+#include <streambuf>
 
 #if defined(_OPENMP)
 #	include <omp.h>
@@ -355,7 +357,7 @@ namespace librapid::internal {
 		ForceANSI() { system(("chcp " + std::to_string(CP_UTF8)).c_str()); }
 	};
 
-	const auto ansiForcer = ForceANSI();
+	inline const auto ansiForcer = ForceANSI();
 } // namespace librapid::internal
 #endif
 
@@ -904,20 +906,23 @@ namespace librapid {
 	static unsigned int matrixThreads	= 1;
 	static unsigned int threadThreshold = 0;
 #endif
-	static bool throwOnAssert						   = false;
-	static inline std::vector<std::string> cudaHeaders = {};
-	static inline std::vector<std::string> nvccOptions = {"--device-int128"};
+	static inline bool throwOnAssert					 = false;
+	static inline std::vector<std::string> cudaHeaders	 = {};
+	static inline std::vector<std::string> nvccOptions	 = {};
+	static inline std::vector<std::string> customHeaders = {};
 
 	namespace internal {
-		class SetThreads {
+		class PreOptimize {
 		public:
-			SetThreads() {
+			PreOptimize() {
 				numThreads	  = std::thread::hardware_concurrency() * (3. / 4.);
 				matrixThreads = std::thread::hardware_concurrency();
+
+				nvccOptions.emplace_back("--device-int128");
 			}
 		};
 
-		const auto threadSetter = SetThreads();
+		inline const auto optimizer = PreOptimize();
 	} // namespace internal
 } // namespace librapid
 

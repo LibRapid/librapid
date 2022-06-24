@@ -11,6 +11,7 @@
 #include "VERSION.hpp"
 #include "internal/config.hpp"
 #include "modified/modified.hpp"
+#include "cuda/headerLoader.hpp"
 #include "internal/memUtils.hpp"
 #include "utils/time.hpp"
 #include "utils/console.hpp"

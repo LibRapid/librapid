@@ -72,6 +72,8 @@ namespace librapid::functors {
 						}
 					}
 #endif
+				} else {
+					alignedLen = 0;
 				}
 
 				// Ensure the remaining values are filled
@@ -127,32 +129,37 @@ namespace librapid::functors {
 					if (i + 1 < index) varArgs += ", ";
 				}
 
+				std::string headers;
+				for (const auto &header : customHeaders) { headers += fmt::format("#include \"{}\"\n", header); }
+
 				std::string kernel = fmt::format(R"V0G0N(kernelOp
-#include<stdint.h>
+#include <stdint.h>
+
+{0}
 
 __device__
-{4} function({0}) {{
+{1} function({2}) {{
 	return {3};
 }}
 
 __global__
-void applyOp({4} **pointers, int64_t size) {{
+void applyOp({1} **pointers, int64_t size) {{
 	const int64_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
-	{4} *dst = pointers[0];
+	{1} *dst = pointers[0];
 	{5}
 
 	if (kernelIndex < size) {{
-		dst[kernelIndex] = function({2});
+		dst[kernelIndex] = function({6});
 	}}
 }}
 				)V0G0N",
-												 functionArgs,
-												 mainArgs,
-												 indArgs,
-												 microKernel,
-												 scalarName,
-												 varExtractor,
-												 varArgs);
+												 headers,	   // 0
+												 scalarName,   // 1
+												 functionArgs, // 2
+												 microKernel,  // 3
+												 mainArgs,	   // 4
+												 varExtractor, // 5
+												 indArgs);	   // 6
 
 				static jitify::JitCache kernelCache;
 				jitify::Program program = kernelCache.program(kernel, cudaHeaders, nvccOptions);
