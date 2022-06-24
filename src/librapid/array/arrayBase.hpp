@@ -125,7 +125,8 @@ namespace librapid {
 		using This		  = ArrayBase<Derived, Device>;
 		using Packet	  = typename internal::traits<Derived>::Packet;
 		using StorageType = typename internal::traits<Derived>::StorageType;
-		using ArrayExtent = ExtentType<int64_t, 32, internal::traits<Scalar>::PacketWidth>;
+		using ArrayExtent = ExtentType < int64_t, 32,
+			  internal::traits<Scalar>::PacketWidth<4 ? 4 : internal::traits<Scalar>::PacketWidth>;
 		static constexpr uint64_t Flags = internal::traits<This>::Flags;
 
 		friend Derived;
@@ -159,7 +160,9 @@ namespace librapid {
 
 			if constexpr (std::is_same_v<Device, device::CPU>) {
 				return RetType(derived());
-			} else {
+			}
+#if defined(LIBRAPID_HAS_CUDA)
+			else {
 				std::string headers;
 				for (const auto &header : customHeaders) {
 					headers += fmt::format("#include \"{}\"\n", header);
@@ -209,6 +212,11 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 							 .launch(res.storage().heap(), m_storage.heap(), elems));
 				return res;
 			}
+#else
+			else {
+				LR_ASSERT(false, "CUDA support not enabled");
+			}
+#endif
 		}
 
 		template<typename D>
@@ -267,7 +275,45 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				order = order_;
 			}
 
-			return RetType(derived(), order);
+			if constexpr (std::is_same_v<Device, device::CPU>) {
+				return RetType(derived(), order);
+			}
+#if defined(LIBRAPID_HAS_CUDA)
+			else {
+				// Access the handle for the corresponding thread. As CUBLAS handles are not
+				// thread-safe (when in use) we need a separate handle per thread.
+#	if defined(LIBRAPID_HAS_OMP)
+				int64_t threadNum = omp_get_thread_num();
+#	else
+				int64_t threadNum = 0;
+#	endif
+
+				Array<Scalar, Device> res(m_extent.swivel(order));
+
+				if constexpr (std::is_same_v<Scalar, extended::float16_t>) {
+					auto tmp = cast<float>();
+					return tmp.transposed(order).template cast<extended::float16_t>();
+				} else if constexpr (std::is_same_v<Scalar, float>) {
+					float alpha = 1;
+					float beta	= 0;
+					cublasSgeam(memory::cublasHandles[threadNum],
+								CUBLAS_OP_T,
+								CUBLAS_OP_N,
+								m_extent.adjusted(0),
+								m_extent.adjusted(1),
+								&alpha,
+								m_storage.heap(),
+								m_extent.adjusted(1),
+								&beta,
+								nullptr,
+								m_extent.adjusted(1),
+								res.storage().heap(),
+								m_extent.adjusted(0));
+				}
+
+				return res;
+			}
+#endif
 		}
 
 		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
