@@ -20,7 +20,7 @@ option(USE_BLAS "Attempt to use a BLAS library" ON)
 option(USE_CUDA "Attempt to use CUDA" ON)
 option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 
-set(LIBRAPID_SOURCES "")
+set(LIBRAPID_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/cuda/headerLoader.cpp")
 
 # {fmt} might fail to compile when building for python if this is not set
 if (${SKBUILD})
@@ -36,18 +36,10 @@ if (${SKBUILD})
     )
 
     # add_compile_definitions(LIBRAPID_PYTHON)
-    target_compile_definitions(${module_name} INTERFACE LIBRAPID_PYTHON)
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_PYTHON)
 else ()
     set(module_name "librapid")
-    if (LIBRAPID_SOURCES)
-        add_library(${module_name} STATIC)
-    else ()
-        add_library(${module_name} INTERFACE)
-    endif ()
-endif ()
-
-if (LIBRAPID_SOURCES)
-    target_sources(${module_name} PUBLIC ${LIBRAPID_SOURCES})
+    add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
 endif ()
 
 # See if OpenMP should be linked against
@@ -56,11 +48,11 @@ if (${OpenMP_FOUND})
         message(STATUS "Linking against OpenMP")
 
         # Link the required library
-        target_link_libraries(${module_name} INTERFACE OpenMP::OpenMP_CXX)
+        target_link_libraries(${module_name} PUBLIC OpenMP::OpenMP_CXX)
 
         # Add the compile definition so LibRapid knows it has OpenMP
         # add_compile_definitions(LIBRAPID_HAS_OMP)
-        target_compile_definitions(${module_name} INTERFACE LIBRAPID_HAS_OMP)
+        target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_OMP)
     else ()
         message(WARNING "OpenMP was found but is not being linked against (Value <USE_OMP> is " ${USE_OMP} ")")
     endif ()
@@ -172,18 +164,18 @@ if (${BLAS_FOUND})
         endif ()
 
         # Link the required library
-        target_link_libraries(${module_name} INTERFACE
+        target_link_libraries(${module_name} PUBLIC
                 "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${lib_name}"
                 )
 
-        target_include_directories(${module_name} INTERFACE
+        target_include_directories(${module_name} PUBLIC
                 "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas"
                 )
 
         # Add the compile definition so LibRapid knows it has BLAS
         if (${has_cblas})
             # add_compile_definitions(LIBRAPID_HAS_BLAS)
-            target_compile_definitions(${module_name} INTERFACE LIBRAPID_HAS_BLAS)
+            target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
         else ()
             message(WARNING "Although BLAS was found, no cblas.h file was found, so BLAS support is not enabled")
         endif ()
@@ -204,17 +196,17 @@ if (${CUDAToolkit_FOUND})
             message(FATAL_ERROR "Jitify not found. Ensure the full LibRapid GitHub repo is cloned!")
         endif ()
 
-        target_include_directories(${module_name} INTERFACE
+        target_include_directories(${module_name} PUBLIC
                 ${CUDAToolkit_INCLUDE_DIRS}
                 "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/cudahelpers"
                 )
 
-        target_link_directories(${module_name} INTERFACE
+        target_link_directories(${module_name} PUBLIC
                 ${CUDA_LIBRARIES}
                 ${CUDA_CUBLAS_LIBRARIES}
                 )
 
-        target_link_libraries(${module_name} INTERFACE
+        target_link_libraries(${module_name} PUBLIC
                 CUDA::cudart
                 CUDA::cuda_driver
                 CUDA::nvrtc
@@ -227,10 +219,10 @@ if (${CUDAToolkit_FOUND})
                 Dbghelp
                 )
 
-        target_compile_definitions(${module_name} INTERFACE LIBRAPID_HAS_CUDA)
-        target_compile_definitions(${module_name} INTERFACE LIBRAPID_CUDA_STREAM)
+        target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_CUDA)
+        target_compile_definitions(${module_name} PUBLIC LIBRAPID_CUDA_STREAM)
         message(STATUS "CUDA include directories: ${CUDAToolkit_INCLUDE_DIRS}")
-        target_compile_definitions(${module_name} INTERFACE CUDA_INCLUDE_DIRS="${CUDAToolkit_INCLUDE_DIRS}")
+        target_compile_definitions(${module_name} PUBLIC CUDA_INCLUDE_DIRS="${CUDAToolkit_INCLUDE_DIRS}")
     else ()
         message(WARNING "CUDA was found but is not being linked against (Value <USE_CUDA> is " ${USE_CUDA} ")")
     endif ()
@@ -246,8 +238,8 @@ if (${SKBUILD})
     target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
     install(TARGETS ${module_name} DESTINATION .)
 else ()
-    target_link_libraries(${module_name} INTERFACE fmt scn Vc)
-    target_include_directories(${module_name} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
+    target_link_libraries(${module_name} PUBLIC fmt scn Vc)
+    target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
 endif ()
 
 message(STATUS "Building LibRapid Examples")

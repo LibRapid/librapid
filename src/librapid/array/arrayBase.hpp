@@ -3,6 +3,7 @@
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
 #include "helpers/extent.hpp"
+#include "helpers/extendedTypes.hpp"
 #include "traits.hpp"
 #include "functors/functors.hpp"
 #include "cast.hpp"
@@ -155,7 +156,77 @@ namespace librapid {
 		LR_FORCE_INLINE auto cast() const {
 			using ScalarType = typename internal::traits<T>::Scalar;
 			using RetType	 = unary::Cast<ScalarType, Derived>;
-			return RetType(derived());
+
+			if constexpr (std::is_same_v<Device, device::CPU>) {
+				return RetType(derived());
+			} else {
+				std::string headers;
+				for (const auto &header : customHeaders) {
+					headers += fmt::format("#include \"{}\"\n", header);
+				}
+
+				std::string kernel = fmt::format(R"V0G0N(castingKernel
+#include <stdint.h>
+
+{0}
+
+__global__
+void castKernel({1} *dst, {2} *src, int64_t size) {{
+	const int64_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
+	if (kernelIndex < size) {{
+		dst[kernelIndex] = ({1}) src[kernelIndex];
+	}}
+}}
+				)V0G0N",
+												 headers,
+												 internal::traits<T>::Name,
+												 internal::traits<Scalar>::Name);
+
+				int64_t elems = m_extent.sizeAdjusted();
+
+				static jitify::JitCache kernelCache;
+				jitify::Program program = kernelCache.program(kernel, cudaHeaders, nvccOptions);
+
+				int64_t threadsPerBlock, blocksPerGrid;
+
+				// Use 1 to 512 threads per block
+				if (elems < 512) {
+					threadsPerBlock = elems;
+					blocksPerGrid	= 1;
+				} else {
+					threadsPerBlock = 512;
+					blocksPerGrid	= ceil(double(elems) / double(threadsPerBlock));
+				}
+
+				dim3 grid(blocksPerGrid);
+				dim3 block(threadsPerBlock);
+
+				Array<T, Device> res(m_extent);
+
+				jitifyCall(program.kernel("castKernel")
+							 .instantiate()
+							 .configure(grid, block, 0, memory::cudaStream)
+							 .launch(res.storage().heap(), m_storage.heap(), elems));
+				return res;
+			}
+		}
+
+		template<typename D>
+		LR_NODISCARD("")
+		LR_FORCE_INLINE auto move() const {
+			Array<Scalar, D> res(m_extent);
+			memory::memcpy<Scalar, D, Scalar, Device>(
+			  res.storage().heap(), m_storage.heap(), m_extent.sizeAdjusted());
+			return res;
+		}
+
+		template<typename T, typename D>
+		LR_NODISCARD("")
+		LR_FORCE_INLINE auto castMove() const {
+			Array<Scalar, D> res(m_extent);
+			memory::memcpy<Scalar, D, Scalar, Device>(
+			  res.storage().heap(), m_storage.heap(), m_extent.sizeAdjusted());
+			return res.template cast<T>();
 		}
 
 		IMPL_BINOP(operator+, ScalarSum)
@@ -277,11 +348,11 @@ namespace librapid {
 			return p;
 		}
 
-		LR_FORCE_INLINE Scalar scalar(int64_t index) const { return m_storage[index]; }
+		LR_FORCE_INLINE Scalar scalar(int64_t index) const { return (Scalar)m_storage[index]; }
 
 		template<typename T>
 		std::string genKernel(std::vector<T> &vec, int64_t &index) const {
-			vec.emplace_back(m_storage.heap());
+			vec.emplace_back((T)m_storage.heap());
 			return fmt::format("arg{}", index++);
 		}
 

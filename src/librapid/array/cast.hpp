@@ -2,6 +2,7 @@
 
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
+#include "helpers/kernelFormat.hpp"
 #include "arrayBase.hpp"
 
 namespace librapid {
@@ -65,6 +66,13 @@ namespace librapid {
 				return Scalar(m_toCast.scalar(index));
 			}
 
+			template<typename T>
+			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
+				fmt::print("Information:\n{}\n", m_toCast.genKernel(vec, index));
+				// std::string kernel = m_toCast.genKernel(vec, index);
+				return fmt::format("(({}) ({}))", internal::traits<Scalar>::Name, 5);
+			}
+
 			LR_NODISCARD("")
 			std::string str(std::string format = "", const std::string &delim = " ",
 							int64_t stripWidth = -1, int64_t beforePoint = -1,
@@ -87,7 +95,7 @@ struct fmt::formatter<librapid::unary::Cast<DST, OtherDerived>> {
 	template<typename ParseContext>
 	constexpr auto parse(ParseContext &ctx) {
 		formatStr = "{:";
-		auto it = ctx.begin();
+		auto it	  = ctx.begin();
 		for (; it != ctx.end(); ++it) {
 			if (*it == '}') break;
 			formatStr += *it;
