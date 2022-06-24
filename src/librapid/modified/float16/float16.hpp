@@ -617,7 +617,7 @@ namespace librapid::extended {
 			return *this;
 		}
 
-		inline float16_t operator--(int) noexcept // f--
+		inline const float16_t operator--(int) noexcept // f--
 		{
 			float16_t ans {*this};
 			*this -= float16_t {static_cast<std::uint16_t>(0x3c00)};
@@ -630,7 +630,7 @@ namespace librapid::extended {
 			return *this;
 		}
 
-		inline float16_t operator++(int) noexcept // f++
+		inline const float16_t operator++(int) noexcept // f++
 		{
 			float16_t ans {*this};
 			*this += float16_t {static_cast<std::uint16_t>(0x3c00)};
@@ -747,15 +747,15 @@ namespace librapid::extended {
 	template<typename CharT, class Traits>
 	std::basic_istream<CharT, Traits> &operator>>(std::basic_istream<CharT, Traits> &is,
 												  float16_t &f) {
-		bool __fail = true;
-		float __v;
+		bool _fail = true;
+		float _v;
 
-		if (is >> __v) {
-			__fail = false;
-			f	   = __v;
+		if (is >> _v) {
+			_fail = false;
+			f	  = _v;
 		}
 
-		if (__fail) is.setstate(std::ios_base::failbit);
+		if (_fail) is.setstate(std::ios_base::failbit);
 
 		return is;
 	}
@@ -921,19 +921,17 @@ namespace librapid::extended {
 
 namespace librapid::suffix {
 	auto operator""_h(long double val) { return extended::float16_t((float)val); }
-}
+} // namespace librapid::suffix
 
 namespace std {
 	template<>
 	struct numeric_limits<librapid::extended::float16_t> {
 		static constexpr bool is_specialized = true;
-		static constexpr librapid::extended::float16_t min() noexcept {
+		static librapid::extended::float16_t min() noexcept {
 			return librapid::extended::fp16_min_positive;
 		}
-		static constexpr librapid::extended::float16_t max() noexcept {
-			return librapid::extended::fp16_max;
-		}
-		static constexpr librapid::extended::float16_t lowest() noexcept {
+		static librapid::extended::float16_t max() noexcept { return librapid::extended::fp16_max; }
+		static librapid::extended::float16_t lowest() noexcept {
 			return librapid::extended::fp16_min;
 		}
 		static constexpr int digits		  = 11;
@@ -943,10 +941,10 @@ namespace std {
 		static constexpr bool is_integer  = false;
 		static constexpr bool is_exact	  = false;
 		static constexpr int radix		  = std::numeric_limits<float>::radix;
-		static constexpr librapid::extended::float16_t epsilon() noexcept {
+		static librapid::extended::float16_t epsilon() noexcept {
 			return librapid::extended::fp16_epsilon;
 		}
-		static constexpr librapid::extended::float16_t round_error() noexcept {
+		static librapid::extended::float16_t round_error() noexcept {
 			return librapid::extended::fp16_half;
 		}
 		static constexpr int min_exponent					= -13;
@@ -958,16 +956,16 @@ namespace std {
 		static constexpr bool has_signaling_NaN				= has_quiet_NaN;
 		static constexpr std::float_denorm_style has_denorm = denorm_present;
 		static constexpr bool has_denorm_loss				= false;
-		static constexpr librapid::extended::float16_t infinity() noexcept {
+		static librapid::extended::float16_t infinity() noexcept {
 			return librapid::extended::fp16_infinity;
 		}
-		static constexpr librapid::extended::float16_t quiet_NaN() noexcept {
+		static librapid::extended::float16_t quiet_NaN() noexcept {
 			return librapid::extended::fp16_nan;
 		}
-		static constexpr librapid::extended::float16_t signaling_NaN() noexcept {
+		static librapid::extended::float16_t signaling_NaN() noexcept {
 			return librapid::extended::fp16_nan;
 		} // TODO: emit signal??
-		static constexpr librapid::extended::float16_t denorm_min() noexcept {
+		static librapid::extended::float16_t denorm_min() noexcept {
 			return librapid::extended::fp16_min_positive_subnormal;
 		}
 		static constexpr bool is_iec559 =

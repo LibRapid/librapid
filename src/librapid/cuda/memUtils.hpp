@@ -7,16 +7,28 @@
 // Memory alignment adapted from
 // https://gist.github.com/dblalock/255e76195676daa5cbc57b9b36d1c99a
 
-namespace librapid { namespace memory {
+namespace librapid::memory {
 	static bool streamCreated = false;
 	static cudaStream_t cudaStream;
+	static constexpr int64_t handleBufferSize = 256 * LIBRAPID_OMP_VAL;
+	static int64_t handleSize				  = handleBufferSize;
+	static cublasHandle_t cublasHandles[handleBufferSize];
 
 	LR_INLINE void initializeCudaStream() {
 #	ifdef LIBRAPID_HAS_CUDA
-		if (!streamCreated) LIBRAPID_UNLIKELY {
-				checkCudaErrors(cudaStreamCreateWithFlags(&cudaStream, cudaStreamNonBlocking));
-				streamCreated = true;
+		if (!streamCreated) {
+			checkCudaErrors(cudaStreamCreateWithFlags(&cudaStream, cudaStreamNonBlocking));
+
+			handleSize = std::thread::hardware_concurrency();
+			for (int64_t i = 0; i < handleSize; ++i) {
+				cublasCreate_v2(&(cublasHandles[i]));
+				cublasSetStream_v2(cublasHandles[i], cudaStream);
 			}
+
+			streamCreated = true;
+
+			loadCustomCudaHeader("cuda_fp16.h", CUDA_INCLUDE_DIRS);
+		}
 #	endif // LIBRAPID_HAS_CUDA
 	}
 
@@ -123,5 +135,5 @@ namespace librapid { namespace memory {
 			}
 		}
 	}
-} } // namespace librapid::memory
+} // namespace librapid::memory
 #endif // LIBRAPID_HAS_CUDA

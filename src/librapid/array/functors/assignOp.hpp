@@ -78,9 +78,19 @@ namespace librapid::functors {
 
 				// Ensure the remaining values are filled
 				int64_t start = alignedLen;
-				for (int64_t i = start < 0 ? 0 : start; i < len; ++i) {
-					dst.loadFromScalar(i, src);
+				if (!multiThread) {
+					for (int64_t i = start < 0 ? 0 : start; i < len; ++i) {
+						dst.loadFromScalar(i, src);
+					}
 				}
+#if defined(LIBRAPID_HAS_OMP)
+				else {
+#	pragma omp parallel for shared(start, len, dst, src) default(none) num_threads(processThreads)
+					for (int64_t i = start < 0 ? 0 : start; i < len; ++i) {
+						dst.loadFromScalar(i, src);
+					}
+				}
+#endif
 			} else {
 #if defined(LIBRAPID_HAS_CUDA)
 				// LR_LOG_STATUS("Size of Type: {}", sizeof(OtherDerived));
@@ -91,8 +101,8 @@ namespace librapid::functors {
 				int64_t elems = src.extent().size();
 
 				if constexpr (is_same_v<Scalar, bool>) {
-					elems += 512;
-					elems /= 512;
+					elems += sizeof(internal::traits<Scalar>::BaseScalar) * 8;
+					elems /= sizeof(internal::traits<Scalar>::BaseScalar) * 8;
 				}
 
 				std::vector<BaseScalar *> arrays = {dst.storage().heap()};
@@ -130,7 +140,9 @@ namespace librapid::functors {
 				}
 
 				std::string headers;
-				for (const auto &header : customHeaders) { headers += fmt::format("#include \"{}\"\n", header); }
+				for (const auto &header : customHeaders) {
+					headers += fmt::format("#include \"{}\"\n", header);
+				}
 
 				std::string kernel = fmt::format(R"V0G0N(kernelOp
 #include <stdint.h>
