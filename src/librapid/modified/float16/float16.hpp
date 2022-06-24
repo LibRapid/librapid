@@ -238,11 +238,11 @@ namespace librapid {
 		constexpr std::uint16_t h_grs_size		   = (0x0003);
 		constexpr std::uint16_t h_snan			   = (0xfe00);
 		constexpr std::uint16_t h_e_mask_minus_one = (0x7bff);
-		const std::uint16_t h_grs_round_carry  = (one << h_grs_size);
-		const std::uint16_t h_grs_round_mask   = (h_grs_round_carry - one);
-		const std::uint16_t x_e				   = (x & h_e_mask);
-		const std::uint16_t y_e				   = (y & h_e_mask);
-		const std::uint16_t is_y_e_larger_msb  = (x_e - y_e);
+		const std::uint16_t h_grs_round_carry	   = (one << h_grs_size);
+		const std::uint16_t h_grs_round_mask	   = (h_grs_round_carry - one);
+		const std::uint16_t x_e					   = (x & h_e_mask);
+		const std::uint16_t y_e					   = (y & h_e_mask);
+		const std::uint16_t is_y_e_larger_msb	   = (x_e - y_e);
 		const std::uint16_t a				  = half_private::_uint16_sels(is_y_e_larger_msb, y, x);
 		const std::uint16_t a_s				  = (a & h_s_mask);
 		const std::uint16_t a_e				  = (a & h_e_mask);
@@ -647,7 +647,7 @@ namespace librapid::extended {
 	}; // struct float16_t
 
 	inline float16_t fp16_infinity {static_cast<std::uint16_t>(0x7c00)};
-	inline float16_t fp16_max {static_cast<std::uint16_t>(0x7bff)};		   // 65504
+	inline float16_t fp16_max {static_cast<std::uint16_t>(0x7bff)};			 // 65504
 	inline float16_t fp16_max_subnormal {static_cast<std::uint16_t>(0x3ff)}; // 0.00006097
 	inline float16_t fp16_min {static_cast<std::uint16_t>(0xfbff)};
 	inline float16_t fp16_min_positive {static_cast<std::uint16_t>(0x400)};
@@ -917,8 +917,11 @@ namespace librapid::extended {
 	  float16_t_private::make_unary_function([](float f) { return std::expint(f); });
 	inline auto riemann_zeta =
 	  float16_t_private::make_unary_function([](float f) { return std::riemann_zeta(f); });
-
 } // namespace librapid::extended
+
+namespace librapid::suffix {
+	auto operator""_h(long double val) { return extended::float16_t((float)val); }
+}
 
 namespace std {
 	template<>

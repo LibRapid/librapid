@@ -161,6 +161,8 @@ void applyOp({1} **pointers, int64_t size) {{
 												 varExtractor, // 5
 												 indArgs);	   // 6
 
+				// fmt::print("Kernel: {}\n", kernel);
+
 				static jitify::JitCache kernelCache;
 				jitify::Program program = kernelCache.program(kernel, cudaHeaders, nvccOptions);
 
