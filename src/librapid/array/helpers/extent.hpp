@@ -163,7 +163,7 @@ namespace librapid {
 			return res;
 		}
 
-		template<typename T_ = T, int64_t d = maxDims, int64_t a = align>
+		template<typename T_ = T, int64_t d = maxDims, int64_t a = align_>
 		LR_NODISCARD("")
 		ExtentType swivel(const ExtentType<T_, d, a> &order) const {
 			LR_ASSERT(
@@ -189,7 +189,7 @@ namespace librapid {
 			return res;
 		}
 
-		template<typename T_ = T, int64_t d = maxDims, int64_t a = align>
+		template<typename T_ = T, int64_t d = maxDims, int64_t a = align_>
 		void swivelInplace(const ExtentType<T_, d, a> &order) {
 			*this = swivel(order);
 		}
