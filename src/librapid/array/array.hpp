@@ -123,39 +123,6 @@ namespace librapid {
 			return Base::storage()[index];
 		}
 
-		template<typename T>
-		T getCustom(const std::string &microKernel = "*res = ({}) *data;") const {
-#if defined(LIBRAPID_HAS_CUDA)
-			const char resName[]  = internal::traits<T>::Name;
-			const char typeName[] = internal::traits<Scalar>::Name;
-
-			std::string kernel = fmt::format(R"V0G0N(
-__global__
-void customCastKernel({} *res, {} *data) {
-	{}
-}
-			)V0G0N",
-											 resName,
-											 typeName,
-											 fmt::format(microKernel, resName));
-
-			static jitify::JitCache kernelCache;
-			jitify::Program program = kernelCache.program(kernel);
-			unsigned int threadsPerBlock = 1, blocksPerGrid = 1;
-
-			dim3 grid(blocksPerGrid);
-			dim3 block(threadsPerBlock);
-
-			using jitify::reflection::Type;
-			jitifyCall(program.kernel("memcpyKernel")
-						 .instantiate(Type<T>(), Type<Scalar>())
-						 .configure(grid, block, 0, cudaStream)
-						 .launch(dst, src, size));
-#else
-			static_assert(false, "getCustom only supports GPU arrays");
-#endif
-		}
-
 		template<typename T = int64_t, int64_t d = 32>
 		void transpose(const ExtentType<T, d> &order_ = {}) {
 			// Transpose inplace

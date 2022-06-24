@@ -887,6 +887,10 @@ static const char *getCublasErrorEnum_(cublasStatus_t error) {
 #	include "../cuda/helper_cuda.h"
 #	include "../cuda/helper_functions.h"
 
+#else
+
+#define CUDA_INCLUDE_DIRS ""
+
 #endif // LIBRAPID_HAS_CUDA
 
 namespace librapid::device {
