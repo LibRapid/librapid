@@ -331,6 +331,29 @@ namespace librapid {
 
 		return (tmp > 0 ? 1 : -1) * (round(tmp, figs - 1) * pow10<T>(n));
 	}
+	
+	template<typename T, typename std::enable_if_t<std::is_floating_point_v<T>, int> = 0>
+	T lerp(T _a, T _b, T _t) {
+		if (std::isnan(_a) || std::isnan(_b) || std::isnan(_t))
+			return std::numeric_limits<T>::quiet_NaN();
+		else if ((_a <= T {0} && _b >= T {0}) || (_a >= T {0} && _b <= T {0}))
+		// ab <= 0 but product could overflow.
+#ifndef FMA
+			return _t * _b + (T {1} - _t) * _a;
+#else
+			return std::fma(_t, __b, (_Float {1} - _t) * __a);
+#endif
+		else if (_t == T {1})
+			return _b;
+		else { // monotonic near t == 1.
+#ifndef FMA
+			const auto _x = _a + _t * (_b - _a);
+#else
+			const auto _x = std::fma(_t, __b - __a, __a);
+#endif
+			return (_t > T {1}) == (_b > _a) ? max(_b, _x) : min(_b, _x);
+		}
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_CORE_MATH
