@@ -69,7 +69,7 @@ namespace librapid {
 
 		Array copy() const {
 			Array res(Base::extent());
-			res = *this * 1;
+			res = *this * (Scalar) 1;
 			return res;
 		}
 
