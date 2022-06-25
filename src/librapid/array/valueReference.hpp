@@ -118,8 +118,8 @@ namespace librapid {
 				}
 			}
 
-			LR_NODISCARD("") T get() const { return *m_value; }
-			void set(T value) { *m_value = value; }
+			LR_NODISCARD("") T get() const { return (float) *this; }
+			void set(T value) { operator=(value); }
 
 			IMPL_BINOP2(operator==, ==);
 			IMPL_BINOP2(operator!=, !=);

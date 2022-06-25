@@ -316,6 +316,35 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 #endif
 		}
 
+		template<typename OtherDerived>
+		auto dot(const OtherDerived &other) const {
+			// Should this always return an evaluated result???
+			using DeviceOther = typename internal::traits<OtherDerived>::Device;
+
+			if constexpr (std::is_same_v<Device, device::CPU> &&
+						  std::is_same_v<DeviceOther, device::GPU>)
+				return move<DeviceOther>().dot(other);
+			else if constexpr (std::is_same_v<Device, device::GPU> &&
+							   std::is_same_v<DeviceOther, device::CPU>)
+				return dot(other.template move<Device>());
+
+			if (m_extent.dims() == 1 && other.m_extent.dims() == 1) {
+				// Vector dot product
+				auto strideThis	 = m_extent.strideAdjusted();
+				auto strideOther = other.extent().strideAdjusted();
+
+				auto res		 = blas::dot<Device>(m_extent.sizeAdjusted(),
+											 m_storage.heap(),
+											 strideThis[0],
+											 other.storage().heap(),
+											 strideOther[0]);
+
+				return Array<Scalar, Device>(res);
+			}
+
+			return Array<Scalar, Device>(0);
+		}
+
 		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
 		auto eval() const { return derived(); }
 

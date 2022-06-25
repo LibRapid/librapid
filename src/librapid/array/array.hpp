@@ -49,6 +49,8 @@ namespace librapid {
 			Base::assign(other);
 		}
 
+		Array(const Scalar &other) : Base(other) {}
+
 		Array &operator=(const Scalar &other) { return Base::assign(other); }
 
 		Array &operator=(const Array<Scalar, Device> &other) { return Base::assign(other); }
@@ -69,13 +71,15 @@ namespace librapid {
 
 		Array copy() const {
 			Array res(Base::extent());
-			res = *this * (Scalar) 1;
+			res = *this * (Scalar)1;
 			return res;
 		}
 
 		auto copyLazy() const { return *this * 1; }
 
 		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
+			LR_ASSERT(!Base::isScalar(), "Cannot subscript a scalar value");
+
 			int64_t memIndex = this->m_isScalar ? 0 : Base::extent().indexAdjusted(index);
 			Array<Scalar, Device> res;
 			res.m_extent   = Base::extent().partial(1);
@@ -87,6 +91,8 @@ namespace librapid {
 		}
 
 		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) {
+			LR_ASSERT(!Base::isScalar(), "Cannot subscript a scalar value");
+
 			int64_t memIndex = this->m_isScalar ? 0 : Base::extent().indexAdjusted(index);
 			Array<Scalar, Device> res;
 			res.m_extent   = Base::extent().partial(1);
@@ -182,7 +188,7 @@ namespace librapid {
 					if (stripWidth != 0 && strip && i == stripWidth && zeroDim > stripWidth * 2)
 						i = zeroDim - stripWidth;
 
-					auto val			  = (Scalar) this->operator()(i);
+					auto val			  = (Scalar)this->operator()(i);
 					std::string formatted = fmt::format(format, val);
 					auto findIter		  = std::find(formatted.begin(), formatted.end(), '.');
 					int64_t pointPos	  = findIter - formatted.begin();

@@ -216,6 +216,11 @@
 #	define LIBRAPID_OMP_VAL 0
 #endif
 
+#if !defined(LIBRAPID_MAX_ALLOWED_THREADS)
+// Maximum number of threads LibRapid can reasonably support by default
+#	define LIBRAPID_MAX_ALLOWED_THREADS 256
+#endif
+
 // Check for 32bit vs 64bit
 // Check windows
 #if _WIN32 || _WIN64
@@ -889,7 +894,7 @@ static const char *getCublasErrorEnum_(cublasStatus_t error) {
 
 #else
 
-#define CUDA_INCLUDE_DIRS ""
+#	define CUDA_INCLUDE_DIRS ""
 
 #endif // LIBRAPID_HAS_CUDA
 
@@ -914,6 +919,7 @@ namespace librapid {
 	static inline std::vector<std::string> cudaHeaders	 = {};
 	static inline std::vector<std::string> nvccOptions	 = {};
 	static inline std::vector<std::string> customHeaders = {};
+	static inline std::string customCudaCode;
 
 	namespace internal {
 		class PreOptimize {
