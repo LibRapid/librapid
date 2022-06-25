@@ -10,7 +10,7 @@
 namespace librapid::memory {
 	static bool streamCreated = false;
 	static cudaStream_t cudaStream;
-	static constexpr int64_t handleBufferSize = 256 * LIBRAPID_OMP_VAL;
+	static constexpr int64_t handleBufferSize = LIBRAPID_MAX_ALLOWED_THREADS * LIBRAPID_OMP_VAL;
 	static int64_t handleSize				  = handleBufferSize;
 	static cublasHandle_t cublasHandles[handleBufferSize];
 
@@ -20,6 +20,34 @@ namespace librapid::memory {
 			checkCudaErrors(cudaStreamCreateWithFlags(&cudaStream, cudaStreamNonBlocking));
 
 			handleSize = std::thread::hardware_concurrency();
+#		if !defined(LIBRAPID_NO_THREAD_CHECK)
+			if (handleSize > 256) {
+				fmt::print("\n{:=>90}\n", "");
+				fmt::print(R"V0G0N(
+Hello! You seem to have a LOT of threads (256+) and a CUDA-enabled GPU. This could cause
+problems with concurrency and CUDA streams, so LibRapid has a buffer of 256 (maximum)
+cublasHandle_t instances. If you are not running LibRapid code in parallel (outside of
+LibRapid's own processing), you don't need to worry about this, however it is STRONGLY
+advised that you don't ignore it...
+
+If you're using C++, simply define "LIBRAPID_MAX_ALLOWED_THREADS" before including
+LibRapid. If you're using Python, you'll need to define "LIBRAPID_MAX_ALLOWED_THREADS"
+in "./librapidPythonInterface.cpp" above the include statement and then rebuild the
+library.
+
+Instructions to rebuild the Python library can be found in the Documentation at
+"http://librapid.rtfd.io/", but the simplest way to install the library is to simply
+run "pip install ." from within the LibRapid directory. (You may also want to add
+"-vvv" to the command as it can take a while, and this way you get an idea of how far
+through it is)
+
+To IGNORE this error, just define LIBRAPID_NO_THREAD_CHECK above LibRapid includes :)
+)V0G0N");
+				fmt::print("\n{:=>90}\n", "");
+				std::exit(1);
+			}
+#		endif
+
 			for (int64_t i = 0; i < handleSize; ++i) {
 				cublasCreate_v2(&(cublasHandles[i]));
 				cublasSetStream_v2(cublasHandles[i], cudaStream);
@@ -39,7 +67,6 @@ namespace librapid::memory {
 		// Ignore memory alignment
 		T *buf;
 		cudaSafeCall(cudaMallocAsync(&buf, sizeof(T) * num, cudaStream));
-
 // Slightly altered traceback call to log u_chars being allocated
 #	ifdef LIBRAPID_TRACEBACK
 		LR_STATUS("LIBRAPID TRACEBACK -- MALLOC {} u_charS -> {}", size, (void *)buf);
@@ -134,6 +161,12 @@ namespace librapid::memory {
 							 .launch(dst, src, size));
 			}
 		}
+	}
+
+	template<typename T, typename d,
+			 typename std::enable_if_t<std::is_same_v<d, device::GPU>, int> = 0>
+	LR_FORCE_INLINE void memset(T *dst, T val, int64_t size) {
+		cudaMemsetAsync(dst, val, sizeof(T) * size, cudaStream);
 	}
 } // namespace librapid::memory
 #endif // LIBRAPID_HAS_CUDA

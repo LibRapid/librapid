@@ -20,7 +20,9 @@ option(USE_BLAS "Attempt to use a BLAS library" ON)
 option(USE_CUDA "Attempt to use CUDA" ON)
 option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 
-set(LIBRAPID_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/cuda/headerLoader.cpp")
+set(LIBRAPID_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/cudaCodeLoader.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/kernelHelper.cpp")
 
 # {fmt} might fail to compile when building for python if this is not set
 if (${SKBUILD})

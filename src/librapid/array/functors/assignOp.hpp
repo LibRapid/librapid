@@ -98,7 +98,7 @@ namespace librapid::functors {
 							  "Calculation is too large to be run in a single call. Please call "
 							  "eval() somewhere earlier");
 
-				int64_t elems = src.extent().size();
+				int64_t elems = src.extent().sizeAdjusted();
 
 				if constexpr (is_same_v<Scalar, bool>) {
 					elems += sizeof(internal::traits<Scalar>::BaseScalar) * 8;
@@ -118,6 +118,7 @@ namespace librapid::functors {
 
 				std::string functionArgs;
 				for (int64_t i = 0; i < index; ++i) {
+					// functionArgs += fmt::format("{} arg{}", scalarName, i);
 					functionArgs += fmt::format("{} arg{}", scalarName, i);
 					if (i + 1 < index) functionArgs += ", ";
 				}
@@ -131,7 +132,7 @@ namespace librapid::functors {
 				std::string varExtractor;
 				for (int64_t i = 0; i < index; ++i)
 					varExtractor +=
-					  fmt::format("{} *arg{} = pointers[{}];\n\t", scalarName, i, i + 1);
+					  fmt::format("{0} *arg{1} = pointers[{2}];\n\t", scalarName, i, i + 1);
 
 				std::string varArgs;
 				for (int64_t i = 0; i < index; ++i) {
@@ -139,39 +140,31 @@ namespace librapid::functors {
 					if (i + 1 < index) varArgs += ", ";
 				}
 
-				std::string headers;
-				for (const auto &header : customHeaders) {
-					headers += fmt::format("#include \"{}\"\n", header);
-				}
-
-				std::string kernel = fmt::format(R"V0G0N(kernelOp
-#include <stdint.h>
-
-{0}
-
+				std::string opKernel = fmt::format(R"V0G0N(
 __device__
-{1} function({2}) {{
-	return {3};
+{0} function({1}) {{
+	return {2};
 }}
 
 __global__
-void applyOp({1} **pointers, int64_t size) {{
+void applyOp({0} **pointers, int64_t size) {{
 	const int64_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
-	{1} *dst = pointers[0];
-	{5}
+	{0} *dst = pointers[0];
+	{4}
 
 	if (kernelIndex < size) {{
-		dst[kernelIndex] = function({6});
+		dst[kernelIndex] = function({5});
 	}}
 }}
 				)V0G0N",
-												 headers,	   // 0
-												 scalarName,   // 1
-												 functionArgs, // 2
-												 microKernel,  // 3
-												 mainArgs,	   // 4
-												 varExtractor, // 5
-												 indArgs);	   // 6
+												   scalarName,	 // 0
+												   functionArgs, // 1
+												   microKernel,	 // 2
+												   mainArgs,	 // 3
+												   varExtractor, // 4
+												   indArgs);	 // 5
+
+				std::string kernel = detail::kernelGenerator(opKernel);
 
 				// fmt::print("Kernel: {}\n", kernel);
 
