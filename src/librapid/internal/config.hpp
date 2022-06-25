@@ -319,7 +319,7 @@
 #endif
 
 // Settings and macros for inline functions
-#if defined(LIBRAPID_DEBUG) || defined(LIBRAPID_NO_INLINE)
+#if defined(LIBRAPID_NO_INLINE)
 #	define LR_INLINE
 #	define LR_FORCE_INLINE
 #else // LIBRAPID_DEBUG || LIBRAPID_NO_INLINE
@@ -822,6 +822,17 @@ namespace librapid { namespace internal {
 		} while (0)
 #endif
 
+// BLAS enabled LibRapid
+#ifdef LIBRAPID_HAS_BLAS
+#	include <cblas.h>
+// TODO: LAPACK?
+// #	include <lapacke.h> // Currently errors
+#endif
+
+#if defined(OPENBLAS_OPENMP) || defined(OPENBLAS_THREAD) || defined(OPENBLAS_SEQUENTIAL)
+#	define LIBRAPID_HAS_OPENBLAS
+#endif
+
 // CUDA enabled LibRapid
 #ifdef LIBRAPID_HAS_CUDA
 
@@ -833,6 +844,7 @@ namespace librapid { namespace internal {
 #		pragma warning(disable : 4723)
 #	endif
 
+#	define CUDA_NO_HALF
 #	include <cublas_v2.h>
 #	include <cuda.h>
 #	include <curand.h>

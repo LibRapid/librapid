@@ -2,6 +2,7 @@
 
 #if defined(LIBRAPID_HAS_CUDA)
 #	include "../internal/config.hpp"
+#	include "cudaCodeLoader.hpp"
 #	include "../internal/memUtils.hpp"
 
 // Memory alignment adapted from
@@ -165,8 +166,8 @@ To IGNORE this error, just define LIBRAPID_NO_THREAD_CHECK above LibRapid includ
 
 	template<typename T, typename d,
 			 typename std::enable_if_t<std::is_same_v<d, device::GPU>, int> = 0>
-	LR_FORCE_INLINE void memset(T *dst, T val, int64_t size) {
-		cudaMemsetAsync(dst, val, sizeof(T) * size, cudaStream);
+	LR_FORCE_INLINE void memset(T *dst, int val, int64_t size) {
+		cudaMemsetAsync((void *) dst, val, sizeof(T) * size, cudaStream);
 	}
 } // namespace librapid::memory
 #endif // LIBRAPID_HAS_CUDA

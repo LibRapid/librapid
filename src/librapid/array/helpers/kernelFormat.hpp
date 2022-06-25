@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../internal/config.hpp"
+#include "../traits.hpp"
 
 namespace librapid::detail {
 	// template<typename T, typename std::enable_if_t<!std::is_floating_point_v<T>, int> = 0>

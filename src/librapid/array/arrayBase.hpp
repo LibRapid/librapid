@@ -296,19 +296,19 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				} else if constexpr (std::is_same_v<Scalar, float>) {
 					float alpha = 1;
 					float beta	= 0;
-					cublasSgeam(memory::cublasHandles[threadNum],
-								CUBLAS_OP_T,
-								CUBLAS_OP_N,
-								m_extent.adjusted(0),
-								m_extent.adjusted(1),
-								&alpha,
-								m_storage.heap(),
-								m_extent.adjusted(1),
-								&beta,
-								nullptr,
-								m_extent.adjusted(1),
-								res.storage().heap(),
-								m_extent.adjusted(0));
+					cblasSafeCall(cublasSgeam(memory::cublasHandles[threadNum],
+											  CUBLAS_OP_T,
+											  CUBLAS_OP_N,
+											  m_extent.adjusted(0),
+											  m_extent.adjusted(1),
+											  &alpha,
+											  m_storage.heap(),
+											  m_extent.adjusted(1),
+											  &beta,
+											  nullptr,
+											  m_extent.adjusted(1),
+											  res.storage().heap(),
+											  m_extent.adjusted(0)));
 				}
 
 				return res;
@@ -333,7 +333,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				auto strideThis	 = m_extent.strideAdjusted();
 				auto strideOther = other.extent().strideAdjusted();
 
-				auto res		 = blas::dot<Device>(m_extent.sizeAdjusted(),
+				auto res = blas::dot<Device>(m_extent.sizeAdjusted(),
 											 m_storage.heap(),
 											 strideThis[0],
 											 other.storage().heap(),
