@@ -3,8 +3,9 @@
 #include "../internal/config.hpp"
 #include "../array/helpers/kernelHelper.hpp"
 #include "../array/helpers/kernelFormat.hpp"
-#include "../../internal/memUtils.hpp"
+#include "../internal/memUtils.hpp"
 #include "../cuda/memUtils.hpp"
+#include "../modified/modified.hpp"
 
 namespace librapid::blas {
 	template<typename A, typename B>
@@ -32,7 +33,8 @@ namespace librapid::blas {
 				blocksPerGrid	= ceil(double(n) / double(threadsPerBlock));
 			}
 
-			std::string opKernel = fmt::format("#define BLOCK_SIZE {}\n", threadsPerBlock) + R"V0G0N(
+			std::string opKernel =
+			  fmt::format("#define BLOCK_SIZE {}\n", threadsPerBlock) + R"V0G0N(
 template<typename A, typename B, typename C>
 __global__
 void dot(int64_t n, A *__restrict x, int64_t incX, B *__restrict y, int64_t incY, C *__restrict dst) {
@@ -85,4 +87,47 @@ void dot(int64_t n, A *__restrict x, int64_t incX, B *__restrict y, int64_t incY
 		}
 #endif
 	}
+
+#if defined(LIBRAPID_HAS_BLAS)
+	template<>
+	float dot<device::CPU, float, float>(int64_t n, float *__restrict x, int64_t incX,
+										 float *__restrict y, int64_t incY);
+
+	template<>
+	double dot<device::CPU, double, double>(int64_t n, double *__restrict x, int64_t incX,
+											double *__restrict y, int64_t incY);
+#endif
+
+#if defined(LIBRAPID_HAS_CUDA)
+	namespace impl {
+		extended::float16_t dot(int64_t n, extended::float16_t *__restrict x, int64_t incX,
+								extended::float16_t *__restrict y, int64_t incY,
+								cublasHandle_t *handles = &(memory::cublasHandles[0]));
+
+		float dot(int64_t n, float *__restrict x, int64_t incX, float *__restrict y, int64_t incY,
+				  cublasHandle_t *handles = &(memory::cublasHandles[0]));
+
+		double dot(int64_t n, double *__restrict x, int64_t incX, double *__restrict y,
+				   int64_t incY, cublasHandle_t *handles = &(memory::cublasHandles[0]));
+	} // namespace impl
+
+	template<>
+	LR_INLINE extended::float16_t dot<device::GPU, extended::float16_t, extended::float16_t>(
+	  int64_t n, extended::float16_t *__restrict x, int64_t incX, extended::float16_t *__restrict y,
+	  int64_t incY) {
+		return impl::dot(n, x, incX, y, incY);
+	}
+
+	template<>
+	LR_INLINE float dot<device::GPU, float, float>(int64_t n, float *__restrict x, int64_t incX,
+												   float *__restrict y, int64_t incY) {
+		return impl::dot(n, x, incX, y, incY);
+	}
+
+	template<>
+	LR_INLINE double dot<device::GPU, double, double>(int64_t n, double *__restrict x, int64_t incX,
+													  double *__restrict y, int64_t incY) {
+		return impl::dot(n, x, incX, y, incY);
+	}
+#endif
 } // namespace librapid::blas

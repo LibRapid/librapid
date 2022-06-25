@@ -920,7 +920,7 @@ namespace librapid::extended {
 } // namespace librapid::extended
 
 namespace librapid::suffix {
-	auto operator""_h(long double val) { return extended::float16_t((float)val); }
+	LR_INLINE auto operator""_h(long double val) { return extended::float16_t((float)val); }
 } // namespace librapid::suffix
 
 namespace std {

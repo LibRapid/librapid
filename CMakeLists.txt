@@ -22,7 +22,8 @@ option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 
 set(LIBRAPID_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/cudaCodeLoader.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/kernelHelper.cpp")
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/kernelHelper.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/dotCBlas.cpp")
 
 # {fmt} might fail to compile when building for python if this is not set
 if (${SKBUILD})

@@ -12,7 +12,7 @@
 #define IS_POW_2(x) (0 == ((x) & ((x)-1)))
 
 namespace librapid { namespace detail {
-	void findDivisor(unsigned int denom, unsigned int &mulCoeff, unsigned int &shiftCoeff);
+	LR_INLINE void findDivisor(unsigned int denom, unsigned int &mulCoeff, unsigned int &shiftCoeff);
 
 	LR_FORCE_INLINE unsigned int umulhi(unsigned int x, unsigned int y) {
 		unsigned long long z = (unsigned long long)x * (unsigned long long)y;
@@ -61,19 +61,19 @@ namespace librapid { namespace detail {
 		return 32;
 	}
 
-	int intLog2(int x, bool round_up = false) {
+	LR_INLINE int intLog2(int x, bool round_up = false) {
 		int a = 31 - clz(x);
 		if (round_up) a += !IS_POW_2(x);
 		return a;
 	}
 
-	int intLog2(long long x, bool round_up = false) {
+	LR_INLINE int intLog2(long long x, bool round_up = false) {
 		int a = 63 - clz(x);
 		if (round_up) a += !IS_POW_2(x);
 		return a;
 	}
 
-	void findDivisor(unsigned int denom, unsigned int &mulCoeff, unsigned int &shiftCoeff) {
+	LR_INLINE void findDivisor(unsigned int denom, unsigned int &mulCoeff, unsigned int &shiftCoeff) {
 		LR_ASSERT(denom != 0, "Trying to find reduced divisor for zero is invalid");
 
 		if (denom == 1) {
