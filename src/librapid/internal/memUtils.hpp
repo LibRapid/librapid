@@ -65,8 +65,8 @@ namespace librapid { namespace memory {
 
 		template<typename T, typename d,
 				 typename std::enable_if_t<std::is_same_v<d, device::CPU>, int> = 0>
-		LR_FORCE_INLINE void memset(T *dst, T val, int64_t size) {
-			std::memset(dst, val, sizeof(T) * size);
+		LR_FORCE_INLINE void memset(T *dst, int val, int64_t size) {
+			std::memset((void *)dst, val, sizeof(T) * size);
 		}
 
 		template<typename A, typename B>

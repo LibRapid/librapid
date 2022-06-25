@@ -6,20 +6,20 @@
 #include "../array/traits.hpp"
 
 namespace librapid {
-	int64_t product(const std::vector<int64_t> &vals) {
+	LR_INLINE int64_t product(const std::vector<int64_t> &vals) {
 		int64_t res = 1;
 		for (const auto &val : vals) res *= val;
 		return res;
 	}
 
-	double product(const std::vector<double> &vals) {
+	LR_INLINE double product(const std::vector<double> &vals) {
 		double res = 1;
 		for (const auto &val : vals) res *= val;
 		return res;
 	}
 
 	template<typename T>
-	T min(const std::vector<T> &vals) {
+	LR_INLINE T min(const std::vector<T> &vals) {
 		T min_found = 0;
 		for (const auto &val : vals)
 			if (val < min_found) min_found = val;
@@ -27,18 +27,18 @@ namespace librapid {
 	}
 
 	template<typename T>
-	T &&min(T &&val) {
+	LR_INLINE T &&min(T &&val) {
 		return std::forward<T>(val);
 	}
 
 	template<typename T0, typename T1, typename... Ts>
-	inline auto min(T0 &&val1, T1 &&val2, Ts &&...vs) {
+	LR_INLINE auto min(T0 &&val1, T1 &&val2, Ts &&...vs) {
 		return (val1 < val2) ? min(val1, std::forward<Ts>(vs)...)
 							 : min(val2, std::forward<Ts>(vs)...);
 	}
 
 	template<typename T>
-	T max(const std::vector<T> &vals) {
+	LR_INLINE T max(const std::vector<T> &vals) {
 		T min_found = 0;
 		for (const auto &val : vals)
 			if (val > min_found) min_found = val;
@@ -46,133 +46,133 @@ namespace librapid {
 	}
 
 	template<typename T>
-	inline T &&max(T &&val) {
+	LR_INLINE T &&max(T &&val) {
 		return std::forward<T>(val);
 	}
 
 	template<typename T0, typename T1, typename... Ts>
-	inline auto max(T0 &&val1, T1 &&val2, Ts &&...vs) {
+	LR_INLINE auto max(T0 &&val1, T1 &&val2, Ts &&...vs) {
 		return (val1 > val2) ? max(val1, std::forward<Ts>(vs)...)
 							 : max(val2, std::forward<Ts>(vs)...);
 	}
 
 	template<typename T>
-	inline T abs(T a) {
+	LR_INLINE T abs(T a) {
 		return std::abs(a);
 	}
 
 	template<typename A, typename B,
 			 typename std::enable_if_t<std::is_fundamental_v<A> && std::is_fundamental_v<B>> = 0>
-	inline A pow(A a, B exp) {
+	LR_INLINE A pow(A a, B exp) {
 		return std::pow(a, exp);
 	}
 
 	template<typename T>
-	inline T sqrt(T a) {
+	LR_INLINE T sqrt(T a) {
 		return std::sqrt(a);
 	}
 
 	template<typename T>
-	inline T exp(T a) {
+	LR_INLINE T exp(T a) {
 		return std::exp(a);
 	}
 
 	template<typename T>
-	inline T pow(T a, T power) {
+	LR_INLINE T pow(T a, T power) {
 		return std::pow(a, power);
 	}
 
 	template<typename T>
-	inline T ln(T a) {
+	LR_INLINE T ln(T a) {
 		return std::log(a);
 	}
 
 	template<typename T>
-	inline T log2(T a) {
+	LR_INLINE T log2(T a) {
 		return std::log2(a);
 	}
 
 	template<typename T>
-	inline T log10(T a) {
+	LR_INLINE T log10(T a) {
 		return std::log10(a);
 	}
 
 	template<typename T>
-	inline T log(T a, T base) {
+	LR_INLINE T log(T a, T base) {
 		return ln(a) / ln(base);
 	}
 
 	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>> = 0>
-	inline T exp(T a) {
+	LR_INLINE T exp(T a) {
 		return std::exp(a);
 	}
 
 	template<typename T>
-	inline T sin(T a) {
+	LR_INLINE T sin(T a) {
 		return std::sin(a);
 	}
 
 	template<typename T>
-	inline T cos(T a) {
+	LR_INLINE T cos(T a) {
 		return std::cos(a);
 	}
 
 	template<typename T>
-	inline T tan(T a) {
+	LR_INLINE T tan(T a) {
 		return std::tan(a);
 	}
 
 	template<typename T>
-	inline T asin(T a) {
+	LR_INLINE T asin(T a) {
 		return std::asin(a);
 	}
 
 	template<typename T>
-	inline T acos(T a) {
+	LR_INLINE T acos(T a) {
 		return std::acos(a);
 	}
 
 	template<typename T>
-	inline T atan(T a) {
+	LR_INLINE T atan(T a) {
 		return std::atan(a);
 	}
 
 	template<typename T>
-	inline T sinh(T a) {
+	LR_INLINE T sinh(T a) {
 		return std::sinh(a);
 	}
 
 	template<typename T>
-	inline T cosh(T a) {
+	LR_INLINE T cosh(T a) {
 		return std::cosh(a);
 	}
 
 	template<typename T>
-	inline T tanh(T a) {
+	LR_INLINE T tanh(T a) {
 		return std::tanh(a);
 	}
 
 	template<typename T>
-	inline T asinh(T a) {
+	LR_INLINE T asinh(T a) {
 		return std::asinh(a);
 	}
 
 	template<typename T>
-	inline T acosh(T a) {
+	LR_INLINE T acosh(T a) {
 		return std::acosh(a);
 	}
 
 	template<typename T>
-	inline T atanh(T a) {
+	LR_INLINE T atanh(T a) {
 		return std::atanh(a);
 	}
 
 	template<typename T>
-	T map(T val, T start1, T stop1, T start2, T stop2) {
+	LR_INLINE T map(T val, T start1, T stop1, T start2, T stop2) {
 		return start2 + (stop2 - start2) * ((val - start1) / (stop1 - start1));
 	}
 
-	inline double random(double lower = 0, double upper = 1, uint64_t seed = -1) {
+	LR_INLINE double random(double lower = 0, double upper = 1, uint64_t seed = -1) {
 		// Random floating point value in range [lower, upper)
 		static std::uniform_real_distribution<double> distribution(0., 1.);
 		static std::mt19937 generator(seed == (uint64_t)-1 ? (unsigned int)(now() * 10) : seed);
@@ -180,25 +180,25 @@ namespace librapid {
 	}
 
 	template<typename T, typename std::enable_if_t<std::is_integral_v<T>, int> = 0>
-	inline T randint(T lower, T upper, uint64_t seed = -1) {
+	LR_INLINE T randint(T lower, T upper, uint64_t seed = -1) {
 		// Random integral value in range [lower, upper]
 		return (int64_t)random((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1, seed);
 	}
 
-	inline double trueRandomEntropy() {
+	LR_INLINE double trueRandomEntropy() {
 		static std::random_device rd;
 		return rd.entropy();
 	}
 
 	template<typename T = double>
-	inline double trueRandom(T lower = 0, T upper = 1) {
+	LR_INLINE double trueRandom(T lower = 0, T upper = 1) {
 		// Truly random value in range [lower, upper)
 		static std::random_device rd;
 		std::uniform_real_distribution<double> dist((double)lower, (double)upper);
 		return dist(rd);
 	}
 
-	inline int64_t trueRandint(int64_t lower, int64_t upper) {
+	LR_INLINE int64_t trueRandint(int64_t lower, int64_t upper) {
 		// Truly random value in range [lower, upper)
 		return (int64_t)trueRandom((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1);
 	}
@@ -207,7 +207,7 @@ namespace librapid {
 	 * Adapted from
 	 * https://docs.oracle.com/javase/6/docs/api/java/util/Random.html#nextGaussian()
 	 */
-	inline double randomGaussian() {
+	LR_INLINE double randomGaussian() {
 		static double nextGaussian;
 		static bool hasNextGaussian = false;
 
@@ -232,7 +232,7 @@ namespace librapid {
 	}
 
 	template<typename T = double>
-	auto pow10(int64_t exponent) {
+	LR_INLINE auto pow10(int64_t exponent) {
 		using Scalar = typename internal::traits<T>::Scalar;
 
 		const static Scalar pows[] = {
@@ -251,14 +251,14 @@ namespace librapid {
 
 	template<typename T1, typename T2,
 			 typename std::enable_if_t<std::is_integral_v<T1> && std::is_integral_v<T2>, int> = 0>
-	auto mod(T1 val, T2 divisor) {
+	LR_INLINE auto mod(T1 val, T2 divisor) {
 		return val % divisor;
 	}
 
 	template<typename T1, typename T2,
 			 typename std::enable_if_t<std::is_floating_point_v<T1> || std::is_floating_point_v<T2>,
 									   int> = 0>
-	auto mod(T1 val, T2 divisor) {
+	LR_INLINE auto mod(T1 val, T2 divisor) {
 		return std::fmod(val, divisor);
 	}
 
@@ -279,7 +279,7 @@ namespace librapid {
 	} // namespace roundMode
 
 	template<typename T = double>
-	auto round(T num, int64_t dp, int8_t mode = roundMode::MATH) {
+	LR_INLINE auto round(T num, int64_t dp, int8_t mode = roundMode::MATH) {
 		using Scalar = typename internal::traits<T>::Scalar;
 
 		const Scalar alpha	= pow10<T>(dp);
@@ -297,21 +297,21 @@ namespace librapid {
 	}
 
 	template<typename T1 = double, typename T2 = double>
-	typename std::common_type_t<T1, T2> roundTo(T1 num, T2 val) {
+	LR_INLINE typename std::common_type_t<T1, T2> roundTo(T1 num, T2 val) {
 		auto rem = mod(num, val);
 		if (rem >= val / 2) return (num + val) - rem;
 		return num - rem;
 	}
 
 	template<typename T1 = double, typename T2 = double>
-	typename std::common_type_t<T1, T2> roundUpTo(T1 num, T2 val) {
+	LR_INLINE typename std::common_type_t<T1, T2> roundUpTo(T1 num, T2 val) {
 		auto rem = mod(num, val);
 		if (rem == 0) return num;
 		return (num + val) - rem;
 	}
 
 	template<typename T>
-	T roundSigFig(T num, int64_t figs) {
+	LR_INLINE T roundSigFig(T num, int64_t figs) {
 		LR_ASSERT(figs > 0,
 				  "Cannot round to {} significant figures. Value must be greater than zero",
 				  figs);
@@ -331,9 +331,9 @@ namespace librapid {
 
 		return (tmp > 0 ? 1 : -1) * (round(tmp, figs - 1) * pow10<T>(n));
 	}
-	
+
 	template<typename T, typename std::enable_if_t<std::is_floating_point_v<T>, int> = 0>
-	T lerp(T _a, T _b, T _t) {
+	LR_INLINE T lerp(T _a, T _b, T _t) {
 		if (std::isnan(_a) || std::isnan(_b) || std::isnan(_t))
 			return std::numeric_limits<T>::quiet_NaN();
 		else if ((_a <= T {0} && _b >= T {0}) || (_a >= T {0} && _b <= T {0}))

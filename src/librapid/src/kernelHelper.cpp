@@ -24,6 +24,8 @@ namespace librapid::detail {
 										 opKernel);		 // 2
 
 		return kernel;
+#else
+		return "";
 #endif
 	}
 } // namespace librapid::detail
