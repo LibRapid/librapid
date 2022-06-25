@@ -21,6 +21,7 @@ namespace librapid::memory {
 #if defined(LIBRAPID_HAS_CUDA)
 			if constexpr (is_same_v<d, device::GPU>) initializeCudaStream();
 #endif
+			memory::memset<T, d>(m_heap, 0, m_size);
 		}
 
 		DenseStorage(const DenseStorage<T, d> &other) {
