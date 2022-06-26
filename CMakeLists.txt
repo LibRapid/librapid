@@ -20,6 +20,10 @@ option(USE_BLAS "Attempt to use a BLAS library" ON)
 option(USE_CUDA "Attempt to use CUDA" ON)
 option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 
+set(LIBRAPID_HAS_OMP false)
+set(LIBRAPID_HAS_BLAS false)
+set(LIBRAPID_HAS_CUDA false)
+
 set(LIBRAPID_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/cudaCodeLoader.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/kernelHelper.cpp"
@@ -35,11 +39,18 @@ if (${SKBUILD})
     set(module_name "_librapid")
     pybind11_add_module(
             ${module_name} MODULE
-            "python/librapidPythonInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/librapidPythonInterface.cpp"
+            ${LIBRAPID_SOURCES}
     )
 
     # add_compile_definitions(LIBRAPID_PYTHON)
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_PYTHON)
+
+    target_compile_options(${module_name} PRIVATE
+            $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
+            -w>
+            $<$<CXX_COMPILER_ID:MSVC>:
+            /W0>)
 else ()
     set(module_name "librapid")
     add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
@@ -56,6 +67,7 @@ if (${OpenMP_FOUND})
         # Add the compile definition so LibRapid knows it has OpenMP
         # add_compile_definitions(LIBRAPID_HAS_OMP)
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_OMP)
+        set(LIBRAPID_HAS_OMP true)
     else ()
         message(WARNING "OpenMP was found but is not being linked against (Value <USE_OMP> is " ${USE_OMP} ")")
     endif ()
@@ -179,6 +191,7 @@ if (${BLAS_FOUND})
         if (${has_cblas})
             # add_compile_definitions(LIBRAPID_HAS_BLAS)
             target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
+            set(LIBRAPID_HAS_BLAS true)
         else ()
             message(WARNING "Although BLAS was found, no cblas.h file was found, so BLAS support is not enabled")
         endif ()
@@ -226,9 +239,25 @@ if (${CUDAToolkit_FOUND})
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_CUDA_STREAM)
         message(STATUS "CUDA include directories: ${CUDAToolkit_INCLUDE_DIRS}")
         target_compile_definitions(${module_name} PUBLIC CUDA_INCLUDE_DIRS="${CUDAToolkit_INCLUDE_DIRS}")
+        set(LIBRAPID_HAS_CUDA true)
     else ()
         message(WARNING "CUDA was found but is not being linked against (Value <USE_CUDA> is " ${USE_CUDA} ")")
     endif ()
+endif ()
+
+# Write configuration settings to file
+file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "# LibRapid Configuration Settings\n\n")
+
+if (${LIBRAPID_HAS_OMP})
+    file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_HAS_OMP = TRUE\n")
+endif ()
+
+if (${LIBRAPID_HAS_BLAS})
+    file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_HAS_BLAS = TRUE\n")
+endif ()
+
+if (${LIBRAPID_HAS_CUDA})
+    file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_HAS_CUDA = TRUE\n")
 endif ()
 
 # Add dependencies
@@ -236,14 +265,12 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/fmt")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/Vc")
 
+target_link_libraries(${module_name} PUBLIC fmt scn Vc)
+target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
+
 if (${SKBUILD})
-    target_link_libraries(${module_name} PUBLIC fmt scn Vc)
-    target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
     install(TARGETS ${module_name} DESTINATION .)
 else ()
-    target_link_libraries(${module_name} PUBLIC fmt scn Vc)
-    target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
+    message(STATUS "Building LibRapid Examples")
+    add_subdirectory(examples)
 endif ()
-
-message(STATUS "Building LibRapid Examples")
-add_subdirectory(examples)
