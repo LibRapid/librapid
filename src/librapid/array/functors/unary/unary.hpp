@@ -3,7 +3,7 @@
 #include "../../../internal/config.hpp"
 #include "../../traits.hpp"
 
-namespace librapid { namespace functors { namespace unop {
+namespace librapid::functors::unop {
 	template<typename TYPE>
 	class UnaryOp {
 	public:
@@ -17,4 +17,4 @@ namespace librapid { namespace functors { namespace unop {
 			return extent;
 		}
 	};
-}}} // namespace librapid::functors::unop
+} // namespace librapid::functors::unop
