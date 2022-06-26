@@ -19,7 +19,7 @@ namespace librapid {
 			using Device				   = Device_;
 			using Packet				   = typename traits<Scalar>::Packet;
 			using StorageType			   = memory::DenseStorage<Scalar, Device>;
-			static constexpr int64_t Flags = 0;
+			static constexpr int64_t Flags = flags::Evaluated | flags::PythonFlags;
 		};
 	} // namespace internal
 
@@ -36,12 +36,11 @@ namespace librapid {
 		using Type						= Array<Scalar, Device>;
 		using Base						= ArrayBase<Type, Device>;
 		using StorageType				= typename internal::traits<Type>::StorageType;
-		static constexpr uint64_t Flags = internal::flags::Evaluated;
+		static constexpr uint64_t Flags = internal::traits<Base>::Flags;
 
 		Array() = default;
 
-		template<typename T, int64_t d, int64_t a_>
-		explicit Array(const ExtentType<T, d, a_> &extent) : Base(extent) {}
+		explicit Array(const Extent &extent) : Base(extent) {}
 
 		template<typename OtherDerived,
 				 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>
@@ -71,11 +70,9 @@ namespace librapid {
 
 		Array copy() const {
 			Array res(Base::extent());
-			res = *this * (Scalar)1;
+			res = *this;
 			return res;
 		}
-
-		auto copyLazy() const { return *this * 1; }
 
 		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
 			LR_ASSERT(!Base::isScalar(), "Cannot subscript a scalar value");
@@ -129,29 +126,7 @@ namespace librapid {
 			return Base::storage()[index];
 		}
 
-		template<typename T = int64_t, int64_t d = 32>
-		void transpose(const ExtentType<T, d> &order_ = {}) {
-			// Transpose inplace
-			auto &extent = Base::extent();
-			ExtentType<int64_t, 32> order;
-			if (order_.dims() == -1) {
-				// Default order is to reverse all indices
-				order = ExtentType<int64_t, 32>::zero(extent.dims());
-				for (int64_t i = 0; i < extent.dims(); ++i) { order[extent.dims() - i - 1] = i; }
-			} else {
-				order = order_;
-			}
-
-			if constexpr (is_same_v<Device, device::CPU>) {
-				Scalar *buffer = memory::malloc<Scalar, Device>(extent.size());
-				detail::transpose(true, Base::storage().heap(), extent[0], extent[1], buffer);
-				memory::free<Scalar, Device>(buffer);
-			} else {
-				LR_ASSERT(false, "CUDA support was not enabled");
-			}
-
-			extent.swivelInplace(order);
-		}
+		void transpose(const Extent &order = {}) { *this = Base::transposed(order); }
 
 		LR_FORCE_INLINE void writePacket(int64_t index, const Packet &p) {
 			LR_ASSERT(index >= 0 && index < Base::extent().sizeAdjusted(),
@@ -303,6 +278,24 @@ namespace librapid {
 			return res + "]";
 		}
 	};
+
+	using ArrayB   = Array<bool, device::CPU>;
+	using ArrayC   = Array<char, device::CPU>;
+	using ArrayF16 = Array<extended::float16_t, device::CPU>;
+	using ArrayF32 = Array<float, device::CPU>;
+	using ArrayF64 = Array<double, device::CPU>;
+	using ArrayI16 = Array<int16_t, device::CPU>;
+	using ArrayI32 = Array<int32_t, device::CPU>;
+	using ArrayI64 = Array<int64_t, device::CPU>;
+
+	using ArrayBG	= Array<bool, device::GPU>;
+	using ArrayCG	= Array<char, device::GPU>;
+	using ArrayF16G = Array<extended::float16_t, device::GPU>;
+	using ArrayF32G = Array<float, device::GPU>;
+	using ArrayF64G = Array<double, device::GPU>;
+	using ArrayI16G = Array<int16_t, device::GPU>;
+	using ArrayI32G = Array<int32_t, device::GPU>;
+	using ArrayI64G = Array<int64_t, device::GPU>;
 } // namespace librapid
 
 // Provide {fmt} printing capabilities

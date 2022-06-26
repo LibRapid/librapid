@@ -5,6 +5,8 @@ src/librapid/librapid.egg-info
 
 build_config.txt
 
+src/librapid/configuration.txt
+
 src/librapid/blas
 
 openblas_install

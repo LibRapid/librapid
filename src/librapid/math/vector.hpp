@@ -26,7 +26,14 @@ namespace librapid {
 
 		template<typename X, typename... YZ>
 		explicit Vec(X x, YZ... yz) : m_components {(DTYPE)x, (DTYPE)yz...} {
-			static_assert(1 + sizeof...(YZ) <= dims, "Parameters cannot exceed vector dimensions");
+			static_assert(sizeof...(YZ) <= dims, "Parameters cannot exceed vector dimensions");
+		}
+
+		template<typename T>
+		Vec(const std::initializer_list<T> &vals) {
+			LR_ASSERT(vals.size() <= dims, "Parameters cannot exceed vector dimensions");
+			int64_t ind = 0;
+			for (const auto &val : vals) { m_components[ind++] = val; }
 		}
 
 		template<typename T, int64_t d>
@@ -476,6 +483,13 @@ namespace librapid {
 
 		template<typename X = DTYPE, typename Y = DTYPE, typename Z = DTYPE>
 		explicit Vec(X x, Y y = 0, Z z = 0) : x(x), y(y), z(z) {}
+
+		template<typename T>
+		Vec(const std::initializer_list<T> &vals) {
+			LR_ASSERT(vals.size() <= 3, "Parameters cannot exceed vector dimensions");
+			int64_t ind = 0;
+			for (const auto &val : vals) { operator[](ind++) = val; }
+		}
 
 		template<typename T, int64_t d>
 		explicit Vec(const Vec<T, d> &other) {

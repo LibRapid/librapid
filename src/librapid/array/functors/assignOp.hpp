@@ -55,7 +55,8 @@ namespace librapid::functors {
 				}
 
 				// Only use a Packet type if possible
-				if constexpr (!is_same_v<Packet, std::false_type>) {
+				if constexpr (!is_same_v<Packet, std::false_type> &&
+							  !(Flags & internal::flags::NoPacketOp)) {
 					// Use the entire packet width where possible
 					if (!multiThread) {
 						for (int64_t i = 0; i < alignedLen; i += packetWidth) {

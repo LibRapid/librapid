@@ -16,8 +16,8 @@ if os.path.exists("openblas_install") and not os.path.exists(os.path.join("src",
     shutil.copytree("openblas_install", os.path.join("src", "librapid", "openblas_install"))
 
 # Remove _skbuild directory if it already exists. It can lead to issues
-if os.path.exists("_skbuild"):
-    shutil.rmtree("_skbuild")
+# if os.path.exists("_skbuild"):
+#     shutil.rmtree("_skbuild")
 
 # Remove the _librapid_python_cmake directory if it's present. This can cause more issues...
 if os.path.exists("_librapid_python_cmake"):

@@ -9,10 +9,11 @@
 #include "cast.hpp"
 
 #define IMPL_BINOP(NAME, TYPE)                                                                     \
-	template<typename OtherDerived, typename OtherDevice>                                          \
+	template<typename OtherDerived>                                                                \
 	LR_NODISCARD("")                                                                               \
-	auto NAME(const ArrayBase<OtherDerived, OtherDevice> &other) const {                           \
+	auto NAME(const OtherDerived &other) const {                                                   \
 		using ScalarOther = typename internal::traits<OtherDerived>::Scalar;                       \
+		using OtherDevice = typename internal::traits<OtherDerived>::Device;                       \
 		using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;             \
 		using RetType =                                                                            \
 		  binop::CWiseBinop<functors::binary::TYPE<Scalar, ScalarOther>, Derived, OtherDerived>;   \
@@ -106,15 +107,18 @@ namespace librapid {
 			using BaseScalar				= typename traits<Scalar>::BaseScalar;
 			using Device					= device::CPU;
 			using StorageType				= memory::DenseStorage<Scalar, device::CPU>;
-			static constexpr uint64_t Flags = traits<Derived>::Flags;
+			static constexpr uint64_t Flags = traits<Derived>::Flags | flags::PythonFlags;
 		};
 
 		template<typename Derived>
 		struct traits<ArrayBase<Derived, device::GPU>> {
+			static constexpr bool IsScalar	= false;
+			using Valid						= std::true_type;
 			using Scalar					= typename traits<Derived>::Scalar;
-			using Device					= device::GPU;
-			using StorageType				= memory::DenseStorage<Scalar, device::CPU>;
-			static constexpr uint64_t Flags = traits<Derived>::Flags;
+			using BaseScalar				= typename traits<Scalar>::BaseScalar;
+			using Device					= device::CPU;
+			using StorageType				= memory::DenseStorage<Scalar, device::GPU>;
+			static constexpr uint64_t Flags = traits<Derived>::Flags | flags::PythonFlags;
 		};
 	} // namespace internal
 
@@ -122,11 +126,13 @@ namespace librapid {
 	class ArrayBase {
 	public:
 		using Scalar	  = typename internal::traits<Derived>::Scalar;
+		using BaseScalar  = typename internal::traits<Scalar>::BaseScalar;
 		using This		  = ArrayBase<Derived, Device>;
 		using Packet	  = typename internal::traits<Derived>::Packet;
 		using StorageType = typename internal::traits<Derived>::StorageType;
-		using ArrayExtent = ExtentType < int64_t, 32,
-			  internal::traits<Scalar>::PacketWidth<4 ? 4 : internal::traits<Scalar>::PacketWidth>;
+		// using ArrayExtent = ExtentType < int64_t, 32,
+		// 	  internal::traits<Scalar>::PacketWidth<4 ? 4 : internal::traits<Scalar>::PacketWidth>;
+		using ArrayExtent				= Extent; // ExtentType<int64_t, 32, 1>;
 		static constexpr uint64_t Flags = internal::traits<This>::Flags;
 
 		friend Derived;
@@ -159,7 +165,11 @@ namespace librapid {
 			using RetType	 = unary::Cast<ScalarType, Derived>;
 
 			if constexpr (std::is_same_v<Device, device::CPU>) {
-				return RetType(derived());
+				if constexpr ((bool)(internal::traits<RetType>::Flags &
+									 internal::flags::RequireEval))
+					return RetType(derived()).eval();
+				else
+					return RetType(derived());
 			}
 #if defined(LIBRAPID_HAS_CUDA)
 			else {
@@ -223,8 +233,15 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		LR_NODISCARD("")
 		LR_FORCE_INLINE auto move() const {
 			Array<Scalar, D> res(m_extent);
-			memory::memcpy<Scalar, D, Scalar, Device>(
-			  res.storage().heap(), m_storage.heap(), m_extent.sizeAdjusted());
+			int64_t size = m_extent.sizeAdjusted();
+
+			if constexpr (std::is_same_v<Scalar, bool>) {
+				size += sizeof(BaseScalar) * 8;
+				size /= sizeof(BaseScalar) * 8;
+			}
+
+			memory::memcpy<BaseScalar, D, BaseScalar, Device>(
+			  res.storage().heap(), m_storage.heap(), size);
 			return res;
 		}
 
@@ -232,8 +249,15 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		LR_NODISCARD("")
 		LR_FORCE_INLINE auto castMove() const {
 			Array<Scalar, D> res(m_extent);
-			memory::memcpy<Scalar, D, Scalar, Device>(
-			  res.storage().heap(), m_storage.heap(), m_extent.sizeAdjusted());
+			int64_t size = m_extent.sizeAdjusted();
+
+			if constexpr (std::is_same_v<Scalar, bool>) {
+				size += sizeof(BaseScalar) * 8;
+				size /= sizeof(BaseScalar) * 8;
+			}
+
+			memory::memcpy<BaseScalar, D, BaseScalar, Device>(
+			  res.storage().heap(), m_storage.heap(), size);
 			return res.template cast<T>();
 		}
 
@@ -255,8 +279,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		IMPL_UNOP(operator~, BitwiseNot)
 		IMPL_UNOP(operator!, UnaryNot)
 
-		template<typename T_ = int64_t, int64_t d_ = 32, int64_t a_ = 1>
-		auto transposed(const ExtentType<T_, d_, a_> &order_ = {}) const {
+		auto transposed(const Extent &order_ = {}) const {
 			using RetType = unop::CWiseUnop<functors::matrix::Transpose<Derived>, Derived>;
 			static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
 			static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;

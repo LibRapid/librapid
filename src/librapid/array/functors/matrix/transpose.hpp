@@ -9,12 +9,13 @@ namespace librapid::functors::matrix {
 	template<typename Type_>
 	class Transpose {
 	public:
-		using Type	  = Type_;
-		using Scalar  = typename internal::traits<Type_>::Scalar;
-		using RetType = Scalar;
-		using Packet  = typename internal::traits<Scalar>::Packet;
-		static constexpr int64_t Flags =
-		  internal::flags::Matrix | internal::flags::Unary | internal::flags::RequireInput;
+		using Type					   = Type_;
+		using Scalar				   = typename internal::traits<Type_>::Scalar;
+		using RetType				   = Scalar;
+		using Packet				   = typename internal::traits<Scalar>::Packet;
+		static constexpr int64_t Flags = internal::flags::Matrix | internal::flags::Unary |
+										 internal::flags::RequireInput |
+										 internal::flags::NoPacketOp;
 
 		Transpose() = default;
 
@@ -46,9 +47,13 @@ namespace librapid::functors::matrix {
 		template<typename Derived>
 		LR_NODISCARD("")
 		LR_FORCE_INLINE Packet packetOpInput(const Derived &other, int64_t index) const {
+			/*
+			 * This works great if all Array dimensions are a multiple of the packet size, otherwise
+			 * it's entirely useless and doesn't work at all :)
 			using BaseScalar = typename internal::traits<Scalar>::BaseScalar;
 			BaseScalar buffer[internal::traits<BaseScalar>::PacketWidth];
 			auto extent	   = other.extent();
+			auto size	   = extent.size();
 			auto swivelled = extent.reverseIndexAdjusted(index).swivel(m_order);
 			auto first	   = extent.indexAdjusted(swivelled);
 			auto stride	   = extent.strideAdjusted();
@@ -65,6 +70,9 @@ namespace librapid::functors::matrix {
 
 			Packet res(&(buffer[0]));
 			return res;
+			 */
+
+			return -1;
 		}
 
 		template<typename T, int64_t d, int64_t a>
