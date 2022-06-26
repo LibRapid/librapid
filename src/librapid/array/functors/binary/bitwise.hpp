@@ -18,7 +18,7 @@ namespace librapid { namespace functors { namespace binary {
 
 		BitwiseOr(const BitwiseOr<LHS, RHS> &other) = default;
 
-		BitwiseOr<LHS, RHS> &operator=(const BitwiseOr<LHS, RHS> &other) { return *this; }
+		BitwiseOr<LHS, RHS> &operator=(const BitwiseOr<LHS, RHS> &other) = default;
 
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {
@@ -51,7 +51,7 @@ namespace librapid { namespace functors { namespace binary {
 
 		BitwiseAnd(const BitwiseAnd<LHS, RHS> &other) = default;
 
-		BitwiseAnd<LHS, RHS> &operator=(const BitwiseAnd<LHS, RHS> &other) { return *this; }
+		BitwiseAnd<LHS, RHS> &operator=(const BitwiseAnd<LHS, RHS> &other) = default;
 
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {
@@ -84,7 +84,7 @@ namespace librapid { namespace functors { namespace binary {
 
 		BitwiseXor(const BitwiseXor<LHS, RHS> &other) = default;
 
-		BitwiseXor<LHS, RHS> &operator=(const BitwiseXor<LHS, RHS> &other) { return *this; }
+		BitwiseXor<LHS, RHS> &operator=(const BitwiseXor<LHS, RHS> &other) = default;
 
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {
@@ -101,4 +101,4 @@ namespace librapid { namespace functors { namespace binary {
 
 	private:
 	};
-} } } // namespace librapid::functors::binary
+}}} // namespace librapid::functors::binary
