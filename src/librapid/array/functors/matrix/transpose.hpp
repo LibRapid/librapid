@@ -23,10 +23,7 @@ namespace librapid::functors::matrix {
 
 		Transpose(const Transpose<Type> &other) = default;
 
-		Transpose<Type> &operator=(const Transpose<Type> &other) {
-			m_order = other.m_order;
-			return *this;
-		}
+		Transpose<Type> &operator=(const Transpose<Type> &other) = default;
 
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const Scalar &val) const { return 0; }

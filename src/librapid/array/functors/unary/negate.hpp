@@ -18,7 +18,7 @@ namespace librapid { namespace functors { namespace unop {
 
 		UnaryMinus(const UnaryMinus<Type> &other) = default;
 
-		UnaryMinus<Type> &operator=(const UnaryMinus<Type> &other) { return *this; }
+		UnaryMinus<Type> &operator=(const UnaryMinus<Type> &other) = default;
 
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const Scalar &val) const { return -val; }
@@ -49,7 +49,7 @@ namespace librapid { namespace functors { namespace unop {
 
 		UnaryNot(const UnaryNot<Type> &other) = default;
 
-		UnaryNot<Type> &operator=(const UnaryNot<Type> &other) { return *this; }
+		UnaryNot<Type> &operator=(const UnaryNot<Type> &other) = default;
 
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const Scalar &val) const { return !val; }
@@ -80,7 +80,7 @@ namespace librapid { namespace functors { namespace unop {
 
 		BitwiseNot(const BitwiseNot<Type> &other) = default;
 
-		BitwiseNot<Type> &operator=(const BitwiseNot<Type> &other) { return *this; }
+		BitwiseNot<Type> &operator=(const BitwiseNot<Type> &other) = default;
 
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOp(const Scalar &val) const { return ~val; }
@@ -95,4 +95,4 @@ namespace librapid { namespace functors { namespace unop {
 
 	private:
 	};
-} } } // namespace librapid::functors::unop
+}}} // namespace librapid::functors::unop
