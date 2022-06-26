@@ -3,9 +3,11 @@
 #include "../../internal/config.hpp"
 
 namespace librapid {
-	template<typename T, int64_t maxDims, int64_t align_ = 4>
+	template<typename T, int64_t maxDims, int64_t align_ = 1>
 	class ExtentType {
 	public:
+		using Type = T;
+		static constexpr int64_t MaxDims = maxDims;
 		static constexpr int64_t Align = align_;
 
 		ExtentType() = default;
@@ -156,10 +158,10 @@ namespace librapid {
 		}
 
 		ExtentType partial(int64_t start = 0, int64_t end = -1) const {
-			if (end == -1) end = m_dims;
+			if (end == -1) end = m_dims - 1;
 			ExtentType res;
 			res.m_dims = m_dims - 1;
-			for (int64_t i = start; i < end; ++i) { res[i - start] = m_data[i]; }
+			for (int64_t i = start; i < end + 1; ++i) { res[i - start] = m_data[i]; }
 			return res;
 		}
 
@@ -305,5 +307,5 @@ namespace librapid {
 		T m_data[maxDims] {};
 	};
 
-	using Extent = ExtentType<int64_t, 32>;
+	using Extent = ExtentType<int64_t, 32, 1>;
 } // namespace librapid

@@ -6,7 +6,7 @@
 #include "reducedMath.hpp"
 #include "index.hpp"
 
-namespace librapid { namespace detail {
+namespace librapid::detail {
 	struct Prerotator {
 		ReducedDivisor m, b;
 
@@ -142,4 +142,4 @@ namespace librapid { namespace detail {
 		rowShuffle(m, n, data, tmp, Shuffle(m, n, c, k));
 		colShuffle(m, n, data, tmp, Postpermuter(m, n, m / c));
 	}
-}} // namespace librapid::detail
+} // namespace librapid::detail

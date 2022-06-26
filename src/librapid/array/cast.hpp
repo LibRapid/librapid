@@ -16,7 +16,7 @@ namespace librapid {
 			using Packet				   = typename traits<Scalar>::Packet;
 			using Device				   = typename internal::traits<OtherDerived>::Device;
 			using StorageType			   = memory::DenseStorage<Scalar, Device>;
-			static const uint64_t Flags	   = 0;
+			static const uint64_t Flags	   = internal::flags::PythonFlags;
 		};
 	} // namespace internal
 
