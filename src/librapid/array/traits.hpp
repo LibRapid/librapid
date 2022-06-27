@@ -17,10 +17,10 @@ namespace librapid::internal {
 		 * [35]       -> Packet operation is illegal
 		 */
 
-		constexpr uint64_t Evaluated		= 1ll << 0; // Result is already evaluated
-		constexpr uint64_t RequireEval		= 1ll << 1; // Result must be evaluated
-		constexpr uint64_t RequireInput		= 1ll << 2; // Requires the entire array (not scalar)
-		constexpr uint64_t HasCustomEval	= 1ll << 3; // Has a custom eval function
+		constexpr uint64_t Evaluated	 = 1ll << 0; // Result is already evaluated
+		constexpr uint64_t RequireEval	 = 1ll << 1; // Result must be evaluated
+		constexpr uint64_t RequireInput	 = 1ll << 2; // Requires the entire array (not scalar)
+		constexpr uint64_t HasCustomEval = 1ll << 3; // Has a custom eval function
 
 		constexpr uint64_t Bitwise	  = 1ll << 10; // Bitwise functions
 		constexpr uint64_t Arithmetic = 1ll << 11; // Arithmetic functions
@@ -46,7 +46,7 @@ namespace librapid::internal {
 #if defined(LIBRAPID_PYTHON)
 		constexpr uint64_t PythonFlags = RequireEval;
 #else
-		constexpr uint64_t PythonFlags = RequireEval;
+		constexpr uint64_t PythonFlags = 0;
 #endif
 	} // namespace flags
 
@@ -78,8 +78,11 @@ namespace librapid::internal {
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = 1;
 		static constexpr char Name[]		 = "char";
-		static constexpr uint64_t Flags =
-		  flags::ScalarBitwise | flags::ScalarArithmetic | flags::ScalarLogical;
+		// Packet ops here are a hack -- Packet = std::false_type means the packet ops will never
+		// be called
+		static constexpr uint64_t Flags		 = flags::ScalarBitwise | flags::ScalarArithmetic |
+										  flags::ScalarLogical | flags::PacketArithmetic |
+										  flags::PacketLogical | flags::PacketBitwise;
 	};
 
 	//------- Boolean ---------------------------------------------------------

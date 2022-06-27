@@ -9,7 +9,8 @@
 #include "cast.hpp"
 
 #define IMPL_BINOP(NAME, TYPE)                                                                     \
-	template<typename OtherDerived>                                                                \
+	template<typename OtherDerived,                                                                \
+			 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>         \
 	LR_NODISCARD("")                                                                               \
 	auto NAME(const OtherDerived &other) const {                                                   \
 		using ScalarOther = typename internal::traits<OtherDerived>::Scalar;                       \
@@ -240,8 +241,10 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				size /= sizeof(BaseScalar) * 8;
 			}
 
+			fmt::print("Information: {}\n", typeid(BaseScalar).name());
+
 			memory::memcpy<BaseScalar, D, BaseScalar, Device>(
-			  res.storage().heap(), m_storage.heap(), size);
+			  res.storage().heap(), eval().storage().heap(), size);
 			return res;
 		}
 
@@ -257,7 +260,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 			}
 
 			memory::memcpy<BaseScalar, D, BaseScalar, Device>(
-			  res.storage().heap(), m_storage.heap(), size);
+			  res.storage().heap(), eval().storage().heap(), size);
 			return res.template cast<T>();
 		}
 

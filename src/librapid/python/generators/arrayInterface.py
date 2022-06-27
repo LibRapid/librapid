@@ -1,164 +1,200 @@
 # Detect LibRapid features
 features = []
 try:
-    with open("../configuration.txt", "r") as file:
-        for line in file:
-            if line.startswith("#"):
-                continue
-
-            args = line.split()
-            features.append((args[0], args[2])) # Cut out the "="
+	with open("../../configuration.txt", "r") as file:
+		for line in file:
+			if len(line) == 0 or line.startswith("#"):
+				continue
+			
+			print("FEATURE:", line.strip())
+			try:
+				args = line.split()
+				features.append((args[0], args[2])) # Cut out the "="
+			except:
+				pass
 except:
-    pass
+	pass
 
 arrayTypes = [
-    "ArrayB",
-    # "ArrayC",
-    # "ArrayF16",
-    "ArrayF32",
-    # "ArrayF64",
-    # "ArrayI16",
-    # "ArrayI32",
-    # "ArrayI64"
+	"ArrayB",
+	"ArrayC",
+	"ArrayF16",
+	"ArrayF32",
+	"ArrayF64",
+	"ArrayI16",
+	"ArrayI32",
+	"ArrayI64"
 ]
 
 # GPU Arrays
 if ("LIBRAPID_HAS_CUDA", "TRUE") in features:
-    arrayTypes += [
-        "ArrayBG",
-        "ArrayCG",
-        "ArrayF16G",
-        "ArrayF32G",
-        "ArrayF64G",
-        "ArrayI16G",
-        "ArrayI32G",
-        "ArrayI64G"
-    ]
+	arrayTypes += [
+		"ArrayBG",
+		"ArrayCG",
+		"ArrayF16G",
+		"ArrayF32G",
+		"ArrayF64G",
+		"ArrayI16G",
+		"ArrayI32G",
+		"ArrayI64G"
+	]
 
 class Argument:
-    def __init__(self, type:str, name:str):
-        self.type = type.strip().lstrip()
-        self.name = name.strip().lstrip()
+	def __init__(self, type:str, name:str, default:str = None):
+		self.type = type.strip().lstrip()
+		self.name = name.strip().lstrip()
+		self.default = default
 
-    def setType(self, type:str):
-        self.type = type
+	def setType(self, type:str):
+		self.type = type
 
-    def __str__(self) -> str:
-        return self.type + " " + self.name
+	def hasDefault(self):
+		return self.default is not None
+
+	def __str__(self) -> str:
+		return self.type + " " + self.name
 
 class Function:
-    def __init__(self, prettyName:str, name:str, templateArgs:list):
-        self.prettyName = prettyName
-        self.name = name
-        self.templateArgs = templateArgs
+	def __init__(self, name:str, args:list, op:str):
+		self.name = name
+		self.args = args
+		self.op = op
 
-    def gen(self, type:str):
-        templates = ""
-        if len(self.templateArgs) != 0:
-            templates = "<"
-            for i in range(len(self.templateArgs)):
-                templates += "librapid::" + self.templateArgs[i]
-                if i + 1 < len(self.templateArgs):
-                    templates += ", "
-            templates += ">"
+	def gen(self, type:str):
+		inputArgs = ""
+		if len(self.args) != 0:
+			for i in range(len(self.args)):
+				inputArgs += "{0} {1}".format(self.args[i].type, self.args[i].name)
 
-        return ".def(\"{0}\", &librapid::{1}::{2}{3})".format(self.prettyName, type, self.name, templates)
+				if i + 1 < len(self.args):
+					inputArgs += ", "
+		
+		arguments = ""
+		if len(self.args) > 1:
+			arguments = ", "
+			for i in range(1, len(self.args)):
+				arguments += "py::arg(\"{0}\")".format(self.args[i].name, self.args[i].type)
 
-    def __str__(self):
-        return "help me"
+				if self.args[i].hasDefault():
+					arguments += " = {0}(".format(self.args[i].type.strip("&").lstrip("const").strip()) + self.args[i].default + ")"
+
+				if i + 1 < len(self.args):
+					arguments += ", "
+
+		return ".def(\"{0}\", []({1}) {{ {2} }}{3})".format(self.name, inputArgs, self.op, arguments)
+
+resStr = ""
 
 for t in arrayTypes:
-    # Class Definition
-    print("\tpy::class_<librapid::{0}>(module, \"{0}\")".format(t))
+	typename = "librapid::{}".format(t)
+	constRef = "const librapid::{} &".format(t)
+	int64_t = "int64_t"
+	scalar = "typename librapid::internal::traits<{}>::Scalar".format(typename)
+	extent = "librapid::Extent"
+	extentConstRef = "const librapid::Extent &"
+	stdString = "std::string"
+	stdStringConstRef = "const std::string &"
 
-    # Constructors
-    print("\t\t.def(py::init<>())")
-    print("\t\t.def(py::init<librapid::Extent>())")
-    print("\t\t.def(py::init<librapid::{}>())".format(t))
-    print("\t\t.def(py::init<librapid::internal::traits<librapid::{}>::Scalar>())".format(t))
+	# Class Definition
+	resStr += "py::class_<{0}>(module, \"{1}\")\n".format(typename, t)
 
-    fCopy = [
-        Function("copy", "copy", []), # Copy
-    ]
+	# Constructors
+	resStr += "\t.def(py::init<>())\n"
+	resStr += "\t.def(py::init<librapid::Extent>())\n"
+	resStr += "\t.def(py::init<{}>())\n".format(typename)
+	resStr += "\t.def(py::init<librapid::internal::traits<{}>::Scalar>())\n".format(typename)
 
-    fIndex = [
-        ".def(\"__getitem__\", [](const librapid::{} &arr, int64_t index) {{ return arr[index]; }})".format(t), # Get Item Indexing
-        ".def(\"__setitem__\", [](const librapid::{0} &arr, int64_t index, librapid::internal::traits<librapid::{0}>::Scalar val) {{ arr[index] = val; }})".format(t), # Set Item (Scalar)
-        ".def(\"__setitem__\", [](const librapid::{0} &arr, int64_t index, const librapid::{0} &val) {{ arr[index] = val; }})".format(t), # Set Item (Array)
-    ]
+	fCopy = [
+		Function("copy", [Argument(constRef, "arr")], "return arr.copy();")
+	]
 
-    fMove = [
-        Function("move_CPU", "move", ["device::CPU"]), # Move CPU
-        Function("move_GPU", "move", ["device::GPU"]), # Move GPU
-    ]
+	fIndex = [
+		Function("__getitem__", [Argument(constRef, "arr"), Argument(int64_t, "index")], "return arr[index];"),
+		Function("__setitem__", [Argument(typename, "arr"), Argument(int64_t, "index"), Argument(scalar, "val")], "arr[index] = val;"),
+		Function("__setitem__", [Argument(typename, "arr"), Argument(int64_t, "index"), Argument(scalar, "val")], "arr[index] = val;")
+	]
 
-    if t not in ["ArrayB", "ArrayBG"]:
-        fArithmetic = [
-            Function("__add__", "operator+", [t]), 
-            Function("__add__", "operator+", ["internal::traits<librapid::{}>::Scalar".format(t)]), 
+	fMove = [
+		Function("move_CPU", [Argument(constRef, "arr")], "return arr.move<librapid::device::CPU>();"),
+		Function("move_GPU", [Argument(constRef, "arr")], "return arr.move<librapid::device::GPU>();")
+	]
 
-            Function("__sub__", "operator-", [t]), 
-            Function("__sub__", "operator-", ["internal::traits<librapid::{}>::Scalar".format(t)]), 
+	fCast = []
+	
+	for t2 in arrayTypes:
+		typename2 = "librapid::{}".format(t2)
+		scalar2 = "typename librapid::internal::traits<{}>::Scalar".format(typename2)
+		fCast += [
+		Function("cast_{}".format(t), [Argument(constRef, "this_")], "return this_.cast<{}>();".format(scalar2)),
+		Function("castMove_{}_CPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::CPU>();".format(scalar2)),
+		Function("castMove_{}_GPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::GPU>();".format(scalar2)),
+	]
 
-            Function("__mul__", "operator*", [t]), 
-            Function("__mul__", "operator*", ["internal::traits<librapid::{}>::Scalar".format(t)]), 
+	if t not in ["ArrayB", "ArrayBG"]:
+		fArithmetic = [
+			Function("__add__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ + other;"),
+			Function("__add__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return this_ + other;"),
 
-            Function("__div__", "operator/", [t]), 
-            Function("__div__", "operator/", ["internal::traits<librapid::{}>::Scalar".format(t)]), 
-        ]
-    else:
-        fArithmetic = []
+			Function("__sub__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ - other;"),
+			Function("__sub__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return this_ - other;"),
 
-    if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G"]:
-        fBitwise = [
-            Function("__or__", "operator|", [t]), 
-            # Function("__or__", "operator|", ["internal::traits<librapid::{}>::Scalar".format(t)]), 
+			Function("__mul__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ * other;"),
+			Function("__mul__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return this_ * other;"),
 
-            Function("__and__", "operator&", [t]), 
-            # Function("__and__", "operator&", ["internal::traits<librapid::{}>::Scalar".format(t)]), 
+			Function("__div__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ / other;"),
+			Function("__div__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return this_ / other;"),
+		]
+	else:
+		fArithmetic = []
 
-            Function("__xor__", "operator^", [t]), 
-            # Function("__xor__", "operator^", ["internal::traits<librapid::{}>::Scalar".format(t)]), 
-        ]
-    else:
-        fBitwise = []
+	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G"]:
+		fBitwise = [
+			Function("__or__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ | other;"),
+			Function("__and__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ & other;"),
+			Function("__xor__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ ^ other;"),
+		]
+	else:
+		fBitwise = []
 
-    if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G"]:
-        fUnary = [Function("__invert__", "operator~", [])]
-        if t != "ArrayB":
-            fUnary.append(Function("__neg__", "operator-", []))
-    else:
-        fUnary = []
+	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G"]:
+		fUnary = [Function("__invert__", [Argument(constRef, "this_")], "return ~this_;")]
+		if t != "ArrayB":
+			fUnary = [Function("__neg__", [Argument(constRef, "this_")], "return -this_;")]
+	else:
+		fUnary = []
 
-    fMatrix = [
-        Function("transpose", "transpose", []), # Transpose
-        Function("transposed", "transposed", []), # Transposed
-        Function("dot", "dot", [t]), # Transposed
-    ]
+	fMatrix = [
+		Function("transpose", [Argument(typename, "this_"), Argument(extentConstRef, "order", "{}")], "this_.transpose(order);"),
+		Function("transposed", [Argument(constRef, "this_"), Argument(extentConstRef, "order", "{}")], "return this_.transposed(order);"),
+		Function("dot", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_.dot(other);"),
+	]
 
-    fString = [
-        Function("str", "str", []), # String
-        Function("__str__", "str", []), # String
-        ".def(\"__repr__\", [](const librapid::{0} &arr) {{ return \"<librapid.{0}\\n\" + arr.str() + \"\\n>\"; }})".format(t)
-    ]
+	fString = [
+		Function("str", [Argument(constRef, "this_"),
+						 Argument(stdStringConstRef, "format", "\"{}\""),
+						 Argument(stdStringConstRef, "delim", "\" \""),
+						 Argument(int64_t, "stripWidth", "-1"),
+						 Argument(int64_t, "beforePoint", "-1"),
+						 Argument(int64_t, "afterPoint", "-1"),
+						 Argument(int64_t, "depth", "0")], "return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth);"),
+		Function("__str__", [Argument(constRef, "this_")], "return this_.str();"),
+		Function("__repr__", [Argument(constRef, "this_")], "return \"<{0}\\n\" + this_.str(\"{{}}\", \",\") + \"\\n>\";".format(typename))
+	]
 
-    functions = fCopy + fIndex + fMove + fArithmetic + fBitwise + fUnary + fMatrix + fString
+	functions = fCopy + fIndex + fMove + fCast + fArithmetic + fBitwise + fUnary + fMatrix + fString
 
-    # Casting
-    for t2 in arrayTypes:
-        functions.append(Function("cast_{}".format(t2), "cast", [t2]))
+	for i in range(len(functions)):
+		function = functions[i]
+		if isinstance(function,Function):
+			resStr += "\t" + function.gen(t)
+		else:
+			resStr += "\t" + function
+		
+		if i + 1 < len(functions):
+			resStr += "\n"
+		else:
+			resStr += ";\n"
 
-        functions.append(Function("castMove_{}_CPU".format(t2), "castMove", ["internal::traits<{}>::Scalar".format(t2), "device::CPU"])) # Cast and Move to CPU
-        functions.append(Function("castMove_{}_GPU".format(t2), "castMove", ["internal::traits<{}>::Scalar".format(t2), "device::GPU"])) # Cast and Move to GPU
-
-    for i in range(len(functions)):
-        function = functions[i]
-        if isinstance(function, Function):
-            print("\t\t" + function.gen(t), end="")
-        else:
-            print("\t\t" + function, end="")
-        
-        if i + 1 < len(functions):
-            print("")
-        else:
-            print(";\n")
+def write(path:str):
+	with open(path, "w") as file:
+		file.write(resStr)

@@ -16,8 +16,8 @@ if os.path.exists("openblas_install") and not os.path.exists(os.path.join("src",
     shutil.copytree("openblas_install", os.path.join("src", "librapid", "openblas_install"))
 
 # Remove _skbuild directory if it already exists. It can lead to issues
-# if os.path.exists("_skbuild"):
-#     shutil.rmtree("_skbuild")
+if os.path.exists("_skbuild"):
+    shutil.rmtree("_skbuild")
 
 # Remove the _librapid_python_cmake directory if it's present. This can cause more issues...
 if os.path.exists("_librapid_python_cmake"):
@@ -29,6 +29,18 @@ if not os.path.exists(os.path.join("src", "librapid", "blas")) and not os.path.e
     out = os.system("mkdir _librapid_python_cmake && cd _librapid_python_cmake && cmake ..")
     if out != 0:
         print("\nCMake failed to run correctly, so it is likely that BLAS will not be installed with LibRapid")
+
+# Run the autogen files
+genPath = os.path.join("src", "librapid", "python", "generators")
+vecInterfacePath = os.path.join("src", "librapid", "python", "cpp", "vecInterface.hpp")
+arrayInterfacePath = os.path.join("src", "librapid", "python", "cpp", "arrayInterface.hpp")
+
+sys.path.append(genPath)
+import vecInterface
+import arrayInterface
+
+vecInterface.write(vecInterfacePath)
+arrayInterface.write(arrayInterfacePath)
 
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
@@ -127,6 +139,8 @@ else:
 
 if os.environ.get("LIBRAPID_NO_ARCH"):
     cmake_args.append("-DLIBRAPID_NO_ARCH=yes")
+
+cmake_args.append("-DCMAKE_BUILD_TYPE=Release")
 
 # cmake_args.append("-DCMAKE_BUILD_TYPE=DEBUG")
 
