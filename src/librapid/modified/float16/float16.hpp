@@ -566,7 +566,10 @@ namespace librapid::extended {
 			return f32.float_;
 		}
 
-		explicit inline operator std::uint16_t() const noexcept { return data_.bits_; }
+		template<typename T>
+		explicit inline operator T() const noexcept {
+			return (T)(float)*this;
+		}
 
 		inline float16_t &operator+=(float16_t v) noexcept {
 			data_.bits_ = librapid::half_add(data_.bits_, v.data_.bits_);
