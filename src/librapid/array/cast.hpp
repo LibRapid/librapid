@@ -9,14 +9,27 @@ namespace librapid {
 	namespace internal {
 		template<typename DST, typename OtherDerived>
 		struct traits<unary::Cast<DST, OtherDerived>> {
+			static constexpr bool IsScalar	= false;
+			using Valid						= std::true_type;
+			using Type						= unary::Cast<DST, OtherDerived>;
+			using Scalar					= DST;
+			using Packet					= typename traits<Scalar>::Packet;
+			using Device					= typename internal::traits<OtherDerived>::Device;
+			using StorageType				= memory::DenseStorage<Scalar, Device>;
+			static constexpr uint64_t Flags = internal::flags::PythonFlags;
+		};
+
+		template<typename OtherDerived>
+		struct traits<unary::Cast<bool, OtherDerived>> {
 			static constexpr bool IsScalar = false;
 			using Valid					   = std::true_type;
-			using Type					   = unary::Cast<DST, OtherDerived>;
-			using Scalar				   = DST;
+			using Type					   = unary::Cast<bool, OtherDerived>;
+			using Scalar				   = bool;
 			using Packet				   = typename traits<Scalar>::Packet;
 			using Device				   = typename internal::traits<OtherDerived>::Device;
 			using StorageType			   = memory::DenseStorage<Scalar, Device>;
-			static const uint64_t Flags	   = internal::flags::PythonFlags;
+			static constexpr uint64_t Flags =
+			  internal::flags::PythonFlags | internal::flags::NoPacketOp;
 		};
 	} // namespace internal
 
@@ -25,13 +38,14 @@ namespace librapid {
 		class Cast : public ArrayBase<Cast<DST, OtherDerived>,
 									  typename internal::traits<OtherDerived>::Device> {
 		public:
-			using Scalar	  = DST;
-			using Packet	  = typename internal::traits<Scalar>::Packet;
-			using Device	  = typename internal::traits<OtherDerived>::Device;
-			using InputType	  = OtherDerived;
-			using InputScalar = typename internal::traits<InputType>::Scalar;
-			using Type		  = Cast<DST, OtherDerived>;
-			using Base		  = ArrayBase<Cast<DST, OtherDerived>, Device>;
+			using Scalar					= DST;
+			using Packet					= typename internal::traits<Scalar>::Packet;
+			using Device					= typename internal::traits<OtherDerived>::Device;
+			using InputType					= OtherDerived;
+			using InputScalar				= typename internal::traits<InputType>::Scalar;
+			using Type						= Cast<DST, OtherDerived>;
+			using Base						= ArrayBase<Cast<DST, OtherDerived>, Device>;
+			static constexpr uint64_t Flags = internal::traits<Type>::Flags;
 
 			Cast() = delete;
 
@@ -56,9 +70,10 @@ namespace librapid {
 
 			LR_FORCE_INLINE Packet packet(int64_t index) const {
 				// Quick return if possible
-				if constexpr (is_same_v<Scalar, InputScalar>) return m_toCast.packet(index);
+				if constexpr (std::is_same_v<Scalar, InputScalar>) return m_toCast.packet(index);
 				static Scalar buffer[Packet::size()];
-				for (int64_t i = 0; i < Packet::size(); ++i) buffer[i] = m_toCast.scalar(index + i);
+				for (int64_t i = 0; i < Packet::size(); ++i)
+					buffer[i] = (Scalar)m_toCast.scalar(index + i);
 				return Packet(&(buffer[0]));
 			}
 
@@ -68,8 +83,6 @@ namespace librapid {
 
 			template<typename T>
 			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
-				fmt::print("Information:\n{}\n", m_toCast.genKernel(vec, index));
-				// std::string kernel = m_toCast.genKernel(vec, index);
 				return fmt::format("(({}) ({}))", internal::traits<Scalar>::Name, 5);
 			}
 
