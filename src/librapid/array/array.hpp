@@ -42,6 +42,8 @@ namespace librapid {
 
 		explicit Array(const Extent &extent) : Base(extent) {}
 
+		Array(const Array &other) : Base(other) {}
+
 		template<typename OtherDerived,
 				 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>
 		Array(const OtherDerived &other) : Base(other.extent()) {
@@ -50,9 +52,9 @@ namespace librapid {
 
 		Array(const Scalar &other) : Base(other) {}
 
-		Array &operator=(const Scalar &other) { return Base::assign(other); }
+		Array &operator=(const Array &other) { return Base::assign(other); }
 
-		Array &operator=(const Array<Scalar, Device> &other) { return Base::assign(other); }
+		Array &operator=(const Scalar &other) { return Base::assign(other); }
 
 		template<typename OtherDerived,
 				 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>
