@@ -1,19 +1,4 @@
 # Detect LibRapid features
-features = []
-try:
-	with open("../../configuration.txt", "r") as file:
-		for line in file:
-			if len(line) == 0 or line.startswith("#"):
-				continue
-			
-			print("FEATURE:", line.strip())
-			try:
-				args = line.split()
-				features.append((args[0], args[2])) # Cut out the "="
-			except:
-				pass
-except:
-	pass
 
 arrayTypes = [
 	"ArrayB",
@@ -23,21 +8,21 @@ arrayTypes = [
 	"ArrayF64",
 	"ArrayI16",
 	"ArrayI32",
-	"ArrayI64"
-]
+	"ArrayI64",
 
-# GPU Arrays
-if ("LIBRAPID_HAS_CUDA", "TRUE") in features:
-	arrayTypes += [
-		"ArrayBG",
-		"ArrayCG",
-		"ArrayF16G",
-		"ArrayF32G",
-		"ArrayF64G",
-		"ArrayI16G",
-		"ArrayI32G",
-		"ArrayI64G"
-	]
+	"#if defined(LIBRAPID_HAS_CUDA)",
+
+	"ArrayBG",
+	"ArrayCG",
+	"ArrayF16G",
+	"ArrayF32G",
+	"ArrayF64G",
+	"ArrayI16G",
+	"ArrayI32G",
+	"ArrayI64G",
+	
+	"#endif // LIBRAPID_HAS_CUDA"
+]
 
 class Argument:
 	def __init__(self, type:str, name:str, default:str = None):
@@ -86,6 +71,10 @@ class Function:
 resStr = ""
 
 for t in arrayTypes:
+	if t[0] == "#":
+		resStr += "\n" + t + "\n"
+		continue
+
 	typename = "librapid::{}".format(t)
 	constRef = "const librapid::{} &".format(t)
 	ref = "librapid::{} &".format(t)
@@ -119,12 +108,16 @@ for t in arrayTypes:
 		Function("move_CPU", [Argument(constRef, "arr")], "return arr.move<librapid::device::CPU>();"),
 	]
 
-	if ("LIBRAPID_HAS_CUDA", "TRUE") in features:
-		fMove.append(Function("move_GPU", [Argument(constRef, "arr")], "return arr.move<librapid::device::GPU>();"))
+	fMove.append("#if defined(LIBRAPID_HAS_CUDA)")
+	fMove.append(Function("move_GPU", [Argument(constRef, "arr")], "return arr.move<librapid::device::GPU>();"))
+	fMove.append("#endif // LIBRAPID_HAS_CUDA")
 
 	fCast = []
 	
 	for t2 in arrayTypes:
+		if t2[0] == "#":
+			continue
+
 		typename2 = "librapid::{}".format(t2)
 		scalar2 = "typename librapid::internal::traits<{}>::Scalar".format(typename2)
 		fCast += [
@@ -132,8 +125,9 @@ for t in arrayTypes:
 			Function("castMove_{}_CPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::CPU>();".format(scalar2)),
 		]
 
-		if ("LIBRAPID_HAS_CUDA", "TRUE") in features:
-			fCast.append(Function("castMove_{}_GPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::GPU>();".format(scalar2)))
+		fCast.append("#if defined(LIBRAPID_HAS_CUDA)")
+		fCast.append(Function("castMove_{}_GPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::GPU>();".format(scalar2)))
+		fCast.append("#endif // LIBRAPID_HAS_CUDA")
 
 	if t not in ["ArrayB", "ArrayBG"]:
 		fArithmetic = [
@@ -206,3 +200,4 @@ def write(path:str):
 
 if __name__ == "__main__":
 	print(resStr)
+	write("../cpp/arrayInterface.hpp")
