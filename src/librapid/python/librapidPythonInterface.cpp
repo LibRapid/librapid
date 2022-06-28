@@ -1,6 +1,6 @@
 #define LIBRAPID_ASSERT
 
-#include "../librapid.hpp"
+#include <librapid/librapid.hpp>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -28,13 +28,13 @@ PYBIND11_MODULE(_librapid, module) {
 	module.doc() = module_docstring;
 
 	// Include the Extent type
-	#include LIBRAPID_SOURCE_DIR "/cpp/extentInterface.hpp"
+	#include <librapid/python/cpp/extentInterface.hpp> //LIBRAPID_SOURCE_DIR "/cpp/extentInterface.hpp"
 
 	// Include the Array library
-    #include LIBRAPID_SOURCE_DIR "/cpp/arrayInterface.hpp"
+    #include <librapid/python/cpp/arrayInterface.hpp> // LIBRAPID_SOURCE_DIR "/cpp/arrayInterface.hpp"
 
 	// Include the Vector library
-	#include LIBRAPID_SOURCE_DIR "/cpp/vecInterface.hpp"
+	#include <librapid/python/cpp/vecInterface.hpp> // LIBRAPID_SOURCE_DIR "/cpp/vecInterface.hpp"
 
 	// py::implicitly_convertible<int64_t, librapid::Array>();
 	// py::implicitly_convertible<double, librapid::Array>();
