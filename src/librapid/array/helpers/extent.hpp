@@ -147,16 +147,6 @@ namespace librapid {
 			return res;
 		}
 
-		ExtentType reverseIndexAdjusted(int64_t index) const {
-			ExtentType res	   = zero(m_dims);
-			ExtentType strides = strideAdjusted();
-			for (int64_t i = 0; i < m_dims; ++i) {
-				res[i] = index / strides[i];
-				index -= strides[i] * res[i];
-			}
-			return res;
-		}
-
 		ExtentType partial(int64_t start = 0, int64_t end = -1) const {
 			if (end == -1) end = m_dims - 1;
 			ExtentType res;
