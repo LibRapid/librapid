@@ -203,3 +203,6 @@ for t in arrayTypes:
 def write(path:str):
 	with open(path, "w") as file:
 		file.write(resStr)
+
+if __name__ == "__main__":
+	print(resStr)
