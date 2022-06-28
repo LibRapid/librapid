@@ -73,7 +73,7 @@ jobs:
 
       - name: Install from Source Distribution
         run: |
-          pip install --user wheelhouse/*.tar.gz -vvvv
+          pip install wheelhouse/*.tar.gz -vvvv
 
       - name: Run Python Tests
         run: |
