@@ -11,6 +11,8 @@ src/librapid/blas
 
 openblas_install
 
+librapid-*.*.*/
+
 MANIFEST
 
 build
