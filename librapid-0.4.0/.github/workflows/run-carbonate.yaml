@@ -1,0 +1,24 @@
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [opened]
+
+jobs:
+  carbonate:
+    runs-on: ubuntu-latest
+    name: Generate Carbonate Image
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+       
+      - name: Clone cabonate
+        run: |
+          git clone https://github.com/callmekatootie/carbonate.git --recursive ./carbonate
+        
+      - name: Run Carbonate
+        uses: ./carbonate
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          imgur-client-id: ${{ secrets.IMGUR_CLIENT_ID }}
+          carbonate-options: "{\r\n  paddingVertical: '56px',\r\n  paddingHorizontal: '56px',\r\n  backgroundColor: 'rgba(80, 227, 194, 100)',\r\n  dropShadow: true,\r\n  dropShadowOffsetY: '20px',\r\n  dropShadowBlurRadius: '68px',\r\n  theme: 'monokai',\r\n  windowTheme: 'none',\r\n  language: 'auto',\r\n  fontFamily: 'jetbrains-mono',\r\n  fontSize: '14px',\r\n  lineHeight: '143%',\r\n  windowControls: false,\r\n  widthAdjustment: true,\r\n  lineNumbers: true,\r\n  exportSize: '2x',\r\n  watermark: false\r\n}"

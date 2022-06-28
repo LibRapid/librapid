@@ -1,0 +1,15 @@
+function(make_example name)
+    add_executable(example-${name} example-${name}.cpp)
+    target_link_libraries(example-${name} PRIVATE scn)
+    set_private_flags(example-${name})
+endfunction()
+
+make_example(1)
+make_example(2)
+make_example(3)
+make_example(tuple-return)
+make_example(getline)
+make_example(positional)
+make_example(json)
+
+make_example(readme)
