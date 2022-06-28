@@ -157,7 +157,7 @@ for t in arrayTypes:
 
 	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G"]:
 		fUnary = [Function("__invert__", [Argument(constRef, "this_")], "return ~this_;")]
-		if t != "ArrayB":
+		if not t.startswith("ArrayB"):
 			fUnary = [Function("__neg__", [Argument(constRef, "this_")], "return -this_;")]
 	else:
 		fUnary = []
