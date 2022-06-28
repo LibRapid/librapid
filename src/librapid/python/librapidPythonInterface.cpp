@@ -28,13 +28,13 @@ PYBIND11_MODULE(_librapid, module) {
 	module.doc() = module_docstring;
 
 	// Include the Extent type
-	#include "cpp/extentInterface.hpp"
+	#include "./cpp/extentInterface.hpp"
 
 	// Include the Array library
-    #include "cpp/arrayInterface.hpp"
+    #include "./cpp/arrayInterface.hpp"
 
 	// Include the Vector library
-	#include "cpp/vecInterface.hpp"
+	#include "./cpp/vecInterface.hpp"
 
 	// py::implicitly_convertible<int64_t, librapid::Array>();
 	// py::implicitly_convertible<double, librapid::Array>();
