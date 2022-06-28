@@ -75,7 +75,7 @@ endif ()
 
 # Check if BLAS was built by CI for Python Wheels.
 # If so, use this instead of any other BLAS install found
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install")
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install" OR EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install/lib/libopenblas.a")
     message(STATUS "Using OpenBLAS built by CI for Python Wheels")
     set(BLAS_FOUND TRUE)
     set(USE_BLAS TRUE)
@@ -85,6 +85,8 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install")
     else ()
         set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install/lib/libopenblas.a")
     endif ()
+else()
+	message(STATUS "OpenBLAS for CI not found")
 endif ()
 
 # See if BLAS should be linked against
@@ -147,9 +149,7 @@ if (${BLAS_FOUND})
                     configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${inc_file}" COPYONLY)
                 endforeach ()
             endif ()
-        endif ()
-
-        if (${has_cblas})
+       
             # Copy library files
             get_filename_component(lib_name ${LIBRAPID_BLAS} NAME)
             # message(STATUS "Found library file ${lib_name}")
@@ -178,18 +178,17 @@ if (${BLAS_FOUND})
             endforeach ()
         endif ()
 
-        # Link the required library
-        target_link_libraries(${module_name} PUBLIC
-                "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${lib_name}"
-                )
-
-        target_include_directories(${module_name} PUBLIC
-                "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas"
-                )
-
         # Add the compile definition so LibRapid knows it has BLAS
         if (${has_cblas})
-            # add_compile_definitions(LIBRAPID_HAS_BLAS)
+			# Link the required library
+			target_link_libraries(${module_name} PUBLIC
+				"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${lib_name}"
+			)
+
+			target_include_directories(${module_name} PUBLIC
+				"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas"
+			)
+
             target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
             set(LIBRAPID_HAS_BLAS true)
         else ()
