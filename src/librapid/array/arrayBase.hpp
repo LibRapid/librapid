@@ -10,7 +10,7 @@
 
 #define IMPL_BINOP(NAME, TYPE)                                                                     \
 	template<typename OtherDerived,                                                                \
-			 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>         \
+			 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>        \
 	LR_NODISCARD("")                                                                               \
 	auto NAME(const OtherDerived &other) const {                                                   \
 		using ScalarOther = typename internal::traits<OtherDerived>::Scalar;                       \
@@ -322,19 +322,19 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				} else if constexpr (std::is_same_v<Scalar, float>) {
 					float alpha = 1;
 					float beta	= 0;
-					cblasSafeCall(cublasSgeam(memory::cublasHandles[threadNum],
-											  CUBLAS_OP_T,
-											  CUBLAS_OP_N,
-											  m_extent.adjusted(0),
-											  m_extent.adjusted(1),
-											  &alpha,
-											  m_storage.heap(),
-											  m_extent.adjusted(1),
-											  &beta,
-											  nullptr,
-											  m_extent.adjusted(1),
-											  res.storage().heap(),
-											  m_extent.adjusted(0)));
+					cublasSafeCall(cublasSgeam(memory::cublasHandles[threadNum],
+											   CUBLAS_OP_T,
+											   CUBLAS_OP_N,
+											   m_extent.adjusted(0),
+											   m_extent.adjusted(1),
+											   &alpha,
+											   m_storage.heap(),
+											   m_extent.adjusted(1),
+											   &beta,
+											   nullptr,
+											   m_extent.adjusted(1),
+											   res.storage().heap(),
+											   m_extent.adjusted(0)));
 				}
 
 				return res;
