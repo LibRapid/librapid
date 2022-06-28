@@ -88,6 +88,7 @@ resStr = ""
 for t in arrayTypes:
 	typename = "librapid::{}".format(t)
 	constRef = "const librapid::{} &".format(t)
+	ref = "librapid::{} &".format(t)
 	int64_t = "int64_t"
 	scalar = "typename librapid::internal::traits<{}>::Scalar".format(typename)
 	extent = "librapid::Extent"
@@ -101,7 +102,7 @@ for t in arrayTypes:
 	# Constructors
 	resStr += "\t.def(py::init<>())\n"
 	resStr += "\t.def(py::init<librapid::Extent>())\n"
-	resStr += "\t.def(py::init<{}>())\n".format(typename)
+	resStr += "\t.def(py::init<{}>())\n".format(constRef)
 	resStr += "\t.def(py::init<librapid::internal::traits<{}>::Scalar>())\n".format(typename)
 
 	fCopy = [
@@ -110,14 +111,16 @@ for t in arrayTypes:
 
 	fIndex = [
 		Function("__getitem__", [Argument(constRef, "arr"), Argument(int64_t, "index")], "return arr[index];"),
-		Function("__setitem__", [Argument(typename, "arr"), Argument(int64_t, "index"), Argument(scalar, "val")], "arr[index] = val;"),
-		Function("__setitem__", [Argument(typename, "arr"), Argument(int64_t, "index"), Argument(scalar, "val")], "arr[index] = val;")
+		Function("__setitem__", [Argument(ref, "arr"), Argument(int64_t, "index"), Argument(scalar, "val")], "arr[index] = val;"),
+		Function("__setitem__", [Argument(ref, "arr"), Argument(int64_t, "index"), Argument(scalar, "val")], "arr[index] = val;")
 	]
 
 	fMove = [
 		Function("move_CPU", [Argument(constRef, "arr")], "return arr.move<librapid::device::CPU>();"),
-		Function("move_GPU", [Argument(constRef, "arr")], "return arr.move<librapid::device::GPU>();")
 	]
+
+	if ("LIBRAPID_HAS_CUDA", "TRUE") in features:
+		fMove.append(Function("move_GPU", [Argument(constRef, "arr")], "return arr.move<librapid::device::GPU>();"))
 
 	fCast = []
 	
@@ -125,10 +128,12 @@ for t in arrayTypes:
 		typename2 = "librapid::{}".format(t2)
 		scalar2 = "typename librapid::internal::traits<{}>::Scalar".format(typename2)
 		fCast += [
-		Function("cast_{}".format(t), [Argument(constRef, "this_")], "return this_.cast<{}>();".format(scalar2)),
-		Function("castMove_{}_CPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::CPU>();".format(scalar2)),
-		Function("castMove_{}_GPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::GPU>();".format(scalar2)),
-	]
+			Function("cast_{}".format(t), [Argument(constRef, "this_")], "return this_.cast<{}>();".format(scalar2)),
+			Function("castMove_{}_CPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::CPU>();".format(scalar2)),
+		]
+
+		if ("LIBRAPID_HAS_CUDA", "TRUE") in features:
+			fCast.append(Function("castMove_{}_GPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::GPU>();".format(scalar2)))
 
 	if t not in ["ArrayB", "ArrayBG"]:
 		fArithmetic = [
@@ -164,7 +169,7 @@ for t in arrayTypes:
 		fUnary = []
 
 	fMatrix = [
-		Function("transpose", [Argument(typename, "this_"), Argument(extentConstRef, "order", "{}")], "this_.transpose(order);"),
+		Function("transpose", [Argument(ref, "this_"), Argument(extentConstRef, "order", "{}")], "this_.transpose(order);"),
 		Function("transposed", [Argument(constRef, "this_"), Argument(extentConstRef, "order", "{}")], "return this_.transposed(order);"),
 		Function("dot", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_.dot(other);"),
 	]
