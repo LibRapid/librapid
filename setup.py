@@ -33,13 +33,16 @@ if not os.path.exists(os.path.join("src", "librapid", "blas")) and not os.path.e
 # Run the autogen files
 genPath = os.path.join("src", "librapid", "python", "generators")
 vecInterfacePath = os.path.join("src", "librapid", "python", "cpp", "vecInterface.hpp")
+extentInterfacePath = os.path.join("src", "librapid", "python", "cpp", "extentInterface.hpp")
 arrayInterfacePath = os.path.join("src", "librapid", "python", "cpp", "arrayInterface.hpp")
 
 sys.path.append(genPath)
 import vecInterface
+import extentInterface
 import arrayInterface
 
 vecInterface.write(vecInterfacePath)
+extentInterface.write(extentInterfacePath)
 arrayInterface.write(arrayInterfacePath)
 
 # Add CMake as a build requirement if cmake is not installed or is too low a version
