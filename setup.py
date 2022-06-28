@@ -38,6 +38,7 @@ vecInterfacePath = os.path.join(ROOT_DIR, "src", "librapid", "python", "cpp", "v
 extentInterfacePath = os.path.join(ROOT_DIR, "src", "librapid", "python", "cpp", "extentInterface.hpp")
 arrayInterfacePath = os.path.join(ROOT_DIR, "src", "librapid", "python", "cpp", "arrayInterface.hpp")
 
+"""
 sys.path.append(genPath)
 import vecInterface
 import extentInterface
@@ -46,6 +47,7 @@ import arrayInterface
 vecInterface.write(vecInterfacePath)
 extentInterface.write(extentInterfacePath)
 arrayInterface.write(arrayInterfacePath)
+"""
 
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
