@@ -46,10 +46,7 @@ jobs:
 
       - name: Install Requirements
         run: |
-          pip install --user check-manifest twine==3.4.1
-          pip install --user check-manifest pybind11==2.6.2
-          pip install --user check-manifest cpufeature==0.2.0
-          pip install --user check-manifest -r requirements.txt
+          pip install -r requirements.txt
 
       # Download an OpenBLAS build
       - name: Download OpenBLAS Build
@@ -60,20 +57,13 @@ jobs:
           name: OpenBLAS on ubuntu-latest
           path: src/librapid/openblas_install
 
-
-      # - name: Build Documentation
-      #   run: |
-      #     cd docs
-      #     pip install --user check-manifest -r requirements.txt
-      #     make html
-
       - name: Build Source Distribution
         run: |
-          python -m build --sdist --outdir wheelhouse
+          python setup.py sdist
 
       - name: Install from Source Distribution
         run: |
-          pip install wheelhouse/*.tar.gz -vvvv
+          pip install dist/*.tar.gz -vvvv
 
       - name: Run Python Tests
         run: |
@@ -81,13 +71,13 @@ jobs:
 
       - name: Check Source Distribution
         run: |
-          python -m twine check wheelhouse/*
+          python -m twine check dist/*
 
       - name: Archive LibRapid Source Distribution
         uses: actions/upload-artifact@v3
         with:
           name: LibRapid Source Distribution
-          path: wheelhouse
+          path: dist
 
       - if: github.actor != 'dependabot[bot]'
         name: Upload Source Distribution
@@ -149,8 +139,7 @@ jobs:
           name: OpenBLAS on macos-latest
           path: src/librapid/openblas_install
 
-      - if: runner.os == 'macOS'
-        name: Run cibuildwheel
+      - name: Run cibuildwheel
         run: |
           export LIBRAPID_NO_ARCH=yes
           cibuildwheel --output-dir wheelhouse
@@ -159,30 +148,13 @@ jobs:
           CXX: g++-11
           LIBRAPID_NO_ARCH: yes
 
-      - if: runner.os != 'macOS'
-        name: Run cibuildwheel
-        run: |
-          export LIBRAPID_NO_ARCH=yes
-          cibuildwheel --output-dir wheelhouse
-        env:
-          LIBRAPID_NO_ARCH: yes
-
-      - if: runner.os == 'macOS'
-        name: Install Library
+      - name: Install Library
         run: |
           export LIBRAPID_NO_ARCH=yes
           python -m pip install . -vvvv
         env:
           CC: gcc-11
           CXX: g++-11
-          LIBRAPID_NO_ARCH: yes
-
-      - if: runner.os != 'macOS'
-        name: Install Library
-        run: |
-          export LIBRAPID_NO_ARCH=yes
-          python -m pip install . -vvvv
-        env:
           LIBRAPID_NO_ARCH: yes
 
       - name: Show all files in librapid install
@@ -260,36 +232,14 @@ jobs:
           name: OpenBLAS on ubuntu-latest
           path: src/librapid/openblas_install
 
-      - if: runner.os == 'macOS'
-        name: Run cibuildwheel
-        run: |
-          export LIBRAPID_NO_ARCH=yes
-          cibuildwheel --output-dir wheelhouse
-        env:
-          CC: gcc-11
-          CXX: g++-11
-          LIBRAPID_NO_ARCH: yes
-
-      - if: runner.os != 'macOS'
-        name: Run cibuildwheel
+      - name: Run cibuildwheel
         run: |
           export LIBRAPID_NO_ARCH=yes
           cibuildwheel --output-dir wheelhouse
         env:
           LIBRAPID_NO_ARCH: yes
 
-      - if: runner.os == 'macOS'
-        name: Install Library
-        run: |
-          export LIBRAPID_NO_ARCH=yes
-          python -m pip install . -vvvv
-        env:
-          CC: gcc-11
-          CXX: g++-11
-          LIBRAPID_NO_ARCH: yes
-
-      - if: runner.os != 'macOS'
-        name: Install Library
+      - name: Install Library
         run: |
           export LIBRAPID_NO_ARCH=yes
           python -m pip install . -vvvv

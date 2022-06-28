@@ -24,8 +24,19 @@ std::string module_docstring = "A highly-optimized Array library for Python";
 #undef max
 #endif
 
+namespace lrc = librapid;
+
 PYBIND11_MODULE(_librapid, module) {
 	module.doc() = module_docstring;
+
+	module.def("test", [](double n) {
+		lrc::Array<float> myArray1(lrc::Extent(1000, 1000));
+		lrc::Array<float> myArray2(lrc::Extent(1000, 1000));
+		lrc::Array<float> myArray3(lrc::Extent(1000, 1000));
+
+		lrc::timeFunction([&]() { auto res = myArray1 + myArray2; }, -1, -1, n);
+		lrc::timeFunction([&]() { myArray3 = myArray1 + myArray2; }, -1, -1, n);
+	});
 
 	// Include the Extent type
 	#include <librapid/python/cpp/extentInterface.hpp> //LIBRAPID_SOURCE_DIR "/cpp/extentInterface.hpp"

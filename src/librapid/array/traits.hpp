@@ -46,7 +46,7 @@ namespace librapid::internal {
 #if defined(LIBRAPID_PYTHON)
 		constexpr uint64_t PythonFlags = RequireEval;
 #else
-		constexpr uint64_t PythonFlags = 0;
+		constexpr uint64_t PythonFlags = 0; // RequireEval;
 #endif
 	} // namespace flags
 
