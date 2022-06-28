@@ -1,0 +1,15 @@
+[submodule "src/librapid/vendor/jitify"] # Jitify module for CUDA JIT compilation
+	path = src/librapid/vendor/jitify
+	url = https://github.com/Pencilcaseman/jitify.git
+[submodule "src/librapid/vendor/Vc"] # Vc module for SIMD instructions
+	path = src/librapid/vendor/Vc
+	url = https://github.com/VcDevel/Vc.git
+[submodule "src/librapid/vendor/fmt"] # {fmt} module for fast formatting and IO
+	path = src/librapid/vendor/fmt
+	url = https://github.com/fmtlib/fmt.git
+[submodule "src/librapid/vendor/scnlib"] # {scnlib} module for fast reverse formatting and IO
+	path = src/librapid/vendor/scnlib
+	url = https://github.com/eliaskosunen/scnlib.git
+[submodule "src/librapid/vendor/pybind11"]
+	path = src/librapid/vendor/pybind11
+	url = https://github.com/pybind/pybind11.git
