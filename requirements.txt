@@ -6,3 +6,4 @@ pytest
 pybind11==2.9.2
 cmake
 scikit-build
+packaging

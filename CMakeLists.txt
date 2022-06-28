@@ -10,6 +10,17 @@ set(LIBRAPID_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
 
+MACRO(SUBDIRLIST result curdir)
+    FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+    SET(dirlist "")
+    FOREACH (child ${children})
+        IF (IS_DIRECTORY ${curdir}/${child})
+            LIST(APPEND dirlist ${child})
+        ENDIF ()
+    ENDFOREACH ()
+    SET(${result} ${dirlist})
+ENDMACRO()
+
 # Attempt to locate the required packages
 include(FetchContent)
 find_package(CUDAToolkit QUIET)
@@ -85,8 +96,10 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install" OR EXISTS
     else ()
         set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install/lib/libopenblas.a")
     endif ()
-else()
-	message(STATUS "OpenBLAS for CI not found")
+else ()
+    message(STATUS "OpenBLAS for CI not found")
+    SUBDIRLIST(listDir "${CMAKE_CURRENT_SOURCE_DIR}")
+    message(STATUS "Files in Directory: ${listDir}")
 endif ()
 
 # See if BLAS should be linked against
@@ -149,7 +162,7 @@ if (${BLAS_FOUND})
                     configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${inc_file}" COPYONLY)
                 endforeach ()
             endif ()
-       
+
             # Copy library files
             get_filename_component(lib_name ${LIBRAPID_BLAS} NAME)
             # message(STATUS "Found library file ${lib_name}")
@@ -180,14 +193,14 @@ if (${BLAS_FOUND})
 
         # Add the compile definition so LibRapid knows it has BLAS
         if (${has_cblas})
-			# Link the required library
-			target_link_libraries(${module_name} PUBLIC
-				"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${lib_name}"
-			)
+            # Link the required library
+            target_link_libraries(${module_name} PUBLIC
+                    "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas/${lib_name}"
+                    )
 
-			target_include_directories(${module_name} PUBLIC
-				"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas"
-			)
+            target_include_directories(${module_name} PUBLIC
+                    "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/blas"
+                    )
 
             target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
             set(LIBRAPID_HAS_BLAS true)

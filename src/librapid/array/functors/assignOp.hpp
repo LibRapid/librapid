@@ -49,8 +49,8 @@ namespace librapid::functors {
 
 				if constexpr (is_same_v<Scalar, bool>) {
 					auto tmpLen = len;
-					len += sizeof(internal::traits<Scalar>::BaseScalar) * 8;
-					len /= sizeof(internal::traits<Scalar>::BaseScalar) * 8;
+					len += sizeof(typename internal::traits<Scalar>::BaseScalar) * 8;
+					len /= sizeof(typename internal::traits<Scalar>::BaseScalar) * 8;
 					len = max(len, tmpLen);
 					packetWidth = 1;
 					alignedLen	= len;
