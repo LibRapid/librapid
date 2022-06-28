@@ -30,11 +30,13 @@ if not os.path.exists(os.path.join("src", "librapid", "blas")) and not os.path.e
     if out != 0:
         print("\nCMake failed to run correctly, so it is likely that BLAS will not be installed with LibRapid")
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Run the autogen files
-genPath = os.path.join("src", "librapid", "python", "generators")
-vecInterfacePath = os.path.join("src", "librapid", "python", "cpp", "vecInterface.hpp")
-extentInterfacePath = os.path.join("src", "librapid", "python", "cpp", "extentInterface.hpp")
-arrayInterfacePath = os.path.join("src", "librapid", "python", "cpp", "arrayInterface.hpp")
+genPath = os.path.join(ROOT_DIR, "src", "librapid", "python", "generators")
+vecInterfacePath = os.path.join(ROOT_DIR, "src", "librapid", "python", "cpp", "vecInterface.hpp")
+extentInterfacePath = os.path.join(ROOT_DIR, "src", "librapid", "python", "cpp", "extentInterface.hpp")
+arrayInterfacePath = os.path.join(ROOT_DIR, "src", "librapid", "python", "cpp", "arrayInterface.hpp")
 
 sys.path.append(genPath)
 import vecInterface
@@ -61,8 +63,6 @@ except SKBuildError:
 if platform.system() == "Windows" and LR_PYTHON_IMPL == "CPython":
     setup_requires.append('pywin32')
     install_requires.append("pywin32")
-
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 data_files = []
 if platform.system() == "Windows":
