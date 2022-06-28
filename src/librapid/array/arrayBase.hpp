@@ -149,6 +149,12 @@ namespace librapid {
 		explicit ArrayBase(const ExtentType<T_, d_, a_> &extent, int) :
 				m_isScalar(extent.size() == 0), m_extent(extent) {}
 
+		ArrayBase(const Array<Scalar, Device> &other) {
+			m_isScalar = other.isScalar();
+			m_extent = other.extent();
+			m_storage = other.storage();
+		}
+
 		template<typename OtherDerived>
 		ArrayBase(const OtherDerived &other) {
 			assign(other);
@@ -402,6 +408,13 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 
 			LR_ASSERT(m_isScalar, "Cannot assign Scalar to non-scalar Array");
 			m_storage[0] = other;
+			return derived();
+		}
+
+		LR_FORCE_INLINE Derived &assign(const Array<Scalar, Device> &other) {
+			m_extent = other.extent();
+			m_isScalar = other.isScalar();
+			m_storage = other.storage();
 			return derived();
 		}
 

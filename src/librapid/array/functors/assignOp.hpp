@@ -39,7 +39,7 @@ namespace librapid::functors {
 				if (alignedLen < 0) alignedLen = 0;
 				int64_t processThreads = isMatrixOp ? matrixThreads : numThreads;
 
-#if LIBRAPID_OMP_VAL
+#if defined(LIBRAPID_HAS_OMP)
 				bool multiThread = true;
 				if (processThreads < 2) multiThread = false;
 				if (len < threadThreshold) multiThread = false;
@@ -51,7 +51,7 @@ namespace librapid::functors {
 					auto tmpLen = len;
 					len += sizeof(typename internal::traits<Scalar>::BaseScalar) * 8;
 					len /= sizeof(typename internal::traits<Scalar>::BaseScalar) * 8;
-					len = max(len, tmpLen);
+					len			= max(len, tmpLen);
 					packetWidth = 1;
 					alignedLen	= len;
 				}
