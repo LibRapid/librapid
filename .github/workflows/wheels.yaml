@@ -67,7 +67,7 @@ jobs:
 
       - name: Run Python Tests
         run: |
-          python -m pytest unit_tests
+          python -m pytest tests/python
 
       - name: Check Source Distribution
         run: |
