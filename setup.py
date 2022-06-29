@@ -164,7 +164,7 @@ setup(
     description="A fast math and neural network library for Python and C++",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=["librapid"] + ["librapid." + mod for mod in find_packages("librapid")],
+    packages=["librapid"] + ["librapid." + mod for mod in find_packages("src/librapid")],
     package_dir={"": "src"},
     cmake_args=cmake_args,
     cmake_install_dir="src/librapid",
@@ -187,6 +187,6 @@ setup(
     install_requires=install_requires,
     setup_requires=setup_requires,
     data_files=data_files,
-    # include_package_data=True,
+    include_package_data=True,
     zip_safe=False
 )
