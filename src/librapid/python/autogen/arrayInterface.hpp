@@ -3,13 +3,13 @@ py::class_<librapid::ArrayB>(module, "ArrayB")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayB &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayB>::Scalar>())
-	.def("copy", [](const librapid::ArrayB & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayB & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayB & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayB>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayB & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayB>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayB & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayB & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayB & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayB & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayB>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayB & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayB>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayB & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayB & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayB & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayB", [](const librapid::ArrayB & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayB & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -106,13 +106,13 @@ py::class_<librapid::ArrayC>(module, "ArrayC")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayC &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayC>::Scalar>())
-	.def("copy", [](const librapid::ArrayC & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayC & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayC & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayC>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayC & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayC>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayC & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayC & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayC & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayC & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayC>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayC & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayC>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayC & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayC & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayC & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayC", [](const librapid::ArrayC & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayC & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -217,13 +217,13 @@ py::class_<librapid::ArrayF16>(module, "ArrayF16")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayF16 &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayF16>::Scalar>())
-	.def("copy", [](const librapid::ArrayF16 & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayF16 & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayF16 & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayF16>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayF16 & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayF16>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayF16 & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayF16 & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayF16 & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayF16 & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayF16>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayF16 & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayF16>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayF16 & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayF16 & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayF16 & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayF16", [](const librapid::ArrayF16 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayF16 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -324,13 +324,13 @@ py::class_<librapid::ArrayF32>(module, "ArrayF32")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayF32 &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayF32>::Scalar>())
-	.def("copy", [](const librapid::ArrayF32 & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayF32 & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayF32 & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayF32>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayF32 & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayF32>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayF32 & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayF32 & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayF32 & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayF32 & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayF32>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayF32 & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayF32>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayF32 & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayF32 & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayF32 & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayF32", [](const librapid::ArrayF32 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayF32 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -431,13 +431,13 @@ py::class_<librapid::ArrayF64>(module, "ArrayF64")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayF64 &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayF64>::Scalar>())
-	.def("copy", [](const librapid::ArrayF64 & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayF64 & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayF64 & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayF64>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayF64 & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayF64>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayF64 & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayF64 & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayF64 & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayF64 & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayF64>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayF64 & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayF64>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayF64 & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayF64 & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayF64 & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayF64", [](const librapid::ArrayF64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayF64 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -538,13 +538,13 @@ py::class_<librapid::ArrayI16>(module, "ArrayI16")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayI16 &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayI16>::Scalar>())
-	.def("copy", [](const librapid::ArrayI16 & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayI16 & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayI16 & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayI16>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayI16 & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayI16>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayI16 & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayI16 & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayI16 & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayI16 & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayI16>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayI16 & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayI16>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayI16 & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayI16 & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayI16 & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayI16", [](const librapid::ArrayI16 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayI16 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -649,13 +649,13 @@ py::class_<librapid::ArrayI32>(module, "ArrayI32")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayI32 &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayI32>::Scalar>())
-	.def("copy", [](const librapid::ArrayI32 & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayI32 & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayI32 & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayI32>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayI32 & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayI32>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayI32 & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayI32 & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayI32 & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayI32 & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayI32>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayI32 & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayI32>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayI32 & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayI32 & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayI32 & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayI32", [](const librapid::ArrayI32 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayI32 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -760,13 +760,13 @@ py::class_<librapid::ArrayI64>(module, "ArrayI64")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayI64 &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayI64>::Scalar>())
-	.def("copy", [](const librapid::ArrayI64 & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayI64 & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayI64 & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayI64>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayI64 & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayI64>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayI64 & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayI64 & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayI64 & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayI64 & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayI64>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayI64 & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayI64>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayI64 & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayI64 & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayI64 & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayI64", [](const librapid::ArrayI64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayI64 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -873,13 +873,13 @@ py::class_<librapid::ArrayBG>(module, "ArrayBG")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayBG &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayBG>::Scalar>())
-	.def("copy", [](const librapid::ArrayBG & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayBG & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayBG & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayBG>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayBG & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayBG>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayBG & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayBG & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayBG & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayBG & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayBG>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayBG & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayBG>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayBG & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayBG & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayBG & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayBG", [](const librapid::ArrayBG & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayBG & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -976,13 +976,13 @@ py::class_<librapid::ArrayCG>(module, "ArrayCG")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayCG &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayCG>::Scalar>())
-	.def("copy", [](const librapid::ArrayCG & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayCG & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayCG & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayCG>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayCG & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayCG>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayCG & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayCG & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayCG & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayCG & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayCG>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayCG & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayCG>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayCG & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayCG & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayCG & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayCG", [](const librapid::ArrayCG & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayCG & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -1087,13 +1087,13 @@ py::class_<librapid::ArrayF16G>(module, "ArrayF16G")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayF16G &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayF16G>::Scalar>())
-	.def("copy", [](const librapid::ArrayF16G & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayF16G & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayF16G & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayF16G>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayF16G & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayF16G>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayF16G & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayF16G & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayF16G & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayF16G & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayF16G>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayF16G & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayF16G>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayF16G & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayF16G & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayF16G & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayF16G", [](const librapid::ArrayF16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayF16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -1194,13 +1194,13 @@ py::class_<librapid::ArrayF32G>(module, "ArrayF32G")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayF32G &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayF32G>::Scalar>())
-	.def("copy", [](const librapid::ArrayF32G & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayF32G & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayF32G & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayF32G>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayF32G & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayF32G>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayF32G & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayF32G & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayF32G & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayF32G & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayF32G>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayF32G & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayF32G>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayF32G & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayF32G & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayF32G & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayF32G", [](const librapid::ArrayF32G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayF32G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -1301,13 +1301,13 @@ py::class_<librapid::ArrayF64G>(module, "ArrayF64G")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayF64G &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayF64G>::Scalar>())
-	.def("copy", [](const librapid::ArrayF64G & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayF64G & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayF64G & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayF64G>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayF64G & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayF64G>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayF64G & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayF64G & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayF64G & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayF64G & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayF64G>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayF64G & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayF64G>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayF64G & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayF64G & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayF64G & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayF64G", [](const librapid::ArrayF64G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayF64G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -1408,13 +1408,13 @@ py::class_<librapid::ArrayI16G>(module, "ArrayI16G")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayI16G &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayI16G>::Scalar>())
-	.def("copy", [](const librapid::ArrayI16G & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayI16G & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayI16G & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayI16G>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayI16G & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayI16G>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayI16G & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayI16G & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayI16G & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayI16G & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayI16G>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayI16G & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayI16G>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayI16G & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayI16G & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayI16G & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayI16G", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -1519,13 +1519,13 @@ py::class_<librapid::ArrayI32G>(module, "ArrayI32G")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayI32G &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayI32G>::Scalar>())
-	.def("copy", [](const librapid::ArrayI32G & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayI32G & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayI32G & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayI32G>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayI32G & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayI32G>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayI32G & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayI32G & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayI32G & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayI32G & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayI32G>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayI32G & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayI32G>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayI32G & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayI32G & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayI32G & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayI32G", [](const librapid::ArrayI32G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayI32G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -1630,13 +1630,13 @@ py::class_<librapid::ArrayI64G>(module, "ArrayI64G")
 	.def(py::init<librapid::Extent>())
 	.def(py::init<const librapid::ArrayI64G &>())
 	.def(py::init<librapid::internal::traits<librapid::ArrayI64G>::Scalar>())
-	.def("copy", [](const librapid::ArrayI64G & arr) { return arr.copy(); })
-	.def("__getitem__", [](const librapid::ArrayI64G & arr, int64_t index) { return arr[index]; }, py::arg("index"))
-	.def("__setitem__", [](librapid::ArrayI64G & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayI64G>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("__setitem__", [](librapid::ArrayI64G & arr, int64_t index, typename librapid::internal::traits<librapid::ArrayI64G>::Scalar val) { arr[index] = val; }, py::arg("index"), py::arg("val"))
-	.def("move_CPU", [](const librapid::ArrayI64G & arr) { return arr.move<librapid::device::CPU>(); })
+	.def("copy", [](const librapid::ArrayI64G & this_) { return this_.copy(); })
+	.def("__getitem__", [](const librapid::ArrayI64G & this_, int64_t index) { return this_[index]; }, py::arg("index"))
+	.def("__setitem__", [](librapid::ArrayI64G & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayI64G>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("__setitem__", [](librapid::ArrayI64G & this_, int64_t index, typename librapid::internal::traits<librapid::ArrayI64G>::Scalar val) { this_[index] = val; }, py::arg("index"), py::arg("val"))
+	.def("move_CPU", [](const librapid::ArrayI64G & this_) { return this_.move<librapid::device::CPU>(); })
 	#if defined(LIBRAPID_HAS_CUDA)
-	.def("move_GPU", [](const librapid::ArrayI64G & arr) { return arr.move<librapid::device::GPU>(); })
+	.def("move_GPU", [](const librapid::ArrayI64G & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayI64G", [](const librapid::ArrayI64G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("castMove_ArrayB_CPU", [](const librapid::ArrayI64G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
@@ -1738,3 +1738,60 @@ py::class_<librapid::ArrayI64G>(module, "ArrayI64G")
 	.def("__repr__", [](const librapid::ArrayI64G & this_) { return "<librapid::ArrayI64G\n" + this_.str("{}", ",") + "\n>"; });
 
 #endif // LIBRAPID_HAS_CUDA
+
+module.def("add", [](const librapid::ArrayC & lhs, const librapid::ArrayC & rhs, librapid::ArrayC & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayC & lhs, const librapid::ArrayC & rhs, librapid::ArrayC & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayC & lhs, const librapid::ArrayC & rhs, librapid::ArrayC & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayC & lhs, const librapid::ArrayC & rhs, librapid::ArrayC & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayF16 & lhs, const librapid::ArrayF16 & rhs, librapid::ArrayF16 & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayF16 & lhs, const librapid::ArrayF16 & rhs, librapid::ArrayF16 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayF16 & lhs, const librapid::ArrayF16 & rhs, librapid::ArrayF16 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayF16 & lhs, const librapid::ArrayF16 & rhs, librapid::ArrayF16 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayF32 & lhs, const librapid::ArrayF32 & rhs, librapid::ArrayF32 & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayF32 & lhs, const librapid::ArrayF32 & rhs, librapid::ArrayF32 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayF32 & lhs, const librapid::ArrayF32 & rhs, librapid::ArrayF32 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayF32 & lhs, const librapid::ArrayF32 & rhs, librapid::ArrayF32 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayF64 & lhs, const librapid::ArrayF64 & rhs, librapid::ArrayF64 & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayF64 & lhs, const librapid::ArrayF64 & rhs, librapid::ArrayF64 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayF64 & lhs, const librapid::ArrayF64 & rhs, librapid::ArrayF64 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayF64 & lhs, const librapid::ArrayF64 & rhs, librapid::ArrayF64 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayI16 & lhs, const librapid::ArrayI16 & rhs, librapid::ArrayI16 & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayI16 & lhs, const librapid::ArrayI16 & rhs, librapid::ArrayI16 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayI16 & lhs, const librapid::ArrayI16 & rhs, librapid::ArrayI16 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayI16 & lhs, const librapid::ArrayI16 & rhs, librapid::ArrayI16 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayI32 & lhs, const librapid::ArrayI32 & rhs, librapid::ArrayI32 & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayI32 & lhs, const librapid::ArrayI32 & rhs, librapid::ArrayI32 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayI32 & lhs, const librapid::ArrayI32 & rhs, librapid::ArrayI32 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayI32 & lhs, const librapid::ArrayI32 & rhs, librapid::ArrayI32 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayI64 & lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayI64 & lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayI64 & lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayI64 & lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayF16G & lhs, const librapid::ArrayF16G & rhs, librapid::ArrayF16G & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayF16G & lhs, const librapid::ArrayF16G & rhs, librapid::ArrayF16G & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayF16G & lhs, const librapid::ArrayF16G & rhs, librapid::ArrayF16G & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayF16G & lhs, const librapid::ArrayF16G & rhs, librapid::ArrayF16G & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayF32G & lhs, const librapid::ArrayF32G & rhs, librapid::ArrayF32G & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayF32G & lhs, const librapid::ArrayF32G & rhs, librapid::ArrayF32G & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayF32G & lhs, const librapid::ArrayF32G & rhs, librapid::ArrayF32G & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayF32G & lhs, const librapid::ArrayF32G & rhs, librapid::ArrayF32G & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayF64G & lhs, const librapid::ArrayF64G & rhs, librapid::ArrayF64G & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayF64G & lhs, const librapid::ArrayF64G & rhs, librapid::ArrayF64G & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayF64G & lhs, const librapid::ArrayF64G & rhs, librapid::ArrayF64G & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayF64G & lhs, const librapid::ArrayF64G & rhs, librapid::ArrayF64G & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayI16G & lhs, const librapid::ArrayI16G & rhs, librapid::ArrayI16G & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayI16G & lhs, const librapid::ArrayI16G & rhs, librapid::ArrayI16G & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayI16G & lhs, const librapid::ArrayI16G & rhs, librapid::ArrayI16G & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayI16G & lhs, const librapid::ArrayI16G & rhs, librapid::ArrayI16G & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayI32G & lhs, const librapid::ArrayI32G & rhs, librapid::ArrayI32G & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayI32G & lhs, const librapid::ArrayI32G & rhs, librapid::ArrayI32G & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayI32G & lhs, const librapid::ArrayI32G & rhs, librapid::ArrayI32G & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayI32G & lhs, const librapid::ArrayI32G & rhs, librapid::ArrayI32G & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayI64G & lhs, const librapid::ArrayI64G & rhs, librapid::ArrayI64G & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayI64G & lhs, const librapid::ArrayI64G & rhs, librapid::ArrayI64G & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayI64G & lhs, const librapid::ArrayI64G & rhs, librapid::ArrayI64G & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayI64G & lhs, const librapid::ArrayI64G & rhs, librapid::ArrayI64G & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));

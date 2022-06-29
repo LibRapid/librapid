@@ -55,24 +55,30 @@ class Function:
 					inputArgs += ", "
 		
 		arguments = ""
-		if len(self.args) > 1:
+		if len(self.args) > 0 and self.args[0].name == "this_":
+			tmpArgs = self.args[1:]
+		else:
+			tmpArgs = self.args[:]
+
+		if len(tmpArgs) > 0:
 			arguments = ", "
-			for i in range(1, len(self.args)):
-				arguments += "py::arg(\"{0}\")".format(self.args[i].name, self.args[i].type)
+			for i in range(len(tmpArgs)):
+				arguments += "py::arg(\"{0}\")".format(tmpArgs[i].name, tmpArgs[i].type)
 
-				if self.args[i].hasDefault():
-					arguments += " = {0}(".format(self.args[i].type.strip("&").lstrip("const").strip()) + self.args[i].default + ")"
+				if tmpArgs[i].hasDefault():
+					arguments += " = {0}(".format(tmpArgs[i].type.strip("&").lstrip("const").strip()) + tmpArgs[i].default + ")"
 
-				if i + 1 < len(self.args):
+				if i + 1 < len(tmpArgs):
 					arguments += ", "
 
 		return ".def(\"{0}\", []({1}) {{ {2} }}{3})".format(self.name, inputArgs, self.op, arguments)
 
-resStr = ""
+classStr = ""
+moduleStr = ""
 
 for t in arrayTypes:
 	if t[0] == "#":
-		resStr += "\n" + t + "\n"
+		classStr += "\n" + t + "\n"
 		continue
 
 	typename = "librapid::{}".format(t)
@@ -86,30 +92,30 @@ for t in arrayTypes:
 	stdStringConstRef = "const std::string &"
 
 	# Class Definition
-	resStr += "py::class_<{0}>(module, \"{1}\")\n".format(typename, t)
+	classStr += "py::class_<{0}>(module, \"{1}\")\n".format(typename, t)
 
 	# Constructors
-	resStr += "\t.def(py::init<>())\n"
-	resStr += "\t.def(py::init<librapid::Extent>())\n"
-	resStr += "\t.def(py::init<{}>())\n".format(constRef)
-	resStr += "\t.def(py::init<librapid::internal::traits<{}>::Scalar>())\n".format(typename)
+	classStr += "\t.def(py::init<>())\n"
+	classStr += "\t.def(py::init<librapid::Extent>())\n"
+	classStr += "\t.def(py::init<{}>())\n".format(constRef)
+	classStr += "\t.def(py::init<librapid::internal::traits<{}>::Scalar>())\n".format(typename)
 
 	fCopy = [
-		Function("copy", [Argument(constRef, "arr")], "return arr.copy();")
+		Function("copy", [Argument(constRef, "this_")], "return this_.copy();")
 	]
 
 	fIndex = [
-		Function("__getitem__", [Argument(constRef, "arr"), Argument(int64_t, "index")], "return arr[index];"),
-		Function("__setitem__", [Argument(ref, "arr"), Argument(int64_t, "index"), Argument(scalar, "val")], "arr[index] = val;"),
-		Function("__setitem__", [Argument(ref, "arr"), Argument(int64_t, "index"), Argument(scalar, "val")], "arr[index] = val;")
+		Function("__getitem__", [Argument(constRef, "this_"), Argument(int64_t, "index")], "return this_[index];"),
+		Function("__setitem__", [Argument(ref, "this_"), Argument(int64_t, "index"), Argument(scalar, "val")], "this_[index] = val;"),
+		Function("__setitem__", [Argument(ref, "this_"), Argument(int64_t, "index"), Argument(scalar, "val")], "this_[index] = val;")
 	]
 
 	fMove = [
-		Function("move_CPU", [Argument(constRef, "arr")], "return arr.move<librapid::device::CPU>();"),
+		Function("move_CPU", [Argument(constRef, "this_")], "return this_.move<librapid::device::CPU>();"),
 	]
 
 	fMove.append("#if defined(LIBRAPID_HAS_CUDA)")
-	fMove.append(Function("move_GPU", [Argument(constRef, "arr")], "return arr.move<librapid::device::GPU>();"))
+	fMove.append(Function("move_GPU", [Argument(constRef, "this_")], "return this_.move<librapid::device::GPU>();"))
 	fMove.append("#endif // LIBRAPID_HAS_CUDA")
 
 	fCast = []
@@ -185,19 +191,40 @@ for t in arrayTypes:
 	for i in range(len(functions)):
 		function = functions[i]
 		if isinstance(function,Function):
-			resStr += "\t" + function.gen(t)
+			classStr += "\t" + function.gen(t)
 		else:
-			resStr += "\t" + function
+			classStr += "\t" + function
 		
 		if i + 1 < len(functions):
-			resStr += "\n"
+			classStr += "\n"
 		else:
-			resStr += ";\n"
+			classStr += ";\n"
+
+	# Module-based functions
+
+	if t not in ("ArrayB", "ArrayBG"):
+		forceTmpFunc = [
+			Function("add", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::add(lhs, rhs, dst);"),
+			Function("sub", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::sub(lhs, rhs, dst);"),
+			Function("mul", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::mul(lhs, rhs, dst);"),
+			Function("div", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::div(lhs, rhs, dst);"),
+		]
+	else:
+		forceTmpFunc = []
+
+	moduleFunctions = forceTmpFunc
+
+	for function in moduleFunctions:
+		moduleStr += "module" + function.gen(t) + ";\n"
 
 def write(path:str):
 	with open(path, "w") as file:
-		file.write(resStr)
+		file.write(classStr)
+		file.write("\n")
+		file.write(moduleStr)
 
 if __name__ == "__main__":
-	print(resStr)
+	print(classStr)
+	print("\n")
+	print(moduleStr)
 	write("../autogen/arrayInterface.hpp")

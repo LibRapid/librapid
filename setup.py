@@ -4,6 +4,8 @@ import platform
 import shutil
 import sys
 import site
+import pathlib
+from setuptools import find_packages
 from packaging.version import LegacyVersion
 from skbuild import setup
 from skbuild.cmaker import get_cmake_version
@@ -124,6 +126,9 @@ if platform.system() == "Windows":
 if data_files != []:
 	data_files = [(os.path.join(".", libdir, "librapid"), data_files[:])]
 
+pythonApi = list(pathlib.Path("src/librapid/python").rglob("*.[tT][xX][tT]"))
+data_files += [("librapid", file) for file in pythonApi]
+
 print("Operating System: {}".format(platform.system()))
 print("Additional files being included: {}".format(data_files))
 print("\n\n\n\n")
@@ -159,7 +164,7 @@ setup(
     description="A fast math and neural network library for Python and C++",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=["librapid"],
+    packages=["librapid"] + ["librapid." + mod for mod in find_packages("librapid")],
     package_dir={"": "src"},
     cmake_args=cmake_args,
     cmake_install_dir="src/librapid",
@@ -182,6 +187,6 @@ setup(
     install_requires=install_requires,
     setup_requires=setup_requires,
     data_files=data_files,
-    include_package_data=True,
+    # include_package_data=True,
     zip_safe=False
 )
