@@ -200,4 +200,4 @@ def write(path:str):
 
 if __name__ == "__main__":
 	print(resStr)
-	write("../cpp/arrayInterface.hpp")
+	write("../autogen/arrayInterface.hpp")
