@@ -10,6 +10,7 @@
 
 #define IMPL_BINOP(NAME, TYPE)                                                                     \
 	template<typename OtherDerived,                                                                \
+			 bool forceTemporary													   = false,    \
 			 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>        \
 	LR_NODISCARD("")                                                                               \
 	auto NAME(const OtherDerived &other) const {                                                   \
@@ -33,7 +34,8 @@
 				  extent().str(),                                                                  \
 				  other.extent().str());                                                           \
                                                                                                    \
-		if constexpr ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval))             \
+		if constexpr (!forceTemporary && /* If we REQUIRE a temporary value, don't evaluate it */  \
+					  ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval)))           \
 			return RetType(derived(), other.derived()).eval();                                     \
 		else                                                                                       \
 			return RetType(derived(), other.derived());                                            \
@@ -151,8 +153,8 @@ namespace librapid {
 
 		ArrayBase(const Array<Scalar, Device> &other) {
 			m_isScalar = other.isScalar();
-			m_extent = other.extent();
-			m_storage = other.storage();
+			m_extent   = other.extent();
+			m_storage  = other.storage();
 		}
 
 		template<typename OtherDerived>
@@ -412,9 +414,9 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		}
 
 		LR_FORCE_INLINE Derived &assign(const Array<Scalar, Device> &other) {
-			m_extent = other.extent();
+			m_extent   = other.extent();
 			m_isScalar = other.isScalar();
-			m_storage = other.storage();
+			m_storage  = other.storage();
 			return derived();
 		}
 

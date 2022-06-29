@@ -1,2 +1,7 @@
 graft src*
-recursive-include *.py *.cpp *.hpp *.c *.h *.asm *.s
+global-exclude *.dat *.txt *.svg *.png *.md *.css *.html *.js *.yml *.json
+
+recursive-exclude src/librapid/vendor/fmt/test *
+recursive-exclude src/librapid/vendor/scnlib/test *
+recursive-exclude src/librapid/vendor/scnlib/benchmark *
+recursive-exclude src/librapid/vendor/Vc/tests *

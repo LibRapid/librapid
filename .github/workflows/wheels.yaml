@@ -190,7 +190,7 @@ jobs:
 
   linux-build:
     name: Python Wheels on Linux
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     env:
       CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310-* pp37-* pp38-*"

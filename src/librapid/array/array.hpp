@@ -298,6 +298,19 @@ namespace librapid {
 	using ArrayI16G = Array<int16_t, device::GPU>;
 	using ArrayI32G = Array<int32_t, device::GPU>;
 	using ArrayI64G = Array<int64_t, device::GPU>;
+
+#define FORCE_TMP_FUNC(NAME, FUNC)                                                                 \
+	template<typename T, typename D>                                                               \
+	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, const Array<T, D> &rhs, Array<T, D> &dst) {  \
+		dst.assign(lhs.template FUNC<Array<T, D>, true>(rhs));                                     \
+	}
+
+	FORCE_TMP_FUNC(add, operator+)
+	FORCE_TMP_FUNC(sub, operator-)
+	FORCE_TMP_FUNC(mul, operator*)
+	FORCE_TMP_FUNC(div, operator/)
+
+#undef FORCE_TMP_FUNC
 } // namespace librapid
 
 // Provide {fmt} printing capabilities
