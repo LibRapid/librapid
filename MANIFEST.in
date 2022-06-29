@@ -1,5 +1,5 @@
 graft src*
-global-exclude *.dat *.txt *.svg *.png *.md *.css *.html *.js *.yml *.json
+global-exclude *.dat *.txt *.svg *.png *.css *.html *.js *.yml *.json
 
 recursive-exclude src/librapid/vendor/fmt/test *
 recursive-exclude src/librapid/vendor/scnlib/test *

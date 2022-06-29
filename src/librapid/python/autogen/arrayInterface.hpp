@@ -1767,6 +1767,8 @@ module.def("add", [](const librapid::ArrayI64 & lhs, const librapid::ArrayI64 & 
 module.def("sub", [](const librapid::ArrayI64 & lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("mul", [](const librapid::ArrayI64 & lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("div", [](const librapid::ArrayI64 & lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+
+#if defined(LIBRAPID_HAS_CUDA)
 module.def("add", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("sub", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("mul", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
@@ -1795,3 +1797,5 @@ module.def("add", [](const librapid::ArrayI64G & lhs, const librapid::ArrayI64G 
 module.def("sub", [](const librapid::ArrayI64G & lhs, const librapid::ArrayI64G & rhs, librapid::ArrayI64G & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("mul", [](const librapid::ArrayI64G & lhs, const librapid::ArrayI64G & rhs, librapid::ArrayI64G & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("div", [](const librapid::ArrayI64G & lhs, const librapid::ArrayI64G & rhs, librapid::ArrayI64G & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+
+#endif // LIBRAPID_HAS_CUDA
