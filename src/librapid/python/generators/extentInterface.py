@@ -129,3 +129,4 @@ def write(path:str):
 
 if __name__ == "__main__":
 	print(resStr)
+	write("../autogen/extentInterface.hpp")

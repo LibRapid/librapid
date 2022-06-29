@@ -151,3 +151,5 @@ if __name__ == "__main__":
 
 	print("\n\n")
 	print("#endif // LIBRAPID_VEC_INTERFACE\n")
+
+	write("../autogen/vecInterface.hpp")
