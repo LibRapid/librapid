@@ -30,13 +30,18 @@ try:
 except:
     print("Was not able to append to system path")
 
+from . import python
+
+"""
 try:
     try:
-        from ._librapid import *
+        # from ._librapid import *
+        from .python import librapid
     except ModuleNotFoundError:
         print("Failed to load '._librapid' locally from {}".format(os.listdir(ROOT_DIR)))
         print("Attempting to load '_librapid' globally")
-        from _librapid import *
+        # from _librapid import *
+        from .python import librapid
 except ImportError:
     print("Attempting to load librapid again, but using win32api to set the DLL directory")
 
@@ -66,11 +71,13 @@ except ImportError:
 
     try:
         try:
-            from ._librapid import *
+            # from ._librapid import *
+            from .python import librapid
         except ModuleNotFoundError:
             print("Failed to load '._librapid' from {}".format(os.listdir(ROOT_DIR)))
             print("Attempting to load '_librapid' globally")
-            from _librapid import *
+            # from _librapid import *
+            from .python import librapid
     except ImportError:
         print("There was an error trying to load the librapid C++ module '_librapid'")
 
@@ -79,3 +86,4 @@ except ImportError:
             print("\n".join(os.listdir(ROOT_DIR)))
 
         raise ImportError("Could not import '_librapid'")
+"""
