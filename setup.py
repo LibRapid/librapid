@@ -32,22 +32,24 @@ if not os.path.exists(os.path.join("src", "librapid", "blas")) and not os.path.e
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Run the autogen files
-genPath = os.path.join(ROOT_DIR, "src", "librapid", "python", "generators")
-vecInterfacePath = os.path.join(ROOT_DIR, "src", "librapid", "python", "cpp", "vecInterface.hpp")
-extentInterfacePath = os.path.join(ROOT_DIR, "src", "librapid", "python", "cpp", "extentInterface.hpp")
-arrayInterfacePath = os.path.join(ROOT_DIR, "src", "librapid", "python", "cpp", "arrayInterface.hpp")
+if not os.path.exists("src/librapid/python/autogen"):
+    # Force-create the directory
+    os.mkdir(os.path.join("src", "librapid", "python", "autogen"))
 
-"""
-sys.path.append(genPath)
-import vecInterface
-import extentInterface
-import arrayInterface
+    # Run the autogen files
+    genPath = os.path.join("src", "librapid", "python", "generators")
+    vecInterfacePath = os.path.join("src", "librapid", "python", "autogen", "vecInterface.hpp")
+    extentInterfacePath = os.path.join("src", "librapid", "python", "autogen", "extentInterface.hpp")
+    arrayInterfacePath = os.path.join("src", "librapid", "python", "autogen", "arrayInterface.hpp")
 
-vecInterface.write(vecInterfacePath)
-extentInterface.write(extentInterfacePath)
-arrayInterface.write(arrayInterfacePath)
-"""
+    sys.path.append(genPath)
+    import vecInterface
+    import extentInterface
+    import arrayInterface
+
+    vecInterface.write(vecInterfacePath)
+    extentInterface.write(extentInterfacePath)
+    arrayInterface.write(arrayInterfacePath)
 
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
