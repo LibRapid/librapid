@@ -1,9 +1,0 @@
-setuptools
-wheel
-twine
-cibuildwheel==2.4.0
-pytest
-pybind11==2.9.2
-cmake
-scikit-build
-packaging
