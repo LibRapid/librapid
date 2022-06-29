@@ -39,13 +39,13 @@ PYBIND11_MODULE(_librapid, module) {
 	});
 
 	// Include the Extent type
-	#include <librapid/python/cpp/extentInterface.hpp> //LIBRAPID_SOURCE_DIR "/cpp/extentInterface.hpp"
+	#include "autogen/extentInterface.hpp"
 
 	// Include the Array library
-    #include <librapid/python/cpp/arrayInterface.hpp> // LIBRAPID_SOURCE_DIR "/cpp/arrayInterface.hpp"
+    #include "autogen/arrayInterface.hpp"
 
 	// Include the Vector library
-	#include <librapid/python/cpp/vecInterface.hpp> // LIBRAPID_SOURCE_DIR "/cpp/vecInterface.hpp"
+	#include "autogen/vecInterface.hpp"
 
 	// py::implicitly_convertible<int64_t, librapid::Array>();
 	// py::implicitly_convertible<double, librapid::Array>();
