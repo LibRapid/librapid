@@ -79,6 +79,7 @@ moduleStr = ""
 for t in arrayTypes:
 	if t[0] == "#":
 		classStr += "\n" + t + "\n"
+		moduleStr += "\n" + t + "\n"
 		continue
 
 	typename = "librapid::{}".format(t)
