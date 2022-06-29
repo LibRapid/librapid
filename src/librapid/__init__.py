@@ -30,7 +30,7 @@ try:
 except:
     print("Was not able to append to system path")
 
-from . import python
+from python import pythonInterface
 
 """
 try:
