@@ -140,7 +140,9 @@ jobs:
 
     steps:
       - name: Checkout LibRapid
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -191,7 +193,9 @@ jobs:
 
     steps:
       - name: Checkout LibRapid
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -222,8 +226,10 @@ jobs:
     if: github.event_name != 'pull_request'
 
     steps:
-      - name: Checkout scikit-learn
-        uses: actions/checkout@v1
+      - name: Checkout LibRapid
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Download artifacts
         uses: actions/download-artifact@v2
