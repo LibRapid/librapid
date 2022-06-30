@@ -160,16 +160,8 @@ jobs:
           name: OpenBLAS on ${{ matrix.os }}
           path: src/librapid/openblas_install
 
-      - name: Export Required Variables
-        if: runner.os == 'macOS'
-        run: |
-          export CC=gcc-11
-          export CXX=g++-11
-
       - name: Build Wheels
         env:
-          CIBW_ENVIRONMENT: OMP_NUM_THREADS=256
-                            OPENBLAS_NUM_THREADS=256
           CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform_id }}
           CIBW_ARCHS: all
           CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.manylinux_image }}
