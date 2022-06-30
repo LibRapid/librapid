@@ -153,6 +153,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Clone OpenBLAS Build
+        if: runner.bitness == 64
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: build-openblas.yaml
@@ -161,6 +162,23 @@ jobs:
           path: src/librapid/openblas_install
 
       - name: Build Wheels
+        if: runner.os == 'macOS'
+        env:
+          CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform_id }}
+          CIBW_ARCHS: all
+          CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.manylinux_image }}
+          CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.manylinux_image }}
+          CIBW_TEST_SKIP: "*-macosx_arm64"
+          CIBW_BUILD_VERBOSITY: 1
+          CC: gcc-11
+          CXX: g++-11
+
+        run: |
+          python -m pip install cibuildwheel
+          python -m cibuildwheel --output-dir wheelhouse
+
+      - name: Build Wheels
+        if: runner.os != 'macOS'
         env:
           CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform_id }}
           CIBW_ARCHS: all
@@ -169,7 +187,9 @@ jobs:
           CIBW_TEST_SKIP: "*-macosx_arm64"
           CIBW_BUILD_VERBOSITY: 1
 
-        run: bash build_tools/build_wheels.sh
+        run: |
+          python -m pip install cibuildwheel
+          python -m cibuildwheel --output-dir wheelhouse
 
       - name: Store Artifacts
         uses: actions/upload-artifact@v2
