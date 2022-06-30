@@ -108,6 +108,9 @@ class Array:
 	def __setitem__(self, index:int, val):
 		self.array[index] = val
 
+	def scalar(self, index:int):
+		return self.array.scalar(index)
+
 	def move(self, newLoc:str):
 		_, adjusted = typeMapping.mapType(None, newLoc)
 		if adjusted == "CPU":
@@ -216,7 +219,10 @@ class Array:
 		self.array.transpose(order)
 
 	def transposed(self, order:Extent=[]):
-		return Array(self.transposed(order))
+		return Array(self.array.transposed(order))
+
+	def dot(self, other):
+		return Array(self.array.dot(other.array))
 
 	def str(self, format:str="{}",
 				  delim:str=" ",
@@ -233,6 +239,12 @@ class Array:
 
 	def __repr__(self):
 		return repr(self.array)
+
+	def isScalar(self):
+		return self.array.isScalar()
+
+	def extent(self):
+		return self.array.extent()
 
 def add(lhs:Array, rhs:Array, dst:Array):
 	_librapid.add(lhs.array, rhs.array, dst.array)
