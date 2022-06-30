@@ -236,5 +236,5 @@ jobs:
       - name: Upload Artifacts
         continue-on-error: true
         run: |
-          ls wheelhouse
+          ls dist
           twine upload --skip-existing dist/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
