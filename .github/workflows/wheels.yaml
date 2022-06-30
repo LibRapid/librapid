@@ -237,5 +237,4 @@ jobs:
         continue-on-error: true
         run: |
           ls wheelhouse
-          twine upload --skip-existing wheelhouse/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
           twine upload --skip-existing dist/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
