@@ -234,7 +234,7 @@ jobs:
         uses: actions/setup-python@v2
 
       - name: Install Requirements
-        run: pip instal -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Upload Artifacts
         continue-on-error: true
