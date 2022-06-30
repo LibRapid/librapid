@@ -233,8 +233,11 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
 
+      - name: Install Requirements
+        run: pip instal -r requirements.txt
+
       - name: Upload Artifacts
         continue-on-error: true
         run: |
           ls dist
-          twine upload --skip-existing dist/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
+          twine upload --skip-existing dist/artifact/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
