@@ -186,8 +186,13 @@ for t in arrayTypes:
 		Function("__str__", [Argument(constRef, "this_")], "return this_.str();"),
 		Function("__repr__", [Argument(constRef, "this_")], "return \"<{0}\\n\" + this_.str(\"{{}}\", \",\") + \"\\n>\";".format(typename))
 	]
+	
+	fProperties = [
+		Function("isScalar", [Argument(constRef, "this_")], "return this_.isScalar();"),
+		Function("extent", [Argument(constRef, "this_")], "return this_.extent();"),
+	]
 
-	functions = fCopy + fIndex + fMove + fCast + fArithmetic + fBitwise + fUnary + fMatrix + fString
+	functions = fCopy + fIndex + fMove + fCast + fArithmetic + fBitwise + fUnary + fMatrix + fString + fProperties
 
 	for i in range(len(functions)):
 		function = functions[i]
