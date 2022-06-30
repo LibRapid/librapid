@@ -198,6 +198,9 @@ jobs:
         with:
           python-version: '3.9'  # update once build dependencies are available
 
+      - name: Install Requirements
+        run: pip install -r requirements.txt
+
       - name: Build Source Distribution
         run: |
           python setup.py sdist
