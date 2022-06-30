@@ -3,5 +3,10 @@
 set -e
 set -x
 
+if [[ "$RUNNER_OS" == "macOS" ]]; then
+    export CC=gcc-11
+    export CXX=g++-11
+fi
+
 python -m pip install cibuildwheel
 python -m cibuildwheel --output-dir wheelhouse
