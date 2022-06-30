@@ -120,24 +120,6 @@ jobs:
             bitness: 64
             platform_id: macosx_x86_64
 
-          # MacOS arm64
-          - os: macos-latest
-            python: 37
-            bitness: 64
-            platform_id: macosx_arm64
-          - os: macos-latest
-            python: 38
-            bitness: 64
-            platform_id: macosx_arm64
-          - os: macos-latest
-            python: 39
-            bitness: 64
-            platform_id: macosx_arm64
-          - os: macos-latest
-            python: 310
-            bitness: 64
-            platform_id: macosx_arm64
-
     steps:
       - name: Checkout LibRapid
         uses: actions/checkout@v3
