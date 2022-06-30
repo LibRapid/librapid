@@ -8,5 +8,3 @@ if [[ "$RUNNER_OS" == "macOS" ]]; then
     export CXX=g++-11
 fi
 
-python -m pip install cibuildwheel
-python -m cibuildwheel --output-dir wheelhouse
