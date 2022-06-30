@@ -72,7 +72,7 @@ namespace librapid {
 
 		Array copy() const {
 			Array res(Base::extent());
-			res = *this;
+			res.assign(*this);
 			return res;
 		}
 
