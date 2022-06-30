@@ -161,8 +161,8 @@ jobs:
       - name: Export Required Variables
         if: runner.os == 'macOS'
         run: |
-          export CC = gcc-11
-          export CXX = g++-11
+          export CC=gcc-11
+          export CXX=g++-11
 
       - name: Build Wheels
         env:
