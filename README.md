@@ -6,11 +6,6 @@
 <img src="https://github.com/LibRapid/librapid_bin/blob/master/branding/LibRapid_dark.png#gh-dark-mode-only" width="800">
 </p>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/LibRapid/librapid_bin/blob/master/branding/LibRapid_dark.png">
-  <img alt="LibRapid" src="https://github.com/LibRapid/librapid_bin/blob/master/branding/LibRapid_light.png">
-</picture>
-
 ![PyPI](https://img.shields.io/pypi/v/librapid?color=green&label=Release&logo=python&logoColor=green) ![PyPI - License](https://img.shields.io/pypi/l/librapid?color=gray&label=Licensed%20under) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/librapid?color=blue&label=Version&logo=python&logoColor=green) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC) ![PyPI - Downloads](https://img.shields.io/pypi/dm/librapid?color=blue&label=Downloads&logo=python&logoColor=green) ![C++ Version](https://img.shields.io/badge/Language-C%2B%2B%2017-orange)
 
 
