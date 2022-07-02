@@ -100,7 +100,9 @@ py::class_<librapid::ArrayB>(module, "ArrayB")
 	.def("dot", [](const librapid::ArrayB & this_, const librapid::ArrayB & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayB & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayB & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayB & this_) { return "<librapid::ArrayB\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayB & this_) { return "<librapid::ArrayB\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayB & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayB & this_) { return this_.extent(); });
 py::class_<librapid::ArrayC>(module, "ArrayC")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -211,7 +213,9 @@ py::class_<librapid::ArrayC>(module, "ArrayC")
 	.def("dot", [](const librapid::ArrayC & this_, const librapid::ArrayC & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayC & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayC & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayC & this_) { return "<librapid::ArrayC\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayC & this_) { return "<librapid::ArrayC\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayC & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayC & this_) { return this_.extent(); });
 py::class_<librapid::ArrayF16>(module, "ArrayF16")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -318,7 +322,9 @@ py::class_<librapid::ArrayF16>(module, "ArrayF16")
 	.def("dot", [](const librapid::ArrayF16 & this_, const librapid::ArrayF16 & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayF16 & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayF16 & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayF16 & this_) { return "<librapid::ArrayF16\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayF16 & this_) { return "<librapid::ArrayF16\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayF16 & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayF16 & this_) { return this_.extent(); });
 py::class_<librapid::ArrayF32>(module, "ArrayF32")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -425,7 +431,9 @@ py::class_<librapid::ArrayF32>(module, "ArrayF32")
 	.def("dot", [](const librapid::ArrayF32 & this_, const librapid::ArrayF32 & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayF32 & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayF32 & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayF32 & this_) { return "<librapid::ArrayF32\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayF32 & this_) { return "<librapid::ArrayF32\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayF32 & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayF32 & this_) { return this_.extent(); });
 py::class_<librapid::ArrayF64>(module, "ArrayF64")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -532,7 +540,9 @@ py::class_<librapid::ArrayF64>(module, "ArrayF64")
 	.def("dot", [](const librapid::ArrayF64 & this_, const librapid::ArrayF64 & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayF64 & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayF64 & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayF64 & this_) { return "<librapid::ArrayF64\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayF64 & this_) { return "<librapid::ArrayF64\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayF64 & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayF64 & this_) { return this_.extent(); });
 py::class_<librapid::ArrayI16>(module, "ArrayI16")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -643,7 +653,9 @@ py::class_<librapid::ArrayI16>(module, "ArrayI16")
 	.def("dot", [](const librapid::ArrayI16 & this_, const librapid::ArrayI16 & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayI16 & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayI16 & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayI16 & this_) { return "<librapid::ArrayI16\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayI16 & this_) { return "<librapid::ArrayI16\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayI16 & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayI16 & this_) { return this_.extent(); });
 py::class_<librapid::ArrayI32>(module, "ArrayI32")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -754,7 +766,9 @@ py::class_<librapid::ArrayI32>(module, "ArrayI32")
 	.def("dot", [](const librapid::ArrayI32 & this_, const librapid::ArrayI32 & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayI32 & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayI32 & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayI32 & this_) { return "<librapid::ArrayI32\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayI32 & this_) { return "<librapid::ArrayI32\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayI32 & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayI32 & this_) { return this_.extent(); });
 py::class_<librapid::ArrayI64>(module, "ArrayI64")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -865,7 +879,9 @@ py::class_<librapid::ArrayI64>(module, "ArrayI64")
 	.def("dot", [](const librapid::ArrayI64 & this_, const librapid::ArrayI64 & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayI64 & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayI64 & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayI64 & this_) { return "<librapid::ArrayI64\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayI64 & this_) { return "<librapid::ArrayI64\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayI64 & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayI64 & this_) { return this_.extent(); });
 
 #if defined(LIBRAPID_HAS_CUDA)
 py::class_<librapid::ArrayBG>(module, "ArrayBG")
@@ -970,7 +986,9 @@ py::class_<librapid::ArrayBG>(module, "ArrayBG")
 	.def("dot", [](const librapid::ArrayBG & this_, const librapid::ArrayBG & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayBG & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayBG & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayBG & this_) { return "<librapid::ArrayBG\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayBG & this_) { return "<librapid::ArrayBG\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayBG & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayBG & this_) { return this_.extent(); });
 py::class_<librapid::ArrayCG>(module, "ArrayCG")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -1081,7 +1099,9 @@ py::class_<librapid::ArrayCG>(module, "ArrayCG")
 	.def("dot", [](const librapid::ArrayCG & this_, const librapid::ArrayCG & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayCG & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayCG & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayCG & this_) { return "<librapid::ArrayCG\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayCG & this_) { return "<librapid::ArrayCG\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayCG & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayCG & this_) { return this_.extent(); });
 py::class_<librapid::ArrayF16G>(module, "ArrayF16G")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -1188,7 +1208,9 @@ py::class_<librapid::ArrayF16G>(module, "ArrayF16G")
 	.def("dot", [](const librapid::ArrayF16G & this_, const librapid::ArrayF16G & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayF16G & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayF16G & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayF16G & this_) { return "<librapid::ArrayF16G\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayF16G & this_) { return "<librapid::ArrayF16G\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayF16G & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayF16G & this_) { return this_.extent(); });
 py::class_<librapid::ArrayF32G>(module, "ArrayF32G")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -1295,7 +1317,9 @@ py::class_<librapid::ArrayF32G>(module, "ArrayF32G")
 	.def("dot", [](const librapid::ArrayF32G & this_, const librapid::ArrayF32G & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayF32G & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayF32G & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayF32G & this_) { return "<librapid::ArrayF32G\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayF32G & this_) { return "<librapid::ArrayF32G\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayF32G & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayF32G & this_) { return this_.extent(); });
 py::class_<librapid::ArrayF64G>(module, "ArrayF64G")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -1402,7 +1426,9 @@ py::class_<librapid::ArrayF64G>(module, "ArrayF64G")
 	.def("dot", [](const librapid::ArrayF64G & this_, const librapid::ArrayF64G & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayF64G & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayF64G & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayF64G & this_) { return "<librapid::ArrayF64G\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayF64G & this_) { return "<librapid::ArrayF64G\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayF64G & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayF64G & this_) { return this_.extent(); });
 py::class_<librapid::ArrayI16G>(module, "ArrayI16G")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -1513,7 +1539,9 @@ py::class_<librapid::ArrayI16G>(module, "ArrayI16G")
 	.def("dot", [](const librapid::ArrayI16G & this_, const librapid::ArrayI16G & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayI16G & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayI16G & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayI16G & this_) { return "<librapid::ArrayI16G\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayI16G & this_) { return "<librapid::ArrayI16G\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayI16G & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayI16G & this_) { return this_.extent(); });
 py::class_<librapid::ArrayI32G>(module, "ArrayI32G")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -1624,7 +1652,9 @@ py::class_<librapid::ArrayI32G>(module, "ArrayI32G")
 	.def("dot", [](const librapid::ArrayI32G & this_, const librapid::ArrayI32G & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayI32G & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayI32G & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayI32G & this_) { return "<librapid::ArrayI32G\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayI32G & this_) { return "<librapid::ArrayI32G\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayI32G & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayI32G & this_) { return this_.extent(); });
 py::class_<librapid::ArrayI64G>(module, "ArrayI64G")
 	.def(py::init<>())
 	.def(py::init<librapid::Extent>())
@@ -1735,7 +1765,9 @@ py::class_<librapid::ArrayI64G>(module, "ArrayI64G")
 	.def("dot", [](const librapid::ArrayI64G & this_, const librapid::ArrayI64G & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayI64G & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayI64G & this_) { return this_.str(); })
-	.def("__repr__", [](const librapid::ArrayI64G & this_) { return "<librapid::ArrayI64G\n" + this_.str("{}", ",") + "\n>"; });
+	.def("__repr__", [](const librapid::ArrayI64G & this_) { return "<librapid::ArrayI64G\n" + this_.str("{}", ",") + "\n>"; })
+	.def("isScalar", [](const librapid::ArrayI64G & this_) { return this_.isScalar(); })
+	.def("extent", [](const librapid::ArrayI64G & this_) { return this_.extent(); });
 
 #endif // LIBRAPID_HAS_CUDA
 
