@@ -13,6 +13,8 @@ openblas_install
 
 librapid-*.*.*/
 
+*.egg-info
+
 MANIFEST
 
 build
