@@ -260,19 +260,24 @@ namespace librapid {
 						res += "... ";
 					}
 
-					Scalar val			  = (Scalar)this->operator()(i);
+					auto val			  = (Scalar)this->operator()(i);
 					std::string formatted = fmt::format(format, val);
 					auto findIter		  = std::find(formatted.begin(), formatted.end(), '.');
 					int64_t pointPos	  = findIter - formatted.begin();
-					if (findIter == formatted.end()) {
+					if (afterPoint == 0) {
 						// No decimal point present
 						res += fmt::format("{:>{}}", formatted, beforePoint);
 					} else {
 						// Decimal point present
 						auto integer  = formatted.substr(0, pointPos);
 						auto floating = formatted.substr(pointPos);
-						res +=
-						  fmt::format("{:>{}}{:<{}}", integer, beforePoint, floating, afterPoint);
+						// Add an additional space to account for the missing decimal point in some
+						// cases
+						res += fmt::format("{:>{}}{:<{}}",
+										   integer,
+										   beforePoint,
+										   floating,
+										   afterPoint + (findIter == formatted.end()));
 					}
 					if (i + 1 < zeroDim) res += delim;
 				}
