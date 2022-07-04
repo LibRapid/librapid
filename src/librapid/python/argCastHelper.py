@@ -11,13 +11,19 @@ def cast(args, scalarTypes, retType, allowed=None, extractor=None):
 			return None
 
 		# Check for a list type
-		if isinstance(args[0], (list, tuple)):
+		if allowed is not None:
+			typeList = (list, tuple, retType, allowed)
+		else:
+			typeList = (list, tuple, retType)
+
+		if isinstance(args[0], typeList):
 			if len(args) > 1:
 				return None
-			return cast(args[0], scalarTypes, retType)
+			return cast(args[0], scalarTypes, retType, allowed, extractor)
 
 		# Cast elements in args to return type
 		for val in args:
 			if not isinstance(val, scalarTypes):
 				return None
 			return retType(args)
+			
