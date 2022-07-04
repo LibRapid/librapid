@@ -322,7 +322,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				int64_t threadNum = 0;
 #	endif
 
-				Array<Scalar, Device> res(m_extent.swivel(order));
+				Array<Scalar, Device> res(m_extent.swivelled(order));
 
 				if constexpr (std::is_same_v<Scalar, extended::float16_t>) {
 					auto tmp = cast<float>();

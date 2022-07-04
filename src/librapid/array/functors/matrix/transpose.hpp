@@ -39,7 +39,7 @@ namespace librapid::functors::matrix {
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOpInput(const Derived &other, int64_t index) const {
 			auto extent	   = other.extent();
-			auto swivelled = extent.reverseIndex(index).swivel(m_order);
+			auto swivelled = extent.reverseIndex(index).swivelled(m_order);
 			auto first	   = extent.index(swivelled);
 			return other.scalar(first);
 		}
@@ -54,7 +54,7 @@ namespace librapid::functors::matrix {
 			BaseScalar buffer[internal::traits<BaseScalar>::PacketWidth];
 			auto extent	   = other.extent();
 			auto size	   = extent.size();
-			auto swivelled = extent.reverseIndexAdjusted(index).swivel(m_order);
+			auto swivelled = extent.reverseIndexAdjusted(index).swivelled(m_order);
 			auto first	   = extent.indexAdjusted(swivelled);
 			auto stride	   = extent.strideAdjusted();
 			auto inc	   = stride[m_order[extent.dims() - 1]];
@@ -78,7 +78,7 @@ namespace librapid::functors::matrix {
 		template<typename T, int64_t d, int64_t a>
 		LR_NODISCARD("")
 		ExtentType<T, d> genExtent(const ExtentType<T, d, a> &extent) const {
-			return extent.swivel(m_order);
+			return extent.swivelled(m_order);
 		}
 
 		LR_NODISCARD("") LR_FORCE_INLINE std::string genKernel() const {
