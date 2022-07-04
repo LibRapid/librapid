@@ -13,13 +13,13 @@ arrayTypes = [
 	"#if defined(LIBRAPID_HAS_CUDA)",
 
 	"ArrayBG",
-	"ArrayCG",
+	# "ArrayCG",
 	"ArrayF16G",
 	"ArrayF32G",
-	"ArrayF64G",
-	"ArrayI16G",
-	"ArrayI32G",
-	"ArrayI64G",
+	# "ArrayF64G",
+	# "ArrayI16G",
+	# "ArrayI32G",
+	# "ArrayI64G",
 	
 	"#endif // LIBRAPID_HAS_CUDA"
 ]
