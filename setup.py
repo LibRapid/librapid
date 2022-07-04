@@ -152,11 +152,16 @@ else:
 if os.environ.get("LIBRAPID_NO_ARCH"):
     cmake_args.append("-DLIBRAPID_NO_ARCH=yes")
 
+if os.environ.get("LIBRAPID_CUDA_WHEEL"):
+    moduleName = "librapid_cuda_" + os.environ["LIBRAPID_CUDA_WHEEL"]
+else:
+    moduleName = "librapid"
+
 # cmake_args.append("-DCMAKE_BUILD_TYPE=Release")
 # cmake_args.append("-DCMAKE_BUILD_TYPE=DEBUG")
 
 setup(
-    name="librapid",
+    name=moduleName,
     version=__version__,
     author="Toby Davis",
     author_email="pencilcaseman@gmail.com",

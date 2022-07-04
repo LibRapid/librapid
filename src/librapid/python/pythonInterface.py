@@ -179,37 +179,37 @@ class Array:
 
 	def __add__(self, other):
 		if isinstance(other, Array):
-			return Array(self._array + other.array)
+			return Array(self._array + other._array)
 		return Array(self._array + other)
 
 	def __sub__(self, other):
 		if isinstance(other, Array):
-			return Array(self._array - other.array)
+			return Array(self._array - other._array)
 		return Array(self._array - other)
 
 	def __mul__(self, other):
 		if isinstance(other, Array):
-			return Array(self._array * other.array)
+			return Array(self._array * other._array)
 		return Array(self._array * other)
 
 	def __div__(self, other):
 		if isinstance(other, Array):
-			return Array(self._array / other.array)
+			return Array(self._array / other._array)
 		return Array(self._array / other)
 
 	def __or__(self, other):
 		if isinstance(other, Array):
-			return Array(self._array | other.array)
+			return Array(self._array | other._array)
 		return Array(self._array | other)
 
 	def __and__(self, other):
 		if isinstance(other, Array):
-			return Array(self._array & other.array)
+			return Array(self._array & other._array)
 		return Array(self._array & other)
 
 	def __xor__(self, other):
 		if isinstance(other, Array):
-			return Array(self._array ^ other.array)
+			return Array(self._array ^ other._array)
 		return Array(self._array ^ other)
 
 	def __neg__(self):
@@ -222,7 +222,7 @@ class Array:
 		return Array(self._array.transposed(order))
 
 	def dot(self, other):
-		return Array(self._array.dot(other.array))
+		return Array(self._array.dot(other._array))
 
 	def str(self, format:str="{}",
 				  delim:str=" ",
