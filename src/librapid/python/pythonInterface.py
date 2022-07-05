@@ -264,13 +264,13 @@ class Array:
 		return self._array.extent()
 
 def add(lhs:Array, rhs:Array, dst:Array):
-	_librapid.add(lhs.array, rhs.array, dst.array)
+	_librapid.add(lhs._array, rhs._array, dst._array)
 
 def sub(lhs:Array, rhs:Array, dst:Array):
-	_librapid.sub(lhs.array, rhs.array, dst.array)
+	_librapid.sub(lhs._array, rhs._array, dst._array)
 
 def mul(lhs:Array, rhs:Array, dst:Array):
-	_librapid.mul(lhs.array, rhs.array, dst.array)
+	_librapid.mul(lhs._array, rhs.a_arrayrray, dst._array)
 
 def div(lhs:Array, rhs:Array, dst:Array):
-	_librapid.div(lhs.array, rhs.array, dst.array)
+	_librapid.div(lhs._array, rhs._array, dst._array)
