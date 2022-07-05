@@ -7,6 +7,28 @@ print("HELLO WORLD!")
 def test(x):
     print(x * 2)
 
+def isArrayObject(obj):
+	try:
+		# CUDA support
+		return isinstance(obj, (_librapid.ArrayB,
+								_librapid.ArrayF16,
+								_librapid.ArrayF32,
+								_librapid.ArrayI32,
+								_librapid.ArrayBG,
+								_librapid.ArrayF16G,
+								_librapid.ArrayF32G,
+								_librapid.ArrayI32G))
+	except:
+		# No CUDA support
+		return isinstance(obj, (_librapid.ArrayB,
+								_librapid.ArrayC,
+								_librapid.ArrayF16,
+								_librapid.ArrayF32,
+								_librapid.ArrayF64,
+								_librapid.ArrayI16,
+								_librapid.ArrayI32,
+								_librapid.ArrayI64))
+
 Extent = extentInterface.Extent
 
 class Array:
@@ -36,16 +58,8 @@ class Array:
 					raise ValueError("Device argument must be a string")
 
 		if len(args) > 0:
-			if isinstance(args[0], (_librapid.ArrayC,
-									_librapid.ArrayB,
-									_librapid.ArrayF16,
-									_librapid.ArrayF32,
-									_librapid.ArrayF64,
-									_librapid.ArrayI16,
-									_librapid.ArrayI32,
-									_librapid.ArrayI64)):
+			if isArrayObject(args[0]):
 				self._array = args[0]
-
 			elif isinstance(args[0], Extent):
 				extent = args[0]
 
