@@ -1,6 +1,20 @@
 # Detect LibRapid features
 
 arrayTypes = [
+	"#if defined(LIBRAPID_HAS_CUDA)",
+
+	"ArrayB",
+	"ArrayF16",
+	"ArrayF32",
+	"ArrayI32",
+
+	"ArrayBG",
+	"ArrayF16G",
+	"ArrayF32G",
+	"ArrayI32G",
+
+	"#else",
+
 	"ArrayB",
 	"ArrayC",
 	"ArrayF16",
@@ -9,17 +23,6 @@ arrayTypes = [
 	"ArrayI16",
 	"ArrayI32",
 	"ArrayI64",
-
-	"#if defined(LIBRAPID_HAS_CUDA)",
-
-	"ArrayBG",
-	# "ArrayCG",
-	"ArrayF16G",
-	"ArrayF32G",
-	# "ArrayF64G",
-	# "ArrayI16G",
-	# "ArrayI32G",
-	# "ArrayI64G",
 	
 	"#endif // LIBRAPID_HAS_CUDA"
 ]
