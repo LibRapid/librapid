@@ -135,7 +135,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Clone OpenBLAS Build
-        if: runner.bitness == 64
+        if: ${{ runner.bitness }} == 64
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: build-openblas.yaml
@@ -352,8 +352,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: dist/*.tar.gz
-
-      
 
   # Upload the wheels and the source distribution
   upload_artifacts:
