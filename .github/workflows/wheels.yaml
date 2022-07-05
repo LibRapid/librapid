@@ -53,32 +53,39 @@ jobs:
             python: 37
             bitness: 64
             platform_id: win_amd64
+            use_openblas: true
           - os: windows-latest
             python: 38
             bitness: 64
             platform_id: win_amd64
+            use_openblas: true
           - os: windows-latest
             python: 39
             bitness: 64
             platform_id: win_amd64
+            use_openblas: true
           - os: windows-latest
             python: 310
             bitness: 64
             platform_id: win_amd64
+            use_openblas: true
 
           # Window 32 bit
           - os: windows-latest
             python: 37
             bitness: 32
             platform_id: win32
+            use_openblas: false
           - os: windows-latest
             python: 38
             bitness: 32
             platform_id: win32
+            use_openblas: false
           - os: windows-latest
             python: 39
             bitness: 32
             platform_id: win32
+            use_openblas: false
 
           # Linux 64 bit manylinux2014
           - os: ubuntu-latest
@@ -86,39 +93,47 @@ jobs:
             bitness: 64
             platform_id: manylinux_x86_64
             manylinux_image: manylinux2014
+            use_openblas: false
           - os: ubuntu-latest
             python: 38
             bitness: 64
             platform_id: manylinux_x86_64
             manylinux_image: manylinux2014
+            use_openblas: false
           - os: ubuntu-latest
             python: 39
             bitness: 64
             platform_id: manylinux_x86_64
             manylinux_image: manylinux2014
+            use_openblas: false
           - os: ubuntu-latest
             python: 310
             bitness: 64
             platform_id: manylinux_x86_64
             manylinux_image: manylinux2014
+            use_openblas: false
 
           # MacOS x86_64
           - os: macos-latest
             python: 37
             bitness: 64
             platform_id: macosx_x86_64
+            use_openblas: true
           - os: macos-latest
             python: 38
             bitness: 64
             platform_id: macosx_x86_64
+            use_openblas: true
           - os: macos-latest
             python: 39
             bitness: 64
             platform_id: macosx_x86_64
+            use_openblas: true
           - os: macos-latest
             python: 310
             bitness: 64
             platform_id: macosx_x86_64
+            use_openblas: true
 
     steps:
       - name: Checkout LibRapid
@@ -135,7 +150,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Clone OpenBLAS Build
-        if: ${{ runner.bitness }} == 64
+        if: ${{ matrix.use_openblas }}
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: build-openblas.yaml
@@ -196,84 +211,100 @@ jobs:
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.4.0"
+            use_openblas: true
           - os: windows-latest
             python: 37
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.5.0"
+            use_openblas: true
           - os: windows-latest
             python: 37
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.6.0"
+            use_openblas: true
           - os: windows-latest
             python: 37
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.7.0"
+            use_openblas: true
 
           - os: windows-latest
             python: 38
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.4.0"
+            use_openblas: true
           - os: windows-latest
             python: 38
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.5.0"
+            use_openblas: true
           - os: windows-latest
             python: 38
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.6.0"
+            use_openblas: true
           - os: windows-latest
             python: 38
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.7.0"
+            use_openblas: true
 
           - os: windows-latest
             python: 39
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.4.0"
+            use_openblas: true
           - os: windows-latest
             python: 39
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.5.0"
+            use_openblas: true
           - os: windows-latest
             python: 39
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.6.0"
+            use_openblas: true
           - os: windows-latest
             python: 39
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.7.0"
+            use_openblas: true
 
           - os: windows-latest
             python: 310
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.4.0"
+            use_openblas: true
           - os: windows-latest
             python: 310
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.5.0"
+            use_openblas: true
           - os: windows-latest
             python: 310
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.6.0"
+            use_openblas: true
           - os: windows-latest
             python: 310
             bitness: 64
             platform_id: win_amd64
             cuda_version: "11.7.0"
+            use_openblas: true
 
     steps:
       - name: Checkout LibRapid
@@ -290,7 +321,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Clone OpenBLAS Build
-        if: ${{ runner.bitness }} == 64
+        if: ${{ matrix.use_openblas }}
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: build-openblas.yaml
