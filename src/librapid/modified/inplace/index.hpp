@@ -82,9 +82,8 @@ namespace librapid { namespace detail {
 
 		RowMajorIndex(const int &_m, const int &_n) : m(_m), n(_n) {}
 
-		RowMajorIndex(const ReducedDivisor &_m, const int &_n) :
-				m(_m.get()), n(_n) {}
+		RowMajorIndex(const ReducedDivisor &_m, const int &_n) : m(_m.get()), n(_n) {}
 
 		int operator()(const int &i, const int &j) const { return j + i * n; }
 	};
-} } // namespace librapid::detail
+}} // namespace librapid::detail
