@@ -13,3 +13,6 @@
 [submodule "src/librapid/vendor/pybind11"]
 	path = src/librapid/vendor/pybind11
 	url = https://github.com/pybind/pybind11.git
+[submodule "src/librapid/vendor/mpir"]
+	path = src/librapid/vendor/mpir
+	url = https://github.com/Pencilcaseman/mpir
