@@ -1,7 +1,12 @@
-graft src*
-global-exclude *.dat *.txt *.svg *.png *.css *.html *.js *.yml *.json
+global-include *.cpp *.hpp *.c *.h *.cc *.hh *.py *.cmake
 
-recursive-exclude src/librapid/vendor/fmt/test *
-recursive-exclude src/librapid/vendor/scnlib/test *
-recursive-exclude src/librapid/vendor/scnlib/benchmark *
-recursive-exclude src/librapid/vendor/Vc/tests *
+prune src/librapid/vendor/fmt/test
+prune src/librapid/vendor/mpir/tests
+prune src/librapid/vendor/pybind11/tests
+prune src/librapid/vendor/pybind11/docs
+prune src/librapid/vendor/scnlib/benchmark
+prune src/librapid/vendor/scnlib/test
+prune src/librapid/vendor/scnlib/exmaples
+prune src/librapid/vendor/Vc/examples
+prune src/librapid/vendor/Vc/tests
+prune src/librapid/vendor/Vc/godbolt

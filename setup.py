@@ -191,7 +191,7 @@ setup(
     extras_require={"test": "pytest"},
     install_requires=install_requires,
     setup_requires=setup_requires,
-    data_files=data_files,
-    include_package_data=True,
+	data_files=data_files,
+	include_package_data=True,
     zip_safe=False
 )
