@@ -62,12 +62,12 @@ namespace librapid {
 		static int64_t mpirPrintPrec = 10;
 	} // namespace internal
 
-	void setMpirPrec(int64_t dig10) {
+	inline void setMpirPrec(int64_t dig10) {
 		internal::mpirPrec = dig10;
 		mpf_set_default_prec((int64_t)((double)dig10 * 3.33));
 	}
 
-	void setMpirPrintPrec(int64_t dig10) { internal::mpirPrintPrec = dig10; }
+	inline void setMpirPrintPrec(int64_t dig10) { internal::mpirPrintPrec = dig10; }
 } // namespace librapid
 
 // Provide {fmt} printing capabilities
@@ -77,12 +77,12 @@ struct fmt::formatter<mpz_class> {
 	std::string formatStr = "{}";
 
 	template<typename ParseContext>
-	constexpr auto parse(ParseContext &ctx) {
+	inline constexpr auto parse(ParseContext &ctx) {
 		return ctx.begin();
 	}
 
 	template<typename FormatContext>
-	auto format(const mpz_class &num, FormatContext &ctx) {
+	inline auto format(const mpz_class &num, FormatContext &ctx) {
 		try {
 			std::stringstream ss;
 			ss << std::fixed;
@@ -98,12 +98,12 @@ struct fmt::formatter<mpf_class> {
 	std::string formatStr = "{}";
 
 	template<typename ParseContext>
-	constexpr auto parse(ParseContext &ctx) {
+	inline constexpr auto parse(ParseContext &ctx) {
 		return ctx.begin();
 	}
 
 	template<typename FormatContext>
-	auto format(const mpf_class &num, FormatContext &ctx) {
+	inline auto format(const mpf_class &num, FormatContext &ctx) {
 		try {
 			std::stringstream ss;
 			ss << std::fixed;
@@ -119,12 +119,12 @@ struct fmt::formatter<mpq_class> {
 	std::string formatStr = "{}";
 
 	template<typename ParseContext>
-	constexpr auto parse(ParseContext &ctx) {
+	inline constexpr auto parse(ParseContext &ctx) {
 		return ctx.begin();
 	}
 
 	template<typename FormatContext>
-	auto format(const mpq_class &num, FormatContext &ctx) {
+	inline auto format(const mpq_class &num, FormatContext &ctx) {
 		try {
 			std::stringstream ss;
 			ss << std::fixed;
