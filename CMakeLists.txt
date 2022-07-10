@@ -38,7 +38,8 @@ set(LIBRAPID_HAS_CUDA false)
 set(LIBRAPID_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/cudaCodeLoader.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/kernelHelper.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/dotCBlas.cpp")
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/dotCBlas.cpp"
+        )
 
 # {fmt} might fail to compile when building for python if this is not set
 if (${SKBUILD})
@@ -280,8 +281,6 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/mpir")
 
 target_link_libraries(${module_name} PUBLIC fmt scn Vc mpir)
 target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
-
-target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
 
 if (${SKBUILD})
     install(TARGETS ${module_name} DESTINATION .)
