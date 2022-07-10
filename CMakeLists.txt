@@ -276,8 +276,9 @@ endif ()
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/fmt")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/Vc")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/mpir")
 
-target_link_libraries(${module_name} PUBLIC fmt scn Vc)
+target_link_libraries(${module_name} PUBLIC fmt scn Vc mpir)
 target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
 
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
