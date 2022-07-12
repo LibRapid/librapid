@@ -21,7 +21,6 @@ namespace librapid::memory {
 #if defined(LIBRAPID_HAS_CUDA)
 			if constexpr (is_same_v<d, device::GPU>) initializeCudaStream();
 #endif
-			// memory::memset<T, d>(m_heap, 0, m_size);
 		}
 
 		DenseStorage(const DenseStorage<T, d> &other) {
@@ -73,6 +72,11 @@ namespace librapid::memory {
 
 		LR_NODISCARD("") int64_t bytes() const { return sizeof(T) * m_size; }
 
+		LR_NODISCARD("") int64_t getOffset() const { return m_memOffset; }
+
+		LR_NODISCARD("") void setOffset(int64_t off) { m_memOffset = off; }
+
+	private:
 		void increment() const { (*m_refCount)++; }
 
 		void decrement() {
@@ -140,5 +144,6 @@ namespace librapid::memory {
 		LR_ASSERT(dst.size() == src.size(),
 				  "Cannot copy data between DenseStorage objects with different sizes");
 		memcpy<T, d, T_, d_>(dst.heap(), src.heap(), dst.size());
+		dst.setOffset(src.getOffset());
 	}
 } // namespace librapid::memory
