@@ -5,16 +5,61 @@
 // Memory alignment adapted from
 // https://gist.github.com/dblalock/255e76195676daa5cbc57b9b36d1c99a
 
-namespace librapid { namespace memory {
+namespace librapid::memory {
+	template<typename T>
+	struct traits {
+		static constexpr uint64_t Size = sizeof(T);
+		static constexpr bool CanAlign = true;
+		static constexpr bool CanMemcpy = true;
+	};
+
+	template<>
+	struct traits<mpz> {
+		static constexpr uint64_t Size = sizeof(mpz);
+		static constexpr bool CanAlign = false;
+		static constexpr bool CanMemcpy = false;
+	};
+
+	template<>
+	struct traits<mpf> {
+		static constexpr uint64_t Size = sizeof(mpf);
+		static constexpr bool CanAlign = false;
+		static constexpr bool CanMemcpy = false;
+	};
+
+	template<>
+	struct traits<mpq> {
+		static constexpr uint64_t Size = sizeof(mpq);
+		static constexpr bool CanAlign = false;
+		static constexpr bool CanMemcpy = false;
+	};
+
 	constexpr uint64_t memAlign = 32;
 
 	template<typename T = char, typename d = device::CPU,
 			 typename std::enable_if_t<std::is_same_v<d, device::CPU>, int> = 0>
 	LR_NODISCARD("Do not leave a dangling pointer")
 	LR_FORCE_INLINE T *malloc(size_t num, size_t alignment = memAlign, bool zero = false) {
+		if constexpr(!traits<T>::CanAlign) {
+			// Value cannot be aligned to a boundary, so use a simpler allocation technique
+			auto buf = new T[num];
+
+			LR_ASSERT(buf != nullptr,
+					  "Memory allocation failed. Cannot allocate {} items of size "
+					  "{} ({} bytes total)!",
+					  num,
+					  sizeof(T),
+					  sizeof(T) * num);
+
+			if (zero) std::memset(buf, 0, sizeof(T) * num);
+			return buf;
+		}
+
 		size_t size		   = sizeof(T) * num;
 		size_t requestSize = size + alignment;
-		auto *buf = (unsigned char *)(zero ? calloc(1, requestSize) : std::malloc(requestSize));
+
+		auto *buf = new unsigned char[requestSize];
+		if (zero) std::memset(buf, 0, requestSize);
 
 		LR_ASSERT(buf != nullptr,
 				  "Memory allocation failed. Cannot allocate {} items of size "
@@ -45,9 +90,14 @@ namespace librapid { namespace memory {
 #ifdef LIBRAPID_TRACEBACK
 			LR_STATUS("LIBRAPID TRACEBACK -- FREE {}", (void *)alignedPtr);
 #endif
+			if constexpr(!traits<T>::CanAlign) {
+				// Value cannot be aligned to a boundary, so use a simpler freeing technique
+				delete[] alignedPtr;
+				return;
+			}
 
 			int offset = *(((unsigned char *)alignedPtr) - 1);
-			std::free(((unsigned char *)alignedPtr) - offset);
+			delete[] (alignedPtr - offset);
 		}
 
 		// Only supports copying between host pointers
@@ -55,7 +105,7 @@ namespace librapid { namespace memory {
 				 typename std::enable_if_t<
 				   std::is_same_v<d, device::CPU> && std::is_same_v<d_, device::CPU>, int> = 0>
 		LR_FORCE_INLINE void memcpy(T *dst, T_ *src, int64_t size) {
-			if constexpr (std::is_same_v<T, T_>) {
+			if constexpr (std::is_same_v<T, T_> && traits<T>::CanMemcpy) {
 				std::copy(src, src + size, dst);
 			} else {
 				// TODO: Optimise this?
@@ -99,4 +149,4 @@ namespace librapid { namespace memory {
 		struct PromoteDevice<device::GPU, device::GPU> {
 			using type = device::GPU;
 		};
-}} // namespace librapid::memory
+} // namespace librapid::memory
