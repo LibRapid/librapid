@@ -3,15 +3,24 @@
 arrayTypes = [
 	"#if defined(LIBRAPID_HAS_CUDA)",
 
-	"ArrayB",
-	"ArrayF16",
-	"ArrayF32",
-	"ArrayI32",
+	# "ArrayB",
+	# "ArrayF16",
+	# "ArrayF32",
+	# "ArrayI32",
+
+	# "ArrayBG",
+	# "ArrayF16G",
+	# "ArrayF32G",
+	# "ArrayI32G",
 
 	"ArrayBG",
+	"ArrayCG",
 	"ArrayF16G",
 	"ArrayF32G",
+	"ArrayF64G",
+	"ArrayI16G",
 	"ArrayI32G",
+	"ArrayI64G",
 
 	"#else",
 
@@ -79,10 +88,12 @@ class Function:
 classStr = ""
 moduleStr = ""
 
+interfaceList = {}
+
 for t in arrayTypes:
 	if t[0] == "#":
-		classStr += "\n" + t + "\n"
-		moduleStr += "\n" + t + "\n"
+		# classStr += "\n" + t + "\n"
+		# moduleStr += "\n" + t + "\n"
 		continue
 
 	typename = "librapid::{}".format(t)
@@ -226,14 +237,63 @@ for t in arrayTypes:
 	for function in moduleFunctions:
 		moduleStr += "module" + function.gen(t) + ";\n"
 
+	interfaceList[t] = classStr + "\n\n" + moduleStr
+	classStr = ""
+	moduleStr = ""
+
+# def write(path:str):
+# 	with open(path, "w") as file:
+# 		file.write(classStr)
+# 		file.write("\n")
+# 		file.write(moduleStr)
+
 def write(path:str):
-	with open(path, "w") as file:
-		file.write(classStr)
-		file.write("\n")
-		file.write(moduleStr)
+	for type, interface in interfaceList.items():
+		with open(path + "/{}Interface.cpp".format(type), "w") as file:
+			file.write("#pragma once\n")
+
+			file.write("""
+#include <librapid/librapid.hpp>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/functional.h>
+#include <functional>
+#include <string>
+
+// Just remove these. They're pointless
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
+namespace lrc = librapid;
+namespace py = pybind11;
+
+""")
+
+			file.write("void init_{}(py::module &module) {{\n".format(type))
+			if type[-1] == "G":
+				file.write("#if defined(LIBRAPID_HAS_CUDA)\n")
+			file.write(interface)
+			if type[-1] == "G":
+				file.write("#endif\n")
+			file.write("\n}")
 
 if __name__ == "__main__":
-	print(classStr)
+	write("../autogen")
+
+	for type, interface in interfaceList.items():
+		print("{}Interface.cpp".format(type))
+
 	print("\n")
-	print(moduleStr)
-	write("../autogen/arrayInterface.hpp")
+
+	for type, interface in interfaceList.items():
+		print("void init_{}(py::module &);".format(type))
+
+	print("\n")
+
+	for type, interface in interfaceList.items():
+		print("init_{}(module);".format(type))

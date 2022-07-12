@@ -39,6 +39,7 @@ set(LIBRAPID_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/cudaCodeLoader.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/kernelHelper.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/dotCBlas.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/fastMath.cpp"
         )
 
 # {fmt} might fail to compile when building for python if this is not set
@@ -52,6 +53,22 @@ if (${SKBUILD})
     pybind11_add_module(
             ${module_name} MODULE
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/librapidPythonInterface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayBGInterface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayCGInterface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayF16GInterface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayF32GInterface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayF64GInterface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayI16GInterface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayI32GInterface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayI64GInterface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayBInterface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayCInterface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayF16Interface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayF32Interface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayF64Interface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayI16Interface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayI32Interface.cpp"
+			"${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayI64Interface.cpp"
             ${LIBRAPID_SOURCES}
     )
 
