@@ -118,7 +118,13 @@ namespace librapid {
 				}
 			}
 
-			LR_NODISCARD("") T get() const { return *m_value; }
+			LR_NODISCARD("") T get() const {
+				if constexpr(std::is_same_v<d, device::CPU>)
+					return *m_value;
+				T res;
+				memcpy<T, device::CPU, T, d>(&res, m_value, 1);
+				return res;
+			}
 			void set(T value) { operator=(value); }
 
 			IMPL_BINOP2(operator==, ==);
