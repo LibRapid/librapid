@@ -464,7 +464,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 			return p;
 		}
 
-		LR_FORCE_INLINE Scalar scalar(int64_t index) const { return (Scalar)m_storage[index]; }
+		LR_FORCE_INLINE Scalar scalar(int64_t index) const { return m_storage[index].get(); }
 
 		template<typename T>
 		std::string genKernel(std::vector<T> &vec, int64_t &index) const {

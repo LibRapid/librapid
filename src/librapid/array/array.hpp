@@ -72,7 +72,9 @@ namespace librapid {
 
 		Array copy() const {
 			Array res(Base::extent());
-			res.assign(*this);
+			memory::memcpy(res.storage(), Base::storage());
+
+			// res.assign(*this);
 			return res;
 		}
 
@@ -165,7 +167,7 @@ namespace librapid {
 					if (stripWidth != 0 && strip && i == stripWidth && zeroDim > stripWidth * 2)
 						i = zeroDim - stripWidth;
 
-					auto val			  = (Scalar)this->operator()(i);
+					auto val			  = this->operator()(i).get();
 					std::string formatted = fmt::format(format, val);
 					auto findIter		  = std::find(formatted.begin(), formatted.end(), '.');
 					int64_t pointPos	  = findIter - formatted.begin();
@@ -260,7 +262,7 @@ namespace librapid {
 						res += "... ";
 					}
 
-					auto val			  = (Scalar)this->operator()(i);
+					auto val			  = this->operator()(i).get();
 					std::string formatted = fmt::format(format, val);
 					auto findIter		  = std::find(formatted.begin(), formatted.end(), '.');
 					int64_t pointPos	  = findIter - formatted.begin();
