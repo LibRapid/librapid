@@ -1,13 +1,10 @@
 #define LIBRAPID_ASSERT
 
 #include <librapid/librapid.hpp>
-
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/functional.h>
-
 #include <functional>
-
 #include <string>
 
 namespace py = pybind11;
@@ -26,6 +23,26 @@ std::string module_docstring = "A highly-optimized Array library for Python";
 
 namespace lrc = librapid;
 
+void init_extent(py::module &);
+void init_vec(py::module &);
+
+void init_ArrayBG(py::module &);
+void init_ArrayCG(py::module &);
+void init_ArrayF16G(py::module &);
+void init_ArrayF32G(py::module &);
+void init_ArrayF64G(py::module &);
+void init_ArrayI16G(py::module &);
+void init_ArrayI32G(py::module &);
+void init_ArrayI64G(py::module &);
+void init_ArrayB(py::module &);
+void init_ArrayC(py::module &);
+void init_ArrayF16(py::module &);
+void init_ArrayF32(py::module &);
+void init_ArrayF64(py::module &);
+void init_ArrayI16(py::module &);
+void init_ArrayI32(py::module &);
+void init_ArrayI64(py::module &);
+
 PYBIND11_MODULE(_librapid, module) {
 	module.doc() = module_docstring;
 
@@ -42,7 +59,22 @@ PYBIND11_MODULE(_librapid, module) {
 	#include "autogen/extentInterface.hpp"
 
 	// Include the Array library
-    #include "autogen/arrayInterface.hpp"
+    init_ArrayBG(module);
+	init_ArrayCG(module);
+	init_ArrayF16G(module);
+	init_ArrayF32G(module);
+	init_ArrayF64G(module);
+	init_ArrayI16G(module);
+	init_ArrayI32G(module);
+	init_ArrayI64G(module);
+	init_ArrayB(module);
+	init_ArrayC(module);
+	init_ArrayF16(module);
+	init_ArrayF32(module);
+	init_ArrayF64(module);
+	init_ArrayI16(module);
+	init_ArrayI32(module);
+	init_ArrayI64(module);
 
 	// Include the Vector library
 	#include "autogen/vecInterface.hpp"
