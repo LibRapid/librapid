@@ -143,7 +143,10 @@ namespace librapid::memory {
 	LR_INLINE void memcpy(DenseStorage<T, d> &dst, const DenseStorage<T_, d_> &src) {
 		LR_ASSERT(dst.size() == src.size(),
 				  "Cannot copy data between DenseStorage objects with different sizes");
-		memcpy<T, d, T_, d_>(dst.heap(), src.heap(), dst.size());
+		memcpy<typename internal::traits<T>::BaseScalar,
+			   d,
+			   typename internal::traits<T_>::BaseScalar,
+			   d_>(dst.heap(), src.heap(), dst.size());
 		dst.setOffset(src.getOffset());
 	}
 } // namespace librapid::memory
