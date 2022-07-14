@@ -21,6 +21,39 @@ namespace librapid {
 	}
 
 	inline void setMpirPrintPrec(int64_t dig10) { internal::mpirPrintPrec = dig10; }
+
+	// Helper functions
+	// mpf pi();
+
+	namespace detail {
+		struct PQT {
+			mpz_class P, Q, T;
+		};
+	} // namespace detail
+
+	class Chudnovsky {
+	public:
+		Chudnovsky(int64_t dig10 = 100);
+		detail::PQT compPQT(int64_t n1, int64_t n2) const;
+		mpf pi() const;
+
+	private:
+		mpz A, B, C, D, E, C3_24;
+		int64_t DIGITS, PREC, N;
+		double DIGITS_PER_TERM;
+	};
+
+	// void bs(const int64_t a, const int64_t b, mpz_class &Pab, mpz_class &Qab, mpz_class &Tab);
+	// mpz_class chudnovsky(int64_t digits);
+
+	mpf epsilon(const mpf &val = mpf_class());
+	mpf fmod(const mpf &val, const mpf &mod);
+
+	// Trigonometric Functionality for mpf
+	mpf sin(const mpf &val);
+	mpf cos(const mpf &val);
+	mpf tan(const mpf &val);
+
 } // namespace librapid
 
 // Provide {fmt} printing capabilities
@@ -50,7 +83,10 @@ struct fmt::formatter<mpz_class> {
 			ss.precision(specs_.precision < 1 ? 10 : specs_.precision);
 			ss << num;
 			return fmt::format_to(ctx.out(), ss.str());
-		} catch (std::exception &e) { LR_ASSERT("Invalid Format Specifier: {}", e.what()); }
+		} catch (std::exception &e) {
+			LR_ASSERT("Invalid Format Specifier: {}", e.what());
+			return fmt::format_to(ctx.out(), "FORMAT ERROR");
+		}
 	}
 };
 
@@ -79,7 +115,10 @@ struct fmt::formatter<mpf_class> {
 			ss.precision(specs_.precision < 1 ? 10 : specs_.precision);
 			ss << num;
 			return fmt::format_to(ctx.out(), ss.str());
-		} catch (std::exception &e) { LR_ASSERT("Invalid Format Specifier: {}", e.what()); }
+		} catch (std::exception &e) {
+			LR_ASSERT("Invalid Format Specifier: {}", e.what());
+			return fmt::format_to(ctx.out(), "FORMAT ERROR");
+		}
 	}
 };
 
@@ -108,7 +147,10 @@ struct fmt::formatter<mpq_class> {
 			ss.precision(specs_.precision < 1 ? 10 : specs_.precision);
 			ss << num;
 			return fmt::format_to(ctx.out(), ss.str());
-		} catch (std::exception &e) { LR_ASSERT("Invalid Format Specifier: {}", e.what()); }
+		} catch (std::exception &e) {
+			LR_ASSERT("Invalid Format Specifier: {}", e.what());
+			return fmt::format_to(ctx.out(), "FORMAT ERROR");
+		}
 	}
 };
 #endif // FMT_API

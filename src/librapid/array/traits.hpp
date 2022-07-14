@@ -64,6 +64,11 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
 	};
 
 	//------- Just a  Character -----------------------------------------------
@@ -80,9 +85,14 @@ namespace librapid::internal {
 		static constexpr char Name[]		 = "char";
 		// Packet ops here are a hack -- Packet = std::false_type means the packet ops will never
 		// be called
-		static constexpr uint64_t Flags		 = flags::ScalarBitwise | flags::ScalarArithmetic |
+		static constexpr uint64_t Flags = flags::ScalarBitwise | flags::ScalarArithmetic |
 										  flags::ScalarLogical | flags::PacketArithmetic |
 										  flags::PacketLogical | flags::PacketBitwise;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
 	};
 
 	//------- Boolean ---------------------------------------------------------
@@ -99,6 +109,11 @@ namespace librapid::internal {
 		static constexpr char Name[]		 = "bool";
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::ScalarArithmetic | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
 	};
 
 	//------- 8bit Signed Integer ---------------------------------------------
@@ -116,6 +131,11 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
 	};
 
 	//------- 8bit Unsigned Integer -------------------------------------------
@@ -133,6 +153,11 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
 	};
 
 	//------- 16bit Signed Integer --------------------------------------------
@@ -150,6 +175,11 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
 	};
 
 	//------- 16bit Unsigned Integer ------------------------------------------
@@ -167,6 +197,11 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
 	};
 
 	//------- 32bit Signed Integer --------------------------------------------
@@ -184,6 +219,11 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
 	};
 
 	//------- 32bit Unsigned Integer ------------------------------------------
@@ -201,6 +241,11 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
 	};
 
 	//------- 64bit Signed Integer --------------------------------------------
@@ -218,6 +263,11 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
 	};
 
 	//------- 64bit Unsigned Integer ------------------------------------------
@@ -235,6 +285,11 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
 	};
 
 	//------- 32bit Floating Point --------------------------------------------
@@ -251,6 +306,11 @@ namespace librapid::internal {
 		static constexpr char Name[]		 = "float";
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
 	};
 
 	//------- 64bit Floating Point --------------------------------------------
@@ -267,6 +327,64 @@ namespace librapid::internal {
 		static constexpr char Name[]		 = "double";
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+			return (CAST)val;
+		}
+	};
+
+	//------- Multiprecision Integer (MPZ) ------------------------------------
+	template<>
+	struct traits<mpz> {
+		static constexpr bool IsScalar		 = true;
+		using Valid							 = std::true_type;
+		using Scalar						 = mpz;
+		using BaseScalar					 = mpz;
+		using StorageType					 = memory::DenseStorage<mpz>;
+		using Packet						 = std::false_type;
+		using Device						 = device::CPU;
+		static constexpr int64_t PacketWidth = 1;
+		static constexpr char Name[]		 = "NO_VALID_CONVERSION";
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketBitwise | flags::ScalarBitwise |
+										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const mpz &val) {
+			if constexpr (std::is_fundamental_v<CAST>) {
+				if constexpr (std::is_floating_point_v<CAST>) return (CAST)val.get_d();
+				if constexpr (std::is_unsigned_v<CAST>) return (CAST)val.get_ui();
+				if constexpr (std::is_signed_v<CAST>) return (CAST)val.get_si();
+			}
+			return CAST(val.get_d());
+		}
+	};
+
+	//------- Multiprecision Float (MPF) ------------------------------------
+	template<>
+	struct traits<mpf> {
+		static constexpr bool IsScalar		 = true;
+		using Valid							 = std::true_type;
+		using Scalar						 = mpf;
+		using BaseScalar					 = mpf;
+		using StorageType					 = memory::DenseStorage<mpf>;
+		using Packet						 = std::false_type;
+		using Device						 = device::CPU;
+		static constexpr int64_t PacketWidth = 1;
+		static constexpr char Name[]		 = "NO_VALID_CONVERSION";
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const mpf &val) {
+			if constexpr (std::is_fundamental_v<CAST>) {
+				if constexpr (std::is_floating_point_v<CAST>) return (CAST)val.get_d();
+				if constexpr (std::is_unsigned_v<CAST>) return (CAST)val.get_ui();
+				if constexpr (std::is_signed_v<CAST>) return (CAST)val.get_si();
+			}
+			return CAST(val.get_d());
+		}
 	};
 
 	template<typename LHS, typename RHS>

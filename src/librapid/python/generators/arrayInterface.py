@@ -3,16 +3,6 @@
 arrayTypes = [
 	"#if defined(LIBRAPID_HAS_CUDA)",
 
-	# "ArrayB",
-	# "ArrayF16",
-	# "ArrayF32",
-	# "ArrayI32",
-
-	# "ArrayBG",
-	# "ArrayF16G",
-	# "ArrayF32G",
-	# "ArrayI32G",
-
 	"ArrayBG",
 	"ArrayCG",
 	"ArrayF16G",
@@ -32,6 +22,10 @@ arrayTypes = [
 	"ArrayI16",
 	"ArrayI32",
 	"ArrayI64",
+	
+	"ArrayMPZ",
+	"ArrayMPF",
+	"ArrayMPQ",
 	
 	"#endif // LIBRAPID_HAS_CUDA"
 ]
@@ -167,7 +161,7 @@ for t in arrayTypes:
 	else:
 		fArithmetic = []
 
-	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G"]:
+	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G", "ArrayMPF", "ArrayMPQ"]:
 		fBitwise = [
 			Function("__or__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ | other;"),
 			Function("__and__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ & other;"),
@@ -176,7 +170,7 @@ for t in arrayTypes:
 	else:
 		fBitwise = []
 
-	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G"]:
+	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G", "ArrayMPF", "ArrayMPQ"]:
 		fUnary = [Function("__invert__", [Argument(constRef, "this_")], "return ~this_;")]
 		if not t.startswith("ArrayB"):
 			fUnary = [Function("__neg__", [Argument(constRef, "this_")], "return -this_;")]
@@ -286,7 +280,7 @@ if __name__ == "__main__":
 	write("../autogen")
 
 	for type, interface in interfaceList.items():
-		print("{}Interface.cpp".format(type))
+		print("\"${{CMAKE_CURRENT_SOURCE_DIR}}/src/librapid/python/autogen/{}Interface.cpp\"".format(type))
 
 	print("\n")
 

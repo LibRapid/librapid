@@ -73,12 +73,13 @@ namespace librapid {
 				if constexpr (std::is_same_v<Scalar, InputScalar>) return m_toCast.packet(index);
 				static Scalar buffer[Packet::size()];
 				for (int64_t i = 0; i < Packet::size(); ++i)
-					buffer[i] = (Scalar)m_toCast.scalar(index + i);
+					buffer[i] = internal::traits<InputScalar>::template cast<Scalar>(
+					  m_toCast.scalar(index + i));
 				return Packet(&(buffer[0]));
 			}
 
 			LR_FORCE_INLINE Scalar scalar(int64_t index) const {
-				return Scalar(m_toCast.scalar(index));
+				return internal::traits<InputScalar>::template cast<Scalar>(m_toCast.scalar(index));
 			}
 
 			template<typename T>

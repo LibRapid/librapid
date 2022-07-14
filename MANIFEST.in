@@ -1,4 +1,4 @@
-global-include *.cpp *.hpp *.c *.h *.cc *.hh *.py *.cmake
+global-include *.cpp *.hpp *.c *.h *.cc *.hh *.py
 
 prune src/librapid/vendor/fmt/test
 prune src/librapid/vendor/mpir/tests
