@@ -3,6 +3,11 @@
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
 #include "../internal/memUtils.hpp"
+// #include "../modified/float16/float16.hpp"
+
+namespace librapid::extended {
+	struct float16_t;
+}
 
 namespace librapid::internal {
 	namespace flags {
@@ -90,7 +95,7 @@ namespace librapid::internal {
 										  flags::PacketLogical | flags::PacketBitwise;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+		LR_FORCE_INLINE static CAST cast(const char &val) {
 			return (CAST)val;
 		}
 	};
@@ -111,7 +116,7 @@ namespace librapid::internal {
 										  flags::ScalarArithmetic | flags::ScalarLogical;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+		LR_FORCE_INLINE static CAST cast(const bool &val) {
 			return (CAST)val;
 		}
 	};
@@ -133,7 +138,7 @@ namespace librapid::internal {
 										  flags::PacketLogical | flags::ScalarLogical;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+		LR_FORCE_INLINE static CAST cast(const int8_t &val) {
 			return (CAST)val;
 		}
 	};
@@ -155,7 +160,7 @@ namespace librapid::internal {
 										  flags::PacketLogical | flags::ScalarLogical;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+		LR_FORCE_INLINE static CAST cast(const uint8_t &val) {
 			return (CAST)val;
 		}
 	};
@@ -177,7 +182,7 @@ namespace librapid::internal {
 										  flags::PacketLogical | flags::ScalarLogical;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+		LR_FORCE_INLINE static CAST cast(const int16_t &val) {
 			return (CAST)val;
 		}
 	};
@@ -199,7 +204,7 @@ namespace librapid::internal {
 										  flags::PacketLogical | flags::ScalarLogical;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+		LR_FORCE_INLINE static CAST cast(const uint16_t &val) {
 			return (CAST)val;
 		}
 	};
@@ -221,7 +226,7 @@ namespace librapid::internal {
 										  flags::PacketLogical | flags::ScalarLogical;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+		LR_FORCE_INLINE static CAST cast(const int32_t &val) {
 			return (CAST)val;
 		}
 	};
@@ -243,7 +248,7 @@ namespace librapid::internal {
 										  flags::PacketLogical | flags::ScalarLogical;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+		LR_FORCE_INLINE static CAST cast(const uint32_t &val) {
 			return (CAST)val;
 		}
 	};
@@ -265,7 +270,7 @@ namespace librapid::internal {
 										  flags::PacketLogical | flags::ScalarLogical;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+		LR_FORCE_INLINE static CAST cast(const int64_t &val) {
 			return (CAST)val;
 		}
 	};
@@ -287,7 +292,28 @@ namespace librapid::internal {
 										  flags::PacketLogical | flags::ScalarLogical;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+		LR_FORCE_INLINE static CAST cast(const uint64_t &val) {
+			return (CAST)val;
+		}
+	};
+
+	//------- 16bit Floating Point --------------------------------------------
+	template<>
+	struct traits<extended::float16_t> {
+		static constexpr bool IsScalar		 = true;
+		using Valid							 = std::true_type;
+		using Scalar						 = extended::float16_t;
+		using BaseScalar					 = extended::float16_t;
+		using StorageType					 = memory::DenseStorage<extended::float16_t>;
+		using Packet						 = std::false_type;
+		using Device						 = device::CPU;
+		static constexpr int64_t PacketWidth = 1;
+		static constexpr char Name[]		 = "__half";
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const extended::float16_t &val) {
 			return (CAST)val;
 		}
 	};
@@ -308,7 +334,7 @@ namespace librapid::internal {
 										  flags::PacketLogical | flags::ScalarLogical;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+		LR_FORCE_INLINE static CAST cast(const float &val) {
 			return (CAST)val;
 		}
 	};
@@ -329,7 +355,7 @@ namespace librapid::internal {
 										  flags::PacketLogical | flags::ScalarLogical;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const CAST &val) {
+		LR_FORCE_INLINE static CAST cast(const double &val) {
 			return (CAST)val;
 		}
 	};
@@ -357,6 +383,9 @@ namespace librapid::internal {
 				if constexpr (std::is_unsigned_v<CAST>) return (CAST)val.get_ui();
 				if constexpr (std::is_signed_v<CAST>) return (CAST)val.get_si();
 			}
+			if constexpr (std::is_same_v<CAST, mpz> || std::is_same_v<CAST, mpf> ||
+						  std::is_same_v<CAST, mpq>)
+				return CAST(val);
 			return CAST(val.get_d());
 		}
 	};
@@ -383,6 +412,36 @@ namespace librapid::internal {
 				if constexpr (std::is_unsigned_v<CAST>) return (CAST)val.get_ui();
 				if constexpr (std::is_signed_v<CAST>) return (CAST)val.get_si();
 			}
+			if constexpr (std::is_same_v<CAST, mpz> || std::is_same_v<CAST, mpf> ||
+						  std::is_same_v<CAST, mpq>)
+				return CAST(val);
+			return CAST(val.get_d());
+		}
+	};
+
+	//------- Multiprecision Rational (MPQ) ---------------------------------
+	template<>
+	struct traits<mpq> {
+		static constexpr bool IsScalar		 = true;
+		using Valid							 = std::true_type;
+		using Scalar						 = mpq;
+		using BaseScalar					 = mpq;
+		using StorageType					 = memory::DenseStorage<mpq>;
+		using Packet						 = std::false_type;
+		using Device						 = device::CPU;
+		static constexpr int64_t PacketWidth = 1;
+		static constexpr char Name[]		 = "NO_VALID_CONVERSION";
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const mpq &val) {
+			if constexpr (std::is_fundamental_v<CAST> && std::is_floating_point_v<CAST>)
+				return (CAST)val.get_d();
+
+			if constexpr (std::is_same_v<CAST, mpz> || std::is_same_v<CAST, mpf> ||
+						  std::is_same_v<CAST, mpq>)
+				return CAST(val);
 			return CAST(val.get_d());
 		}
 	};

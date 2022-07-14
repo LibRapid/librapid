@@ -1,5 +1,5 @@
-#ifndef FLOAT16_T_HPP_INCLUDED_OSDIJSALKJS8OU4LKJAFSOIUASFD98U3LJKASFOIJFFDDDDDF
-#define FLOAT16_T_HPP_INCLUDED_OSDIJSALKJS8OU4LKJAFSOIUASFD98U3LJKASFOIJFFDDDDDF
+#pragma once
+
 //
 // inspired by:
 // https://github.com/acgessler/half_float
@@ -1017,5 +1017,3 @@ struct fmt::formatter<librapid::extended::float16_t> {
 	}
 };
 #endif // FMT_API
-
-#endif
