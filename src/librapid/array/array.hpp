@@ -296,6 +296,9 @@ namespace librapid {
 	using ArrayI16 = Array<int16_t, device::CPU>;
 	using ArrayI32 = Array<int32_t, device::CPU>;
 	using ArrayI64 = Array<int64_t, device::CPU>;
+	using ArrayMPZ = Array<mpz, device::CPU>;
+	using ArrayMPF = Array<mpf, device::CPU>;
+	using ArrayMPQ = Array<mpq, device::CPU>;
 
 	using ArrayBG	= Array<bool, device::GPU>;
 	using ArrayCG	= Array<char, device::GPU>;

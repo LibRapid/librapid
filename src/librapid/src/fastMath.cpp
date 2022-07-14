@@ -24,3 +24,11 @@ namespace librapid {
 		return u.x;
 	}
 }
+
+/*
+ * Sources:
+ *
+ * sqrtApprox,
+ * invSqrtApprox => https://en.wikipedia.org/wiki/Methods_of_computing_square_roots
+ *
+ */

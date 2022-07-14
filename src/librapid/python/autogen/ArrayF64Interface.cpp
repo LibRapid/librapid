@@ -113,6 +113,21 @@ py::class_<librapid::ArrayF64>(module, "ArrayF64")
 	#if defined(LIBRAPID_HAS_CUDA)
 	.def("castMove_ArrayI64_GPU", [](const librapid::ArrayF64 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI64>::Scalar, librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
+	.def("cast_ArrayF64", [](const librapid::ArrayF64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayMPZ>::Scalar>(); })
+	.def("castMove_ArrayMPZ_CPU", [](const librapid::ArrayF64 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayMPZ>::Scalar, librapid::device::CPU>(); })
+	#if defined(LIBRAPID_HAS_CUDA)
+	.def("castMove_ArrayMPZ_GPU", [](const librapid::ArrayF64 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayMPZ>::Scalar, librapid::device::GPU>(); })
+	#endif // LIBRAPID_HAS_CUDA
+	.def("cast_ArrayF64", [](const librapid::ArrayF64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayMPF>::Scalar>(); })
+	.def("castMove_ArrayMPF_CPU", [](const librapid::ArrayF64 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayMPF>::Scalar, librapid::device::CPU>(); })
+	#if defined(LIBRAPID_HAS_CUDA)
+	.def("castMove_ArrayMPF_GPU", [](const librapid::ArrayF64 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayMPF>::Scalar, librapid::device::GPU>(); })
+	#endif // LIBRAPID_HAS_CUDA
+	.def("cast_ArrayF64", [](const librapid::ArrayF64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayMPQ>::Scalar>(); })
+	.def("castMove_ArrayMPQ_CPU", [](const librapid::ArrayF64 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayMPQ>::Scalar, librapid::device::CPU>(); })
+	#if defined(LIBRAPID_HAS_CUDA)
+	.def("castMove_ArrayMPQ_GPU", [](const librapid::ArrayF64 & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayMPQ>::Scalar, librapid::device::GPU>(); })
+	#endif // LIBRAPID_HAS_CUDA
 	.def("__add__", [](const librapid::ArrayF64 & this_, const librapid::ArrayF64 & other) { return this_ + other; }, py::arg("other"))
 	.def("__add__", [](const librapid::ArrayF64 & this_, typename librapid::internal::traits<librapid::ArrayF64>::Scalar other) { return this_ + other; }, py::arg("other"))
 	.def("__sub__", [](const librapid::ArrayF64 & this_, const librapid::ArrayF64 & other) { return this_ - other; }, py::arg("other"))
