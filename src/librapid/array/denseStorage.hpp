@@ -74,7 +74,7 @@ namespace librapid::memory {
 
 		LR_NODISCARD("") int64_t getOffset() const { return m_memOffset; }
 
-		LR_NODISCARD("") void setOffset(int64_t off) { m_memOffset = off; }
+		void setOffset(int64_t off) { m_memOffset = off; }
 
 	private:
 		void increment() const { (*m_refCount)++; }

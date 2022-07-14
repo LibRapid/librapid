@@ -8,29 +8,29 @@
 namespace librapid::memory {
 	template<typename T>
 	struct traits {
-		static constexpr uint64_t Size = sizeof(T);
-		static constexpr bool CanAlign = true;
+		static constexpr uint64_t Size	= sizeof(T);
+		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 	};
 
 	template<>
 	struct traits<mpz> {
-		static constexpr uint64_t Size = sizeof(mpz);
-		static constexpr bool CanAlign = false;
+		static constexpr uint64_t Size	= sizeof(mpz);
+		static constexpr bool CanAlign	= false;
 		static constexpr bool CanMemcpy = false;
 	};
 
 	template<>
 	struct traits<mpf> {
-		static constexpr uint64_t Size = sizeof(mpf);
-		static constexpr bool CanAlign = false;
+		static constexpr uint64_t Size	= sizeof(mpf);
+		static constexpr bool CanAlign	= false;
 		static constexpr bool CanMemcpy = false;
 	};
 
 	template<>
 	struct traits<mpq> {
-		static constexpr uint64_t Size = sizeof(mpq);
-		static constexpr bool CanAlign = false;
+		static constexpr uint64_t Size	= sizeof(mpq);
+		static constexpr bool CanAlign	= false;
 		static constexpr bool CanMemcpy = false;
 	};
 
@@ -40,7 +40,7 @@ namespace librapid::memory {
 			 typename std::enable_if_t<std::is_same_v<d, device::CPU>, int> = 0>
 	LR_NODISCARD("Do not leave a dangling pointer")
 	LR_FORCE_INLINE T *malloc(size_t num, size_t alignment = memAlign, bool zero = false) {
-		if constexpr(!traits<T>::CanAlign) {
+		if constexpr (!traits<T>::CanAlign) {
 			// Value cannot be aligned to a boundary, so use a simpler allocation technique
 			auto buf = new T[num];
 
@@ -50,6 +50,12 @@ namespace librapid::memory {
 					  num,
 					  sizeof(T),
 					  sizeof(T) * num);
+
+			// Slightly altered traceback call to log unsigned chars being allocated
+#ifdef LIBRAPID_TRACEBACK
+			LR_STATUS(
+			  "LIBRAPID TRACEBACK -- MALLOC {} unsigned chars -> {}", sizeof(T) * num, (void *)buf);
+#endif
 
 			if (zero) std::memset(buf, 0, sizeof(T) * num);
 			return buf;
@@ -78,75 +84,75 @@ namespace librapid::memory {
 
 // Slightly altered traceback call to log unsigned chars being allocated
 #ifdef LIBRAPID_TRACEBACK
-			LR_STATUS("LIBRAPID TRACEBACK -- MALLOC {} unsigned charS -> {}", size, (void *)buf);
+		LR_STATUS("LIBRAPID TRACEBACK -- MALLOC {} unsigned chars -> {}", size, (void *)buf);
 #endif
 
-			return (T *)ret;
-		}
+		return (T *)ret;
+	}
 
-		template<typename T = char, typename d = device::CPU,
-				 typename std::enable_if_t<std::is_same_v<d, device::CPU>, int> = 0>
-		LR_FORCE_INLINE void free(T *alignedPtr) {
+	template<typename T = char, typename d = device::CPU,
+			 typename std::enable_if_t<std::is_same_v<d, device::CPU>, int> = 0>
+	LR_FORCE_INLINE void free(T *alignedPtr) {
 #ifdef LIBRAPID_TRACEBACK
-			LR_STATUS("LIBRAPID TRACEBACK -- FREE {}", (void *)alignedPtr);
+		LR_STATUS("LIBRAPID TRACEBACK -- FREE {}", (void *)alignedPtr);
 #endif
-			if constexpr(!traits<T>::CanAlign) {
-				// Value cannot be aligned to a boundary, so use a simpler freeing technique
-				delete[] alignedPtr;
-				return;
-			}
-
-			int offset = *(((unsigned char *)alignedPtr) - 1);
-			delete[] (alignedPtr - offset);
+		if constexpr (!traits<T>::CanAlign) {
+			// Value cannot be aligned to a boundary, so use a simpler freeing technique
+			delete[] alignedPtr;
+			return;
 		}
 
-		// Only supports copying between host pointers
-		template<typename T, typename d, typename T_, typename d_,
-				 typename std::enable_if_t<
-				   std::is_same_v<d, device::CPU> && std::is_same_v<d_, device::CPU>, int> = 0>
-		LR_FORCE_INLINE void memcpy(T *dst, T_ *src, int64_t size) {
-			if constexpr (std::is_same_v<T, T_> && traits<T>::CanMemcpy) {
-				std::copy(src, src + size, dst);
-			} else {
-				// TODO: Optimise this?
-				for (int64_t i = 0; i < size; ++i) { dst[i] = src[i]; }
-			}
+		int offset = *(((unsigned char *)alignedPtr) - 1);
+		delete[] ((unsigned char *) alignedPtr - offset);
+	}
+
+	// Only supports copying between host pointers
+	template<typename T, typename d, typename T_, typename d_,
+			 typename std::enable_if_t<
+			   std::is_same_v<d, device::CPU> && std::is_same_v<d_, device::CPU>, int> = 0>
+	LR_FORCE_INLINE void memcpy(T *dst, T_ *src, int64_t size) {
+		if constexpr (std::is_same_v<T, T_> && traits<T>::CanMemcpy) {
+			std::copy(src, src + size, dst);
+		} else {
+			// TODO: Optimise this?
+			for (int64_t i = 0; i < size; ++i) { dst[i] = src[i]; }
 		}
+	}
 
-		template<typename T, typename d,
-				 typename std::enable_if_t<std::is_same_v<d, device::CPU>, int> = 0>
-		LR_FORCE_INLINE void memset(T *dst, int val, int64_t size) {
-			std::memset((void *)dst, val, sizeof(T) * size);
-		}
+	template<typename T, typename d,
+			 typename std::enable_if_t<std::is_same_v<d, device::CPU>, int> = 0>
+	LR_FORCE_INLINE void memset(T *dst, int val, int64_t size) {
+		std::memset((void *)dst, val, sizeof(T) * size);
+	}
 
-		template<typename A, typename B>
-		struct PromoteDevice {};
+	template<typename A, typename B>
+	struct PromoteDevice {};
 
-		template<>
-		struct PromoteDevice<device::CPU, device::CPU> {
-			using type = device::CPU;
-		};
+	template<>
+	struct PromoteDevice<device::CPU, device::CPU> {
+		using type = device::CPU;
+	};
 
-		template<>
-		struct PromoteDevice<device::CPU, device::GPU> {
+	template<>
+	struct PromoteDevice<device::CPU, device::GPU> {
 #if defined(LIBRAPID_PREFER_GPU)
-			using type = device::GPU;
+		using type = device::GPU;
 #else
-			using type = device::CPU;
+		using type = device::CPU;
 #endif
-		};
+	};
 
-		template<>
-		struct PromoteDevice<device::GPU, device::CPU> {
+	template<>
+	struct PromoteDevice<device::GPU, device::CPU> {
 #if defined(LIBRAPID_PREFER_GPU)
-			using type = device::GPU;
+		using type = device::GPU;
 #else
-			using type = device::CPU;
+		using type = device::CPU;
 #endif
-		};
+	};
 
-		template<>
-		struct PromoteDevice<device::GPU, device::GPU> {
-			using type = device::GPU;
-		};
+	template<>
+	struct PromoteDevice<device::GPU, device::GPU> {
+		using type = device::GPU;
+	};
 } // namespace librapid::memory

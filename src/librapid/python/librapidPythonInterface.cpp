@@ -42,6 +42,9 @@ void init_ArrayF64(py::module &);
 void init_ArrayI16(py::module &);
 void init_ArrayI32(py::module &);
 void init_ArrayI64(py::module &);
+void init_ArrayMPZ(py::module &);
+void init_ArrayMPF(py::module &);
+void init_ArrayMPQ(py::module &);
 
 PYBIND11_MODULE(_librapid, module) {
 	module.doc() = module_docstring;
@@ -75,6 +78,9 @@ PYBIND11_MODULE(_librapid, module) {
 	init_ArrayI16(module);
 	init_ArrayI32(module);
 	init_ArrayI64(module);
+	init_ArrayMPZ(module);
+	init_ArrayMPF(module);
+	init_ArrayMPQ(module);
 
 	// Include the Vector library
 	#include "autogen/vecInterface.hpp"
