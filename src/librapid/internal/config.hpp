@@ -948,6 +948,7 @@ namespace librapid {
 	} // namespace internal
 } // namespace librapid
 
+#define MPIRXX_HAVE_LLONG // Enable long long support
 #include "../math/mpir.hpp"
 
 // Prefer using the GPU over the CPU -- promote arrays to the GPU where possible
