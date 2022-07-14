@@ -3,6 +3,7 @@
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
 #include "helpers/kernelFormat.hpp"
+#include "traits.hpp"
 #include "arrayBase.hpp"
 
 namespace librapid {
