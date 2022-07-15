@@ -136,7 +136,7 @@ for t in arrayTypes:
 		typename2 = "librapid::{}".format(t2)
 		scalar2 = "typename librapid::internal::traits<{}>::Scalar".format(typename2)
 		fCast += [
-			Function("cast_{}".format(t), [Argument(constRef, "this_")], "return this_.cast<{}>();".format(scalar2)),
+			Function("cast_{}".format(t2), [Argument(constRef, "this_")], "return this_.cast<{}>();".format(scalar2)),
 			Function("castMove_{}_CPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::CPU>();".format(scalar2)),
 		]
 
