@@ -1,4 +1,6 @@
 #include <cmath>
+#include <thread>
+#include <future>
 #include "librapid/math/mpir.hpp"
 
 namespace librapid {
@@ -20,8 +22,8 @@ namespace librapid {
 		detail::PQT res;
 
 		if (n1 + 1 == n2) {
-			res.P = (2 * n2 - 1);
-			res.P *= (6 * n2 - 1);
+			res.P = mpz(2 * n2 - 1);
+			res.P *= m(6 * n2 - 1);
 			res.P *= (6 * n2 - 5);
 			res.Q = C3_24 * n2 * n2 * n2;
 			res.T = (A + B * n2) * res.P;
@@ -40,7 +42,19 @@ namespace librapid {
 
 	mpf Chudnovsky::pi() const {
 		// Compute Pi
+		if ((double)DIGITS < DIGITS_PER_TERM) return {3.1415926535897932385};
+		if (DIGITS > 500) return piMultiThread();
 		detail::PQT pqt = compPQT(0, N);
+		mpf pi(0, PREC);
+		pi = D * sqrt((mpf_class)E) * pqt.Q;
+		pi /= (A * pqt.Q + pqt.T);
+		return pi;
+	}
+
+	mpf Chudnovsky::piMultiThread() const {
+		// Compute Pi
+		if ((double)DIGITS < DIGITS_PER_TERM) return {3.1415926535897932385};
+		detail::PQT pqt = compPQT2(*this, 0, N);
 		mpf pi(0, PREC);
 		pi = D * sqrt((mpf_class)E) * pqt.Q;
 		pi /= (A * pqt.Q + pqt.T);
