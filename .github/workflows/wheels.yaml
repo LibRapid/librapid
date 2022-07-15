@@ -169,6 +169,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: 1
           CC: gcc-11
           CXX: g++-11
+          CMAKE_BUILD_PARALLEL_LEVEL: 1
           LIBRAPID_CI_BUILD: true
 
         run: |
@@ -184,6 +185,7 @@ jobs:
           CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.manylinux_image }}
           CIBW_TEST_SKIP: "*-macosx_arm64"
           CIBW_BUILD_VERBOSITY: 1
+          CMAKE_BUILD_PARALLEL_LEVEL: 1
           LIBRAPID_CI_BUILD: true
 
         run: |
@@ -344,6 +346,7 @@ jobs:
           CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.manylinux_image }}
           CIBW_TEST_SKIP: "*-macosx_arm64"
           CIBW_BUILD_VERBOSITY: 1
+          CMAKE_BUILD_PARALLEL_LEVEL: 1
           LIBRAPID_CUDA_WHEEL: ${{ matrix.cuda_version }}
           LIBRAPID_CI_BUILD: true
 
