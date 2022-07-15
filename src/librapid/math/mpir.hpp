@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-
 // MPIR (modified) for BigNumber types
 #include <mpirxx.h>
 
