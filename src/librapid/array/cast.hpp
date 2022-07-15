@@ -69,7 +69,7 @@ namespace librapid {
 				return res;
 			}
 
-			LR_FORCE_INLINE Packet packet(int64_t index) const {
+			Packet packet(int64_t index) const {
 				// Quick return if possible
 				if constexpr (std::is_same_v<Scalar, InputScalar>) return m_toCast.packet(index);
 				static Scalar buffer[Packet::size()];
@@ -79,7 +79,7 @@ namespace librapid {
 				return Packet(&(buffer[0]));
 			}
 
-			LR_FORCE_INLINE Scalar scalar(int64_t index) const {
+			Scalar scalar(int64_t index) const {
 				return internal::traits<InputScalar>::template cast<Scalar>(m_toCast.scalar(index));
 			}
 
