@@ -152,9 +152,6 @@ else:
 if os.environ.get("LIBRAPID_NO_ARCH"):
     cmake_args.append("-DLIBRAPID_NO_ARCH=yes")
 
-if os.environ.get("LIBRAPID_CI_BUILD"):
-	cmake_args.append("--parallel 1")
-
 if os.environ.get("LIBRAPID_CUDA_WHEEL"):
     moduleName = "librapid_cuda_" + os.environ["LIBRAPID_CUDA_WHEEL"]
 else:
