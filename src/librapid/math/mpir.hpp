@@ -2,26 +2,17 @@
 
 // MPIR (modified) for BigNumber types
 #include <mpirxx.h>
+#include <thread>
+#include <future>
 
 namespace librapid {
 	using mpz = mpz_class;
 	using mpf = mpf_class;
 	using mpq = mpq_class;
 
-	namespace internal {
-		static int64_t mpirPrec		 = 10;
-		static int64_t mpirPrintPrec = 10;
-	} // namespace internal
-
-	inline void setMpirPrec(int64_t dig10) {
-		internal::mpirPrec = dig10;
+	inline void prec(int64_t dig10) {
 		mpf_set_default_prec((int64_t)((double)dig10 * 3.33));
 	}
-
-	inline void setMpirPrintPrec(int64_t dig10) { internal::mpirPrintPrec = dig10; }
-
-	// Helper functions
-	// mpf pi();
 
 	namespace detail {
 		struct PQT {
@@ -31,18 +22,58 @@ namespace librapid {
 
 	class Chudnovsky {
 	public:
-		Chudnovsky(int64_t dig10 = 100);
-		detail::PQT compPQT(int64_t n1, int64_t n2) const;
-		mpf pi() const;
+		explicit Chudnovsky(int64_t dig10 = 100);
+		[[nodiscard]] detail::PQT compPQT(int64_t n1, int64_t n2) const;
+		[[nodiscard]] mpf pi() const;
 
-	private:
+		[[nodiscard]] mpf piMultiThread() const;
+
+		[[nodiscard]] static detail::PQT compPQT2(const Chudnovsky &chud, int64_t n1, int64_t n2,
+												  int64_t depth = 0) {
+			int64_t m;
+			detail::PQT res;
+
+			if (n1 + 1 == n2) {
+				res.P = mpz(2 * n2 - 1);
+				res.P *= (6 * n2 - 1);
+				res.P *= (6 * n2 - 5);
+				res.Q = chud.C3_24 * n2 * n2 * n2;
+				res.T = (chud.A + chud.B * n2) * res.P;
+				if ((n2 & 1) == 1) res.T = -res.T;
+			} else {
+				auto maxThreads = std::thread::hardware_concurrency() / 2;
+				if (depth < maxThreads) {
+					m = (n1 + n2) / 2;
+
+					std::future<detail::PQT> res1fut =
+					  std::async(&Chudnovsky::compPQT2, chud, n1, m, depth + 1);
+
+					std::future<detail::PQT> res2fut =
+					  std::async(&Chudnovsky::compPQT2, chud, m, n2, depth + 2);
+
+					detail::PQT res1 = res1fut.get(); // compPQT2(n1, m);
+					detail::PQT res2 = res2fut.get(); // compPQT2(m, n2);
+					res.P			 = res1.P * res2.P;
+					res.Q			 = res1.Q * res2.Q;
+					res.T			 = res1.T * res2.Q + res1.P * res2.T;
+				} else {
+					m				 = (n1 + n2) / 2;
+					detail::PQT res1 = compPQT2(chud, n1, m, depth + 1);
+					detail::PQT res2 = compPQT2(chud, m, n2, depth + 1);
+					res.P			 = res1.P * res2.P;
+					res.Q			 = res1.Q * res2.Q;
+					res.T			 = res1.T * res2.Q + res1.P * res2.T;
+				}
+			}
+
+			return res;
+		}
+
+	public:
 		mpz A, B, C, D, E, C3_24;
 		int64_t DIGITS, PREC, N;
 		double DIGITS_PER_TERM;
 	};
-
-	// void bs(const int64_t a, const int64_t b, mpz_class &Pab, mpz_class &Qab, mpz_class &Tab);
-	// mpz_class chudnovsky(int64_t digits);
 
 	mpf epsilon(const mpf &val = mpf_class());
 	mpf fmod(const mpf &val, const mpf &mod);
@@ -51,6 +82,10 @@ namespace librapid {
 	mpf sin(const mpf &val);
 	mpf cos(const mpf &val);
 	mpf tan(const mpf &val);
+
+	mpf csc(const mpf &val);
+	mpf sec(const mpf &val);
+	mpf cot(const mpf &val);
 
 } // namespace librapid
 

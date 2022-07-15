@@ -14,6 +14,7 @@
 #include <iostream>
 #include <atomic>
 #include <thread>
+#include <future>
 #include <random>
 #include <fstream>
 #include <streambuf>
