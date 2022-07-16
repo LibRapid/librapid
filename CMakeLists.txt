@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 project(librapid VERSION "0.3.3")
-
+set(CMAKE_CXX_STANDARD 17)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-set(CMAKE_CXX_STANDARD 17)
-
-set(LIBRAPID_INCLUDE_DIRS
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
+# Optional LibRapid settings
+option(LIBRAPID_USE_BLAS "Attempt to use a BLAS library" ON)
+option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
+option(LIBRAPID_USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
+option(LIBRAPID_USE_VC "Use Vc for SIMD vectorisation on primitive array types" ON)
+option(LIBRAPID_USE_MPIR "Include MPIR in the LibRapid build" ON)
 
 MACRO(SUBDIRLIST result curdir)
     FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
@@ -23,13 +23,17 @@ ENDMACRO()
 
 # Attempt to locate the required packages
 include(FetchContent)
-find_package(CUDAToolkit QUIET)
-find_package(BLAS QUIET)
-find_package(OpenMP)
+if (${LIBRAPID_USE_CUDA})
+    find_package(CUDAToolkit QUIET)
+endif ()
 
-option(USE_BLAS "Attempt to use a BLAS library" ON)
-option(USE_CUDA "Attempt to use CUDA" ON)
-option(USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
+if (${LIBRAPID_USE_BLAS})
+    find_package(BLAS QUIET)
+endif ()
+
+if (${LIBRAPID_USE_OMP})
+    find_package(OpenMP QUIET)
+endif ()
 
 set(LIBRAPID_HAS_OMP false)
 set(LIBRAPID_HAS_BLAS false)
@@ -40,10 +44,14 @@ set(LIBRAPID_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/kernelHelper.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/dotCBlas.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/fastMath.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirHelpers.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirTrig.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirPi.cpp"
         )
+
+if (${LIBRAPID_USE_MPIR})
+    list(APPEND LIBRAPID_SOURCES
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirHelpers.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirTrig.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirPi.cpp")
+endif ()
 
 # {fmt} might fail to compile when building for python if this is not set
 if (${SKBUILD})
@@ -92,8 +100,8 @@ else ()
 endif ()
 
 # See if OpenMP should be linked against
-if (${OpenMP_FOUND})
-    if (${USE_OMP})
+if (${LIBRAPID_USE_OMP})
+    if (${OpenMP_FOUND})
         message(STATUS "Linking against OpenMP")
 
         # Link the required library
@@ -104,31 +112,29 @@ if (${OpenMP_FOUND})
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_OMP)
         set(LIBRAPID_HAS_OMP true)
     else ()
-        message(WARNING "OpenMP was found but is not being linked against (Value <USE_OMP> is " ${USE_OMP} ")")
+        message(WARNING "OpenMP support was requested, but OpenMP was not found")
     endif ()
 endif ()
 
 # Check if BLAS was built by CI for Python Wheels.
 # If so, use this instead of any other BLAS install found
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install" OR EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install/lib/libopenblas.a")
-    message(STATUS "Using OpenBLAS built by CI for Python Wheels")
-    set(BLAS_FOUND TRUE)
-    set(USE_BLAS TRUE)
+if (${LIBRAPID_USE_BLAS})
+    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install" OR EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install/lib/libopenblas.a")
+        message(STATUS "Using OpenBLAS built by CI for Python Wheels")
+        set(BLAS_FOUND TRUE)
+        set(LIBRAPID_USE_BLAS TRUE)
 
-    if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-        set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install/lib/openblas.lib")
-    else ()
-        set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install/lib/libopenblas.a")
+        if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+            set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install/lib/openblas.lib")
+        else ()
+            set(BLAS_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install/lib/libopenblas.a")
+        endif ()
     endif ()
-else ()
-    message(STATUS "OpenBLAS for CI not found")
-    SUBDIRLIST(listDir "${CMAKE_CURRENT_SOURCE_DIR}")
-    message(STATUS "Files in Directory: ${listDir}")
 endif ()
 
 # See if BLAS should be linked against
-if (${BLAS_FOUND})
-    if (${USE_BLAS})
+if (${LIBRAPID_USE_BLAS})
+    if (${BLAS_FOUND})
         message(STATUS "BLAS located was ${BLAS_LIBRARIES}")
 
         list(GET ${BLAS_LIBRARIES} 0 LIBRAPID_BLAS)
@@ -232,13 +238,13 @@ if (${BLAS_FOUND})
             message(WARNING "Although BLAS was found, no cblas.h file was found, so BLAS support is not enabled")
         endif ()
     else ()
-        message(WARNING "BLAS was found but is not being linked against (Value <USE_BLAS> is " ${USE_BLAS} ")")
+        message(WARNING "BLAS support was requested but a valid BLAS interface was not found")
     endif ()
 endif ()
 
 # Check if CUDA should be used
-if (${CUDAToolkit_FOUND})
-    if (${USE_CUDA})
+if (${LIBRAPID_USE_CUDA})
+    if (${CUDAToolkit_FOUND})
         message(STATUS "Using CUDA ${CUDAToolkit_VERSION}")
 
         # Ensure jitify is accessible
@@ -277,7 +283,7 @@ if (${CUDAToolkit_FOUND})
         target_compile_definitions(${module_name} PUBLIC CUDA_INCLUDE_DIRS="${CUDAToolkit_INCLUDE_DIRS}")
         set(LIBRAPID_HAS_CUDA true)
     else ()
-        message(WARNING "CUDA was found but is not being linked against (Value <USE_CUDA> is " ${USE_CUDA} ")")
+        message(WARNING "CUDA support was requested, but a valid CUDA installation could not be found")
     endif ()
 endif ()
 
@@ -286,23 +292,52 @@ file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "# LibRa
 
 if (${LIBRAPID_HAS_OMP})
     file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_HAS_OMP = TRUE\n")
+else ()
+    file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_HAS_OMP = FALSE\n")
 endif ()
 
 if (${LIBRAPID_HAS_BLAS})
     file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_HAS_BLAS = TRUE\n")
+else ()
+    file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_HAS_BLAS = FALSE\n")
 endif ()
 
 if (${LIBRAPID_HAS_CUDA})
     file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_HAS_CUDA = TRUE\n")
+else ()
+    file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_HAS_CUDA = FALSE\n")
+endif ()
+
+if (${LIBRAPID_USE_VC})
+    file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_USE_VC = TRUE\n")
+else ()
+    file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_USE_VC = FALSE\n")
+endif ()
+
+if (${LIBRAPID_USE_MPIR})
+    file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_USE_MPIR = TRUE\n")
+else ()
+    file(APPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/configuration.txt" "LIBRAPID_USE_MPIR = FALSE\n")
 endif ()
 
 # Add dependencies
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/fmt")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/Vc")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/mpir")
 
-target_link_libraries(${module_name} PUBLIC fmt scn Vc mpir)
+target_link_libraries(${module_name} PUBLIC fmt scn)
+
+if (${LIBRAPID_USE_VC})
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/Vc")
+    target_link_libraries(${module_name} PUBLIC Vc)
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_USE_VC)
+endif ()
+
+if (${LIBRAPID_USE_MPIR})
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/mpir")
+    target_link_libraries(${module_name} PUBLIC mpir)
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_USE_MPIR)
+endif ()
+
 target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
 
 if (${SKBUILD})

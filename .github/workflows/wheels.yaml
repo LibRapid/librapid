@@ -216,6 +216,7 @@ jobs:
             platform_id: win_amd64
             cuda_version: "11.4.0"
             use_openblas: true
+          # This tends to give a "Compiler Out of Heap Space" error
           - os: windows-latest
             python: 37
             bitness: 64
@@ -285,6 +286,7 @@ jobs:
             cuda_version: "11.7.0"
             use_openblas: true
 
+          # This tends to give a "Compiler Out of Heap Space" error
           - os: windows-latest
             python: 310
             bitness: 64

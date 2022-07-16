@@ -296,10 +296,14 @@ namespace librapid {
 	using ArrayI16 = Array<int16_t, device::CPU>;
 	using ArrayI32 = Array<int32_t, device::CPU>;
 	using ArrayI64 = Array<int64_t, device::CPU>;
+
+#if defined(LIBRAPID_USE_MPIR)
 	using ArrayMPZ = Array<mpz, device::CPU>;
 	using ArrayMPF = Array<mpf, device::CPU>;
 	using ArrayMPQ = Array<mpq, device::CPU>;
+#endif
 
+#if defined(LIBRAPID_HAS_CUDA)
 	using ArrayBG	= Array<bool, device::GPU>;
 	using ArrayCG	= Array<char, device::GPU>;
 	using ArrayF16G = Array<extended::float16_t, device::GPU>;
@@ -308,6 +312,7 @@ namespace librapid {
 	using ArrayI16G = Array<int16_t, device::GPU>;
 	using ArrayI32G = Array<int32_t, device::GPU>;
 	using ArrayI64G = Array<int64_t, device::GPU>;
+#endif
 
 #define FORCE_TMP_FUNC(NAME, FUNC)                                                                 \
 	template<typename T, typename D>                                                               \
