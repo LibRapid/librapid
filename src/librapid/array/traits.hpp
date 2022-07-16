@@ -3,7 +3,14 @@
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
 #include "../internal/memUtils.hpp"
-// #include "../modified/float16/float16.hpp"
+
+#if defined(LIBRAPID_USE_VC)
+#define LR_VC_TYPE(X) Vc::Vector<X>
+#define LR_VC_SIZE(X) Vc::Vector<X>::size()
+#else
+#define LR_VC_TYPE(X) std::false_type
+#define LR_VC_SIZE(X) 1
+#endif
 
 namespace librapid::extended {
 	struct float16_t;
@@ -70,6 +77,10 @@ namespace librapid::internal {
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+		static constexpr uint64_t Size	= sizeof(T);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
+
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const CAST &val) {
 			return (CAST)val;
@@ -94,6 +105,10 @@ namespace librapid::internal {
 										  flags::ScalarLogical | flags::PacketArithmetic |
 										  flags::PacketLogical | flags::PacketBitwise;
 
+		static constexpr uint64_t Size	= sizeof(char);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
+
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const char &val) {
 			return (CAST)val;
@@ -108,12 +123,16 @@ namespace librapid::internal {
 		using Scalar						 = bool;
 		using BaseScalar					 = uint32_t;
 		using StorageType					 = memory::DenseStorage<bool, device::CPU>;
-		using Packet						 = Vc::Vector<BaseScalar>;
+		using Packet						 = LR_VC_TYPE(BaseScalar);
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
+		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "bool";
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::ScalarArithmetic | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(uint32_t);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const bool &val) {
@@ -129,13 +148,17 @@ namespace librapid::internal {
 		using Scalar						 = int8_t;
 		using BaseScalar					 = int8_t;
 		using StorageType					 = memory::DenseStorage<int8_t, device::CPU>;
-		using Packet						 = Vc::Vector<BaseScalar>;
+		using Packet						 = LR_VC_TYPE(BaseScalar);
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
+		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "int8_t";
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(int8_t);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const int8_t &val) {
@@ -151,13 +174,17 @@ namespace librapid::internal {
 		using Scalar						 = uint8_t;
 		using BaseScalar					 = uint8_t;
 		using StorageType					 = memory::DenseStorage<uint8_t>;
-		using Packet						 = Vc::Vector<BaseScalar>;
+		using Packet						 = LR_VC_TYPE(BaseScalar);
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
+		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "uint8_t";
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(uint8_t);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const uint8_t &val) {
@@ -173,13 +200,17 @@ namespace librapid::internal {
 		using Scalar						 = int16_t;
 		using BaseScalar					 = int16_t;
 		using StorageType					 = memory::DenseStorage<int16_t>;
-		using Packet						 = Vc::Vector<BaseScalar>;
+		using Packet						 = LR_VC_TYPE(BaseScalar);
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
+		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "int16_t";
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(int16_t);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const int16_t &val) {
@@ -195,13 +226,17 @@ namespace librapid::internal {
 		using Scalar						 = uint16_t;
 		using BaseScalar					 = uint16_t;
 		using StorageType					 = memory::DenseStorage<uint16_t>;
-		using Packet						 = Vc::Vector<BaseScalar>;
+		using Packet						 = LR_VC_TYPE(BaseScalar);
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
+		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "uint16_t";
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(uint16_t);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const uint16_t &val) {
@@ -217,13 +252,17 @@ namespace librapid::internal {
 		using Scalar						 = int32_t;
 		using BaseScalar					 = int32_t;
 		using StorageType					 = memory::DenseStorage<int32_t>;
-		using Packet						 = Vc::Vector<BaseScalar>;
+		using Packet						 = LR_VC_TYPE(BaseScalar);
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
+		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "int32_t";
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(int32_t);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const int32_t &val) {
@@ -239,13 +278,17 @@ namespace librapid::internal {
 		using Scalar						 = uint32_t;
 		using BaseScalar					 = uint32_t;
 		using StorageType					 = memory::DenseStorage<uint32_t>;
-		using Packet						 = Vc::Vector<BaseScalar>;
+		using Packet						 = LR_VC_TYPE(BaseScalar);
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
+		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "uint32_t";
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(uint32_t);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const uint32_t &val) {
@@ -263,11 +306,15 @@ namespace librapid::internal {
 		using StorageType					 = memory::DenseStorage<int64_t>;
 		using Packet						 = std::false_type; // Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = 1; // Vc::Vector<BaseScalar>::size();
+		static constexpr int64_t PacketWidth = 1; // LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "int64_t";
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(int64_t);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const int64_t &val) {
@@ -285,11 +332,15 @@ namespace librapid::internal {
 		using StorageType					 = memory::DenseStorage<uint64_t>;
 		using Packet						 = std::false_type; // Vc::Vector<BaseScalar>;
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = 1; // Vc::Vector<BaseScalar>::size();
+		static constexpr int64_t PacketWidth = 1; // LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "uint64_t";
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(uint64_t);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const uint64_t &val) {
@@ -312,6 +363,10 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+		static constexpr uint64_t Size	= 2;
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
+
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const extended::float16_t &val) {
 			return (CAST)val;
@@ -326,12 +381,16 @@ namespace librapid::internal {
 		using Scalar						 = float;
 		using BaseScalar					 = float;
 		using StorageType					 = memory::DenseStorage<float>;
-		using Packet						 = Vc::Vector<BaseScalar>;
+		using Packet						 = LR_VC_TYPE(BaseScalar);;
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
+		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "float";
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(float);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const float &val) {
@@ -347,18 +406,24 @@ namespace librapid::internal {
 		using Scalar						 = double;
 		using BaseScalar					 = double;
 		using StorageType					 = memory::DenseStorage<double>;
-		using Packet						 = Vc::Vector<BaseScalar>;
+		using Packet						 = LR_VC_TYPE(BaseScalar);;
 		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = Vc::Vector<BaseScalar>::size();
+		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "double";
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(double);
+		static constexpr bool CanAlign	= true;
+		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const double &val) {
 			return (CAST)val;
 		}
 	};
+
+#if defined(LIBRAPID_USE_MPIR)
 
 	//------- Multiprecision Integer (MPZ) ------------------------------------
 	template<>
@@ -375,6 +440,10 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(mpz);
+		static constexpr bool CanAlign	= false;
+		static constexpr bool CanMemcpy = false;
 
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const mpz &val) {
@@ -405,6 +474,10 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+		static constexpr uint64_t Size	= sizeof(mpf);
+		static constexpr bool CanAlign	= false;
+		static constexpr bool CanMemcpy = false;
+
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const mpf &val) {
 			if constexpr (std::is_fundamental_v<CAST>) {
@@ -434,6 +507,10 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+		static constexpr uint64_t Size	= sizeof(mpq);
+		static constexpr bool CanAlign	= false;
+		static constexpr bool CanMemcpy = false;
+
 		template<typename CAST>
 		LR_FORCE_INLINE static CAST cast(const mpq &val) {
 			if constexpr (std::is_fundamental_v<CAST> && std::is_floating_point_v<CAST>)
@@ -445,6 +522,8 @@ namespace librapid::internal {
 			return CAST(val.get_d());
 		}
 	};
+
+#endif // LIBRAPID_USE_MPIR
 
 	template<typename LHS, typename RHS>
 	struct PropagateDeviceType {

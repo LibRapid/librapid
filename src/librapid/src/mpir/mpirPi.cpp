@@ -43,7 +43,7 @@ namespace librapid {
 	mpf Chudnovsky::pi() const {
 		// Compute Pi
 		if ((double)DIGITS < DIGITS_PER_TERM) return {3.1415926535897932385};
-		if (DIGITS > 500) return piMultiThread();
+		// if (DIGITS > 500) return piMultiThread();
 		detail::PQT pqt = compPQT(0, N);
 		mpf pi(0, PREC);
 		pi = D * sqrt((mpf_class)E) * pqt.Q;
