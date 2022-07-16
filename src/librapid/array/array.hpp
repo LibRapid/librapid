@@ -312,6 +312,15 @@ namespace librapid {
 	using ArrayI16G = Array<int16_t, device::GPU>;
 	using ArrayI32G = Array<int32_t, device::GPU>;
 	using ArrayI64G = Array<int64_t, device::GPU>;
+#else
+	using ArrayBG	= Array<bool, device::CPU>;
+	using ArrayCG	= Array<char, device::CPU>;
+	using ArrayF16G = Array<extended::float16_t, device::CPU>;
+	using ArrayF32G = Array<float, device::CPU>;
+	using ArrayF64G = Array<double, device::CPU>;
+	using ArrayI16G = Array<int16_t, device::CPU>;
+	using ArrayI32G = Array<int32_t, device::CPU>;
+	using ArrayI64G = Array<int64_t, device::CPU>;
 #endif
 
 #define FORCE_TMP_FUNC(NAME, FUNC)                                                                 \
