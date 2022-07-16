@@ -17,8 +17,8 @@ namespace librapid {
 		PREC			= (int64_t)((double)DIGITS * log2(10));
 	}
 
-	detail::PQT Chudnovsky::compPQT(int64_t n1, int64_t n2) const {
-		int64_t m;
+	detail::PQT Chudnovsky::compPQT(int32_t n1, int32_t n2) const {
+		int32_t m;
 		detail::PQT res;
 
 		if (n1 + 1 == n2) {
