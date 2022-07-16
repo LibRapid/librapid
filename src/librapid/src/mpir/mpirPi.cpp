@@ -23,7 +23,7 @@ namespace librapid {
 
 		if (n1 + 1 == n2) {
 			res.P = mpz(2 * n2 - 1);
-			res.P *= m(6 * n2 - 1);
+			res.P *= (6 * n2 - 1);
 			res.P *= (6 * n2 - 5);
 			res.Q = C3_24 * n2 * n2 * n2;
 			res.T = (A + B * n2) * res.P;
