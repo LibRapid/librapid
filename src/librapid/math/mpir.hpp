@@ -1,6 +1,7 @@
 #pragma once
 
 // MPIR (modified) for BigNumber types
+#include <cstdint>
 #include <mpirxx.h>
 #include <thread>
 #include <future>
@@ -23,14 +24,14 @@ namespace librapid {
 	class Chudnovsky {
 	public:
 		explicit Chudnovsky(int64_t dig10 = 100);
-		[[nodiscard]] detail::PQT compPQT(int64_t n1, int64_t n2) const;
+		[[nodiscard]] detail::PQT compPQT(int32_t n1, int32_t n2) const;
 		[[nodiscard]] mpf pi() const;
 
 		[[nodiscard]] mpf piMultiThread() const;
 
-		[[nodiscard]] static detail::PQT compPQT2(const Chudnovsky &chud, int64_t n1, int64_t n2,
+		[[nodiscard]] static detail::PQT compPQT2(const Chudnovsky &chud, int32_t n1, int32_t n2,
 												  int64_t depth = 0) {
-			int64_t m;
+			int32_t m;
 			detail::PQT res;
 
 			if (n1 + 1 == n2) {
