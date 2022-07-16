@@ -1,19 +1,20 @@
 #pragma once
 
+#if defined(LIBRAPID_USE_MPIR)
+
 // MPIR (modified) for BigNumber types
-#include <cstdint>
-#include <mpirxx.h>
-#include <thread>
-#include <future>
+#	include <cstdint>
+#	include <mpirxx.h>
+#	include <thread>
+#	include <future>
+#	include <iostream>
 
 namespace librapid {
 	using mpz = mpz_class;
 	using mpf = mpf_class;
 	using mpq = mpq_class;
 
-	inline void prec(int64_t dig10) {
-		mpf_set_default_prec((int64_t)((double)dig10 * 3.33));
-	}
+	inline void prec(int64_t dig10) { mpf_set_default_prec((int64_t)((double)dig10 * 3.33)); }
 
 	namespace detail {
 		struct PQT {
@@ -42,6 +43,8 @@ namespace librapid {
 				res.T = (chud.A + chud.B * n2) * res.P;
 				if ((n2 & 1) == 1) res.T = -res.T;
 			} else {
+				// I'll be honest: I have no clue why this works. Theoretically it should be slower
+				// than other methods, but it seems to be faster, so I'm not complaining :)
 				auto maxThreads = std::thread::hardware_concurrency() / 2;
 				if (depth < maxThreads) {
 					m = (n1 + n2) / 2;
@@ -50,7 +53,7 @@ namespace librapid {
 					  std::async(&Chudnovsky::compPQT2, chud, n1, m, depth + 1);
 
 					std::future<detail::PQT> res2fut =
-					  std::async(&Chudnovsky::compPQT2, chud, m, n2, depth + 2);
+					  std::async(&Chudnovsky::compPQT2, chud, m, n2, depth + 1);
 
 					detail::PQT res1 = res1fut.get(); // compPQT2(n1, m);
 					detail::PQT res2 = res2fut.get(); // compPQT2(m, n2);
@@ -91,7 +94,7 @@ namespace librapid {
 } // namespace librapid
 
 // Provide {fmt} printing capabilities
-#ifdef FMT_API
+#	ifdef FMT_API
 template<>
 struct fmt::formatter<mpz_class> {
 	detail::dynamic_format_specs<char> specs_;
@@ -187,4 +190,6 @@ struct fmt::formatter<mpq_class> {
 		}
 	}
 };
-#endif // FMT_API
+#	endif // FMT_API
+
+#endif // LIBRAPID_USE_MPIR

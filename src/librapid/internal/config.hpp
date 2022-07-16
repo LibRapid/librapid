@@ -46,9 +46,11 @@
 #include <scn/tuple_return/tuple_return.h>
 
 // SIMD instructions
-#include <Vc/Vc>
-#include <Vc/algorithm>
-#include <Vc/cpuid.h>
+#if defined(LIBRAPID_USE_VC)
+#	include <Vc/Vc>
+#	include <Vc/algorithm>
+#	include <Vc/cpuid.h>
+#endif
 
 // LibRapid definitions
 
@@ -949,9 +951,6 @@ namespace librapid {
 	} // namespace internal
 } // namespace librapid
 
-#define MPIRXX_HAVE_LLONG // Enable long long support
-#include "../math/mpir.hpp"
-
 // Prefer using the GPU over the CPU -- promote arrays to the GPU where possible
 #if !defined(LIBRAPID_PREFER_CPU)
 #	define LIBRAPID_PREFER_GPU
@@ -964,3 +963,6 @@ namespace librapid {
 	template<class T, class U>
 	constexpr bool is_same_v = std::is_same<T, U>::value;
 } // namespace librapid
+
+#define MPIRXX_HAVE_LLONG // Enable long long support
+#include "../math/mpir.hpp"
