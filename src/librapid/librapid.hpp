@@ -33,6 +33,7 @@
 #include "array/cwisebinop.hpp"
 #include "array/cwiseunop.hpp"
 #include "array/array.hpp"
+#include "test/test.hpp"
 
 #pragma warning(pop)
 
