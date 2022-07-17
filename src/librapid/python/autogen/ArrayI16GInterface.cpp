@@ -35,100 +35,24 @@ py::class_<librapid::ArrayI16G>(module, "ArrayI16G")
 	.def("move_GPU", [](const librapid::ArrayI16G & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayBG", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayBG>::Scalar>(); })
-	.def("castMove_ArrayBG_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayBG>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayBG_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayBG>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayCG", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayCG>::Scalar>(); })
-	.def("castMove_ArrayCG_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayCG>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayCG_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayCG>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayF16G", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayF16G>::Scalar>(); })
-	.def("castMove_ArrayF16G_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayF16G>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayF16G_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayF16G>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayF32G", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayF32G>::Scalar>(); })
-	.def("castMove_ArrayF32G_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayF32G>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayF32G_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayF32G>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayF64G", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayF64G>::Scalar>(); })
-	.def("castMove_ArrayF64G_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayF64G>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayF64G_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayF64G>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayI16G", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayI16G>::Scalar>(); })
-	.def("castMove_ArrayI16G_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI16G>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayI16G_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI16G>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayI32G", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayI32G>::Scalar>(); })
-	.def("castMove_ArrayI32G_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI32G>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayI32G_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI32G>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayI64G", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayI64G>::Scalar>(); })
-	.def("castMove_ArrayI64G_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI64G>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayI64G_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI64G>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayB", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
-	.def("castMove_ArrayB_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayB_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayB>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayC", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayC>::Scalar>(); })
-	.def("castMove_ArrayC_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayC>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayC_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayC>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayF16", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayF16>::Scalar>(); })
-	.def("castMove_ArrayF16_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayF16>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayF16_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayF16>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayF32", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayF32>::Scalar>(); })
-	.def("castMove_ArrayF32_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayF32>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayF32_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayF32>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayF64", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayF64>::Scalar>(); })
-	.def("castMove_ArrayF64_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayF64>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayF64_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayF64>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayI16", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayI16>::Scalar>(); })
-	.def("castMove_ArrayI16_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI16>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayI16_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI16>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayI32", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayI32>::Scalar>(); })
-	.def("castMove_ArrayI32_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI32>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayI32_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI32>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayI64", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayI64>::Scalar>(); })
-	.def("castMove_ArrayI64_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI64>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayI64_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayI64>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayMPZ", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayMPZ>::Scalar>(); })
-	.def("castMove_ArrayMPZ_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayMPZ>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayMPZ_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayMPZ>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayMPF", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayMPF>::Scalar>(); })
-	.def("castMove_ArrayMPF_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayMPF>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayMPF_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayMPF>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("cast_ArrayMPQ", [](const librapid::ArrayI16G & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayMPQ>::Scalar>(); })
-	.def("castMove_ArrayMPQ_CPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayMPQ>::Scalar, librapid::device::CPU>(); })
-	#if defined(LIBRAPID_HAS_CUDA)
-	.def("castMove_ArrayMPQ_GPU", [](const librapid::ArrayI16G & this_) { return this_.castMove<typename librapid::internal::traits<librapid::ArrayMPQ>::Scalar, librapid::device::GPU>(); })
-	#endif // LIBRAPID_HAS_CUDA
 	.def("__add__", [](const librapid::ArrayI16G & this_, const librapid::ArrayI16G & other) { return this_ + other; }, py::arg("other"))
 	.def("__add__", [](const librapid::ArrayI16G & this_, typename librapid::internal::traits<librapid::ArrayI16G>::Scalar other) { return this_ + other; }, py::arg("other"))
 	.def("__sub__", [](const librapid::ArrayI16G & this_, const librapid::ArrayI16G & other) { return this_ - other; }, py::arg("other"))
