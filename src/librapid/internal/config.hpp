@@ -18,6 +18,7 @@
 #include <random>
 #include <fstream>
 #include <streambuf>
+#include <utility>
 
 #if defined(_OPENMP)
 #	include <omp.h>

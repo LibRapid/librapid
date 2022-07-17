@@ -77,6 +77,7 @@ namespace librapid {
 		mpz A, B, C, D, E, C3_24;
 		int64_t DIGITS, PREC, N;
 		double DIGITS_PER_TERM;
+		bool m_verbose = false;
 	};
 
 	mpf epsilon(const mpf &val = mpf_class());

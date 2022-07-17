@@ -4,6 +4,9 @@ set(CMAKE_CXX_STANDARD 17)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Optional LibRapid settings
+option(LIBRAPID_BUILD_EXAMPLES "Compile LibRapid C++ Examples" OFF)
+option(LIBRAPID_BUILD_TESTS "Compile LibRapid C++ Tests" OFF)
+
 option(LIBRAPID_USE_BLAS "Attempt to use a BLAS library" ON)
 option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
 option(LIBRAPID_USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
@@ -338,11 +341,18 @@ if (${LIBRAPID_USE_MPIR})
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_USE_MPIR)
 endif ()
 
-target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/alt" "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
 
 if (${SKBUILD})
     install(TARGETS ${module_name} DESTINATION .)
 else ()
-    message(STATUS "Building LibRapid Examples")
-    add_subdirectory(examples)
+    if (${LIBRAPID_BUILD_EXAMPLES})
+        message(STATUS "Building LibRapid Examples")
+        add_subdirectory(examples)
+    endif ()
+
+    if (${LIBRAPID_BUILD_TESTS})
+        message(STATUS "Building LibRapid Tests")
+        add_subdirectory(tests/cpp)
+    endif ()
 endif ()
