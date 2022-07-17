@@ -11,13 +11,24 @@ def isArrayObject(obj):
 	try:
 		# CUDA support
 		return isinstance(obj, (_librapid.ArrayB,
+								_librapid.ArrayC,
 								_librapid.ArrayF16,
 								_librapid.ArrayF32,
+								_librapid.ArrayF64,
+								_librapid.ArrayI16,
 								_librapid.ArrayI32,
+								_librapid.ArrayI64,
+								_librapid.ArrayMPZ,
+								_librapid.ArrayMPF,
+								_librapid.ArrayMPQ,
 								_librapid.ArrayBG,
+								_librapid.ArrayCG,
 								_librapid.ArrayF16G,
 								_librapid.ArrayF32G,
-								_librapid.ArrayI32G))
+								_librapid.ArrayF64G,
+								_librapid.ArrayI16G,
+								_librapid.ArrayI32G,
+								_librapid.ArrayI64G))
 	except:
 		# No CUDA support
 		return isinstance(obj, (_librapid.ArrayB,
@@ -27,7 +38,10 @@ def isArrayObject(obj):
 								_librapid.ArrayF64,
 								_librapid.ArrayI16,
 								_librapid.ArrayI32,
-								_librapid.ArrayI64))
+								_librapid.ArrayI64,
+								_librapid.ArrayMPZ,
+								_librapid.ArrayMPF,
+								_librapid.ArrayMPQ))
 
 Extent = extentInterface.Extent
 
@@ -95,6 +109,12 @@ class Array:
 					self._array = _librapid.ArrayI32(extent._extent)
 				elif adjustedType == "ArrayI64":
 					self._array = _librapid.ArrayI64(extent._extent)
+				elif adjustedType == "ArrayMPZ":
+					self._array = _librapid.ArrayMPZ(extent._extent)
+				elif adjustedType == "ArrayMPF":
+					self._array = _librapid.ArrayMPF(extent._extent)
+				elif adjustedType == "ArrayMPQ":
+					self._array = _librapid.ArrayMPQ(extent._extent)
 			elif adjustedDevice == "GPU":
 				if adjustedType == "ArrayB":
 					self._array = _librapid.ArrayBG(extent._extent)
@@ -112,6 +132,9 @@ class Array:
 					self._array = _librapid.ArrayI32G(extent._extent)
 				elif adjustedType == "ArrayI64":
 					self._array = _librapid.ArrayI64G(extent._extent)
+
+		if self._array is None:
+			raise ValueError("Unknown or invalid Array type")
 
 	def copy(self):
 		return Array(self._array.copy())
@@ -152,44 +175,17 @@ class Array:
 			return Array(self._array.cast_ArrayI32())
 		elif adjustedType == "ArrayI64":
 			return Array(self._array.cast_ArrayI64())
+		elif adjustedType == "ArrayMPZ":
+			return Array(self._array.cast_ArrayMPZ())
+		elif adjustedType == "ArrayMPF":
+			return Array(self._array.cast_ArrayMPF())
+		elif adjustedType == "ArrayMPQ":
+			return Array(self._array.cast_ArrayMPQ())
 
 	def castMove(self, newType:str, newLoc:str):
 		adjustedType, adjustedDevice = typeMapping.mapType(newType, newLoc)
 
-		if adjustedDevice == "CPU":
-			if adjustedType == "ArrayB":
-				return Array(self._array.cast_ArrayB_CPU())
-			elif adjustedType == "ArrayC":
-				return Array(self._array.cast_ArrayC_CPU())
-			elif adjustedType == "ArrayF16":
-				return Array(self._array.cast_Array16F_CPU())
-			elif adjustedType == "ArrayF32":
-				return Array(self._array.cast_ArrayF32_CPU())
-			elif adjustedType == "ArrayF64":
-				return Array(self._array.cast_ArrayF64_CPU())
-			elif adjustedType == "ArrayI16":
-				return Array(self._array.cast_ArrayI16_CPU())
-			elif adjustedType == "ArrayI32":
-				return Array(self._array.cast_ArrayI32_CPU())
-			elif adjustedType == "ArrayI64":
-				return Array(self._array.cast_ArrayI64_CPU())
-		elif adjustedDevice == "GPU":
-			if adjustedType == "ArrayB":
-				return Array(self._array.cast_ArrayB_GPU())
-			elif adjustedType == "ArrayC":
-				return Array(self._array.cast_ArrayC_GPU())
-			elif adjustedType == "ArrayF16":
-				return Array(self._array.cast_Array16F_GPU())
-			elif adjustedType == "ArrayF32":
-				return Array(self._array.cast_ArrayF32_GPU())
-			elif adjustedType == "ArrayF64":
-				return Array(self._array.cast_ArrayF64_GPU())
-			elif adjustedType == "ArrayI16":
-				return Array(self._array.cast_ArrayI16_GPU())
-			elif adjustedType == "ArrayI32":
-				return Array(self._array.cast_ArrayI32_GPU())
-			elif adjustedType == "ArrayI64":
-				return Array(self._array.cast_ArrayI64_GPU())
+		return self.cast(adjustedType).move(adjustedDevice)
 
 	def __add__(self, other):
 		if isinstance(other, Array):

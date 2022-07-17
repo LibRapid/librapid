@@ -137,12 +137,12 @@ for t in arrayTypes:
 		scalar2 = "typename librapid::internal::traits<{}>::Scalar".format(typename2)
 		fCast += [
 			Function("cast_{}".format(t2), [Argument(constRef, "this_")], "return this_.cast<{}>();".format(scalar2)),
-			Function("castMove_{}_CPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::CPU>();".format(scalar2)),
+			# Function("castMove_{}_CPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::CPU>();".format(scalar2)),
 		]
 
-		fCast.append("#if defined(LIBRAPID_HAS_CUDA)")
-		fCast.append(Function("castMove_{}_GPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::GPU>();".format(scalar2)))
-		fCast.append("#endif // LIBRAPID_HAS_CUDA")
+		# fCast.append("#if defined(LIBRAPID_HAS_CUDA)")
+		# fCast.append(Function("castMove_{}_GPU".format(t2), [Argument(constRef, "this_")], "return this_.castMove<{}, librapid::device::GPU>();".format(scalar2)))
+		# fCast.append("#endif // LIBRAPID_HAS_CUDA")
 
 	if t not in ["ArrayB", "ArrayBG"]:
 		fArithmetic = [
