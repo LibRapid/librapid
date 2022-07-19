@@ -9,12 +9,14 @@ int main() {
 	// Don't test for anything below int32, as they get promoted to int32 and this causes compile
 	// errors
 
+	bool passed = true;
+
 #define TEST(FUNC, TYPE, DEVICE)                                                                   \
 	{                                                                                              \
 		/* This ensures that we cannot use vectorised instructions on the entire array, */         \
 		/* improving code coverage and forcing small, final loops to be run */                     \
 		int64_t packetWidth = lrc::internal::traits<TYPE>::PacketWidth;                            \
-		int64_t size		= lrc::roundUpTo(256, packetWidth) + 1;                                \
+		int64_t size		= lrc::roundUpTo(64, packetWidth) + 1;                                 \
                                                                                                    \
 		lrc::Array<TYPE, lrc::device::DEVICE> test1(lrc::Extent(size, size));                      \
 		lrc::Array<TYPE, lrc::device::DEVICE> test2(lrc::Extent(size, size));                      \
@@ -131,6 +133,9 @@ int main() {
 		force.run();                                                                               \
 		lazyScalar.run();                                                                          \
 		lazyScalar2.run();                                                                         \
+                                                                                                   \
+		if (!lazy.passed() || !force.passed() || !lazyScalar.passed() || !lazyScalar2.passed())    \
+			passed = false;                                                                        \
 	}
 
 	auto OP_ADD = [&](auto x, auto y) { return x + y; };
@@ -180,5 +185,6 @@ int main() {
 	TEST(DIV, double, GPU)
 #endif
 
-	return 0;
+	if (passed) return 0;
+	return 1;
 }
