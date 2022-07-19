@@ -72,7 +72,6 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on
           cmake --build . --config Release
-          cd librapid
           ctest -C Release -VV
         env:
           LIBRAPID_NO_ARCH: yes
@@ -113,7 +112,6 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on
           cmake --build . --config Release
-          cd librapid
           ctest -C Release -VV
         env:
           CC: gcc-11
@@ -168,7 +166,6 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on
           cmake --build . --config Release
-          cd librapid
           ctest -C Release -VV
         env:
           LIBRAPID_NO_ARCH: yes
