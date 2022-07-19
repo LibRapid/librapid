@@ -322,6 +322,9 @@
 #	endif
 #endif
 
+#define STRINGIFY(a) STR_IMPL_(a)
+#define STR_IMPL_(a) #a
+
 // Settings and macros for inline functions
 #if defined(LIBRAPID_NO_INLINE)
 #	define LR_INLINE
