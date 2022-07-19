@@ -4,7 +4,7 @@
 
 namespace librapid::test {
 	namespace detail {
-		auto noOp = []() { return true; };
+		static inline auto noOp = []() { return true; };
 	} // namespace detail
 
 	template<typename LAMBDA_>
