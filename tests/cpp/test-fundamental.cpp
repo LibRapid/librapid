@@ -11,6 +11,8 @@ int main() {
 	// We must assume that an Array object can be correctly allocated on the corresponding device
 	// and with the correct datatype.
 
+	bool passed = true;
+
 #define TEST(TYPE, DEVICE)                                                                         \
 	{                                                                                              \
 		lrc::Array<TYPE, lrc::device::DEVICE> test1d(lrc::Extent(5));                              \
@@ -62,13 +64,17 @@ int main() {
 								" [ 5  6  7  8  9]\n"                                              \
 								" [10 11 12 13 14]\n"                                              \
 								" [15 16 17 18 19]\n"                                              \
-								" [20 21 22 23 24]]"));                                            \
+								" [20 21 22 23 25]]"));                                            \
                                                                                                    \
 		directAccess.run();                                                                        \
 		indirectAccess1.run();                                                                     \
 		indirectAccess2.run();                                                                     \
 		stringify1.run();                                                                          \
 		stringify2.run();                                                                          \
+                                                                                                   \
+		if (!directAccess.passed() || !indirectAccess1.passed() || !indirectAccess2.passed() ||    \
+			!stringify1.passed() || !stringify2.passed())                                          \
+			passed = false;                                                                        \
 	}
 
 	TEST(int8_t, CPU)
@@ -87,8 +93,6 @@ int main() {
 	TEST(double, GPU)
 #endif
 
-	// Note: Extended and custom types require slightly more advanced testing as they have certain
-	//       limitations that other primitive types do not
-
-	return 0;
+	if (passed) return 0;
+	return 1;
 }

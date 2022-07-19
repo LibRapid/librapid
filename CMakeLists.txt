@@ -354,6 +354,8 @@ else ()
 
     if (${LIBRAPID_BUILD_TESTS})
         message(STATUS "Building LibRapid Tests")
+        include(CTest)
+        enable_testing()
         add_subdirectory(tests/cpp)
     endif ()
 endif ()

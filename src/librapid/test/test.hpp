@@ -71,12 +71,16 @@ namespace librapid::test {
 			if (threw) execTime = tryEnd - tryStart;
 
 			if (!threw && result == m_expect) {
+				m_pass = PASSED;
+
 				// If the test passed, just say that it passed.
 				fmt::print(
 				  fmt::fg(fmt::color::green),
 				  fmt::format(
 					"[ TEST ] {:<50}   {:<10}   {:>8}\n", m_name, pass, formatTime(execTime)));
 			} else {
+				m_pass = FAILED;
+
 				// If the test fails, print some more detailed information
 				fmt::print(fmt::fg(fmt::color::red), fmt::format("\n{:#<81}\n", ""));
 
@@ -101,10 +105,13 @@ namespace librapid::test {
 			}
 		}
 
+		LR_NODISCARD("") operator bool() const { return passed(); }
+
 		auto getName() const { return m_name; }
 		auto getDescription() const { return m_description; }
 		auto getTest() const { return m_test; }
 		auto getExpect() const { return m_expect; }
+		auto passed() const { return m_pass == PASSED; }
 
 	private:
 		std::string m_name;
