@@ -5,11 +5,11 @@
 #include "../internal/memUtils.hpp"
 
 #if defined(LIBRAPID_USE_VC)
-#define LR_VC_TYPE(X) Vc::Vector<X>
-#define LR_VC_SIZE(X) Vc::Vector<X>::size()
+#	define LR_VC_TYPE(X) Vc::Vector<X>
+#	define LR_VC_SIZE(X) Vc::Vector<X>::size()
 #else
-#define LR_VC_TYPE(X) std::false_type
-#define LR_VC_SIZE(X) 1
+#	define LR_VC_TYPE(X) std::false_type
+#	define LR_VC_SIZE(X) 1
 #endif
 
 namespace librapid::extended {
@@ -376,12 +376,13 @@ namespace librapid::internal {
 	//------- 32bit Floating Point --------------------------------------------
 	template<>
 	struct traits<float> {
-		static constexpr bool IsScalar		 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = float;
-		using BaseScalar					 = float;
-		using StorageType					 = memory::DenseStorage<float>;
-		using Packet						 = LR_VC_TYPE(BaseScalar);;
+		static constexpr bool IsScalar = true;
+		using Valid					   = std::true_type;
+		using Scalar				   = float;
+		using BaseScalar			   = float;
+		using StorageType			   = memory::DenseStorage<float>;
+		using Packet				   = LR_VC_TYPE(BaseScalar);
+		;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "float";
@@ -401,12 +402,13 @@ namespace librapid::internal {
 	//------- 64bit Floating Point --------------------------------------------
 	template<>
 	struct traits<double> {
-		static constexpr bool IsScalar		 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = double;
-		using BaseScalar					 = double;
-		using StorageType					 = memory::DenseStorage<double>;
-		using Packet						 = LR_VC_TYPE(BaseScalar);;
+		static constexpr bool IsScalar = true;
+		using Valid					   = std::true_type;
+		using Scalar				   = double;
+		using BaseScalar			   = double;
+		using StorageType			   = memory::DenseStorage<double>;
+		using Packet				   = LR_VC_TYPE(BaseScalar);
+		;
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "double";
@@ -484,11 +486,10 @@ namespace librapid::internal {
 				if constexpr (std::is_floating_point_v<CAST>) return (CAST)val.get_d();
 				if constexpr (std::is_unsigned_v<CAST>) return (CAST)val.get_ui();
 				if constexpr (std::is_signed_v<CAST>) return (CAST)val.get_si();
-			}
-			if constexpr (std::is_same_v<CAST, mpz> || std::is_same_v<CAST, mpf> ||
-						  std::is_same_v<CAST, mpq>)
+			} else if constexpr (std::is_same_v<CAST, mpz> || std::is_same_v<CAST, mpf> ||
+								 std::is_same_v<CAST, mpq>)
 				return CAST(val);
-			return CAST(val.get_d());
+			else { return CAST(val.get_d()); }
 		}
 	};
 

@@ -38,7 +38,7 @@ namespace librapid {
 	}
 
 	template<int64_t scale = time::second>
-	std::string formatTime(double time, const std::string &format = "{:3f}") {
+	std::string formatTime(double time, const std::string &format = "{:.3f}") {
 		double ns					= time * scale;
 		int numUnits				= 8;
 		static std::string prefix[] = {"ns", "µs", "ms", "s", "m", "h", "d", "y"};

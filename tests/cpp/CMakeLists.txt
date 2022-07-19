@@ -4,3 +4,4 @@ function(make_test name)
 endfunction()
 
 make_test(fundamental)
+make_test(arithmetic)
