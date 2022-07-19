@@ -502,7 +502,7 @@ jobs:
   build_sdist:
     name: Source Distribution
     runs-on: ubuntu-latest
-    needs: check_build_trigger
+    needs: [run_linux_tests, run_macos_tests, run_windows_tests]
     if: needs.check_build_trigger.outputs.build
 
     steps:
