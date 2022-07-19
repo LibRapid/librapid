@@ -36,11 +36,148 @@ jobs:
         name: Check build trigger
         run: bash build_tools/check_build_trigger.sh
 
+  # Ensure all tests pass on Linux
+  run_linux_tests:
+    name: Run Linux Tests
+    runs-on: ubuntu-latest
+    needs: check_build_trigger
+
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@latest
+
+      # Download an OpenBLAS build
+      - name: Download OpenBLAS Build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-openblas.yaml
+          workflow_conclusion: success
+          name: OpenBLAS on ubuntu-latest
+          path: src/librapid/openblas_install
+      
+      - name: Build LibRapid
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          cd librapid
+          ctest -C Release -VV
+        env:
+          LIBRAPID_NO_ARCH: yes
+
+  # Ensure all tests pass on MacOS
+  run_macos_tests:
+    name: Run MacOS Tests
+    runs-on: macos-latest
+    needs: check_build_trigger
+    
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@latest
+
+      # Download an OpenBLAS build
+      - name: Download OpenBLAS Build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-openblas.yaml
+          workflow_conclusion: success
+          name: OpenBLAS on macos-latest
+          path: src/librapid/openblas_install
+
+      - name: Build LibRapid
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          cd librapid
+          ctest -C Release -VV
+        env:
+          CC: gcc-11
+          CXX: g++-11
+          LIBRAPID_NO_ARCH: yes
+
+  # Ensure all tests pass on Windows
+  run_windows_tests:
+    name: Run Windows Tests
+    runs-on: windows-latest
+    needs: check_build_trigger
+    
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      # - name: Set Up WSL
+      #   uses: Vampire/setup-wsl@v1.2.0
+
+      - name: Set Up Miniconda
+        uses: conda-incubator/setup-miniconda@v2.1.1
+
+      - name: Set Up Visual Studio shell
+        uses: egor-tensin/vs-shell@v2
+
+      - name: Install Conda things
+        run: |
+          conda config --add channels conda-forge --force
+          conda config --set auto_update_conda false
+          conda install --yes --quiet clangdev cmake ninja flang=11.0.1
+
+      # Download an OpenBLAS build
+      - name: Download OpenBLAS Build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-openblas.yaml
+          workflow_conclusion: success
+          name: OpenBLAS on windows-latest
+          path: src/librapid/openblas_install
+
+      - name: Build LibRapid
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          cd librapid
+          ctest -C Release -VV
+        env:
+          LIBRAPID_NO_ARCH: yes
+
   # Build the wheels for Linux, Windows and macOS for CPython 3.7 and newer
   build_wheels:
     name: Build wheel for cp${{ matrix.python }}-${{ matrix.platform_id }}-${{ matrix.manylinux_image }}
     runs-on: ${{ matrix.os }}
-    needs: check_build_trigger
+    needs: [run_linux_tests, run_macos_tests, run_windows_tests]
     if: needs.check_build_trigger.outputs.build
 
     strategy:
@@ -201,7 +338,7 @@ jobs:
   build_wheels_cuda:
     name: Build wheel for cp${{ matrix.python }}-${{ matrix.platform_id }}-${{ matrix.manylinux_image }}-cuda${{ matrix.cuda_version }}
     runs-on: ${{ matrix.os }}
-    needs: check_build_trigger
+    needs: [run_linux_tests, run_macos_tests, run_windows_tests]
     if: needs.check_build_trigger.outputs.build
 
     strategy:
