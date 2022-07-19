@@ -110,21 +110,23 @@ namespace librapid {
 			LR_NODISCARD("")
 			LR_INLINE operator Type() const {
 				if constexpr (std::is_same<d, device::CPU>::value) {
-					return (Type)*m_value;
+					return internal::traits<T>::template cast<Type>(get());
 				} else {
 					T res;
 					memcpy<T, device::CPU, T, d>(&res, m_value, 1);
-					return (Type)res;
+					return internal::traits<T>::template cast<Type>(res);
 				}
 			}
 
 			LR_NODISCARD("") T get() const {
-				if constexpr(std::is_same_v<d, device::CPU>)
-					return *m_value;
-				T res;
-				memcpy<T, device::CPU, T, d>(&res, m_value, 1);
-				return res;
+				if constexpr (std::is_same_v<d, device::CPU>) return *m_value;
+				else {
+					T res;
+					memcpy<T, device::CPU, T, d>(&res, m_value, 1);
+					return res;
+				}
 			}
+
 			void set(T value) { operator=(value); }
 
 			IMPL_BINOP2(operator==, ==);

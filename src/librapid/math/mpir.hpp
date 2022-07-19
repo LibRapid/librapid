@@ -43,8 +43,6 @@ namespace librapid {
 				res.T = (chud.A + chud.B * n2) * res.P;
 				if ((n2 & 1) == 1) res.T = -res.T;
 			} else {
-				// I'll be honest: I have no clue why this works. Theoretically it should be slower
-				// than other methods, but it seems to be faster, so I'm not complaining :)
 				auto maxThreads = std::thread::hardware_concurrency() / 2;
 				if (depth < maxThreads) {
 					m = (n1 + n2) / 2;
@@ -80,6 +78,8 @@ namespace librapid {
 		bool m_verbose = false;
 	};
 
+	mpf pi(int64_t digits, long threads = 1, int outMode = 0);
+
 	mpf epsilon(const mpf &val = mpf_class());
 	mpf fmod(const mpf &val, const mpf &mod);
 
@@ -91,7 +91,6 @@ namespace librapid {
 	mpf csc(const mpf &val);
 	mpf sec(const mpf &val);
 	mpf cot(const mpf &val);
-
 } // namespace librapid
 
 // Provide {fmt} printing capabilities

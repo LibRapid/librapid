@@ -17,7 +17,7 @@ namespace librapid::test {
 
 	public:
 		explicit Test(const LAMBDA_ &func) :
-				m_name("Unnamed Test"), m_description("None"), m_test(func), m_expect(0) {}
+				m_name("Unnamed Test"), m_description("None"), m_test(func), m_expect() {}
 
 		Test(const Test &other) :
 				m_name(other.getName()), m_description(other.getDescription()),
@@ -48,11 +48,56 @@ namespace librapid::test {
 
 		template<typename... Args>
 		void run(Args... args) {
-			auto result = m_test(args...);
-			if (result == m_expect) {
-				fmt::print("[ PASSED ]\n");
+			Expect result;
+			bool threw		= false;
+			double execTime = 0;
+			std::exception error;
+
+			const std::string pass = "PASSED";
+			const std::string fail = "FAILED";
+
+			double tryStart = now();
+			try {
+				double start = now();
+				result		 = m_test(args...);
+				double end	 = now();
+				execTime	 = end - start;
+			} catch (std::exception &e) {
+				result = Expect();
+				error  = e;
+				threw  = true;
+			}
+			double tryEnd = now();
+			if (threw) execTime = tryEnd - tryStart;
+
+			if (!threw && result == m_expect) {
+				// If the test passed, just say that it passed.
+				fmt::print(
+				  fmt::fg(fmt::color::green),
+				  fmt::format(
+					"[ TEST ] {:<50}   {:<10}   {:>8}\n", m_name, pass, formatTime(execTime)));
 			} else {
-				fmt::print("[ ERROR ]\n");
+				// If the test fails, print some more detailed information
+				fmt::print(fmt::fg(fmt::color::red), fmt::format("\n{:#<81}\n", ""));
+
+				fmt::print(
+				  fmt::fg(fmt::color::red),
+				  fmt::format("{:<50}   {:<10}   {:>8}\n", m_name, fail, formatTime(execTime)));
+
+				fmt::print(fmt::fg(fmt::color::red), fmt::format("\n{}\n\n", m_description));
+
+				fmt::print(fmt::fg(fmt::color::red), fmt::format("Expected:\n{}\n\n", m_expect));
+
+				if (!threw) {
+					// If no exception was thrown, print the resulting value
+					fmt::print(fmt::fg(fmt::color::red), fmt::format("Received:\n{}\n", result));
+				} else {
+					// An exception was thrown, so the resulting value is *almost* certainly invalid
+					fmt::print(fmt::fg(fmt::color::red),
+							   fmt::format("Received:\nERROR: {}\n", error.what()));
+				}
+
+				fmt::print(fmt::fg(fmt::color::red), fmt::format("{:#<81}\n\n", ""));
 			}
 		}
 
