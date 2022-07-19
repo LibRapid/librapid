@@ -34,15 +34,17 @@ int main() {
                                                                                                    \
 		auto indirectAccess1 =                                                                     \
 		  lrc::test::Test([&]() { return (TYPE)test2d[0][0]; })                                    \
-			.name(fmt::format(                                                                     \
-			  "Indirect Access ({} -> {})", lrc::internal::traits<TYPE>::Name, STRINGIFY(DEVICE))) \
+			.name(fmt::format("Indirect Access Test 1 ({} -> {})",                                 \
+							  lrc::internal::traits<TYPE>::Name,                                   \
+							  STRINGIFY(DEVICE)))                                                  \
 			.description("Accessing an Array element via repeated subscripting")                   \
 			.expect(0);                                                                            \
                                                                                                    \
 		auto indirectAccess2 =                                                                     \
 		  lrc::test::Test([&]() { return (TYPE)test2d[1][4]; })                                    \
-			.name(fmt::format(                                                                     \
-			  "Indirect Access ({} -> {})", lrc::internal::traits<TYPE>::Name, STRINGIFY(DEVICE))) \
+			.name(fmt::format("Indirect Access Test 2 ({} -> {})",                                 \
+							  lrc::internal::traits<TYPE>::Name,                                   \
+							  STRINGIFY(DEVICE)))                                                  \
 			.description("Accessing an Array element via repeated subscripting")                   \
 			.expect(9);                                                                            \
                                                                                                    \
@@ -64,7 +66,7 @@ int main() {
 								" [ 5  6  7  8  9]\n"                                              \
 								" [10 11 12 13 14]\n"                                              \
 								" [15 16 17 18 19]\n"                                              \
-								" [20 21 22 23 25]]"));                                            \
+								" [20 21 22 23 24]]"));                                            \
                                                                                                    \
 		directAccess.run();                                                                        \
 		indirectAccess1.run();                                                                     \
