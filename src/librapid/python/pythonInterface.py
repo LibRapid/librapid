@@ -2,8 +2,6 @@ import _librapid
 from . import typeMapping
 from . import extentInterface
 
-print("HELLO WORLD!")
-
 def test(x):
     print(x * 2)
 
@@ -44,6 +42,12 @@ def isArrayObject(obj):
 								_librapid.ArrayMPQ))
 
 Extent = extentInterface.Extent
+
+mpz = _librapid.mpz
+mpf = _librapid.mpf
+mpq = _librapid.mpq
+
+prec = _librapid.prec
 
 class Array:
 	def __init__(self, *args, **kwargs):

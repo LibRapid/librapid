@@ -58,6 +58,15 @@ PYBIND11_MODULE(_librapid, module) {
 		lrc::timeFunction([&]() { myArray3 = myArray1 + myArray2; }, -1, -1, n);
 	});
 
+	module.def("prec", [](int64_t n) {
+		lrc::prec(n);
+	});
+
+	module.def("pi", [](int64_t digits, int64_t threads, int64_t outmode) { return lrc::pi(digits, threads, outmode); }, py::arg("digits"), py::arg("threasd") = 1, py::arg("outmode") = 0);
+
+	// Interface with MPIR
+	#include "autogen/mpirInterface.hpp"
+
 	// Include the Extent type
 	#include "autogen/extentInterface.hpp"
 

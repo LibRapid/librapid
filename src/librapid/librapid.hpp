@@ -35,6 +35,8 @@
 #include "array/array.hpp"
 #include "test/test.hpp"
 
+#include "utils/toString.hpp"
+
 #pragma warning(pop)
 
 #endif // LIBRAPID_INCLUDE
