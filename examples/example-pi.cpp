@@ -1,4 +1,4 @@
-#include <librapid/librapid.hpp>
+#include <librapid>
 
 namespace lrc = librapid;
 using namespace librapid::suffix;
@@ -9,8 +9,13 @@ int main() {
 
 	lrc::prec(digits);
 	fmt::print("Calculating PI\n");
-	auto chud = lrc::Chudnovsky(digits);
-	auto pi	  = chud.pi();
+
+	// A Chudnovsky object is easier to use but slower. Using
+	// the "pi" function is much quicker but is not threadsafe,
+	// outputs to the console and might (?) have a slight memory leak???
+
+	// auto chud = lrc::Chudnovsky(digits);
+	auto pi	  = lrc::pi(digits, 2); // chud.pi();
 
 	fmt::print("Stringifying Pi\n");
 	std::string piStr = fmt::format("{:.1000000}", pi);
@@ -30,26 +35,24 @@ int main() {
 		return 0;
 	}
 
-	fmt::print("Inserting new lines\n");
-	int64_t lineWidth = 100;
-	int64_t index	  = lineWidth - 1;
-	int64_t inserted  = 0;
-	while (index < piStr.length()) {
-		piStr.insert(index, "\n  ");
-		index += lineWidth;
-		++inserted;
-
-		/*
-		if (inserted % 500 == 0) {
-			fmt::print("[ PROGRESS ] {:>5.2f}%\n", ((double)index / (double)piStr.length()) * 100);
-		}
-		*/
-	}
+	int64_t digitsPerBlock = 10;
+	int64_t blocksPerLine  = 5;
+	int64_t digitsPerLine  = digitsPerBlock * blocksPerLine;
 
 	fmt::print("Writing to file...\n");
 	std::fstream file;
 	file.open("pi-librapid.txt", std::ios::out);
-	fmt::print(file, "Pi to {} digits:\n{}", digits, piStr);
+	fmt::print(file, "Pi to {} digits:\n3.\n", digits, piStr);
+
+	for (auto it = piStr.begin() + 2; it < piStr.end(); it += digitsPerLine) {
+		fmt::print(file, " ");
+		for (int64_t i = 0; i < blocksPerLine; ++i) {
+			fmt::print(
+			  file, " {}", std::string(it + digitsPerBlock * i, it + digitsPerBlock * (i + 1)));
+		}
+		fmt::print(file, "\n");
+	}
+
 	file.close();
 
 	return 0;
