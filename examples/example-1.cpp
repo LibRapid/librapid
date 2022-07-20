@@ -3,7 +3,7 @@
  * operations that can be applied to it
  */
 
-#include <librapid/librapid.hpp>
+#include <librapid>
 
 namespace lrc = librapid;
 

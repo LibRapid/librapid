@@ -48,13 +48,15 @@ set(LIBRAPID_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/kernelHelper.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/dotCBlas.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/fastMath.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/toString.cpp"
         )
 
 if (${LIBRAPID_USE_MPIR})
     list(APPEND LIBRAPID_SOURCES
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirHelpers.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirTrig.cpp"
-            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirPi.cpp")
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirPi.cpp"
+            )
 endif ()
 
 # {fmt} might fail to compile when building for python if this is not set

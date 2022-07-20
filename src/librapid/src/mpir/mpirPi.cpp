@@ -125,109 +125,6 @@ namespace librapid {
 #define DIGITS_PER_ITER 14.1816474627254776555
 #define DOUBLE_PREC		53
 
-	mpf_t t1, t2;
-
-	// r = sqrt(x)
-	void my_sqrt_ui(mpf_t r, unsigned long x) {
-		unsigned long prec, bits, prec0;
-
-		prec0 = mpf_get_prec(r);
-
-		if (prec0 <= DOUBLE_PREC) {
-			mpf_set_d(r, sqrt(x));
-			return;
-		}
-
-		bits = 0;
-		for (prec = prec0; prec > DOUBLE_PREC;) {
-			int bit = prec & 1;
-			prec	= (prec + bit) / 2;
-			bits	= bits * 2 + bit;
-		}
-
-		mpf_set_prec_raw(t1, DOUBLE_PREC);
-		mpf_set_d(t1, 1 / sqrt(x));
-
-		while (prec < prec0) {
-			prec *= 2;
-			if (prec < prec0) {
-				/* t1 = t1+t1*(1-x*t1*t1)/2; */
-				mpf_set_prec_raw(t2, prec);
-				mpf_mul(t2, t1, t1); // half x half -> full
-				mpf_mul_ui(t2, t2, x);
-				mpf_ui_sub(t2, 1, t2);
-				mpf_set_prec_raw(t2, prec / 2);
-				mpf_div_2exp(t2, t2, 1);
-				mpf_mul(t2, t2, t1); // half x half -> half
-				mpf_set_prec_raw(t1, prec);
-				mpf_add(t1, t1, t2);
-			} else {
-				prec = prec0;
-				/* t2=x*t1, t1 = t2+t1*(x-t2*t2)/2; */
-				mpf_set_prec_raw(t2, prec / 2);
-				mpf_mul_ui(t2, t1, x);
-				mpf_mul(r, t2, t2); // half x half -> full
-				mpf_ui_sub(r, x, r);
-				mpf_mul(t1, t1, r); // half x half -> half
-				mpf_div_2exp(t1, t1, 1);
-				mpf_add(r, t1, t2);
-				break;
-			}
-			prec -= (bits & 1);
-			bits /= 2;
-		}
-	}
-
-	// r = y/x   WARNING: r cannot be the same as y.
-	void my_div(mpf_t r, mpf_t y, mpf_t x) {
-		unsigned long prec, bits, prec0;
-
-		prec0 = mpf_get_prec(r);
-
-		if (prec0 <= DOUBLE_PREC) {
-			mpf_set_d(r, mpf_get_d(y) / mpf_get_d(x));
-			return;
-		}
-
-		bits = 0;
-		for (prec = prec0; prec > DOUBLE_PREC;) {
-			int bit = prec & 1;
-			prec	= (prec + bit) / 2;
-			bits	= bits * 2 + bit;
-		}
-
-		mpf_set_prec_raw(t1, DOUBLE_PREC);
-		mpf_ui_div(t1, 1, x);
-
-		while (prec < prec0) {
-			prec *= 2;
-			if (prec < prec0) {
-				/* t1 = t1+t1*(1-x*t1); */
-				mpf_set_prec_raw(t2, prec);
-				mpf_mul(t2, x, t1); // full x half -> full
-				mpf_ui_sub(t2, 1, t2);
-				mpf_set_prec_raw(t2, prec / 2);
-				mpf_mul(t2, t2, t1); // half x half -> half
-				mpf_set_prec_raw(t1, prec);
-				mpf_add(t1, t1, t2);
-			} else {
-				prec = prec0;
-				/* t2=y*t1, t1 = t2+t1*(y-x*t2); */
-				mpf_set_prec_raw(t2, prec / 2);
-				mpf_mul(t2, t1, y); // half x half -> half
-				mpf_mul(r, x, t2);	// full x half -> full
-				mpf_sub(r, y, r);
-				mpf_mul(t1, t1, r); // half x half -> half
-				mpf_add(r, t1, t2);
-				break;
-			}
-			prec -= (bits & 1);
-			bits /= 2;
-		}
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
 #ifndef NO_FACTOR
 
 #	define min(x, y) ((x) < (y) ? (x) : (y))
@@ -768,20 +665,16 @@ namespace librapid {
 
 		mid2 = librapid::now();
 
-		/* initialize temp float variables for sqrt & div */
-		mpf_init(t1);
-		mpf_init(t2);
-
 		/* final step */
 		fprintf(stderr, "div     ");
 		fflush(stderr);
-		my_div(qi, pi, qi);
+		mpf_div(qi, pi, qi);
 		mid3 = librapid::now();
 		fprintf(stderr, "cputime = %6.3f\n", (double)(mid3 - mid2));
 
 		fprintf(stderr, "sqrt    ");
 		fflush(stderr);
-		my_sqrt_ui(pi, C);
+		mpf_sqrt_ui(pi, C);
 		mid4 = librapid::now();
 		fprintf(stderr, "cputime = %6.3f\n", (double)(mid4 - mid3));
 
@@ -814,9 +707,6 @@ namespace librapid {
 		/* free float resources */
 		mpf_clear(pi);
 		// mpf_clear(qi);
-
-		mpf_clear(t1);
-		mpf_clear(t2);
 
 		return piResult;
 	}

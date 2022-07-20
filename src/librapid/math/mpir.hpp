@@ -14,7 +14,9 @@ namespace librapid {
 	using mpf = mpf_class;
 	using mpq = mpq_class;
 
-	inline void prec(int64_t dig10) { mpf_set_default_prec((int64_t)((double)dig10 * 3.33)); }
+	inline void prec(int64_t dig10) {
+		mpf_set_default_prec((int64_t)((double)dig10 * 3.32192809488736234787));
+	}
 
 	namespace detail {
 		struct PQT {
