@@ -2,11 +2,12 @@
 #define LIBRAPID_INCLUDE
 
 #pragma warning(push)
-// Disable zero-division warnings for the vector library
 #pragma warning(disable : 4723)
-
-// Disable zero-division warnings for the vector library
 #pragma warning(disable : 4804)
+#pragma warning(disable : 4146) // Unary minus applied to unsigned type
+#pragma warning(disable : 4018) // Signed/unsigned mismatch
+#pragma warning(disable : 4244) // Possible loss of data in conversion
+#pragma warning(disable : 4267) // Possible loss of data in conversion
 
 #include "VERSION.hpp"
 #include "internal/config.hpp"

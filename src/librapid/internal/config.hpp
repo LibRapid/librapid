@@ -20,6 +20,10 @@
 #include <streambuf>
 #include <utility>
 
+#if defined(__unix__)
+#	include <unistd.h>
+#endif
+
 #if defined(_OPENMP)
 #	include <omp.h>
 #	define LIBRAPID_OPENMP
@@ -944,7 +948,7 @@ namespace librapid {
 		class PreOptimize {
 		public:
 			PreOptimize() {
-				numThreads	  = std::thread::hardware_concurrency() * (3. / 4.);
+				numThreads	  = (int64_t)((double)std::thread::hardware_concurrency() * (3. / 4.));
 				matrixThreads = std::thread::hardware_concurrency();
 
 				nvccOptions.emplace_back("--device-int128");

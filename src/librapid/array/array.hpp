@@ -334,6 +334,11 @@ namespace librapid {
 	FORCE_TMP_FUNC(mul, operator*)
 	FORCE_TMP_FUNC(div, operator/)
 
+	template<typename T, typename D>
+	inline std::string str(const Array<T, D> &val, const StrOpt &options = DEFAULT_STR_OPT) {
+		return val.str();
+	}
+
 #undef FORCE_TMP_FUNC
 } // namespace librapid
 

@@ -989,6 +989,10 @@ namespace std {
 
 } // namespace std
 
+namespace librapid {
+	using half = extended::float16_t;
+}
+
 // Provide {fmt} printing capabilities
 #ifdef FMT_API
 template<>
