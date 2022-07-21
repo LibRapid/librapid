@@ -1,6 +1,8 @@
-#include <librapid>
+#include <librapid/utils/toString.hpp>
+#include <librapid/math/mpir.hpp>
 
 namespace librapid {
+#if defined(LIBRAPID_USE_MPIR)
 	std::string str(const mpz &val, const StrOpt &options) {
 		return val.get_str((int)options.base);
 	}
@@ -24,4 +26,5 @@ namespace librapid {
 	std::string str(const mpq &val, const StrOpt &options) {
 		return val.get_str((int)options.base);
 	}
+#endif
 } // namespace librapid

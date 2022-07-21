@@ -297,5 +297,11 @@ namespace librapid {
 		T m_data[maxDims] {};
 	};
 
+	template<typename T, int64_t d, int64_t a>
+	inline std::string str(const ExtentType<T, d, a> &val,
+						   const StrOpt &options = DEFAULT_STR_OPT) {
+		return val.str();
+	}
+
 	using Extent = ExtentType<int64_t, 32, 1>;
 } // namespace librapid

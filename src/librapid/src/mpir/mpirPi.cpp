@@ -1,6 +1,8 @@
 #include <cmath>
 #include <thread>
-#include <librapid/librapid.hpp>
+#include <librapid/internal/config.hpp>
+#include <librapid/utils/time.hpp>
+#include <librapid/math/mpir.hpp>
 
 namespace librapid {
 	Chudnovsky::Chudnovsky(int64_t dig10) {

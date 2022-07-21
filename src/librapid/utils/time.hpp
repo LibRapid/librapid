@@ -11,13 +11,13 @@ namespace librapid {
 	T map(T val, T start1, T stop1, T start2, T stop2);
 
 	namespace time {
-		constexpr int64_t day		  = 86400e9;
-		constexpr int64_t hour		  = 3600e9;
-		constexpr int64_t minute	  = 60e9;
-		constexpr int64_t second	  = 1e9;
-		constexpr int64_t millisecond = 1e6;
-		constexpr int64_t microsecond = 1e3;
-		constexpr int64_t nanosecond  = 1;
+		constexpr int64_t day		  = (int64_t) 86400e9;
+		constexpr int64_t hour		  = (int64_t) 3600e9;
+		constexpr int64_t minute	  = (int64_t) 60e9;
+		constexpr int64_t second	  = (int64_t) 1e9;
+		constexpr int64_t millisecond = (int64_t) 1e6;
+		constexpr int64_t microsecond = (int64_t) 1e3;
+		constexpr int64_t nanosecond  = (int64_t) 1;
 	} // namespace time
 
 	template<int64_t scale = time::second>

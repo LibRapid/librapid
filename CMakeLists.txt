@@ -12,7 +12,8 @@ option(LIBRAPID_USE_BLAS "Attempt to use a BLAS library" ON)
 option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
 option(LIBRAPID_USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 option(LIBRAPID_USE_VC "Use Vc for SIMD vectorisation on primitive array types" ON)
-option(LIBRAPID_USE_MPIR "Include MPIR in the LibRapid build" ON)
+option(LIBRAPID_USE_MPIR "Include MPIR and MPFR in the LibRapid build" OFF)
+option(LIBRAPID_QUIET_BUILD "Hide warnings generated WITHIN LibRapid's source" ON)
 
 MACRO(SUBDIRLIST result curdir)
     FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
@@ -332,21 +333,31 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/scnlib")
 
 target_link_libraries(${module_name} PUBLIC fmt scn)
 
-if (${LIBRAPID_USE_VC})
+if (LIBRAPID_USE_VC)
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/Vc")
+    target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
     target_link_libraries(${module_name} PUBLIC Vc)
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_USE_VC)
 endif ()
 
-if (${LIBRAPID_USE_MPIR})
+if (LIBRAPID_USE_MPIR)
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/mpir")
     target_link_libraries(${module_name} PUBLIC mpir)
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_USE_MPIR)
 endif ()
 
+if (LIBRAPID_QUIET_BUILD)
+    # Disable warnings because they're really annoying
+    target_compile_options(${module_name} PRIVATE
+            $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
+            -w>
+            $<$<CXX_COMPILER_ID:MSVC>:
+            /w>)
+endif ()
+
 target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/alt" "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}")
 
-if (${SKBUILD})
+if (SKBUILD)
     install(TARGETS ${module_name} DESTINATION .)
 else ()
     if (${LIBRAPID_BUILD_EXAMPLES})
