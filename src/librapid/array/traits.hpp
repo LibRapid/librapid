@@ -425,7 +425,7 @@ namespace librapid::internal {
 		}
 	};
 
-#if defined(LIBRAPID_USE_MPIR)
+#if defined(LIBRAPID_USE_MULTIPREC)
 
 	//------- Multiprecision Integer (MPZ) ------------------------------------
 	template<>

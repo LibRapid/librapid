@@ -42,4 +42,12 @@ namespace librapid {
 
 	template<typename Scalar_, typename Device_>
 	class Array;
+
+	struct StrOpt {
+		int64_t digits	= -1;
+		int64_t base	= 10;
+		bool scientific = false;
+	};
+
+#define DEFAULT_STR_OPT {-1, 10, false}
 } // namespace librapid

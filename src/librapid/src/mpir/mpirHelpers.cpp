@@ -1,4 +1,4 @@
-#include "librapid/math/mpir.hpp"
+#include <librapid/math/mpir.hpp>
 
 namespace librapid {
 	mpf epsilon(const mpf &val) {
@@ -11,7 +11,13 @@ namespace librapid {
 
 	mpf fmod(const mpf &val, const mpf &mod) {
 		auto div	  = val / mod;
-		auto floordiv = floor(div + epsilon(val));
+		auto floordiv = floor(mpf(div + epsilon(val)));
+
+		fmt::print("DEBUG POINT:\n");
+		fmt::print("{:.100f}\n", mpf(div));
+		fmt::print("{:.100f}\n", mpf(div + epsilon(val)));
+		fmt::print("{:.100f}\n", mpf(floordiv));
+
 		return val - (mod * floordiv);
 	}
 } // namespace librapid

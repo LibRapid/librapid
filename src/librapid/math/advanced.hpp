@@ -63,7 +63,7 @@ namespace librapid {
 					x += std::complex<double>(pVal) /
 						 (z + std::complex<double>(i) + std::complex<double>(1));
 				}
-				auto t = z + std::complex<double>(elemsP) - std::complex<double>(0.5);
+				auto t = z + std::complex<double>((double)elemsP) - std::complex<double>(0.5);
 				y	   = sqrt(2 * PI) * pow(t, z + 0.5) * exp(-t) * x;
 			}
 

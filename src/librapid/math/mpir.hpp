@@ -2,20 +2,26 @@
 
 #if defined(LIBRAPID_USE_MPIR)
 
+#include "../internal/forward.hpp"
+
 // MPIR (modified) for BigNumber types
-#	include <cstdint>
 #	include <mpirxx.h>
+#	include <cstdint>
 #	include <thread>
 #	include <future>
 #	include <iostream>
 
 namespace librapid {
-	using mpz = mpz_class;
-	using mpf = mpf_class;
-	using mpq = mpq_class;
+	using mpz  = mpz_class;
+	using mpf  = mpf_class;
+	using mpq  = mpq_class;
+
+    std::string str(const mpz &val, const StrOpt &options = DEFAULT_STR_OPT);
+	std::string str(const mpf &val, const StrOpt &options = DEFAULT_STR_OPT);
+	std::string str(const mpq &val, const StrOpt &options = DEFAULT_STR_OPT);
 
 	inline void prec(int64_t dig10) {
-		mpf_set_default_prec((int64_t)((double)dig10 * 3.32192809488736234787));
+		mpf_set_default_prec((int64_t)((double)dig10 * 3.32192809488736234787) + 1);
 	}
 
 	namespace detail {
@@ -194,4 +200,4 @@ struct fmt::formatter<mpq_class> {
 };
 #	endif // FMT_API
 
-#endif // LIBRAPID_USE_MPIR
+#endif // LIBRAPID_USE_MULTIPREC
