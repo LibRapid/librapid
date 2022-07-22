@@ -70,7 +70,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_USE_MPIR=on
           cmake --build . --config Release
           ctest -C Release -VV
         env:
@@ -110,7 +110,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_USE_MPIR=on
           cmake --build . --config Release
           ctest -C Release -VV
         env:
@@ -164,7 +164,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_USE_MPIR=on
           cmake --build . --config Release
           ctest -C Release -VV
         env:

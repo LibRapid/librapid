@@ -2,7 +2,6 @@
 
 namespace lrc = librapid;
 using namespace librapid::suffix;
-using half = lrc::extended::float16_t;
 
 int main() {
 	int64_t digits = 1000000;
