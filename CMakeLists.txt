@@ -341,8 +341,8 @@ if (${LIBRAPID_USE_VC})
 endif ()
 
 if (${LIBRAPID_USE_MULTIPREC})
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/mpir")
-    target_link_libraries(${module_name} PUBLIC mpir)
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/vendor/mpfr")
+    target_link_libraries(${module_name} PUBLIC mpfr)
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_USE_MULTIPREC)
 endif ()
 

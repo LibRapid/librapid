@@ -301,6 +301,7 @@ namespace librapid {
 	using ArrayMPZ = Array<mpz, device::CPU>;
 	using ArrayMPF = Array<mpf, device::CPU>;
 	using ArrayMPQ = Array<mpq, device::CPU>;
+	using ArrayMPFR = Array<mpfr, device::CPU>;
 #endif
 
 	// GPU array aliases will default to CPU arrays if CUDA is not enabled
