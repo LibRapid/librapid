@@ -2,7 +2,7 @@
 #include <librapid/math/mpir.hpp>
 
 namespace librapid {
-#if defined(LIBRAPID_USE_MPIR)
+#if defined(LIBRAPID_USE_MULTIPREC)
 	std::string str(const mpz &val, const StrOpt &options) {
 		return val.get_str((int)options.base);
 	}
