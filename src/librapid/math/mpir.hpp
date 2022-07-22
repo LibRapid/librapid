@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined(LIBRAPID_USE_MPIR)
+#if defined(LIBRAPID_USE_MULTIPREC)
 
 #	include "../internal/forward.hpp"
 
