@@ -2,7 +2,7 @@
 
 #if defined(LIBRAPID_USE_MPIR)
 
-#include "../internal/forward.hpp"
+#	include "../internal/forward.hpp"
 
 // MPIR (modified) for BigNumber types
 #	include <mpirxx.h>
@@ -12,11 +12,11 @@
 #	include <iostream>
 
 namespace librapid {
-	using mpz  = mpz_class;
-	using mpf  = mpf_class;
-	using mpq  = mpq_class;
+	using mpz = mpz_class;
+	using mpf = mpf_class;
+	using mpq = mpq_class;
 
-    std::string str(const mpz &val, const StrOpt &options = DEFAULT_STR_OPT);
+	std::string str(const mpz &val, const StrOpt &options = DEFAULT_STR_OPT);
 	std::string str(const mpf &val, const StrOpt &options = DEFAULT_STR_OPT);
 	std::string str(const mpq &val, const StrOpt &options = DEFAULT_STR_OPT);
 
@@ -90,6 +90,13 @@ namespace librapid {
 
 	mpf epsilon(const mpf &val = mpf_class());
 	mpf fmod(const mpf &val, const mpf &mod);
+
+	template<typename T, typename U, typename V, typename W>
+	inline mpf fmod(const __gmp_expr<T, U> &val, const __gmp_expr<V, W> &mod) {
+		auto lhs = mpf(val);
+		auto rhs = mpf(mod);
+		return fmod(lhs, rhs);
+	}
 
 	// Trigonometric Functionality for mpf
 	mpf sin(const mpf &val);
