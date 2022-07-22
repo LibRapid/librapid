@@ -26,5 +26,15 @@ namespace librapid {
 	std::string str(const mpq &val, const StrOpt &options) {
 		return val.get_str((int)options.base);
 	}
+
+	std::string str(const mpfr &val, const StrOpt &options) {
+		std::stringstream ss;
+		ss << std::fixed;
+		mp_prec_t dig2 = val.getPrecision();
+		dig2 = ::mpfr::bits2digits(dig2);
+		ss.precision(options.digits < 1 ? dig2 : options.digits);
+		ss << val;
+		return ss.str();
+	}
 #endif
 } // namespace librapid
