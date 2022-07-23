@@ -248,6 +248,11 @@
 #	endif
 #endif
 
+// If we don't know, defualt to 64 bit
+#if !defined(LIBRAPID_32BIT) && !defined(LIBRAPID_64BIT)
+#	define LIBRAPID_64BIT
+#endif
+
 // Check C++ Version
 #if __cplusplus >= 201103L
 #	define LIBRAPID_CXX_11
