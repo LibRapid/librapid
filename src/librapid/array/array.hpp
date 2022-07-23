@@ -297,12 +297,14 @@ namespace librapid {
 	using ArrayI32 = Array<int32_t, device::CPU>;
 	using ArrayI64 = Array<int64_t, device::CPU>;
 
-#if defined(LIBRAPID_USE_MPIR)
+#if defined(LIBRAPID_USE_MULTIPREC)
 	using ArrayMPZ = Array<mpz, device::CPU>;
 	using ArrayMPF = Array<mpf, device::CPU>;
 	using ArrayMPQ = Array<mpq, device::CPU>;
+	using ArrayMPFR = Array<mpfr, device::CPU>;
 #endif
 
+	// GPU array aliases will default to CPU arrays if CUDA is not enabled
 #if defined(LIBRAPID_HAS_CUDA)
 	using ArrayBG	= Array<bool, device::GPU>;
 	using ArrayCG	= Array<char, device::GPU>;

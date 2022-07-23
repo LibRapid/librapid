@@ -13,6 +13,6 @@
 [submodule "src/librapid/vendor/pybind11"] # PyBind11 for Python builds
 	path = src/librapid/vendor/pybind11
 	url = https://github.com/pybind/pybind11.git
-[submodule "src/librapid/vendor/mpir"] # Modified MPIR implementation
-	path = src/librapid/vendor/mpir
-	url = https://github.com/Pencilcaseman/mpir
+[submodule "src/librapid/vendor/mpfr"] # Modified MPFR implementation
+	path = src/librapid/vendor/mpfr
+	url = https://github.com/pencilcaseman/mpfr

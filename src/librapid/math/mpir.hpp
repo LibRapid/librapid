@@ -1,11 +1,13 @@
 #pragma once
 
-#if defined(LIBRAPID_USE_MPIR)
+#if defined(LIBRAPID_USE_MULTIPREC)
 
-#include "../internal/forward.hpp"
+#	include "../internal/forward.hpp"
 
 // MPIR (modified) for BigNumber types
 #	include <mpirxx.h>
+#	include <mpreal.h>
+
 #	include <cstdint>
 #	include <thread>
 #	include <future>
@@ -15,13 +17,17 @@ namespace librapid {
 	using mpz  = mpz_class;
 	using mpf  = mpf_class;
 	using mpq  = mpq_class;
+	using mpfr = mpfr::mpreal;
 
-    std::string str(const mpz &val, const StrOpt &options = DEFAULT_STR_OPT);
+	std::string str(const mpz &val, const StrOpt &options = DEFAULT_STR_OPT);
 	std::string str(const mpf &val, const StrOpt &options = DEFAULT_STR_OPT);
 	std::string str(const mpq &val, const StrOpt &options = DEFAULT_STR_OPT);
+	std::string str(const mpfr &val, const StrOpt &options = DEFAULT_STR_OPT);
 
 	inline void prec(int64_t dig10) {
-		mpf_set_default_prec((int64_t)((double)dig10 * 3.32192809488736234787) + 1);
+		int64_t dig2 = (int64_t)((double)dig10 * 3.32192809488736234787) + 1;
+		mpf_set_default_prec(dig2);
+		mpfr::mpreal::set_default_prec(dig2);
 	}
 
 	namespace detail {
@@ -90,6 +96,13 @@ namespace librapid {
 
 	mpf epsilon(const mpf &val = mpf_class());
 	mpf fmod(const mpf &val, const mpf &mod);
+
+	template<typename T, typename U, typename V, typename W>
+	inline mpf fmod(const __gmp_expr<T, U> &val, const __gmp_expr<V, W> &mod) {
+		auto lhs = mpf(val);
+		auto rhs = mpf(mod);
+		return fmod(lhs, rhs);
+	}
 
 	// Trigonometric Functionality for mpf
 	mpf sin(const mpf &val);
@@ -186,6 +199,38 @@ struct fmt::formatter<mpq_class> {
 
 	template<typename FormatContext>
 	inline auto format(const mpq_class &num, FormatContext &ctx) {
+		try {
+			std::stringstream ss;
+			ss << std::fixed;
+			ss.precision(specs_.precision < 1 ? 10 : specs_.precision);
+			ss << num;
+			return fmt::format_to(ctx.out(), ss.str());
+		} catch (std::exception &e) {
+			LR_ASSERT("Invalid Format Specifier: {}", e.what());
+			return fmt::format_to(ctx.out(), "FORMAT ERROR");
+		}
+	}
+};
+
+template<>
+struct fmt::formatter<librapid::mpfr> {
+	detail::dynamic_format_specs<char> specs_;
+
+	template<typename ParseContext>
+	constexpr auto parse(ParseContext &ctx) {
+		auto begin = ctx.begin(), end = ctx.end();
+		if (begin == end) return begin;
+		using handler_type = detail::dynamic_specs_handler<ParseContext>;
+		auto type		   = detail::type_constant<mpq_class, char>::value;
+		auto checker	   = detail::specs_checker<handler_type>(handler_type(specs_, ctx), type);
+		auto it			   = detail::parse_format_specs(begin, end, checker);
+		auto eh			   = ctx.error_handler();
+		detail::parse_float_type_spec(specs_, eh);
+		return it;
+	}
+
+	template<typename FormatContext>
+	inline auto format(const librapid::mpfr &num, FormatContext &ctx) {
 		try {
 			std::stringstream ss;
 			ss << std::fixed;
