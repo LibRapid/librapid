@@ -524,6 +524,38 @@ namespace librapid::internal {
 		}
 	};
 
+	//------- Multiprecision Rational (MPFR) ---------------------------------
+	template<>
+	struct traits<mpfr> {
+		static constexpr bool IsScalar		 = true;
+		using Valid							 = std::true_type;
+		using Scalar						 = mpfr;
+		using BaseScalar					 = mpfr;
+		using StorageType					 = memory::DenseStorage<mpfr>;
+		using Packet						 = std::false_type;
+		using Device						 = device::CPU;
+		static constexpr int64_t PacketWidth = 1;
+		static constexpr char Name[]		 = "NO_VALID_CONVERSION";
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(mpfr);
+		static constexpr bool CanAlign	= false;
+		static constexpr bool CanMemcpy = false;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const mpfr &val) {
+			if constexpr (std::is_same_v<CAST, bool>) return val != 0;
+			if constexpr (std::is_integral_v<CAST> && std::is_signed_v<CAST>)
+				return (CAST)val.toLLong();
+			if constexpr (std::is_integral_v<CAST> && std::is_unsigned_v<CAST>)
+				return (CAST)val.toULLong();
+			if constexpr (std::is_same_v<CAST, float>) return (CAST)val.toFloat();
+			if constexpr (std::is_same_v<CAST, double>) return (CAST)val.toDouble();
+			if constexpr (std::is_same_v<CAST, long double>) return (CAST)val.toLDouble();
+		}
+	};
+
 #endif // LIBRAPID_USE_MPIR
 
 	template<typename LHS, typename RHS>
