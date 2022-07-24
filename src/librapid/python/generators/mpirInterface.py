@@ -21,8 +21,8 @@ resStr = ""
 
 types = [
 	"mpz",
-	"mpf",
-	"mpq"
+	"mpq",
+	"mpfr"
 ]
 
 for type in types:
@@ -43,93 +43,41 @@ for type in types:
 	resStr += "\t.def(py::init<int64_t>())\n"
 	resStr += "\t.def(py::init<double>())\n"
 	resStr += "\t.def(py::init<const std::string &>())\n"
-	resStr += "\t.def(py::init<const lrc::mpz>())\n"
-	resStr += "\t.def(py::init<const lrc::mpf>())\n"
-	resStr += "\t.def(py::init<const lrc::mpq>())\n"
+	resStr += "\t.def(py::init<{}>())\n".format(constRef)
 
 	functions = [
-		Function("__add__", [Argument(constRef, "this_"), Argument("int64_t", "other")],               "return {}(this_ + other);".format(typename)),
-		Function("__add__", [Argument(constRef, "this_"), Argument("double", "other")],                "return {}(this_ + other);".format(typename)),
-		Function("__add__", [Argument(constRef, "this_"), Argument("const librapid::mpz &", "other")], "return {}(this_ + other);".format(typename)),
-		Function("__add__", [Argument(constRef, "this_"), Argument("const librapid::mpf &", "other")], "return {}(this_ + other);".format(typename)),
-		Function("__add__", [Argument(constRef, "this_"), Argument("const librapid::mpq &", "other")], "return {}(this_ + other);".format(typename)),
+		Function("__add__", [Argument(constRef, "this_"), Argument(constRef, "other")],     "return this_ + other;"),
+		Function("__sub__", [Argument(constRef, "this_"), Argument(constRef, "other")],     "return this_ - other;"),
+		Function("__mul__", [Argument(constRef, "this_"), Argument(constRef, "other")],     "return this_ * other;"),
+		Function("__truediv__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ / other;"),
 
-		Function("__sub__", [Argument(constRef, "this_"), Argument("int64_t", "other")],               "return {}(this_ - other);".format(typename)),
-		Function("__sub__", [Argument(constRef, "this_"), Argument("double", "other")],                "return {}(this_ - other);".format(typename)),
-		Function("__sub__", [Argument(constRef, "this_"), Argument("const librapid::mpz &", "other")], "return {}(this_ - other);".format(typename)),
-		Function("__sub__", [Argument(constRef, "this_"), Argument("const librapid::mpf &", "other")], "return {}(this_ - other);".format(typename)),
-		Function("__sub__", [Argument(constRef, "this_"), Argument("const librapid::mpq &", "other")], "return {}(this_ - other);".format(typename)),
+		Function("__radd__", [Argument(constRef, "this_"), Argument(constRef, "other")],     "return other + this_;"),
+		Function("__rsub__", [Argument(constRef, "this_"), Argument(constRef, "other")],     "return other - this_;"),
+		Function("__rmul__", [Argument(constRef, "this_"), Argument(constRef, "other")],     "return other * this_;"),
+		Function("__rtruediv__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return other / this_;"),
 
-		Function("__mul__", [Argument(constRef, "this_"), Argument("int64_t", "other")],               "return {}(this_ * other);".format(typename)),
-		Function("__mul__", [Argument(constRef, "this_"), Argument("double", "other")],                "return {}(this_ * other);".format(typename)),
-		Function("__mul__", [Argument(constRef, "this_"), Argument("const librapid::mpz &", "other")], "return {}(this_ * other);".format(typename)),
-		Function("__mul__", [Argument(constRef, "this_"), Argument("const librapid::mpf &", "other")], "return {}(this_ * other);".format(typename)),
-		Function("__mul__", [Argument(constRef, "this_"), Argument("const librapid::mpq &", "other")], "return {}(this_ * other);".format(typename)),
-
-		Function("__truediv__", [Argument(constRef, "this_"), Argument("int64_t", "other")],               "return {}(this_ / other);".format(typename)),
-		Function("__truediv__", [Argument(constRef, "this_"), Argument("double", "other")],                "return {}(this_ / other);".format(typename)),
-		Function("__truediv__", [Argument(constRef, "this_"), Argument("const librapid::mpz &", "other")], "return {}(this_ / other);".format(typename)),
-		Function("__truediv__", [Argument(constRef, "this_"), Argument("const librapid::mpf &", "other")], "return {}(this_ / other);".format(typename)),
-		Function("__truediv__", [Argument(constRef, "this_"), Argument("const librapid::mpq &", "other")], "return {}(this_ / other);".format(typename)),
-
-
-		Function("__radd__", [Argument(constRef, "this_"), Argument("int64_t", "other")],               "return {}(other + this_);".format(typename)),
-		Function("__radd__", [Argument(constRef, "this_"), Argument("double", "other")],                "return {}(other + this_);".format(typename)),
-		Function("__radd__", [Argument(constRef, "this_"), Argument("const librapid::mpz &", "other")], "return {}(other + this_);".format(typename)),
-		Function("__radd__", [Argument(constRef, "this_"), Argument("const librapid::mpf &", "other")], "return {}(other + this_);".format(typename)),
-		Function("__radd__", [Argument(constRef, "this_"), Argument("const librapid::mpq &", "other")], "return {}(other + this_);".format(typename)),
-
-		Function("__rsub__", [Argument(constRef, "this_"), Argument("int64_t", "other")],               "return {}(other - this_);".format(typename)),
-		Function("__rsub__", [Argument(constRef, "this_"), Argument("double", "other")],                "return {}(other - this_);".format(typename)),
-		Function("__rsub__", [Argument(constRef, "this_"), Argument("const librapid::mpz &", "other")], "return {}(other - this_);".format(typename)),
-		Function("__rsub__", [Argument(constRef, "this_"), Argument("const librapid::mpf &", "other")], "return {}(other - this_);".format(typename)),
-		Function("__rsub__", [Argument(constRef, "this_"), Argument("const librapid::mpq &", "other")], "return {}(other - this_);".format(typename)),
-
-		Function("__rmul__", [Argument(constRef, "this_"), Argument("int64_t", "other")],               "return {}(other * this_);".format(typename)),
-		Function("__rmul__", [Argument(constRef, "this_"), Argument("double", "other")],                "return {}(other * this_);".format(typename)),
-		Function("__rmul__", [Argument(constRef, "this_"), Argument("const librapid::mpz &", "other")], "return {}(other * this_);".format(typename)),
-		Function("__rmul__", [Argument(constRef, "this_"), Argument("const librapid::mpf &", "other")], "return {}(other * this_);".format(typename)),
-		Function("__rmul__", [Argument(constRef, "this_"), Argument("const librapid::mpq &", "other")], "return {}(other * this_);".format(typename)),
-
-		Function("__rtruediv__", [Argument(constRef, "this_"), Argument("int64_t", "other")],               "return {}(other / this_);".format(typename)),
-		Function("__rtruediv__", [Argument(constRef, "this_"), Argument("double", "other")],                "return {}(other / this_);".format(typename)),
-		Function("__rtruediv__", [Argument(constRef, "this_"), Argument("const librapid::mpz &", "other")], "return {}(other / this_);".format(typename)),
-		Function("__rtruediv__", [Argument(constRef, "this_"), Argument("const librapid::mpf &", "other")], "return {}(other / this_);".format(typename)),
-		Function("__rtruediv__", [Argument(constRef, "this_"), Argument("const librapid::mpq &", "other")], "return {}(other / this_);".format(typename)),
-
-		Function("__iadd__", [Argument(ref, "this_"), Argument("int64_t", "other")],               "this_ += other; return this_;"),
-		Function("__iadd__", [Argument(ref, "this_"), Argument("double", "other")],                "this_ += other; return this_;"),
-		Function("__iadd__", [Argument(ref, "this_"), Argument("const librapid::mpz &", "other")], "this_ += other; return this_;"),
-		Function("__iadd__", [Argument(ref, "this_"), Argument("const librapid::mpf &", "other")], "this_ += other; return this_;"),
-		Function("__iadd__", [Argument(ref, "this_"), Argument("const librapid::mpq &", "other")], "this_ += other; return this_;"),
-
-		Function("__isub__", [Argument(ref, "this_"), Argument("int64_t", "other")],               "this_ -= other; return this_;"),
-		Function("__isub__", [Argument(ref, "this_"), Argument("double", "other")],                "this_ -= other; return this_;"),
-		Function("__isub__", [Argument(ref, "this_"), Argument("const librapid::mpz &", "other")], "this_ -= other; return this_;"),
-		Function("__isub__", [Argument(ref, "this_"), Argument("const librapid::mpf &", "other")], "this_ -= other; return this_;"),
-		Function("__isub__", [Argument(ref, "this_"), Argument("const librapid::mpq &", "other")], "this_ -= other; return this_;"),
-
-		Function("__imul__", [Argument(ref, "this_"), Argument("int64_t", "other")],               "this_ *= other; return this_;"),
-		Function("__imul__", [Argument(ref, "this_"), Argument("double", "other")],                "this_ *= other; return this_;"),
-		Function("__imul__", [Argument(ref, "this_"), Argument("const librapid::mpz &", "other")], "this_ *= other; return this_;"),
-		Function("__imul__", [Argument(ref, "this_"), Argument("const librapid::mpf &", "other")], "this_ *= other; return this_;"),
-		Function("__imul__", [Argument(ref, "this_"), Argument("const librapid::mpq &", "other")], "this_ *= other; return this_;"),
-
-		Function("__itruediv__", [Argument(ref, "this_"), Argument("int64_t", "other")],               "this_ /= other; return this_;"),
-		Function("__itruediv__", [Argument(ref, "this_"), Argument("double", "other")],                "this_ /= other; return this_;"),
-		Function("__itruediv__", [Argument(ref, "this_"), Argument("const librapid::mpz &", "other")], "this_ /= other; return this_;"),
-		Function("__itruediv__", [Argument(ref, "this_"), Argument("const librapid::mpf &", "other")], "this_ /= other; return this_;"),
-		Function("__itruediv__", [Argument(ref, "this_"), Argument("const librapid::mpq &", "other")], "this_ /= other; return this_;"),
-
-		Function("__lshift__", [Argument(constRef, "this_"), Argument("int64_t", "other")], "return {}(this_ << other);".format(typename)),
-		Function("__rshift__", [Argument(constRef, "this_"), Argument("int64_t", "other")], "return {}(this_ >> other);".format(typename)),
-		Function("__ilshift__", [Argument(ref, "this_"), Argument("int64_t", "other")], "this_ <<= other; return this_;"),
-		Function("__irshift__", [Argument(ref, "this_"), Argument("int64_t", "other")], "this_ >>= other; return this_;"),
+		Function("__iadd__", [Argument(ref, "this_"), Argument(constRef, "other")],     "this_ += other; return this_;"),
+		Function("__isub__", [Argument(ref, "this_"), Argument(constRef, "other")],     "this_ -= other; return this_;"),
+		Function("__imul__", [Argument(ref, "this_"), Argument(constRef, "other")],     "this_ *= other; return this_;"),
+		Function("__itruediv__", [Argument(ref, "this_"), Argument(constRef, "other")], "this_ /= other; return this_;"),
+		
+		Function("__lt__", [Argument(constRef, "this_"), Argument(constRef, "other")],  "return this_ < other;"),
+		Function("__gt__", [Argument(constRef, "this_"), Argument(constRef, "other")],  "return this_ > other;"),
+		Function("__lte__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ <= other;"),
+		Function("__gte__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ >= other;"),
 
 		Function("str", [Argument(constRef, "this_"), Argument("int64_t", "base", "10")], "return lrc::str(this_, {-1, base, false});"),
 		Function("__str__", [Argument(constRef, "this_")], "return lrc::str(this_, {-1, 10, false});"),
 		Function("__repr__", [Argument(constRef, "this_")], "return \"librapid::{}(\\\"\" + lrc::str(this_, {{-1, 10, false}}) + \"\\\")\";".format(t)),
 	]
+
+	if type != "mpfr":
+		functions += [
+			Function("__lshift__", [Argument(constRef, "this_"), Argument("int64_t", "other")], "return this_ << other;"),
+			Function("__rshift__", [Argument(constRef, "this_"), Argument("int64_t", "other")], "return this_ >> other;"),
+			Function("__ilshift__", [Argument(ref, "this_"), Argument("int64_t", "other")], "this_ <<= other; return this_;"),
+			Function("__irshift__", [Argument(ref, "this_"), Argument("int64_t", "other")], "this_ >>= other; return this_;"),
+		]
 
 	for i in range(len(functions)):
 		function = functions[i]
@@ -142,6 +90,16 @@ for type in types:
 			resStr += "\n"
 		else:
 			resStr += ";\n\n"
+
+for type in types:
+	functions = [
+		Function("toMpz", [Argument(constRef, "this_")], "return librapid::toMpz(this_);"),
+		Function("toMpq", [Argument(constRef, "this_")], "return librapid::toMpq(this_);"),
+		Function("toMpfr", [Argument(constRef, "this_")], "return librapid::toMpfr(this_);"),
+	]
+
+	for function in functions:
+		resStr += "module" + function.gen() + ";\n"
 
 def write(path:str):
 	with open(path, "w") as file:
