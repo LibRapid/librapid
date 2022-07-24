@@ -331,7 +331,7 @@ jobs:
         with:
           path: wheelhouse/*.whl
 
-  # Build the wheels for Linux, Windows and macOS for CPython 3.7 and newer
+  # Build the wheels for Linux and Windows with CUDA support
   build_wheels_cuda:
     name: Build wheel for cp${{ matrix.python }}-${{ matrix.platform_id }}-${{ matrix.manylinux_image }}-cuda${{ matrix.cuda_version }}
     runs-on: ${{ matrix.os }}
@@ -350,7 +350,6 @@ jobs:
             platform_id: win_amd64
             cuda_version: "11.4.0"
             use_openblas: true
-          # This tends to give a "Compiler Out of Heap Space" error
           - os: windows-latest
             python: 37
             bitness: 64
@@ -420,7 +419,6 @@ jobs:
             cuda_version: "11.7.0"
             use_openblas: true
 
-          # This tends to give a "Compiler Out of Heap Space" error
           - os: windows-latest
             python: 310
             bitness: 64
@@ -443,6 +441,107 @@ jobs:
             python: 310
             bitness: 64
             platform_id: win_amd64
+            cuda_version: "11.7.0"
+            use_openblas: true
+
+          # Linux 64 bit
+          - os: ubuntu-latest
+            python: 37
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.4.0"
+            use_openblas: true
+          - os: ubuntu-latest
+            python: 37
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.5.0"
+            use_openblas: true
+          - os: ubuntu-latest
+            python: 37
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.6.0"
+            use_openblas: true
+          - os: ubuntu-latest
+            python: 37
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.7.0"
+            use_openblas: true
+
+          - os: ubuntu-latest
+            python: 38
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.4.0"
+            use_openblas: true
+          - os: ubuntu-latest
+            python: 38
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.5.0"
+            use_openblas: true
+          - os: ubuntu-latest
+            python: 38
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.6.0"
+            use_openblas: true
+          - os: ubuntu-latest
+            python: 38
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.7.0"
+            use_openblas: true
+
+          - os: ubuntu-latest
+            python: 39
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.4.0"
+            use_openblas: true
+          - os: ubuntu-latest
+            python: 39
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.5.0"
+            use_openblas: true
+          - os: ubuntu-latest
+            python: 39
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.6.0"
+            use_openblas: true
+          - os: ubuntu-latest
+            python: 39
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.7.0"
+            use_openblas: true
+
+          - os: ubuntu-latest
+            python: 310
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.4.0"
+            use_openblas: true
+          - os: ubuntu-latest
+            python: 310
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.5.0"
+            use_openblas: true
+          - os: ubuntu-latest
+            python: 310
+            bitness: 64
+            platform_id: manylinux_x86_64
+            cuda_version: "11.6.0"
+            use_openblas: true
+          - os: ubuntu-latest
+            python: 310
+            bitness: 64
+            platform_id: manylinux_x86_64
             cuda_version: "11.7.0"
             use_openblas: true
 
