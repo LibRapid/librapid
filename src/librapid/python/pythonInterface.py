@@ -17,8 +17,8 @@ def isArrayObject(obj):
 								_librapid.ArrayI32,
 								_librapid.ArrayI64,
 								_librapid.ArrayMPZ,
-								_librapid.ArrayMPF,
 								_librapid.ArrayMPQ,
+								_librapid.ArrayMPFR,
 								_librapid.ArrayBG,
 								_librapid.ArrayCG,
 								_librapid.ArrayF16G,
@@ -38,13 +38,13 @@ def isArrayObject(obj):
 								_librapid.ArrayI32,
 								_librapid.ArrayI64,
 								_librapid.ArrayMPZ,
-								_librapid.ArrayMPF,
-								_librapid.ArrayMPQ))
+								_librapid.ArrayMPQ,
+								_librapid.ArrayMPFR))
 
 Extent = extentInterface.Extent
 
 mpz = _librapid.mpz
-mpf = _librapid.mpf
+mpfr = _librapid.mpfr
 mpq = _librapid.mpq
 
 prec = _librapid.prec
@@ -115,10 +115,10 @@ class Array:
 					self._array = _librapid.ArrayI64(extent._extent)
 				elif adjustedType == "ArrayMPZ":
 					self._array = _librapid.ArrayMPZ(extent._extent)
-				elif adjustedType == "ArrayMPF":
-					self._array = _librapid.ArrayMPF(extent._extent)
 				elif adjustedType == "ArrayMPQ":
 					self._array = _librapid.ArrayMPQ(extent._extent)
+				elif adjustedType == "ArrayMPFR":
+					self._array = _librapid.ArrayMPFR(extent._extent)
 			elif adjustedDevice == "GPU":
 				if adjustedType == "ArrayB":
 					self._array = _librapid.ArrayBG(extent._extent)
@@ -181,10 +181,10 @@ class Array:
 			return Array(self._array.cast_ArrayI64())
 		elif adjustedType == "ArrayMPZ":
 			return Array(self._array.cast_ArrayMPZ())
-		elif adjustedType == "ArrayMPF":
-			return Array(self._array.cast_ArrayMPF())
 		elif adjustedType == "ArrayMPQ":
 			return Array(self._array.cast_ArrayMPQ())
+		elif adjustedType == "ArrayMPFR":
+			return Array(self._array.cast_ArrayMPFR())
 
 	def castMove(self, newType:str, newLoc:str):
 		adjustedType, adjustedDevice = typeMapping.mapType(newType, newLoc)
@@ -274,3 +274,54 @@ def mul(lhs:Array, rhs:Array, dst:Array):
 
 def div(lhs:Array, rhs:Array, dst:Array):
 	_librapid.div(lhs._array, rhs._array, dst._array)
+
+# Functions from the Math library
+abs = _librapid.abs
+floor = _librapid.floor
+ceil = _librapid.ceil
+pow = _librapid.pow
+sqrt = _librapid.sqrt
+exp = _librapid.exp
+exp2 = _librapid.exp2
+exp10 = _librapid.exp10
+ln = _librapid.ln
+log2 = _librapid.log2
+log10 = _librapid.log10
+log = _librapid.log
+sin = _librapid.sin
+cos = _librapid.cos
+tan = _librapid.tan
+asin = _librapid.asin
+acos = _librapid.acos
+atan = _librapid.atan
+csc = _librapid.csc
+sec = _librapid.sec
+cot = _librapid.cot
+acsc = _librapid.acsc
+asec = _librapid.asec
+acot = _librapid.acot
+sinh = _librapid.sinh
+cosh = _librapid.cosh
+tanh = _librapid.tanh
+asinh = _librapid.asinh
+acosh = _librapid.acosh
+atanh = _librapid.atanh
+mod = _librapid.mod
+round = _librapid.round
+roundSigFig = _librapid.roundSigFig
+roundTo = _librapid.roundTo
+roundUpTo = _librapid.roundUpTo
+map = _librapid.map
+random = _librapid.random
+randint = _librapid.randint
+trueRandomEntropy = _librapid.trueRandomEntropy
+trueRandom = _librapid.trueRandom
+trueRandint = _librapid.trueRandint
+randomGaussian = _librapid.randomGaussian
+pow10 = _librapid.pow10
+lerp = _librapid.lerp
+
+constPi = _librapid.constPi
+constEuler = _librapid.constEuler
+constLog2 = _librapid.constLog2
+constCatalan = _librapid.constCatalan

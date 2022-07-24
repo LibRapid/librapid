@@ -43,8 +43,10 @@ void init_ArrayI16(py::module &);
 void init_ArrayI32(py::module &);
 void init_ArrayI64(py::module &);
 void init_ArrayMPZ(py::module &);
-void init_ArrayMPF(py::module &);
 void init_ArrayMPQ(py::module &);
+void init_ArrayMPFR(py::module &);
+
+void init_math(py::module &);
 
 PYBIND11_MODULE(_librapid, module) {
 	module.doc() = module_docstring;
@@ -62,7 +64,10 @@ PYBIND11_MODULE(_librapid, module) {
 		lrc::prec(n);
 	});
 
-	module.def("pi", [](int64_t digits, int64_t threads, int64_t outmode) { return lrc::pi(digits, threads, outmode); }, py::arg("digits"), py::arg("threasd") = 1, py::arg("outmode") = 0);
+	module.def("constPi", &lrc::constPi);
+	module.def("constEuler", &lrc::constEuler);
+	module.def("constLog2", &lrc::constLog2);
+	module.def("constCatalan", &lrc::constCatalan);
 
 	// Interface with MPIR
 	#include "autogen/mpirInterface.hpp"
@@ -88,11 +93,19 @@ PYBIND11_MODULE(_librapid, module) {
 	init_ArrayI32(module);
 	init_ArrayI64(module);
 	init_ArrayMPZ(module);
-	init_ArrayMPF(module);
 	init_ArrayMPQ(module);
+	init_ArrayMPFR(module);
+
+	init_math(module);
 
 	// Include the Vector library
 	#include "autogen/vecInterface.hpp"
+
+	py::implicitly_convertible<int64_t, librapid::mpz>();
+	py::implicitly_convertible<const std::string &, librapid::mpz>();
+	py::implicitly_convertible<int64_t, librapid::mpfr>();
+	py::implicitly_convertible<double, librapid::mpfr>();
+	py::implicitly_convertible<const std::string &, librapid::mpfr>();
 
 	// py::implicitly_convertible<int64_t, librapid::Array>();
 	// py::implicitly_convertible<double, librapid::Array>();

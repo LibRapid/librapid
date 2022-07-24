@@ -299,7 +299,6 @@ namespace librapid {
 
 #if defined(LIBRAPID_USE_MULTIPREC)
 	using ArrayMPZ = Array<mpz, device::CPU>;
-	using ArrayMPF = Array<mpf, device::CPU>;
 	using ArrayMPQ = Array<mpq, device::CPU>;
 	using ArrayMPFR = Array<mpfr, device::CPU>;
 #endif
