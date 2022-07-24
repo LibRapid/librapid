@@ -9,7 +9,7 @@ namespace librapid {
 
 		template<typename T = unsigned char, typename d = device::CPU>
 		class DenseStorage;
-	}
+	} // namespace memory
 
 	namespace internal {
 		template<typename T>
@@ -43,11 +43,18 @@ namespace librapid {
 	template<typename Scalar_, typename Device_>
 	class Array;
 
-	struct StrOpt {
-		int64_t digits	= -1;
-		int64_t base	= 10;
-		bool scientific = false;
+	class StrOpt {
+	public:
+		StrOpt() : digits(-1), base(10), scientific(false) {}
+
+		StrOpt(int64_t digits_, int64_t base_, bool scientific_) :
+				digits(digits_), base(base_), scientific(scientific_) {}
+
+	public:
+		int64_t digits;
+		int64_t base;
+		bool scientific;
 	};
 
-#define DEFAULT_STR_OPT {-1, 10, false}
+#define DEFAULT_STR_OPT StrOpt(-1, 10, false)
 } // namespace librapid
