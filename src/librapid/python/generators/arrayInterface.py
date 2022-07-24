@@ -41,8 +41,8 @@ arrayTypes = [
 	"ArrayI64",
 	
 	"ArrayMPZ",
-	"ArrayMPF",
 	"ArrayMPQ",
+	"ArrayMPFR",
 	
 	"#endif // LIBRAPID_HAS_CUDA"
 ]
@@ -129,7 +129,7 @@ for t in arrayTypes:
 	else:
 		fArithmetic = []
 
-	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G", "ArrayMPF", "ArrayMPQ"]:
+	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G", "ArrayMPFR", "ArrayMPQ"]:
 		fBitwise = [
 			Function("__or__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ | other;"),
 			Function("__and__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ & other;"),
@@ -138,7 +138,7 @@ for t in arrayTypes:
 	else:
 		fBitwise = []
 
-	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G", "ArrayMPF", "ArrayMPQ"]:
+	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G", "ArrayMPFR", "ArrayMPQ"]:
 		fUnary = [Function("__invert__", [Argument(constRef, "this_")], "return ~this_;")]
 		if not t.startswith("ArrayB"):
 			fUnary = [Function("__neg__", [Argument(constRef, "this_")], "return -this_;")]
@@ -173,7 +173,7 @@ for t in arrayTypes:
 	for i in range(len(functions)):
 		function = functions[i]
 		if isinstance(function,Function):
-			classStr += "\t" + function.gen(t)
+			classStr += "\t" + function.gen()
 		else:
 			classStr += "\t" + function
 		
@@ -197,7 +197,7 @@ for t in arrayTypes:
 	moduleFunctions = forceTmpFunc
 
 	for function in moduleFunctions:
-		moduleStr += "module" + function.gen(t) + ";\n"
+		moduleStr += "module" + function.gen() + ";\n"
 
 	interfaceList[t] = classStr + "\n\n" + moduleStr
 	classStr = ""

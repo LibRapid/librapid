@@ -54,9 +54,11 @@ set(LIBRAPID_SOURCES
 
 if (${LIBRAPID_USE_MULTIPREC})
     list(APPEND LIBRAPID_SOURCES
-            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirHelpers.cpp"
-            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirTrig.cpp"
-            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpir/mpirPi.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/trig.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/expLogPow.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/floorCeil.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/modAbs.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/casting.cpp"
             )
 endif ()
 
@@ -71,6 +73,7 @@ if (${SKBUILD})
     pybind11_add_module(
             ${module_name} MODULE
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/librapidPythonInterface.cpp"
+
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayBGInterface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayCGInterface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayF16GInterface.cpp"
@@ -88,8 +91,11 @@ if (${SKBUILD})
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayI32Interface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayI64Interface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayMPZInterface.cpp"
-            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayMPFInterface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayMPQInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayMPFRInterface.cpp"
+
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/mathInterface.cpp"
+
             ${LIBRAPID_SOURCES}
     )
 
