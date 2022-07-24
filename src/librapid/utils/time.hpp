@@ -3,9 +3,14 @@
 #include <utility>
 
 #include "../internal/config.hpp"
-#include "../math/statistics.hpp"
 
 namespace librapid {
+	// Forward declare mean and standardDeviation
+	template<typename T>
+	T mean(const std::vector<T> &);
+	template<typename T>
+	T standardDeviation(const std::vector<T> &);
+
 	// Forward declare this function
 	template<typename T>
 	T map(T val, T start1, T stop1, T start2, T stop2);

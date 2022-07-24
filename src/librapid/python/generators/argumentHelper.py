@@ -32,10 +32,16 @@ class Function:
 				if i + 1 < len(self.args):
 					inputArgs += ", "
 		
+		start = -1
+		if len(self.args) > 0:
+			start = 0
+			if self.args[0].name == "this_":
+				start = 1
+
 		arguments = ""
-		if len(self.args) > 1:
+		if len(self.args) > 1 or start == 0:
 			arguments = ", "
-			for i in range(1, len(self.args)):
+			for i in range(start, len(self.args)):
 				arguments += "py::arg(\"{0}\")".format(self.args[i].name, self.args[i].type)
 
 				if self.args[i].hasDefault():

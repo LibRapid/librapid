@@ -4,6 +4,8 @@
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
 #include "../array/traits.hpp"
+#include "../utils/time.hpp"
+#include "mpir.hpp"
 
 namespace librapid {
 	LR_INLINE int64_t product(const std::vector<int64_t> &vals) {
@@ -61,8 +63,17 @@ namespace librapid {
 		return std::abs(a);
 	}
 
-	template<typename A, typename B,
-			 typename std::enable_if_t<std::is_fundamental_v<A> && std::is_fundamental_v<B>> = 0>
+	template<typename T>
+	LR_INLINE T floor(T a) {
+		return std::floor(a);
+	}
+
+	template<typename T>
+	LR_INLINE T ceil(T a) {
+		return std::ceil(a);
+	}
+
+	template<typename A, typename B>
 	LR_INLINE A pow(A a, B exp) {
 		return std::pow(a, exp);
 	}
@@ -78,8 +89,13 @@ namespace librapid {
 	}
 
 	template<typename T>
-	LR_INLINE T pow(T a, T power) {
-		return std::pow(a, power);
+	LR_INLINE T exp2(T a) {
+		return std::exp2(a);
+	}
+
+	template<typename T>
+	LR_INLINE T exp10(T a) {
+		return std::pow((T) 10, a);
 	}
 
 	template<typename T>
@@ -100,11 +116,6 @@ namespace librapid {
 	template<typename T>
 	LR_INLINE T log(T a, T base) {
 		return ln(a) / ln(base);
-	}
-
-	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>> = 0>
-	LR_INLINE T exp(T a) {
-		return std::exp(a);
 	}
 
 	template<typename T>
@@ -135,6 +146,21 @@ namespace librapid {
 	template<typename T>
 	LR_INLINE T atan(T a) {
 		return std::atan(a);
+	}
+
+	template<typename T>
+	LR_INLINE T csc(T a) {
+		return T(1) / std::sin(a);
+	}
+
+	template<typename T>
+	LR_INLINE T sec(T a) {
+		return T(1) / std::cos(a);
+	}
+
+	template<typename T>
+	LR_INLINE T cot(T a) {
+		return T(1) / std::tan(a);
 	}
 
 	template<typename T>
@@ -198,7 +224,7 @@ namespace librapid {
 		return dist(rd);
 	}
 
-	LR_INLINE int64_t trueRandint(int64_t lower, int64_t upper) {
+	LR_INLINE int64_t trueRandint(int64_t lower = 0, int64_t upper = 1) {
 		// Truly random value in range [lower, upper)
 		return (int64_t)trueRandom((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1);
 	}
@@ -279,13 +305,31 @@ namespace librapid {
 	} // namespace roundMode
 
 	template<typename T = double>
-	LR_INLINE auto round(T num, int64_t dp, int8_t mode = roundMode::MATH) {
+	LR_INLINE auto round(T num, int64_t dp = 0, int8_t mode = roundMode::MATH) {
 		using Scalar = typename internal::traits<T>::Scalar;
 
-		const Scalar alpha	= pow10<T>(dp);
-		const Scalar beta	= pow10<T>(-dp);
-		const Scalar absNum = abs(num * alpha);
-		Scalar y			= floor(absNum);
+		const Scalar alpha	= ::librapid::pow10(dp);
+		const Scalar beta	= ::librapid::pow10(-dp);
+		const Scalar absNum = ::librapid::abs(num * alpha);
+		Scalar y			= ::librapid::floor(absNum);
+		Scalar diff			= absNum - y;
+		if (mode & (1 << 0) && diff >= 0.5) y += 1;
+		if (mode & (1 << 2)) {
+			auto integer	 = (uint64_t)y;
+			auto nearestEven = (integer & 1) ? (y + 1) : (Scalar)integer;
+			if (mode & (1 << 4) && diff == 0.5) y = nearestEven;
+		}
+		return (num >= 0 ? y : -y) * beta;
+	}
+
+	template<>
+	LR_INLINE auto round(mpfr num, int64_t dp, int8_t mode) {
+		using Scalar = mpfr;
+
+		const Scalar alpha	= ::librapid::exp10(mpfr(dp));
+		const Scalar beta	= ::librapid::exp10(mpfr(-dp));
+		const Scalar absNum = ::librapid::abs(num * alpha);
+		Scalar y			= ::librapid::floor(absNum);
 		Scalar diff			= absNum - y;
 		if (mode & (1 << 0) && diff >= 0.5) y += 1;
 		if (mode & (1 << 2)) {
@@ -298,20 +342,20 @@ namespace librapid {
 
 	template<typename T1 = double, typename T2 = double>
 	LR_INLINE typename std::common_type_t<T1, T2> roundTo(T1 num, T2 val) {
-		auto rem = mod(num, val);
+		auto rem = ::librapid::mod(num, val);
 		if (rem >= val / 2) return (num + val) - rem;
 		return num - rem;
 	}
 
 	template<typename T1 = double, typename T2 = double>
 	LR_INLINE typename std::common_type_t<T1, T2> roundUpTo(T1 num, T2 val) {
-		auto rem = mod(num, val);
+		auto rem = ::librapid::mod(num, val);
 		if (rem == 0) return num;
 		return (num + val) - rem;
 	}
 
 	template<typename T>
-	LR_INLINE T roundSigFig(T num, int64_t figs) {
+	LR_INLINE T roundSigFig(T num, int64_t figs = 3) {
 		LR_ASSERT(figs > 0,
 				  "Cannot round to {} significant figures. Value must be greater than zero",
 				  figs);
