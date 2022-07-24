@@ -4,6 +4,7 @@
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
 #include "../array/traits.hpp"
+#include "../utils/time.hpp"
 #include "mpir.hpp"
 
 namespace librapid {
