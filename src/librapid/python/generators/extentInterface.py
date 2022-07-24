@@ -62,7 +62,7 @@ functions = [
 for i in range(len(functions)):
 	function = functions[i]
 	if isinstance(function,Function):
-		resStr += "\t" + function.gen(t)
+		resStr += "\t" + function.gen()
 	else:
 		resStr += "\t" + function
 	

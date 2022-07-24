@@ -10,8 +10,8 @@ typeMap = {
 	"ArrayI32" : ("int", "long", "int32", "i32"),
 	"ArrayI64" : ("long long", "int64", "i64"),
 	"ArrayMPZ" : ("bigint", "mpz", "mpz_t", "mpz_class", "mpir_int"),
-	"ArrayMPF" : ("bigfloat", "mpf", "mpf_t", "mpf_class", "mpir_float"),
 	"ArrayMPQ" : ("bigrational", "mpq", "mpq_t", "mpq_class", "mpir_rational"),
+	"ArrayMPFR" : ("bigfloat", "mpfr", "mpreal", "mpfr_float"),
 }
 
 deviceMap = {

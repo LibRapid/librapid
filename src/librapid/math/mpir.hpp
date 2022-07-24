@@ -15,103 +15,86 @@
 
 namespace librapid {
 	using mpz  = mpz_class;
-	using mpf  = mpf_class;
 	using mpq  = mpq_class;
 	using mpfr = mpfr::mpreal;
 
 	std::string str(const mpz &val, const StrOpt &options = DEFAULT_STR_OPT);
-	std::string str(const mpf &val, const StrOpt &options = DEFAULT_STR_OPT);
+	std::string str(const mpf_class &val, const StrOpt &options = DEFAULT_STR_OPT);
 	std::string str(const mpq &val, const StrOpt &options = DEFAULT_STR_OPT);
 	std::string str(const mpfr &val, const StrOpt &options = DEFAULT_STR_OPT);
 
+	// TODO: Optimise these functions
+	mpz toMpz(const mpz &other);
+	mpz toMpz(const mpq &other);
+	mpz toMpz(const mpfr &other);
+
+	mpq toMpq(const mpz &other);
+	mpq toMpq(const mpq &other);
+	mpq toMpq(const mpfr &other);
+
+	mpfr toMpfr(const mpz &other);
+	mpfr toMpfr(const mpq &other);
+	mpfr toMpfr(const mpfr &other);
+
 	inline void prec(int64_t dig10) {
-		int64_t dig2 = (int64_t)((double)dig10 * 3.32192809488736234787) + 1;
+		int64_t dig2 = (int64_t)((double)dig10 * 3.32192809488736234787) + 5;
 		mpf_set_default_prec(dig2);
 		mpfr::mpreal::set_default_prec(dig2);
 	}
 
-	namespace detail {
-		struct PQT {
-			mpz_class P, Q, T;
-		};
-	} // namespace detail
-
-	class Chudnovsky {
-	public:
-		explicit Chudnovsky(int64_t dig10 = 100);
-		[[nodiscard]] detail::PQT compPQT(int32_t n1, int32_t n2) const;
-		[[nodiscard]] mpf pi() const;
-
-		[[nodiscard]] mpf piMultiThread() const;
-
-		[[nodiscard]] static detail::PQT compPQT2(const Chudnovsky &chud, int32_t n1, int32_t n2,
-												  int64_t depth = 0) {
-			int32_t m;
-			detail::PQT res;
-
-			if (n1 + 1 == n2) {
-				res.P = mpz(2 * n2 - 1);
-				res.P *= (6 * n2 - 1);
-				res.P *= (6 * n2 - 5);
-				res.Q = chud.C3_24 * n2 * n2 * n2;
-				res.T = (chud.A + chud.B * n2) * res.P;
-				if ((n2 & 1) == 1) res.T = -res.T;
-			} else {
-				auto maxThreads = std::thread::hardware_concurrency() / 2;
-				if (depth < maxThreads) {
-					m = (n1 + n2) / 2;
-
-					std::future<detail::PQT> res1fut =
-					  std::async(&Chudnovsky::compPQT2, chud, n1, m, depth + 1);
-
-					std::future<detail::PQT> res2fut =
-					  std::async(&Chudnovsky::compPQT2, chud, m, n2, depth + 1);
-
-					detail::PQT res1 = res1fut.get(); // compPQT2(n1, m);
-					detail::PQT res2 = res2fut.get(); // compPQT2(m, n2);
-					res.P			 = res1.P * res2.P;
-					res.Q			 = res1.Q * res2.Q;
-					res.T			 = res1.T * res2.Q + res1.P * res2.T;
-				} else {
-					m				 = (n1 + n2) / 2;
-					detail::PQT res1 = compPQT2(chud, n1, m, depth + 1);
-					detail::PQT res2 = compPQT2(chud, m, n2, depth + 1);
-					res.P			 = res1.P * res2.P;
-					res.Q			 = res1.Q * res2.Q;
-					res.T			 = res1.T * res2.Q + res1.P * res2.T;
-				}
-			}
-
-			return res;
-		}
-
-	public:
-		mpz A, B, C, D, E, C3_24;
-		int64_t DIGITS, PREC, N;
-		double DIGITS_PER_TERM;
-		bool m_verbose = false;
-	};
-
-	mpf pi(int64_t digits, long threads = 1, int outMode = 0);
-
-	mpf epsilon(const mpf &val = mpf_class());
-	mpf fmod(const mpf &val, const mpf &mod);
-
-	template<typename T, typename U, typename V, typename W>
-	inline mpf fmod(const __gmp_expr<T, U> &val, const __gmp_expr<V, W> &mod) {
-		auto lhs = mpf(val);
-		auto rhs = mpf(mod);
-		return fmod(lhs, rhs);
-	}
-
 	// Trigonometric Functionality for mpf
-	mpf sin(const mpf &val);
-	mpf cos(const mpf &val);
-	mpf tan(const mpf &val);
+	mpfr sin(const mpfr &val);
+	mpfr cos(const mpfr &val);
+	mpfr tan(const mpfr &val);
 
-	mpf csc(const mpf &val);
-	mpf sec(const mpf &val);
-	mpf cot(const mpf &val);
+	mpfr asin(const mpfr &val);
+	mpfr acos(const mpfr &val);
+	mpfr atan(const mpfr &val);
+
+	mpfr csc(const mpfr &val);
+	mpfr sec(const mpfr &val);
+	mpfr cot(const mpfr &val);
+
+	mpfr acsc(const mpfr &val);
+	mpfr asec(const mpfr &val);
+	mpfr acot(const mpfr &val);
+
+	mpfr sinh(const mpfr &val);
+	mpfr cosh(const mpfr &val);
+	mpfr tanh(const mpfr &val);
+
+	mpfr asinh(const mpfr &val);
+	mpfr acosh(const mpfr &val);
+	mpfr atanh(const mpfr &val);
+
+	mpfr csch(const mpfr &val);
+	mpfr sech(const mpfr &val);
+	mpfr coth(const mpfr &val);
+
+	mpfr acsch(const mpfr &val);
+	mpfr asech(const mpfr &val);
+	mpfr acoth(const mpfr &val);
+
+	mpfr abs(const mpfr &val);
+	mpfr sqrt(const mpfr &val);
+	mpfr pow(const mpfr &base, const mpfr &pow);
+	mpfr exp(const mpfr &val);
+	mpfr exp2(const mpfr &val);
+	mpfr exp10(const mpfr &val);
+	mpfr ln(const mpfr &val);
+	mpfr log(const mpfr &val, const mpfr &base);
+	mpfr log2(const mpfr &val);
+	mpfr log10(const mpfr &val);
+
+	mpfr floor(const mpfr &val);
+	mpfr ceil(const mpfr &val);
+
+	mpfr mod(const mpfr &val, const mpfr &mod);
+
+	LR_INLINE mpfr constPi() { return ::mpfr::const_pi(); }
+	LR_INLINE mpfr constEuler() { return ::mpfr::const_euler(); }
+	LR_INLINE mpfr constLog2() { return ::mpfr::const_log2(); }
+	LR_INLINE mpfr constCatalan() { return ::mpfr::const_catalan(); }
 } // namespace librapid
 
 // Provide {fmt} printing capabilities
@@ -148,6 +131,7 @@ struct fmt::formatter<mpz_class> {
 	}
 };
 
+// Even though `mpf` is not a typedef-ed type, we'll add printing support for it
 template<>
 struct fmt::formatter<mpf_class> {
 	detail::dynamic_format_specs<char> specs_;
@@ -239,7 +223,7 @@ struct fmt::formatter<librapid::mpfr> {
 			return fmt::format_to(ctx.out(), ss.str());
 		} catch (std::exception &e) {
 			LR_ASSERT("Invalid Format Specifier: {}", e.what());
-			return fmt::format_to(ctx.out(), "FORMAT ERROR");
+			return fmt::format_to(ctx.out(), fmt::format("Format Error: {}", e.what()));
 		}
 	}
 };

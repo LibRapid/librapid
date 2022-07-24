@@ -7,14 +7,9 @@ int main() {
 	int64_t digits = 1000000;
 
 	lrc::prec(digits);
+
 	fmt::print("Calculating PI\n");
-
-	// A Chudnovsky object is easier to use but slower. Using
-	// the "pi" function is much quicker but is not threadsafe,
-	// outputs to the console and might (?) have a slight memory leak???
-
-	// auto chud = lrc::Chudnovsky(digits);
-	auto pi	  = lrc::pi(digits, 2); // chud.pi();
+	auto pi	  = lrc::constPi();
 
 	fmt::print("Stringifying Pi\n");
 	std::string piStr = fmt::format("{:.1000000}", pi);
