@@ -30,6 +30,7 @@ try:
 except:
     print("Was not able to append to system path")
 
+sys.path.append(ROOT_DIR)
 from python.pythonInterface import *
 
 """
