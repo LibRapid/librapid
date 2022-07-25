@@ -978,4 +978,4 @@ namespace librapid {
 } // namespace librapid
 
 #define MPIRXX_HAVE_LLONG // Enable long long support
-#include "../math/mpir.hpp"
+#include "../math/mpfr.hpp"

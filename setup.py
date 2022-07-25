@@ -150,9 +150,9 @@ else:
     cmake_args = []
 
 if os.environ.get("LIBRAPID_NO_ARCH"):
-    cmake_args.append("-DLIBRAPID_NO_ARCH=yes")
+    cmake_args.append("-DLIBRAPID_NO_ARCH=on")
 
-cmake_args.append("-DLIBRAPID_USE_MULTIPREC=yes")
+cmake_args.append("-DLIBRAPID_USE_MULTIPREC=on")
 
 if os.environ.get("LIBRAPID_CUDA_WHEEL"):
     moduleName = "librapid_cuda_" + os.environ["LIBRAPID_CUDA_WHEEL"]

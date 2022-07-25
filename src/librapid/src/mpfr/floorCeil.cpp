@@ -1,4 +1,4 @@
-#include <librapid/math/mpir.hpp>
+#include <librapid/math/mpfr.hpp>
 
 namespace librapid {
 	mpfr floor(const mpfr &val) { return ::mpfr::floor(val); }
