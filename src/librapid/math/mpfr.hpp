@@ -17,6 +17,7 @@ namespace librapid {
 	using mpz  = mpz_class;
 	using mpq  = mpq_class;
 	using mpfr = mpfr::mpreal;
+	using mpc  = std::complex<mpfr>;
 
 	std::string str(const mpz &val, const StrOpt &options = DEFAULT_STR_OPT);
 	std::string str(const mpf_class &val, const StrOpt &options = DEFAULT_STR_OPT);

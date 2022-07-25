@@ -9,8 +9,10 @@ librapid > Array > eval
 
 Parameters:
 
-	- ``fakeArg1`` -- ``int``
-	- ``fakeArg2`` -- ``int``
+- ``fakeArg1`` -- ``int``
+- ``fakeArg2`` -- ``int``
+
+Is this :yellow:`red?`
 
 #####
 Title
@@ -46,23 +48,10 @@ Contents
 ========
 
 .. toctree::
-	:hidden:
 	:maxdepth: 2
 	:glob:
 
 	modules/modules
-
-.. panels::
-	Modules
-
-	+++
-
-	.. link-button:: modules/modules
-		:type: ref
-		:text: View Page
-		:classes: btn-outline-info btn-block stretched-link
-
-	---
 
 Licencing
 =========
