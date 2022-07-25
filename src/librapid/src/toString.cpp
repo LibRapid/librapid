@@ -1,5 +1,5 @@
 #include <librapid/utils/toString.hpp>
-#include <librapid/math/mpir.hpp>
+#include <librapid/math/mpfr.hpp>
 
 namespace librapid {
 #if defined(LIBRAPID_USE_MULTIPREC)

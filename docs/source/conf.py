@@ -179,5 +179,10 @@ html_theme_options = {
 
 # These folders are copied to the documentation's HTML output
 html_static_path = ["_static"]
+html_css_files = ['css/s4defs-roles.css']
 
 html_favicon = "/en/latest/_static/LR_icon.png"
+
+rst_prolog = """
+.. include:: <s5defs.txt>
+"""

@@ -1,4 +1,4 @@
-#include <librapid/math/mpir.hpp>
+#include <librapid/math/mpfr.hpp>
 
 namespace librapid {
 	mpfr sin(const mpfr &val) { return ::mpfr::sin(val); }
