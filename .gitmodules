@@ -15,4 +15,4 @@
 	url = https://github.com/pybind/pybind11.git
 [submodule "src/librapid/vendor/mpfr"] # Big number support with MPFR and MPIR
 	path = src/librapid/vendor/mpfr
-	url = https://github.com/pencilcaseman/mpfr.git
+	url = https://github.com/pencilcaseman/mpfr
