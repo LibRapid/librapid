@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../../../internal/config.hpp"
-#include "../../traits.hpp"
 
 namespace librapid::functors::unop {
 	template<typename TYPE>

@@ -9,14 +9,18 @@
 #pragma warning(disable : 4244) // Possible loss of data in conversion
 #pragma warning(disable : 4267) // Possible loss of data in conversion
 
+#define MPIRXX_HAVE_LLONG // Enable long long support
+
 #include "VERSION.hpp"
 #include "internal/config.hpp"
 #include "linalg/threadHelper.hpp"
 #include "modified/modified.hpp"
 #include "cuda/cudaCodeLoader.hpp"
 #include "internal/memUtils.hpp"
+#include "utils/traits.hpp"
 #include "utils/time.hpp"
 #include "utils/console.hpp"
+#include "utils/bit.hpp"
 #include "librapid/linalg/blasInterface.hpp"
 #include "math/constants.hpp"
 #include "math/coreMath.hpp"
@@ -25,8 +29,8 @@
 #include "math/fastMath.hpp"
 #include "math/zTheory.hpp"
 #include "math/vector.hpp"
+#include "math/complex.hpp"
 #include "internal/forward.hpp"
-#include "array/traits.hpp"
 #include "array/helpers/kernelHelper.hpp"
 #include "array/denseStorage.hpp"
 #include "array/helpers/extent.hpp"

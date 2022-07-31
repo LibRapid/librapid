@@ -977,5 +977,4 @@ namespace librapid {
 	constexpr bool is_same_v = std::is_same<T, U>::value;
 } // namespace librapid
 
-#define MPIRXX_HAVE_LLONG // Enable long long support
 #include "../math/mpfr.hpp"

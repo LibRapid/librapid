@@ -2,7 +2,6 @@
 
 #include "../../internal/config.hpp"
 #include "../../internal/forward.hpp"
-#include "../traits.hpp"
 
 namespace librapid::functors {
 	template<typename Derived, typename OtherDerived, bool evalBeforeAssign>

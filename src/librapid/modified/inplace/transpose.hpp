@@ -2,7 +2,6 @@
 
 #include "../../internal/config.hpp"
 #include "../../math/zTheory.hpp"
-#include "../../array/traits.hpp"
 #include "reducedMath.hpp"
 #include "index.hpp"
 
