@@ -3,7 +3,6 @@
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
 #include "helpers/extent.hpp"
-#include "traits.hpp"
 #include "functors/functors.hpp"
 #include "cast.hpp"
 

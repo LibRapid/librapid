@@ -3,9 +3,8 @@
 
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
-#include "../array/traits.hpp"
+#include "../utils/traits.hpp"
 #include "../utils/time.hpp"
-#include "mpfr.hpp"
 
 namespace librapid {
 	LR_INLINE int64_t product(const std::vector<int64_t> &vals) {

@@ -991,7 +991,49 @@ namespace std {
 
 namespace librapid {
 	using half = extended::float16_t;
-}
+
+#define LIMIT_IMPL(NAME_) static auto NAME_() noexcept
+#define NUM_LIM(NAME_)	  std::numeric_limits<Scalar>::NAME_()
+
+	namespace internal {
+		//------- 16bit Floating Point --------------------------------------------
+		template<>
+		struct traits<extended::float16_t> {
+			static constexpr bool IsScalar		 = true;
+			using Valid							 = std::true_type;
+			using Scalar						 = extended::float16_t;
+			using BaseScalar					 = extended::float16_t;
+			using StorageType					 = memory::DenseStorage<extended::float16_t>;
+			using Packet						 = std::false_type;
+			using Device						 = device::CPU;
+			static constexpr int64_t PacketWidth = 1;
+			static constexpr char Name[]		 = "__half";
+			static constexpr uint64_t Flags = flags::PacketArithmetic | flags::ScalarArithmetic |
+											  flags::PacketLogical | flags::ScalarLogical;
+
+			static constexpr uint64_t Size	= 2;
+			static constexpr bool CanAlign	= true;
+			static constexpr bool CanMemcpy = true;
+
+			template<typename CAST>
+			LR_FORCE_INLINE static CAST cast(const extended::float16_t &val) {
+				return (CAST)val;
+			}
+
+			LR_FORCE_INLINE LIMIT_IMPL(min) { return NUM_LIM(min); }
+			LR_FORCE_INLINE LIMIT_IMPL(max) { return NUM_LIM(max); }
+			LR_FORCE_INLINE LIMIT_IMPL(epsilon) { return NUM_LIM(epsilon); }
+			LR_FORCE_INLINE LIMIT_IMPL(roundError) { return NUM_LIM(round_error); }
+			LR_FORCE_INLINE LIMIT_IMPL(denormMin) { return NUM_LIM(denorm_min); }
+			LR_FORCE_INLINE LIMIT_IMPL(infinity) { return NUM_LIM(infinity); }
+			LR_FORCE_INLINE LIMIT_IMPL(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LR_FORCE_INLINE LIMIT_IMPL(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+	} // namespace internal
+
+#undef LIMIT_IMPL
+#undef NUM_LIM
+} // namespace librapid
 
 // Provide {fmt} printing capabilities
 #ifdef FMT_API
