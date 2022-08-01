@@ -673,6 +673,44 @@ namespace librapid::internal {
 
 	template<typename T>
 	using StripQualifiers = typename std::remove_cv_t<typename std::remove_reference_t<T>>;
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE bool isNaN(const T &val) noexcept {
+		return std::isnan(val);
+	}
+
+	// MPIR does not support NaN, so chances are it'll have errored already...
+	template<typename A, typename B>
+	LR_NODISCARD("")
+	LR_INLINE bool isNaN(const __gmp_expr<A, B> &val) noexcept {
+		return false;
+	}
+
+	template<>
+	LR_NODISCARD("")
+	LR_INLINE bool isNaN(const mpfr &val) noexcept {
+		return ::mpfr::isnan(val);
+	}
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE bool isFinite(const T &val) noexcept {
+		return std::isfinite(val);
+	}
+
+	// MPIR does not support NaN, so chances are it'll have errored already...
+	template<typename A, typename B>
+	LR_NODISCARD("")
+	LR_INLINE bool isFinite(const __gmp_expr<A, B> &val) noexcept {
+		return true;
+	}
+
+	template<>
+	LR_NODISCARD("")
+	LR_INLINE bool isFinite(const mpfr &val) noexcept {
+		return ::mpfr::isfinite(val);
+	}
 } // namespace librapid::internal
 
 #undef LR_VC_TYPE
