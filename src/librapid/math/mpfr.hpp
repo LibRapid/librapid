@@ -60,6 +60,7 @@ namespace librapid {
 	mpfr asin(const mpfr &val);
 	mpfr acos(const mpfr &val);
 	mpfr atan(const mpfr &val);
+	mpfr atan2(const mpfr &dy, const mpfr &dx);
 
 	mpfr csc(const mpfr &val);
 	mpfr sec(const mpfr &val);
@@ -91,6 +92,7 @@ namespace librapid {
 	mpfr exp(const mpfr &val);
 	mpfr exp2(const mpfr &val);
 	mpfr exp10(const mpfr &val);
+	mpfr ldexp(const mpfr &val, int exponent);
 	mpfr log(const mpfr &val);
 	mpfr log(const mpfr &val, const mpfr &base);
 	mpfr log2(const mpfr &val);
