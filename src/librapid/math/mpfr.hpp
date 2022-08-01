@@ -49,7 +49,7 @@ namespace librapid {
 	inline void prec(int64_t dig10) {
 		int64_t dig2 = (int64_t)((double)dig10 * 3.32192809488736234787) + 5;
 		mpf_set_default_prec(dig2);
-		mpfr::mpreal::set_default_prec((mpfr_prec_t) dig2);
+		mpfr::mpreal::set_default_prec((mpfr_prec_t)dig2);
 	}
 
 	// Trigonometric Functionality for mpf
@@ -102,6 +102,8 @@ namespace librapid {
 	mpfr ceil(const mpfr &val);
 
 	mpfr mod(const mpfr &val, const mpfr &mod);
+
+	mpfr hypot(const mpfr &a, const mpfr &b);
 
 	LR_INLINE mpfr constPi() { return ::mpfr::const_pi(); }
 	LR_INLINE mpfr constEuler() { return ::mpfr::const_euler(); }

@@ -255,16 +255,28 @@
 #endif
 
 // Check C++ Version
-#if __cplusplus >= 201103L
-#	define LIBRAPID_CXX_11
-#elif __cplusplus >= 201402L
-#	define LIBRAPID_CXX_14
-#elif __cplusplus >= 201703L
-#	define LIBRAPID_CXX_17
-#elif __cplusplus >= 202002L
-#	define LIBRAPID_CXX_20
+#if defined(LIBRAPID_MSVC_CXX)
+// https://developercommunity.visualstudio.com/t/msvc-incorrectly-defines-cplusplus/139261
+// MSVC incorrectly defines the C++ version, so we cannot reliably detect it.
+#	if defined(_HAS_CXX20) && _HAS_CXX20
+#		define LIBRAPID_CXX_20
+#	else
+#		define LIBRAPID_CXX_17
+#	endif
 #else
-#	define LIBRAPID_CXX_11 // Assume we're using C++ 11???
+#	if __cplusplus >= 199711L
+#		define LIBRAPID_CXX_98
+#	elif __cplusplus >= 201103L
+#		define LIBRAPID_CXX_11
+#	elif __cplusplus >= 201402L
+#		define LIBRAPID_CXX_14
+#	elif __cplusplus >= 201703L
+#		define LIBRAPID_CXX_17
+#	elif __cplusplus >= 202002L
+#		define LIBRAPID_CXX_20
+#	else
+#		define LIBRAPID_CXX_11 // Assume we're using C++ 11???
+#	endif
 #endif
 
 // Nice-to-have macros
