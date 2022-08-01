@@ -98,7 +98,7 @@ namespace librapid {
 	}
 
 	template<typename T>
-	LR_INLINE T ln(T a) {
+	LR_INLINE T log(T a) {
 		return std::log(a);
 	}
 
@@ -247,7 +247,7 @@ namespace librapid {
 				v2 = 2 * random() - 1; // between -1.0 and 1.0
 				s  = v1 * v1 + v2 * v2;
 			} while (s >= 1 || s == 0);
-			double multiplier = sqrt(-2 * ln(s) / s);
+			double multiplier = sqrt(-2 * log(s) / s);
 			nextGaussian	  = v2 * multiplier;
 			hasNextGaussian	  = true;
 			res				  = v1 * multiplier;

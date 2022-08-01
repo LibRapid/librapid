@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LIBRAPID_CONFIG_HPP
+#define LIBRAPID_CONFIG_HPP
 
 // Include required headers
 #include <cstdlib>
@@ -948,6 +949,9 @@ namespace librapid {
 	static inline std::vector<std::string> nvccOptions	 = {};
 	static inline std::vector<std::string> customHeaders = {};
 	static inline std::string customCudaCode;
+	static inline bool checkComplex = false; // Use faster, less safe methods in the Complex type
+
+	void prec(int64_t dig10);
 
 	namespace internal {
 		class PreOptimize {
@@ -955,8 +959,8 @@ namespace librapid {
 			PreOptimize() {
 				numThreads	  = (int64_t)((double)std::thread::hardware_concurrency() * (3. / 4.));
 				matrixThreads = std::thread::hardware_concurrency();
-
 				nvccOptions.emplace_back("--device-int128");
+				prec(25);
 			}
 		};
 
@@ -978,3 +982,4 @@ namespace librapid {
 } // namespace librapid
 
 #include "../math/mpfr.hpp"
+#endif // LIBRAPID_CONFIG_HPP
