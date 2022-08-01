@@ -121,7 +121,7 @@ namespace librapid {
 
 	template<typename T>
 	LR_INLINE T log(T a, T base) {
-		return ln(a) / ln(base);
+		return log(a) / log(base);
 	}
 
 	template<typename T>
@@ -202,6 +202,11 @@ namespace librapid {
 	template<typename T>
 	LR_INLINE T atanh(T a) {
 		return std::atanh(a);
+	}
+
+	template<typename T>
+	LR_INLINE T hypot(T a, T b) {
+		return std::hypot(a);
 	}
 
 	template<typename T>

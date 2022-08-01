@@ -59,6 +59,7 @@ if (${LIBRAPID_USE_MULTIPREC})
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/floorCeil.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/modAbs.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/casting.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/hypot.cpp"
             )
 endif ()
 
