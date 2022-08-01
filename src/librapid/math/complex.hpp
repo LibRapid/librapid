@@ -268,11 +268,19 @@ namespace librapid { namespace detail {
 		template<typename T>
 		LR_NODISCARD("")
 		LR_INLINE T logHypot(const T x, const T y) noexcept {
-			if (!checkComplex) return ::librapid::log();
+			if (!checkComplex) return ::librapid::log(::librapid::sqrt(x * x + y * y));
 #if defined(LIBRAPID_USE_MULTIPREC)
 			// No point doing anything shown below if we're using multiprec
-			if constexpr (std::is_same_v<T, mpfr>) return ::librapid::log(x + 1.0);
+			if constexpr (std::is_same_v<T, mpfr>) return ::librapid::log(::mpfr::hypot(x, y));
 #endif
+
+			if (!internal::isFinite(x) || !internal::isFinite(y)) { // Inf or NaN
+				// Return NaN and raise FE_INVALID if either x or y is NaN
+				if (internal::isNaN(x) || internal::isNaN(y)) return x + y;
+
+				// Return Inf if either of them is infinity
+				
+			}
 		}
 	} // namespace algorithm
 }}	  // namespace librapid::detail
