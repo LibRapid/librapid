@@ -567,6 +567,56 @@ namespace librapid {
 		tmp /= right;
 		return tmp;
 	}
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE constexpr bool operator==(const Complex<T> &left, const Complex<T> &right) {
+		return left.real() == right.real() && left.imag() == right.imag();
+	}
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE constexpr bool operator==(const Complex<T> &left, T &right) {
+		return left.real() == right && left.imag() == 0;
+	}
+
+#if !defined(LIBRAPID_CXX_20)
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE constexpr bool operator==(const T &left, const Complex<T> &right) {
+		return left == right.real() && 0 == right.imag();
+	}
+#endif
+
+#if !defined(LIBRAPID_CXX_20)
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE constexpr bool operator!=(const Complex<T> &left, const Complex<T> &right) {
+		return !(left == right);
+	}
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE constexpr bool operator!=(const Complex<T> &left, T &right) {
+		return !(left == right);
+	}
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE constexpr bool operator!=(const T &left, const Complex<T> &right) {
+		return !(left == right);
+	}
+#endif
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE Complex<T> sqrt(const Complex<T> &val); // Defined later
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE Complex<T> abs(const Complex<T> &val) {
+		return ::librapid::hypot(val.real(), val.imag());
+	}
 } // namespace librapid
 
 #if defined(FMT_API)

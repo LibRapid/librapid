@@ -1,0 +1,51 @@
+name: Build (Linux)
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+  workflow_dispatch:
+
+jobs:
+  linux-build:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install Requirements
+        run: |
+          pip install -r requirements.txt
+          cd docs
+          pip install -r requirements.txt
+
+      - name: Build Documentation
+        run: |
+          cd docs
+          make html latexpdf
+        
+      - name: Store Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: docs/build/**
