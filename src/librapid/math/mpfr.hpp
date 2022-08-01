@@ -15,6 +15,7 @@
 
 namespace librapid {
 	using mpz  = mpz_class;
+	using mpf  = mpf_class;
 	using mpq  = mpq_class;
 	using mpfr = mpfr::mpreal;
 	using mpc  = std::complex<mpfr>;
@@ -26,21 +27,29 @@ namespace librapid {
 
 	// TODO: Optimise these functions
 	mpz toMpz(const mpz &other);
+	mpz toMpz(const mpf &other);
 	mpz toMpz(const mpq &other);
 	mpz toMpz(const mpfr &other);
 
+	mpz toMpf(const mpz &other);
+	mpz toMpf(const mpf &other);
+	mpz toMpf(const mpq &other);
+	mpz toMpf(const mpfr &other);
+
 	mpq toMpq(const mpz &other);
+	mpq toMpq(const mpf &other);
 	mpq toMpq(const mpq &other);
 	mpq toMpq(const mpfr &other);
 
 	mpfr toMpfr(const mpz &other);
+	mpfr toMpfr(const mpf &other);
 	mpfr toMpfr(const mpq &other);
 	mpfr toMpfr(const mpfr &other);
 
 	inline void prec(int64_t dig10) {
 		int64_t dig2 = (int64_t)((double)dig10 * 3.32192809488736234787) + 5;
 		mpf_set_default_prec(dig2);
-		mpfr::mpreal::set_default_prec(dig2);
+		mpfr::mpreal::set_default_prec((mpfr_prec_t) dig2);
 	}
 
 	// Trigonometric Functionality for mpf
@@ -82,7 +91,7 @@ namespace librapid {
 	mpfr exp(const mpfr &val);
 	mpfr exp2(const mpfr &val);
 	mpfr exp10(const mpfr &val);
-	mpfr ln(const mpfr &val);
+	mpfr log(const mpfr &val);
 	mpfr log(const mpfr &val, const mpfr &base);
 	mpfr log2(const mpfr &val);
 	mpfr log10(const mpfr &val);

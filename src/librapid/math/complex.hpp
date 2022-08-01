@@ -93,7 +93,7 @@ namespace librapid { namespace detail {
 		// worse results
 		template<typename T>
 		LR_NODISCARD("")
-		LR_INLINE constexpr Fmp<T> addSmallX2(const T &x, const T &y) noexcept {
+		LR_INLINE constexpr Fmp<T> addSmallX2(const T x, const T y) noexcept {
 			const T sum0 = x + y;
 			const T yMod = sum0 - x;
 			const T yErr = y - yMod;
@@ -105,7 +105,7 @@ namespace librapid { namespace detail {
 		// exponent(x) + countr_zero(significand(x)) >= exponent(y.val0) || x == 0
 		template<typename T>
 		LR_NODISCARD("")
-		LR_INLINE constexpr Fmp<T> addSmallX2(const Fmp<T> &x, const Fmp<T> &y) noexcept {
+		LR_INLINE constexpr Fmp<T> addSmallX2(const T &x, const Fmp<T> &y) noexcept {
 			const Fmp<T> sum0 = addSmallX2(x, y.val0);
 			return addSmallX2(sum0.val0, sum0.val1 + y.val1);
 		}
@@ -114,7 +114,7 @@ namespace librapid { namespace detail {
 		template<typename T>
 		LR_NODISCARD("")
 		LR_INLINE constexpr T addX1(const Fmp<T> &x, const Fmp<T> &y) noexcept {
-			const Fmp<T> sum0 = addx2(x.val0, y.val0);
+			const Fmp<T> sum0 = addX2(x.val0, y.val0);
 			return sum0.val0 + (sum0.val1 + (x.val1 + y.val1));
 		}
 
@@ -158,10 +158,25 @@ namespace librapid { namespace detail {
 		}
 #endif
 
+		template<typename T>
+		LR_NODISCARD("") // Fallback method
+		LR_INLINE T sqrError(const T x, const T prod0) noexcept {
+			const T xHigh = highHalf(x);
+			const T xLow  = x - xHigh;
+			return ((xHigh * xHigh - prod0) + 2.0 * xHigh * xLow) + xLow * xLow;
+		}
+
 		// square(1x precision) -> 2x precision
 		// the result is exact when no internal overflow or underflow occurs
 		LR_NODISCARD("") LR_INLINE Fmp<double> sqrX2(const double x) noexcept {
 			const double prod0 = x * x;
+			return {prod0, sqrError(x, prod0)};
+		}
+
+		template<typename T>
+		LR_NODISCARD("")
+		LR_INLINE Fmp<T> sqrX2(const T x) noexcept {
+			const T prod0 = x * x;
 			return {prod0, sqrError(x, prod0)};
 		}
 	} // namespace multiprec
@@ -194,7 +209,7 @@ namespace librapid { namespace detail {
 			// If <T> is an integer type, divide by two rather than multiplying by 0.5, as
 			// 0.5 gets truncated to zero
 			static inline T val =
-			  ::librapid::sqrt(T(2) * internal::traits<T>::min()) / internal::traits<T>::epsilon();
+			  ::librapid::sqrt(T(2) * internal::traits<T>::min() / internal::traits<T>::epsilon());
 		};
 
 		template<>
@@ -206,6 +221,59 @@ namespace librapid { namespace detail {
 		struct HypotLegTinyHelper<float> {
 			static constexpr double val = 4.440892e-16f;
 		};
+
+		template<typename T>
+		LR_NODISCARD("")
+		LR_INLINE T normMinusOne(const T x, const T y) noexcept {
+			// requires |x| >= |y| and 0.5 <= |x| < 2^12
+			// returns x * x + y * y - 1
+			const multiprec::Fmp<T> xSqr   = multiprec::sqrX2(x);
+			const multiprec::Fmp<T> ySqr   = multiprec::sqrX2(y);
+			const multiprec::Fmp<T> xSqrM1 = multiprec::addSmallX2(T(-1), xSqr);
+			return multiprec::addX1(xSqrM1, ySqr);
+		}
+
+		// Returns log(1 + x)
+		// May be inaccurate for small inputs
+		template<typename T>
+		LR_NODISCARD("")
+		LR_INLINE T logP1(const T x) {
+			if (!checkComplex) return ::librapid::log(x + 1.0);
+#if defined(LIBRAPID_USE_MULTIPREC)
+			// No point doing anything shown below if we're using multiprec
+			if constexpr (std::is_same_v<T, mpfr>) return ::librapid::log(x + 1.0);
+#endif
+
+			if (internal::isNaN(x)) return x + x; // Trigger a signaling NaN
+
+			// Naive formula
+			if (x <= T(-0.5) || T(2) <= x) {
+				// To avoid overflow
+				if (x == internal::traits<T>::max()) return ::librapid::log(x);
+				return ::librapid::log(T(1) + x);
+			}
+
+			const T absX = ::librapid::abs(x);
+			if (absX < internal::traits<T>::epsilon()) {
+				if (x == T(0)) return x;
+				return x - T(0.5) * x * x; // Honour rounding
+			}
+
+			// log(1 + x) with fix for small x
+			const multiprec::Fmp<T> tmp = multiprec::addSmallX2(T(1), x);
+			return ::librapid::log(tmp.val0) + tmp.val1 / tmp.val0;
+		}
+
+		// Return log(hypot(x, y))
+		template<typename T>
+		LR_NODISCARD("")
+		LR_INLINE T logHypot(const T x, const T y) noexcept {
+			if (!checkComplex) return ::librapid::log();
+#if defined(LIBRAPID_USE_MULTIPREC)
+			// No point doing anything shown below if we're using multiprec
+			if constexpr (std::is_same_v<T, mpfr>) return ::librapid::log(x + 1.0);
+#endif
+		}
 	} // namespace algorithm
 }}	  // namespace librapid::detail
 
