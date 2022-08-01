@@ -8,6 +8,7 @@ namespace librapid {
 	mpfr asin(const mpfr &val) { return ::mpfr::asin(val); }
 	mpfr acos(const mpfr &val) { return ::mpfr::acos(val); }
 	mpfr atan(const mpfr &val) { return ::mpfr::atan(val); }
+	mpfr atan2(const mpfr &dy, const mpfr &dx) { return ::mpfr::atan2(dy, dx); }
 
 	mpfr csc(const mpfr &val) { return ::mpfr::csc(val); }
 	mpfr sec(const mpfr &val) { return ::mpfr::sec(val); }

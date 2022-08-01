@@ -94,7 +94,14 @@ namespace librapid {
 
 	template<typename T>
 	LR_INLINE T exp10(T a) {
-		return std::pow((T) 10, a);
+		return std::pow((T)10, a);
+	}
+
+	// Return a * 2 ^ exponent
+	template<typename T>
+	LR_INLINE T ldexp(T a, int exponent) {
+		// Use static_cast to ensure we get the most precision possible, even for integer types
+		return static_cast<T>(std::ldexp(static_cast<double>(a), exponent));
 	}
 
 	template<typename T>
@@ -145,6 +152,11 @@ namespace librapid {
 	template<typename T>
 	LR_INLINE T atan(T a) {
 		return std::atan(a);
+	}
+
+	template<typename T>
+	LR_INLINE T atan2(T a, T b) {
+		return std::atan2(a, b);
 	}
 
 	template<typename T>

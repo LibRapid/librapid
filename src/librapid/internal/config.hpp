@@ -949,7 +949,7 @@ namespace librapid {
 	static inline std::vector<std::string> nvccOptions	 = {};
 	static inline std::vector<std::string> customHeaders = {};
 	static inline std::string customCudaCode;
-	static inline bool checkComplex = false; // Use faster, less safe methods in the Complex type
+	static inline bool checkComplex = true; // Use faster, less safe methods in the Complex type
 
 	void prec(int64_t dig10);
 
