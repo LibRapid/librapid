@@ -699,7 +699,7 @@ namespace librapid::internal {
 		return std::isfinite(val);
 	}
 
-	// MPIR does not support NaN, so chances are it'll have errored already...
+	// MPIR does not support Inf, so we can probably just return true
 	template<typename A, typename B>
 	LR_NODISCARD("")
 	LR_INLINE bool isFinite(const __gmp_expr<A, B> &val) noexcept {
@@ -710,6 +710,25 @@ namespace librapid::internal {
 	LR_NODISCARD("")
 	LR_INLINE bool isFinite(const mpfr &val) noexcept {
 		return ::mpfr::isfinite(val);
+	}
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE bool isInf(const T &val) noexcept {
+		return std::isinf(val);
+	}
+
+	// MPIR does not support Inf, so chances are it'll have errored already...
+	template<typename A, typename B>
+	LR_NODISCARD("")
+	LR_INLINE bool isInf(const __gmp_expr<A, B> &val) noexcept {
+		return false;
+	}
+
+	template<>
+	LR_NODISCARD("")
+	LR_INLINE bool isInf(const mpfr &val) noexcept {
+		return ::mpfr::isinf(val);
 	}
 } // namespace librapid::internal
 

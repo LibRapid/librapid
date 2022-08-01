@@ -223,6 +223,11 @@ namespace librapid { namespace detail {
 		};
 
 		template<typename T>
+		static inline T HypotLegHuge = HypotLegHugeHelper<T>::val;
+		template<typename T>
+		static inline T HypotLegTiny = HypotLegTinyHelper<T>::val;
+
+		template<typename T>
 		LR_NODISCARD("")
 		LR_INLINE T normMinusOne(const T x, const T y) noexcept {
 			// requires |x| >= |y| and 0.5 <= |x| < 2^12
@@ -279,6 +284,20 @@ namespace librapid { namespace detail {
 				if (internal::isNaN(x) || internal::isNaN(y)) return x + y;
 
 				// Return Inf if either of them is infinity
+				if (internal::isInf(x)) return x;
+				if (internal::isInf(y)) return y;
+
+				return x + y; // Fallback
+			}
+
+			T absX = ::librapid::abs(x);
+			T absY = ::librapid::abs(y);
+
+			if (absX < absY) std::swap(absX, absY);		 // Ensure absX > absY
+			if (absY == 0) return ::librapid::log(absX); // One side has zero length
+
+			// Avoid overflow and underflow
+			if (HypotLegTiny<T> < absX && absX < HypotLegHuge<T>) {
 				
 			}
 		}
