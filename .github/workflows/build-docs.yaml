@@ -37,6 +37,7 @@ jobs:
       - name: Install Requirements
         run: |
           sudo apt-get install -y doxygen
+          sudo apt-get install -y texlive-full
           pip install -r requirements.txt
           cd docs
           pip install -r requirements.txt
