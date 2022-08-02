@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  linux-build:
+  build-docs:
     name: Build Documentation
     runs-on: ubuntu-latest
 
