@@ -23,6 +23,7 @@ types = [
 	"int64_t",
 	"double",
 	"librapid::mpz",
+	"librapid::mpf",
 	"librapid::mpq",
 	"librapid::mpfr"
 ]
@@ -39,7 +40,7 @@ for type in types:
 	stdString = "std::string"
 	stdStringConstRef = "const std::string &"
 
-	if type not in ["librapid::mpz", "librapid::mpq"]:
+	if type not in ["librapid::mpz", "librapid::mpq", "librapid::mpf"]:
 		functions += [
 			Function("abs", [Argument(constRef, "val")], "return lrc::abs(val);"),
 			Function("floor", [Argument(constRef, "val")], "return lrc::floor(val);"),
@@ -49,7 +50,7 @@ for type in types:
 			Function("exp", [Argument(constRef, "val")], "return lrc::exp(val);"),
 			Function("exp2", [Argument(constRef, "val")], "return lrc::exp2(val);"),
 			Function("exp10", [Argument(constRef, "val")], "return lrc::exp10(val);"),
-			Function("ln", [Argument(constRef, "val")], "return lrc::ln(val);"),
+			Function("log", [Argument(constRef, "val")], "return lrc::log(val);"),
 			Function("log2", [Argument(constRef, "val")], "return lrc::log2(val);"),
 			Function("log10", [Argument(constRef, "val")], "return lrc::log10(val);"),
 			Function("log", [Argument(constRef, "val"), Argument(constRef, "base")], "return lrc::log(val, base);"),
@@ -61,6 +62,7 @@ for type in types:
 			Function("asin", [Argument(constRef, "val")], "return lrc::asin(val);"),
 			Function("acos", [Argument(constRef, "val")], "return lrc::acos(val);"),
 			Function("atan", [Argument(constRef, "val")], "return lrc::atan(val);"),
+			Function("atan2", [Argument(constRef, "a"), Argument(constRef, "b")], "return lrc::atan2(a, b);"),
 
 			Function("csc", [Argument(constRef, "val")], "return lrc::csc(val);"),
 			Function("sec", [Argument(constRef, "val")], "return lrc::sec(val);"),

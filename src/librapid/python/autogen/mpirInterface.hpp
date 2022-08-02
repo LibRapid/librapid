@@ -28,6 +28,36 @@ py::class_<librapid::mpz>(module, "mpz")
 	.def("__ilshift__", [](librapid::mpz & this_, int64_t other) { this_ <<= other; return this_; }, py::arg("other"))
 	.def("__irshift__", [](librapid::mpz & this_, int64_t other) { this_ >>= other; return this_; }, py::arg("other"));
 
+py::class_<librapid::mpf>(module, "mpf")
+	.def(py::init<>())
+	.def(py::init<int64_t>())
+	.def(py::init<double>())
+	.def(py::init<const std::string &>())
+	.def(py::init<const librapid::mpf &>())
+	.def("__add__", [](const librapid::mpf & this_, const librapid::mpf & other) { return this_ + other; }, py::arg("other"))
+	.def("__sub__", [](const librapid::mpf & this_, const librapid::mpf & other) { return this_ - other; }, py::arg("other"))
+	.def("__mul__", [](const librapid::mpf & this_, const librapid::mpf & other) { return this_ * other; }, py::arg("other"))
+	.def("__truediv__", [](const librapid::mpf & this_, const librapid::mpf & other) { return this_ / other; }, py::arg("other"))
+	.def("__radd__", [](const librapid::mpf & this_, const librapid::mpf & other) { return other + this_; }, py::arg("other"))
+	.def("__rsub__", [](const librapid::mpf & this_, const librapid::mpf & other) { return other - this_; }, py::arg("other"))
+	.def("__rmul__", [](const librapid::mpf & this_, const librapid::mpf & other) { return other * this_; }, py::arg("other"))
+	.def("__rtruediv__", [](const librapid::mpf & this_, const librapid::mpf & other) { return other / this_; }, py::arg("other"))
+	.def("__iadd__", [](librapid::mpf & this_, const librapid::mpf & other) { this_ += other; return this_; }, py::arg("other"))
+	.def("__isub__", [](librapid::mpf & this_, const librapid::mpf & other) { this_ -= other; return this_; }, py::arg("other"))
+	.def("__imul__", [](librapid::mpf & this_, const librapid::mpf & other) { this_ *= other; return this_; }, py::arg("other"))
+	.def("__itruediv__", [](librapid::mpf & this_, const librapid::mpf & other) { this_ /= other; return this_; }, py::arg("other"))
+	.def("__lt__", [](const librapid::mpf & this_, const librapid::mpf & other) { return this_ < other; }, py::arg("other"))
+	.def("__gt__", [](const librapid::mpf & this_, const librapid::mpf & other) { return this_ > other; }, py::arg("other"))
+	.def("__lte__", [](const librapid::mpf & this_, const librapid::mpf & other) { return this_ <= other; }, py::arg("other"))
+	.def("__gte__", [](const librapid::mpf & this_, const librapid::mpf & other) { return this_ >= other; }, py::arg("other"))
+	.def("str", [](const librapid::mpf & this_, int64_t base) { return lrc::str(this_, {-1, base, false}); }, py::arg("base") = int64_t(10))
+	.def("__str__", [](const librapid::mpf & this_) { return lrc::str(this_, {-1, 10, false}); })
+	.def("__repr__", [](const librapid::mpf & this_) { return "librapid::mpf(\"" + lrc::str(this_, {-1, 10, false}) + "\")"; })
+	.def("__lshift__", [](const librapid::mpf & this_, int64_t other) { return this_ << other; }, py::arg("other"))
+	.def("__rshift__", [](const librapid::mpf & this_, int64_t other) { return this_ >> other; }, py::arg("other"))
+	.def("__ilshift__", [](librapid::mpf & this_, int64_t other) { this_ <<= other; return this_; }, py::arg("other"))
+	.def("__irshift__", [](librapid::mpf & this_, int64_t other) { this_ >>= other; return this_; }, py::arg("other"));
+
 py::class_<librapid::mpq>(module, "mpq")
 	.def(py::init<>())
 	.def(py::init<int64_t>())
@@ -84,6 +114,9 @@ py::class_<librapid::mpfr>(module, "mpfr")
 	.def("__str__", [](const librapid::mpfr & this_) { return lrc::str(this_, {-1, 10, false}); })
 	.def("__repr__", [](const librapid::mpfr & this_) { return "librapid::mpfr(\"" + lrc::str(this_, {-1, 10, false}) + "\")"; });
 
+module.def("toMpz", [](const librapid::mpfr & this_) { return librapid::toMpz(this_); });
+module.def("toMpq", [](const librapid::mpfr & this_) { return librapid::toMpq(this_); });
+module.def("toMpfr", [](const librapid::mpfr & this_) { return librapid::toMpfr(this_); });
 module.def("toMpz", [](const librapid::mpfr & this_) { return librapid::toMpz(this_); });
 module.def("toMpq", [](const librapid::mpfr & this_) { return librapid::toMpq(this_); });
 module.def("toMpfr", [](const librapid::mpfr & this_) { return librapid::toMpfr(this_); });
