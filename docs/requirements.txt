@@ -1,4 +1,4 @@
-sphinx==4.5.0
+sphinx==5.1.1
 breathe==4.34.0
 exhale==0.3.5
 furo==2022.6.21
