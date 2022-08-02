@@ -20,39 +20,6 @@
 
 namespace librapid {
 	namespace detail {
-		// The basic complex container type
-		template<typename Scalar>
-		struct ComplexImpl {
-			Scalar val[2];
-		};
-
-#if defined(LIBRAPID_USE_VC)
-		template<>
-		struct ComplexImpl<int16_t> {
-			Vc::int16_v val;
-		};
-
-		template<>
-		struct ComplexImpl<int32_t> {
-			Vc::int32_v val;
-		};
-
-		template<>
-		struct ComplexImpl<int64_t> {
-			Vc::int64_t val;
-		};
-
-		template<>
-		struct ComplexImpl<float> {
-			Vc::float_v val;
-		};
-
-		template<>
-		struct ComplexImpl<double> {
-			Vc::double_v val;
-		};
-#endif
-
 		// Implements floating-point arithmetic for numeric algorithms
 		namespace multiprec {
 			template<typename Scalar>
@@ -610,12 +577,104 @@ namespace librapid {
 
 	template<typename T>
 	LR_NODISCARD("")
+	LR_INLINE T real(const Complex<T> &val) {
+		return val.real();
+	}
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE T imag(const Complex<T> &val) {
+		return val.imag();
+	}
+
+	template<typename T>
+	LR_NODISCARD("")
 	LR_INLINE Complex<T> sqrt(const Complex<T> &val); // Defined later
 
 	template<typename T>
 	LR_NODISCARD("")
 	LR_INLINE Complex<T> abs(const Complex<T> &val) {
 		return ::librapid::hypot(val.real(), val.imag());
+	}
+
+	template<typename T>
+	LR_NODISCARD("")
+	Complex<T> acos(const Complex<T> &other) {
+		const T arcBig = T(0.25) * ::librapid::sqrt(internal::traits<T>::max());
+		const T pi	   = []() {
+#if defined(LIBRAPID_USE_MULTIPREC)
+			if constexpr (std::is_same_v<T, mpfr>)
+				return ::librapid::constPi();
+			else
+				return static_cast<T>(3.1415926535897932384626433832795029L);
+#else
+			return static_cast<T>(3.1415926535897932384626433832795029L);
+#endif
+		}();
+
+		const T re = real(other);
+		const T im = imag(other);
+		T ux, vx;
+
+		if (internal::isNaN(re) || internal::isNaN(im)) { // At least one NaN
+			ux = internal::traits<T>::quietNaN();
+			vx = ux;
+		} else if (internal::isInf(re)) { // +/- Inf
+			if (internal::isInf(im)) {
+				if (re < 0)
+					ux = T(0.75) * pi; // (-Inf, +/-Inf)
+				else
+					ux = T(0.25) * pi; // (-Inf, +/-Inf)
+			} else if (re < 0) {
+				ux = pi; // (-Inf, finite)
+			} else {
+				ux = 0; // (+Inf, finite)
+			}
+			vx = -internal::copySign(internal::traits<T>::infinity(), im);
+		} else if (internal::isInf(im)) { // finite, Inf)
+			ux = T(0.5) * pi;			  // (finite, +/-Inf)
+			vx = -im;
+		} else { // (finite, finite)
+			const Complex<T> wx = sqrt(Complex<T>(1 + re, -im));
+			const Complex<T> zx = sqrt(Complex<T>(1 - re, -im));
+			const T wr			= real(wx);
+			const T wi			= imag(wx);
+			const T zr			= real(zx);
+			const T zi			= imag(zx);
+			T alpha, beta;
+
+			ux = 2 * ::librapid::atan2(zr, wr);
+
+			if (arcBig < wr) { // Real part is large
+				alpha = wr;
+				beta  = zi + wi * (zr / alpha);
+			} else if (arcBig < wi) { // Imaginary part is large
+				alpha = wi;
+				beta  = wr * (zi / alpha) + zr;
+			} else if (wi < -arcBig) { // Imaginary part of w is large negative
+				alpha = -wi;
+				beta  = wr * (zi / alpha) - zr;
+			} else { // Shouldn't overflow (?)
+				alpha = 0;
+				beta  = wr * zi + wi * zr; // Im(w * z)
+			}
+
+			vx = ::librapid::asinh(beta);
+			if (alpha != 0) {
+				// asinh(a * b) = asinh(a) + log(b)
+				if (0 <= vx)
+					vx += ::librapid::log(alpha);
+				else
+					vx -= ::librapid::log(alpha);
+			}
+		}
+		return Complex<T>(ux, vx);
+	}
+
+	template<typename T>
+	LR_NODISCARD("") Complex<T> sqrt(const Complex<T> &other) {
+		int leftExp;
+		// T rho = ::librapid::abs()
 	}
 } // namespace librapid
 

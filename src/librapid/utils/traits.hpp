@@ -680,6 +680,25 @@ namespace librapid::internal {
 		return std::isnan(val);
 	}
 
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE bool isFinite(const T &val) noexcept {
+		return std::isfinite(val);
+	}
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE bool isInf(const T &val) noexcept {
+		return std::isinf(val);
+	}
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE T copySign(const T &mag, const T &sign) noexcept {
+		return std::copysign(mag, sign);
+	}
+
+#if defined(LIBRAPID_USE_MULTIPREC)
 	// MPIR does not support NaN, so chances are it'll have errored already...
 	template<typename A, typename B>
 	LR_NODISCARD("")
@@ -691,12 +710,6 @@ namespace librapid::internal {
 	LR_NODISCARD("")
 	LR_INLINE bool isNaN(const mpfr &val) noexcept {
 		return ::mpfr::isnan(val);
-	}
-
-	template<typename T>
-	LR_NODISCARD("")
-	LR_INLINE bool isFinite(const T &val) noexcept {
-		return std::isfinite(val);
 	}
 
 	// MPIR does not support Inf, so we can probably just return true
@@ -712,12 +725,6 @@ namespace librapid::internal {
 		return ::mpfr::isfinite(val);
 	}
 
-	template<typename T>
-	LR_NODISCARD("")
-	LR_INLINE bool isInf(const T &val) noexcept {
-		return std::isinf(val);
-	}
-
 	// MPIR does not support Inf, so chances are it'll have errored already...
 	template<typename A, typename B>
 	LR_NODISCARD("")
@@ -730,6 +737,24 @@ namespace librapid::internal {
 	LR_INLINE bool isInf(const mpfr &val) noexcept {
 		return ::mpfr::isinf(val);
 	}
+
+	template<>
+	LR_NODISCARD("")
+	LR_INLINE mpfr copySign(const mpfr &mag, const mpfr &sign) noexcept {
+		return ::mpfr::copysign(mag, sign);
+	}
+
+	template<typename A, typename B>
+	LR_NODISCARD("")
+	LR_INLINE __gmp_expr<A, B> copySign(const __gmp_expr<A, B> &mag,
+										const __gmp_expr<A, B> &sign) noexcept {
+		if (sign >= 0 && mag >= 0) return mag;
+		if (sign >= 0 && mag < 0) return -mag;
+		if (sign < 0 && mag >= 0) return -mag;
+		if (sign < 0 && mag < 0) return mag;
+		return 0; // Should never get here
+	}
+#endif // LIBRAPID_USE_MULTIPREC
 } // namespace librapid::internal
 
 #undef LR_VC_TYPE

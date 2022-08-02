@@ -27,7 +27,7 @@ void init_math(py::module &module) {
 	module.def("exp", [](const int64_t & val) { return lrc::exp(val); }, py::arg("val"));
 	module.def("exp2", [](const int64_t & val) { return lrc::exp2(val); }, py::arg("val"));
 	module.def("exp10", [](const int64_t & val) { return lrc::exp10(val); }, py::arg("val"));
-	module.def("ln", [](const int64_t & val) { return lrc::ln(val); }, py::arg("val"));
+	module.def("log", [](const int64_t & val) { return lrc::log(val); }, py::arg("val"));
 	module.def("log2", [](const int64_t & val) { return lrc::log2(val); }, py::arg("val"));
 	module.def("log10", [](const int64_t & val) { return lrc::log10(val); }, py::arg("val"));
 	module.def("log", [](const int64_t & val, const int64_t & base) { return lrc::log(val, base); }, py::arg("val"), py::arg("base"));
@@ -37,6 +37,7 @@ void init_math(py::module &module) {
 	module.def("asin", [](const int64_t & val) { return lrc::asin(val); }, py::arg("val"));
 	module.def("acos", [](const int64_t & val) { return lrc::acos(val); }, py::arg("val"));
 	module.def("atan", [](const int64_t & val) { return lrc::atan(val); }, py::arg("val"));
+	module.def("atan2", [](const int64_t & a, const int64_t & b) { return lrc::atan2(a, b); }, py::arg("a"), py::arg("b"));
 	module.def("csc", [](const int64_t & val) { return lrc::csc(val); }, py::arg("val"));
 	module.def("sec", [](const int64_t & val) { return lrc::sec(val); }, py::arg("val"));
 	module.def("cot", [](const int64_t & val) { return lrc::cot(val); }, py::arg("val"));
@@ -62,7 +63,7 @@ void init_math(py::module &module) {
 	module.def("exp", [](const double & val) { return lrc::exp(val); }, py::arg("val"));
 	module.def("exp2", [](const double & val) { return lrc::exp2(val); }, py::arg("val"));
 	module.def("exp10", [](const double & val) { return lrc::exp10(val); }, py::arg("val"));
-	module.def("ln", [](const double & val) { return lrc::ln(val); }, py::arg("val"));
+	module.def("log", [](const double & val) { return lrc::log(val); }, py::arg("val"));
 	module.def("log2", [](const double & val) { return lrc::log2(val); }, py::arg("val"));
 	module.def("log10", [](const double & val) { return lrc::log10(val); }, py::arg("val"));
 	module.def("log", [](const double & val, const double & base) { return lrc::log(val, base); }, py::arg("val"), py::arg("base"));
@@ -72,6 +73,7 @@ void init_math(py::module &module) {
 	module.def("asin", [](const double & val) { return lrc::asin(val); }, py::arg("val"));
 	module.def("acos", [](const double & val) { return lrc::acos(val); }, py::arg("val"));
 	module.def("atan", [](const double & val) { return lrc::atan(val); }, py::arg("val"));
+	module.def("atan2", [](const double & a, const double & b) { return lrc::atan2(a, b); }, py::arg("a"), py::arg("b"));
 	module.def("csc", [](const double & val) { return lrc::csc(val); }, py::arg("val"));
 	module.def("sec", [](const double & val) { return lrc::sec(val); }, py::arg("val"));
 	module.def("cot", [](const double & val) { return lrc::cot(val); }, py::arg("val"));
@@ -97,7 +99,7 @@ void init_math(py::module &module) {
 	module.def("exp", [](const librapid::mpfr & val) { return lrc::exp(val); }, py::arg("val"));
 	module.def("exp2", [](const librapid::mpfr & val) { return lrc::exp2(val); }, py::arg("val"));
 	module.def("exp10", [](const librapid::mpfr & val) { return lrc::exp10(val); }, py::arg("val"));
-	module.def("ln", [](const librapid::mpfr & val) { return lrc::ln(val); }, py::arg("val"));
+	module.def("log", [](const librapid::mpfr & val) { return lrc::log(val); }, py::arg("val"));
 	module.def("log2", [](const librapid::mpfr & val) { return lrc::log2(val); }, py::arg("val"));
 	module.def("log10", [](const librapid::mpfr & val) { return lrc::log10(val); }, py::arg("val"));
 	module.def("log", [](const librapid::mpfr & val, const librapid::mpfr & base) { return lrc::log(val, base); }, py::arg("val"), py::arg("base"));
@@ -107,6 +109,7 @@ void init_math(py::module &module) {
 	module.def("asin", [](const librapid::mpfr & val) { return lrc::asin(val); }, py::arg("val"));
 	module.def("acos", [](const librapid::mpfr & val) { return lrc::acos(val); }, py::arg("val"));
 	module.def("atan", [](const librapid::mpfr & val) { return lrc::atan(val); }, py::arg("val"));
+	module.def("atan2", [](const librapid::mpfr & a, const librapid::mpfr & b) { return lrc::atan2(a, b); }, py::arg("a"), py::arg("b"));
 	module.def("csc", [](const librapid::mpfr & val) { return lrc::csc(val); }, py::arg("val"));
 	module.def("sec", [](const librapid::mpfr & val) { return lrc::sec(val); }, py::arg("val"));
 	module.def("cot", [](const librapid::mpfr & val) { return lrc::cot(val); }, py::arg("val"));

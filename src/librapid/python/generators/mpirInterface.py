@@ -21,6 +21,7 @@ resStr = ""
 
 types = [
 	"mpz",
+	"mpf",
 	"mpq",
 	"mpfr"
 ]
