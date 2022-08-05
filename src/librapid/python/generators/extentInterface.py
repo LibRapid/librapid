@@ -76,5 +76,4 @@ def write(path:str):
 		file.write(resStr)
 
 if __name__ == "__main__":
-	print(resStr)
 	write("../autogen/extentInterface.hpp")

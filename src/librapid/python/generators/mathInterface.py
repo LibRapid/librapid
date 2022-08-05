@@ -20,12 +20,18 @@ except:
 resStr = ""
 
 types = [
+	# Scalar types
 	"int64_t",
 	"double",
 	"librapid::mpz",
 	"librapid::mpf",
 	"librapid::mpq",
-	"librapid::mpfr"
+	"librapid::mpfr",
+
+	# Complex number types
+	"librapid::Complex<float>",
+	"librapid::Complex<double>",
+	"librapid::Complex<librapid::mpfr>"
 ]
 
 functions = []
@@ -53,7 +59,6 @@ for type in types:
 			Function("log", [Argument(constRef, "val")], "return lrc::log(val);"),
 			Function("log2", [Argument(constRef, "val")], "return lrc::log2(val);"),
 			Function("log10", [Argument(constRef, "val")], "return lrc::log10(val);"),
-			Function("log", [Argument(constRef, "val"), Argument(constRef, "base")], "return lrc::log(val, base);"),
 
 			Function("sin", [Argument(constRef, "val")], "return lrc::sin(val);"),
 			Function("cos", [Argument(constRef, "val")], "return lrc::cos(val);"),
@@ -83,8 +88,8 @@ for type in types:
 			Function("mod", [Argument(constRef, "val"), Argument(constRef, "divisor")], "return lrc::mod(val, divisor);"),
 			Function("round", [Argument(constRef, "val"), Argument("int64_t", "dp", "0")], "return lrc::round(val, dp);"),
 			Function("roundSigFig", [Argument(constRef, "val"), Argument("int64_t", "dp", "3")], "return lrc::roundSigFig(val, dp);"),
-			Function("roundTo", [Argument(constRef, "val"), Argument(constRef, "num", "0")], "return lrc::roundTo(val, num);"),
-			Function("roundUpTo", [Argument(constRef, "val"), Argument(constRef, "num", "0")], "return lrc::roundUpTo(val, num);"),
+			Function("roundTo", [Argument(constRef, "val"), Argument(constRef, "num")], "return lrc::roundTo(val, num);"),
+			Function("roundUpTo", [Argument(constRef, "val"), Argument(constRef, "num")], "return lrc::roundUpTo(val, num);"),
 		]
 
 functions += [

@@ -19,6 +19,9 @@ def isArrayObject(obj):
 								_librapid.ArrayMPZ,
 								_librapid.ArrayMPQ,
 								_librapid.ArrayMPFR,
+								_librapid.ArrayCF32,
+								_librapid.ArrayCF64,
+								_librapid.ArrayCMPFR,
 								_librapid.ArrayBG,
 								_librapid.ArrayCG,
 								_librapid.ArrayF16G,
@@ -39,13 +42,21 @@ def isArrayObject(obj):
 								_librapid.ArrayI64,
 								_librapid.ArrayMPZ,
 								_librapid.ArrayMPQ,
-								_librapid.ArrayMPFR))
+								_librapid.ArrayMPFR,
+								_librapid.ArrayCF32,
+								_librapid.ArrayCF64,
+								_librapid.ArrayCMPFR))
 
 Extent = extentInterface.Extent
 
 mpz = _librapid.mpz
-mpfr = _librapid.mpfr
+mpf = _librapid.mpf
 mpq = _librapid.mpq
+mpfr = _librapid.mpfr
+
+ComplexF32 = _librapid.ComplexF32
+ComplexF64 = _librapid.ComplexF64
+ComplexMPFR = _librapid.ComplexMPFR
 
 prec = _librapid.prec
 
@@ -119,6 +130,12 @@ class Array:
 					self._array = _librapid.ArrayMPQ(extent._extent)
 				elif adjustedType == "ArrayMPFR":
 					self._array = _librapid.ArrayMPFR(extent._extent)
+				elif adjustedType == "ArrayCF32":
+					self._array = _librapid.ArrayCF32(extent._extent)
+				elif adjustedType == "ArrayCF64":
+					self._array = _librapid.ArrayCF64(extent._extent)
+				elif adjustedType == "ArrayCMPFR":
+					self._array = _librapid.ArrayCMPFR(extent._extent)
 			elif adjustedDevice == "GPU":
 				if adjustedType == "ArrayB":
 					self._array = _librapid.ArrayBG(extent._extent)
@@ -148,6 +165,9 @@ class Array:
 	
 	def __setitem__(self, index:int, val):
 		self._array[index] = val
+
+	def __call__(self, *args):
+		return self._array(*args)
 
 	def scalar(self, index:int):
 		return self._array.scalar(index)
@@ -185,6 +205,12 @@ class Array:
 			return Array(self._array.cast_ArrayMPQ())
 		elif adjustedType == "ArrayMPFR":
 			return Array(self._array.cast_ArrayMPFR())
+		elif adjustedType == "ArrayCF32":
+			return Array(self._array.cast_ArrayCF32())
+		elif adjustedType == "ArrayCF64":
+			return Array(self._array.cast_ArrayCF64())
+		elif adjustedType == "ArrayCMPFR":
+			return Array(self._array.cast_ArrayCMPFR())
 
 	def castMove(self, newType:str, newLoc:str):
 		adjustedType, adjustedDevice = typeMapping.mapType(newType, newLoc)
@@ -284,10 +310,9 @@ sqrt = _librapid.sqrt
 exp = _librapid.exp
 exp2 = _librapid.exp2
 exp10 = _librapid.exp10
-ln = _librapid.ln
+log = _librapid.log
 log2 = _librapid.log2
 log10 = _librapid.log10
-log = _librapid.log
 sin = _librapid.sin
 cos = _librapid.cos
 tan = _librapid.tan
@@ -325,3 +350,6 @@ constPi = _librapid.constPi
 constEuler = _librapid.constEuler
 constLog2 = _librapid.constLog2
 constCatalan = _librapid.constCatalan
+
+norm = _librapid.norm
+polar = _librapid.polar
