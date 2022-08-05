@@ -84,6 +84,8 @@ for t in arrayTypes:
 		args = [Argument("int64_t", "index{}".format(ind)) for ind in range(i)]
 		params = ", ".join(["index{}".format(ind) for ind in range(i)])
 		fIndex.append(Function("__call__", [Argument(constRef, "this_")] + args, "return this_({}).get();".format(params)))
+		fIndex.append(Function("get", [Argument(constRef, "this_")] + args, "return this_({}).get();".format(params)))
+		fIndex.append(Function("set", [Argument(constRef, "this_"), Argument(scalar, "val")] + args, "this_({}) = val;".format(params)))
 
 	fMove = [
 		Function("move_CPU", [Argument(constRef, "this_")], "return this_.move<librapid::device::CPU>();"),
