@@ -16,6 +16,15 @@ namespace librapid {
 		struct traits;
 	}
 
+	template<typename T>
+	class Complex;
+
+	template<typename T>
+	T real(const Complex<T> &val);
+
+	template<typename T>
+	T imag(const Complex<T> &val);
+
 	template<typename T, int64_t maxDims, int64_t align>
 	class ExtentType;
 

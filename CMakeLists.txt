@@ -94,6 +94,9 @@ if (${SKBUILD})
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayMPZInterface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayMPQInterface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayMPFRInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayCF32Interface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayCF64Interface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayCMPFRInterface.cpp"
 
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/mathInterface.cpp"
 
