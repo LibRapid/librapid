@@ -276,7 +276,7 @@ jobs:
           submodules: recursive
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
@@ -327,7 +327,7 @@ jobs:
           python -m cibuildwheel --output-dir wheelhouse
 
       - name: Store Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: wheelhouse/*.whl
 
@@ -451,7 +451,7 @@ jobs:
           submodules: recursive
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.9"  # update once build dependencies are available
 
@@ -489,7 +489,7 @@ jobs:
           python -m cibuildwheel --output-dir wheelhouse
 
       - name: Store Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: wheelhouse/*.whl
 
@@ -507,7 +507,7 @@ jobs:
           submodules: recursive
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'  # update once build dependencies are available
 
@@ -520,7 +520,7 @@ jobs:
           twine check dist/*.tar.gz
 
       - name: Store artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: dist/*.tar.gz
 
@@ -544,7 +544,7 @@ jobs:
           path: dist
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
 
       - name: Install Requirements
         run: pip install -r requirements.txt
