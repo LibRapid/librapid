@@ -169,6 +169,12 @@ class Array:
 	def __call__(self, *args):
 		return self._array(*args)
 
+	def get(self, *args):
+		return self._array.get(*args)
+
+	def set(self, val, *args):
+		self._array.set(val, *args)
+
 	def scalar(self, index:int):
 		return self._array.scalar(index)
 
