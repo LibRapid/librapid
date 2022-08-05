@@ -30,7 +30,7 @@ jobs:
         uses: lukka/get-cmake@latest
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
@@ -48,6 +48,6 @@ jobs:
           make html latexpdf
         
       - name: Store Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: docs/build/**
