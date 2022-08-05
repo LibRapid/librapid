@@ -143,13 +143,4 @@ def write(path:str):
 		file.write("#endif // LIBRAPID_VEC_INTERFACE\n")
 
 if __name__ == "__main__":
-	print("#ifndef LIBRAPID_VEC_INTERFACE\n")
-	print("#define LIBRAPID_VEC_INTERFACE\n")
-	print("\n\n")
-
-	print(generate(types))
-
-	print("\n\n")
-	print("#endif // LIBRAPID_VEC_INTERFACE\n")
-
 	write("../autogen/vecInterface.hpp")

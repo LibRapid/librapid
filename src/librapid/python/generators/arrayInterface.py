@@ -18,8 +18,6 @@ except:
 	pass
 
 arrayTypes = [
-	"#if defined(LIBRAPID_HAS_CUDA)",
-
 	"ArrayBG",
 	"ArrayCG",
 	"ArrayF16G",
@@ -28,8 +26,6 @@ arrayTypes = [
 	"ArrayI16G",
 	"ArrayI32G",
 	"ArrayI64G",
-
-	"#else",
 
 	"ArrayB",
 	"ArrayC",
@@ -43,8 +39,10 @@ arrayTypes = [
 	"ArrayMPZ",
 	"ArrayMPQ",
 	"ArrayMPFR",
-	
-	"#endif // LIBRAPID_HAS_CUDA"
+
+	"ArrayCF32",
+	"ArrayCF64",
+	"ArrayCMPFR",
 ]
 
 classStr = ""
@@ -53,11 +51,6 @@ moduleStr = ""
 interfaceList = {}
 
 for t in arrayTypes:
-	if t[0] == "#":
-		# classStr += "\n" + t + "\n"
-		# moduleStr += "\n" + t + "\n"
-		continue
-
 	typename = "librapid::{}".format(t)
 	constRef = "const librapid::{} &".format(t)
 	ref = "librapid::{} &".format(t)
@@ -78,7 +71,7 @@ for t in arrayTypes:
 	classStr += "\t.def(py::init<librapid::internal::traits<{}>::Scalar>())\n".format(typename)
 
 	fCopy = [
-		Function("copy", [Argument(constRef, "this_")], "return this_.copy();")
+		Function("copy", [Argument(constRef, "this_")], "return this_.copy();"),
 	]
 
 	fIndex = [
@@ -86,6 +79,11 @@ for t in arrayTypes:
 		Function("__setitem__", [Argument(ref, "this_"), Argument(int64_t, "index"), Argument(scalar, "val")], "this_[index] = val;"),
 		Function("__setitem__", [Argument(ref, "this_"), Argument(int64_t, "index"), Argument(scalar, "val")], "this_[index] = val;")
 	]
+
+	for i in range(1, 32):
+		args = [Argument("int64_t", "index{}".format(ind)) for ind in range(i)]
+		params = ", ".join(["index{}".format(ind) for ind in range(i)])
+		fIndex.append(Function("__call__", [Argument(constRef, "this_")] + args, "return this_({}).get();".format(params)))
 
 	fMove = [
 		Function("move_CPU", [Argument(constRef, "this_")], "return this_.move<librapid::device::CPU>();"),
@@ -129,7 +127,7 @@ for t in arrayTypes:
 	else:
 		fArithmetic = []
 
-	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G", "ArrayMPFR", "ArrayMPQ"]:
+	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G", "ArrayMPFR", "ArrayMPQ", "ArrayCF32", "ArrayCF64", "ArrayCMPFR"]:
 		fBitwise = [
 			Function("__or__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ | other;"),
 			Function("__and__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ & other;"),
@@ -138,12 +136,12 @@ for t in arrayTypes:
 	else:
 		fBitwise = []
 
-	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G", "ArrayMPFR", "ArrayMPQ"]:
-		fUnary = [Function("__invert__", [Argument(constRef, "this_")], "return ~this_;")]
-		if not t.startswith("ArrayB"):
-			fUnary = [Function("__neg__", [Argument(constRef, "this_")], "return -this_;")]
-	else:
-		fUnary = []
+	fUnary = []
+	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G", "ArrayMPFR", "ArrayMPQ", "ArrayCF32", "ArrayCF64", "ArrayCMPFR"]:
+		fUnary += [Function("__invert__", [Argument(constRef, "this_")], "return ~this_;")]
+
+	if not t.startswith("ArrayB"):
+		fUnary += [Function("__neg__", [Argument(constRef, "this_")], "return -this_;")]
 
 	fMatrix = [
 		Function("transpose", [Argument(ref, "this_"), Argument(extentConstRef, "order", "{}")], "this_.transpose(order);"),

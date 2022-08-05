@@ -525,6 +525,51 @@ namespace librapid::internal {
 		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 	};
 
+	//------- Complex Number --------------------------------------------
+	template<typename T>
+	struct traits<Complex<T>> {
+		static constexpr bool IsScalar		 = true;
+		using Valid							 = std::true_type;
+		using Scalar						 = Complex<T>;
+		using BaseScalar					 = Complex<T>;
+		using StorageType					 = memory::DenseStorage<Complex<T>>;
+		using Packet						 = std::false_type;
+		using Device						 = device::CPU;
+		static constexpr int64_t PacketWidth = 1;
+		static constexpr char Name[]		 = "NO_MAPPED_TYPE";
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
+
+		static constexpr uint64_t Size	= sizeof(Complex<T>);
+		static constexpr bool CanAlign	= traits<T>::CanAlign;
+		static constexpr bool CanMemcpy = traits<T>::CanMemcpy;
+
+		template<typename S>
+		struct IsComplex : public std::false_type {};
+
+		template<typename S>
+		struct IsComplex<Complex<S>> : public std::true_type {};
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const Complex<T> &val) {
+			if constexpr (IsComplex<T>::value) {
+				return {traits<T>::template cast<CAST>(real(val)),
+						traits<T>::template cast<CAST>(imag(val))};
+			} else {
+				return traits<T>::template cast<CAST>(real(val));
+			}
+		}
+
+		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(min) { return traits<T>::min(); }
+		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(max) { return traits<T>::min(); }
+		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(epsilon) { return traits<T>::min(); }
+		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(roundError) { return traits<T>::round_error(); }
+		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(denormMin) { return traits<T>::denorm_min(); }
+		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(infinity) { return traits<T>::infinity(); }
+		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(quietNaN) { return traits<T>::quiet_NaN(); }
+		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(signalingNaN) { return traits<T>::signaling_NaN(); }
+	};
+
 #if defined(LIBRAPID_USE_MULTIPREC)
 
 	//------- Multiprecision Integer (MPZ) ------------------------------------
@@ -698,6 +743,36 @@ namespace librapid::internal {
 		return std::copysign(mag, sign);
 	}
 
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE bool signBit(const T &val) noexcept {
+		return signBit((double)val);
+	}
+
+	template<>
+	LR_NODISCARD("")
+	LR_INLINE bool signBit(const long double &val) noexcept {
+		return std::signbit(val);
+	}
+
+	template<>
+	LR_NODISCARD("")
+	LR_INLINE bool signBit(const double &val) noexcept {
+		return std::signbit(val);
+	}
+
+	template<>
+	LR_NODISCARD("")
+	LR_INLINE bool signBit(const float &val) noexcept {
+		return std::signbit(val);
+	}
+
+	template<typename T>
+	LR_NODISCARD("")
+	LR_INLINE T ldexp(const T &x, const int64_t exp) noexcept {
+		return std::ldexp(x, (int)exp);
+	}
+
 #if defined(LIBRAPID_USE_MULTIPREC)
 	// MPIR does not support NaN, so chances are it'll have errored already...
 	template<typename A, typename B>
@@ -753,6 +828,30 @@ namespace librapid::internal {
 		if (sign < 0 && mag >= 0) return -mag;
 		if (sign < 0 && mag < 0) return mag;
 		return 0; // Should never get here
+	}
+
+	template<typename A, typename B>
+	LR_NODISCARD("")
+	LR_INLINE bool signBit(const __gmp_expr<A, B> &val) noexcept {
+		return val < 0 || val == -0.0; // I have no idea if this works
+	}
+
+	template<>
+	LR_NODISCARD("")
+	LR_INLINE bool signBit(const mpfr &val) noexcept {
+		return ::mpfr::signbit(val);
+	}
+
+	template<>
+	LR_NODISCARD("")
+	LR_INLINE mpfr ldexp(const mpfr &x, const int64_t exp) noexcept {
+		return ::mpfr::ldexp(x, exp);
+	}
+
+	template<typename A, typename B>
+	LR_NODISCARD("")
+	LR_INLINE __gmp_expr<A, B> ldexp(const __gmp_expr<A, B> &x, const int64_t exp) noexcept {
+		return x << exp;
 	}
 #endif // LIBRAPID_USE_MULTIPREC
 } // namespace librapid::internal

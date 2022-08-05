@@ -45,6 +45,9 @@ void init_ArrayI64(py::module &);
 void init_ArrayMPZ(py::module &);
 void init_ArrayMPQ(py::module &);
 void init_ArrayMPFR(py::module &);
+void init_ArrayCF32(py::module &);
+void init_ArrayCF64(py::module &);
+void init_ArrayCMPFR(py::module &);
 
 void init_math(py::module &);
 
@@ -76,7 +79,7 @@ PYBIND11_MODULE(_librapid, module) {
 	#include "autogen/extentInterface.hpp"
 
 	// Include the Array library
-    init_ArrayBG(module);
+	init_ArrayBG(module);
 	init_ArrayCG(module);
 	init_ArrayF16G(module);
 	init_ArrayF32G(module);
@@ -95,17 +98,36 @@ PYBIND11_MODULE(_librapid, module) {
 	init_ArrayMPZ(module);
 	init_ArrayMPQ(module);
 	init_ArrayMPFR(module);
+	init_ArrayCF32(module);
+	init_ArrayCF64(module);
+	init_ArrayCMPFR(module);
 
 	init_math(module);
 
-	// Include the Vector library
-	#include "autogen/vecInterface.hpp"
+	#include "autogen/vecInterface.hpp" // Include the Vector library
+	#include "autogen/complexInterface.hpp" // Include the Complex library
 
 	py::implicitly_convertible<int64_t, librapid::mpz>();
 	py::implicitly_convertible<const std::string &, librapid::mpz>();
 	py::implicitly_convertible<int64_t, librapid::mpfr>();
 	py::implicitly_convertible<double, librapid::mpfr>();
 	py::implicitly_convertible<const std::string &, librapid::mpfr>();
+
+	py::implicitly_convertible<int64_t, librapid::Complex<float>>();
+	py::implicitly_convertible<double, librapid::Complex<float>>();
+	py::implicitly_convertible<int64_t, librapid::Complex<double>>();
+	py::implicitly_convertible<double, librapid::Complex<double>>();
+	py::implicitly_convertible<int64_t, librapid::Complex<librapid::mpfr>>();
+	py::implicitly_convertible<double, librapid::Complex<librapid::mpfr>>();
+	py::implicitly_convertible<const std::string &, librapid::Complex<librapid::mpfr>>();
+
+	// Allow implicit casting between Complex types
+	py::implicitly_convertible<librapid::Complex<float>, librapid::Complex<double>>();
+	py::implicitly_convertible<librapid::Complex<float>, librapid::Complex<librapid::mpfr>>();
+	py::implicitly_convertible<librapid::Complex<double>, librapid::Complex<float>>();
+	py::implicitly_convertible<librapid::Complex<double>, librapid::Complex<librapid::mpfr>>();
+	py::implicitly_convertible<librapid::Complex<librapid::mpfr>, librapid::Complex<float>>();
+	py::implicitly_convertible<librapid::Complex<librapid::mpfr>, librapid::Complex<double>>();
 
 	// py::implicitly_convertible<int64_t, librapid::Array>();
 	// py::implicitly_convertible<double, librapid::Array>();

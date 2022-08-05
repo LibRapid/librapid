@@ -58,155 +58,155 @@ namespace librapid {
 	}
 
 	template<typename T>
-	LR_INLINE T abs(T a) {
+	LR_INLINE T abs(const T &a) {
 		return std::abs(a);
 	}
 
 	template<typename T>
-	LR_INLINE T floor(T a) {
+	LR_INLINE T floor(const T &a) {
 		return std::floor(a);
 	}
 
 	template<typename T>
-	LR_INLINE T ceil(T a) {
+	LR_INLINE T ceil(const T &a) {
 		return std::ceil(a);
 	}
 
 	template<typename A, typename B>
-	LR_INLINE A pow(A a, B exp) {
+	LR_INLINE A pow(const A &a, const B &exp) {
 		return std::pow(a, exp);
 	}
 
 	template<typename T>
-	LR_INLINE T sqrt(T a) {
+	LR_INLINE T sqrt(const T &a) {
 		return std::sqrt(a);
 	}
 
 	template<typename T>
-	LR_INLINE T exp(T a) {
+	LR_INLINE T exp(const T &a) {
 		return std::exp(a);
 	}
 
 	template<typename T>
-	LR_INLINE T exp2(T a) {
+	LR_INLINE T exp2(const T &a) {
 		return std::exp2(a);
 	}
 
 	template<typename T>
-	LR_INLINE T exp10(T a) {
+	LR_INLINE T exp10(const T &a) {
 		return std::pow((T)10, a);
 	}
 
 	// Return a * 2 ^ exponent
 	template<typename T>
-	LR_INLINE T ldexp(T a, int exponent) {
+	LR_INLINE T ldexp(const T &a, int exponent) {
 		// Use static_cast to ensure we get the most precision possible, even for integer types
 		return static_cast<T>(std::ldexp(static_cast<double>(a), exponent));
 	}
 
 	template<typename T>
-	LR_INLINE T log(T a) {
+	LR_INLINE T log(const T &a) {
 		return std::log(a);
 	}
 
 	template<typename T>
-	LR_INLINE T log2(T a) {
+	LR_INLINE T log2(const T &a) {
 		return std::log2(a);
 	}
 
 	template<typename T>
-	LR_INLINE T log10(T a) {
+	LR_INLINE T log10(const T &a) {
 		return std::log10(a);
 	}
 
-	template<typename T>
-	LR_INLINE T log(T a, T base) {
-		return log(a) / log(base);
+	template<typename T, typename B>
+	LR_INLINE auto log(const T &a, const B &base) {
+		return log(a) / log(T(base));
 	}
 
 	template<typename T>
-	LR_INLINE T sin(T a) {
+	LR_INLINE T sin(const T &a) {
 		return std::sin(a);
 	}
 
 	template<typename T>
-	LR_INLINE T cos(T a) {
+	LR_INLINE T cos(const T &a) {
 		return std::cos(a);
 	}
 
 	template<typename T>
-	LR_INLINE T tan(T a) {
+	LR_INLINE T tan(const T &a) {
 		return std::tan(a);
 	}
 
 	template<typename T>
-	LR_INLINE T asin(T a) {
+	LR_INLINE T asin(const T &a) {
 		return std::asin(a);
 	}
 
 	template<typename T>
-	LR_INLINE T acos(T a) {
+	LR_INLINE T acos(const T &a) {
 		return std::acos(a);
 	}
 
 	template<typename T>
-	LR_INLINE T atan(T a) {
+	LR_INLINE T atan(const T &a) {
 		return std::atan(a);
 	}
 
 	template<typename T>
-	LR_INLINE T atan2(T a, T b) {
+	LR_INLINE T atan2(const T &a, const T &b) {
 		return std::atan2(a, b);
 	}
 
 	template<typename T>
-	LR_INLINE T csc(T a) {
+	LR_INLINE T csc(const T &a) {
 		return T(1) / std::sin(a);
 	}
 
 	template<typename T>
-	LR_INLINE T sec(T a) {
+	LR_INLINE T sec(const T &a) {
 		return T(1) / std::cos(a);
 	}
 
 	template<typename T>
-	LR_INLINE T cot(T a) {
+	LR_INLINE T cot(const T &a) {
 		return T(1) / std::tan(a);
 	}
 
 	template<typename T>
-	LR_INLINE T sinh(T a) {
+	LR_INLINE T sinh(const T &a) {
 		return std::sinh(a);
 	}
 
 	template<typename T>
-	LR_INLINE T cosh(T a) {
+	LR_INLINE T cosh(const T &a) {
 		return std::cosh(a);
 	}
 
 	template<typename T>
-	LR_INLINE T tanh(T a) {
+	LR_INLINE T tanh(const T &a) {
 		return std::tanh(a);
 	}
 
 	template<typename T>
-	LR_INLINE T asinh(T a) {
+	LR_INLINE T asinh(const T &a) {
 		return std::asinh(a);
 	}
 
 	template<typename T>
-	LR_INLINE T acosh(T a) {
+	LR_INLINE T acosh(const T &a) {
 		return std::acosh(a);
 	}
 
 	template<typename T>
-	LR_INLINE T atanh(T a) {
+	LR_INLINE T atanh(const T &a) {
 		return std::atanh(a);
 	}
 
 	template<typename T>
-	LR_INLINE T hypot(T a, T b) {
-		return std::hypot(a);
+	LR_INLINE T hypot(const T &a, const T &b) {
+		return std::hypot(a, b);
 	}
 
 	template<typename T>
@@ -338,6 +338,11 @@ namespace librapid {
 		return (num >= 0 ? y : -y) * beta;
 	}
 
+	template<typename T>
+	LR_INLINE auto round(const Complex<T> &num, int64_t dp = 0, int8_t mode = roundMode::MATH) {
+		return Complex<T>(round(real(num), dp, mode), round(imag(num), dp, mode));
+	}
+
 	template<>
 	LR_INLINE auto round(mpfr num, int64_t dp, int8_t mode) {
 		using Scalar = mpfr;
@@ -357,17 +362,37 @@ namespace librapid {
 	}
 
 	template<typename T1 = double, typename T2 = double>
-	LR_INLINE typename std::common_type_t<T1, T2> roundTo(T1 num, T2 val) {
-		auto rem = ::librapid::mod(num, val);
-		if (rem >= val / 2) return (num + val) - rem;
+	LR_INLINE T1 roundTo(T1 num, T2 val) {
+		auto rem = ::librapid::mod(num, T1(val));
+		if (rem >= T1(val) / 2) return (num + T1(val)) - rem;
 		return num - rem;
 	}
 
+	template<typename T1, typename T2>
+	LR_INLINE Complex<T1> roundTo(const Complex<T1> &num, T2 val) {
+		return Complex<T1>(roundTo(real(num), val), roundTo(imag(num), val));
+	}
+
 	template<typename T1 = double, typename T2 = double>
-	LR_INLINE typename std::common_type_t<T1, T2> roundUpTo(T1 num, T2 val) {
-		auto rem = ::librapid::mod(num, val);
+	LR_INLINE T1 roundTo(const Complex<T1> &num, const Complex<T1> &val) {
+		return Complex<T1>(roundTo(real(num), real(val)), roundTo(imag(num), imag(val)));
+	}
+
+	template<typename T1 = double, typename T2 = double>
+	LR_INLINE T1 roundUpTo(T1 num, T2 val) {
+		auto rem = ::librapid::mod(num, T1(val));
 		if (rem == 0) return num;
 		return (num + val) - rem;
+	}
+
+	template<typename T1 = double, typename T2 = double>
+	LR_INLINE Complex<T1> roundUpTo(const Complex<T1> &num, T2 val) {
+		return Complex<T1>(roundUpTo(real(num), val), roundUpTo(imag(num), val));
+	}
+
+	template<typename T1 = double, typename T2 = double>
+	LR_INLINE Complex<T1> roundUpTo(const Complex<T1> &num, const Complex<T2> &val) {
+		return Complex<T1>(roundUpTo(real(num), real(val)), roundUpTo(imag(num), imag(val)));
 	}
 
 	template<typename T>
@@ -390,6 +415,11 @@ namespace librapid {
 		}
 
 		return (tmp > 0 ? 1 : -1) * (round(tmp, figs - 1) * pow10<T>(n));
+	}
+
+	template<typename T>
+	LR_INLINE Complex<T> roundSigFig(const Complex<T> &num, int64_t figs = 3) {
+		return Complex<T>(roundSigFig(real(num), figs), roundSigFig(imag(num), figs));
 	}
 
 	template<typename T, typename std::enable_if_t<std::is_floating_point_v<T>, int> = 0>

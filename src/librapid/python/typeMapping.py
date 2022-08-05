@@ -12,6 +12,9 @@ typeMap = {
 	"ArrayMPZ" : ("bigint", "mpz", "mpz_t", "mpz_class", "mpir_int"),
 	"ArrayMPQ" : ("bigrational", "mpq", "mpq_t", "mpq_class", "mpir_rational"),
 	"ArrayMPFR" : ("bigfloat", "mpfr", "mpreal", "mpfr_float"),
+	"ArrayCF32" : ("complex float", "cfloat", "cf32", "c32"),
+	"ArrayCF64" : ("compled double", "cdouble", "cf64", "c64"),
+	"ArrayCMPFR" : ("complex multiprecision", "complex multiprec", "cmpfr", "cmpf", "cmp")
 }
 
 deviceMap = {
