@@ -315,7 +315,7 @@ namespace librapid {
 					return ans;
 #else
 				*pleft = ::librapid::exp(*pleft) * right * ::librapid::exp2(exponent);
-				return (internal::isNaN(res) || internal::isInf(res)) ? 1 : -1;
+				return (internal::isNaN(*pleft) || internal::isInf(*pleft)) ? 1 : -1;
 #endif
 
 #if defined(LIBRAPID_USE_MULTIPREC)
