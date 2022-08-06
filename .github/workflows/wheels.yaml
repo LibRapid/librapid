@@ -523,34 +523,34 @@ jobs:
 #         uses: actions/upload-artifact@v3
 #         with:
 #           path: dist/*.tar.gz
-# 
-#   # Upload the wheels and the source distribution
-#   upload_artifacts:
-#     name: Upload to PyPi
-#     runs-on: ubuntu-latest
-#     needs: [build_wheels, build_wheels_cuda, build_sdist]
-#     # The artifacts cannot be uploaded on PRs
-#     if: github.event_name != 'pull_request'
-# 
-#     steps:
-#       - name: Checkout LibRapid
-#         uses: actions/checkout@v3
-#         with:
-#           submodules: recursive
-# 
-#       - name: Download artifacts
-#         uses: actions/download-artifact@v3
-#         with:
-#           path: dist
-# 
-#       - name: Setup Python
-#         uses: actions/setup-python@v4
-# 
-#       - name: Install Requirements
-#         run: pip install -r requirements.txt
-# 
-#       - name: Upload Artifacts
-#         continue-on-error: true
-#         run: |
-#           ls dist
-#           twine upload --skip-existing dist/artifact/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
+
+  # Upload the wheels and the source distribution
+  upload_artifacts:
+    name: Upload to PyPi
+    runs-on: ubuntu-latest
+    needs: [build_wheels, build_wheels_cuda, build_sdist]
+    # The artifacts cannot be uploaded on PRs
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: Checkout LibRapid
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: dist
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+
+      - name: Install Requirements
+        run: pip install -r requirements.txt
+
+      - name: Upload Artifacts
+        continue-on-error: true
+        run: |
+          ls dist
+          twine upload --skip-existing dist/artifact/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
