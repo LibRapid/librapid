@@ -343,6 +343,7 @@ namespace librapid {
 		return Complex<T>(round(real(num), dp, mode), round(imag(num), dp, mode));
 	}
 
+#if defined(LIBRAPID_USE_MULTIPREC)
 	template<>
 	LR_INLINE auto round(mpfr num, int64_t dp, int8_t mode) {
 		using Scalar = mpfr;
@@ -360,6 +361,7 @@ namespace librapid {
 		}
 		return (num >= 0 ? y : -y) * beta;
 	}
+#endif
 
 	template<typename T1 = double, typename T2 = double>
 	LR_INLINE T1 roundTo(T1 num, T2 val) {
