@@ -1089,11 +1089,13 @@ namespace librapid {
 														  static_cast<double>(imag(other))));
 	}
 
+#if defined(LIBRAPID_USE_MULTIPREC)
 	template<>
 	LR_NODISCARD("")
 	LR_INLINE mpfr _logAbs(const Complex<mpfr> &other) noexcept {
 		return detail::algorithm::logHypot(real(other), imag(other));
 	}
+#endif
 
 	template<>
 	LR_NODISCARD("")
