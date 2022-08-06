@@ -23,9 +23,6 @@ std::string module_docstring = "A highly-optimized Array library for Python";
 
 namespace lrc = librapid;
 
-void init_extent(py::module &);
-void init_vec(py::module &);
-
 void init_ArrayBG(py::module &);
 void init_ArrayCG(py::module &);
 void init_ArrayF16G(py::module &);
@@ -51,6 +48,20 @@ void init_ArrayCMPFR(py::module &);
 
 void init_math(py::module &);
 
+void init_mpfr(py::module &);
+
+void init_complex(py::module &);
+
+void init_Vec2i(py::module &);
+void init_Vec2f(py::module &);
+void init_Vec2d(py::module &);
+void init_Vec3i(py::module &);
+void init_Vec3f(py::module &);
+void init_Vec3d(py::module &);
+void init_Vec4i(py::module &);
+void init_Vec4f(py::module &);
+void init_Vec4d(py::module &);
+
 PYBIND11_MODULE(_librapid, module) {
 	module.doc() = module_docstring;
 
@@ -72,11 +83,28 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("constLog2", &lrc::constLog2);
 	module.def("constCatalan", &lrc::constCatalan);
 
-	// Interface with MPIR
-	#include "autogen/mpirInterface.hpp"
-
 	// Include the Extent type
 	#include "autogen/extentInterface.hpp"
+
+	// MPFR support
+	init_mpfr(module);
+
+	// Math module
+	init_math(module);
+
+	// Complex numbers
+	init_complex(module);
+
+	// Vector interface
+	init_Vec2i(module);
+	init_Vec2f(module);
+	init_Vec2d(module);
+	init_Vec3i(module);
+	init_Vec3f(module);
+	init_Vec3d(module);
+	init_Vec4i(module);
+	init_Vec4f(module);
+	init_Vec4d(module);
 
 	// Include the Array library
 	init_ArrayBG(module);
@@ -101,11 +129,6 @@ PYBIND11_MODULE(_librapid, module) {
 	init_ArrayCF32(module);
 	init_ArrayCF64(module);
 	init_ArrayCMPFR(module);
-
-	init_math(module);
-
-	#include "autogen/vecInterface.hpp" // Include the Vector library
-	#include "autogen/complexInterface.hpp" // Include the Complex library
 
 	py::implicitly_convertible<int64_t, librapid::mpz>();
 	py::implicitly_convertible<const std::string &, librapid::mpz>();

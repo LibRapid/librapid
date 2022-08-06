@@ -158,9 +158,40 @@ for i in range(len(functions)):
 
 def write(path:str):
 	with open(path, "w") as file:
+		file.write("""
+#include <librapid/librapid.hpp>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/functional.h>
+#include <functional>
+#include <string>
+
+// Just remove these. They're pointless
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
+namespace lrc = librapid;
+namespace py = pybind11;
+
+""")
+
+		file.write("void init_complex(py::module &module) {\n")
+		
 		file.write(classDefs)
 		file.write("\n\n")
 		file.write(moduleDefs)
 
+		file.write("\n}")
+
 if __name__ == "__main__":
-	write("../autogen/complexInterface.hpp")
+	write("../autogen/complexInterface.cpp")
+	
+	print("\"${{CMAKE_CURRENT_SOURCE_DIR}}/src/librapid/python/autogen/complexInterface.cpp\"".format(type))
+	print("void init_complex(py::module &);")
+	print("init_complex(module);")
+	print()

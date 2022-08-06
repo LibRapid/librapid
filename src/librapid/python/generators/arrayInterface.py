@@ -212,8 +212,6 @@ for t in arrayTypes:
 def write(path:str):
 	for type, interface in interfaceList.items():
 		with open(path + "/{}Interface.cpp".format(type), "w") as file:
-			file.write("#pragma once\n")
-
 			file.write("""
 #include <librapid/librapid.hpp>
 #include <pybind11/pybind11.h>
