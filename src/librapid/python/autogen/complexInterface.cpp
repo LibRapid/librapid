@@ -1,3 +1,24 @@
+
+#include <librapid/librapid.hpp>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/functional.h>
+#include <functional>
+#include <string>
+
+// Just remove these. They're pointless
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
+namespace lrc = librapid;
+namespace py = pybind11;
+
+void init_complex(py::module &module) {
 py::class_<librapid::Complex<float>>(module, "ComplexF32")
 	.def(py::init<>())
 	.def(py::init<int64_t>())
@@ -183,3 +204,5 @@ py::class_<librapid::Complex<librapid::mpfr>>(module, "ComplexMPFR")
 	module.def("proj", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::proj(val); }, py::arg("val"));
 	module.def("norm", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::norm(val); }, py::arg("val"));
 	module.def("polar", [](const librapid::mpfr & rho, const librapid::mpfr & theta) { return librapid::polar(rho, theta); }, py::arg("rho"), py::arg("theta"));
+
+}

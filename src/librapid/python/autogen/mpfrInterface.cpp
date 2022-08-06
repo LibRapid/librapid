@@ -1,3 +1,24 @@
+
+#include <librapid/librapid.hpp>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/functional.h>
+#include <functional>
+#include <string>
+
+// Just remove these. They're pointless
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
+namespace lrc = librapid;
+namespace py = pybind11;
+
+void init_mpfr(py::module &module) {
 py::class_<librapid::mpz>(module, "mpz")
 	.def(py::init<>())
 	.def(py::init<int64_t>())
@@ -126,3 +147,5 @@ module.def("toMpfr", [](const librapid::mpfr & this_) { return librapid::toMpfr(
 module.def("toMpz", [](const librapid::mpfr & this_) { return librapid::toMpz(this_); });
 module.def("toMpq", [](const librapid::mpfr & this_) { return librapid::toMpq(this_); });
 module.def("toMpfr", [](const librapid::mpfr & this_) { return librapid::toMpfr(this_); });
+
+}

@@ -104,7 +104,38 @@ for type in types:
 
 def write(path:str):
 	with open(path, "w") as file:
+		file.write("""
+#include <librapid/librapid.hpp>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/functional.h>
+#include <functional>
+#include <string>
+
+// Just remove these. They're pointless
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
+namespace lrc = librapid;
+namespace py = pybind11;
+
+""")
+
+		file.write("void init_{}(py::module &module) {{\n".format(type))
+		
 		file.write(resStr)
 
+		file.write("\n}")
+
 if __name__ == "__main__":
-	write("../autogen/mpirInterface.hpp")
+	write("../autogen/mpfrInterface.cpp")
+
+	print("\"${{CMAKE_CURRENT_SOURCE_DIR}}/src/librapid/python/autogen/mpfrInterface.cpp\"".format(type))
+	print("void init_mpfr(py::module &);")
+	print("init_mpfr(module);")
+	print()

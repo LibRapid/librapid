@@ -1,4 +1,3 @@
-#pragma once
 
 #include <librapid/librapid.hpp>
 #include <pybind11/pybind11.h>

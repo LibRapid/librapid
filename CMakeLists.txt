@@ -98,7 +98,21 @@ if (${SKBUILD})
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayCF64Interface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayCMPFRInterface.cpp"
 
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/mpfrInterface.cpp"
+
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/complexInterface.cpp"
+
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/mathInterface.cpp"
+
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/../autogen/Vec2iInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/../autogen/Vec2fInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/../autogen/Vec2dInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/../autogen/Vec3iInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/../autogen/Vec3fInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/../autogen/Vec3dInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/../autogen/Vec4iInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/../autogen/Vec4fInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/../autogen/Vec4dInterface.cpp"
 
             ${LIBRAPID_SOURCES}
     )
