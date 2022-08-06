@@ -243,4 +243,10 @@ struct fmt::formatter<librapid::mpfr> {
 };
 #	endif // FMT_API
 
+#else
+
+namespace librapid {
+	LR_INLINE void prec(int64_t) {};
+}
+
 #endif // LIBRAPID_USE_MULTIPREC
