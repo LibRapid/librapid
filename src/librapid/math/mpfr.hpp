@@ -243,6 +243,43 @@ struct fmt::formatter<librapid::mpfr> {
 };
 #	endif // FMT_API
 
+#	if defined(SCN_SCN_H)
+
+namespace scn {
+	SCN_BEGIN_NAMESPACE
+
+	template<>
+	struct scanner<librapid::mpfr> : public detail::string_scanner {
+		template<typename Context>
+		error scan(librapid::mpfr &val, Context &ctx) {
+			if (set_parser.enabled()) {
+				bool loc = (common_options & localized) != 0;
+				bool mb =
+				  (loc || set_parser.get_option(detail::set_parser_type::flag::use_ranges)) &&
+				  detail::is_multichar_type(typename Context::char_type {});
+				std::string tmp;
+				auto ret = do_scan(ctx, tmp, pred<Context> {ctx, set_parser, loc, mb});
+				val		 = librapid::mpfr(tmp);
+				return ret;
+			}
+
+			auto e = skip_range_whitespace(ctx, false);
+			if (!e) { return e; }
+
+			auto is_space_pred = detail::make_is_space_predicate(
+			  ctx.locale(), (common_options & localized) != 0, field_width);
+			std::string tmp;
+			auto ret = do_scan(ctx, tmp, is_space_pred);
+			val		 = librapid::mpfr(tmp);
+			return ret;
+		}
+	};
+
+	SCN_END_NAMESPACE
+} // namespace scn
+
+#	endif // SCN_SCN_H
+
 #else
 
 namespace librapid {
