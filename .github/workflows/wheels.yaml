@@ -227,25 +227,25 @@ jobs:
             bitness: 64
             platform_id: manylinux_x86_64
             manylinux_image: manylinux2014
-            use_openblas: false
+            use_openblas: true
           - os: ubuntu-latest
             python: 38
             bitness: 64
             platform_id: manylinux_x86_64
             manylinux_image: manylinux2014
-            use_openblas: false
+            use_openblas: true
           - os: ubuntu-latest
             python: 39
             bitness: 64
             platform_id: manylinux_x86_64
             manylinux_image: manylinux2014
-            use_openblas: false
+            use_openblas: true
           - os: ubuntu-latest
             python: 310
             bitness: 64
             platform_id: manylinux_x86_64
             manylinux_image: manylinux2014
-            use_openblas: false
+            use_openblas: true
 
           # MacOS x86_64
           - os: macos-latest

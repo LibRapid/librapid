@@ -249,6 +249,87 @@ namespace scn {
 	SCN_BEGIN_NAMESPACE
 
 	template<>
+	struct scanner<librapid::mpz> : public detail::string_scanner {
+		template<typename Context>
+		error scan(librapid::mpz &val, Context &ctx) {
+			if (set_parser.enabled()) {
+				bool loc = (common_options & localized) != 0;
+				bool mb =
+				  (loc || set_parser.get_option(detail::set_parser_type::flag::use_ranges)) &&
+				  detail::is_multichar_type(typename Context::char_type {});
+				std::string tmp;
+				auto ret = do_scan(ctx, tmp, pred<Context> {ctx, set_parser, loc, mb});
+				val		 = librapid::mpz(tmp);
+				return ret;
+			}
+
+			auto e = skip_range_whitespace(ctx, false);
+			if (!e) { return e; }
+
+			auto is_space_pred = detail::make_is_space_predicate(
+			  ctx.locale(), (common_options & localized) != 0, field_width);
+			std::string tmp;
+			auto ret = do_scan(ctx, tmp, is_space_pred);
+			val		 = librapid::mpz(tmp);
+			return ret;
+		}
+	};
+
+	template<>
+	struct scanner<librapid::mpf> : public detail::string_scanner {
+		template<typename Context>
+		error scan(librapid::mpf &val, Context &ctx) {
+			if (set_parser.enabled()) {
+				bool loc = (common_options & localized) != 0;
+				bool mb =
+				  (loc || set_parser.get_option(detail::set_parser_type::flag::use_ranges)) &&
+				  detail::is_multichar_type(typename Context::char_type {});
+				std::string tmp;
+				auto ret = do_scan(ctx, tmp, pred<Context> {ctx, set_parser, loc, mb});
+				val		 = librapid::mpf(tmp);
+				return ret;
+			}
+
+			auto e = skip_range_whitespace(ctx, false);
+			if (!e) { return e; }
+
+			auto is_space_pred = detail::make_is_space_predicate(
+			  ctx.locale(), (common_options & localized) != 0, field_width);
+			std::string tmp;
+			auto ret = do_scan(ctx, tmp, is_space_pred);
+			val		 = librapid::mpf(tmp);
+			return ret;
+		}
+	};
+
+	template<>
+	struct scanner<librapid::mpq> : public detail::string_scanner {
+		template<typename Context>
+		error scan(librapid::mpq &val, Context &ctx) {
+			if (set_parser.enabled()) {
+				bool loc = (common_options & localized) != 0;
+				bool mb =
+				  (loc || set_parser.get_option(detail::set_parser_type::flag::use_ranges)) &&
+				  detail::is_multichar_type(typename Context::char_type {});
+				std::string tmp;
+				auto ret = do_scan(ctx, tmp, pred<Context> {ctx, set_parser, loc, mb});
+				val		 = librapid::mpq(tmp);
+				return ret;
+			}
+
+			auto e = skip_range_whitespace(ctx, false);
+			if (!e) { return e; }
+
+			auto is_space_pred = detail::make_is_space_predicate(
+			  ctx.locale(), (common_options & localized) != 0, field_width);
+			std::string tmp;
+			auto ret = do_scan(ctx, tmp, is_space_pred);
+			val		 = librapid::mpq(tmp);
+			return ret;
+		}
+	};
+
+	template<>
 	struct scanner<librapid::mpfr> : public detail::string_scanner {
 		template<typename Context>
 		error scan(librapid::mpfr &val, Context &ctx) {
