@@ -31,10 +31,10 @@ namespace librapid {
 	mpz toMpz(const mpq &other);
 	mpz toMpz(const mpfr &other);
 
-	mpz toMpf(const mpz &other);
-	mpz toMpf(const mpf &other);
-	mpz toMpf(const mpq &other);
-	mpz toMpf(const mpfr &other);
+	mpf toMpf(const mpz &other);
+	mpf toMpf(const mpf &other);
+	mpf toMpf(const mpq &other);
+	mpf toMpf(const mpfr &other);
 
 	mpq toMpq(const mpz &other);
 	mpq toMpq(const mpf &other);
