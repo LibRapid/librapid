@@ -95,6 +95,7 @@ for type in types:
 for type in types:
 	functions = [
 		Function("toMpz", [Argument(constRef, "this_")], "return librapid::toMpz(this_);"),
+		Function("toMpf", [Argument(constRef, "this_")], "return librapid::toMpf(this_);"),
 		Function("toMpq", [Argument(constRef, "this_")], "return librapid::toMpq(this_);"),
 		Function("toMpfr", [Argument(constRef, "this_")], "return librapid::toMpfr(this_);"),
 	]

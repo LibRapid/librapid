@@ -136,15 +136,19 @@ py::class_<librapid::mpfr>(module, "mpfr")
 	.def("__repr__", [](const librapid::mpfr & this_) { return "librapid::mpfr(\"" + lrc::str(this_, {-1, 10, false}) + "\")"; });
 
 module.def("toMpz", [](const librapid::mpfr & this_) { return librapid::toMpz(this_); });
+module.def("toMpf", [](const librapid::mpfr & this_) { return librapid::toMpf(this_); });
 module.def("toMpq", [](const librapid::mpfr & this_) { return librapid::toMpq(this_); });
 module.def("toMpfr", [](const librapid::mpfr & this_) { return librapid::toMpfr(this_); });
 module.def("toMpz", [](const librapid::mpfr & this_) { return librapid::toMpz(this_); });
+module.def("toMpf", [](const librapid::mpfr & this_) { return librapid::toMpf(this_); });
 module.def("toMpq", [](const librapid::mpfr & this_) { return librapid::toMpq(this_); });
 module.def("toMpfr", [](const librapid::mpfr & this_) { return librapid::toMpfr(this_); });
 module.def("toMpz", [](const librapid::mpfr & this_) { return librapid::toMpz(this_); });
+module.def("toMpf", [](const librapid::mpfr & this_) { return librapid::toMpf(this_); });
 module.def("toMpq", [](const librapid::mpfr & this_) { return librapid::toMpq(this_); });
 module.def("toMpfr", [](const librapid::mpfr & this_) { return librapid::toMpfr(this_); });
 module.def("toMpz", [](const librapid::mpfr & this_) { return librapid::toMpz(this_); });
+module.def("toMpf", [](const librapid::mpfr & this_) { return librapid::toMpf(this_); });
 module.def("toMpq", [](const librapid::mpfr & this_) { return librapid::toMpq(this_); });
 module.def("toMpfr", [](const librapid::mpfr & this_) { return librapid::toMpfr(this_); });
 
