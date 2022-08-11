@@ -359,3 +359,8 @@ constCatalan = _librapid.constCatalan
 
 norm = _librapid.norm
 polar = _librapid.polar
+
+toMpz = _librapid.toMpz
+toMpf = _librapid.toMpf
+toMpq = _librapid.toMpq
+toMpfr = _librapid.toMpfr
