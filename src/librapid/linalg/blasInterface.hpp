@@ -88,6 +88,13 @@ void dot(int64_t n, A *__restrict x, int64_t incX, B *__restrict y, int64_t incY
 #endif
 	}
 
+	template<typename Device, typename A, typename B, typename C>
+	LR_INLINE void gemm(bool transA, bool transB, int64_t m, int64_t n, int64_t k, A alpha,
+						const A *__restrict a, int64_t lda, const B *__restrict b, int64_t ldb,
+						B beta, C *__restrict c, int64_t ldc) {
+		// TODO: Implement this
+	}
+
 #if defined(LIBRAPID_HAS_BLAS)
 	template<>
 	float dot<device::CPU, float, float>(int64_t n, float *__restrict x, int64_t incX,
@@ -96,6 +103,19 @@ void dot(int64_t n, A *__restrict x, int64_t incX, B *__restrict y, int64_t incY
 	template<>
 	double dot<device::CPU, double, double>(int64_t n, double *__restrict x, int64_t incX,
 											double *__restrict y, int64_t incY);
+
+	template<>
+	void gemm<device::CPU, float, float, float>(bool transA, bool transB, int64_t m, int64_t n,
+												int64_t k, float alpha, const float *__restrict a,
+												int64_t lda, const float *__restrict b, int64_t ldb,
+												float beta, float *__restrict c, int64_t ldc);
+
+	template<>
+	void gemm<device::CPU, double, double, double>(bool transA, bool transB, int64_t m, int64_t n,
+												   int64_t k, double alpha,
+												   const double *__restrict a, int64_t lda,
+												   const double *__restrict b, int64_t ldb,
+												   double beta, double *__restrict c, int64_t ldc);
 #endif
 
 #if defined(LIBRAPID_HAS_CUDA)

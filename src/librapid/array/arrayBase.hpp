@@ -372,6 +372,35 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 											 strideOther[0]);
 
 				return Array<Scalar, Device>(res);
+			} else if (m_extent.dims() == 2 && other.m_extent.dims() == 2) {
+				// Matrix product
+
+				using ScalarThis  = Scalar;
+				using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
+
+				LR_ASSERT(m_extent[1] == other.m_extent[0],
+						  "Columns of left matrix must match rows of right matrix");
+
+				int64_t m = m_extent[0];	   // Rows of left matrix
+				int64_t n = other.extent()[1]; // Columns of right matrix
+				int64_t k = m_extent[1];	   // Columns of left matrix
+
+				Array<Scalar, Device> res(Extent(m, n));
+				blas::gemm<Device>(false,
+								   false,
+								   m,
+								   n,
+								   k,
+								   ScalarThis(1),
+								   m_storage.heap(),
+								   m_extent.strideAdjusted()[0],
+								   other.storage().heap(),
+								   other.extent().strideAdjusted()[0],
+								   ScalarOther(0),
+								   res.storage().heap(),
+								   res.extent().strideAdjusted()[0]);
+
+				return res;
 			}
 
 			return Array<Scalar, Device>(0);
