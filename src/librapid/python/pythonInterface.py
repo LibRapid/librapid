@@ -307,6 +307,10 @@ def mul(lhs:Array, rhs:Array, dst:Array):
 def div(lhs:Array, rhs:Array, dst:Array):
 	_librapid.div(lhs._array, rhs._array, dst._array)
 
+# Utility Functions
+setNumThreads = _librapid.setNumThreads
+setBlasThreads = _librapid.setBlasThreads
+
 # Functions from the Math library
 abs = _librapid.abs
 floor = _librapid.floor

@@ -948,6 +948,7 @@ namespace librapid::device {
 
 namespace librapid {
 #ifdef LIBRAPID_HAS_OMP
+	// Default values
 	static inline unsigned int numThreads	   = 8;
 	static inline unsigned int matrixThreads   = 8;
 	static inline unsigned int threadThreshold = 2500;
@@ -961,9 +962,12 @@ namespace librapid {
 	static inline std::vector<std::string> nvccOptions	 = {};
 	static inline std::vector<std::string> customHeaders = {};
 	static inline std::string customCudaCode;
-	static inline bool checkComplex = true; // Use faster, less safe methods in the Complex type
 
-	void prec(int64_t dig10);
+	void prec(int64_t); // Forward declare
+
+	LR_INLINE void setNumThreads(int64_t num) {
+		numThreads = num;
+	}
 
 	namespace internal {
 		class PreOptimize {
