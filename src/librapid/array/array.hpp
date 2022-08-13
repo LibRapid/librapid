@@ -65,7 +65,8 @@ namespace librapid {
 			return Base::assign(other);
 		}
 
-		internal::CommaInitializer<Type> operator<<(const Scalar &value) {
+		template<typename T>
+		internal::CommaInitializer<Type> operator<<(const T &value) {
 			return internal::CommaInitializer<Type>(*this, value);
 		}
 
