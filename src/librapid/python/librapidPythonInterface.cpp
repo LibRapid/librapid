@@ -83,6 +83,9 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("constLog2", &lrc::constLog2);
 	module.def("constCatalan", &lrc::constCatalan);
 
+	module.def("setNumThreads", &lrc::setNumThreads);
+	module.def("setBlasThreads", &lrc::setBlasThreads);
+
 	// Include the Extent type
 	#include "autogen/extentInterface.hpp"
 
