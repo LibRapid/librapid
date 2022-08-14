@@ -351,7 +351,12 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		template<typename OtherDerived>
 		auto dot(const OtherDerived &other) const {
 			// Should this always return an evaluated result???
+			using ScalarThis  = Scalar;
+			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
 			using DeviceOther = typename internal::traits<OtherDerived>::Device;
+
+			static_assert(!std::is_same_v<ScalarThis, bool> || !std::is_same_v<ScalarOther, bool>,
+						  "Dot product not defined for boolean arrays");
 
 			if constexpr (std::is_same_v<Device, device::CPU> &&
 						  std::is_same_v<DeviceOther, device::GPU>)
@@ -360,7 +365,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 							   std::is_same_v<DeviceOther, device::CPU>)
 				return dot(other.template move<Device>());
 
-			if (m_extent.dims() == 1 && other.m_extent.dims() == 1) {
+			if (m_extent.dims() == 1 && other.extent().dims() == 1) {
 				// Vector dot product
 				auto strideThis	 = m_extent.strideAdjusted();
 				auto strideOther = other.extent().strideAdjusted();
@@ -372,13 +377,10 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 											 strideOther[0]);
 
 				return Array<Scalar, Device>(res);
-			} else if (m_extent.dims() == 2 && other.m_extent.dims() == 2) {
+			} else if (m_extent.dims() == 2 && other.extent().dims() == 2) {
 				// Matrix product
 
-				using ScalarThis  = Scalar;
-				using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
-
-				LR_ASSERT(m_extent[1] == other.m_extent[0],
+				LR_ASSERT(m_extent[1] == other.extent()[0],
 						  "Columns of left matrix must match rows of right matrix");
 
 				int64_t m = m_extent[0];	   // Rows of left matrix
