@@ -161,14 +161,14 @@ py::class_<librapid::ArrayI64G>(module, "ArrayI64G")
 	.def("__xor__", [](const librapid::ArrayI64G & this_, const librapid::ArrayI64G & other) { return this_ ^ other; }, py::arg("other"))
 	.def("__invert__", [](const librapid::ArrayI64G & this_) { return ~this_; })
 	.def("__neg__", [](const librapid::ArrayI64G & this_) { return -this_; })
-	.def("transpose", [](librapid::ArrayI64G & this_, const librapid::Extent & order) { this_.transpose(order); }, py::arg("order") = librapid::Extent({}))
-	.def("transposed", [](const librapid::ArrayI64G & this_, const librapid::Extent & order) { return this_.transposed(order); }, py::arg("order") = librapid::Extent({}))
-	.def("dot", [](const librapid::ArrayI64G & this_, const librapid::ArrayI64G & other) { return this_.dot(other); }, py::arg("other"))
 	.def("str", [](const librapid::ArrayI64G & this_, const std::string & format, const std::string & delim, int64_t stripWidth, int64_t beforePoint, int64_t afterPoint, int64_t depth) { return this_.str(format, delim, stripWidth, beforePoint, afterPoint, depth); }, py::arg("format") = std::string("{}"), py::arg("delim") = std::string(" "), py::arg("stripWidth") = int64_t(-1), py::arg("beforePoint") = int64_t(-1), py::arg("afterPoint") = int64_t(-1), py::arg("depth") = int64_t(0))
 	.def("__str__", [](const librapid::ArrayI64G & this_) { return this_.str(); })
 	.def("__repr__", [](const librapid::ArrayI64G & this_) { return "<librapid::ArrayI64G\n" + this_.str("{}", ",") + "\n>"; })
 	.def("isScalar", [](const librapid::ArrayI64G & this_) { return this_.isScalar(); })
-	.def("extent", [](const librapid::ArrayI64G & this_) { return this_.extent(); });
+	.def("extent", [](const librapid::ArrayI64G & this_) { return this_.extent(); })
+	.def("transpose", [](librapid::ArrayI64G & this_, const librapid::Extent & order) { this_.transpose(order); }, py::arg("order") = librapid::Extent({}))
+	.def("transposed", [](const librapid::ArrayI64G & this_, const librapid::Extent & order) { return this_.transposed(order); }, py::arg("order") = librapid::Extent({}))
+	.def("dot", [](const librapid::ArrayI64G & this_, const librapid::ArrayI64G & other) { return this_.dot(other); }, py::arg("other"));
 
 
 module.def("add", [](const librapid::ArrayI64G & lhs, const librapid::ArrayI64G & rhs, librapid::ArrayI64G & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
