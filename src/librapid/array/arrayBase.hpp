@@ -351,11 +351,13 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		template<typename OtherDerived>
 		auto dot(const OtherDerived &other) const {
 			// Should this always return an evaluated result???
-			using ScalarThis  = Scalar;
-			using ScalarOther = typename internal::traits<OtherDerived>::Scalar;
+			using ScalarThis  = typename internal::traits<Derived>::BaseScalar;
+			using ScalarOther = typename internal::traits<OtherDerived>::BaseScalar;
 			using DeviceOther = typename internal::traits<OtherDerived>::Device;
 
-			static_assert(!std::is_same_v<ScalarThis, bool> || !std::is_same_v<ScalarOther, bool>,
+			// Ensure Boolean arrays cannot be used with dot product
+			static_assert(!std::is_same_v<typename internal::traits<Derived>::Scalar, bool> &&
+							!std::is_same_v<typename internal::traits<OtherDerived>::Scalar, bool>,
 						  "Dot product not defined for boolean arrays");
 
 			if constexpr (std::is_same_v<Device, device::CPU> &&
