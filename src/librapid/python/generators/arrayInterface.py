@@ -168,7 +168,10 @@ for t in arrayTypes:
 		Function("extent", [Argument(constRef, "this_")], "return this_.extent();"),
 	]
 
-	functions = fCopy + fIndex + fMove + fCast + fArithmetic + fBitwise + fUnary + fMatrix + fString + fProperties
+	functions = fCopy + fIndex + fMove + fCast + fArithmetic + fBitwise + fUnary + fString + fProperties
+
+	if t not in ["ArrayB", "ArrayBG"]:
+		functions += fMatrix
 
 	for i in range(len(functions)):
 		function = functions[i]
