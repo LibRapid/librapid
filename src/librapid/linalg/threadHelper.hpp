@@ -9,9 +9,9 @@ namespace librapid {
 #if defined(LIBRAPID_HAS_OPENBLAS)
 		openblas_set_num_threads((int)n);
 		goto_set_num_threads((int)n);
-#	if defined(LIBRAPID_HAS_OMP)
+#endif
+#if defined(LIBRAPID_HAS_OMP)
 		omp_set_num_threads((int)n);
-#	endif
 #endif
 	}
 } // namespace librapid

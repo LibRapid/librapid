@@ -92,7 +92,43 @@ void dot(int64_t n, A *__restrict x, int64_t incX, B *__restrict y, int64_t incY
 	LR_INLINE void gemm(bool transA, bool transB, int64_t m, int64_t n, int64_t k, A alpha,
 						const A *__restrict a, int64_t lda, const B *__restrict b, int64_t ldb,
 						B beta, C *__restrict c, int64_t ldc) {
-		// TODO: Implement this
+		if constexpr (std::is_same_v<Device, device::CPU>) {
+			// CPU implementation
+ #if defined(LIBRAPID_HAS_OMP)
+ #	pragma omp parallel for shared(                                                               \
+ 	  transA, transB, m, n, k, a, b, c, alpha, beta, lda, ldb, ldc) default(none) schedule(static)
+ #endif
+			for (int64_t i = 0; i < m; ++i) {
+				for (int64_t j = 0; j < n; ++j) {
+					C sum;
+					if (beta == 0)
+						sum = 0;
+					else
+						sum = c[i * ldc + j];
+
+					for (int64_t l = 0; l < k; ++l) {
+						sum += a[transA ? i + l * lda : l + i * lda] *
+							   b[transB ? l + j * ldb : j + l * ldb];
+					}
+					c[i * ldc + j] = sum * alpha;
+				}
+			}
+		} else {
+			// CUDA implementation
+		}
+
+		/*
+
+		 for (int i = 0; i < a.dim(); i++)
+			for (int j = 0; j < a.dim(); j++) {
+				int sum = 0;
+				for (int k = 0; k < a.dim(); k++)
+					sum += a(i,k) * b(k,j);
+				c(i,j) = sum;
+			}
+		 }
+
+		 */
 	}
 
 #if defined(LIBRAPID_HAS_BLAS)
