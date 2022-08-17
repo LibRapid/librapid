@@ -214,19 +214,6 @@ namespace librapid {
 		return start2 + (stop2 - start2) * ((val - start1) / (stop1 - start1));
 	}
 
-	LR_INLINE double random(double lower = 0, double upper = 1, uint64_t seed = -1) {
-		// Random floating point value in range [lower, upper)
-		static std::uniform_real_distribution<double> distribution(0., 1.);
-		static std::mt19937 generator(seed == (uint64_t)-1 ? (unsigned int)(now() * 10) : seed);
-		return lower + (upper - lower) * distribution(generator);
-	}
-
-	template<typename T, typename std::enable_if_t<std::is_integral_v<T>, int> = 0>
-	LR_INLINE T randint(T lower, T upper, uint64_t seed = -1) {
-		// Random integral value in range [lower, upper]
-		return (int64_t)random((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1, seed);
-	}
-
 	LR_INLINE double trueRandomEntropy() {
 		static std::random_device rd;
 		return rd.entropy();
@@ -238,6 +225,24 @@ namespace librapid {
 		static std::random_device rd;
 		std::uniform_real_distribution<double> dist((double)lower, (double)upper);
 		return dist(rd);
+	}
+
+	LR_INLINE double random(double lower = 0, double upper = 1, uint64_t seed = -1) {
+		// Random floating point value in range [lower, upper)
+
+		// Seed generation
+		static auto tmpSeed = (uint64_t)trueRandom<double>(0, internal::traits<double>::max());
+		if (seed != -1) tmpSeed = seed;
+
+		static std::uniform_real_distribution<double> distribution(0., 1.);
+		static std::mt19937 generator(tmpSeed);
+		return lower + (upper - lower) * distribution(generator);
+	}
+
+	template<typename T, typename std::enable_if_t<std::is_integral_v<T>, int> = 0>
+	LR_INLINE T randint(T lower, T upper, uint64_t seed = -1) {
+		// Random integral value in range [lower, upper]
+		return (int64_t)random((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1, seed);
 	}
 
 	LR_INLINE int64_t trueRandint(int64_t lower = 0, int64_t upper = 1) {

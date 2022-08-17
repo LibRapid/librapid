@@ -8,6 +8,8 @@ cmake_policy(SET CMP0077 NEW)
 option(LIBRAPID_BUILD_EXAMPLES "Compile LibRapid C++ Examples" OFF)
 option(LIBRAPID_BUILD_TESTS "Compile LibRapid C++ Tests" OFF)
 
+option(LIBRAPID_GET_BLAS "Download pre-built OpenBLAS binaries and use them" OFF)
+
 option(LIBRAPID_USE_BLAS "Attempt to use a BLAS library" ON)
 option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
 option(LIBRAPID_USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
@@ -131,6 +133,20 @@ else ()
     add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
 endif ()
 
+# Extract system information
+set(IS_LINUX OFF)
+set(IS_MACOS OFF)
+set(IS_WINDOWS OFF)
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(IS_LINUX ON)
+endif ()
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(IS_MACOS ON)
+endif ()
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(IS_WINDOWS ON)
+endif ()
+
 # See if OpenMP should be linked against
 if (${LIBRAPID_USE_OMP})
     if (${OpenMP_FOUND})
@@ -148,7 +164,34 @@ if (${LIBRAPID_USE_OMP})
     endif ()
 endif ()
 
-# Check if BLAS was built by CI for Python Wheels.
+if (${LIBRAPID_GET_BLAS})
+    message(STATUS "Downloading OpenBLAS Build...")
+
+    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/buildopenblas-src")
+        FetchContent_Declare(
+                BuildOpenBLAS
+                GIT_REPOSITORY https://github.com/librapid/BuildOpenBLAS
+        )
+
+        FetchContent_MakeAvailable(BuildOpenBLAS)
+    endif ()
+
+    set(BLAS_FOUND TRUE)
+    set(LIBRAPID_USE_BLAS TRUE)
+
+    if (${IS_WINDOWS})
+        # Use openblas-windows-latest
+        set(BLAS_LIBRARIES "${FETCHCONTENT_BASE_DIR}/buildopenblas-src/openblas-windows-latest/lib/openblas.lib")
+    elseif (${IS_MACOS})
+        # Use openblas-macos-latest
+        set(BLAS_LIBRARIES "${FETCHCONTENT_BASE_DIR}/buildopenblas-src/openblas-macos-latest/lib/libopenblas.a")
+    else () # Linux and other systems
+        # Use openblas-ubuntu-latest
+        set(BLAS_LIBRARIES "${FETCHCONTENT_BASE_DIR}/buildopenblas-src/openblas-ubuntu-latest/lib/libopenblas.a")
+    endif ()
+endif ()
+
+# Check if BLAS was built by CI for Python Wheels
 # If so, use this instead of any other BLAS install found
 if (${LIBRAPID_USE_BLAS})
     if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install" OR EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/openblas_install/lib/libopenblas.a")

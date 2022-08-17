@@ -149,8 +149,10 @@ else:
     # print("Using 32bit Python (or an OS other than Windows)")
     cmake_args = []
 
-if os.environ.get("LIBRAPID_NO_ARCH"):
+if os.environ.get("LIBRAPID_NO_ARCH"): # Only defined on GitHub Actions
     cmake_args.append("-DLIBRAPID_NO_ARCH=on")
+else:
+    cmake_args.append("-DLIBRAPID_GET_BLAS=on")
 
 cmake_args.append("-DLIBRAPID_USE_MULTIPREC=on")
 
@@ -158,9 +160,6 @@ if os.environ.get("LIBRAPID_CUDA_WHEEL"):
     moduleName = "librapid_cuda_" + os.environ["LIBRAPID_CUDA_WHEEL"]
 else:
     moduleName = "librapid"
-
-# cmake_args.append("-DCMAKE_BUILD_TYPE=Release")
-# cmake_args.append("-DCMAKE_BUILD_TYPE=DEBUG")
 
 setup(
     name=moduleName,
