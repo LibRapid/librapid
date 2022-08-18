@@ -381,6 +381,28 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				return Array<Scalar, Device>(res);
 			} else if (m_extent.dims() == 2 && other.extent().dims() == 1) {
 				// Matrix-vector product
+
+				LR_ASSERT(m_extent[1] == other.extent()[0],
+						  "Columns of left matrix must match elements of right matrix");
+
+				int64_t m = m_extent[0]; // Rows of left matrix
+				int64_t n = m_extent[1]; // Columns of left matrix
+
+				auto res = Array<Scalar, Device>(Extent(m));
+
+				blas::gemv<Device>(false,
+								   m,
+								   n,
+								   Scalar(1),
+								   m_storage.heap(),
+								   m_extent.strideAdjusted()[0],
+								   other.storage().heap(),
+								   other.extent().strideAdjusted()[0],
+								   Scalar(0),
+								   res.storage().heap(),
+								   res.extent().strideAdjusted()[0]);
+
+				return res;
 			} else if (m_extent.dims() == 2 && other.extent().dims() == 2) {
 				// Matrix product
 
