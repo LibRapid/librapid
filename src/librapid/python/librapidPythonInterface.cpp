@@ -86,6 +86,8 @@ PYBIND11_MODULE(_librapid, module) {
 	module.def("setNumThreads", &lrc::setNumThreads);
 	module.def("setBlasThreads", &lrc::setBlasThreads);
 
+	module.def("setCudaMathMode", &lrc::setCudaMathMode);
+
 	// Include the Extent type
 	#include "autogen/extentInterface.hpp"
 
