@@ -83,6 +83,10 @@ namespace librapid::internal {
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+#endif
+
 		static constexpr uint64_t Size	= sizeof(T);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
@@ -120,6 +124,10 @@ namespace librapid::internal {
 										  flags::ScalarLogical | flags::PacketArithmetic |
 										  flags::PacketLogical | flags::PacketBitwise;
 
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
+#endif
+
 		static constexpr uint64_t Size	= sizeof(char);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
@@ -153,6 +161,10 @@ namespace librapid::internal {
 		static constexpr char Name[]		 = "bool";
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::ScalarArithmetic | flags::ScalarLogical;
+
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+#endif
 
 		static constexpr uint64_t Size	= sizeof(uint32_t);
 		static constexpr bool CanAlign	= true;
@@ -189,6 +201,10 @@ namespace librapid::internal {
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
+#endif
+
 		static constexpr uint64_t Size	= sizeof(int8_t);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
@@ -223,6 +239,10 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8U;
+#endif
 
 		static constexpr uint64_t Size	= sizeof(uint8_t);
 		static constexpr bool CanAlign	= true;
@@ -259,6 +279,10 @@ namespace librapid::internal {
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_16I;
+#endif
+
 		static constexpr uint64_t Size	= sizeof(int16_t);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
@@ -293,6 +317,10 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_16U;
+#endif
 
 		static constexpr uint64_t Size	= sizeof(uint16_t);
 		static constexpr bool CanAlign	= true;
@@ -329,6 +357,10 @@ namespace librapid::internal {
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32I;
+#endif
+
 		static constexpr uint64_t Size	= sizeof(int32_t);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
@@ -363,6 +395,10 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32U;
+#endif
 
 		static constexpr uint64_t Size	= sizeof(uint32_t);
 		static constexpr bool CanAlign	= true;
@@ -399,6 +435,10 @@ namespace librapid::internal {
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64I;
+#endif
+
 		static constexpr uint64_t Size	= sizeof(int64_t);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
@@ -433,6 +473,10 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64U;
+#endif
 
 		static constexpr uint64_t Size	= sizeof(uint64_t);
 		static constexpr bool CanAlign	= true;
@@ -471,6 +515,10 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32F;
+#endif
+
 		static constexpr uint64_t Size	= sizeof(float);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
@@ -506,6 +554,10 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+#endif
+
 		static constexpr uint64_t Size	= sizeof(double);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
@@ -539,6 +591,10 @@ namespace librapid::internal {
 		static constexpr char Name[]		 = "NO_MAPPED_TYPE";
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_C_64F;
+#endif
 
 		static constexpr uint64_t Size	= sizeof(Complex<T>);
 		static constexpr bool CanAlign	= traits<T>::CanAlign;
@@ -588,6 +644,10 @@ namespace librapid::internal {
 										  flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+#endif
+
 		static constexpr uint64_t Size	= sizeof(mpz);
 		static constexpr bool CanAlign	= false;
 		static constexpr bool CanMemcpy = false;
@@ -630,6 +690,10 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+#endif
+
 		static constexpr uint64_t Size	= sizeof(mpq);
 		static constexpr bool CanAlign	= false;
 		static constexpr bool CanMemcpy = false;
@@ -669,6 +733,10 @@ namespace librapid::internal {
 		static constexpr char Name[]		 = "NO_VALID_CONVERSION";
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
+
+#if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+#endif
 
 		static constexpr uint64_t Size	= sizeof(mpfr);
 		static constexpr bool CanAlign	= false;
