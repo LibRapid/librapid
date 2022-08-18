@@ -1011,6 +1011,10 @@ namespace librapid {
 			static constexpr uint64_t Flags = flags::PacketArithmetic | flags::ScalarArithmetic |
 											  flags::PacketLogical | flags::ScalarLogical;
 
+#if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_16F;
+#endif
+
 			static constexpr uint64_t Size	= 2;
 			static constexpr bool CanAlign	= true;
 			static constexpr bool CanMemcpy = true;
