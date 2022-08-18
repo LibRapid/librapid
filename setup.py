@@ -151,8 +151,6 @@ else:
 
 if os.environ.get("LIBRAPID_NO_ARCH"): # Only defined on GitHub Actions
     cmake_args.append("-DLIBRAPID_NO_ARCH=on")
-else:
-    cmake_args.append("-DLIBRAPID_GET_BLAS=on")
 
 cmake_args.append("-DLIBRAPID_USE_MULTIPREC=on")
 

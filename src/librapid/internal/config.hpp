@@ -965,14 +965,19 @@ namespace librapid {
 
 	void prec(int64_t); // Forward declare
 
-	LR_INLINE void setNumThreads(int64_t num) {
-		numThreads = num;
-	}
+	LR_INLINE void setNumThreads(int64_t num) { numThreads = num; }
 
 	namespace internal {
+#if defined(LIBRAPID_HAS_CUDA)
+		static inline std::string cudaMathMode;
+#endif
+
 		class PreOptimize {
 		public:
 			PreOptimize() {
+#if defined(LIBRAPID_HAS_CUDA)
+				cudaMathMode = "DEFAULT";
+#endif
 				numThreads	  = (int64_t)((double)std::thread::hardware_concurrency() * (3. / 4.));
 				matrixThreads = std::thread::hardware_concurrency();
 				nvccOptions.emplace_back("--device-int128");
