@@ -163,8 +163,7 @@ void dot(int64_t n, A *__restrict x, int64_t incX, B *__restrict y, int64_t incY
 				// CPU implementation
 #if defined(LIBRAPID_HAS_OMP)
 #	pragma omp parallel for shared(                                                               \
-	  A, B, C, transA, transB, m, n, k, a, b, c, alpha, beta, lda, ldb, ldc) default(none)         \
-	  schedule(static)
+	  transA, transB, m, n, k, a, b, c, alpha, beta, lda, ldb, ldc) default(none) schedule(static)
 #endif
 				for (int64_t i = 0; i < m; ++i) {
 					for (int64_t j = 0; j < n; ++j) {

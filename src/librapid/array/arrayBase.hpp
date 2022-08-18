@@ -379,6 +379,8 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 											 strideOther[0]);
 
 				return Array<Scalar, Device>(res);
+			} else if (m_extent.dims() == 2 && other.extent().dims() == 1) {
+				// Matrix-vector product
 			} else if (m_extent.dims() == 2 && other.extent().dims() == 2) {
 				// Matrix product
 
