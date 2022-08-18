@@ -54,23 +54,4 @@ namespace librapid::blas {
 					(blasint)ldc);
 	}
 #endif
-
-// #if defined(LIBRAPID_HAS_CUDA)
-// 	template<>
-// 	void gemm<device::GPU, float, float, float>(bool transA, bool transB, int64_t m, int64_t n,
-// 												int64_t k, float alpha, const float *__restrict a,
-// 												int64_t lda, const float *__restrict b, int64_t ldb,
-// 												float beta, float *__restrict c, int64_t ldc) {
-// 		// cublasSafeCall(cublasSgemmEx())
-// 	}
-//
-// 	template<>
-// 	void gemm<device::GPU, double, double, double>(bool transA, bool transB, int64_t m, int64_t n,
-// 												   int64_t k, double alpha,
-// 												   const double *__restrict a, int64_t lda,
-// 												   const double *__restrict b, int64_t ldb,
-// 												   double beta, double *__restrict c, int64_t ldc) {
-//
-// 	}
-// #endif
 } // namespace librapid::blas

@@ -310,6 +310,7 @@ def div(lhs:Array, rhs:Array, dst:Array):
 # Utility Functions
 setNumThreads = _librapid.setNumThreads
 setBlasThreads = _librapid.setBlasThreads
+setCudaMathMode = _librapid.setCudaMathMode
 
 # Functions from the Math library
 abs = _librapid.abs

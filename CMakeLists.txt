@@ -50,6 +50,7 @@ set(LIBRAPID_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/cudaCodeLoader.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/kernelHelper.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/linalg/dot.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/linalg/gemv.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/linalg/gemm.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/fastMath.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/toString.cpp"

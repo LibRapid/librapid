@@ -66,7 +66,7 @@ namespace librapid::functors {
 					}
 #if defined(LIBRAPID_HAS_OMP)
 					else {
-						// Multi-threaded approach
+						// Multithreaded approach
 #	pragma omp parallel for shared(dst, src, alignedLen, packetWidth) default(none)               \
 	  num_threads(processThreads)
 						for (int64_t i = 0; i < alignedLen; i += packetWidth) {

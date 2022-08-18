@@ -16,7 +16,8 @@ namespace librapid {
 			internal::cudaMathMode = "DEFAULT";
 		else if (type == "precise")
 			internal::cudaMathMode = "PRECISE";
-		LR_ASSERT(false, "Invalid CUDA math mode {}", type);
+		else
+			LR_ASSERT(false, "Invalid CUDA math mode {}", type);
 #endif
 	}
 
@@ -161,15 +162,20 @@ void dot(int64_t n, A *__restrict x, int64_t incX, B *__restrict y, int64_t incY
 				  C *__restrict c, int64_t ldc) {
 			if constexpr (std::is_same_v<Device, device::CPU>) {
 				// CPU implementation
+
+				B betaZero(0);
+				C cZero(0);
+
 #if defined(LIBRAPID_HAS_OMP)
 #	pragma omp parallel for shared(                                                               \
-	  transA, transB, m, n, k, a, b, c, alpha, beta, lda, ldb, ldc) default(none) schedule(static)
+	  transA, transB, m, n, k, a, b, c, alpha, beta, lda, ldb, ldc, betaZero, cZero) default(none) \
+	  schedule(static)
 #endif
 				for (int64_t i = 0; i < m; ++i) {
 					for (int64_t j = 0; j < n; ++j) {
 						C sum;
-						if (beta == B(0))
-							sum = C(0);
+						if (beta == betaZero)
+							sum = cZero;
 						else
 							sum = c[i * ldc + j];
 
@@ -223,6 +229,43 @@ void dot(int64_t n, A *__restrict x, int64_t incX, B *__restrict y, int64_t incY
 #endif // LIBRAPID_HAS_CUDA
 		}
 
+		template<typename Device, typename A, typename B, typename C>
+		void gemv(bool trans, int64_t m, int64_t n, A alpha, const A *__restrict a, int64_t lda,
+				  const B *__restrict x, int64_t incX, B beta, C *__restrict y, int64_t incY) {
+			if (std::is_same_v<Device, device::CPU>) {
+				// CPU implementation
+
+				// Matrix vector product
+				if (m * n < threadThreshold || matrixThreads < 2) {
+					for (int64_t i = 0; i < m; ++i) {
+						y[i * incY] = beta * y[i * incY];
+						for (int64_t j = 0; j < n; ++j) {
+							y[i * incY] +=
+							  alpha * a[trans ? j * lda + i : i * lda + j] * x[j * incX];
+						}
+					}
+				} else {
+#if defined(LIBRAPID_HAS_OMP)
+#	pragma omp parallel for shared(trans, m, n, alpha, a, lda, x, incX, beta, y, incY) default(   \
+	  none) num_threads(matrixThreads)
+#endif // LIBRAPID_HAS_OMP
+					for (int64_t i = 0; i < m; ++i) {
+						y[i * incY] = beta * y[i * incY];
+						for (int64_t j = 0; j < n; ++j) {
+							y[i * incY] +=
+							  alpha * a[trans ? j * lda + i : i * lda + j] * x[j * incX];
+						}
+					}
+				}
+			}
+#if defined(LIBRAPID_HAS_CUDA)
+			else {
+				// CUDA implementation -- call GEMM instead (supports more datatypes with GemmEx)
+				gemm<Device>(trans, false, m, 1, n, alpha, a, lda, x, incX, beta, y, incY);
+			}
+#endif // LIBRAPID_HAS_CUDA
+		}
+
 #if defined(LIBRAPID_HAS_BLAS)
 		template<>
 		float dot<device::CPU, float, float>(int64_t n, float *__restrict x, int64_t incX,
@@ -231,6 +274,19 @@ void dot(int64_t n, A *__restrict x, int64_t incX, B *__restrict y, int64_t incY
 		template<>
 		double dot<device::CPU, double, double>(int64_t n, double *__restrict x, int64_t incX,
 												double *__restrict y, int64_t incY);
+
+		template<>
+		void gemv<device::CPU, float, float, float>(bool trans, int64_t m, int64_t n, float alpha,
+													const float *__restrict a, int64_t lda,
+													const float *__restrict x, int64_t incX,
+													float beta, float *__restrict y, int64_t incY);
+
+		template<>
+		void gemv<device::CPU, double, double, double>(bool trans, int64_t m, int64_t n,
+													   double alpha, const double *__restrict a,
+													   int64_t lda, const double *__restrict x,
+													   int64_t incX, double beta,
+													   double *__restrict y, int64_t incY);
 
 		template<>
 		void gemm<device::CPU, float, float, float>(bool transA, bool transB, int64_t m, int64_t n,
@@ -259,6 +315,16 @@ void dot(int64_t n, A *__restrict x, int64_t incX, B *__restrict y, int64_t incY
 
 			double dot(int64_t n, double *__restrict x, int64_t incX, double *__restrict y,
 					   int64_t incY, cublasHandle_t *handles = &(memory::cublasHandles[0]));
+
+			void gemv(bool trans, int64_t m, int64_t n, float alpha, const float *__restrict a,
+					  int64_t lda, const float *__restrict x, int64_t incX, float beta,
+					  float *__restrict y, int64_t incY,
+					  cublasHandle_t *handles = &(memory::cublasHandles[0]));
+
+			void gemv(bool trans, int64_t m, int64_t n, double alpha, const double *__restrict a,
+					  int64_t lda, const double *__restrict x, int64_t incX, double beta,
+					  double *__restrict y, int64_t incY,
+					  cublasHandle_t *handles = &(memory::cublasHandles[0]));
 		} // namespace impl
 
 		template<>
@@ -281,18 +347,21 @@ void dot(int64_t n, A *__restrict x, int64_t incX, B *__restrict y, int64_t incY
 			return impl::dot(n, x, incX, y, incY);
 		}
 
-//	template<>
-//	void gemm<device::GPU, float, float, float>(bool transA, bool transB, int64_t m, int64_t n,
-//												int64_t k, float alpha, const float *__restrict a,
-//												int64_t lda, const float *__restrict b, int64_t ldb,
-//												float beta, float *__restrict c, int64_t ldc);
-//
-//	template<>
-//	void gemm<device::GPU, double, double, double>(bool transA, bool transB, int64_t m, int64_t n,
-//												   int64_t k, double alpha,
-//												   const double *__restrict a, int64_t lda,
-//												   const double *__restrict b, int64_t ldb,
-//												   double beta, double *__restrict c, int64_t ldc);
+		template<>
+		LR_INLINE void gemv<device::GPU, float, float, float>(
+		  bool trans, int64_t m, int64_t n, float alpha, const float *__restrict a, int64_t lda,
+		  const float *__restrict x, int64_t incX, float beta, float *__restrict y, int64_t incY) {
+			return impl::gemv(trans, m, n, alpha, a, lda, x, incX, beta, y, incY);
+		}
+
+		template<>
+		LR_INLINE void
+		gemv<device::GPU, double, double, double>(bool trans, int64_t m, int64_t n, double alpha,
+												  const double *__restrict a, int64_t lda,
+												  const double *__restrict x, int64_t incX,
+												  double beta, double *__restrict y, int64_t incY) {
+			return impl::gemv(trans, m, n, alpha, a, lda, x, incX, beta, y, incY);
+		}
 #endif
 	} // namespace blas
 } // namespace librapid
