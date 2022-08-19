@@ -374,13 +374,11 @@ namespace librapid {
 
 	template<typename T1, typename T2>
 	LR_INLINE Complex<T1> roundTo(const Complex<T1> &num, T2 val) {
-		if (num == 0) return 0;
 		return Complex<T1>(roundTo(real(num), val), roundTo(imag(num), val));
 	}
 
 	template<typename T1 = double, typename T2 = double>
 	LR_INLINE T1 roundTo(const Complex<T1> &num, const Complex<T1> &val) {
-		if (num == 0) return 0;
 		return Complex<T1>(roundTo(real(num), real(val)), roundTo(imag(num), imag(val)));
 	}
 
