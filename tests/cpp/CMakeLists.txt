@@ -6,6 +6,7 @@ function(make_test name)
             COMMAND "${CMAKE_CURRENT_BINARY_DIR}/test-${name}")
 endfunction()
 
+make_test(math)
 make_test(fundamental)
 make_test(arithmetic)
 
