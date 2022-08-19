@@ -7,14 +7,9 @@
 #include "../utils/time.hpp"
 
 namespace librapid {
-	LR_INLINE int64_t product(const std::vector<int64_t> &vals) {
-		int64_t res = 1;
-		for (const auto &val : vals) res *= val;
-		return res;
-	}
-
-	LR_INLINE double product(const std::vector<double> &vals) {
-		double res = 1;
+	template<typename T>
+	LR_INLINE T product(const std::vector<T> &vals) {
+		T res = 1;
 		for (const auto &val : vals) res *= val;
 		return res;
 	}
@@ -329,18 +324,18 @@ namespace librapid {
 	LR_INLINE auto round(T num, int64_t dp = 0, int8_t mode = roundMode::MATH) {
 		using Scalar = typename internal::traits<T>::Scalar;
 
-		const Scalar alpha	= ::librapid::pow10(dp);
-		const Scalar beta	= ::librapid::pow10(-dp);
-		const Scalar absNum = ::librapid::abs(num * alpha);
-		Scalar y			= ::librapid::floor(absNum);
-		Scalar diff			= absNum - y;
+		const double alpha	= ::librapid::pow10(dp);
+		const double beta	= ::librapid::pow10(-dp);
+		const double absNum = ::librapid::abs(static_cast<double>(num) * alpha);
+		double y			= ::librapid::floor(absNum);
+		double diff			= absNum - y;
 		if (mode & (1 << 0) && diff >= 0.5) y += 1;
 		if (mode & (1 << 2)) {
 			auto integer	 = (uint64_t)y;
-			auto nearestEven = (integer & 1) ? (y + 1) : (Scalar)integer;
+			auto nearestEven = (integer & 1) ? (y + 1) : (double)integer;
 			if (mode & (1 << 4) && diff == 0.5) y = nearestEven;
 		}
-		return (num >= 0 ? y : -y) * beta;
+		return static_cast<Scalar>((num >= 0 ? y : -y) * beta);
 	}
 
 	template<typename T>
@@ -370,18 +365,22 @@ namespace librapid {
 
 	template<typename T1 = double, typename T2 = double>
 	LR_INLINE T1 roundTo(T1 num, T2 val) {
-		auto rem = ::librapid::mod(num, T1(val));
-		if (rem >= T1(val) / 2) return (num + T1(val)) - rem;
-		return num - rem;
+		if (num == 0) return 0;
+		auto rem = ::librapid::mod(::librapid::abs(num), T1(val));
+		if (rem >= T1(val) / 2)
+			return internal::copySign((::librapid::abs(num) + T1(val)) - rem, num);
+		return internal::copySign(num - rem, num);
 	}
 
 	template<typename T1, typename T2>
 	LR_INLINE Complex<T1> roundTo(const Complex<T1> &num, T2 val) {
+		if (num == 0) return 0;
 		return Complex<T1>(roundTo(real(num), val), roundTo(imag(num), val));
 	}
 
 	template<typename T1 = double, typename T2 = double>
 	LR_INLINE T1 roundTo(const Complex<T1> &num, const Complex<T1> &val) {
+		if (num == 0) return 0;
 		return Complex<T1>(roundTo(real(num), real(val)), roundTo(imag(num), imag(val)));
 	}
 
