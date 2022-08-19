@@ -405,7 +405,11 @@ namespace librapid {
 				  "Cannot round to {} significant figures. Value must be greater than zero",
 				  figs);
 
-		T tmp	  = num > 0 ? num : -num;
+		using Scalar = std::conditional_t<std::is_floating_point_v<T>, double, T>;
+
+		if (num == 0) return 0;
+
+		auto tmp  = ::librapid::abs(static_cast<T>(num));
 		int64_t n = 0;
 
 		while (tmp > 10) {
@@ -418,7 +422,7 @@ namespace librapid {
 			--n;
 		}
 
-		return (tmp > 0 ? 1 : -1) * (round(tmp, figs - 1) * pow10<T>(n));
+		return internal::copySign(static_cast<T>(round(tmp, figs - 1) * pow10<Scalar>(n)), num);
 	}
 
 	template<typename T>
@@ -435,7 +439,7 @@ namespace librapid {
 #ifndef FMA
 			return _t * _b + (T {1} - _t) * _a;
 #else
-			return std::fma(_t, __b, (_Float {1} - _t) * __a);
+			return std::fma(_t, _b, (_Float {1} - _t) * _a);
 #endif
 		else if (_t == T {1})
 			return _b;
@@ -443,7 +447,7 @@ namespace librapid {
 #ifndef FMA
 			const auto _x = _a + _t * (_b - _a);
 #else
-			const auto _x = std::fma(_t, __b - __a, __a);
+			const auto _x = std::fma(_t, _b - _a, _a);
 #endif
 			return (_t > T {1}) == (_b > _a) ? max(_b, _x) : min(_b, _x);
 		}
