@@ -116,7 +116,7 @@ namespace librapid {
 		return {samples, itersCompleted - 1, avg, stddev};
 	}
 
-	LR_INLINE std::string formatBench(const Bench &bench, bool includeIters = true;) {
+	LR_INLINE std::string formatBench(const Bench &bench, bool includeIters = true) {
 		std::string res = fmt::format("Mean {:>9} ± {:>9}",
 									  formatTime<time::nanosecond>(bench.avg, "{:.3f}"),
 									  formatTime<time::nanosecond>(bench.stddev, "{:.3f}"));
@@ -125,7 +125,7 @@ namespace librapid {
 			res +=
 			  fmt::format(" after {} samples, each with {} iterations", bench.samples, bench.iters);
 		}
-		
+
 		return res;
 	}
 } // namespace librapid
