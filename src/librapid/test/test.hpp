@@ -5,6 +5,23 @@
 namespace librapid::test {
 	namespace detail {
 		static inline auto noOp = []() { return true; };
+
+		template<typename T>
+		bool isClose(T a, T b) {
+			if constexpr (std::is_floating_point_v<T> || std::is_same_v<T, half> ||
+						  std::is_same_v<T, mpf> || std::is_same_v<T, mpq> ||
+						  std::is_same_v<T, mpfr>)
+				return abs(a - b) < internal::traits<T>::epsilon();
+			return a == b;
+		}
+
+		template<typename T>
+		bool isClose(const std::vector<T> &a, const std::vector<T> &b) {
+			if (a.size() != b.size()) { return false; }
+			for (size_t i = 0; i < a.size(); i++)
+				if (!isClose(a[i], b[i])) return false;
+			return true;
+		}
 	} // namespace detail
 
 	template<typename LAMBDA_>
@@ -21,13 +38,16 @@ namespace librapid::test {
 
 		Test(const Test &other) :
 				m_name(other.getName()), m_description(other.getDescription()),
-				m_test(other.getTest()), m_expect(other.getExpect()) {}
+				m_test(other.getTest()), m_expect(other.getExpect()), m_bench(other.getBench()),
+				m_allowClose(other.getAllowClose()) {}
 
 		Test &operator=(const Test &other) {
 			m_name		  = other.m_name;
 			m_description = other.m_description;
 			m_test		  = other.m_test;
 			m_expect	  = other.m_expect;
+			m_bench		  = other.m_bench;
+			m_allowClose  = other.m_allowClose;
 			return *this;
 		}
 
@@ -43,6 +63,16 @@ namespace librapid::test {
 
 		Test &expect(const Expect &expect) {
 			m_expect = expect;
+			return *this;
+		}
+
+		Test &bench(const bool &b) {
+			m_bench = b;
+			return *this;
+		}
+
+		Test &allowClose(const bool &b) {
+			m_allowClose = b;
 			return *this;
 		}
 
@@ -70,14 +100,20 @@ namespace librapid::test {
 			double tryEnd = now();
 			if (threw) execTime = tryEnd - tryStart;
 
-			if (!threw && result == m_expect) {
+			if (!threw && (m_allowClose ? detail::isClose(result, m_expect) : result == m_expect)) {
 				m_pass = PASSED;
+				std::string benchRes;
+				// If we are benchmarking properly, time it
+				if (m_bench) {
+					benchRes = formatBench(timeFunction(m_test, -1, -1, 1, args...), false);
+				} else {
+					benchRes = formatTime(execTime);
+				}
 
 				// If the test passed, just say that it passed.
 				fmt::print(
 				  fmt::fg(fmt::color::green),
-				  fmt::format(
-					"[ TEST ] {:<50}   {:<10}   {:>8}\n", m_name, pass, formatTime(execTime)));
+				  fmt::format("[ TEST ] {:<50}   {:<10}   {:>8}\n", m_name, pass, benchRes));
 			} else {
 				m_pass = FAILED;
 
@@ -96,7 +132,8 @@ namespace librapid::test {
 					// If no exception was thrown, print the resulting value
 					fmt::print(fmt::fg(fmt::color::red), fmt::format("Received:\n{}\n", result));
 				} else {
-					// An exception was thrown, so the resulting value is *almost* certainly invalid
+					// An exception was thrown, so the resulting value is *almost* certainly
+					// invalid
 					fmt::print(fmt::fg(fmt::color::red),
 							   fmt::format("Received:\nERROR: {}\n", error.what()));
 				}
@@ -111,6 +148,8 @@ namespace librapid::test {
 		auto getDescription() const { return m_description; }
 		auto getTest() const { return m_test; }
 		auto getExpect() const { return m_expect; }
+		auto getBench() const { return m_bench; }
+		auto getAllowClose() const { return m_allowClose; }
 		auto passed() const { return m_pass == PASSED; }
 
 	private:
@@ -118,6 +157,8 @@ namespace librapid::test {
 		std::string m_description;
 		Lambda m_test;
 		Expect m_expect;
+		bool m_bench	  = true;
+		bool m_allowClose = false;
 
 		PassState m_pass = NOT_RUN;
 	};

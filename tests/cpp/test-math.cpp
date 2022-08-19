@@ -109,10 +109,73 @@ int main() {
 													TYPE(-6),
 													TYPE(-0.125)}));
 
+	auto roundSigFig = lrc::test::Test([&]() {
+						   return std::vector<TYPE>({
+							 // Integers
+							 lrc::roundSigFig(TYPE(0), 1),
+							 lrc::roundSigFig(TYPE(1), 2),
+							 lrc::roundSigFig(TYPE(3), 3),
+							 lrc::roundSigFig(TYPE(10), 4),
+							 // Floating small
+							 lrc::roundSigFig(TYPE(0.012345), 1),
+							 lrc::roundSigFig(TYPE(0.012345), 2),
+							 lrc::roundSigFig(TYPE(0.012345), 3),
+							 lrc::roundSigFig(TYPE(0.012345), 4),
+							 // Floating large
+							 lrc::roundSigFig(TYPE(12345), 1),
+							 lrc::roundSigFig(TYPE(12345), 2),
+							 lrc::roundSigFig(TYPE(12345), 3),
+							 lrc::roundSigFig(TYPE(12345), 4),
+							 // Negative
+							 // Floating small
+							 lrc::roundSigFig(TYPE(-0.012345), 1),
+							 lrc::roundSigFig(TYPE(-0.012345), 2),
+							 lrc::roundSigFig(TYPE(-0.012345), 3),
+							 lrc::roundSigFig(TYPE(-0.012345), 4),
+							 // Floating large
+							 lrc::roundSigFig(TYPE(-12345), 1),
+							 lrc::roundSigFig(TYPE(-12345), 2),
+							 lrc::roundSigFig(TYPE(-12345), 3),
+							 lrc::roundSigFig(TYPE(-12345), 4),
+						   });
+					   })
+						 .name(fmt::format("Rounding To Test [ {} ]", STRINGIFY(TYPE)))
+						 .description("Round a number to the nearest multiple of a number")
+						 .expect(std::vector<TYPE>({// Integers
+													TYPE(0),
+													TYPE(1.0),
+													TYPE(3.00),
+													TYPE(10.00),
+													// Floating small
+													TYPE(0.01),
+													TYPE(0.012),
+													TYPE(0.0123),
+													TYPE(0.01235),
+													// Floating large
+													TYPE(10000),
+													TYPE(12000),
+													TYPE(12300),
+													TYPE(12340),
+													// Negative
+													// Floating small
+													TYPE(-0.01),
+													TYPE(-0.012),
+													TYPE(-0.0123),
+													TYPE(-0.01235),
+													// Floating large
+													TYPE(-10000),
+													TYPE(-12000),
+													TYPE(-12300),
+													TYPE(-12340)}))
+						 .allowClose(true);
+
 	roundingTest.run();
 	roundToTest.run();
+	roundSigFig.run();
 
-	if (!roundingTest.passed() || !roundToTest.passed()) { passed = false; }
+	if (!roundingTest.passed() || !roundToTest.passed() || !roundSigFig.passed()) {
+		passed = false;
+	}
 
 	if (passed) return 0;
 	return 1;

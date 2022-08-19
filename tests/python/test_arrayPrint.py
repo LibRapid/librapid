@@ -8,7 +8,7 @@ def testArrayPrint():
     working as expected
     """
     
-    x = lrp.ArrayF32(lrp.Extent([5]))
+    x = lrp.Array(lrp.Extent(5), "f32")
     for i in range(5):
         x[i] = i + 1
-    assert(x.str() == "[1 2 3 4 5]")
+    assert(str(x) == "[1 2 3 4 5]")
