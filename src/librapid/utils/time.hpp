@@ -16,13 +16,13 @@ namespace librapid {
 	T map(T val, T start1, T stop1, T start2, T stop2);
 
 	namespace time {
-		constexpr int64_t day		  = (int64_t) 86400e9;
-		constexpr int64_t hour		  = (int64_t) 3600e9;
-		constexpr int64_t minute	  = (int64_t) 60e9;
-		constexpr int64_t second	  = (int64_t) 1e9;
-		constexpr int64_t millisecond = (int64_t) 1e6;
-		constexpr int64_t microsecond = (int64_t) 1e3;
-		constexpr int64_t nanosecond  = (int64_t) 1;
+		constexpr int64_t day		  = (int64_t)86400e9;
+		constexpr int64_t hour		  = (int64_t)3600e9;
+		constexpr int64_t minute	  = (int64_t)60e9;
+		constexpr int64_t second	  = (int64_t)1e9;
+		constexpr int64_t millisecond = (int64_t)1e6;
+		constexpr int64_t microsecond = (int64_t)1e3;
+		constexpr int64_t nanosecond  = (int64_t)1;
 	} // namespace time
 
 	template<int64_t scale = time::second>
@@ -70,9 +70,16 @@ namespace librapid {
 		double m_start;
 	};
 
+	struct Bench {
+		int64_t samples;
+		int64_t iters;
+		double avg;
+		double stddev;
+	};
+
 	template<typename LAMBDA, typename... Args>
-	double timeFunction(const LAMBDA &op, int64_t samples = -1, int64_t iters = -1,
-						double time = -1, Args... vals) {
+	LR_INLINE Bench timeFunction(const LAMBDA &op, int64_t samples = -1, int64_t iters = -1,
+								 double time = -1, Args... vals) {
 		if (samples < 1) samples = 10;
 
 		// Call the function to compile any kernels
@@ -104,13 +111,48 @@ namespace librapid {
 		}
 
 		// Calculate average (mean) time and standard deviation
-		double avg = mean(times);
-		double std = standardDeviation(times);
-		fmt::print("Mean {:>9} ± {:>9} after {} samples, each with {} iterations\n",
-				   formatTime<time::nanosecond>(avg, "{:.3f}"),
-				   formatTime<time::nanosecond>(std, "{:.3f}"),
-				   samples,
-				   itersCompleted - 1);
-		return avg;
+		double avg	  = mean(times);
+		double stddev = standardDeviation(times);
+		return {samples, itersCompleted - 1, avg, stddev};
+	}
+
+	LR_INLINE std::string formatBench(const Bench &bench, bool includeIters = true;) {
+		std::string res = fmt::format("Mean {:>9} ± {:>9}",
+									  formatTime<time::nanosecond>(bench.avg, "{:.3f}"),
+									  formatTime<time::nanosecond>(bench.stddev, "{:.3f}"));
+
+		if (includeIters) {
+			res +=
+			  fmt::format(" after {} samples, each with {} iterations", bench.samples, bench.iters);
+		}
+		
+		return res;
 	}
 } // namespace librapid
+
+// Provide {fmt} printing capabilities
+#ifdef FMT_API
+template<>
+struct fmt::formatter<librapid::Bench> {
+	std::string formatStr = "{}";
+
+	template<typename ParseContext>
+	constexpr auto parse(ParseContext &ctx) {
+		formatStr = "{:";
+		auto it	  = ctx.begin();
+		for (; it != ctx.end(); ++it) {
+			if (*it == '}') break;
+			formatStr += *it;
+		}
+		formatStr += "}";
+		return it;
+	}
+
+	template<typename FormatContext>
+	auto format(const librapid::Bench &b, FormatContext &ctx) {
+		try {
+			return fmt::format_to(ctx.out(), formatBench(b));
+		} catch (std::exception &e) { return fmt::format_to(ctx.out(), e.what()); }
+	}
+};
+#endif // FMT_API
