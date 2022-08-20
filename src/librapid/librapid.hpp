@@ -31,7 +31,6 @@
 #include "math/vector.hpp"
 #include "math/complex.hpp"
 #include "internal/forward.hpp"
-#include "array/helpers/kernelHelper.hpp"
 #include "array/denseStorage.hpp"
 #include "array/helpers/extent.hpp"
 #include "array/arrayBase.hpp"

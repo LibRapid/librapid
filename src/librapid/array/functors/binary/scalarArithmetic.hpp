@@ -3,139 +3,45 @@
 #include "binary.hpp"
 
 namespace librapid::functors::binary {
-	template<typename LHS, typename RHS>
-	class ScalarSum : public ScalarOp<LHS, RHS> {
-	public:
-		using LhsType				   = typename internal::traits<LHS>::Scalar;
-		using RhsType				   = typename internal::traits<RHS>::Scalar;
-		using RetType				   = typename std::common_type<LhsType, RhsType>::type;
-		using Packet				   = typename internal::traits<RetType>::Packet;
-		static constexpr int64_t Flags = internal::flags::Binary | internal::flags::Arithmetic |
-										 internal::flags::PacketArithmetic |
-										 internal::flags::ScalarArithmetic;
+#define DEF_SCALAR_FUNCTOR(NAME_, OP_)                                                             \
+	template<typename LHS, typename RHS>                                                           \
+	class Scalar##NAME_ : public ScalarOp<LHS, RHS> {                                              \
+	public:                                                                                        \
+		using LhsType				   = typename internal::traits<LHS>::Scalar;                   \
+		using RhsType				   = typename internal::traits<RHS>::Scalar;                   \
+		using RetType				   = typename std::common_type<LhsType, RhsType>::type;        \
+		using Packet				   = typename internal::traits<RetType>::Packet;               \
+		static constexpr int64_t Flags = internal::flags::Binary | internal::flags::Arithmetic |   \
+										 internal::flags::PacketArithmetic |                       \
+										 internal::flags::ScalarArithmetic;                        \
+                                                                                                   \
+		Scalar##NAME_() = default;                                                                 \
+                                                                                                   \
+		Scalar##NAME_(const Scalar##NAME_<LHS, RHS> &other) = default;                             \
+                                                                                                   \
+		Scalar##NAME_<LHS, RHS> &operator=(const Scalar##NAME_<LHS, RHS> &other) = default;        \
+                                                                                                   \
+		LR_NODISCARD("")                                                                           \
+		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {        \
+			return left OP_ right;                                                                 \
+		}                                                                                          \
+                                                                                                   \
+		template<typename PacketTypeLHS, typename PacketTypeRHS>                                   \
+		LR_NODISCARD("")                                                                           \
+		LR_FORCE_INLINE Packet                                                                     \
+		  packetOp(const PacketTypeLHS &left, const PacketTypeRHS &right) const {                  \
+			return left OP_ right;                                                                 \
+		}                                                                                          \
+                                                                                                   \
+		LR_NODISCARD("") LR_FORCE_INLINE std::string genKernel() const { return STRINGIFY(OP_); }  \
+                                                                                                   \
+	private:                                                                                       \
+	}
 
-		ScalarSum() = default;
+	DEF_SCALAR_FUNCTOR(Sum, +);
+	DEF_SCALAR_FUNCTOR(Diff, -);
+	DEF_SCALAR_FUNCTOR(Prod, *);
+	DEF_SCALAR_FUNCTOR(Div, /);
 
-		ScalarSum(const ScalarSum<LHS, RHS> &other) = default;
-
-		ScalarSum<LHS, RHS> &operator=(const ScalarSum<LHS, RHS> &other) = default;
-
-		LR_NODISCARD("")
-		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {
-			return left + right;
-		}
-
-		template<typename PacketTypeLHS, typename PacketTypeRHS>
-		LR_NODISCARD("")
-		LR_FORCE_INLINE Packet
-		  packetOp(const PacketTypeLHS &left, const PacketTypeRHS &right) const {
-			return left + right;
-		}
-
-		LR_NODISCARD("") LR_FORCE_INLINE std::string genKernel() const { return "+"; }
-
-	private:
-	};
-
-	template<typename LHS, typename RHS>
-	class ScalarDiff : public ScalarOp<LHS, RHS> {
-	public:
-		using LhsType				   = typename internal::traits<LHS>::Scalar;
-		using RhsType				   = typename internal::traits<RHS>::Scalar;
-		using RetType				   = typename std::common_type<LhsType, RhsType>::type;
-		using Packet				   = typename internal::traits<RetType>::Packet;
-		static constexpr int64_t Flags = internal::flags::Binary | internal::flags::Arithmetic |
-										 internal::flags::PacketArithmetic |
-										 internal::flags::ScalarArithmetic;
-
-		ScalarDiff() = default;
-
-		ScalarDiff(const ScalarDiff<LHS, RHS> &other) = default;
-
-		ScalarDiff<LHS, RHS> &operator=(const ScalarDiff<LHS, RHS> &other) = default;
-
-		LR_NODISCARD("")
-		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {
-			return left - right;
-		}
-
-		template<typename PacketTypeLHS, typename PacketTypeRHS>
-		LR_NODISCARD("")
-		LR_FORCE_INLINE Packet
-		  packetOp(const PacketTypeLHS &left, const PacketTypeRHS &right) const {
-			return left - right;
-		}
-
-		LR_NODISCARD("") LR_FORCE_INLINE std::string genKernel() const { return "-"; }
-
-	private:
-	};
-
-	template<typename LHS, typename RHS>
-	class ScalarProd : public ScalarOp<LHS, RHS> {
-	public:
-		using LhsType				   = typename internal::traits<LHS>::Scalar;
-		using RhsType				   = typename internal::traits<RHS>::Scalar;
-		using RetType				   = typename std::common_type<LhsType, RhsType>::type;
-		using Packet				   = typename internal::traits<RetType>::Packet;
-		static constexpr int64_t Flags = internal::flags::Binary | internal::flags::Arithmetic |
-										 internal::flags::PacketArithmetic |
-										 internal::flags::ScalarArithmetic;
-
-		ScalarProd() = default;
-
-		ScalarProd(const ScalarProd<LHS, RHS> &other) = default;
-
-		ScalarProd<LHS, RHS> &operator=(const ScalarProd<LHS, RHS> &other) = default;
-
-		LR_NODISCARD("")
-		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {
-			return left * right;
-		}
-
-		template<typename PacketTypeLHS, typename PacketTypeRHS>
-		LR_NODISCARD("")
-		LR_FORCE_INLINE Packet
-		  packetOp(const PacketTypeLHS &left, const PacketTypeRHS &right) const {
-			return left * right;
-		}
-
-		LR_NODISCARD("") LR_FORCE_INLINE std::string genKernel() const { return "*"; }
-
-	private:
-	};
-
-	template<typename LHS, typename RHS>
-	class ScalarDiv : public ScalarOp<LHS, RHS> {
-	public:
-		using LhsType				   = typename internal::traits<LHS>::Scalar;
-		using RhsType				   = typename internal::traits<RHS>::Scalar;
-		using RetType				   = typename std::common_type<LhsType, RhsType>::type;
-		using Packet				   = typename internal::traits<RetType>::Packet;
-		static constexpr int64_t Flags = internal::flags::Binary | internal::flags::Arithmetic |
-										 internal::flags::PacketArithmetic |
-										 internal::flags::ScalarArithmetic;
-
-		ScalarDiv() = default;
-
-		ScalarDiv(const ScalarDiv<LHS, RHS> &other) = default;
-
-		ScalarDiv<LHS, RHS> &operator=(const ScalarDiv<LHS, RHS> &other) = default;
-
-		LR_NODISCARD("")
-		LR_FORCE_INLINE RetType scalarOp(const LhsType &left, const RhsType &right) const {
-			return left / right;
-		}
-
-		template<typename PacketTypeLHS, typename PacketTypeRHS>
-		LR_NODISCARD("")
-		LR_FORCE_INLINE Packet
-		  packetOp(const PacketTypeLHS &left, const PacketTypeRHS &right) const {
-			return left / right;
-		}
-
-		LR_NODISCARD("") LR_FORCE_INLINE std::string genKernel() const { return "/"; }
-
-	private:
-	};
+#undef DEF_SCALAR_FUNCTOR
 } // namespace librapid::functors::binary

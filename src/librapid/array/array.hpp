@@ -73,8 +73,6 @@ namespace librapid {
 		Array copy() const {
 			Array res(Base::extent());
 			memory::memcpy(res.storage(), Base::storage());
-
-			// res.assign(*this);
 			return res;
 		}
 
@@ -92,16 +90,7 @@ namespace librapid {
 		}
 
 		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) {
-			LR_ASSERT(!Base::isScalar(), "Cannot subscript a scalar value");
-
-			int64_t memIndex = this->m_isScalar ? 0 : Base::extent().indexAdjusted(index);
-			Array<Scalar, Device> res;
-			res.m_extent   = Base::extent().partial(1);
-			res.m_isScalar = Base::extent().dims() == 1;
-			res.m_storage  = Base::storage();
-			res.m_storage.offsetMemory(memIndex);
-
-			return res;
+			return const_cast<const Type *>(this)->operator[](index);
 		}
 
 		template<typename... T>
@@ -120,14 +109,7 @@ namespace librapid {
 		template<typename... T>
 		LR_NODISCARD("")
 		auto operator()(T... indices) {
-			LR_ASSERT((this->m_isScalar && sizeof...(T) == 1) ||
-						sizeof...(T) == Base::extent().dims(),
-					  "Array with {0} dimensions requires {0} access indices. Received {1}",
-					  Base::extent().dims(),
-					  sizeof...(indices));
-
-			int64_t index = Base::isScalar() ? 0 : Base::extent().index(indices...);
-			return Base::storage()[index];
+			return const_cast<const Type *>(this)->operator()(indices...);
 		}
 
 		void transpose(const Extent &order = {}) { *this = Base::transposed(order); }
@@ -330,16 +312,40 @@ namespace librapid {
 	using ArrayI64G = Array<int64_t, device::CPU>;
 #endif
 
-#define FORCE_TMP_FUNC(NAME, FUNC)                                                                 \
+#define FORCE_TMP_FUNC_BINOP(NAME, FUNC)                                                           \
 	template<typename T, typename D>                                                               \
 	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, const Array<T, D> &rhs, Array<T, D> &dst) {  \
-		dst.assign(lhs.template FUNC<Array<T, D>, true>(rhs));                                     \
+		dst.assign(lhs.template operator FUNC<Array<T, D>, true>(rhs));                            \
+	}                                                                                              \
+                                                                                                   \
+	template<typename T, typename D>                                                               \
+	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, const T &rhs, Array<T, D> &dst) {            \
+		dst.assign(lhs.template operator FUNC<Array<T, D>, true>(rhs));                            \
+	}                                                                                              \
+                                                                                                   \
+	template<typename T, typename D>                                                               \
+	LR_FORCE_INLINE void NAME(const T &lhs, const Array<T, D> &rhs, Array<T, D> &dst) {            \
+		dst.assign(lhs FUNC rhs);                                                                  \
 	}
 
-	FORCE_TMP_FUNC(add, operator+)
-	FORCE_TMP_FUNC(sub, operator-)
-	FORCE_TMP_FUNC(mul, operator*)
-	FORCE_TMP_FUNC(div, operator/)
+#define FORCE_TMP_FUNC_UNOP(NAME, FUNC)                                                            \
+	template<typename T, typename D>                                                               \
+	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, Array<T, D> &dst) {                          \
+		dst.assign(lhs.template operator FUNC<Array<T, D>, true>());                               \
+	}
+
+	FORCE_TMP_FUNC_BINOP(add, +)
+	FORCE_TMP_FUNC_BINOP(sub, -)
+	FORCE_TMP_FUNC_BINOP(mul, *)
+	FORCE_TMP_FUNC_BINOP(div, /)
+
+	FORCE_TMP_FUNC_BINOP(bitwiseOr, |)
+	FORCE_TMP_FUNC_BINOP(bitwiseAnd, &)
+	FORCE_TMP_FUNC_BINOP(bitwiseXor, ^)
+
+	FORCE_TMP_FUNC_UNOP(negate, -)
+	FORCE_TMP_FUNC_UNOP(bitwiseNot, ~)
+	FORCE_TMP_FUNC_UNOP(logicalNot, !)
 
 	template<typename T, typename D>
 	inline std::string str(const Array<T, D> &val, const StrOpt &options = DEFAULT_STR_OPT) {

@@ -285,7 +285,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		IMPL_BINOP(operator^, BitwiseXor)
 
 		IMPL_UNOP(operator-, UnaryMinus)
-		IMPL_UNOP(operator~, BitwiseNot)
+		IMPL_UNOP(operator~, UnaryInvert)
 		IMPL_UNOP(operator!, UnaryNot)
 
 		auto transposed(const Extent &order_ = {}) const {

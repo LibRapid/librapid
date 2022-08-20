@@ -1,7 +1,8 @@
-#include <librapid/array/helpers/kernelHelper.hpp>
+#include <librapid/array/helpers/kernelFormat.hpp>
 
 namespace librapid::detail {
-	std::string kernelGenerator(const std::string &opKernel, const std::vector<std::string> &headerFiles) {
+	std::string kernelGenerator(const std::string &opKernel,
+								const std::vector<std::string> &headerFiles) {
 #if defined(LIBRAPID_HAS_CUDA)
 		std::string headers;
 		for (const auto &header : headerFiles) {
