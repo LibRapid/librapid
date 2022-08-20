@@ -13,4 +13,7 @@ namespace librapid::detail {
 	LR_INLINE std::string kernelFormat(const T &val) {
 		return fmt::format("(({}) {})", internal::traits<T>::Name, val);
 	}
+
+	std::string kernelGenerator(const std::string &opKernel,
+								const std::vector<std::string> &headerFiles = customHeaders);
 } // namespace librapid::detail

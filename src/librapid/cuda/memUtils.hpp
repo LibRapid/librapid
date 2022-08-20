@@ -9,11 +9,12 @@
 // https://gist.github.com/dblalock/255e76195676daa5cbc57b9b36d1c99a
 
 namespace librapid::memory {
-	static bool streamCreated = false;
-	static cudaStream_t cudaStream;
-	static constexpr int64_t handleBufferSize = LIBRAPID_MAX_ALLOWED_THREADS * LIBRAPID_OMP_VAL;
-	static int64_t handleSize				  = handleBufferSize;
-	static cublasHandle_t cublasHandles[handleBufferSize];
+	static inline bool streamCreated = false;
+	static inline cudaStream_t cudaStream;
+	static inline constexpr int64_t handleBufferSize =
+	  LIBRAPID_MAX_ALLOWED_THREADS * LIBRAPID_OMP_VAL;
+	static inline int64_t handleSize = handleBufferSize;
+	static inline cublasHandle_t cublasHandles[handleBufferSize];
 
 	LR_INLINE void initializeCudaStream() {
 #	ifdef LIBRAPID_HAS_CUDA
@@ -21,6 +22,8 @@ namespace librapid::memory {
 			checkCudaErrors(cudaStreamCreateWithFlags(&cudaStream, cudaStreamNonBlocking));
 
 			handleSize = std::thread::hardware_concurrency();
+			if (handleSize < 1) handleSize = 1; // Minimum of one thread
+
 #		if !defined(LIBRAPID_NO_THREAD_CHECK)
 			if (handleSize > 256) {
 				fmt::print("\n{:=>90}\n", "");
@@ -50,8 +53,8 @@ To IGNORE this error, just define LIBRAPID_NO_THREAD_CHECK above LibRapid includ
 #		endif
 
 			for (int64_t i = 0; i < handleSize; ++i) {
-				cublasCreate_v2(&(cublasHandles[i]));
-				cublasSetStream_v2(cublasHandles[i], cudaStream);
+				checkCudaErrors(cublasCreate_v2(&(cublasHandles[i])));
+				checkCudaErrors(cublasSetStream_v2(cublasHandles[i], cudaStream));
 			}
 
 			streamCreated = true;
@@ -167,7 +170,7 @@ To IGNORE this error, just define LIBRAPID_NO_THREAD_CHECK above LibRapid includ
 	template<typename T, typename d,
 			 typename std::enable_if_t<std::is_same_v<d, device::GPU>, int> = 0>
 	LR_FORCE_INLINE void memset(T *dst, int val, int64_t size) {
-		cudaMemsetAsync((void *) dst, val, sizeof(T) * size, cudaStream);
+		cudaMemsetAsync((void *)dst, val, sizeof(T) * size, cudaStream);
 	}
 } // namespace librapid::memory
 #endif // LIBRAPID_HAS_CUDA

@@ -181,7 +181,8 @@ void applyOp({0} **pointers, int64_t size) {{
 					blocksPerGrid	= 1;
 				} else {
 					threadsPerBlock = 512;
-					blocksPerGrid	= ceil(double(elems) / double(threadsPerBlock));
+					blocksPerGrid	= static_cast<int64_t>(
+						ceil(static_cast<double>(elems) / static_cast<double>(threadsPerBlock)));
 				}
 
 				dim3 grid(blocksPerGrid);
