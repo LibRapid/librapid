@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../internal/config.hpp"
-#include "../array/helpers/kernelHelper.hpp"
 #include "../array/helpers/kernelFormat.hpp"
 #include "../internal/memUtils.hpp"
 #include "../cuda/memUtils.hpp"
