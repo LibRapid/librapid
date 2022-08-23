@@ -12,7 +12,7 @@ namespace librapid::functors::unop {
 		using RetType				   = Scalar;                                                   \
 		using Packet				   = typename internal::traits<Scalar>::Packet;                \
 		static constexpr int64_t Flags = internal::flags::Unary | internal::flags::Arithmetic |    \
-										 internal::flags::PacketArithmetic |                       \
+										                        \
 										 internal::flags::ScalarArithmetic;                        \
                                                                                                    \
 		Unary##NAME_() = default;                                                                  \

@@ -83,6 +83,7 @@
 	}
 
 #define IMPL_UNOP(NAME, TYPE)                                                                        \
+	template<bool forceTemporary = false>                                                            \
 	LR_NODISCARD("")                                                                                 \
 	auto NAME() const {                                                                              \
 		using RetType					   = unop::CWiseUnop<functors::unop::TYPE<Scalar>, Derived>; \
@@ -92,7 +93,8 @@
 		static_assert(!(Required & ~(Flags & Required)),                                             \
 					  "Scalar type is incompatible with Functor");                                   \
                                                                                                      \
-		if constexpr ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval))               \
+		if constexpr (!forceTemporary && /* If a temporary value is required, don't eval */          \
+					  ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval)))             \
 			return RetType(derived()).eval();                                                        \
 		else                                                                                         \
 			return RetType(derived());                                                               \
