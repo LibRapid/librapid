@@ -103,8 +103,8 @@ namespace librapid::functors {
 				int64_t elems = src.extent().sizeAdjusted();
 
 				if constexpr (is_same_v<Scalar, bool>) {
-					elems += sizeof(internal::traits<Scalar>::BaseScalar) * 8;
-					elems /= sizeof(internal::traits<Scalar>::BaseScalar) * 8;
+					elems += sizeof(typename internal::traits<Scalar>::BaseScalar) * 8;
+					elems /= sizeof(typename internal::traits<Scalar>::BaseScalar) * 8;
 				}
 
 				std::vector<BaseScalar *> arrays = {dst.storage().heap()};
