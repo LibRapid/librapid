@@ -102,24 +102,26 @@ namespace librapid {
 	namespace internal {
 		template<typename Derived>
 		struct traits<ArrayBase<Derived, device::CPU>> {
-			static constexpr bool IsScalar	= false;
-			using Valid						= std::true_type;
-			using Scalar					= typename traits<Derived>::Scalar;
-			using BaseScalar				= typename traits<Scalar>::BaseScalar;
-			using Device					= device::CPU;
-			using StorageType				= memory::DenseStorage<Scalar, device::CPU>;
-			static constexpr uint64_t Flags = traits<Derived>::Flags | flags::PythonFlags;
+			static constexpr bool IsScalar	  = false;
+			static constexpr bool IsEvaluated = traits<Derived>::IsEvaluated;
+			using Valid						  = std::true_type;
+			using Scalar					  = typename traits<Derived>::Scalar;
+			using BaseScalar				  = typename traits<Scalar>::BaseScalar;
+			using Device					  = device::CPU;
+			using StorageType				  = memory::DenseStorage<Scalar, device::CPU>;
+			static constexpr uint64_t Flags	  = traits<Derived>::Flags | flags::PythonFlags;
 		};
 
 		template<typename Derived>
 		struct traits<ArrayBase<Derived, device::GPU>> {
-			static constexpr bool IsScalar	= false;
-			using Valid						= std::true_type;
-			using Scalar					= typename traits<Derived>::Scalar;
-			using BaseScalar				= typename traits<Scalar>::BaseScalar;
-			using Device					= device::CPU;
-			using StorageType				= memory::DenseStorage<Scalar, device::GPU>;
-			static constexpr uint64_t Flags = traits<Derived>::Flags | flags::PythonFlags;
+			static constexpr bool IsScalar	  = false;
+			static constexpr bool IsEvaluated = traits<Derived>::IsEvaluated;
+			using Valid						  = std::true_type;
+			using Scalar					  = typename traits<Derived>::Scalar;
+			using BaseScalar				  = typename traits<Scalar>::BaseScalar;
+			using Device					  = device::CPU;
+			using StorageType				  = memory::DenseStorage<Scalar, device::GPU>;
+			static constexpr uint64_t Flags	  = traits<Derived>::Flags | flags::PythonFlags;
 		};
 	} // namespace internal
 
@@ -367,6 +369,11 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 							   std::is_same_v<DeviceOther, device::CPU>)
 				return dot(other.template move<Device>());
 
+			if constexpr (!internal::traits<Derived>::IsEvaluated ||
+						  !internal::traits<OtherDerived>::IsEvaluated) {
+				return eval().dot(other.eval());
+			}
+
 			if (m_extent.dims() == 1 && other.extent().dims() == 1) {
 				// Vector dot product
 				auto strideThis	 = m_extent.strideAdjusted();
@@ -547,6 +554,10 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 	IMPL_BINOP_SCALAR_EXTERNAL(operator-, ScalarDiff)
 	IMPL_BINOP_SCALAR_EXTERNAL(operator*, ScalarProd)
 	IMPL_BINOP_SCALAR_EXTERNAL(operator/, ScalarDiv)
+
+	IMPL_BINOP_SCALAR_EXTERNAL(operator|, BitwiseOr)
+	IMPL_BINOP_SCALAR_EXTERNAL(operator&, BitwiseAnd)
+	IMPL_BINOP_SCALAR_EXTERNAL(operator^, BitwiseXor)
 } // namespace librapid
 
 #undef IMPL_BINOP

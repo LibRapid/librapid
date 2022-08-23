@@ -170,5 +170,14 @@ module.def("add", [](const librapid::ArrayF64 & lhs, const librapid::ArrayF64 & 
 module.def("sub", [](const librapid::ArrayF64 & lhs, const librapid::ArrayF64 & rhs, librapid::ArrayF64 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("mul", [](const librapid::ArrayF64 & lhs, const librapid::ArrayF64 & rhs, librapid::ArrayF64 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("div", [](const librapid::ArrayF64 & lhs, const librapid::ArrayF64 & rhs, librapid::ArrayF64 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayF64 & lhs, typename librapid::internal::traits<librapid::ArrayF64>::Scalar rhs, librapid::ArrayF64 & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayF64 & lhs, typename librapid::internal::traits<librapid::ArrayF64>::Scalar rhs, librapid::ArrayF64 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayF64 & lhs, typename librapid::internal::traits<librapid::ArrayF64>::Scalar rhs, librapid::ArrayF64 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayF64 & lhs, typename librapid::internal::traits<librapid::ArrayF64>::Scalar rhs, librapid::ArrayF64 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](typename librapid::internal::traits<librapid::ArrayF64>::Scalar lhs, const librapid::ArrayF64 & rhs, librapid::ArrayF64 & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](typename librapid::internal::traits<librapid::ArrayF64>::Scalar lhs, const librapid::ArrayF64 & rhs, librapid::ArrayF64 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](typename librapid::internal::traits<librapid::ArrayF64>::Scalar lhs, const librapid::ArrayF64 & rhs, librapid::ArrayF64 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](typename librapid::internal::traits<librapid::ArrayF64>::Scalar lhs, const librapid::ArrayF64 & rhs, librapid::ArrayF64 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("negate", [](const librapid::ArrayF64 & lhs, librapid::ArrayF64 & dst) { librapid::negate(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
 
 }

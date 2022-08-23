@@ -71,6 +71,7 @@ namespace librapid::internal {
 	template<typename T>
 	struct traits {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = T;
 		using BaseScalar					 = T;
@@ -110,6 +111,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<char> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = char;
 		using BaseScalar					 = char;
@@ -151,6 +153,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<bool> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = bool;
 		using BaseScalar					 = uint32_t;
@@ -189,6 +192,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<int8_t> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = int8_t;
 		using BaseScalar					 = int8_t;
@@ -228,6 +232,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<uint8_t> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = uint8_t;
 		using BaseScalar					 = uint8_t;
@@ -267,6 +272,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<int16_t> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = int16_t;
 		using BaseScalar					 = int16_t;
@@ -306,6 +312,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<uint16_t> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = uint16_t;
 		using BaseScalar					 = uint16_t;
@@ -345,6 +352,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<int32_t> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = int32_t;
 		using BaseScalar					 = int32_t;
@@ -384,6 +392,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<uint32_t> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = uint32_t;
 		using BaseScalar					 = uint32_t;
@@ -423,6 +432,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<int64_t> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = int64_t;
 		using BaseScalar					 = int64_t;
@@ -462,6 +472,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<uint64_t> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = uint64_t;
 		using BaseScalar					 = uint64_t;
@@ -502,13 +513,13 @@ namespace librapid::internal {
 	//------- 32bit Floating Point --------------------------------------------
 	template<>
 	struct traits<float> {
-		static constexpr bool IsScalar = true;
-		using Valid					   = std::true_type;
-		using Scalar				   = float;
-		using BaseScalar			   = float;
-		using StorageType			   = memory::DenseStorage<float>;
-		using Packet				   = LR_VC_TYPE(BaseScalar);
-		;
+		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
+		using Valid							 = std::true_type;
+		using Scalar						 = float;
+		using BaseScalar					 = float;
+		using StorageType					 = memory::DenseStorage<float>;
+		using Packet						 = LR_VC_TYPE(BaseScalar);
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "float";
@@ -541,13 +552,13 @@ namespace librapid::internal {
 	//------- 64bit Floating Point --------------------------------------------
 	template<>
 	struct traits<double> {
-		static constexpr bool IsScalar = true;
-		using Valid					   = std::true_type;
-		using Scalar				   = double;
-		using BaseScalar			   = double;
-		using StorageType			   = memory::DenseStorage<double>;
-		using Packet				   = LR_VC_TYPE(BaseScalar);
-		;
+		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
+		using Valid							 = std::true_type;
+		using Scalar						 = double;
+		using BaseScalar					 = double;
+		using StorageType					 = memory::DenseStorage<double>;
+		using Packet						 = LR_VC_TYPE(BaseScalar);
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "double";
@@ -581,6 +592,7 @@ namespace librapid::internal {
 	template<typename T>
 	struct traits<Complex<T>> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = Complex<T>;
 		using BaseScalar					 = Complex<T>;
@@ -632,6 +644,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<mpz> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = mpz;
 		using BaseScalar					 = mpz;
@@ -644,9 +657,9 @@ namespace librapid::internal {
 										  flags::PacketBitwise | flags::ScalarBitwise |
 										  flags::PacketLogical | flags::ScalarLogical;
 
-#if defined(LIBRAPID_HAS_CUDA)
+#	if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
-#endif
+#	endif
 
 		static constexpr uint64_t Size	= sizeof(mpz);
 		static constexpr bool CanAlign	= false;
@@ -679,6 +692,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<mpq> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = mpq;
 		using BaseScalar					 = mpq;
@@ -690,9 +704,9 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
-#if defined(LIBRAPID_HAS_CUDA)
+#	if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
-#endif
+#	endif
 
 		static constexpr uint64_t Size	= sizeof(mpq);
 		static constexpr bool CanAlign	= false;
@@ -723,6 +737,7 @@ namespace librapid::internal {
 	template<>
 	struct traits<mpfr> {
 		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = mpfr;
 		using BaseScalar					 = mpfr;
@@ -734,9 +749,9 @@ namespace librapid::internal {
 		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
 										  flags::PacketLogical | flags::ScalarLogical;
 
-#if defined(LIBRAPID_HAS_CUDA)
+#	if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
-#endif
+#	endif
 
 		static constexpr uint64_t Size	= sizeof(mpfr);
 		static constexpr bool CanAlign	= false;
