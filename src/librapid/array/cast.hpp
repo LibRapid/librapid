@@ -10,6 +10,7 @@ namespace librapid {
 		template<typename DST, typename OtherDerived>
 		struct traits<unary::Cast<DST, OtherDerived>> {
 			static constexpr bool IsScalar	= false;
+			static constexpr bool IsEvaluated = true;
 			using Valid						= std::true_type;
 			using Type						= unary::Cast<DST, OtherDerived>;
 			using Scalar					= DST;
@@ -22,6 +23,7 @@ namespace librapid {
 		template<typename OtherDerived>
 		struct traits<unary::Cast<bool, OtherDerived>> {
 			static constexpr bool IsScalar = false;
+			static constexpr bool IsEvaluated = true;
 			using Valid					   = std::true_type;
 			using Type					   = unary::Cast<bool, OtherDerived>;
 			using Scalar				   = bool;
