@@ -332,7 +332,7 @@ namespace librapid {
 #define FORCE_TMP_FUNC_UNOP(NAME, FUNC)                                                            \
 	template<typename T, typename D>                                                               \
 	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, Array<T, D> &dst) {                          \
-		dst.assign(lhs.template FUNC<Array<T, D>, true>());                                        \
+		dst.assign(lhs.template FUNC<true>());                                                     \
 	}
 
 	FORCE_TMP_FUNC_BINOP(add, +)

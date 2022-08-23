@@ -45,19 +45,19 @@ namespace librapid::internal {
 		constexpr uint64_t Logical	  = 1ll << 12; // Logical functions
 		constexpr uint64_t Matrix	  = 1ll << 13; // Matrix operation
 
+		constexpr uint64_t Unary  = 1ll << 14; // Operation takes one argument
+		constexpr uint64_t Binary = 1ll << 15; // Operation takes two arguments
+
 		// Extract only operation information
-		constexpr uint64_t OperationMask = 0b1111111111111111100000000000000;
+		constexpr uint64_t OperationMask = 0b1111111111111110000000000000000;
 
-		constexpr uint64_t PacketBitwise	= 1ll << 14; // Packet needs bitwise
-		constexpr uint64_t PacketArithmetic = 1ll << 15; // Packet needs arithmetic
-		constexpr uint64_t PacketLogical	= 1ll << 16; // Packet needs logical
+		constexpr uint64_t PacketBitwise	= 1ll << 16; // Packet needs bitwise
+		constexpr uint64_t PacketArithmetic = 1ll << 17; // Packet needs arithmetic
+		constexpr uint64_t PacketLogical	= 1ll << 18; // Packet needs logical
 
-		constexpr uint64_t ScalarBitwise	= 1ll << 17; // Scalar needs bitwise
-		constexpr uint64_t ScalarArithmetic = 1ll << 18; // Scalar needs arithmetic
-		constexpr uint64_t ScalarLogical	= 1ll << 19; // Scalar needs logical
-
-		constexpr uint64_t Unary  = 1ll << 32; // Operation takes one argument
-		constexpr uint64_t Binary = 1ll << 33; // Operation takes two arguments
+		constexpr uint64_t ScalarBitwise	= 1ll << 19; // Scalar needs bitwise
+		constexpr uint64_t ScalarArithmetic = 1ll << 20; // Scalar needs arithmetic
+		constexpr uint64_t ScalarLogical	= 1ll << 21; // Scalar needs logical
 
 		constexpr uint64_t NoPacketOp = 1ll << 34; // Supports packet operations
 
