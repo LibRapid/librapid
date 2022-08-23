@@ -211,7 +211,7 @@ for t in arrayTypes:
 		if not t.startswith("ArrayF"):
 			forceTmpFunc += [Function("bitwiseNot", [Argument(constRef, "lhs"), Argument(ref, "dst")], "librapid::bitwiseNot(lhs, dst);")]
 
-	if not t.startswith("ArrayF"):
+	if not t.startswith("ArrayF") and not t.startswith("ArrayCF"):
 		forceTmpFunc += [
 			Function("bitwiseOr", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::bitwiseOr(lhs, rhs, dst);"),
 			Function("bitwiseAnd", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::bitwiseAnd(lhs, rhs, dst);"),
