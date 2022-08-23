@@ -11,14 +11,15 @@ namespace librapid {
 	namespace internal {
 		template<typename Scalar_, typename Device_>
 		struct traits<Array<Scalar_, Device_>> {
-			static constexpr bool IsScalar = false;
-			using Valid					   = std::true_type;
-			using Scalar				   = Scalar_;
-			using BaseScalar			   = typename traits<Scalar>::BaseScalar;
-			using Device				   = Device_;
-			using Packet				   = typename traits<Scalar>::Packet;
-			using StorageType			   = memory::DenseStorage<Scalar, Device>;
-			static constexpr int64_t Flags = flags::Evaluated | flags::PythonFlags;
+			static constexpr bool IsScalar	  = false;
+			static constexpr bool IsEvaluated = true;
+			using Valid						  = std::true_type;
+			using Scalar					  = Scalar_;
+			using BaseScalar				  = typename traits<Scalar>::BaseScalar;
+			using Device					  = Device_;
+			using Packet					  = typename traits<Scalar>::Packet;
+			using StorageType				  = memory::DenseStorage<Scalar, Device>;
+			static constexpr int64_t Flags	  = flags::Evaluated | flags::PythonFlags;
 		};
 	} // namespace internal
 
@@ -331,7 +332,7 @@ namespace librapid {
 #define FORCE_TMP_FUNC_UNOP(NAME, FUNC)                                                            \
 	template<typename T, typename D>                                                               \
 	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, Array<T, D> &dst) {                          \
-		dst.assign(lhs.template operator FUNC<Array<T, D>, true>());                               \
+		dst.assign(lhs.template FUNC<Array<T, D>, true>());                                        \
 	}
 
 	FORCE_TMP_FUNC_BINOP(add, +)
@@ -343,9 +344,9 @@ namespace librapid {
 	FORCE_TMP_FUNC_BINOP(bitwiseAnd, &)
 	FORCE_TMP_FUNC_BINOP(bitwiseXor, ^)
 
-	FORCE_TMP_FUNC_UNOP(negate, -)
-	FORCE_TMP_FUNC_UNOP(bitwiseNot, ~)
-	FORCE_TMP_FUNC_UNOP(logicalNot, !)
+	FORCE_TMP_FUNC_UNOP(negate, operator-)
+	FORCE_TMP_FUNC_UNOP(bitwiseNot, operator~)
+	FORCE_TMP_FUNC_UNOP(logicalNot, operator!)
 
 	template<typename T, typename D>
 	inline std::string str(const Array<T, D> &val, const StrOpt &options = DEFAULT_STR_OPT) {

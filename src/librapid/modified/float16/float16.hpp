@@ -1000,6 +1000,7 @@ namespace librapid {
 		template<>
 		struct traits<extended::float16_t> {
 			static constexpr bool IsScalar		 = true;
+			static constexpr bool IsEvaluated	 = true;
 			using Valid							 = std::true_type;
 			using Scalar						 = extended::float16_t;
 			using BaseScalar					 = extended::float16_t;

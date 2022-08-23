@@ -9,6 +9,7 @@ namespace librapid {
 		template<typename Unop, typename TYPE>
 		struct traits<unop::CWiseUnop<Unop, TYPE>> {
 			static constexpr bool IsScalar	= false;
+			static constexpr bool IsEvaluated	 = false;
 			using Valid						= std::true_type;
 			using Type						= unop::CWiseUnop<Unop, TYPE>;
 			using Scalar					= typename Unop::RetType;

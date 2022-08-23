@@ -175,6 +175,26 @@ module.def("add", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rh
 module.def("sub", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("mul", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("div", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayCG & lhs, typename librapid::internal::traits<librapid::ArrayCG>::Scalar rhs, librapid::ArrayCG & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayCG & lhs, typename librapid::internal::traits<librapid::ArrayCG>::Scalar rhs, librapid::ArrayCG & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayCG & lhs, typename librapid::internal::traits<librapid::ArrayCG>::Scalar rhs, librapid::ArrayCG & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayCG & lhs, typename librapid::internal::traits<librapid::ArrayCG>::Scalar rhs, librapid::ArrayCG & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](typename librapid::internal::traits<librapid::ArrayCG>::Scalar lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](typename librapid::internal::traits<librapid::ArrayCG>::Scalar lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](typename librapid::internal::traits<librapid::ArrayCG>::Scalar lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](typename librapid::internal::traits<librapid::ArrayCG>::Scalar lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("negate", [](const librapid::ArrayCG & lhs, librapid::ArrayCG & dst) { librapid::negate(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
+module.def("bitwiseNot", [](const librapid::ArrayCG & lhs, librapid::ArrayCG & dst) { librapid::bitwiseNot(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
+module.def("bitwiseOr", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::bitwiseOr(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseAnd", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::bitwiseAnd(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseXor", [](const librapid::ArrayCG & lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::bitwiseXor(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseOr", [](const librapid::ArrayCG & lhs, typename librapid::internal::traits<librapid::ArrayCG>::Scalar rhs, librapid::ArrayCG & dst) { librapid::bitwiseOr(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseAnd", [](const librapid::ArrayCG & lhs, typename librapid::internal::traits<librapid::ArrayCG>::Scalar rhs, librapid::ArrayCG & dst) { librapid::bitwiseAnd(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseXor", [](const librapid::ArrayCG & lhs, typename librapid::internal::traits<librapid::ArrayCG>::Scalar rhs, librapid::ArrayCG & dst) { librapid::bitwiseXor(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseOr", [](typename librapid::internal::traits<librapid::ArrayCG>::Scalar lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::bitwiseOr(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseAnd", [](typename librapid::internal::traits<librapid::ArrayCG>::Scalar lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::bitwiseAnd(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseXor", [](typename librapid::internal::traits<librapid::ArrayCG>::Scalar lhs, const librapid::ArrayCG & rhs, librapid::ArrayCG & dst) { librapid::bitwiseXor(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("logicalNot", [](const librapid::ArrayCG & lhs, librapid::ArrayCG & dst) { librapid::logicalNot(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
 #endif
 
 }
