@@ -139,7 +139,7 @@ for t in arrayTypes:
 		fBitwise = []
 
 	fUnary = []
-	if t not in ["ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G", "ArrayMPFR", "ArrayMPQ", "ArrayCF32", "ArrayCF64", "ArrayCMPFR"]:
+	if t not in ["ArrayB", "ArrayBG", "ArrayF16", "ArrayF16G", "ArrayF32", "ArrayF32G", "ArrayF64", "ArrayF64G", "ArrayMPFR", "ArrayMPQ", "ArrayCF32", "ArrayCF64", "ArrayCMPFR"]:
 		fUnary += [Function("__invert__", [Argument(constRef, "this_")], "return ~this_;")]
 
 	if not t.startswith("ArrayB"):
@@ -205,8 +205,11 @@ for t in arrayTypes:
 			Function("mul", [Argument(scalar, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::mul(lhs, rhs, dst);"),
 			Function("div", [Argument(scalar, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::div(lhs, rhs, dst);"),
 
-			Function("negate", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::negate(lhs, rhs, dst);"),
+			Function("negate", [Argument(constRef, "lhs"), Argument(ref, "dst")], "librapid::negate(lhs, dst);"),
 		]
+
+		if not t.startswith("ArrayF"):
+			forceTmpFunc += [Function("bitwiseNot", [Argument(constRef, "lhs"), Argument(ref, "dst")], "librapid::bitwiseNot(lhs, dst);")]
 
 	if not t.startswith("ArrayF"):
 		forceTmpFunc += [
@@ -214,8 +217,15 @@ for t in arrayTypes:
 			Function("bitwiseAnd", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::bitwiseAnd(lhs, rhs, dst);"),
 			Function("bitwiseXor", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::bitwiseXor(lhs, rhs, dst);"),
 
-			Function("bitwiseNot", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::bitwiseNot(lhs, rhs, dst);"),
-			Function("logicalNot", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::logicalNot(lhs, rhs, dst);"),
+			Function("bitwiseOr", [Argument(constRef, "lhs"), Argument(scalar, "rhs"), Argument(ref, "dst")], "librapid::bitwiseOr(lhs, rhs, dst);"),
+			Function("bitwiseAnd", [Argument(constRef, "lhs"), Argument(scalar, "rhs"), Argument(ref, "dst")], "librapid::bitwiseAnd(lhs, rhs, dst);"),
+			Function("bitwiseXor", [Argument(constRef, "lhs"), Argument(scalar, "rhs"), Argument(ref, "dst")], "librapid::bitwiseXor(lhs, rhs, dst);"),
+
+			Function("bitwiseOr", [Argument(scalar, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::bitwiseOr(lhs, rhs, dst);"),
+			Function("bitwiseAnd", [Argument(scalar, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::bitwiseAnd(lhs, rhs, dst);"),
+			Function("bitwiseXor", [Argument(scalar, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::bitwiseXor(lhs, rhs, dst);"),
+			
+			Function("logicalNot", [Argument(constRef, "lhs"), Argument(ref, "dst")], "librapid::logicalNot(lhs, dst);"),
 		]
 
 	moduleFunctions = forceTmpFunc

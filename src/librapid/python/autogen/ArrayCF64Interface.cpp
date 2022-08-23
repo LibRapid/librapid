@@ -170,5 +170,25 @@ module.def("add", [](const librapid::ArrayCF64 & lhs, const librapid::ArrayCF64 
 module.def("sub", [](const librapid::ArrayCF64 & lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("mul", [](const librapid::ArrayCF64 & lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("div", [](const librapid::ArrayCF64 & lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](const librapid::ArrayCF64 & lhs, typename librapid::internal::traits<librapid::ArrayCF64>::Scalar rhs, librapid::ArrayCF64 & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](const librapid::ArrayCF64 & lhs, typename librapid::internal::traits<librapid::ArrayCF64>::Scalar rhs, librapid::ArrayCF64 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](const librapid::ArrayCF64 & lhs, typename librapid::internal::traits<librapid::ArrayCF64>::Scalar rhs, librapid::ArrayCF64 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](const librapid::ArrayCF64 & lhs, typename librapid::internal::traits<librapid::ArrayCF64>::Scalar rhs, librapid::ArrayCF64 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("add", [](typename librapid::internal::traits<librapid::ArrayCF64>::Scalar lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::add(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("sub", [](typename librapid::internal::traits<librapid::ArrayCF64>::Scalar lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::sub(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("mul", [](typename librapid::internal::traits<librapid::ArrayCF64>::Scalar lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("div", [](typename librapid::internal::traits<librapid::ArrayCF64>::Scalar lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("negate", [](const librapid::ArrayCF64 & lhs, librapid::ArrayCF64 & dst) { librapid::negate(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
+module.def("bitwiseNot", [](const librapid::ArrayCF64 & lhs, librapid::ArrayCF64 & dst) { librapid::bitwiseNot(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
+module.def("bitwiseOr", [](const librapid::ArrayCF64 & lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::bitwiseOr(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseAnd", [](const librapid::ArrayCF64 & lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::bitwiseAnd(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseXor", [](const librapid::ArrayCF64 & lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::bitwiseXor(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseOr", [](const librapid::ArrayCF64 & lhs, typename librapid::internal::traits<librapid::ArrayCF64>::Scalar rhs, librapid::ArrayCF64 & dst) { librapid::bitwiseOr(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseAnd", [](const librapid::ArrayCF64 & lhs, typename librapid::internal::traits<librapid::ArrayCF64>::Scalar rhs, librapid::ArrayCF64 & dst) { librapid::bitwiseAnd(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseXor", [](const librapid::ArrayCF64 & lhs, typename librapid::internal::traits<librapid::ArrayCF64>::Scalar rhs, librapid::ArrayCF64 & dst) { librapid::bitwiseXor(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseOr", [](typename librapid::internal::traits<librapid::ArrayCF64>::Scalar lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::bitwiseOr(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseAnd", [](typename librapid::internal::traits<librapid::ArrayCF64>::Scalar lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::bitwiseAnd(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("bitwiseXor", [](typename librapid::internal::traits<librapid::ArrayCF64>::Scalar lhs, const librapid::ArrayCF64 & rhs, librapid::ArrayCF64 & dst) { librapid::bitwiseXor(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
+module.def("logicalNot", [](const librapid::ArrayCF64 & lhs, librapid::ArrayCF64 & dst) { librapid::logicalNot(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
 
 }
