@@ -119,7 +119,8 @@ namespace librapid {
 			}
 
 			LR_NODISCARD("") T get() const {
-				if constexpr (std::is_same_v<d, device::CPU>) return *m_value;
+				if constexpr (std::is_same_v<d, device::CPU>)
+					return *m_value;
 				else {
 					T res;
 					memcpy<T, device::CPU, T, d>(&res, m_value, 1);
