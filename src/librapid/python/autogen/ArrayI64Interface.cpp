@@ -125,7 +125,6 @@ py::class_<librapid::ArrayI64>(module, "ArrayI64")
 	#if defined(LIBRAPID_HAS_CUDA)
 	.def("move_GPU", [](const librapid::ArrayI64 & this_) { return this_.move<librapid::device::GPU>(); })
 	#endif // LIBRAPID_HAS_CUDA
-	.def("cast_ArrayBG", [](const librapid::ArrayI64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayBG>::Scalar>(); })
 	.def("cast_ArrayCG", [](const librapid::ArrayI64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayCG>::Scalar>(); })
 	.def("cast_ArrayF16G", [](const librapid::ArrayI64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayF16G>::Scalar>(); })
 	.def("cast_ArrayF32G", [](const librapid::ArrayI64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayF32G>::Scalar>(); })
@@ -133,7 +132,6 @@ py::class_<librapid::ArrayI64>(module, "ArrayI64")
 	.def("cast_ArrayI16G", [](const librapid::ArrayI64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayI16G>::Scalar>(); })
 	.def("cast_ArrayI32G", [](const librapid::ArrayI64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayI32G>::Scalar>(); })
 	.def("cast_ArrayI64G", [](const librapid::ArrayI64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayI64G>::Scalar>(); })
-	.def("cast_ArrayB", [](const librapid::ArrayI64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayB>::Scalar>(); })
 	.def("cast_ArrayC", [](const librapid::ArrayI64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayC>::Scalar>(); })
 	.def("cast_ArrayF16", [](const librapid::ArrayI64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayF16>::Scalar>(); })
 	.def("cast_ArrayF32", [](const librapid::ArrayI64 & this_) { return this_.cast<typename librapid::internal::traits<librapid::ArrayF32>::Scalar>(); })
@@ -183,7 +181,6 @@ module.def("sub", [](typename librapid::internal::traits<librapid::ArrayI64>::Sc
 module.def("mul", [](typename librapid::internal::traits<librapid::ArrayI64>::Scalar lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("div", [](typename librapid::internal::traits<librapid::ArrayI64>::Scalar lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("negate", [](const librapid::ArrayI64 & lhs, librapid::ArrayI64 & dst) { librapid::negate(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
-module.def("bitwiseNot", [](const librapid::ArrayI64 & lhs, librapid::ArrayI64 & dst) { librapid::bitwiseNot(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
 module.def("bitwiseOr", [](const librapid::ArrayI64 & lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::bitwiseOr(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("bitwiseAnd", [](const librapid::ArrayI64 & lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::bitwiseAnd(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("bitwiseXor", [](const librapid::ArrayI64 & lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::bitwiseXor(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
@@ -193,6 +190,6 @@ module.def("bitwiseXor", [](const librapid::ArrayI64 & lhs, typename librapid::i
 module.def("bitwiseOr", [](typename librapid::internal::traits<librapid::ArrayI64>::Scalar lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::bitwiseOr(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("bitwiseAnd", [](typename librapid::internal::traits<librapid::ArrayI64>::Scalar lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::bitwiseAnd(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("bitwiseXor", [](typename librapid::internal::traits<librapid::ArrayI64>::Scalar lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::bitwiseXor(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
-module.def("logicalNot", [](const librapid::ArrayI64 & lhs, librapid::ArrayI64 & dst) { librapid::logicalNot(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
+module.def("bitwiseNot", [](const librapid::ArrayI64 & lhs, librapid::ArrayI64 & dst) { librapid::bitwiseNot(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
 
 }

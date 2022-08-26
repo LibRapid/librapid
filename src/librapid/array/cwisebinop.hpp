@@ -123,11 +123,11 @@ namespace librapid {
 
 			LR_FORCE_INLINE Packet packet(int64_t index) const {
 				if constexpr (LhsIsScalar && RhsIsScalar)
-					return m_operation.packetOp(m_lhs, m_rhs);
+					return m_operation.packetOp(Packet(m_lhs), Packet(m_rhs));
 				else if constexpr (LhsIsScalar && !RhsIsScalar)
-					return m_operation.packetOp(m_lhs, m_rhs.packet(index));
+					return m_operation.packetOp(Packet(m_lhs), m_rhs.packet(index));
 				else if constexpr (!LhsIsScalar && RhsIsScalar)
-					return m_operation.packetOp(m_lhs.packet(index), m_rhs);
+					return m_operation.packetOp(m_lhs.packet(index), Packet(m_rhs));
 				else
 					return m_operation.packetOp(m_lhs.packet(index), m_rhs.packet(index));
 			}
