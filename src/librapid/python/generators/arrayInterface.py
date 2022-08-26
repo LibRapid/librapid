@@ -18,7 +18,7 @@ except:
 	pass
 
 arrayTypes = [
-	"ArrayBG",
+	# "ArrayBG",
 	"ArrayCG",
 	"ArrayF16G",
 	"ArrayF32G",
@@ -27,7 +27,7 @@ arrayTypes = [
 	"ArrayI32G",
 	"ArrayI64G",
 
-	"ArrayB",
+	# "ArrayB",
 	"ArrayC",
 	"ArrayF16",
 	"ArrayF32",
@@ -208,10 +208,7 @@ for t in arrayTypes:
 			Function("negate", [Argument(constRef, "lhs"), Argument(ref, "dst")], "librapid::negate(lhs, dst);"),
 		]
 
-		if not t.startswith("ArrayF"):
-			forceTmpFunc += [Function("bitwiseNot", [Argument(constRef, "lhs"), Argument(ref, "dst")], "librapid::bitwiseNot(lhs, dst);")]
-
-	if not t.startswith("ArrayF") and not t.startswith("ArrayCF"):
+	if not any([t.startswith(prefix) for prefix in ["ArrayF", "ArrayCF", "ArrayMP", "ArrayCMP"]]):
 		forceTmpFunc += [
 			Function("bitwiseOr", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::bitwiseOr(lhs, rhs, dst);"),
 			Function("bitwiseAnd", [Argument(constRef, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::bitwiseAnd(lhs, rhs, dst);"),
@@ -225,7 +222,9 @@ for t in arrayTypes:
 			Function("bitwiseAnd", [Argument(scalar, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::bitwiseAnd(lhs, rhs, dst);"),
 			Function("bitwiseXor", [Argument(scalar, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::bitwiseXor(lhs, rhs, dst);"),
 			
-			Function("logicalNot", [Argument(constRef, "lhs"), Argument(ref, "dst")], "librapid::logicalNot(lhs, dst);"),
+			Function("bitwiseNot", [Argument(constRef, "lhs"), Argument(ref, "dst")], "librapid::bitwiseNot(lhs, dst);"),
+
+			# Function("logicalNot", [Argument(constRef, "lhs"), Argument(ref, "dst")], "librapid::logicalNot(lhs, dst);"),
 		]
 
 	moduleFunctions = forceTmpFunc
