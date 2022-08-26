@@ -82,22 +82,26 @@
 			return RetType(other, arr.derived());                                                  \
 	}
 
-#define IMPL_UNOP(NAME, TYPE)                                                                        \
-	template<bool forceTemporary = false>                                                            \
-	LR_NODISCARD("")                                                                                 \
-	auto NAME() const {                                                                              \
-		using RetType					   = unop::CWiseUnop<functors::unop::TYPE<Scalar>, Derived>; \
-		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                        \
-		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;        \
-                                                                                                     \
-		static_assert(!(Required & ~(Flags & Required)),                                             \
-					  "Scalar type is incompatible with Functor");                                   \
-                                                                                                     \
-		if constexpr (!forceTemporary && /* If a temporary value is required, don't eval */          \
-					  ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval)))             \
-			return RetType(derived()).eval();                                                        \
-		else                                                                                         \
-			return RetType(derived());                                                               \
+#define IMPL_UNOP(NAME, TYPE, OVERRIDE_BOOL)                                                       \
+	template<bool forceTemporary = false>                                                          \
+	LR_NODISCARD("")                                                                               \
+	auto NAME() const {                                                                            \
+		if constexpr (std::is_same_v<Scalar, bool> && OVERRIDE_BOOL) {                             \
+			return operator~();                                                                    \
+		} else {                                                                                   \
+			using RetType = unop::CWiseUnop<functors::unop::TYPE<Scalar>, Derived>;                \
+			static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                  \
+			static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;  \
+                                                                                                   \
+			static_assert(!(Required & ~(Flags & Required)),                                       \
+						  "Scalar type is incompatible with Functor");                             \
+                                                                                                   \
+			if constexpr (!forceTemporary && /* If a temporary value is required, don't eval */    \
+						  ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval)))       \
+				return RetType(derived()).eval();                                                  \
+			else                                                                                   \
+				return RetType(derived());                                                         \
+		}                                                                                          \
 	}
 
 namespace librapid {
@@ -279,6 +283,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		IMPL_BINOP(operator*, ScalarProd)
 		IMPL_BINOP(operator/, ScalarDiv)
 
+		// Allow bool as operand
 		IMPL_BINOP_SCALAR(operator+, ScalarSum)
 		IMPL_BINOP_SCALAR(operator-, ScalarDiff)
 		IMPL_BINOP_SCALAR(operator*, ScalarProd)
@@ -288,9 +293,14 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		IMPL_BINOP(operator&, BitwiseAnd)
 		IMPL_BINOP(operator^, BitwiseXor)
 
-		IMPL_UNOP(operator-, UnaryMinus)
-		IMPL_UNOP(operator~, UnaryInvert)
-		IMPL_UNOP(operator!, UnaryNot)
+		// Do not allow bool as operator (Can be done with other operations)
+		IMPL_BINOP_SCALAR(operator|, BitwiseOr)
+		IMPL_BINOP_SCALAR(operator&, BitwiseAnd)
+		IMPL_BINOP_SCALAR(operator^, BitwiseXor)
+
+		IMPL_UNOP(operator-, UnaryMinus, true)
+		IMPL_UNOP(operator~, UnaryInvert, false)
+		IMPL_UNOP(operator!, UnaryNot, true)
 
 		auto transposed(const Extent &order_ = {}) const {
 			using RetType = unop::CWiseUnop<functors::matrix::Transpose<Derived>, Derived>;
