@@ -128,6 +128,12 @@ namespace librapid {
 
 		return res;
 	}
+
+	LR_INLINE void timeVerbose(const LAMBDA &op, int64_t samples = -1, int64_t iters = -1,
+							   double time = -1, Args... vals) {
+		Bench b = timeFunction(op, samples, iters, time, vals...);
+		fmt::print("{}\n", formatBench(b));
+	}
 } // namespace librapid
 
 // Provide {fmt} printing capabilities
