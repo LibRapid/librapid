@@ -119,6 +119,8 @@ if (${SKBUILD})
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/../autogen/Vec4dInterface.cpp"
 
             ${LIBRAPID_SOURCES}
+
+            ${LIBRAPID_BACKTRACE_SOURCES}
     )
 
     # add_compile_definitions(LIBRAPID_PYTHON)
@@ -131,7 +133,7 @@ if (${SKBUILD})
             /W0>)
 else ()
     set(module_name "librapid")
-    add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
+    add_library(${module_name} STATIC ${LIBRAPID_SOURCES} ${LIBRAPID_BACKTRACE_SOURCES})
 endif ()
 
 # Extract system information
