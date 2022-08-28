@@ -129,6 +129,7 @@ namespace librapid {
 		return res;
 	}
 
+	template<typename LAMBDA, typename... Args>
 	LR_INLINE void timeVerbose(const LAMBDA &op, int64_t samples = -1, int64_t iters = -1,
 							   double time = -1, Args... vals) {
 		Bench b = timeFunction(op, samples, iters, time, vals...);
