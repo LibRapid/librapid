@@ -25,11 +25,43 @@ namespace librapid {
 		constexpr int64_t nanosecond  = (int64_t)1;
 	} // namespace time
 
+	// 		namespace {
+	// 			const long long g_Frequency = []() -> long long {
+	// 				LARGE_INTEGER frequency;
+	// 				QueryPerformanceFrequency(&frequency);
+	// 				return frequency.QuadPart;
+	// 			}();
+	// 		}
+
+	// 		HighResClock::time_point HighResClock::now() {
+	// 			LARGE_INTEGER count;
+	// 			QueryPerformanceCounter(&count);
+	// 			return time_point(duration(count.QuadPart * static_cast<rep>(period::den) /
+	// g_Frequency));
+	// 		}
+
 	template<int64_t scale = time::second>
 	LR_NODISCARD("")
 	LR_FORCE_INLINE double now() {
 		using namespace std::chrono;
+#if defined(LIBRAPID_OS_WINDOWS)
+		using rep	   = int64_t;
+		using period   = std::nano;
+		using duration = std::chrono::duration<rep, period>;
+
+		static const int64_t clockFreq = []() -> int64_t {
+			LARGE_INTEGER frequency;
+			QueryPerformanceFrequency(&frequency);
+			return frequency.QuadPart;
+		}();
+
+		LARGE_INTEGER count;
+		QueryPerformanceCounter(&count);
+		return duration(count.QuadPart * static_cast<int64_t>(std::nano::den) / clockFreq).count() /
+			   (double)scale;
+#else
 		return (double)high_resolution_clock::now().time_since_epoch().count() / (double)scale;
+#endif
 	}
 
 	static double sleepOffset = 0;
