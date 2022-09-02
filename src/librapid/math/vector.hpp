@@ -1018,17 +1018,20 @@ namespace librapid {
 	using Vec2i	   = Vec<int64_t, 2>;
 	using Vec2f	   = Vec<float, 2>;
 	using Vec2d	   = Vec<double, 2>;
-	using Vec2mpfr = Vec<mpfr, 2>;
 
 	using Vec3i	   = Vec<int64_t, 3>;
 	using Vec3f	   = Vec<float, 3>;
 	using Vec3d	   = Vec<double, 3>;
-	using Vec3mpfr = Vec<mpfr, 3>;
 
 	using Vec4i	   = Vec<int64_t, 4>;
 	using Vec4f	   = Vec<float, 4>;
 	using Vec4d	   = Vec<double, 4>;
+
+#if defined(LIBRAPID_USE_MULTIPREC)
+	using Vec2mpfr = Vec<mpfr, 2>;
+	using Vec3mpfr = Vec<mpfr, 3>;
 	using Vec4mpfr = Vec<mpfr, 4>;
+#endif
 
 	template<typename T, int64_t dims>
 	std::ostream &operator<<(std::ostream &os, const Vec<T, dims> &vec) {
