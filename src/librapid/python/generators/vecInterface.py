@@ -21,6 +21,8 @@ py::class_<librapid::{dtype[0]}>(module, \"{dtype[0]}\")
 	.def("__setitem__", [](librapid::{dtype[0]} &vec, int64_t index, int64_t val) {{ vec[index] = val; }})
 	.def("__setitem__", [](librapid::{dtype[0]} &vec, int64_t index, double val) {{ vec[index] = val; }})
 
+	.def("__neg__", [](const librapid::{dtype[0]} &lhs) {{ return -lhs; }})
+
 	.def("__add__", [](const librapid::{dtype[0]} &lhs, int64_t rhs) {{ return lhs + rhs; }})
 	.def("__sub__", [](const librapid::{dtype[0]} &lhs, int64_t rhs) {{ return lhs - rhs; }})
 	.def("__mul__", [](const librapid::{dtype[0]} &lhs, int64_t rhs) {{ return lhs * rhs; }})

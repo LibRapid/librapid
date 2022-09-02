@@ -20,6 +20,7 @@
 #include <fstream>
 #include <streambuf>
 #include <utility>
+#include <mutex>
 
 #if defined(__unix__)
 #	include <unistd.h>

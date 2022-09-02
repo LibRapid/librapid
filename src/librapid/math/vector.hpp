@@ -114,6 +114,45 @@ namespace librapid {
 			return !(*this == other);
 		}
 
+		// Implement equality checks with GLM types
+#ifdef GLM_VERSION
+
+		template<typename T, int tmpDims, glm::qualifier p = glm::defaultp>
+		bool operator==(const glm::vec<tmpDims, T, p> &other) const {
+			// For vectors with different dimensions, return true if the excess
+			// values are all zero
+			for (int64_t i = 0; i < MIN_DIM_CLAMP(dims, tmpDims); ++i) {
+				if (m_components[i] != other[i]) return false;
+			}
+
+			// Quick return to avoid excess checks
+			if (dims == tmpDims) return true;
+
+			for (int64_t i = MIN_DIM_CLAMP(dims, tmpDims); i < MAX_DIM_CLAMP(dims, tmpDims); ++i) {
+				if (i < dims && m_components[i]) return false;
+				if (i < tmpDims && other[i]) return false;
+			}
+
+			return true;
+		}
+
+		template<typename T, int tmpDims, glm::qualifier p = glm::defaultp>
+		bool operator!=(const glm::vec<tmpDims, T, p> &other) const {
+			return !(*this == other);
+		}
+
+#endif // GLM_VERSION
+
+		/*
+		 * Implement unary operators
+		 */
+
+		Vec<DTYPE, dims> operator-() const {
+			Vec<DTYPE, dims> res;
+			for (int64_t i = 0; i < dims; ++i) { res[i] = -m_components[i]; }
+			return res;
+		}
+
 		/**
 		 * Implement simple arithmetic operators + - * /
 		 *
@@ -564,6 +603,28 @@ namespace librapid {
 			return !(*this == other);
 		}
 
+#ifdef GLM_VERSION
+
+		template<typename T, int tmpDims, glm::qualifier p = glm::defaultp>
+		bool operator==(const glm::vec<tmpDims, T, p> &other) const {
+			if (tmpDims <= 3) {
+				return x == other.x && y == other.y && z == other.z && w == other.w;
+			}
+
+			for (int64_t i = 3; i < tmpDims; ++i) {
+				if (other[i]) return false;
+			}
+
+			return true;
+		}
+
+		template<typename T, int tmpDims, glm::qualifier p = glm::defaultp>
+		bool operator!=(const glm::vec<tmpDims, T, p> &other) const {
+			return !(*this == other);
+		}
+
+#endif // GLM_VERSION
+
 		/**
 		 * Implement simple arithmetic operators + - * /
 		 *
@@ -931,6 +992,22 @@ namespace librapid {
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(
 		  value / vec.x, value / vec.y, value / vec.z);
 	}
+
+#ifdef GLM_VERSION
+
+	template<typename DTYPE, int64_t dims, typename T, int tmpDims,
+			 glm::qualifier p = glm::defaultp>
+	bool operator==(const glm::vec<tmpDims, T, p> &other, const Vec<DTYPE, dims> &vec) {
+		return vec == other;
+	}
+
+	template<typename DTYPE, int64_t dims, typename T, int tmpDims,
+			 glm::qualifier p = glm::defaultp>
+	bool operator!=(const glm::vec<tmpDims, T, p> &other, const Vec<DTYPE, dims> &vec) {
+		return !(vec == other);
+	}
+
+#endif // GLM_VERSION
 
 	using Vec2i = Vec<int64_t, 2>;
 	using Vec2f = Vec<float, 2>;
