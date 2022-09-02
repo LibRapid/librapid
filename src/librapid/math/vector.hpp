@@ -625,6 +625,12 @@ namespace librapid {
 
 #endif // GLM_VERSION
 
+		/*
+		 * Implement unary operators
+		 */
+
+		Vec<DTYPE, 3> operator-() const { return Vec<DTYPE, 3>(-x, -y, -z); }
+
 		/**
 		 * Implement simple arithmetic operators + - * /
 		 *
