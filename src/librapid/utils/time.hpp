@@ -25,21 +25,6 @@ namespace librapid {
 		constexpr int64_t nanosecond  = (int64_t)1;
 	} // namespace time
 
-	// 		namespace {
-	// 			const long long g_Frequency = []() -> long long {
-	// 				LARGE_INTEGER frequency;
-	// 				QueryPerformanceFrequency(&frequency);
-	// 				return frequency.QuadPart;
-	// 			}();
-	// 		}
-
-	// 		HighResClock::time_point HighResClock::now() {
-	// 			LARGE_INTEGER count;
-	// 			QueryPerformanceCounter(&count);
-	// 			return time_point(duration(count.QuadPart * static_cast<rep>(period::den) /
-	// g_Frequency));
-	// 		}
-
 	template<int64_t scale = time::second>
 	LR_NODISCARD("")
 	LR_FORCE_INLINE double now() {
