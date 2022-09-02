@@ -452,6 +452,11 @@ namespace librapid {
 			return (_t > T {1}) == (_b > _a) ? max(_b, _x) : min(_b, _x);
 		}
 	}
+
+	template<typename T, typename std::enable_if_t<!std::is_floating_point_v<T>, int> = 0>
+	LR_INLINE T lerp(T _a, T _b, T _t) {
+		return _a + _t * (_b - _a);
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_CORE_MATH
