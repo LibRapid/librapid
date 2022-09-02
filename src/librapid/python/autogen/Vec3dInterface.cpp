@@ -36,6 +36,8 @@ py::class_<librapid::Vec3d>(module, "Vec3d")
 	.def("__setitem__", [](librapid::Vec3d &vec, int64_t index, int64_t val) { vec[index] = val; })
 	.def("__setitem__", [](librapid::Vec3d &vec, int64_t index, double val) { vec[index] = val; })
 
+	.def("__neg__", [](const librapid::Vec3d &lhs) { return -lhs; })
+
 	.def("__add__", [](const librapid::Vec3d &lhs, int64_t rhs) { return lhs + rhs; })
 	.def("__sub__", [](const librapid::Vec3d &lhs, int64_t rhs) { return lhs - rhs; })
 	.def("__mul__", [](const librapid::Vec3d &lhs, int64_t rhs) { return lhs * rhs; })
