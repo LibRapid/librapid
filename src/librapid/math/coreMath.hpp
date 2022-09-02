@@ -453,8 +453,8 @@ namespace librapid {
 		}
 	}
 
-	template<typename T, typename std::enable_if_t<!std::is_floating_point_v<T>, int> = 0>
-	LR_INLINE T lerp(T _a, T _b, T _t) {
+	template<typename A, typename B, typename C, typename std::enable_if_t<!std::is_floating_point_v<T>, int> = 0>
+	LR_INLINE auto lerp(A _a, B _b, C _t) {
 		return _a + _t * (_b - _a);
 	}
 } // namespace librapid
