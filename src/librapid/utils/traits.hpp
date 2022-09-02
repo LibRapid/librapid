@@ -733,6 +733,51 @@ namespace librapid::internal {
 		LR_FORCE_INLINE LIMIT_IMPL(signalingNaN) { return NUM_LIM(signaling_NaN); }
 	};
 
+	//------- Multiprecision Float (MPF) ---------------------------------
+	template<>
+	struct traits<mpf> {
+		static constexpr bool IsScalar		 = true;
+		static constexpr bool IsEvaluated	 = true;
+		using Valid							 = std::true_type;
+		using Scalar						 = mpf;
+		using BaseScalar					 = mpf;
+		using StorageType					 = memory::DenseStorage<mpf>;
+		using Packet						 = std::false_type;
+		using Device						 = device::CPU;
+		static constexpr int64_t PacketWidth = 1;
+		static constexpr char Name[]		 = "NO_VALID_CONVERSION";
+		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+#	endif
+
+		static constexpr uint64_t Size	= sizeof(mpf);
+		static constexpr bool CanAlign	= false;
+		static constexpr bool CanMemcpy = false;
+
+		template<typename CAST>
+		LR_FORCE_INLINE static CAST cast(const mpf &val) {
+			if constexpr (std::is_fundamental_v<CAST> && std::is_floating_point_v<CAST>)
+				return (CAST)val.get_d();
+
+			if constexpr (std::is_same_v<CAST, mpz>) return toMpz(val);
+			if constexpr (std::is_same_v<CAST, mpq>) return toMpq(val);
+			if constexpr (std::is_same_v<CAST, mpfr>) return toMpfr(val);
+			return CAST(val.get_d());
+		}
+
+		LR_FORCE_INLINE LIMIT_IMPL(min) { return NUM_LIM(min); }
+		LR_FORCE_INLINE LIMIT_IMPL(max) { return NUM_LIM(max); }
+		LR_FORCE_INLINE LIMIT_IMPL(epsilon) { return NUM_LIM(epsilon); }
+		LR_FORCE_INLINE LIMIT_IMPL(roundError) { return NUM_LIM(round_error); }
+		LR_FORCE_INLINE LIMIT_IMPL(denormMin) { return NUM_LIM(denorm_min); }
+		LR_FORCE_INLINE LIMIT_IMPL(infinity) { return NUM_LIM(infinity); }
+		LR_FORCE_INLINE LIMIT_IMPL(quietNaN) { return NUM_LIM(quiet_NaN); }
+		LR_FORCE_INLINE LIMIT_IMPL(signalingNaN) { return NUM_LIM(signaling_NaN); }
+	};
+
 	//------- Multiprecision Rational (MPFR) ---------------------------------
 	template<>
 	struct traits<mpfr> {

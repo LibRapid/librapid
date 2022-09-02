@@ -434,7 +434,7 @@ namespace librapid {
 		[[nodiscard]] std::string str() const {
 			std::string res = "(";
 			for (int64_t i = 0; i < dims; ++i) {
-				res += str(m_components[i]) + (i == dims - 1 ? ")" : ", ");
+				res += ::librapid::str(m_components[i]) + (i == dims - 1 ? ")" : ", ");
 			}
 			return res;
 		}
