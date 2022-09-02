@@ -204,28 +204,28 @@ namespace librapid {
 		 * common type) containing the result of the element-wise operation.
 		 */
 
-		template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+		template<typename T, typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 		Vec<Common<T>, dims> operator+(const T &other) const {
 			Vec<Common<T>, dims> res;
 			for (int64_t i = 0; i < dims; ++i) { res[i] = m_components[i] + other; }
 			return res;
 		}
 
-		template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+		template<typename T, typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 		Vec<Common<T>, dims> operator-(const T &other) const {
 			Vec<Common<T>, dims> res;
 			for (int64_t i = 0; i < dims; ++i) { res[i] = m_components[i] - other; }
 			return res;
 		}
 
-		template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+		template<typename T, typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 		Vec<Common<T>, dims> operator*(const T &other) const {
 			Vec<Common<T>, dims> res;
 			for (int64_t i = 0; i < dims; ++i) { res[i] = m_components[i] * other; }
 			return res;
 		}
 
-		template<typename T, typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+		template<typename T, typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 		Vec<Common<T>, dims> operator/(const T &other) const {
 			Vec<Common<T>, dims> res;
 			for (int64_t i = 0; i < dims; ++i) { res[i] = m_components[i] / other; }
@@ -434,7 +434,7 @@ namespace librapid {
 		[[nodiscard]] std::string str() const {
 			std::string res = "(";
 			for (int64_t i = 0; i < dims; ++i) {
-				res += std::to_string(m_components[i]) + (i == dims - 1 ? ")" : ", ");
+				res += str(m_components[i]) + (i == dims - 1 ? ")" : ", ");
 			}
 			return res;
 		}
@@ -472,7 +472,7 @@ namespace librapid {
 	 */
 
 	template<typename T, typename DTYPE, int64_t dims,
-			 typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+			 typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator+(const T &value,
 																   const Vec<DTYPE, dims> &vec) {
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
@@ -481,7 +481,7 @@ namespace librapid {
 	}
 
 	template<typename T, typename DTYPE, int64_t dims,
-			 typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+			 typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator-(const T &value,
 																   const Vec<DTYPE, dims> &vec) {
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
@@ -490,7 +490,7 @@ namespace librapid {
 	}
 
 	template<typename T, typename DTYPE, int64_t dims,
-			 typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+			 typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator*(const T &value,
 																   const Vec<DTYPE, dims> &vec) {
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
@@ -499,7 +499,7 @@ namespace librapid {
 	}
 
 	template<typename T, typename DTYPE, int64_t dims,
-			 typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+			 typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator/(const T &value,
 																   const Vec<DTYPE, dims> &vec) {
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
@@ -934,8 +934,8 @@ namespace librapid {
 		inline Vec<DTYPE, 4> wzyx() const { return {w, z, y, x}; }
 
 		[[nodiscard]] std::string str() const {
-			return std::string("(") + std::to_string(x) + ", " + std::to_string(y) + ", " +
-				   std::to_string(z) + ")";
+			return std::string("(") + ::librapid::str(x) + ", " + ::librapid::str(y) + ", " +
+				   ::librapid::str(z) + ")";
 		}
 
 		void setX(DTYPE val) { x = val; }
@@ -968,7 +968,7 @@ namespace librapid {
 	 */
 
 	template<typename T, typename DTYPE,
-			 typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+			 typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, 3> operator+(const T &value,
 																const Vec<DTYPE, 3> &vec) {
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(
@@ -976,7 +976,7 @@ namespace librapid {
 	}
 
 	template<typename T, typename DTYPE,
-			 typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+			 typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, 3> operator-(const T &value,
 																const Vec<DTYPE, 3> &vec) {
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(
@@ -984,7 +984,7 @@ namespace librapid {
 	}
 
 	template<typename T, typename DTYPE,
-			 typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+			 typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, 3> operator*(const T &value,
 																const Vec<DTYPE, 3> &vec) {
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(
@@ -992,7 +992,7 @@ namespace librapid {
 	}
 
 	template<typename T, typename DTYPE,
-			 typename std::enable_if<std::is_scalar<T>::value, int>::type = 0>
+			 typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, 3> operator/(const T &value,
 																const Vec<DTYPE, 3> &vec) {
 		return Vec<typename std::common_type<T, DTYPE>::type, 3>(
@@ -1015,17 +1015,17 @@ namespace librapid {
 
 #endif // GLM_VERSION
 
-	using Vec2i	   = Vec<int64_t, 2>;
-	using Vec2f	   = Vec<float, 2>;
-	using Vec2d	   = Vec<double, 2>;
+	using Vec2i = Vec<int64_t, 2>;
+	using Vec2f = Vec<float, 2>;
+	using Vec2d = Vec<double, 2>;
 
-	using Vec3i	   = Vec<int64_t, 3>;
-	using Vec3f	   = Vec<float, 3>;
-	using Vec3d	   = Vec<double, 3>;
+	using Vec3i = Vec<int64_t, 3>;
+	using Vec3f = Vec<float, 3>;
+	using Vec3d = Vec<double, 3>;
 
-	using Vec4i	   = Vec<int64_t, 4>;
-	using Vec4f	   = Vec<float, 4>;
-	using Vec4d	   = Vec<double, 4>;
+	using Vec4i = Vec<int64_t, 4>;
+	using Vec4f = Vec<float, 4>;
+	using Vec4d = Vec<double, 4>;
 
 #if defined(LIBRAPID_USE_MULTIPREC)
 	using Vec2mpfr = Vec<mpfr, 2>;
