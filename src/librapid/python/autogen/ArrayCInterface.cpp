@@ -163,6 +163,8 @@ py::class_<librapid::ArrayC>(module, "ArrayC")
 	.def("__repr__", [](const librapid::ArrayC & this_) { return "<librapid::ArrayC\n" + this_.str("{}", ",") + "\n>"; })
 	.def("isScalar", [](const librapid::ArrayC & this_) { return this_.isScalar(); })
 	.def("extent", [](const librapid::ArrayC & this_) { return this_.extent(); })
+	.def("filled", [](const librapid::ArrayC & this_, typename librapid::internal::traits<librapid::ArrayC>::Scalar scalar) { return this_.filled(scalar); }, py::arg("scalar"))
+	.def("fill", [](librapid::ArrayC & this_, typename librapid::internal::traits<librapid::ArrayC>::Scalar scalar) { this_.fill(scalar); }, py::arg("scalar"))
 	.def("transpose", [](librapid::ArrayC & this_, const librapid::Extent & order) { this_.transpose(order); }, py::arg("order") = librapid::Extent({}))
 	.def("transposed", [](const librapid::ArrayC & this_, const librapid::Extent & order) { return this_.transposed(order); }, py::arg("order") = librapid::Extent({}))
 	.def("dot", [](const librapid::ArrayC & this_, const librapid::ArrayC & other) { return this_.dot(other); }, py::arg("other"));

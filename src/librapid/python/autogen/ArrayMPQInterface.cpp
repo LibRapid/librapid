@@ -159,6 +159,8 @@ py::class_<librapid::ArrayMPQ>(module, "ArrayMPQ")
 	.def("__repr__", [](const librapid::ArrayMPQ & this_) { return "<librapid::ArrayMPQ\n" + this_.str("{}", ",") + "\n>"; })
 	.def("isScalar", [](const librapid::ArrayMPQ & this_) { return this_.isScalar(); })
 	.def("extent", [](const librapid::ArrayMPQ & this_) { return this_.extent(); })
+	.def("filled", [](const librapid::ArrayMPQ & this_, typename librapid::internal::traits<librapid::ArrayMPQ>::Scalar scalar) { return this_.filled(scalar); }, py::arg("scalar"))
+	.def("fill", [](librapid::ArrayMPQ & this_, typename librapid::internal::traits<librapid::ArrayMPQ>::Scalar scalar) { this_.fill(scalar); }, py::arg("scalar"))
 	.def("transpose", [](librapid::ArrayMPQ & this_, const librapid::Extent & order) { this_.transpose(order); }, py::arg("order") = librapid::Extent({}))
 	.def("transposed", [](const librapid::ArrayMPQ & this_, const librapid::Extent & order) { return this_.transposed(order); }, py::arg("order") = librapid::Extent({}))
 	.def("dot", [](const librapid::ArrayMPQ & this_, const librapid::ArrayMPQ & other) { return this_.dot(other); }, py::arg("other"));

@@ -159,6 +159,8 @@ py::class_<librapid::ArrayCF64>(module, "ArrayCF64")
 	.def("__repr__", [](const librapid::ArrayCF64 & this_) { return "<librapid::ArrayCF64\n" + this_.str("{}", ",") + "\n>"; })
 	.def("isScalar", [](const librapid::ArrayCF64 & this_) { return this_.isScalar(); })
 	.def("extent", [](const librapid::ArrayCF64 & this_) { return this_.extent(); })
+	.def("filled", [](const librapid::ArrayCF64 & this_, typename librapid::internal::traits<librapid::ArrayCF64>::Scalar scalar) { return this_.filled(scalar); }, py::arg("scalar"))
+	.def("fill", [](librapid::ArrayCF64 & this_, typename librapid::internal::traits<librapid::ArrayCF64>::Scalar scalar) { this_.fill(scalar); }, py::arg("scalar"))
 	.def("transpose", [](librapid::ArrayCF64 & this_, const librapid::Extent & order) { this_.transpose(order); }, py::arg("order") = librapid::Extent({}))
 	.def("transposed", [](const librapid::ArrayCF64 & this_, const librapid::Extent & order) { return this_.transposed(order); }, py::arg("order") = librapid::Extent({}))
 	.def("dot", [](const librapid::ArrayCF64 & this_, const librapid::ArrayCF64 & other) { return this_.dot(other); }, py::arg("other"));
