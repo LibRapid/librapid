@@ -59,6 +59,13 @@
 #	include <Vc/cpuid.h>
 #endif
 
+// Thread pool
+#include "src/librapid/vendor/thread-pool/BS_thread_pool.hpp"
+namespace librapid {
+	// Rename thread pool to better fit with librapid
+	using ThreadPool = BS::thread_pool;
+} // namespace librapid
+
 // LibRapid definitions
 
 #if !defined(NDEBUG)
