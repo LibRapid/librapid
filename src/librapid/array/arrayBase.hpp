@@ -2,8 +2,15 @@
 
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
+#include "../internal/memUtils.hpp"
+
+#if defined(LIBRAPID_HAS_CUDA)
+#include "../cuda/memUtils.hpp"
+#endif
+
 #include "helpers/extent.hpp"
 #include "functors/functors.hpp"
+#include "../linalg/blasInterface.hpp"
 #include "cast.hpp"
 
 #define IMPL_BINOP(NAME, TYPE)                                                                     \

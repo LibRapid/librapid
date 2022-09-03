@@ -164,6 +164,8 @@ py::class_<librapid::ArrayCG>(module, "ArrayCG")
 	.def("__repr__", [](const librapid::ArrayCG & this_) { return "<librapid::ArrayCG\n" + this_.str("{}", ",") + "\n>"; })
 	.def("isScalar", [](const librapid::ArrayCG & this_) { return this_.isScalar(); })
 	.def("extent", [](const librapid::ArrayCG & this_) { return this_.extent(); })
+	.def("filled", [](const librapid::ArrayCG & this_, typename librapid::internal::traits<librapid::ArrayCG>::Scalar scalar) { return this_.filled(scalar); }, py::arg("scalar"))
+	.def("fill", [](librapid::ArrayCG & this_, typename librapid::internal::traits<librapid::ArrayCG>::Scalar scalar) { this_.fill(scalar); }, py::arg("scalar"))
 	.def("transpose", [](librapid::ArrayCG & this_, const librapid::Extent & order) { this_.transpose(order); }, py::arg("order") = librapid::Extent({}))
 	.def("transposed", [](const librapid::ArrayCG & this_, const librapid::Extent & order) { return this_.transposed(order); }, py::arg("order") = librapid::Extent({}))
 	.def("dot", [](const librapid::ArrayCG & this_, const librapid::ArrayCG & other) { return this_.dot(other); }, py::arg("other"));

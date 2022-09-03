@@ -1,3 +1,4 @@
+from readline import read_init_file
 from argumentHelper import *
 
 # Detect LibRapid features
@@ -168,7 +169,12 @@ for t in arrayTypes:
 		Function("extent", [Argument(constRef, "this_")], "return this_.extent();"),
 	]
 
-	functions = fCopy + fIndex + fMove + fCast + fArithmetic + fBitwise + fUnary + fString + fProperties
+	fMisc = [
+		Function("filled", [Argument(constRef, "this_"), Argument(scalar, "scalar")], "return this_.filled(scalar);"),
+		Function("fill", [Argument(ref, "this_"), Argument(scalar, "scalar")], "this_.fill(scalar);"),
+	]
+
+	functions = fCopy + fIndex + fMove + fCast + fArithmetic + fBitwise + fUnary + fString + fProperties + fMisc
 
 	if t not in ["ArrayB", "ArrayBG"]:
 		functions += fMatrix
