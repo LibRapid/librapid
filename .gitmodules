@@ -16,3 +16,6 @@
 [submodule "src/librapid/vendor/mpfr"] # Big number support with MPFR and MPIR
 	path = src/librapid/vendor/mpfr
 	url = https://github.com/pencilcaseman/mpfr
+[submodule "src/librapid/vendor/thread-pool"]
+	path = src/librapid/vendor/thread-pool
+	url = https://github.com/bshoshany/thread-pool.git
