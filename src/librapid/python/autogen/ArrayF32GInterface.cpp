@@ -160,6 +160,8 @@ py::class_<librapid::ArrayF32G>(module, "ArrayF32G")
 	.def("__repr__", [](const librapid::ArrayF32G & this_) { return "<librapid::ArrayF32G\n" + this_.str("{}", ",") + "\n>"; })
 	.def("isScalar", [](const librapid::ArrayF32G & this_) { return this_.isScalar(); })
 	.def("extent", [](const librapid::ArrayF32G & this_) { return this_.extent(); })
+	.def("filled", [](const librapid::ArrayF32G & this_, typename librapid::internal::traits<librapid::ArrayF32G>::Scalar scalar) { return this_.filled(scalar); }, py::arg("scalar"))
+	.def("fill", [](librapid::ArrayF32G & this_, typename librapid::internal::traits<librapid::ArrayF32G>::Scalar scalar) { this_.fill(scalar); }, py::arg("scalar"))
 	.def("transpose", [](librapid::ArrayF32G & this_, const librapid::Extent & order) { this_.transpose(order); }, py::arg("order") = librapid::Extent({}))
 	.def("transposed", [](const librapid::ArrayF32G & this_, const librapid::Extent & order) { return this_.transposed(order); }, py::arg("order") = librapid::Extent({}))
 	.def("dot", [](const librapid::ArrayF32G & this_, const librapid::ArrayF32G & other) { return this_.dot(other); }, py::arg("other"));

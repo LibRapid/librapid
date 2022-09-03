@@ -132,6 +132,37 @@ namespace librapid {
 			return operator()(0);
 		}
 
+		template<typename Other, bool forceTemporary = false>
+		LR_NODISCARD("")
+		auto filled(const Other &other) const {
+			using BaseScalar = typename internal::traits<Scalar>::BaseScalar;
+			using RetType	 = unop::CWiseUnop<functors::misc::FillArray<Scalar>, Type>;
+			static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
+			static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;
+
+			static_assert(!(Required & ~(Flags & Required)),
+						  "Scalar type is incompatible with Functor");
+
+			BaseScalar tmp;
+			if constexpr (std::is_same_v<Scalar, bool>) {
+				// Booleans are mapped to an unsigned integer, so set all bits to 1 or 0
+				tmp = other ? static_cast<BaseScalar>(-1) : static_cast<BaseScalar>(0);
+			} else {
+				tmp = other;
+			}
+
+			if constexpr (!forceTemporary && // If we REQUIRE a temporary value, don't evaluate it
+						  ((bool)(Flags & internal::flags::RequireEval)))
+				return RetType(*this, tmp).eval();
+			else
+				return RetType(*this, tmp);
+		}
+
+		template<typename Other>
+		void fill(const Other &other) {
+			Base::assign(filled<Other, true>(other));
+		}
+
 		void findLongest(const std::string &format, bool strip, int64_t stripWidth,
 						 int64_t &longestInteger, int64_t &longestFloating) const {
 			int64_t dims	= Base::extent().dims();
@@ -256,7 +287,7 @@ namespace librapid {
 						// Decimal point present
 						auto integer  = formatted.substr(0, pointPos);
 						auto floating = formatted.substr(pointPos);
-						// Add an additional space to account for the missing decimal point in some
+						// Add a space to account for the missing decimal point in some
 						// cases
 						res += fmt::format("{:>{}}{:<{}}",
 										   integer,
