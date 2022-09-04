@@ -90,6 +90,9 @@ for type in types:
 			Function("roundSigFig", [Argument(constRef, "val"), Argument("int64_t", "dp", "3")], "return lrc::roundSigFig(val, dp);"),
 			Function("roundTo", [Argument(constRef, "val"), Argument(constRef, "num")], "return lrc::roundTo(val, num);"),
 			Function("roundUpTo", [Argument(constRef, "val"), Argument(constRef, "num")], "return lrc::roundUpTo(val, num);"),
+
+			Function("clamp", [Argument(constRef, "x"), Argument(constRef, "lower"), Argument(constRef, "upper")], "return librapid::clamp(x, lower, upper);"),
+			Function("smoothStep", [Argument(constRef, "edge0"), Argument(constRef, "edge1"), Argument(constRef, "x")], "return librapid::smoothStep(edge0, edge1, x);"),
 		]
 
 functions += [
