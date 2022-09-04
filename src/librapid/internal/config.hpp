@@ -21,6 +21,7 @@
 #include <streambuf>
 #include <utility>
 #include <mutex>
+#include <queue>
 
 #if defined(__unix__)
 #	include <unistd.h>
