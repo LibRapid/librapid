@@ -461,6 +461,21 @@ namespace librapid {
 	LR_INLINE auto lerp(A _a, B _b, C _t) {
 		return _a + _t * (_b - _a);
 	}
+
+	template<typename T>
+	T clamp(T x, T lower, T upper) {
+		if (x < lower) return lower;
+		if (x > upper) return upper;
+		return x;
+	}
+
+	template<typename T>
+	T smoothStep(T edge0, T edge1, T x) {
+		// Scale, and clamp x to 0..1 range
+		x = clamp((x - edge0) / (edge1 - edge0), T(0), T(1));
+		// Evaluate polynomial
+		return x * x * x * (x * (x * 6 - 15) + 10);
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_CORE_MATH

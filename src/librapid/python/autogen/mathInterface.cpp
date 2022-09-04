@@ -54,6 +54,8 @@ void init_math(py::module &module) {
 	module.def("roundSigFig", [](const int64_t & val, int64_t dp) { return lrc::roundSigFig(val, dp); }, py::arg("val"), py::arg("dp") = int64_t(3));
 	module.def("roundTo", [](const int64_t & val, const int64_t & num) { return lrc::roundTo(val, num); }, py::arg("val"), py::arg("num"));
 	module.def("roundUpTo", [](const int64_t & val, const int64_t & num) { return lrc::roundUpTo(val, num); }, py::arg("val"), py::arg("num"));
+	module.def("clamp", [](const int64_t & x, const int64_t & lower, const int64_t & upper) { return librapid::clamp(x, lower, upper); }, py::arg("x"), py::arg("lower"), py::arg("upper"));
+	module.def("smoothStep", [](const int64_t & edge0, const int64_t & edge1, const int64_t & x) { return librapid::smoothStep(edge0, edge1, x); }, py::arg("edge0"), py::arg("edge1"), py::arg("x"));
 	module.def("abs", [](const double & val) { return lrc::abs(val); }, py::arg("val"));
 	module.def("floor", [](const double & val) { return lrc::floor(val); }, py::arg("val"));
 	module.def("ceil", [](const double & val) { return lrc::ceil(val); }, py::arg("val"));
@@ -89,6 +91,8 @@ void init_math(py::module &module) {
 	module.def("roundSigFig", [](const double & val, int64_t dp) { return lrc::roundSigFig(val, dp); }, py::arg("val"), py::arg("dp") = int64_t(3));
 	module.def("roundTo", [](const double & val, const double & num) { return lrc::roundTo(val, num); }, py::arg("val"), py::arg("num"));
 	module.def("roundUpTo", [](const double & val, const double & num) { return lrc::roundUpTo(val, num); }, py::arg("val"), py::arg("num"));
+	module.def("clamp", [](const double & x, const double & lower, const double & upper) { return librapid::clamp(x, lower, upper); }, py::arg("x"), py::arg("lower"), py::arg("upper"));
+	module.def("smoothStep", [](const double & edge0, const double & edge1, const double & x) { return librapid::smoothStep(edge0, edge1, x); }, py::arg("edge0"), py::arg("edge1"), py::arg("x"));
 	module.def("abs", [](const librapid::mpfr & val) { return lrc::abs(val); }, py::arg("val"));
 	module.def("floor", [](const librapid::mpfr & val) { return lrc::floor(val); }, py::arg("val"));
 	module.def("ceil", [](const librapid::mpfr & val) { return lrc::ceil(val); }, py::arg("val"));
@@ -124,6 +128,8 @@ void init_math(py::module &module) {
 	module.def("roundSigFig", [](const librapid::mpfr & val, int64_t dp) { return lrc::roundSigFig(val, dp); }, py::arg("val"), py::arg("dp") = int64_t(3));
 	module.def("roundTo", [](const librapid::mpfr & val, const librapid::mpfr & num) { return lrc::roundTo(val, num); }, py::arg("val"), py::arg("num"));
 	module.def("roundUpTo", [](const librapid::mpfr & val, const librapid::mpfr & num) { return lrc::roundUpTo(val, num); }, py::arg("val"), py::arg("num"));
+	module.def("clamp", [](const librapid::mpfr & x, const librapid::mpfr & lower, const librapid::mpfr & upper) { return librapid::clamp(x, lower, upper); }, py::arg("x"), py::arg("lower"), py::arg("upper"));
+	module.def("smoothStep", [](const librapid::mpfr & edge0, const librapid::mpfr & edge1, const librapid::mpfr & x) { return librapid::smoothStep(edge0, edge1, x); }, py::arg("edge0"), py::arg("edge1"), py::arg("x"));
 	module.def("abs", [](const librapid::Complex<float> & val) { return lrc::abs(val); }, py::arg("val"));
 	module.def("floor", [](const librapid::Complex<float> & val) { return lrc::floor(val); }, py::arg("val"));
 	module.def("ceil", [](const librapid::Complex<float> & val) { return lrc::ceil(val); }, py::arg("val"));
@@ -159,6 +165,8 @@ void init_math(py::module &module) {
 	module.def("roundSigFig", [](const librapid::Complex<float> & val, int64_t dp) { return lrc::roundSigFig(val, dp); }, py::arg("val"), py::arg("dp") = int64_t(3));
 	module.def("roundTo", [](const librapid::Complex<float> & val, const librapid::Complex<float> & num) { return lrc::roundTo(val, num); }, py::arg("val"), py::arg("num"));
 	module.def("roundUpTo", [](const librapid::Complex<float> & val, const librapid::Complex<float> & num) { return lrc::roundUpTo(val, num); }, py::arg("val"), py::arg("num"));
+	module.def("clamp", [](const librapid::Complex<float> & x, const librapid::Complex<float> & lower, const librapid::Complex<float> & upper) { return librapid::clamp(x, lower, upper); }, py::arg("x"), py::arg("lower"), py::arg("upper"));
+	module.def("smoothStep", [](const librapid::Complex<float> & edge0, const librapid::Complex<float> & edge1, const librapid::Complex<float> & x) { return librapid::smoothStep(edge0, edge1, x); }, py::arg("edge0"), py::arg("edge1"), py::arg("x"));
 	module.def("abs", [](const librapid::Complex<double> & val) { return lrc::abs(val); }, py::arg("val"));
 	module.def("floor", [](const librapid::Complex<double> & val) { return lrc::floor(val); }, py::arg("val"));
 	module.def("ceil", [](const librapid::Complex<double> & val) { return lrc::ceil(val); }, py::arg("val"));
@@ -194,6 +202,8 @@ void init_math(py::module &module) {
 	module.def("roundSigFig", [](const librapid::Complex<double> & val, int64_t dp) { return lrc::roundSigFig(val, dp); }, py::arg("val"), py::arg("dp") = int64_t(3));
 	module.def("roundTo", [](const librapid::Complex<double> & val, const librapid::Complex<double> & num) { return lrc::roundTo(val, num); }, py::arg("val"), py::arg("num"));
 	module.def("roundUpTo", [](const librapid::Complex<double> & val, const librapid::Complex<double> & num) { return lrc::roundUpTo(val, num); }, py::arg("val"), py::arg("num"));
+	module.def("clamp", [](const librapid::Complex<double> & x, const librapid::Complex<double> & lower, const librapid::Complex<double> & upper) { return librapid::clamp(x, lower, upper); }, py::arg("x"), py::arg("lower"), py::arg("upper"));
+	module.def("smoothStep", [](const librapid::Complex<double> & edge0, const librapid::Complex<double> & edge1, const librapid::Complex<double> & x) { return librapid::smoothStep(edge0, edge1, x); }, py::arg("edge0"), py::arg("edge1"), py::arg("x"));
 	module.def("abs", [](const librapid::Complex<librapid::mpfr> & val) { return lrc::abs(val); }, py::arg("val"));
 	module.def("floor", [](const librapid::Complex<librapid::mpfr> & val) { return lrc::floor(val); }, py::arg("val"));
 	module.def("ceil", [](const librapid::Complex<librapid::mpfr> & val) { return lrc::ceil(val); }, py::arg("val"));
@@ -229,6 +239,8 @@ void init_math(py::module &module) {
 	module.def("roundSigFig", [](const librapid::Complex<librapid::mpfr> & val, int64_t dp) { return lrc::roundSigFig(val, dp); }, py::arg("val"), py::arg("dp") = int64_t(3));
 	module.def("roundTo", [](const librapid::Complex<librapid::mpfr> & val, const librapid::Complex<librapid::mpfr> & num) { return lrc::roundTo(val, num); }, py::arg("val"), py::arg("num"));
 	module.def("roundUpTo", [](const librapid::Complex<librapid::mpfr> & val, const librapid::Complex<librapid::mpfr> & num) { return lrc::roundUpTo(val, num); }, py::arg("val"), py::arg("num"));
+	module.def("clamp", [](const librapid::Complex<librapid::mpfr> & x, const librapid::Complex<librapid::mpfr> & lower, const librapid::Complex<librapid::mpfr> & upper) { return librapid::clamp(x, lower, upper); }, py::arg("x"), py::arg("lower"), py::arg("upper"));
+	module.def("smoothStep", [](const librapid::Complex<librapid::mpfr> & edge0, const librapid::Complex<librapid::mpfr> & edge1, const librapid::Complex<librapid::mpfr> & x) { return librapid::smoothStep(edge0, edge1, x); }, py::arg("edge0"), py::arg("edge1"), py::arg("x"));
 	module.def("map", [](double val, double start1, double stop1, double start2, double stop2) { return lrc::map(val, start1, stop1, start2, stop2); }, py::arg("val"), py::arg("start1"), py::arg("stop1"), py::arg("start2"), py::arg("stop2"));
 	module.def("random", [](double lower, double upper, int64_t seed) { return librapid::random(lower, upper, seed); }, py::arg("lower") = double(0), py::arg("upper") = double(1), py::arg("seed") = int64_t(-1));
 	module.def("randint", [](int64_t lower, int64_t upper, int64_t seed) { return librapid::randint(lower, upper, seed); }, py::arg("lower") = int64_t(0), py::arg("upper") = int64_t(0), py::arg("seed") = int64_t(-1));
