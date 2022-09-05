@@ -470,6 +470,12 @@ namespace librapid {
 	}
 
 	template<typename T>
+	Complex<T> clamp(Complex<T> x, Complex<T> lower, Complex<T> upper) {
+		return Complex<T>(clamp(real(x), real(lower), real(upper)),
+						  clamp(imag(x), imag(lower), imag(upper)));
+	}
+
+	template<typename T>
 	T smoothStep(T edge0, T edge1, T x) {
 		// Scale, and clamp x to 0..1 range
 		x = clamp((x - edge0) / (edge1 - edge0), T(0), T(1));

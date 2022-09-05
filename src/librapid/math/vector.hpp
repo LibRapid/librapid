@@ -510,7 +510,7 @@ namespace librapid {
 
 #define IMPL_VEC_OP(OP)                                                                            \
 	template<typename DTYPE, int64_t dims>                                                         \
-	Vec<DTYPE, dims> OP(const Vec<DTYPE, dims> &vec) {                                    \
+	LR_INLINE Vec<DTYPE, dims> OP(const Vec<DTYPE, dims> &vec) {                                   \
 		Vec<DTYPE, dims> res;                                                                      \
 		for (int64_t i = 0; i < dims; ++i) { res[i] = ::librapid::OP(vec[i]); }                    \
 		return res;                                                                                \
