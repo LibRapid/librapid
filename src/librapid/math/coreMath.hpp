@@ -482,6 +482,12 @@ namespace librapid {
 		// Evaluate polynomial
 		return x * x * x * (x * (x * 6 - 15) + 10);
 	}
+
+	template<typename T>
+	Complex<T> smoothStep(Complex<T> edge0, Complex<T> edge1, Complex<T> x) {
+		return Complex<T>(smoothStep(real(edge0), real(edge1), real(x)),
+						  smoothStep(imag(edge0), imag(edge1), imag(x)));
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_CORE_MATH
