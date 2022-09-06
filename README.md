@@ -63,3 +63,13 @@ be included with a CMake option. The following is a list of the external depende
     - [CUDA](https://developer.nvidia.com/cuda-zone) - GPU computing library
     - [mpfr](https://github.com/Pencilcaseman/mpfr) - Arbitrary precision numbers (integer, real, rational)
     - [Vc](https://github.com/VcDevel/Vc) - SIMD library
+
+# Support
+
+Thanks to JetBrains for providing LibRapid with free licenses for their amazing tools!
+
+<p align="center">
+  <a href="https://www.jetbrains.com/?from=LibRapid">
+    <img src="https://devclass.com/wp-content/uploads/2018/12/jetbrains-variant-4.png" alt="JetBrains" width="200"/>
+  </a>
+</p>
