@@ -95,6 +95,7 @@ namespace librapid::memory {
 		int64_t m_memOffset				 = 0;
 	};
 
+	/*
 	template<typename d>
 	class DenseStorage<bool, d>
 			: public DenseStorage<typename internal::traits<bool>::BaseScalar, d> {
@@ -138,6 +139,7 @@ namespace librapid::memory {
 			return this->m_heap + (this->m_memOffset / (sizeof(BaseScalar) * 8));
 		}
 	};
+	 */
 
 	template<typename T, typename d, typename T_, typename d_>
 	LR_INLINE void memcpy(DenseStorage<T, d> &dst, const DenseStorage<T_, d_> &src) {
