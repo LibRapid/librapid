@@ -19,7 +19,7 @@ except:
 	pass
 
 arrayTypes = [
-	# "ArrayBG",
+	"ArrayBG",
 	"ArrayCG",
 	"ArrayF16G",
 	"ArrayF32G",
@@ -28,7 +28,7 @@ arrayTypes = [
 	"ArrayI32G",
 	"ArrayI64G",
 
-	# "ArrayB",
+	"ArrayB",
 	"ArrayC",
 	"ArrayF16",
 	"ArrayF32",
