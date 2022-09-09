@@ -156,9 +156,9 @@ namespace librapid::internal {
 		static constexpr bool IsEvaluated	 = true;
 		using Valid							 = std::true_type;
 		using Scalar						 = bool;
-		using BaseScalar					 = uint32_t;
+		using BaseScalar					 = bool;
 		using StorageType					 = memory::DenseStorage<bool, device::CPU>;
-		using Packet						 = LR_VC_TYPE(BaseScalar);
+		using Packet						 = std::false_type; // LR_VC_TYPE(BaseScalar);
 		using Device						 = device::CPU;
 		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
 		static constexpr char Name[]		 = "bool";

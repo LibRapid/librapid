@@ -152,6 +152,7 @@ namespace librapid {
 			T *m_value = nullptr;
 		};
 
+		/*
 		template<typename d>
 		class ValueReference<bool, d>
 				: public ValueReference<typename internal::traits<bool>::BaseScalar, d> {
@@ -259,6 +260,7 @@ namespace librapid {
 		private:
 			uint16_t m_bit; // Bit masked value
 		};
+		 */
 
 		IMPL_BINOP2_EXTERN(operator==, ==)
 		IMPL_BINOP2_EXTERN(operator!=, !=)
