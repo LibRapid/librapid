@@ -79,7 +79,7 @@ if (${SKBUILD})
             ${module_name} MODULE
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/librapidPythonInterface.cpp"
 
-            # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayBGInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayBGInterface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayCGInterface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayF16GInterface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayF32GInterface.cpp"
@@ -87,7 +87,7 @@ if (${SKBUILD})
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayI16GInterface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayI32GInterface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayI64GInterface.cpp"
-            # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayBInterface.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayBInterface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayCInterface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayF16Interface.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/python/autogen/ArrayF32Interface.cpp"

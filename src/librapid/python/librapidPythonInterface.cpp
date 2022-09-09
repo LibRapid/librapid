@@ -23,7 +23,7 @@ std::string module_docstring = "A highly-optimized Array library for Python";
 
 namespace lrc = librapid;
 
-// void init_ArrayBG(py::module &);
+void init_ArrayBG(py::module &);
 void init_ArrayCG(py::module &);
 void init_ArrayF16G(py::module &);
 void init_ArrayF32G(py::module &);
@@ -31,7 +31,7 @@ void init_ArrayF64G(py::module &);
 void init_ArrayI16G(py::module &);
 void init_ArrayI32G(py::module &);
 void init_ArrayI64G(py::module &);
-// void init_ArrayB(py::module &);
+void init_ArrayB(py::module &);
 void init_ArrayC(py::module &);
 void init_ArrayF16(py::module &);
 void init_ArrayF32(py::module &);
@@ -112,7 +112,7 @@ PYBIND11_MODULE(_librapid, module) {
 	init_Vec4d(module);
 
 	// Include the Array library
-	// init_ArrayBG(module);
+	init_ArrayBG(module);
 	init_ArrayCG(module);
 	init_ArrayF16G(module);
 	init_ArrayF32G(module);
@@ -120,7 +120,7 @@ PYBIND11_MODULE(_librapid, module) {
 	init_ArrayI16G(module);
 	init_ArrayI32G(module);
 	init_ArrayI64G(module);
-	// init_ArrayB(module);
+	init_ArrayB(module);
 	init_ArrayC(module);
 	init_ArrayF16(module);
 	init_ArrayF32(module);
