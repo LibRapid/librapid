@@ -7,13 +7,20 @@
 
 namespace librapid {
 	namespace mapping {
-		template<typename... DerivedTypes>
+		template<typename First>
 		constexpr bool allSameDevice() {
-			if constexpr (sizeof...(DerivedTypes) < 2) {
-				return true;
-			} else {
-				return std::is_same_v<typename internal::traits<DerivedTypes>::Device...>;
-			}
+			return true;
+		}
+
+		template<typename First, typename Second>
+		constexpr bool allSameDevice() {
+			return std::is_same_v<First, Second>;
+		}
+
+		template<typename First, typename Second, typename... Rest,
+				 typename std::enable_if_t<(sizeof...(Rest) > 0), int> = 0>
+		constexpr bool allSameDevice() {
+			return std::is_same_v<First, Second> && allSameDevice<Rest...>();
 		}
 
 		template<typename T, typename = int>
