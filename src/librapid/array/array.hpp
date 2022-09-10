@@ -127,11 +127,11 @@ namespace librapid {
 			Base::storage()[index] = s;
 		}
 
-		// template<typename T>
-		// LR_FORCE_INLINE operator T() const {
-		// 	LR_ASSERT(Base::isScalar(), "Cannot cast non-scalar Array to scalar value");
-		// 	return operator()(0);
-		// }
+		template<typename T>
+		LR_FORCE_INLINE operator T() const {
+			LR_ASSERT(Base::isScalar(), "Cannot cast non-scalar Array to scalar value");
+			return operator()(0);
+		}
 
 		template<typename Other, bool forceTemporary = false>
 		LR_NODISCARD("")
@@ -341,7 +341,7 @@ namespace librapid {
 	// Arbitrary mapping of functions to arrays
 	template<bool forceTemporary = false, typename Map, typename... DerivedTypes>
 	LR_NODISCARD("")
-	auto map(const Map &map, DerivedTypes ...args) {
+	auto map(const Map &map, DerivedTypes... args) {
 		using Scalar					   = typename std::common_type_t<DerivedTypes...>::Scalar;
 		using BaseScalar				   = typename internal::traits<Scalar>::BaseScalar;
 		using RetType					   = mapping::CWiseMap<Map, DerivedTypes...>;
