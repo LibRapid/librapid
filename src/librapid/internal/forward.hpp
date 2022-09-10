@@ -49,6 +49,11 @@ namespace librapid {
 		class CWiseUnop;
 	}
 
+	namespace mapping {
+		template<typename Map, typename... DerivedTypes>
+		class CWiseMap;
+	}
+
 	template<typename Scalar_, typename Device_>
 	class Array;
 

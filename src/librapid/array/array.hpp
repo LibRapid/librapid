@@ -4,6 +4,7 @@
 #include "helpers/extent.hpp"
 #include "arrayBase.hpp"
 #include "cwisebinop.hpp"
+#include "cwisemap.hpp"
 #include "denseStorage.hpp"
 #include "commaInitializer.hpp"
 
@@ -126,11 +127,11 @@ namespace librapid {
 			Base::storage()[index] = s;
 		}
 
-		template<typename T>
-		LR_FORCE_INLINE operator T() const {
-			LR_ASSERT(Base::isScalar(), "Cannot cast non-scalar Array to scalar value");
-			return operator()(0);
-		}
+		// template<typename T>
+		// LR_FORCE_INLINE operator T() const {
+		// 	LR_ASSERT(Base::isScalar(), "Cannot cast non-scalar Array to scalar value");
+		// 	return operator()(0);
+		// }
 
 		template<typename Other, bool forceTemporary = false>
 		LR_NODISCARD("")
@@ -302,6 +303,66 @@ namespace librapid {
 		}
 	};
 
+#define FORCE_TMP_FUNC_BINOP(NAME, FUNC)                                                           \
+	template<typename T, typename D>                                                               \
+	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, const Array<T, D> &rhs, Array<T, D> &dst) {  \
+		dst.assign(lhs.template operator FUNC<Array<T, D>, true>(rhs));                            \
+	}                                                                                              \
+                                                                                                   \
+	template<typename T, typename D>                                                               \
+	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, const T &rhs, Array<T, D> &dst) {            \
+		dst.assign(lhs.template operator FUNC<Array<T, D>, true>(rhs));                            \
+	}                                                                                              \
+                                                                                                   \
+	template<typename T, typename D>                                                               \
+	LR_FORCE_INLINE void NAME(const T &lhs, const Array<T, D> &rhs, Array<T, D> &dst) {            \
+		dst.assign(lhs FUNC rhs);                                                                  \
+	}
+
+#define FORCE_TMP_FUNC_UNOP(NAME, FUNC)                                                            \
+	template<typename T, typename D>                                                               \
+	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, Array<T, D> &dst) {                          \
+		dst.assign(lhs.template FUNC<true>());                                                     \
+	}
+
+	FORCE_TMP_FUNC_BINOP(add, +)
+	FORCE_TMP_FUNC_BINOP(sub, -)
+	FORCE_TMP_FUNC_BINOP(mul, *)
+	FORCE_TMP_FUNC_BINOP(div, /)
+
+	FORCE_TMP_FUNC_BINOP(bitwiseOr, |)
+	FORCE_TMP_FUNC_BINOP(bitwiseAnd, &)
+	FORCE_TMP_FUNC_BINOP(bitwiseXor, ^)
+
+	FORCE_TMP_FUNC_UNOP(negate, operator-)
+	FORCE_TMP_FUNC_UNOP(bitwiseNot, operator~)
+	FORCE_TMP_FUNC_UNOP(logicalNot, operator!)
+
+	// Arbitrary mapping of functions to arrays
+	template<bool forceTemporary = false, typename Map, typename... DerivedTypes>
+	LR_NODISCARD("")
+	auto map(const Map &map, DerivedTypes ...args) {
+		using Scalar					   = typename std::common_type_t<DerivedTypes...>::Scalar;
+		using BaseScalar				   = typename internal::traits<Scalar>::BaseScalar;
+		using RetType					   = mapping::CWiseMap<Map, DerivedTypes...>;
+		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
+		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;
+
+		static_assert(!(Required & ~(Flags & Required)),
+					  "Scalar type is incompatible with Functor");
+
+		if constexpr (!forceTemporary && // If we REQUIRE a temporary value, don't evaluate it
+					  ((bool)(Flags & internal::flags::RequireEval)))
+			return RetType(map, args...).eval();
+		else
+			return RetType(map, args...);
+	}
+
+	template<typename T, typename D>
+	inline std::string str(const Array<T, D> &val, const StrOpt &options = DEFAULT_STR_OPT) {
+		return val.str();
+	}
+
 	using ArrayB   = Array<bool, device::CPU>;
 	using ArrayC   = Array<char, device::CPU>;
 	using ArrayF16 = Array<extended::float16_t, device::CPU>;
@@ -343,46 +404,6 @@ namespace librapid {
 	using ArrayI32G = Array<int32_t, device::CPU>;
 	using ArrayI64G = Array<int64_t, device::CPU>;
 #endif
-
-#define FORCE_TMP_FUNC_BINOP(NAME, FUNC)                                                           \
-	template<typename T, typename D>                                                               \
-	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, const Array<T, D> &rhs, Array<T, D> &dst) {  \
-		dst.assign(lhs.template operator FUNC<Array<T, D>, true>(rhs));                            \
-	}                                                                                              \
-                                                                                                   \
-	template<typename T, typename D>                                                               \
-	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, const T &rhs, Array<T, D> &dst) {            \
-		dst.assign(lhs.template operator FUNC<Array<T, D>, true>(rhs));                            \
-	}                                                                                              \
-                                                                                                   \
-	template<typename T, typename D>                                                               \
-	LR_FORCE_INLINE void NAME(const T &lhs, const Array<T, D> &rhs, Array<T, D> &dst) {            \
-		dst.assign(lhs FUNC rhs);                                                                  \
-	}
-
-#define FORCE_TMP_FUNC_UNOP(NAME, FUNC)                                                            \
-	template<typename T, typename D>                                                               \
-	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, Array<T, D> &dst) {                          \
-		dst.assign(lhs.template FUNC<true>());                                                     \
-	}
-
-	FORCE_TMP_FUNC_BINOP(add, +)
-	FORCE_TMP_FUNC_BINOP(sub, -)
-	FORCE_TMP_FUNC_BINOP(mul, *)
-	FORCE_TMP_FUNC_BINOP(div, /)
-
-	FORCE_TMP_FUNC_BINOP(bitwiseOr, |)
-	FORCE_TMP_FUNC_BINOP(bitwiseAnd, &)
-	FORCE_TMP_FUNC_BINOP(bitwiseXor, ^)
-
-	FORCE_TMP_FUNC_UNOP(negate, operator-)
-	FORCE_TMP_FUNC_UNOP(bitwiseNot, operator~)
-	FORCE_TMP_FUNC_UNOP(logicalNot, operator!)
-
-	template<typename T, typename D>
-	inline std::string str(const Array<T, D> &val, const StrOpt &options = DEFAULT_STR_OPT) {
-		return val.str();
-	}
 
 #undef FORCE_TMP_FUNC
 } // namespace librapid
