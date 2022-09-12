@@ -106,21 +106,55 @@ namespace librapid {
 
 	namespace mapping {
 		// Utility Mapping Type
+
+		static inline std::atomic<uint64_t> mapCounter = 0;
+
 		template<typename Map>
 		class MapFunction {
 		public:
-			MapFunction(const Map &map, std::string name = "",
-						std::vector<std::string> argNames = {}, std::string &&kernel = "") :
+			MapFunction() = default;
+
+			MapFunction(const Map &map, std::vector<std::string> argNames = {},
+						const std::string &kernel = "") :
 					m_map(map),
-					m_name(std::move(name)), m_argNames(std::move(argNames)),
-					m_kernel(std::move(kernel)) {}
+					m_argNames(std::move(argNames)), m_kernel(kernel) {
+				m_name = "jitMappingKernel_" + ::librapid::str((uint64_t)mapCounter++);
+			}
+
+			MapFunction(const MapFunction &other) {
+				m_argNames = other.m_argNames;
+				m_name	   = other.m_name;
+				m_kernel   = other.m_kernel;
+			};
+
+			MapFunction &operator=(const MapFunction &other) {
+				if (this == &other) return *this;
+				m_argNames = other.m_argNames;
+				m_name	   = other.m_name;
+				m_kernel   = other.m_kernel;
+				return *this;
+			};
 
 			template<typename... DerivedTypes>
 			LR_FORCE_INLINE auto operator()(const DerivedTypes &...args) const {
 				return m_map(args...);
 			}
 
-		private:
+			const auto &name() const { return m_name; }
+			const auto &argNames() const { return m_argNames; }
+
+			LR_NODISCARD("") std::string genJitLambda() const {
+				std::string args;
+				for (const auto &arg : m_argNames) {
+					args += "auto " + arg;
+					if (arg != m_argNames.back()) { args += ", "; }
+				}
+
+				return fmt::format("[]({}) {{ {} }}", args, m_kernel);
+			}
+
+			// private:
+		public:
 			Map m_map;
 			std::string m_name;
 			std::vector<std::string> m_argNames;
@@ -142,20 +176,21 @@ namespace librapid {
 
 			CWiseMap() = delete;
 
-			CWiseMap(const MapFunction<Map> &map, const DerivedTypes &...args) :
+			CWiseMap(const Map &map, const DerivedTypes &...args) :
 					Base(extractAndCheckExtent(args...), 0), m_operation(map),
-					m_operands(std::make_tuple(args...)) {}
-
-			CWiseMap(const Type &op) :
-					Base(op.extent(), 0), m_operands(op.m_operands), m_operation(op.m_operation) {}
-
-			CWiseMap &operator=(const Type &op) {
-				if (this == &op) return *this;
-				Base::m_extent = op.m_extent;
-				m_operation	   = op.m_operation;
-				m_operands	   = op.m_operands;
-				return *this;
+					m_operands(std::make_tuple(args...)) {
 			}
+
+			// CWiseMap(const MapFunction<Map> &map, const DerivedTypes &...args) :
+			// 		Base(extractAndCheckExtent(args...), 0), m_operation(map),
+			// 		m_operands(std::make_tuple(args...)) {
+			// 	fmt::print("INFORMATION HEHEHE: {}\n", map.m_kernel);
+			// 	fmt::print("INFORMATION TURD FUCKER: {}\n", typeid(map).name());
+			// }
+
+			CWiseMap(const CWiseMap &op) = default;
+
+			CWiseMap &operator=(const CWiseMap &op) = default;
 
 			LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
 				LR_WARN_ONCE(
@@ -204,14 +239,20 @@ namespace librapid {
 									m_operands));
 			}
 
-			template<typename T>
-			std::string genKernel(std::vector<T> &vec, int64_t &index) const {}
-
 			LR_NODISCARD("")
 			std::string str(std::string format = "", const std::string &delim = " ",
 							int64_t stripWidth = -1, int64_t beforePoint = -1,
 							int64_t afterPoint = -1, int64_t depth = 0) const {
 				return eval().str(format, delim, stripWidth, beforePoint, afterPoint, depth);
+			}
+
+			template<typename T>
+			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
+				std::string lambda = m_operation.genJitLambda();
+				fmt::print("KERNEL: {}\n", m_operation.m_kernel);
+				fmt::print("LAMBDA: {}\n", lambda);
+				std::string operation = lambda + "(5, 10)";
+				return operation;
 			}
 
 		private:
