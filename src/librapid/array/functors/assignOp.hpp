@@ -168,7 +168,7 @@ void applyOp({0} **pointers, int64_t size) {{
 
 				std::string kernel = detail::kernelGenerator(opKernel);
 
-				// fmt::print("Kernel: {}\n", kernel);
+				fmt::print("Kernel: {}\n", kernel);
 
 				static jitify::JitCache kernelCache;
 				jitify::Program program = kernelCache.program(kernel, cudaHeaders, nvccOptions);

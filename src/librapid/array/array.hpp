@@ -342,7 +342,7 @@ namespace librapid {
 	template<bool forceTemporary = false, typename Map, typename... DerivedTypes>
 	LR_NODISCARD("")
 	auto map(const Map &map, DerivedTypes... args) {
-		using Scalar					   = typename std::common_type_t<DerivedTypes...>::Scalar;
+		using Scalar					   = typename std::common_type_t<typename internal::traits<DerivedTypes>::Scalar...>;
 		using BaseScalar				   = typename internal::traits<Scalar>::BaseScalar;
 		using RetType					   = mapping::CWiseMap<Map, DerivedTypes...>;
 		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
