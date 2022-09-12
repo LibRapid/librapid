@@ -129,20 +129,14 @@ namespace librapid::memory {
 	};
 
 	namespace detail {
-		template<typename A>
+		template<typename A, typename... Rest>
 		auto PromoteDeviceMulti() {
-			return A{};
-		};
-
-		template<typename A, typename B>
-		auto PromoteDeviceMulti() {
-			return typename PromoteDevice<A, B>::type{};
-		};
-
-		template<typename A, typename B, typename C, typename... D>
-		auto PromoteDeviceMulti() {
-			return typename PromoteDevice<A, typename PromoteDeviceMulti<B, C, D...>::type>::type{};
-		};
+			if constexpr(sizeof...(Rest) == 0) {
+				return A{};
+			} else {
+				return typename PromoteDevice<A, decltype(PromoteDeviceMulti<Rest...>())>::type{};
+			}
+		}
 	}
 
 	template<typename... Types>
