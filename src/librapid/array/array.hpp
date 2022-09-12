@@ -339,12 +339,12 @@ namespace librapid {
 	FORCE_TMP_FUNC_UNOP(logicalNot, operator!)
 
 	// Arbitrary mapping of functions to arrays
-	template<bool forceTemporary = false, typename Map, typename... DerivedTypes>
+	template<bool allowPacket = true, bool forceTemporary = false, typename Map, typename... DerivedTypes>
 	LR_NODISCARD("")
 	auto map(const Map &map, DerivedTypes... args) {
 		using Scalar					   = typename std::common_type_t<typename internal::traits<DerivedTypes>::Scalar...>;
 		using BaseScalar				   = typename internal::traits<Scalar>::BaseScalar;
-		using RetType					   = mapping::CWiseMap<Map, DerivedTypes...>;
+		using RetType					   = mapping::CWiseMap<allowPacket, Map, DerivedTypes...>;
 		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
 		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;
 

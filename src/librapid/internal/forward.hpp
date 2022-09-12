@@ -50,7 +50,7 @@ namespace librapid {
 	}
 
 	namespace mapping {
-		template<typename Map, typename... DerivedTypes>
+		template<bool allowPacket, typename Map, typename... DerivedTypes>
 		class CWiseMap;
 	}
 

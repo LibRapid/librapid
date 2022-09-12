@@ -226,7 +226,7 @@ namespace librapid {
 		// Random floating point value in range [lower, upper)
 
 		// Seed generation
-		static auto tmpSeed = (uint64_t)trueRandom<double>(0, internal::traits<double>::max());
+		static auto tmpSeed = (uint64_t) now<time::microsecond>();
 		if (seed != -1) tmpSeed = seed;
 
 		static std::uniform_real_distribution<double> distribution(0., 1.);

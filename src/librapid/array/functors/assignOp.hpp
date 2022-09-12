@@ -21,11 +21,13 @@ namespace librapid::functors {
 			  is_same_v<typename internal::traits<Derived>::Device, device::CPU>;
 			constexpr bool srcIsHost =
 			  is_same_v<typename internal::traits<OtherDerived>::Device, device::CPU>;
-			using Scalar				   = typename internal::traits<Derived>::Scalar;
-			using BaseScalar			   = typename internal::traits<Derived>::BaseScalar;
-			using Packet				   = typename internal::traits<Scalar>::Packet;
-			static constexpr int64_t Flags = internal::traits<OtherDerived>::Flags;
-			constexpr bool isMatrixOp	   = (bool)(Flags & internal::flags::Matrix);
+			using Scalar					 = typename internal::traits<Derived>::Scalar;
+			using BaseScalar				 = typename internal::traits<Derived>::BaseScalar;
+			using Packet					 = typename internal::traits<Scalar>::Packet;
+			static constexpr int64_t Flags	 = internal::traits<OtherDerived>::Flags;
+			constexpr bool isMatrixOp		 = (bool)(Flags & internal::flags::Matrix);
+			constexpr bool hasCustomFunction = (bool)(Flags & internal::flags::CustomFunctionGen);
+			constexpr bool allowPacket		 = !((bool)(Flags & internal::flags::NoPacketOp));
 
 #if !defined(LIBRAPID_HAS_CUDA)
 			static_assert(dstIsHost && srcIsHost, "CUDA support was not enabled");
@@ -79,7 +81,7 @@ namespace librapid::functors {
 				}
 
 				// Ensure the remaining values are filled
-				int64_t start = alignedLen;
+				int64_t start = alignedLen * allowPacket;
 				if (!multiThread) {
 					for (int64_t i = start < 0 ? 0 : start; i < len; ++i) {
 						dst.loadFromScalar(i, src);
@@ -120,7 +122,6 @@ namespace librapid::functors {
 
 				std::string functionArgs;
 				for (int64_t i = 0; i < index; ++i) {
-					// functionArgs += fmt::format("{} arg{}", scalarName, i);
 					functionArgs += fmt::format("{} arg{}", scalarName, i);
 					if (i + 1 < index) functionArgs += ", ";
 				}
@@ -142,7 +143,15 @@ namespace librapid::functors {
 					if (i + 1 < index) varArgs += ", ";
 				}
 
+				std::string customFunctionDefinition;
+
+				if constexpr (hasCustomFunction) {
+					customFunctionDefinition = src.genCustomFunction();
+				}
+
 				std::string opKernel = fmt::format(R"V0G0N(
+{6}
+
 __device__
 {0} function({1}) {{
 	return {2};
@@ -159,16 +168,17 @@ void applyOp({0} **pointers, int64_t size) {{
 	}}
 }}
 				)V0G0N",
-												   scalarName,	 // 0
-												   functionArgs, // 1
-												   microKernel,	 // 2
-												   mainArgs,	 // 3
-												   varExtractor, // 4
-												   indArgs);	 // 5
+												   scalarName,				  // 0
+												   functionArgs,			  // 1
+												   microKernel,				  // 2
+												   mainArgs,				  // 3
+												   varExtractor,			  // 4
+												   indArgs,					  // 5
+												   customFunctionDefinition); // 6
 
 				std::string kernel = detail::kernelGenerator(opKernel);
 
-				fmt::print("Kernel: {}\n", kernel);
+				// fmt::print("Kernel: {}\n", kernel);
 
 				static jitify::JitCache kernelCache;
 				jitify::Program program = kernelCache.program(kernel, cudaHeaders, nvccOptions);

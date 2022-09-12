@@ -75,7 +75,7 @@ namespace librapid::memory {
 		}
 
 		int offset = *(((unsigned char *)alignedPtr) - 1);
-		delete[] ((unsigned char *) alignedPtr - offset);
+		delete[] ((unsigned char *)alignedPtr - offset);
 	}
 
 	// Only supports copying between host pointers
@@ -127,4 +127,24 @@ namespace librapid::memory {
 	struct PromoteDevice<device::GPU, device::GPU> {
 		using type = device::GPU;
 	};
+
+	namespace detail {
+		template<typename A>
+		auto PromoteDeviceMulti() {
+			return A{};
+		};
+
+		template<typename A, typename B>
+		auto PromoteDeviceMulti() {
+			return typename PromoteDevice<A, B>::type{};
+		};
+
+		template<typename A, typename B, typename C, typename... D>
+		auto PromoteDeviceMulti() {
+			return typename PromoteDevice<A, typename PromoteDeviceMulti<B, C, D...>::type>::type{};
+		};
+	}
+
+	template<typename... Types>
+	using PromoteDeviceMulti = decltype(detail::PromoteDeviceMulti<Types...>());
 } // namespace librapid::memory

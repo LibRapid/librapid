@@ -59,7 +59,8 @@ namespace librapid::internal {
 		constexpr uint64_t ScalarArithmetic = 1ll << 20; // Scalar needs arithmetic
 		constexpr uint64_t ScalarLogical	= 1ll << 21; // Scalar needs logical
 
-		constexpr uint64_t NoPacketOp = 1ll << 34; // Supports packet operations
+		constexpr uint64_t NoPacketOp		 = 1ll << 34; // Supports packet operations
+		constexpr uint64_t CustomFunctionGen = 1ll << 35; // Needs a custom function to be generated
 
 #if defined(LIBRAPID_PYTHON)
 		constexpr uint64_t PythonFlags = RequireEval;
