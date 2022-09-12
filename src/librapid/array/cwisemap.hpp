@@ -16,12 +16,16 @@ namespace librapid {
 
 		template<typename First, typename Second>
 		constexpr bool allSameDevice() {
+			if (internal::traits<First>::IsScalar || internal::traits<Second>::IsScalar)
+				return true;
 			return std::is_same_v<First, Second>;
 		}
 
 		template<typename First, typename Second, typename... Rest,
 				 typename std::enable_if_t<(sizeof...(Rest) > 0), int> = 0>
 		constexpr bool allSameDevice() {
+			if (internal::traits<First>::IsScalar || internal::traits<Second>::IsScalar)
+				return true;
 			return std::is_same_v<First, Second> && allSameDevice<Rest...>();
 		}
 
@@ -85,92 +89,39 @@ namespace librapid {
 	} // namespace mapping
 
 	namespace internal {
-		template<typename Map, typename... DerivedTypes>
-		struct traits<mapping::CWiseMap<Map, DerivedTypes...>> {
+		template<bool allowPacket, typename Map, typename... DerivedTypes>
+		struct traits<mapping::CWiseMap<allowPacket, Map, DerivedTypes...>> {
 			static_assert(mapping::allSameDevice<DerivedTypes...>(),
 						  "All arrays must be on the same device");
 
 			static constexpr bool IsScalar	  = false;
 			static constexpr bool IsEvaluated = false;
 			using Valid						  = std::true_type;
-			using Type						  = mapping::CWiseMap<Map, DerivedTypes...>;
+			using Type	 = mapping::CWiseMap<allowPacket, Map, DerivedTypes...>;
 			using Scalar = typename std::common_type_t<typename traits<DerivedTypes>::Scalar...>;
 			using BaseScalar = typename traits<Scalar>::BaseScalar;
-			using Packet	 = typename traits<Scalar>::Packet;
-			using Device = typename std::common_type_t<typename traits<DerivedTypes>::Device...>;
-			using StorageType = memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags =
-			  mapping::extractFlags<Map>() | (traits<DerivedTypes>::Flags | ...);
+			using Packet = typename std::conditional_t<allowPacket, typename traits<Scalar>::Packet,
+													   std::false_type>;
+			using Device =
+			  typename memory::PromoteDeviceMulti<typename traits<DerivedTypes>::Device...>;
+			using StorageType				= memory::DenseStorage<Scalar, Device>;
+			static constexpr uint64_t Flags = (flags::CustomFunctionGen |
+											  mapping::extractFlags<Map>() |
+											  (traits<DerivedTypes>::Flags | ...)) | (allowPacket ? 0 : flags::NoPacketOp);
 		};
 	} // namespace internal
 
 	namespace mapping {
-		// Utility Mapping Type
-
-		static inline std::atomic<uint64_t> mapCounter = 0;
-
-		template<typename Map>
-		class MapFunction {
-		public:
-			MapFunction() = default;
-
-			MapFunction(const Map &map, std::vector<std::string> argNames = {},
-						const std::string &kernel = "") :
-					m_map(map),
-					m_argNames(std::move(argNames)), m_kernel(kernel) {
-				m_name = "jitMappingKernel_" + ::librapid::str((uint64_t)mapCounter++);
-			}
-
-			MapFunction(const MapFunction &other) {
-				m_argNames = other.m_argNames;
-				m_name	   = other.m_name;
-				m_kernel   = other.m_kernel;
-			};
-
-			MapFunction &operator=(const MapFunction &other) {
-				if (this == &other) return *this;
-				m_argNames = other.m_argNames;
-				m_name	   = other.m_name;
-				m_kernel   = other.m_kernel;
-				return *this;
-			};
-
-			template<typename... DerivedTypes>
-			LR_FORCE_INLINE auto operator()(const DerivedTypes &...args) const {
-				return m_map(args...);
-			}
-
-			const auto &name() const { return m_name; }
-			const auto &argNames() const { return m_argNames; }
-
-			LR_NODISCARD("") std::string genJitLambda() const {
-				std::string args;
-				for (const auto &arg : m_argNames) {
-					args += "auto " + arg;
-					if (arg != m_argNames.back()) { args += ", "; }
-				}
-
-				return fmt::format("[]({}) {{ {} }}", args, m_kernel);
-			}
-
-			// private:
-		public:
-			Map m_map;
-			std::string m_name;
-			std::vector<std::string> m_argNames;
-			std::string m_kernel;
-		};
-
-		template<typename Map, typename... DerivedTypes>
-		class CWiseMap : public ArrayBase<
-						   CWiseMap<Map, DerivedTypes...>,
-						   typename internal::traits<CWiseMap<Map, DerivedTypes...>>::Device> {
+		template<bool allowPacket, typename Map, typename... DerivedTypes>
+		class CWiseMap : public ArrayBase<CWiseMap<allowPacket, Map, DerivedTypes...>,
+										  typename internal::traits<
+											CWiseMap<allowPacket, Map, DerivedTypes...>>::Device> {
 		public:
 			using Operation					= Map;
 			using Scalar					= typename internal::traits<CWiseMap>::Scalar;
 			using Packet					= typename internal::traits<Scalar>::Packet;
 			using Device					= typename internal::traits<CWiseMap>::Device;
-			using Type						= CWiseMap<Map, DerivedTypes...>;
+			using Type						= CWiseMap<allowPacket, Map, DerivedTypes...>;
 			using Base						= ArrayBase<Type, Device>;
 			static constexpr uint64_t Flags = internal::traits<Type>::Flags;
 
@@ -178,15 +129,7 @@ namespace librapid {
 
 			CWiseMap(const Map &map, const DerivedTypes &...args) :
 					Base(extractAndCheckExtent(args...), 0), m_operation(map),
-					m_operands(std::make_tuple(args...)) {
-			}
-
-			// CWiseMap(const MapFunction<Map> &map, const DerivedTypes &...args) :
-			// 		Base(extractAndCheckExtent(args...), 0), m_operation(map),
-			// 		m_operands(std::make_tuple(args...)) {
-			// 	fmt::print("INFORMATION HEHEHE: {}\n", map.m_kernel);
-			// 	fmt::print("INFORMATION TURD FUCKER: {}\n", typeid(map).name());
-			// }
+					m_operands(std::make_tuple(args...)) {}
 
 			CWiseMap(const CWiseMap &op) = default;
 
@@ -246,17 +189,67 @@ namespace librapid {
 				return eval().str(format, delim, stripWidth, beforePoint, afterPoint, depth);
 			}
 
+			LR_NODISCARD("") std::string genCustomFunction() const {
+				std::string types;
+				std::string args;
+				std::vector<std::string> argNames = m_operation.args();
+				for (int64_t i = 0; i < argNames.size(); ++i) {
+					std::string type = fmt::format("T_{}", i);
+					types += fmt::format("typename {}", type);
+					args += fmt::format("{} {}", type, argNames[i]);
+					if (i + 1 < argNames.size()) {
+						args += ", ";
+						types += ", ";
+					}
+				}
+				return fmt::format(R"V0G0N(
+template<{0}>
+__forceinline__  __device__ {1} customFunctionImpl({2}) {{
+	{3}
+}}
+								   )V0G0N",
+								   types,
+								   internal::traits<Scalar>::Name,
+								   args,
+								   m_operation.kernel());
+			}
+
 			template<typename T>
 			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
-				std::string lambda = m_operation.genJitLambda();
-				fmt::print("KERNEL: {}\n", m_operation.m_kernel);
-				fmt::print("LAMBDA: {}\n", lambda);
-				std::string operation = lambda + "(5, 10)";
-				return operation;
+				std::vector<std::string> strings;
+				extractTupleInfo<0>(strings, vec, index, m_operands);
+
+				std::string res("customFunctionImpl(");
+				for (int64_t i = 0; i < strings.size(); ++i) {
+					res += strings[i];
+					if (i + 1 < strings.size()) { res += ", "; }
+				}
+
+				return res + ")";
 			}
 
 		private:
-			MapFunction<Map> m_operation;
+			template<int64_t TupleIndex, typename T, typename... Pack>
+			LR_FORCE_INLINE void extractTupleInfo(std::vector<std::string> &strings,
+												  std::vector<T> &vec, int64_t &index,
+												  const std::tuple<Pack...> &vals) const {
+				if constexpr (TupleIndex < sizeof...(Pack)) {
+					if constexpr (internal::traits<typename std::tuple_element<
+									TupleIndex,
+									std::tuple<Pack...>>::type>::IsScalar) {
+						strings.emplace_back(detail::kernelFormat(std::get<0>(vals)));
+					} else {
+						strings.emplace_back(std::get<0>(vals).genKernel(vec, index));
+					}
+
+					if constexpr (TupleIndex + 1 < sizeof...(Pack)) {
+						extractTupleInfo<TupleIndex + 1>(strings, vec, index, vals);
+					}
+				}
+			}
+
+		private:
+			Map m_operation;
 			std::tuple<DerivedTypes...> m_operands;
 		};
 	} // namespace mapping
@@ -264,8 +257,8 @@ namespace librapid {
 
 // Provide {fmt} printing capabilities
 #ifdef FMT_API
-template<typename Map, typename... DerivedTypes>
-struct fmt::formatter<librapid::mapping::CWiseMap<Map, DerivedTypes...>> {
+template<bool allowPacket, typename Map, typename... DerivedTypes>
+struct fmt::formatter<librapid::mapping::CWiseMap<allowPacket, Map, DerivedTypes...>> {
 	std::string formatStr = "{}";
 
 	template<typename ParseContext>
@@ -281,7 +274,8 @@ struct fmt::formatter<librapid::mapping::CWiseMap<Map, DerivedTypes...>> {
 	}
 
 	template<typename FormatContext>
-	auto format(const librapid::mapping::CWiseMap<Map, DerivedTypes...> &map, FormatContext &ctx) {
+	auto format(const librapid::mapping::CWiseMap<allowPacket, Map, DerivedTypes...> &map,
+				FormatContext &ctx) {
 		try {
 			return fmt::format_to(ctx.out(), map.str(formatStr));
 		} catch (std::exception &e) { return fmt::format_to(ctx.out(), e.what()); }

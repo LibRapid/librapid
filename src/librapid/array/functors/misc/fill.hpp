@@ -6,7 +6,7 @@ namespace librapid::functors::misc {
 	template<typename Type_>
 	class FillArray {
 	public:
-		using Type					   = Type_;
+		using Type = Type_;
 		// Use base scalar specially for boolean arrays
 		using Scalar				   = typename internal::traits<Type_>::BaseScalar;
 		using RetType				   = Scalar;
@@ -32,7 +32,7 @@ namespace librapid::functors::misc {
 
 		LR_NODISCARD("") LR_FORCE_INLINE std::string genKernel() const {
 			// This should be compiled down to just "m_val"
-			return fmt::format("{} + 0 *", m_val);
+			return fmt::format("{0}({1}) + {0}(0) *", internal::traits<Type>::Name, m_val);
 		}
 
 		template<typename T, int64_t d, int64_t a>
