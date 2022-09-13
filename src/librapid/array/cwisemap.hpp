@@ -64,24 +64,27 @@ namespace librapid {
 			}
 		}
 
-		template<typename T>
+		template<typename Scalar, typename T>
 		LR_FORCE_INLINE auto extractPacket(const T &val, int64_t index) {
 			if constexpr (internal::traits<T>::IsScalar) {
-				using Packet = typename internal::traits<T>::Packet;
-				return Packet(val);
+				using Packet = typename internal::traits<Scalar>::Packet;
+				return Packet(static_cast<Scalar>(val));
 			} else {
 				return val.packet(index);
 			}
 		}
 
-		template<typename T>
+		template<typename Scalar, typename T>
 		LR_FORCE_INLINE auto extractScalar(const T &val, int64_t index) {
 			if constexpr (internal::traits<T>::IsScalar) {
-				return val;
+				return static_cast<Scalar>(val);
 			} else {
-				return val.scalar(index);
+				return static_cast<Scalar>(val.scalar(index));
 			}
 		}
+
+		// Count the number of unique mapping objects ever created
+		static inline std::atomic<uint64_t> lambdaMapCount = 0;
 	} // namespace mapping
 
 	namespace internal {
@@ -100,11 +103,10 @@ namespace librapid {
 													   std::false_type>;
 			using Device =
 			  typename memory::PromoteDeviceMulti<typename traits<DerivedTypes>::Device...>;
-			using StorageType = memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags =
-			  (flags::CustomFunctionGen | mapping::extractFlags<Map>() |
-			   (traits<DerivedTypes>::Flags | ...)) |
-			  (allowPacket ? 0 : flags::NoPacketOp);
+			using StorageType				= memory::DenseStorage<Scalar, Device>;
+			static constexpr uint64_t Flags = flags::CustomFunctionGen |
+											  mapping::extractFlags<Map>() |
+											  (allowPacket ? 0 : flags::NoPacketOp);
 		};
 	} // namespace internal
 
@@ -126,11 +128,14 @@ namespace librapid {
 
 			CWiseMap(const Map &map, const DerivedTypes &...args) :
 					Base(extractAndCheckExtent(args...), 0), m_operation(map),
-					m_operands(std::make_tuple(args...)) {}
+					m_operands(std::make_tuple(args...)),
+					m_name(fmt::format("implMapFunction_{}", lambdaMapCount)) {}
 
-			CWiseMap(const CWiseMap &op) = default;
+			CWiseMap(const CWiseMap &op) :
+					Base(op.extent(), 0), m_operation(op.m_operation), m_operands(op.m_operands),
+					m_name(op.m_name) {}
 
-			CWiseMap &operator=(const CWiseMap &op) = default;
+			CWiseMap &operator=(const CWiseMap &op) = delete;
 
 			LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
 				LR_WARN_ONCE(
@@ -165,7 +170,8 @@ namespace librapid {
 				return std::apply(m_operation,
 								  std::apply(
 									[index](auto &&...args) {
-										return std::make_tuple(extractPacket(args, index)...);
+										return std::make_tuple(
+										  extractPacket<Scalar>(args, index)...);
 									},
 									m_operands));
 			}
@@ -174,7 +180,8 @@ namespace librapid {
 				return std::apply(m_operation,
 								  std::apply(
 									[index](auto &&...args) {
-										return std::make_tuple(extractScalar(args, index)...);
+										return std::make_tuple(
+										  extractScalar<Scalar>(args, index)...);
 									},
 									m_operands));
 			}
@@ -201,14 +208,15 @@ namespace librapid {
 				}
 				return fmt::format(R"V0G0N(
 template<{0}>
-__forceinline__  __device__ {1} customFunctionImpl({2}) {{
+__forceinline__  __device__ {1} {2}({3}) {{
 	{3}
 }}
 								   )V0G0N",
-								   types,
-								   internal::traits<Scalar>::Name,
-								   args,
-								   m_operation.kernel());
+								   types,						   // Templates
+								   internal::traits<Scalar>::Name, // Return type
+								   m_name,						   // Function name
+								   args,						   // Arguments
+								   m_operation.kernel());		   // Kernel
 			}
 
 			template<typename T>
@@ -224,6 +232,8 @@ __forceinline__  __device__ {1} customFunctionImpl({2}) {{
 
 				return res + ")";
 			}
+
+			LR_NODISCARD("") std::string name() const { return m_name; }
 
 		private:
 			template<int64_t TupleIndex, typename T, typename... Pack>
@@ -248,8 +258,31 @@ __forceinline__  __device__ {1} customFunctionImpl({2}) {{
 		private:
 			Map m_operation;
 			std::tuple<DerivedTypes...> m_operands;
+			std::string m_name;
 		};
 	} // namespace mapping
+
+	// Arbitrary mapping of functions to arrays
+	template<bool allowPacket = true, bool forceTemporary = false, typename Map,
+			 typename... DerivedTypes>
+	LR_NODISCARD("")
+	auto map(const Map &map, DerivedTypes... args) {
+		using Scalar =
+		  typename std::common_type_t<typename internal::traits<DerivedTypes>::Scalar...>;
+		using BaseScalar				   = typename internal::traits<Scalar>::BaseScalar;
+		using RetType					   = mapping::CWiseMap<allowPacket, Map, DerivedTypes...>;
+		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
+		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;
+
+		static_assert(!(Required & ~(Flags & Required)),
+					  "Scalar type is incompatible with Functor");
+
+		if constexpr (!forceTemporary && // If we REQUIRE a temporary value, don't evaluate it
+					  ((bool)(Flags & internal::flags::RequireEval)))
+			return RetType(map, args...).eval();
+		else
+			return RetType(map, args...);
+	}
 } // namespace librapid
 
 // Provide {fmt} printing capabilities
