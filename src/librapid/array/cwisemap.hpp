@@ -5,7 +5,6 @@
 #include "../internal/config.hpp"
 #include "../internal/forward.hpp"
 #include "helpers/kernelFormat.hpp"
-#include "arrayBase.hpp"
 
 namespace librapid {
 	namespace mapping {
@@ -16,17 +15,14 @@ namespace librapid {
 
 		template<typename First, typename Second>
 		constexpr bool allSameDevice() {
-			if (internal::traits<First>::IsScalar || internal::traits<Second>::IsScalar)
-				return true;
-			return std::is_same_v<First, Second>;
+			return std::is_same_v<typename internal::traits<First>::Device,
+								  typename internal::traits<Second>::Device>;
 		}
 
 		template<typename First, typename Second, typename... Rest,
-				 typename std::enable_if_t<(sizeof...(Rest) > 0), int> = 0>
+				 typename std::enable_if_t<(sizeof...(Rest) > 0)> = 0>
 		constexpr bool allSameDevice() {
-			if (internal::traits<First>::IsScalar || internal::traits<Second>::IsScalar)
-				return true;
-			return std::is_same_v<First, Second> && allSameDevice<Rest...>();
+			return allSameDevice<First, Second>() && allSameDevice<Second, Rest...>();
 		}
 
 		template<typename T, typename = int>
@@ -104,10 +100,11 @@ namespace librapid {
 													   std::false_type>;
 			using Device =
 			  typename memory::PromoteDeviceMulti<typename traits<DerivedTypes>::Device...>;
-			using StorageType				= memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags = (flags::CustomFunctionGen |
-											  mapping::extractFlags<Map>() |
-											  (traits<DerivedTypes>::Flags | ...)) | (allowPacket ? 0 : flags::NoPacketOp);
+			using StorageType = memory::DenseStorage<Scalar, Device>;
+			static constexpr uint64_t Flags =
+			  (flags::CustomFunctionGen | mapping::extractFlags<Map>() |
+			   (traits<DerivedTypes>::Flags | ...)) |
+			  (allowPacket ? 0 : flags::NoPacketOp);
 		};
 	} // namespace internal
 
