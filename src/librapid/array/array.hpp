@@ -221,10 +221,7 @@ namespace librapid {
 				for (int64_t i = 0; i < Base::extent().dims(); ++i)
 					if (Base::extent()[i] != 1) ++nonOneDims;
 
-				if (nonOneDims == 1 && stripWidth == -1) {
-					strip	   = false;
-					stripWidth = 0;
-				}
+				if (nonOneDims == 1 && stripWidth == -1) stripWidth = 0;
 
 				if (stripWidth == -1) {
 					if (Base::extent().size() >= 1000) {
@@ -337,26 +334,6 @@ namespace librapid {
 	FORCE_TMP_FUNC_UNOP(negate, operator-)
 	FORCE_TMP_FUNC_UNOP(bitwiseNot, operator~)
 	FORCE_TMP_FUNC_UNOP(logicalNot, operator!)
-
-	// Arbitrary mapping of functions to arrays
-	template<bool allowPacket = true, bool forceTemporary = false, typename Map, typename... DerivedTypes>
-	LR_NODISCARD("")
-	auto map(const Map &map, DerivedTypes... args) {
-		using Scalar					   = typename std::common_type_t<typename internal::traits<DerivedTypes>::Scalar...>;
-		using BaseScalar				   = typename internal::traits<Scalar>::BaseScalar;
-		using RetType					   = mapping::CWiseMap<allowPacket, Map, DerivedTypes...>;
-		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
-		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;
-
-		static_assert(!(Required & ~(Flags & Required)),
-					  "Scalar type is incompatible with Functor");
-
-		if constexpr (!forceTemporary && // If we REQUIRE a temporary value, don't evaluate it
-					  ((bool)(Flags & internal::flags::RequireEval)))
-			return RetType(map, args...).eval();
-		else
-			return RetType(map, args...);
-	}
 
 	template<typename T, typename D>
 	inline std::string str(const Array<T, D> &val, const StrOpt &options = DEFAULT_STR_OPT) {

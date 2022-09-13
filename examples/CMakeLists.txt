@@ -4,5 +4,5 @@ function(make_example name)
 endfunction()
 
 make_example(1)
-make_example(2)
+make_example(map)
 make_example(pi)
