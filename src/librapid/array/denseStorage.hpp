@@ -31,15 +31,36 @@ namespace librapid::memory {
 			increment();
 		}
 
+		DenseStorage(DenseStorage<T, d> &&other) noexcept {
+			m_refCount	= other.m_refCount;
+			m_size		= other.m_size;
+			m_heap		= other.m_heap;
+			m_memOffset = other.m_memOffset;
+			increment();
+		}
+
 		DenseStorage &operator=(const DenseStorage<T, d> &other) {
 			if (this == &other) return *this;
 
+			other.increment();
 			decrement();
 			m_size		= other.m_size;
 			m_heap		= other.m_heap;
 			m_refCount	= other.m_refCount;
 			m_memOffset = other.m_memOffset;
-			increment();
+
+			return *this;
+		}
+
+		DenseStorage &operator=(DenseStorage<T, d> &&other) noexcept {
+			if (this == &other) return *this;
+
+			other.increment();
+			decrement();
+			m_size		= other.m_size;
+			m_heap		= other.m_heap;
+			m_refCount	= other.m_refCount;
+			m_memOffset = other.m_memOffset;
 
 			return *this;
 		}
@@ -76,8 +97,11 @@ namespace librapid::memory {
 
 		void setOffset(int64_t off) { m_memOffset = off; }
 
-	private:
-		void increment() const { (*m_refCount)++; }
+	protected:
+		void increment() const {
+			if (!m_refCount) return;
+			(*m_refCount)++;
+		}
 
 		void decrement() {
 			if (!m_refCount) return;
@@ -88,7 +112,6 @@ namespace librapid::memory {
 			}
 		}
 
-	protected:
 		int64_t m_size					 = 0;
 		T *m_heap						 = nullptr;
 		std::atomic<int64_t> *m_refCount = nullptr;

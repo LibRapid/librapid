@@ -14,10 +14,57 @@
 #include "../linalg/blasInterface.hpp"
 #include "cast.hpp"
 
-#define IMPL_BINOP(OPERATOR_, TYPE_)                                                               \
-	template<typename OtherDerived>                                                                \
-	auto OPERATOR_(const OtherDerived &other) const {                                              \
-		return ::librapid::map(TYPE_(), *this, other);                                                         \
+#define IMPL_BINOP(NAME, TYPE)                                                                     \
+	template<typename OtherDerived,                                                                \
+			 bool forceTemporary													   = false,    \
+			 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>        \
+	LR_NODISCARD("")                                                                               \
+	auto NAME(const OtherDerived &other) const {                                                   \
+		using ScalarOther = typename internal::traits<OtherDerived>::Scalar;                       \
+		using OtherDevice = typename internal::traits<OtherDerived>::Device;                       \
+		using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;             \
+		using RetType =                                                                            \
+		  binop::CWiseBinop<functors::binary::TYPE<Scalar, ScalarOther>, Derived, OtherDerived>;   \
+		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                      \
+		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
+                                                                                                   \
+		static_assert(                                                                             \
+		  is_same_v<Scalar, ScalarOther>,                                                          \
+		  "Cannot operate on Arrays with different types. Please use Array::cast<T>()");           \
+                                                                                                   \
+		static_assert(!(Required & ~(Flags & Required)),                                           \
+					  "Scalar type is incompatible with Functor");                                 \
+                                                                                                   \
+		LR_ASSERT(extent() == other.extent(),                                                      \
+				  "Arrays must have equal extents. Cannot operate on Arrays with {} and {}",       \
+				  extent().str(),                                                                  \
+				  other.extent().str());                                                           \
+                                                                                                   \
+		if constexpr (!forceTemporary && /* If we REQUIRE a temporary value, don't evaluate it */  \
+					  ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval)))           \
+			return RetType(derived(), other.derived()).eval();                                     \
+		else                                                                                       \
+			return RetType(derived(), other.derived());                                            \
+	}
+
+#define IMPL_BINOP_SCALAR(NAME, TYPE)                                                              \
+	template<typename OtherScalar,                                                                 \
+			 typename std::enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
+	LR_NODISCARD("")                                                                               \
+	auto NAME(const OtherScalar &other) const {                                                    \
+		using ResDevice = Device;                                                                  \
+		using RetType =                                                                            \
+		  binop::CWiseBinop<functors::binary::TYPE<Scalar, OtherScalar>, Derived, OtherScalar>;    \
+		static constexpr uint64_t Flags	   = internal::traits<OtherScalar>::Flags;                 \
+		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
+                                                                                                   \
+		static_assert(!(Required & ~(Flags & Required)),                                           \
+					  "Scalar type is incompatible with Functor");                                 \
+                                                                                                   \
+		if constexpr ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval))             \
+			return RetType(derived(), other).eval();                                               \
+		else                                                                                       \
+			return RetType(derived(), other);                                                      \
 	}
 
 #define IMPL_BINOP_SCALAR_EXTERNAL(NAME, TYPE)                                                     \
@@ -66,44 +113,6 @@
 	}
 
 namespace librapid {
-	namespace detail {
-		struct SumOp {
-			template<typename A, typename B>
-			LR_FORCE_INLINE auto operator()(const A &x, const B &y) const {
-				return x + y;
-			}
-			LR_FORCE_INLINE std::vector<std::string> args() const { return {"x", "y"}; }
-			LR_FORCE_INLINE std::string kernel() const { return "return x + y;"; }
-		};
-
-		struct SubOp {
-			template<typename A, typename B>
-			LR_FORCE_INLINE auto operator()(const A &x, const B &y) const {
-				return x - y;
-			}
-			LR_FORCE_INLINE std::vector<std::string> args() const { return {"x", "y"}; }
-			LR_FORCE_INLINE std::string kernel() const { return "return x - y;"; }
-		};
-
-		struct MulOp {
-			template<typename A, typename B>
-			LR_FORCE_INLINE auto operator()(const A &x, const B &y) const {
-				return x * y;
-			}
-			LR_FORCE_INLINE std::vector<std::string> args() const { return {"x", "y"}; }
-			LR_FORCE_INLINE std::string kernel() const { return "return x * y;"; }
-		};
-
-		struct DivOp {
-			template<typename A, typename B>
-			LR_FORCE_INLINE auto operator()(const A &x, const B &y) const {
-				return x / y;
-			}
-			LR_FORCE_INLINE std::vector<std::string> args() const { return {"x", "y"}; }
-			LR_FORCE_INLINE std::string kernel() const { return "return x / y;"; }
-		};
-	} // namespace detail
-
 	namespace internal {
 		template<typename Derived>
 		struct traits<ArrayBase<Derived, device::CPU>> {
@@ -277,14 +286,25 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 			return res.template cast<T>();
 		}
 
-		IMPL_BINOP(operator+, detail::SumOp)
-		IMPL_BINOP(operator-, detail::SubOp)
-		IMPL_BINOP(operator*, detail::MulOp)
-		IMPL_BINOP(operator/, detail::DivOp)
+		IMPL_BINOP(operator+, ScalarSum)
+		IMPL_BINOP(operator-, ScalarDiff)
+		IMPL_BINOP(operator*, ScalarProd)
+		IMPL_BINOP(operator/, ScalarDiv)
+
+		// Allow bool as operand
+		IMPL_BINOP_SCALAR(operator+, ScalarSum)
+		IMPL_BINOP_SCALAR(operator-, ScalarDiff)
+		IMPL_BINOP_SCALAR(operator*, ScalarProd)
+		IMPL_BINOP_SCALAR(operator/, ScalarDiv)
 
 		IMPL_BINOP(operator|, BitwiseOr)
 		IMPL_BINOP(operator&, BitwiseAnd)
 		IMPL_BINOP(operator^, BitwiseXor)
+
+		// Do not allow bool as operator (Can be done with other operations)
+		IMPL_BINOP_SCALAR(operator|, BitwiseOr)
+		IMPL_BINOP_SCALAR(operator&, BitwiseAnd)
+		IMPL_BINOP_SCALAR(operator^, BitwiseXor)
 
 		IMPL_UNOP(operator-, UnaryMinus, true)
 		IMPL_UNOP(operator~, UnaryInvert, false)
