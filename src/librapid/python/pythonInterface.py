@@ -1,3 +1,4 @@
+import inspect
 import _librapid
 from . import typeMapping
 from . import extentInterface
@@ -312,50 +313,61 @@ setNumThreads = _librapid.setNumThreads
 setBlasThreads = _librapid.setBlasThreads
 setCudaMathMode = _librapid.setCudaMathMode
 
+def _generateFunction(function):
+	def newFunction(*args):
+		newArgs = (arg._array if isinstance(arg, Array) else arg for arg in args)
+		containsArray = any([isinstance(arg, Array) for arg in args])
+		res = function(*newArgs)
+		if res is not None and containsArray:
+			return Array(res)
+		return res
+
+	return newFunction
+
 # Functions from the Math library
-abs = _librapid.abs
-floor = _librapid.floor
-ceil = _librapid.ceil
-pow = _librapid.pow
-sqrt = _librapid.sqrt
-exp = _librapid.exp
-exp2 = _librapid.exp2
-exp10 = _librapid.exp10
-log = _librapid.log
-log2 = _librapid.log2
-log10 = _librapid.log10
-sin = _librapid.sin
-cos = _librapid.cos
-tan = _librapid.tan
-asin = _librapid.asin
-acos = _librapid.acos
-atan = _librapid.atan
-csc = _librapid.csc
-sec = _librapid.sec
-cot = _librapid.cot
-acsc = _librapid.acsc
-asec = _librapid.asec
-acot = _librapid.acot
-sinh = _librapid.sinh
-cosh = _librapid.cosh
-tanh = _librapid.tanh
-asinh = _librapid.asinh
-acosh = _librapid.acosh
-atanh = _librapid.atanh
-mod = _librapid.mod
-round = _librapid.round
-roundSigFig = _librapid.roundSigFig
-roundTo = _librapid.roundTo
-roundUpTo = _librapid.roundUpTo
-map = _librapid.map
-random = _librapid.random
-randint = _librapid.randint
-trueRandomEntropy = _librapid.trueRandomEntropy
-trueRandom = _librapid.trueRandom
-trueRandint = _librapid.trueRandint
-randomGaussian = _librapid.randomGaussian
-pow10 = _librapid.pow10
-lerp = _librapid.lerp
+abs = _generateFunction(_librapid.abs)
+floor = _generateFunction(_librapid.floor)
+ceil = _generateFunction(_librapid.ceil)
+pow = _generateFunction(_librapid.pow)
+sqrt = _generateFunction(_librapid.sqrt)
+exp = _generateFunction(_librapid.exp)
+exp2 = _generateFunction(_librapid.exp2)
+exp10 = _generateFunction(_librapid.exp10)
+log = _generateFunction(_librapid.log)
+log2 = _generateFunction(_librapid.log2)
+log10 = _generateFunction(_librapid.log10)
+sin = _generateFunction(_librapid.sin)
+cos = _generateFunction(_librapid.cos)
+tan = _generateFunction(_librapid.tan)
+asin = _generateFunction(_librapid.asin)
+acos = _generateFunction(_librapid.acos)
+atan = _generateFunction(_librapid.atan)
+csc = _generateFunction(_librapid.csc)
+sec = _generateFunction(_librapid.sec)
+cot = _generateFunction(_librapid.cot)
+acsc = _generateFunction(_librapid.acsc)
+asec = _generateFunction(_librapid.asec)
+acot = _generateFunction(_librapid.acot)
+sinh = _generateFunction(_librapid.sinh)
+cosh = _generateFunction(_librapid.cosh)
+tanh = _generateFunction(_librapid.tanh)
+asinh = _generateFunction(_librapid.asinh)
+acosh = _generateFunction(_librapid.acosh)
+atanh = _generateFunction(_librapid.atanh)
+mod = _generateFunction(_librapid.mod)
+round = _generateFunction(_librapid.round)
+roundSigFig = _generateFunction(_librapid.roundSigFig)
+roundTo = _generateFunction(_librapid.roundTo)
+roundUpTo = _generateFunction(_librapid.roundUpTo)
+map = _generateFunction(_librapid.map)
+random = _generateFunction(_librapid.random)
+randint = _generateFunction(_librapid.randint)
+trueRandomEntropy = _generateFunction(_librapid.trueRandomEntropy)
+trueRandom = _generateFunction(_librapid.trueRandom)
+trueRandint = _generateFunction(_librapid.trueRandint)
+randomGaussian = _generateFunction(_librapid.randomGaussian)
+pow10 = _generateFunction(_librapid.pow10)
+lerp = _generateFunction(_librapid.lerp)
 
 constPi = _librapid.constPi
 constEuler = _librapid.constEuler

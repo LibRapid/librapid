@@ -316,16 +316,61 @@ namespace librapid {
 		dst.assign(lhs FUNC rhs);                                                                  \
 	}
 
+#define FORCE_TMP_FUNC_BINOP_EXTERNAL(NAME)                                                        \
+	template<typename T, typename D>                                                               \
+	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, const Array<T, D> &rhs, Array<T, D> &dst) {  \
+		dst.assign(::librapid::NAME<true>(lhs, rhs));                                              \
+	}                                                                                              \
+                                                                                                   \
+	template<typename T, typename D>                                                               \
+	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, const T &rhs, Array<T, D> &dst) {            \
+		dst.assign(::librapid::NAME<true>(lhs, rhs));                                              \
+	}                                                                                              \
+                                                                                                   \
+	template<typename T, typename D>                                                               \
+	LR_FORCE_INLINE void NAME(const T &lhs, const Array<T, D> &rhs, Array<T, D> &dst) {            \
+		dst.assign(::librapid::NAME<true>(lhs, rhs));                                              \
+	}
+
 #define FORCE_TMP_FUNC_UNOP(NAME, FUNC)                                                            \
 	template<typename T, typename D>                                                               \
 	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, Array<T, D> &dst) {                          \
 		dst.assign(lhs.template FUNC<true>());                                                     \
 	}
 
+#define FORCE_TMP_FUNC_UNOP_EXTERNAL(NAME)                                                         \
+	template<typename T, typename D>                                                               \
+	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, Array<T, D> &dst) {                          \
+		dst.assign(::librapid::NAME<true>(lhs));                                                   \
+	}
+
 	FORCE_TMP_FUNC_BINOP(add, +)
 	FORCE_TMP_FUNC_BINOP(sub, -)
 	FORCE_TMP_FUNC_BINOP(mul, *)
 	FORCE_TMP_FUNC_BINOP(div, /)
+
+	FORCE_TMP_FUNC_BINOP_EXTERNAL(pow)
+	FORCE_TMP_FUNC_BINOP_EXTERNAL(log)
+
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(sin)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(cos)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(tan)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(asin)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(acos)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(atan)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(sinh)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(cosh)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(tanh)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(asinh)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(acosh)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(atanh)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(exp)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(log)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(log10)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(sqrt)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(abs)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(floor)
+	FORCE_TMP_FUNC_UNOP_EXTERNAL(ceil)
 
 	FORCE_TMP_FUNC_BINOP(bitwiseOr, |)
 	FORCE_TMP_FUNC_BINOP(bitwiseAnd, &)

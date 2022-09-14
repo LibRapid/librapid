@@ -15,8 +15,8 @@
 #include "cast.hpp"
 
 #define IMPL_BINOP(NAME, TYPE)                                                                     \
-	template<typename OtherDerived,                                                                \
-			 bool forceTemporary													   = false,    \
+	template<bool forceTemporary = false,                                                          \
+			 typename OtherDerived,                                                                \
 			 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>        \
 	LR_NODISCARD("")                                                                               \
 	auto NAME(const OtherDerived &other) const {                                                   \
@@ -54,7 +54,7 @@
 	auto NAME(const OtherScalar &other) const {                                                    \
 		using ResDevice = Device;                                                                  \
 		using RetType =                                                                            \
-		  binop::CWiseBinop<functors::binary::TYPE<Scalar, OtherScalar>, Derived, OtherScalar>;    \
+		  binop::CWiseBinop<functors::binary::TYPE<Scalar, Scalar>, Derived, Scalar>;              \
 		static constexpr uint64_t Flags	   = internal::traits<OtherScalar>::Flags;                 \
 		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
                                                                                                    \
@@ -62,9 +62,9 @@
 					  "Scalar type is incompatible with Functor");                                 \
                                                                                                    \
 		if constexpr ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval))             \
-			return RetType(derived(), other).eval();                                               \
+			return RetType(derived(), static_cast<Scalar>(other)).eval();                          \
 		else                                                                                       \
-			return RetType(derived(), other);                                                      \
+			return RetType(derived(), static_cast<Scalar>(other));                                 \
 	}
 
 #define IMPL_BINOP_SCALAR_EXTERNAL(NAME, TYPE)                                                     \
@@ -113,7 +113,7 @@
 	}
 
 #define IMPL_UNOP_EXTERNAL(NAME, TYPE)                                                               \
-	template<typename Derived, typename Device, bool forceTemporary = false>                         \
+	template<bool forceTemporary = false, typename Derived, typename Device>                         \
 	LR_NODISCARD("")                                                                                 \
 	auto NAME(const ArrayBase<Derived, Device> &arr) {                                               \
 		using Scalar					   = typename internal::traits<Derived>::Scalar;             \
@@ -612,10 +612,12 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 	IMPL_UNOP_EXTERNAL(atanh, Atanh)
 	IMPL_UNOP_EXTERNAL(exp, Exp)
 	IMPL_UNOP_EXTERNAL(log, Log)
+	IMPL_UNOP_EXTERNAL(log2, Log2)
+	IMPL_UNOP_EXTERNAL(log10, Log10)
 	IMPL_UNOP_EXTERNAL(sqrt, Sqrt)
 	IMPL_UNOP_EXTERNAL(abs, Abs)
-	IMPL_UNOP_EXTERNAL(floor, Floor)
 	IMPL_UNOP_EXTERNAL(ceil, Ceil)
+	IMPL_UNOP_EXTERNAL(floor, Floor)
 
 } // namespace librapid
 
