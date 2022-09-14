@@ -112,6 +112,25 @@
 		}                                                                                          \
 	}
 
+#define IMPL_UNOP_EXTERNAL(NAME, TYPE)                                                               \
+	template<typename Derived, typename Device, bool forceTemporary = false>                         \
+	LR_NODISCARD("")                                                                                 \
+	auto NAME(const ArrayBase<Derived, Device> &arr) {                                               \
+		using Scalar					   = typename internal::traits<Derived>::Scalar;             \
+		using RetType					   = unop::CWiseUnop<functors::unop::TYPE<Scalar>, Derived>; \
+		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                        \
+		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;        \
+                                                                                                     \
+		static_assert(!(Required & ~(Flags & Required)),                                             \
+					  "Scalar type is incompatible with Functor");                                   \
+                                                                                                     \
+		if constexpr (!forceTemporary && /* If a temporary value is required, don't eval */          \
+					  ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval)))             \
+			return RetType(arr.derived()).eval();                                                    \
+		else                                                                                         \
+			return RetType(arr.derived());                                                           \
+	}
+
 namespace librapid {
 	namespace internal {
 		template<typename Derived>
@@ -578,6 +597,26 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 	IMPL_BINOP_SCALAR_EXTERNAL(operator|, BitwiseOr)
 	IMPL_BINOP_SCALAR_EXTERNAL(operator&, BitwiseAnd)
 	IMPL_BINOP_SCALAR_EXTERNAL(operator^, BitwiseXor)
+
+	IMPL_UNOP_EXTERNAL(sin, Sin)
+	IMPL_UNOP_EXTERNAL(cos, Cos)
+	IMPL_UNOP_EXTERNAL(tan, Tan)
+	IMPL_UNOP_EXTERNAL(asin, Asin)
+	IMPL_UNOP_EXTERNAL(acos, Acos)
+	IMPL_UNOP_EXTERNAL(atan, Atan)
+	IMPL_UNOP_EXTERNAL(sinh, Sinh)
+	IMPL_UNOP_EXTERNAL(cosh, Cosh)
+	IMPL_UNOP_EXTERNAL(tanh, Tanh)
+	IMPL_UNOP_EXTERNAL(asinh, Asinh)
+	IMPL_UNOP_EXTERNAL(acosh, Acosh)
+	IMPL_UNOP_EXTERNAL(atanh, Atanh)
+	IMPL_UNOP_EXTERNAL(exp, Exp)
+	IMPL_UNOP_EXTERNAL(log, Log)
+	IMPL_UNOP_EXTERNAL(sqrt, Sqrt)
+	IMPL_UNOP_EXTERNAL(abs, Abs)
+	IMPL_UNOP_EXTERNAL(floor, Floor)
+	IMPL_UNOP_EXTERNAL(ceil, Ceil)
+
 } // namespace librapid
 
 #undef IMPL_BINOP

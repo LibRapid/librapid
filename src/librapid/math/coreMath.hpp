@@ -52,44 +52,34 @@ namespace librapid {
 							 : max(val2, std::forward<Ts>(vs)...);
 	}
 
-	template<typename T>
-	LR_INLINE T abs(const T &a) {
-		return std::abs(a);
+#define LR_UNARY_MATH_OP(NAME_)                                                                    \
+	template<typename T, typename std::enable_if_t<internal::traits<T>::IsScalar, int> = 0>        \
+	LR_INLINE T NAME_(const T &a) {                                                                \
+		return std::NAME_(a);                                                                      \
 	}
 
-	template<typename T>
-	LR_INLINE T floor(const T &a) {
-		return std::floor(a);
+#define LR_UNARY_MATH_OP_RECIP(NAME_, OP_)                                                         \
+	template<typename T, typename std::enable_if_t<internal::traits<T>::IsScalar, int> = 0>        \
+	LR_INLINE T NAME_(const T &a) {                                                                \
+		return T(1) / std::OP_(a);                                                                 \
 	}
 
-	template<typename T>
-	LR_INLINE T ceil(const T &a) {
-		return std::ceil(a);
-	}
+	LR_UNARY_MATH_OP(abs)
+	LR_UNARY_MATH_OP(floor)
+	LR_UNARY_MATH_OP(ceil)
 
 	template<typename A, typename B>
-	LR_INLINE A pow(const A &a, const B &exp) {
-		return std::pow(a, exp);
+	LR_INLINE auto pow(const A &a, const B &b) {
+		return std::pow(a, b);
 	}
 
-	template<typename T>
-	LR_INLINE T sqrt(const T &a) {
-		return std::sqrt(a);
-	}
-
-	template<typename T>
-	LR_INLINE T exp(const T &a) {
-		return std::exp(a);
-	}
-
-	template<typename T>
-	LR_INLINE T exp2(const T &a) {
-		return std::exp2(a);
-	}
+	LR_UNARY_MATH_OP(sqrt)
+	LR_UNARY_MATH_OP(exp)
+	LR_UNARY_MATH_OP(exp2)
 
 	template<typename T>
 	LR_INLINE T exp10(const T &a) {
-		return std::pow((T)10, a);
+		return pow(T(10), a);
 	}
 
 	// Return a * 2 ^ exponent
@@ -99,105 +89,38 @@ namespace librapid {
 		return static_cast<T>(std::ldexp(static_cast<double>(a), exponent));
 	}
 
-	template<typename T>
-	LR_INLINE T log(const T &a) {
-		return std::log(a);
-	}
-
-	template<typename T>
-	LR_INLINE T log2(const T &a) {
-		return std::log2(a);
-	}
-
-	template<typename T>
-	LR_INLINE T log10(const T &a) {
-		return std::log10(a);
-	}
+	LR_UNARY_MATH_OP(log);
+	LR_UNARY_MATH_OP(log2);
+	LR_UNARY_MATH_OP(log10);
 
 	template<typename T, typename B>
 	LR_INLINE auto log(const T &a, const B &base) {
 		return log(a) / log(T(base));
 	}
 
-	template<typename T>
-	LR_INLINE T sin(const T &a) {
-		return std::sin(a);
-	}
-
-	template<typename T>
-	LR_INLINE T cos(const T &a) {
-		return std::cos(a);
-	}
-
-	template<typename T>
-	LR_INLINE T tan(const T &a) {
-		return std::tan(a);
-	}
-
-	template<typename T>
-	LR_INLINE T asin(const T &a) {
-		return std::asin(a);
-	}
-
-	template<typename T>
-	LR_INLINE T acos(const T &a) {
-		return std::acos(a);
-	}
-
-	template<typename T>
-	LR_INLINE T atan(const T &a) {
-		return std::atan(a);
-	}
+	LR_UNARY_MATH_OP(sin)
+	LR_UNARY_MATH_OP(cos)
+	LR_UNARY_MATH_OP(tan)
+	LR_UNARY_MATH_OP(asin)
+	LR_UNARY_MATH_OP(acos)
+	LR_UNARY_MATH_OP(atan)
 
 	template<typename T>
 	LR_INLINE T atan2(const T &a, const T &b) {
 		return std::atan2(a, b);
 	}
 
-	template<typename T>
-	LR_INLINE T csc(const T &a) {
-		return T(1) / std::sin(a);
-	}
+	LR_UNARY_MATH_OP_RECIP(csc, sin)
+	LR_UNARY_MATH_OP_RECIP(sec, cos)
+	LR_UNARY_MATH_OP_RECIP(cot, tan)
 
-	template<typename T>
-	LR_INLINE T sec(const T &a) {
-		return T(1) / std::cos(a);
-	}
+	LR_UNARY_MATH_OP(sinh)
+	LR_UNARY_MATH_OP(cosh)
+	LR_UNARY_MATH_OP(tanh)
 
-	template<typename T>
-	LR_INLINE T cot(const T &a) {
-		return T(1) / std::tan(a);
-	}
-
-	template<typename T>
-	LR_INLINE T sinh(const T &a) {
-		return std::sinh(a);
-	}
-
-	template<typename T>
-	LR_INLINE T cosh(const T &a) {
-		return std::cosh(a);
-	}
-
-	template<typename T>
-	LR_INLINE T tanh(const T &a) {
-		return std::tanh(a);
-	}
-
-	template<typename T>
-	LR_INLINE T asinh(const T &a) {
-		return std::asinh(a);
-	}
-
-	template<typename T>
-	LR_INLINE T acosh(const T &a) {
-		return std::acosh(a);
-	}
-
-	template<typename T>
-	LR_INLINE T atanh(const T &a) {
-		return std::atanh(a);
-	}
+	LR_UNARY_MATH_OP(asinh)
+	LR_UNARY_MATH_OP(acosh)
+	LR_UNARY_MATH_OP(atanh)
 
 	template<typename T>
 	LR_INLINE T hypot(const T &a, const T &b) {
@@ -226,7 +149,7 @@ namespace librapid {
 		// Random floating point value in range [lower, upper)
 
 		// Seed generation
-		static auto tmpSeed = (uint64_t) now<time::microsecond>();
+		static auto tmpSeed = (uint64_t)now<time::microsecond>();
 		if (seed != -1) tmpSeed = seed;
 
 		static std::uniform_real_distribution<double> distribution(0., 1.);
