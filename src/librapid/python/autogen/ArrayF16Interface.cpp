@@ -181,5 +181,23 @@ module.def("sub", [](typename librapid::internal::traits<librapid::ArrayF16>::Sc
 module.def("mul", [](typename librapid::internal::traits<librapid::ArrayF16>::Scalar lhs, const librapid::ArrayF16 & rhs, librapid::ArrayF16 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("div", [](typename librapid::internal::traits<librapid::ArrayF16>::Scalar lhs, const librapid::ArrayF16 & rhs, librapid::ArrayF16 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("negate", [](const librapid::ArrayF16 & lhs, librapid::ArrayF16 & dst) { librapid::negate(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
+module.def("sin", [](const librapid::ArrayF16 & val) { return lrc::sin(val); }, py::arg("val"));
+module.def("cos", [](const librapid::ArrayF16 & val) { return lrc::cos(val); }, py::arg("val"));
+module.def("tan", [](const librapid::ArrayF16 & val) { return lrc::tan(val); }, py::arg("val"));
+module.def("asin", [](const librapid::ArrayF16 & val) { return lrc::asin(val); }, py::arg("val"));
+module.def("acos", [](const librapid::ArrayF16 & val) { return lrc::acos(val); }, py::arg("val"));
+module.def("atan", [](const librapid::ArrayF16 & val) { return lrc::atan(val); }, py::arg("val"));
+module.def("sinh", [](const librapid::ArrayF16 & val) { return lrc::sinh(val); }, py::arg("val"));
+module.def("cosh", [](const librapid::ArrayF16 & val) { return lrc::cosh(val); }, py::arg("val"));
+module.def("tanh", [](const librapid::ArrayF16 & val) { return lrc::tanh(val); }, py::arg("val"));
+module.def("asinh", [](const librapid::ArrayF16 & val) { return lrc::asinh(val); }, py::arg("val"));
+module.def("acosh", [](const librapid::ArrayF16 & val) { return lrc::acosh(val); }, py::arg("val"));
+module.def("atanh", [](const librapid::ArrayF16 & val) { return lrc::atanh(val); }, py::arg("val"));
+module.def("exp", [](const librapid::ArrayF16 & val) { return lrc::exp(val); }, py::arg("val"));
+module.def("log", [](const librapid::ArrayF16 & val) { return lrc::log(val); }, py::arg("val"));
+module.def("sqrt", [](const librapid::ArrayF16 & val) { return lrc::sqrt(val); }, py::arg("val"));
+module.def("abs", [](const librapid::ArrayF16 & val) { return lrc::abs(val); }, py::arg("val"));
+module.def("floor", [](const librapid::ArrayF16 & val) { return lrc::floor(val); }, py::arg("val"));
+module.def("ceil", [](const librapid::ArrayF16 & val) { return lrc::ceil(val); }, py::arg("val"));
 
 }
