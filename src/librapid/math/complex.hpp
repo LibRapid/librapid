@@ -497,17 +497,17 @@ namespace librapid {
 		return tmp;
 	}
 
-	template<typename T>
+	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator+(const Complex<T> &left, const T &right) {
+	LR_INLINE Complex<T> operator+(const Complex<T> &left, const R &right) {
 		Complex<T> tmp(left);
 		tmp.real(tmp.real() + right);
 		return tmp;
 	}
 
-	template<typename T>
+	template<typename R, typename T>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator+(const T &left, const Complex<T> &right) {
+	LR_INLINE Complex<T> operator+(const R &left, const Complex<T> &right) {
 		Complex<T> tmp(left);
 		tmp += right;
 		return tmp;
@@ -521,17 +521,17 @@ namespace librapid {
 		return tmp;
 	}
 
-	template<typename T>
+	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator-(const Complex<T> &left, const T &right) {
+	LR_INLINE Complex<T> operator-(const Complex<T> &left, const R &right) {
 		Complex<T> tmp(left);
 		tmp.real(tmp.real() - right);
 		return tmp;
 	}
 
-	template<typename T>
+	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator-(const T &left, const Complex<T> &right) {
+	LR_INLINE Complex<T> operator-(const R &left, const Complex<T> &right) {
 		Complex<T> tmp(left);
 		tmp -= right;
 		return tmp;
@@ -545,18 +545,18 @@ namespace librapid {
 		return tmp;
 	}
 
-	template<typename T>
+	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator*(const Complex<T> &left, const T &right) {
+	LR_INLINE Complex<T> operator*(const Complex<T> &left, const typename R &right) {
 		Complex<T> tmp(left);
 		tmp.real(tmp.real() * right);
 		tmp.imag(tmp.imag() * right);
 		return tmp;
 	}
 
-	template<typename T>
+	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator*(const T &left, const Complex<T> &right) {
+	LR_INLINE Complex<T> operator*(const typename R &left, const Complex<T> &right) {
 		Complex<T> tmp(left);
 		tmp *= right;
 		return tmp;
@@ -570,18 +570,18 @@ namespace librapid {
 		return tmp;
 	}
 
-	template<typename T>
+	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator/(const Complex<T> &left, const T &right) {
+	LR_INLINE Complex<T> operator/(const Complex<T> &left, const R &right) {
 		Complex<T> tmp(left);
 		tmp.real(tmp.real() / right);
 		tmp.imag(tmp.imag() / right);
 		return tmp;
 	}
 
-	template<typename T>
+	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator/(const T &left, const Complex<T> &right) {
+	LR_INLINE Complex<T> operator/(const R &left, const Complex<T> &right) {
 		Complex<T> tmp(left);
 		tmp /= right;
 		return tmp;
@@ -1313,7 +1313,7 @@ namespace librapid {
 	template<typename T>
 	LR_NODISCARD("")
 	LR_INLINE Complex<T> log10(const Complex<T> &other) {
-		return log(other) / ::librapid::log(T(10.0));
+		return log(other) / ::librapid::log(10);
 	}
 
 	// Return magnitude squared

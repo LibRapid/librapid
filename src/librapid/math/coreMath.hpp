@@ -54,14 +54,19 @@ namespace librapid {
 
 #define LR_UNARY_MATH_OP(NAME_)                                                                    \
 	template<typename T, typename std::enable_if_t<internal::traits<T>::IsScalar, int> = 0>        \
-	LR_INLINE T NAME_(const T &a) {                                                                \
-		return std::NAME_(a);                                                                      \
+	LR_INLINE auto NAME_(const T &a) {                                                             \
+		using Scalar = typename std::conditional_t<isMultiprecision<T>(), mpfr, double>;           \
+		if constexpr (Vc::is_simd_vector<T>::value)                                                \
+			return std::NAME_(a);                                                                  \
+		else                                                                                       \
+			return std::NAME_(static_cast<Scalar>(a));                                             \
 	}
 
 #define LR_UNARY_MATH_OP_RECIP(NAME_, OP_)                                                         \
 	template<typename T, typename std::enable_if_t<internal::traits<T>::IsScalar, int> = 0>        \
-	LR_INLINE T NAME_(const T &a) {                                                                \
-		return T(1) / std::OP_(a);                                                                 \
+	LR_INLINE typename std::conditional_t<isMultiprecision<T>(), mpfr, double> NAME_(const T &a) { \
+		using Scalar = typename std::conditional_t<isMultiprecision<T>(), mpfr, double>;           \
+		return Scalar(1) / std::OP_(static_cast<Scalar>(a));                                       \
 	}
 
 	LR_UNARY_MATH_OP(abs)
@@ -89,18 +94,26 @@ namespace librapid {
 		return static_cast<T>(std::ldexp(static_cast<double>(a), exponent));
 	}
 
-	LR_UNARY_MATH_OP(log);
-	LR_UNARY_MATH_OP(log2);
-	LR_UNARY_MATH_OP(log10);
+	LR_UNARY_MATH_OP(log)
+	LR_UNARY_MATH_OP(log2)
+	LR_UNARY_MATH_OP(log10)
 
 	template<typename T, typename B>
 	LR_INLINE auto log(const T &a, const B &base) {
-		return log(a) / log(T(base));
+		fmt::print("Info: {} {}\n", a, base);
+		using Scalar =
+		  typename std::conditional_t<isMultiprecision<T>() || isMultiprecision<B>(), mpfr, double>;
+		if constexpr (internal::traits<T>::IsScalar && internal::traits<B>::IsScalar) {
+			return log(static_cast<Scalar>(a)) / log(static_cast<Scalar>(base));
+		} else {
+			return log(a) / log(base);
+		}
 	}
 
 	LR_UNARY_MATH_OP(sin)
 	LR_UNARY_MATH_OP(cos)
 	LR_UNARY_MATH_OP(tan)
+
 	LR_UNARY_MATH_OP(asin)
 	LR_UNARY_MATH_OP(acos)
 	LR_UNARY_MATH_OP(atan)
@@ -121,6 +134,68 @@ namespace librapid {
 	LR_UNARY_MATH_OP(asinh)
 	LR_UNARY_MATH_OP(acosh)
 	LR_UNARY_MATH_OP(atanh)
+
+#if defined(LIBRAPID_USE_VC)
+	// SIMD vector tan
+	template<typename T, typename Set>
+	LR_INLINE auto tan(const Vc::Vector<T, Set> &vec) {
+		return sin(vec) / cos(vec);
+	}
+
+	// SIMD vector asin
+	template<typename T, typename Set>
+	LR_INLINE auto asin(const Vc::Vector<T, Set> &vec) {
+		return atan2(vec, sqrt(Vc::Vector<T, Set>(1) - vec * vec));
+	}
+
+	// SIMD vector acos
+	template<typename T, typename Set>
+	LR_INLINE auto acos(const Vc::Vector<T, Set> &vec) {
+		return atan2(sqrt(Vc::Vector<T, Set>(1) - vec * vec), vec);
+	}
+
+	// SIMD vector atan
+	template<typename T, typename Set>
+	LR_INLINE auto atan(const Vc::Vector<T, Set> &vec) {
+		return atan2(vec, Vc::Vector<T, Set>(1));
+	}
+
+	// SIMD vector sinh
+	template<typename T, typename Set>
+	LR_INLINE auto sinh(const Vc::Vector<T, Set> &vec) {
+		return (exp(vec) - exp(-vec)) / T(2);
+	}
+
+	// SIMD vector cosh
+	template<typename T, typename Set>
+	LR_INLINE auto cosh(const Vc::Vector<T, Set> &vec) {
+		return (exp(vec) + exp(-vec)) / T(2);
+	}
+
+	// SIMD vector tanh
+	template<typename T, typename Set>
+	LR_INLINE auto tanh(const Vc::Vector<T, Set> &vec) {
+		return sinh(vec) / cosh(vec);
+	}
+
+	// SIMD vector asinh
+	template<typename T, typename Set>
+	LR_INLINE auto asinh(const Vc::Vector<T, Set> &vec) {
+		return log(vec + sqrt(vec * vec + Vc::Vector<T, Set>(1)));
+	}
+
+	// SIMD vector acosh
+	template<typename T, typename Set>
+	LR_INLINE auto acosh(const Vc::Vector<T, Set> &vec) {
+		return log(vec + sqrt(vec * vec - Vc::Vector<T, Set>(1)));
+	}
+
+	// SIMD vector atanh
+	template<typename T, typename Set>
+	LR_INLINE auto atanh(const Vc::Vector<T, Set> &vec) {
+		return log((Vc::Vector<T, Set>(1) + vec) / (Vc::Vector<T, Set>(1) - vec)) / T(2);
+	}
+#endif
 
 	template<typename T>
 	LR_INLINE T hypot(const T &a, const T &b) {

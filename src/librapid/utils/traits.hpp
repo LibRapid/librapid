@@ -849,6 +849,16 @@ namespace librapid::internal {
 	using StripQualifiers = typename std::remove_cv_t<typename std::remove_reference_t<T>>;
 
 	template<typename T>
+	constexpr bool isVector(const T &) {
+		return false;
+	}
+
+	template<typename T, typename ABI>
+	constexpr bool isVector(const Vc::Vector<T, ABI> &) {
+		return true;
+	}
+
+	template<typename T>
 	LR_NODISCARD("")
 	LR_INLINE bool isNaN(const T &val) noexcept {
 		return std::isnan(val);

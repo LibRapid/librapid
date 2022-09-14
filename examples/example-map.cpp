@@ -36,7 +36,7 @@ int main() {
 	// that the compiler will error :)
 	auto resSISD = lrc::map<false>(
 	  [](auto val) {
-		  // Set all values below 50 to 0, otherwise set them to 100
+		  // Set all values below 0.5 to 0, otherwise set them to 1
 		  if (val >= 0.5) {
 			  return 1;
 		  } else {
