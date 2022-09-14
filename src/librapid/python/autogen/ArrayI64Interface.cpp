@@ -195,5 +195,23 @@ module.def("bitwiseOr", [](typename librapid::internal::traits<librapid::ArrayI6
 module.def("bitwiseAnd", [](typename librapid::internal::traits<librapid::ArrayI64>::Scalar lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::bitwiseAnd(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("bitwiseXor", [](typename librapid::internal::traits<librapid::ArrayI64>::Scalar lhs, const librapid::ArrayI64 & rhs, librapid::ArrayI64 & dst) { librapid::bitwiseXor(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("bitwiseNot", [](const librapid::ArrayI64 & lhs, librapid::ArrayI64 & dst) { librapid::bitwiseNot(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
+module.def("sin", [](const librapid::ArrayI64 & val) { return lrc::sin(val); }, py::arg("val"));
+module.def("cos", [](const librapid::ArrayI64 & val) { return lrc::cos(val); }, py::arg("val"));
+module.def("tan", [](const librapid::ArrayI64 & val) { return lrc::tan(val); }, py::arg("val"));
+module.def("asin", [](const librapid::ArrayI64 & val) { return lrc::asin(val); }, py::arg("val"));
+module.def("acos", [](const librapid::ArrayI64 & val) { return lrc::acos(val); }, py::arg("val"));
+module.def("atan", [](const librapid::ArrayI64 & val) { return lrc::atan(val); }, py::arg("val"));
+module.def("sinh", [](const librapid::ArrayI64 & val) { return lrc::sinh(val); }, py::arg("val"));
+module.def("cosh", [](const librapid::ArrayI64 & val) { return lrc::cosh(val); }, py::arg("val"));
+module.def("tanh", [](const librapid::ArrayI64 & val) { return lrc::tanh(val); }, py::arg("val"));
+module.def("asinh", [](const librapid::ArrayI64 & val) { return lrc::asinh(val); }, py::arg("val"));
+module.def("acosh", [](const librapid::ArrayI64 & val) { return lrc::acosh(val); }, py::arg("val"));
+module.def("atanh", [](const librapid::ArrayI64 & val) { return lrc::atanh(val); }, py::arg("val"));
+module.def("exp", [](const librapid::ArrayI64 & val) { return lrc::exp(val); }, py::arg("val"));
+module.def("log", [](const librapid::ArrayI64 & val) { return lrc::log(val); }, py::arg("val"));
+module.def("sqrt", [](const librapid::ArrayI64 & val) { return lrc::sqrt(val); }, py::arg("val"));
+module.def("abs", [](const librapid::ArrayI64 & val) { return lrc::abs(val); }, py::arg("val"));
+module.def("floor", [](const librapid::ArrayI64 & val) { return lrc::floor(val); }, py::arg("val"));
+module.def("ceil", [](const librapid::ArrayI64 & val) { return lrc::ceil(val); }, py::arg("val"));
 
 }

@@ -86,9 +86,9 @@ namespace librapid {
 		if (n == 0) return digamma(z);
 
 		double t1	= n & 1 ? 1 : -1;
-		double fact = gamma(n - 1);
+		double fact = gamma((double) n - 1);
 		double sum	= 0;
-		for (int64_t k = 0; k < lim; ++k) { sum += 1 / pow(z + k, n + 1); }
+		for (int64_t k = 0; k < lim; ++k) { sum += 1 / ::librapid::pow(z + (double) k, n + 1); }
 		return t1 * fact * sum;
 	}
 

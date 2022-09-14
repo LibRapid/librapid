@@ -126,7 +126,7 @@ namespace librapid {
 			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
 				std::string kernel = m_value.genKernel(vec, index);
 				std::string op	   = m_operation.genKernel();
-				return fmt::format("({}{})", op, kernel);
+				return fmt::format("({}({}))", op, kernel);
 			}
 
 			LR_NODISCARD("")

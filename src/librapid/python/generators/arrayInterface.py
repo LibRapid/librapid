@@ -233,7 +233,31 @@ for t in arrayTypes:
 			# Function("logicalNot", [Argument(constRef, "lhs"), Argument(ref, "dst")], "librapid::logicalNot(lhs, dst);"),
 		]
 
-	moduleFunctions = forceTmpFunc
+	unaryFunctions = []
+
+	if not any([t.startswith(prefix) for prefix in ["ArrayB", "ArrayC", "ArrayArrayMPN"]]):
+		unaryFunctions += [
+			Function("sin", [Argument(constRef, "val")], "return lrc::sin(val);"),
+			Function("cos", [Argument(constRef, "val")], "return lrc::cos(val);"),
+			Function("tan", [Argument(constRef, "val")], "return lrc::tan(val);"),
+			Function("asin", [Argument(constRef, "val")], "return lrc::asin(val);"),
+			Function("acos", [Argument(constRef, "val")], "return lrc::acos(val);"),
+			Function("atan", [Argument(constRef, "val")], "return lrc::atan(val);"),
+			Function("sinh", [Argument(constRef, "val")], "return lrc::sinh(val);"),
+			Function("cosh", [Argument(constRef, "val")], "return lrc::cosh(val);"),
+			Function("tanh", [Argument(constRef, "val")], "return lrc::tanh(val);"),
+			Function("asinh", [Argument(constRef, "val")], "return lrc::asinh(val);"),
+			Function("acosh", [Argument(constRef, "val")], "return lrc::acosh(val);"),
+			Function("atanh", [Argument(constRef, "val")], "return lrc::atanh(val);"),
+			Function("exp", [Argument(constRef, "val")], "return lrc::exp(val);"),
+			Function("log", [Argument(constRef, "val")], "return lrc::log(val);"),
+			Function("sqrt", [Argument(constRef, "val")], "return lrc::sqrt(val);"),
+			Function("abs", [Argument(constRef, "val")], "return lrc::abs(val);"),
+			Function("floor", [Argument(constRef, "val")], "return lrc::floor(val);"),
+			Function("ceil", [Argument(constRef, "val")], "return lrc::ceil(val);"),
+		]
+
+	moduleFunctions = forceTmpFunc + unaryFunctions
 
 	for function in moduleFunctions:
 		moduleStr += "module" + function.gen() + ";\n"
