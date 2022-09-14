@@ -181,5 +181,24 @@ module.def("sub", [](typename librapid::internal::traits<librapid::ArrayCMPFR>::
 module.def("mul", [](typename librapid::internal::traits<librapid::ArrayCMPFR>::Scalar lhs, const librapid::ArrayCMPFR & rhs, librapid::ArrayCMPFR & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("div", [](typename librapid::internal::traits<librapid::ArrayCMPFR>::Scalar lhs, const librapid::ArrayCMPFR & rhs, librapid::ArrayCMPFR & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("negate", [](const librapid::ArrayCMPFR & lhs, librapid::ArrayCMPFR & dst) { librapid::negate(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
+module.def("sin", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::sin(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("cos", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::cos(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("tan", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::tan(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("asin", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::asin(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("acos", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::acos(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("atan", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::atan(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("sinh", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::sinh(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("cosh", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::cosh(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("tanh", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::tanh(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("asinh", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::asinh(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("acosh", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::acosh(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("atanh", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::atanh(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("exp", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::exp(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("log", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::log(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("log10", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::log10(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("sqrt", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::sqrt(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("abs", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::abs(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("floor", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::floor(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("ceil", [](const librapid::ArrayCMPFR & val, librapid::ArrayCMPFR & dst) { lrc::ceil(val, dst); }, py::arg("val"), py::arg("dst"));
 
 }

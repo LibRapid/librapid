@@ -181,5 +181,24 @@ module.def("sub", [](typename librapid::internal::traits<librapid::ArrayCF32>::S
 module.def("mul", [](typename librapid::internal::traits<librapid::ArrayCF32>::Scalar lhs, const librapid::ArrayCF32 & rhs, librapid::ArrayCF32 & dst) { librapid::mul(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("div", [](typename librapid::internal::traits<librapid::ArrayCF32>::Scalar lhs, const librapid::ArrayCF32 & rhs, librapid::ArrayCF32 & dst) { librapid::div(lhs, rhs, dst); }, py::arg("lhs"), py::arg("rhs"), py::arg("dst"));
 module.def("negate", [](const librapid::ArrayCF32 & lhs, librapid::ArrayCF32 & dst) { librapid::negate(lhs, dst); }, py::arg("lhs"), py::arg("dst"));
+module.def("sin", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::sin(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("cos", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::cos(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("tan", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::tan(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("asin", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::asin(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("acos", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::acos(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("atan", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::atan(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("sinh", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::sinh(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("cosh", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::cosh(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("tanh", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::tanh(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("asinh", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::asinh(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("acosh", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::acosh(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("atanh", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::atanh(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("exp", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::exp(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("log", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::log(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("log10", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::log10(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("sqrt", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::sqrt(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("abs", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::abs(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("floor", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::floor(val, dst); }, py::arg("val"), py::arg("dst"));
+module.def("ceil", [](const librapid::ArrayCF32 & val, librapid::ArrayCF32 & dst) { lrc::ceil(val, dst); }, py::arg("val"), py::arg("dst"));
 
 }

@@ -25,6 +25,31 @@ namespace librapid {
 	std::string str(const mpq &val, const StrOpt &options = DEFAULT_STR_OPT);
 	std::string str(const mpfr &val, const StrOpt &options = DEFAULT_STR_OPT);
 
+	template<typename T>
+	constexpr bool isMultiprecision() {
+		return false;
+	}
+
+	template<>
+	constexpr bool isMultiprecision<mpz>() {
+		return true;
+	}
+
+	template<>
+	constexpr bool isMultiprecision<mpq>() {
+		return true;
+	}
+
+	template<>
+	constexpr bool isMultiprecision<mpf>() {
+		return true;
+	}
+
+	template<>
+	constexpr bool isMultiprecision<mpfr>() {
+		return true;
+	}
+
 	// TODO: Optimise these functions
 	mpz toMpz(const mpz &other);
 	mpz toMpz(const mpf &other);

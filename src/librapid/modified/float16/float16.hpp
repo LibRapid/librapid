@@ -1038,6 +1038,29 @@ namespace librapid {
 
 #undef LIMIT_IMPL
 #undef NUM_LIM
+
+	// Expose lambda functions to main namespace
+	LR_INLINE extended::float16_t sin(extended::float16_t x) { return extended::sin(x); }
+	LR_INLINE extended::float16_t cos(extended::float16_t x) { return extended::cos(x); }
+	LR_INLINE extended::float16_t tan(extended::float16_t x) { return extended::tan(x); }
+	LR_INLINE extended::float16_t asin(extended::float16_t x) { return extended::asin(x); }
+	LR_INLINE extended::float16_t acos(extended::float16_t x) { return extended::acos(x); }
+	LR_INLINE extended::float16_t atan(extended::float16_t x) { return extended::atan(x); }
+	LR_INLINE extended::float16_t sinh(extended::float16_t x) { return extended::sinh(x); }
+	LR_INLINE extended::float16_t cosh(extended::float16_t x) { return extended::cosh(x); }
+	LR_INLINE extended::float16_t tanh(extended::float16_t x) { return extended::tanh(x); }
+	LR_INLINE extended::float16_t asinh(extended::float16_t x) { return extended::asinh(x); }
+	LR_INLINE extended::float16_t acosh(extended::float16_t x) { return extended::acosh(x); }
+	LR_INLINE extended::float16_t atanh(extended::float16_t x) { return extended::atanh(x); }
+	LR_INLINE extended::float16_t exp(extended::float16_t x) { return extended::exp(x); }
+	LR_INLINE extended::float16_t log(extended::float16_t x) { return extended::log(x); }
+	LR_INLINE extended::float16_t log10(extended::float16_t x) { return extended::log10(x); }
+	LR_INLINE extended::float16_t log2(extended::float16_t x) { return extended::log2(x); }
+	LR_INLINE extended::float16_t sqrt(extended::float16_t x) { return extended::sqrt(x); }
+	LR_INLINE extended::float16_t abs(extended::float16_t x) { return extended::abs(x); }
+	LR_INLINE extended::float16_t ceil(extended::float16_t x) { return extended::ceil(x); }
+	LR_INLINE extended::float16_t floor(extended::float16_t x) { return extended::floor(x); }
+
 } // namespace librapid
 
 // Provide {fmt} printing capabilities
