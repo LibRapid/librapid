@@ -169,8 +169,8 @@ py::class_<librapid::Complex<librapid::mpfr>>(module, "ComplexMPFR")
 	module.def("norm", [](const librapid::Complex<double> & val) { return librapid::norm(val); }, py::arg("val"));
 	module.def("polar", [](double rho, double theta) { return librapid::polar(rho, theta); }, py::arg("rho"), py::arg("theta"));
 	module.def("abs", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::abs(val); }, py::arg("val"));
-	module.def("pow", [](const librapid::mpfr & base, const librapid::Complex<librapid::mpfr> & power) { return librapid::pow(base, power); }, py::arg("base"), py::arg("power"));
-	module.def("pow", [](const librapid::Complex<librapid::mpfr> & base, const librapid::mpfr & power) { return librapid::pow(base, power); }, py::arg("base"), py::arg("power"));
+	module.def("pow", [](librapid::mpfr base, const librapid::Complex<librapid::mpfr> & power) { return librapid::pow(base, power); }, py::arg("base"), py::arg("power"));
+	module.def("pow", [](const librapid::Complex<librapid::mpfr> & base, librapid::mpfr power) { return librapid::pow(base, power); }, py::arg("base"), py::arg("power"));
 	module.def("pow", [](const librapid::Complex<librapid::mpfr> & base, const librapid::Complex<librapid::mpfr> & power) { return librapid::pow(base, power); }, py::arg("base"), py::arg("power"));
 	module.def("sqrt", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::sqrt(val); }, py::arg("val"));
 	module.def("exp", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::exp(val); }, py::arg("val"));
@@ -180,7 +180,7 @@ py::class_<librapid::Complex<librapid::mpfr>>(module, "ComplexMPFR")
 	module.def("log2", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::log2(val); }, py::arg("val"));
 	module.def("log10", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::log10(val); }, py::arg("val"));
 	module.def("log", [](const librapid::Complex<librapid::mpfr> & val, const librapid::Complex<librapid::mpfr> & base) { return librapid::log(val, base); }, py::arg("val"), py::arg("base"));
-	module.def("log", [](const librapid::Complex<librapid::mpfr> & val, const librapid::mpfr & base) { return librapid::log(val, base); }, py::arg("val"), py::arg("base"));
+	module.def("log", [](const librapid::Complex<librapid::mpfr> & val, librapid::mpfr base) { return librapid::log(val, base); }, py::arg("val"), py::arg("base"));
 	module.def("sin", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::sin(val); }, py::arg("val"));
 	module.def("cos", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::cos(val); }, py::arg("val"));
 	module.def("tan", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::tan(val); }, py::arg("val"));
@@ -203,6 +203,6 @@ py::class_<librapid::Complex<librapid::mpfr>>(module, "ComplexMPFR")
 	module.def("arg", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::arg(val); }, py::arg("val"));
 	module.def("proj", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::proj(val); }, py::arg("val"));
 	module.def("norm", [](const librapid::Complex<librapid::mpfr> & val) { return librapid::norm(val); }, py::arg("val"));
-	module.def("polar", [](const librapid::mpfr & rho, const librapid::mpfr & theta) { return librapid::polar(rho, theta); }, py::arg("rho"), py::arg("theta"));
+	module.def("polar", [](librapid::mpfr rho, librapid::mpfr theta) { return librapid::polar(rho, theta); }, py::arg("rho"), py::arg("theta"));
 
 }
