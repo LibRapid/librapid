@@ -78,16 +78,16 @@
 		using ResDevice = Device;                                                                  \
 		using RetType =                                                                            \
 		  binop::CWiseBinop<functors::binary::TYPE<OtherScalar, Scalar>, OtherScalar, Derived>;    \
-		static constexpr uint64_t Flags	   = internal::traits<OtherScalar>::Flags;                 \
+		static constexpr uint64_t Flags	   = internal::traits<Derived>::Flags;                 \
 		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
                                                                                                    \
 		static_assert(!(Required & ~(Flags & Required)),                                           \
 					  "Scalar type is incompatible with Functor");                                 \
                                                                                                    \
 		if constexpr ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval))             \
-			return RetType(other, arr.derived()).eval();                                           \
+			return RetType(Scalar(other), arr.derived()).eval();                                   \
 		else                                                                                       \
-			return RetType(other, arr.derived());                                                  \
+			return RetType(Scalar(other), arr.derived());                                          \
 	}
 
 #define IMPL_UNOP(NAME, TYPE, OVERRIDE_BOOL)                                                       \
@@ -477,7 +477,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				return res;
 			}
 
-			return Array<Scalar, Device>(0);
+			return Array<Scalar, Device>(Scalar(0));
 		}
 
 		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
@@ -558,10 +558,10 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 
 		LR_FORCE_INLINE Packet packet(int64_t index) const {
 			Packet p;
-			if constexpr (is_same_v<Scalar, bool>)
-				p.load(m_storage.heap() + (index / 64));
-			else
-				p.load(m_storage.heap() + index);
+			// if constexpr (is_same_v<Scalar, bool>)
+			// 	p.load(m_storage.heap() + (index / 64));
+			// else
+			p.load(m_storage.heap() + index);
 			return p;
 		}
 

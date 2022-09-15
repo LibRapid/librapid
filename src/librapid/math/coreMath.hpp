@@ -100,7 +100,6 @@ namespace librapid {
 
 	template<typename T, typename B>
 	LR_INLINE auto log(const T &a, const B &base) {
-		fmt::print("Info: {} {}\n", a, base);
 		using Scalar =
 		  typename std::conditional_t<isMultiprecision<T>() || isMultiprecision<B>(), mpfr, double>;
 		if constexpr (internal::traits<T>::IsScalar && internal::traits<B>::IsScalar) {

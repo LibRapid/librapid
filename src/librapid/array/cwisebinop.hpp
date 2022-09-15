@@ -9,15 +9,15 @@ namespace librapid {
 	namespace internal {
 		template<typename Binop, typename LHS, typename RHS>
 		struct traits<binop::CWiseBinop<Binop, LHS, RHS>> {
-			static constexpr bool IsScalar = false;
-			static constexpr bool IsEvaluated	 = false;
-			using Valid					   = std::true_type;
-			using Type					   = binop::CWiseBinop<Binop, LHS, RHS>;
-			using Scalar				   = typename Binop::RetType;
-			using BaseScalar			   = typename traits<Scalar>::BaseScalar;
-			using Packet				   = typename traits<Scalar>::Packet;
-			using DeviceLHS				   = typename traits<LHS>::Device;
-			using DeviceRHS				   = typename traits<RHS>::Device;
+			static constexpr bool IsScalar	  = false;
+			static constexpr bool IsEvaluated = false;
+			using Valid						  = std::true_type;
+			using Type						  = binop::CWiseBinop<Binop, LHS, RHS>;
+			using Scalar					  = typename Binop::RetType;
+			using BaseScalar				  = typename traits<Scalar>::BaseScalar;
+			using Packet					  = typename traits<Scalar>::Packet;
+			using DeviceLHS					  = typename traits<LHS>::Device;
+			using DeviceRHS					  = typename traits<RHS>::Device;
 			using Device	  = typename memory::PromoteDevice<DeviceLHS, DeviceRHS>::type;
 			using StorageType = memory::DenseStorage<Scalar, Device>;
 			static constexpr uint64_t Flags =

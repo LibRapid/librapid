@@ -303,12 +303,12 @@ namespace librapid {
 #define FORCE_TMP_FUNC_BINOP(NAME, FUNC)                                                           \
 	template<typename T, typename D>                                                               \
 	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, const Array<T, D> &rhs, Array<T, D> &dst) {  \
-		dst.assign(lhs.template operator FUNC<Array<T, D>, true>(rhs));                            \
+		dst.assign(lhs.template operator FUNC<true, Array<T, D>>(rhs));                            \
 	}                                                                                              \
                                                                                                    \
 	template<typename T, typename D>                                                               \
 	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, const T &rhs, Array<T, D> &dst) {            \
-		dst.assign(lhs.template operator FUNC<Array<T, D>, true>(rhs));                            \
+		dst.assign(lhs.template operator FUNC<true, Array<T, D>>(rhs));                            \
 	}                                                                                              \
                                                                                                    \
 	template<typename T, typename D>                                                               \
