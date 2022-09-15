@@ -328,11 +328,12 @@ namespace librapid {
 	template<typename T = double>
 	class Complex {
 	public:
-		template<typename S = T>
-		Complex(const S &realVal = 0, const S &imagVal = 0) : m_val {T(realVal), T(imagVal)} {}
+		template<typename R = T, typename I = T>
+		explicit Complex(const R &realVal = R(), const I &imagVal = I()) :
+				m_val {T(realVal), T(imagVal)} {}
 		Complex(const Complex<T> &other) : m_val {other.real(), other.imag()} {}
-		Complex(Complex<T> &&other) : m_val {other.real(), other.imag()} {}
-		Complex(const std::complex<T> &other) : m_val {other.real(), other.imag()} {}
+		Complex(Complex<T> &&other) noexcept : m_val {other.real(), other.imag()} {}
+		explicit Complex(const std::complex<T> &other) : m_val {other.real(), other.imag()} {}
 
 		Complex<T> &operator=(const Complex<T> &other) {
 			if (this == &other) return *this;
@@ -485,21 +486,22 @@ namespace librapid {
 
 	template<typename T>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator-(const Complex<T> &other) {
+	LR_INLINE auto operator-(const Complex<T> &other) {
 		return Complex<T>(-other.real(), -other.imag());
 	}
 
-	template<typename T>
+	template<typename L, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator+(const Complex<T> &left, const Complex<T> &right) {
-		Complex<T> tmp(left);
-		tmp += right;
+	LR_INLINE auto operator+(const Complex<L> &left, const Complex<R> &right) {
+		using Scalar = typename std::common_type_t<L, R>;
+		Complex<Scalar> tmp(left.real(), left.imag());
+		tmp += Complex<Scalar>(right.real(), right.imag());
 		return tmp;
 	}
 
 	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator+(const Complex<T> &left, const R &right) {
+	LR_INLINE auto operator+(const Complex<T> &left, const R &right) {
 		Complex<T> tmp(left);
 		tmp.real(tmp.real() + right);
 		return tmp;
@@ -507,23 +509,24 @@ namespace librapid {
 
 	template<typename R, typename T>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator+(const R &left, const Complex<T> &right) {
+	LR_INLINE auto operator+(const R &left, const Complex<T> &right) {
 		Complex<T> tmp(left);
 		tmp += right;
 		return tmp;
 	}
 
-	template<typename T>
+	template<typename L, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator-(const Complex<T> &left, const Complex<T> &right) {
-		Complex<T> tmp(left);
-		tmp -= right;
+	LR_INLINE auto operator-(const Complex<L> &left, const Complex<R> &right) {
+		using Scalar = typename std::common_type_t<L, R>;
+		Complex<Scalar> tmp(left.real(), left.imag());
+		tmp -= Complex<Scalar>(right.real(), right.imag());
 		return tmp;
 	}
 
 	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator-(const Complex<T> &left, const R &right) {
+	LR_INLINE auto operator-(const Complex<T> &left, const R &right) {
 		Complex<T> tmp(left);
 		tmp.real(tmp.real() - right);
 		return tmp;
@@ -531,23 +534,24 @@ namespace librapid {
 
 	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator-(const R &left, const Complex<T> &right) {
+	LR_INLINE auto operator-(const R &left, const Complex<T> &right) {
 		Complex<T> tmp(left);
 		tmp -= right;
 		return tmp;
 	}
 
-	template<typename T>
+	template<typename L, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator*(const Complex<T> &left, const Complex<T> &right) {
-		Complex<T> tmp(left);
-		tmp *= right;
+	LR_INLINE auto operator*(const Complex<L> &left, const Complex<R> &right) {
+		using Scalar = typename std::common_type_t<L, R>;
+		Complex<Scalar> tmp(left.real(), left.imag());
+		tmp *= Complex<Scalar>(right.real(), right.imag());
 		return tmp;
 	}
 
 	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator*(const Complex<T> &left, const typename R &right) {
+	LR_INLINE auto operator*(const Complex<T> &left, const R &right) {
 		Complex<T> tmp(left);
 		tmp.real(tmp.real() * right);
 		tmp.imag(tmp.imag() * right);
@@ -556,23 +560,24 @@ namespace librapid {
 
 	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator*(const typename R &left, const Complex<T> &right) {
+	LR_INLINE auto operator*(const R &left, const Complex<T> &right) {
 		Complex<T> tmp(left);
 		tmp *= right;
 		return tmp;
 	}
 
-	template<typename T>
+	template<typename L, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator/(const Complex<T> &left, const Complex<T> &right) {
-		Complex<T> tmp(left);
-		tmp /= right;
+	LR_INLINE auto operator/(const Complex<L> &left, const Complex<R> &right) {
+		using Scalar = typename std::common_type_t<L, R>;
+		Complex<Scalar> tmp(left.real(), left.imag());
+		tmp /= Complex<Scalar>(right.real(), right.imag());
 		return tmp;
 	}
 
 	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator/(const Complex<T> &left, const R &right) {
+	LR_INLINE auto operator/(const Complex<T> &left, const R &right) {
 		Complex<T> tmp(left);
 		tmp.real(tmp.real() / right);
 		tmp.imag(tmp.imag() / right);
@@ -581,15 +586,15 @@ namespace librapid {
 
 	template<typename T, typename R>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> operator/(const R &left, const Complex<T> &right) {
+	LR_INLINE auto operator/(const R &left, const Complex<T> &right) {
 		Complex<T> tmp(left);
 		tmp /= right;
 		return tmp;
 	}
 
-	template<typename T>
+	template<typename L, typename R>
 	LR_NODISCARD("")
-	LR_INLINE constexpr bool operator==(const Complex<T> &left, const Complex<T> &right) {
+	LR_INLINE constexpr bool operator==(const Complex<L> &left, const Complex<R> &right) {
 		return left.real() == right.real() && left.imag() == right.imag();
 	}
 
