@@ -328,9 +328,14 @@ namespace librapid {
 	template<typename T = double>
 	class Complex {
 	public:
-		template<typename R = T, typename I = T>
-		explicit Complex(const R &realVal = R(), const I &imagVal = I()) :
-				m_val {T(realVal), T(imagVal)} {}
+		Complex() : m_val {T(0), T(0)} {}
+
+		template<typename R>
+		Complex(const R &realVal) : m_val {T(realVal), T(0)} {}
+
+		template<typename R, typename I>
+		Complex(const R &realVal, const I &imagVal) : m_val {T(realVal), T(imagVal)} {}
+
 		Complex(const Complex<T> &other) : m_val {other.real(), other.imag()} {}
 		Complex(Complex<T> &&other) noexcept : m_val {other.real(), other.imag()} {}
 		explicit Complex(const std::complex<T> &other) : m_val {other.real(), other.imag()} {}
@@ -499,7 +504,8 @@ namespace librapid {
 		return tmp;
 	}
 
-	template<typename T, typename R>
+	template<typename T, typename R,
+			 typename std::enable_if_t<internal::traits<R>::IsScalar, int> = 0>
 	LR_NODISCARD("")
 	LR_INLINE auto operator+(const Complex<T> &left, const R &right) {
 		Complex<T> tmp(left);
@@ -507,7 +513,8 @@ namespace librapid {
 		return tmp;
 	}
 
-	template<typename R, typename T>
+	template<typename R, typename T,
+			 typename std::enable_if_t<internal::traits<R>::IsScalar, int> = 0>
 	LR_NODISCARD("")
 	LR_INLINE auto operator+(const R &left, const Complex<T> &right) {
 		Complex<T> tmp(left);
@@ -524,7 +531,8 @@ namespace librapid {
 		return tmp;
 	}
 
-	template<typename T, typename R>
+	template<typename T, typename R,
+			 typename std::enable_if_t<internal::traits<R>::IsScalar, int> = 0>
 	LR_NODISCARD("")
 	LR_INLINE auto operator-(const Complex<T> &left, const R &right) {
 		Complex<T> tmp(left);
@@ -532,7 +540,8 @@ namespace librapid {
 		return tmp;
 	}
 
-	template<typename T, typename R>
+	template<typename T, typename R,
+			 typename std::enable_if_t<internal::traits<R>::IsScalar, int> = 0>
 	LR_NODISCARD("")
 	LR_INLINE auto operator-(const R &left, const Complex<T> &right) {
 		Complex<T> tmp(left);
@@ -549,7 +558,8 @@ namespace librapid {
 		return tmp;
 	}
 
-	template<typename T, typename R>
+	template<typename T, typename R,
+			 typename std::enable_if_t<internal::traits<R>::IsScalar, int> = 0>
 	LR_NODISCARD("")
 	LR_INLINE auto operator*(const Complex<T> &left, const R &right) {
 		Complex<T> tmp(left);
@@ -558,7 +568,8 @@ namespace librapid {
 		return tmp;
 	}
 
-	template<typename T, typename R>
+	template<typename T, typename R,
+			 typename std::enable_if_t<internal::traits<R>::IsScalar, int> = 0>
 	LR_NODISCARD("")
 	LR_INLINE auto operator*(const R &left, const Complex<T> &right) {
 		Complex<T> tmp(left);
@@ -575,7 +586,8 @@ namespace librapid {
 		return tmp;
 	}
 
-	template<typename T, typename R>
+	template<typename T, typename R,
+			 typename std::enable_if_t<internal::traits<R>::IsScalar, int> = 0>
 	LR_NODISCARD("")
 	LR_INLINE auto operator/(const Complex<T> &left, const R &right) {
 		Complex<T> tmp(left);
@@ -584,7 +596,8 @@ namespace librapid {
 		return tmp;
 	}
 
-	template<typename T, typename R>
+	template<typename T, typename R,
+			 typename std::enable_if_t<internal::traits<R>::IsScalar, int> = 0>
 	LR_NODISCARD("")
 	LR_INLINE auto operator/(const R &left, const Complex<T> &right) {
 		Complex<T> tmp(left);
@@ -974,8 +987,8 @@ namespace librapid {
 		if (!internal::isNaN(logRho) && !internal::isInf(logRho)) { // Real component is finite
 			T real = logRho;
 			T imag = logRho;
-			detail::algorithm::expMul(&real, ::librapid::cos(theta), 0);
-			detail::algorithm::expMul(&imag, ::librapid::sin(theta), 0);
+			detail::algorithm::expMul(&real, static_cast<T>(::librapid::cos(theta)), 0);
+			detail::algorithm::expMul(&imag, static_cast<T>(::librapid::sin(theta)), 0);
 			return Complex<T>(real, imag);
 		}
 
@@ -988,7 +1001,7 @@ namespace librapid {
 				return polarPositiveNanInfZeroRho(logRho, theta); // exp(+Inf) = +Inf
 			}
 		} else {
-			return polarPositiveNanInfZeroRho(::librapid::abs(logRho), theta); // exp(NaN) = +NaN
+			return polarPositiveNanInfZeroRho(static_cast<T>(::librapid::abs(logRho)), theta); // exp(NaN) = +NaN
 		}
 	}
 
@@ -1114,6 +1127,22 @@ namespace librapid {
 		const T logAbs = _logAbs(other);
 		const T theta  = ::librapid::atan2(imag(other), real(other));
 		return Complex<T>(logAbs, theta);
+	}
+
+	template<typename T, typename B>
+	LR_NODISCARD("")
+	LR_INLINE Complex<T> log(const Complex<T> &other, const Complex<T> &base) {
+		const T logAbs = _logAbs(other);
+		const T theta  = ::librapid::atan2(imag(other), real(other));
+		return Complex<T>(logAbs, theta) / log(base);
+	}
+
+	template<typename T, typename B>
+	LR_NODISCARD("")
+	LR_INLINE Complex<T> log(const Complex<T> &other, const B &base) {
+		const T logAbs = _logAbs(other);
+		const T theta  = ::librapid::atan2(imag(other), real(other));
+		return Complex<T>(logAbs, theta) / ::librapid::log(base);
 	}
 
 	template<typename T>

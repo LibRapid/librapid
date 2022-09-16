@@ -212,26 +212,6 @@ for t in arrayTypes:
 			Function("div", [Argument(scalar, "lhs"), Argument(constRef, "rhs"), Argument(ref, "dst")], "librapid::div(lhs, rhs, dst);"),
 
 			Function("negate", [Argument(constRef, "lhs"), Argument(ref, "dst")], "librapid::negate(lhs, dst);"),
-
-			Function("sin", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::sin(val, dst);"),
-			Function("cos", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::cos(val, dst);"),
-			Function("tan", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::tan(val, dst);"),
-			Function("asin", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::asin(val, dst);"),
-			Function("acos", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::acos(val, dst);"),
-			Function("atan", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::atan(val, dst);"),
-			Function("sinh", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::sinh(val, dst);"),
-			Function("cosh", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::cosh(val, dst);"),
-			Function("tanh", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::tanh(val, dst);"),
-			Function("asinh", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::asinh(val, dst);"),
-			Function("acosh", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::acosh(val, dst);"),
-			Function("atanh", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::atanh(val, dst);"),
-			Function("exp", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::exp(val, dst);"),
-			Function("log", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::log(val, dst);"),
-			Function("log10", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::log10(val, dst);"),
-			Function("sqrt", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::sqrt(val, dst);"),
-			Function("abs", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::abs(val, dst);"),
-			Function("floor", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::floor(val, dst);"),
-			Function("ceil", [Argument(constRef, "val"), Argument(ref, "dst")], "lrc::ceil(val, dst);"),
 		]
 
 	if not any([t.startswith(prefix) for prefix in ["ArrayF", "ArrayCF", "ArrayMP", "ArrayCMP"]]):

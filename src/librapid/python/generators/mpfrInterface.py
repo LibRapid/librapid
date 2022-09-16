@@ -20,6 +20,7 @@ except:
 resStr = ""
 
 types = [
+	"half",
 	"mpz",
 	"mpf",
 	"mpq",
@@ -67,12 +68,15 @@ for type in types:
 		Function("__lte__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ <= other;"),
 		Function("__gte__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ >= other;"),
 
+		Function("__int__", [Argument(constRef, "this_")], "return librapid::internal::traits<librapid::{}>::cast<int64_t>(this_);".format(t)),
+		Function("__float__", [Argument(constRef, "this_")], "return librapid::internal::traits<librapid::{}>::cast<double>(this_);".format(t)),
+
 		Function("str", [Argument(constRef, "this_"), Argument("int64_t", "base", "10")], "return lrc::str(this_, {-1, base, false});"),
 		Function("__str__", [Argument(constRef, "this_")], "return lrc::str(this_, {-1, 10, false});"),
 		Function("__repr__", [Argument(constRef, "this_")], "return \"librapid::{}(\\\"\" + lrc::str(this_, {{-1, 10, false}}) + \"\\\")\";".format(t)),
 	]
 
-	if type != "mpfr":
+	if type != "mpfr" and type != "half":
 		functions += [
 			Function("__lshift__", [Argument(constRef, "this_"), Argument("int64_t", "other")], "return this_ << other;"),
 			Function("__rshift__", [Argument(constRef, "this_"), Argument("int64_t", "other")], "return this_ >> other;"),
@@ -93,6 +97,8 @@ for type in types:
 			resStr += ";\n\n"
 
 for type in types:
+	if type == "half": continue
+
 	functions = [
 		Function("toMpz", [Argument(constRef, "this_")], "return librapid::toMpz(this_);"),
 		Function("toMpf", [Argument(constRef, "this_")], "return librapid::toMpf(this_);"),

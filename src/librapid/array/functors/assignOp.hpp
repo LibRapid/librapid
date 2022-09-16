@@ -176,7 +176,18 @@ void applyOp({0} **pointers, int64_t size) {{
 												   indArgs,					  // 5
 												   customFunctionDefinition); // 6
 
-				std::string kernel = detail::kernelGenerator(opKernel);
+				std::string kernel = detail::kernelGenerator(opKernel, cudaHeaders);
+
+#	if defined(LIBRAPID_PYTHON)
+				// This fixes a bug in Python that means GPU handles aren't initialized
+				for (int64_t i = 0; !memory::streamCreated && i < memory::handleSize; ++i) {
+					checkCudaErrors(cublasCreate_v2(&(memory::cublasHandles[i])));
+					checkCudaErrors(
+					  cublasSetStream_v2(memory::cublasHandles[i], memory::cudaStream));
+				}
+
+				memory::streamCreated = true;
+#	endif
 
 				// fmt::print("Kernel: {}\n", kernel);
 
