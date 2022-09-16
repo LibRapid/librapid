@@ -70,14 +70,6 @@ for type in types:
 			Function("atan", [Argument(constRef, "val")], "return lrc::atan(val);"),
 			Function("atan2", [Argument(constRef, "a"), Argument(constRef, "b")], "return lrc::atan2(a, b);"),
 
-			Function("csc", [Argument(constRef, "val")], "return lrc::csc(val);"),
-			Function("sec", [Argument(constRef, "val")], "return lrc::sec(val);"),
-			Function("cot", [Argument(constRef, "val")], "return lrc::cot(val);"),
-
-			Function("acsc", [Argument(constRef, "val")], "return lrc::acsc(val);"),
-			Function("asec", [Argument(constRef, "val")], "return lrc::asec(val);"),
-			Function("acot", [Argument(constRef, "val")], "return lrc::acot(val);"),
-
 			Function("sinh", [Argument(constRef, "val")], "return lrc::sinh(val);"),
 			Function("cosh", [Argument(constRef, "val")], "return lrc::cosh(val);"),
 			Function("tanh", [Argument(constRef, "val")], "return lrc::tanh(val);"),
