@@ -11,18 +11,21 @@ namespace librapid::detail {
 
 		std::string kernel = fmt::format(R"V0G0N(kernelOp
 #include <stdint.h>
+// Required for float16 support
+#include "{0}"
 // Headers
-{0}
-
-// Custom code
 {1}
 
-// Provided kernel
+// Custom code
 {2}
+
+// Provided kernel
+{3}
 				)V0G0N",
-										 headers,		 // 0
-										 customCudaCode, // 1
-										 opKernel);		 // 2
+										 CUDA_INCLUDE_DIRS "/cuda_fp16.h", // 0
+										 headers,						   // 1
+										 customCudaCode,				   // 2
+										 opKernel);						   // 3
 
 		return kernel;
 #else

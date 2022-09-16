@@ -21,6 +21,7 @@ resStr = ""
 
 types = [
 	# Scalar types
+	"librapid::half",
 	"int64_t",
 	"double",
 	"librapid::mpz",

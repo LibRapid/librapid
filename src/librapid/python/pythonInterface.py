@@ -239,7 +239,7 @@ class Array:
 			return Array(self._array * other._array)
 		return Array(self._array * other)
 
-	def __div__(self, other):
+	def __truediv__(self, other):
 		if isinstance(other, Array):
 			return Array(self._array / other._array)
 		return Array(self._array / other)
@@ -261,6 +261,49 @@ class Array:
 
 	def __neg__(self):
 		return Array(-self._array)
+
+	# ========= Reverse Operators =========
+
+	def __radd__(self, other):
+		if isinstance(other, Array):
+			return Array(self._array + other._array)
+		return Array(other + self._array)
+
+	def __rsub__(self, other):
+		if isinstance(other, Array):
+			return Array(self._array - other._array)
+		return Array(other - self._array)
+
+	def __rmul__(self, other):
+		if isinstance(other, Array):
+			return Array(self._array * other._array)
+		return Array(other * self._array)
+
+	def __rtruediv__(self, other):
+		if isinstance(other, Array):
+			return Array(self._array / other._array)
+		return Array(other / self._array)
+
+	def __ror__(self, other):
+		if isinstance(other, Array):
+			return Array(self._array | other._array)
+		return Array(other | self._array)
+
+	def __rand__(self, other):
+		if isinstance(other, Array):
+			return Array(self._array & other._array)
+		return Array(other & self._array)
+
+	def __rxor__(self, other):
+		if isinstance(other, Array):
+			return Array(self._array ^ other._array)
+		return Array(other ^ self._array)
+
+	def fill(self, val):
+		self._array.fill(val)
+
+	def filled(self, val):
+		return Array(self._array.filled(val))
 
 	def transpose(self, order:Extent=[]):
 		self._array.transpose(order)

@@ -59,7 +59,8 @@ To IGNORE this error, just define LIBRAPID_NO_THREAD_CHECK above LibRapid includ
 
 			streamCreated = true;
 
-			loadCustomCudaHeader("cuda_fp16.h", CUDA_INCLUDE_DIRS);
+			loadCustomCudaHeader(
+			  "cuda_fp16.h", CUDA_INCLUDE_DIRS, cudaHeaders, nvccOptions);
 		}
 #	endif // LIBRAPID_HAS_CUDA
 	}

@@ -552,12 +552,10 @@ namespace librapid::extended {
 
 		inline float16_t &operator=(float16_t const &) noexcept = default;
 		inline float16_t &operator=(float16_t &&) noexcept		= default;
-		inline float16_t &operator=(std::uint16_t bits) noexcept {
-			data_.bits_ = bits;
-			return *this;
-		}
-		inline float16_t &operator=(float other) noexcept {
-			data_ = float16_t_private::float32_to_float16(other);
+
+		template<typename T>
+		inline float16_t &operator=(T other) noexcept {
+			data_ = float16_t_private::float32_to_float16(static_cast<float>(other));
 			return *this;
 		}
 
@@ -922,10 +920,6 @@ namespace librapid::extended {
 	  float16_t_private::make_unary_function([](float f) { return std::riemann_zeta(f); });
 } // namespace librapid::extended
 
-namespace librapid::suffix {
-	LR_INLINE auto operator""_h(long double val) { return extended::float16_t((float)val); }
-} // namespace librapid::suffix
-
 namespace std {
 	template<>
 	struct numeric_limits<librapid::extended::float16_t> {
@@ -995,6 +989,8 @@ namespace librapid {
 #define LIMIT_IMPL(NAME_) static auto NAME_() noexcept
 #define NUM_LIM(NAME_)	  std::numeric_limits<Scalar>::NAME_()
 
+	std::string str(const half &h, const StrOpt &options = DEFAULT_STR_OPT);
+
 	namespace internal {
 		//------- 16bit Floating Point --------------------------------------------
 		template<>
@@ -1052,6 +1048,12 @@ namespace librapid {
 	LR_INLINE extended::float16_t asinh(extended::float16_t x) { return extended::asinh(x); }
 	LR_INLINE extended::float16_t acosh(extended::float16_t x) { return extended::acosh(x); }
 	LR_INLINE extended::float16_t atanh(extended::float16_t x) { return extended::atanh(x); }
+	LR_INLINE extended::float16_t csc(extended::float16_t x) { return 1.0f / sin(x); }
+	LR_INLINE extended::float16_t sec(extended::float16_t x) { return 1.0f / cos(x); }
+	LR_INLINE extended::float16_t cot(extended::float16_t x) { return 1.0f / tan(x); }
+	LR_INLINE extended::float16_t acsc(extended::float16_t x) { return asin(1.0f / x); }
+	LR_INLINE extended::float16_t asec(extended::float16_t x) { return acos(1.0f / x); }
+	LR_INLINE extended::float16_t acot(extended::float16_t x) { return atan(1.0f / x); }
 	LR_INLINE extended::float16_t exp(extended::float16_t x) { return extended::exp(x); }
 	LR_INLINE extended::float16_t log(extended::float16_t x) { return extended::log(x); }
 	LR_INLINE extended::float16_t log10(extended::float16_t x) { return extended::log10(x); }

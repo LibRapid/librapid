@@ -876,10 +876,10 @@ namespace librapid::internal {
 		return std::isinf(val);
 	}
 
-	template<typename T>
+	template<typename T, typename M>
 	LR_NODISCARD("")
-	LR_INLINE T copySign(const T &mag, const T &sign) noexcept {
-		return std::copysign(mag, sign);
+	LR_INLINE T copySign(const T &mag, const M &sign) noexcept {
+		return std::copysign(mag, (T) sign);
 	}
 
 	template<typename T>
