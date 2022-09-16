@@ -77,8 +77,8 @@
 		using Scalar	= typename internal::traits<Derived>::Scalar;                              \
 		using ResDevice = Device;                                                                  \
 		using RetType =                                                                            \
-		  binop::CWiseBinop<functors::binary::TYPE<OtherScalar, Scalar>, OtherScalar, Derived>;    \
-		static constexpr uint64_t Flags	   = internal::traits<Derived>::Flags;                 \
+		  binop::CWiseBinop<functors::binary::TYPE<Scalar, Scalar>, Scalar, Derived>;    \
+		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                 \
 		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
                                                                                                    \
 		static_assert(!(Required & ~(Flags & Required)),                                           \
@@ -558,9 +558,6 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 
 		LR_FORCE_INLINE Packet packet(int64_t index) const {
 			Packet p;
-			// if constexpr (is_same_v<Scalar, bool>)
-			// 	p.load(m_storage.heap() + (index / 64));
-			// else
 			p.load(m_storage.heap() + index);
 			return p;
 		}

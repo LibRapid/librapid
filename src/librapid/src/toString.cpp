@@ -1,5 +1,4 @@
-#include <librapid/utils/toString.hpp>
-#include <librapid/math/mpfr.hpp>
+#include <librapid>
 
 namespace librapid {
 #if defined(LIBRAPID_USE_MULTIPREC)
@@ -37,4 +36,8 @@ namespace librapid {
 		return ss.str();
 	}
 #endif
+
+	std::string str(const half &h, const StrOpt &options) {
+		return fmt::format("{:.4f}", static_cast<float>(h));
+	}
 } // namespace librapid

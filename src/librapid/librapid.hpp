@@ -37,6 +37,7 @@
 #include "array/cwisebinop.hpp"
 #include "array/cwiseunop.hpp"
 #include "array/array.hpp"
+#include "utils/suffix.hpp"
 #include "test/test.hpp"
 
 #include "utils/toString.hpp"

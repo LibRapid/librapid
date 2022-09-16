@@ -191,9 +191,11 @@ struct fmt::formatter<mpf_class> {
 	template<typename FormatContext>
 	inline auto format(const mpf_class &num, FormatContext &ctx) {
 		try {
+			if (specs_.precision < 1) return fmt::format_to(ctx.out(), librapid::str(num));
+
 			std::stringstream ss;
 			ss << std::fixed;
-			ss.precision(specs_.precision < 1 ? 10 : specs_.precision);
+			ss.precision(specs_.precision);
 			ss << num;
 			return fmt::format_to(ctx.out(), ss.str());
 		} catch (std::exception &e) {
@@ -223,9 +225,11 @@ struct fmt::formatter<mpq_class> {
 	template<typename FormatContext>
 	inline auto format(const mpq_class &num, FormatContext &ctx) {
 		try {
+			if (specs_.precision < 1) return fmt::format_to(ctx.out(), librapid::str(num));
+
 			std::stringstream ss;
 			ss << std::fixed;
-			ss.precision(specs_.precision < 1 ? 10 : specs_.precision);
+			ss.precision(specs_.precision);
 			ss << num;
 			return fmt::format_to(ctx.out(), ss.str());
 		} catch (std::exception &e) {
@@ -255,9 +259,11 @@ struct fmt::formatter<librapid::mpfr> {
 	template<typename FormatContext>
 	inline auto format(const librapid::mpfr &num, FormatContext &ctx) {
 		try {
+			if (specs_.precision < 1) return fmt::format_to(ctx.out(), librapid::str(num));
+
 			std::stringstream ss;
 			ss << std::fixed;
-			ss.precision(specs_.precision < 1 ? 10 : specs_.precision);
+			ss.precision(specs_.precision);
 			ss << num;
 			return fmt::format_to(ctx.out(), ss.str());
 		} catch (std::exception &e) {
