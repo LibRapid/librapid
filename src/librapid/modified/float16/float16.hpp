@@ -545,10 +545,14 @@ namespace librapid::extended {
 		inline float16_t(float16_t &&) noexcept		 = default;
 		inline float16_t(float other) noexcept :
 				data_ {float16_t_private::float32_to_float16(other)} {}
-		inline float16_t(std::uint16_t bits) noexcept : data_ {bits} {}
+
+		// inline float16_t(std::uint16_t bits) noexcept : data_ {bits} {}
 
 		template<typename T>
 		inline float16_t(T val) : float16_t((float)val) {}
+
+		inline float16_t(const char *val) : float16_t(std::stof(val)) {}
+		inline float16_t(const std::string &val) : float16_t(std::stof(val)) {}
 
 		inline float16_t &operator=(float16_t const &) noexcept = default;
 		inline float16_t &operator=(float16_t &&) noexcept		= default;
