@@ -50,6 +50,7 @@ def isArrayObject(obj):
 
 Extent = extentInterface.Extent
 
+half = _librapid.half
 mpz = _librapid.mpz
 mpf = _librapid.mpf
 mpq = _librapid.mpq
