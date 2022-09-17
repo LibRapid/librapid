@@ -1018,7 +1018,7 @@ namespace librapid {
 
 			template<typename CAST>
 			LR_FORCE_INLINE static CAST cast(const extended::float16_t &val) {
-				return (CAST)val;
+				return (CAST)((float)val);
 			}
 
 			LR_FORCE_INLINE LIMIT_IMPL(min) { return NUM_LIM(min); }
