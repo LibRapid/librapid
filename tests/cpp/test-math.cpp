@@ -155,7 +155,7 @@ int main() {
 													TYPE(10000),
 													TYPE(12000),
 													TYPE(12300),
-													TYPE(12340),
+													TYPE(12350),
 													// Negative
 													// Floating small
 													TYPE(-0.01),
@@ -166,7 +166,7 @@ int main() {
 													TYPE(-10000),
 													TYPE(-12000),
 													TYPE(-12300),
-													TYPE(-12340)}))
+													TYPE(-12350)}))
 						 .allowClose(true);
 
 	roundingTest.run();

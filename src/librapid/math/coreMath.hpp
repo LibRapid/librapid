@@ -406,7 +406,7 @@ namespace librapid {
 
 		if (num == 0) return 0;
 
-		auto tmp  = ::librapid::abs(static_cast<T>(num));
+		auto tmp  = ::librapid::abs(static_cast<Scalar>(num));
 		int64_t n = 0;
 
 		while (tmp > 10) {
