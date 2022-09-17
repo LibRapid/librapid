@@ -1058,13 +1058,13 @@ namespace librapid {
 		return extended::float16_t(1.0f) / tan(x);
 	}
 	LR_INLINE extended::float16_t acsc(extended::float16_t x) {
-		return extended::float16_t(asin((float)(extended::float16_t(1.0f) / x)));
+		return {asin((float)(extended::float16_t(1.0f) / x))};
 	}
 	LR_INLINE extended::float16_t asec(extended::float16_t x) {
-		return extended::float16_t(acos((float)(extended::float16_t(1.0f) / x)));
+		return {acos((float)(extended::float16_t(1.0f) / x))};
 	}
 	LR_INLINE extended::float16_t acot(extended::float16_t x) {
-		return extended::float16_t(atan((float)(extended::float16_t(1.0f) / x)));
+		return {atan((float)(extended::float16_t(1.0f) / x))};
 	}
 	LR_INLINE extended::float16_t exp(extended::float16_t x) { return extended::exp(x); }
 	LR_INLINE extended::float16_t log(extended::float16_t x) { return extended::log(x); }
@@ -1079,6 +1079,10 @@ namespace librapid {
 	LR_INLINE extended::float16_t floor(extended::float16_t x) { return extended::floor(x); }
 	LR_INLINE extended::float16_t pow(extended::float16_t x, extended::float16_t y) {
 		return extended::pow(x, y);
+	}
+
+	LR_INLINE extended::float16_t fmod(extended::float16_t x, extended::float16_t y) {
+		return extended::fmod(x, y);
 	}
 
 } // namespace librapid
