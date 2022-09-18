@@ -301,6 +301,17 @@ namespace librapid {
 		return std::fmod(val, divisor);
 	}
 
+	template<typename A, typename B>
+	LR_INLINE auto mod(const Complex<A> &a, const Complex<B> &b) {
+		return Complex<decltype(mod(a.real(), b.real()))>(mod(a.real(), b.real()),
+														  mod(a.imag(), b.imag()));
+	}
+
+	template<typename A, typename B>
+	LR_INLINE auto fmod(const Complex<A> &a, const Complex<B> &b) {
+		return mod(a, b);
+	}
+
 	namespace roundMode {
 		// Rounding Mode Information:
 		// Bit mask:
