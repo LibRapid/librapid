@@ -12,9 +12,9 @@
 #define MPIRXX_HAVE_LLONG // Enable long long support
 
 #include "VERSION.hpp"
+#include "modified/modified.hpp"
 #include "internal/config.hpp"
 #include "linalg/threadHelper.hpp"
-#include "modified/modified.hpp"
 #include "cuda/cudaCodeLoader.hpp"
 #include "internal/memUtils.hpp"
 #include "utils/traits.hpp"
