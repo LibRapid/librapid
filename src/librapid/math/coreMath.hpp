@@ -374,12 +374,12 @@ namespace librapid {
 #endif
 
 	template<typename T1 = double, typename T2 = double>
-	LR_INLINE T1 roundTo(T1 num, T2 val) {
+	LR_INLINE T2 roundTo(T1 num, T2 val) {
 		if (num == 0) return 0;
-		auto rem = ::librapid::mod(::librapid::abs(num), T1(val));
-		if (rem >= T1(val) / 2)
-			return internal::copySign((::librapid::abs(num) + T1(val)) - rem, num);
-		return internal::copySign(num - rem, num);
+		T2 rem = ::librapid::mod(::librapid::abs(T2(num)), val);
+		if (rem >= val / 2)
+			return internal::copySign((::librapid::abs(T2(num)) + val) - rem, num);
+		return internal::copySign(T2(num) - rem, num);
 	}
 
 	template<typename T1, typename T2>
