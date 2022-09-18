@@ -303,8 +303,8 @@ namespace librapid {
 
 	template<typename A, typename B>
 	LR_INLINE auto mod(const Complex<A> &a, const Complex<B> &b) {
-		return Complex<decltype(mod(a.real(), b.real()))>(mod(a.real(), b.real()),
-														  mod(a.imag(), b.imag()));
+		return Complex<decltype(::librapid::mod(a.real(), b.real()))>(
+		  ::librapid::mod(a.real(), b.real()), ::librapid::mod(a.imag(), b.imag()));
 	}
 
 	template<typename A, typename B>
