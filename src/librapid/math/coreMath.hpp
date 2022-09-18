@@ -294,9 +294,11 @@ namespace librapid {
 		return val % divisor;
 	}
 
-	template<typename T1, typename T2,
-			 typename std::enable_if_t<std::is_floating_point_v<T1> || std::is_floating_point_v<T2>,
-									   int> = 0>
+	template<
+	  typename T1, typename T2,
+	  typename std::enable_if_t<(std::is_fundamental_v<T1> && std::is_fundamental_v<T2>)&&(
+								  std::is_floating_point_v<T1> || std::is_floating_point_v<T2>),
+								int> = 0>
 	LR_INLINE auto mod(T1 val, T2 divisor) {
 		return std::fmod(val, divisor);
 	}
@@ -353,7 +355,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_USE_MULTIPREC)
 	template<>
-	LR_INLINE auto round(mpfr num, int64_t dp, int8_t mode) {
+	LR_INLINE auto round(const mpfr &num, int64_t dp, int8_t mode) {
 		using Scalar = mpfr;
 
 		const Scalar alpha	= ::librapid::exp10(mpfr(dp));
@@ -381,20 +383,20 @@ namespace librapid {
 	}
 
 	template<typename T1, typename T2>
-	LR_INLINE Complex<T1> roundTo(const Complex<T1> &num, T2 val) {
-		return Complex<T1>(roundTo(real(num), val), roundTo(imag(num), val));
+	LR_INLINE Complex<T2> roundTo(const Complex<T1> &num, T2 val) {
+		return Complex<T2>(roundTo(real(num), val), roundTo(imag(num), val));
 	}
 
 	template<typename T1 = double, typename T2 = double>
-	LR_INLINE T1 roundTo(const Complex<T1> &num, const Complex<T1> &val) {
-		return Complex<T1>(roundTo(real(num), real(val)), roundTo(imag(num), imag(val)));
+	LR_INLINE Complex<T2> roundTo(const Complex<T1> &num, const Complex<T2> &val) {
+		return Complex<T2>(roundTo(real(num), real(val)), roundTo(imag(num), imag(val)));
 	}
 
 	template<typename T1 = double, typename T2 = double>
-	LR_INLINE T1 roundUpTo(T1 num, T2 val) {
-		auto rem = ::librapid::mod(num, T1(val));
-		if (rem == 0) return num;
-		return (num + val) - rem;
+	LR_INLINE T2 roundUpTo(T1 num, T2 val) {
+		T2 rem = ::librapid::mod(T2(num), val);
+		if (rem == T2(0)) return static_cast<T2>(num);
+		return (static_cast<T2>(num) + val) - rem;
 	}
 
 	template<typename T1 = double, typename T2 = double>
