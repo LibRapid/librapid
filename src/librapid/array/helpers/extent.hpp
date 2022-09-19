@@ -104,10 +104,6 @@ namespace librapid {
 			T res			   = 0;
 			ExtentType strides = stride();
 			for (int64_t i = 0; i < index.dims(); ++i) {
-				LR_ASSERT(index.m_data[i] >= 0 && index.m_data[i] <= m_data[i],
-						  "Index {} is out of range for Extent with dimension {}",
-						  index.m_data[i],
-						  m_data[i]);
 				res += strides[i] * index[i];
 			}
 			return res;
