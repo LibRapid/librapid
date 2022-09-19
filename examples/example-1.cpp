@@ -54,10 +54,10 @@ retry:
 	if (!scn::input("{}x{}", rows, cols)) goto retry;
 	fmt::print("Lazily evaluated result:\n");
 	lrc::Array<float> bench(lrc::Extent(rows, cols));
-	lrc::timeFunction([&]() { auto res = bench + bench; });
+	lrc::timeVerbose([&]() { auto res = bench + bench; });
 	fmt::print("Actually evaluating the result:\n");
 	lrc::Array<float> res;
-	lrc::timeFunction([&]() { res = bench + bench; });
+	lrc::timeVerbose([&]() { res = bench + bench; });
 
 	return 0;
 }
