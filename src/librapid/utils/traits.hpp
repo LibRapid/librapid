@@ -61,6 +61,7 @@ namespace librapid::internal {
 
 		constexpr uint64_t NoPacketOp		 = 1ll << 34; // Supports packet operations
 		constexpr uint64_t CustomFunctionGen = 1ll << 35; // Needs a custom function to be generated
+		constexpr uint64_t MatrixTranspose	 = 1ll << 36; // Some functions need this information
 
 #if defined(LIBRAPID_PYTHON)
 		constexpr uint64_t PythonFlags = RequireEval;

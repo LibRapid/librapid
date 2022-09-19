@@ -8,16 +8,16 @@ namespace librapid {
 	namespace internal {
 		template<typename Unop, typename TYPE>
 		struct traits<unop::CWiseUnop<Unop, TYPE>> {
-			static constexpr bool IsScalar	= false;
-			static constexpr bool IsEvaluated	 = false;
-			using Valid						= std::true_type;
-			using Type						= unop::CWiseUnop<Unop, TYPE>;
-			using Scalar					= typename Unop::RetType;
-			using BaseScalar				= typename traits<Scalar>::BaseScalar;
-			using Packet					= typename traits<Scalar>::Packet;
-			using Device					= typename traits<TYPE>::Device;
-			using StorageType				= memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags = Unop::Flags | traits<TYPE>::Flags;
+			static constexpr bool IsScalar	  = false;
+			static constexpr bool IsEvaluated = false;
+			using Valid						  = std::true_type;
+			using Type						  = unop::CWiseUnop<Unop, TYPE>;
+			using Scalar					  = typename Unop::RetType;
+			using BaseScalar				  = typename traits<Scalar>::BaseScalar;
+			using Packet					  = typename traits<Scalar>::Packet;
+			using Device					  = typename traits<TYPE>::Device;
+			using StorageType				  = memory::DenseStorage<Scalar, Device>;
+			static constexpr uint64_t Flags	  = Unop::Flags | traits<TYPE>::Flags;
 		};
 	} // namespace internal
 
@@ -90,9 +90,10 @@ namespace librapid {
 				if constexpr ((bool)(Flags & internal::flags::HasCustomEval)) {
 					m_operation.customEval(m_value, res);
 					return res;
+				} else {
+					res.assign(*this);
 				}
 
-				res.assign(*this);
 				return res;
 			}
 
@@ -106,7 +107,7 @@ namespace librapid {
 			}
 
 			LR_FORCE_INLINE Packet packet(int64_t index) const {
-				if constexpr ((bool) (Flags & internal::flags::RequireInput)) {
+				if constexpr ((bool)(Flags & internal::flags::RequireInput)) {
 					return m_operation.packetOpInput(m_value, index);
 				} else {
 					return m_operation.packetOp(m_value.packet(index));
@@ -114,7 +115,7 @@ namespace librapid {
 			}
 
 			LR_FORCE_INLINE Scalar scalar(int64_t index) const {
-				if constexpr ((bool) (Flags & internal::flags::RequireInput)) {
+				if constexpr ((bool)(Flags & internal::flags::RequireInput)) {
 					return m_operation.scalarOpInput(m_value, index);
 				} else {
 					return m_operation.scalarOp(m_value.scalar(index));

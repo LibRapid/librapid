@@ -77,8 +77,8 @@
 		using Scalar	= typename internal::traits<Derived>::Scalar;                              \
 		using ResDevice = Device;                                                                  \
 		using RetType =                                                                            \
-		  binop::CWiseBinop<functors::binary::TYPE<Scalar, Scalar>, Scalar, Derived>;    \
-		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                 \
+		  binop::CWiseBinop<functors::binary::TYPE<Scalar, Scalar>, Scalar, Derived>;              \
+		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                      \
 		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
                                                                                                    \
 		static_assert(!(Required & ~(Flags & Required)),                                           \
@@ -529,7 +529,8 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				m_storage = StorageType(m_extent.sizeAdjusted());
 			}
 
-			LR_ASSERT(m_extent == other.extent(),
+			constexpr uint64_t flags = internal::traits<OtherDerived>::Flags;
+			LR_ASSERT((flags & internal::flags::MatrixTranspose) || (m_extent == other.extent()),
 					  "Cannot perform operation on Arrays with {} and {}. Extents must be equal",
 					  m_extent.str(),
 					  other.extent().str());
@@ -542,7 +543,8 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 
 		template<typename OtherDerived>
 		LR_FORCE_INLINE Derived &assignLazy(const OtherDerived &other) {
-			LR_ASSERT(m_extent == other.extent(),
+			constexpr uint64_t flags = internal::traits<OtherDerived>::Flags;
+			LR_ASSERT((flags & internal::flags::MatrixTranspose) || (m_extent == other.extent()),
 					  "Cannot perform operation on Arrays with {} and {}. Extents must be equal",
 					  m_extent.str(),
 					  other.extent().str());

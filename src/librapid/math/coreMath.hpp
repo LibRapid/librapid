@@ -345,7 +345,8 @@ namespace librapid {
 			auto nearestEven = (integer & 1) ? (y + 1) : (double)integer;
 			if (mode & (1 << 4) && diff == 0.5) y = nearestEven;
 		}
-		return static_cast<Scalar>((num >= 0 ? y : -y) * beta);
+
+		return static_cast<T>(internal::copySign(y * beta, num));
 	}
 
 	template<typename T>
@@ -422,8 +423,8 @@ namespace librapid {
 		auto tmp  = ::librapid::abs(static_cast<Scalar>(num));
 		int64_t n = 0;
 
-		constexpr auto ten = static_cast<Scalar>(10);
-		constexpr auto one = static_cast<Scalar>(1);
+		const auto ten = static_cast<Scalar>(10);
+		const auto one = static_cast<Scalar>(1);
 		while (tmp > ten) {
 			tmp /= ten;
 			++n;

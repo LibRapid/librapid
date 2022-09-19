@@ -8,13 +8,13 @@ namespace librapid::functors::matrix {
 	template<typename Type_>
 	class Transpose {
 	public:
-		using Type					   = Type_;
-		using Scalar				   = typename internal::traits<Type_>::Scalar;
-		using RetType				   = Scalar;
-		using Packet				   = typename internal::traits<Scalar>::Packet;
-		static constexpr int64_t Flags = internal::flags::Matrix | internal::flags::Unary |
-										 internal::flags::RequireInput |
-										 internal::flags::NoPacketOp;
+		using Type	  = Type_;
+		using Scalar  = typename internal::traits<Type_>::Scalar;
+		using RetType = Scalar;
+		using Packet  = typename internal::traits<Scalar>::Packet;
+		static constexpr int64_t Flags =
+		  internal::flags::Matrix | internal::flags::Unary | internal::flags::RequireInput |
+		  internal::flags::NoPacketOp | internal::flags::MatrixTranspose;
 
 		Transpose() = default;
 
