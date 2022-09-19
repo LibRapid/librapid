@@ -375,11 +375,11 @@ namespace librapid {
 
 	template<typename T1 = double, typename T2 = double>
 	LR_INLINE T2 roundTo(T1 num, T2 val) {
-		if (num == 0) return 0;
-		T2 rem = ::librapid::mod(::librapid::abs(T2(num)), val);
-		if (rem >= val / 2)
-			return internal::copySign((::librapid::abs(T2(num)) + val) - rem, num);
-		return internal::copySign(T2(num) - rem, num);
+		if (num == static_cast<T1>(0)) return 0;
+		T2 rem = ::librapid::mod(::librapid::abs(static_cast<T2>(num)), val);
+		if (rem >= val / static_cast<T2>(2))
+			return internal::copySign((::librapid::abs(static_cast<T2>(num)) + val) - rem, num);
+		return internal::copySign(static_cast<T2>(num) - rem, num);
 	}
 
 	template<typename T1, typename T2>
@@ -417,18 +417,20 @@ namespace librapid {
 
 		using Scalar = std::conditional_t<std::is_floating_point_v<T>, double, T>;
 
-		if (num == 0) return 0;
+		if (num == static_cast<T>(0)) return static_cast<T>(0);
 
 		auto tmp  = ::librapid::abs(static_cast<Scalar>(num));
 		int64_t n = 0;
 
-		while (tmp > 10) {
-			tmp /= 10;
+		constexpr auto ten = static_cast<Scalar>(10);
+		constexpr auto one = static_cast<Scalar>(1);
+		while (tmp > ten) {
+			tmp /= ten;
 			++n;
 		}
 
-		while (tmp < 1) {
-			tmp *= 10;
+		while (tmp < one) {
+			tmp *= ten;
 			--n;
 		}
 

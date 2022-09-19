@@ -879,7 +879,16 @@ namespace librapid::internal {
 	template<typename T, typename M>
 	LR_NODISCARD("")
 	LR_INLINE T copySign(const T &mag, const M &sign) noexcept {
-		return std::copysign(mag, (T) sign);
+#if defined(LIBRAPID_MSVC_CXX)
+		return std::copysign(mag, static_cast<T>(sign));
+#else
+		if constexpr (std::is_fundamental_v<T> && std::is_fundamental_v<M>) {
+			return std::copysign(mag, static_cast<T>(sign));
+		} else {
+			if (sign < 0) return -mag;
+			return mag;
+		}
+#endif
 	}
 
 	template<typename T>
