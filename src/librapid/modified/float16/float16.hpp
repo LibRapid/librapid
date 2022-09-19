@@ -1074,10 +1074,9 @@ namespace librapid {
 	namespace internal {
 		LR_INLINE extended::float16_t copySign(const extended::float16_t &mag,
 											   const extended::float16_t &sign) noexcept {
-			return extended::copysign(mag, sign);
+			return extended::copysign(static_cast<float>(mag), static_cast<float>(sign));
 		}
 	}
-
 } // namespace librapid
 
 // Provide {fmt} printing capabilities
