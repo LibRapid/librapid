@@ -14,6 +14,7 @@
 #include "VERSION.hpp"
 #include "modified/modified.hpp"
 #include "internal/config.hpp"
+#include "internal/typedefs.hpp"
 #include "linalg/threadHelper.hpp"
 #include "cuda/cudaCodeLoader.hpp"
 #include "internal/memUtils.hpp"
