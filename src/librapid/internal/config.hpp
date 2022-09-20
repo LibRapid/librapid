@@ -23,10 +23,6 @@
 #include <mutex>
 #include <queue>
 
-#if defined(__unix__)
-#	include <unistd.h>
-#endif
-
 #if defined(_OPENMP)
 #	include <omp.h>
 #	define LIBRAPID_OPENMP
@@ -1010,6 +1006,14 @@ namespace librapid {
 	template<class T, class U>
 	constexpr bool is_same_v = std::is_same<T, U>::value;
 } // namespace librapid
+
+#if defined(LIBRAPID_OS_WINDOWS)
+#	define WIN32_LEAN_AND_MEAN
+#	include <Windows.h>
+#elif defined(LIBRAPID_OS_UNIX)
+#	include <sys/ioctl.h>
+#	include <unistd.h>
+#endif
 
 #include "../math/mpfr.hpp"
 #endif // LIBRAPID_CONFIG_HPP
