@@ -54,8 +54,8 @@ namespace librapid {
 	mpfr toMpfr(const mpq &other);
 	mpfr toMpfr(const mpfr &other);
 
-	inline void prec(int64_t dig10) {
-		int64_t dig2 = (int64_t)((double)dig10 * 3.32192809488736234787) + 5;
+	inline void prec(i64 dig10) {
+		i64 dig2 = (i64)((f64)dig10 * 3.32192809488736234787) + 5;
 		mpf_set_default_prec(dig2);
 		mpfr::mpreal::set_default_prec((mpfr_prec_t)dig2);
 	}
@@ -378,7 +378,7 @@ namespace scn {
 #else
 
 namespace librapid {
-	LR_INLINE void prec(int64_t) {};
+	LR_INLINE void prec(i64) {};
 }
 
 #endif // LIBRAPID_USE_MULTIPREC
