@@ -2,24 +2,7 @@
 
 #if defined(LIBRAPID_USE_MULTIPREC)
 
-#	include "../internal/forward.hpp"
-
-// MPIR (modified) for BigNumber types
-#	include <mpirxx.h>
-#	include <mpreal.h>
-
-#	include <cstdint>
-#	include <thread>
-#	include <future>
-#	include <iostream>
-
 namespace librapid {
-	using mpz  = mpz_class;
-	using mpf  = mpf_class;
-	using mpq  = mpq_class;
-	using mpfr = mpfr::mpreal;
-	using mpc  = std::complex<mpfr>;
-
 	std::string str(const mpz &val, const StrOpt &options = DEFAULT_STR_OPT);
 	std::string str(const mpf_class &val, const StrOpt &options = DEFAULT_STR_OPT);
 	std::string str(const mpq &val, const StrOpt &options = DEFAULT_STR_OPT);

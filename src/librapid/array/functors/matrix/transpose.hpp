@@ -1,9 +1,5 @@
 #pragma once
 
-#include "../../../internal/config.hpp"
-#include "../../helpers/extent.hpp"
-#include "../../../modified/modified.hpp"
-
 namespace librapid::functors::matrix {
 	template<typename Type_>
 	class Transpose {

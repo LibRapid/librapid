@@ -1,13 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-#include "helpers/extent.hpp"
-#include "arrayBase.hpp"
-#include "cwisebinop.hpp"
-#include "cwisemap.hpp"
-#include "denseStorage.hpp"
-#include "commaInitializer.hpp"
-
 namespace librapid {
 	namespace internal {
 		template<typename Scalar_, typename Device_>

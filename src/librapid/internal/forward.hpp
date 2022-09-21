@@ -1,7 +1,5 @@
 #pragma once
 
-#include "config.hpp"
-
 namespace librapid {
 	namespace memory {
 		template<typename T, typename d>

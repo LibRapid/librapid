@@ -1,10 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-#include "../internal/forward.hpp"
-#include "../internal/memUtils.hpp"
-#include "arrayBase.hpp"
-
 // TODO: Optimise this for GPU accesses
 #define IMPL_BINOP(NAME, ASSIGN, OP)                                                               \
 	template<typename Other>                                                                       \

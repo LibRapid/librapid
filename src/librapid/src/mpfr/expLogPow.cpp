@@ -1,4 +1,4 @@
-#include <librapid/math/mpfr.hpp>
+#include <librapid>
 
 namespace librapid {
 	mpfr sqrt(const mpfr &val) { return ::mpfr::sqrt(val); }

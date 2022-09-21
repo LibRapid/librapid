@@ -1,11 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-#include "../array/helpers/kernelFormat.hpp"
-#include "../internal/memUtils.hpp"
-#include "../cuda/memUtils.hpp"
-#include "../modified/modified.hpp"
-
 namespace librapid {
 	LR_INLINE void setCudaMathMode(const std::string &type) {
 #if defined(LIBRAPID_HAS_CUDA)

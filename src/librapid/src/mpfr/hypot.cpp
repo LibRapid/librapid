@@ -1,4 +1,4 @@
-#include <librapid/math/mpfr.hpp>
+#include <librapid>
 
 namespace librapid {
 	mpfr hypot(const mpfr &a, const mpfr &b) { return ::mpfr::hypot(a, b); }

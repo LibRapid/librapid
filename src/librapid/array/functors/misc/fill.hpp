@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../../internal/config.hpp"
-
 namespace librapid::functors::misc {
 	template<typename Type_>
 	class FillArray {
