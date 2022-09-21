@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../../internal/config.hpp"
-
 namespace librapid { namespace functors { namespace binary {
 	template<typename LHS, typename RHS>
 	class ScalarOp {

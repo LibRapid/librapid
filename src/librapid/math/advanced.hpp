@@ -1,9 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-#include "coreMath.hpp"
-#include "constants.hpp"
-
 namespace librapid {
 	template<typename LAMBDA>
 	LR_NODISCARD("")

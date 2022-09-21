@@ -8,8 +8,6 @@
  * (*1*) Why on Earth would you create a complex number out of an integer type?
  */
 
-#include "../internal/config.hpp"
-
 #if defined(_M_IX86) || (defined(_M_X64) && !defined(_M_ARM64EC))
 #	define USE_X86_X64_INTRINSICS
 #	include <emmintrin.h>

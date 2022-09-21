@@ -1,8 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-#include <omp.h>
-
 namespace librapid {
 	LR_INLINE void setBlasThreads(int64_t n) {
 		LR_ASSERT(n >= 1, "Number of threads must be greater than or equal to 1");

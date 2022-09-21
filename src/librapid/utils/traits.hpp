@@ -6,10 +6,6 @@
  * type and LibRapid. A default implementation is provided, though may not work for all types.
  */
 
-#include "../internal/config.hpp"
-#include "../internal/forward.hpp"
-#include "../internal/memUtils.hpp"
-
 #if defined(LIBRAPID_USE_VC)
 #	define LR_VC_TYPE(X) Vc::Vector<X>
 #	define LR_VC_SIZE(X) Vc::Vector<X>::size()

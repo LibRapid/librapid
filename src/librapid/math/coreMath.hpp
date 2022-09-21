@@ -1,11 +1,6 @@
 #ifndef LIBRAPID_CORE_MATH
 #define LIBRAPID_CORE_MATH
 
-#include "../internal/config.hpp"
-#include "../internal/forward.hpp"
-#include "../utils/traits.hpp"
-#include "../utils/time.hpp"
-
 namespace librapid {
 	template<typename T>
 	LR_INLINE T product(const std::vector<T> &vals) {

@@ -1,4 +1,4 @@
-#include <librapid/math/mpfr.hpp>
+#include <librapid>
 
 namespace librapid {
 	mpz toMpz(const mpz &other) { return other; }

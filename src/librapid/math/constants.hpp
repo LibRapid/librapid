@@ -1,8 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-#include <cfloat>
-
 namespace librapid {
 #define CTYPED static const double
 

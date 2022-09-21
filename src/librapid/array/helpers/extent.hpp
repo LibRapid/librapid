@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../internal/config.hpp"
-
 namespace librapid {
 	template<typename T, int64_t maxDims, int64_t align_ = 1>
 	class ExtentType {

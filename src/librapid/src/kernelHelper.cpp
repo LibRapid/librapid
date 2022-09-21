@@ -1,4 +1,4 @@
-#include <librapid/array/helpers/kernelFormat.hpp>
+#include <librapid>
 
 namespace librapid::detail {
 	std::string kernelGenerator(const std::string &opKernel,

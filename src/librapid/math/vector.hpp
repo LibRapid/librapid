@@ -1,9 +1,6 @@
 #ifndef LIBRAPID_VECTOR
 #define LIBRAPID_VECTOR
 
-#include "../internal/config.hpp"
-#include "../utils/toString.hpp"
-
 namespace librapid {
 #ifndef LIBRAPID_DOXYGEN_BUILD
 #	define MIN_DIM_CLAMP(_dims, _tmpDims) (((_dims) < (_tmpDims)) ? (_dims) : (_tmpDims))
