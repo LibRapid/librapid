@@ -829,13 +829,6 @@ namespace librapid::internal {
 #endif // LIBRAPID_USE_MPIR
 
 	template<typename LHS, typename RHS>
-	struct PropagateDeviceType {
-		using DeviceLHS = typename traits<LHS>::Device;
-		using DeviceRHS = typename traits<RHS>::Device;
-		using Device	= typename memory::PromoteDevice<DeviceLHS, DeviceRHS>::type;
-	};
-
-	template<typename LHS, typename RHS>
 	struct ReturnType {
 		using LhsType = LHS;
 		using RhsType = RHS;

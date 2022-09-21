@@ -85,10 +85,10 @@ namespace librapid {
 			}
 
 			// Round to 26 significant bits. Ties toward zero
-			LR_NODISCARD("") LR_INLINE constexpr double highHalf(const double x) noexcept {
-				const auto bits			= bitCast<uint64_t>(x);
+			LR_NODISCARD("") LR_INLINE constexpr f64 highHalf(const f64 x) noexcept {
+				const auto bits			= bitCast<ui64>(x);
 				const auto highHalfBits = (bits + 0x3ff'ffffULL) & 0xffff'ffff'f800'0000ULL;
-				return bitCast<double>(highHalfBits);
+				return bitCast<f64>(highHalfBits);
 			}
 
 #if defined(USE_X86_X64_INTRINSICS) || defined(USE_ARM64_INTRINSICS) // SIMD method
@@ -98,28 +98,28 @@ namespace librapid {
 			// 2) no internal overflow or underflow occurs
 			// violation of condition 1 could lead to relative error on the order of epsilon
 			LR_NODISCARD("")
-			LR_INLINE double sqrError(const double x, const double prod0) noexcept {
+			LR_INLINE f64 sqrError(const f64 x, const f64 prod0) noexcept {
 #	if defined(USE_X86_X64_INTRINSICS)
 				const __m128d xVec		= _mm_set_sd(x);
 				const __m128d prodVec	= _mm_set_sd(prod0);
 				const __m128d resultVec = _mm_fmsub_sd(xVec, xVec, prodVec);
-				double result;
+				f64 result;
 				_mm_store_sd(&result, resultVec);
 				return result;
 #	else // Only two options, so this is fine
 				const float64x1_t xVec		= vld1_f64(&x);
 				const float64x1_t prod0Vec	= vld1_f64(&prod0);
 				const float64x1_t resultVec = vfma_f64(vneg_f64(prod0Vec), xVec, xVec);
-				double result;
+				f64 result;
 				vst1_f64(&result, resultVec);
 				return result;
 #	endif
 			}
 #else
 			LR_NODISCARD("") // Fallback method
-			LR_INLINE constexpr double sqrError(const double x, const double prod0) noexcept {
-				const double xHigh = highHalf(x);
-				const double xLow  = x - xHigh;
+			LR_INLINE constexpr f64 sqrError(const f64 x, const f64 prod0) noexcept {
+				const f64 xHigh = highHalf(x);
+				const f64 xLow	= x - xHigh;
 				return ((xHigh * xHigh - prod0) + 2.0 * xHigh * xLow) + xLow * xLow;
 			}
 #endif
@@ -134,8 +134,8 @@ namespace librapid {
 
 			// square(1x precision) -> 2x precision
 			// the result is exact when no internal overflow or underflow occurs
-			LR_NODISCARD("") LR_INLINE Fmp<double> sqrX2(const double x) noexcept {
-				const double prod0 = x * x;
+			LR_NODISCARD("") LR_INLINE Fmp<f64> sqrX2(const f64 x) noexcept {
+				const f64 prod0 = x * x;
 				return {prod0, sqrError(x, prod0)};
 			}
 
@@ -162,13 +162,13 @@ namespace librapid {
 			};
 
 			template<>
-			struct HypotLegHugeHelper<double> {
-				static constexpr double val = 6.703903964971298e+153;
+			struct HypotLegHugeHelper<f64> {
+				static constexpr f64 val = 6.703903964971298e+153;
 			};
 
 			template<>
-			struct HypotLegHugeHelper<float> {
-				static constexpr double val = 9.2233715e+18f;
+			struct HypotLegHugeHelper<f32> {
+				static constexpr f64 val = 9.2233715e+18f;
 			};
 
 			template<typename T>
@@ -180,13 +180,13 @@ namespace librapid {
 			};
 
 			template<>
-			struct HypotLegTinyHelper<double> {
-				static constexpr double val = 1.4156865331029228e-146;
+			struct HypotLegTinyHelper<f64> {
+				static constexpr f64 val = 1.4156865331029228e-146;
 			};
 
 			template<>
-			struct HypotLegTinyHelper<float> {
-				static constexpr double val = 4.440892e-16f;
+			struct HypotLegTinyHelper<f32> {
+				static constexpr f64 val = 4.440892e-16f;
 			};
 
 			template<typename T>
@@ -307,8 +307,8 @@ namespace librapid {
 #endif
 
 #if defined(LIBRAPID_MSVC_CXX)
-					auto tmp  = static_cast<double>(*pleft);
-					short ans = _CSTD _Exp(&tmp, static_cast<double>(right), exponent);
+					auto tmp  = static_cast<f64>(*pleft);
+					short ans = _CSTD _Exp(&tmp, static_cast<f64>(right), exponent);
 					*pleft	  = static_cast<T>(tmp);
 					return ans;
 #else
@@ -323,7 +323,7 @@ namespace librapid {
 		} // namespace algorithm
 	}	  // namespace detail
 
-	template<typename T = double>
+	template<typename T = f64>
 	class Complex {
 	public:
 		Complex() : m_val {T(0), T(0)} {}
@@ -999,7 +999,8 @@ namespace librapid {
 				return polarPositiveNanInfZeroRho(logRho, theta); // exp(+Inf) = +Inf
 			}
 		} else {
-			return polarPositiveNanInfZeroRho(static_cast<T>(::librapid::abs(logRho)), theta); // exp(NaN) = +NaN
+			return polarPositiveNanInfZeroRho(static_cast<T>(::librapid::abs(logRho)),
+											  theta); // exp(NaN) = +NaN
 		}
 	}
 
@@ -1016,7 +1017,7 @@ namespace librapid {
 	}
 
 	template<typename T>
-	T _fabs(const Complex<T> &other, int64_t *exp) {
+	T _fabs(const Complex<T> &other, i64 *exp) {
 		*exp = 0;
 		T av = ::librapid::abs(real(other));
 		T bv = ::librapid::abs(imag(other));
@@ -1041,7 +1042,7 @@ namespace librapid {
 
 				if (av < legTiny) {
 #if defined(LIBRAPID_USE_MULTIPREC)
-					int64_t exponent;
+					i64 exponent;
 					if constexpr (std::is_same_v<T, mpfr>) {
 						exponent = -2 * ::mpfr::mpreal::get_default_prec();
 					} else {
@@ -1101,8 +1102,8 @@ namespace librapid {
 	template<typename T>
 	LR_NODISCARD("")
 	LR_INLINE T _logAbs(const Complex<T> &other) noexcept {
-		return static_cast<T>(detail::algorithm::logHypot(static_cast<double>(real(other)),
-														  static_cast<double>(imag(other))));
+		return static_cast<T>(detail::algorithm::logHypot(static_cast<f64>(real(other)),
+														  static_cast<f64>(imag(other))));
 	}
 
 #if defined(LIBRAPID_USE_MULTIPREC)
@@ -1115,7 +1116,7 @@ namespace librapid {
 
 	template<>
 	LR_NODISCARD("")
-	LR_INLINE float _logAbs(const Complex<float> &other) noexcept {
+	LR_INLINE f32 _logAbs(const Complex<f32> &other) noexcept {
 		return detail::algorithm::logHypot(real(other), imag(other));
 	}
 
@@ -1195,8 +1196,7 @@ namespace librapid {
 	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
 	LR_NODISCARD("")
 	LR_INLINE T _sinh(const T left, const T right) {
-		return static_cast<T>(::librapid::sinh(static_cast<double>(left)) *
-							  static_cast<double>(right));
+		return static_cast<T>(::librapid::sinh(static_cast<f64>(left)) * static_cast<f64>(right));
 	}
 
 	template<typename T, typename std::enable_if_t<!std::is_fundamental_v<T>, int> = 0>
@@ -1215,7 +1215,7 @@ namespace librapid {
 	template<typename T>
 	LR_NODISCARD("")
 	Complex<T> sqrt(const Complex<T> &other) {
-		int64_t otherExp;
+		i64 otherExp;
 		T rho = _fabs(other, &otherExp); // Get magnitude and scale factor
 
 		if (otherExp == 0) { // Argument is zero, Inf or NaN
@@ -1406,7 +1406,7 @@ namespace librapid {
 
 	template<typename T>
 	LR_NODISCARD("")
-	LR_INLINE Complex<T> random(const Complex<T> &min, const Complex<T> &max, uint64_t seed = -1) {
+	LR_INLINE Complex<T> random(const Complex<T> &min, const Complex<T> &max, ui64 seed = -1) {
 		return Complex<T>(::librapid::random(real(min), real(max), seed),
 						  ::librapid::random(imag(min), imag(max), seed));
 	}

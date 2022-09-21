@@ -1,6 +1,6 @@
 #pragma once
 
 namespace librapid {
-	float sqrtApprox(float);
-	float invSqrtApprox(float);
+	f32 sqrtApprox(f32);
+	f32 invSqrtApprox(f32);
 } // namespace librapid

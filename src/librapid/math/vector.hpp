@@ -14,7 +14,8 @@ namespace librapid {
 #	define MAX_DIM_CLAMP(_dims, _tmpDims) _dims
 #endif
 
-	template<typename DTYPE, int64_t dims>
+	/*
+	template<typename DTYPE, i64 dims>
 	class Vec {
 		template<typename T>
 		using Common = typename std::common_type<DTYPE, T>::type;
@@ -30,13 +31,13 @@ namespace librapid {
 		template<typename T>
 		Vec(const std::initializer_list<T> &vals) {
 			LR_ASSERT(vals.size() <= dims, "Parameters cannot exceed vector dimensions");
-			int64_t ind = 0;
+			i64 ind = 0;
 			for (const auto &val : vals) { m_components[ind++] = val; }
 		}
 
-		template<typename T, int64_t d>
+		template<typename T, i64 d>
 		explicit Vec(const Vec<T, d> &other) {
-			int64_t i;
+			i64 i;
 			for (i = 0; i < MIN_DIM_CLAMP(dims, d); ++i) { m_components[i] = other[i]; }
 		}
 
@@ -48,13 +49,13 @@ namespace librapid {
 		}
 
 		Vec(const Vec<DTYPE, dims> &other) {
-			int64_t i;
+			i64 i;
 			for (i = 0; i < dims; ++i) { m_components[i] = other[i]; }
 		}
 
 		Vec<DTYPE, dims> &operator=(const Vec<DTYPE, dims> &other) {
 			if (this == &other) { return *this; }
-			for (int64_t i = 0; i < dims; ++i) { m_components[i] = other[i]; }
+			for (i64 i = 0; i < dims; ++i) { m_components[i] = other[i]; }
 			return *this;
 		}
 
@@ -63,43 +64,37 @@ namespace librapid {
 
 		template<typename T, int tmpDim, glm::qualifier p = glm::defaultp>
 		Vec(const glm::vec<tmpDim, T, p> &vec) {
-			for (int64_t i = 0; i < tmpDim; ++i) {
-				m_components[i] = (i < dims) ? ((T)vec[i]) : (T());
-			}
+			for (i64 i = 0; i < tmpDim; ++i) { m_components[i] = (i < dims) ? ((T)vec[i]) : (T()); }
 		}
 
 		template<typename T = DTYPE, int tmpDim = dims, glm::qualifier p = glm::defaultp>
 		operator glm::vec<tmpDim, T, p>() const {
 			glm::vec<tmpDim, T, p> res;
-			for (int64_t i = 0; i < dims; ++i) {
-				res[i] = (i < dims) ? ((T)m_components[i]) : (T());
-			}
+			for (i64 i = 0; i < dims; ++i) { res[i] = (i < dims) ? ((T)m_components[i]) : (T()); }
 			return res;
 		}
 
 #endif // GLM_VERSION
 
-		/**
-		 * Implement indexing (const and non-const)
-		 * Functions take a single index and return a scalar value
-		 */
+		// Implement indexing (const and non-const)
+		// Functions take a single index and return a scalar value
 
-		const DTYPE &operator[](int64_t index) const { return m_components[index]; }
+		const DTYPE &operator[](i64 index) const { return m_components[index]; }
 
-		DTYPE &operator[](int64_t index) { return m_components[index]; }
+		DTYPE &operator[](i64 index) { return m_components[index]; }
 
-		template<typename T, int64_t tmpDims>
+		template<typename T, i64 tmpDims>
 		bool operator==(const Vec<T, tmpDims> &other) const {
 			// For vectors with different dimensions, return true if the excess
 			// values are all zero
-			for (int64_t i = 0; i < MIN_DIM_CLAMP(dims, tmpDims); ++i) {
+			for (i64 i = 0; i < MIN_DIM_CLAMP(dims, tmpDims); ++i) {
 				if (m_components[i] != other[i]) return false;
 			}
 
 			// Quick return to avoid excess checks
 			if (dims == tmpDims) return true;
 
-			for (int64_t i = MIN_DIM_CLAMP(dims, tmpDims); i < MAX_DIM_CLAMP(dims, tmpDims); ++i) {
+			for (i64 i = MIN_DIM_CLAMP(dims, tmpDims); i < MAX_DIM_CLAMP(dims, tmpDims); ++i) {
 				if (i < dims && m_components[i]) return false;
 				if (i < tmpDims && other[i]) return false;
 			}
@@ -107,7 +102,7 @@ namespace librapid {
 			return true;
 		}
 
-		template<typename T, int64_t tmpDims>
+		template<typename T, i64 tmpDims>
 		bool operator!=(const Vec<T, tmpDims> &other) const {
 			return !(*this == other);
 		}
@@ -119,14 +114,14 @@ namespace librapid {
 		bool operator==(const glm::vec<tmpDims, T, p> &other) const {
 			// For vectors with different dimensions, return true if the excess
 			// values are all zero
-			for (int64_t i = 0; i < MIN_DIM_CLAMP(dims, tmpDims); ++i) {
+			for (i64 i = 0; i < MIN_DIM_CLAMP(dims, tmpDims); ++i) {
 				if (m_components[i] != other[i]) return false;
 			}
 
 			// Quick return to avoid excess checks
 			if (dims == tmpDims) return true;
 
-			for (int64_t i = MIN_DIM_CLAMP(dims, tmpDims); i < MAX_DIM_CLAMP(dims, tmpDims); ++i) {
+			for (i64 i = MIN_DIM_CLAMP(dims, tmpDims); i < MAX_DIM_CLAMP(dims, tmpDims); ++i) {
 				if (i < dims && m_components[i]) return false;
 				if (i < tmpDims && other[i]) return false;
 			}
@@ -141,172 +136,162 @@ namespace librapid {
 
 #endif // GLM_VERSION
 
-		/*
-		 * Implement unary operators
-		 */
+
+		// Implement unary operators
+
 
 		Vec<DTYPE, dims> operator-() const {
 			Vec<DTYPE, dims> res;
-			for (int64_t i = 0; i < dims; ++i) { res[i] = -m_components[i]; }
+			for (i64 i = 0; i < dims; ++i) { res[i] = -m_components[i]; }
 			return res;
 		}
 
-		/**
-		 * Implement simple arithmetic operators + - * /
-		 *
-		 * Operations take two Vec objects and return a new vector (with common
-		 * type) containing the result of the element-wise operation.
-		 *
-		 * Vectors must have same dimensions. To cast, use Vec.as<TYPE, DIMS>()
-		 */
-		template<typename T, int64_t tmpDims>
+		// Implement simple arithmetic operators + - * /
+		//
+		// Operations take two Vec objects and return a new vector (with common
+		// type) containing the result of the element-wise operation.
+		//
+		// Vectors must have same dimensions. To cast, use Vec.as<TYPE, DIMS>()
+		template<typename T, i64 tmpDims>
 		Vec<Common<T>, MAX_DIM_CLAMP(dims, tmpDims)> operator+(const Vec<T, tmpDims> &other) const {
 			Vec<Common<T>, MAX_DIM_CLAMP(dims, tmpDims)> res;
-			for (int64_t i = 0; i < (MAX_DIM_CLAMP(dims, tmpDims)); ++i) {
+			for (i64 i = 0; i < (MAX_DIM_CLAMP(dims, tmpDims)); ++i) {
 				res[i] = ((i < dims) ? m_components[i] : 0) + ((i < tmpDims) ? other[i] : 0);
 			}
 			return res;
 		}
 
-		template<typename T, int64_t tmpDims>
+		template<typename T, i64 tmpDims>
 		Vec<Common<T>, MAX_DIM_CLAMP(dims, tmpDims)> operator-(const Vec<T, tmpDims> &other) const {
 			Vec<Common<T>, MAX_DIM_CLAMP(dims, tmpDims)> res;
-			for (int64_t i = 0; i < (MAX_DIM_CLAMP(dims, tmpDims)); ++i) {
+			for (i64 i = 0; i < (MAX_DIM_CLAMP(dims, tmpDims)); ++i) {
 				res[i] = ((i < dims) ? m_components[i] : 0) - ((i < tmpDims) ? other[i] : 0);
 			}
 			return res;
 		}
 
-		template<typename T, int64_t tmpDims>
+		template<typename T, i64 tmpDims>
 		Vec<Common<T>, MAX_DIM_CLAMP(dims, tmpDims)> operator*(const Vec<T, tmpDims> &other) const {
 			Vec<Common<T>, MAX_DIM_CLAMP(dims, tmpDims)> res;
-			for (int64_t i = 0; i < (MAX_DIM_CLAMP(dims, tmpDims)); ++i) {
+			for (i64 i = 0; i < (MAX_DIM_CLAMP(dims, tmpDims)); ++i) {
 				res[i] = ((i < dims) ? m_components[i] : 0) * ((i < tmpDims) ? other[i] : 0);
 			}
 			return res;
 		}
 
-		template<typename T, int64_t tmpDims>
+		template<typename T, i64 tmpDims>
 		Vec<Common<T>, MAX_DIM_CLAMP(dims, tmpDims)> operator/(const Vec<T, tmpDims> &other) const {
 			Vec<Common<T>, MAX_DIM_CLAMP(dims, tmpDims)> res;
-			for (int64_t i = 0; i < (MAX_DIM_CLAMP(dims, tmpDims)); ++i) {
+			for (i64 i = 0; i < (MAX_DIM_CLAMP(dims, tmpDims)); ++i) {
 				res[i] = ((i < dims) ? m_components[i] : 0) / ((i < tmpDims) ? other[i] : 0);
 			}
 			return res;
 		}
 
-		/**
-		 * Implement simple arithmetic operators + - * /
-		 *
-		 * Operations take a vector and a scalar, and return a new vector (with
-		 * common type) containing the result of the element-wise operation.
-		 */
+		//
+		// Implement simple arithmetic operators + - * /
+		//
+		// Operations take a vector and a scalar, and return a new vector (with
+		// common type) containing the result of the element-wise operation.
+		//
 
 		template<typename T, typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 		Vec<Common<T>, dims> operator+(const T &other) const {
 			Vec<Common<T>, dims> res;
-			for (int64_t i = 0; i < dims; ++i) { res[i] = m_components[i] + other; }
+			for (i64 i = 0; i < dims; ++i) { res[i] = m_components[i] + other; }
 			return res;
 		}
 
 		template<typename T, typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 		Vec<Common<T>, dims> operator-(const T &other) const {
 			Vec<Common<T>, dims> res;
-			for (int64_t i = 0; i < dims; ++i) { res[i] = m_components[i] - other; }
+			for (i64 i = 0; i < dims; ++i) { res[i] = m_components[i] - other; }
 			return res;
 		}
 
 		template<typename T, typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 		Vec<Common<T>, dims> operator*(const T &other) const {
 			Vec<Common<T>, dims> res;
-			for (int64_t i = 0; i < dims; ++i) { res[i] = m_components[i] * other; }
+			for (i64 i = 0; i < dims; ++i) { res[i] = m_components[i] * other; }
 			return res;
 		}
 
 		template<typename T, typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 		Vec<Common<T>, dims> operator/(const T &other) const {
 			Vec<Common<T>, dims> res;
-			for (int64_t i = 0; i < dims; ++i) { res[i] = m_components[i] / other; }
+			for (i64 i = 0; i < dims; ++i) { res[i] = m_components[i] / other; }
 			return res;
 		}
 
-		template<typename T, int64_t tmpDims>
+		template<typename T, i64 tmpDims>
 		Vec<DTYPE, dims> &operator+=(const Vec<T, tmpDims> &other) {
-			for (int64_t i = 0; i < dims; ++i) {
-				m_components[i] += (i < tmpDims) ? (other[i]) : (0);
-			}
+			for (i64 i = 0; i < dims; ++i) { m_components[i] += (i < tmpDims) ? (other[i]) : (0); }
 			return *this;
 		}
 
-		template<typename T, int64_t tmpDims>
+		template<typename T, i64 tmpDims>
 		Vec<DTYPE, dims> &operator-=(const Vec<T, tmpDims> &other) {
-			for (int64_t i = 0; i < dims; ++i) {
-				m_components[i] -= (i < tmpDims) ? (other[i]) : (0);
-			}
+			for (i64 i = 0; i < dims; ++i) { m_components[i] -= (i < tmpDims) ? (other[i]) : (0); }
 			return *this;
 		}
 
-		template<typename T, int64_t tmpDims>
+		template<typename T, i64 tmpDims>
 		Vec<DTYPE, dims> &operator*=(const Vec<T, tmpDims> &other) {
-			for (int64_t i = 0; i < dims; ++i) {
-				m_components[i] *= (i < tmpDims) ? (other[i]) : (0);
-			}
+			for (i64 i = 0; i < dims; ++i) { m_components[i] *= (i < tmpDims) ? (other[i]) : (0); }
 			return *this;
 		}
 
-		template<typename T, int64_t tmpDims>
+		template<typename T, i64 tmpDims>
 		Vec<DTYPE, dims> &operator/=(const Vec<T, tmpDims> &other) {
-			for (int64_t i = 0; i < dims; ++i) {
-				m_components[i] /= (i < tmpDims) ? (other[i]) : (0);
-			}
+			for (i64 i = 0; i < dims; ++i) { m_components[i] /= (i < tmpDims) ? (other[i]) : (0); }
 			return *this;
 		}
 
 		template<typename T>
 		Vec<DTYPE, dims> &operator+=(const T &other) {
-			for (int64_t i = 0; i < dims; ++i) { m_components[i] += other; }
+			for (i64 i = 0; i < dims; ++i) { m_components[i] += other; }
 			return *this;
 		}
 
 		template<typename T>
 		Vec<DTYPE, dims> &operator-=(const T &other) {
-			for (int64_t i = 0; i < dims; ++i) { m_components[i] -= other; }
+			for (i64 i = 0; i < dims; ++i) { m_components[i] -= other; }
 			return *this;
 		}
 
 		template<typename T>
 		Vec<DTYPE, dims> &operator*=(const T &other) {
-			for (int64_t i = 0; i < dims; ++i) { m_components[i] *= other; }
+			for (i64 i = 0; i < dims; ++i) { m_components[i] *= other; }
 			return *this;
 		}
 
 		template<typename T>
 		Vec<DTYPE, dims> &operator/=(const T &other) {
-			for (int64_t i = 0; i < dims; ++i) { m_components[i] /= other; }
+			for (i64 i = 0; i < dims; ++i) { m_components[i] /= other; }
 			return *this;
 		}
 
-		/**
-		 * Return the magnitude squared of a vector
-		 */
+		//
+		// Return the magnitude squared of a vector
+		//
 		DTYPE mag2() const {
 			DTYPE res = 0;
-			for (int64_t i = 0; i < dims; ++i) { res += m_components[i] * m_components[i]; }
+			for (i64 i = 0; i < dims; ++i) { res += m_components[i] * m_components[i]; }
 			return res;
 		}
 
-		/**
-		 * Return the magnitude of a vector
-		 */
+		//
+		// Return the magnitude of a vector
+		//
 		DTYPE mag() const { return sqrt(mag2()); }
 
 		DTYPE invMag() const { return DTYPE(1) / sqrt(mag2()); }
 
-		template<typename T, int64_t tmpDims>
+		template<typename T, i64 tmpDims>
 		typename std::common_type<DTYPE, T>::type dist2(const Vec<T, tmpDims> &other) const {
 			using RET	= typename std::common_type<DTYPE, T>::type;
 			RET squared = 0;
-			int64_t i	= 0;
+			i64 i		= 0;
 
 			// Compute the squares of the differences for the matching
 			// components
@@ -327,25 +312,25 @@ namespace librapid {
 			return squared;
 		}
 
-		template<typename T, int64_t tmpDims>
+		template<typename T, i64 tmpDims>
 		typename std::common_type<DTYPE, T>::type dist(const Vec<T, tmpDims> &other) const {
 			return sqrt(dist2(other));
 		}
 
-		/**
-		 * Compute the vector dot product
-		 * AxBx + AyBy + AzCz + ...
-		 */
+		//
+		// Compute the vector dot product
+		// AxBx + AyBy + AzCz + ...
+		//
 		template<typename T>
 		Common<T> dot(const Vec<T, dims> &other) const {
 			Common<T> res = 0;
-			for (int64_t i = 0; i < dims; ++i) { res += m_components[i] * other[i]; }
+			for (i64 i = 0; i < dims; ++i) { res += m_components[i] * other[i]; }
 			return res;
 		}
 
-		/**
-		 * Compute the vector cross product
-		 */
+		//
+		// Compute the vector cross product
+		//
 		template<typename T>
 		Vec<Common<T>, dims> cross(const Vec<T, dims> &other) const {
 			static_assert(dims == 2 || dims == 3,
@@ -431,7 +416,7 @@ namespace librapid {
 
 		[[nodiscard]] std::string str() const {
 			std::string res = "(";
-			for (int64_t i = 0; i < dims; ++i) {
+			for (i64 i = 0; i < dims; ++i) {
 				res += ::librapid::str(m_components[i]) + (i == dims - 1 ? ")" : ", ");
 			}
 			return res;
@@ -462,54 +447,54 @@ namespace librapid {
 		DTYPE m_components[dims < 4 ? 4 : dims];
 	};
 
-	/**
-	 * Implement simple arithmetic operators + - * /
-	 *
-	 * Operations take a scalar and a vector and return a new vector (with
-	 * common type) containing the result of the element-wise operation.
-	 */
+	//
+	// Implement simple arithmetic operators + - * /
+	//
+	// Operations take a scalar and a vector and return a new vector (with
+	// common type) containing the result of the element-wise operation.
+	//
 
-	template<typename T, typename DTYPE, int64_t dims,
+	template<typename T, typename DTYPE, i64 dims,
 			 typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator+(const T &value,
 																   const Vec<DTYPE, dims> &vec) {
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
-		for (int64_t i = 0; i < dims; ++i) { res[i] = value + vec[i]; }
+		for (i64 i = 0; i < dims; ++i) { res[i] = value + vec[i]; }
 		return res;
 	}
 
-	template<typename T, typename DTYPE, int64_t dims,
+	template<typename T, typename DTYPE, i64 dims,
 			 typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator-(const T &value,
 																   const Vec<DTYPE, dims> &vec) {
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
-		for (int64_t i = 0; i < dims; ++i) { res[i] = value - vec[i]; }
+		for (i64 i = 0; i < dims; ++i) { res[i] = value - vec[i]; }
 		return res;
 	}
 
-	template<typename T, typename DTYPE, int64_t dims,
+	template<typename T, typename DTYPE, i64 dims,
 			 typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator*(const T &value,
 																   const Vec<DTYPE, dims> &vec) {
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
-		for (int64_t i = 0; i < dims; ++i) { res[i] = value * vec[i]; }
+		for (i64 i = 0; i < dims; ++i) { res[i] = value * vec[i]; }
 		return res;
 	}
 
-	template<typename T, typename DTYPE, int64_t dims,
+	template<typename T, typename DTYPE, i64 dims,
 			 typename std::enable_if<internal::traits<T>::IsScalar, int>::type = 0>
 	Vec<typename std::common_type<T, DTYPE>::type, dims> operator/(const T &value,
 																   const Vec<DTYPE, dims> &vec) {
 		Vec<typename std::common_type<T, DTYPE>::type, dims> res;
-		for (int64_t i = 0; i < dims; ++i) { res[i] = value / vec[i]; }
+		for (i64 i = 0; i < dims; ++i) { res[i] = value / vec[i]; }
 		return res;
 	}
 
 #define IMPL_VEC_OP(OP)                                                                            \
-	template<typename DTYPE, int64_t dims>                                                         \
+	template<typename DTYPE, i64 dims>                                                             \
 	LR_INLINE Vec<DTYPE, dims> OP(const Vec<DTYPE, dims> &vec) {                                   \
 		Vec<DTYPE, dims> res;                                                                      \
-		for (int64_t i = 0; i < dims; ++i) { res[i] = ::librapid::OP(vec[i]); }                    \
+		for (i64 i = 0; i < dims; ++i) { res[i] = ::librapid::OP(vec[i]); }                        \
 		return res;                                                                                \
 	}
 
@@ -529,17 +514,17 @@ namespace librapid {
 	IMPL_VEC_OP(exp2)
 	IMPL_VEC_OP(sqrt)
 
-	using Vec2i = Vec<int64_t, 2>;
-	using Vec2f = Vec<float, 2>;
-	using Vec2d = Vec<double, 2>;
+	using Vec2i = Vec<i64, 2>;
+	using Vec2f = Vec<f32, 2>;
+	using Vec2d = Vec<f64, 2>;
 
-	using Vec3i = Vec<int64_t, 3>;
-	using Vec3f = Vec<float, 3>;
-	using Vec3d = Vec<double, 3>;
+	using Vec3i = Vec<i64, 3>;
+	using Vec3f = Vec<f32, 3>;
+	using Vec3d = Vec<f64, 3>;
 
-	using Vec4i = Vec<int64_t, 4>;
-	using Vec4f = Vec<float, 4>;
-	using Vec4d = Vec<double, 4>;
+	using Vec4i = Vec<i64, 4>;
+	using Vec4f = Vec<f32, 4>;
+	using Vec4d = Vec<f64, 4>;
 
 #if defined(LIBRAPID_USE_MULTIPREC)
 	using Vec2mpfr = Vec<mpfr, 2>;
@@ -547,14 +532,147 @@ namespace librapid {
 	using Vec4mpfr = Vec<mpfr, 4>;
 #endif
 
-	template<typename T, int64_t dims>
+	template<typename T, i64 dims>
 	std::ostream &operator<<(std::ostream &os, const Vec<T, dims> &vec) {
 		return os << vec.str();
 	}
+	*/
+
+	template<typename T, i64 dims>
+	class Vec {
+	public:
+		using StorageType = Vc::SimdArray<T, dims>;
+
+		Vec() = default;
+
+		Vec(const StorageType &arr) : m_components {+arr} {}
+
+		template<typename... Args>
+		Vec(Args... args) : m_components {args...} {
+			static_assert(sizeof...(Args) <= dims, "Invalid number of arguments");
+		}
+
+		Vec(const Vec &other)			 = default;
+		Vec(Vec &&other)				 = default;
+		Vec &operator=(const Vec &other) = default;
+		Vec &operator=(Vec &&other)		 = default;
+
+		LR_NODISCARD("") auto operator[](i64 index) const { return m_components[index]; }
+
+		LR_NODISCARD("") auto &operator[](i64 index) { return m_components[index]; }
+
+		LR_FORCE_INLINE void operator+=(const Vec &other) { m_components += other.m_components; }
+		LR_FORCE_INLINE void operator-=(const Vec &other) { m_components -= other.m_components; }
+		LR_FORCE_INLINE void operator*=(const Vec &other) { m_components *= other.m_components; }
+		LR_FORCE_INLINE void operator/=(const Vec &other) { m_components /= other.m_components; }
+
+		LR_FORCE_INLINE void operator+=(const T &value) { m_components += value; }
+		LR_FORCE_INLINE void operator-=(const T &value) { m_components -= value; }
+		LR_FORCE_INLINE void operator*=(const T &value) { m_components *= value; }
+		LR_FORCE_INLINE void operator/=(const T &value) { m_components /= value; }
+
+		LR_NODISCARD("") std::string str() const {
+			std::string res = "(";
+			for (i64 i = 0; i < dims; ++i) {
+				res += std::to_string(m_components[i]);
+				if (i != dims - 1) { res += ", "; }
+			}
+			return res + ")";
+		}
+
+	protected:
+		StorageType m_components {};
+	};
+
+	template<typename T, i64 dims>
+	LR_FORCE_INLINE Vec<T, dims> operator+(const Vec<T, dims> &lhs, const Vec<T, dims> &rhs) {
+		Vec<T, dims> res(lhs);
+		res += rhs;
+		return res;
+	}
+
+	template<typename T, i64 dims>
+	LR_FORCE_INLINE Vec<T, dims> operator-(const Vec<T, dims> &lhs, const Vec<T, dims> &rhs) {
+		Vec<T, dims> res(lhs);
+		res -= rhs;
+		return res;
+	}
+
+	template<typename T, i64 dims>
+	LR_FORCE_INLINE Vec<T, dims> operator*(const Vec<T, dims> &lhs, const Vec<T, dims> &rhs) {
+		Vec<T, dims> res(lhs);
+		res *= rhs;
+		return res;
+	}
+
+	template<typename T, i64 dims>
+	LR_FORCE_INLINE Vec<T, dims> operator/(const Vec<T, dims> &lhs, const Vec<T, dims> &rhs) {
+		Vec<T, dims> res(lhs);
+		res /= rhs;
+		return res;
+	}
+
+	template<typename T, i64 dims, typename S>
+	LR_FORCE_INLINE Vec<T, dims> operator+(const Vec<T, dims> &lhs, const S &rhs) {
+		Vec<T, dims> res(lhs);
+		res += rhs;
+		return res;
+	}
+
+	template<typename T, i64 dims, typename S>
+	LR_FORCE_INLINE Vec<T, dims> operator-(const Vec<T, dims> &lhs, const S &rhs) {
+		Vec<T, dims> res(lhs);
+		res -= rhs;
+		return res;
+	}
+
+	template<typename T, i64 dims, typename S>
+	LR_FORCE_INLINE Vec<T, dims> operator*(const Vec<T, dims> &lhs, const S &rhs) {
+		Vec<T, dims> res(lhs);
+		res *= rhs;
+		return res;
+	}
+
+	template<typename T, i64 dims, typename S>
+	LR_FORCE_INLINE Vec<T, dims> operator/(const Vec<T, dims> &lhs, const S &rhs) {
+		Vec<T, dims> res(lhs);
+		res /= rhs;
+		return res;
+	}
+
+	template<typename S, typename T, i64 dims>
+	LR_FORCE_INLINE Vec<T, dims> operator+(const S &lhs, const Vec<T, dims> &rhs) {
+		using StorageType = typename Vec<T, dims>::StorageType;
+		Vec<T, dims> res(StorageType(static_cast<T>(lhs)));
+		res += rhs;
+		return res;
+	}
+
+	template<typename S, typename T, i64 dims>
+	LR_FORCE_INLINE Vec<T, dims> operator-(const S &lhs, const Vec<T, dims> &rhs) {
+		Vec<T, dims> res(StorageType(static_cast<T>(lhs)));
+		res -= rhs;
+		return res;
+	}
+
+	template<typename S, typename T, i64 dims>
+	LR_FORCE_INLINE Vec<T, dims> operator*(const S &lhs, const Vec<T, dims> &rhs) {
+		Vec<T, dims> res(StorageType(static_cast<T>(lhs)));
+		res *= rhs;
+		return res;
+	}
+
+	template<typename S, typename T, i64 dims>
+	LR_FORCE_INLINE Vec<T, dims> operator/(const S &lhs, const Vec<T, dims> &rhs) {
+		Vec<T, dims> res(StorageType(static_cast<T>(lhs)));
+		res /= rhs;
+		return res;
+	}
+
 } // namespace librapid
 
 #ifdef FMT_API
-template<typename T, int64_t D>
+template<typename T, librapid::i64 D>
 struct fmt::formatter<librapid::Vec<T, D>> {
 	template<typename ParseContext>
 	constexpr auto parse(ParseContext &ctx) {
