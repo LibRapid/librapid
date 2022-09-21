@@ -1,11 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-#include "../internal/memUtils.hpp"
-#include "../cuda/memUtils.hpp"
-#include "valueReference.hpp"
-#include "../math/coreMath.hpp"
-
 namespace librapid::memory {
 	template<typename T, typename d>
 	class DenseStorage {

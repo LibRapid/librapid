@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-
 namespace librapid {
 	void loadCustomCudaHeader(const std::string &fileName, const std::string &searchDir = "",
 							  std::vector<std::string> &res	 = customHeaders,

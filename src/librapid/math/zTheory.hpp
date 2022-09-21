@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-
 namespace librapid {
 	template<typename T>
 	LR_FORCE_INLINE void extendedGCD(T a, T b, T &gcd, T &mmi) {

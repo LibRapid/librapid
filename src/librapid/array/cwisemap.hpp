@@ -1,11 +1,5 @@
 #pragma once
 
-#include <utility>
-
-#include "../internal/config.hpp"
-#include "../internal/forward.hpp"
-#include "helpers/kernelFormat.hpp"
-
 namespace librapid {
 	namespace mapping {
 		template<typename First>
