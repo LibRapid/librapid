@@ -1015,5 +1015,4 @@ namespace librapid {
 #	include <unistd.h>
 #endif
 
-#include "../math/mpfr.hpp"
 #endif // LIBRAPID_CONFIG_HPP
