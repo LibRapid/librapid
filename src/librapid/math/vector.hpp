@@ -571,6 +571,9 @@ namespace librapid {
 		LR_FORCE_INLINE void operator*=(const T &value) { m_components *= value; }
 		LR_FORCE_INLINE void operator/=(const T &value) { m_components /= value; }
 
+		LR_NODISCARD("") LR_INLINE T mag2() const { return (m_components * m_components).sum(); }
+		LR_NODISCARD("") LR_INLINE T mag() const { return ::librapid::sqrt(mag2()); }
+
 		LR_NODISCARD("") std::string str() const {
 			std::string res = "(";
 			for (i64 i = 0; i < dims; ++i) {
