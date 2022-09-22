@@ -14,6 +14,9 @@ namespace librapid {
 		struct traits;
 	}
 
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	class VecImpl;
+
 	template<typename T>
 	class Complex;
 
