@@ -1,5 +1,4 @@
-#ifndef LIBRAPID_VECTOR
-#define LIBRAPID_VECTOR
+#pragma once
 
 namespace librapid {
 	template<typename Scalar, i64 Dims>
@@ -371,6 +370,7 @@ namespace librapid {
 	using Vec3d = Vec<f64, 3>;
 	using Vec4d = Vec<f64, 4>;
 } // namespace librapid
+
 #ifdef FMT_API
 template<typename Scalar, librapid::i64 D, typename StorageType>
 struct fmt::formatter<librapid::VecImpl<Scalar, D, StorageType>> {
@@ -385,5 +385,3 @@ struct fmt::formatter<librapid::VecImpl<Scalar, D, StorageType>> {
 	}
 };
 #endif // FMT_API
-
-#endif // LIBRAPID_VECTOR
