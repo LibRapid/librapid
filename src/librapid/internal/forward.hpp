@@ -14,7 +14,7 @@ namespace librapid {
 		struct traits;
 	}
 
-	template<typename Scalar, int64_t Dims, typename StorageType>
+	template<typename Scalar, i32 Dims, typename StorageType>
 	class VecImpl;
 
 	template<typename T>
@@ -26,7 +26,7 @@ namespace librapid {
 	template<typename T>
 	T imag(const Complex<T> &val);
 
-	template<typename T, int64_t maxDims, int64_t align>
+	template<typename T, i32 maxDims, i32 align>
 	class ExtentType;
 
 	template<typename ArrT>
@@ -62,12 +62,12 @@ namespace librapid {
 	public:
 		StrOpt() : digits(-1), base(10), scientific(false) {}
 
-		StrOpt(int64_t digits_, int64_t base_, bool scientific_) :
+		StrOpt(i32 digits_, i32 base_, bool scientific_) :
 				digits(digits_), base(base_), scientific(scientific_) {}
 
 	public:
-		int64_t digits;
-		int64_t base;
+		i32 digits;
+		i32 base;
 		bool scientific;
 	};
 
