@@ -31,62 +31,62 @@ namespace librapid::internal {
 		 * [35]       -> Packet operation is illegal
 		 */
 
-		constexpr uint64_t Evaluated	 = 1ll << 0; // Result is already evaluated
-		constexpr uint64_t RequireEval	 = 1ll << 1; // Result must be evaluated
-		constexpr uint64_t RequireInput	 = 1ll << 2; // Requires the entire array (not scalar)
-		constexpr uint64_t HasCustomEval = 1ll << 3; // Has a custom eval function
+		constexpr ui64 Evaluated	 = 1ll << 0; // Result is already evaluated
+		constexpr ui64 RequireEval	 = 1ll << 1; // Result must be evaluated
+		constexpr ui64 RequireInput	 = 1ll << 2; // Requires the entire array (not scalar)
+		constexpr ui64 HasCustomEval = 1ll << 3; // Has a custom eval function
 
-		constexpr uint64_t Bitwise	  = 1ll << 10; // Bitwise functions
-		constexpr uint64_t Arithmetic = 1ll << 11; // Arithmetic functions
-		constexpr uint64_t Logical	  = 1ll << 12; // Logical functions
-		constexpr uint64_t Matrix	  = 1ll << 13; // Matrix operation
+		constexpr ui64 Bitwise	  = 1ll << 10; // Bitwise functions
+		constexpr ui64 Arithmetic = 1ll << 11; // Arithmetic functions
+		constexpr ui64 Logical	  = 1ll << 12; // Logical functions
+		constexpr ui64 Matrix	  = 1ll << 13; // Matrix operation
 
-		constexpr uint64_t Unary  = 1ll << 14; // Operation takes one argument
-		constexpr uint64_t Binary = 1ll << 15; // Operation takes two arguments
+		constexpr ui64 Unary  = 1ll << 14; // Operation takes one argument
+		constexpr ui64 Binary = 1ll << 15; // Operation takes two arguments
 
 		// Extract only operation information
-		constexpr uint64_t OperationMask = 0b1111111111111110000000000000000;
+		constexpr ui64 OperationMask = 0b1111111111111110000000000000000;
 
-		constexpr uint64_t PacketBitwise	= 1ll << 16; // Packet needs bitwise
-		constexpr uint64_t PacketArithmetic = 1ll << 17; // Packet needs arithmetic
-		constexpr uint64_t PacketLogical	= 1ll << 18; // Packet needs logical
+		constexpr ui64 PacketBitwise	= 1ll << 16; // Packet needs bitwise
+		constexpr ui64 PacketArithmetic = 1ll << 17; // Packet needs arithmetic
+		constexpr ui64 PacketLogical	= 1ll << 18; // Packet needs logical
 
-		constexpr uint64_t ScalarBitwise	= 1ll << 19; // Scalar needs bitwise
-		constexpr uint64_t ScalarArithmetic = 1ll << 20; // Scalar needs arithmetic
-		constexpr uint64_t ScalarLogical	= 1ll << 21; // Scalar needs logical
+		constexpr ui64 ScalarBitwise	= 1ll << 19; // Scalar needs bitwise
+		constexpr ui64 ScalarArithmetic = 1ll << 20; // Scalar needs arithmetic
+		constexpr ui64 ScalarLogical	= 1ll << 21; // Scalar needs logical
 
-		constexpr uint64_t NoPacketOp		 = 1ll << 34; // Supports packet operations
-		constexpr uint64_t CustomFunctionGen = 1ll << 35; // Needs a custom function to be generated
-		constexpr uint64_t MatrixTranspose	 = 1ll << 36; // Some functions need this information
+		constexpr ui64 NoPacketOp		 = 1ll << 34; // Supports packet operations
+		constexpr ui64 CustomFunctionGen = 1ll << 35; // Needs a custom function to be generated
+		constexpr ui64 MatrixTranspose	 = 1ll << 36; // Some functions need this information
 
 #if defined(LIBRAPID_PYTHON)
-		constexpr uint64_t PythonFlags = RequireEval;
+		constexpr ui64 PythonFlags = RequireEval;
 #else
-		constexpr uint64_t PythonFlags = 0;
+		constexpr ui64 PythonFlags = 0;
 #endif
 	} // namespace flags
 
 	template<typename T>
 	struct traits {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = T;
-		using BaseScalar					 = T;
-		using StorageType					 = memory::DenseStorage<T, device::CPU>;
-		using Packet						 = std::false_type;
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = 1;
-		static constexpr char Name[]		 = "[NO DEFINED TYPE]";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
-										  flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = T;
+		using BaseScalar				  = T;
+		using StorageType				  = memory::DenseStorage<T, device::CPU>;
+		using Packet					  = std::false_type;
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = 1;
+		static constexpr char Name[]	  = "[NO DEFINED TYPE]";
+		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
+									  flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(T);
+		static constexpr ui64 Size		= sizeof(T);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
@@ -108,27 +108,27 @@ namespace librapid::internal {
 	//------- Just a  Character -----------------------------------------------
 	template<>
 	struct traits<char> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = char;
-		using BaseScalar					 = char;
-		using StorageType					 = memory::DenseStorage<char, device::CPU>;
-		using Packet						 = std::false_type;
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = 1;
-		static constexpr char Name[]		 = "char";
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = char;
+		using BaseScalar				  = char;
+		using StorageType				  = memory::DenseStorage<char, device::CPU>;
+		using Packet					  = std::false_type;
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = 1;
+		static constexpr char Name[]	  = "char";
 		// Packet ops here are a hack -- Packet = std::false_type means the packet ops will never
 		// be called
-		static constexpr uint64_t Flags = flags::ScalarBitwise | flags::ScalarArithmetic |
-										  flags::ScalarLogical | flags::PacketArithmetic |
-										  flags::PacketLogical | flags::PacketBitwise;
+		static constexpr ui64 Flags = flags::ScalarBitwise | flags::ScalarArithmetic |
+									  flags::ScalarLogical | flags::PacketArithmetic |
+									  flags::PacketLogical | flags::PacketBitwise;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(char);
+		static constexpr ui64 Size		= sizeof(char);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
@@ -150,24 +150,24 @@ namespace librapid::internal {
 	//------- Boolean ---------------------------------------------------------
 	template<>
 	struct traits<bool> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = bool;
-		using BaseScalar					 = bool;
-		using StorageType					 = memory::DenseStorage<bool, device::CPU>;
-		using Packet						 = std::false_type; // LR_VC_TYPE(BaseScalar);
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]		 = "bool";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
-										  flags::ScalarArithmetic | flags::ScalarLogical;
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = bool;
+		using BaseScalar				  = bool;
+		using StorageType				  = memory::DenseStorage<bool, device::CPU>;
+		using Packet					  = std::false_type; // LR_VC_TYPE(BaseScalar);
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
+		static constexpr char Name[]	  = "bool";
+		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
+									  flags::ScalarArithmetic | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(uint32_t);
+		static constexpr ui64 Size		= sizeof(ui32);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
@@ -189,25 +189,25 @@ namespace librapid::internal {
 	//------- 8bit Signed Integer ---------------------------------------------
 	template<>
 	struct traits<int8_t> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = int8_t;
-		using BaseScalar					 = int8_t;
-		using StorageType					 = memory::DenseStorage<int8_t, device::CPU>;
-		using Packet						 = LR_VC_TYPE(BaseScalar);
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]		 = "int8_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
-										  flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = int8_t;
+		using BaseScalar				  = int8_t;
+		using StorageType				  = memory::DenseStorage<int8_t, device::CPU>;
+		using Packet					  = LR_VC_TYPE(BaseScalar);
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
+		static constexpr char Name[]	  = "int8_t";
+		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
+									  flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(int8_t);
+		static constexpr ui64 Size		= sizeof(int8_t);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
@@ -228,31 +228,31 @@ namespace librapid::internal {
 
 	//------- 8bit Unsigned Integer -------------------------------------------
 	template<>
-	struct traits<uint8_t> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = uint8_t;
-		using BaseScalar					 = uint8_t;
-		using StorageType					 = memory::DenseStorage<uint8_t>;
-		using Packet						 = LR_VC_TYPE(BaseScalar);
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]		 = "uint8_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
-										  flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+	struct traits<ui8> {
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = ui8;
+		using BaseScalar				  = ui8;
+		using StorageType				  = memory::DenseStorage<ui8, device::CPU>;
+		using Packet					  = LR_VC_TYPE(BaseScalar);
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
+		static constexpr char Name[]	  = "ui8";
+		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
+									  flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8U;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(uint8_t);
+		static constexpr ui64 Size		= sizeof(ui8);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const uint8_t &val) {
+		LR_FORCE_INLINE static CAST cast(const ui8 &val) {
 			return (CAST)val;
 		}
 
@@ -268,31 +268,31 @@ namespace librapid::internal {
 
 	//------- 16bit Signed Integer --------------------------------------------
 	template<>
-	struct traits<int16_t> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = int16_t;
-		using BaseScalar					 = int16_t;
-		using StorageType					 = memory::DenseStorage<int16_t>;
-		using Packet						 = LR_VC_TYPE(BaseScalar);
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]		 = "int16_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
-										  flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+	struct traits<i16> {
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = i16;
+		using BaseScalar				  = i16;
+		using StorageType				  = memory::DenseStorage<i16, device::CPU>;
+		using Packet					  = LR_VC_TYPE(BaseScalar);
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
+		static constexpr char Name[]	  = "i16";
+		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
+									  flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_16I;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(int16_t);
+		static constexpr ui64 Size		= sizeof(i16);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const int16_t &val) {
+		LR_FORCE_INLINE static CAST cast(const i16 &val) {
 			return (CAST)val;
 		}
 
@@ -308,31 +308,31 @@ namespace librapid::internal {
 
 	//------- 16bit Unsigned Integer ------------------------------------------
 	template<>
-	struct traits<uint16_t> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = uint16_t;
-		using BaseScalar					 = uint16_t;
-		using StorageType					 = memory::DenseStorage<uint16_t>;
-		using Packet						 = LR_VC_TYPE(BaseScalar);
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]		 = "uint16_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
-										  flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+	struct traits<ui16> {
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = ui16;
+		using BaseScalar				  = ui16;
+		using StorageType				  = memory::DenseStorage<ui16, device::CPU>;
+		using Packet					  = LR_VC_TYPE(BaseScalar);
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
+		static constexpr char Name[]	  = "ui16";
+		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
+									  flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_16U;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(uint16_t);
+		static constexpr ui64 Size		= sizeof(ui16);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const uint16_t &val) {
+		LR_FORCE_INLINE static CAST cast(const ui16 &val) {
 			return (CAST)val;
 		}
 
@@ -348,31 +348,31 @@ namespace librapid::internal {
 
 	//------- 32bit Signed Integer --------------------------------------------
 	template<>
-	struct traits<int32_t> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = int32_t;
-		using BaseScalar					 = int32_t;
-		using StorageType					 = memory::DenseStorage<int32_t>;
-		using Packet						 = LR_VC_TYPE(BaseScalar);
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]		 = "int32_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
-										  flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+	struct traits<i32> {
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = i32;
+		using BaseScalar				  = i32;
+		using StorageType				  = memory::DenseStorage<i32, device::CPU>;
+		using Packet					  = LR_VC_TYPE(BaseScalar);
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
+		static constexpr char Name[]	  = "i32";
+		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
+									  flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32I;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(int32_t);
+		static constexpr ui64 Size		= sizeof(i32);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const int32_t &val) {
+		LR_FORCE_INLINE static CAST cast(const i32 &val) {
 			return (CAST)val;
 		}
 
@@ -388,31 +388,31 @@ namespace librapid::internal {
 
 	//------- 32bit Unsigned Integer ------------------------------------------
 	template<>
-	struct traits<uint32_t> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = uint32_t;
-		using BaseScalar					 = uint32_t;
-		using StorageType					 = memory::DenseStorage<uint32_t>;
-		using Packet						 = LR_VC_TYPE(BaseScalar);
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]		 = "uint32_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
-										  flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+	struct traits<ui32> {
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = ui32;
+		using BaseScalar				  = ui32;
+		using StorageType				  = memory::DenseStorage<ui32, device::CPU>;
+		using Packet					  = LR_VC_TYPE(BaseScalar);
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
+		static constexpr char Name[]	  = "ui32";
+		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
+									  flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32U;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(uint32_t);
+		static constexpr ui64 Size		= sizeof(ui32);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const uint32_t &val) {
+		LR_FORCE_INLINE static CAST cast(const ui32 &val) {
 			return (CAST)val;
 		}
 
@@ -428,31 +428,31 @@ namespace librapid::internal {
 
 	//------- 64bit Signed Integer --------------------------------------------
 	template<>
-	struct traits<int64_t> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = int64_t;
-		using BaseScalar					 = int64_t;
-		using StorageType					 = memory::DenseStorage<int64_t>;
-		using Packet						 = std::false_type; // Vc::Vector<BaseScalar>;
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = 1; // LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]		 = "int64_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
-										  flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+	struct traits<i64> {
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = i64;
+		using BaseScalar				  = i64;
+		using StorageType				  = memory::DenseStorage<i64, device::CPU>;
+		using Packet					  = std::false_type; // Vc::Vector<BaseScalar>;
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = 1; // LR_VC_SIZE(BaseScalar);
+		static constexpr char Name[]	  = "i64";
+		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
+									  flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64I;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(int64_t);
+		static constexpr ui64 Size		= sizeof(i64);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const int64_t &val) {
+		LR_FORCE_INLINE static CAST cast(const i64 &val) {
 			return (CAST)val;
 		}
 
@@ -468,31 +468,31 @@ namespace librapid::internal {
 
 	//------- 64bit Unsigned Integer ------------------------------------------
 	template<>
-	struct traits<uint64_t> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = uint64_t;
-		using BaseScalar					 = uint64_t;
-		using StorageType					 = memory::DenseStorage<uint64_t>;
-		using Packet						 = std::false_type; // Vc::Vector<BaseScalar>;
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = 1; // LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]		 = "uint64_t";
-		static constexpr uint64_t Flags		 = flags::PacketBitwise | flags::ScalarBitwise |
-										  flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+	struct traits<ui64> {
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = ui64;
+		using BaseScalar				  = ui64;
+		using StorageType				  = memory::DenseStorage<ui64, device::CPU>;
+		using Packet					  = std::false_type; // Vc::Vector<BaseScalar>;
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = 1; // LR_VC_SIZE(BaseScalar);
+		static constexpr char Name[]	  = "ui64";
+		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
+									  flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64U;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(uint64_t);
+		static constexpr ui64 Size		= sizeof(ui64);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const uint64_t &val) {
+		LR_FORCE_INLINE static CAST cast(const ui64 &val) {
 			return (CAST)val;
 		}
 
@@ -506,34 +506,34 @@ namespace librapid::internal {
 		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 	};
 
-	// 16bit Floating Point implementation is in "librapid/modified/float16/float16.hpp"
+	// 16bit f32ing Point implementation is in "librapid/modified/f3216/f3216.hpp"
 
-	//------- 32bit Floating Point --------------------------------------------
+	//------- 32bit f32ing Point --------------------------------------------
 	template<>
-	struct traits<float> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = float;
-		using BaseScalar					 = float;
-		using StorageType					 = memory::DenseStorage<float>;
-		using Packet						 = LR_VC_TYPE(BaseScalar);
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]		 = "float";
-		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+	struct traits<f32> {
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = f32;
+		using BaseScalar				  = f32;
+		using StorageType				  = memory::DenseStorage<f32, device::CPU>;
+		using Packet					  = LR_VC_TYPE(BaseScalar);
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
+		static constexpr char Name[]	  = "f32";
+		static constexpr ui64 Flags		  = flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32F;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(float);
+		static constexpr ui64 Size		= sizeof(f32);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const float &val) {
+		LR_FORCE_INLINE static CAST cast(const f32 &val) {
 			return (CAST)val;
 		}
 
@@ -547,32 +547,32 @@ namespace librapid::internal {
 		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 	};
 
-	//------- 64bit Floating Point --------------------------------------------
+	//------- 64bit f32ing Point --------------------------------------------
 	template<>
-	struct traits<double> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = double;
-		using BaseScalar					 = double;
-		using StorageType					 = memory::DenseStorage<double>;
-		using Packet						 = LR_VC_TYPE(BaseScalar);
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]		 = "double";
-		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+	struct traits<f64> {
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = f64;
+		using BaseScalar				  = f64;
+		using StorageType				  = memory::DenseStorage<f64, device::CPU>;
+		using Packet					  = LR_VC_TYPE(BaseScalar);
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
+		static constexpr char Name[]	  = "f64";
+		static constexpr ui64 Flags		  = flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(double);
+		static constexpr ui64 Size		= sizeof(f64);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const double &val) {
+		LR_FORCE_INLINE static CAST cast(const f64 &val) {
 			return (CAST)val;
 		}
 
@@ -589,24 +589,24 @@ namespace librapid::internal {
 	//------- Complex Number --------------------------------------------
 	template<typename T>
 	struct traits<Complex<T>> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = Complex<T>;
-		using BaseScalar					 = Complex<T>;
-		using StorageType					 = memory::DenseStorage<Complex<T>>;
-		using Packet						 = std::false_type;
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = 1;
-		static constexpr char Name[]		 = "NO_MAPPED_TYPE";
-		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = Complex<T>;
+		using BaseScalar				  = Complex<T>;
+		using StorageType				  = memory::DenseStorage<Complex<T>, device::CPU>;
+		using Packet					  = std::false_type;
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = 1;
+		static constexpr char Name[]	  = "NO_MAPPED_TYPE";
+		static constexpr ui64 Flags		  = flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_C_64F;
 #endif
 
-		static constexpr uint64_t Size	= sizeof(Complex<T>);
+		static constexpr ui64 Size		= sizeof(Complex<T>);
 		static constexpr bool CanAlign	= traits<T>::CanAlign;
 		static constexpr bool CanMemcpy = traits<T>::CanMemcpy;
 
@@ -641,25 +641,25 @@ namespace librapid::internal {
 	//------- Multiprecision Integer (MPZ) ------------------------------------
 	template<>
 	struct traits<mpz> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = mpz;
-		using BaseScalar					 = mpz;
-		using StorageType					 = memory::DenseStorage<mpz>;
-		using Packet						 = std::false_type;
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = 1;
-		static constexpr char Name[]		 = "NO_VALID_CONVERSION";
-		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketBitwise | flags::ScalarBitwise |
-										  flags::PacketLogical | flags::ScalarLogical;
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = mpz;
+		using BaseScalar				  = mpz;
+		using StorageType				  = memory::DenseStorage<mpz, device::CPU>;
+		using Packet					  = std::false_type;
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = 1;
+		static constexpr char Name[]	  = "NO_VALID_CONVERSION";
+		static constexpr ui64 Flags		  = flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketBitwise | flags::ScalarBitwise |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #	if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
 #	endif
 
-		static constexpr uint64_t Size	= sizeof(mpz);
+		static constexpr ui64 Size		= sizeof(mpz);
 		static constexpr bool CanAlign	= false;
 		static constexpr bool CanMemcpy = false;
 
@@ -689,24 +689,24 @@ namespace librapid::internal {
 	//------- Multiprecision Rational (MPQ) ---------------------------------
 	template<>
 	struct traits<mpq> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = mpq;
-		using BaseScalar					 = mpq;
-		using StorageType					 = memory::DenseStorage<mpq>;
-		using Packet						 = std::false_type;
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = 1;
-		static constexpr char Name[]		 = "NO_VALID_CONVERSION";
-		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = mpq;
+		using BaseScalar				  = mpq;
+		using StorageType				  = memory::DenseStorage<mpq, device::CPU>;
+		using Packet					  = std::false_type;
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = 1;
+		static constexpr char Name[]	  = "NO_VALID_CONVERSION";
+		static constexpr ui64 Flags		  = flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #	if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
 #	endif
 
-		static constexpr uint64_t Size	= sizeof(mpq);
+		static constexpr ui64 Size		= sizeof(mpq);
 		static constexpr bool CanAlign	= false;
 		static constexpr bool CanMemcpy = false;
 
@@ -731,27 +731,27 @@ namespace librapid::internal {
 		LR_FORCE_INLINE LIMIT_IMPL(signalingNaN) { return NUM_LIM(signaling_NaN); }
 	};
 
-	//------- Multiprecision Float (MPF) ---------------------------------
+	//------- Multiprecision f32 (MPF) ---------------------------------
 	template<>
 	struct traits<mpf> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = mpf;
-		using BaseScalar					 = mpf;
-		using StorageType					 = memory::DenseStorage<mpf>;
-		using Packet						 = std::false_type;
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = 1;
-		static constexpr char Name[]		 = "NO_VALID_CONVERSION";
-		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = mpf;
+		using BaseScalar				  = mpf;
+		using StorageType				  = memory::DenseStorage<mpf, device::CPU>;
+		using Packet					  = std::false_type;
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = 1;
+		static constexpr char Name[]	  = "NO_VALID_CONVERSION";
+		static constexpr ui64 Flags		  = flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #	if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
 #	endif
 
-		static constexpr uint64_t Size	= sizeof(mpf);
+		static constexpr ui64 Size		= sizeof(mpf);
 		static constexpr bool CanAlign	= false;
 		static constexpr bool CanMemcpy = false;
 
@@ -779,24 +779,24 @@ namespace librapid::internal {
 	//------- Multiprecision Rational (MPFR) ---------------------------------
 	template<>
 	struct traits<mpfr> {
-		static constexpr bool IsScalar		 = true;
-		static constexpr bool IsEvaluated	 = true;
-		using Valid							 = std::true_type;
-		using Scalar						 = mpfr;
-		using BaseScalar					 = mpfr;
-		using StorageType					 = memory::DenseStorage<mpfr>;
-		using Packet						 = std::false_type;
-		using Device						 = device::CPU;
-		static constexpr int64_t PacketWidth = 1;
-		static constexpr char Name[]		 = "NO_VALID_CONVERSION";
-		static constexpr uint64_t Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
-										  flags::PacketLogical | flags::ScalarLogical;
+		static constexpr bool IsScalar	  = true;
+		static constexpr bool IsEvaluated = true;
+		using Valid						  = std::true_type;
+		using Scalar					  = mpfr;
+		using BaseScalar				  = mpfr;
+		using StorageType				  = memory::DenseStorage<mpfr, device::CPU>;
+		using Packet					  = std::false_type;
+		using Device					  = device::CPU;
+		static constexpr i64 PacketWidth  = 1;
+		static constexpr char Name[]	  = "NO_VALID_CONVERSION";
+		static constexpr ui64 Flags		  = flags::PacketArithmetic | flags::ScalarArithmetic |
+									  flags::PacketLogical | flags::ScalarLogical;
 
 #	if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
 #	endif
 
-		static constexpr uint64_t Size	= sizeof(mpfr);
+		static constexpr ui64 Size		= sizeof(mpfr);
 		static constexpr bool CanAlign	= false;
 		static constexpr bool CanMemcpy = false;
 
@@ -807,9 +807,9 @@ namespace librapid::internal {
 				return (CAST)val.toLLong();
 			if constexpr (std::is_integral_v<CAST> && std::is_unsigned_v<CAST>)
 				return (CAST)val.toULLong();
-			if constexpr (std::is_same_v<CAST, float>) return (CAST)val.toFloat();
-			if constexpr (std::is_same_v<CAST, double>) return (CAST)val.toDouble();
-			if constexpr (std::is_same_v<CAST, long double>) return (CAST)val.toLDouble();
+			if constexpr (std::is_same_v<CAST, f32>) return (CAST)val.toFloat();
+			if constexpr (std::is_same_v<CAST, f64>) return (CAST)val.toDouble();
+			if constexpr (std::is_same_v<CAST, long long>) return (CAST)val.toLLong();
 			if constexpr (std::is_same_v<CAST, mpz>) return toMpz(val);
 			if constexpr (std::is_same_v<CAST, mpq>) return toMpq(val);
 			if constexpr (std::is_same_v<CAST, mpfr>) return toMpfr(val);
@@ -884,7 +884,7 @@ namespace librapid::internal {
 	template<typename T>
 	LR_NODISCARD("")
 	LR_INLINE bool signBit(const T &val) noexcept {
-		return signBit((double)val);
+		return signBit((f64)val);
 	}
 
 	template<>
@@ -895,19 +895,19 @@ namespace librapid::internal {
 
 	template<>
 	LR_NODISCARD("")
-	LR_INLINE bool signBit(const double &val) noexcept {
+	LR_INLINE bool signBit(const f64 &val) noexcept {
 		return std::signbit(val);
 	}
 
 	template<>
 	LR_NODISCARD("")
-	LR_INLINE bool signBit(const float &val) noexcept {
+	LR_INLINE bool signBit(const f32 &val) noexcept {
 		return std::signbit(val);
 	}
 
 	template<typename T>
 	LR_NODISCARD("")
-	LR_INLINE T ldexp(const T &x, const int64_t exp) noexcept {
+	LR_INLINE T ldexp(const T &x, const i64 exp) noexcept {
 		return std::ldexp(x, (int)exp);
 	}
 
@@ -982,13 +982,13 @@ namespace librapid::internal {
 
 	template<>
 	LR_NODISCARD("")
-	LR_INLINE mpfr ldexp(const mpfr &x, const int64_t exp) noexcept {
+	LR_INLINE mpfr ldexp(const mpfr &x, const i64 exp) noexcept {
 		return ::mpfr::ldexp(x, exp);
 	}
 
 	template<typename A, typename B>
 	LR_NODISCARD("")
-	LR_INLINE __gmp_expr<A, B> ldexp(const __gmp_expr<A, B> &x, const int64_t exp) noexcept {
+	LR_INLINE __gmp_expr<A, B> ldexp(const __gmp_expr<A, B> &x, const i64 exp) noexcept {
 		return x << exp;
 	}
 #endif // LIBRAPID_USE_MULTIPREC

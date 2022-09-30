@@ -50,17 +50,17 @@
 #include "array/helpers/extent.hpp"
 #include "array/helpers/kernelFormat.hpp"
 #include "array/functors/functors.hpp"
-// #include "array/cwisebinop.hpp"
-// #include "array/cwiseunop.hpp"
-// #include "array/cwisemap.hpp"
-// #include "array/cast.hpp"
-// #include "array/commaInitializer.hpp"
-// #include "array/arrayBase.hpp"
-// #include "array/array.hpp"
+#include "array/cwisebinop.hpp"
+#include "array/cwiseunop.hpp"
+#include "array/cwisemap.hpp"
+#include "array/cast.hpp"
+#include "array/commaInitializer.hpp"
+#include "array/arrayBase.hpp"
+#include "array/array.hpp"
 
-// #include "utils/suffix.hpp"
-// #include "test/test.hpp"
-// #include "utils/toString.hpp"
+#include "utils/suffix.hpp"
+#include "test/test.hpp"
+#include "utils/toString.hpp"
 
 #pragma warning(pop)
 

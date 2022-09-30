@@ -5,7 +5,7 @@ namespace librapid {
 		template<typename T, typename d>
 		class ValueReference;
 
-		template<typename T = unsigned char, typename d = device::CPU>
+		template<typename T, typename d>
 		class DenseStorage;
 	} // namespace memory
 
@@ -14,7 +14,7 @@ namespace librapid {
 		struct traits;
 	}
 
-	template<typename Scalar, i32 Dims, typename StorageType>
+	template<typename Scalar, i64 Dims, typename StorageType>
 	class VecImpl;
 
 	template<typename T>

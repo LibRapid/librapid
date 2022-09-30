@@ -4,7 +4,7 @@ namespace librapid {
 	template<typename Scalar, i64 Dims>
 	using Vec = VecImpl<Scalar, Dims, Vc::SimdArray<Scalar, Dims>>;
 
-	template<typename Scalar, i32 Dims, typename StorageType>
+	template<typename Scalar, i64 Dims, typename StorageType>
 	class VecImpl {
 	public:
 		using Mask = Vc::Mask<Scalar, struct Vc::simd_abi::fixed_size<Dims>>;

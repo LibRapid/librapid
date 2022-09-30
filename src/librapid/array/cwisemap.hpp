@@ -26,7 +26,7 @@ namespace librapid {
 		struct HasFlags<T, decltype((void)T::Flags, 0)> : std::true_type {};
 
 		template<typename Map>
-		constexpr uint64_t extractFlags() {
+		constexpr ui64 extractFlags() {
 			if constexpr (HasFlags<Map>::value) {
 				return Map::Flags;
 			} else {
@@ -59,7 +59,7 @@ namespace librapid {
 		}
 
 		template<typename Scalar, typename T>
-		LR_FORCE_INLINE auto extractPacket(const T &val, int64_t index) {
+		LR_FORCE_INLINE auto extractPacket(const T &val, i64 index) {
 			if constexpr (internal::traits<T>::IsScalar) {
 				using Packet = typename internal::traits<Scalar>::Packet;
 				return Packet(static_cast<Scalar>(val));
@@ -69,7 +69,7 @@ namespace librapid {
 		}
 
 		template<typename Scalar, typename T>
-		LR_FORCE_INLINE auto extractScalar(const T &val, int64_t index) {
+		LR_FORCE_INLINE auto extractScalar(const T &val, i64 index) {
 			if constexpr (internal::traits<T>::IsScalar) {
 				return static_cast<Scalar>(val);
 			} else {
@@ -78,7 +78,7 @@ namespace librapid {
 		}
 
 		// Count the number of unique mapping objects ever created
-		static inline std::atomic<uint64_t> lambdaMapCount = 0;
+		static inline std::atomic<ui64> lambdaMapCount = 0;
 	} // namespace mapping
 
 	namespace internal {
@@ -98,7 +98,7 @@ namespace librapid {
 			using Device =
 			  typename memory::PromoteDeviceMulti<typename traits<DerivedTypes>::Device...>;
 			using StorageType				= memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags = flags::CustomFunctionGen |
+			static constexpr ui64 Flags = flags::CustomFunctionGen |
 											  mapping::extractFlags<Map>() |
 											  (allowPacket ? 0 : flags::NoPacketOp);
 		};
@@ -116,7 +116,7 @@ namespace librapid {
 			using Device					= typename internal::traits<CWiseMap>::Device;
 			using Type						= CWiseMap<allowPacket, Map, DerivedTypes...>;
 			using Base						= ArrayBase<Type, Device>;
-			static constexpr uint64_t Flags = internal::traits<Type>::Flags;
+			static constexpr ui64 Flags = internal::traits<Type>::Flags;
 
 			CWiseMap() = delete;
 
@@ -131,7 +131,7 @@ namespace librapid {
 
 			CWiseMap &operator=(const CWiseMap &op) = delete;
 
-			LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
+			LR_NODISCARD("") Array<Scalar, Device> operator[](i64 index) const {
 				LR_WARN_ONCE(
 				  "Calling operator[] on a lazy-evaluation object forces evaluation every time. "
 				  "Consider using operator() instead");
@@ -149,7 +149,7 @@ namespace librapid {
 						  Base::extent().dims(),
 						  sizeof...(indices));
 
-				int64_t index = Base::isScalar() ? 0 : Base::extent().index(indices...);
+				i64 index = Base::isScalar() ? 0 : Base::extent().index(indices...);
 				return scalar(index);
 			}
 
@@ -160,7 +160,7 @@ namespace librapid {
 				return res;
 			}
 
-			LR_FORCE_INLINE auto packet(int64_t index) const {
+			LR_FORCE_INLINE auto packet(i64 index) const {
 				return std::apply(m_operation,
 								  std::apply(
 									[index](auto &&...args) {
@@ -170,7 +170,7 @@ namespace librapid {
 									m_operands));
 			}
 
-			LR_FORCE_INLINE auto scalar(int64_t index) const {
+			LR_FORCE_INLINE auto scalar(i64 index) const {
 				return std::apply(m_operation,
 								  std::apply(
 									[index](auto &&...args) {
@@ -182,8 +182,8 @@ namespace librapid {
 
 			LR_NODISCARD("")
 			std::string str(std::string format = "", const std::string &delim = " ",
-							int64_t stripWidth = -1, int64_t beforePoint = -1,
-							int64_t afterPoint = -1, int64_t depth = 0) const {
+							i64 stripWidth = -1, i64 beforePoint = -1,
+							i64 afterPoint = -1, i64 depth = 0) const {
 				return eval().str(format, delim, stripWidth, beforePoint, afterPoint, depth);
 			}
 
@@ -191,7 +191,7 @@ namespace librapid {
 				std::string types;
 				std::string args;
 				std::vector<std::string> argNames = m_operation.args();
-				for (int64_t i = 0; i < argNames.size(); ++i) {
+				for (i64 i = 0; i < argNames.size(); ++i) {
 					std::string type = fmt::format("T_{}", i);
 					types += fmt::format("typename {}", type);
 					args += fmt::format("{} {}", type, argNames[i]);
@@ -214,12 +214,12 @@ __forceinline__  __device__ {1} {2}({3}) {{
 			}
 
 			template<typename T>
-			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
+			std::string genKernel(std::vector<T> &vec, i64 &index) const {
 				std::vector<std::string> strings;
 				extractTupleInfo<0>(strings, vec, index, m_operands);
 
 				std::string res("customFunctionImpl(");
-				for (int64_t i = 0; i < strings.size(); ++i) {
+				for (i64 i = 0; i < strings.size(); ++i) {
 					res += strings[i];
 					if (i + 1 < strings.size()) { res += ", "; }
 				}
@@ -230,9 +230,9 @@ __forceinline__  __device__ {1} {2}({3}) {{
 			LR_NODISCARD("") std::string name() const { return m_name; }
 
 		private:
-			template<int64_t TupleIndex, typename T, typename... Pack>
+			template<i64 TupleIndex, typename T, typename... Pack>
 			LR_FORCE_INLINE void extractTupleInfo(std::vector<std::string> &strings,
-												  std::vector<T> &vec, int64_t &index,
+												  std::vector<T> &vec, i64 &index,
 												  const std::tuple<Pack...> &vals) const {
 				if constexpr (TupleIndex < sizeof...(Pack)) {
 					if constexpr (internal::traits<typename std::tuple_element<
@@ -265,8 +265,8 @@ __forceinline__  __device__ {1} {2}({3}) {{
 		  typename std::common_type_t<typename internal::traits<DerivedTypes>::Scalar...>;
 		using BaseScalar				   = typename internal::traits<Scalar>::BaseScalar;
 		using RetType					   = mapping::CWiseMap<allowPacket, Map, DerivedTypes...>;
-		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
-		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;
+		static constexpr ui64 Flags	   = internal::traits<Scalar>::Flags;
+		static constexpr ui64 Required = RetType::Flags & internal::flags::OperationMask;
 
 		static_assert(!(Required & ~(Flags & Required)),
 					  "Scalar type is incompatible with Functor");

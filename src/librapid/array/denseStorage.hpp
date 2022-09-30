@@ -1,7 +1,7 @@
 #pragma once
 
 namespace librapid::memory {
-	template<typename T, typename d>
+	template<typename T, typename d = device::CPU>
 	class DenseStorage {
 	public:
 		using Type = T;

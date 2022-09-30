@@ -1,4 +1,4 @@
-#pragma onces
+#pragma once
 
 namespace librapid::functors::unop {
 #define DEF_UNARY_FUNCTOR_GENERIC(NAME_, OP_)                                                      \
