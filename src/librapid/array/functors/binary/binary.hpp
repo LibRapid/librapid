@@ -1,10 +1,9 @@
 #pragma once
 
-namespace librapid { namespace functors { namespace binary {
+namespace librapid::functors::binary {
 	template<typename LHS, typename RHS>
 	class ScalarOp {
 	public:
-
 		using LhsType				   = LHS;
 		using RhsType				   = RHS;
 		using RetType				   = std::false_type;
@@ -12,7 +11,8 @@ namespace librapid { namespace functors { namespace binary {
 
 		template<typename T, int64_t d, int64_t a>
 		LR_NODISCARD("")
-		ExtentType<T, d> genExtent(const ExtentType<T, d, a> &lhs, const ExtentType<T, d, a> &rhs) const {
+		ExtentType<T, d> genExtent(const ExtentType<T, d, a> &lhs,
+								   const ExtentType<T, d, a> &rhs) const {
 			return lhs;
 		}
 
@@ -23,4 +23,4 @@ namespace librapid { namespace functors { namespace binary {
 			return generic;
 		}
 	};
-} } } // namespace librapid::functors::binary
+} // namespace librapid::functors::binary
