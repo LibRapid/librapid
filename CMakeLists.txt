@@ -47,23 +47,23 @@ set(LIBRAPID_HAS_BLAS false)
 set(LIBRAPID_HAS_CUDA false)
 
 set(LIBRAPID_SOURCES
-        # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/cudaCodeLoader.cpp"
-        # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/kernelHelper.cpp"
-        # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/linalg/dot.cpp"
-        # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/linalg/gemv.cpp"
-        # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/linalg/gemm.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/cudaCodeLoader.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/kernelHelper.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/linalg/dot.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/linalg/gemv.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/linalg/gemm.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/fastMath.cpp"
-        # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/toString.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/toString.cpp"
         )
 
 if (${LIBRAPID_USE_MULTIPREC})
     list(APPEND LIBRAPID_SOURCES ""
-            # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/trig.cpp"
-            # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/expLogPow.cpp"
-            # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/floorCeil.cpp"
-            # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/modAbs.cpp"
-            # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/casting.cpp"
-            # "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/hypot.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/trig.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/expLogPow.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/floorCeil.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/modAbs.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/casting.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/hypot.cpp"
             )
 endif ()
 

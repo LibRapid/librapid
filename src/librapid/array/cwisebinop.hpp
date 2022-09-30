@@ -15,16 +15,17 @@ namespace librapid {
 			using DeviceRHS					  = typename traits<RHS>::Device;
 			using Device	  = typename memory::PromoteDevice<DeviceLHS, DeviceRHS>::type;
 			using StorageType = memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags =
+			static constexpr ui64 Flags =
 			  Binop::Flags | traits<LHS>::Flags | traits<RHS>::Flags;
 		};
 	} // namespace internal
 
 	namespace binop {
 		template<typename Binop, typename LHS, typename RHS>
-		class CWiseBinop
-				: public ArrayBase<CWiseBinop<Binop, LHS, RHS>,
-								   typename internal::PropagateDeviceType<LHS, RHS>::Device> {
+		class CWiseBinop : public ArrayBase<CWiseBinop<Binop, LHS, RHS>,
+											typename memory::PromoteDevice<
+											  typename internal::traits<LHS>::Device,
+											  typename internal::traits<RHS>::Device>::Device> {
 		public:
 			using Operation = Binop;
 			using Scalar	= typename Binop::RetType;
@@ -38,7 +39,7 @@ namespace librapid {
 			using Base		= ArrayBase<Type, Device>;
 			static constexpr bool LhsIsScalar = internal::traits<LeftType>::IsScalar;
 			static constexpr bool RhsIsScalar = internal::traits<RightType>::IsScalar;
-			static constexpr uint64_t Flags	  = internal::traits<Type>::Flags;
+			static constexpr ui64 Flags	  = internal::traits<Type>::Flags;
 
 			CWiseBinop() = delete;
 
@@ -70,7 +71,7 @@ namespace librapid {
 				return *this;
 			}
 
-			LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
+			LR_NODISCARD("") Array<Scalar, Device> operator[](i64 index) const {
 				LR_WARN_ONCE(
 				  "Calling operator[] on a lazy-evaluation object forces evaluation every time. "
 				  "Consider using operator() instead");
@@ -88,13 +89,13 @@ namespace librapid {
 						  Base::extent().dims(),
 						  sizeof...(indices));
 
-				int64_t index = Base::isScalar() ? 0 : Base::extent().index(indices...);
+				i64 index = Base::isScalar() ? 0 : Base::extent().index(indices...);
 				return scalar(index);
 			}
 
 			LR_NODISCARD("Do not ignore the result of an evaluated calculation")
 			Array<Scalar, Device> eval() const {
-				ExtentType<int64_t, 32> resExtent;
+				ExtentType<i64, 32> resExtent;
 				if constexpr (LhsIsScalar && RhsIsScalar) {
 					LR_ASSERT(false, "This should never happen");
 				} else if constexpr (LhsIsScalar && !RhsIsScalar) {
@@ -116,7 +117,7 @@ namespace librapid {
 				return res;
 			}
 
-			LR_FORCE_INLINE Packet packet(int64_t index) const {
+			LR_FORCE_INLINE Packet packet(i64 index) const {
 				if constexpr (LhsIsScalar && RhsIsScalar)
 					return m_operation.packetOp(Packet(m_lhs), Packet(m_rhs));
 				else if constexpr (LhsIsScalar && !RhsIsScalar)
@@ -127,7 +128,7 @@ namespace librapid {
 					return m_operation.packetOp(m_lhs.packet(index), m_rhs.packet(index));
 			}
 
-			LR_FORCE_INLINE Scalar scalar(int64_t index) const {
+			LR_FORCE_INLINE Scalar scalar(i64 index) const {
 				if constexpr (LhsIsScalar && RhsIsScalar)
 					return m_operation.scalarOp(m_lhs, m_rhs);
 				else if constexpr (LhsIsScalar && !RhsIsScalar)
@@ -139,7 +140,7 @@ namespace librapid {
 			}
 
 			template<typename T>
-			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
+			std::string genKernel(std::vector<T> &vec, i64 &index) const {
 				std::string leftKernel, rightKernel;
 
 				if constexpr (LhsIsScalar && RhsIsScalar) {
@@ -162,8 +163,8 @@ namespace librapid {
 
 			LR_NODISCARD("")
 			std::string str(std::string format = "", const std::string &delim = " ",
-							int64_t stripWidth = -1, int64_t beforePoint = -1,
-							int64_t afterPoint = -1, int64_t depth = 0) const {
+							i64 stripWidth = -1, i64 beforePoint = -1,
+							i64 afterPoint = -1, i64 depth = 0) const {
 				return eval().str(format, delim, stripWidth, beforePoint, afterPoint, depth);
 			}
 

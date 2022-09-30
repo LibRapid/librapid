@@ -23,6 +23,6 @@ namespace librapid { namespace internal {
 
 	private:
 		ArrT &m_array;
-		int64_t m_index = 0;
+		i64 m_index = 0;
 	};
 } } // namespace librapid::internal
