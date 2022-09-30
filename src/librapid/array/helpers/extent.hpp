@@ -4,14 +4,15 @@ namespace librapid {
 	template<typename T, i32 maxDims, i32 align_ = 1>
 	class ExtentType {
 	public:
-		using Type = T;
+		using Type					 = T;
 		static constexpr i32 MaxDims = maxDims;
-		static constexpr i32 Align = align_;
+		static constexpr i32 Align	 = align_;
 
 		ExtentType() = default;
 
 		template<typename... T_>
-		explicit ExtentType(T_... args) : m_dims(sizeof...(T_)), m_data {args...} {}
+		explicit ExtentType(T_... args) :
+				m_dims((i32)sizeof...(T_)), m_data {static_cast<T>(args)...} {}
 
 		template<typename T_>
 		ExtentType(const std::initializer_list<T_> &args) : m_dims(args.size()) {
@@ -69,7 +70,7 @@ namespace librapid {
 
 		ExtentType stride() const {
 			ExtentType res = zero(m_dims);
-			i32 prod   = 1;
+			i32 prod	   = 1;
 			for (i32 i = m_dims - 1; i >= 0; --i) {
 				res[i] = prod;
 				prod *= m_data[i];
@@ -79,7 +80,7 @@ namespace librapid {
 
 		ExtentType strideAdjusted() const {
 			ExtentType res = zero(m_dims);
-			i32 prod   = 1;
+			i32 prod	   = 1;
 			for (i32 i = m_dims - 1; i >= 0; --i) {
 				res[i] = prod;
 				prod *= adjusted(i);
@@ -101,9 +102,7 @@ namespace librapid {
 
 			T res			   = 0;
 			ExtentType strides = stride();
-			for (i32 i = 0; i < index.dims(); ++i) {
-				res += strides[i] * index[i];
-			}
+			for (i32 i = 0; i < index.dims(); ++i) { res += strides[i] * index[i]; }
 			return res;
 		}
 

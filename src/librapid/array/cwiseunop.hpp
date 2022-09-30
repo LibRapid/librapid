@@ -13,7 +13,7 @@ namespace librapid {
 			using Packet					  = typename traits<Scalar>::Packet;
 			using Device					  = typename traits<TYPE>::Device;
 			using StorageType				  = memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags	  = Unop::Flags | traits<TYPE>::Flags;
+			static constexpr ui64 Flags		  = Unop::Flags | traits<TYPE>::Flags;
 		};
 	} // namespace internal
 
@@ -22,14 +22,14 @@ namespace librapid {
 		class CWiseUnop
 				: public ArrayBase<CWiseUnop<Unop, TYPE>, typename internal::traits<TYPE>::Device> {
 		public:
-			using Operation					= Unop;
-			using Scalar					= typename Unop::RetType;
-			using Packet					= typename internal::traits<Scalar>::Packet;
-			using ValType					= typename internal::StripQualifiers<TYPE>;
-			using Device					= typename internal::traits<TYPE>::Device;
-			using Type						= CWiseUnop<Unop, TYPE>;
-			using Base						= ArrayBase<Type, Device>;
-			static constexpr uint64_t Flags = internal::traits<Type>::Flags;
+			using Operation				= Unop;
+			using Scalar				= typename Unop::RetType;
+			using Packet				= typename internal::traits<Scalar>::Packet;
+			using ValType				= typename internal::StripQualifiers<TYPE>;
+			using Device				= typename internal::traits<TYPE>::Device;
+			using Type					= CWiseUnop<Unop, TYPE>;
+			using Base					= ArrayBase<Type, Device>;
+			static constexpr ui64 Flags = internal::traits<Type>::Flags;
 
 			CWiseUnop() = delete;
 
@@ -57,7 +57,7 @@ namespace librapid {
 				return *this;
 			}
 
-			LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
+			LR_NODISCARD("") Array<Scalar, Device> operator[](i64 index) const {
 				LR_WARN_ONCE(
 				  "Calling operator[] on a lazy-evaluation object forces evaluation every time. "
 				  "Consider using operator() instead");
@@ -75,7 +75,7 @@ namespace librapid {
 						  Base::extent().dims(),
 						  sizeof...(indices));
 
-				int64_t index = Base::isScalar() ? 0 : Base::extent().index(indices...);
+				i64 index = Base::isScalar() ? 0 : Base::extent().index(indices...);
 				return scalar(index);
 			}
 
@@ -102,7 +102,7 @@ namespace librapid {
 				}
 			}
 
-			LR_FORCE_INLINE Packet packet(int64_t index) const {
+			LR_FORCE_INLINE Packet packet(i64 index) const {
 				if constexpr ((bool)(Flags & internal::flags::RequireInput)) {
 					return m_operation.packetOpInput(m_value, index);
 				} else {
@@ -110,7 +110,7 @@ namespace librapid {
 				}
 			}
 
-			LR_FORCE_INLINE Scalar scalar(int64_t index) const {
+			LR_FORCE_INLINE Scalar scalar(i64 index) const {
 				if constexpr ((bool)(Flags & internal::flags::RequireInput)) {
 					return m_operation.scalarOpInput(m_value, index);
 				} else {
@@ -120,7 +120,7 @@ namespace librapid {
 
 			template<typename T>
 			LR_NODISCARD("")
-			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
+			std::string genKernel(std::vector<T> &vec, i64 &index) const {
 				std::string kernel = m_value.genKernel(vec, index);
 				std::string op	   = m_operation.genKernel();
 				return fmt::format("({}({}))", op, kernel);
@@ -128,8 +128,8 @@ namespace librapid {
 
 			LR_NODISCARD("")
 			std::string str(std::string format = "", const std::string &delim = " ",
-							int64_t stripWidth = -1, int64_t beforePoint = -1,
-							int64_t afterPoint = -1, int64_t depth = 0) const {
+							i64 stripWidth = -1, i64 beforePoint = -1, i64 afterPoint = -1,
+							i64 depth = 0) const {
 				return eval().str(format, delim, stripWidth, beforePoint, afterPoint, depth);
 			}
 
