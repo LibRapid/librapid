@@ -18,57 +18,54 @@ py::class_<librapid::{dtype[0]}>(module, \"{dtype[0]}\")
 	.def(py::init<const librapid::{dtype[0]}>())
 
 	.def("__getitem__", [](const librapid::{dtype[0]} &vec, int64_t index) {{ return vec[index]; }})
-	.def("__setitem__", [](librapid::{dtype[0]} &vec, int64_t index, int64_t val) {{ vec[index] = val; }})
-	.def("__setitem__", [](librapid::{dtype[0]} &vec, int64_t index, double val) {{ vec[index] = val; }})
+	.def("__setitem__", [](librapid::{dtype[0]} &vec, int64_t index, {dtype[3]} val) {{ vec[index] = val; }})
+	.def("__setitem__", [](librapid::{dtype[0]} &vec, int64_t index, {dtype[3]} val) {{ vec[index] = val; }})
 
 	.def("__neg__", [](const librapid::{dtype[0]} &lhs) {{ return -lhs; }})
 
-	.def("__add__", [](const librapid::{dtype[0]} &lhs, int64_t rhs) {{ return lhs + rhs; }})
-	.def("__sub__", [](const librapid::{dtype[0]} &lhs, int64_t rhs) {{ return lhs - rhs; }})
-	.def("__mul__", [](const librapid::{dtype[0]} &lhs, int64_t rhs) {{ return lhs * rhs; }})
-	.def("__truediv__", [](const librapid::{dtype[0]} &lhs, int64_t rhs) {{ return lhs / rhs; }})
+	.def("__add__", [](const librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ return lhs + rhs; }})
+	.def("__sub__", [](const librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ return lhs - rhs; }})
+	.def("__mul__", [](const librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ return lhs * rhs; }})
+	.def("__truediv__", [](const librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ return lhs / rhs; }})
 
-	.def("__add__", [](const librapid::{dtype[0]} &lhs, float rhs) {{ return lhs + rhs; }})
-	.def("__sub__", [](const librapid::{dtype[0]} &lhs, float rhs) {{ return lhs - rhs; }})
-	.def("__mul__", [](const librapid::{dtype[0]} &lhs, float rhs) {{ return lhs * rhs; }})
-	.def("__truediv__", [](const librapid::{dtype[0]} &lhs, float rhs) {{ return lhs / rhs; }})
+	.def("__add__", [](const librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ return lhs + rhs; }})
+	.def("__sub__", [](const librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ return lhs - rhs; }})
+	.def("__mul__", [](const librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ return lhs * rhs; }})
+	.def("__truediv__", [](const librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ return lhs / rhs; }})
 
-	.def("__add__", [](const librapid::{dtype[0]} &lhs, double rhs) {{ return lhs + rhs; }})
-	.def("__sub__", [](const librapid::{dtype[0]} &lhs, double rhs) {{ return lhs - rhs; }})
-	.def("__mul__", [](const librapid::{dtype[0]} &lhs, double rhs) {{ return lhs * rhs; }})
-	.def("__truediv__", [](const librapid::{dtype[0]} &lhs, double rhs) {{ return lhs / rhs; }})
+	.def("__add__", [](const librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ return lhs + rhs; }})
+	.def("__sub__", [](const librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ return lhs - rhs; }})
+	.def("__mul__", [](const librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ return lhs * rhs; }})
+	.def("__truediv__", [](const librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ return lhs / rhs; }})
 
-	.def("__iadd__", [](librapid::{dtype[0]} &lhs, int64_t rhs) {{ lhs += rhs; }})
-	.def("__isub__", [](librapid::{dtype[0]} &lhs, int64_t rhs) {{ lhs -= rhs; }})
-	.def("__imul__", [](librapid::{dtype[0]} &lhs, int64_t rhs) {{ lhs *= rhs; }})
-	.def("__itruediv__", [](librapid::{dtype[0]} &lhs, int64_t rhs) {{ lhs /= rhs; }})
+	.def("__iadd__", [](librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ lhs += rhs; }})
+	.def("__isub__", [](librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ lhs -= rhs; }})
+	.def("__imul__", [](librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ lhs *= rhs; }})
+	.def("__itruediv__", [](librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ lhs /= rhs; }})
 
-	.def("__iadd__", [](librapid::{dtype[0]} &lhs, float rhs) {{ lhs += rhs; }})
-	.def("__isub__", [](librapid::{dtype[0]} &lhs, float rhs) {{ lhs -= rhs; }})
-	.def("__imul__", [](librapid::{dtype[0]} &lhs, float rhs) {{ lhs *= rhs; }})
-	.def("__itruediv__", [](librapid::{dtype[0]} &lhs, float rhs) {{ lhs /= rhs; }})
+	.def("__iadd__", [](librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ lhs += rhs; }})
+	.def("__isub__", [](librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ lhs -= rhs; }})
+	.def("__imul__", [](librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ lhs *= rhs; }})
+	.def("__itruediv__", [](librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ lhs /= rhs; }})
 
-	.def("__iadd__", [](librapid::{dtype[0]} &lhs, double rhs) {{ lhs += rhs; }})
-	.def("__isub__", [](librapid::{dtype[0]} &lhs, double rhs) {{ lhs -= rhs; }})
-	.def("__imul__", [](librapid::{dtype[0]} &lhs, double rhs) {{ lhs *= rhs; }})
-	.def("__itruediv__", [](librapid::{dtype[0]} &lhs, double rhs) {{ lhs /= rhs; }})
+	.def("__iadd__", [](librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ lhs += rhs; }})
+	.def("__isub__", [](librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ lhs -= rhs; }})
+	.def("__imul__", [](librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ lhs *= rhs; }})
+	.def("__itruediv__", [](librapid::{dtype[0]} &lhs, {dtype[3]} rhs) {{ lhs /= rhs; }})
 	
 """
 
-		for dtype2 in types:
-			tmp += f"""
-	.def("__add__", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ return lhs + rhs; }})
-	.def("__sub__", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ return lhs - rhs; }})
-	.def("__mul__", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ return lhs * rhs; }})
-	.def("__truediv__", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ return lhs / rhs; }})
+		# for dtype2 in types:
+		tmp += f"""
+	.def("__add__", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype[0]} &rhs) {{ return lhs + rhs; }})
+	.def("__sub__", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype[0]} &rhs) {{ return lhs - rhs; }})
+	.def("__mul__", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype[0]} &rhs) {{ return lhs * rhs; }})
+	.def("__truediv__", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype[0]} &rhs) {{ return lhs / rhs; }})
 
-	.def("__iadd__", [](librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ lhs += rhs; }})
-	.def("__isub__", [](librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ lhs -= rhs; }})
-	.def("__imul__", [](librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ lhs *= rhs; }})
-	.def("__itruediv__", [](librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ lhs /= rhs; }})
-
-	.def("dist2", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ return lhs.dist2(rhs); }})
-	.def("dist", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ return lhs.dist(rhs); }})
+	.def("__iadd__", [](librapid::{dtype[0]} &lhs, const librapid::{dtype[0]} &rhs) {{ lhs += rhs; }})
+	.def("__isub__", [](librapid::{dtype[0]} &lhs, const librapid::{dtype[0]} &rhs) {{ lhs -= rhs; }})
+	.def("__imul__", [](librapid::{dtype[0]} &lhs, const librapid::{dtype[0]} &rhs) {{ lhs *= rhs; }})
+	.def("__itruediv__", [](librapid::{dtype[0]} &lhs, const librapid::{dtype[0]} &rhs) {{ lhs /= rhs; }})
 """
 
 		tmp += f"""
@@ -77,17 +74,18 @@ py::class_<librapid::{dtype[0]}>(module, \"{dtype[0]}\")
 	.def("invMag", &librapid::{dtype[0]}::invMag)
 """
 
-		for dtype2 in types:
-			if dtype[-1] != dtype2[-1]:
-				continue
+		# for dtype2 in types:
+		# 	if dtype[-1] != dtype2[-1]:
+		# 		continue
 
-			tmp += f"""
-	.def("dot", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ return lhs.dot(rhs); }}, py::arg("other"))
+		tmp += f"""
+	.def("dot", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype[0]} &rhs) {{ return lhs.dot(rhs); }}, py::arg("other"))
 """
 
-			if dtype[-2] == 3 and dtype2[-2] == 3:
-				tmp += f"""
-	.def("cross", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype2[0]} &rhs) {{ return lhs.cross(rhs); }}, py::arg("other"))
+			# if dtype[-2] == 3 and dtype2[-2] == 3:
+		if dtype[-2] == 3:
+			tmp += f"""
+	.def("cross", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype[0]} &rhs) {{ return lhs.cross(rhs); }}, py::arg("other"))
 """
 
 		tmp += f"""
@@ -114,15 +112,15 @@ py::class_<librapid::{dtype[0]}>(module, \"{dtype[0]}\")
 
 
 types = [
-	["Vec2i", "int64_t x, int64_t y", "py::arg(\"x\"), py::arg(\"y\") = 0", "int64_t", 2],
+	["Vec2i", "int32_t x, int32_t y", "py::arg(\"x\"), py::arg(\"y\") = 0", "int32_t", 2],
 	["Vec2f", "float x, float y", "py::arg(\"x\"), py::arg(\"y\") = 0", "float", 2],
 	["Vec2d", "double x, double y", "py::arg(\"x\"), py::arg(\"y\") = 0", "double", 2],
 
-	["Vec3i", "int64_t x, int64_t y, int64_t z", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0", "int64_t", 3],
+	["Vec3i", "int32_t x, int32_t y, int32_t z", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0", "int32_t", 3],
 	["Vec3f", "float x, float y, float z", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0", "float", 3],
 	["Vec3d", "double x, double y, double z", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0", "double", 3],
 
-	["Vec4i", "int64_t x, int64_t y, int64_t z, int64_t w", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0, py::arg(\"w\") = 0", "int64_t", 4],
+	["Vec4i", "int32_t x, int32_t y, int32_t z, int32_t w", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0, py::arg(\"w\") = 0", "int32_t", 4],
 	["Vec4f", "float x, float y, float z, float w", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0, py::arg(\"w\") = 0", "float", 4],
 	["Vec4d", "double x, double y, double z, double w", "py::arg(\"x\"), py::arg(\"y\") = 0, py::arg(\"z\") = 0, py::arg(\"w\") = 0", "double", 4]
 ]

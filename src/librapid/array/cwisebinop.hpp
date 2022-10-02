@@ -25,7 +25,7 @@ namespace librapid {
 		class CWiseBinop : public ArrayBase<CWiseBinop<Binop, LHS, RHS>,
 											typename memory::PromoteDevice<
 											  typename internal::traits<LHS>::Device,
-											  typename internal::traits<RHS>::Device>::Device> {
+											  typename internal::traits<RHS>::Device>::type> {
 		public:
 			using Operation = Binop;
 			using Scalar	= typename Binop::RetType;
@@ -95,7 +95,7 @@ namespace librapid {
 
 			LR_NODISCARD("Do not ignore the result of an evaluated calculation")
 			Array<Scalar, Device> eval() const {
-				ExtentType<i64, 32> resExtent;
+				Extent resExtent;
 				if constexpr (LhsIsScalar && RhsIsScalar) {
 					LR_ASSERT(false, "This should never happen");
 				} else if constexpr (LhsIsScalar && !RhsIsScalar) {

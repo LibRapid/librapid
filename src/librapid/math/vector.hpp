@@ -43,8 +43,21 @@ namespace librapid {
 
 #endif // GLM_VERSION
 
-		LR_NODISCARD("") auto operator[](i64 index) const { return m_data[index]; }
-		LR_NODISCARD("") auto &operator[](i64 index) { return m_data[index]; }
+		LR_NODISCARD("") auto operator[](i64 index) const {
+			LR_ASSERT(0 <= index < Dims,
+					  "Index {} out of range for vector with {} dimensions",
+					  index,
+					  Dims);
+			return m_data[index];
+		}
+
+		LR_NODISCARD("") auto operator[](i64 index) {
+			LR_ASSERT(0 <= index < Dims,
+					  "Index {} out of range for vector with {} dimensions",
+					  index,
+					  Dims);
+			return m_data[index];
+		}
 
 		LR_FORCE_INLINE void operator+=(const VecImpl &other) { m_data += other.m_data; }
 		LR_FORCE_INLINE void operator-=(const VecImpl &other) { m_data -= other.m_data; }
@@ -105,10 +118,10 @@ namespace librapid {
 		}
 
 		LR_NODISCARD("") LR_INLINE VecImpl cross(const VecImpl &other) const {
-			static_assert(Dims == 3, "Cross product is only defined for 3D VecImpltors");
-			return VecImpl {m_data[1] * other.m_data[2] - m_data[2] * other.m_data[1],
-							m_data[2] * other.m_data[0] - m_data[0] * other.m_data[2],
-							m_data[0] * other.m_data[1] - m_data[1] * other.m_data[0]};
+			static_assert(Dims == 3, "Cross product is only defined for 3D Vectors");
+			return VecImpl(y() * other.z() - z() * other.y(),
+						   z() * other.x() - x() * other.z(),
+						   x() * other.y() - y() * other.x());
 		}
 
 		LR_NODISCARD("") LR_FORCE_INLINE explicit operator bool() const {
@@ -160,11 +173,19 @@ namespace librapid {
 				return m_data[0];
 		}
 
+		LR_FORCE_INLINE void x(Scalar val) {
+			if constexpr (Dims >= 1) m_data[0] = val;
+		}
+
 		LR_FORCE_INLINE Scalar y() const {
 			if constexpr (Dims < 2)
 				return 0;
 			else
 				return m_data[1];
+		}
+
+		LR_FORCE_INLINE void y(Scalar val) {
+			if constexpr (Dims >= 2) m_data[1] = val;
 		}
 
 		LR_FORCE_INLINE Scalar z() const {
@@ -174,12 +195,31 @@ namespace librapid {
 				return m_data[2];
 		}
 
+		LR_FORCE_INLINE void z(Scalar val) {
+			if constexpr (Dims >= 3) m_data[2] = val;
+		}
+
 		LR_FORCE_INLINE Scalar w() const {
 			if constexpr (Dims < 4)
 				return 0;
 			else
 				return m_data[3];
 		}
+
+		LR_FORCE_INLINE void w(Scalar val) {
+			if constexpr (Dims >= 4) m_data[3] = val;
+		}
+
+#if defined(LIBRAPID_PYTHON)
+		LR_FORCE_INLINE Scalar getX() const { return x(); }
+		LR_FORCE_INLINE Scalar getY() const { return y(); }
+		LR_FORCE_INLINE Scalar getZ() const { return z(); }
+		LR_FORCE_INLINE Scalar getW() const { return w(); }
+		LR_FORCE_INLINE void setX(Scalar val) { x(val); }
+		LR_FORCE_INLINE void setY(Scalar val) { y(val); }
+		LR_FORCE_INLINE void setZ(Scalar val) { z(val); }
+		LR_FORCE_INLINE void setW(Scalar val) { w(val); }
+#endif // LIBRAPID_PYTHON
 
 		LR_NODISCARD("") std::string str() const {
 			std::string res = "(";
@@ -193,6 +233,17 @@ namespace librapid {
 	protected:
 		StorageType m_data {};
 	};
+
+	template<typename Scalar, i64 Dims, typename StorageType1, typename StorageType2>
+	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType1>
+	operator&(const VecImpl<Scalar, Dims, StorageType1> &vec,
+			  const VecImpl<Scalar, Dims, StorageType2> &mask) {
+		VecImpl<Scalar, Dims, StorageType1> res(vec);
+		for (i64 i = 0; i < Dims; ++i) {
+			if (!mask[i]) { res[i] = 0; }
+		}
+		return res;
+	}
 
 	template<typename Scalar, i64 Dims, typename StorageType>
 	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
@@ -359,6 +410,16 @@ namespace librapid {
 	sqrt(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::sqrt(vec.data()));
 	}
+
+	using VecMask2i = VecImpl<i32, 2, Vc::SimdMaskArray<i32, 2>>;
+	using VecMask3i = VecImpl<i32, 3, Vc::SimdMaskArray<i32, 3>>;
+	using VecMask4i = VecImpl<i32, 4, Vc::SimdMaskArray<i32, 4>>;
+	using VecMask2f = VecImpl<f32, 2, Vc::SimdMaskArray<f32, 2>>;
+	using VecMask3f = VecImpl<f32, 3, Vc::SimdMaskArray<f32, 3>>;
+	using VecMask4f = VecImpl<f32, 4, Vc::SimdMaskArray<f32, 4>>;
+	using VecMask2d = VecImpl<f64, 2, Vc::SimdMaskArray<f64, 2>>;
+	using VecMask3d = VecImpl<f64, 3, Vc::SimdMaskArray<f64, 3>>;
+	using VecMask4d = VecImpl<f64, 4, Vc::SimdMaskArray<f64, 4>>;
 
 	using Vec2i = Vec<i32, 2>;
 	using Vec3i = Vec<i32, 3>;

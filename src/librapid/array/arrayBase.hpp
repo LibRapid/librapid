@@ -152,19 +152,18 @@ namespace librapid {
 		using This		  = ArrayBase<Derived, Device>;
 		using Packet	  = typename internal::traits<Derived>::Packet;
 		using StorageType = typename internal::traits<Derived>::StorageType;
-		using ArrayExtent			= Extent;
 		static constexpr ui64 Flags = internal::traits<This>::Flags;
 
 		friend Derived;
 
 		ArrayBase() = default;
 
-		template<typename T_, i64 d_, i64 a_>
+		template<typename T_, i32 d_, i32 a_>
 		explicit ArrayBase(const ExtentType<T_, d_, a_> &extent) :
 				m_isScalar(extent.size() == 0), m_extent(extent), m_storage(extent.sizeAdjusted()) {
 		}
 
-		template<typename T_, i64 d_, i64 a_>
+		template<typename T_, i32 d_, i32 a_>
 		explicit ArrayBase(const ExtentType<T_, d_, a_> &extent, int) :
 				m_isScalar(extent.size() == 0), m_extent(extent) {}
 
@@ -321,10 +320,10 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 			static_assert(!(Required & ~(Flags & Required)),
 						  "Scalar type is incompatible with Functor");
 
-			ArrayExtent order;
+			Extent order;
 			if (order_.dims() == -1) {
 				// Default order is to reverse all indices
-				order = ArrayExtent::zero(m_extent.dims());
+				order = Extent::zero(m_extent.dims());
 				for (i64 i = 0; i < m_extent.dims(); ++i) { order[m_extent.dims() - i - 1] = i; }
 			} else {
 				order = order_;
@@ -486,7 +485,7 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 		LR_FORCE_INLINE Derived &assign(const Scalar &other) {
 			// Construct if necessary
 			if (!m_storage) {
-				m_extent   = ArrayExtent(1);
+				m_extent   = Extent(1);
 				m_storage  = StorageType(m_extent.sizeAdjusted());
 				m_isScalar = true;
 			}
@@ -561,12 +560,12 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 		LR_NODISCARD("") bool isScalar() const { return m_isScalar; }
 		LR_NODISCARD("") const StorageType &storage() const { return m_storage; }
 		LR_NODISCARD("") StorageType &storage() { return m_storage; }
-		LR_NODISCARD("") ArrayExtent extent() const { return m_extent; }
-		LR_NODISCARD("") ArrayExtent &extent() { return m_extent; }
+		LR_NODISCARD("") Extent extent() const { return m_extent; }
+		LR_NODISCARD("") Extent &extent() { return m_extent; }
 
 	private:
 		bool m_isScalar = false;
-		ArrayExtent m_extent;
+		Extent m_extent;
 		StorageType m_storage;
 	};
 
