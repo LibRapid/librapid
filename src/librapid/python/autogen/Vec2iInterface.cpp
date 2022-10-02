@@ -29,44 +29,44 @@
 
 py::class_<librapid::Vec2i>(module, "Vec2i")
 	.def(py::init<>())
-	.def(py::init<int64_t, int64_t>(), py::arg("x"), py::arg("y") = 0)
+	.def(py::init<int32_t, int32_t>(), py::arg("x"), py::arg("y") = 0)
 	.def(py::init<const librapid::Vec2i>())
 
 	.def("__getitem__", [](const librapid::Vec2i &vec, int64_t index) { return vec[index]; })
-	.def("__setitem__", [](librapid::Vec2i &vec, int64_t index, int64_t val) { vec[index] = val; })
-	.def("__setitem__", [](librapid::Vec2i &vec, int64_t index, double val) { vec[index] = val; })
+	.def("__setitem__", [](librapid::Vec2i &vec, int64_t index, int32_t val) { vec[index] = val; })
+	.def("__setitem__", [](librapid::Vec2i &vec, int64_t index, int32_t val) { vec[index] = val; })
 
 	.def("__neg__", [](const librapid::Vec2i &lhs) { return -lhs; })
 
-	.def("__add__", [](const librapid::Vec2i &lhs, int64_t rhs) { return lhs + rhs; })
-	.def("__sub__", [](const librapid::Vec2i &lhs, int64_t rhs) { return lhs - rhs; })
-	.def("__mul__", [](const librapid::Vec2i &lhs, int64_t rhs) { return lhs * rhs; })
-	.def("__truediv__", [](const librapid::Vec2i &lhs, int64_t rhs) { return lhs / rhs; })
+	.def("__add__", [](const librapid::Vec2i &lhs, int32_t rhs) { return lhs + rhs; })
+	.def("__sub__", [](const librapid::Vec2i &lhs, int32_t rhs) { return lhs - rhs; })
+	.def("__mul__", [](const librapid::Vec2i &lhs, int32_t rhs) { return lhs * rhs; })
+	.def("__truediv__", [](const librapid::Vec2i &lhs, int32_t rhs) { return lhs / rhs; })
 
-	.def("__add__", [](const librapid::Vec2i &lhs, float rhs) { return lhs + rhs; })
-	.def("__sub__", [](const librapid::Vec2i &lhs, float rhs) { return lhs - rhs; })
-	.def("__mul__", [](const librapid::Vec2i &lhs, float rhs) { return lhs * rhs; })
-	.def("__truediv__", [](const librapid::Vec2i &lhs, float rhs) { return lhs / rhs; })
+	.def("__add__", [](const librapid::Vec2i &lhs, int32_t rhs) { return lhs + rhs; })
+	.def("__sub__", [](const librapid::Vec2i &lhs, int32_t rhs) { return lhs - rhs; })
+	.def("__mul__", [](const librapid::Vec2i &lhs, int32_t rhs) { return lhs * rhs; })
+	.def("__truediv__", [](const librapid::Vec2i &lhs, int32_t rhs) { return lhs / rhs; })
 
-	.def("__add__", [](const librapid::Vec2i &lhs, double rhs) { return lhs + rhs; })
-	.def("__sub__", [](const librapid::Vec2i &lhs, double rhs) { return lhs - rhs; })
-	.def("__mul__", [](const librapid::Vec2i &lhs, double rhs) { return lhs * rhs; })
-	.def("__truediv__", [](const librapid::Vec2i &lhs, double rhs) { return lhs / rhs; })
+	.def("__add__", [](const librapid::Vec2i &lhs, int32_t rhs) { return lhs + rhs; })
+	.def("__sub__", [](const librapid::Vec2i &lhs, int32_t rhs) { return lhs - rhs; })
+	.def("__mul__", [](const librapid::Vec2i &lhs, int32_t rhs) { return lhs * rhs; })
+	.def("__truediv__", [](const librapid::Vec2i &lhs, int32_t rhs) { return lhs / rhs; })
 
-	.def("__iadd__", [](librapid::Vec2i &lhs, int64_t rhs) { lhs += rhs; })
-	.def("__isub__", [](librapid::Vec2i &lhs, int64_t rhs) { lhs -= rhs; })
-	.def("__imul__", [](librapid::Vec2i &lhs, int64_t rhs) { lhs *= rhs; })
-	.def("__itruediv__", [](librapid::Vec2i &lhs, int64_t rhs) { lhs /= rhs; })
+	.def("__iadd__", [](librapid::Vec2i &lhs, int32_t rhs) { lhs += rhs; })
+	.def("__isub__", [](librapid::Vec2i &lhs, int32_t rhs) { lhs -= rhs; })
+	.def("__imul__", [](librapid::Vec2i &lhs, int32_t rhs) { lhs *= rhs; })
+	.def("__itruediv__", [](librapid::Vec2i &lhs, int32_t rhs) { lhs /= rhs; })
 
-	.def("__iadd__", [](librapid::Vec2i &lhs, float rhs) { lhs += rhs; })
-	.def("__isub__", [](librapid::Vec2i &lhs, float rhs) { lhs -= rhs; })
-	.def("__imul__", [](librapid::Vec2i &lhs, float rhs) { lhs *= rhs; })
-	.def("__itruediv__", [](librapid::Vec2i &lhs, float rhs) { lhs /= rhs; })
+	.def("__iadd__", [](librapid::Vec2i &lhs, int32_t rhs) { lhs += rhs; })
+	.def("__isub__", [](librapid::Vec2i &lhs, int32_t rhs) { lhs -= rhs; })
+	.def("__imul__", [](librapid::Vec2i &lhs, int32_t rhs) { lhs *= rhs; })
+	.def("__itruediv__", [](librapid::Vec2i &lhs, int32_t rhs) { lhs /= rhs; })
 
-	.def("__iadd__", [](librapid::Vec2i &lhs, double rhs) { lhs += rhs; })
-	.def("__isub__", [](librapid::Vec2i &lhs, double rhs) { lhs -= rhs; })
-	.def("__imul__", [](librapid::Vec2i &lhs, double rhs) { lhs *= rhs; })
-	.def("__itruediv__", [](librapid::Vec2i &lhs, double rhs) { lhs /= rhs; })
+	.def("__iadd__", [](librapid::Vec2i &lhs, int32_t rhs) { lhs += rhs; })
+	.def("__isub__", [](librapid::Vec2i &lhs, int32_t rhs) { lhs -= rhs; })
+	.def("__imul__", [](librapid::Vec2i &lhs, int32_t rhs) { lhs *= rhs; })
+	.def("__itruediv__", [](librapid::Vec2i &lhs, int32_t rhs) { lhs /= rhs; })
 	
 
 	.def("__add__", [](const librapid::Vec2i &lhs, const librapid::Vec2i &rhs) { return lhs + rhs; })
@@ -79,122 +79,11 @@ py::class_<librapid::Vec2i>(module, "Vec2i")
 	.def("__imul__", [](librapid::Vec2i &lhs, const librapid::Vec2i &rhs) { lhs *= rhs; })
 	.def("__itruediv__", [](librapid::Vec2i &lhs, const librapid::Vec2i &rhs) { lhs /= rhs; })
 
-	.def("dist2", [](const librapid::Vec2i &lhs, const librapid::Vec2i &rhs) { return lhs.dist2(rhs); })
-	.def("dist", [](const librapid::Vec2i &lhs, const librapid::Vec2i &rhs) { return lhs.dist(rhs); })
-
-	.def("__add__", [](const librapid::Vec2i &lhs, const librapid::Vec2f &rhs) { return lhs + rhs; })
-	.def("__sub__", [](const librapid::Vec2i &lhs, const librapid::Vec2f &rhs) { return lhs - rhs; })
-	.def("__mul__", [](const librapid::Vec2i &lhs, const librapid::Vec2f &rhs) { return lhs * rhs; })
-	.def("__truediv__", [](const librapid::Vec2i &lhs, const librapid::Vec2f &rhs) { return lhs / rhs; })
-
-	.def("__iadd__", [](librapid::Vec2i &lhs, const librapid::Vec2f &rhs) { lhs += rhs; })
-	.def("__isub__", [](librapid::Vec2i &lhs, const librapid::Vec2f &rhs) { lhs -= rhs; })
-	.def("__imul__", [](librapid::Vec2i &lhs, const librapid::Vec2f &rhs) { lhs *= rhs; })
-	.def("__itruediv__", [](librapid::Vec2i &lhs, const librapid::Vec2f &rhs) { lhs /= rhs; })
-
-	.def("dist2", [](const librapid::Vec2i &lhs, const librapid::Vec2f &rhs) { return lhs.dist2(rhs); })
-	.def("dist", [](const librapid::Vec2i &lhs, const librapid::Vec2f &rhs) { return lhs.dist(rhs); })
-
-	.def("__add__", [](const librapid::Vec2i &lhs, const librapid::Vec2d &rhs) { return lhs + rhs; })
-	.def("__sub__", [](const librapid::Vec2i &lhs, const librapid::Vec2d &rhs) { return lhs - rhs; })
-	.def("__mul__", [](const librapid::Vec2i &lhs, const librapid::Vec2d &rhs) { return lhs * rhs; })
-	.def("__truediv__", [](const librapid::Vec2i &lhs, const librapid::Vec2d &rhs) { return lhs / rhs; })
-
-	.def("__iadd__", [](librapid::Vec2i &lhs, const librapid::Vec2d &rhs) { lhs += rhs; })
-	.def("__isub__", [](librapid::Vec2i &lhs, const librapid::Vec2d &rhs) { lhs -= rhs; })
-	.def("__imul__", [](librapid::Vec2i &lhs, const librapid::Vec2d &rhs) { lhs *= rhs; })
-	.def("__itruediv__", [](librapid::Vec2i &lhs, const librapid::Vec2d &rhs) { lhs /= rhs; })
-
-	.def("dist2", [](const librapid::Vec2i &lhs, const librapid::Vec2d &rhs) { return lhs.dist2(rhs); })
-	.def("dist", [](const librapid::Vec2i &lhs, const librapid::Vec2d &rhs) { return lhs.dist(rhs); })
-
-	.def("__add__", [](const librapid::Vec2i &lhs, const librapid::Vec3i &rhs) { return lhs + rhs; })
-	.def("__sub__", [](const librapid::Vec2i &lhs, const librapid::Vec3i &rhs) { return lhs - rhs; })
-	.def("__mul__", [](const librapid::Vec2i &lhs, const librapid::Vec3i &rhs) { return lhs * rhs; })
-	.def("__truediv__", [](const librapid::Vec2i &lhs, const librapid::Vec3i &rhs) { return lhs / rhs; })
-
-	.def("__iadd__", [](librapid::Vec2i &lhs, const librapid::Vec3i &rhs) { lhs += rhs; })
-	.def("__isub__", [](librapid::Vec2i &lhs, const librapid::Vec3i &rhs) { lhs -= rhs; })
-	.def("__imul__", [](librapid::Vec2i &lhs, const librapid::Vec3i &rhs) { lhs *= rhs; })
-	.def("__itruediv__", [](librapid::Vec2i &lhs, const librapid::Vec3i &rhs) { lhs /= rhs; })
-
-	.def("dist2", [](const librapid::Vec2i &lhs, const librapid::Vec3i &rhs) { return lhs.dist2(rhs); })
-	.def("dist", [](const librapid::Vec2i &lhs, const librapid::Vec3i &rhs) { return lhs.dist(rhs); })
-
-	.def("__add__", [](const librapid::Vec2i &lhs, const librapid::Vec3f &rhs) { return lhs + rhs; })
-	.def("__sub__", [](const librapid::Vec2i &lhs, const librapid::Vec3f &rhs) { return lhs - rhs; })
-	.def("__mul__", [](const librapid::Vec2i &lhs, const librapid::Vec3f &rhs) { return lhs * rhs; })
-	.def("__truediv__", [](const librapid::Vec2i &lhs, const librapid::Vec3f &rhs) { return lhs / rhs; })
-
-	.def("__iadd__", [](librapid::Vec2i &lhs, const librapid::Vec3f &rhs) { lhs += rhs; })
-	.def("__isub__", [](librapid::Vec2i &lhs, const librapid::Vec3f &rhs) { lhs -= rhs; })
-	.def("__imul__", [](librapid::Vec2i &lhs, const librapid::Vec3f &rhs) { lhs *= rhs; })
-	.def("__itruediv__", [](librapid::Vec2i &lhs, const librapid::Vec3f &rhs) { lhs /= rhs; })
-
-	.def("dist2", [](const librapid::Vec2i &lhs, const librapid::Vec3f &rhs) { return lhs.dist2(rhs); })
-	.def("dist", [](const librapid::Vec2i &lhs, const librapid::Vec3f &rhs) { return lhs.dist(rhs); })
-
-	.def("__add__", [](const librapid::Vec2i &lhs, const librapid::Vec3d &rhs) { return lhs + rhs; })
-	.def("__sub__", [](const librapid::Vec2i &lhs, const librapid::Vec3d &rhs) { return lhs - rhs; })
-	.def("__mul__", [](const librapid::Vec2i &lhs, const librapid::Vec3d &rhs) { return lhs * rhs; })
-	.def("__truediv__", [](const librapid::Vec2i &lhs, const librapid::Vec3d &rhs) { return lhs / rhs; })
-
-	.def("__iadd__", [](librapid::Vec2i &lhs, const librapid::Vec3d &rhs) { lhs += rhs; })
-	.def("__isub__", [](librapid::Vec2i &lhs, const librapid::Vec3d &rhs) { lhs -= rhs; })
-	.def("__imul__", [](librapid::Vec2i &lhs, const librapid::Vec3d &rhs) { lhs *= rhs; })
-	.def("__itruediv__", [](librapid::Vec2i &lhs, const librapid::Vec3d &rhs) { lhs /= rhs; })
-
-	.def("dist2", [](const librapid::Vec2i &lhs, const librapid::Vec3d &rhs) { return lhs.dist2(rhs); })
-	.def("dist", [](const librapid::Vec2i &lhs, const librapid::Vec3d &rhs) { return lhs.dist(rhs); })
-
-	.def("__add__", [](const librapid::Vec2i &lhs, const librapid::Vec4i &rhs) { return lhs + rhs; })
-	.def("__sub__", [](const librapid::Vec2i &lhs, const librapid::Vec4i &rhs) { return lhs - rhs; })
-	.def("__mul__", [](const librapid::Vec2i &lhs, const librapid::Vec4i &rhs) { return lhs * rhs; })
-	.def("__truediv__", [](const librapid::Vec2i &lhs, const librapid::Vec4i &rhs) { return lhs / rhs; })
-
-	.def("__iadd__", [](librapid::Vec2i &lhs, const librapid::Vec4i &rhs) { lhs += rhs; })
-	.def("__isub__", [](librapid::Vec2i &lhs, const librapid::Vec4i &rhs) { lhs -= rhs; })
-	.def("__imul__", [](librapid::Vec2i &lhs, const librapid::Vec4i &rhs) { lhs *= rhs; })
-	.def("__itruediv__", [](librapid::Vec2i &lhs, const librapid::Vec4i &rhs) { lhs /= rhs; })
-
-	.def("dist2", [](const librapid::Vec2i &lhs, const librapid::Vec4i &rhs) { return lhs.dist2(rhs); })
-	.def("dist", [](const librapid::Vec2i &lhs, const librapid::Vec4i &rhs) { return lhs.dist(rhs); })
-
-	.def("__add__", [](const librapid::Vec2i &lhs, const librapid::Vec4f &rhs) { return lhs + rhs; })
-	.def("__sub__", [](const librapid::Vec2i &lhs, const librapid::Vec4f &rhs) { return lhs - rhs; })
-	.def("__mul__", [](const librapid::Vec2i &lhs, const librapid::Vec4f &rhs) { return lhs * rhs; })
-	.def("__truediv__", [](const librapid::Vec2i &lhs, const librapid::Vec4f &rhs) { return lhs / rhs; })
-
-	.def("__iadd__", [](librapid::Vec2i &lhs, const librapid::Vec4f &rhs) { lhs += rhs; })
-	.def("__isub__", [](librapid::Vec2i &lhs, const librapid::Vec4f &rhs) { lhs -= rhs; })
-	.def("__imul__", [](librapid::Vec2i &lhs, const librapid::Vec4f &rhs) { lhs *= rhs; })
-	.def("__itruediv__", [](librapid::Vec2i &lhs, const librapid::Vec4f &rhs) { lhs /= rhs; })
-
-	.def("dist2", [](const librapid::Vec2i &lhs, const librapid::Vec4f &rhs) { return lhs.dist2(rhs); })
-	.def("dist", [](const librapid::Vec2i &lhs, const librapid::Vec4f &rhs) { return lhs.dist(rhs); })
-
-	.def("__add__", [](const librapid::Vec2i &lhs, const librapid::Vec4d &rhs) { return lhs + rhs; })
-	.def("__sub__", [](const librapid::Vec2i &lhs, const librapid::Vec4d &rhs) { return lhs - rhs; })
-	.def("__mul__", [](const librapid::Vec2i &lhs, const librapid::Vec4d &rhs) { return lhs * rhs; })
-	.def("__truediv__", [](const librapid::Vec2i &lhs, const librapid::Vec4d &rhs) { return lhs / rhs; })
-
-	.def("__iadd__", [](librapid::Vec2i &lhs, const librapid::Vec4d &rhs) { lhs += rhs; })
-	.def("__isub__", [](librapid::Vec2i &lhs, const librapid::Vec4d &rhs) { lhs -= rhs; })
-	.def("__imul__", [](librapid::Vec2i &lhs, const librapid::Vec4d &rhs) { lhs *= rhs; })
-	.def("__itruediv__", [](librapid::Vec2i &lhs, const librapid::Vec4d &rhs) { lhs /= rhs; })
-
-	.def("dist2", [](const librapid::Vec2i &lhs, const librapid::Vec4d &rhs) { return lhs.dist2(rhs); })
-	.def("dist", [](const librapid::Vec2i &lhs, const librapid::Vec4d &rhs) { return lhs.dist(rhs); })
-
 	.def("mag2", &librapid::Vec2i::mag2)
 	.def("mag", &librapid::Vec2i::mag)
 	.def("invMag", &librapid::Vec2i::invMag)
 
 	.def("dot", [](const librapid::Vec2i &lhs, const librapid::Vec2i &rhs) { return lhs.dot(rhs); }, py::arg("other"))
-
-	.def("dot", [](const librapid::Vec2i &lhs, const librapid::Vec2f &rhs) { return lhs.dot(rhs); }, py::arg("other"))
-
-	.def("dot", [](const librapid::Vec2i &lhs, const librapid::Vec2d &rhs) { return lhs.dot(rhs); }, py::arg("other"))
 
 	.def("str", &librapid::Vec2i::str)
 	.def("__str__", &librapid::Vec2i::str)

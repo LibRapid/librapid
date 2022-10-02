@@ -62,12 +62,12 @@ namespace librapid {
 	public:
 		StrOpt() : digits(-1), base(10), scientific(false) {}
 
-		StrOpt(i32 digits_, i32 base_, bool scientific_) :
+		StrOpt(i32 digits_, i8 base_, bool scientific_) :
 				digits(digits_), base(base_), scientific(scientific_) {}
 
 	public:
 		i32 digits;
-		i32 base;
+		i8 base;
 		bool scientific;
 	};
 
