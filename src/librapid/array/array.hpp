@@ -1,13 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-#include "helpers/extent.hpp"
-#include "arrayBase.hpp"
-#include "cwisebinop.hpp"
-#include "cwisemap.hpp"
-#include "denseStorage.hpp"
-#include "commaInitializer.hpp"
-
 namespace librapid {
 	namespace internal {
 		template<typename Scalar_, typename Device_>
@@ -20,7 +12,7 @@ namespace librapid {
 			using Device					  = Device_;
 			using Packet					  = typename traits<Scalar>::Packet;
 			using StorageType				  = memory::DenseStorage<Scalar, Device>;
-			static constexpr int64_t Flags	  = flags::Evaluated | flags::PythonFlags;
+			static constexpr i64 Flags		  = flags::Evaluated | flags::PythonFlags;
 		};
 	} // namespace internal
 
@@ -31,13 +23,13 @@ namespace librapid {
 		static_assert(is_same_v<Device_, device::CPU>, "CUDA support was not enabled");
 #endif
 
-		using Scalar					= Scalar_;
-		using Device					= Device_;
-		using Packet					= typename internal::traits<Scalar>::Packet;
-		using Type						= Array<Scalar, Device>;
-		using Base						= ArrayBase<Type, Device>;
-		using StorageType				= typename internal::traits<Type>::StorageType;
-		static constexpr uint64_t Flags = internal::traits<Base>::Flags;
+		using Scalar				= Scalar_;
+		using Device				= Device_;
+		using Packet				= typename internal::traits<Scalar>::Packet;
+		using Type					= Array<Scalar, Device>;
+		using Base					= ArrayBase<Type, Device>;
+		using StorageType			= typename internal::traits<Type>::StorageType;
+		static constexpr ui64 Flags = internal::traits<Base>::Flags;
 
 		Array() = default;
 
@@ -78,10 +70,10 @@ namespace librapid {
 			return res;
 		}
 
-		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) const {
+		LR_NODISCARD("") Array<Scalar, Device> operator[](i64 index) const {
 			LR_ASSERT(!Base::isScalar(), "Cannot subscript a scalar value");
 
-			int64_t memIndex = this->m_isScalar ? 0 : Base::extent().indexAdjusted(index);
+			i64 memIndex = this->m_isScalar ? 0 : Base::extent().indexAdjusted(index);
 			Array<Scalar, Device> res;
 			res.m_extent   = Base::extent().partial(1);
 			res.m_isScalar = Base::extent().dims() == 1;
@@ -91,7 +83,7 @@ namespace librapid {
 			return res;
 		}
 
-		LR_NODISCARD("") Array<Scalar, Device> operator[](int64_t index) {
+		LR_NODISCARD("") Array<Scalar, Device> operator[](i64 index) {
 			return const_cast<const Type *>(this)->operator[](index);
 		}
 
@@ -104,7 +96,7 @@ namespace librapid {
 					  Base::extent().dims(),
 					  sizeof...(indices));
 
-			int64_t index = Base::isScalar() ? 0 : Base::extent().index(indices...);
+			i64 index = Base::isScalar() ? 0 : Base::extent().index(indices...);
 			return Base::storage()[index];
 		}
 
@@ -116,16 +108,14 @@ namespace librapid {
 
 		void transpose(const Extent &order = {}) { *this = Base::transposed(order); }
 
-		LR_FORCE_INLINE void writePacket(int64_t index, const Packet &p) {
+		LR_FORCE_INLINE void writePacket(i64 index, const Packet &p) {
 			LR_ASSERT(index >= 0 && index < Base::extent().sizeAdjusted(),
 					  "Index {} is out of range",
 					  index);
 			p.store(Base::storage().heap() + index);
 		}
 
-		LR_FORCE_INLINE void writeScalar(int64_t index, const Scalar &s) {
-			Base::storage()[index] = s;
-		}
+		LR_FORCE_INLINE void writeScalar(i64 index, const Scalar &s) { Base::storage()[index] = s; }
 
 		template<typename T>
 		LR_FORCE_INLINE operator T() const {
@@ -136,10 +126,10 @@ namespace librapid {
 		template<typename Other, bool forceTemporary = false>
 		LR_NODISCARD("")
 		auto filled(const Other &other) const {
-			using BaseScalar = typename internal::traits<Scalar>::BaseScalar;
-			using RetType	 = unop::CWiseUnop<functors::misc::FillArray<Scalar>, Type>;
-			static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
-			static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;
+			using BaseScalar			= typename internal::traits<Scalar>::BaseScalar;
+			using RetType				= unop::CWiseUnop<functors::misc::FillArray<Scalar>, Type>;
+			static constexpr ui64 Flags = internal::traits<Scalar>::Flags;
+			static constexpr ui64 Required = RetType::Flags & internal::flags::OperationMask;
 
 			static_assert(!(Required & ~(Flags & Required)),
 						  "Scalar type is incompatible with Functor");
@@ -164,39 +154,39 @@ namespace librapid {
 			Base::assign(filled<Other, true>(other));
 		}
 
-		void findLongest(const std::string &format, bool strip, int64_t stripWidth,
-						 int64_t &longestInteger, int64_t &longestFloating) const {
-			int64_t dims	= Base::extent().dims();
-			int64_t zeroDim = Base::extent()[0];
+		void findLongest(const std::string &format, bool strip, i64 stripWidth, i64 &longestInteger,
+						 i64 &longestf32ing) const {
+			i64 dims	= Base::extent().dims();
+			i64 zeroDim = Base::extent()[0];
 			if (dims > 1) {
-				for (int64_t i = 0; i < zeroDim; ++i) {
+				for (i64 i = 0; i < zeroDim; ++i) {
 					if (stripWidth != 0 && strip && i == stripWidth && zeroDim > stripWidth * 2)
 						i = zeroDim - stripWidth;
 
 					this->operator[](i).findLongest(
-					  format, strip, stripWidth, longestInteger, longestFloating);
+					  format, strip, stripWidth, longestInteger, longestf32ing);
 				}
 			} else {
 				// Stringify vector
-				for (int64_t i = 0; i < zeroDim; ++i) {
+				for (i64 i = 0; i < zeroDim; ++i) {
 					if (stripWidth != 0 && strip && i == stripWidth && zeroDim > stripWidth * 2)
 						i = zeroDim - stripWidth;
 
 					auto val			  = this->operator()(i).get();
 					std::string formatted = fmt::format(format, val);
 					auto findIter		  = std::find(formatted.begin(), formatted.end(), '.');
-					int64_t pointPos	  = findIter - formatted.begin();
+					i64 pointPos		  = findIter - formatted.begin();
 					if (findIter == formatted.end()) {
 						// No decimal point present
 						if (formatted.length() > longestInteger)
 							longestInteger = formatted.length();
 					} else {
 						// Decimal point present
-						auto integer  = formatted.substr(0, pointPos);
-						auto floating = formatted.substr(pointPos);
+						auto integer = formatted.substr(0, pointPos);
+						auto f32ing	 = formatted.substr(pointPos);
 						if (integer.length() > longestInteger) longestInteger = integer.length();
-						if (floating.length() - 1 > longestFloating)
-							longestFloating = floating.length() - 1;
+						if (f32ing.length() - 1 > longestf32ing)
+							longestf32ing = f32ing.length() - 1;
 					}
 				}
 			}
@@ -208,8 +198,8 @@ namespace librapid {
 		// stripWidth >= 1  => n values are shown
 		LR_NODISCARD("")
 		std::string str(std::string format = "", const std::string &delim = " ",
-						int64_t stripWidth = -1, int64_t beforePoint = -1, int64_t afterPoint = -1,
-						int64_t depth = 0) const {
+						i64 stripWidth = -1, i64 beforePoint = -1, i64 afterPoint = -1,
+						i64 depth = 0) const {
 			bool strip = stripWidth > 0;
 			if (depth == 0) {
 				strip = false;
@@ -217,8 +207,8 @@ namespace librapid {
 
 				// Always print the full vector if the array has all dimensions as 1 except a single
 				// axis, unless specified otherwise
-				int64_t nonOneDims = 0;
-				for (int64_t i = 0; i < Base::extent().dims(); ++i)
+				i64 nonOneDims = 0;
+				for (i64 i = 0; i < Base::extent().dims(); ++i)
 					if (Base::extent()[i] != 1) ++nonOneDims;
 
 				if (nonOneDims == 1 && stripWidth == -1) stripWidth = 0;
@@ -243,17 +233,17 @@ namespace librapid {
 				// Scalars
 				if (Base::isScalar()) return fmt::format(format, this->operator()(0));
 
-				int64_t tmpBeforePoint = 0, tmpAfterPoint = 0;
+				i64 tmpBeforePoint = 0, tmpAfterPoint = 0;
 				findLongest(format, strip, stripWidth, tmpBeforePoint, tmpAfterPoint);
 				if (beforePoint == -1) beforePoint = tmpBeforePoint;
 				if (afterPoint == -1) afterPoint = tmpAfterPoint;
 			}
 
 			std::string res = "[";
-			int64_t dims	= Base::extent().dims();
-			int64_t zeroDim = Base::extent()[0];
+			i64 dims		= Base::extent().dims();
+			i64 zeroDim		= Base::extent()[0];
 			if (dims > 1) {
-				for (int64_t i = 0; i < zeroDim; ++i) {
+				for (i64 i = 0; i < zeroDim; ++i) {
 					if (stripWidth != 0 && strip && i == stripWidth && zeroDim > stripWidth * 2) {
 						i = zeroDim - stripWidth;
 						res += std::string(depth + 1, ' ') + "...\n";
@@ -268,7 +258,7 @@ namespace librapid {
 				}
 			} else {
 				// Stringify vector
-				for (int64_t i = 0; i < zeroDim; ++i) {
+				for (i64 i = 0; i < zeroDim; ++i) {
 					if (stripWidth != 0 && strip && i == stripWidth && zeroDim > stripWidth * 2) {
 						i = zeroDim - stripWidth;
 						res += "... ";
@@ -277,20 +267,20 @@ namespace librapid {
 					auto val			  = this->operator()(i).get();
 					std::string formatted = fmt::format(format, val);
 					auto findIter		  = std::find(formatted.begin(), formatted.end(), '.');
-					int64_t pointPos	  = findIter - formatted.begin();
+					i64 pointPos		  = findIter - formatted.begin();
 					if (afterPoint == 0) {
 						// No decimal point present
 						res += fmt::format("{:>{}}", formatted, beforePoint);
 					} else {
 						// Decimal point present
-						auto integer  = formatted.substr(0, pointPos);
-						auto floating = formatted.substr(pointPos);
+						auto integer = formatted.substr(0, pointPos);
+						auto f32ing	 = formatted.substr(pointPos);
 						// Add a space to account for the missing decimal point in some
 						// cases
 						res += fmt::format("{:>{}}{:<{}}",
 										   integer,
 										   beforePoint,
-										   floating,
+										   f32ing,
 										   afterPoint + (findIter == formatted.end()));
 					}
 					if (i + 1 < zeroDim) res += delim;
@@ -387,12 +377,12 @@ namespace librapid {
 
 	using ArrayB   = Array<bool, device::CPU>;
 	using ArrayC   = Array<char, device::CPU>;
-	using ArrayF16 = Array<extended::float16_t, device::CPU>;
-	using ArrayF32 = Array<float, device::CPU>;
-	using ArrayF64 = Array<double, device::CPU>;
-	using ArrayI16 = Array<int16_t, device::CPU>;
-	using ArrayI32 = Array<int32_t, device::CPU>;
-	using ArrayI64 = Array<int64_t, device::CPU>;
+	using ArrayF16 = Array<f16, device::CPU>;
+	using ArrayF32 = Array<f32, device::CPU>;
+	using ArrayF64 = Array<f64, device::CPU>;
+	using ArrayI16 = Array<i16, device::CPU>;
+	using ArrayI32 = Array<i32, device::CPU>;
+	using ArrayI64 = Array<i64, device::CPU>;
 
 #if defined(LIBRAPID_USE_MULTIPREC)
 	using ArrayMPZ	= Array<mpz, device::CPU>;
@@ -400,8 +390,8 @@ namespace librapid {
 	using ArrayMPFR = Array<mpfr, device::CPU>;
 #endif
 
-	using ArrayCF32 = Array<Complex<float>, device::CPU>;
-	using ArrayCF64 = Array<Complex<double>, device::CPU>;
+	using ArrayCF32 = Array<Complex<f32>, device::CPU>;
+	using ArrayCF64 = Array<Complex<f64>, device::CPU>;
 #if defined(LIBRAPID_USE_MULTIPREC)
 	using ArrayCMPFR = Array<Complex<mpfr>, device::CPU>;
 #endif
@@ -410,21 +400,21 @@ namespace librapid {
 #if defined(LIBRAPID_HAS_CUDA)
 	using ArrayBG	= Array<bool, device::GPU>;
 	using ArrayCG	= Array<char, device::GPU>;
-	using ArrayF16G = Array<extended::float16_t, device::GPU>;
-	using ArrayF32G = Array<float, device::GPU>;
-	using ArrayF64G = Array<double, device::GPU>;
-	using ArrayI16G = Array<int16_t, device::GPU>;
-	using ArrayI32G = Array<int32_t, device::GPU>;
-	using ArrayI64G = Array<int64_t, device::GPU>;
+	using ArrayF16G = Array<f16, device::GPU>;
+	using ArrayF32G = Array<f32, device::GPU>;
+	using ArrayF64G = Array<f64, device::GPU>;
+	using ArrayI16G = Array<i16, device::GPU>;
+	using ArrayI32G = Array<i32, device::GPU>;
+	using ArrayI64G = Array<i64, device::GPU>;
 #else
 	using ArrayBG	= Array<bool, device::CPU>;
 	using ArrayCG	= Array<char, device::CPU>;
-	using ArrayF16G = Array<extended::float16_t, device::CPU>;
-	using ArrayF32G = Array<float, device::CPU>;
-	using ArrayF64G = Array<double, device::CPU>;
-	using ArrayI16G = Array<int16_t, device::CPU>;
-	using ArrayI32G = Array<int32_t, device::CPU>;
-	using ArrayI64G = Array<int64_t, device::CPU>;
+	using ArrayF16G = Array<f16, device::CPU>;
+	using ArrayF32G = Array<f32, device::CPU>;
+	using ArrayF64G = Array<f64, device::CPU>;
+	using ArrayI16G = Array<i16, device::CPU>;
+	using ArrayI32G = Array<i32, device::CPU>;
+	using ArrayI64G = Array<i64, device::CPU>;
 #endif
 
 #undef FORCE_TMP_FUNC

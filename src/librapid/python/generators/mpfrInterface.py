@@ -71,7 +71,7 @@ for type in types:
 		Function("__int__", [Argument(constRef, "this_")], "return librapid::internal::traits<librapid::{}>::cast<int64_t>(this_);".format(t)),
 		Function("__float__", [Argument(constRef, "this_")], "return librapid::internal::traits<librapid::{}>::cast<double>(this_);".format(t)),
 
-		Function("str", [Argument(constRef, "this_"), Argument("int64_t", "base", "10")], "return lrc::str(this_, {-1, base, false});"),
+		Function("str", [Argument(constRef, "this_"), Argument("int8_t", "base", "10")], "return lrc::str(this_, {-1, base, false});"),
 		Function("__str__", [Argument(constRef, "this_")], "return lrc::str(this_, {-1, 10, false});"),
 		Function("__repr__", [Argument(constRef, "this_")], "return \"librapid::{}(\\\"\" + lrc::str(this_, {{-1, 10, false}}) + \"\\\")\";".format(t)),
 	]

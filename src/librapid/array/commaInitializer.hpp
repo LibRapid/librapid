@@ -1,9 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-#include "../internal/forward.hpp"
-#include "arrayBase.hpp"
-
 namespace librapid { namespace internal {
 	template<typename ArrT>
 	class CommaInitializer {
@@ -27,6 +23,6 @@ namespace librapid { namespace internal {
 
 	private:
 		ArrT &m_array;
-		int64_t m_index = 0;
+		i64 m_index = 0;
 	};
 } } // namespace librapid::internal

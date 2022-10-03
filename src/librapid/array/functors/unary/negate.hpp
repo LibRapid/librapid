@@ -1,7 +1,5 @@
 #pragma once
 
-#include "unary.hpp"
-
 namespace librapid::functors::unop {
 #define DEF_NEGATE_FUNCTOR(NAME_, OP_)                                                             \
 	template<typename Type_>                                                                       \

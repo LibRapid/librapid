@@ -1,10 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-#include "../internal/forward.hpp"
-#include "helpers/kernelFormat.hpp"
-#include "arrayBase.hpp"
-
 namespace librapid {
 	namespace internal {
 		template<typename DST, typename OtherDerived>
@@ -17,7 +12,7 @@ namespace librapid {
 			using Packet					= typename traits<Scalar>::Packet;
 			using Device					= typename internal::traits<OtherDerived>::Device;
 			using StorageType				= memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags = internal::flags::PythonFlags;
+			static constexpr ui64 Flags = internal::flags::PythonFlags;
 		};
 
 		template<typename OtherDerived>
@@ -30,7 +25,7 @@ namespace librapid {
 			using Packet				   = typename traits<Scalar>::Packet;
 			using Device				   = typename internal::traits<OtherDerived>::Device;
 			using StorageType			   = memory::DenseStorage<Scalar, Device>;
-			static constexpr uint64_t Flags =
+			static constexpr ui64 Flags =
 			  internal::flags::PythonFlags | internal::flags::NoPacketOp;
 		};
 	} // namespace internal
@@ -47,7 +42,7 @@ namespace librapid {
 			using InputScalar				= typename internal::traits<InputType>::Scalar;
 			using Type						= Cast<DST, OtherDerived>;
 			using Base						= ArrayBase<Cast<DST, OtherDerived>, Device>;
-			static constexpr uint64_t Flags = internal::traits<Type>::Flags;
+			static constexpr ui64 Flags = internal::traits<Type>::Flags;
 
 			Cast() = delete;
 
@@ -70,29 +65,29 @@ namespace librapid {
 				return res;
 			}
 
-			Packet packet(int64_t index) const {
+			Packet packet(i64 index) const {
 				// Quick return if possible
 				if constexpr (std::is_same_v<Scalar, InputScalar>) return m_toCast.packet(index);
 				static Scalar buffer[Packet::size()];
-				for (int64_t i = 0; i < Packet::size(); ++i)
+				for (i64 i = 0; i < Packet::size(); ++i)
 					buffer[i] = internal::traits<InputScalar>::template cast<Scalar>(
 					  m_toCast.scalar(index + i));
 				return Packet(&(buffer[0]));
 			}
 
-			Scalar scalar(int64_t index) const {
+			Scalar scalar(i64 index) const {
 				return internal::traits<InputScalar>::template cast<Scalar>(m_toCast.scalar(index));
 			}
 
 			template<typename T>
-			std::string genKernel(std::vector<T> &vec, int64_t &index) const {
+			std::string genKernel(std::vector<T> &vec, i64 &index) const {
 				return fmt::format("(({}) ({}))", internal::traits<Scalar>::Name, 5);
 			}
 
 			LR_NODISCARD("")
 			std::string str(std::string format = "", const std::string &delim = " ",
-							int64_t stripWidth = -1, int64_t beforePoint = -1,
-							int64_t afterPoint = -1, int64_t depth = 0) const {
+							i64 stripWidth = -1, i64 beforePoint = -1,
+							i64 afterPoint = -1, i64 depth = 0) const {
 				return eval().str(format, delim, stripWidth, beforePoint, afterPoint, depth);
 			}
 

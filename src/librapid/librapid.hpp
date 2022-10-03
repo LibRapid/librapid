@@ -9,37 +9,57 @@
 #pragma warning(disable : 4244) // Possible loss of data in conversion
 #pragma warning(disable : 4267) // Possible loss of data in conversion
 
-#define MPIRXX_HAVE_LLONG // Enable long long support
+#define MPIRXX_HAVE_LLONG // Enable i64 support
 
 #include "VERSION.hpp"
-#include "modified/modified.hpp"
 #include "internal/config.hpp"
-#include "linalg/threadHelper.hpp"
-#include "cuda/cudaCodeLoader.hpp"
-#include "internal/memUtils.hpp"
+
+#if defined(LIBRAPID_USE_MULTIPREC)
+// MPIR (modified) for BigNumber types
+#	include <mpirxx.h>
+#	include <mpreal.h>
+#endif
+
+#include "internal/typedefs.hpp"
+#include "internal/forward.hpp"
+#include "math/mpfr.hpp"
+
 #include "utils/traits.hpp"
 #include "utils/time.hpp"
 #include "utils/console.hpp"
 #include "utils/bit.hpp"
-#include "librapid/linalg/blasInterface.hpp"
+
 #include "math/constants.hpp"
 #include "math/coreMath.hpp"
-#include "math/statistics.hpp"
-#include "math/advanced.hpp"
+#include "math/vector.hpp"
 #include "math/fastMath.hpp"
 #include "math/zTheory.hpp"
-#include "math/vector.hpp"
 #include "math/complex.hpp"
-#include "internal/forward.hpp"
+#include "math/advanced.hpp"
+#include "math/statistics.hpp"
+
+#include "modified/modified.hpp"
+#include "cuda/cudaCodeLoader.hpp"
+#include "internal/memUtils.hpp"
+#include "cuda/memUtils.hpp"
+#include "linalg/threadHelper.hpp"
+#include "linalg/blasInterface.hpp"
+
 #include "array/denseStorage.hpp"
+#include "array/valueReference.hpp"
 #include "array/helpers/extent.hpp"
-#include "array/arrayBase.hpp"
+#include "array/helpers/kernelFormat.hpp"
+#include "array/functors/functors.hpp"
 #include "array/cwisebinop.hpp"
 #include "array/cwiseunop.hpp"
+#include "array/cwisemap.hpp"
+#include "array/cast.hpp"
+#include "array/commaInitializer.hpp"
+#include "array/arrayBase.hpp"
 #include "array/array.hpp"
+
 #include "utils/suffix.hpp"
 #include "test/test.hpp"
-
 #include "utils/toString.hpp"
 
 #pragma warning(pop)
