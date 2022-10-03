@@ -8,9 +8,9 @@ namespace librapid::functors::unop {
 		using RetType				   = std::false_type;
 		static constexpr int64_t Flags = 0;
 
-		template<typename T, int64_t d, int64_t a>
+		template<typename T, i32 d, i32 a>
 		LR_NODISCARD("")
-		ExtentType<T, d> genExtent(const ExtentType<T, d, a> &extent) const {
+		ExtentType<T, d, a> genExtent(const ExtentType<T, d, a> &extent) const {
 			return extent;
 		}
 	};
