@@ -62,6 +62,18 @@ ComplexMPFR = _librapid.ComplexMPFR
 
 prec = _librapid.prec
 
+Vec2i = _librapid.Vec2i
+Vec2f = _librapid.Vec2f
+Vec2d = _librapid.Vec2d
+
+Vec3i = _librapid.Vec3i
+Vec3f = _librapid.Vec3f
+Vec3d = _librapid.Vec3d
+
+Vec4i = _librapid.Vec4i
+Vec4f = _librapid.Vec4f
+Vec4d = _librapid.Vec4d
+
 class Array:
 	def __init__(self, *args, **kwargs):
 		self._array = None
