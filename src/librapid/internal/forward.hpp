@@ -1,13 +1,11 @@
 #pragma once
 
-#include "config.hpp"
-
 namespace librapid {
 	namespace memory {
 		template<typename T, typename d>
 		class ValueReference;
 
-		template<typename T = unsigned char, typename d = device::CPU>
+		template<typename T, typename d>
 		class DenseStorage;
 	} // namespace memory
 
@@ -15,6 +13,9 @@ namespace librapid {
 		template<typename T>
 		struct traits;
 	}
+
+	template<typename Scalar, i64 Dims, typename StorageType>
+	class VecImpl;
 
 	template<typename T>
 	class Complex;
@@ -25,7 +26,7 @@ namespace librapid {
 	template<typename T>
 	T imag(const Complex<T> &val);
 
-	template<typename T, int64_t maxDims, int64_t align>
+	template<typename T, i32 maxDims, i32 align>
 	class ExtentType;
 
 	template<typename ArrT>
@@ -61,12 +62,12 @@ namespace librapid {
 	public:
 		StrOpt() : digits(-1), base(10), scientific(false) {}
 
-		StrOpt(int64_t digits_, int64_t base_, bool scientific_) :
+		StrOpt(i32 digits_, i8 base_, bool scientific_) :
 				digits(digits_), base(base_), scientific(scientific_) {}
 
 	public:
-		int64_t digits;
-		int64_t base;
+		i32 digits;
+		i8 base;
 		bool scientific;
 	};
 

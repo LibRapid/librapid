@@ -1,4 +1,4 @@
-#include <librapid/cuda/cudaCodeLoader.hpp>
+#include <librapid>
 
 namespace librapid {
 	void loadCustomCudaHeader(const std::string &fileName, const std::string &searchDir,

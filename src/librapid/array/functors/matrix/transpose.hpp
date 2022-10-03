@@ -1,9 +1,5 @@
 #pragma once
 
-#include "../../../internal/config.hpp"
-#include "../../helpers/extent.hpp"
-#include "../../../modified/modified.hpp"
-
 namespace librapid::functors::matrix {
 	template<typename Type_>
 	class Transpose {
@@ -18,8 +14,8 @@ namespace librapid::functors::matrix {
 
 		Transpose() = default;
 
-		template<typename T, int64_t d>
-		explicit Transpose(const ExtentType<T, d> &order) : m_order(order) {};
+		template<typename T, i32 d, i32 a>
+		explicit Transpose(const ExtentType<T, d, a> &order) : m_order(order) {};
 
 		Transpose(const Transpose<Type> &other) = default;
 
@@ -74,9 +70,9 @@ namespace librapid::functors::matrix {
 			return -1;
 		}
 
-		template<typename T, int64_t d, int64_t a>
+		template<typename T, i32 d, i32 a>
 		LR_NODISCARD("")
-		ExtentType<T, d> genExtent(const ExtentType<T, d, a> &extent) const {
+		ExtentType<T, d, a> genExtent(const ExtentType<T, d, a> &extent) const {
 			return extent.swivelled(m_order);
 		}
 
@@ -86,6 +82,6 @@ namespace librapid::functors::matrix {
 		}
 
 	private:
-		ExtentType<int64_t, 32> m_order;
+		ExtentType<i32, 32> m_order;
 	};
 } // namespace librapid::functors::matrix

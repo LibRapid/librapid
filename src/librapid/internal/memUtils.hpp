@@ -1,7 +1,5 @@
 #pragma once
 
-#include "config.hpp"
-
 // Memory alignment adapted from
 // https://gist.github.com/dblalock/255e76195676daa5cbc57b9b36d1c99a
 

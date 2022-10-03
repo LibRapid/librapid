@@ -995,24 +995,24 @@ namespace librapid {
 		//------- 16bit Floating Point --------------------------------------------
 		template<>
 		struct traits<extended::float16_t> {
-			static constexpr bool IsScalar		 = true;
-			static constexpr bool IsEvaluated	 = true;
-			using Valid							 = std::true_type;
-			using Scalar						 = extended::float16_t;
-			using BaseScalar					 = extended::float16_t;
-			using StorageType					 = memory::DenseStorage<extended::float16_t>;
-			using Packet						 = std::false_type;
-			using Device						 = device::CPU;
-			static constexpr int64_t PacketWidth = 1;
-			static constexpr char Name[]		 = "__half";
-			static constexpr uint64_t Flags = flags::PacketArithmetic | flags::ScalarArithmetic |
-											  flags::PacketLogical | flags::ScalarLogical;
+			static constexpr bool IsScalar	  = true;
+			static constexpr bool IsEvaluated = true;
+			using Valid						  = std::true_type;
+			using Scalar					  = extended::float16_t;
+			using BaseScalar				  = extended::float16_t;
+			using StorageType = memory::DenseStorage<extended::float16_t, device::CPU>;
+			using Packet	  = std::false_type;
+			using Device	  = device::CPU;
+			static constexpr i64 PacketWidth = 1;
+			static constexpr char Name[]	 = "__half";
+			static constexpr ui64 Flags		 = flags::PacketArithmetic | flags::ScalarArithmetic |
+										  flags::PacketLogical | flags::ScalarLogical;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_16F;
 #endif
 
-			static constexpr uint64_t Size	= 2;
+			static constexpr ui64 Size		= 2;
 			static constexpr bool CanAlign	= true;
 			static constexpr bool CanMemcpy = true;
 
@@ -1042,33 +1042,67 @@ namespace librapid {
 	LR_INLINE extended::float16_t asin(extended::float16_t x) noexcept { return extended::asin(x); }
 	LR_INLINE extended::float16_t acos(extended::float16_t x) noexcept { return extended::acos(x); }
 	LR_INLINE extended::float16_t atan(extended::float16_t x) noexcept { return extended::atan(x); }
-	LR_INLINE extended::float16_t atan2(extended::float16_t y, extended::float16_t x) noexcept { return extended::atan2(y, x); }
+	LR_INLINE extended::float16_t atan2(extended::float16_t y, extended::float16_t x) noexcept {
+		return extended::atan2(y, x);
+	}
 	LR_INLINE extended::float16_t sinh(extended::float16_t x) noexcept { return extended::sinh(x); }
 	LR_INLINE extended::float16_t cosh(extended::float16_t x) noexcept { return extended::cosh(x); }
 	LR_INLINE extended::float16_t tanh(extended::float16_t x) noexcept { return extended::tanh(x); }
-	LR_INLINE extended::float16_t asinh(extended::float16_t x) noexcept { return extended::asinh(x); }
-	LR_INLINE extended::float16_t acosh(extended::float16_t x) noexcept { return extended::acosh(x); }
-	LR_INLINE extended::float16_t atanh(extended::float16_t x) noexcept { return extended::atanh(x); }
-	LR_INLINE extended::float16_t csc(extended::float16_t x) noexcept { return extended::float16_t(1.0f) / sin(x); }
-	LR_INLINE extended::float16_t sec(extended::float16_t x) noexcept { return extended::float16_t(1.0f) / cos(x); }
-	LR_INLINE extended::float16_t cot(extended::float16_t x) noexcept { return extended::float16_t(1.0f) / tan(x); }
-	LR_INLINE extended::float16_t acsc(extended::float16_t x) noexcept { return {asin((float)(extended::float16_t(1.0f) / x))}; }
-	LR_INLINE extended::float16_t asec(extended::float16_t x) noexcept { return {acos((float)(extended::float16_t(1.0f) / x))}; }
-	LR_INLINE extended::float16_t acot(extended::float16_t x) noexcept { return {atan((float)(extended::float16_t(1.0f) / x))}; }
+	LR_INLINE extended::float16_t asinh(extended::float16_t x) noexcept {
+		return extended::asinh(x);
+	}
+	LR_INLINE extended::float16_t acosh(extended::float16_t x) noexcept {
+		return extended::acosh(x);
+	}
+	LR_INLINE extended::float16_t atanh(extended::float16_t x) noexcept {
+		return extended::atanh(x);
+	}
+	LR_INLINE extended::float16_t csc(extended::float16_t x) noexcept {
+		return extended::float16_t(1.0f) / sin(x);
+	}
+	LR_INLINE extended::float16_t sec(extended::float16_t x) noexcept {
+		return extended::float16_t(1.0f) / cos(x);
+	}
+	LR_INLINE extended::float16_t cot(extended::float16_t x) noexcept {
+		return extended::float16_t(1.0f) / tan(x);
+	}
+	LR_INLINE extended::float16_t acsc(extended::float16_t x) noexcept {
+		return {asin((float)(extended::float16_t(1.0f) / x))};
+	}
+	LR_INLINE extended::float16_t asec(extended::float16_t x) noexcept {
+		return {acos((float)(extended::float16_t(1.0f) / x))};
+	}
+	LR_INLINE extended::float16_t acot(extended::float16_t x) noexcept {
+		return {atan((float)(extended::float16_t(1.0f) / x))};
+	}
 	LR_INLINE extended::float16_t exp(extended::float16_t x) noexcept { return extended::exp(x); }
 	LR_INLINE extended::float16_t exp2(extended::float16_t x) noexcept { return extended::exp2(x); }
-	LR_INLINE extended::float16_t exp10(extended::float16_t x) noexcept { return extended::pow(10.0f, x); }
+	LR_INLINE extended::float16_t exp10(extended::float16_t x) noexcept {
+		return extended::pow(10.0f, x);
+	}
 	LR_INLINE extended::float16_t log(extended::float16_t x) noexcept { return extended::log(x); }
-	LR_INLINE extended::float16_t log(extended::float16_t x, extended::float16_t base) noexcept{ return extended::log(x) / extended::log(base); }
-	LR_INLINE extended::float16_t log10(extended::float16_t x) noexcept { return extended::log10(x); }
+	LR_INLINE extended::float16_t log(extended::float16_t x, extended::float16_t base) noexcept {
+		return extended::log(x) / extended::log(base);
+	}
+	LR_INLINE extended::float16_t log10(extended::float16_t x) noexcept {
+		return extended::log10(x);
+	}
 	LR_INLINE extended::float16_t log2(extended::float16_t x) noexcept { return extended::log2(x); }
 	LR_INLINE extended::float16_t sqrt(extended::float16_t x) noexcept { return extended::sqrt(x); }
 	LR_INLINE extended::float16_t abs(extended::float16_t x) noexcept { return extended::abs(x); }
 	LR_INLINE extended::float16_t ceil(extended::float16_t x) noexcept { return extended::ceil(x); }
-	LR_INLINE extended::float16_t floor(extended::float16_t x) noexcept { return extended::floor(x); }
-	LR_INLINE extended::float16_t pow(extended::float16_t x, extended::float16_t y) noexcept { return extended::pow(x, y); }
-	LR_INLINE extended::float16_t fmod(extended::float16_t x, extended::float16_t y) noexcept { return extended::fmod(x, y); }
-	LR_INLINE extended::float16_t mod(extended::float16_t x, extended::float16_t y) noexcept { return fmod(x, y); }
+	LR_INLINE extended::float16_t floor(extended::float16_t x) noexcept {
+		return extended::floor(x);
+	}
+	LR_INLINE extended::float16_t pow(extended::float16_t x, extended::float16_t y) noexcept {
+		return extended::pow(x, y);
+	}
+	LR_INLINE extended::float16_t fmod(extended::float16_t x, extended::float16_t y) noexcept {
+		return extended::fmod(x, y);
+	}
+	LR_INLINE extended::float16_t mod(extended::float16_t x, extended::float16_t y) noexcept {
+		return fmod(x, y);
+	}
 
 	// TODO: Make copySign present in librapid namespace
 	namespace internal {
@@ -1076,7 +1110,7 @@ namespace librapid {
 											   const extended::float16_t &sign) noexcept {
 			return extended::copysign(static_cast<float>(mag), static_cast<float>(sign));
 		}
-	}
+	} // namespace internal
 } // namespace librapid
 
 // Provide {fmt} printing capabilities

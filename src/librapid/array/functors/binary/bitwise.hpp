@@ -1,7 +1,5 @@
 #pragma once
 
-#include "binary.hpp"
-
 namespace librapid::functors::binary {
 #define DEF_BITWISE_FUNCTOR(NAME_, OP_)                                                            \
 	template<typename LHS, typename RHS>                                                           \

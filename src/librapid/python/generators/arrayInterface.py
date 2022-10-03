@@ -1,4 +1,3 @@
-from readline import read_init_file
 from argumentHelper import *
 
 # Detect LibRapid features

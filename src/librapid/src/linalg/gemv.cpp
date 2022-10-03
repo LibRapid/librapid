@@ -1,6 +1,4 @@
-#include <librapid/internal/config.hpp>
-#include <librapid/linalg/blasInterface.hpp>
-#include <librapid/modified/modified.hpp>
+#include <librapid>
 
 namespace librapid::blas {
 #if defined(LIBRAPID_HAS_BLAS)
