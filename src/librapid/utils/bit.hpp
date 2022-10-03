@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-
 namespace librapid {
 	template<typename To, typename From>
 	LR_NODISCARD("")

@@ -57,7 +57,7 @@ set(LIBRAPID_SOURCES
         )
 
 if (${LIBRAPID_USE_MULTIPREC})
-    list(APPEND LIBRAPID_SOURCES
+    list(APPEND LIBRAPID_SOURCES ""
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/trig.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/expLogPow.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/src/librapid/src/mpfr/floorCeil.cpp"

@@ -1,19 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-#include "../internal/forward.hpp"
-#include "../internal/memUtils.hpp"
-
-#if defined(LIBRAPID_HAS_CUDA)
-#	include "../cuda/memUtils.hpp"
-#endif
-
-#include "helpers/extent.hpp"
-#include "functors/functors.hpp"
-#include "cwisemap.hpp"
-#include "../linalg/blasInterface.hpp"
-#include "cast.hpp"
-
 #define IMPL_BINOP(NAME, TYPE)                                                                     \
 	template<bool forceTemporary = false,                                                          \
 			 typename OtherDerived,                                                                \
@@ -25,8 +11,8 @@
 		using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;             \
 		using RetType =                                                                            \
 		  binop::CWiseBinop<functors::binary::TYPE<Scalar, ScalarOther>, Derived, OtherDerived>;   \
-		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                      \
-		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
+		static constexpr ui64 Flags	   = internal::traits<Scalar>::Flags;                          \
+		static constexpr ui64 Required = RetType::Flags & internal::flags::OperationMask;          \
                                                                                                    \
 		static_assert(                                                                             \
 		  is_same_v<Scalar, ScalarOther>,                                                          \
@@ -55,8 +41,8 @@
 		using ResDevice = Device;                                                                  \
 		using RetType =                                                                            \
 		  binop::CWiseBinop<functors::binary::TYPE<Scalar, Scalar>, Derived, Scalar>;              \
-		static constexpr uint64_t Flags	   = internal::traits<OtherScalar>::Flags;                 \
-		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
+		static constexpr ui64 Flags	   = internal::traits<OtherScalar>::Flags;                     \
+		static constexpr ui64 Required = RetType::Flags & internal::flags::OperationMask;          \
                                                                                                    \
 		static_assert(!(Required & ~(Flags & Required)),                                           \
 					  "Scalar type is incompatible with Functor");                                 \
@@ -78,8 +64,8 @@
 		using ResDevice = Device;                                                                  \
 		using RetType =                                                                            \
 		  binop::CWiseBinop<functors::binary::TYPE<Scalar, Scalar>, Scalar, Derived>;              \
-		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                      \
-		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;      \
+		static constexpr ui64 Flags	   = internal::traits<Scalar>::Flags;                          \
+		static constexpr ui64 Required = RetType::Flags & internal::flags::OperationMask;          \
                                                                                                    \
 		static_assert(!(Required & ~(Flags & Required)),                                           \
 					  "Scalar type is incompatible with Functor");                                 \
@@ -90,45 +76,45 @@
 			return RetType(Scalar(other), arr.derived());                                          \
 	}
 
-#define IMPL_UNOP(NAME, TYPE, OVERRIDE_BOOL)                                                       \
-	template<bool forceTemporary = false>                                                          \
-	LR_NODISCARD("")                                                                               \
-	auto NAME() const {                                                                            \
-		if constexpr (std::is_same_v<Scalar, bool> && OVERRIDE_BOOL) {                             \
-			return operator~();                                                                    \
-		} else {                                                                                   \
-			using RetType = unop::CWiseUnop<functors::unop::TYPE<Scalar>, Derived>;                \
-			static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                  \
-			static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;  \
-                                                                                                   \
-			static_assert(!(Required & ~(Flags & Required)),                                       \
-						  "Scalar type is incompatible with Functor");                             \
-                                                                                                   \
-			if constexpr (!forceTemporary && /* If a temporary value is required, don't eval */    \
-						  ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval)))       \
-				return RetType(derived()).eval();                                                  \
-			else                                                                                   \
-				return RetType(derived());                                                         \
-		}                                                                                          \
+#define IMPL_UNOP(NAME, TYPE, OVERRIDE_BOOL)                                                         \
+	template<bool forceTemporary = false>                                                            \
+	LR_NODISCARD("")                                                                                 \
+	auto NAME() const {                                                                              \
+		if constexpr (std::is_same_v<Scalar, bool> && OVERRIDE_BOOL) {                               \
+			return operator~();                                                                      \
+		} else {                                                                                     \
+			using RetType				   = unop::CWiseUnop<functors::unop::TYPE<Scalar>, Derived>; \
+			static constexpr ui64 Flags	   = internal::traits<Scalar>::Flags;                        \
+			static constexpr ui64 Required = RetType::Flags & internal::flags::OperationMask;        \
+                                                                                                     \
+			static_assert(!(Required & ~(Flags & Required)),                                         \
+						  "Scalar type is incompatible with Functor");                               \
+                                                                                                     \
+			if constexpr (!forceTemporary && /* If a temporary value is required, don't eval */      \
+						  ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval)))         \
+				return RetType(derived()).eval();                                                    \
+			else                                                                                     \
+				return RetType(derived());                                                           \
+		}                                                                                            \
 	}
 
-#define IMPL_UNOP_EXTERNAL(NAME, TYPE)                                                               \
-	template<bool forceTemporary = false, typename Derived, typename Device>                         \
-	LR_NODISCARD("")                                                                                 \
-	auto NAME(const ArrayBase<Derived, Device> &arr) {                                               \
-		using Scalar					   = typename internal::traits<Derived>::Scalar;             \
-		using RetType					   = unop::CWiseUnop<functors::unop::TYPE<Scalar>, Derived>; \
-		static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;                        \
-		static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;        \
-                                                                                                     \
-		static_assert(!(Required & ~(Flags & Required)),                                             \
-					  "Scalar type is incompatible with Functor");                                   \
-                                                                                                     \
-		if constexpr (!forceTemporary && /* If a temporary value is required, don't eval */          \
-					  ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval)))             \
-			return RetType(arr.derived()).eval();                                                    \
-		else                                                                                         \
-			return RetType(arr.derived());                                                           \
+#define IMPL_UNOP_EXTERNAL(NAME, TYPE)                                                             \
+	template<bool forceTemporary = false, typename Derived, typename Device>                       \
+	LR_NODISCARD("")                                                                               \
+	auto NAME(const ArrayBase<Derived, Device> &arr) {                                             \
+		using Scalar				   = typename internal::traits<Derived>::Scalar;               \
+		using RetType				   = unop::CWiseUnop<functors::unop::TYPE<Scalar>, Derived>;   \
+		static constexpr ui64 Flags	   = internal::traits<Scalar>::Flags;                          \
+		static constexpr ui64 Required = RetType::Flags & internal::flags::OperationMask;          \
+                                                                                                   \
+		static_assert(!(Required & ~(Flags & Required)),                                           \
+					  "Scalar type is incompatible with Functor");                                 \
+                                                                                                   \
+		if constexpr (!forceTemporary && /* If a temporary value is required, don't eval */        \
+					  ((bool)((Flags | RetType::Flags) & internal::flags::RequireEval)))           \
+			return RetType(arr.derived()).eval();                                                  \
+		else                                                                                       \
+			return RetType(arr.derived());                                                         \
 	}
 
 namespace librapid {
@@ -142,7 +128,7 @@ namespace librapid {
 			using BaseScalar				  = typename traits<Scalar>::BaseScalar;
 			using Device					  = device::CPU;
 			using StorageType				  = memory::DenseStorage<Scalar, device::CPU>;
-			static constexpr uint64_t Flags	  = traits<Derived>::Flags | flags::PythonFlags;
+			static constexpr ui64 Flags		  = traits<Derived>::Flags | flags::PythonFlags;
 		};
 
 		template<typename Derived>
@@ -154,7 +140,7 @@ namespace librapid {
 			using BaseScalar				  = typename traits<Scalar>::BaseScalar;
 			using Device					  = device::CPU;
 			using StorageType				  = memory::DenseStorage<Scalar, device::GPU>;
-			static constexpr uint64_t Flags	  = traits<Derived>::Flags | flags::PythonFlags;
+			static constexpr ui64 Flags		  = traits<Derived>::Flags | flags::PythonFlags;
 		};
 	} // namespace internal
 
@@ -166,21 +152,18 @@ namespace librapid {
 		using This		  = ArrayBase<Derived, Device>;
 		using Packet	  = typename internal::traits<Derived>::Packet;
 		using StorageType = typename internal::traits<Derived>::StorageType;
-		// using ArrayExtent = ExtentType < int64_t, 32,
-		// 	  internal::traits<Scalar>::PacketWidth<4 ? 4 : internal::traits<Scalar>::PacketWidth>;
-		using ArrayExtent				= Extent; // ExtentType<int64_t, 32, 1>;
-		static constexpr uint64_t Flags = internal::traits<This>::Flags;
+		static constexpr ui64 Flags = internal::traits<This>::Flags;
 
 		friend Derived;
 
 		ArrayBase() = default;
 
-		template<typename T_, int64_t d_, int64_t a_>
+		template<typename T_, i32 d_, i32 a_>
 		explicit ArrayBase(const ExtentType<T_, d_, a_> &extent) :
 				m_isScalar(extent.size() == 0), m_extent(extent), m_storage(extent.sizeAdjusted()) {
 		}
 
-		template<typename T_, int64_t d_, int64_t a_>
+		template<typename T_, i32 d_, i32 a_>
 		explicit ArrayBase(const ExtentType<T_, d_, a_> &extent, int) :
 				m_isScalar(extent.size() == 0), m_extent(extent) {}
 
@@ -226,8 +209,8 @@ namespace librapid {
 {0}
 
 __global__
-void castKernel({1} *dst, {2} *src, int64_t size) {{
-	const int64_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
+void castKernel({1} *dst, {2} *src, i64 size) {{
+	const i64 kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
 	if (kernelIndex < size) {{
 		dst[kernelIndex] = ({1}) src[kernelIndex];
 	}}
@@ -237,12 +220,12 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 												 internal::traits<T>::Name,
 												 internal::traits<Scalar>::Name);
 
-				int64_t elems = m_extent.sizeAdjusted();
+				i64 elems = m_extent.sizeAdjusted();
 
 				static jitify::JitCache kernelCache;
 				jitify::Program program = kernelCache.program(kernel, cudaHeaders, nvccOptions);
 
-				int64_t threadsPerBlock, blocksPerGrid;
+				i64 threadsPerBlock, blocksPerGrid;
 
 				// Use 1 to 512 threads per block
 				if (elems < 512) {
@@ -275,7 +258,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		LR_NODISCARD("")
 		LR_FORCE_INLINE auto move() const {
 			Array<Scalar, D> res(m_extent);
-			int64_t size = m_extent.sizeAdjusted();
+			i64 size = m_extent.sizeAdjusted();
 
 			if constexpr (std::is_same_v<Scalar, bool>) {
 				size += sizeof(BaseScalar) * 8;
@@ -293,7 +276,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		LR_NODISCARD("")
 		LR_FORCE_INLINE auto castMove() const {
 			Array<Scalar, D> res(m_extent);
-			int64_t size = m_extent.sizeAdjusted();
+			i64 size = m_extent.sizeAdjusted();
 
 			if constexpr (std::is_same_v<Scalar, bool>) {
 				size += sizeof(BaseScalar) * 8;
@@ -331,19 +314,17 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 
 		auto transposed(const Extent &order_ = {}) const {
 			using RetType = unop::CWiseUnop<functors::matrix::Transpose<Derived>, Derived>;
-			static constexpr uint64_t Flags	   = internal::traits<Scalar>::Flags;
-			static constexpr uint64_t Required = RetType::Flags & internal::flags::OperationMask;
+			static constexpr ui64 Flags	   = internal::traits<Scalar>::Flags;
+			static constexpr ui64 Required = RetType::Flags & internal::flags::OperationMask;
 
 			static_assert(!(Required & ~(Flags & Required)),
 						  "Scalar type is incompatible with Functor");
 
-			ArrayExtent order;
+			Extent order;
 			if (order_.dims() == -1) {
 				// Default order is to reverse all indices
-				order = ArrayExtent::zero(m_extent.dims());
-				for (int64_t i = 0; i < m_extent.dims(); ++i) {
-					order[m_extent.dims() - i - 1] = i;
-				}
+				order = Extent::zero(m_extent.dims());
+				for (i64 i = 0; i < m_extent.dims(); ++i) { order[m_extent.dims() - i - 1] = i; }
 			} else {
 				order = order_;
 			}
@@ -356,9 +337,9 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				// Access the handle for the corresponding thread. As CUBLAS handles are not
 				// thread-safe (when in use) we need a separate handle per thread.
 #	if defined(LIBRAPID_HAS_OMP)
-				int64_t threadNum = omp_get_thread_num();
+				i64 threadNum = omp_get_thread_num();
 #	else
-				int64_t threadNum = 0;
+				i64 threadNum = 0;
 #	endif
 
 				Array<Scalar, Device> res(m_extent.swivelled(order));
@@ -431,8 +412,8 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				LR_ASSERT(m_extent[1] == other.extent()[0],
 						  "Columns of left matrix must match elements of right matrix");
 
-				int64_t m = m_extent[0]; // Rows of left matrix
-				int64_t n = m_extent[1]; // Columns of left matrix
+				i64 m = m_extent[0]; // Rows of left matrix
+				i64 n = m_extent[1]; // Columns of left matrix
 
 				auto res = Array<Scalar, Device>(Extent(m));
 
@@ -455,9 +436,9 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				LR_ASSERT(m_extent[1] == other.extent()[0],
 						  "Columns of left matrix must match rows of right matrix");
 
-				int64_t m = m_extent[0];	   // Rows of left matrix
-				int64_t n = other.extent()[1]; // Columns of right matrix
-				int64_t k = m_extent[1];	   // Columns of left matrix
+				i64 m = m_extent[0];	   // Rows of left matrix
+				i64 n = other.extent()[1]; // Columns of right matrix
+				i64 k = m_extent[1];	   // Columns of left matrix
 
 				Array<Scalar, Device> res(Extent(m, n));
 				blas::gemm<Device>(false,
@@ -484,7 +465,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		auto eval() const { return derived(); }
 
 		template<typename OtherDerived>
-		LR_FORCE_INLINE void loadFrom(int64_t index, const OtherDerived &other) {
+		LR_FORCE_INLINE void loadFrom(i64 index, const OtherDerived &other) {
 			LR_ASSERT(index >= 0 && index < m_extent.sizeAdjusted(),
 					  "Index {} is out of range for Array with extent {}",
 					  index,
@@ -493,7 +474,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		}
 
 		template<typename ScalarType>
-		LR_FORCE_INLINE void loadFromScalar(int64_t index, const ScalarType &other) {
+		LR_FORCE_INLINE void loadFromScalar(i64 index, const ScalarType &other) {
 			LR_ASSERT(index >= 0 && index < m_extent.sizeAdjusted(),
 					  "Index {} is out of range for Array with extent {}",
 					  index,
@@ -504,7 +485,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		LR_FORCE_INLINE Derived &assign(const Scalar &other) {
 			// Construct if necessary
 			if (!m_storage) {
-				m_extent   = ArrayExtent(1);
+				m_extent   = Extent(1);
 				m_storage  = StorageType(m_extent.sizeAdjusted());
 				m_isScalar = true;
 			}
@@ -529,7 +510,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 				m_storage = StorageType(m_extent.sizeAdjusted());
 			}
 
-			constexpr uint64_t flags = internal::traits<OtherDerived>::Flags;
+			constexpr ui64 flags = internal::traits<OtherDerived>::Flags;
 			LR_ASSERT((flags & internal::flags::MatrixTranspose) || (m_extent == other.extent()),
 					  "Cannot perform operation on Arrays with {} and {}. Extents must be equal",
 					  m_extent.str(),
@@ -543,7 +524,7 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 
 		template<typename OtherDerived>
 		LR_FORCE_INLINE Derived &assignLazy(const OtherDerived &other) {
-			constexpr uint64_t flags = internal::traits<OtherDerived>::Flags;
+			constexpr ui64 flags = internal::traits<OtherDerived>::Flags;
 			LR_ASSERT((flags & internal::flags::MatrixTranspose) || (m_extent == other.extent()),
 					  "Cannot perform operation on Arrays with {} and {}. Extents must be equal",
 					  m_extent.str(),
@@ -558,16 +539,16 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 			return *static_cast<const Derived *>(this);
 		}
 
-		LR_FORCE_INLINE Packet packet(int64_t index) const {
+		LR_FORCE_INLINE Packet packet(i64 index) const {
 			Packet p;
 			p.load(m_storage.heap() + index);
 			return p;
 		}
 
-		LR_FORCE_INLINE Scalar scalar(int64_t index) const { return m_storage[index].get(); }
+		LR_FORCE_INLINE Scalar scalar(i64 index) const { return m_storage[index].get(); }
 
 		template<typename T>
-		std::string genKernel(std::vector<T> &vec, int64_t &index) const {
+		std::string genKernel(std::vector<T> &vec, i64 &index) const {
 			vec.emplace_back((T)m_storage.heap());
 			return fmt::format("arg{}", index++);
 		}
@@ -579,12 +560,12 @@ void castKernel({1} *dst, {2} *src, int64_t size) {{
 		LR_NODISCARD("") bool isScalar() const { return m_isScalar; }
 		LR_NODISCARD("") const StorageType &storage() const { return m_storage; }
 		LR_NODISCARD("") StorageType &storage() { return m_storage; }
-		LR_NODISCARD("") ArrayExtent extent() const { return m_extent; }
-		LR_NODISCARD("") ArrayExtent &extent() { return m_extent; }
+		LR_NODISCARD("") Extent extent() const { return m_extent; }
+		LR_NODISCARD("") Extent &extent() { return m_extent; }
 
 	private:
 		bool m_isScalar = false;
-		ArrayExtent m_extent;
+		Extent m_extent;
 		StorageType m_storage;
 	};
 

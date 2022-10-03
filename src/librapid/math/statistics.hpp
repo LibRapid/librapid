@@ -1,8 +1,5 @@
 #pragma once
 
-#include "../internal/config.hpp"
-#include "coreMath.hpp"
-
 namespace librapid {
 	template<typename T>
 	T mean(const std::vector<T> &vals) {

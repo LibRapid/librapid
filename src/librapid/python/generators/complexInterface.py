@@ -70,7 +70,7 @@ for type in types:
 		Function("__imul__", [Argument(ref, "this_"), Argument(constRef, "other")],     "this_ *= other; return this_;"),
 		Function("__itruediv__", [Argument(ref, "this_"), Argument(constRef, "other")], "this_ /= other; return this_;"),
 		
-		Function("str", [Argument(constRef, "this_"), Argument("int64_t", "base", "10")], "return librapid::str(this_, {-1, base, false});"),
+		Function("str", [Argument(constRef, "this_"), Argument("librapid::i8", "base", "10")], "return librapid::str(this_, {-1, base, false});"),
 		Function("__str__", [Argument(constRef, "this_")], "return librapid::str(this_, {-1, 10, false});"),
 		Function("__repr__", [Argument(constRef, "this_")], "return \"librapid::{}(\\\"\" + librapid::str(this_, {{-1, 10, false}}) + \"\\\")\";".format(pretty)),
 	]

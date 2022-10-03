@@ -1,4 +1,4 @@
-#include <librapid/internal/config.hpp>
+#include <librapid>
 
 namespace librapid {
 	float sqrtApprox(float z) {

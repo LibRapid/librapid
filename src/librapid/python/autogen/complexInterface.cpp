@@ -40,7 +40,7 @@ py::class_<librapid::Complex<float>>(module, "ComplexF32")
 	.def("__isub__", [](librapid::Complex<float> & this_, const librapid::Complex<float> & other) { this_ -= other; return this_; }, py::arg("other"))
 	.def("__imul__", [](librapid::Complex<float> & this_, const librapid::Complex<float> & other) { this_ *= other; return this_; }, py::arg("other"))
 	.def("__itruediv__", [](librapid::Complex<float> & this_, const librapid::Complex<float> & other) { this_ /= other; return this_; }, py::arg("other"))
-	.def("str", [](const librapid::Complex<float> & this_, int64_t base) { return librapid::str(this_, {-1, base, false}); }, py::arg("base") = int64_t(10))
+	.def("str", [](const librapid::Complex<float> & this_, librapid::i8 base) { return librapid::str(this_, {-1, base, false}); }, py::arg("base") = librapid::i8(10))
 	.def("__str__", [](const librapid::Complex<float> & this_) { return librapid::str(this_, {-1, 10, false}); })
 	.def("__repr__", [](const librapid::Complex<float> & this_) { return "librapid::ComplexF32(\"" + librapid::str(this_, {-1, 10, false}) + "\")"; });
 
@@ -65,7 +65,7 @@ py::class_<librapid::Complex<double>>(module, "ComplexF64")
 	.def("__isub__", [](librapid::Complex<double> & this_, const librapid::Complex<double> & other) { this_ -= other; return this_; }, py::arg("other"))
 	.def("__imul__", [](librapid::Complex<double> & this_, const librapid::Complex<double> & other) { this_ *= other; return this_; }, py::arg("other"))
 	.def("__itruediv__", [](librapid::Complex<double> & this_, const librapid::Complex<double> & other) { this_ /= other; return this_; }, py::arg("other"))
-	.def("str", [](const librapid::Complex<double> & this_, int64_t base) { return librapid::str(this_, {-1, base, false}); }, py::arg("base") = int64_t(10))
+	.def("str", [](const librapid::Complex<double> & this_, librapid::i8 base) { return librapid::str(this_, {-1, base, false}); }, py::arg("base") = librapid::i8(10))
 	.def("__str__", [](const librapid::Complex<double> & this_) { return librapid::str(this_, {-1, 10, false}); })
 	.def("__repr__", [](const librapid::Complex<double> & this_) { return "librapid::ComplexF64(\"" + librapid::str(this_, {-1, 10, false}) + "\")"; });
 
@@ -90,7 +90,7 @@ py::class_<librapid::Complex<librapid::mpfr>>(module, "ComplexMPFR")
 	.def("__isub__", [](librapid::Complex<librapid::mpfr> & this_, const librapid::Complex<librapid::mpfr> & other) { this_ -= other; return this_; }, py::arg("other"))
 	.def("__imul__", [](librapid::Complex<librapid::mpfr> & this_, const librapid::Complex<librapid::mpfr> & other) { this_ *= other; return this_; }, py::arg("other"))
 	.def("__itruediv__", [](librapid::Complex<librapid::mpfr> & this_, const librapid::Complex<librapid::mpfr> & other) { this_ /= other; return this_; }, py::arg("other"))
-	.def("str", [](const librapid::Complex<librapid::mpfr> & this_, int64_t base) { return librapid::str(this_, {-1, base, false}); }, py::arg("base") = int64_t(10))
+	.def("str", [](const librapid::Complex<librapid::mpfr> & this_, librapid::i8 base) { return librapid::str(this_, {-1, base, false}); }, py::arg("base") = librapid::i8(10))
 	.def("__str__", [](const librapid::Complex<librapid::mpfr> & this_) { return librapid::str(this_, {-1, 10, false}); })
 	.def("__repr__", [](const librapid::Complex<librapid::mpfr> & this_) { return "librapid::ComplexMPFR(\"" + librapid::str(this_, {-1, 10, false}) + "\")"; });
 

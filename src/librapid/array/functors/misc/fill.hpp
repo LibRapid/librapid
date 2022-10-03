@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../../internal/config.hpp"
-
 namespace librapid::functors::misc {
 	template<typename Type_>
 	class FillArray {
@@ -35,9 +33,9 @@ namespace librapid::functors::misc {
 			return fmt::format("{0}({1}) + {0}(0) *", internal::traits<Type>::Name, m_val);
 		}
 
-		template<typename T, int64_t d, int64_t a>
+		template<typename T, i32 d, i32 a>
 		LR_NODISCARD("")
-		ExtentType<T, d> genExtent(const ExtentType<T, d, a> &extent) const {
+		ExtentType<T, d, a> genExtent(const ExtentType<T, d, a> &extent) const {
 			return extent;
 		}
 
