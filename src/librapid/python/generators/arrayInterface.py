@@ -76,11 +76,10 @@ for t in arrayTypes:
 
 	fIndex = [
 		Function("__getitem__", [Argument(constRef, "this_"), Argument(int64_t, "index")], "return this_[index];"),
-		Function("__setitem__", [Argument(ref, "this_"), Argument(int64_t, "index"), Argument(scalar, "val")], "this_[index] = val;"),
 		Function("__setitem__", [Argument(ref, "this_"), Argument(int64_t, "index"), Argument(scalar, "val")], "this_[index] = val;")
 	]
 
-	for i in range(1, 32):
+	for i in range(1, 33):
 		args = [Argument("int64_t", "index{}".format(ind)) for ind in range(i)]
 		params = ", ".join(["index{}".format(ind) for ind in range(i)])
 		fIndex.append(Function("__call__", [Argument(constRef, "this_")] + args, "return this_({}).get();".format(params)))

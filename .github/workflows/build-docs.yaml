@@ -42,6 +42,10 @@ jobs:
           cd docs
           pip install -r requirements.txt
 
+      - name: Update Distribution
+        run: |
+          sudo apt-get dist-upgrade
+
       - name: Build Documentation
         run: |
           cd docs
