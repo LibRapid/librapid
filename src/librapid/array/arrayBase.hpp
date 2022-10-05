@@ -147,11 +147,11 @@ namespace librapid {
 	template<typename Derived, typename Device>
 	class ArrayBase {
 	public:
-		using Scalar	  = typename internal::traits<Derived>::Scalar;
-		using BaseScalar  = typename internal::traits<Scalar>::BaseScalar;
-		using This		  = ArrayBase<Derived, Device>;
-		using Packet	  = typename internal::traits<Derived>::Packet;
-		using StorageType = typename internal::traits<Derived>::StorageType;
+		using Scalar				= typename internal::traits<Derived>::Scalar;
+		using BaseScalar			= typename internal::traits<Scalar>::BaseScalar;
+		using This					= ArrayBase<Derived, Device>;
+		using Packet				= typename internal::traits<Derived>::Packet;
+		using StorageType			= typename internal::traits<Derived>::StorageType;
 		static constexpr ui64 Flags = internal::traits<This>::Flags;
 
 		friend Derived;
@@ -264,8 +264,6 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 				size += sizeof(BaseScalar) * 8;
 				size /= sizeof(BaseScalar) * 8;
 			}
-
-			fmt::print("Information: {}\n", typeid(BaseScalar).name());
 
 			memory::memcpy<BaseScalar, D, BaseScalar, Device>(
 			  res.storage().heap(), eval().storage().heap(), size);
@@ -462,7 +460,7 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 		}
 
 		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
-		auto eval() const { return derived(); }
+		auto eval() const { return derived().eval(); }
 
 		template<typename OtherDerived>
 		LR_FORCE_INLINE void loadFrom(i64 index, const OtherDerived &other) {
@@ -529,6 +527,12 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 					  "Cannot perform operation on Arrays with {} and {}. Extents must be equal",
 					  m_extent.str(),
 					  other.extent().str());
+
+			// If device differs, we need to copy the data
+			if constexpr (!std::is_same_v<Device,
+										  typename internal::traits<OtherDerived>::Device>) {
+				return assignLazy(other.move<Device>());
+			}
 
 			using Selector = functors::AssignOp<Derived, OtherDerived>;
 			Selector::run(derived(), other.derived());

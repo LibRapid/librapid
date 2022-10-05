@@ -98,6 +98,8 @@ To IGNORE this error, just define LIBRAPID_NO_THREAD_CHECK above LibRapid includ
 				  cudaMemcpyAsync(dst, src, sizeof(T) * size, cudaMemcpyDeviceToHost, cudaStream));
 			} else if constexpr (std::is_same_v<d, device::GPU> &&
 								 std::is_same_v<d_, device::CPU>) {
+				// fmt::print("Info: {} {} {} {}\n", (void *) dst[0], (void *) dst[1], (void *)src[0], (void *)src[1]);
+
 				// Host to Device
 				cudaSafeCall(
 				  cudaMemcpyAsync(dst, src, sizeof(T) * size, cudaMemcpyHostToDevice, cudaStream));
