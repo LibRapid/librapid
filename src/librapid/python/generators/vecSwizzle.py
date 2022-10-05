@@ -1,6 +1,6 @@
 import itertools
 
-toSwizzle = ["xy", "xyz", "xyzw"]
+toSwizzle = ["xy", "xz", "yz", "xyz", "xyw", "xzw", "yzw", "xyzw"]
 
 for swiz in toSwizzle:
     for perm in itertools.permutations(list(swiz)):

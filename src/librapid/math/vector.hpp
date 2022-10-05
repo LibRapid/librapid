@@ -7,8 +7,6 @@ namespace librapid {
 	template<typename Scalar, i64 Dims, typename StorageType>
 	class VecImpl {
 	public:
-		using Mask = Vc::Mask<Scalar, struct Vc::simd_abi::fixed_size<Dims>>;
-
 		VecImpl() = default;
 
 		explicit VecImpl(const StorageType &arr) : m_data {arr} {}
@@ -16,9 +14,17 @@ namespace librapid {
 		template<typename T, typename ABI>
 		explicit VecImpl(const Vc::Vector<T, ABI> &arr) : m_data {arr} {}
 
-		template<typename... Args>
+		template<typename... Args, typename std::enable_if_t<sizeof...(Args) == Dims, int> = 0>
 		VecImpl(Args... args) : m_data {static_cast<Scalar>(args)...} {
 			static_assert(sizeof...(Args) <= Dims, "Invalid number of arguments");
+		}
+
+		template<typename... Args, i64 size = sizeof...(Args),
+				 typename std::enable_if_t<size != Dims, int> = 0>
+		VecImpl(Args... args) {
+			static_assert(sizeof...(Args) <= Dims, "Invalid number of arguments");
+			const Scalar expanded[] = {static_cast<Scalar>(args)...};
+			for (i64 i = 0; i < size; i++) { m_data[i] = expanded[i]; }
 		}
 
 		VecImpl(const VecImpl &other)				 = default;
@@ -76,32 +82,86 @@ namespace librapid {
 		}
 
 		LR_FORCE_INLINE
-		VecImpl<Scalar, Dims, Mask> operator>(const VecImpl &other) {
-			return VecImpl<Scalar, Dims, Mask>(m_data > other.m_data);
+		VecImpl operator>(const VecImpl &other) {
+			VecImpl res(*this);
+			for (i64 i = 0; i < Dims; ++i) {
+				if (res[i] > other[i]) {
+					res[i] = 1;
+				} else {
+					res[i] = 0;
+				}
+			}
+			return res;
 		}
 
 		LR_FORCE_INLINE
-		VecImpl<Scalar, Dims, Mask> operator<(const VecImpl &other) {
-			return VecImpl<Scalar, Dims, Mask>(m_data < other.m_data);
+		VecImpl cmp(const VecImpl &other, char mode[2]) {
+			// Mode:
+			// 0: ==
+			// 1: !=
+			// 2: <
+			// 3: <=
+			// 4: >
+			// 5: >=
+
+			VecImpl res(*this);
+			i16 modeInt = (mode[1] << 8) | mode[0];
+			for (i64 i = 0; i < Dims; ++i) {
+				switch (modeInt) {
+					case ('e' << 8) | 'q':
+						if (res[i] == other[i]) {
+							res[i] = 1;
+						} else {
+							res[i] = 0;
+						}
+						break;
+					case ('n' << 8) | 'e':
+						if (res[i] != other[i]) {
+							res[i] = 1;
+						} else {
+							res[i] = 0;
+						}
+						break;
+					case ('l' << 8) | 't':
+						if (res[i] < other[i]) {
+							res[i] = 1;
+						} else {
+							res[i] = 0;
+						}
+						break;
+					case ('l' << 8) | 'e':
+						if (res[i] <= other[i]) {
+							res[i] = 1;
+						} else {
+							res[i] = 0;
+						}
+						break;
+					case ('g' << 8) | 't':
+						if (res[i] > other[i]) {
+							res[i] = 1;
+						} else {
+							res[i] = 0;
+						}
+						break;
+					case ('g' << 8) | 'e':
+						if (res[i] >= other[i]) {
+							res[i] = 1;
+						} else {
+							res[i] = 0;
+						}
+						break;
+					default: LR_ASSERT(false, "Invalid mode {}", mode);
+				}
+			}
+			return res;
 		}
 
-		LR_FORCE_INLINE
-		VecImpl<Scalar, Dims, Mask> operator>=(const VecImpl &other) {
-			return VecImpl<Scalar, Dims, Mask>(m_data >= other.m_data);
-		}
-
-		LR_FORCE_INLINE
-		VecImpl<Scalar, Dims, Mask> operator<=(const VecImpl &other) {
-			return VecImpl<Scalar, Dims, Mask>(m_data <= other.m_data);
-		}
-
-		LR_FORCE_INLINE
-		VecImpl<Scalar, Dims, Mask> operator==(const VecImpl &other) {
-			return VecImpl<Scalar, Dims, Mask>(m_data == other.m_data);
-		}
-
-		LR_FORCE_INLINE
-		VecImpl<Scalar, Dims, Mask> operator!=(const VecImpl &other) { return !(*this == other); }
+		LR_FORCE_INLINE VecImpl operator<(const VecImpl &other) const { return cmp(other, "lt"); }
+		LR_FORCE_INLINE VecImpl operator<=(const VecImpl &other) const { return cmp(other, "le"); }
+		LR_FORCE_INLINE VecImpl operator>(const VecImpl &other) const { return cmp(other, "gt"); }
+		LR_FORCE_INLINE VecImpl operator>=(const VecImpl &other) const { return cmp(other, "ge"); }
+		LR_FORCE_INLINE VecImpl operator==(const VecImpl &other) const { return cmp(other, "eq"); }
+		LR_FORCE_INLINE VecImpl operator!=(const VecImpl &other) const { return cmp(other, "ne"); }
 
 		LR_NODISCARD("") LR_INLINE Scalar mag2() const { return (m_data * m_data).sum(); }
 		LR_NODISCARD("") LR_INLINE Scalar mag() const { return ::librapid::sqrt(mag2()); }
@@ -132,12 +192,34 @@ namespace librapid {
 
 		LR_FORCE_INLINE Vec<Scalar, 2> xy() const { return {x(), y()}; }
 		LR_FORCE_INLINE Vec<Scalar, 2> yx() const { return {y(), x()}; }
+		LR_FORCE_INLINE Vec<Scalar, 2> xz() const { return {x(), z()}; }
+		LR_FORCE_INLINE Vec<Scalar, 2> zx() const { return {z(), x()}; }
+		LR_FORCE_INLINE Vec<Scalar, 2> yz() const { return {y(), z()}; }
+		LR_FORCE_INLINE Vec<Scalar, 2> zy() const { return {z(), y()}; }
 		LR_FORCE_INLINE Vec<Scalar, 3> xyz() const { return {x(), y(), z()}; }
 		LR_FORCE_INLINE Vec<Scalar, 3> xzy() const { return {x(), z(), y()}; }
 		LR_FORCE_INLINE Vec<Scalar, 3> yxz() const { return {y(), x(), z()}; }
 		LR_FORCE_INLINE Vec<Scalar, 3> yzx() const { return {y(), z(), x()}; }
 		LR_FORCE_INLINE Vec<Scalar, 3> zxy() const { return {z(), x(), y()}; }
 		LR_FORCE_INLINE Vec<Scalar, 3> zyx() const { return {z(), y(), x()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> xyw() const { return {x(), y(), w()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> xwy() const { return {x(), w(), y()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> yxw() const { return {y(), x(), w()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> ywx() const { return {y(), w(), x()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> wxy() const { return {w(), x(), y()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> wyx() const { return {w(), y(), x()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> xzw() const { return {x(), z(), w()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> xwz() const { return {x(), w(), z()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> zxw() const { return {z(), x(), w()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> zwx() const { return {z(), w(), x()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> wxz() const { return {w(), x(), z()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> wzx() const { return {w(), z(), x()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> yzw() const { return {y(), z(), w()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> ywz() const { return {y(), w(), z()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> zyw() const { return {z(), y(), w()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> zwy() const { return {z(), w(), y()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> wyz() const { return {w(), y(), z()}; }
+		LR_FORCE_INLINE Vec<Scalar, 3> wzy() const { return {w(), z(), y()}; }
 		LR_FORCE_INLINE Vec<Scalar, 4> xyzw() const { return {x(), y(), z(), w()}; }
 		LR_FORCE_INLINE Vec<Scalar, 4> xywz() const { return {x(), y(), w(), z()}; }
 		LR_FORCE_INLINE Vec<Scalar, 4> xzyw() const { return {x(), z(), y(), w()}; }
