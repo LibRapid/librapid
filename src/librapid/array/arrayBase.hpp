@@ -531,7 +531,7 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 			// If device differs, we need to copy the data
 			if constexpr (!std::is_same_v<Device,
 										  typename internal::traits<OtherDerived>::Device>) {
-				return assignLazy(other.move<Device>());
+				return assignLazy(other.template move<Device>());
 			}
 
 			using Selector = functors::AssignOp<Derived, OtherDerived>;
