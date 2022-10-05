@@ -83,7 +83,7 @@ py::class_<librapid::{dtype[0]}>(module, \"{dtype[0]}\")
 """
 
 			# if dtype[-2] == 3 and dtype2[-2] == 3:
-		if dtype[-2] == 3:
+		if dtype[-1] == 3:
 			tmp += f"""
 	.def("cross", [](const librapid::{dtype[0]} &lhs, const librapid::{dtype[0]} &rhs) {{ return lhs.cross(rhs); }}, py::arg("other"))
 """
@@ -99,7 +99,7 @@ py::class_<librapid::{dtype[0]}>(module, \"{dtype[0]}\")
 	.def_property("w", &librapid::{dtype[0]}::getW, &librapid::{dtype[0]}::setW)
 """
 
-		toSwizzle = ["xy", "xyz", "xyzw"]
+		toSwizzle = ["xy", "xz", "yz", "xyz", "xyw", "xzw", "yzw", "xyzw"]
 		for swiz in toSwizzle:
 			for perm in itertools.permutations(list(swiz)):
 				joined = "".join(perm)
