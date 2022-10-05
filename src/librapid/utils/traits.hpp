@@ -188,13 +188,13 @@ namespace librapid::internal {
 
 	//------- 8bit Signed Integer ---------------------------------------------
 	template<>
-	struct traits<int8_t> {
+	struct traits<i8> {
 		static constexpr bool IsScalar	  = true;
 		static constexpr bool IsEvaluated = true;
 		using Valid						  = std::true_type;
-		using Scalar					  = int8_t;
-		using BaseScalar				  = int8_t;
-		using StorageType				  = memory::DenseStorage<int8_t, device::CPU>;
+		using Scalar					  = i8;
+		using BaseScalar				  = i8;
+		using StorageType				  = memory::DenseStorage<i8, device::CPU>;
 		using Packet					  = LR_VC_TYPE(BaseScalar);
 		using Device					  = device::CPU;
 		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
@@ -207,12 +207,12 @@ namespace librapid::internal {
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
 #endif
 
-		static constexpr ui64 Size		= sizeof(int8_t);
+		static constexpr ui64 Size		= sizeof(i8);
 		static constexpr bool CanAlign	= true;
 		static constexpr bool CanMemcpy = true;
 
 		template<typename CAST>
-		LR_FORCE_INLINE static CAST cast(const int8_t &val) {
+		LR_FORCE_INLINE static CAST cast(const i8 &val) {
 			return (CAST)val;
 		}
 
@@ -238,7 +238,7 @@ namespace librapid::internal {
 		using Packet					  = LR_VC_TYPE(BaseScalar);
 		using Device					  = device::CPU;
 		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]	  = "ui8";
+		static constexpr char Name[]	  = "uint8_t";
 		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
 									  flags::PacketArithmetic | flags::ScalarArithmetic |
 									  flags::PacketLogical | flags::ScalarLogical;
@@ -278,7 +278,7 @@ namespace librapid::internal {
 		using Packet					  = LR_VC_TYPE(BaseScalar);
 		using Device					  = device::CPU;
 		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]	  = "i16";
+		static constexpr char Name[]	  = "int16_t";
 		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
 									  flags::PacketArithmetic | flags::ScalarArithmetic |
 									  flags::PacketLogical | flags::ScalarLogical;
@@ -318,7 +318,7 @@ namespace librapid::internal {
 		using Packet					  = LR_VC_TYPE(BaseScalar);
 		using Device					  = device::CPU;
 		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]	  = "ui16";
+		static constexpr char Name[]	  = "uint16_t";
 		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
 									  flags::PacketArithmetic | flags::ScalarArithmetic |
 									  flags::PacketLogical | flags::ScalarLogical;
@@ -358,7 +358,7 @@ namespace librapid::internal {
 		using Packet					  = LR_VC_TYPE(BaseScalar);
 		using Device					  = device::CPU;
 		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]	  = "i32";
+		static constexpr char Name[]	  = "int32_t";
 		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
 									  flags::PacketArithmetic | flags::ScalarArithmetic |
 									  flags::PacketLogical | flags::ScalarLogical;
@@ -398,7 +398,7 @@ namespace librapid::internal {
 		using Packet					  = LR_VC_TYPE(BaseScalar);
 		using Device					  = device::CPU;
 		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]	  = "ui32";
+		static constexpr char Name[]	  = "uint32_t";
 		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
 									  flags::PacketArithmetic | flags::ScalarArithmetic |
 									  flags::PacketLogical | flags::ScalarLogical;
@@ -438,7 +438,7 @@ namespace librapid::internal {
 		using Packet					  = std::false_type; // Vc::Vector<BaseScalar>;
 		using Device					  = device::CPU;
 		static constexpr i64 PacketWidth  = 1; // LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]	  = "i64";
+		static constexpr char Name[]	  = "int64_t";
 		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
 									  flags::PacketArithmetic | flags::ScalarArithmetic |
 									  flags::PacketLogical | flags::ScalarLogical;
@@ -478,7 +478,7 @@ namespace librapid::internal {
 		using Packet					  = std::false_type; // Vc::Vector<BaseScalar>;
 		using Device					  = device::CPU;
 		static constexpr i64 PacketWidth  = 1; // LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]	  = "ui64";
+		static constexpr char Name[]	  = "uint64_t";
 		static constexpr ui64 Flags		  = flags::PacketBitwise | flags::ScalarBitwise |
 									  flags::PacketArithmetic | flags::ScalarArithmetic |
 									  flags::PacketLogical | flags::ScalarLogical;
@@ -520,7 +520,7 @@ namespace librapid::internal {
 		using Packet					  = LR_VC_TYPE(BaseScalar);
 		using Device					  = device::CPU;
 		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]	  = "f32";
+		static constexpr char Name[]	  = "float";
 		static constexpr ui64 Flags		  = flags::PacketArithmetic | flags::ScalarArithmetic |
 									  flags::PacketLogical | flags::ScalarLogical;
 
@@ -559,7 +559,7 @@ namespace librapid::internal {
 		using Packet					  = LR_VC_TYPE(BaseScalar);
 		using Device					  = device::CPU;
 		static constexpr i64 PacketWidth  = LR_VC_SIZE(BaseScalar);
-		static constexpr char Name[]	  = "f64";
+		static constexpr char Name[]	  = "double";
 		static constexpr ui64 Flags		  = flags::PacketArithmetic | flags::ScalarArithmetic |
 									  flags::PacketLogical | flags::ScalarLogical;
 
