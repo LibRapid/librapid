@@ -82,20 +82,7 @@ namespace librapid {
 		}
 
 		LR_FORCE_INLINE
-		VecImpl operator>(const VecImpl &other) {
-			VecImpl res(*this);
-			for (i64 i = 0; i < Dims; ++i) {
-				if (res[i] > other[i]) {
-					res[i] = 1;
-				} else {
-					res[i] = 0;
-				}
-			}
-			return res;
-		}
-
-		LR_FORCE_INLINE
-		VecImpl cmp(const VecImpl &other, char mode[2]) {
+		VecImpl cmp(const VecImpl &other, const char *mode) const {
 			// Mode:
 			// 0: ==
 			// 1: !=
@@ -105,46 +92,112 @@ namespace librapid {
 			// 5: >=
 
 			VecImpl res(*this);
-			i16 modeInt = (mode[1] << 8) | mode[0];
+			i16 modeInt = *(i16 *)mode;
+			fmt::print("Info: {:Lb}\n", modeInt);
+			fmt::print("Info: {:Lb}\n", ('g' << 8) | 't');
 			for (i64 i = 0; i < Dims; ++i) {
 				switch (modeInt) {
-					case ('e' << 8) | 'q':
+					case 'e' | ('q' << 8):
 						if (res[i] == other[i]) {
 							res[i] = 1;
 						} else {
 							res[i] = 0;
 						}
 						break;
-					case ('n' << 8) | 'e':
+					case 'n' | ('e' << 8):
 						if (res[i] != other[i]) {
 							res[i] = 1;
 						} else {
 							res[i] = 0;
 						}
 						break;
-					case ('l' << 8) | 't':
+					case 'l' | ('t' << 8):
 						if (res[i] < other[i]) {
 							res[i] = 1;
 						} else {
 							res[i] = 0;
 						}
 						break;
-					case ('l' << 8) | 'e':
+					case 'l' | ('e' << 8):
 						if (res[i] <= other[i]) {
 							res[i] = 1;
 						} else {
 							res[i] = 0;
 						}
 						break;
-					case ('g' << 8) | 't':
+					case 'g' | ('t' << 8):
 						if (res[i] > other[i]) {
 							res[i] = 1;
 						} else {
 							res[i] = 0;
 						}
 						break;
-					case ('g' << 8) | 'e':
+					case 'g' | ('e' << 8):
 						if (res[i] >= other[i]) {
+							res[i] = 1;
+						} else {
+							res[i] = 0;
+						}
+						break;
+					default: LR_ASSERT(false, "Invalid mode {}", mode);
+				}
+			}
+			return res;
+		}
+
+		LR_FORCE_INLINE
+		VecImpl cmp(const Scalar &value, const char *mode) const {
+			// Mode:
+			// 0: ==
+			// 1: !=
+			// 2: <
+			// 3: <=
+			// 4: >
+			// 5: >=
+
+			VecImpl res(*this);
+			i16 modeInt = *(i16 *)mode;
+			fmt::print("Info: {:Lb}\n", modeInt);
+			fmt::print("Info: {:Lb}\n", ('g' << 8) | 't');
+			for (i64 i = 0; i < Dims; ++i) {
+				switch (modeInt) {
+					case 'e' | ('q' << 8):
+						if (res[i] == value) {
+							res[i] = 1;
+						} else {
+							res[i] = 0;
+						}
+						break;
+					case 'n' | ('e' << 8):
+						if (res[i] != value) {
+							res[i] = 1;
+						} else {
+							res[i] = 0;
+						}
+						break;
+					case 'l' | ('t' << 8):
+						if (res[i] < value) {
+							res[i] = 1;
+						} else {
+							res[i] = 0;
+						}
+						break;
+					case 'l' | ('e' << 8):
+						if (res[i] <= value) {
+							res[i] = 1;
+						} else {
+							res[i] = 0;
+						}
+						break;
+					case 'g' | ('t' << 8):
+						if (res[i] > value) {
+							res[i] = 1;
+						} else {
+							res[i] = 0;
+						}
+						break;
+					case 'g' | ('e' << 8):
+						if (res[i] >= value) {
 							res[i] = 1;
 						} else {
 							res[i] = 0;
@@ -162,6 +215,13 @@ namespace librapid {
 		LR_FORCE_INLINE VecImpl operator>=(const VecImpl &other) const { return cmp(other, "ge"); }
 		LR_FORCE_INLINE VecImpl operator==(const VecImpl &other) const { return cmp(other, "eq"); }
 		LR_FORCE_INLINE VecImpl operator!=(const VecImpl &other) const { return cmp(other, "ne"); }
+
+		LR_FORCE_INLINE VecImpl operator<(const Scalar &other) const { return cmp(other, "lt"); }
+		LR_FORCE_INLINE VecImpl operator<=(const Scalar &other) const { return cmp(other, "le"); }
+		LR_FORCE_INLINE VecImpl operator>(const Scalar &other) const { return cmp(other, "gt"); }
+		LR_FORCE_INLINE VecImpl operator>=(const Scalar &other) const { return cmp(other, "ge"); }
+		LR_FORCE_INLINE VecImpl operator==(const Scalar &other) const { return cmp(other, "eq"); }
+		LR_FORCE_INLINE VecImpl operator!=(const Scalar &other) const { return cmp(other, "ne"); }
 
 		LR_NODISCARD("") LR_INLINE Scalar mag2() const { return (m_data * m_data).sum(); }
 		LR_NODISCARD("") LR_INLINE Scalar mag() const { return ::librapid::sqrt(mag2()); }
