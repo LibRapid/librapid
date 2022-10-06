@@ -100,10 +100,10 @@ for type in types:
 	if type == "half": continue
 
 	functions = [
-		Function("toMpz", [Argument(constRef, "this_")], "return librapid::toMpz(this_);"),
-		Function("toMpf", [Argument(constRef, "this_")], "return librapid::toMpf(this_);"),
-		Function("toMpq", [Argument(constRef, "this_")], "return librapid::toMpq(this_);"),
-		Function("toMpfr", [Argument(constRef, "this_")], "return librapid::toMpfr(this_);"),
+		Function("toMpz", [Argument("librapid::" + type, "this_")], "return librapid::toMpz(this_);"),
+		Function("toMpf", [Argument("librapid::" + type, "this_")], "return librapid::toMpf(this_);"),
+		Function("toMpq", [Argument("librapid::" + type, "this_")], "return librapid::toMpq(this_);"),
+		Function("toMpfr", [Argument("librapid::" + type, "this_")], "return librapid::toMpfr(this_);"),
 	]
 
 	for function in functions:

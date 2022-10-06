@@ -64,6 +64,10 @@ be included with a CMake option. The following is a list of the external depende
     - [mpfr](https://github.com/Pencilcaseman/mpfr) - Arbitrary precision numbers (integer, real, rational)
     - [Vc](https://github.com/VcDevel/Vc) - SIMD library
 
+# Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=librapid/librapid&type=Date)](https://star-history.com/#librapid/librapid&Date)
+
 # Support
 
 Thanks to JetBrains for providing LibRapid with free licenses for their amazing tools!
