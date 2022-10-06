@@ -260,10 +260,10 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 			Array<Scalar, D> res(m_extent);
 			i64 size = m_extent.sizeAdjusted();
 
-			if constexpr (std::is_same_v<Scalar, bool>) {
-				size += sizeof(BaseScalar) * 8;
-				size /= sizeof(BaseScalar) * 8;
-			}
+			// if constexpr (std::is_same_v<Scalar, bool>) {
+			// 	size += sizeof(BaseScalar) * 8;
+			// 	size /= sizeof(BaseScalar) * 8;
+			// }
 
 			memory::memcpy<BaseScalar, D, BaseScalar, Device>(
 			  res.storage().heap(), eval().storage().heap(), size);
@@ -276,10 +276,10 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 			Array<Scalar, D> res(m_extent);
 			i64 size = m_extent.sizeAdjusted();
 
-			if constexpr (std::is_same_v<Scalar, bool>) {
-				size += sizeof(BaseScalar) * 8;
-				size /= sizeof(BaseScalar) * 8;
-			}
+			// if constexpr (std::is_same_v<Scalar, bool>) {
+			// 	size += sizeof(BaseScalar) * 8;
+			// 	size /= sizeof(BaseScalar) * 8;
+			// }
 
 			memory::memcpy<BaseScalar, D, BaseScalar, Device>(
 			  res.storage().heap(), eval().storage().heap(), size);
@@ -460,7 +460,11 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 		}
 
 		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
-		auto eval() const { return derived().eval(); }
+		auto eval() const {
+			if (Flags & internal::flags::Evaluated)
+				return *this;
+			return derived().eval();
+		}
 
 		template<typename OtherDerived>
 		LR_FORCE_INLINE void loadFrom(i64 index, const OtherDerived &other) {
