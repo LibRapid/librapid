@@ -88,6 +88,10 @@ namespace librapid {
 	LR_UNARY_MATH_OP_RECIP(sec, cos)
 	LR_UNARY_MATH_OP_RECIP(cot, tan)
 
+	LR_UNARY_MATH_OP_RECIP(acsc, asin)
+	LR_UNARY_MATH_OP_RECIP(asec, acos)
+	LR_UNARY_MATH_OP_RECIP(acot, atan)
+
 	LR_UNARY_MATH_OP(sinh)
 	LR_UNARY_MATH_OP(cosh)
 	LR_UNARY_MATH_OP(tanh)

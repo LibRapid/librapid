@@ -293,9 +293,7 @@ namespace librapid {
 #define FORCE_TMP_FUNC_BINOP(NAME, FUNC)                                                           \
 	template<typename T, typename D>                                                               \
 	LR_FORCE_INLINE void NAME(const Array<T, D> &lhs, const Array<T, D> &rhs, Array<T, D> &dst) {  \
-		double start = now<time::microsecond>();                                                   \
 		dst.assign(lhs.template operator FUNC<true, Array<T, D>>(rhs));                            \
-		fmt::print("Elapsed: {}us\n", now<time::microsecond>() - start);                              \
 	}                                                                                              \
                                                                                                    \
 	template<typename T, typename D>                                                               \

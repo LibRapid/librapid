@@ -171,21 +171,21 @@ py::class_<librapid::mpfr>(module, "mpfr")
 	.def("__str__", [](const librapid::mpfr & this_) { return lrc::str(this_, {-1, 10, false}); })
 	.def("__repr__", [](const librapid::mpfr & this_) { return "librapid::mpfr(\"" + lrc::str(this_, {-1, 10, false}) + "\")"; });
 
-module.def("toMpz", [](const librapid::mpfr & this_) { return librapid::toMpz(this_); });
-module.def("toMpf", [](const librapid::mpfr & this_) { return librapid::toMpf(this_); });
-module.def("toMpq", [](const librapid::mpfr & this_) { return librapid::toMpq(this_); });
-module.def("toMpfr", [](const librapid::mpfr & this_) { return librapid::toMpfr(this_); });
-module.def("toMpz", [](const librapid::mpfr & this_) { return librapid::toMpz(this_); });
-module.def("toMpf", [](const librapid::mpfr & this_) { return librapid::toMpf(this_); });
-module.def("toMpq", [](const librapid::mpfr & this_) { return librapid::toMpq(this_); });
-module.def("toMpfr", [](const librapid::mpfr & this_) { return librapid::toMpfr(this_); });
-module.def("toMpz", [](const librapid::mpfr & this_) { return librapid::toMpz(this_); });
-module.def("toMpf", [](const librapid::mpfr & this_) { return librapid::toMpf(this_); });
-module.def("toMpq", [](const librapid::mpfr & this_) { return librapid::toMpq(this_); });
-module.def("toMpfr", [](const librapid::mpfr & this_) { return librapid::toMpfr(this_); });
-module.def("toMpz", [](const librapid::mpfr & this_) { return librapid::toMpz(this_); });
-module.def("toMpf", [](const librapid::mpfr & this_) { return librapid::toMpf(this_); });
-module.def("toMpq", [](const librapid::mpfr & this_) { return librapid::toMpq(this_); });
-module.def("toMpfr", [](const librapid::mpfr & this_) { return librapid::toMpfr(this_); });
+module.def("toMpz", [](librapid::mpz this_) { return librapid::toMpz(this_); });
+module.def("toMpf", [](librapid::mpz this_) { return librapid::toMpf(this_); });
+module.def("toMpq", [](librapid::mpz this_) { return librapid::toMpq(this_); });
+module.def("toMpfr", [](librapid::mpz this_) { return librapid::toMpfr(this_); });
+module.def("toMpz", [](librapid::mpf this_) { return librapid::toMpz(this_); });
+module.def("toMpf", [](librapid::mpf this_) { return librapid::toMpf(this_); });
+module.def("toMpq", [](librapid::mpf this_) { return librapid::toMpq(this_); });
+module.def("toMpfr", [](librapid::mpf this_) { return librapid::toMpfr(this_); });
+module.def("toMpz", [](librapid::mpq this_) { return librapid::toMpz(this_); });
+module.def("toMpf", [](librapid::mpq this_) { return librapid::toMpf(this_); });
+module.def("toMpq", [](librapid::mpq this_) { return librapid::toMpq(this_); });
+module.def("toMpfr", [](librapid::mpq this_) { return librapid::toMpfr(this_); });
+module.def("toMpz", [](librapid::mpfr this_) { return librapid::toMpz(this_); });
+module.def("toMpf", [](librapid::mpfr this_) { return librapid::toMpf(this_); });
+module.def("toMpq", [](librapid::mpfr this_) { return librapid::toMpq(this_); });
+module.def("toMpfr", [](librapid::mpfr this_) { return librapid::toMpfr(this_); });
 
 }
