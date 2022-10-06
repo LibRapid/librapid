@@ -265,8 +265,9 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 			// 	size /= sizeof(BaseScalar) * 8;
 			// }
 
+			auto evaluatedStorage = eval().storage();
 			memory::memcpy<BaseScalar, D, BaseScalar, Device>(
-			  res.storage().heap(), eval().storage().heap(), size);
+			  res.storage().heap(), evaluatedStorage.heap(), size);
 			return res;
 		}
 
@@ -461,9 +462,10 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 
 		LR_NODISCARD("Do not ignore the result of an evaluated calculation")
 		auto eval() const {
-			if (Flags & internal::flags::Evaluated)
+			if constexpr (Flags & internal::flags::Evaluated)
 				return *this;
-			return derived().eval();
+			else
+				return derived().eval();
 		}
 
 		template<typename OtherDerived>

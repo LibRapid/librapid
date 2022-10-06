@@ -16,7 +16,7 @@ namespace librapid {
 			using Device	  = typename memory::PromoteDevice<DeviceLHS, DeviceRHS>::type;
 			using StorageType = memory::DenseStorage<Scalar, Device>;
 			static constexpr ui64 Flags =
-			  Binop::Flags | traits<LHS>::Flags | traits<RHS>::Flags;
+			  (Binop::Flags | traits<LHS>::Flags | traits<RHS>::Flags) & ~flags::Evaluated;
 		};
 	} // namespace internal
 
