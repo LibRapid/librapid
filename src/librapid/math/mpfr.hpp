@@ -217,7 +217,7 @@ struct fmt::formatter<mpq_class> {
 			return fmt::format_to(ctx.out(), ss.str());
 		} catch (std::exception &e) {
 			LR_ASSERT("Invalid Format Specifier: {}", e.what());
-			return fmt::format_to(ctx.out(), "FORMAT ERROR");
+			return fmt::format_to(ctx.out(), fmt::format("FORMAT ERROR: {}", e.what()));
 		}
 	}
 };
