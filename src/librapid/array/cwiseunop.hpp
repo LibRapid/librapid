@@ -13,7 +13,7 @@ namespace librapid {
 			using Packet					  = typename traits<Scalar>::Packet;
 			using Device					  = typename traits<TYPE>::Device;
 			using StorageType				  = memory::DenseStorage<Scalar, Device>;
-			static constexpr ui64 Flags		  = Unop::Flags | traits<TYPE>::Flags;
+			static constexpr ui64 Flags = (Unop::Flags | traits<TYPE>::Flags) & ~flags::Evaluated;
 		};
 	} // namespace internal
 

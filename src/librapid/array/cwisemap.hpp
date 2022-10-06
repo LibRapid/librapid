@@ -97,10 +97,10 @@ namespace librapid {
 													   std::false_type>;
 			using Device =
 			  typename memory::PromoteDeviceMulti<typename traits<DerivedTypes>::Device...>;
-			using StorageType				= memory::DenseStorage<Scalar, Device>;
-			static constexpr ui64 Flags = flags::CustomFunctionGen |
-											  mapping::extractFlags<Map>() |
-											  (allowPacket ? 0 : flags::NoPacketOp);
+			using StorageType			= memory::DenseStorage<Scalar, Device>;
+			static constexpr ui64 Flags = (flags::CustomFunctionGen | mapping::extractFlags<Map>() |
+										   (allowPacket ? 0 : flags::NoPacketOp)) &
+										  ~flags::Evaluated;
 		};
 	} // namespace internal
 
@@ -110,12 +110,12 @@ namespace librapid {
 										  typename internal::traits<
 											CWiseMap<allowPacket, Map, DerivedTypes...>>::Device> {
 		public:
-			using Operation					= Map;
-			using Scalar					= typename internal::traits<CWiseMap>::Scalar;
-			using Packet					= typename internal::traits<Scalar>::Packet;
-			using Device					= typename internal::traits<CWiseMap>::Device;
-			using Type						= CWiseMap<allowPacket, Map, DerivedTypes...>;
-			using Base						= ArrayBase<Type, Device>;
+			using Operation				= Map;
+			using Scalar				= typename internal::traits<CWiseMap>::Scalar;
+			using Packet				= typename internal::traits<Scalar>::Packet;
+			using Device				= typename internal::traits<CWiseMap>::Device;
+			using Type					= CWiseMap<allowPacket, Map, DerivedTypes...>;
+			using Base					= ArrayBase<Type, Device>;
 			static constexpr ui64 Flags = internal::traits<Type>::Flags;
 
 			CWiseMap() = delete;
@@ -182,8 +182,8 @@ namespace librapid {
 
 			LR_NODISCARD("")
 			std::string str(std::string format = "", const std::string &delim = " ",
-							i64 stripWidth = -1, i64 beforePoint = -1,
-							i64 afterPoint = -1, i64 depth = 0) const {
+							i64 stripWidth = -1, i64 beforePoint = -1, i64 afterPoint = -1,
+							i64 depth = 0) const {
 				return eval().str(format, delim, stripWidth, beforePoint, afterPoint, depth);
 			}
 
@@ -263,8 +263,8 @@ __forceinline__  __device__ {1} {2}({3}) {{
 	auto map(const Map &map, DerivedTypes... args) {
 		using Scalar =
 		  typename std::common_type_t<typename internal::traits<DerivedTypes>::Scalar...>;
-		using BaseScalar				   = typename internal::traits<Scalar>::BaseScalar;
-		using RetType					   = mapping::CWiseMap<allowPacket, Map, DerivedTypes...>;
+		using BaseScalar			   = typename internal::traits<Scalar>::BaseScalar;
+		using RetType				   = mapping::CWiseMap<allowPacket, Map, DerivedTypes...>;
 		static constexpr ui64 Flags	   = internal::traits<Scalar>::Flags;
 		static constexpr ui64 Required = RetType::Flags & internal::flags::OperationMask;
 
