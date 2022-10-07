@@ -370,10 +370,10 @@ class Array:
 		return Array(self._array.filled(val))
 
 	def transpose(self, order:Extent=[]):
-		self._array.transpose(order)
+		self._array.transpose(Extent(order))
 
 	def transposed(self, order:Extent=[]):
-		return Array(self._array.transposed(order))
+		return Array(self._array.transposed(Extent(order)))
 
 	def dot(self, other):
 		return Array(self._array.dot(other._array))
