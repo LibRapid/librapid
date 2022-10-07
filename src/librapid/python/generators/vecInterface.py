@@ -65,7 +65,7 @@ for t in vecTypes:
 		Function("__add__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ + other;"),
 		Function("__sub__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ - other;"),
 		Function("__mul__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ * other;"),
-		Function("__div__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ / other;"),
+		Function("__truediv__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ / other;"),
 
 		Function("__iadd__", [Argument(ref, "this_"), Argument(constRef, "other")], "this_ += other; return this_;"),
 		Function("__isub__", [Argument(ref, "this_"), Argument(constRef, "other")], "this_ -= other; return this_;"),
@@ -75,22 +75,22 @@ for t in vecTypes:
 		Function("__radd__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return other + this_;"),
 		Function("__rsub__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return other - this_;"),
 		Function("__rmul__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return other * this_;"),
-		Function("__rdiv__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return other / this_;"),
+		Function("__rtruediv__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return other / this_;"),
 
 		Function("__add__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return this_ + other;"),
 		Function("__sub__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return this_ - other;"),
 		Function("__mul__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return this_ * other;"),
-		Function("__div__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return this_ / other;"),
+		Function("__truediv__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return this_ / other;"),
 
 		Function("__iadd__", [Argument(ref, "this_"), Argument(scalar, "other")], "this_ += other; return this_;"),
 		Function("__isub__", [Argument(ref, "this_"), Argument(scalar, "other")], "this_ -= other; return this_;"),
 		Function("__imul__", [Argument(ref, "this_"), Argument(scalar, "other")], "this_ *= other; return this_;"),
-		Function("__idiv__", [Argument(ref, "this_"), Argument(scalar, "other")], "this_ /= other; return this_;"),
+		Function("__itruediv__", [Argument(ref, "this_"), Argument(scalar, "other")], "this_ /= other; return this_;"),
 
 		Function("__radd__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return other + this_;"),
 		Function("__rsub__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return other - this_;"),
 		Function("__rmul__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return other * this_;"),
-		Function("__rdiv__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return other / this_;"),
+		Function("__rtruediv__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return other / this_;"),
 
 		Function("__neg__", [Argument(constRef, "this_")], "return -this_;"),
 
