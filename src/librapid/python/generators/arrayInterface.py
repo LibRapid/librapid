@@ -122,8 +122,20 @@ for t in arrayTypes:
 			Function("__mul__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ * other;"),
 			Function("__mul__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return this_ * other;"),
 
-			Function("__div__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ / other;"),
-			Function("__div__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return this_ / other;"),
+			Function("__truediv__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ / other;"),
+			Function("__truediv__", [Argument(constRef, "this_"), Argument(scalar, "other")], "return this_ / other;"),
+
+			Function("__iadd__", [Argument(ref, "this_"), Argument(constRef, "other")], "this_ += other; return this_;"),
+			Function("__iadd__", [Argument(ref, "this_"), Argument(scalar, "other")], "this_ += other; return this_;"),
+
+			Function("__isub__", [Argument(ref, "this_"), Argument(constRef, "other")], "this_ -= other; return this_;"),
+			Function("__isub__", [Argument(ref, "this_"), Argument(scalar, "other")], "this_ -= other; return this_;"),
+
+			Function("__imul__", [Argument(ref, "this_"), Argument(constRef, "other")], "this_ *= other; return this_;"),
+			Function("__imul__", [Argument(ref, "this_"), Argument(scalar, "other")], "this_ *= other; return this_;"),
+
+			Function("__itruediv__", [Argument(ref, "this_"), Argument(constRef, "other")], "this_ /= other; return this_;"),
+			Function("__itruediv__", [Argument(ref, "this_"), Argument(scalar, "other")], "this_ /= other; return this_;"),
 		]
 	else:
 		fArithmetic = []
@@ -133,6 +145,10 @@ for t in arrayTypes:
 			Function("__or__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ | other;"),
 			Function("__and__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ & other;"),
 			Function("__xor__", [Argument(constRef, "this_"), Argument(constRef, "other")], "return this_ ^ other;"),
+
+			Function("__ior__", [Argument(ref, "this_"), Argument(constRef, "other")], "this_ |= other; return this_;"),
+			Function("__iand__", [Argument(ref, "this_"), Argument(constRef, "other")], "this_ &= other; return this_;"),
+			Function("__ixor__", [Argument(ref, "this_"), Argument(constRef, "other")], "this_ ^= other; return this_;"),
 		]
 	else:
 		fBitwise = []

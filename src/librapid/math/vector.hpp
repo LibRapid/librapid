@@ -537,6 +537,54 @@ namespace librapid {
 
 	template<typename Scalar, i64 Dims, typename StorageType>
 	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	sinh(const VecImpl<Scalar, Dims, StorageType> &vec) {
+		VecImpl<Scalar, Dims, StorageType> res;
+		for (i64 i = 0; i < Dims; ++i) { res[i] = std::sinh(vec[i]); }
+		return res;
+	}
+
+	template<typename Scalar, i64 Dims, typename StorageType>
+	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	cosh(const VecImpl<Scalar, Dims, StorageType> &vec) {
+		VecImpl<Scalar, Dims, StorageType> res;
+		for (i64 i = 0; i < Dims; ++i) { res[i] = std::cosh(vec[i]); }
+		return res;
+	}
+
+	template<typename Scalar, i64 Dims, typename StorageType>
+	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	tanh(const VecImpl<Scalar, Dims, StorageType> &vec) {
+		VecImpl<Scalar, Dims, StorageType> res;
+		for (i64 i = 0; i < Dims; ++i) { res[i] = std::tanh(vec[i]); }
+		return res;
+	}
+
+	template<typename Scalar, i64 Dims, typename StorageType>
+	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	asinh(const VecImpl<Scalar, Dims, StorageType> &vec) {
+		VecImpl<Scalar, Dims, StorageType> res;
+		for (i64 i = 0; i < Dims; ++i) { res[i] = std::asinh(vec[i]); }
+		return res;
+	}
+
+	template<typename Scalar, i64 Dims, typename StorageType>
+	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	acosh(const VecImpl<Scalar, Dims, StorageType> &vec) {
+		VecImpl<Scalar, Dims, StorageType> res;
+		for (i64 i = 0; i < Dims; ++i) { res[i] = std::acosh(vec[i]); }
+		return res;
+	}
+
+	template<typename Scalar, i64 Dims, typename StorageType>
+	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	atanh(const VecImpl<Scalar, Dims, StorageType> &vec) {
+		VecImpl<Scalar, Dims, StorageType> res;
+		for (i64 i = 0; i < Dims; ++i) { res[i] = std::atanh(vec[i]); }
+		return res;
+	}
+
+	template<typename Scalar, i64 Dims, typename StorageType>
+	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
 	exp(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::exp(vec.data()));
 	}
@@ -553,15 +601,30 @@ namespace librapid {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::sqrt(vec.data()));
 	}
 
-	using VecMask2i = VecImpl<i32, 2, Vc::SimdMaskArray<i32, 2>>;
-	using VecMask3i = VecImpl<i32, 3, Vc::SimdMaskArray<i32, 3>>;
-	using VecMask4i = VecImpl<i32, 4, Vc::SimdMaskArray<i32, 4>>;
-	using VecMask2f = VecImpl<f32, 2, Vc::SimdMaskArray<f32, 2>>;
-	using VecMask3f = VecImpl<f32, 3, Vc::SimdMaskArray<f32, 3>>;
-	using VecMask4f = VecImpl<f32, 4, Vc::SimdMaskArray<f32, 4>>;
-	using VecMask2d = VecImpl<f64, 2, Vc::SimdMaskArray<f64, 2>>;
-	using VecMask3d = VecImpl<f64, 3, Vc::SimdMaskArray<f64, 3>>;
-	using VecMask4d = VecImpl<f64, 4, Vc::SimdMaskArray<f64, 4>>;
+	template<typename Scalar, i64 Dims, typename StorageType>
+	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	pow(const VecImpl<Scalar, Dims, StorageType> &vec,
+		const VecImpl<Scalar, Dims, StorageType> &exp) {
+		return VecImpl<Scalar, Dims, StorageType>(Vc::pow(vec.data(), exp.data()));
+	}
+
+	template<typename Scalar, i64 Dims, typename StorageType>
+	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	abs(const VecImpl<Scalar, Dims, StorageType> &vec) {
+		return VecImpl<Scalar, Dims, StorageType>(Vc::abs(vec.data()));
+	}
+
+	template<typename Scalar, i64 Dims, typename StorageType>
+	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	floor(const VecImpl<Scalar, Dims, StorageType> &vec) {
+		return VecImpl<Scalar, Dims, StorageType>(Vc::floor(vec.data()));
+	}
+
+	template<typename Scalar, i64 Dims, typename StorageType>
+	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	ceil(const VecImpl<Scalar, Dims, StorageType> &vec) {
+		return VecImpl<Scalar, Dims, StorageType>(Vc::ceil(vec.data()));
+	}
 
 	using Vec2i = Vec<i32, 2>;
 	using Vec3i = Vec<i32, 3>;

@@ -106,6 +106,48 @@ namespace librapid {
 			return const_cast<const Type *>(this)->operator()(indices...);
 		}
 
+		template<typename T>
+		LR_FORCE_INLINE void operator+=(const T &val) {
+			// Force temporary value
+			Base::assign(this->template operator+<true, T>(val));
+		}
+
+		template<typename T>
+		LR_FORCE_INLINE void operator-=(const T &val) {
+			// Force temporary value
+			Base::assign(this->template operator-<true, T>(val));
+		}
+
+		template<typename T>
+		LR_FORCE_INLINE void operator*=(const T &val) {
+			// Force temporary value
+			Base::assign(this->template operator*<true, T>(val));
+		}
+
+		template<typename T>
+		LR_FORCE_INLINE void operator/=(const T &val) {
+			// Force temporary value
+			Base::assign(this->template operator/<true, T>(val));
+		}
+
+		template<typename T>
+		LR_FORCE_INLINE void operator|=(const T &val) {
+			// Force temporary value
+			Base::assign(this->template operator|<true, T>(val));
+		}
+
+		template<typename T>
+		LR_FORCE_INLINE void operator&=(const T &val) {
+			// Force temporary value
+			Base::assign(this->template operator&<true, T>(val));
+		}
+
+		template<typename T>
+		LR_FORCE_INLINE void operator^=(const T &val) {
+			// Force temporary value
+			Base::assign(this->template operator^<true, T>(val));
+		}
+
 		void transpose(const Extent &order = {}) { *this = Base::transposed(order); }
 
 		LR_FORCE_INLINE void writePacket(i64 index, const Packet &p) {
