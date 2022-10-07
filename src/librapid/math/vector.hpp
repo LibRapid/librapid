@@ -605,7 +605,9 @@ namespace librapid {
 	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
 	pow(const VecImpl<Scalar, Dims, StorageType> &vec,
 		const VecImpl<Scalar, Dims, StorageType> &exp) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::pow(vec.data(), exp.data()));
+		VecImpl<Scalar, Dims, StorageType> res;
+		for (i64 i = 0; i < Dims; ++i) { res[i] = std::pow(vec[i], exp[i]); }
+		return res;
 	}
 
 	template<typename Scalar, i64 Dims, typename StorageType>

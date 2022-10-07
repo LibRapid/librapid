@@ -282,42 +282,49 @@ class Array:
 			self._array += other._array
 		else:
 			self._array += other
+		return self
 
 	def __isub__(self, other):
 		if isinstance(other, Array):
 			self._array -= other._array
 		else:
 			self._array -= other
+		return self
 
 	def __imul__(self, other):
 		if isinstance(other, Array):
 			self._array *= other._array
 		else:
 			self._array *= other
+		return self
 
 	def __itruediv__(self, other):
 		if isinstance(other, Array):
 			self._array /= other._array
 		else:
 			self._array /= other
+		return self
 
 	def __ior__(self, other):
 		if isinstance(other, Array):
 			self._array |= other._array
 		else:
 			self._array |= other
+		return self
 
 	def __iand__(self, other):
 		if isinstance(other, Array):
 			self._array &= other._array
 		else:
 			self._array &= other
+		return self
 
 	def __ixor__(self, other):
 		if isinstance(other, Array):
 			self._array ^= other._array
 		else:
 			self._array ^= other
+		return self
 
 	# ========= Reverse Operators =========
 
