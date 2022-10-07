@@ -892,6 +892,7 @@ namespace librapid::extended {
 	//  sph_neumann
 	//
 
+	/*
 	inline auto beta =
 	  float16_t_private::make_binary_function([](float f1, float f2) { return std::beta(f1, f2); });
 	inline auto comp_ellint_1 =
@@ -918,6 +919,7 @@ namespace librapid::extended {
 	  float16_t_private::make_unary_function([](float f) { return std::expint(f); });
 	inline auto riemann_zeta =
 	  float16_t_private::make_unary_function([](float f) { return std::riemann_zeta(f); });
+	  */
 } // namespace librapid::extended
 
 namespace std {
