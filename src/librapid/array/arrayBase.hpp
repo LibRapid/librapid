@@ -34,7 +34,8 @@
 	}
 
 #define IMPL_BINOP_SCALAR(NAME, TYPE)                                                              \
-	template<typename OtherScalar,                                                                 \
+	template<bool forceTemporary = false,                                                          \
+			 typename OtherScalar,                                                                 \
 			 typename std::enable_if_t<internal::traits<OtherScalar>::IsScalar, int> = 0>          \
 	LR_NODISCARD("")                                                                               \
 	auto NAME(const OtherScalar &other) const {                                                    \
