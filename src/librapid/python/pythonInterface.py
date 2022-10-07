@@ -275,6 +275,50 @@ class Array:
 	def __neg__(self):
 		return Array(-self._array)
 
+	# ========= Inplace Operators =========
+
+	def __iadd__(self, other):
+		if isinstance(other, Array):
+			self._array += other._array
+		else:
+			self._array += other
+
+	def __isub__(self, other):
+		if isinstance(other, Array):
+			self._array -= other._array
+		else:
+			self._array -= other
+
+	def __imul__(self, other):
+		if isinstance(other, Array):
+			self._array *= other._array
+		else:
+			self._array *= other
+
+	def __itruediv__(self, other):
+		if isinstance(other, Array):
+			self._array /= other._array
+		else:
+			self._array /= other
+
+	def __ior__(self, other):
+		if isinstance(other, Array):
+			self._array |= other._array
+		else:
+			self._array |= other
+
+	def __iand__(self, other):
+		if isinstance(other, Array):
+			self._array &= other._array
+		else:
+			self._array &= other
+
+	def __ixor__(self, other):
+		if isinstance(other, Array):
+			self._array ^= other._array
+		else:
+			self._array ^= other
+
 	# ========= Reverse Operators =========
 
 	def __radd__(self, other):
