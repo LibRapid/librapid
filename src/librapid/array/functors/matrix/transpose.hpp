@@ -33,10 +33,12 @@ namespace librapid::functors::matrix {
 		template<typename Derived>
 		LR_NODISCARD("")
 		LR_FORCE_INLINE RetType scalarOpInput(const Derived &other, int64_t index) const {
-			auto extent	   = other.extent();
-			auto swivelled = extent.reverseIndex(index).swivelled(m_order);
-			auto first	   = extent.index(swivelled);
-			return other.scalar(first);
+			// Transpose matrix
+			auto extent = other.extent();
+			auto swivelled = extent.swivelled(m_order);
+			auto reversed = swivelled.reverseIndex(index).swivelled(m_order);
+			auto first = extent.index(reversed);
+			return other.scalar(first < extent.size() ? first : 0);
 		}
 
 		template<typename Derived>
@@ -45,11 +47,12 @@ namespace librapid::functors::matrix {
 			/*
 			 * This works great if all Array dimensions are a multiple of the packet size, otherwise
 			 * it's entirely useless and doesn't work at all :)
+			 * /
 			using BaseScalar = typename internal::traits<Scalar>::BaseScalar;
 			BaseScalar buffer[internal::traits<BaseScalar>::PacketWidth];
 			auto extent	   = other.extent();
 			auto size	   = extent.size();
-			auto swivelled = extent.reverseIndexAdjusted(index).swivelled(m_order);
+			auto swivelled = extent.reverseIndex(index).swivelled(m_order);
 			auto first	   = extent.indexAdjusted(swivelled);
 			auto stride	   = extent.strideAdjusted();
 			auto inc	   = stride[m_order[extent.dims() - 1]];
