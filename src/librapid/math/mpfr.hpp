@@ -8,11 +8,6 @@ namespace librapid {
 	std::string str(const mpq &val, const StrOpt &options = DEFAULT_STR_OPT);
 	std::string str(const mpfr &val, const StrOpt &options = DEFAULT_STR_OPT);
 
-	template<typename T>
-	constexpr bool isMultiprecision() {
-		return false;
-	}
-
 	template<>
 	constexpr bool isMultiprecision<mpz>() {
 		return true;
