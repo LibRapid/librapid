@@ -47,22 +47,39 @@ namespace librapid {
 							 : max(val2, std::forward<Ts>(vs)...);
 	}
 
-#define LR_UNARY_MATH_OP(NAME_)                                                                    \
-	template<typename T, typename std::enable_if_t<internal::traits<T>::IsScalar, int> = 0>        \
-	LR_INLINE auto NAME_(const T &a) {                                                             \
-		using Scalar = typename std::conditional_t<isMultiprecision<T>(), mpfr, f64>;              \
-		if constexpr (Vc::is_simd_vector<T>::value)                                                \
-			return std::NAME_(a);                                                                  \
-		else                                                                                       \
-			return std::NAME_(static_cast<Scalar>(a));                                             \
-	}
+#if defined(LIBRAPID_MULTIPREC)
+#	define LR_UNARY_MATH_OP(NAME_)                                                                \
+		template<typename T, typename std::enable_if_t<internal::traits<T>::IsScalar, int> = 0>    \
+		LR_INLINE auto NAME_(const T &a) {                                                         \
+			using Scalar = typename std::conditional_t<isMultiprecision<T>(), mpfr, f64>;          \
+			if constexpr (Vc::is_simd_vector<T>::value)                                            \
+				return Vc::NAME_(a);                                                               \
+			else                                                                                   \
+				return std::NAME_(static_cast<Scalar>(a));                                         \
+		}
 
-#define LR_UNARY_MATH_OP_RECIP(NAME_, OP_)                                                         \
-	template<typename T, typename std::enable_if_t<internal::traits<T>::IsScalar, int> = 0>        \
-	LR_INLINE typename std::conditional_t<isMultiprecision<T>(), mpfr, f64> NAME_(const T &a) {    \
-		using Scalar = typename std::conditional_t<isMultiprecision<T>(), mpfr, f64>;              \
-		return Scalar(1) / std::OP_(static_cast<Scalar>(a));                                       \
-	}
+#	define LR_UNARY_MATH_OP_RECIP(NAME_, OP_)                                                     \
+		template<typename T, typename std::enable_if_t<internal::traits<T>::IsScalar, int> = 0>    \
+		LR_INLINE auto NAME_(const T &a) {                                                         \
+			using Scalar = typename std::conditional_t<isMultiprecision<T>(), mpfr, f64>;          \
+			return Scalar(1) / std::OP_(static_cast<Scalar>(a));                                   \
+		}
+#else
+#	define LR_UNARY_MATH_OP(NAME_)                                                                \
+		template<typename T, typename std::enable_if_t<internal::traits<T>::IsScalar, int> = 0>    \
+		LR_INLINE auto NAME_(const T &a) {                                                         \
+			if constexpr (Vc::is_simd_vector<T>::value)                                            \
+				return Vc::NAME_(a);                                                               \
+			else                                                                                   \
+				return std::NAME_(static_cast<f64>(a));                                            \
+		}
+
+#	define LR_UNARY_MATH_OP_RECIP(NAME_, OP_)                                                     \
+		template<typename T, typename std::enable_if_t<internal::traits<T>::IsScalar, int> = 0>    \
+		LR_INLINE auto NAME_(const T &a) {                                                         \
+			return f64(1) / std::OP_(static_cast<f6>(a));                                          \
+		}
+#endif // LIBRAPID_MULTIPREC
 
 	LR_UNARY_MATH_OP(abs)
 	LR_UNARY_MATH_OP(floor)
@@ -121,8 +138,12 @@ namespace librapid {
 
 	template<typename T, typename B>
 	LR_INLINE auto log(const T &a, const B &base) {
+#if defined(LIBRAPID_MULTIPREC)
 		using Scalar =
 		  typename std::conditional_t<isMultiprecision<T>() || isMultiprecision<B>(), mpfr, f64>;
+#else
+		using Scalar = f64;
+#endif // LIBRAPID_MULTIPREC
 		if constexpr (internal::traits<T>::IsScalar && internal::traits<B>::IsScalar) {
 			return log(static_cast<Scalar>(a)) / log(static_cast<Scalar>(base));
 		} else {

@@ -18,11 +18,13 @@ namespace librapid {
 	using f32  = float;
 	using f64  = double;
 
+#if defined(LIBRAPID_USE_MULTIPREC)
 	using mpz  = mpz_class;
 	using mpf  = mpf_class;
 	using mpq  = mpq_class;
 	using mpfr = mpfr::mpreal;
 	// using mpc  = librapid::Complex<mpfr>;
+#endif // LIBRAPID_USE_MULTIPREC
 
 	// Assert all sizes are correct
 	static_assert(sizeof(i8) == 1, "i8 is not 1 byte");
