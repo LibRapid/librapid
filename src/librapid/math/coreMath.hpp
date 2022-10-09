@@ -53,7 +53,7 @@ namespace librapid {
 		LR_INLINE auto NAME_(const T &a) {                                                         \
 			using Scalar = typename std::conditional_t<isMultiprecision<T>(), mpfr, f64>;          \
 			if constexpr (Vc::is_simd_vector<T>::value)                                            \
-				return Vc::NAME_(a);                                                               \
+				return std::NAME_(a);                                                               \
 			else                                                                                   \
 				return std::NAME_(static_cast<Scalar>(a));                                         \
 		}
@@ -69,7 +69,7 @@ namespace librapid {
 		template<typename T, typename std::enable_if_t<internal::traits<T>::IsScalar, int> = 0>    \
 		LR_INLINE auto NAME_(const T &a) {                                                         \
 			if constexpr (Vc::is_simd_vector<T>::value)                                            \
-				return Vc::NAME_(a);                                                               \
+				return std::NAME_(a);                                                               \
 			else                                                                                   \
 				return std::NAME_(static_cast<f64>(a));                                            \
 		}
@@ -77,7 +77,7 @@ namespace librapid {
 #	define LR_UNARY_MATH_OP_RECIP(NAME_, OP_)                                                     \
 		template<typename T, typename std::enable_if_t<internal::traits<T>::IsScalar, int> = 0>    \
 		LR_INLINE auto NAME_(const T &a) {                                                         \
-			return f64(1) / std::OP_(static_cast<f6>(a));                                          \
+			return f64(1) / std::OP_(static_cast<f64>(a));                                          \
 		}
 #endif // LIBRAPID_MULTIPREC
 
