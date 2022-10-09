@@ -14,6 +14,11 @@ namespace librapid {
 		struct traits;
 	}
 
+	template<typename T>
+	constexpr bool isMultiprecision() {
+		return false;
+	}
+
 	template<typename Scalar, i64 Dims, typename StorageType>
 	class VecImpl;
 
