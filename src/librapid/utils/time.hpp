@@ -84,10 +84,11 @@ namespace librapid {
 	};
 
 	struct Bench {
-		i64 samples;
-		i64 iters;
-		double avg;
-		double stddev;
+		i64 samples = 0;
+		i64 iters = 0;
+		double avg = 0;
+		double stddev = 0;
+		double elapsed = 0;
 	};
 
 	template<typename LAMBDA, typename... Args>
@@ -113,6 +114,7 @@ namespace librapid {
 
 		std::vector<double> times;
 
+		double mainStart = now<time::nanosecond>();
 		for (i64 sample = 0; sample < samples; ++sample) {
 			itersCompleted = 0;
 			double start   = now<time::nanosecond>();
@@ -122,11 +124,12 @@ namespace librapid {
 			double end = now<time::nanosecond>();
 			times.emplace_back((end - start) / (double)itersCompleted);
 		}
+		double mainEnd = now<time::nanosecond>();
 
 		// Calculate average (mean) time and standard deviation
 		double avg	  = mean(times);
 		double stddev = standardDeviation(times);
-		return {samples, itersCompleted - 1, avg, stddev};
+		return {samples, itersCompleted - 1, avg, stddev, mainEnd - mainStart};
 	}
 
 	LR_INLINE std::string formatBench(const Bench &bench, bool includeIters = true) {
