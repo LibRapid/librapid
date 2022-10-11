@@ -22,6 +22,7 @@
 #include <utility>
 #include <mutex>
 #include <queue>
+#include <numeric>
 
 #if defined(_OPENMP)
 #	include <omp.h>
