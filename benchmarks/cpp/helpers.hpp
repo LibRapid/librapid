@@ -14,24 +14,28 @@ void printTable(const std::vector<std::string> &headings,
 		}
 	}
 
+	auto consoleSize = lrc::getConsoleSize();
+
+	std::string heading;
 	std::string line;
 	for (lrc::i64 i = 0; i < headings.size(); ++i) {
-		fmt::print("{:>{}}", headings[i], colWidths[i]);
+		heading += fmt::format("{:>{}}", headings[i], colWidths[i]);
 		line += std::string(colWidths[i], '-');
 		if (i < headings.size()) {
-			fmt::print(" | ");
+			heading += " | ";
 			line += "-+-";
 		}
 	}
 
-	fmt::print("\n{}", line);
+	fmt::print("{}\n{}", heading, line);
 
 	for (const auto &row : rows) {
-		fmt::print("\n");
+		std::string rowString;
 		for (lrc::i64 i = 0; i < row.size(); ++i) {
-			fmt::print("{:>{}}", row[i], colWidths[i]);
-			if (i < row.size()) { fmt::print(" | "); }
+			rowString += fmt::format("{:>{}}", row[i], colWidths[i]);
+			if (i < row.size()) { rowString += " | "; }
 		}
+		fmt::print("\n{}", rowString);
 	}
 	fmt::print("\n");
 }

@@ -1,62 +1,67 @@
+// Benchmark every Array constructor
+
 #include <librapid>
 #include "helpers.hpp"
 
 namespace lrc = librapid;
 
-template<typename T>
-void timeArrayConstructor(double timePerRow = 1) {
+template<typename Scalar, typename Device>
+void benchmarkConstructors(double benchTime) {
 	std::vector<lrc::Extent> sizes = {lrc::Extent(10),
 									  lrc::Extent(100),
 									  lrc::Extent(1000),
 									  lrc::Extent(10000),
 									  lrc::Extent(100000),
 									  lrc::Extent(1000000),
-									  lrc::Extent(10, 10),
-									  lrc::Extent(100, 100),
-									  lrc::Extent(1000, 1000),
-									  lrc::Extent(10000, 10000),
-									  lrc::Extent(10, 10, 10),
-									  lrc::Extent(100, 100, 100),
-									  lrc::Extent(1000, 1000, 1000)};
+									  lrc::Extent(10000000),
+									  lrc::Extent(100000000),
+									  lrc::Extent(1000000000)};
 
 	std::vector<std::string> headings = {"Extent", "Bytes", "Elapsed", "Average", "StdDev"};
 	std::vector<std::vector<std::string>> rows;
 
-	for (const auto &size : sizes) {
-		auto time = lrc::timeFunction([&]() { auto benchy = lrc::Array<T>(size);}, -1, -1, timePerRow);
-		rows.emplace_back(std::vector<std::string>{
-		  size.str(),
-		  fmt::format("{}", sizeof(T) * size.size()),
+	fmt::print("Benchmarking Array Constructors for {} on {}\n",
+			   lrc::internal::traits<Scalar>::Name,
+			   lrc::device::toString<Device>());
+
+	for (lrc::i64 i = 0; i < sizes.size(); ++i) {
+		auto time = lrc::timeFunction(
+		  [&]() { auto benchy = lrc::Array<Scalar>(sizes[i]); }, -1, -1, benchTime);
+		rows.emplace_back(std::vector<std::string> {
+		  sizes[i].str(),
+		  fmt::format("{}", sizeof(Scalar) * sizes[i].size()),
 		  lrc::formatTime<lrc::time::nanosecond>(time.elapsed),
 		  lrc::formatTime<lrc::time::nanosecond>(time.avg),
 		  lrc::formatTime<lrc::time::nanosecond>(time.stddev),
 		});
-		fmt::print("\r{}", size.str());
-	}
-	fmt::print("\n");
 
+		// You can comment this out for a slightly nicer table printing, assuming it'll fit
+		// FULLY in the console without scrolling.
+		// if (i > 0) lrc::moveCursor(0, -(lrc::i32(rows.size()) + 1));
+		// printTable(headings, rows);
+	}
+
+	// If you print the table above, comment this out
 	printTable(headings, rows);
+	fmt::print("\n\n");
 }
 
 int main() {
 	fmt::print("Hello, World\n");
 
-	// Benchmark Development
+	benchmarkConstructors<bool, lrc::device::CPU>(1);
+	benchmarkConstructors<lrc::i16, lrc::device::CPU>(1);
+	benchmarkConstructors<float, lrc::device::CPU>(1);
+	benchmarkConstructors<lrc::i64, lrc::device::CPU>(1);
 
-	// Benchmark 1: Matrix Construction
-	// Benchmark 2: Matrix Addition
-	// Benchmark 3: Matrix Multiplication
-	// Benchmark 4: Matrix Transpose
+#if defined(LIBRAPID_HAS_CUDA)
+	fmt::print("\n\n");
 
-	std::vector<std::string> headings = {"Heading 1", "ABCD", "Heading 3", "Time"};
-
-	std::vector<std::vector<std::string>> rows = {{"abc", "123", "hello", "REALLY LONG THING"},
-												  {"def", "456", "world", "REALLY LONG THING"},
-												  {"ghi", "789", "!", "REALLY LONG THING"}};
-
-	printTable(headings, rows);
-
-	timeArrayConstructor<float>(1);
+	benchmarkConstructors<bool, lrc::device::GPU>(1);
+	benchmarkConstructors<lrc::i16, lrc::device::GPU>(1);
+	benchmarkConstructors<float, lrc::device::GPU>(1);
+	benchmarkConstructors<lrc::i64, lrc::device::GPU>(1);
+#endif // LIBRAPID_HAS_CUDA
 
 	return 0;
 }

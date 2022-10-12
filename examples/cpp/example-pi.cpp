@@ -4,12 +4,13 @@ namespace lrc = librapid;
 using namespace librapid::suffix;
 
 int main() {
+#if defined(LIBRAPID_MULTIPRECISION)
 	int64_t digits = 1000000;
 
 	lrc::prec(digits);
 
 	fmt::print("Calculating PI\n");
-	auto pi	  = lrc::constPi();
+	auto pi = lrc::constPi();
 
 	fmt::print("Stringifying Pi\n");
 	std::string piStr = fmt::format("{:.1000000}", pi);
@@ -48,6 +49,9 @@ int main() {
 	}
 
 	file.close();
+#else
+	LR_ASSERT_ALWAYS(false, "Multiprecision is not supported in this build.");
+#endif
 
 	return 0;
 }
