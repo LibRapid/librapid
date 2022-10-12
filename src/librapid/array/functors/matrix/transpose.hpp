@@ -55,7 +55,7 @@ namespace librapid::functors::matrix {
 			auto swivelled = extent.reverseIndex(index).swivelled(m_order);
 			auto first	   = extent.indexAdjusted(swivelled);
 			auto stride	   = extent.strideAdjusted();
-			auto inc	   = stride[m_order[extent.dims() - 1]];
+			auto inc	   = stride[m_order[extent.ndim() - 1]];
 
 			if constexpr (std::is_same_v<Scalar, bool>) {
 				LR_ASSERT(false, "Boolean Arrays do not currently support Matrix operations");

@@ -70,9 +70,9 @@ namespace librapid {
 			LR_NODISCARD("")
 			auto operator()(T... indices) const {
 				LR_ASSERT((this->m_isScalar && sizeof...(T) == 1) ||
-							sizeof...(T) == Base::extent().dims(),
+							sizeof...(T) == Base::extent().ndim(),
 						  "Array with {0} dimensions requires {0} access indices. Received {1}",
-						  Base::extent().dims(),
+						  Base::extent().ndim(),
 						  sizeof...(indices));
 
 				i64 index = Base::isScalar() ? 0 : Base::extent().index(indices...);
