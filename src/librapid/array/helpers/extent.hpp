@@ -33,30 +33,30 @@ namespace librapid {
 
 		template<typename T_, i32 d_, i32 a_>
 		ExtentType(const ExtentType<T_, d_, a_> &e) {
-			LR_ASSERT(e.dims() < maxDims,
+			LR_ASSERT(e.ndim() < maxDims,
 					  "Extent with {} dimensions cannot be stored in an extent with a maximum of "
 					  "{} dimensions",
 					  d_,
 					  maxDims);
-			m_dims = e.dims();
+			m_dims = e.ndim();
 			for (i32 i = 0; i < m_dims; ++i) { m_data[i] = e[i]; }
 		}
 
 		ExtentType &operator=(const ExtentType &other) {
 			if (this == &other) return *this;
-			m_dims = other.dims();
+			m_dims = other.ndim();
 			for (i32 i = 0; i < m_dims; ++i) { m_data[i] = other[i]; }
 			return *this;
 		}
 
 		template<typename T_, i32 d_, i32 a_>
 		ExtentType &operator=(const ExtentType<T_, d_, a_> &other) {
-			LR_ASSERT(other.dims() < maxDims,
+			LR_ASSERT(other.ndim() < maxDims,
 					  "Extent with {} dimensions cannot be stored in an extent with a maximum of "
 					  "{} dimensions",
 					  d_,
 					  maxDims);
-			m_dims = other.dims();
+			m_dims = other.ndim();
 			for (i32 i = 0; i < m_dims; ++i) { m_data[i] = other[i]; }
 			return *this;
 		}
@@ -95,14 +95,14 @@ namespace librapid {
 
 		T index(const ExtentType &index) const {
 			LR_ASSERT(
-			  index.dims() == m_dims,
+			  index.ndim() == m_dims,
 			  "Cannot get index of Extent with {} dimensions using Extent with {} dimensions",
 			  m_dims,
-			  index.dims());
+			  index.ndim());
 
 			T res			   = 0;
 			ExtentType strides = stride();
-			for (i32 i = 0; i < index.dims(); ++i) { res += strides[i] * index[i]; }
+			for (i32 i = 0; i < index.ndim(); ++i) { res += strides[i] * index[i]; }
 			return res;
 		}
 
@@ -113,14 +113,14 @@ namespace librapid {
 
 		T indexAdjusted(const ExtentType &index) const {
 			LR_ASSERT(
-			  index.dims() == m_dims,
+			  index.ndim() == m_dims,
 			  "Cannot get index of Extent with {} dimensions using Extent with {} dimensions",
 			  m_dims,
-			  index.dims());
+			  index.ndim());
 
 			T res			   = 0;
 			ExtentType strides = strideAdjusted();
-			for (i32 i = 0; i < index.dims(); ++i) {
+			for (i32 i = 0; i < index.ndim(); ++i) {
 				LR_ASSERT(index.m_data[i] >= 0 && index[i] <= adjusted(i),
 						  "Index {} is out of range for Extent with adjusted dimension {}",
 						  index[i],
@@ -130,7 +130,7 @@ namespace librapid {
 			return res;
 		}
 
-		ExtentType reverseIndex(i32 index) const {
+		ExtentType reverseIndex(i64 index) const {
 			ExtentType res	   = zero(m_dims);
 			ExtentType strides = stride();
 			for (i32 i = 0; i < m_dims; ++i) {
@@ -152,14 +152,14 @@ namespace librapid {
 		LR_NODISCARD("")
 		ExtentType swivelled(const ExtentType<T_, d, a> &order) const {
 			LR_ASSERT(
-			  order.dims() == m_dims,
+			  order.ndim() == m_dims,
 			  "Swivel order must contain the same number of dimensions as the Extent to swivelled");
 
 #if defined(LIBRAPID_DEBUG)
 			// Check the order contains only valid numbers
-			for (i32 i = 0; i < order.dims(); ++i) {
+			for (i32 i = 0; i < order.ndim(); ++i) {
 				bool found = false;
-				for (i32 j = 0; j < order.dims(); ++j) {
+				for (i32 j = 0; j < order.ndim(); ++j) {
 					if (order[j] == i) {
 						found = true;
 						break;
@@ -170,7 +170,7 @@ namespace librapid {
 #endif
 
 			ExtentType res = zero(m_dims);
-			for (i32 i = 0; i < order.dims(); ++i) { res[order[i]] = m_data[i]; }
+			for (i32 i = 0; i < order.ndim(); ++i) { res[order[i]] = m_data[i]; }
 			return res;
 		}
 
@@ -179,21 +179,21 @@ namespace librapid {
 			*this = swivelled(order);
 		}
 
-		LR_NODISCARD("") LR_FORCE_INLINE i32 size() const {
-			i32 res = 1;
-			for (i32 i = 0; i < m_dims; ++i) res *= m_data[i];
+		LR_NODISCARD("") LR_FORCE_INLINE i64 size() const {
+			i64 res = 1;
+			for (i64 i = 0; i < m_dims; ++i) res *= m_data[i];
 			return res;
 		}
 
-		LR_NODISCARD("") LR_FORCE_INLINE i32 sizeAdjusted() const {
-			i32 res = 1;
-			for (i32 i = 0; i < m_dims; ++i) res *= adjusted(i);
+		LR_NODISCARD("") LR_FORCE_INLINE i64 sizeAdjusted() const {
+			i64 res = 1;
+			for (i64 i = 0; i < m_dims; ++i) res *= adjusted(i);
 			return res;
 		}
 
-		LR_NODISCARD("") LR_FORCE_INLINE i32 dims() const { return m_dims; }
+		LR_NODISCARD("") LR_FORCE_INLINE i32 ndim() const { return m_dims; }
 
-		const T &operator[](i32 index) const {
+		const T &operator[](i64 index) const {
 			LR_ASSERT(index >= 0 && index < m_dims,
 					  "Index {} is out of range for Extent with {} dimensions",
 					  index,
@@ -201,7 +201,7 @@ namespace librapid {
 			return m_data[index];
 		}
 
-		T &operator[](i32 index) {
+		T &operator[](i64 index) {
 			LR_ASSERT(index >= 0 && index < m_dims,
 					  "Index {} is out of range for Extent with {} dimensions",
 					  index,
@@ -209,7 +209,7 @@ namespace librapid {
 			return m_data[index];
 		}
 
-		T adjusted(i32 index) const {
+		T adjusted(i64 index) const {
 			LR_ASSERT(index >= 0 && index < m_dims,
 					  "Index {} is out of range for Extent with {} dimensions",
 					  index,
