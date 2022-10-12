@@ -40,6 +40,9 @@ namespace librapid {
 	template<typename Derived, typename device>
 	class ArrayBase;
 
+	template<typename Derived>
+	class ArraySlice;
+
 	namespace unary {
 		template<typename DST, typename OtherDerived>
 		class Cast;

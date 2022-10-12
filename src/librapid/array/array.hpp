@@ -16,6 +16,12 @@ namespace librapid {
 		};
 	} // namespace internal
 
+	namespace detail {
+		// Forward declare
+		template<typename T, typename D>
+		Array<T, D> constructFromInitializer(const std::initializer_list<T> &list);
+	} // namespace detail
+
 	template<typename Scalar_, typename Device_ = device::CPU>
 	class Array : public ArrayBase<Array<Scalar_, Device_>, Device_> {
 	public:
@@ -42,6 +48,10 @@ namespace librapid {
 		Array(const OtherDerived &other) : Base(other.extent()) {
 			Base::assign(other);
 		}
+
+		template<typename T>
+		Array(const std::initializer_list<T> &list) :
+				Base(detail::constructFromInitializer<T, Device>(list)) {}
 
 		Array(const Scalar &other) : Base(other) {}
 
@@ -76,7 +86,7 @@ namespace librapid {
 			i64 memIndex = this->m_isScalar ? 0 : Base::extent().indexAdjusted(index);
 			Array<Scalar, Device> res;
 			res.m_extent   = Base::extent().partial(1);
-			res.m_isScalar = Base::extent().dims() == 1;
+			res.m_isScalar = Base::extent().ndim() == 1;
 			res.m_storage  = Base::storage();
 			res.m_storage.offsetMemory(memIndex);
 
@@ -91,9 +101,9 @@ namespace librapid {
 		LR_NODISCARD("")
 		auto operator()(T... indices) const {
 			LR_ASSERT((this->m_isScalar && sizeof...(T) == 1) ||
-						sizeof...(T) == Base::extent().dims(),
+						sizeof...(T) == Base::extent().ndim(),
 					  "Array with {0} dimensions requires {0} access indices. Received {1}",
-					  Base::extent().dims(),
+					  Base::extent().ndim(),
 					  sizeof...(indices));
 
 			i64 index = Base::isScalar() ? 0 : Base::extent().index(indices...);
@@ -198,7 +208,7 @@ namespace librapid {
 
 		void findLongest(const std::string &format, bool strip, i64 stripWidth, i64 &longestInteger,
 						 i64 &longestf32ing) const {
-			i64 dims	= Base::extent().dims();
+			i64 dims	= Base::extent().ndim();
 			i64 zeroDim = Base::extent()[0];
 			if (dims > 1) {
 				for (i64 i = 0; i < zeroDim; ++i) {
@@ -250,7 +260,7 @@ namespace librapid {
 				// Always print the full vector if the array has all dimensions as 1 except a single
 				// axis, unless specified otherwise
 				i64 nonOneDims = 0;
-				for (i64 i = 0; i < Base::extent().dims(); ++i)
+				for (i64 i = 0; i < Base::extent().ndim(); ++i)
 					if (Base::extent()[i] != 1) ++nonOneDims;
 
 				if (nonOneDims == 1 && stripWidth == -1) stripWidth = 0;
@@ -282,7 +292,7 @@ namespace librapid {
 			}
 
 			std::string res = "[";
-			i64 dims		= Base::extent().dims();
+			i64 dims		= Base::extent().ndim();
 			i64 zeroDim		= Base::extent()[0];
 			if (dims > 1) {
 				for (i64 i = 0; i < zeroDim; ++i) {
@@ -331,6 +341,19 @@ namespace librapid {
 			return res + "]";
 		}
 	};
+
+	namespace detail {
+		// Construct from nested initializer lists
+		template<typename T, typename D>
+		Array<T, D> constructFromInitializer(const std::initializer_list<T> &list) {
+			if constexpr (internal::traits<T>::IsScalar) {
+				Array<T, D> res(Extent(list.size()));
+				for (i64 i = 0; i < list.size(); ++i) res(i) = *(list.begin() + i);
+				return res;
+			} else {
+			}
+		}
+	} // namespace detail
 
 #define FORCE_TMP_FUNC_BINOP(NAME, FUNC)                                                           \
 	template<typename T, typename D>                                                               \
