@@ -1041,8 +1041,8 @@ namespace librapid {
 				const T legTiny = fltEps == 0 ? T(0) : 2 * internal::traits<T>::min() / fltEps;
 
 				if (av < legTiny) {
-#if defined(LIBRAPID_USE_MULTIPREC)
 					i64 exponent;
+#if defined(LIBRAPID_USE_MULTIPREC)
 					if constexpr (std::is_same_v<T, mpfr>) {
 						exponent = -2 * ::mpfr::mpreal::get_default_prec();
 					} else {
