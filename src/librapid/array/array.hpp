@@ -18,8 +18,36 @@ namespace librapid {
 
 	namespace detail {
 		// Forward declare
-		template<typename T, typename D>
-		Array<T, D> constructFromInitializer(const std::initializer_list<T> &list);
+		template<typename Scalar, typename Device, typename T>
+		Array<Scalar, Device> constructFromVector(const std::vector<T> &list);
+
+		template<typename Scalar, typename Device, typename T>
+		Array<Scalar, Device> constructFromVector(const std::initializer_list<T> &list);
+
+		template<i64 Depth, typename Scalar>
+		class MakeInitializerList {
+		public:
+			typedef std::initializer_list<typename MakeInitializerList<Depth - 1, Scalar>::type>
+			  type;
+		};
+
+		template<typename Scalar>
+		class MakeInitializerList<0, Scalar> {
+		public:
+			typedef Scalar type;
+		};
+
+		template<i64 Depth, typename Scalar>
+		class MakeVector {
+		public:
+			typedef std::vector<typename MakeVector<Depth - 1, Scalar>::type> type;
+		};
+
+		template<typename Scalar>
+		class MakeVector<0, Scalar> {
+		public:
+			typedef Scalar type;
+		};
 	} // namespace detail
 
 	template<typename Scalar_, typename Device_ = device::CPU>
@@ -48,10 +76,6 @@ namespace librapid {
 		Array(const OtherDerived &other) : Base(other.extent()) {
 			Base::assign(other);
 		}
-
-		template<typename T>
-		Array(const std::initializer_list<T> &list) :
-				Base(detail::constructFromInitializer<T, Device>(list)) {}
 
 		Array(const Scalar &other) : Base(other) {}
 
@@ -110,10 +134,26 @@ namespace librapid {
 			return Base::storage()[index];
 		}
 
+		LR_NODISCARD("")
+		auto operator()(const Extent &index) const {
+			LR_ASSERT((this->m_isScalar && index.ndim() == 1) ||
+						index.ndim() == Base::extent().ndim(),
+					  "Array with {0} dimensions requires {0} access indices. Received {1}",
+					  Base::extent().ndim(),
+					  index.ndim());
+
+			return Base::storage()[Base::isScalar() ? 0 : Base::extent().index(index)];
+		}
+
 		template<typename... T>
 		LR_NODISCARD("")
 		auto operator()(T... indices) {
 			return const_cast<const Type *>(this)->operator()(indices...);
+		}
+
+		LR_NODISCARD("")
+		auto operator()(const Extent &index) {
+			return const_cast<const Type *>(this)->operator()(index);
 		}
 
 		template<typename T>
@@ -343,15 +383,30 @@ namespace librapid {
 	};
 
 	namespace detail {
-		// Construct from nested initializer lists
-		template<typename T, typename D>
-		Array<T, D> constructFromInitializer(const std::initializer_list<T> &list) {
+		// Construct from nested vectors
+		template<typename Scalar, typename Device, typename T>
+		Array<Scalar, Device> constructFromVector(const std::vector<T> &list) {
 			if constexpr (internal::traits<T>::IsScalar) {
-				Array<T, D> res(Extent(list.size()));
-				for (i64 i = 0; i < list.size(); ++i) res(i) = *(list.begin() + i);
+				Array<Scalar, Device> res(Extent(list.size()));
+				for (i64 i = 0; i < list.size(); ++i) res(i) = list[i];
 				return res;
 			} else {
+				// std::vector<i64> newSize = list[i].extent().toVector();
+				// newSize.insert(newSize.begin(), list.size());
+				// Array<T, D> res(Extent(newSize));
+
+				std::vector<Array<Scalar, Device>> tmp;
+				for (i64 i = 0; i < list.size(); ++i)
+					tmp.push_back(constructFromVector<Scalar, Device>(list[i]));
+
+				return concatenate(tmp, 0);
 			}
+		}
+
+		// Construct from nested initializer lists
+		template<typename Scalar, typename Device, typename T>
+		Array<Scalar, Device> constructFromInitializer(const std::initializer_list<T> &list) {
+			return constructFromVector<Scalar, Device>(list);
 		}
 	} // namespace detail
 
