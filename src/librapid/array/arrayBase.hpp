@@ -159,12 +159,12 @@ namespace librapid {
 
 		ArrayBase() = default;
 
-		template<typename T_, i32 d_, i32 a_>
+		template<typename T_, i64 d_, i64 a_>
 		explicit ArrayBase(const ExtentType<T_, d_, a_> &extent) :
 				m_isScalar(extent.size() == 0), m_extent(extent), m_storage(extent.sizeAdjusted()) {
 		}
 
-		template<typename T_, i32 d_, i32 a_>
+		template<typename T_, i64 d_, i64 a_>
 		explicit ArrayBase(const ExtentType<T_, d_, a_> &extent, int) :
 				m_isScalar(extent.size() == 0), m_extent(extent) {}
 
@@ -184,7 +184,7 @@ namespace librapid {
 			return assign(other);
 		}
 
-		LR_NODISCARD("") i32 ndim() const { return m_extent.ndim(); }
+		LR_NODISCARD("") i64 ndim() const { return m_extent.ndim(); }
 
 		template<typename T>
 		LR_NODISCARD("")
@@ -518,7 +518,7 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 		LR_FORCE_INLINE Derived &assign(const OtherDerived &other) {
 			// Construct if necessary
 			if (!m_storage) {
-				m_extent  = other.extent();
+				m_extent  = other.dextent();
 				m_storage = StorageType(m_extent.sizeAdjusted());
 			}
 

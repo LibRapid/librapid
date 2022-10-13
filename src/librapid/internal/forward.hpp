@@ -31,7 +31,7 @@ namespace librapid {
 	template<typename T>
 	T imag(const Complex<T> &val);
 
-	template<typename T, i32 maxDims, i32 align>
+	template<typename T, i64 maxDims, i64 align>
 	class ExtentType;
 
 	template<typename ArrT>

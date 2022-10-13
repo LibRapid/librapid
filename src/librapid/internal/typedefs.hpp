@@ -37,4 +37,6 @@ namespace librapid {
 	static_assert(sizeof(ui64) == 8, "ui64 is not 8 bytes");
 	static_assert(sizeof(f32) == 4, "f32 is not 4 bytes");
 	static_assert(sizeof(f64) == 8, "f64 is not 8 bytes");
+
+	static inline constexpr i64 AUTO = std::numeric_limits<i64>::max();
 } // namespace librapid

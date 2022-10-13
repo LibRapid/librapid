@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 
 namespace librapid {
@@ -13,13 +15,16 @@ namespace librapid {
 			using Packet					  = typename traits<Scalar>::Packet;
 			using Device					  = typename traits<Derived>::Device;
 			using StorageType				  = memory::DenseStorage<Scalar, Device>;
-			static constexpr ui64 Flags		  = (traits<Derived>::Flags) & ~flags::Evaluated;
+			static constexpr ui64 Flags =
+			  (traits<Derived>::Flags | flags::NoPacketOp) & ~flags::Evaluated;
 		};
 	} // namespace internal
 
 	class Slice {
 	public:
-		Slice()							= default;
+		Slice() = default;
+		Slice(const Extent &start, const Extent &stop, const Extent &stride) :
+				m_start(start), m_stop(stop), m_stride(stride) {}
 		Slice(const Slice &)			= default;
 		Slice(Slice &&)					= default;
 		Slice &operator=(const Slice &) = default;
@@ -65,64 +70,124 @@ namespace librapid {
 		using Base					= ArrayBase<Type, Device>;
 		static constexpr ui64 Flags = internal::traits<Derived>::Flags;
 
-		ArraySlice() = delete;
+		ArraySlice() = default;
 
-		ArraySlice(const Derived &derived, const Slice &slice) :
-				Base(derived.extent()), m_derived(derived), m_slice(slice) {
+		ArraySlice(const Derived &derived, Slice slice) :
+				Base(derived.extent()), m_derived(derived), m_slice(std::move(slice)) {
+			// Check the slice is valid
+			if (m_slice.start().ndim() == -1) {
+				m_slice.start() = Extent(std::vector<i64>(derived.ndim(), AUTO));
+			}
+
+			if (m_slice.stop().ndim() == -1) {
+				m_slice.stop() = Extent(std::vector<i64>(derived.ndim(), AUTO));
+			}
+
+			if (m_slice.stride().ndim() == -1) {
+				m_slice.stride() = Extent(std::vector<i64>(derived.ndim(), AUTO));
+			}
+
 			// Calculate the extent of the resulting array
 			std::vector<i64> tmpExtent(derived.ndim());
 			for (i64 i = 0; i < tmpExtent.size(); ++i) {
-				tmpExtent[i] = (m_slice.stop()[i] - m_slice.start()[i]) / m_slice.stride()[i];
+				// Adjust the start and stop values to account for negative values
+				if (m_slice.start()[i] < 0) { m_slice.start()[i] += derived.extent()[i]; }
+				if (m_slice.stop()[i] < 0) { m_slice.stop()[i] += derived.extent()[i]; }
+
+				// Automatic slice settings -- clip to the start/end of the array
+				if (m_slice.start()[i] == AUTO) { m_slice.start()[i] = 0; }
+				if (m_slice.stop()[i] == AUTO) { m_slice.stop()[i] = derived.extent()[i]; }
+				i64 delta = m_slice.stop()[i] - m_slice.start()[i];
+				if (m_slice.stride()[i] == AUTO) {
+					m_slice.stride()[i] = internal::copySign(i64(1), delta);
+				}
+
+				tmpExtent[i] = roundUpTo(delta, m_slice.stride()[i]) / m_slice.stride()[i];
+
+				LR_ASSERT(tmpExtent[i] > 0, "Invalid slice");
 			}
 			m_extent = Extent(tmpExtent);
 		}
 
-		ArraySlice(const ArraySlice &other) : Base(other.extent()) { m_derived = other.m_derived; }
-
-		ArraySlice(ArraySlice &&other) : Base(other.extent()) {
-			m_derived = std::move(other.m_derived);
-		}
-
-		ArraySlice &operator=(const ArraySlice &other) {
+		ArraySlice(const ArraySlice &other) : Base(other.extent()) {
 			m_derived = other.m_derived;
-			return *this;
+			m_slice	  = other.m_slice;
+			m_extent  = other.m_extent;
 		}
 
-		ArraySlice &operator=(ArraySlice &&other) noexcept {
+		ArraySlice(ArraySlice &&other) noexcept : Base(other.extent()) {
 			m_derived = std::move(other.m_derived);
-			return *this;
+			m_slice	  = std::move(other.m_slice);
+			m_extent  = std::move(other.m_extent);
 		}
 
-		LR_NODISCARD("") ArraySlice operator[](i64 index) const {
-			LR_ASSERT(false, "NOT YET IMPLEMENTED");
-			return ArraySlice(m_derived);
+		// ArraySlice &operator=(const ArraySlice &other) {
+		// 	m_derived = other.m_derived;
+		// 	m_slice	  = other.m_slice;
+		// 	m_extent  = other.m_extent;
+		// 	return *this;
+		// }
+
+		// ArraySlice &operator=(ArraySlice &&other) noexcept {
+		// 	m_derived = std::move(other.m_derived);
+		// 	m_slice	  = std::move(other.m_slice);
+		// 	m_extent  = std::move(other.m_extent);
+		// 	return *this;
+		// }
+
+		template<typename OtherDerived>
+		ArraySlice &operator=(const OtherDerived &other) {
+			LR_ASSERT(other.extent() == m_extent, "Array extents must match");
+
+			for (i64 i = 0; i < m_extent.size(); ++i) {
+				Extent tmpIndex = m_extent.reverseIndex(i);
+				(*this)(tmpIndex) = other.scalar(i);
+			}
+		}
+
+		auto operator[](i64 index) const { return eval()[index]; }
+
+		template<typename... T>
+		LR_NODISCARD("")
+		auto operator()(T... indices) const {
+			Extent index(indices...);
+			for (i64 i = 0; i < index.ndim(); ++i) {
+				index[i] = index[i] * m_slice.stride()[i] + m_slice.start()[i];
+			}
+			return m_derived(index);
+		}
+
+		LR_NODISCARD("")
+		auto operator()(Extent index) const {
+			for (i64 i = 0; i < index.ndim(); ++i) {
+				index[i] = index[i] * m_slice.stride()[i] + m_slice.start()[i];
+			}
+			return m_derived(index);
 		}
 
 		template<typename... T>
 		LR_NODISCARD("")
-		Scalar operator()(T... indices) const {
-			Extent tmpIndex(indices...);
-			return m_derived(tmpIndex);
+		auto operator()(T... indices) {
+			return const_cast<const Type *>(this)->operator()(indices...);
 		}
 
 		LR_NODISCARD("")
-		Scalar operator()(const Extent &index) const {
-			Extent tmpIndex(index);
-			for (i64 i = 0; i < tmpIndex.ndim(); ++i) {
-				tmpIndex[i] = tmpIndex[i] * m_slice.stride()[i] + m_slice.start()[i];
-			}
-			return m_derived(tmpIndex);
+		auto operator()(const Extent &index) {
+			return const_cast<const Type *>(this)->operator()(index);
 		}
 
 		// Evaluate the slice and return a new array
 		LR_NODISCARD("") Array<Scalar, Device> eval() const {
 			Array<Scalar, Device> result(m_extent);
 			auto resStorage = result.storage();
-			for (i64 i = 0; i < m_extent.size(); ++i) {
-				resStorage[i]		= at(i);
-			}
+			for (i64 i = 0; i < m_extent.size(); ++i) { resStorage[i] = at(i); }
 			return result;
 		}
+
+		LR_NODISCARD("") LR_FORCE_INLINE Scalar scalar(i64 index) const { return at(index); }
+
+		LR_NODISCARD("") LR_INLINE const Extent &extent() const { return m_extent; }
+		LR_NODISCARD("") LR_INLINE Extent &extent() { return m_extent; }
 
 	private:
 		LR_NODISCARD("")
