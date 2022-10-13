@@ -13,8 +13,8 @@ namespace librapid {
 
 		// Check all arrays have the same extent, other than the
 		// concatenation axis
-		i64 concatAxisSize = 0;
 		Extent dim0		   = arrays[0].extent();
+		i64 concatAxisSize = dim0[axis];
 		for (i64 i = 1; i < arrays.size(); i++) {
 			Extent dim = arrays[i].extent();
 			LR_ASSERT(dim.ndim() == dim0.ndim(),
@@ -27,8 +27,8 @@ namespace librapid {
 			concatAxisSize += dim[axis];
 		}
 
-		Extent resExtent(dim0.ndim() + 1);
-		for (i64 i = 0; i < dim0.ndim(); i++) {
+		Extent resExtent = Extent::zero(dim0.ndim());
+		for (i64 i = 0; i < dim0.ndim() - 1; i++) {
 			if (i == axis) {
 				resExtent[i]	 = concatAxisSize;
 				resExtent[i + 1] = dim0[i];
@@ -40,9 +40,17 @@ namespace librapid {
 		Array<T, D> result(resExtent);
 
 		// Concatenate the arrays on the given axis
-		for (i64 i = 0; i < arrays.size(); ++i) {}
+		Extent start = Extent::zero(result.ndim());
+		Extent stop;
 
-		return 5;
+		for (i64 i = 0; i < arrays.size(); ++i) {
+			stop										  = arrays[i].extent();
+			stop[axis]									  = start[axis] + arrays[i].extent()[axis];
+			result.slice(Slice().start(start).stop(stop)) = arrays[i];
+			start[axis] += arrays[i].extent()[axis];
+		}
+
+		return result;
 	}
 
 	// Same function, except for initializer lists
