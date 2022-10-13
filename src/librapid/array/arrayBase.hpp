@@ -291,8 +291,8 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 		}
 
 		// Return a slice of the Array
-		LR_NODISCARD("") auto slice(const Extent &offset, const Extent &stride) const {
-			return ArraySlice<Derived>(derived(), offset, stride);
+		LR_NODISCARD("") auto slice(const Slice &slice) const {
+			return ArraySlice<Derived>(derived(), slice);
 		}
 
 		IMPL_BINOP(operator+, ScalarSum)
