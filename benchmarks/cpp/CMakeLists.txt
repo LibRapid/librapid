@@ -4,3 +4,4 @@ function(make_benchmark name)
 endfunction()
 
 make_benchmark(constructors)
+make_benchmark(arithmetic)

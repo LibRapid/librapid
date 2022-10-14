@@ -1,4 +1,4 @@
-// Benchmark every Array constructor
+// Benchmark array constructor -- a fairly useless benchmark but why not :)
 
 #include <librapid>
 #include "helpers.hpp"
@@ -6,7 +6,7 @@
 namespace lrc = librapid;
 
 template<typename Scalar, typename Device>
-void benchmarkConstructors(double benchTime) {
+void benchmarkConstructor(double benchTime) {
 	std::vector<lrc::Extent> sizes = {lrc::Extent(10),
 									  lrc::Extent(100),
 									  lrc::Extent(1000),
@@ -49,18 +49,18 @@ void benchmarkConstructors(double benchTime) {
 int main() {
 	fmt::print("Hello, World\n");
 
-	benchmarkConstructors<bool, lrc::device::CPU>(1);
-	benchmarkConstructors<lrc::i16, lrc::device::CPU>(1);
-	benchmarkConstructors<float, lrc::device::CPU>(1);
-	benchmarkConstructors<lrc::i64, lrc::device::CPU>(1);
+	benchmarkConstructor<bool, lrc::device::CPU>(1);
+	benchmarkConstructor<lrc::i16, lrc::device::CPU>(1);
+	benchmarkConstructor<float, lrc::device::CPU>(1);
+	benchmarkConstructor<lrc::i64, lrc::device::CPU>(1);
 
 #if defined(LIBRAPID_HAS_CUDA)
 	fmt::print("\n\n");
 
-	benchmarkConstructors<bool, lrc::device::GPU>(1);
-	benchmarkConstructors<lrc::i16, lrc::device::GPU>(1);
-	benchmarkConstructors<float, lrc::device::GPU>(1);
-	benchmarkConstructors<lrc::i64, lrc::device::GPU>(1);
+	benchmarkConstructor<bool, lrc::device::GPU>(1);
+	benchmarkConstructor<lrc::i16, lrc::device::GPU>(1);
+	benchmarkConstructor<float, lrc::device::GPU>(1);
+	benchmarkConstructor<lrc::i64, lrc::device::GPU>(1);
 #endif // LIBRAPID_HAS_CUDA
 
 	return 0;
