@@ -96,7 +96,13 @@ namespace librapid {
 
 				// Automatic slice settings -- clip to the start/end of the array
 				if (m_slice.start()[i] == AUTO) { m_slice.start()[i] = 0; }
-				if (m_slice.stop()[i] == AUTO) { m_slice.stop()[i] = derived.extent()[i]; }
+				if (m_slice.stop()[i] == AUTO) {
+					if (m_slice.stride()[i] < 0) {
+						m_slice.stop()[i] = -1;
+					} else {
+						m_slice.stop()[i] = derived.extent()[i];
+					}
+				}
 				i64 delta = m_slice.stop()[i] - m_slice.start()[i];
 				if (m_slice.stride()[i] == AUTO) {
 					m_slice.stride()[i] = internal::copySign(i64(1), delta);
@@ -140,7 +146,7 @@ namespace librapid {
 			LR_ASSERT(other.extent() == m_extent, "Array extents must match");
 
 			for (i64 i = 0; i < m_extent.size(); ++i) {
-				Extent tmpIndex = m_extent.reverseIndex(i);
+				Extent tmpIndex	  = m_extent.reverseIndex(i);
 				(*this)(tmpIndex) = other.scalar(i);
 			}
 		}
@@ -205,3 +211,27 @@ namespace librapid {
 		Extent m_extent;
 	};
 } // namespace librapid
+
+template<typename Derived>
+struct fmt::formatter<librapid::ArraySlice<Derived>> {
+	std::string formatStr = "{}";
+
+	template<typename ParseContext>
+	constexpr auto parse(ParseContext &ctx) {
+		formatStr = "{:";
+		auto it	  = ctx.begin();
+		for (; it != ctx.end(); ++it) {
+			if (*it == '}') break;
+			formatStr += *it;
+		}
+		formatStr += "}";
+		return it;
+	}
+
+	template<typename FormatContext>
+	auto format(const librapid::ArraySlice<Derived> &slice, FormatContext &ctx) {
+		try {
+			return fmt::format_to(ctx.out(), slice.eval().str(formatStr));
+		} catch (std::exception &e) { return fmt::format_to(ctx.out(), e.what()); }
+	}
+};

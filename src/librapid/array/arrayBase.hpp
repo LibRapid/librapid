@@ -518,7 +518,7 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 		LR_FORCE_INLINE Derived &assign(const OtherDerived &other) {
 			// Construct if necessary
 			if (!m_storage) {
-				m_extent  = other.dextent();
+				m_extent  = other.extent();
 				m_storage = StorageType(m_extent.sizeAdjusted());
 			}
 

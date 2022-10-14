@@ -14,7 +14,7 @@ namespace librapid::functors::matrix {
 
 		Transpose() = default;
 
-		template<typename T, i32 d, i32 a>
+		template<typename T, i64 d, i64 a>
 		explicit Transpose(const ExtentType<T, d, a> &order) : m_order(order) {};
 
 		Transpose(const Transpose<Type> &other) = default;
@@ -73,7 +73,7 @@ namespace librapid::functors::matrix {
 			return -1;
 		}
 
-		template<typename T, i32 d, i32 a>
+		template<typename T, i64 d, i64 a>
 		LR_NODISCARD("")
 		ExtentType<T, d, a> genExtent(const ExtentType<T, d, a> &extent) const {
 			return extent.swivelled(m_order);

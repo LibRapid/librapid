@@ -33,7 +33,7 @@ namespace librapid::functors::misc {
 			return fmt::format("{0}({1}) + {0}(0) *", internal::traits<Type>::Name, m_val);
 		}
 
-		template<typename T, i32 d, i32 a>
+		template<typename T, i64 d, i64 a>
 		LR_NODISCARD("")
 		ExtentType<T, d, a> genExtent(const ExtentType<T, d, a> &extent) const {
 			return extent;
