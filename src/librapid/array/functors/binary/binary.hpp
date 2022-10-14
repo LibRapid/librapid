@@ -7,9 +7,9 @@ namespace librapid::functors::binary {
 		using LhsType				   = LHS;
 		using RhsType				   = RHS;
 		using RetType				   = std::false_type;
-		static constexpr int64_t Flags = 0;
+		static constexpr i64 Flags = 0;
 
-		template<typename T, i32 d, i32 a>
+		template<typename T, i64 d, i64 a>
 		LR_NODISCARD("")
 		ExtentType<T, d> genExtent(const ExtentType<T, d, a> &lhs,
 								   const ExtentType<T, d, a> &rhs) const {
@@ -17,7 +17,7 @@ namespace librapid::functors::binary {
 		}
 
 		// For a scalar operation
-		template<typename T, i32 d, i32 a>
+		template<typename T, i64 d, i64 a>
 		LR_NODISCARD("")
 		ExtentType<T, d> genExtent(const ExtentType<T, d, a> &generic) const {
 			return generic;
