@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <cstddef>
+#include <cfloat>
 #include <string>
 #include <vector>
 #include <type_traits>
@@ -22,6 +23,7 @@
 #include <utility>
 #include <mutex>
 #include <queue>
+#include <numeric>
 
 #if defined(_OPENMP)
 #	include <omp.h>
@@ -947,6 +949,21 @@ static const char *getCublasErrorEnum_(cublasStatus_t error) {
 namespace librapid::device {
 	struct CPU {};
 	struct GPU {};
+
+	template<typename T>
+	LR_INLINE std::string toString() {
+		return "UNKNOWN";
+	}
+
+	template<>
+	LR_INLINE std::string toString<CPU>() {
+		return "CPU";
+	}
+
+	template<>
+	LR_INLINE std::string toString<GPU>() {
+		return "GPU";
+	}
 } // namespace librapid::device
 
 // User Config Variables

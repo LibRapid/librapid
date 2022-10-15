@@ -55,8 +55,10 @@
 #include "array/cwisemap.hpp"
 #include "array/cast.hpp"
 #include "array/commaInitializer.hpp"
+#include "array/slice.hpp"
 #include "array/arrayBase.hpp"
 #include "array/array.hpp"
+#include "array/concatenate.hpp"
 
 #include "utils/suffix.hpp"
 #include "test/test.hpp"

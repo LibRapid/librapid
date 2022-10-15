@@ -8,9 +8,12 @@ namespace librapid::test {
 
 		template<typename T>
 		bool isClose(T a, T b) {
-			if constexpr (std::is_floating_point_v<T> || std::is_same_v<T, half> ||
-						  std::is_same_v<T, mpf> || std::is_same_v<T, mpq> ||
-						  std::is_same_v<T, mpfr>)
+			if constexpr (std::is_floating_point_v<T> || std::is_same_v<T, half>
+#if defined(LIBRAPID_MULTIPRECISION)
+						  || std::is_same_v<T, mpf> || std::is_same_v<T, mpq> ||
+						  std::is_same_v<T, mpfr>
+#endif // LIBRAPID_MULTIPRECISION
+			)
 				return abs(a - b) < internal::traits<T>::epsilon();
 			return a == b;
 		}

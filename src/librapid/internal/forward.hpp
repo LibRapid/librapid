@@ -31,7 +31,7 @@ namespace librapid {
 	template<typename T>
 	T imag(const Complex<T> &val);
 
-	template<typename T, i32 maxDims, i32 align>
+	template<typename T, i64 maxDims, i64 align>
 	class ExtentType;
 
 	template<typename ArrT>
@@ -39,6 +39,9 @@ namespace librapid {
 
 	template<typename Derived, typename device>
 	class ArrayBase;
+
+	template<typename Derived>
+	class ArraySlice;
 
 	namespace unary {
 		template<typename DST, typename OtherDerived>

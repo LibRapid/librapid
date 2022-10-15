@@ -159,12 +159,12 @@ namespace librapid {
 
 		ArrayBase() = default;
 
-		template<typename T_, i32 d_, i32 a_>
+		template<typename T_, i64 d_, i64 a_>
 		explicit ArrayBase(const ExtentType<T_, d_, a_> &extent) :
 				m_isScalar(extent.size() == 0), m_extent(extent), m_storage(extent.sizeAdjusted()) {
 		}
 
-		template<typename T_, i32 d_, i32 a_>
+		template<typename T_, i64 d_, i64 a_>
 		explicit ArrayBase(const ExtentType<T_, d_, a_> &extent, int) :
 				m_isScalar(extent.size() == 0), m_extent(extent) {}
 
@@ -183,6 +183,8 @@ namespace librapid {
 		LR_INLINE Derived &operator=(const OtherDerived &other) {
 			return assign(other);
 		}
+
+		LR_NODISCARD("") i64 ndim() const { return m_extent.ndim(); }
 
 		template<typename T>
 		LR_NODISCARD("")
@@ -288,6 +290,11 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 			return res.template cast<T>();
 		}
 
+		// Return a slice of the Array
+		LR_NODISCARD("") auto slice(const Slice &slice) const {
+			return ArraySlice<Derived>(derived(), slice);
+		}
+
 		IMPL_BINOP(operator+, ScalarSum)
 		IMPL_BINOP(operator-, ScalarDiff)
 		IMPL_BINOP(operator*, ScalarProd)
@@ -321,10 +328,10 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 						  "Scalar type is incompatible with Functor");
 
 			Extent order;
-			if (order_.dims() == -1) {
+			if (order_.ndim() == -1) {
 				// Default order is to reverse all indices
-				order = Extent::zero(m_extent.dims());
-				for (i64 i = 0; i < m_extent.dims(); ++i) { order[m_extent.dims() - i - 1] = i; }
+				order = Extent::zero(m_extent.ndim());
+				for (i64 i = 0; i < m_extent.ndim(); ++i) { order[m_extent.ndim() - i - 1] = i; }
 			} else {
 				order = order_;
 			}
@@ -394,7 +401,7 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 				return eval().dot(other.eval());
 			}
 
-			if (m_extent.dims() == 1 && other.extent().dims() == 1) {
+			if (m_extent.ndim() == 1 && other.extent().ndim() == 1) {
 				// Vector dot product
 				auto strideThis	 = m_extent.strideAdjusted();
 				auto strideOther = other.extent().strideAdjusted();
@@ -406,7 +413,7 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 											 strideOther[0]);
 
 				return Array<Scalar, Device>(res);
-			} else if (m_extent.dims() == 2 && other.extent().dims() == 1) {
+			} else if (m_extent.ndim() == 2 && other.extent().ndim() == 1) {
 				// Matrix-vector product
 
 				LR_ASSERT(m_extent[1] == other.extent()[0],
@@ -430,7 +437,7 @@ void castKernel({1} *dst, {2} *src, i64 size) {{
 								   res.extent().strideAdjusted()[0]);
 
 				return res;
-			} else if (m_extent.dims() == 2 && other.extent().dims() == 2) {
+			} else if (m_extent.ndim() == 2 && other.extent().ndim() == 2) {
 				// Matrix product
 
 				LR_ASSERT(m_extent[1] == other.extent()[0],
