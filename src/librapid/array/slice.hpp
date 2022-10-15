@@ -149,6 +149,7 @@ namespace librapid {
 				Extent tmpIndex	  = m_extent.reverseIndex(i);
 				(*this)(tmpIndex) = other.scalar(i);
 			}
+			return *this;
 		}
 
 		auto operator[](i64 index) const { return eval()[index]; }
