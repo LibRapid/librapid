@@ -988,6 +988,7 @@ namespace librapid {
 	void prec(int64_t); // Forward declare
 
 	LR_INLINE void setNumThreads(int64_t num) { numThreads = num; }
+	LR_INLINE void setMatrixThreads(int64_t num) { matrixThreads = num; }
 
 	namespace internal {
 #if defined(LIBRAPID_HAS_CUDA)

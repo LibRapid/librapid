@@ -506,9 +506,9 @@ namespace librapid::internal {
 		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 	};
 
-	// 16bit f32ing Point implementation is in "librapid/modified/f3216/f3216.hpp"
+	// 16bit floating Point implementation is in "librapid/modified/float16/float16.hpp"
 
-	//------- 32bit f32ing Point --------------------------------------------
+	//------- 32bit floating Point --------------------------------------------
 	template<>
 	struct traits<f32> {
 		static constexpr bool IsScalar	  = true;
@@ -547,7 +547,7 @@ namespace librapid::internal {
 		LR_FORCE_INLINE LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 	};
 
-	//------- 64bit f32ing Point --------------------------------------------
+	//------- 64bit floating Point --------------------------------------------
 	template<>
 	struct traits<f64> {
 		static constexpr bool IsScalar	  = true;
