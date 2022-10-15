@@ -16,6 +16,40 @@ namespace librapid {
 		};
 	} // namespace internal
 
+	namespace detail {
+		// Forward declare
+		template<typename Scalar, typename Device, typename T>
+		Array<Scalar, Device> constructFromVector(const std::vector<T> &list);
+
+		template<typename Scalar, typename Device, typename T>
+		Array<Scalar, Device> constructFromVector(const std::initializer_list<T> &list);
+
+		template<i64 Depth, typename Scalar>
+		class MakeInitializerList {
+		public:
+			typedef std::initializer_list<typename MakeInitializerList<Depth - 1, Scalar>::type>
+			  type;
+		};
+
+		template<typename Scalar>
+		class MakeInitializerList<0, Scalar> {
+		public:
+			typedef Scalar type;
+		};
+
+		template<i64 Depth, typename Scalar>
+		class MakeVector {
+		public:
+			typedef std::vector<typename MakeVector<Depth - 1, Scalar>::type> type;
+		};
+
+		template<typename Scalar>
+		class MakeVector<0, Scalar> {
+		public:
+			typedef Scalar type;
+		};
+	} // namespace detail
+
 	template<typename Scalar_, typename Device_ = device::CPU>
 	class Array : public ArrayBase<Array<Scalar_, Device_>, Device_> {
 	public:
@@ -76,7 +110,7 @@ namespace librapid {
 			i64 memIndex = this->m_isScalar ? 0 : Base::extent().indexAdjusted(index);
 			Array<Scalar, Device> res;
 			res.m_extent   = Base::extent().partial(1);
-			res.m_isScalar = Base::extent().dims() == 1;
+			res.m_isScalar = Base::extent().ndim() == 1;
 			res.m_storage  = Base::storage();
 			res.m_storage.offsetMemory(memIndex);
 
@@ -91,19 +125,35 @@ namespace librapid {
 		LR_NODISCARD("")
 		auto operator()(T... indices) const {
 			LR_ASSERT((this->m_isScalar && sizeof...(T) == 1) ||
-						sizeof...(T) == Base::extent().dims(),
+						sizeof...(T) == Base::extent().ndim(),
 					  "Array with {0} dimensions requires {0} access indices. Received {1}",
-					  Base::extent().dims(),
+					  Base::extent().ndim(),
 					  sizeof...(indices));
 
 			i64 index = Base::isScalar() ? 0 : Base::extent().index(indices...);
 			return Base::storage()[index];
 		}
 
+		LR_NODISCARD("")
+		auto operator()(const Extent &index) const {
+			LR_ASSERT((this->m_isScalar && index.ndim() == 1) ||
+						index.ndim() == Base::extent().ndim(),
+					  "Array with {0} dimensions requires {0} access indices. Received {1}",
+					  Base::extent().ndim(),
+					  index.ndim());
+
+			return Base::storage()[Base::isScalar() ? 0 : Base::extent().index(index)];
+		}
+
 		template<typename... T>
 		LR_NODISCARD("")
 		auto operator()(T... indices) {
 			return const_cast<const Type *>(this)->operator()(indices...);
+		}
+
+		LR_NODISCARD("")
+		auto operator()(const Extent &index) {
+			return const_cast<const Type *>(this)->operator()(index);
 		}
 
 		template<typename T>
@@ -198,7 +248,7 @@ namespace librapid {
 
 		void findLongest(const std::string &format, bool strip, i64 stripWidth, i64 &longestInteger,
 						 i64 &longestf32ing) const {
-			i64 dims	= Base::extent().dims();
+			i64 dims	= Base::extent().ndim();
 			i64 zeroDim = Base::extent()[0];
 			if (dims > 1) {
 				for (i64 i = 0; i < zeroDim; ++i) {
@@ -250,7 +300,7 @@ namespace librapid {
 				// Always print the full vector if the array has all dimensions as 1 except a single
 				// axis, unless specified otherwise
 				i64 nonOneDims = 0;
-				for (i64 i = 0; i < Base::extent().dims(); ++i)
+				for (i64 i = 0; i < Base::extent().ndim(); ++i)
 					if (Base::extent()[i] != 1) ++nonOneDims;
 
 				if (nonOneDims == 1 && stripWidth == -1) stripWidth = 0;
@@ -282,7 +332,7 @@ namespace librapid {
 			}
 
 			std::string res = "[";
-			i64 dims		= Base::extent().dims();
+			i64 dims		= Base::extent().ndim();
 			i64 zeroDim		= Base::extent()[0];
 			if (dims > 1) {
 				for (i64 i = 0; i < zeroDim; ++i) {
@@ -331,6 +381,34 @@ namespace librapid {
 			return res + "]";
 		}
 	};
+
+	namespace detail {
+		// Construct from nested vectors
+		template<typename Scalar, typename Device, typename T>
+		Array<Scalar, Device> constructFromVector(const std::vector<T> &list) {
+			if constexpr (internal::traits<T>::IsScalar) {
+				Array<Scalar, Device> res(Extent(list.size()));
+				for (i64 i = 0; i < list.size(); ++i) res(i) = list[i];
+				return res;
+			} else {
+				// std::vector<i64> newSize = list[i].extent().toVector();
+				// newSize.insert(newSize.begin(), list.size());
+				// Array<T, D> res(Extent(newSize));
+
+				std::vector<Array<Scalar, Device>> tmp;
+				for (i64 i = 0; i < list.size(); ++i)
+					tmp.push_back(constructFromVector<Scalar, Device>(list[i]));
+
+				return concatenate(tmp, 0);
+			}
+		}
+
+		// Construct from nested initializer lists
+		template<typename Scalar, typename Device, typename T>
+		Array<Scalar, Device> constructFromInitializer(const std::initializer_list<T> &list) {
+			return constructFromVector<Scalar, Device>(list);
+		}
+	} // namespace detail
 
 #define FORCE_TMP_FUNC_BINOP(NAME, FUNC)                                                           \
 	template<typename T, typename D>                                                               \

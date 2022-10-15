@@ -76,9 +76,9 @@ jobs:
         env:
           LIBRAPID_NO_ARCH: yes
 
-  # Ensure all tests pass on MacOS
+  # Ensure all tests pass on MacOS (GCC)
   run_macos_tests:
-    name: Run MacOS Tests
+    name: Run MacOS Tests (GCC)
     runs-on: macos-latest
     needs: check_build_trigger
     

@@ -14,7 +14,7 @@ namespace librapid::functors::matrix {
 
 		Transpose() = default;
 
-		template<typename T, i32 d, i32 a>
+		template<typename T, i64 d, i64 a>
 		explicit Transpose(const ExtentType<T, d, a> &order) : m_order(order) {};
 
 		Transpose(const Transpose<Type> &other) = default;
@@ -55,7 +55,7 @@ namespace librapid::functors::matrix {
 			auto swivelled = extent.reverseIndex(index).swivelled(m_order);
 			auto first	   = extent.indexAdjusted(swivelled);
 			auto stride	   = extent.strideAdjusted();
-			auto inc	   = stride[m_order[extent.dims() - 1]];
+			auto inc	   = stride[m_order[extent.ndim() - 1]];
 
 			if constexpr (std::is_same_v<Scalar, bool>) {
 				LR_ASSERT(false, "Boolean Arrays do not currently support Matrix operations");
@@ -73,7 +73,7 @@ namespace librapid::functors::matrix {
 			return -1;
 		}
 
-		template<typename T, i32 d, i32 a>
+		template<typename T, i64 d, i64 a>
 		LR_NODISCARD("")
 		ExtentType<T, d, a> genExtent(const ExtentType<T, d, a> &extent) const {
 			return extent.swivelled(m_order);
