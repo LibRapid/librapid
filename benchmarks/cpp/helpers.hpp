@@ -14,8 +14,6 @@ void printTable(const std::vector<std::string> &headings,
 		}
 	}
 
-	auto consoleSize = lrc::getConsoleSize();
-
 	std::string heading;
 	std::string line;
 	for (lrc::i64 i = 0; i < headings.size(); ++i) {

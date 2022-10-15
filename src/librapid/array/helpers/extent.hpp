@@ -318,3 +318,30 @@ namespace librapid {
 
 	using Extent = ExtentType<i64, 32, 1>;
 } // namespace librapid
+
+// Provide {fmt} printing capabilities
+#ifdef FMT_API
+template<typename T, librapid::i64 maxDims, librapid::i64 align_>
+struct fmt::formatter<librapid::ExtentType<T, maxDims, align_>> {
+	std::string formatStr = "{}";
+
+	template<typename ParseContext>
+	constexpr auto parse(ParseContext &ctx) {
+		formatStr = "{:";
+		auto it	  = ctx.begin();
+		for (; it != ctx.end(); ++it) {
+			if (*it == '}') break;
+			formatStr += *it;
+		}
+		formatStr += "}";
+		return it;
+	}
+
+	template<typename FormatContext>
+	auto format(const librapid::ExtentType<T, maxDims, align_> &extent, FormatContext &ctx) {
+		try {
+			return fmt::format_to(ctx.out(), extent.str());
+		} catch (std::exception &e) { return fmt::format_to(ctx.out(), e.what()); }
+	}
+};
+#endif // FMT_API
