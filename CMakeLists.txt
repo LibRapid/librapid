@@ -6,6 +6,7 @@ cmake_policy(SET CMP0077 NEW)
 
 # Optional LibRapid settings
 option(LIBRAPID_BUILD_EXAMPLES "Compile LibRapid C++ Examples" OFF)
+option(LIBRAPID_BUILD_BENCHMARKS "Compile LibRapid C++ Benchmarks" OFF)
 option(LIBRAPID_BUILD_TESTS "Compile LibRapid C++ Tests" OFF)
 
 option(LIBRAPID_GET_BLAS "Download pre-built OpenBLAS binaries and use them" OFF)
@@ -433,7 +434,12 @@ if (${SKBUILD})
 else ()
     if (${LIBRAPID_BUILD_EXAMPLES})
         message(STATUS "Building LibRapid Examples")
-        add_subdirectory(examples)
+        add_subdirectory(examples/cpp)
+    endif ()
+
+    if (${LIBRAPID_BUILD_BENCHMARKS})
+        message(STATUS "Building LibRapid Benchmarks")
+        add_subdirectory(benchmarks/cpp)
     endif ()
 
     if (${LIBRAPID_BUILD_TESTS})
