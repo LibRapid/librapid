@@ -22,10 +22,11 @@ namespace librapid {
 
 	namespace binop {
 		template<typename Binop, typename LHS, typename RHS>
-		class CWiseBinop : public ArrayBase<CWiseBinop<Binop, LHS, RHS>,
-											typename memory::PromoteDevice<
-											  typename internal::traits<LHS>::Device,
-											  typename internal::traits<RHS>::Device>::type> {
+		class CWiseBinop
+				: public ArrayBase<
+					CWiseBinop<Binop, LHS, RHS>,
+					typename memory::PromoteDevice<typename internal::traits<LHS>::Device,
+												   typename internal::traits<RHS>::Device>::type> {
 		public:
 			using Operation = Binop;
 			using Scalar	= typename Binop::RetType;
@@ -39,7 +40,7 @@ namespace librapid {
 			using Base		= ArrayBase<Type, Device>;
 			static constexpr bool LhsIsScalar = internal::traits<LeftType>::IsScalar;
 			static constexpr bool RhsIsScalar = internal::traits<RightType>::IsScalar;
-			static constexpr ui64 Flags	  = internal::traits<Type>::Flags;
+			static constexpr ui64 Flags		  = internal::traits<Type>::Flags;
 
 			CWiseBinop() = delete;
 
@@ -59,17 +60,7 @@ namespace librapid {
 					Base(op.extent(), 0), m_lhs(op.m_lhs), m_rhs(op.m_rhs),
 					m_operation(op.m_operation) {}
 
-			CWiseBinop &operator=(const Type &op) {
-				if (this == &op) return *this;
-
-				Base::m_extent = op.m_extent;
-
-				m_lhs		= op.m_lhs;
-				m_rhs		= op.m_rhs;
-				m_operation = op.m_operation;
-
-				return *this;
-			}
+			CWiseBinop &operator=(const Type &op) = delete;
 
 			LR_NODISCARD("") Array<Scalar, Device> operator[](i64 index) const {
 				LR_WARN_ONCE(
@@ -163,15 +154,15 @@ namespace librapid {
 
 			LR_NODISCARD("")
 			std::string str(std::string format = "", const std::string &delim = " ",
-							i64 stripWidth = -1, i64 beforePoint = -1,
-							i64 afterPoint = -1, i64 depth = 0) const {
+							i64 stripWidth = -1, i64 beforePoint = -1, i64 afterPoint = -1,
+							i64 depth = 0) const {
 				return eval().str(format, delim, stripWidth, beforePoint, afterPoint, depth);
 			}
 
 		private:
-			LeftType m_lhs;
-			RightType m_rhs;
-			Binop m_operation {};
+			const LeftType &m_lhs;
+			const RightType &m_rhs;
+			Binop m_operation;
 		};
 	} // namespace binop
 } // namespace librapid

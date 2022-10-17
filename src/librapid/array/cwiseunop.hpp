@@ -41,21 +41,7 @@ namespace librapid {
 					Base(op.extent(), 0), m_value(op.m_value), m_operation(op.m_operation) {}
 
 			template<typename T>
-			CWiseUnop &operator=(const T &op) {
-				static_assert(
-				  is_same_v<T, Type>,
-				  "Lazy-evaluated result cannot be assigned a different type. Please either "
-				  "evaluate the result (using 'eval()') or create a new variable");
-
-				if (this == &op) return *this;
-
-				Base::m_extent = op.m_extent;
-
-				m_value		= op.m_value;
-				m_operation = op.m_operation;
-
-				return *this;
-			}
+			CWiseUnop &operator=(const T &op) = delete;
 
 			LR_NODISCARD("") Array<Scalar, Device> operator[](i64 index) const {
 				LR_WARN_ONCE(
@@ -134,7 +120,7 @@ namespace librapid {
 			}
 
 		protected:
-			ValType m_value;
+			const ValType &m_value;
 			Operation m_operation {};
 		};
 	} // namespace unop
