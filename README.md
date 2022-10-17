@@ -68,7 +68,6 @@ be included with a CMake option. The following is a list of the external depende
 
 [![Star History Chart](https://api.star-history.com/svg?repos=LibRapid/librapid&type=Date)](https://star-history.com/#LibRapid/librapid&Date)
 
-
 # Support
 
 Thanks to JetBrains for providing LibRapid with free licenses for their amazing tools!

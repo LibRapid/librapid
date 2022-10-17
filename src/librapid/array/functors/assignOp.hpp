@@ -9,7 +9,7 @@ namespace librapid::functors {
 
 	template<typename Derived, typename OtherDerived>
 	struct AssignSelector<Derived, OtherDerived, false> {
-		static Derived &run(Derived &left, const OtherDerived &right) {
+		LR_FORCE_INLINE static Derived &run(Derived &left, const OtherDerived &right) {
 			return left.assignLazy(right);
 		}
 	};
@@ -24,7 +24,7 @@ namespace librapid::functors {
 			using Scalar					 = typename internal::traits<Derived>::Scalar;
 			using BaseScalar				 = typename internal::traits<Derived>::BaseScalar;
 			using Packet					 = typename internal::traits<Scalar>::Packet;
-			static constexpr int64_t Flags	 = internal::traits<OtherDerived>::Flags;
+			static constexpr i64 Flags		 = internal::traits<OtherDerived>::Flags;
 			constexpr bool isMatrixOp		 = (bool)(Flags & internal::flags::Matrix);
 			constexpr bool hasCustomFunction = (bool)(Flags & internal::flags::CustomFunctionGen);
 			constexpr bool allowPacket		 = !((bool)(Flags & internal::flags::NoPacketOp));
@@ -34,11 +34,11 @@ namespace librapid::functors {
 #endif
 
 			if constexpr (dstIsHost && srcIsHost) {
-				int64_t packetWidth = internal::traits<Scalar>::PacketWidth;
-				int64_t len			= dst.extent().sizeAdjusted();
-				int64_t alignedLen	= len - (len % packetWidth);
+				i64 packetWidth = internal::traits<Scalar>::PacketWidth;
+				i64 len			= dst.extent().sizeAdjusted();
+				i64 alignedLen	= len - (len % packetWidth);
 				if (alignedLen < 0) alignedLen = 0;
-				int64_t processThreads = isMatrixOp ? matrixThreads : numThreads;
+				i64 processThreads = isMatrixOp ? matrixThreads : numThreads;
 
 #if defined(LIBRAPID_HAS_OMP)
 				bool multiThread = true;
@@ -48,32 +48,19 @@ namespace librapid::functors {
 				bool multiThread = false;
 #endif
 
-				if constexpr (is_same_v<Scalar, bool>) {
-					auto tmpLen = len;
-					len += sizeof(typename internal::traits<Scalar>::BaseScalar) * 8;
-					len /= sizeof(typename internal::traits<Scalar>::BaseScalar) * 8;
-					len			= max(len, tmpLen);
-					packetWidth = 1;
-					alignedLen	= len;
-				}
-
 				// Only use a Packet type if possible
 				if constexpr (!is_same_v<Packet, std::false_type> &&
 							  !(Flags & internal::flags::NoPacketOp)) {
 					// Use the entire packet width where possible
 					if (!multiThread) {
-						for (int64_t i = 0; i < alignedLen; i += packetWidth) {
-							dst.loadFrom(i, src);
-						}
+						for (i64 i = 0; i < alignedLen; i += packetWidth) { dst.loadFrom(i, src); }
 					}
 #if defined(LIBRAPID_HAS_OMP)
 					else {
 						// Multithreaded approach
 #	pragma omp parallel for shared(dst, src, alignedLen, packetWidth) default(none)               \
 	  num_threads(processThreads)
-						for (int64_t i = 0; i < alignedLen; i += packetWidth) {
-							dst.loadFrom(i, src);
-						}
+						for (i64 i = 0; i < alignedLen; i += packetWidth) { dst.loadFrom(i, src); }
 					}
 #endif
 				} else {
@@ -81,16 +68,16 @@ namespace librapid::functors {
 				}
 
 				// Ensure the remaining values are filled
-				int64_t start = alignedLen * allowPacket;
+				i64 start = alignedLen * allowPacket;
 				if (!multiThread) {
-					for (int64_t i = start < 0 ? 0 : start; i < len; ++i) {
+					for (i64 i = start < 0 ? 0 : start; i < len; ++i) {
 						dst.loadFromScalar(i, src);
 					}
 				}
 #if defined(LIBRAPID_HAS_OMP)
 				else {
 #	pragma omp parallel for shared(start, len, dst, src) default(none) num_threads(processThreads)
-					for (int64_t i = start < 0 ? 0 : start; i < len; ++i) {
+					for (i64 i = start < 0 ? 0 : start; i < len; ++i) {
 						dst.loadFromScalar(i, src);
 					}
 				}
@@ -102,7 +89,7 @@ namespace librapid::functors {
 							  "Calculation is too large to be run in a single call. Please call "
 							  "eval() somewhere earlier");
 
-				int64_t elems = src.extent().sizeAdjusted();
+				i64 elems = src.extent().sizeAdjusted();
 
 				if constexpr (is_same_v<Scalar, bool>) {
 					elems += sizeof(typename internal::traits<Scalar>::BaseScalar) * 8;
@@ -111,34 +98,34 @@ namespace librapid::functors {
 
 				std::vector<BaseScalar *> arrays = {dst.storage().heap()};
 				std::string scalarName			 = internal::traits<BaseScalar>::Name;
-				int64_t index					 = 0;
+				i64 index						 = 0;
 				std::string microKernel			 = src.genKernel(arrays, index);
 
 				std::string mainArgs;
-				for (int64_t i = 0; i < index; ++i) {
+				for (i64 i = 0; i < index; ++i) {
 					mainArgs += fmt::format("{} *{}{}", scalarName, "arg", i);
 					if (i + 1 < index) mainArgs += ", ";
 				}
 
 				std::string functionArgs;
-				for (int64_t i = 0; i < index; ++i) {
+				for (i64 i = 0; i < index; ++i) {
 					functionArgs += fmt::format("{} arg{}", scalarName, i);
 					if (i + 1 < index) functionArgs += ", ";
 				}
 
 				std::string indArgs;
-				for (int64_t i = 0; i < index; ++i) {
+				for (i64 i = 0; i < index; ++i) {
 					indArgs += fmt::format("arg{}[kernelIndex]", i);
 					if (i + 1 < index) indArgs += ", ";
 				}
 
 				std::string varExtractor;
-				for (int64_t i = 0; i < index; ++i)
+				for (i64 i = 0; i < index; ++i)
 					varExtractor +=
 					  fmt::format("{0} *arg{1} = pointers[{2}];\n\t", scalarName, i, i + 1);
 
 				std::string varArgs;
-				for (int64_t i = 0; i < index; ++i) {
+				for (i64 i = 0; i < index; ++i) {
 					varArgs += fmt::format("src{}", i);
 					if (i + 1 < index) varArgs += ", ";
 				}
@@ -158,8 +145,8 @@ __device__
 }}
 
 __global__
-void applyOp({0} **pointers, int64_t size) {{
-	const int64_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
+void applyOp({0} **pointers, i64 size) {{
+	const i64 kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
 	{0} *dst = pointers[0];
 	{4}
 
@@ -180,7 +167,7 @@ void applyOp({0} **pointers, int64_t size) {{
 
 #	if defined(LIBRAPID_PYTHON)
 				// This fixes a bug in Python that means GPU handles aren't initialized
-				for (int64_t i = 0; !memory::streamCreated && i < memory::handleSize; ++i) {
+				for (i64 i = 0; !memory::streamCreated && i < memory::handleSize; ++i) {
 					checkCudaErrors(cublasCreate_v2(&(memory::cublasHandles[i])));
 					checkCudaErrors(
 					  cublasSetStream_v2(memory::cublasHandles[i], memory::cudaStream));
@@ -194,7 +181,7 @@ void applyOp({0} **pointers, int64_t size) {{
 				static jitify::JitCache kernelCache;
 				jitify::Program program = kernelCache.program(kernel, cudaHeaders, nvccOptions);
 
-				int64_t threadsPerBlock, blocksPerGrid;
+				i64 threadsPerBlock, blocksPerGrid;
 
 				// Use 1 to 512 threads per block
 				if (elems < 512) {
@@ -202,7 +189,7 @@ void applyOp({0} **pointers, int64_t size) {{
 					blocksPerGrid	= 1;
 				} else {
 					threadsPerBlock = 512;
-					blocksPerGrid	= static_cast<int64_t>(
+					blocksPerGrid	= static_cast<i64>(
 						ceil(static_cast<double>(elems) / static_cast<double>(threadsPerBlock)));
 				}
 
