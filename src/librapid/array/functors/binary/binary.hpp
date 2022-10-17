@@ -11,7 +11,7 @@ namespace librapid::functors::binary {
 
 		template<typename T, i64 d, i64 a>
 		LR_NODISCARD("")
-		ExtentType<T, d> genExtent(const ExtentType<T, d, a> &lhs,
+		LR_FORCE_INLINE ExtentType<T, d> genExtent(const ExtentType<T, d, a> &lhs,
 								   const ExtentType<T, d, a> &rhs) const {
 			return lhs;
 		}
@@ -19,7 +19,7 @@ namespace librapid::functors::binary {
 		// For a scalar operation
 		template<typename T, i64 d, i64 a>
 		LR_NODISCARD("")
-		ExtentType<T, d> genExtent(const ExtentType<T, d, a> &generic) const {
+		LR_FORCE_INLINE ExtentType<T, d> genExtent(const ExtentType<T, d, a> &generic) const {
 			return generic;
 		}
 	};

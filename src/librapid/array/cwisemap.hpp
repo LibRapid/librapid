@@ -251,7 +251,7 @@ __forceinline__  __device__ {1} {2}({3}) {{
 
 		private:
 			Map m_operation;
-			std::tuple<DerivedTypes...> m_operands;
+			std::tuple<const DerivedTypes &...> m_operands;
 			std::string m_name;
 		};
 	} // namespace mapping
