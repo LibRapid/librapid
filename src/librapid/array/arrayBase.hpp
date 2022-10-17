@@ -5,7 +5,7 @@
 			 typename OtherDerived,                                                                \
 			 typename std::enable_if_t<!internal::traits<OtherDerived>::IsScalar, int> = 0>        \
 	LR_NODISCARD("")                                                                               \
-	auto NAME(const OtherDerived &other) const {                                                   \
+	LR_FORCE_INLINE auto NAME(const OtherDerived &other) const {                                   \
 		using ScalarOther = typename internal::traits<OtherDerived>::Scalar;                       \
 		using OtherDevice = typename internal::traits<OtherDerived>::Device;                       \
 		using ResDevice	  = typename memory::PromoteDevice<Device, OtherDevice>::type;             \
