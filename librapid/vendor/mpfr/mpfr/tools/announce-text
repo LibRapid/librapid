@@ -1,0 +1,306 @@
+#!/bin/sh
+
+# This announce-text script should be run before publishing an announce
+# of a new GNU MPFR release or release candidate. It does some checking,
+# then it outputs the announce text to stdout. Information messages are
+# written to stderr.
+#
+# Warning! The release name in the announce text may contain accented
+# letters. Make sure they are preserved if your locales are not UTF-8
+# based. Moreover, you may need to modify the text.
+#
+# Specific dependencies:
+#   GNU Coreutils (sha1sum, sha256sum, date), git, gpg, unzip, wget.
+#
+# Usage: announce-text [ <variable_settings> ]
+# where arguments can be, for instance:
+#   vers=<mpfr_version>
+#   nopgpsig=1  to disable checking of the PGP signatures.
+#   nowebsrv=1  to disable checking of the mpfr.org web server.
+#   nognuftp=1  to disable checking of the tarballs on the GNU FTP.
+#
+# If the MPFR version is not provided, this must be the one at HEAD,
+# i.e. the contents of the working tree.
+
+set -e
+
+if [ -z "$(git remote -v 2> /dev/null | \
+           grep '^origin[[:space:]].*:mpfr/mpfr\.git')" ]; then
+  cat <<EOF >&2
+This $0 script must be run from a git working tree
+with mpfr/mpfr.git as origin.
+EOF
+  exit 1
+fi
+
+tmpdir=$(mktemp -d /tmp/announce-text-XXXXXXXX)
+trap 'rm -rf $tmpdir' 0 1 2 15
+echo "Temporary directory: $tmpdir" >&2
+
+alias wget="wget --no-config -q"
+
+for i in $@
+do
+  eval "$i"
+done
+
+if [ -z "$vers" ]; then
+  vers=$(git tag --points-at HEAD)
+  if [ -z "$vers" ]; then
+    echo "$0 error: no MPFR version" >&2
+    exit 1
+  fi
+fi
+
+base=${vers%-rc*}
+echo "MPFR version: $vers" >&2
+echo "Base version: $base" >&2
+
+# With Subversion, we were doing checks against the (remote) repository.
+# With Git, the checks are done locally, so that we need to make sure
+# that the working tree and index have no uncommitted changes and that
+# the local branch of the MPFR version to announce is up-to-date with
+# remote.
+
+# https://stackoverflow.com/a/3899339/3782797
+# https://stackoverflow.com/q/3882838/3782797#comment121636904_3899339
+if [ -n "$(git update-index -q --refresh; \
+           git diff-index --name-only HEAD)" ]; then
+  cat <<EOF >&2
+$0 error: you have unstaged and/or uncommitted changes.
+$0 error: please commit or stash them.
+EOF
+  exit 1
+fi
+
+if [ -n "$(git log $vers --not --remotes)" ]; then
+  cat <<EOF >&2
+$0 error: this MPFR version contains unpushed commits.
+$0 error: please push them first.
+EOF
+  exit 1
+fi
+
+getid() { sed -n 's/^\([0-9a-f]*\)[[:space:]].*/\1/p' "$@"; }
+
+# Check that one has an annotated tag at origin.
+tid=$(git show-ref refs/tags/$vers | getid)
+if [ -z "$tid" ]; then
+  echo "$0 error: no local tag '$vers'" >&2
+  exit 1
+fi
+rtid=$(git ls-remote --tags origin refs/tags/$vers | getid)
+if [ -z "$rtid" ]; then
+  echo "$0 error: no remote tag '$vers'" >&2
+  exit 1
+fi
+if [ "$tid" != "$rtid" ]; then
+  echo "$0 error: local and remote tags '$vers' do not match." >&2
+  exit 1
+fi
+if [ "tag $vers" != "$(git show $tid | head -n 1)" ]; then
+  echo "$0 error: '$vers' is not an annotated tag." >&2
+  exit 1
+fi
+
+versionfile=${vers}:VERSION
+vfcontents=$(git show $versionfile)
+if [ "$vers" != "$vfcontents" ]; then
+  cat <<EOF >&2
+$0 error: $versionfile is incorrect or does not exist.
+$0 error: got '$vfcontents' instead of '$vers'.
+EOF
+  exit 1
+fi
+
+cd $tmpdir
+
+git clone --no-checkout --depth 1 https://gitlab.inria.fr/mpfr/misc.git
+cd misc
+
+echo "Getting files from the www/mpfr-$base directory..." >&2
+git checkout HEAD www/mpfr-$base
+cd www/mpfr-$base
+
+files=$(ls)
+printf "%s\n" $files > ls1
+
+cat <<EOF > ls2
+index.html
+mpfr-$vers.tar.bz2
+mpfr-$vers.tar.bz2.asc
+mpfr-$vers.tar.gz
+mpfr-$vers.tar.gz.asc
+mpfr-$vers.tar.xz
+mpfr-$vers.tar.xz.asc
+mpfr-$vers.zip
+mpfr-$vers.zip.asc
+mpfr.dvi.gz
+mpfr.html
+mpfr.pdf
+mpfr.ps.gz
+EOF
+
+missing=$(diff ls1 ls2 | sed -n 's/^> //p')
+if [ -n "$missing" ]; then
+  echo "Missing files in the www directory:" $missing >&2
+  # Error if this is not a release candidate.
+  [ $vers != $base ]
+fi
+
+tarballs=""
+for i in tar.bz2 tar.gz tar.xz zip
+do
+  tarballs="$tarballs mpfr-$vers.$i"
+done
+sha1sum $tarballs > sha1sum.out
+sha256sum $tarballs > sha256sum.out
+unzip -jq mpfr-$vers.zip '*/NEWS'
+
+if [ -z "$nopgpsig" ]; then
+  echo "Checking the signatures..." >&2
+  for i in $tarballs
+  do
+    gpg --verify "$i.asc" >&2
+  done
+fi
+
+if [ -z "$nowebsrv" ]; then
+  echo "Checking the mpfr.org web server..." >&2
+  for i in $(cat ls1)
+  do
+    echo "  [$i]" >&2
+    wget -O file "https://www.mpfr.org/mpfr-$base/$i"
+    cmp file "$i"
+    rm file
+  done
+fi
+
+rm mpfr*
+
+if [ $vers = $base ] && [ -z "$nognuftp" ]; then
+  echo "Comparing with GNU FTP (ftp.gnu.org)..." >&2
+  for i in tar.bz2 tar.gz tar.xz zip
+  do
+    wget https://ftp.gnu.org/gnu/mpfr/mpfr-$vers.$i
+  done
+  for i in sha1sum sha256sum
+  do
+    $i mpfr-$vers.* > sums-gnu
+    diff $i.out sums-gnu >&2
+  done
+  rm mpfr-* sums-gnu
+fi
+
+sed -n "/^Changes .* to version ${base}:/,/^\$/p" NEWS > Changes
+if [ "$(wc -l < Changes)" -lt 3 ]; then
+  echo "The Changes file is too small:" >&2
+  cat Changes >&2
+  exit 1
+fi
+
+rname=$(sed -n "/^Changes .* to version ${base%.*}\.0:/,+1 {
+    s/.*The \(\".*\"\) release.*/\1/p
+  }" NEWS)
+
+pl=${base##*.}
+[ $pl -gt 0 ] && rname="$rname, patch level $pl"
+
+if [ $vers = $base ]; then
+  cat <<EOF
+Subject: Announce: GNU MPFR $vers is released
+
+GNU MPFR $vers ($rname), a C library for
+multiple-precision floating-point computations with correct rounding,
+is now available for download from the MPFR web site:
+
+  https://www.mpfr.org/mpfr-$vers/
+
+and from the GNU FTP site:
+
+  https://ftp.gnu.org/gnu/mpfr/
+
+Thanks very much to those who sent us bug reports and/or tested the
+release candidate.
+EOF
+else
+  rc=${vers#*-rc}
+  [ $rc -gt 1 ] && n=" $rc"
+  printf "%s\n\n" "Subject: GNU MPFR $base Release Candidate$n"
+  if [ $(echo "$base ($rname)" | wc -m) -gt 30 ]; then
+    cat <<EOF
+The release of GNU MPFR $base ($rname)
+is imminent.  Please help to make this release as good as possible
+by downloading and testing this release candidate:
+EOF
+  else
+    cat <<EOF
+The release of GNU MPFR $base ($rname) is imminent.
+Please help to make this release as good as possible by downloading
+and testing this release candidate:
+EOF
+  fi
+  cat <<EOF
+
+https://www.mpfr.org/mpfr-$base/mpfr-$vers.tar.xz
+https://www.mpfr.org/mpfr-$base/mpfr-$vers.tar.bz2
+https://www.mpfr.org/mpfr-$base/mpfr-$vers.tar.gz
+https://www.mpfr.org/mpfr-$base/mpfr-$vers.zip
+EOF
+fi
+
+cat <<EOF
+
+The SHA1 digests:
+EOF
+cat sha1sum.out
+cat <<EOF
+
+The SHA256 digests:
+EOF
+cat sha256sum.out
+cat <<EOF
+
+The signatures:
+https://www.mpfr.org/mpfr-$base/mpfr-$vers.tar.xz.asc
+https://www.mpfr.org/mpfr-$base/mpfr-$vers.tar.bz2.asc
+https://www.mpfr.org/mpfr-$base/mpfr-$vers.tar.gz.asc
+https://www.mpfr.org/mpfr-$base/mpfr-$vers.zip.asc
+
+Each tarball is signed by Vincent Lefèvre. This can be verified using
+the DSA key ID 980C197698C3739D; this key can be retrieved with:
+
+  gpg --recv-keys 980C197698C3739D
+
+or by downloading it from <https://www.vinc17.net/pgp.html>.
+The key fingerprint is:
+
+  07F3 DBBE CC1A 3960 5078  094D 980C 1976 98C3 739D
+
+The signatures can be verified with: gpg --verify <file.asc>
+You should check that the key fingerprint matches.
+
+EOF
+
+cat Changes
+
+if [ $vers = $base ]; then
+  cat <<EOF
+You can send success and failure reports to <mpfr@inria.fr>, and give
+us the canonical system name (by running the "./config.guess" script),
+the processor and the compiler version, in order to complete the
+"Platforms Known to Support MPFR" section of the MPFR $vers web page.
+
+Regards,
+EOF
+else
+  cat <<EOF
+Please send success and failure reports with "./config.guess" output
+to <mpfr@inria.fr>.
+
+If no problems are found, GNU MPFR $base should be released
+around $(date --iso-8601 --date='7 days').
+
+Regards,
+EOF
+fi
