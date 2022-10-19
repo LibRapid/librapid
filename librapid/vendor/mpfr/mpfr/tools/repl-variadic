@@ -1,0 +1,30 @@
+#!/usr/bin/env perl
+
+# Replace the variadic functions mpfr_clears, mpfr_inits and mpfr_inits2,
+# in case they are not supported by the compiler.
+#
+# Example of usage: perl -i tools/repl-variadic {src,tests}/*.{c,h}
+
+use strict;
+
+while (<>)
+  {
+    while (/\bmpfr_(clears|inits2?).*, *$/)
+      { chomp; $_ .= <>; }
+    my ($beg,$fct,$vars,$end) =
+      /^(.*?) *\bmpfr_(clears|inits2?) *\((.*?), *\(mpfr_ptr\) *0\)(.*?)$/
+        or print, next;
+    print "$beg\n" if $beg ne '';
+    my @vars = split /, */, $vars;
+    $fct =~ tr/s//d;
+    print "/* !!! Replaced with repl-variadic !!! */ do {\n";
+    my $prec = '';
+    if ($fct eq 'init2')
+      {
+        print "  mpfr_prec_t _repl_prec = (", shift(@vars), ");\n";
+        $prec = ", _repl_prec";
+      }
+    foreach my $var (@vars)
+      { print "  mpfr_$fct ($var$prec);\n" }
+    print "} while (0)$end\n";
+  }

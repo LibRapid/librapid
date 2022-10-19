@@ -1,0 +1,60 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dll_mpir_gc", "dll_mpir_gc\dll_mpir_gc.vcxproj", "{6322DE11-2109-42FA-9179-333322FE30C6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_mpir_gc", "lib_mpir_gc\lib_mpir_gc.vcxproj", "{396374D5-36B1-4E6A-A166-D8F729F75550}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dll_mpir_skylake_avx", "dll_mpir_skylake_avx\dll_mpir_skylake_avx.vcxproj", "{E68485DC-DA33-4A57-8BAB-DC927EEF7E17}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_mpir_skylake_avx", "lib_mpir_skylake_avx\lib_mpir_skylake_avx.vcxproj", "{A2436635-0979-4422-9125-E4C9AEF03CC4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_mpir_cxx", "lib_mpir_cxx\lib_mpir_cxx.vcxproj", "{9455FC7D-F579-4992-8A21-4E779543634E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testApplication", "testApplication\testApplication.vcxproj", "{4AC585A5-54A1-487C-975A-CE684C6DA051}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6322DE11-2109-42FA-9179-333322FE30C6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6322DE11-2109-42FA-9179-333322FE30C6}.Debug|x64.ActiveCfg = Debug|x64
+		{6322DE11-2109-42FA-9179-333322FE30C6}.Release|Win32.ActiveCfg = Release|Win32
+		{6322DE11-2109-42FA-9179-333322FE30C6}.Release|x64.ActiveCfg = Release|x64
+		{396374D5-36B1-4E6A-A166-D8F729F75550}.Debug|Win32.ActiveCfg = Debug|Win32
+		{396374D5-36B1-4E6A-A166-D8F729F75550}.Debug|x64.ActiveCfg = Debug|x64
+		{396374D5-36B1-4E6A-A166-D8F729F75550}.Release|Win32.ActiveCfg = Release|Win32
+		{396374D5-36B1-4E6A-A166-D8F729F75550}.Release|x64.ActiveCfg = Release|x64
+		{E68485DC-DA33-4A57-8BAB-DC927EEF7E17}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E68485DC-DA33-4A57-8BAB-DC927EEF7E17}.Debug|x64.ActiveCfg = Debug|x64
+		{E68485DC-DA33-4A57-8BAB-DC927EEF7E17}.Release|Win32.ActiveCfg = Release|Win32
+		{E68485DC-DA33-4A57-8BAB-DC927EEF7E17}.Release|x64.ActiveCfg = Release|x64
+		{A2436635-0979-4422-9125-E4C9AEF03CC4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A2436635-0979-4422-9125-E4C9AEF03CC4}.Debug|x64.ActiveCfg = Debug|x64
+		{A2436635-0979-4422-9125-E4C9AEF03CC4}.Release|Win32.ActiveCfg = Release|Win32
+		{A2436635-0979-4422-9125-E4C9AEF03CC4}.Release|x64.ActiveCfg = Release|x64
+		{9455FC7D-F579-4992-8A21-4E779543634E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9455FC7D-F579-4992-8A21-4E779543634E}.Debug|x64.ActiveCfg = Debug|x64
+		{9455FC7D-F579-4992-8A21-4E779543634E}.Release|Win32.ActiveCfg = Release|Win32
+		{9455FC7D-F579-4992-8A21-4E779543634E}.Release|x64.ActiveCfg = Release|x64
+		{4AC585A5-54A1-487C-975A-CE684C6DA051}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4AC585A5-54A1-487C-975A-CE684C6DA051}.Debug|Win32.Build.0 = Debug|Win32
+		{4AC585A5-54A1-487C-975A-CE684C6DA051}.Debug|x64.ActiveCfg = Debug|x64
+		{4AC585A5-54A1-487C-975A-CE684C6DA051}.Debug|x64.Build.0 = Debug|x64
+		{4AC585A5-54A1-487C-975A-CE684C6DA051}.Release|Win32.ActiveCfg = Release|Win32
+		{4AC585A5-54A1-487C-975A-CE684C6DA051}.Release|Win32.Build.0 = Release|Win32
+		{4AC585A5-54A1-487C-975A-CE684C6DA051}.Release|x64.ActiveCfg = Release|x64
+		{4AC585A5-54A1-487C-975A-CE684C6DA051}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {54B92E3F-18DC-497B-B541-B10BCF0CAA81}
+	EndGlobalSection
+EndGlobal

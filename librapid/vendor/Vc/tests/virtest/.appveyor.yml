@@ -1,0 +1,22 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+configuration: Release
+platform:
+   - x64
+   - x86
+
+clone_depth: 2
+
+build_script:
+- cmd: >-
+    CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\VsDevCmd.bat" -arch=%PLATFORM% -host_arch=%PLATFORM% -no_logo
+
+    mkdir build
+
+    cd build
+
+    cmake -G "NMake Makefiles" ..
+
+    nmake
+
+    ctest -V

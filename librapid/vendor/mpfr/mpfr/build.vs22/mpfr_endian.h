@@ -1,0 +1,3 @@
+
+#define __BYTE_ORDER __LITTLE_ENDIAN
+#define HAVE_LITTLE_ENDIAN // idfk
