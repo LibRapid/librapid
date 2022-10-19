@@ -1,0 +1,50 @@
+# reference values for the digamma function
+#
+# Copyright 2009-2022 Free Software Foundation, Inc.
+# Contributed by the AriC and Caramba projects, INRIA.
+#
+# This file is part of the GNU MPFR Library.
+#
+# The GNU MPFR Library is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or (at your
+# option) any later version.
+# The GNU MPFR Library is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
+# License for more details.
+# You should have received a copy of the GNU Lesser General Public License
+# along with the GNU MPFR Library; see the file COPYING.LESSER.  If not, see
+# https://www.gnu.org/licenses/ or write to the Free Software Foundation, Inc.,
+# 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+# the following are random values
+17 17 n 1 -0x12789p-17
+17 17 n 2 0xD877p-17
+17 17 n 3 0x1D877p-17
+17 17 n 4 0x14191p-16
+17 17 n 5 0x18191p-16
+17 17 n 10 0x12039p-15
+17 27 n 20 0x5F0E885p-25
+17 42 n 50 0xF9BA32E52Dp-38
+17 53 n 100 0x126690D4274475p-50
+17 53 n 0x1p+100 0x11542457337D43p-46
+17 53 n 0x1p+1000 0x56A4B5B401725p-41
+17 53 n 0x1p+10000 0x1B1378C84073B9p-40
+17 53 n 0x1p+100000 0x10EC2B7D284853p-36
+17 53 n 0x1p+1000000 0x2A4E6CB8E4B4Dp-30
+17 53 n 0x1p+10000000 0xD3881F9C77881p-29
+17 53 n 0x1p+100000000 0x1086A2783956A1p-26
+17 53 n 0x1p+1000000000 0xA54258B23D625p-22
+17 53 n -0.5 0x957682CDEB045p-56
+17 53 n -1.5 0xB40212D7895AFp-52
+17 53 n -2.5 0x11A68793DEFC15p-52
+17 53 n -3.5 0xB1C685C38A29Dp-51
+17 53 n -4.5 0xCE384CDFFBF0Fp-51
+# special values
+2 2 * nan nan
+2 2 * +inf +inf
+2 2 * -inf nan
+2 2 * +0 -inf
+2 2 * -0 +inf
+2 2 * -1 nan
+2 2 * -2 nan
