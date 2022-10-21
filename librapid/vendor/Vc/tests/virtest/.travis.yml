@@ -1,0 +1,23 @@
+language: cpp
+
+os:
+  - linux
+  - osx
+
+# Linux should use the "newer" 14.04 release (12.04 is default)
+dist: trusty
+
+compiler:
+  - gcc
+  - clang
+
+script:
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release ..
+  - make -j2
+
+notifications:
+  email: false
+
+# vim: sw=2 et

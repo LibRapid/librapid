@@ -1,16 +1,13 @@
 build
+buildWsl
 dist
 src/librapid.egg-info
 src/librapid/librapid.egg-info
 
 build_config.txt
 
-src/librapid/configuration.txt
-
-src/librapid/openblas_install
-
-src/librapid/blas
-
+librapid/openblas_install
+librapid/blas
 openblas_install
 
 librapid-*.*.*/
