@@ -1,33 +1,14 @@
 build
 buildWsl
-dist
-src/librapid.egg-info
-src/librapid/librapid.egg-info
-
-build_config.txt
 
 librapid/openblas_install
 librapid/blas
 openblas_install
 
-librapid-*.*.*/
-
-*.egg-info
-
-MANIFEST
-
-build/*
-_skbuild
-_librapid_python_cmake
-
-tests/__pycache__
-
 docs/build
 docs/source/api
 docs/source/doxygenoutput
 docs/source/librapid_doc_copy
-
-*.pyc
 
 *.i
 *.ii
