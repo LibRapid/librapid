@@ -37,17 +37,17 @@
 #include "cxxblas/auxiliary/restrictto.h"
 
 // define implementation specific constants, macros, etc.
-#if defined(WITH_ATLAS)
+#if defined(LIBRAPID_BLAS_ATLAS)
 #	include "cxxblas/drivers/atlas.h"
-#elif defined(WITH_GOTOBLAS)
+#elif defined(LIBRAPID_BLAS_GOTOBLAS)
 #	include "cxxblas/drivers/gotoblas.h"
-#elif defined(WITH_OPENBLAS)
+#elif defined(LIBRAPID_BLAS_OPENBLAS)
 #	include "cxxblas/drivers/openblas.h"
-#elif defined(WITH_VECLIB)
+#elif defined(LIBRAPID_BLAS_VECLIB)
 #	include "cxxblas/drivers/veclib.h"
-#elif defined(WITH_MKLBLAS)
+#elif defined(LIBRAPID_BLAS_MKLBLAS)
 #	include "cxxblas/drivers/mklblas.h"
-#elif defined(WITH_REFBLAS)
+#elif defined(LIBRAPID_BLAS_REFBLAS)
 #	include "cxxblas/drivers/refblas.h"
 #endif
 
