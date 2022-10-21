@@ -1,0 +1,6 @@
+#ifndef LIBRAPID_STANDARD_INCLUDE
+#define LIBRAPID_STANDARD_INCLUDE
+
+#include <librapid/librapid.hpp>
+
+#endif // LIBRAPID_STANDARD_INCLUDE

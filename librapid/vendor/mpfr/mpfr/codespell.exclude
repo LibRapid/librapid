@@ -1,0 +1,5 @@
+	   : "od" ((USItype) (x)), "n" (0))
+"	cas	%0,r2,r0\n"						\
+  LOG_PRINT (MPFR_LOG_TIME_F, "%s:TIM %dms\n", __mpfr_log_fname,        \
+   (of any type). Thanks to Wojtek Lerch and Tim Rentsch for the idea.
+              printf ("\nd=");

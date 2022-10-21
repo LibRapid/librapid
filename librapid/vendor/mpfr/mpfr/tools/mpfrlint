@@ -1,0 +1,593 @@
+#!/usr/bin/env zsh
+
+# Check possible problems in the MPFR source.
+
+set -e
+setopt EXTENDED_GLOB
+
+# mpfrlint can be run from the tools directory
+oldpwd=$PWD
+[[ -d src ]] || [[ $oldpwd:t != tools ]] || cd ..
+err=0
+
+if [[ -t 1 ]] then
+  term=1
+  pfx=""
+  sfx=""
+fi
+
+err-if-output()
+{
+  local dir msg checkoutput=1 checkstatus=1 output st h line
+  while [[ $1 == -* ]]
+  do
+    case $1 in
+      --dir=*)
+        dir=${1#--dir=} ;;
+      --msg=*)
+        msg=${1#--msg=} ;;
+      -o)
+        # The command generates output even in case of success;
+        # do not regard this as an error.
+        checkoutput="" ;;
+      -t)
+        # The command normally returns with a non-zero exit status;
+        # do not regard this as an error.
+        checkstatus="" ;;
+      *)
+        echo "unrecognized option '$1' for $0" >&2
+        exit 1 ;;
+    esac
+    shift
+  done
+  [[ -n $dir ]] && pushd $dir
+  set +e
+  # Note: the double quotes for $@[2,-1] are important to pass empty args.
+  output=(${(f)"$("$@[2,-1]" 2>&1)"})
+  st=$?
+  if [[ ( -n "$checkstatus" && $st -ne 0 ) ||
+        ( -n "$checkoutput" && -n "$output" ) ]] then
+    if [[ -n "$1" && -t 1 ]] then
+      [[ -n "$pfx" ]] || pfx=$(tput 2>/dev/null bold)
+      [[ -n "$sfx" ]] || sfx=$(tput 2>/dev/null sgr0)
+    fi
+    h=${1:+$pfx$1:$sfx }
+    for line in ${output:-"exit status = $st"}
+    do
+      printf "%s%s\n" $h $line
+    done
+    [[ -n "$msg" ]] && printf "%s %s\n" "$pfx-->$sfx" "$msg"
+    err=1
+  fi
+  set -e
+  [[ -n $dir ]] && popd
+  # Do not fail.
+  true
+}
+
+if [[ $1 == test ]] then
+  export LC_ALL=C
+  err-if-output Err-e exit 17
+  err-if-output Err-f false
+  err-if-output Err-t true
+  err-if-output "" echo "Empty first argument"
+  err-if-output "1 line" echo foo
+  err-if-output "2 lines" printf "foo\nbar\n"
+  err-if-output -o Err-f false
+  err-if-output -o Err-t true
+  err-if-output -o "cp test" cp
+  err-if-output -o "1 line" echo foo
+  err-if-output -t Err-f false
+  err-if-output -t Err-t true
+  err-if-output -t error echo output
+  echo "Test done."
+  exit
+: <<EOF
+The output should be:
+
+Err-e: exit status = 17
+Err-f: exit status = 1
+Empty first argument
+1 line: foo
+2 lines: foo
+2 lines: bar
+Err-f: exit status = 1
+cp test: cp: missing file operand
+cp test: Try 'cp --help' for more information.
+error: output
+Test done.
+
+EOF
+fi
+
+############################################################################
+
+# Note: In the source, ignore everything related to mini-gmp.
+src=(src/**/*.[ch]~*mini-gmp.*)
+srctests=({src,tests}/**/*.[ch]~*mini-gmp.*)
+
+# Among C files, ignore extracted files (proven code).
+c_src=(src/*.c~src/*_extracted.c)
+c_srctests=($c_src tests/*.c)
+
+# Detect the definition of reserved macro names.
+#
+# See ISO C 7.1.3 (Reserved identifiers) and 7.31 (Future library directions).
+# The definition of a reserved identifier is undefined behavior
+# (this includes the future library directions).
+#
+# Note: The following check may have false positives in some cases,
+# but this may also correspond to bad coding, in particular because
+# code moves. We assume that if a header is used somewhere, it may
+# be used everywhere in the MPFR code. This particularly concerns
+# macros defined via mpfr-impl.h or mpfr-test.h, which are included
+# in almost every tests.
+#
+# The case of EXP in src/mpfr-gmp.h is not really fixable due to the
+# possible use of gmp-impl.h, but we should make sure that <errno.h>
+# is never included in this case (see comment in the code).
+names='E[0-9A-Z]|FE_[A-Z]|LC_[A-Z]|(PRI|SCN)[Xa-z]|SIG_?[A-Z]|TIME_[A-Z]'
+msg='ISO C 7.1.3 (Reserved identifiers) and 7.31 (Future library directions).'
+grep -E "# *define ($names)" $srctests | \
+  grep -v 'src/mpfr-gmp.h:#define EXP(' | \
+  err-if-output --msg="$msg" "reserved identifiers (macro names)" cat
+
+# Detect the possible use of forbidden macros in mpfr.h, such as those
+# starting with "HAVE_" or "WANT_". Public macros defined by MPFR must
+# start with "MPFR_".
+err-if-output -t "" perl -ne '
+  /^#/ && ! /^# *error / or next; while (/\b([_A-Z]+)\b/g) {
+    my $m = $1;
+    $m =~ /^(_*MPFR_|_*GMP_|__(GNUC|ICC|STDC)(_|$)|_MSC_|U?INTMAX_C$)/
+      and next;
+    print "Forbidden macro in mpfr.h line $.: $m\n" }' src/mpfr.h
+
+# Detect the use of the non-underscore version of the attribute names
+# in mpfr.h (as user code could define macros with such names).
+err-if-output \
+  --msg="In mpfr.h, use the underscore version of the attribute names." \
+  -t "attribute name" grep '__attribute__ *(( *[^_]' src/mpfr.h
+
+# Test before other ones about preprocessing directives.
+err-if-output \
+  --msg="Do not put spaces before a preprocessing directive" \
+  -t "space+#" grep -E '^ +# *(define|include|if|el|endif)' $srctests
+
+err-if-output -t "math.h" grep '^# *include *<math\.h>' src/*.c
+
+flaglist="underflow|overflow|divby0|nanflag|inexflag|erangeflag"
+grep -E "mpfr_($flaglist)_p" src/*.[ch] | \
+  grep -v -i 'mpfr_clear_' | \
+  grep -v '^src/exceptions.c:' | \
+  grep -v '^src/mpfr-impl.h:#define mpfr_.*_p()' | \
+  grep -v '^src/mpfr.h:__MPFR_DECLSPEC ' | \
+  err-if-output "flags" cat
+grep -E "mpfr_(clear|set)_($flaglist) *\(" src/*.[ch] | \
+  grep -v '^src/exceptions.c:' | \
+  grep -v '^src/mpfr.h:' | \
+  err-if-output "flags" cat
+
+# Variables should not be initialized with the default precision, which
+# could have been set to a large value by the user. Even if the precision
+# is set with mpfr_set_prec (e.g. in the Ziv loop) before the variable is
+# assigned, this is a waste of memory.
+grep -E "mpfr_inits? *\(" src/*.[ch] | \
+  grep -Ev '^src/mpfr\.h:.*(\(mpfr_ptr|, mpfr_set)' | \
+  grep -Ev '^src/(inits?|set_str)\.c:' | \
+  err-if-output \
+    --msg="Use mpfr_init2/mpfr_inits2 instead of mpfr_init/mpfr_inits." \
+    -t "init/inits" cat
+
+grconf()
+{
+  grep -v '^dnl ' acinclude.m4 configure.ac | \
+    err-if-output -t "grconf '$1'" grep -E "$1"
+}
+
+grconf '^(.*if +|[[:space:]]*)(test|\[).* == '
+grconf '="`'
+grconf '[^a-z][ef]?grep[^a-z]'
+grconf '[^a-z]sed[^a-z]'
+
+err-if-output --msg="Use GMP_NUMB_BITS instead." \
+  -t "GMP_LIMB_BITS" grep GMP_LIMB_BITS $srctests
+
+grep GMP_RND $srctests | err-if-output -t "GMP_RND*" grep -v '#define GMP_RND'
+
+# __MPFR_DECLSPEC (based on the __MPFR_WITHIN_MPFR status) must be used
+# instead of __GMP_DECLSPEC (based on the __GMP_WITHIN_GMP status, always
+# undefined in MPFR); in particular, the __GMP_DECLSPEC occurrences from
+# GMP's longlong.h file must be changed to __MPFR_DECLSPEC when porting
+# this file to MPFR. See:
+#   https://sympa.inria.fr/sympa/arc/mpfr/2018-08/msg00000.html
+#   https://sympa.inria.fr/sympa/arc/mpfr/2018-08/msg00001.html
+grep __GMP_DECLSPEC $srctests | \
+  grep -Ev '^src/mpfr.h:(#|.*__GMP_DECLSPEC_..PORT)' | \
+  grep -v '__GMP_DECLSPEC renamed to __MPFR_DECLSPEC' | \
+  err-if-output --msg="Use __MPFR_DECLSPEC instead." -t "__GMP_DECLSPEC" cat
+
+# Use mpfr_div_2ui/mpfr_mul_2ui instead of mpfr_div_2exp/mpfr_mul_2exp.
+grep 'mpfr_\(div\|mul\)_2exp' {src,tests}/*.[ch] |\
+  grep -v '^src/\(\(div\|mul\)_2exp\.c:\|mpf2mpfr\.h:#define mpf_\)' | \
+  grep -v '^src/mpfr\.h:\(__MPFR_DECLSPEC\|#define mpfr_..._2exp\)' | \
+  grep -v '^tests/\(reuse\|taway\)\.c: *test2ui (mpfr_..._2exp,' | \
+  err-if-output --msg="Use mpfr_div_2ui and mpfr_mul_2ui instead." \
+    "mpfr_div_2exp and mpfr_mul_2exp" cat
+
+# In tests, use set_emin / set_emax rather than mpfr_set_emin / mpfr_set_emax
+# (except when a failure may be expected).
+err-if-output --msg="Use set_emin / set_emax instead." \
+  -t "mpfr_set_emin / mpfr_set_emax" \
+  grep "^[[:space:]]*mpfr_set_e\(min\|max\)[[:space:]]*(" tests/*.[ch]
+
+# Note: GMP internals must not be used unless WANT_GMP_INTERNALS is defined.
+# The check below attempts to handle that, but this is a heuristic (it might
+# fail in case of nested #if's, but this is currently OK).
+for file in $srctests
+do
+  perl -e 'undef $/; $_ = <>;
+           s:/\*.*?\*/::sg;
+           s:# *(el)?if.*WANT_GMP_INTERNALS(.|\n)*?# *(else|endif)::g;
+           print' $file |
+    err-if-output -t "GMP internals in $file" grep '__gmp[nz]_'
+done
+
+err-if-output --msg="Use mpfr_limb_ptr and mpfr_limb_srcptr instead." \
+  -t "mp_ptr and mp_srcptr" grep -E 'mp_(src)?ptr' $srctests
+
+# Do not use __mpfr_struct structure members in .c files.
+err-if-output -t "__mpfr_struct members" \
+  grep -E '[^0-9a-z_]_mpfr_(prec|sign|exp|d)' $c_srctests
+
+# Detect some uses of "x != x" and "x == x". If this occurs in source code,
+# x is probably a native FP number (otherwise the test is useless), but in
+# such a case, the DOUBLE_ISNAN macro should be used.
+err-if-output -t "x != x and x == x tests" \
+  grep '( *\([^[:space:]]*\) *[!=]= *\1 *)' $srctests
+
+err-if-output --msg="Use MPFR_DBL_* macros." -t "DBL_* macros" \
+  grep -E '[^A-Z_]DBL_(NAN|(POS|NEG)_INF)' $c_src tests/*.[ch]
+
+for i in exp prec rnd
+do
+  grep "[^a-z]mp_${i}_t" $srctests | \
+    grep -v "\(# *define\|# *ifndef\|typedef\) *mp_${i}_t" | \
+    grep -v "\[mp_${i}_t\]" | \
+    err-if-output "mp_*_t" cat
+done
+
+for file in $srctests
+do
+  err-if-output "MPFR_LOG_MSG format" perl -e '
+    my $f = do { local $/; <> };
+    while ($f =~ /MPFR_LOG_MSG\s*\(\s*\(.*?\)\s*\)/gs) {
+      my $s = $&; print "$ARGV: $s\n" if
+        index($s,"\\n\"") < 0 || $s !~ /"\s*,/
+    }' $file
+done
+
+# Macros of the form:
+#   #define FOO { ... }
+# may be unsafe and could yield obscure failures where writing "FOO;" as
+# this is here a block followed by a null statement. The following form
+# is preferred in most of the cases:
+#   #define FOO do { ... } while (0)
+# so that "FOO;" is a single statement.
+# To avoid false positives, a comment can be inserted, e.g.:
+#   #define FOO /* initializer */ { 0, 17 }
+for file in $srctests
+do
+  err-if-output "Missing 'do ... while (0)'" perl -e '
+    while (<>) {
+      my $s = $_;
+      while ($s =~ s/\\\n//) { $s .= <> }
+      $s =~ /^#\s*define\s+\w+(\([^)]*\))?\s*{/
+        and $s =~ tr/ \t/ /s, print "$ARGV: $s";
+    }' $file
+done
+
+# Do not use snprintf as it is not available in ISO C90.
+# Even on platforms where it is available, the prototype
+# may not be included (e.g. with gcc -ansi), so that the
+# code may be compiled incorrectly.
+grep '[^a-z_]snprintf *([^)]' $srctests | \
+  err-if-output -t "snprintf" grep -v '/\*.*[^a-z_]snprintf *([^)]'
+
+# Constant checking should use either MPFR_STAT_STATIC_ASSERT
+# or MPFR_ASSERTN(0) for not yet implemented corner cases.
+# This test is a heuristic.
+# Note: as long as the support of _MPFR_EXP_FORMAT = 4 is not complete,
+# run-time assertions involving MPFR_EMAX_MAX, LONG_MAX, etc. should be
+# used instead of static assertions to allow testing and correction of
+# the code (then the removal of the assertions).
+grep 'MPFR_ASSERT[DN][^a-z]*;' src/*.c | grep -v 'MPFR_ASSERTN *(0)' | \
+  grep -v '\(MPFR_EMAX_MAX\|MPFR_EXP_MAX\).*LONG_MAX' | \
+  grep -v '\(MPFR_EMIN_MIN\|MPFR_EXP_MIN\).*LONG_MIN' | \
+  grep -v MPFR_BLOCK_EXCEP | \
+  err-if-output --msg="Use MPFR_STAT_STATIC_ASSERT in general." \
+    -t "Constant checking" cat
+
+# ASSERT and ASSERT_ALWAYS must not be used for assertion checking.
+# Use MPFR_STAT_STATIC_ASSERT for static assertions, otherwise either
+# MPFR_ASSERTD (debug mode / hint for the compiler) or MPFR_ASSERTN.
+err-if-output -t "ASSERT / ASSERT_ALWAYS" \
+  grep -E '[^_]ASSERT(_ALWAYS)? *(\(|$)' {src,tests}/*.c
+
+# Use MPFR_TMP_LIMBS_ALLOC.
+err-if-output -t "Use MPFR_TMP_LIMBS_ALLOC" \
+  grep 'MPFR_TMP_ALLOC.*\(BYTES_PER_MP_LIMB\|sizeof.*mp_limb_t\)' src/*.c
+
+# Use simple mp_limb_t constants: MPFR_LIMB_ZERO, MPFR_LIMB_ONE, etc.
+grep '(mp_limb_t) *-\?[01][^0-9]' $srctests | grep -v '#define MPFR_LIMB_' | \
+  grep -v 'MPFR_ASSERTN *(MPFR_MANT.*== *(mp_limb_t)' | \
+  err-if-output -t "Use simple mp_limb_t constants" cat
+
+# "~0;" has already been seen in the code. Check also a bit more.
+# Such code is either an error or poorly written, and in this case, quite
+# fragile. In practice, this may work because most (or all) platforms use
+# two's complement, and 0 being of type int (signed), this will give -1;
+# then when converted to a larger unsigned type, this will give the maximum
+# value as expected. However, the reader may not know this explanation, and
+# a small change of the code can easily make it incorrect. The correct way
+# to obtain this result is to cast the constant to the expected type, then
+# do the bitwise complement; alternatively, cast -1 to the expected type.
+# For limbs, the macro MPFR_LIMB_MAX should be used.
+err-if-output \
+  --msg="Possibly incorrect type for ~ (use MPFR_LIMB_MAX for limbs)" \
+  -t "Suspicious code" \
+  grep '~[0-9] *[-+*&|;]' $srctests
+
+# Code possibly wrong with some C/GMP implementations. In short, if the
+# right operand of a shift depends on GMP_NUMB_BITS, then the left operand
+# should be of type mp_limb_t. There might be false positives.
+err-if-output \
+  --msg="Use a constant of type mp_limb_t instead of unsigned long?" \
+  -t "Suspicious code" \
+  grep -E '[^A_Za-z_][0-9]+[UL]* *<<.*GMP_NUMB_BITS' src/*.c
+
+for file in $srctests */Makefile.am acinclude.m4 configure.ac
+do
+  # Note: this is one less that the POSIX minimum limit in case
+  # implementations are buggy like POSIX examples. :)
+  err-if-output "" perl -ne "/.{2047,}/ and print \
+    \"Line \$. of file $file has more than 2046 bytes.\n\"" "$file"
+done
+
+# Code style: a sign decimal constant for mpfr_set_inf and mpfr_set_zero
+# should be either 1 or -1 (except for the tests in tset.c).
+grep -E 'mpfr_set_(inf|zero) *\([^,]*, *[-+]?([02-9]|1[^)])' $srctests | \
+  err-if-output -t "mpfr_set_(inf|zero) second argument" \
+    grep -v tests/tset\\.c:
+
+# The return value of fclose() or fflush() should not be compared with -1
+# (usual value of EOF), but with EOF (or 0).
+err-if-output \
+  --msg="fclose() or fflush() seems to be compared with -1 instead of EOF" \
+  -t "fclose/fflush" grep -E 'f(close|flush).*[!=]= *-1' $srctests
+
+# Detect "% 1", which always gives 0, probably mistaken for "& 1" or "% 2".
+# Note: We use "% +1" instead of "% *1" because the code has lots of "%1"
+# in strings (for other purposes). Anyway, the coding styles recommend to
+# put a space around operators.
+err-if-output \
+  --msg='"% 1" always gives 0; was "& 1" or "% 2" intended?' \
+  -t "modulo 1" grep -E '% +1\>' $srctests
+
+# The HAVE_SUBNORM_* macros may still be generated for build information,
+# but should no longer be used, in particular because they are not defined
+# when cross-compiling. For the tests, use the have_subnorm_* functions
+# instead.
+err-if-output \
+  --msg='Do not use the HAVE_SUBNORM_* macros (for the tests, use have_subnorm_*).' \
+  -t "HAVE_SUBNORM_" grep HAVE_SUBNORM_ $srctests
+
+# In general, one needs to include mpfr-impl.h (note that some platforms
+# such as MS Windows use a config.h, which is included by mpfr-impl.h).
+for file in $c_src
+do
+  [[ "$file" == src/(jyn_asympt|mini-gmp|round_raw_generic).c ]] || \
+    grep -q '^# *include *"\(mpfr-impl\|fits.*\|gen_inverse\|random_deviate\)\.h"' $file || \
+    { echo "Missing '#include \"mpfr-impl.h\"' in $file?" && err=1 }
+done
+
+# Detect mpfr_mul with identical 2nd and 3rd arguments, which can be
+# replaced by mpfr_sqr. We exclude mul.c and sqr.c (which implement
+# these functions) because such a mpfr_mul can be used on purpose.
+err-if-output --msg='Use mpfr_sqr instead of mpfr_mul.' "mul/sqr" perl -ne \
+  '/__MPFR_DECLSPEC/ or ($u,$v) = /mpfr_mul *\([^,]*,([^,]*),([^,]*),/ and
+     do { $u =~ tr/ //d; $v =~ tr/ //d; $u eq $v and print "$ARGV: $_" }' \
+  src/*.[ch]~src/(mul|sqr).c
+
+# Detect mpn_mul_n with identical 2nd and 3rd arguments, which can be
+# replaced by mpn_sqr.
+err-if-output --msg='Use mpn_sqr instead of mpn_mul_n.' "mpn mul/sqr" \
+  perl -ne '($u,$v) = /mpn_mul_n *\([^,]*,([^,]*),([^,]*),/ and
+     !/# *define +mpn_sqr/ and
+     do { $u =~ tr/ //d; $v =~ tr/ //d; $u eq $v and print "$ARGV: $_" }' \
+  $src
+
+# Re-seeding mpfr_rands in the tests is bad practice, as it would affect
+# later tests, defeating the purpose of GMP_CHECK_RANDOMIZE.
+err-if-output \
+  --msg='Do not re-seed mpfr_rands; use another gmp_randstate_t variable.' \
+  -t "mpfr_rands" grep --exclude=tests.c \
+    'gmp_randseed.*mpfr_rands' tests/*.[ch]
+
+# "mpfr-impl.h" must not be included directly by the test programs.
+# Otherwise __MPFR_WITHIN_MPFR will be defined, yielding failures
+# under MS Windows with DLL.
+err-if-output \
+  --msg='Include "mpfr-test.h" instead of "mpfr-impl.h" to prevent __MPFR_WITHIN_MPFR from being defined.' \
+  -t "mpfr-impl.h inclusion" grep --exclude=mpfr-test.h \
+    '^ *# *include *"mpfr-impl.h"' tests/*.[ch]
+
+# Division by zero yields issues on some platforms, even in the case where
+# MPFR_ERRDIVZERO is not defined. See, e.g.
+#   https://sympa.inria.fr/sympa/arc/mpfr/2019-02/msg00005.html
+# The solution is to still allow tests related to NaN and infinities, but
+# such tests must avoid division by zero.
+grep -E '/ *0?\.0([^0-9]|$)' tests/*.[ch] | \
+  err-if-output --msg='Division by zero yields issues on some platforms, use MPFR_DBL_* macros.' \
+                -t "division by zero" grep -Ev '/\*.*/ *0?\.0'
+
+# Check that the usual test programs call tests_start_mpfr and tests_end_mpfr.
+if grep -q TESTS_NO_TVERSION tests/Makefile.am; then
+  tprgvar=TESTS_NO_TVERSION
+else
+  tprgvar=check_PROGRAMS
+fi
+tprg=($(sed -n "/^$tprgvar"'/,/[^\\]$/ {
+  s/.*=//
+  s/\\//
+  p
+  }' tests/Makefile.am))
+[[ -n $tprg ]]
+for t in $tprg
+do
+  [[ $t != mpf*_compat ]] || continue
+  tc=tests/$t.c
+  if grep -q "main *(" $tc; then
+    for fn in tests_start_mpfr tests_end_mpfr
+    do
+      err-if-output "missing call to $fn in $tc" grep -q "$fn *();" $tc
+    done
+  fi
+done
+
+# mpfr_printf-like functions shouldn't be used in the tests,
+# as they need <stdarg.h> (HAVE_STDARG defined).
+for file in tests/*.c
+do
+  sed '/#if\(def\| *defined *(\)\? *HAVE_STDARG/,/#\(endif\|else\) .*HAVE_STDARG/d
+       /\/\*.*\*\//d
+       /\/\*/,/\*\//d' $file | \
+    err-if-output -t "unprotected mpfr_printf-like function call in $file" \
+      grep "mpfr_[a-z]*printf"
+done
+
+# gmp_printf with just %N can be avoided by using n_trace (see r13327).
+grep 'gmp_printf *(' tests/*.c | \
+  err-if-output --msg='gmp_printf is not available in mini-gmp' \
+                -t "gmp_printf" grep -Ev '/\*.*gmp_printf|%Z'
+
+grep __gmp_ tests/*.c | \
+  err-if-output -t "__gmp_" grep -v '^tests/tabort_defalloc'
+
+grep -E '[^a-z_](m|re)alloc *\(' tests/*.c | \
+  err-if-output -t "alloc" grep -Ev '^tests/(memory|talloc-cache).c:'
+
+err-if-output --dir=doc "check-typography" ./check-typography
+
+rndmodes1=(${(o)$(perl -ne '/return\s*"(MPFR_\S+)"/ and print "$1\n"' src/print_rnd_mode.c)})
+rndmodes2=(${(o)$(sed -n '/deftypefun.*mpfr_print_rnd_mode/,/end deftypefun/{s/[^"]*"\(MPFR_[^"]*\)"[^"]*/\1\n/gp}' doc/mpfr.texi)})
+rndmodes3=(${(o)$(sed -n '/The following rounding modes are supported:/,/end itemize/{s/.*@item @code{\(MPFR_[^}]*\)}.*/\1/p}' doc/mpfr.texi)})
+[[ "$rndmodes1" == "$rndmodes2" && "$rndmodes2" == "$rndmodes3" ]] ||
+  { cat <<EOF && err=1 }
+The lists of rounding modes in src/print_rnd_mode.c and doc/mpfr.texi differ:
+  $rndmodes1
+  $rndmodes2
+  $rndmodes3
+EOF
+
+fdlv1="`sed -n '/Version / {
+  s/.*Version //
+  s/,.*//
+  p
+  q
+  }' doc/fdl.texi`"
+fdlv2="`sed -n '/GNU Free Documentation License/ {
+  s/.*Version //
+  s/ or.*//
+  p
+  q
+  }' doc/mpfr.texi`"
+[[ $fdlv1 == $fdlv2 ]] || { cat <<EOF && err=1 }
+GFDL versions differ:
+   fdl.texi: $fdlv1
+  mpfr.texi: $fdlv2
+EOF
+
+err-if-output "ck-copyright-notice" tools/ck-copyright-notice
+
+if which gcc > /dev/null 2> /dev/null; then
+  err-if-output "ck-mparam" tools/ck-mparam
+else
+  echo "Warning! gcc is not installed. Cannot run ck-mparam." >&2
+fi
+
+# Note about the TZ value: GMT0 and UTC0 are both specified by POSIX,
+# and UTC0 is the preferred value, but old systems only accept GMT0.
+# The "0" is important ("GMT" alone does not work on Tru64 Unix).
+#texisvnd=`LC_ALL=C TZ=GMT0 svn info doc/mpfr.texi 2> /dev/null | sed -n 's/Last Changed Date:.*, [0-9]* \([A-Z][a-z][a-z] [0-9][0-9][0-9][0-9]\)).*/\1/p'`
+texigitd=`LC_ALL=C TZ=GMT0 git log -1 -s --format=%cd --date=format:"%B %Y" doc/mpfr.texi`
+if [[ $? -eq 0 ]] && [[ -n "$texigitd" ]] then
+  #texidate=`sed -n 's/@set UPDATED-MONTH \([A-Z][a-z][a-z]\).*\( [0-9][0-9][0-9][0-9]\)/\1\2/p' doc/mpfr.texi`
+  texidate=`sed -n 's/^@set UPDATED-MONTH *//p' doc/mpfr.texi`
+  [[ $texidate == $texigitd ]] || { cat <<EOF && err=1 }
+mpfr.texi's UPDATED-MONTH seems to be incorrect:
+  mpfr.texi's UPDATED-MONTH: $texidate
+  Last Changed Date in WC:   $texigitd
+EOF
+fi
+
+acv1=`sed -n 's/.*autoconf \([0-9.]\+\) (at least).*/\1/p' doc/README.dev`
+acv2=`sed -n 's/AC_PREREQ(\([0-9.]\+\).*/\1/p' acinclude.m4`
+[[ $acv1 == $acv2 ]] || { cat <<EOF && err=1 }
+autoconf minimal versions differ:
+  README.dev:   $acv1
+  acinclude.m4: $acv2
+EOF
+
+gmpv1=`sed -n 's/.*error "GMP \([0-9.]\+\) or .*/\1/p' configure.ac`
+gmpv2=`sed -n 's/.*AC_MSG_ERROR.*GMP \([0-9.]\+\) or .*/\1/p' configure.ac`
+gmpv3=`sed -n 's/.*MPFR requires GMP version \([0-9.]\+\) or .*/\1/p' INSTALL`
+gmpv4=`sed -n 's/.*GNU MP (version \([0-9.]\+\) or .*/\1/p' doc/mpfr.texi`
+[[ $gmpv1 == $gmpv2 && $gmpv1 == $gmpv3 && $gmpv1 == $gmpv4 ]] ||
+  { cat <<EOF && err=1 }
+Minimal GMP version mismatch:
+  configure.ac 1: $gmpv1
+  configure.ac 2: $gmpv2
+  INSTALL:        $gmpv3
+  doc/mpfr.texi:  $gmpv4
+EOF
+
+doc=(FAQ.html Makefile.am README.dev add-with-carry.c check-typography \
+     faq.xsl fdl.texi mini-gmp mpfr.texi sum.txt update-faq)
+doc=(doc/${^doc})
+
+# In case of problems, one can skip files with -S or use "grep -v"...
+# The codespell.exclude could be simplified after this is fixed:
+#   https://github.com/codespell-project/codespell/issues/17
+#   https://github.com/codespell-project/codespell/issues/535
+# Note: We ignore all messages sent to stderr since python libraries prefer
+# to annoy the user by sending programming errors to stderr rather than to
+# report the issue to the caller (application). This will not prevent this
+# script from detecting spelling errors, which are sent to stdout; and in
+# case of serious error, the non-zero exit status will be detected, but the
+# error message will not be visible (if such an issue is reproducible, then
+# remove the "2> /dev/null" and retry in order to see the error message).
+if which codespell > /dev/null 2> /dev/null; then
+  cscmd()
+  {
+    codespell ${term:+--enable-colors} \
+      -q3 -I codespell.ignore -x codespell.exclude \
+      AUTHORS BUGS INSTALL NEWS README TODO $doc examples $srctests \
+      2> /dev/null
+  }
+  err-if-output "codespell" cscmd
+else
+  echo "Warning! codespell is not installed. Cannot check spelling." >&2
+fi
+
+err-if-output --msg='Say "positive infinity" and "negative infinity".' -t \
+  "+/- infinity" grep -Ei "(plus|minus) *infinity" \
+  doc/algorithms.tex $doc $srctests
+
+err-if-output "ck-clz_tab" tools/ck-clz_tab
+err-if-output "ck-inits-clears" tools/ck-inits-clears
+err-if-output "ck-version-info" tools/ck-version-info
+
+############################################################################
+
+[[ $err -eq 0 ]] || echo "Terminated with errors." >&2
+exit $err

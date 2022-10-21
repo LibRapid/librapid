@@ -1,0 +1,96 @@
+#!/usr/bin/env zsh
+
+# Utility to transform a raw patch into a patch to be put on the MPFR
+# www server. Assume that update-version is in the same directory.
+# MPFR_CURRENT_DIR should contain a path to a directory corresponding
+# to /misc/www/mpfr-current in the MPFR repository; if not set, it is
+# assumed to be "$HOME/mpfr-misc/www/mpfr-current".
+#
+# Typical use:
+#   svn diff -c <REV> > $MPFR_CURRENT_DIR/mpfr.patch
+#   cd $MPFR_CURRENT_DIR
+#   patchlevel=$(($(ls patch?? | tail -n 1 | sed 's/patch//')+1))
+#   .../build-patch mpfr.patch $patchlevel <patchname>
+#   cat patch?? > allpatches
+#
+# But sometimes, autotools-generated files also need to be rebuilt
+# for inclusion in the patch (e.g. if configure.ac is patched),
+# with correction of timestamps.
+
+set -e
+prg=$0
+upv=$prg:h/update-version
+
+if [[ $# -gt 3 || $1 == -* ]] then
+  echo "Usage: $prg [ <patch> [ <patchlevel> [ <patchname> ] ] ]" >&2
+  exit 1
+fi
+
+mpfrdir=$(realpath ${MPFR_CURRENT_DIR:-$HOME/mpfr-misc/www/mpfr-current})
+base=$mpfrdir:t
+version=${base#mpfr-}
+
+if [[ -z "$version" ]] then
+  echo "${prg}: bad version" >&2
+  exit 2
+fi
+
+if [[ $# -ge 2 ]] then
+  newpatch=$(printf patch%02d $2)
+else
+  newpatch=$base-patch
+fi
+
+checkobj()
+{
+  if [[ -e $1 ]] then
+    echo "${prg}: $1 is in the way" >&2
+    exit 3
+  fi
+}
+checkobj $base
+checkobj $base-a
+checkobj $base-b
+checkobj $newpatch
+
+atool -eqx -- $mpfrdir/$base.tar.xz
+pushd $base
+touch -a $mpfrdir/allpatches
+patch -N -Z -p1 < $mpfrdir/allpatches
+: > PATCHES
+popd
+mv -T $base $base-a
+cp -aT $base-a $base-b
+
+if [[ $# -ge 1 ]] then
+  patchfile=$(realpath $1)
+  pushd $base-b
+  echo "Applying patch $1"
+  if grep -q '^--- mpfr.*/' $patchfile; then
+    p=1
+  else
+    p=0
+  fi
+  patch --no-backup-if-mismatch -p$p < $patchfile
+  if [[ $# -ge 2 ]] then
+    ~/wd/mpfr/tools/update-version ${(s:.:)version} p$2 -
+    if [[ $# -ge 3 ]] then
+      echo $3 >> PATCHES
+    fi
+  fi
+  if ! cmp --quiet $mpfrdir/$base-{a,b}/doc/mpfr.texi; then
+    ./configure
+    make info
+    make distclean
+  fi
+  popd
+  set +e
+  TZ=UTC0 diff -Naurd $base-a $base-b > $newpatch
+  if [[ $? -ne 1 ]] then
+    echo "${prg}: something has gone wrong with diff" >&2
+    exit 4
+  fi
+  set -e
+  rm -r $base-a $base-b
+  echo "OK, patch in $newpatch"
+fi

@@ -1,0 +1,258 @@
+[Part of changesets r13214,13217,13224,13225,13228,13229]
+
+These were the modifications to configure.ac and src/Makefile.am needed
+for --with-mini-gmp support (these are just those related to the autotools,
+changes to the MPFR source not included, and changes in temporary comments
+not included either). This works with GNU Automake 1.16, but not with
+earlier versions, due to a bug fixed in 1.16; in Automake 1.16 NEWS file:
+
+  - Automatic dependency tracking has been fixed to work also when the
+    'subdir-object' option is used and some 'foo_SOURCES' definition
+    contains unexpanded references to make variables, as in, e.g.:
+
+        a_src = sources/libs/aaa
+        b_src = sources/bbb
+        foo_SOURCES = $(a_src)/bar.c $(b_src)/baz.c
+
+    With such a setup, the created makefile fragment containing dependency
+    tracking information will be correctly placed under the directories
+    named 'sources/libs/aaa/.deps' and 'sources/bbb/.deps', rather than
+    mistakenly under directories named (literally!) '$(src_a)/.deps' and
+    '$(src_b)/.deps' (this was the first part of automake bug#13928).
+
+    Notice that in order to fix this bug we had to slightly change the
+    semantics of how config.status bootstraps the makefile fragments
+    required for the dependency tracking to work: rather than attempting
+    to parse the Makefiles via grep and sed trickeries only, we actually
+    invoke 'make' on a slightly preprocessed version of those Makefiles,
+    using a private target that is only meant to bootstrap the required
+    makefile fragments.
+
+The code has been changed in r13235 to avoid this Automake bug.
+
+Index: configure.ac
+===================================================================
+--- configure.ac	(revision 13213)
++++ configure.ac	(working copy)
+@@ -32,7 +32,9 @@
+ dnl tested, and many things have changed in 1.13. Moreover the INSTALL file
+ dnl and MPFR manual assume that MPFR has been built using Automake 1.13+
+ dnl (due to parallel tests, introduced by default in Automake 1.13).
+-AM_INIT_AUTOMAKE([1.13 no-define dist-bzip2 dist-xz dist-zip])
++dnl The subdir-objects option is needed due to configuration related to
++dnl mini-gmp, which has sources in an external directory.
++AM_INIT_AUTOMAKE([1.13 no-define dist-bzip2 dist-xz dist-zip subdir-objects])
+ AM_MAINTAINER_MODE(enable)
+ 
+ AC_CONFIG_MACRO_DIR([m4])
+@@ -121,6 +123,26 @@
+    fi
+    ])
+ 
++AC_ARG_WITH(mini_gmp,
++   [  --with-mini-gmp=DIR     use mini-gmp (sources in DIR) instead of GMP
++                          (experimental, please read doc/mini-gmp file)],
++   [
++   MPFR_PARSE_DIRECTORY(["$withval"],[withval])
++   if test -z "$gmp_lib_path" && test -z "$with_gmp_include" && \
++      test -z "$use_gmp_build"; then
++     if test -f "$withval/mini-gmp.c" && test -f "$withval/mini-gmp.h"; then
++       AC_DEFINE([MPFR_USE_MINI_GMP],1,[Use mini-gmp])
++       CPPFLAGS="$CPPFLAGS -I$withval"
++       mini_gmp_path="$withval"
++       AC_SUBST(mini_gmp_path)
++     else
++       AC_MSG_FAILURE([mini-gmp.{c,h} not found in $withval])
++     fi
++   else
++     AC_MSG_FAILURE([Do not use --with-mini-gmp and other --with-gmp options simultaneously.])
++   fi
++  ])
++
+ AC_ARG_WITH(mulhigh_size,
+    [  --with-mulhigh-size=NUM internal threshold table for mulhigh],
+    AC_DEFINE_UNQUOTED([MPFR_MULHIGH_SIZE],$withval, [Mulhigh size]))
+@@ -204,7 +226,10 @@
+       *)    AC_MSG_ERROR([bad value for --enable-tune-for-coverage]) ;;
+      esac])
+ 
++dnl Makefile.am files can use "if MINI_GMP" / ... / "endif".
++AM_CONDITIONAL([MINI_GMP], [test -n "$mini_gmp_path"])
+ 
++
+ dnl
+ dnl Setup CC and CFLAGS
+ dnl
+@@ -520,10 +545,61 @@
+ LIBS="$old_LIBS"
+ AC_SUBST(TUNE_LIBS)
+ 
++dnl Under Linux, make sure that the old dtags are used if LD_LIBRARY_PATH
++dnl is defined. The issue is that with the new dtags, LD_LIBRARY_PATH has
++dnl the precedence over the run path, so that if a compatible MPFR library
++dnl is installed in some directory from $LD_LIBRARY_PATH, then the tested
++dnl MPFR library will be this library instead of the MPFR library from the
++dnl build tree. Other OS with the same issue might be added later.
+ dnl
+-dnl Setup GMP detection
++dnl References:
++dnl   https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=859732
++dnl   http://lists.gnu.org/archive/html/libtool/2017-05/msg00000.html
+ dnl
++dnl We need to check whether --disable-new-dtags is supported as alternate
++dnl linkers may be used (e.g., with tcc: CC=tcc LD=tcc).
++dnl
++case $host in
++  *-*-linux*)
++    if test -n "$LD_LIBRARY_PATH"; then
++      saved_LDFLAGS="$LDFLAGS"
++      LDFLAGS="$LDFLAGS -Wl,--disable-new-dtags"
++      AC_MSG_CHECKING(whether --disable-new-dtags is supported by the linker)
++      AC_LINK_IFELSE([AC_LANG_SOURCE([[
++int main (void) { return 0; }
++      ]])],
++      [AC_MSG_RESULT(yes (use it since LD_LIBRARY_PATH is set))],
++      [AC_MSG_RESULT(no)
++       LDFLAGS="$saved_LDFLAGS"
++      ])
++    fi
++    ;;
++esac
+ 
++dnl
++dnl For mpfr-longlong.h - TODO: should be replaced (see acinclude.m4).
++dnl
++
++GMP_C_ATTRIBUTE_MODE
++
++
++dnl
++dnl Setup related to GMP / mini-gmp
++dnl
++
++if test -z "$mini_gmp_path" ; then
++
++dnl Setup for GMP
++
++dnl Avoid a configure failure with automatic dependency tracking due to
++dnl   libminigmp_la_SOURCES = $(mini_gmp_path)/mini-gmp.h [...]
++dnl in src/Makefile.am; this failure comes from the fact that lines with
++dnl $(mini_gmp_path)/$(DEPDIR)/... are added to src/Makefile even though
++dnl the rules related to $(mini_gmp_path) are in an Automake conditional
++dnl that is false when $mini_gmp_path is an empty string. This is probably
++dnl a bug in Automake.
++mini_gmp_path=.
++
+ dnl Check GMP Header
+ AC_MSG_CHECKING(for gmp.h)
+ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+@@ -577,48 +653,6 @@
+   ;;
+ esac
+ 
+-dnl Under Linux, make sure that the old dtags are used if LD_LIBRARY_PATH
+-dnl is defined. The issue is that with the new dtags, LD_LIBRARY_PATH has
+-dnl the precedence over the run path, so that if a compatible MPFR library
+-dnl is installed in some directory from $LD_LIBRARY_PATH, then the tested
+-dnl MPFR library will be this library instead of the MPFR library from the
+-dnl build tree. Other OS with the same issue might be added later.
+-dnl
+-dnl References:
+-dnl   https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=859732
+-dnl   http://lists.gnu.org/archive/html/libtool/2017-05/msg00000.html
+-dnl
+-dnl We need to check whether --disable-new-dtags is supported as alternate
+-dnl linkers may be used (e.g., with tcc: CC=tcc LD=tcc).
+-dnl
+-case $host in
+-  *-*-linux*)
+-    if test -n "$LD_LIBRARY_PATH"; then
+-      saved_LDFLAGS="$LDFLAGS"
+-      LDFLAGS="$LDFLAGS -Wl,--disable-new-dtags"
+-      AC_MSG_CHECKING(whether --disable-new-dtags is supported by the linker)
+-      AC_LINK_IFELSE([AC_LANG_SOURCE([[
+-int main (void) { return 0; }
+-      ]])],
+-      [AC_MSG_RESULT(yes (use it since LD_LIBRARY_PATH is set))],
+-      [AC_MSG_RESULT(no)
+-       LDFLAGS="$saved_LDFLAGS"
+-      ])
+-    fi
+-    ;;
+-esac
+-
+-dnl
+-dnl For mpfr-longlong.h - TODO: should be replaced (see acinclude.m4).
+-dnl
+-
+-GMP_C_ATTRIBUTE_MODE
+-
+-
+-dnl
+-dnl Setup GMP detection (continued)
+-dnl
+-
+ dnl Check minimal GMP version
+ dnl We only guarantee that with a *functional* and recent enough GMP version,
+ dnl MPFR will compile; we do not guarantee that GMP will compile.
+@@ -777,6 +811,27 @@
+ MPFR_CHECK_MP_LIMB_T_VS_LONG
+ MPFR_CHECK_MP_LIMB_T_VS_INTMAX
+ 
++else
++
++dnl Setup for mini-gmp
++
++dnl First check whether mini-gmp defines GMP_NUMB_BITS.
++AC_MSG_CHECKING(for GMP_NUMB_BITS)
++how="from mini-gmp.h"
++AC_COMPUTE_INT(mini_gmp_numb_bits, [(GMP_NUMB_BITS)],
++   [#include <mini-gmp.h>],
++   [how="not in mini-gmp.h; guessed"
++    AC_COMPUTE_INT(mini_gmp_numb_bits, [(sizeof(unsigned long) * CHAR_BIT)],
++       [#include <limits.h>],
++       [AC_MSG_FAILURE([cannot define GMP_NUMB_BITS])])
++    AC_DEFINE_UNQUOTED([GMP_NUMB_BITS], $mini_gmp_numb_bits, [number of bits in a limb])
++  ])
++AC_MSG_RESULT([$mini_gmp_numb_bits bits ($how)])
++
++fi
++
++dnl End of setup related to GMP / mini-gmp
++
+ dnl The getrusage function is needed for MPFR bench (cf tools/bench)
+ AC_CHECK_FUNCS([getrusage])
+ 
+Index: src/Makefile.am
+===================================================================
+--- src/Makefile.am	(revision 13213)
++++ src/Makefile.am	(working copy)
+@@ -17,6 +17,7 @@
+ 	x86/mparam.h x86_64/core2/mparam.h x86_64/mparam.h
+ 
+ include_HEADERS = mpfr.h mpf2mpfr.h
++nodist_include_HEADERS =
+ 
+ BUILT_SOURCES = mparam.h
+ 
+@@ -91,6 +92,20 @@
+ $(srcdir)/get_patches.c: $(top_srcdir)/PATCHES $(top_srcdir)/tools/get_patches.sh
+ 	(cd $(top_srcdir) && ./tools/get_patches.sh) > $@ || rm -f $@
+ 
++if MINI_GMP
++# The mini-gmp.{c,h} files are external files, not part of MPFR, thus they
++# must not be put in the tarballs by "make dist". Hence the use of nodist_
++# on the corresponding sources (this is needed even when --with-mini-gmp
++# has not been used).
++nodist_include_HEADERS += $(mini_gmp_path)/mini-gmp.h
++# The noinst_ below seems OK as libminigmp should be included in libmpfr,
++# and this is confirmed by ldd (replacing noinst_ by lib_ does not seem to
++# do this and makes linking of the test programs fail).
++noinst_LTLIBRARIES = libminigmp.la
++nodist_libminigmp_la_SOURCES = $(mini_gmp_path)/mini-gmp.h $(mini_gmp_path)/mini-gmp.c
++libmpfr_la_LIBADD += libminigmp.la
++endif
++
+ # For check-gmp-symbols
+ GMPC = $(top_builddir)/src/gmp.c
+ GMPI = $(top_builddir)/src/gmp.i
