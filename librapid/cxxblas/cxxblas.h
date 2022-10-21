@@ -33,6 +33,9 @@
 #ifndef CXXBLAS_CXXBLAS_H
 #define CXXBLAS_CXXBLAS_H 1
 
+// Ensure LibRapid is already present
+#include "librapid/core/core.hpp"
+
 #include "cxxblas/auxiliary/auxiliary.h"
 #include "cxxblas/drivers/drivers.h"
 #include "cxxblas/typedefs.h"

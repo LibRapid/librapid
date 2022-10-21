@@ -1,0 +1,16 @@
+﻿  dummy.cc
+  isfuns.cc
+  ismpf.cc
+  ismpq.cc
+  ismpz.cc
+  ismpznw.cc
+  osdoprnti.cc
+  osfuns.cc
+  osmpf.cc
+  osmpq.cc
+  osmpz.cc
+  Generating Code...
+  lib_mpir_cxx.vcxproj -> C:\Users\penci\OneDrive\Desktop\Code\C-Cpp\gmp\mpir\msvc\vs22\lib_mpir_cxx\x64\Release\mpirxx.lib
+  "Final subpath msvc\vs22\lib_mpir_cxx\x64\Release\mpirxx.lib"
+  target=lib_mpir_cxx, platform=x64, configuration=Release, file=mpirxx.lib
+  copying outputs from "vs22\lib_mpir_cxx\x64\Release\" to "..\lib\x64\Release\"

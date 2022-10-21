@@ -230,6 +230,12 @@
 #	include "genericConfig.hpp"
 #endif
 
+#include "cudaConfig.hpp"
+
+#ifndef LIBRAPID_MAX_ARRAY_DIMS
+#	define LIBRAPID_MAX_ARRAY_DIMS 32
+#endif // LIBRAPID_MAX_ARRAY_DIMS
+
 // Code to be run *before* main()
 #include "preMain.hpp"
 

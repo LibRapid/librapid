@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+
+# Check that a cast is performed for the last argument of
+# mpfr_inits, mpfr_inits2 and mpfr_clears.
+
+use strict;
+use warnings;
+use File::Find;
+use Cwd;
+
+my $err = 0;
+find(\&wanted, -d 'src' || getcwd() !~ m,/tools$, ? '.' : '..');
+exit $err;
+
+sub wanted
+  {
+    /\.c$/ && ! /^\.#/ or return;
+    my $ctr = 0;
+    open FILE, '<', $_ or die;
+    while (<FILE>)
+      {
+        /^ +mpfr_(init|clear)s/ && ! /\(mpfr_ptr\) *(0|NULL)/ or next;
+        /, *$/ and $_ .= <FILE>, redo;
+        $ctr++ or print "Error found in $File::Find::name\n";
+        print;
+        $err = 1;
+      }
+    close FILE or die;
+  }

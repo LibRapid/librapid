@@ -1,0 +1,155 @@
+#!/bin/bash
+# run this from the devel directory
+
+# mpz/Makefile.am
+cd ../mpz
+srcs=$(ls *.h *.c 2>/dev/null)
+srcs=$(echo -n $srcs)
+cat Makefile.am | sed s/"libmpz_la_SOURCES[[:space:]]*=[[:space:]]*.*"/"libmpz_la_SOURCES = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+srcs=$(ls *.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"mpz\\\\\/\1\$U.lo "/g)
+cat ../Makefile.am | sed s/"MPZ_OBJECTS[[:space:]]*=.*"/"MPZ_OBJECTS = $srcs"/ > tmpfile
+mv tmpfile ../Makefile.am
+cd ../devel
+
+# fft/Makefile.am
+cd ../fft
+srcs=$(ls *.h *.c 2>/dev/null)
+srcs=$(echo -n $srcs)
+cat Makefile.am | sed s/"libfft_la_SOURCES[[:space:]]*=[[:space:]]*.*"/"libfft_la_SOURCES = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+srcs=$(ls *.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"fft\\\\\/\1\$U.lo "/g)
+cat ../Makefile.am | sed s/"FFT_OBJECTS[[:space:]]*=.*"/"FFT_OBJECTS = $srcs"/ > tmpfile
+mv tmpfile ../Makefile.am
+cd ../devel
+
+# mpf/Makefile.am
+cd ../mpf
+srcs=$(ls *.h *.c 2>/dev/null)
+srcs=$(echo -n $srcs)
+cat Makefile.am | sed s/"libmpf_la_SOURCES[[:space:]]*=[[:space:]]*.*"/"libmpf_la_SOURCES = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+srcs=$(ls *.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"mpf\\\\\/\1\$U.lo "/g)
+cat ../Makefile.am | sed s/"MPF_OBJECTS[[:space:]]*=.*"/"MPF_OBJECTS = $srcs"/ > tmpfile
+mv tmpfile ../Makefile.am
+cd ../devel
+
+# mpq/Makefile.am Makefile.am
+cd ../mpq
+srcs=$(ls *.h *.c 2>/dev/null)
+srcs=$(echo -n $srcs)
+cat Makefile.am | sed s/"libmpq_la_SOURCES[[:space:]]*=[[:space:]]*.*"/"libmpq_la_SOURCES = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+srcs=$(ls *.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"mpq\\\\\/\1\$U.lo "/g)
+cat ../Makefile.am | sed s/"MPQ_OBJECTS[[:space:]]*=.*"/"MPQ_OBJECTS = $srcs"/ > tmpfile
+mv tmpfile ../Makefile.am
+cd ../devel
+
+# printf/Makefile.am Makefile.am
+cd ../printf
+srcs=$(ls *.h *.c 2>/dev/null)
+srcs=$(echo -n $srcs)
+cat Makefile.am | sed s/"libprintf_la_SOURCES[[:space:]]*=[[:space:]]*.*"/"libprintf_la_SOURCES = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+srcs=$(ls *.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"printf\\\\\/\1\$U.lo "/g)
+cat ../Makefile.am | sed s/"PRINTF_OBJECTS[[:space:]]*=.*"/"PRINTF_OBJECTS = $srcs"/ > tmpfile
+mv tmpfile ../Makefile.am
+cd ../devel
+
+# scanf/Makefile.am Makefile.am
+cd ../scanf
+srcs=$(ls *.h *.c 2>/dev/null)
+srcs=$(echo -n $srcs)
+cat Makefile.am | sed s/"libscanf_la_SOURCES[[:space:]]*=[[:space:]]*.*"/"libscanf_la_SOURCES = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+srcs=$(ls *.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"scanf\\\\\/\1\$U.lo "/g)
+cat ../Makefile.am | sed s/"SCANF_OBJECTS[[:space:]]*=.*"/"SCANF_OBJECTS = $srcs"/ > tmpfile
+mv tmpfile ../Makefile.am
+cd ../devel
+
+# tests/mpz/Makefile.am
+cd ../tests/mpz
+srcs=$(ls *.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"\1 "/g)
+cat Makefile.am | sed s/"check_PROGRAMS[[:space:]]*=.*"/"check_PROGRAMS = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+cd ../../devel
+
+# tests/fft/Makefile.am
+cd ../tests/fft
+srcs=$(ls *.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"\1 "/g)
+cat Makefile.am | sed s/"check_PROGRAMS[[:space:]]*=.*"/"check_PROGRAMS = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+cd ../../devel
+
+# tests/mpf/Makefile.am
+cd ../tests/mpf
+srcs=$(ls *.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"\1 "/g)
+cat Makefile.am | sed s/"check_PROGRAMS[[:space:]]*=.*"/"check_PROGRAMS = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+cd ../../devel
+
+# tests/mpq/Makefile.am
+cd ../tests/mpq
+srcs=$(ls *.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"\1 "/g)
+cat Makefile.am | sed s/"check_PROGRAMS[[:space:]]*=.*"/"check_PROGRAMS = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+cd ../../devel
+
+# tests/misc/Makefile.am
+cd ../tests/misc
+srcs=$(ls *.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"\1 "/g)
+cat Makefile.am | sed s/"check_PROGRAMS[[:space:]]*=.*"/"check_PROGRAMS = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+cd ../../devel
+
+# tests/mpn/Makefile.am
+cd ../tests/mpn
+srcs=$(ls *.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"\1 "/g)
+cat Makefile.am | sed s/"check_PROGRAMS[[:space:]]*=.*"/"check_PROGRAMS = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+cd ../../devel
+
+# tests/rand/Makefile.am
+cd ../tests/rand
+srcs=$(ls t-*.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"\1 "/g)
+cat Makefile.am | sed s/"check_PROGRAMS[[:space:]]*=.*"/"check_PROGRAMS = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+cd ../../devel
+
+# tests/Makefile.am
+cd ../tests
+srcs=$(ls t-*.c)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.c[[:space:]]*\)"/"\1 "/g)
+cat Makefile.am | sed s/"check_PROGRAMS[[:space:]]*=.*"/"check_PROGRAMS = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+cd ../devel
+
+# tests/cxx/Makefile.am , this is not complete
+cd ../tests/cxx
+srcs=$(ls *.cc)
+#cxxsrcs=$(echo -n $srcs | sed s/"t-\([^[:space:]]\+\)\(\.cc[[:space:]]*\)"/"t_\1_SOURCES = t-\1.cc\n"/g)
+srcs=$(echo -n $srcs | sed s/"\([^[:space:]]\+\)\(\.cc[[:space:]]*\)"/"\1 "/g)
+cat Makefile.am | sed s/"check_PROGRAMS[[:space:]]*=.*"/"check_PROGRAMS = $srcs"/ > tmpfile
+mv tmpfile Makefile.am
+cd ../../devel
+
+# CRLF to LF on all C files
+cd ..
+for i in $(file $(find mpz mpq mpf mpn printf scanf tests tune -name \*.c) | grep -e CRLF | cut -f 1 -d " " | cut -f 1 -d :) ; do cat $i | fromdos > crap ; mv crap $i  ; done
+for i in $(file $(find mpz mpq mpf mpn printf scanf tests tune -name \*.h) | grep -e CRLF | cut -f 1 -d " " | cut -f 1 -d :) ; do cat $i | fromdos > crap ; mv crap $i  ; done
+for i in $(file $(find -name \*.c -maxdepth 1) | grep -e CRLF | cut -f 1 -d " " | cut -f 1 -d :) ; do cat $i | fromdos > crap ; mv crap $i  ; done
+for i in $(file $(find -name \*.h -maxdepth 1) | grep -e CRLF | cut -f 1 -d " " | cut -f 1 -d :) ; do cat $i | fromdos > crap ; mv crap $i  ; done
+cd devel

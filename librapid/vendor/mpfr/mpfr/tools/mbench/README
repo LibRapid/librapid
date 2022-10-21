@@ -1,0 +1,33 @@
+This directory contains 'mbench', a program written by Patrick Pélissier
+(INRIA) to bench MPFR for low precisions.
+
+It is distributed under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation; either version 3 of the License,
+or (at your option) any later version.
+
+To use the mbench program:
+   Build it:
+      make GMP=/dir/to/gmp MPFR=/dir/to/mpfr
+   Run it by specifying the functions you want to bench:
+      ./mfv5 mpfr_add mpfr_mul mpfr_sub mpfr_div mpfr_sqrt
+   To have the lists of the available functions:
+      ./mfv5 -l
+   Help usage:
+      ./mfv5 -h
+   To build MFV5 with PARI/NTL/CLN/MAPM/ARPREC/CRLIBM support, build it with:
+     make GMP=/dir/to/gmp MPFR=/dir/to/mpfr PARI=/dir/to/pari ...
+   (It autodetects which library is available. Thus a non-existent directory
+   can be given to disable a library installed on the system if it yields a
+   build failure.)
+   Then use ./mfv5 -l to have the lists of the available functions.
+   To add a new function in MPFR (mpfr_toto), edit mfv5-mpfr.cc and add:
+
+class mpfr_toto_test {
+public:
+  int func (mpfr_ptr a, mpfr_srcptr b, mpfr_srcptr c, mp_rnd_t r) {
+    return mpfr_toto (a,b,r);
+  }
+};
+static mpfr_test<mpfr_toto_test> testtoto ("mpfr_toto");
+
+  Rebuild it and that's all.

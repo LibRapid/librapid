@@ -1,0 +1,22 @@
+﻿  dummy.cc
+  isfuns.cc
+C:\Users\penci\OneDrive\Desktop\Code\C-Cpp\gmp\mpir\cxx\isfuns.cc(25,10): fatal error C1083: Cannot open include file: 'mpir.h': No such file or directory
+  ismpf.cc
+C:\Users\penci\OneDrive\Desktop\Code\C-Cpp\gmp\mpir\cxx\ismpf.cc(29,10): fatal error C1083: Cannot open include file: 'mpir.h': No such file or directory
+  ismpq.cc
+C:\Users\penci\OneDrive\Desktop\Code\C-Cpp\gmp\mpir\cxx\ismpq.cc(25,10): fatal error C1083: Cannot open include file: 'mpir.h': No such file or directory
+  ismpz.cc
+C:\Users\penci\OneDrive\Desktop\Code\C-Cpp\gmp\mpir\cxx\ismpz.cc(27,10): fatal error C1083: Cannot open include file: 'mpir.h': No such file or directory
+  ismpznw.cc
+C:\Users\penci\OneDrive\Desktop\Code\C-Cpp\gmp\mpir\cxx\ismpznw.cc(25,10): fatal error C1083: Cannot open include file: 'mpir.h': No such file or directory
+  osdoprnti.cc
+C:\Users\penci\OneDrive\Desktop\Code\C-Cpp\gmp\mpir\cxx\osdoprnti.cc(30,10): fatal error C1083: Cannot open include file: 'mpir.h': No such file or directory
+  osfuns.cc
+C:\Users\penci\OneDrive\Desktop\Code\C-Cpp\gmp\mpir\cxx\osfuns.cc(30,10): fatal error C1083: Cannot open include file: 'mpir.h': No such file or directory
+  osmpf.cc
+C:\Users\penci\OneDrive\Desktop\Code\C-Cpp\gmp\mpir\cxx\osmpf.cc(29,10): fatal error C1083: Cannot open include file: 'mpir.h': No such file or directory
+  osmpq.cc
+C:\Users\penci\OneDrive\Desktop\Code\C-Cpp\gmp\mpir\cxx\osmpq.cc(26,10): fatal error C1083: Cannot open include file: 'mpir.h': No such file or directory
+  osmpz.cc
+C:\Users\penci\OneDrive\Desktop\Code\C-Cpp\gmp\mpir\cxx\osmpz.cc(26,10): fatal error C1083: Cannot open include file: 'mpir.h': No such file or directory
+  Generating Code...
