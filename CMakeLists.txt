@@ -17,6 +17,9 @@ option(LIBRAPID_USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_QUIET_BUILD "Hide warnings generated WITHIN LibRapid's source" ON)
 
+# Include any required modules
+include(identifyBLAS)
+
 MACRO(SUBDIRLIST result curdir)
     FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
     SET(dirlist "")
@@ -131,6 +134,10 @@ if (${LIBRAPID_USE_BLAS})
         message(STATUS "Using BLAS (" ${LIBRAPID_BLAS} ")")
 
         get_filename_component(filepath ${LIBRAPID_BLAS} DIRECTORY)
+        get_filename_component(filename ${LIBRAPID_BLAS} NAME)
+
+        # Attempt to identify which BLAS library is being used
+        setBlasDefinition(filename)
 
         # Copy include files
         set(inc_path "${filepath}/../include")

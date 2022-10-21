@@ -10,6 +10,7 @@
 
 // Standard Library
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <cfenv>
 #include <cfloat>

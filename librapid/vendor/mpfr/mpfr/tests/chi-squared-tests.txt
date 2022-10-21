@@ -1,0 +1,94 @@
+About the trandom_deviate.c and t[ne]random_chisq.c
+
+trandom_deviate tests the functions in random_deviate.c, which provides
+support routines for mpfr_[ne]random.  The tests
+
+  * improve the code coverage of the tests by constructing random
+    deviates with special properties: (a) the initial part of the
+    fraction matches that of another random deviate; (b) with the
+    leading bit in various positions.
+
+  * that the values provided by mpfr_random_deviate_value at a given
+    precision do not change if additional random words are added to the
+    deviate;
+
+  * that the values provided by mpfr_random_deviate_value at a given
+    precision but different rounding modes are consistent.
+
+t[ne]random_chisq.c provide chi-squared tests for mpfr_[ne]random.  Note
+that there's a fair amount of code duplicated in these files, but with
+enough differences to make putting the code into a separate file a
+little messy.
+
+Two types of tests are performed
+
+  * using equal width bins at moderate precision (prec = 64) treating
+    the deviates are continuous quantities;
+
+  * assigning a bin to each possible value for the random deviates
+    (within a range) at low precisions (prec = 2, 3, 4).
+
+Only abnormally large values of chi-squared are flagged, since
+abnormally low values can only result from
+
+  * the expected variation in chi-squared results;
+
+  * a correlation between the random deviates; but this can only happen
+    if gmp's random numbers are correlated (in a rather pernicious way);
+    the tests on gmp's random number generator should catch this.
+
+The chi-squared tests have to accomplish contradictory goals:
+
+  * reliably detect when there's a problem with the routines under test
+    (the probability of a false negative is low);
+
+  * rarely report a problem when there isn't one (the probability of a
+    false positive is low);
+
+  * complete in about 1 second.
+
+Some attributes of the testing come to our aid:
+
+  * the tests are executed many times on many different platforms;
+
+  * typical coding errors in the routines for normal and exponential
+    sampling lead to distributions which are far from the correct one;
+
+  * carrying out a longer (by a factor of N) test on a bad routine
+    multiplies chi-squared by about N, a result which has a vanishingly
+    small probability for a good routine.
+
+The strategy for testing is
+
+  * use 100000 samples (with this number, the test of mpfr_nrandom takes
+    about 0.3 sec); compute Q, the probability that chi-square exceeds
+    the value obtained.  If Q > 0.01, the test passes; if Q < 1.0e-9,
+    the test fails; otherwise:
+
+  * repeat the test with 10 times the number of samples and compute Q
+    again.  If Q > 0.001, the test passes; if Q < 1.0e-9, the test
+    fails; otherwise:
+
+  * repeat the test with 10 times the number of samples and compute Q
+    again.  If Q > 0.0001, the test passes; if Q < 1.0e-9, the test
+    fails; otherwise:
+
+  * the test fails.
+
+If the mpfr_[ne]random is OK, then the probability that the test fails
+(a false positive) is about 1.0e-9.  If there's a bad error in
+mpfr_[ne]random, failure will probably occur at one of the stages.  It
+there's an error in mpfr_[ne]random which results in a slight deviation
+from the true distribution (which I don't think is likely given the
+nature of the algorithms), then there a reasonable chance that the
+problem will be discovered "eventually".  Because "eventually" is not
+very satisfactory, it is important that the tests be run with a large
+number (e.g., 10^9) of samples whenever changes are made to
+mpfr_[ne]random.
+
+I've left the t[ne]random tests as is, even though t[ne]random_chisq are
+performing the same tests in a more comprehensive fashion.  There's some
+utility in having a set of really simple tests.
+
+  --Charles Karney <charles.karney@sri.com>
+

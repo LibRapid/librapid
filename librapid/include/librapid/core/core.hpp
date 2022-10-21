@@ -4,6 +4,9 @@
 #include "librapidPch.hpp"
 #include "config.hpp"
 #include "global.hpp"
+#include "traits.hpp"
+#include "typetraits.hpp"
+#include "helperMacros.hpp"
 
 // BLAS
 #include "cxxblas/cxxblas.h"
