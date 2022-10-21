@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# Export some release identified by a Git tag in order to get a tarball.
+
+set -e
+
+if [ $# -ne 2 ]; then
+  echo "Usage: $0 <tag> <dir>" >&2
+  exit 1
+fi
+
+tag=$1
+dir="$2/mpfr-$tag"
+
+# Make sure that the upstream repository is up-to-date by getting
+# the commit id associated with the tag from it.
+url="https://gitlab.inria.fr/mpfr/mpfr.git"
+lsr=$(git ls-remote --tags "$url" "refs/tags/$tag^{}")
+
+if [ -z "$lsr" ]; then
+  echo "$0: tag '$tag' doesn't exist"
+  exit 2
+fi
+
+id=${lsr%%[[:space:]]*}
+echo "commit id: $id"
+
+# https://stackoverflow.com/a/163769/3782797
+mkdir "$dir"
+git archive --format=tar "$id" | tar -x -C "$dir"
+
+# Fix the timestamps so that each file or directory has a timestamp
+# corresponding to its last change.
+# https://stackoverflow.com/a/36243002/3782797
+for f in $(git ls-tree -r -t --name-only "$id")
+do
+  touch -d $(git log --pretty=format:%cI -1 "$id" -- "$f") "$dir/$f"
+done

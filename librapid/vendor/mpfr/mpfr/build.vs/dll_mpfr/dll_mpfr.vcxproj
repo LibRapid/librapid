@@ -1,0 +1,509 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8A1EB575-B721-4891-B5BD-17CC45D0103C}</ProjectGuid>
+    <RootNamespace>dll_mpfr</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.21006.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\dll\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)..\dll\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\dll\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\dll\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">mpfr</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">mpfr</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">mpfr</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">mpfr</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Command>..\out_copy_rename.bat ..\..\src\mpfr.h ..\..\dll\$(IntDir) mpfr.h
+..\out_copy_rename.bat ..\..\src\mparam_h.in ..\..\ mparam.h</Command>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\;..\..\;..\..\..\mpir\dll\$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN32;HAVE_CONFIG_H;_DEBUG;_LIB;__MPFR_WITHIN_MPFR;_GMP_IEEE_FLOATS;_CRT_SECURE_NO_WARNINGS;HAVE_STDINT_H;__GMP_LIBGMP_DLL;MPFR_HAVE_GMP_IMPL;MPFR_USE_THREAD_SAFE=1;MPFR_USE_C11_THREAD_SAFE=1</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <CompileAs>Default</CompileAs>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <ProjectReference />
+    <Link>
+      <AdditionalDependencies>..\..\..\mpir\dll\$(IntDir)mpir.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PreBuildEvent>
+      <Command>..\out_copy_rename.bat ..\..\src\mpfr.h ..\..\dll\$(IntDir) mpfr.h
+..\out_copy_rename.bat ..\..\src\mparam_h.in ..\..\ mparam.h</Command>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\;..\..\;..\..\..\mpir\dll\$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN32;HAVE_CONFIG_H;_DEBUG;_LIB;__MPFR_WITHIN_MPFR;_GMP_IEEE_FLOATS;_CRT_SECURE_NO_WARNINGS;HAVE_STDINT_H;__GMP_LIBGMP_DLL;MPFR_HAVE_GMP_IMPL;MPFR_USE_THREAD_SAFE=1;MPFR_USE_C11_THREAD_SAFE=1</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <CompileAs>Default</CompileAs>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <ProjectReference />
+    <Link>
+      <AdditionalDependencies>..\..\..\mpir\dll\$(IntDir)mpir.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Command>..\out_copy_rename.bat ..\..\src\mpfr.h ..\..\dll\$(IntDir) mpfr.h
+..\out_copy_rename.bat ..\..\src\mparam_h.in ..\..\ mparam.h</Command>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\;..\..\;..\..\..\mpir\dll\$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN32;HAVE_CONFIG_H;NDEBUG;_LIB;__MPFR_WITHIN_MPFR;_GMP_IEEE_FLOATS;_CRT_SECURE_NO_WARNINGS;HAVE_STDINT_H;__GMP_LIBGMP_DLL;MPFR_HAVE_GMP_IMPL;MPFR_USE_THREAD_SAFE=1;MPFR_USE_C11_THREAD_SAFE=1</PreprocessorDefinitions>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <CompileAs>Default</CompileAs>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <ProjectReference />
+    <Link>
+      <AdditionalDependencies>..\..\..\mpir\dll\$(IntDir)mpir.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PreBuildEvent>
+      <Command>..\out_copy_rename.bat ..\..\src\mpfr.h ..\..\dll\$(IntDir) mpfr.h
+..\out_copy_rename.bat ..\..\src\mparam_h.in ..\..\ mparam.h</Command>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\;..\..\;..\..\..\mpir\dll\$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN32;HAVE_CONFIG_H;NDEBUG;_LIB;__MPFR_WITHIN_MPFR;_GMP_IEEE_FLOATS;_CRT_SECURE_NO_WARNINGS;HAVE_STDINT_H;__GMP_LIBGMP_DLL;MPFR_HAVE_GMP_IMPL;MPFR_USE_THREAD_SAFE=1;MPFR_USE_C11_THREAD_SAFE=1</PreprocessorDefinitions>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <ProjectReference />
+    <Link>
+      <AdditionalDependencies>..\..\..\mpir\dll\$(IntDir)mpir.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\abort_prec_max.c" />
+    <ClCompile Include="..\..\src\acos.c" />
+    <ClCompile Include="..\..\src\acosh.c" />
+    <ClCompile Include="..\..\src\acosu.c" />
+    <ClCompile Include="..\..\src\add.c" />
+    <ClCompile Include="..\..\src\add1.c" />
+    <ClCompile Include="..\..\src\add1sp.c" />
+    <ClCompile Include="..\..\src\add_d.c" />
+    <ClCompile Include="..\..\src\add_ui.c" />
+    <ClCompile Include="..\..\src\agm.c" />
+    <ClCompile Include="..\..\src\ai.c" />
+    <ClCompile Include="..\..\src\asin.c" />
+    <ClCompile Include="..\..\src\asinh.c" />
+    <ClCompile Include="..\..\src\asinu.c" />
+    <ClCompile Include="..\..\src\atan.c" />
+    <ClCompile Include="..\..\src\atan2.c" />
+    <ClCompile Include="..\..\src\atan2u.c" />
+    <ClCompile Include="..\..\src\atanh.c" />
+    <ClCompile Include="..\..\src\atanu.c" />
+    <ClCompile Include="..\..\src\bernoulli.c" />
+    <ClCompile Include="..\..\src\beta.c" />
+    <ClCompile Include="..\..\src\buildopt.c" />
+    <ClCompile Include="..\..\src\cache.c" />
+    <ClCompile Include="..\..\src\cbrt.c" />
+    <ClCompile Include="..\..\src\check.c" />
+    <ClCompile Include="..\..\src\clear.c" />
+    <ClCompile Include="..\..\src\clears.c" />
+    <ClCompile Include="..\..\src\cmp.c" />
+    <ClCompile Include="..\..\src\cmp2.c" />
+    <ClCompile Include="..\..\src\cmpabs.c" />
+    <ClCompile Include="..\..\src\cmpabs_ui.c" />
+    <ClCompile Include="..\..\src\cmp_d.c" />
+    <ClCompile Include="..\..\src\cmp_ld.c" />
+    <ClCompile Include="..\..\src\cmp_si.c" />
+    <ClCompile Include="..\..\src\cmp_ui.c" />
+    <ClCompile Include="..\..\src\comparisons.c" />
+    <ClCompile Include="..\..\src\compound.c" />
+    <ClCompile Include="..\..\src\const_catalan.c" />
+    <ClCompile Include="..\..\src\const_euler.c" />
+    <ClCompile Include="..\..\src\const_log2.c" />
+    <ClCompile Include="..\..\src\const_pi.c" />
+    <ClCompile Include="..\..\src\constant.c" />
+    <ClCompile Include="..\..\src\copysign.c" />
+    <ClCompile Include="..\..\src\cos.c" />
+    <ClCompile Include="..\..\src\cosh.c" />
+    <ClCompile Include="..\..\src\cosu.c" />
+    <ClCompile Include="..\..\src\cot.c" />
+    <ClCompile Include="..\..\src\coth.c" />
+    <ClCompile Include="..\..\src\csc.c" />
+    <ClCompile Include="..\..\src\csch.c" />
+    <ClCompile Include="..\..\src\dot.c" />
+    <ClCompile Include="..\..\src\d_div.c" />
+    <ClCompile Include="..\..\src\d_sub.c" />
+    <ClCompile Include="..\..\src\digamma.c" />
+    <ClCompile Include="..\..\src\dim.c" />
+    <ClCompile Include="..\..\src\div.c" />
+    <ClCompile Include="..\..\src\div_2exp.c" />
+    <ClCompile Include="..\..\src\div_2si.c" />
+    <ClCompile Include="..\..\src\div_2ui.c" />
+    <ClCompile Include="..\..\src\div_d.c" />
+    <ClCompile Include="..\..\src\div_ui.c" />
+    <ClCompile Include="..\..\src\dump.c" />
+    <ClCompile Include="..\..\src\eint.c" />
+    <ClCompile Include="..\..\src\eq.c" />
+    <ClCompile Include="..\..\src\erandom.c" />
+    <ClCompile Include="..\..\src\erf.c" />
+    <ClCompile Include="..\..\src\erfc.c" />
+    <ClCompile Include="..\..\src\exceptions.c" />
+    <ClCompile Include="..\..\src\exp.c" />
+    <ClCompile Include="..\..\src\exp10.c" />
+    <ClCompile Include="..\..\src\exp10m1.c" />
+    <ClCompile Include="..\..\src\exp2.c" />
+    <ClCompile Include="..\..\src\exp2m1.c" />
+    <ClCompile Include="..\..\src\exp3.c" />
+    <ClCompile Include="..\..\src\exp_2.c" />
+    <ClCompile Include="..\..\src\expm1.c" />
+    <ClCompile Include="..\..\src\extract.c" />
+    <ClCompile Include="..\..\src\factorial.c" />
+    <ClCompile Include="..\..\src\fits_intmax.c" />
+    <ClCompile Include="..\..\src\fits_sint.c" />
+    <ClCompile Include="..\..\src\fits_slong.c" />
+    <ClCompile Include="..\..\src\fits_sshort.c" />
+    <ClCompile Include="..\..\src\fits_uint.c" />
+    <ClCompile Include="..\..\src\fits_uintmax.c" />
+    <ClCompile Include="..\..\src\fits_ulong.c" />
+    <ClCompile Include="..\..\src\fits_ushort.c" />
+    <ClCompile Include="..\..\src\fma.c" />
+    <ClCompile Include="..\..\src\fmma.c" />
+    <ClCompile Include="..\..\src\fmod_ui.c" />
+    <ClCompile Include="..\..\src\fms.c" />
+    <ClCompile Include="..\..\src\fpif.c" />
+    <ClCompile Include="..\..\src\frac.c" />
+    <ClCompile Include="..\..\src\free_cache.c" />
+    <ClCompile Include="..\..\src\frexp.c" />
+    <ClCompile Include="..\..\src\gamma.c" />
+    <ClCompile Include="..\..\src\gammaonethird.c" />
+    <ClCompile Include="..\..\src\gamma_inc.c" />
+    <ClCompile Include="..\..\src\get_d.c" />
+    <ClCompile Include="..\..\src\get_d128.c" />
+    <ClCompile Include="..\..\src\get_d64.c" />
+    <ClCompile Include="..\..\src\get_exp.c" />
+    <ClCompile Include="..\..\src\get_f.c" />
+    <ClCompile Include="..\..\src\get_float128.c" />
+    <ClCompile Include="..\..\src\get_flt.c" />
+    <ClCompile Include="..\..\src\get_ld.c" />
+    <ClCompile Include="..\..\src\get_q.c" />
+    <ClCompile Include="..\..\src\get_si.c" />
+    <ClCompile Include="..\..\src\get_sj.c" />
+    <ClCompile Include="..\..\src\get_str.c" />
+    <ClCompile Include="..\..\src\get_ui.c" />
+    <ClCompile Include="..\..\src\get_uj.c" />
+    <ClCompile Include="..\..\src\get_z.c" />
+    <ClCompile Include="..\..\src\get_z_2exp.c" />
+    <ClCompile Include="..\..\src\gmp_op.c" />
+    <ClCompile Include="..\..\src\grandom.c" />
+    <ClCompile Include="..\..\src\hypot.c" />
+    <ClCompile Include="..\..\src\init.c" />
+    <ClCompile Include="..\..\src\init2.c" />
+    <ClCompile Include="..\..\src\inits.c" />
+    <ClCompile Include="..\..\src\inits2.c" />
+    <ClCompile Include="..\..\src\inp_str.c" />
+    <ClCompile Include="..\..\src\int_ceil_log2.c" />
+    <ClCompile Include="..\..\src\isinf.c" />
+    <ClCompile Include="..\..\src\isinteger.c" />
+    <ClCompile Include="..\..\src\isnan.c" />
+    <ClCompile Include="..\..\src\isnum.c" />
+    <ClCompile Include="..\..\src\isqrt.c" />
+    <ClCompile Include="..\..\src\isregular.c" />
+    <ClCompile Include="..\..\src\iszero.c" />
+    <ClCompile Include="..\..\src\jn.c" />
+    <ClCompile Include="..\..\src\jyn_asympt.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\li2.c" />
+    <ClCompile Include="..\..\src\lngamma.c" />
+    <ClCompile Include="..\..\src\log.c" />
+    <ClCompile Include="..\..\src\log10.c" />
+    <ClCompile Include="..\..\src\log10p1.c" />
+    <ClCompile Include="..\..\src\log1p.c" />
+    <ClCompile Include="..\..\src\log2.c" />
+    <ClCompile Include="..\..\src\log2p1.c" />
+    <ClCompile Include="..\..\src\logging.c" />
+    <ClCompile Include="..\..\src\log_ui.c" />
+    <ClCompile Include="..\..\src\min_prec.c" />
+    <ClCompile Include="..\..\src\minmax.c" />
+    <ClCompile Include="..\..\src\modf.c" />
+    <ClCompile Include="..\..\src\mpfr-gmp.c" />
+    <ClCompile Include="..\..\src\mpfr-mini-gmp.c" />
+    <ClCompile Include="..\..\src\mp_clz_tab.c" />
+    <ClCompile Include="..\..\src\mpn_exp.c" />
+    <ClCompile Include="..\..\src\mul.c" />
+    <ClCompile Include="..\..\src\mul_2exp.c" />
+    <ClCompile Include="..\..\src\mul_2si.c" />
+    <ClCompile Include="..\..\src\mul_2ui.c" />
+    <ClCompile Include="..\..\src\mul_d.c" />
+    <ClCompile Include="..\..\src\mul_ui.c" />
+    <ClCompile Include="..\..\src\mulders.c" />
+    <ClCompile Include="..\..\src\nbits_ulong.c" />
+    <ClCompile Include="..\..\src\neg.c" />
+    <ClCompile Include="..\..\src\next.c" />
+    <ClCompile Include="..\..\src\nrandom.c" />
+    <ClCompile Include="..\..\src\odd_p.c" />
+    <ClCompile Include="..\..\src\out_str.c" />
+    <ClCompile Include="..\..\src\pool.c" />
+    <ClCompile Include="..\..\src\pow.c" />
+    <ClCompile Include="..\..\src\powr.c" />
+    <ClCompile Include="..\..\src\pow_si.c" />
+    <ClCompile Include="..\..\src\pow_sj.c" />
+    <ClCompile Include="..\..\src\pow_ui.c" />
+    <ClCompile Include="..\..\src\pow_uj.c" />
+    <ClCompile Include="..\..\src\pow_z.c" />
+    <ClCompile Include="..\..\src\powerof2.c" />
+    <ClCompile Include="..\..\src\print_raw.c" />
+    <ClCompile Include="..\..\src\print_rnd_mode.c" />
+    <ClCompile Include="..\..\src\printf.c" />
+    <ClCompile Include="..\..\src\random_deviate.c" />
+    <ClCompile Include="..\..\src\rec_sqrt.c" />
+    <ClCompile Include="..\..\src\reldiff.c" />
+    <ClCompile Include="..\..\src\rem1.c" />
+    <ClCompile Include="..\..\src\rint.c" />
+    <ClCompile Include="..\..\src\rndna.c" />
+    <ClCompile Include="..\..\src\root.c" />
+    <ClCompile Include="..\..\src\round_near_x.c" />
+    <ClCompile Include="..\..\src\round_p.c" />
+    <ClCompile Include="..\..\src\round_prec.c" />
+    <ClCompile Include="..\..\src\round_raw_generic.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scale2.c" />
+    <ClCompile Include="..\..\src\sec.c" />
+    <ClCompile Include="..\..\src\sech.c" />
+    <ClCompile Include="..\..\src\set.c" />
+    <ClCompile Include="..\..\src\set_d.c" />
+    <ClCompile Include="..\..\src\set_d128.c" />
+    <ClCompile Include="..\..\src\set_d64.c" />
+    <ClCompile Include="..\..\src\set_dfl_prec.c" />
+    <ClCompile Include="..\..\src\set_exp.c" />
+    <ClCompile Include="..\..\src\set_f.c" />
+    <ClCompile Include="..\..\src\set_float128.c" />
+    <ClCompile Include="..\..\src\set_flt.c" />
+    <ClCompile Include="..\..\src\set_inf.c" />
+    <ClCompile Include="..\..\src\set_ld.c" />
+    <ClCompile Include="..\..\src\set_nan.c" />
+    <ClCompile Include="..\..\src\set_prc_raw.c" />
+    <ClCompile Include="..\..\src\set_prec.c" />
+    <ClCompile Include="..\..\src\set_q.c" />
+    <ClCompile Include="..\..\src\set_rnd.c" />
+    <ClCompile Include="..\..\src\set_si.c" />
+    <ClCompile Include="..\..\src\set_si_2exp.c" />
+    <ClCompile Include="..\..\src\set_sj.c" />
+    <ClCompile Include="..\..\src\set_str.c" />
+    <ClCompile Include="..\..\src\set_str_raw.c" />
+    <ClCompile Include="..\..\src\set_ui.c" />
+    <ClCompile Include="..\..\src\set_ui_2exp.c" />
+    <ClCompile Include="..\..\src\set_uj.c" />
+    <ClCompile Include="..\..\src\set_z.c" />
+    <ClCompile Include="..\..\src\set_zero.c" />
+    <ClCompile Include="..\..\src\setmax.c" />
+    <ClCompile Include="..\..\src\setmin.c" />
+    <ClCompile Include="..\..\src\setsign.c" />
+    <ClCompile Include="..\..\src\set_z_2exp.c" />
+    <ClCompile Include="..\..\src\sgn.c" />
+    <ClCompile Include="..\..\src\sinu.c" />
+    <ClCompile Include="..\..\src\si_op.c" />
+    <ClCompile Include="..\..\src\signbit.c" />
+    <ClCompile Include="..\..\src\sin.c" />
+    <ClCompile Include="..\..\src\sin_cos.c" />
+    <ClCompile Include="..\..\src\sinh.c" />
+    <ClCompile Include="..\..\src\sinh_cosh.c" />
+    <ClCompile Include="..\..\src\sqr.c" />
+    <ClCompile Include="..\..\src\sqrt.c" />
+    <ClCompile Include="..\..\src\sqrt_ui.c" />
+    <ClCompile Include="..\..\src\stack_interface.c" />
+    <ClCompile Include="..\..\src\strtofr.c" />
+    <ClCompile Include="..\..\src\sub.c" />
+    <ClCompile Include="..\..\src\sub1.c" />
+    <ClCompile Include="..\..\src\sub1sp.c" />
+    <ClCompile Include="..\..\src\sub_d.c" />
+    <ClCompile Include="..\..\src\sub_ui.c" />
+    <ClCompile Include="..\..\src\subnormal.c" />
+    <ClCompile Include="..\..\src\sum.c" />
+    <ClCompile Include="..\..\src\swap.c" />
+    <ClCompile Include="..\..\src\tan.c" />
+    <ClCompile Include="..\..\src\tanh.c" />
+    <ClCompile Include="..\..\src\tanu.c" />
+    <ClCompile Include="..\..\src\total_order.c" />
+    <ClCompile Include="..\..\src\ubf.c" />
+    <ClCompile Include="..\..\src\uceil_exp2.c" />
+    <ClCompile Include="..\..\src\uceil_log2.c" />
+    <ClCompile Include="..\..\src\ufloor_log2.c" />
+    <ClCompile Include="..\..\src\ui_div.c" />
+    <ClCompile Include="..\..\src\ui_pow.c" />
+    <ClCompile Include="..\..\src\ui_pow_ui.c" />
+    <ClCompile Include="..\..\src\ui_sub.c" />
+    <ClCompile Include="..\..\src\urandom.c" />
+    <ClCompile Include="..\..\src\urandomb.c" />
+    <ClCompile Include="..\..\src\vasprintf.c" />
+    <ClCompile Include="..\..\src\version.c" />
+    <ClCompile Include="..\..\src\volatile.c" />
+    <ClCompile Include="..\..\src\yn.c" />
+    <ClCompile Include="..\..\src\zeta.c" />
+    <ClCompile Include="..\..\src\zeta_ui.c" />
+    <ClCompile Include="..\get_patches.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\mpir\dll\$(IntDir)config.h" />
+    <ClInclude Include="..\..\..\mpir\dll\$(IntDir)gmp-impl.h" />
+    <ClInclude Include="..\..\..\mpir\dll\$(IntDir)gmp-mparam.h" />
+    <ClInclude Include="..\..\..\mpir\dll\$(IntDir)gmp.h" />
+    <ClInclude Include="..\..\..\mpir\dll\$(IntDir)longlong.h" />
+    <ClInclude Include="..\..\src\fits_s.h" />
+    <ClInclude Include="..\..\src\fits_u.h" />
+    <ClInclude Include="..\..\src\gen_inverse.h" />
+    <ClInclude Include="..\..\src\ieee_floats.h" />
+    <ClInclude Include="..\..\src\mpf2mpfr.h" />
+    <ClInclude Include="..\..\src\mpfr-cvers.h" />
+    <ClInclude Include="..\..\src\mpfr-gmp.h" />
+    <ClInclude Include="..\..\src\mpfr-impl.h" />
+    <ClInclude Include="..\..\src\mpfr-intmax.h" />
+    <ClInclude Include="..\..\src\mpfr-longlong.h" />
+    <ClInclude Include="..\..\src\mpfr-mini-gmp.h" />
+    <ClInclude Include="..\..\src\mpfr-sassert.h" />
+    <ClInclude Include="..\..\src\mpfr-thread.h" />
+    <ClInclude Include="..\..\src\mpfr.h" />
+    <ClInclude Include="..\..\src\random_deviate.h" />
+    <ClInclude Include="..\mparam.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

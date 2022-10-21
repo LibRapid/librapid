@@ -1,0 +1,57 @@
+Copyright 2008, William Hart
+
+This file is part of the MPIR Library.
+
+The MPIR Library is free software; you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation; either version 2.1 of the License, or (at your
+option) any later version.
+
+The MPIR Library is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
+License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with the MPIR Library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301, USA.
+
+Some compilers with hacks:
+====================================
+- GNUC
+- DEC C
+- SCO OpenUNIX 8 cc
+- __cplusplus
+
+Useful/undocumented macros in mpir.h:
+====================================
+__GMPN_ABS(x) - absolute value
+__GMPN_MAX(h, i) - max of h and i
+
+__GMPN_UINT_MAX - (int) ~0
+__GMPN_ULONG_MAX - (unsigned long) ~0
+__GMPN_USHRT_MAX - unsigned short) ~0
+
+__GMPN_LIKELY(cond) - branch likely hint
+__GMPN_UNLIKELY(cond) - branch unlikely hint
+  - e.g. if UNLIKELY(c >= 0L)....
+
+Note: the __GMPN_ macros are redefined with nicer names in gmp-impl.h
+
+mp_bits_per_limb - number of bits per limb
+gmp_version - GMP version number i.j or i.j.k as a null terminated string
+mpir_version - MPIR version number i.j or i.j.k as a null terminated string
+gmp_errno - integer corresponding to a GMP error condition:
+  0 none
+  1 unsupported argument
+  2 division by zero
+  4 sqrt of negative
+  8 invalid argument
+
+Undocumented mpn functions prototyped in mpir.h:
+===============================================
+mp_limb_t mpn_preinv_mod_1(mp_srcptr sp, mp_size_t sn, mp_limb_t x, mp_limb_t xinv) - 
+  compute {sp, sn} mod x given a precomputed inverse xinv of x
+
+

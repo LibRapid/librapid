@@ -1,0 +1,28 @@
+language: c
+sudo: false
+os:
+  - osx
+  - linux
+compiler:
+  - gcc
+  - clang
+addons:
+  apt:
+    packages:
+      - yasm
+      - texinfo
+script:
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+       brew update;
+       brew install yasm;
+    fi
+  # On OSX, gcc is a wrapper around clang, so use gcc from homebrew
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
+       brew install gcc;
+       brew link --overwrite gcc;
+       export CC=gcc;
+       export CXX=g++;
+    fi
+  - $CC --version
+  - ./autogen.sh
+  - ./configure && make && make check
