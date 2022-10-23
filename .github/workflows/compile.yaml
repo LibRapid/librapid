@@ -17,10 +17,60 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["windows-latest", "macos-latest", "ubuntu-latest"]
-        compiler: [{ cxx: "clang-12", cc: "clang-12" }, { cxx: "clang-13", cc: "clang-13" }, { cxx: "clang-14", cc: "clang-14" }, { cxx: "g++-9",    cc: "gcc-9"    }, { cxx: "g++-10",   cc: "gcc-10"   }, { cxx: "g++-10",   cc: "gcc-10"   }, { cxx: "g++-11",   cc: "gcc-11"   }, { cxx: "msvc",     cc: "msvc"     }]
-        blas: "on"
-        mpfr: "on"
+        include:
+          - os: ubuntu-latest
+            cc: clang-12
+            cxx: clang-12
+            blas: on
+            mpfr: on
+
+          - os: ubuntu-latest
+            cc: clang-13
+            cxx: clang-13
+            blas: on
+            mpfr: on
+
+          - os: ubuntu-latest
+            cc: clang-14
+            cxx: clang-14
+            blas: on
+            mpfr: on
+
+          - os: ubuntu-latest
+            cc: gcc-9
+            cxx: g++-9
+            blas: on
+            mpfr: on
+
+          - os: ubuntu-latest
+            cc: gcc-10
+            cxx: g++-10
+            blas: on
+            mpfr: on
+
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            mpfr: on
+
+          - os: macos-latest
+            cc: clang
+            cxx: clang
+            blas: on
+            mpfr: on
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            mpfr: on
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            blas: on
+            mpfr: on
 
     steps:
       - name: Checkout LibRapid
@@ -29,9 +79,6 @@ jobs:
           submodules: recursive
 
       - name: Compile
-        if: (matrix.os == "ubuntu-latest" && (matrix.compiler.cxx != "gcc-11" && matrix.compiler.cxx != "msvc")) ||
-            (matrix.os == "macos-latest" && matrix.compiler.cxx == "gcc-11") ||
-            (matrix.os == "windows-latest" && matrix.compiler.cxx == "msvc")
         run: |
           mkdir build
           cd build
