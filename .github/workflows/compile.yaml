@@ -85,8 +85,8 @@ jobs:
           submodules: recursive
 
       - name: Add clang path to $PATH env
+        if: runner.os == 'Windows'
         shell: bash
-        if: matrix.os == "windows-latest"
         run: echo "PATH=$PATH:C:\msys64\mingw64\bin" >> $GITHUB_ENV
 
       - name: Compile
