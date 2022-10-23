@@ -23,9 +23,11 @@ jobs:
                    { cxx: "clang-14", cc: "clang-14" },
                    { cxx: "g++-9",    cc: "gcc-9"    },
                    { cxx: "g++-10",   cc: "gcc-10"   },
-                   { cxx: "g++-10",   cc: "gcc-10"   }]
-        blas: ["on", "off"]
-        mpfr: ["on", "off"]
+                   { cxx: "g++-10",   cc: "gcc-10"   },
+                   { cxx: "g++-11",   cc: "gcc-11"   },
+                   { cxx: "msvc",     cc: "msvc"     }]
+        blas: "on" # ["on", "off"]
+        mpfr: "on" # ["on", "off"]
 
     steps:
       - name: Checkout LibRapid
@@ -34,6 +36,11 @@ jobs:
           submodules: recursive
 
       - name: Compile
+        # Horrible condition to make sure we don't try to use a compiler
+        # that doesn't exist on the runner
+        if: (matrix.os == "ubuntu-latest" && (matrix.compiler.cxx != "gcc-11" && matrix.compiler.cxx != "msvc")) ||
+            (matrix.os == "macos-latest" && matrix.compiler.cxx == "gcc-11") ||
+            (matrix.os == "windows-latest" && matrix.compiler.cxx == "msvc")
         run: |
           mkdir build
           cd build
