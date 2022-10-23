@@ -1,0 +1,51 @@
+name: Compile LibRapid
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+  workflow_dispatch:
+
+jobs:
+  compile:
+    name: ${{ matrix.os }} with ${{ matrix.compiler.cxx }} (BLAS ${{ matrix.blas }} | MPFR ${{ matrix.mpfr }})
+    runs-on: ${{ matrix.os }}
+  
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["windows-latest", "macos-latest", "ubuntu-latest"]
+        compiler: [{ cxx: "clang-12", cc: "clang-12" },
+                   { cxx: "clang-13", cc: "clang-13" },
+                   { cxx: "clang-14", cc: "clang-14" },
+                   { cxx: "g++-9",    cc: "gcc-9"    },
+                   { cxx: "g++-10",   cc: "gcc-10"   },
+                   { cxx: "g++-10",   cc: "gcc-10"   }]
+        blas: ["on", "off"]
+        mpfr: ["on", "off"]
+
+    steps:
+      - name: Checkout LibRapid
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Compile
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
+          cmake --build . --config Release
+        env:
+          CC: ${{ matrix.compiler.cc }}
+          CXX: ${{ matrix.compiler.cxx }}
+
+      - name: Run Tests
+        run: |
+          cd build
+          cd librapid
+          ctest -C Release
+          
