@@ -282,15 +282,11 @@ endif ()
 # Add dependencies
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/fmt")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
 
-target_link_libraries(${module_name} PUBLIC fmt scn)
+target_link_libraries(${module_name} PUBLIC fmt scn Vc)
 
-if (${LIBRAPID_USE_VC})
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
-    target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
-    target_link_libraries(${module_name} PUBLIC Vc)
-    target_compile_definitions(${module_name} PUBLIC LIBRAPID_USE_VC)
-endif ()
+target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
 
 if (${LIBRAPID_USE_MULTIPREC})
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/mpfr")
