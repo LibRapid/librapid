@@ -59,6 +59,10 @@ namespace librapid::typetraits {
 
 	template<typename From, typename To>
 	struct CanCast : public decltype(impl::testCast<From, To>(1)) {};
+
+	// Detect whether a class can be default constructed
+	template<class T>
+	using TriviallyDefaultConstructible = std::is_trivially_default_constructible<T>;
 } // namespace librapid::typetraits
 
 #endif // LIBRAPID_CORE_TYPETRAITS_HPP

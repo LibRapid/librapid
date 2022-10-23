@@ -29,6 +29,10 @@ namespace librapid {
 		/// \param other Shape object to copy
 		Shape(const Shape &other) = default;
 
+		/// Create a Shape from an RValue
+		/// \param other Temporary Shape object to copy
+		Shape(Shape &&other) noexcept = default;
+
 		/// Assign a Shape object to this object
 		/// \tparam V Scalar type of the Shape
 		/// \param vals Dimensions of the Shape
@@ -42,6 +46,11 @@ namespace librapid {
 		/// \return *this
 		template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value> = 0>
 		Shape &operator=(const std::vector<V> &vals);
+
+		/// Assign an RValue Shape to this object
+		/// \param other RValue to move
+		/// \return
+		Shape &operator=(Shape &&other) noexcept = default;
 
 		/// Return a Shape object with \p dims dimensions, all initialized to zero.
 		/// \param dims Number of dimensions
@@ -68,8 +77,12 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T &operator[](Index index);
 
 		/// Return the number of dimensions in the Shape object
-		/// \return
+		/// \return Number of dimensions
 		LIBRAPID_NODISCARD T ndim() const;
+
+		/// Return the number of elements the Shape object represents
+		/// \return Number of elements
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T size() const;
 
 		/// Convert a Shape object into a string representation
 		/// \return A string representation of the Shape object
@@ -155,6 +168,13 @@ namespace librapid {
 	template<typename T, size_t N>
 	LIBRAPID_NODISCARD T Shape<T, N>::ndim() const {
 		return m_dims;
+	}
+
+	template<typename T, size_t N>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T Shape<T, N>::size() const {
+		T res = 1;
+		for (size_t i = 0; i < m_dims; ++i) res *= m_data[i];
+		return res;
 	}
 
 	template<typename T, size_t N>
