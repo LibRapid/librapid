@@ -309,19 +309,28 @@ endif ()
 
 target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include")
 
-if (${LIBRAPID_BUILD_EXAMPLES})
-    message(STATUS "Building LibRapid Examples")
-    add_subdirectory(examples/cpp)
-endif ()
+# if (${LIBRAPID_BUILD_EXAMPLES})
+#     message(STATUS "Building LibRapid Examples")
+#     add_subdirectory(examples/cpp)
+# endif ()
 
 if (${LIBRAPID_BUILD_BENCHMARKS})
     message(STATUS "Building LibRapid Benchmarks")
-    add_subdirectory(benchmarks/cpp)
+
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/nanobench")
+    target_link_libraries(${module_name} PUBLIC nanobench)
+
+    add_subdirectory(benchmark)
+
 endif ()
 
 if (${LIBRAPID_BUILD_TESTS})
     message(STATUS "Building LibRapid Tests")
     include(CTest)
+
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Catch2")
+    target_link_libraries(${module_name} PUBLIC Catch2::Catch2WithMain)
+
     enable_testing()
-    add_subdirectory(tests/cpp)
+    add_subdirectory(test)
 endif ()
