@@ -49,4 +49,6 @@ jobs:
 
       - name: Run Tests
         run: |
-          ctest -C Release -VV
+          cd librapid
+          ctest -C Release --verbose
+          
