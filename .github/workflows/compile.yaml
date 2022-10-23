@@ -26,8 +26,8 @@ jobs:
                    { cxx: "g++-10",   cc: "gcc-10"   },
                    { cxx: "g++-11",   cc: "gcc-11"   },
                    { cxx: "msvc",     cc: "msvc"     }]
-        blas: "on" # ["on", "off"]
-        mpfr: "on" # ["on", "off"]
+        blas: on # ["on", "off"]
+        mpfr: on # ["on", "off"]
 
     steps:
       - name: Checkout LibRapid
