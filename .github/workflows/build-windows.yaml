@@ -61,6 +61,6 @@ jobs:
 
       - name: Run Tests
         run: |
-          cd librapid
+          cd build/librapid
           ctest -C Release --verbose
           
