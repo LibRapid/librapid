@@ -16,7 +16,7 @@ namespace librapid::typetraits {
 	/// \tparam T The type to get information about
 	template<typename T>
 	struct TypeInfo {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = T;
 		using Packet							 = std::false_type;
 		static constexpr int64_t packetWidth	 = 1;
@@ -28,15 +28,13 @@ namespace librapid::typetraits {
 #if defined(LIBRAPID_HAS_CUDA)
 		static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
 #endif
-
-		static constexpr uint64_t Size	= sizeof(T);
 		static constexpr bool canAlign	= true;
 		static constexpr bool canMemcpy = true;
 	};
 
 	template<>
 	struct TypeInfo<bool> {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = bool;
 		using Packet							 = std::false_type;
 		static constexpr int64_t packetWidth	 = 1;
@@ -55,7 +53,7 @@ namespace librapid::typetraits {
 
 	template<>
 	struct TypeInfo<char> {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = char;
 		using Packet							 = std::false_type;
 		static constexpr int64_t packetWidth	 = 1;
@@ -74,7 +72,7 @@ namespace librapid::typetraits {
 
 	template<>
 	struct TypeInfo<int8_t> {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = int8_t;
 		using Packet							 = Vc::Vector<int8_t>;
 		static constexpr int64_t packetWidth	 = Packet::size();
@@ -93,7 +91,7 @@ namespace librapid::typetraits {
 
 	template<>
 	struct TypeInfo<uint8_t> {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = uint8_t;
 		using Packet							 = Vc::Vector<uint8_t>;
 		static constexpr int64_t packetWidth	 = Packet::size();
@@ -112,7 +110,7 @@ namespace librapid::typetraits {
 
 	template<>
 	struct TypeInfo<int16_t> {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = int16_t;
 		using Packet							 = Vc::Vector<int16_t>;
 		static constexpr int64_t packetWidth	 = Packet::size();
@@ -131,7 +129,7 @@ namespace librapid::typetraits {
 
 	template<>
 	struct TypeInfo<uint16_t> {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = uint16_t;
 		using Packet							 = Vc::Vector<uint16_t>;
 		static constexpr int64_t packetWidth	 = Packet::size();
@@ -150,7 +148,7 @@ namespace librapid::typetraits {
 
 	template<>
 	struct TypeInfo<int32_t> {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = int32_t;
 		using Packet							 = Vc::Vector<int32_t>;
 		static constexpr int64_t packetWidth	 = Packet::size();
@@ -169,7 +167,7 @@ namespace librapid::typetraits {
 
 	template<>
 	struct TypeInfo<uint32_t> {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = uint32_t;
 		using Packet							 = Vc::Vector<uint32_t>;
 		static constexpr int64_t packetWidth	 = Packet::size();
@@ -188,7 +186,7 @@ namespace librapid::typetraits {
 
 	template<>
 	struct TypeInfo<int64_t> {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = int64_t;
 		using Packet							 = Vc::Vector<int64_t>;
 		static constexpr int64_t packetWidth	 = Packet::size();
@@ -207,7 +205,7 @@ namespace librapid::typetraits {
 
 	template<>
 	struct TypeInfo<uint64_t> {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = uint64_t;
 		using Packet							 = Vc::Vector<uint64_t>;
 		static constexpr int64_t packetWidth	 = Packet::size();
@@ -226,7 +224,7 @@ namespace librapid::typetraits {
 
 	template<>
 	struct TypeInfo<float> {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = float;
 		using Packet							 = Vc::Vector<float>;
 		static constexpr int64_t packetWidth	 = Packet::size();
@@ -245,7 +243,7 @@ namespace librapid::typetraits {
 
 	template<>
 	struct TypeInfo<double> {
-		static constexpr bool isScalar			 = true;
+		static constexpr bool isLibRapidType	 = false;
 		using Scalar							 = double;
 		using Packet							 = Vc::Vector<double>;
 		static constexpr int64_t packetWidth	 = Packet::size();

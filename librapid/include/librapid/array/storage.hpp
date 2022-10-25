@@ -7,6 +7,14 @@
  */
 
 namespace librapid {
+	namespace typetraits {
+		template<typename Scalar_, typename Allocator_>
+		struct TypeInfo<Storage<Scalar_, Allocator_>> {
+			static constexpr bool isLibRapidType = true;
+			using Scalar						 = Scalar_;
+		};
+	} // namespace typetraits
+
 	template<typename Scalar_, typename Allocator_ = std::allocator<Scalar_>>
 	class Storage {
 	public:
@@ -75,6 +83,16 @@ namespace librapid {
 
 		/// Free a Storage object
 		~Storage();
+
+		/// Resize a Storage object to \p size elements. Existing elements
+		/// are preserved.
+		/// \param size New size of the Storage object
+		LIBRAPID_INLINE void resize(SizeType newSize);
+
+		/// Resize a Storage object to \p size elements. Existing elements
+		/// are not preserved
+		/// \param size New size of the Storage object
+		LIBRAPID_INLINE void resize(SizeType newSize, int);
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE SizeType size() const noexcept;
 
@@ -223,7 +241,6 @@ namespace librapid {
 
 	template<typename T, typename A>
 	Storage<T, A>::~Storage() {
-		auto elems = size();
 		detail::safeDeallocate(m_allocator, m_begin, size());
 		m_begin = nullptr;
 		m_end	= nullptr;
@@ -239,8 +256,13 @@ namespace librapid {
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::SizeType Storage<T, A>::size() const noexcept {
+	auto Storage<T, A>::size() const noexcept -> SizeType {
 		return static_cast<SizeType>(std::distance(m_begin, m_end));
+	}
+
+	template<typename T, typename A>
+	void Storage<T, A>::resize(SizeType newSize, int) {
+		resizeImpl(newSize);
 	}
 
 	template<typename T, typename A>
@@ -256,75 +278,74 @@ namespace librapid {
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::ConstReference
-	Storage<T, A>::operator[](Storage<T, A>::SizeType index) const {
+	auto Storage<T, A>::operator[](Storage<T, A>::SizeType index) const -> ConstReference {
 		LIBRAPID_ASSERT(index < size(), "Index out of bounds");
 		return m_begin[index];
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::Reference Storage<T, A>::operator[](Storage<T, A>::SizeType index) {
+	auto Storage<T, A>::operator[](Storage<T, A>::SizeType index) -> Reference {
 		LIBRAPID_ASSERT(index < size(), "Index out of bounds");
 		return m_begin[index];
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::Iterator Storage<T, A>::begin() noexcept {
+	auto Storage<T, A>::begin() noexcept -> Iterator {
 		return m_begin;
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::Iterator Storage<T, A>::end() noexcept {
+	auto Storage<T, A>::end() noexcept -> Iterator {
 		return m_end;
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::ConstIterator Storage<T, A>::begin() const noexcept {
+	auto Storage<T, A>::begin() const noexcept -> ConstIterator {
 		return m_begin;
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::ConstIterator Storage<T, A>::end() const noexcept {
+	auto Storage<T, A>::end() const noexcept -> ConstIterator {
 		return m_end;
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::ConstIterator Storage<T, A>::cbegin() const noexcept {
+	auto Storage<T, A>::cbegin() const noexcept -> ConstIterator {
 		return begin();
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::ConstIterator Storage<T, A>::cend() const noexcept {
+	auto Storage<T, A>::cend() const noexcept -> ConstIterator {
 		return end();
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::ReverseIterator Storage<T, A>::rbegin() noexcept {
+	auto Storage<T, A>::rbegin() noexcept -> ReverseIterator {
 		return ReverseIterator(m_end);
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::ReverseIterator Storage<T, A>::rend() noexcept {
+	auto Storage<T, A>::rend() noexcept -> ReverseIterator {
 		return ReverseIterator(m_begin);
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::ConstReverseIterator Storage<T, A>::rbegin() const noexcept {
+	auto Storage<T, A>::rbegin() const noexcept -> ConstReverseIterator {
 		return ConstReverseIterator(m_end);
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::ConstReverseIterator Storage<T, A>::rend() const noexcept {
+	auto Storage<T, A>::rend() const noexcept -> ConstReverseIterator {
 		return ConstReverseIterator(m_begin);
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::ConstReverseIterator Storage<T, A>::crbegin() const noexcept {
+	auto Storage<T, A>::crbegin() const noexcept -> ConstReverseIterator {
 		return rbegin();
 	}
 
 	template<typename T, typename A>
-	typename Storage<T, A>::ConstReverseIterator Storage<T, A>::crend() const noexcept {
+	auto Storage<T, A>::crend() const noexcept -> ConstReverseIterator {
 		return rend();
 	}
 } // namespace librapid

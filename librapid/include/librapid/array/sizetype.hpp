@@ -10,6 +10,9 @@ namespace librapid {
 	template<typename T = size_t, size_t N = 32>
 	class Shape {
 	public:
+		using SizeType						  = T;
+		static constexpr size_t MaxDimensions = N;
+
 		/// Default constructor
 		Shape() = default;
 
@@ -75,6 +78,16 @@ namespace librapid {
 		/// \return A reference to the value at the index
 		template<typename Index>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T &operator[](Index index);
+
+		/// Compare two Shape objects, returning true if and only if they are identical
+		/// \param other Shape object to compare
+		/// \return	true if the objects are identical
+		LIBRAPID_ALWAYS_INLINE bool operator==(const Shape &other) const;
+
+		/// Compare two Shape objects, returning true if and only if they are not identical
+		/// \param other Shape object to compare
+		/// \return true if the objects are not identical
+		LIBRAPID_ALWAYS_INLINE bool operator!=(const Shape &other) const;
 
 		/// Return the number of dimensions in the Shape object
 		/// \return Number of dimensions
@@ -166,6 +179,20 @@ namespace librapid {
 	}
 
 	template<typename T, size_t N>
+	LIBRAPID_ALWAYS_INLINE bool Shape<T, N>::operator==(const Shape &other) const {
+		if (m_dims != other.m_dims) return false;
+		for (size_t i = 0; i < m_dims; ++i) {
+			if (m_data[i] != other.m_data[i]) return false;
+		}
+		return true;
+	}
+
+	template<typename T, size_t N>
+	LIBRAPID_ALWAYS_INLINE bool Shape<T, N>::operator!=(const Shape &other) const {
+		return !(*this == other);
+	}
+
+	template<typename T, size_t N>
 	LIBRAPID_NODISCARD T Shape<T, N>::ndim() const {
 		return m_dims;
 	}
@@ -182,9 +209,44 @@ namespace librapid {
 		std::string result("(");
 		for (size_t i = 0; i < m_dims; ++i) {
 			result += fmt::format("{}", m_data[i]);
-			if (i < m_dims - 1) result += ", ";
+			if (i < m_dims - 1) result += std::string(", ");
 		}
-		return result + ")";
+		return std::operator+(result, std::string(")"));
+	}
+
+	/// Returns true if all inputs have the same shape
+	/// \tparam T1 Type of the first input
+	/// \tparam N1 Number of dimensions of the first input
+	/// \tparam T2 Type of the second input
+	/// \tparam N2 Number of dimensions of the second input
+	/// \tparam Tn Type of the remaining (optional) inputs
+	/// \tparam Nn Number of dimensions of the remaining (optional) inputs
+	/// \param first First input
+	/// \param second Second input
+	/// \param shapes Remaining (optional) inputs
+	/// \return True if all inputs have the same shape, false otherwise
+	template<typename T1, size_t N1, typename T2, size_t N2, typename... Tn, size_t... Nn>
+	LIBRAPID_NODISCARD LIBRAPID_INLINE bool shapesMatch(const Shape<T1, N1> &first,
+														const Shape<T2, N2> &second,
+														const Shape<Tn, Nn> &...shapes) {
+		if constexpr (sizeof...(Tn) == 0) {
+			return first == second;
+		} else {
+			return first == second && shapesMatch(first, shapes...);
+		}
+	}
+
+	/// \sa shapesMatch
+	template<typename T1, size_t N1, typename T2, size_t N2, typename... Tn, size_t... Nn>
+	LIBRAPID_NODISCARD LIBRAPID_INLINE bool
+	shapesMatch(const std::tuple<Shape<T1, N1>, Shape<T2, N2>, Shape<Tn, Nn>...> &shapes) {
+		if constexpr (sizeof...(Tn) == 0) {
+			return std::get<0>(shapes) == std::get<1>(shapes);
+		} else {
+			return std::get<0>(shapes) == std::get<1>(shapes) &&
+				   shapesMatch(std::apply(
+					 [](auto, auto, auto... rest) { return std::make_tuple(rest...); }, shapes));
+		}
 	}
 } // namespace librapid
 

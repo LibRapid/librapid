@@ -8,6 +8,8 @@
 #include "typetraits.hpp"
 #include "helperMacros.hpp"
 
+#include "forward.hpp"
+
 // BLAS
 #include "cxxblas/cxxblas.h"
 #include "cxxblas/cxxblas.tcc"

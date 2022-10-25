@@ -21,6 +21,25 @@ TEST_CASE("Test Storage<T>", "[storage]") {
 	REQUIRE(shape1[2] == 3);
 	REQUIRE(shape1[3] == 4);
 
+	REQUIRE(shape1.size() == 24);
+	REQUIRE(zero.size() == 0);
+	REQUIRE(ones.size() == 1);
+
+	REQUIRE(shape1 == shape1);
+	REQUIRE_FALSE(shape1 != shape1);
+	REQUIRE_FALSE(shape1 == zero);
+	REQUIRE(shape1 != zero);
+
+	REQUIRE(ones == lrc::Shape({1, 1, 1}));
+	REQUIRE(zero == lrc::Shape({0, 0, 0}));
+	REQUIRE(lrc::Shape({1, 2, 3, 4}) == lrc::Shape({1, 2, 3, 4}));
+	REQUIRE(lrc::Shape({1, 2, 3, 4}) != lrc::Shape({1, 2, 3, 5}));
+
+	REQUIRE(lrc::shapesMatch(lrc::Shape({1, 2, 3, 4}), lrc::Shape({1, 2, 3, 4})));
+	REQUIRE_FALSE(lrc::shapesMatch(lrc::Shape({1, 2, 3, 4}), lrc::Shape({1, 2, 3, 5})));
+	REQUIRE(lrc::shapesMatch(
+	  lrc::Shape({1, 2, 3, 4}), lrc::Shape({1, 2, 3, 4}), lrc::Shape({1, 2, 3, 4})));
+
 	SECTION("Benchmarks") {
 		BENCHMARK("Shape::zeros(5)") {
 			auto shape = lrc::Shape<size_t, 32>::zeros(5);
@@ -31,5 +50,9 @@ TEST_CASE("Test Storage<T>", "[storage]") {
 			auto shape = lrc::Shape<size_t, 32>::ones(5);
 			return shape.size();
 		};
+
+		auto lhs = lrc::Shape<size_t, 128>::ones(128);
+		auto rhs = lrc::Shape<size_t, 128>::ones(128);
+		BENCHMARK("Equality") { return lhs == rhs; };
 	}
 }

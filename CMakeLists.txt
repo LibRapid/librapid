@@ -329,4 +329,8 @@ if (${LIBRAPID_BUILD_TESTS})
 
     enable_testing()
     add_subdirectory(test)
+
+    # Add VALGRIND test if possible
+    include(valgrindTarget)
+    addValgrind(${module_name})
 endif ()
