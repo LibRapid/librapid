@@ -3,5 +3,9 @@
 
 #include "sizetype.hpp"
 #include "storage.hpp"
+#include "arrayContainer.hpp"
+#include "operations.hpp"
+#include "function.hpp"
+#include "assignOps.hpp"
 
 #endif // LIBRAPID_ARRAY
