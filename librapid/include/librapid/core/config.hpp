@@ -12,8 +12,10 @@
 // Detect Release vs Debug builds
 #if !defined(NDEBUG)
 #	define LIBRAPID_DEBUG
+#	define LIBRAPID_RELEASE_NOEXCEPT
 #else
 #	define LIBRAPID_RELEASE
+#	define LIBRAPID_RELEASE_NOEXCEPT noexcept
 #endif
 
 // Detect the operating system
