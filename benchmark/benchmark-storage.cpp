@@ -1,19 +1,26 @@
-#define ANKERL_NANOBENCH_IMPLEMENT
-#include <nanobench.h>
-
 #include <librapid>
+#include <celero/Celero.h>
 
-namespace lrc = librapid;
-using namespace ankerl;
+std::random_device RandomDevice;
+std::uniform_int_distribution<int> UniformDistribution(0, 1024);
 
-int main() {
-	nanobench::Bench benchmark;
+CELERO_MAIN
 
-	benchmark.minEpochTime(
-	  std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds(1)));
+BASELINE(DemoSimple, Baseline, 10, 1000000) {
+	celero::DoNotOptimizeAway(static_cast<float>(sin(UniformDistribution(RandomDevice))));
+}
 
-	benchmark.run("Allocate and deallocate", [] {
-		lrc::Storage<int> bigStorage(1000000);
-		nanobench::doNotOptimizeAway(bigStorage[0]);
-	});
+BENCHMARK(DemoSimple, Complex1, 10, 1000000) {
+	celero::DoNotOptimizeAway(
+	  static_cast<float>(sin(fmod(UniformDistribution(RandomDevice), 3.14159265))));
+}
+
+BENCHMARK(DemoSimple, Complex2, 10, 1000000) {
+	celero::DoNotOptimizeAway(
+	  static_cast<float>(sin(fmod(UniformDistribution(RandomDevice), 3.14159265))));
+}
+
+BENCHMARK(DemoSimple, Complex3, 10, 1000000) {
+	celero::DoNotOptimizeAway(
+	  static_cast<float>(sin(fmod(UniformDistribution(RandomDevice), 3.14159265))));
 }

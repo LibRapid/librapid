@@ -36,6 +36,21 @@ namespace librapid {
 		/// \param other Temporary Shape object to copy
 		Shape(Shape &&other) noexcept = default;
 
+		/// Create a Shape object from one with a different type and number of dimensions.
+		/// \tparam V Scalar type of the values
+		/// \tparam Dim	Number of dimensions
+		/// \param other Shape object to copy
+		template<typename V, size_t Dim>
+		Shape(const Shape<V, Dim> &other);
+
+		/// Create a Shape object from one with a different type and number of dimensions, moving it
+		/// instead of copying it.
+		/// \tparam V Scalar type of the values
+		/// \tparam Dim Number of dimensions
+		/// \param other Temporary Shape object to move
+		template<typename V, size_t Dim>
+		Shape(Shape<V, Dim> &&other) noexcept;
+
 		/// Assign a Shape object to this object
 		/// \tparam V Scalar type of the Shape
 		/// \param vals Dimensions of the Shape
@@ -124,6 +139,26 @@ namespace librapid {
 						N,
 						vals.size());
 		for (size_t i = 0; i < vals.size(); ++i) { m_data[i] = vals[i]; }
+	}
+
+	template<typename T, size_t N>
+	template<typename V, size_t Dim>
+	Shape<T, N>::Shape(const Shape<V, Dim> &other) : m_dims(other.ndim()) {
+		LIBRAPID_ASSERT(other.ndim() <= N,
+						"Shape object is limited to {} dimensions. Cannot initialize with {}",
+						N,
+						other.ndim());
+		for (size_t i = 0; i < m_dims; ++i) { m_data[i] = other[i]; }
+	}
+
+	template<typename T, size_t N>
+	template<typename V, size_t Dim>
+	Shape<T, N>::Shape(Shape<V, Dim> &&other) noexcept : m_dims(other.ndim()) {
+		LIBRAPID_ASSERT(other.ndim() <= N,
+						"Shape object is limited to {} dimensions. Cannot initialize with {}",
+						N,
+						other.ndim());
+		for (size_t i = 0; i < m_dims; ++i) { m_data[i] = other[i]; }
 	}
 
 	template<typename T, size_t N>

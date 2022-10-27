@@ -20,8 +20,8 @@ namespace librapid {
 	public:
 		using Allocator			   = Allocator_;
 		using Scalar			   = Scalar_;
-		using Pointer			   = typename std::allocator_traits<Allocator>::pointer;
-		using ConstPointer		   = typename std::allocator_traits<Allocator>::const_pointer;
+		using Pointer			   = Scalar *__restrict;
+		using ConstPointer		   = const Scalar *__restrict;
 		using Reference			   = Scalar &;
 		using ConstReference	   = const Scalar &;
 		using SizeType			   = size_t;
@@ -38,48 +38,52 @@ namespace librapid {
 		/// optionally, a custom allocator.
 		/// \param size Number of elements to allocate
 		/// \param alloc Allocator to use
-		explicit Storage(SizeType size, const Allocator &alloc = Allocator());
+		LIBRAPID_ALWAYS_INLINE explicit Storage(SizeType size,
+												const Allocator &alloc = Allocator());
 
 		/// Create a Storage object with \p size elements, each initialized
 		/// to \p value. Optionally, a custom allocator can be used.
 		/// \param size Number of elements to allocate
 		/// \param value Value to initialize each element to
 		/// \param alloc Allocator to use
-		Storage(SizeType size, ConstReference value, const Allocator &alloc = Allocator());
+		LIBRAPID_ALWAYS_INLINE Storage(SizeType size, ConstReference value,
+									   const Allocator &alloc = Allocator());
 
 		/// Create a Storage object from another Storage object. Additionally
 		/// a custom allocator can be used.
 		/// \param other Storage object to copy
 		/// \param alloc Allocator to use
-		Storage(const Storage &other, const Allocator &alloc = Allocator());
+		LIBRAPID_ALWAYS_INLINE Storage(const Storage &other, const Allocator &alloc = Allocator());
 
 		/// Move a Storage object into this object.
 		/// \param other Storage object to move
-		Storage(Storage &&other) noexcept;
+		LIBRAPID_ALWAYS_INLINE Storage(Storage &&other) noexcept;
 
 		/// Create a Storage object from an std::initializer_list
 		/// \tparam V Type of the elements in the initializer list
 		/// \param list Initializer list to copy
 		/// \param alloc Allocator to use
 		template<typename V>
-		Storage(const std::initializer_list<V> &list, const Allocator &alloc = Allocator());
+		LIBRAPID_ALWAYS_INLINE Storage(const std::initializer_list<V> &list,
+									   const Allocator &alloc = Allocator());
 
 		/// Create a Storage object from a std::vector
 		/// \tparam V Type of the elements in the vector
 		/// \param vec Vector to copy
 		/// \param alloc Allocator to use
 		template<typename V>
-		explicit Storage(const std::vector<V> &vec, const Allocator &alloc = Allocator());
+		LIBRAPID_ALWAYS_INLINE explicit Storage(const std::vector<V> &vec,
+												const Allocator &alloc = Allocator());
 
 		/// Assignment operator for a Storage object
 		/// \param other Storage object to copy
 		/// \return *this
-		Storage &operator=(const Storage &other);
+		LIBRAPID_ALWAYS_INLINE Storage &operator=(const Storage &other);
 
 		/// Move assignment operator for a Storage object
 		/// \param other Storage object to move
 		/// \return *this
-		Storage &operator=(Storage &&other) noexcept;
+		LIBRAPID_ALWAYS_INLINE Storage &operator=(Storage &&other) noexcept;
 
 		/// Free a Storage object
 		~Storage();
@@ -87,12 +91,12 @@ namespace librapid {
 		/// Resize a Storage object to \p size elements. Existing elements
 		/// are preserved.
 		/// \param size New size of the Storage object
-		LIBRAPID_INLINE void resize(SizeType newSize);
+		LIBRAPID_ALWAYS_INLINE void resize(SizeType newSize);
 
 		/// Resize a Storage object to \p size elements. Existing elements
 		/// are not preserved
 		/// \param size New size of the Storage object
-		LIBRAPID_INLINE void resize(SizeType newSize, int);
+		LIBRAPID_ALWAYS_INLINE void resize(SizeType newSize, int);
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE SizeType size() const noexcept;
 
@@ -123,7 +127,7 @@ namespace librapid {
 		/// \param begin Beginning of data to copy
 		/// \param end End of data to copy
 		template<typename P>
-		void initData(P begin, P end);
+		LIBRAPID_ALWAYS_INLINE void initData(P begin, P end);
 
 		/// Resize the Storage object to \p size elements. Note this does not
 		/// initialize the new elements or maintain existing data.
@@ -131,8 +135,8 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize);
 
 		Allocator m_allocator;
-		Scalar *m_begin = nullptr; // It is more efficient to store pointers to the start
-		Scalar *m_end	= nullptr; // and end of the data block than to store the size
+		Pointer m_begin = nullptr; // It is more efficient to store pointers to the start
+		Pointer m_end	= nullptr; // and end of the data block than to store the size
 	};
 
 	namespace detail {

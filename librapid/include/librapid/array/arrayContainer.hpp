@@ -19,30 +19,82 @@ namespace librapid {
 		using Scalar	  = typename StorageType::Scalar;
 		using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;
 
+		/// Default constructor.
 		ArrayContainer() = default;
-		explicit ArrayContainer(const ShapeType &shape);
-		ArrayContainer(const ShapeType &shape, const Scalar &value);
-		explicit ArrayContainer(ShapeType &&shape);
 
-		ArrayContainer(const ArrayContainer &other)		= default;
-		ArrayContainer(ArrayContainer &&other) noexcept = default;
+		/// Constructs an array container from a shape
+		/// \param shape The shape of the array container
+		LIBRAPID_ALWAYS_INLINE explicit ArrayContainer(const ShapeType &shape);
 
+		/// Create an array container from a shape and a scalar value. The scalar value represents
+		/// the value the memory is initialized with.
+		/// \param shape The shape of the array container
+		/// \param value The value to initialize the memory with
+		LIBRAPID_ALWAYS_INLINE ArrayContainer(const ShapeType &shape, const Scalar &value);
+
+		/// Construct an array container from a shape, which is moved, not copied.
+		/// \param shape The shape of the array container
+		LIBRAPID_ALWAYS_INLINE explicit ArrayContainer(ShapeType &&shape);
+
+		/// Construct an array container from another array container.
+		/// \param other The array container to copy.
+		LIBRAPID_ALWAYS_INLINE ArrayContainer(const ArrayContainer &other) = default;
+
+		/// Construct an array container from a temporary array container.
+		/// \param other The array container to move.
+		LIBRAPID_ALWAYS_INLINE ArrayContainer(ArrayContainer &&other) noexcept = default;
+
+		/// Construct an array container from a function object. This will assign the result of
+		/// the function to the array container, evaluating it accordingly.
+		/// \tparam Functor_ The function type
+		/// \tparam Args The argument types of the function
+		/// \param function The function to assign
 		template<typename Functor_, typename... Args>
-		explicit ArrayContainer(const detail::Function<Functor_, Args...> &function)
-		  LIBRAPID_RELEASE_NOEXCEPT;
+		LIBRAPID_ALWAYS_INLINE explicit ArrayContainer(
+		  const detail::Function<Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT;
 
-		ArrayContainer &operator=(const ArrayContainer &other)	   = default;
-		ArrayContainer &operator=(ArrayContainer &&other) noexcept = default;
+		/// Assign an array container to this array container.
+		/// \param other The array container to copy.
+		/// \return A reference to this array container.
+		LIBRAPID_ALWAYS_INLINE ArrayContainer &operator=(const ArrayContainer &other) = default;
 
+		/// Assign a temporary array container to this array container.
+		/// \param other The array container to move.
+		/// \return A reference to this array container.
+		LIBRAPID_ALWAYS_INLINE ArrayContainer &operator=(ArrayContainer &&other) noexcept = default;
+
+		/// Assign a function object to this array container. This will assign the result of
+		/// the function to the array container, evaluating it accordingly.
+		/// \tparam Functor_ The function type
+		/// \tparam Args The argument types of the function
+		/// \param function The function to assign
+		/// \return A reference to this array container.
 		template<typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE ArrayContainer &
 		operator=(const detail::Function<Functor_, Args...> &function);
 
-		LIBRAPID_NODISCARD LIBRAPID_INLINE const ShapeType &shape() const noexcept;
+		/// Return the shape of the array container. This is an immutable reference.
+		/// \return The shape of the array container.
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ShapeType &shape() const noexcept;
 
+		/// Return a Packet object from the array's storage at a specific index.
+		/// \param index The index to get the packet from
+		/// \return A Packet object from the array's storage at a specific index
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packet(size_t index) const;
+
+		/// Return a Scalar from the array's storage at a specific index.
+		/// \param index The index to get the scalar from
+		/// \return A Scalar from the array's storage at a specific index
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar scalar(size_t index) const;
+
+		/// Write a Packet object to the array's storage at a specific index
+		/// \param index The index to write the packet to
+		/// \param value The value to write to the array's storage
 		LIBRAPID_ALWAYS_INLINE void writePacket(size_t index, const Packet &value);
+
+		/// Write a Scalar to the array's storage at a specific index
+		/// \param index The index to write the scalar to
+		/// \param value The value to write to the array's storage
 		LIBRAPID_ALWAYS_INLINE void write(size_t index, const Scalar &value);
 
 	public:

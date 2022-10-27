@@ -4,7 +4,7 @@
 namespace librapid {
 	namespace typetraits {
 		template<typename Functor_, typename... Args>
-		struct TypeInfo<detail::Function<Functor_, Args...>> {
+		struct TypeInfo<::librapid::detail::Function<Functor_, Args...>> {
 			static constexpr bool isLibRapidType	 = true;
 			using Scalar							 = decltype(std::declval<Functor_>()(
 			  std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
@@ -29,25 +29,25 @@ namespace librapid {
 			/// Constructs a function from a functor and arguments.
 			/// \param functor The functor to use.
 			/// \param args The arguments to use.
-			explicit Function(Functor &&functor, Args &&...args);
+			LIBRAPID_ALWAYS_INLINE explicit Function(Functor &&functor, Args &&...args);
 
 			/// Constructs a function from another function.
 			/// \param other The function to copy.
-			Function(const Function &other) = default;
+			LIBRAPID_ALWAYS_INLINE Function(const Function &other) = default;
 
 			/// Construct a function from a temporary function.
 			/// \param other The function to move.
-			Function(Function &&other) noexcept = default;
+			LIBRAPID_ALWAYS_INLINE Function(Function &&other) noexcept = default;
 
 			/// Assigns a function to this function.
 			/// \param other The function to copy.
 			/// \return A reference to this function.
-			Function &operator=(const Function &other) = default;
+			LIBRAPID_ALWAYS_INLINE Function &operator=(const Function &other) = default;
 
 			/// Assigns a temporary function to this function.
 			/// \param other The function to move.
 			/// \return A reference to this function.
-			Function &operator=(Function &&other) noexcept = default;
+			LIBRAPID_ALWAYS_INLINE Function &operator=(Function &&other) noexcept = default;
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto shape() const {
 				return std::get<0>(m_args).shape();
@@ -63,12 +63,21 @@ namespace librapid {
 			/// \return The result of the function (scalar).
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar scalar(size_t index) const;
 
-			// private:
-		public:
+		private:
+			/// Implementation detail -- evaluates the function at the given index,
+			/// returning a Packet result.
+			/// \tparam I The index sequence.
+			/// \param index The index to evaluate at.
+			/// \return The result of the function (vectorized).
 			template<size_t... I>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetImpl(std::index_sequence<I...>,
 																		size_t index) const;
 
+			/// Implementation detail -- evaluates the function at the given index,
+			/// returning a Scalar result.
+			/// \tparam I The index sequence.
+			/// \param index The index to evaluate at.
+			/// \return The result of the function (scalar).
 			template<size_t... I>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar scalarImpl(std::index_sequence<I...>,
 																		size_t index) const;
