@@ -11,6 +11,61 @@
  */
 
 namespace librapid::typetraits {
+	namespace detail {
+		/*
+		 * Pretty string representations of data types at compile time. This is adapted from
+		 * https://bitwizeshift.github.io/posts/2021/03/09/getting-an-unmangled-type-name-at-compile-time/
+		 * and I have simply adapted it to work with LibRapid.
+		 */
+
+		template<std::size_t... Idxs>
+		constexpr auto substringAsArray(std::string_view str, std::index_sequence<Idxs...>) {
+			return std::array {str[Idxs]...};
+		}
+
+		template<typename T>
+		constexpr auto typeNameArray() {
+#if defined(__clang__)
+			constexpr auto prefix	= std::string_view {"[T = "};
+			constexpr auto suffix	= std::string_view {"]"};
+			constexpr auto function = std::string_view {__PRETTY_FUNCTION__};
+#elif defined(__GNUC__)
+			constexpr auto prefix	= std::string_view {"with T = "};
+			constexpr auto suffix	= std::string_view {"]"};
+			constexpr auto function = std::string_view {__PRETTY_FUNCTION__};
+#elif defined(_MSC_VER)
+			constexpr auto prefix	= std::string_view {"type_name_array<"};
+			constexpr auto suffix	= std::string_view {">(void)"};
+			constexpr auto function = std::string_view {__FUNCSIG__};
+#else
+#	define LIBRAPID_NO_TYPE_TO_STRING
+#endif
+
+#if !defined(LIBRAPID_NO_TYPE_TO_STRING)
+			constexpr auto start = function.find(prefix) + prefix.size();
+			constexpr auto end	 = function.rfind(suffix);
+
+			static_assert(start < end);
+
+			constexpr auto name = function.substr(start, (end - start));
+			return substringAsArray(name, std::make_index_sequence<name.size()> {});
+#else
+			return std::array<char, 0> {};
+#endif
+		}
+
+		template<typename T>
+		struct TypeNameHolder {
+			static inline constexpr auto value = typeNameArray<T>();
+		};
+	} // namespace detail
+
+	template<typename T>
+	constexpr auto typeName() -> std::string_view {
+		constexpr auto &value = detail::TypeNameHolder<T>::value;
+		return std::string_view {value.data(), value.size()};
+	}
+
 	/// Provides compile-time information about a data type, allowing for easier function
 	/// switching and compile-time evaluation
 	/// \tparam T The type to get information about

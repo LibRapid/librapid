@@ -13,9 +13,9 @@
 [submodule "librapid/vendor/mpfr"] # Big number support with MPFR and MPIR
 	path = librapid/vendor/mpfr
 	url = https://github.com/pencilcaseman/mpfr
-[submodule "librapid/vendor/nanobench"]
-	path = librapid/vendor/nanobench
-	url = https://github.com/martinus/nanobench.git
-[submodule "librapid/vendor/Catch2"]
+[submodule "librapid/vendor/Catch2"] # Catch2 module for unit testing
 	path = librapid/vendor/Catch2
 	url = https://github.com/catchorg/Catch2.git
+[submodule "librapid/vendor/Celero"] # Celero module for benchmarking
+	path = librapid/vendor/Celero
+	url = https://github.com/Pencilcaseman/Celero.git

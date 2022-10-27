@@ -313,11 +313,11 @@ target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/li
 if (${LIBRAPID_BUILD_BENCHMARKS})
     message(STATUS "Building LibRapid Benchmarks")
 
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/nanobench")
-    target_link_libraries(${module_name} PUBLIC nanobench)
+    set(CELERO_COMPILE_DYNAMIC_LIBRARIES off)
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Celero")
+    target_link_libraries(${module_name} PUBLIC celero)
 
     add_subdirectory(benchmark)
-
 endif ()
 
 if (${LIBRAPID_BUILD_TESTS})
