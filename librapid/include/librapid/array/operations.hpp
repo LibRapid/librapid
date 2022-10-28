@@ -21,6 +21,7 @@
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator OP_(LHS &&lhs, RHS &&rhs)              \
 	  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<detail::NAME_, LHS, RHS> {                       \
 		LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");                       \
+		int x;                                                                                     \
 		return detail::makeFunction<detail::NAME_>(std::forward<LHS>(lhs),                         \
 												   std::forward<RHS>(rhs));                        \
 	}

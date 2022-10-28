@@ -30,7 +30,7 @@ namespace librapid::detail {
 
 		if (multiThread) {
 #pragma omp parallel for shared(lhs, function, vectorSize) default(none)                           \
-  num_threads(global::numThreads)
+  num_threads(static_cast<int>(global::numThreads))
 			for (int64_t index = 0; index < vectorSize; index += packetWidth) {
 				lhs.writePacket(index, function.packet(index));
 			}

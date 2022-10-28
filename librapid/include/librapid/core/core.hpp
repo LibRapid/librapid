@@ -1,6 +1,7 @@
 #ifndef LIBRAPID_CORE
 #define LIBRAPID_CORE
 
+#include "warningSuppress.hpp"
 #include "librapidPch.hpp"
 #include "config.hpp"
 #include "global.hpp"

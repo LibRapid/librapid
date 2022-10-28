@@ -67,8 +67,20 @@
 #include <scn/tuple_return/tuple_return.h>
 
 // Vc -- SIMD instructions
+#if defined(_MSC_VER)
+// For Vc, we need to disable the following warnings
+#	pragma warning(push)
+#	pragma warning(disable : 4244) // conversion from 'int' to 'float', possible loss of data
+#	pragma warning(disable : 4324) // structure was padded due to alignment specifier
+#	pragma warning(disable : 4127) // conditional expression is constant
+#endif
+
 #include <Vc/Vc>
 #include <Vc/algorithm>
 #include <Vc/cpuid.h>
+
+#if defined(_MSC_VER)
+#	pragma warning(pop)
+#endif
 
 #endif // LIBRAPID_CORE_LIBRAPID_PCH_HPP
