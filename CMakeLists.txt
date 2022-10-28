@@ -4,6 +4,20 @@ set(CMAKE_CXX_STANDARD 17)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 cmake_policy(SET CMP0077 NEW)
 
+# Extract version information
+file(READ "version.txt" ver)
+
+string(REGEX MATCH "MAJOR ([0-9]*)" _ ${ver})
+set(LIBRAPID_MAJOR ${CMAKE_MATCH_1})
+
+string(REGEX MATCH "MINOR ([0-9]*)" _ ${ver})
+set(LIBRAPID_MINOR ${CMAKE_MATCH_1})
+
+string(REGEX MATCH "PATCH ([0-9]*)" _ ${ver})
+set(LIBRAPID_PATCH ${CMAKE_MATCH_1})
+
+message(STATUS "LibRapid Version: v${LIBRAPID_MAJOR}.${LIBRAPID_MINOR}.${LIBRAPID_PATCH}")
+
 # Optional LibRapid settings
 option(LIBRAPID_BUILD_EXAMPLES "Compile LibRapid C++ Examples" OFF)
 option(LIBRAPID_BUILD_TESTS "Compile LibRapid C++ Tests" OFF)
@@ -60,6 +74,10 @@ file(GLOB_RECURSE LIBRAPID_SOURCES
 
 set(module_name "librapid")
 add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
+
+target_compile_definitions(${module_name} PUBLIC LIBRAPID_MAJOR=${LIBRAPID_MAJOR})
+target_compile_definitions(${module_name} PUBLIC LIBRAPID_MINOR=${LIBRAPID_MINOR})
+target_compile_definitions(${module_name} PUBLIC LIBRAPID_PATCH=${LIBRAPID_PATCH})
 
 # Precompiled Headers
 target_precompile_headers(${module_name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include/librapid/core/librapidPch.hpp")
