@@ -42,8 +42,8 @@ sys.path.insert(0, os.path.abspath("../.."))
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_dirs = [
-	"src/librapid/vendor"
+exclude_patterns = [
+	".*(vendor).*"
 ]
 
 file_match = regex.compile(".*\..*")
@@ -54,10 +54,17 @@ project = "librapid"
 copyright = "2022, Toby Davis"
 author = "Toby Davis"
 
-# The full version, including alpha/beta/rc tags
-version_file = open("../../src/librapid/VERSION.hpp", "r")
-release = version_file.readlines()[1].split()[2].replace("\"", "")
-version_file.close()
+# The full version
+try:
+	version_file = open("../../version.txt", "r")
+	lines = version_file.readlines()
+	major = regex.match("MAJOR ([0-9]*)", lines[0])
+	minor = regex.match("MINOR ([0-9]*)", lines[1])
+	patch = regex.match("PATCH ([0-9]*)", lines[2])
+except:
+	raise RuntimeError("Unknown LibRapid Version")
+
+release = f"v{major}.{minor}.{patch}"
 
 # Set the master file
 master_doc = "index"
@@ -95,18 +102,19 @@ breathe_default_project = "librapid"
 # Custom inputs to doxygen generator
 doxygen_inputs = """
 
-INPUT				 = ./librapid_doc_copy
-	   
-ENABLE_PREPROCESSING  = YES
-MACRO_EXPANSION	   = YES
-EXPAND_ONLY_PREDEF	= NO
-PREDEFINED			+= LIBRAPID_DOXYGEN_BUILD
-PREDEFINED			+= LR_INLINE=
-PREDEFINED			+= __restrict=
-PREDEFINED			+= LIBRAPID_MAX_DIMS=32
-PREDEFINED			+= __host__=
-PREDEFINED			+= __device__=
-PREDEFINED			+= __global__=
+INPUT                  = ../../librapid
+EXCLUDE_PATTERNS       = */vendor/*
+
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = NO
+PREDEFINED            += LIBRAPID_DOXYGEN_BUILD
+PREDEFINED            += LR_INLINE=
+PREDEFINED            += __restrict=
+PREDEFINED            += LIBRAPID_MAX_DIMS=32
+PREDEFINED            += __host__=
+PREDEFINED            += __device__=
+PREDEFINED            += __global__=
 
 """
 
@@ -133,11 +141,8 @@ exhale_args = {
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = [
-	"*pybind*",
-	"*version2*",
-	"*jitify*",
-	"*fmt*",
-	"*blas/*"
+	".*(vendor).*"
+	".*(blas).*"
 ]
 
 # -- Options for HTML output -------------------------------------------------
