@@ -13,7 +13,7 @@ jobs:
   compile:
     name: LibRapid on ${{ matrix.os }} with ${{ matrix.cxx }}
     runs-on: ${{ matrix.os }}
-  
+
     strategy:
       fail-fast: false
       matrix:
@@ -89,5 +89,7 @@ jobs:
           CXX: ${{ matrix.compiler.cxx }}
 
       - name: Run Tests
-        run: ctest -C Release
+        run: |
+          cd build
+          ctest -C Release --output-on-failure
           
