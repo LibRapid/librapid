@@ -20,12 +20,12 @@ namespace librapid {
 	public:
 		using Allocator			   = Allocator_;
 		using Scalar			   = Scalar_;
-		using Pointer			   = Scalar *__restrict;
-		using ConstPointer		   = const Scalar *__restrict;
+		using Pointer			   = typename std::allocator_traits<Allocator>::pointer;
+		using ConstPointer		   = typename std::allocator_traits<Allocator>::const_pointer;
 		using Reference			   = Scalar &;
 		using ConstReference	   = const Scalar &;
-		using SizeType			   = size_t;
-		using DifferenceType	   = ptrdiff_t;
+		using SizeType			   = typename std::allocator_traits<Allocator>::size_type;
+		using DifferenceType	   = typename std::allocator_traits<Allocator>::difference_type;
 		using Iterator			   = Pointer;
 		using ConstIterator		   = ConstPointer;
 		using ReverseIterator	   = std::reverse_iterator<Iterator>;
@@ -129,7 +129,12 @@ namespace librapid {
 		template<typename P>
 		LIBRAPID_ALWAYS_INLINE void initData(P begin, P end);
 
-		/// Resize the Storage object to \p size elements. Note this does not
+		/// Resize the Storage Object to \p newSize elements, retaining existing
+		/// data.
+		/// \param newSize New size of the Storage object
+		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize, int);
+
+		/// Resize the Storage object to \p newSize elements. Note this does not
 		/// initialize the new elements or maintain existing data.
 		/// \param newSize New size of the Storage object
 		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize);
@@ -265,12 +270,38 @@ namespace librapid {
 	}
 
 	template<typename T, typename A>
+	void Storage<T, A>::resize(SizeType newSize) {
+		resizeImpl(newSize);
+	}
+
+	template<typename T, typename A>
 	void Storage<T, A>::resize(SizeType newSize, int) {
 		resizeImpl(newSize);
 	}
 
 	template<typename T, typename A>
 	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize) {
+		SizeType oldSize = size();
+		Pointer oldBegin = m_begin;
+		if (oldSize != newSize) {
+			// Reallocate
+			m_begin = detail::safeAllocate(m_allocator, newSize);
+			m_end	= m_begin + newSize;
+
+			if constexpr (typetraits::TriviallyDefaultConstructible<T>::value) {
+				// Use a slightly faster memcpy if the type is trivially default constructible
+				std::uninitialized_copy(oldBegin, oldBegin + std::min(oldSize, newSize), m_begin);
+			} else {
+				// Otherwise, use the standard copy algorithm
+				std::copy(oldBegin, oldBegin + std::min(oldSize, newSize), m_begin);
+			}
+
+			detail::safeDeallocate(m_allocator, oldBegin, oldSize);
+		}
+	}
+
+	template<typename T, typename A>
+	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize, int) {
 		SizeType oldSize = size();
 		Pointer oldBegin = m_begin;
 		if (oldSize != newSize) {

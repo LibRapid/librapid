@@ -1,4 +1,4 @@
-#include <librapid/core/global.hpp>
+#include <librapid/librapid.hpp>
 
 namespace librapid::global {
 	bool throwOnAssert				 = false;
