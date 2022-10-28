@@ -16,6 +16,3 @@
 [submodule "librapid/vendor/Catch2"] # Catch2 module for unit testing
 	path = librapid/vendor/Catch2
 	url = https://github.com/catchorg/Catch2.git
-[submodule "librapid/vendor/Celero"] # Celero module for benchmarking
-	path = librapid/vendor/Celero
-	url = https://github.com/Pencilcaseman/Celero.git

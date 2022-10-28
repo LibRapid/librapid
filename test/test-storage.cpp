@@ -76,6 +76,25 @@ namespace lrc = librapid;
 				i += 1;                                                                            \
 			}                                                                                      \
 		}                                                                                          \
+                                                                                                   \
+		storage4.resize(5);                                                                        \
+		REQUIRE(storage4.size() == 5);                                                             \
+		REQUIRE(storage4[0] == 1);                                                                 \
+		REQUIRE(storage4[1] == 1);                                                                 \
+		REQUIRE(storage4[2] == 1);                                                                 \
+		REQUIRE(storage4[3] == 1);                                                                 \
+		REQUIRE(storage4[4] == 1);                                                                 \
+                                                                                                   \
+		storage4.resize(10);                                                                       \
+		REQUIRE(storage4.size() == 10);                                                            \
+		REQUIRE(storage4[0] == 1);                                                                 \
+		REQUIRE(storage4[1] == 1);                                                                 \
+		REQUIRE(storage4[2] == 1);                                                                 \
+		REQUIRE(storage4[3] == 1);                                                                 \
+		REQUIRE(storage4[4] == 1);                                                                 \
+                                                                                                   \
+		storage4.resize(100, 0);                                                                   \
+		REQUIRE(storage4.size() == 100);                                                           \
 	}
 
 #define BENCHMARK_CONSTRUCTORS(TYPE_, FILL_)                                                       \

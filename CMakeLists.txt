@@ -6,8 +6,10 @@ cmake_policy(SET CMP0077 NEW)
 
 # Optional LibRapid settings
 option(LIBRAPID_BUILD_EXAMPLES "Compile LibRapid C++ Examples" OFF)
-option(LIBRAPID_BUILD_BENCHMARKS "Compile LibRapid C++ Benchmarks" OFF)
 option(LIBRAPID_BUILD_TESTS "Compile LibRapid C++ Tests" OFF)
+
+option(LIBRAPID_STRICT "Force all warnings into errors (use with caution)" OFF)
+option(LIBRAPID_QUIET "Hide warnings generated WITHIN LibRapid's source" OFF)
 
 option(LIBRAPID_GET_BLAS "Download pre-built OpenBLAS binaries and use them" OFF)
 
@@ -15,7 +17,6 @@ option(LIBRAPID_USE_BLAS "Attempt to use a BLAS library" ON)
 option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
 option(LIBRAPID_USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
-option(LIBRAPID_QUIET_BUILD "Hide warnings generated WITHIN LibRapid's source" ON)
 
 # Include any required modules
 include(identifyBLAS)
@@ -75,6 +76,40 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 endif ()
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(IS_WINDOWS ON)
+endif ()
+
+if (LIBRAPID_STRICT AND LIBRAPID_QUIET)
+    message(FATAL_ERROR "LIBRAPID_STRICT and LIBRAPID_QUIET cannot be enabled at the same time")
+endif ()
+
+if (LIBRAPID_STRICT)
+    # Enable all warnings and treat them as errors
+    if (MSVC)
+        target_compile_options(${module_name} PRIVATE /W4 /WX)
+    else ()
+        target_compile_options(${module_name} PRIVATE -Wall -Wextra -pedantic -Werror)
+    endif ()
+else ()
+    # Enable all warnings
+    if (MSVC)
+        target_compile_options(${module_name} PRIVATE /W4)
+    else ()
+        target_compile_options(${module_name} PRIVATE -Wall -Wextra -pedantic)
+    endif ()
+endif ()
+
+if (LIBRAPID_QUIET)
+    # Disable warnings because they're really annoying
+    target_compile_options(${module_name} PRIVATE
+            $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
+            -w>
+            $<$<CXX_COMPILER_ID:MSVC>:
+            /w>)
+endif ()
+
+if (MSVC)
+    # Disable MSVC warnings about unsafe functions
+    target_compile_definitions(${module_name} PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif ()
 
 # See if OpenMP should be linked against
@@ -294,31 +329,12 @@ if (${LIBRAPID_USE_MULTIPREC})
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_USE_MULTIPREC)
 endif ()
 
-if (${LIBRAPID_QUIET_BUILD})
-    # Disable warnings because they're really annoying
-    target_compile_options(${module_name} PRIVATE
-            $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
-            -w>
-            $<$<CXX_COMPILER_ID:MSVC>:
-            /w>)
-endif ()
-
 target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include")
 
 # if (${LIBRAPID_BUILD_EXAMPLES})
 #     message(STATUS "Building LibRapid Examples")
 #     add_subdirectory(examples/cpp)
 # endif ()
-
-if (${LIBRAPID_BUILD_BENCHMARKS})
-    message(STATUS "Building LibRapid Benchmarks")
-
-    set(CELERO_COMPILE_DYNAMIC_LIBRARIES off)
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Celero")
-    target_link_libraries(${module_name} PUBLIC celero)
-
-    add_subdirectory(benchmark)
-endif ()
 
 if (${LIBRAPID_BUILD_TESTS})
     message(STATUS "Building LibRapid Tests")

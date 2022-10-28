@@ -4,38 +4,26 @@
 // CUDA enabled LibRapid
 #ifdef LIBRAPID_HAS_CUDA
 
-#	ifdef _MSC_VER
-// Disable warnings about unsafe classes
-#		pragma warning(disable : 4996)
-
-// Disable zero division errors
-#		pragma warning(disable : 4723)
-#	endif
+// Under MSVC, supress a few warnings
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4505) // unreferenced local function has been removed
+#endif
 
 #	define CUDA_NO_HALF // Ensure the cuda_helpers "half" data type is not defined
 #	include <cublas_v2.h>
 #	include <cuda.h>
 #	include <curand.h>
 #	include <curand_kernel.h>
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
 #	include "../vendor/jitify/jitify.hpp"
 
 // cuBLAS API errors
-static const char *getCublasErrorEnum_(cublasStatus_t error) {
-	switch (error) {
-		case CUBLAS_STATUS_SUCCESS: return "CUBLAS_STATUS_SUCCESS";
-		case CUBLAS_STATUS_NOT_INITIALIZED: return "CUBLAS_STATUS_NOT_INITIALIZED";
-		case CUBLAS_STATUS_ALLOC_FAILED: return "CUBLAS_STATUS_ALLOC_FAILED";
-		case CUBLAS_STATUS_INVALID_VALUE: return "CUBLAS_STATUS_INVALID_VALUE";
-		case CUBLAS_STATUS_ARCH_MISMATCH: return "CUBLAS_STATUS_ARCH_MISMATCH";
-		case CUBLAS_STATUS_MAPPING_ERROR: return "CUBLAS_STATUS_MAPPING_ERROR";
-		case CUBLAS_STATUS_EXECUTION_FAILED: return "CUBLAS_STATUS_EXECUTION_FAILED";
-		case CUBLAS_STATUS_INTERNAL_ERROR: return "CUBLAS_STATUS_INTERNAL_ERROR";
-		case CUBLAS_STATUS_NOT_SUPPORTED: return "CUBLAS_STATUS_NOT_SUPPORTED";
-		case CUBLAS_STATUS_LICENSE_ERROR: return "CUBLAS_STATUS_LICENSE_ERROR";
-	}
-
-	return "UNKNOWN ERROR";
-}
+const char *getCublasErrorEnum_(cublasStatus_t error);
 
 //********************//
 // cuBLAS ERROR CHECK //

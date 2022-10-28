@@ -3,10 +3,8 @@ function(make_test name)
     target_link_libraries(test-${name} PRIVATE librapid)
 
     add_test(NAME ${name}
-            COMMAND "${CMAKE_CURRENT_BINARY_DIR}/test-${name}")
+            COMMAND test-${name} --skip-benchmarks)
 endfunction()
 
 make_test(storage)
 make_test(sizetype)
-
-enable_testing()
