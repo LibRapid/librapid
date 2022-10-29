@@ -42,19 +42,22 @@ jobs:
         run: |
           sudo apt-get install -y doxygen
           sudo apt-get install -y texlive-full
-          cd docs
-          pip install -r requirements.txt
 
       - name: Update Distribution
         run: |
           sudo apt-get dist-upgrade
 
-      - name: Build Documentation
+      - name: Build HTML Documentation
         run: |
-          cd docs
-          make html latexpdf
+          doxygen
+
+      - name: Build LaTeX Documentation
+        run: |
+          cd docs/latex
+          make
         
       - name: Store Artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: docs/build/**
+          path: docs
+          
