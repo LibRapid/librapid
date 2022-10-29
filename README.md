@@ -11,15 +11,11 @@
 
 ---
 
-[![Build (Windows)](https://github.com/LibRapid/librapid/actions/workflows/build-windows.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/build-windows.yaml)
+[![Compile](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml)
 
-[![Build (Linux)](https://github.com/LibRapid/librapid/actions/workflows/build-linux.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/build-linux.yaml)
+[![Documentation Build](https://github.com/LibRapid/librapid/actions/workflows/build-docs.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/build-docs.yaml)
 
-[![Build (MacOS)](https://github.com/LibRapid/librapid/actions/workflows/build-macos.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/build-macos.yaml)
-
-[![Wheels](https://github.com/LibRapid/librapid/actions/workflows/wheels.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/wheels.yaml)
-
-[![Documentation Status](https://readthedocs.org/projects/librapid/badge/?version=latest)](https://librapid.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Online](https://readthedocs.org/projects/librapid/badge/?version=latest)](https://librapid.readthedocs.io/en/latest/?badge=latest)
 
 ---
 
