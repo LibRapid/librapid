@@ -16,3 +16,6 @@
 [submodule "librapid/vendor/Catch2"] # Catch2 module for unit testing
 	path = librapid/vendor/Catch2
 	url = https://github.com/catchorg/Catch2.git
+[submodule "doxygenThemes"] # Make the documentation pretty
+	path = doxygenThemes
+	url = https://github.com/jothepro/doxygen-awesome-css.git

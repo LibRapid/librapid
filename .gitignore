@@ -5,10 +5,7 @@ librapid/openblas_install
 librapid/blas
 openblas_install
 
-docs/build
-docs/source/api
-docs/source/doxygenoutput
-docs/source/librapid_doc_copy
+docs
 
 *.i
 *.ii
