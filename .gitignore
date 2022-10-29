@@ -6,6 +6,8 @@ librapid/blas
 openblas_install
 
 docs
+latex
+html
 
 *.i
 *.ii
