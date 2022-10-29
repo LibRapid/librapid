@@ -117,7 +117,7 @@ namespace librapid {
 		LIBRAPID_NODISCARD std::string str() const;
 
 	private:
-		T m_dims = -1;
+		T m_dims;
 		std::array<T, N> m_data;
 	};
 
