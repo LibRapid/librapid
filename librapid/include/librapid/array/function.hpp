@@ -3,8 +3,8 @@
 
 namespace librapid {
 	namespace typetraits {
-		template<typename Functor_, typename... Args>
-		struct TypeInfo<::librapid::detail::Function<Functor_, Args...>> {
+		template<::librapid::detail::Descriptor desc, typename Functor_, typename... Args>
+		struct TypeInfo<::librapid::detail::Function<desc, Functor_, Args...>> {
 			static constexpr bool isLibRapidType	 = true;
 			using Scalar							 = decltype(std::declval<Functor_>()(
 			  std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
@@ -15,10 +15,12 @@ namespace librapid {
 	} // namespace typetraits
 
 	namespace detail {
-		template<typename Functor_, typename... Args>
+		// Descriptor is defined in "forward.hpp"
+
+		template<Descriptor desc, typename Functor_, typename... Args>
 		class Function {
 		public:
-			using Type	  = Function<Functor_, Args...>;
+			using Type	  = Function<desc, Functor_, Args...>;
 			using Functor = Functor_;
 			using Scalar  = typename typetraits::TypeInfo<Type>::Scalar;
 
@@ -86,32 +88,33 @@ namespace librapid {
 			std::tuple<Args...> m_args;
 		};
 
-		template<typename Functor, typename... Args>
-		Function<Functor, Args...>::Function(Functor &&functor, Args &&...args) :
+		template<Descriptor desc, typename Functor, typename... Args>
+		Function<desc, Functor, Args...>::Function(Functor &&functor, Args &&...args) :
 				m_functor(std::forward<Functor>(functor)), m_args(std::forward<Args>(args)...) {}
 
-		template<typename Functor, typename... Args>
-		typename Function<Functor, Args...>::Packet
-		Function<Functor, Args...>::packet(size_t index) const {
+		template<Descriptor desc, typename Functor, typename... Args>
+		typename Function<desc, Functor, Args...>::Packet
+		Function<desc, Functor, Args...>::packet(size_t index) const {
 			return packetImpl(std::make_index_sequence<sizeof...(Args)>(), index);
 		}
 
-		template<typename Functor, typename... Args>
+		template<Descriptor desc, typename Functor, typename... Args>
 		template<size_t... I>
-		typename Function<Functor, Args...>::Packet
-		Function<Functor, Args...>::packetImpl(std::index_sequence<I...>, size_t index) const {
+		typename Function<desc, Functor, Args...>::Packet
+		Function<desc, Functor, Args...>::packetImpl(std::index_sequence<I...>,
+													 size_t index) const {
 			return m_functor.packet((std::get<I>(m_args).packet(index))...);
 		}
 
-		template<typename Functor, typename... Args>
-		auto Function<Functor, Args...>::scalar(size_t index) const -> Scalar {
+		template<Descriptor desc, typename Functor, typename... Args>
+		auto Function<desc, Functor, Args...>::scalar(size_t index) const -> Scalar {
 			return scalarImpl(std::make_index_sequence<sizeof...(Args)>(), index);
 		}
 
-		template<typename Functor, typename... Args>
+		template<Descriptor desc, typename Functor, typename... Args>
 		template<size_t... I>
-		auto Function<Functor, Args...>::scalarImpl(std::index_sequence<I...>, size_t index) const
-		  -> Scalar {
+		auto Function<desc, Functor, Args...>::scalarImpl(std::index_sequence<I...>,
+														  size_t index) const -> Scalar {
 			return m_functor((std::get<I>(m_args).scalar(index))...);
 		}
 	} // namespace detail
