@@ -1,0 +1,42 @@
+\hypertarget{pre_main_8hpp_source}{}\doxysection{pre\+Main.\+hpp}
+\label{pre_main_8hpp_source}\index{librapid/include/librapid/core/preMain.hpp@{librapid/include/librapid/core/preMain.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef LIBRAPID\_CORE\_PREMAIN}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define LIBRAPID\_CORE\_PREMAIN}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{comment}{/*}}
+\DoxyCodeLine{5 \textcolor{comment}{ * This file defines internal functions which must run *before* main() is called.}}
+\DoxyCodeLine{6 \textcolor{comment}{ */}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{namespace }librapid::detail \{}
+\DoxyCodeLine{9     \textcolor{keyword}{class }\mbox{\hyperlink{classlibrapid_1_1detail_1_1_pre_main}{PreMain}} \{}
+\DoxyCodeLine{10     \textcolor{keyword}{public}:}
+\DoxyCodeLine{11         \mbox{\hyperlink{classlibrapid_1_1detail_1_1_pre_main}{PreMain}}() \{}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#if defined(LIBRAPID\_WINDOWS)}}
+\DoxyCodeLine{13             \textcolor{comment}{// Force the terminal to accept ANSI characters}}
+\DoxyCodeLine{14             system((\textcolor{stringliteral}{"{}chcp "{}} + std::to\_string(CP\_UTF8)).c\_str());}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_WINDOWS}}
+\DoxyCodeLine{16         \}}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18     \textcolor{keyword}{private}:}
+\DoxyCodeLine{19     \};}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21     \textcolor{comment}{// These must be declared here for use in ASSERT functions}}
+\DoxyCodeLine{22     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{23     T internalMax(T val) \{}
+\DoxyCodeLine{24         \textcolor{keywordflow}{return} val;}
+\DoxyCodeLine{25     \}}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename}... Tn>}
+\DoxyCodeLine{28     T internalMax(T val, Tn... vals) \{}
+\DoxyCodeLine{29         \textcolor{keyword}{auto} maxOther = internalMax(vals...);}
+\DoxyCodeLine{30         \textcolor{keywordflow}{return} val < maxOther ? maxOther : val;}
+\DoxyCodeLine{31     \}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     [[maybe\_unused]] \textcolor{keyword}{static} PreMain preMain = PreMain();}
+\DoxyCodeLine{34 \} \textcolor{comment}{// namespace librapid::detail}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_CORE\_PREMAIN}}
+
+\end{DoxyCode}

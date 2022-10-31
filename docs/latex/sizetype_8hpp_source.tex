@@ -1,0 +1,230 @@
+\hypertarget{sizetype_8hpp_source}{}\doxysection{sizetype.\+hpp}
+\label{sizetype_8hpp_source}\index{librapid/include/librapid/array/sizetype.hpp@{librapid/include/librapid/array/sizetype.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef LIBRAPID\_ARRAY\_SIZETYPE\_HPP}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define LIBRAPID\_ARRAY\_SIZETYPE\_HPP}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{comment}{/*}}
+\DoxyCodeLine{5 \textcolor{comment}{ * This file defines the Shape class and some helper functions,}}
+\DoxyCodeLine{6 \textcolor{comment}{ * including stride operations.}}
+\DoxyCodeLine{7 \textcolor{comment}{ */}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{namespace }librapid \{}
+\DoxyCodeLine{10     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T = \textcolor{keywordtype}{size\_t}, \textcolor{keywordtype}{size\_t} N = 32>}
+\DoxyCodeLine{11     \textcolor{keyword}{class }\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \{}
+\DoxyCodeLine{12     \textcolor{keyword}{public}:}
+\DoxyCodeLine{13         \textcolor{keyword}{using} SizeType                        = T;}
+\DoxyCodeLine{14         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{size\_t} MaxDimensions = N;}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{17         \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape}}() = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{22         template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value> = 0>}
+\DoxyCodeLine{23         \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape}}(\textcolor{keyword}{const} std::initializer\_list<V> \&vals);}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{28         template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value> = 0>}
+\DoxyCodeLine{29         \textcolor{keyword}{explicit} \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape}}(\textcolor{keyword}{const} std::vector<V> \&vals);}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{33         \mbox{\hyperlink{classlibrapid_1_1_shape_a795789743e7fdf35c3d2e40a9d57a387}{Shape}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other) = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{37         \mbox{\hyperlink{classlibrapid_1_1_shape_a6b5f814b0da20d3e39ab7da4ed5f3d39}{Shape}}(\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&\&other) \textcolor{keyword}{noexcept} = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{43         \textcolor{keyword}{template}<\textcolor{keyword}{typename} V, \textcolor{keywordtype}{size\_t} Dim>}
+\DoxyCodeLine{44         \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<V, Dim>}} \&other);}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{51         \textcolor{keyword}{template}<\textcolor{keyword}{typename} V, \textcolor{keywordtype}{size\_t} Dim>}
+\DoxyCodeLine{52         \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape}}(\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<V, Dim>}} \&\&other) \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{58         template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value> = 0>}
+\DoxyCodeLine{59         \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&\mbox{\hyperlink{classlibrapid_1_1_shape_a132608c1705432153d0f5275c6275567}{operator=}}(\textcolor{keyword}{const} std::initializer\_list<V> \&vals);}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{65         template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value> = 0>}
+\DoxyCodeLine{66         \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&\mbox{\hyperlink{classlibrapid_1_1_shape_aeeba65680903f473abb6ea4b0720539b}{operator=}}(\textcolor{keyword}{const} std::vector<V> \&vals);}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{71         \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&\mbox{\hyperlink{classlibrapid_1_1_shape_aaf9205371c0b2dc0e12ffd52add08c86}{operator=}}(\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&\&other) \textcolor{keyword}{noexcept} = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{76         \textcolor{keyword}{static} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \mbox{\hyperlink{classlibrapid_1_1_shape_a407b80d75b21d23c9f4a8b7f69adfd93}{zeros}}(\textcolor{keywordtype}{size\_t} dims);}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{81         \textcolor{keyword}{static} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \mbox{\hyperlink{classlibrapid_1_1_shape_a556872fe85e1b79a7472652449de4c24}{ones}}(\textcolor{keywordtype}{size\_t} dims);}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{87         \textcolor{keyword}{template}<\textcolor{keyword}{typename} Index>}
+\DoxyCodeLine{88         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE \textcolor{keyword}{const} T \&\mbox{\hyperlink{classlibrapid_1_1_shape_a2fead305af4ab538bcde7e83dd522ddc}{operator[]}}(Index index) \textcolor{keyword}{const};}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{94         \textcolor{keyword}{template}<\textcolor{keyword}{typename} Index>}
+\DoxyCodeLine{95         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE T \&\mbox{\hyperlink{classlibrapid_1_1_shape_a2fead305af4ab538bcde7e83dd522ddc}{operator[]}}(Index index);}
+\DoxyCodeLine{96 }
+\DoxyCodeLine{100         LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{bool} \mbox{\hyperlink{classlibrapid_1_1_shape_a6c0dd7521d282b8b3679f3badbe535da}{operator==}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other) \textcolor{keyword}{const};}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{105         LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{bool} \mbox{\hyperlink{classlibrapid_1_1_shape_ae4856ffa1441d77aaf2e6e10d485a762}{operator!=}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other) \textcolor{keyword}{const};}
+\DoxyCodeLine{106 }
+\DoxyCodeLine{109         LIBRAPID\_NODISCARD T \mbox{\hyperlink{classlibrapid_1_1_shape_ab5d977f7d716aaeb122ec2b0fe681b4d}{ndim}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{113         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE T \mbox{\hyperlink{classlibrapid_1_1_shape_a8de69ce9f6e9d4625b99a82f652301a8}{size}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{114 }
+\DoxyCodeLine{117         LIBRAPID\_NODISCARD std::string \mbox{\hyperlink{classlibrapid_1_1_shape_a17feb24542bb561a8a53711b68f8e0c1}{str}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{118 }
+\DoxyCodeLine{119     \textcolor{keyword}{private}:}
+\DoxyCodeLine{120         T m\_dims;}
+\DoxyCodeLine{121         std::array<T, N> m\_data;}
+\DoxyCodeLine{122     \};}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{125     template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value>>}
+\DoxyCodeLine{126     \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape<T, N>::Shape}}(\textcolor{keyword}{const} std::initializer\_list<V> \&vals) : m\_dims(vals.size()) \{}
+\DoxyCodeLine{127         LIBRAPID\_ASSERT(vals.size() <= N,}
+\DoxyCodeLine{128                         \textcolor{stringliteral}{"{}Shape object is limited to \{\} dimensions. Cannot initialize with \{\}"{}},}
+\DoxyCodeLine{129                         N,}
+\DoxyCodeLine{130                         vals.size());}
+\DoxyCodeLine{131         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < vals.size(); ++i) \{ m\_data[i] = *(vals.begin() + i); \}}
+\DoxyCodeLine{132     \}}
+\DoxyCodeLine{133 }
+\DoxyCodeLine{134     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{135     template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value>>}
+\DoxyCodeLine{136     \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape<T, N>::Shape}}(\textcolor{keyword}{const} std::vector<V> \&vals) : m\_dims(vals.size()) \{}
+\DoxyCodeLine{137         LIBRAPID\_ASSERT(vals.size() <= N,}
+\DoxyCodeLine{138                         \textcolor{stringliteral}{"{}Shape object is limited to \{\} dimensions. Cannot initialize with \{\}"{}},}
+\DoxyCodeLine{139                         N,}
+\DoxyCodeLine{140                         vals.size());}
+\DoxyCodeLine{141         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < vals.size(); ++i) \{ m\_data[i] = vals[i]; \}}
+\DoxyCodeLine{142     \}}
+\DoxyCodeLine{143 }
+\DoxyCodeLine{144     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{145     \textcolor{keyword}{template}<\textcolor{keyword}{typename} V, \textcolor{keywordtype}{size\_t} Dim>}
+\DoxyCodeLine{146     \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape<T, N>::Shape}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<V, Dim>}} \&other) : m\_dims(other.ndim()) \{}
+\DoxyCodeLine{147         LIBRAPID\_ASSERT(other.\mbox{\hyperlink{classlibrapid_1_1_shape_ab5d977f7d716aaeb122ec2b0fe681b4d}{ndim}}() <= N,}
+\DoxyCodeLine{148                         \textcolor{stringliteral}{"{}Shape object is limited to \{\} dimensions. Cannot initialize with \{\}"{}},}
+\DoxyCodeLine{149                         N,}
+\DoxyCodeLine{150                         other.\mbox{\hyperlink{classlibrapid_1_1_shape_ab5d977f7d716aaeb122ec2b0fe681b4d}{ndim}}());}
+\DoxyCodeLine{151         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < m\_dims; ++i) \{ m\_data[i] = other[i]; \}}
+\DoxyCodeLine{152     \}}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{154     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{155     \textcolor{keyword}{template}<\textcolor{keyword}{typename} V, \textcolor{keywordtype}{size\_t} Dim>}
+\DoxyCodeLine{156     \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape<T, N>::Shape}}(\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<V, Dim>}} \&\&other) noexcept : m\_dims(other.ndim()) \{}
+\DoxyCodeLine{157         LIBRAPID\_ASSERT(other.ndim() <= N,}
+\DoxyCodeLine{158                         \textcolor{stringliteral}{"{}Shape object is limited to \{\} dimensions. Cannot initialize with \{\}"{}},}
+\DoxyCodeLine{159                         N,}
+\DoxyCodeLine{160                         other.ndim());}
+\DoxyCodeLine{161         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < m\_dims; ++i) \{ m\_data[i] = other[i]; \}}
+\DoxyCodeLine{162     \}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{165     template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value>>}
+\DoxyCodeLine{166     \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T, N>}} \&\mbox{\hyperlink{classlibrapid_1_1_shape_a132608c1705432153d0f5275c6275567}{Shape<T, N>::operator=}}(\textcolor{keyword}{const} std::initializer\_list<V> \&vals) \{}
+\DoxyCodeLine{167         LIBRAPID\_ASSERT(vals.size() <= N,}
+\DoxyCodeLine{168                         \textcolor{stringliteral}{"{}Shape object is limited to \{\} dimensions. Cannot initialize with \{\}"{}},}
+\DoxyCodeLine{169                         N,}
+\DoxyCodeLine{170                         vals.size());}
+\DoxyCodeLine{171         m\_dims = vals.size();}
+\DoxyCodeLine{172         \textcolor{keywordflow}{for} (int64\_t i = 0; i < vals.size(); ++i) \{ m\_data[i] = *(vals.begin() + i); \}}
+\DoxyCodeLine{173         \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{174     \}}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{176     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{177     template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value>>}
+\DoxyCodeLine{178     Shape<T, N> \&\mbox{\hyperlink{classlibrapid_1_1_shape_a132608c1705432153d0f5275c6275567}{Shape<T, N>::operator=}}(\textcolor{keyword}{const} std::vector<V> \&vals) \{}
+\DoxyCodeLine{179         LIBRAPID\_ASSERT(vals.size() <= N,}
+\DoxyCodeLine{180                         \textcolor{stringliteral}{"{}Shape object is limited to \{\} dimensions. Cannot initialize with \{\}"{}},}
+\DoxyCodeLine{181                         N,}
+\DoxyCodeLine{182                         vals.size());}
+\DoxyCodeLine{183         m\_dims = vals.size();}
+\DoxyCodeLine{184         \textcolor{keywordflow}{for} (int64\_t i = 0; i < vals.size(); ++i) \{ m\_data[i] = vals[i]; \}}
+\DoxyCodeLine{185         \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{186     \}}
+\DoxyCodeLine{187 }
+\DoxyCodeLine{188     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{189     \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T, N>}} \mbox{\hyperlink{classlibrapid_1_1_shape_a407b80d75b21d23c9f4a8b7f69adfd93}{Shape<T, N>::zeros}}(\textcolor{keywordtype}{size\_t} dims) \{}
+\DoxyCodeLine{190         \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} res;}
+\DoxyCodeLine{191         res.m\_dims = dims;}
+\DoxyCodeLine{192         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < dims; ++i) res.m\_data[i] = 0;}
+\DoxyCodeLine{193         \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{194     \}}
+\DoxyCodeLine{195 }
+\DoxyCodeLine{196     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{197     \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T, N>}} \mbox{\hyperlink{classlibrapid_1_1_shape_a556872fe85e1b79a7472652449de4c24}{Shape<T, N>::ones}}(\textcolor{keywordtype}{size\_t} dims) \{}
+\DoxyCodeLine{198         \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} res;}
+\DoxyCodeLine{199         res.m\_dims = dims;}
+\DoxyCodeLine{200         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < dims; ++i) res.m\_data[i] = 1;}
+\DoxyCodeLine{201         \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{202     \}}
+\DoxyCodeLine{203 }
+\DoxyCodeLine{204     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{205     \textcolor{keyword}{template}<\textcolor{keyword}{typename} Index>}
+\DoxyCodeLine{206     LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE \textcolor{keyword}{const} T \&\mbox{\hyperlink{classlibrapid_1_1_shape_a2fead305af4ab538bcde7e83dd522ddc}{Shape<T, N>::operator[]}}(Index index)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{207         \textcolor{keywordflow}{return} m\_data[index];}
+\DoxyCodeLine{208     \}}
+\DoxyCodeLine{209 }
+\DoxyCodeLine{210     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{211     \textcolor{keyword}{template}<\textcolor{keyword}{typename} Index>}
+\DoxyCodeLine{212     LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE T \&\mbox{\hyperlink{classlibrapid_1_1_shape_a2fead305af4ab538bcde7e83dd522ddc}{Shape<T, N>::operator[]}}(Index index) \{}
+\DoxyCodeLine{213         \textcolor{keywordflow}{return} m\_data[index];}
+\DoxyCodeLine{214     \}}
+\DoxyCodeLine{215 }
+\DoxyCodeLine{216     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{217     LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{bool} \mbox{\hyperlink{classlibrapid_1_1_shape_a6c0dd7521d282b8b3679f3badbe535da}{Shape<T, N>::operator==}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{218         \textcolor{keywordflow}{if} (m\_dims != other.m\_dims) \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{219         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < m\_dims; ++i) \{}
+\DoxyCodeLine{220             \textcolor{keywordflow}{if} (m\_data[i] != other.m\_data[i]) \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{221         \}}
+\DoxyCodeLine{222         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{223     \}}
+\DoxyCodeLine{224 }
+\DoxyCodeLine{225     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{226     LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{bool} \mbox{\hyperlink{classlibrapid_1_1_shape_ae4856ffa1441d77aaf2e6e10d485a762}{Shape<T, N>::operator!=}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{227         \textcolor{keywordflow}{return} !(*\textcolor{keyword}{this} == other);}
+\DoxyCodeLine{228     \}}
+\DoxyCodeLine{229 }
+\DoxyCodeLine{230     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{231     LIBRAPID\_NODISCARD T \mbox{\hyperlink{classlibrapid_1_1_shape_ab5d977f7d716aaeb122ec2b0fe681b4d}{Shape<T, N>::ndim}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{232         \textcolor{keywordflow}{return} m\_dims;}
+\DoxyCodeLine{233     \}}
+\DoxyCodeLine{234 }
+\DoxyCodeLine{235     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{236     LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE T \mbox{\hyperlink{classlibrapid_1_1_shape_a8de69ce9f6e9d4625b99a82f652301a8}{Shape<T, N>::size}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{237         T res = 1;}
+\DoxyCodeLine{238         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < m\_dims; ++i) res *= m\_data[i];}
+\DoxyCodeLine{239         \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{240     \}}
+\DoxyCodeLine{241 }
+\DoxyCodeLine{242     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{243     std::string \mbox{\hyperlink{classlibrapid_1_1_shape_a17feb24542bb561a8a53711b68f8e0c1}{Shape<T, N>::str}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{244         std::string result(\textcolor{stringliteral}{"{}("{}});}
+\DoxyCodeLine{245         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < m\_dims; ++i) \{}
+\DoxyCodeLine{246             result += fmt::format(\textcolor{stringliteral}{"{}\{\}"{}}, m\_data[i]);}
+\DoxyCodeLine{247             \textcolor{keywordflow}{if} (i < m\_dims -\/ 1) result += std::string(\textcolor{stringliteral}{"{}, "{}});}
+\DoxyCodeLine{248         \}}
+\DoxyCodeLine{249         \textcolor{keywordflow}{return} std::operator+(result, std::string(\textcolor{stringliteral}{"{})"{}}));}
+\DoxyCodeLine{250     \}}
+\DoxyCodeLine{251 }
+\DoxyCodeLine{263     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T1, \textcolor{keywordtype}{size\_t} N1, \textcolor{keyword}{typename} T2, \textcolor{keywordtype}{size\_t} N2, \textcolor{keyword}{typename}... Tn, \textcolor{keywordtype}{size\_t}... Nn>}
+\DoxyCodeLine{264     LIBRAPID\_NODISCARD LIBRAPID\_INLINE \textcolor{keywordtype}{bool} shapesMatch(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T1, N1>}} \&first,}
+\DoxyCodeLine{265                                                         \textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T2, N2>}} \&second,}
+\DoxyCodeLine{266                                                         \textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<Tn, Nn>}} \&...shapes) \{}
+\DoxyCodeLine{267         \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}...(Tn) == 0) \{}
+\DoxyCodeLine{268             \textcolor{keywordflow}{return} first == second;}
+\DoxyCodeLine{269         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{270             \textcolor{keywordflow}{return} first == second \&\& shapesMatch(first, shapes...);}
+\DoxyCodeLine{271         \}}
+\DoxyCodeLine{272     \}}
+\DoxyCodeLine{273 }
+\DoxyCodeLine{275     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T1, \textcolor{keywordtype}{size\_t} N1, \textcolor{keyword}{typename} T2, \textcolor{keywordtype}{size\_t} N2, \textcolor{keyword}{typename}... Tn, \textcolor{keywordtype}{size\_t}... Nn>}
+\DoxyCodeLine{276     LIBRAPID\_NODISCARD LIBRAPID\_INLINE \textcolor{keywordtype}{bool}}
+\DoxyCodeLine{277     shapesMatch(\textcolor{keyword}{const} std::tuple<Shape<T1, N1>, Shape<T2, N2>, Shape<Tn, Nn>...> \&shapes) \{}
+\DoxyCodeLine{278         \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}...(Tn) == 0) \{}
+\DoxyCodeLine{279             \textcolor{keywordflow}{return} std::get<0>(shapes) == std::get<1>(shapes);}
+\DoxyCodeLine{280         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{281             \textcolor{keywordflow}{return} std::get<0>(shapes) == std::get<1>(shapes) \&\&}
+\DoxyCodeLine{282                    shapesMatch(std::apply(}
+\DoxyCodeLine{283                      [](\textcolor{keyword}{auto}, \textcolor{keyword}{auto}, \textcolor{keyword}{auto}... rest) \{ \textcolor{keywordflow}{return} std::make\_tuple(rest...); \}, shapes));}
+\DoxyCodeLine{284         \}}
+\DoxyCodeLine{285     \}}
+\DoxyCodeLine{286 \} \textcolor{comment}{// namespace librapid}}
+\DoxyCodeLine{287 }
+\DoxyCodeLine{288 \textcolor{comment}{// Support FMT printing}}
+\DoxyCodeLine{289 \textcolor{preprocessor}{\#ifdef FMT\_API}}
+\DoxyCodeLine{290 LIBRAPID\_SIMPLE\_IO\_IMPL(\textcolor{keyword}{typename} T COMMA \textcolor{keywordtype}{size\_t} N, \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid::Shape<T COMMA N>}})}
+\DoxyCodeLine{291 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// FMT\_API}}
+\DoxyCodeLine{292 }
+\DoxyCodeLine{293 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_ARRAY\_SIZETYPE\_HPP}}
+
+\end{DoxyCode}

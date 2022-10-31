@@ -1,0 +1,66 @@
+\hypertarget{issame_8h_source}{}\doxysection{issame.\+h}
+\label{issame_8h_source}\index{librapid/cxxblas/auxiliary/issame.h@{librapid/cxxblas/auxiliary/issame.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ *   Copyright (c) 2004, Alexander Stippler}}
+\DoxyCodeLine{3 \textcolor{comment}{ *}}
+\DoxyCodeLine{4 \textcolor{comment}{ *   All rights reserved.}}
+\DoxyCodeLine{5 \textcolor{comment}{ *}}
+\DoxyCodeLine{6 \textcolor{comment}{ *   Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{7 \textcolor{comment}{ *   modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{8 \textcolor{comment}{ *   are met:}}
+\DoxyCodeLine{9 \textcolor{comment}{ *}}
+\DoxyCodeLine{10 \textcolor{comment}{ *   1) Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{11 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{12 \textcolor{comment}{ *   2) Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{13 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer in}}
+\DoxyCodeLine{14 \textcolor{comment}{ *      the documentation and/or other materials provided with the}}
+\DoxyCodeLine{15 \textcolor{comment}{ *      distribution.}}
+\DoxyCodeLine{16 \textcolor{comment}{ *   3) Neither the name of the FLENS development group nor the names of}}
+\DoxyCodeLine{17 \textcolor{comment}{ *      its contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{18 \textcolor{comment}{ *      from this software without specific prior written permission.}}
+\DoxyCodeLine{19 \textcolor{comment}{ *}}
+\DoxyCodeLine{20 \textcolor{comment}{ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{21 \textcolor{comment}{ *   "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{22 \textcolor{comment}{ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{23 \textcolor{comment}{ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{24 \textcolor{comment}{ *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{25 \textcolor{comment}{ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{26 \textcolor{comment}{ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{27 \textcolor{comment}{ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{28 \textcolor{comment}{ *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{29 \textcolor{comment}{ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{30 \textcolor{comment}{ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{31 \textcolor{comment}{ */}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#ifndef CXXBLAS\_AUXILIARY\_ISSAME\_H}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#define CXXBLAS\_AUXILIARY\_ISSAME\_H 1}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{keyword}{namespace }cxxblas \{}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38     \textcolor{keyword}{template}<\textcolor{keyword}{typename}... Args>}
+\DoxyCodeLine{39     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_is_same}{IsSame}} \{}
+\DoxyCodeLine{40         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{bool} value = \textcolor{keyword}{false};}
+\DoxyCodeLine{41     \};}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{44     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_is_same}{IsSame}}<T> \{}
+\DoxyCodeLine{45         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{bool} value = \textcolor{keyword}{true};}
+\DoxyCodeLine{46     \};}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{49     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_is_same}{IsSame}}<T, T> \{}
+\DoxyCodeLine{50         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{bool} value = \textcolor{keyword}{true};}
+\DoxyCodeLine{51     \};}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename}... Args>}
+\DoxyCodeLine{54     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_is_same}{IsSame}}<T, T, Args...> \{}
+\DoxyCodeLine{55         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{bool} value = \mbox{\hyperlink{structcxxblas_1_1_is_same}{IsSame}}<T, Args...>::value;}
+\DoxyCodeLine{56     \};}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58 \} \textcolor{comment}{// namespace cxxblas}}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CXXBLAS\_AUXILIARY\_ISSAME\_H}}
+
+\end{DoxyCode}

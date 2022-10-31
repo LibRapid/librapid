@@ -1,0 +1,335 @@
+\@ifundefined {etoctocstyle}{\let \etoc@startlocaltoc \@gobble \let \etoc@settocdepth \@gobble \let \etoc@depthtag \@gobble \let \etoc@setlocaltop \@gobble }{}
+\contentsline {chapter}{\numberline {1}FLENS\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}: Flexible Library for Efficient Numerical Solutions}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Lib\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Rapid}{3}{chapter.2}%
+\contentsline {chapter}{\numberline {3}Hierarchical Index}{5}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Class Hierarchy}{5}{section.3.1}%
+\contentsline {chapter}{\numberline {4}Class Index}{7}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Class List}{7}{section.4.1}%
+\contentsline {chapter}{\numberline {5}File Index}{9}{chapter.5}%
+\contentsline {section}{\numberline {5.1}File List}{9}{section.5.1}%
+\contentsline {chapter}{\numberline {6}Class Documentation}{13}{chapter.6}%
+\contentsline {section}{\numberline {6.1}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Array\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Container$<$ Shape\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}, Storage\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{} $>$ Class Template Reference}{13}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Constructor \& Destructor Documentation}{14}{subsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.1.1}ArrayContainer()\hspace {0.1cm}{\footnotesize \ttfamily [1/6]}}{14}{subsubsection.6.1.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.1.2}ArrayContainer()\hspace {0.1cm}{\footnotesize \ttfamily [2/6]}}{14}{subsubsection.6.1.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.1.3}ArrayContainer()\hspace {0.1cm}{\footnotesize \ttfamily [3/6]}}{14}{subsubsection.6.1.1.3}%
+\contentsline {subsubsection}{\numberline {6.1.1.4}ArrayContainer()\hspace {0.1cm}{\footnotesize \ttfamily [4/6]}}{15}{subsubsection.6.1.1.4}%
+\contentsline {subsubsection}{\numberline {6.1.1.5}ArrayContainer()\hspace {0.1cm}{\footnotesize \ttfamily [5/6]}}{15}{subsubsection.6.1.1.5}%
+\contentsline {subsubsection}{\numberline {6.1.1.6}ArrayContainer()\hspace {0.1cm}{\footnotesize \ttfamily [6/6]}}{15}{subsubsection.6.1.1.6}%
+\contentsline {subsection}{\numberline {6.1.2}Member Function Documentation}{16}{subsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.2.1}operator=()\hspace {0.1cm}{\footnotesize \ttfamily [1/3]}}{16}{subsubsection.6.1.2.1}%
+\contentsline {subsubsection}{\numberline {6.1.2.2}operator=()\hspace {0.1cm}{\footnotesize \ttfamily [2/3]}}{16}{subsubsection.6.1.2.2}%
+\contentsline {subsubsection}{\numberline {6.1.2.3}operator=()\hspace {0.1cm}{\footnotesize \ttfamily [3/3]}}{17}{subsubsection.6.1.2.3}%
+\contentsline {subsubsection}{\numberline {6.1.2.4}packet()}{17}{subsubsection.6.1.2.4}%
+\contentsline {subsubsection}{\numberline {6.1.2.5}scalar()}{17}{subsubsection.6.1.2.5}%
+\contentsline {subsubsection}{\numberline {6.1.2.6}shape()}{19}{subsubsection.6.1.2.6}%
+\contentsline {subsubsection}{\numberline {6.1.2.7}write()}{19}{subsubsection.6.1.2.7}%
+\contentsline {subsubsection}{\numberline {6.1.2.8}writePacket()}{19}{subsubsection.6.1.2.8}%
+\contentsline {section}{\numberline {6.2}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Can\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Cast$<$ From, To $>$ Struct Template Reference}{20}{section.6.2}%
+\contentsline {section}{\numberline {6.3}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Complex\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Trait$<$ T $>$ Struct Template Reference}{20}{section.6.3}%
+\contentsline {section}{\numberline {6.4}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Complex\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Trait$<$ std\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::complex$<$ T $>$ $>$ Struct Template Reference}{20}{section.6.4}%
+\contentsline {section}{\numberline {6.5}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}image\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}internal\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Converter\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}From\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}UByte$<$ T $>$ Struct Template Reference}{21}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}Detailed Description}{21}{subsection.6.5.1}%
+\contentsline {section}{\numberline {6.6}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}image\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}internal\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Converter\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}From\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}UByte$<$ float $>$ Struct Reference}{21}{section.6.6}%
+\contentsline {subsection}{\numberline {6.6.1}Detailed Description}{21}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {6.6.2}Member Function Documentation}{21}{subsection.6.6.2}%
+\contentsline {subsubsection}{\numberline {6.6.2.1}operator()()}{21}{subsubsection.6.6.2.1}%
+\contentsline {section}{\numberline {6.7}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}image\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}internal\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Converter\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}From\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}UByte$<$ unsigned char $>$ Struct Reference}{22}{section.6.7}%
+\contentsline {subsection}{\numberline {6.7.1}Detailed Description}{22}{subsection.6.7.1}%
+\contentsline {subsection}{\numberline {6.7.2}Member Function Documentation}{22}{subsection.6.7.2}%
+\contentsline {subsubsection}{\numberline {6.7.2.1}operator()()}{22}{subsubsection.6.7.2.1}%
+\contentsline {section}{\numberline {6.8}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}image\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}internal\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Converter\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}To\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}UByte$<$ T $>$ Struct Template Reference}{23}{section.6.8}%
+\contentsline {subsection}{\numberline {6.8.1}Detailed Description}{23}{subsection.6.8.1}%
+\contentsline {section}{\numberline {6.9}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}image\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}internal\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Converter\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}To\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}UByte$<$ float $>$ Struct Reference}{23}{section.6.9}%
+\contentsline {subsection}{\numberline {6.9.1}Detailed Description}{23}{subsection.6.9.1}%
+\contentsline {subsection}{\numberline {6.9.2}Member Function Documentation}{23}{subsection.6.9.2}%
+\contentsline {subsubsection}{\numberline {6.9.2.1}operator()()}{23}{subsubsection.6.9.2.1}%
+\contentsline {section}{\numberline {6.10}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}image\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}internal\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Converter\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}To\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}UByte$<$ unsigned char $>$ Struct Reference}{24}{section.6.10}%
+\contentsline {subsection}{\numberline {6.10.1}Detailed Description}{24}{subsection.6.10.1}%
+\contentsline {subsection}{\numberline {6.10.2}Member Function Documentation}{24}{subsection.6.10.2}%
+\contentsline {subsubsection}{\numberline {6.10.2.1}operator()()}{24}{subsubsection.6.10.2.1}%
+\contentsline {section}{\numberline {6.11}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::device\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::CPU Struct Reference}{25}{section.6.11}%
+\contentsline {section}{\numberline {6.12}Exception$<$ Std\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Exception $>$ Class Template Reference}{25}{section.6.12}%
+\contentsline {subsection}{\numberline {6.12.1}Detailed Description}{25}{subsection.6.12.1}%
+\contentsline {subsection}{\numberline {6.12.2}Member Function Documentation}{26}{subsection.6.12.2}%
+\contentsline {subsubsection}{\numberline {6.12.2.1}throw\_it()\hspace {0.1cm}{\footnotesize \ttfamily [1/2]}}{26}{subsubsection.6.12.2.1}%
+\contentsline {subsubsection}{\numberline {6.12.2.2}throw\_it()\hspace {0.1cm}{\footnotesize \ttfamily [2/2]}}{26}{subsubsection.6.12.2.2}%
+\contentsline {section}{\numberline {6.13}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::detail\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Function$<$ Functor\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}, Args $>$ Class Template Reference}{27}{section.6.13}%
+\contentsline {subsection}{\numberline {6.13.1}Constructor \& Destructor Documentation}{27}{subsection.6.13.1}%
+\contentsline {subsubsection}{\numberline {6.13.1.1}Function()\hspace {0.1cm}{\footnotesize \ttfamily [1/3]}}{27}{subsubsection.6.13.1.1}%
+\contentsline {subsubsection}{\numberline {6.13.1.2}Function()\hspace {0.1cm}{\footnotesize \ttfamily [2/3]}}{28}{subsubsection.6.13.1.2}%
+\contentsline {subsubsection}{\numberline {6.13.1.3}Function()\hspace {0.1cm}{\footnotesize \ttfamily [3/3]}}{28}{subsubsection.6.13.1.3}%
+\contentsline {subsection}{\numberline {6.13.2}Member Function Documentation}{28}{subsection.6.13.2}%
+\contentsline {subsubsection}{\numberline {6.13.2.1}operator=()\hspace {0.1cm}{\footnotesize \ttfamily [1/2]}}{28}{subsubsection.6.13.2.1}%
+\contentsline {subsubsection}{\numberline {6.13.2.2}operator=()\hspace {0.1cm}{\footnotesize \ttfamily [2/2]}}{29}{subsubsection.6.13.2.2}%
+\contentsline {subsubsection}{\numberline {6.13.2.3}packet()}{29}{subsubsection.6.13.2.3}%
+\contentsline {subsubsection}{\numberline {6.13.2.4}scalar()}{30}{subsubsection.6.13.2.4}%
+\contentsline {section}{\numberline {6.14}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::device\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::GPU Struct Reference}{30}{section.6.14}%
+\contentsline {section}{\numberline {6.15}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Has\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Addition$<$ T, V $>$ Struct Template Reference}{30}{section.6.15}%
+\contentsline {section}{\numberline {6.16}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Has\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Multiplication$<$ T, V $>$ Struct Template Reference}{31}{section.6.16}%
+\contentsline {section}{\numberline {6.17}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Has\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Subscript$<$ T, Index $>$ Struct Template Reference}{31}{section.6.17}%
+\contentsline {section}{\numberline {6.18}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::If$<$ Any $>$ Struct Template Reference}{31}{section.6.18}%
+\contentsline {section}{\numberline {6.19}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::If$<$ int $>$ Struct Reference}{31}{section.6.19}%
+\contentsline {section}{\numberline {6.20}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::If$<$ long $>$ Struct Reference}{32}{section.6.20}%
+\contentsline {section}{\numberline {6.21}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Is\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Complex$<$ T $>$ Struct Template Reference}{32}{section.6.21}%
+\contentsline {section}{\numberline {6.22}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Is\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Not\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Complex$<$ T $>$ Struct Template Reference}{32}{section.6.22}%
+\contentsline {section}{\numberline {6.23}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Is\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Not\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Complex$<$ std\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::complex$<$ T $>$ $>$ Struct Template Reference}{32}{section.6.23}%
+\contentsline {section}{\numberline {6.24}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Is\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Same$<$ Args $>$ Struct Template Reference}{33}{section.6.24}%
+\contentsline {section}{\numberline {6.25}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Is\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Same$<$ T $>$ Struct Template Reference}{33}{section.6.25}%
+\contentsline {section}{\numberline {6.26}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Is\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Same$<$ T, T $>$ Struct Template Reference}{33}{section.6.26}%
+\contentsline {section}{\numberline {6.27}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Is\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Same$<$ T, T, Args... $>$ Struct Template Reference}{33}{section.6.27}%
+\contentsline {section}{\numberline {6.28}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::detail\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Pre\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Main Class Reference}{34}{section.6.28}%
+\contentsline {section}{\numberline {6.29}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Restrict\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}To$<$ b, T $>$ Struct Template Reference}{34}{section.6.29}%
+\contentsline {section}{\numberline {6.30}cxxblas\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Restrict\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}To$<$ true, T $>$ Struct Template Reference}{34}{section.6.30}%
+\contentsline {section}{\numberline {6.31}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Shape$<$ T, N $>$ Class Template Reference}{34}{section.6.31}%
+\contentsline {subsection}{\numberline {6.31.1}Constructor \& Destructor Documentation}{35}{subsection.6.31.1}%
+\contentsline {subsubsection}{\numberline {6.31.1.1}Shape()\hspace {0.1cm}{\footnotesize \ttfamily [1/6]}}{35}{subsubsection.6.31.1.1}%
+\contentsline {subsubsection}{\numberline {6.31.1.2}Shape()\hspace {0.1cm}{\footnotesize \ttfamily [2/6]}}{36}{subsubsection.6.31.1.2}%
+\contentsline {subsubsection}{\numberline {6.31.1.3}Shape()\hspace {0.1cm}{\footnotesize \ttfamily [3/6]}}{36}{subsubsection.6.31.1.3}%
+\contentsline {subsubsection}{\numberline {6.31.1.4}Shape()\hspace {0.1cm}{\footnotesize \ttfamily [4/6]}}{36}{subsubsection.6.31.1.4}%
+\contentsline {subsubsection}{\numberline {6.31.1.5}Shape()\hspace {0.1cm}{\footnotesize \ttfamily [5/6]}}{37}{subsubsection.6.31.1.5}%
+\contentsline {subsubsection}{\numberline {6.31.1.6}Shape()\hspace {0.1cm}{\footnotesize \ttfamily [6/6]}}{37}{subsubsection.6.31.1.6}%
+\contentsline {subsection}{\numberline {6.31.2}Member Function Documentation}{37}{subsection.6.31.2}%
+\contentsline {subsubsection}{\numberline {6.31.2.1}ndim()}{37}{subsubsection.6.31.2.1}%
+\contentsline {subsubsection}{\numberline {6.31.2.2}ones()}{38}{subsubsection.6.31.2.2}%
+\contentsline {subsubsection}{\numberline {6.31.2.3}operator"!=()}{38}{subsubsection.6.31.2.3}%
+\contentsline {subsubsection}{\numberline {6.31.2.4}operator=()\hspace {0.1cm}{\footnotesize \ttfamily [1/3]}}{38}{subsubsection.6.31.2.4}%
+\contentsline {subsubsection}{\numberline {6.31.2.5}operator=()\hspace {0.1cm}{\footnotesize \ttfamily [2/3]}}{39}{subsubsection.6.31.2.5}%
+\contentsline {subsubsection}{\numberline {6.31.2.6}operator=()\hspace {0.1cm}{\footnotesize \ttfamily [3/3]}}{39}{subsubsection.6.31.2.6}%
+\contentsline {subsubsection}{\numberline {6.31.2.7}operator==()}{40}{subsubsection.6.31.2.7}%
+\contentsline {subsubsection}{\numberline {6.31.2.8}operator[]()\hspace {0.1cm}{\footnotesize \ttfamily [1/2]}}{40}{subsubsection.6.31.2.8}%
+\contentsline {subsubsection}{\numberline {6.31.2.9}operator[]()\hspace {0.1cm}{\footnotesize \ttfamily [2/2]}}{41}{subsubsection.6.31.2.9}%
+\contentsline {subsubsection}{\numberline {6.31.2.10}size()}{41}{subsubsection.6.31.2.10}%
+\contentsline {subsubsection}{\numberline {6.31.2.11}str()}{41}{subsubsection.6.31.2.11}%
+\contentsline {subsubsection}{\numberline {6.31.2.12}zeros()}{42}{subsubsection.6.31.2.12}%
+\contentsline {section}{\numberline {6.32}shared\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Memory\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}st Struct Reference}{42}{section.6.32}%
+\contentsline {section}{\numberline {6.33}Stop\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Watch\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Interface Class Reference}{42}{section.6.33}%
+\contentsline {subsection}{\numberline {6.33.1}Member Function Documentation}{43}{subsection.6.33.1}%
+\contentsline {subsubsection}{\numberline {6.33.1.1}getAverageTime()}{43}{subsubsection.6.33.1.1}%
+\contentsline {subsubsection}{\numberline {6.33.1.2}getTime()}{43}{subsubsection.6.33.1.2}%
+\contentsline {subsubsection}{\numberline {6.33.1.3}reset()}{43}{subsubsection.6.33.1.3}%
+\contentsline {subsubsection}{\numberline {6.33.1.4}start()}{44}{subsubsection.6.33.1.4}%
+\contentsline {subsubsection}{\numberline {6.33.1.5}stop()}{44}{subsubsection.6.33.1.5}%
+\contentsline {section}{\numberline {6.34}Stop\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Watch\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Linux Class Reference}{44}{section.6.34}%
+\contentsline {subsection}{\numberline {6.34.1}Detailed Description}{45}{subsection.6.34.1}%
+\contentsline {subsection}{\numberline {6.34.2}Member Function Documentation}{45}{subsection.6.34.2}%
+\contentsline {subsubsection}{\numberline {6.34.2.1}getAverageTime()}{45}{subsubsection.6.34.2.1}%
+\contentsline {subsubsection}{\numberline {6.34.2.2}getTime()}{45}{subsubsection.6.34.2.2}%
+\contentsline {subsubsection}{\numberline {6.34.2.3}reset()}{45}{subsubsection.6.34.2.3}%
+\contentsline {subsubsection}{\numberline {6.34.2.4}start()}{46}{subsubsection.6.34.2.4}%
+\contentsline {subsubsection}{\numberline {6.34.2.5}stop()}{46}{subsubsection.6.34.2.5}%
+\contentsline {section}{\numberline {6.35}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Storage$<$ Scalar\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}, Allocator\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{} $>$ Class Template Reference}{46}{section.6.35}%
+\contentsline {subsection}{\numberline {6.35.1}Constructor \& Destructor Documentation}{47}{subsection.6.35.1}%
+\contentsline {subsubsection}{\numberline {6.35.1.1}Storage()\hspace {0.1cm}{\footnotesize \ttfamily [1/6]}}{47}{subsubsection.6.35.1.1}%
+\contentsline {subsubsection}{\numberline {6.35.1.2}Storage()\hspace {0.1cm}{\footnotesize \ttfamily [2/6]}}{48}{subsubsection.6.35.1.2}%
+\contentsline {subsubsection}{\numberline {6.35.1.3}Storage()\hspace {0.1cm}{\footnotesize \ttfamily [3/6]}}{48}{subsubsection.6.35.1.3}%
+\contentsline {subsubsection}{\numberline {6.35.1.4}Storage()\hspace {0.1cm}{\footnotesize \ttfamily [4/6]}}{48}{subsubsection.6.35.1.4}%
+\contentsline {subsubsection}{\numberline {6.35.1.5}Storage()\hspace {0.1cm}{\footnotesize \ttfamily [5/6]}}{49}{subsubsection.6.35.1.5}%
+\contentsline {subsubsection}{\numberline {6.35.1.6}Storage()\hspace {0.1cm}{\footnotesize \ttfamily [6/6]}}{49}{subsubsection.6.35.1.6}%
+\contentsline {subsection}{\numberline {6.35.2}Member Function Documentation}{50}{subsection.6.35.2}%
+\contentsline {subsubsection}{\numberline {6.35.2.1}operator=()\hspace {0.1cm}{\footnotesize \ttfamily [1/2]}}{50}{subsubsection.6.35.2.1}%
+\contentsline {subsubsection}{\numberline {6.35.2.2}operator=()\hspace {0.1cm}{\footnotesize \ttfamily [2/2]}}{50}{subsubsection.6.35.2.2}%
+\contentsline {subsubsection}{\numberline {6.35.2.3}resize()\hspace {0.1cm}{\footnotesize \ttfamily [1/2]}}{50}{subsubsection.6.35.2.3}%
+\contentsline {subsubsection}{\numberline {6.35.2.4}resize()\hspace {0.1cm}{\footnotesize \ttfamily [2/2]}}{51}{subsubsection.6.35.2.4}%
+\contentsline {section}{\numberline {6.36}test\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Opts Struct Reference}{51}{section.6.36}%
+\contentsline {section}{\numberline {6.37}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ T $>$ Struct Template Reference}{51}{section.6.37}%
+\contentsline {subsection}{\numberline {6.37.1}Detailed Description}{52}{subsection.6.37.1}%
+\contentsline {section}{\numberline {6.38}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ Array\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Container$<$ Shape\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}, Storage\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{} $>$ $>$ Struct Template Reference}{52}{section.6.38}%
+\contentsline {section}{\numberline {6.39}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ bool $>$ Struct Reference}{52}{section.6.39}%
+\contentsline {section}{\numberline {6.40}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ char $>$ Struct Reference}{53}{section.6.40}%
+\contentsline {section}{\numberline {6.41}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ double $>$ Struct Reference}{53}{section.6.41}%
+\contentsline {section}{\numberline {6.42}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ float $>$ Struct Reference}{54}{section.6.42}%
+\contentsline {section}{\numberline {6.43}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ int16\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t $>$ Struct Reference}{54}{section.6.43}%
+\contentsline {section}{\numberline {6.44}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ int32\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t $>$ Struct Reference}{55}{section.6.44}%
+\contentsline {section}{\numberline {6.45}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ int64\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t $>$ Struct Reference}{55}{section.6.45}%
+\contentsline {section}{\numberline {6.46}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ int8\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t $>$ Struct Reference}{56}{section.6.46}%
+\contentsline {section}{\numberline {6.47}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ Storage$<$ Scalar\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}, Allocator\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{} $>$ $>$ Struct Template Reference}{56}{section.6.47}%
+\contentsline {section}{\numberline {6.48}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ uint16\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t $>$ Struct Reference}{57}{section.6.48}%
+\contentsline {section}{\numberline {6.49}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ uint32\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t $>$ Struct Reference}{57}{section.6.49}%
+\contentsline {section}{\numberline {6.50}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ uint64\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t $>$ Struct Reference}{58}{section.6.50}%
+\contentsline {section}{\numberline {6.51}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$ uint8\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t $>$ Struct Reference}{58}{section.6.51}%
+\contentsline {section}{\numberline {6.52}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Info$<$\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::detail\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Function$<$ Functor\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}, Args... $>$ $>$ Struct Template Reference}{59}{section.6.52}%
+\contentsline {section}{\numberline {6.53}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::typetraits\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::detail\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Type\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Name\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Holder$<$ T $>$ Struct Template Reference}{59}{section.6.53}%
+\contentsline {chapter}{\numberline {7}File Documentation}{61}{chapter.7}%
+\contentsline {section}{\numberline {7.1}auxiliary.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{61}{section.7.1}%
+\contentsline {section}{\numberline {7.2}complex.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{61}{section.7.2}%
+\contentsline {section}{\numberline {7.3}complextrait.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{62}{section.7.3}%
+\contentsline {section}{\numberline {7.4}debugmacro.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{63}{section.7.4}%
+\contentsline {section}{\numberline {7.5}fakeuse.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{64}{section.7.5}%
+\contentsline {section}{\numberline {7.6}iscomplex.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{65}{section.7.6}%
+\contentsline {section}{\numberline {7.7}ismpfrreal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{65}{section.7.7}%
+\contentsline {section}{\numberline {7.8}issame.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{66}{section.7.8}%
+\contentsline {section}{\numberline {7.9}pow.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{67}{section.7.9}%
+\contentsline {section}{\numberline {7.10}restrictto.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{68}{section.7.10}%
+\contentsline {section}{\numberline {7.11}cxxblas.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{68}{section.7.11}%
+\contentsline {section}{\numberline {7.12}atlas.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{69}{section.7.12}%
+\contentsline {section}{\numberline {7.13}cblas.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{70}{section.7.13}%
+\contentsline {section}{\numberline {7.14}drivers.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{76}{section.7.14}%
+\contentsline {section}{\numberline {7.15}gotoblas.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{78}{section.7.15}%
+\contentsline {section}{\numberline {7.16}mklblas.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{79}{section.7.16}%
+\contentsline {section}{\numberline {7.17}openblas.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{80}{section.7.17}%
+\contentsline {section}{\numberline {7.18}refblas.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{81}{section.7.18}%
+\contentsline {section}{\numberline {7.19}sparseblas.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{81}{section.7.19}%
+\contentsline {section}{\numberline {7.20}veclib.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{84}{section.7.20}%
+\contentsline {section}{\numberline {7.21}asum.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{84}{section.7.21}%
+\contentsline {section}{\numberline {7.22}axpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{85}{section.7.22}%
+\contentsline {section}{\numberline {7.23}axpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{86}{section.7.23}%
+\contentsline {section}{\numberline {7.24}axpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{87}{section.7.24}%
+\contentsline {section}{\numberline {7.25}copy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{87}{section.7.25}%
+\contentsline {section}{\numberline {7.26}copy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{88}{section.7.26}%
+\contentsline {section}{\numberline {7.27}dot.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{89}{section.7.27}%
+\contentsline {section}{\numberline {7.28}dot.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{90}{section.7.28}%
+\contentsline {section}{\numberline {7.29}iamax.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{91}{section.7.29}%
+\contentsline {section}{\numberline {7.30}level1.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{92}{section.7.30}%
+\contentsline {section}{\numberline {7.31}nrm2.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{93}{section.7.31}%
+\contentsline {section}{\numberline {7.32}rot.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{94}{section.7.32}%
+\contentsline {section}{\numberline {7.33}rotm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{95}{section.7.33}%
+\contentsline {section}{\numberline {7.34}scal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{96}{section.7.34}%
+\contentsline {section}{\numberline {7.35}scal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{97}{section.7.35}%
+\contentsline {section}{\numberline {7.36}swap.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{97}{section.7.36}%
+\contentsline {section}{\numberline {7.37}acxpby.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{98}{section.7.37}%
+\contentsline {section}{\numberline {7.38}acxpby.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{99}{section.7.38}%
+\contentsline {section}{\numberline {7.39}acxpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{99}{section.7.39}%
+\contentsline {section}{\numberline {7.40}acxpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{100}{section.7.40}%
+\contentsline {section}{\numberline {7.41}asum1.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{101}{section.7.41}%
+\contentsline {section}{\numberline {7.42}axpby.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{101}{section.7.42}%
+\contentsline {section}{\numberline {7.43}axpby.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{102}{section.7.43}%
+\contentsline {section}{\numberline {7.44}ccopy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{103}{section.7.44}%
+\contentsline {section}{\numberline {7.45}ccopy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{104}{section.7.45}%
+\contentsline {section}{\numberline {7.46}gbaxpby.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{104}{section.7.46}%
+\contentsline {section}{\numberline {7.47}gbaxpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{105}{section.7.47}%
+\contentsline {section}{\numberline {7.48}gbcopy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{105}{section.7.48}%
+\contentsline {section}{\numberline {7.49}gbcotr.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{106}{section.7.49}%
+\contentsline {section}{\numberline {7.50}gbscal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{107}{section.7.50}%
+\contentsline {section}{\numberline {7.51}geaxpby.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{107}{section.7.51}%
+\contentsline {section}{\numberline {7.52}geaxpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{108}{section.7.52}%
+\contentsline {section}{\numberline {7.53}geaxpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{109}{section.7.53}%
+\contentsline {section}{\numberline {7.54}gecopy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{109}{section.7.54}%
+\contentsline {section}{\numberline {7.55}gecopy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{110}{section.7.55}%
+\contentsline {section}{\numberline {7.56}gecotr.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{110}{section.7.56}%
+\contentsline {section}{\numberline {7.57}geraxpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{111}{section.7.57}%
+\contentsline {section}{\numberline {7.58}gerscal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{112}{section.7.58}%
+\contentsline {section}{\numberline {7.59}gerscal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{112}{section.7.59}%
+\contentsline {section}{\numberline {7.60}gescal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{113}{section.7.60}%
+\contentsline {section}{\numberline {7.61}gescal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{114}{section.7.61}%
+\contentsline {section}{\numberline {7.62}geswap.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{114}{section.7.62}%
+\contentsline {section}{\numberline {7.63}hescal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{115}{section.7.63}%
+\contentsline {section}{\numberline {7.64}imax1.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{115}{section.7.64}%
+\contentsline {section}{\numberline {7.65}level1extensions.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{116}{section.7.65}%
+\contentsline {section}{\numberline {7.66}racxpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{117}{section.7.66}%
+\contentsline {section}{\numberline {7.67}raxpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{118}{section.7.67}%
+\contentsline {section}{\numberline {7.68}rscal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{118}{section.7.68}%
+\contentsline {section}{\numberline {7.69}rscal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{119}{section.7.69}%
+\contentsline {section}{\numberline {7.70}syscal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{119}{section.7.70}%
+\contentsline {section}{\numberline {7.71}tpaxpby.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{120}{section.7.71}%
+\contentsline {section}{\numberline {7.72}tpaxpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{121}{section.7.72}%
+\contentsline {section}{\numberline {7.73}tpcopy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{121}{section.7.73}%
+\contentsline {section}{\numberline {7.74}tpscal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{122}{section.7.74}%
+\contentsline {section}{\numberline {7.75}traxpby.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{123}{section.7.75}%
+\contentsline {section}{\numberline {7.76}traxpy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{124}{section.7.76}%
+\contentsline {section}{\numberline {7.77}trcopy.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{124}{section.7.77}%
+\contentsline {section}{\numberline {7.78}trscal.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{125}{section.7.78}%
+\contentsline {section}{\numberline {7.79}gbmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{126}{section.7.79}%
+\contentsline {section}{\numberline {7.80}gbmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{127}{section.7.80}%
+\contentsline {section}{\numberline {7.81}gemv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{127}{section.7.81}%
+\contentsline {section}{\numberline {7.82}gemv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{128}{section.7.82}%
+\contentsline {section}{\numberline {7.83}gemv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{129}{section.7.83}%
+\contentsline {section}{\numberline {7.84}ger.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{130}{section.7.84}%
+\contentsline {section}{\numberline {7.85}hbmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{131}{section.7.85}%
+\contentsline {section}{\numberline {7.86}hemv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{132}{section.7.86}%
+\contentsline {section}{\numberline {7.87}hemv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{133}{section.7.87}%
+\contentsline {section}{\numberline {7.88}her.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{134}{section.7.88}%
+\contentsline {section}{\numberline {7.89}her.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{134}{section.7.89}%
+\contentsline {section}{\numberline {7.90}her2.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{135}{section.7.90}%
+\contentsline {section}{\numberline {7.91}her2.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{136}{section.7.91}%
+\contentsline {section}{\numberline {7.92}hpmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{136}{section.7.92}%
+\contentsline {section}{\numberline {7.93}hpr.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{137}{section.7.93}%
+\contentsline {section}{\numberline {7.94}hpr2.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{138}{section.7.94}%
+\contentsline {section}{\numberline {7.95}level2.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{139}{section.7.95}%
+\contentsline {section}{\numberline {7.96}sbmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{140}{section.7.96}%
+\contentsline {section}{\numberline {7.97}spmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{141}{section.7.97}%
+\contentsline {section}{\numberline {7.98}spr.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{141}{section.7.98}%
+\contentsline {section}{\numberline {7.99}spr2.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{142}{section.7.99}%
+\contentsline {section}{\numberline {7.100}symv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{143}{section.7.100}%
+\contentsline {section}{\numberline {7.101}symv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{144}{section.7.101}%
+\contentsline {section}{\numberline {7.102}syr.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{145}{section.7.102}%
+\contentsline {section}{\numberline {7.103}syr2.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{146}{section.7.103}%
+\contentsline {section}{\numberline {7.104}tbmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{147}{section.7.104}%
+\contentsline {section}{\numberline {7.105}tbsv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{148}{section.7.105}%
+\contentsline {section}{\numberline {7.106}tpmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{149}{section.7.106}%
+\contentsline {section}{\numberline {7.107}tpsv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{150}{section.7.107}%
+\contentsline {section}{\numberline {7.108}trmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{151}{section.7.108}%
+\contentsline {section}{\numberline {7.109}trmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{152}{section.7.109}%
+\contentsline {section}{\numberline {7.110}trsv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{152}{section.7.110}%
+\contentsline {section}{\numberline {7.111}trsv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{153}{section.7.111}%
+\contentsline {section}{\numberline {7.112}level2extensions.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{154}{section.7.112}%
+\contentsline {section}{\numberline {7.113}gemm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{155}{section.7.113}%
+\contentsline {section}{\numberline {7.114}hemm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{156}{section.7.114}%
+\contentsline {section}{\numberline {7.115}her2k.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{157}{section.7.115}%
+\contentsline {section}{\numberline {7.116}herk.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{158}{section.7.116}%
+\contentsline {section}{\numberline {7.117}level3.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{158}{section.7.117}%
+\contentsline {section}{\numberline {7.118}symm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{159}{section.7.118}%
+\contentsline {section}{\numberline {7.119}syr2k.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{160}{section.7.119}%
+\contentsline {section}{\numberline {7.120}syrk.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{161}{section.7.120}%
+\contentsline {section}{\numberline {7.121}trmm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{162}{section.7.121}%
+\contentsline {section}{\numberline {7.122}trsm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{163}{section.7.122}%
+\contentsline {section}{\numberline {7.123}gbmm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{164}{section.7.123}%
+\contentsline {section}{\numberline {7.124}hbmm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{165}{section.7.124}%
+\contentsline {section}{\numberline {7.125}level3extensions.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{165}{section.7.125}%
+\contentsline {section}{\numberline {7.126}sbmm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{166}{section.7.126}%
+\contentsline {section}{\numberline {7.127}tbmm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{167}{section.7.127}%
+\contentsline {section}{\numberline {7.128}gecrsmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{167}{section.7.128}%
+\contentsline {section}{\numberline {7.129}heccsmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{168}{section.7.129}%
+\contentsline {section}{\numberline {7.130}hecrsmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{169}{section.7.130}%
+\contentsline {section}{\numberline {7.131}sparselevel2.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{170}{section.7.131}%
+\contentsline {section}{\numberline {7.132}syccsmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{171}{section.7.132}%
+\contentsline {section}{\numberline {7.133}sycrsmv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{171}{section.7.133}%
+\contentsline {section}{\numberline {7.134}trccssv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{172}{section.7.134}%
+\contentsline {section}{\numberline {7.135}trcrssv.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{173}{section.7.135}%
+\contentsline {section}{\numberline {7.136}gecrsmm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{174}{section.7.136}%
+\contentsline {section}{\numberline {7.137}heccsmm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{175}{section.7.137}%
+\contentsline {section}{\numberline {7.138}hecrsmm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{176}{section.7.138}%
+\contentsline {section}{\numberline {7.139}sparselevel3.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{177}{section.7.139}%
+\contentsline {section}{\numberline {7.140}syccsmm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{177}{section.7.140}%
+\contentsline {section}{\numberline {7.141}sycrsmm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{178}{section.7.141}%
+\contentsline {section}{\numberline {7.142}trccssm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{179}{section.7.142}%
+\contentsline {section}{\numberline {7.143}trcrssm.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{180}{section.7.143}%
+\contentsline {section}{\numberline {7.144}tinylevel1.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{181}{section.7.144}%
+\contentsline {section}{\numberline {7.145}tinylevel2.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{182}{section.7.145}%
+\contentsline {section}{\numberline {7.146}typedefs.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{182}{section.7.146}%
+\contentsline {section}{\numberline {7.147}array.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{183}{section.7.147}%
+\contentsline {section}{\numberline {7.148}array\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Container.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{183}{section.7.148}%
+\contentsline {section}{\numberline {7.149}assign\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Ops.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{185}{section.7.149}%
+\contentsline {section}{\numberline {7.150}function.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{185}{section.7.150}%
+\contentsline {section}{\numberline {7.151}operations.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{186}{section.7.151}%
+\contentsline {section}{\numberline {7.152}sizetype.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{187}{section.7.152}%
+\contentsline {section}{\numberline {7.153}storage.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{190}{section.7.153}%
+\contentsline {section}{\numberline {7.154}config.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{194}{section.7.154}%
+\contentsline {section}{\numberline {7.155}core.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{197}{section.7.155}%
+\contentsline {section}{\numberline {7.156}cuda\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Config.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{197}{section.7.156}%
+\contentsline {section}{\numberline {7.157}forward.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{198}{section.7.157}%
+\contentsline {section}{\numberline {7.158}generic\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Config.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{198}{section.7.158}%
+\contentsline {section}{\numberline {7.159}global.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{200}{section.7.159}%
+\contentsline {section}{\numberline {7.160}gnu\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Config.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{201}{section.7.160}%
+\contentsline {section}{\numberline {7.161}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Macros.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{203}{section.7.161}%
+\contentsline {section}{\numberline {7.162}librapid\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Pch.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{203}{section.7.162}%
+\contentsline {section}{\numberline {7.163}msvc\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Config.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{204}{section.7.163}%
+\contentsline {section}{\numberline {7.164}pre\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Main.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{206}{section.7.164}%
+\contentsline {section}{\numberline {7.165}traits.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{207}{section.7.165}%
+\contentsline {section}{\numberline {7.166}typetraits.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{210}{section.7.166}%
+\contentsline {section}{\numberline {7.167}warning\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Suppress.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{211}{section.7.167}%
+\contentsline {section}{\numberline {7.168}exception.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{212}{section.7.168}%
+\contentsline {section}{\numberline {7.169}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}cuda.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{213}{section.7.169}%
+\contentsline {section}{\numberline {7.170}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}cuda\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}drvapi.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{219}{section.7.170}%
+\contentsline {section}{\numberline {7.171}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}cusolver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{223}{section.7.171}%
+\contentsline {section}{\numberline {7.172}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}functions.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{225}{section.7.172}%
+\contentsline {section}{\numberline {7.173}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}image.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{226}{section.7.173}%
+\contentsline {section}{\numberline {7.174}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}math.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{236}{section.7.174}%
+\contentsline {section}{\numberline {7.175}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}multiprocess.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{261}{section.7.175}%
+\contentsline {section}{\numberline {7.176}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}string.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{263}{section.7.176}%
+\contentsline {section}{\numberline {7.177}helper\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}timer.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{267}{section.7.177}%
+\contentsline {section}{\numberline {7.178}kernel\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}header.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{270}{section.7.178}%
+\contentsline {section}{\numberline {7.179}nvrtc\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}helper.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{274}{section.7.179}%
+\contentsline {section}{\numberline {7.180}librapid.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{276}{section.7.180}%
+\contentsline {section}{\numberline {7.181}core\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Math.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hpp}{276}{section.7.181}%
+\contentsline {chapter}{Index}{279}{section*.78}%

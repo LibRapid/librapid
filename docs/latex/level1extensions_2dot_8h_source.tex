@@ -1,0 +1,86 @@
+\hypertarget{level1extensions_2dot_8h_source}{}\doxysection{dot.\+h}
+\label{level1extensions_2dot_8h_source}\index{librapid/cxxblas/level1extensions/dot.h@{librapid/cxxblas/level1extensions/dot.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ *   Copyright (c) 2012, Klaus Pototzky}}
+\DoxyCodeLine{3 \textcolor{comment}{ *}}
+\DoxyCodeLine{4 \textcolor{comment}{ *   All rights reserved.}}
+\DoxyCodeLine{5 \textcolor{comment}{ *}}
+\DoxyCodeLine{6 \textcolor{comment}{ *   Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{7 \textcolor{comment}{ *   modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{8 \textcolor{comment}{ *   are met:}}
+\DoxyCodeLine{9 \textcolor{comment}{ *}}
+\DoxyCodeLine{10 \textcolor{comment}{ *   1) Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{11 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{12 \textcolor{comment}{ *   2) Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{13 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer in}}
+\DoxyCodeLine{14 \textcolor{comment}{ *      the documentation and/or other materials provided with the}}
+\DoxyCodeLine{15 \textcolor{comment}{ *      distribution.}}
+\DoxyCodeLine{16 \textcolor{comment}{ *   3) Neither the name of the FLENS development group nor the names of}}
+\DoxyCodeLine{17 \textcolor{comment}{ *      its contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{18 \textcolor{comment}{ *      from this software without specific prior written permission.}}
+\DoxyCodeLine{19 \textcolor{comment}{ *}}
+\DoxyCodeLine{20 \textcolor{comment}{ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{21 \textcolor{comment}{ *   "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{22 \textcolor{comment}{ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{23 \textcolor{comment}{ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{24 \textcolor{comment}{ *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{25 \textcolor{comment}{ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{26 \textcolor{comment}{ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{27 \textcolor{comment}{ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{28 \textcolor{comment}{ *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{29 \textcolor{comment}{ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{30 \textcolor{comment}{ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{31 \textcolor{comment}{ */}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#ifndef CXXBLAS\_LEVEL1EXTENSIONS\_DOT\_H}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#define CXXBLAS\_LEVEL1EXTENSIONS\_DOT\_H 1}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include "{}cxxblas/typedefs.h"{}}}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#define HAVE\_CXXBLAS\_AXPY 1}}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{keyword}{namespace }cxxblas \{}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#ifdef HAVE\_CBLAS}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{45     \textcolor{keywordtype}{void} dotu(IndexType n, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x, IndexType incX, \textcolor{keyword}{const} std::complex<float> *y,}
+\DoxyCodeLine{46               IndexType incY, std::complex<float> \&result);}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{49     \textcolor{keywordtype}{void} dotu(IndexType n, \textcolor{keyword}{const} std::complex<float> *x, IndexType incX, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *y,}
+\DoxyCodeLine{50               IndexType incY, std::complex<float> \&result);}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{53     \textcolor{keywordtype}{void} dotu(IndexType n, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *x, IndexType incX, \textcolor{keyword}{const} std::complex<double> *y,}
+\DoxyCodeLine{54               IndexType incY, std::complex<double> \&result);}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{57     \textcolor{keywordtype}{void} dotu(IndexType n, \textcolor{keyword}{const} std::complex<double> *x, IndexType incX, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *y,}
+\DoxyCodeLine{58               IndexType incY, std::complex<double> \&result);}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{61     \textcolor{keywordtype}{void} dot(IndexType n, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x, IndexType incX, \textcolor{keyword}{const} std::complex<float> *y,}
+\DoxyCodeLine{62              IndexType incY, std::complex<float> \&result);}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{65     \textcolor{keywordtype}{void} dot(IndexType n, \textcolor{keyword}{const} std::complex<float> *x, IndexType incX, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *y,}
+\DoxyCodeLine{66              IndexType incY, std::complex<float> \&result);}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{69     \textcolor{keywordtype}{void} dot(IndexType n, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *x, IndexType incX, \textcolor{keyword}{const} std::complex<double> *y,}
+\DoxyCodeLine{70              IndexType incY, std::complex<double> \&result);}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{73     \textcolor{keywordtype}{void} dot(IndexType n, \textcolor{keyword}{const} std::complex<double> *x, IndexType incX, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *y,}
+\DoxyCodeLine{74              IndexType incY, std::complex<double> \&result);}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 \} \textcolor{comment}{// namespace cxxblas}}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CXXBLAS\_LEVEL1EXTENSIONS\_DOT\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,97 @@
+\hypertarget{class_exception}{}\doxysection{Exception\texorpdfstring{$<$}{<} Std\+\_\+\+Exception \texorpdfstring{$>$}{>} Class Template Reference}
+\label{class_exception}\index{Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}}
+
+
+{\ttfamily \#include $<$exception.\+h$>$}
+
+Inheritance diagram for Exception\texorpdfstring{$<$}{<} Std\+\_\+\+Exception \texorpdfstring{$>$}{>}\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_exception}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_exception_ac4bfac227d7e53fa707b91a88159d3a8}\label{class_exception_ac4bfac227d7e53fa707b91a88159d3a8}} 
+virtual {\bfseries $\sim$\+Exception} ()  throw ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_exception_ac0904205ad66f00c7287a3cbf3d17838}{throw\+\_\+it}} (const char $\ast$file, const int line, const char $\ast$detailed=\char`\"{}-\/\char`\"{})
+\begin{DoxyCompactList}\small\item\em Static construction interface. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_exception_a9e38551a20583643b1d2efe535577e08}{throw\+\_\+it}} (const char $\ast$file, const int line, const std\+::string \&detailed)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$class Std\+\_\+\+Exception$>$\newline
+class Exception$<$ Std\+\_\+\+Exception $>$}
+\mbox{\hyperlink{class_exception}{Exception}} wrapper. 
+\begin{DoxyParams}{Parameters}
+{\em Std\+\_\+\+Exception} & \mbox{\hyperlink{class_exception}{Exception}} out of namespace std for easy typing. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_exception_ac0904205ad66f00c7287a3cbf3d17838}\label{class_exception_ac0904205ad66f00c7287a3cbf3d17838}} 
+\index{Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}!throw\_it@{throw\_it}}
+\index{throw\_it@{throw\_it}!Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}}
+\doxysubsubsection{\texorpdfstring{throw\_it()}{throw\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class Std\+\_\+\+Exception $>$ \\
+void \mbox{\hyperlink{class_exception}{Exception}}$<$ Std\+\_\+\+Exception $>$\+::throw\+\_\+it (\begin{DoxyParamCaption}\item[{const char $\ast$}]{file,  }\item[{const int}]{line,  }\item[{const char $\ast$}]{detailed = {\ttfamily \char`\"{}-\/\char`\"{}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Static construction interface. 
+
+Implementation.
+
+\begin{DoxyReturn}{Returns}
+Alwayss throws ( Located\+\_\+\+Exception$<$\+Exception$>$) 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em file} & file in which the \mbox{\hyperlink{class_exception}{Exception}} occurs \\
+\hline
+{\em line} & line in which the \mbox{\hyperlink{class_exception}{Exception}} occurs \\
+\hline
+{\em detailed} & details on the code fragment causing the \mbox{\hyperlink{class_exception}{Exception}}\\
+\hline
+\end{DoxyParams}
+Static construction interface. 
+\begin{DoxyParams}{Parameters}
+{\em \mbox{\hyperlink{class_exception}{Exception}}} & causing code fragment (file and line) and detailed infos. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_exception_a9e38551a20583643b1d2efe535577e08}\label{class_exception_a9e38551a20583643b1d2efe535577e08}} 
+\index{Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}!throw\_it@{throw\_it}}
+\index{throw\_it@{throw\_it}!Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}}
+\doxysubsubsection{\texorpdfstring{throw\_it()}{throw\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class Std\+\_\+\+Exception $>$ \\
+void \mbox{\hyperlink{class_exception}{Exception}}$<$ Std\+\_\+\+Exception $>$\+::throw\+\_\+it (\begin{DoxyParamCaption}\item[{const char $\ast$}]{file,  }\item[{const int}]{line,  }\item[{const std\+::string \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Static construction interface \begin{DoxyReturn}{Returns}
+Alwayss throws ( Located\+\_\+\+Exception$<$\+Exception$>$) 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em file} & file in which the \mbox{\hyperlink{class_exception}{Exception}} occurs \\
+\hline
+{\em line} & line in which the \mbox{\hyperlink{class_exception}{Exception}} occurs \\
+\hline
+{\em detailed} & details on the code fragment causing the \mbox{\hyperlink{class_exception}{Exception}}\\
+\hline
+\end{DoxyParams}
+Static construction interface. 
+\begin{DoxyParams}{Parameters}
+{\em \mbox{\hyperlink{class_exception}{Exception}}} & causing code fragment (file and line) and detailed infos. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+librapid/include/librapid/cuda/exception.\+h\end{DoxyCompactItemize}

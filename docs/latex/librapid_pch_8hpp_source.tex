@@ -1,0 +1,92 @@
+\hypertarget{librapid_pch_8hpp_source}{}\doxysection{librapid\+Pch.\+hpp}
+\label{librapid_pch_8hpp_source}\index{librapid/include/librapid/core/librapidPch.hpp@{librapid/include/librapid/core/librapidPch.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef LIBRAPID\_CORE\_LIBRAPID\_PCH\_HPP}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define LIBRAPID\_CORE\_LIBRAPID\_PCH\_HPP}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{comment}{/*}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Include standard library headers and precompile them as part of}}
+\DoxyCodeLine{6 \textcolor{comment}{ * librapid. This reduces compile times dramatically.}}
+\DoxyCodeLine{7 \textcolor{comment}{ *}}
+\DoxyCodeLine{8 \textcolor{comment}{ * Additionally, include the header files of dependencies.}}
+\DoxyCodeLine{9 \textcolor{comment}{ */}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{comment}{// Standard Library}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <algorithm>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <array>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <atomic>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <cfenv>}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include <cfloat>}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include <cmath>}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include <cmath>}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include <complex>}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include <cstddef>}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#include <cstdint>}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#include <cstdlib>}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#include <cstdlib>}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#include <future>}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#include <iomanip>}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#include <iterator>}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#include <limits>}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#include <memory>}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#include <mutex>}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#include <numeric>}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#include <queue>}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#include <random>}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include <regex>}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include <set>}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#include <utility>}}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_OMP)}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#   include <omp.h>}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_HAS\_OMP}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#if defined(\_WIN32) || defined(\_WIN64)}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#   define WIN32\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#   include <Windows.h>}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49 \textcolor{comment}{// Remove a few macros}}
+\DoxyCodeLine{50 \textcolor{preprocessor}{\#undef min}}
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#undef max}}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53 \textcolor{comment}{// fmtlib}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#include <fmt/core.h>}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#include <fmt/format.h>}}
+\DoxyCodeLine{56 \textcolor{preprocessor}{\#include <fmt/ranges.h>}}
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#include <fmt/chrono.h>}}
+\DoxyCodeLine{58 \textcolor{preprocessor}{\#include <fmt/compile.h>}}
+\DoxyCodeLine{59 \textcolor{preprocessor}{\#include <fmt/color.h>}}
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#include <fmt/os.h>}}
+\DoxyCodeLine{61 \textcolor{preprocessor}{\#include <fmt/ostream.h>}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#include <fmt/printf.h>}}
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#include <fmt/xchar.h>}}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65 \textcolor{comment}{// scnlib}}
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#include <scn/scn.h>}}
+\DoxyCodeLine{67 \textcolor{preprocessor}{\#include <scn/tuple\_return/tuple\_return.h>}}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69 \textcolor{comment}{// Vc -\/-\/ SIMD instructions}}
+\DoxyCodeLine{70 \textcolor{preprocessor}{\#if defined(\_MSC\_VER)}}
+\DoxyCodeLine{71 \textcolor{comment}{// For Vc, we need to disable the following warnings}}
+\DoxyCodeLine{72 \textcolor{preprocessor}{\#   pragma warning(push)}}
+\DoxyCodeLine{73 \textcolor{preprocessor}{\#   pragma warning(disable : 4244) }\textcolor{comment}{// conversion from 'int' to 'float', possible loss of data}}
+\DoxyCodeLine{74 \textcolor{preprocessor}{\#   pragma warning(disable : 4324) }\textcolor{comment}{// structure was padded due to alignment specifier}}
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#   pragma warning(disable : 4127) }\textcolor{comment}{// conditional expression is constant}}
+\DoxyCodeLine{76 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 \textcolor{preprocessor}{\#include <Vc/Vc>}}
+\DoxyCodeLine{79 \textcolor{preprocessor}{\#include <Vc/algorithm>}}
+\DoxyCodeLine{80 \textcolor{preprocessor}{\#include <Vc/cpuid.h>}}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82 \textcolor{preprocessor}{\#if defined(\_MSC\_VER)}}
+\DoxyCodeLine{83 \textcolor{preprocessor}{\#   pragma warning(pop)}}
+\DoxyCodeLine{84 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{86 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_CORE\_LIBRAPID\_PCH\_HPP}}
+
+\end{DoxyCode}

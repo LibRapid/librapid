@@ -1,0 +1,347 @@
+\hypertarget{storage_8hpp_source}{}\doxysection{storage.\+hpp}
+\label{storage_8hpp_source}\index{librapid/include/librapid/array/storage.hpp@{librapid/include/librapid/array/storage.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef LIBRAPID\_ARRAY\_DENSE\_STORAGE\_HPP}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define LIBRAPID\_ARRAY\_DENSE\_STORAGE\_HPP}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{comment}{/*}}
+\DoxyCodeLine{5 \textcolor{comment}{ * This file defines the DenseStorage class, which contains a contiguous}}
+\DoxyCodeLine{6 \textcolor{comment}{ * block of memory of a single data type.}}
+\DoxyCodeLine{7 \textcolor{comment}{ */}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{namespace }librapid \{}
+\DoxyCodeLine{10     \textcolor{keyword}{namespace }typetraits \{}
+\DoxyCodeLine{11         \textcolor{keyword}{template}<\textcolor{keyword}{typename} Scalar\_, \textcolor{keyword}{typename} Allocator\_>}
+\DoxyCodeLine{12         \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<\mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}}<Scalar\_, Allocator\_>> \{}
+\DoxyCodeLine{13             \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType = \textcolor{keyword}{true};}
+\DoxyCodeLine{14             \textcolor{keyword}{using} Scalar                         = Scalar\_;}
+\DoxyCodeLine{15         \};}
+\DoxyCodeLine{16     \} \textcolor{comment}{// namespace typetraits}}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18     \textcolor{keyword}{template}<\textcolor{keyword}{typename} Scalar\_, \textcolor{keyword}{typename} Allocator\_ = std::allocator<Scalar\_>>}
+\DoxyCodeLine{19     \textcolor{keyword}{class }\mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \{}
+\DoxyCodeLine{20     \textcolor{keyword}{public}:}
+\DoxyCodeLine{21         \textcolor{keyword}{using} Allocator            = Allocator\_;}
+\DoxyCodeLine{22         \textcolor{keyword}{using} Scalar               = Scalar\_;}
+\DoxyCodeLine{23         \textcolor{keyword}{using} Pointer              = \textcolor{keyword}{typename} std::allocator\_traits<Allocator>::pointer;}
+\DoxyCodeLine{24         \textcolor{keyword}{using} ConstPointer         = \textcolor{keyword}{typename} std::allocator\_traits<Allocator>::const\_pointer;}
+\DoxyCodeLine{25         \textcolor{keyword}{using} Reference            = Scalar \&;}
+\DoxyCodeLine{26         \textcolor{keyword}{using} ConstReference       = \textcolor{keyword}{const} Scalar \&;}
+\DoxyCodeLine{27         \textcolor{keyword}{using} SizeType             = \textcolor{keyword}{typename} std::allocator\_traits<Allocator>::size\_type;}
+\DoxyCodeLine{28         \textcolor{keyword}{using} DifferenceType       = \textcolor{keyword}{typename} std::allocator\_traits<Allocator>::difference\_type;}
+\DoxyCodeLine{29         \textcolor{keyword}{using} Iterator             = Pointer;}
+\DoxyCodeLine{30         \textcolor{keyword}{using} ConstIterator        = ConstPointer;}
+\DoxyCodeLine{31         \textcolor{keyword}{using} ReverseIterator      = std::reverse\_iterator<Iterator>;}
+\DoxyCodeLine{32         \textcolor{keyword}{using} ConstReverseIterator = std::reverse\_iterator<ConstIterator>;}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{35         \mbox{\hyperlink{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}{Storage}}() = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{41         LIBRAPID\_ALWAYS\_INLINE \textcolor{keyword}{explicit} \mbox{\hyperlink{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}{Storage}}(SizeType size,}
+\DoxyCodeLine{42                                                 \textcolor{keyword}{const} Allocator \&alloc = Allocator());}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{49         LIBRAPID\_ALWAYS\_INLINE \mbox{\hyperlink{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}{Storage}}(SizeType size, ConstReference value,}
+\DoxyCodeLine{50                                        \textcolor{keyword}{const} Allocator \&alloc = Allocator());}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{56         LIBRAPID\_ALWAYS\_INLINE \mbox{\hyperlink{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}{Storage}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&other, \textcolor{keyword}{const} Allocator \&alloc = Allocator());}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{60         LIBRAPID\_ALWAYS\_INLINE \mbox{\hyperlink{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}{Storage}}(\mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&\&other) \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{66         \textcolor{keyword}{template}<\textcolor{keyword}{typename} V>}
+\DoxyCodeLine{67         LIBRAPID\_ALWAYS\_INLINE \mbox{\hyperlink{classlibrapid_1_1_storage_ad71195bfc1241bd16be6cbf33b7d84bd}{Storage}}(\textcolor{keyword}{const} std::initializer\_list<V> \&list,}
+\DoxyCodeLine{68                                        \textcolor{keyword}{const} Allocator \&alloc = Allocator());}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{74         \textcolor{keyword}{template}<\textcolor{keyword}{typename} V>}
+\DoxyCodeLine{75         LIBRAPID\_ALWAYS\_INLINE \textcolor{keyword}{explicit} \mbox{\hyperlink{classlibrapid_1_1_storage_a1be479e553cd8647347127790c61cb2c}{Storage}}(\textcolor{keyword}{const} std::vector<V> \&vec,}
+\DoxyCodeLine{76                                                 \textcolor{keyword}{const} Allocator \&alloc = Allocator());}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{81         LIBRAPID\_ALWAYS\_INLINE \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&\mbox{\hyperlink{classlibrapid_1_1_storage_a645549771b97c5a5fc50a425d9ca77d1}{operator=}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&other);}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{86         LIBRAPID\_ALWAYS\_INLINE \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&\mbox{\hyperlink{classlibrapid_1_1_storage_a645549771b97c5a5fc50a425d9ca77d1}{operator=}}(\mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&\&other) \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{89         \mbox{\hyperlink{classlibrapid_1_1_storage_a72b91a469fd786401a1346b9baefaf55}{\string~Storage}}();}
+\DoxyCodeLine{90 }
+\DoxyCodeLine{94         LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{void} \mbox{\hyperlink{classlibrapid_1_1_storage_abe34d150799358f4c44af37da3189332}{resize}}(SizeType newSize);}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{99         LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{void} \mbox{\hyperlink{classlibrapid_1_1_storage_abe34d150799358f4c44af37da3189332}{resize}}(SizeType newSize, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE SizeType size() const noexcept;}
+\DoxyCodeLine{102 }
+\DoxyCodeLine{103         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE ConstReference operator[](SizeType index) const;}
+\DoxyCodeLine{104         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE Reference operator[](SizeType index);}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{106         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE Iterator begin() noexcept;}
+\DoxyCodeLine{107         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE Iterator end() noexcept;}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE ConstIterator begin() const noexcept;}
+\DoxyCodeLine{110         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE ConstIterator end() const noexcept;}
+\DoxyCodeLine{111 }
+\DoxyCodeLine{112         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE ConstIterator cbegin() const noexcept;}
+\DoxyCodeLine{113         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE ConstIterator cend() const noexcept;}
+\DoxyCodeLine{114 }
+\DoxyCodeLine{115         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE ReverseIterator rbegin() noexcept;}
+\DoxyCodeLine{116         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE ReverseIterator rend() noexcept;}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE ConstReverseIterator rbegin() const noexcept;}
+\DoxyCodeLine{119         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE ConstReverseIterator rend() const noexcept;}
+\DoxyCodeLine{120 }
+\DoxyCodeLine{121         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE ConstReverseIterator crbegin() const noexcept;}
+\DoxyCodeLine{122         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE ConstReverseIterator crend() const noexcept;}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124     private:}
+\DoxyCodeLine{129         template<typename P>}
+\DoxyCodeLine{130         LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{void} initData(P begin, P end);}
+\DoxyCodeLine{131 }
+\DoxyCodeLine{135         LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{void} resizeImpl(SizeType newSize, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{140         LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{void} resizeImpl(SizeType newSize);}
+\DoxyCodeLine{141 }
+\DoxyCodeLine{142         Allocator m\_allocator;}
+\DoxyCodeLine{143         Pointer m\_begin = \textcolor{keywordtype}{nullptr}; \textcolor{comment}{// It is more efficient to store pointers to the start}}
+\DoxyCodeLine{144         Pointer m\_end   = \textcolor{keywordtype}{nullptr}; \textcolor{comment}{// and end of the data block than to store the size}}
+\DoxyCodeLine{145     \};}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{147     namespace detail \{}
+\DoxyCodeLine{148         \textcolor{keyword}{template}<\textcolor{keyword}{typename} A>}
+\DoxyCodeLine{149         \textcolor{keyword}{typename} std::allocator\_traits<A>::pointer}
+\DoxyCodeLine{150         safeAllocate(A \&alloc, \textcolor{keyword}{typename} std::allocator\_traits<A>::size\_type size) \{}
+\DoxyCodeLine{151             \textcolor{keyword}{using} Traits    = std::allocator\_traits<A>;}
+\DoxyCodeLine{152             \textcolor{keyword}{using} Pointer   = \textcolor{keyword}{typename} Traits::pointer;}
+\DoxyCodeLine{153             \textcolor{keyword}{using} ValueType = \textcolor{keyword}{typename} Traits::value\_type;}
+\DoxyCodeLine{154             Pointer ptr     = alloc.allocate(size);}
+\DoxyCodeLine{155 }
+\DoxyCodeLine{156             \textcolor{comment}{// If the type cannot be trivially constructed, we need to}}
+\DoxyCodeLine{157             \textcolor{comment}{// initialize each value}}
+\DoxyCodeLine{158             \textcolor{keywordflow}{if} (!typetraits::TriviallyDefaultConstructible<ValueType>::value) \{}
+\DoxyCodeLine{159                 \textcolor{keywordflow}{for} (Pointer p = ptr; p != ptr + size; ++p) \{}
+\DoxyCodeLine{160                     Traits::construct(alloc, p, ValueType());}
+\DoxyCodeLine{161                 \}}
+\DoxyCodeLine{162             \}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164             \textcolor{keywordflow}{return} ptr;}
+\DoxyCodeLine{165         \}}
+\DoxyCodeLine{166 }
+\DoxyCodeLine{167         \textcolor{keyword}{template}<\textcolor{keyword}{typename} A>}
+\DoxyCodeLine{168         \textcolor{keywordtype}{void} safeDeallocate(A \&alloc, \textcolor{keyword}{typename} std::allocator\_traits<A>::pointer ptr,}
+\DoxyCodeLine{169                             \textcolor{keyword}{typename} std::allocator\_traits<A>::size\_type size) \{}
+\DoxyCodeLine{170             \textcolor{keyword}{using} Traits    = std::allocator\_traits<A>;}
+\DoxyCodeLine{171             \textcolor{keyword}{using} Pointer   = \textcolor{keyword}{typename} Traits::pointer;}
+\DoxyCodeLine{172             \textcolor{keyword}{using} ValueType = \textcolor{keyword}{typename} Traits::value\_type;}
+\DoxyCodeLine{173 }
+\DoxyCodeLine{174             \textcolor{comment}{// If the type cannot be trivially destructed, we need to}}
+\DoxyCodeLine{175             \textcolor{comment}{// destroy each value}}
+\DoxyCodeLine{176             \textcolor{keywordflow}{if} (!typetraits::TriviallyDefaultConstructible<ValueType>::value) \{}
+\DoxyCodeLine{177                 \textcolor{keywordflow}{for} (Pointer p = ptr; p != ptr + size; ++p) \{ Traits::destroy(alloc, p); \}}
+\DoxyCodeLine{178             \}}
+\DoxyCodeLine{179             Traits::deallocate(alloc, ptr, size);}
+\DoxyCodeLine{180         \}}
+\DoxyCodeLine{181     \} \textcolor{comment}{// namespace detail}}
+\DoxyCodeLine{182 }
+\DoxyCodeLine{183     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{184     \mbox{\hyperlink{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}{Storage<T, A>::Storage}}(SizeType size, \textcolor{keyword}{const} Allocator \&alloc) : m\_allocator(alloc) \{}
+\DoxyCodeLine{185         m\_begin = detail::safeAllocate(m\_allocator, size);}
+\DoxyCodeLine{186         m\_end   = m\_begin + size;}
+\DoxyCodeLine{187     \}}
+\DoxyCodeLine{188 }
+\DoxyCodeLine{189     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{190     \mbox{\hyperlink{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}{Storage<T, A>::Storage}}(SizeType size, ConstReference value, \textcolor{keyword}{const} Allocator \&alloc) :}
+\DoxyCodeLine{191             m\_allocator(alloc) \{}
+\DoxyCodeLine{192         m\_begin = detail::safeAllocate(m\_allocator, size);}
+\DoxyCodeLine{193         m\_end   = m\_begin + size;}
+\DoxyCodeLine{194         std::fill(m\_begin, m\_end, value);}
+\DoxyCodeLine{195     \}}
+\DoxyCodeLine{196 }
+\DoxyCodeLine{197     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{198     \mbox{\hyperlink{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}{Storage<T, A>::Storage}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&other, \textcolor{keyword}{const} Allocator \&alloc) :}
+\DoxyCodeLine{199             m\_allocator(alloc), m\_begin(nullptr), m\_end(nullptr) \{}
+\DoxyCodeLine{200         initData(other.begin(), other.end());}
+\DoxyCodeLine{201     \}}
+\DoxyCodeLine{202 }
+\DoxyCodeLine{203     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{204     \mbox{\hyperlink{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}{Storage<T, A>::Storage}}(\mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&\&other) noexcept :}
+\DoxyCodeLine{205             m\_allocator(std::move(other.m\_allocator)), m\_begin(other.m\_begin), m\_end(other.m\_end) \{}
+\DoxyCodeLine{206         other.m\_begin = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{207         other.m\_end   = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{208     \}}
+\DoxyCodeLine{209 }
+\DoxyCodeLine{210     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{211     \textcolor{keyword}{template}<\textcolor{keyword}{typename} V>}
+\DoxyCodeLine{212     \mbox{\hyperlink{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}{Storage<T, A>::Storage}}(\textcolor{keyword}{const} std::initializer\_list<V> \&list, \textcolor{keyword}{const} Allocator \&alloc) :}
+\DoxyCodeLine{213             m\_allocator(alloc), m\_begin(nullptr), m\_end(nullptr) \{}
+\DoxyCodeLine{214         initData(list.begin(), list.end());}
+\DoxyCodeLine{215     \}}
+\DoxyCodeLine{216 }
+\DoxyCodeLine{217     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{218     \textcolor{keyword}{template}<\textcolor{keyword}{typename} V>}
+\DoxyCodeLine{219     \mbox{\hyperlink{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}{Storage<T, A>::Storage}}(\textcolor{keyword}{const} std::vector<V> \&vector, \textcolor{keyword}{const} Allocator \&alloc) :}
+\DoxyCodeLine{220             m\_allocator(alloc), m\_begin(nullptr), m\_end(nullptr) \{}
+\DoxyCodeLine{221         initData(vector.begin(), vector.end());}
+\DoxyCodeLine{222     \}}
+\DoxyCodeLine{223 }
+\DoxyCodeLine{224     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{225     \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage<T, A>}} \&\mbox{\hyperlink{classlibrapid_1_1_storage_a645549771b97c5a5fc50a425d9ca77d1}{Storage<T, A>::operator=}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&other) \{}
+\DoxyCodeLine{226         \textcolor{keywordflow}{if} (\textcolor{keyword}{this} != \&other) \{}
+\DoxyCodeLine{227             m\_allocator =}
+\DoxyCodeLine{228               std::allocator\_traits<A>::select\_on\_container\_copy\_construction(other.m\_allocator);}
+\DoxyCodeLine{229             resizeImpl(other.size());}
+\DoxyCodeLine{230             \textcolor{keywordflow}{if} (typetraits::TriviallyDefaultConstructible<T>::value) \{}
+\DoxyCodeLine{231                 \textcolor{comment}{// Use a slightly faster memcpy if the type is trivially default constructible}}
+\DoxyCodeLine{232                 std::uninitialized\_copy(other.begin(), other.end(), m\_begin);}
+\DoxyCodeLine{233             \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{234                 \textcolor{comment}{// Otherwise, use the standard copy algorithm}}
+\DoxyCodeLine{235                 std::copy(other.begin(), other.end(), m\_begin);}
+\DoxyCodeLine{236             \}}
+\DoxyCodeLine{237         \}}
+\DoxyCodeLine{238         \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{239     \}}
+\DoxyCodeLine{240 }
+\DoxyCodeLine{241     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{242     \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage<T, A>}} \&\mbox{\hyperlink{classlibrapid_1_1_storage_a645549771b97c5a5fc50a425d9ca77d1}{Storage<T, A>::operator=}}(\mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&\&other) \textcolor{keyword}{noexcept} \{}
+\DoxyCodeLine{243         \textcolor{keywordflow}{if} (\textcolor{keyword}{this} != \&other) \{}
+\DoxyCodeLine{244             m\_allocator = std::move(other.m\_allocator);}
+\DoxyCodeLine{245             std::swap(m\_begin, other.m\_begin);}
+\DoxyCodeLine{246             std::swap(m\_end, other.m\_end);}
+\DoxyCodeLine{247         \}}
+\DoxyCodeLine{248         \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{249     \}}
+\DoxyCodeLine{250 }
+\DoxyCodeLine{251     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{252     \mbox{\hyperlink{classlibrapid_1_1_storage_a72b91a469fd786401a1346b9baefaf55}{Storage<T, A>::\string~Storage}}() \{}
+\DoxyCodeLine{253         detail::safeDeallocate(m\_allocator, m\_begin, size());}
+\DoxyCodeLine{254         m\_begin = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{255         m\_end   = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{256     \}}
+\DoxyCodeLine{257 }
+\DoxyCodeLine{258     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{259     \textcolor{keyword}{template}<\textcolor{keyword}{typename} P>}
+\DoxyCodeLine{260     \textcolor{keywordtype}{void} \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage<T, A>::initData}}(P begin, P end) \{}
+\DoxyCodeLine{261         \textcolor{keyword}{auto} size = \textcolor{keyword}{static\_cast<}SizeType\textcolor{keyword}{>}(std::distance(begin, end));}
+\DoxyCodeLine{262         m\_begin   = detail::safeAllocate(m\_allocator, size);}
+\DoxyCodeLine{263         m\_end     = m\_begin + size;}
+\DoxyCodeLine{264         std::uninitialized\_copy(begin, end, m\_begin);}
+\DoxyCodeLine{265     \}}
+\DoxyCodeLine{266 }
+\DoxyCodeLine{267     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{268     \textcolor{keyword}{auto} Storage<T, A>::size() const noexcept -\/> SizeType \{}
+\DoxyCodeLine{269         \textcolor{keywordflow}{return} \textcolor{keyword}{static\_cast<}SizeType\textcolor{keyword}{>}(std::distance(m\_begin, m\_end));}
+\DoxyCodeLine{270     \}}
+\DoxyCodeLine{271 }
+\DoxyCodeLine{272     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{273     \textcolor{keywordtype}{void} \mbox{\hyperlink{classlibrapid_1_1_storage_abe34d150799358f4c44af37da3189332}{Storage<T, A>::resize}}(SizeType newSize) \{}
+\DoxyCodeLine{274         resizeImpl(newSize);}
+\DoxyCodeLine{275     \}}
+\DoxyCodeLine{276 }
+\DoxyCodeLine{277     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{278     \textcolor{keywordtype}{void} \mbox{\hyperlink{classlibrapid_1_1_storage_abe34d150799358f4c44af37da3189332}{Storage<T, A>::resize}}(SizeType newSize, \textcolor{keywordtype}{int}) \{}
+\DoxyCodeLine{279         resizeImpl(newSize);}
+\DoxyCodeLine{280     \}}
+\DoxyCodeLine{281 }
+\DoxyCodeLine{282     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{283     LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{void} \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage<T, A>::resizeImpl}}(SizeType newSize) \{}
+\DoxyCodeLine{284         SizeType oldSize = size();}
+\DoxyCodeLine{285         Pointer oldBegin = m\_begin;}
+\DoxyCodeLine{286         \textcolor{keywordflow}{if} (oldSize != newSize) \{}
+\DoxyCodeLine{287             \textcolor{comment}{// Reallocate}}
+\DoxyCodeLine{288             m\_begin = detail::safeAllocate(m\_allocator, newSize);}
+\DoxyCodeLine{289             m\_end   = m\_begin + newSize;}
+\DoxyCodeLine{290 }
+\DoxyCodeLine{291             \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (typetraits::TriviallyDefaultConstructible<T>::value) \{}
+\DoxyCodeLine{292                 \textcolor{comment}{// Use a slightly faster memcpy if the type is trivially default constructible}}
+\DoxyCodeLine{293                 std::uninitialized\_copy(oldBegin, oldBegin + std::min(oldSize, newSize), m\_begin);}
+\DoxyCodeLine{294             \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{295                 \textcolor{comment}{// Otherwise, use the standard copy algorithm}}
+\DoxyCodeLine{296                 std::copy(oldBegin, oldBegin + std::min(oldSize, newSize), m\_begin);}
+\DoxyCodeLine{297             \}}
+\DoxyCodeLine{298 }
+\DoxyCodeLine{299             detail::safeDeallocate(m\_allocator, oldBegin, oldSize);}
+\DoxyCodeLine{300         \}}
+\DoxyCodeLine{301     \}}
+\DoxyCodeLine{302 }
+\DoxyCodeLine{303     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{304     LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{void} Storage<T, A>::resizeImpl(SizeType newSize, \textcolor{keywordtype}{int}) \{}
+\DoxyCodeLine{305         SizeType oldSize = size();}
+\DoxyCodeLine{306         Pointer oldBegin = m\_begin;}
+\DoxyCodeLine{307         \textcolor{keywordflow}{if} (oldSize != newSize) \{}
+\DoxyCodeLine{308             \textcolor{comment}{// Reallocate}}
+\DoxyCodeLine{309             m\_begin = detail::safeAllocate(m\_allocator, newSize);}
+\DoxyCodeLine{310             m\_end   = m\_begin + newSize;}
+\DoxyCodeLine{311             detail::safeDeallocate(m\_allocator, oldBegin, oldSize);}
+\DoxyCodeLine{312         \}}
+\DoxyCodeLine{313     \}}
+\DoxyCodeLine{314 }
+\DoxyCodeLine{315     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{316     \textcolor{keyword}{auto} Storage<T, A>::operator[](Storage<T, A>::SizeType index) \textcolor{keyword}{const} -\/> ConstReference \{}
+\DoxyCodeLine{317         LIBRAPID\_ASSERT(index < size(), \textcolor{stringliteral}{"{}Index out of bounds"{}});}
+\DoxyCodeLine{318         \textcolor{keywordflow}{return} m\_begin[index];}
+\DoxyCodeLine{319     \}}
+\DoxyCodeLine{320 }
+\DoxyCodeLine{321     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{322     \textcolor{keyword}{auto} Storage<T, A>::operator[](Storage<T, A>::SizeType index) -\/> Reference \{}
+\DoxyCodeLine{323         LIBRAPID\_ASSERT(index < size(), \textcolor{stringliteral}{"{}Index out of bounds"{}});}
+\DoxyCodeLine{324         \textcolor{keywordflow}{return} m\_begin[index];}
+\DoxyCodeLine{325     \}}
+\DoxyCodeLine{326 }
+\DoxyCodeLine{327     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{328     \textcolor{keyword}{auto} Storage<T, A>::begin() noexcept -\/> Iterator \{}
+\DoxyCodeLine{329         \textcolor{keywordflow}{return} m\_begin;}
+\DoxyCodeLine{330     \}}
+\DoxyCodeLine{331 }
+\DoxyCodeLine{332     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{333     \textcolor{keyword}{auto} Storage<T, A>::end() noexcept -\/> Iterator \{}
+\DoxyCodeLine{334         \textcolor{keywordflow}{return} m\_end;}
+\DoxyCodeLine{335     \}}
+\DoxyCodeLine{336 }
+\DoxyCodeLine{337     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{338     \textcolor{keyword}{auto} Storage<T, A>::begin() const noexcept -\/> ConstIterator \{}
+\DoxyCodeLine{339         \textcolor{keywordflow}{return} m\_begin;}
+\DoxyCodeLine{340     \}}
+\DoxyCodeLine{341 }
+\DoxyCodeLine{342     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{343     \textcolor{keyword}{auto} Storage<T, A>::end() const noexcept -\/> ConstIterator \{}
+\DoxyCodeLine{344         \textcolor{keywordflow}{return} m\_end;}
+\DoxyCodeLine{345     \}}
+\DoxyCodeLine{346 }
+\DoxyCodeLine{347     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{348     \textcolor{keyword}{auto} Storage<T, A>::cbegin() const noexcept -\/> ConstIterator \{}
+\DoxyCodeLine{349         \textcolor{keywordflow}{return} begin();}
+\DoxyCodeLine{350     \}}
+\DoxyCodeLine{351 }
+\DoxyCodeLine{352     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{353     \textcolor{keyword}{auto} Storage<T, A>::cend() const noexcept -\/> ConstIterator \{}
+\DoxyCodeLine{354         \textcolor{keywordflow}{return} end();}
+\DoxyCodeLine{355     \}}
+\DoxyCodeLine{356 }
+\DoxyCodeLine{357     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{358     \textcolor{keyword}{auto} Storage<T, A>::rbegin() noexcept -\/> ReverseIterator \{}
+\DoxyCodeLine{359         \textcolor{keywordflow}{return} ReverseIterator(m\_end);}
+\DoxyCodeLine{360     \}}
+\DoxyCodeLine{361 }
+\DoxyCodeLine{362     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{363     \textcolor{keyword}{auto} Storage<T, A>::rend() noexcept -\/> ReverseIterator \{}
+\DoxyCodeLine{364         \textcolor{keywordflow}{return} ReverseIterator(m\_begin);}
+\DoxyCodeLine{365     \}}
+\DoxyCodeLine{366 }
+\DoxyCodeLine{367     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{368     \textcolor{keyword}{auto} Storage<T, A>::rbegin() const noexcept -\/> ConstReverseIterator \{}
+\DoxyCodeLine{369         \textcolor{keywordflow}{return} ConstReverseIterator(m\_end);}
+\DoxyCodeLine{370     \}}
+\DoxyCodeLine{371 }
+\DoxyCodeLine{372     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{373     \textcolor{keyword}{auto} Storage<T, A>::rend() const noexcept -\/> ConstReverseIterator \{}
+\DoxyCodeLine{374         \textcolor{keywordflow}{return} ConstReverseIterator(m\_begin);}
+\DoxyCodeLine{375     \}}
+\DoxyCodeLine{376 }
+\DoxyCodeLine{377     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{378     \textcolor{keyword}{auto} Storage<T, A>::crbegin() const noexcept -\/> ConstReverseIterator \{}
+\DoxyCodeLine{379         \textcolor{keywordflow}{return} rbegin();}
+\DoxyCodeLine{380     \}}
+\DoxyCodeLine{381 }
+\DoxyCodeLine{382     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} A>}
+\DoxyCodeLine{383     \textcolor{keyword}{auto} Storage<T, A>::crend() const noexcept -\/> ConstReverseIterator \{}
+\DoxyCodeLine{384         \textcolor{keywordflow}{return} rend();}
+\DoxyCodeLine{385     \}}
+\DoxyCodeLine{386 \} \textcolor{comment}{// namespace librapid}}
+\DoxyCodeLine{387 }
+\DoxyCodeLine{388 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_ARRAY\_DENSE\_STORAGE\_HPP}}
+
+\end{DoxyCode}

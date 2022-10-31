@@ -1,0 +1,171 @@
+\hypertarget{msvc_config_8hpp_source}{}\doxysection{msvc\+Config.\+hpp}
+\label{msvc_config_8hpp_source}\index{librapid/include/librapid/core/msvcConfig.hpp@{librapid/include/librapid/core/msvcConfig.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef LIBRAPID\_CORE\_MSVC\_CONFIG\_HPP}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define LIBRAPID\_CORE\_MSVC\_CONFIG\_HPP}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#define LIBRAPID\_INLINE        inline}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#define LIBRAPID\_ALWAYS\_INLINE inline \_\_forceinline}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#if defined(LIBRAPID\_ENABLE\_ASSERT)}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#   define LIBRAPID\_STATUS(msg, ...)                                                              \(\backslash\)}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{        do \{                                                                                       \(\backslash\)}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{            std::string funcName = FUNCTION;                                                       \(\backslash\)}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{            if (funcName.length() > 75) funcName = "{}<Signature too Long>"{}};                         \(\backslash\)}
+\DoxyCodeLine{12             int maxLen = librapid::detail::internalMax((int)std::ceil(std::log(\_\_LINE\_\_)) + 6,     \(\backslash\)}
+\DoxyCodeLine{13                                                        (int)strlen(FILENAME) + 6,                  \(\backslash\)}
+\DoxyCodeLine{14                                                        (int)funcName.length() + 6,                 \(\backslash\)}
+\DoxyCodeLine{15                                                        (int)strlen("{}WARN ASSERTION FAILED"{}));      \(\backslash\)}
+\DoxyCodeLine{16             fmt::print(fmt::fg(fmt::color::green),                                                 \(\backslash\)}
+\DoxyCodeLine{17                        "{}[\{0:-\/\string^\{5\}\}]\(\backslash\)n[File \{1:>\{6\}\}]\(\backslash\)n[Function "{}                                  \(\backslash\)}
+\DoxyCodeLine{18                        "{}\{2:>\{7\}\}]\(\backslash\)n[Line \{3:>\{8\}\}]\(\backslash\)n\{4\}\(\backslash\)n"{},                                        \(\backslash\)}
+\DoxyCodeLine{19                        "{}STATUS"{},                                                                   \(\backslash\)}
+\DoxyCodeLine{20                        FILENAME,                                                                   \(\backslash\)}
+\DoxyCodeLine{21                        funcName,                                                                   \(\backslash\)}
+\DoxyCodeLine{22                        \_\_LINE\_\_,                                                                   \(\backslash\)}
+\DoxyCodeLine{23                        fmt::format(msg, \_\_VA\_ARGS\_\_),                                              \(\backslash\)}
+\DoxyCodeLine{24                        maxLen + 5,                                                                 \(\backslash\)}
+\DoxyCodeLine{25                        maxLen + 0,                                                                 \(\backslash\)}
+\DoxyCodeLine{26                        maxLen -\/ 4,                                                                 \(\backslash\)}
+\DoxyCodeLine{27                        maxLen);                                                                    \(\backslash\)}
+\DoxyCodeLine{28         \} while (0)}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#   define LIBRAPID\_WARN(msg, ...)                                                                \(\backslash\)}}
+\DoxyCodeLine{31 \textcolor{preprocessor}{        do \{                                                                                       \(\backslash\)}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{            std::string funcName = FUNCTION;                                                       \(\backslash\)}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{            if (funcName.length() > 75) funcName = "{}<Signature too Long>"{}};                         \(\backslash\)}
+\DoxyCodeLine{34             int maxLen = librapid::detail::internalMax((int)std::ceil(std::log(\_\_LINE\_\_)) + 6,     \(\backslash\)}
+\DoxyCodeLine{35                                                        (int)strlen(FILENAME) + 6,                  \(\backslash\)}
+\DoxyCodeLine{36                                                        (int)funcName.length() + 6,                 \(\backslash\)}
+\DoxyCodeLine{37                                                        (int)strlen("{}WARN ASSERTION FAILED"{}));      \(\backslash\)}
+\DoxyCodeLine{38             fmt::print(fmt::fg(fmt::color::yellow),                                                \(\backslash\)}
+\DoxyCodeLine{39                        "{}[\{0:-\/\string^\{5\}\}]\(\backslash\)n[File \{1:>\{6\}\}]\(\backslash\)n[Function "{}                                  \(\backslash\)}
+\DoxyCodeLine{40                        "{}\{2:>\{7\}\}]\(\backslash\)n[Line \{3:>\{8\}\}]\(\backslash\)n\{4\}\(\backslash\)n"{},                                        \(\backslash\)}
+\DoxyCodeLine{41                        "{}WARNING"{},                                                                  \(\backslash\)}
+\DoxyCodeLine{42                        FILENAME,                                                                   \(\backslash\)}
+\DoxyCodeLine{43                        funcName,                                                                   \(\backslash\)}
+\DoxyCodeLine{44                        \_\_LINE\_\_,                                                                   \(\backslash\)}
+\DoxyCodeLine{45                        fmt::format(msg, \_\_VA\_ARGS\_\_),                                              \(\backslash\)}
+\DoxyCodeLine{46                        maxLen + 5,                                                                 \(\backslash\)}
+\DoxyCodeLine{47                        maxLen + 0,                                                                 \(\backslash\)}
+\DoxyCodeLine{48                        maxLen -\/ 4,                                                                 \(\backslash\)}
+\DoxyCodeLine{49                        maxLen);                                                                    \(\backslash\)}
+\DoxyCodeLine{50         \} while (0)}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#   define LIBRAPID\_ERROR(msg, ...)                                                               \(\backslash\)}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{        do \{                                                                                       \(\backslash\)}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{            std::string funcName = FUNCTION;                                                       \(\backslash\)}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{            if (funcName.length() > 75) funcName = "{}<Signature too Long>"{}};                         \(\backslash\)}
+\DoxyCodeLine{56             int maxLen = librapid::detail::internalMax((int)std::ceil(std::log(\_\_LINE\_\_)) + 6,     \(\backslash\)}
+\DoxyCodeLine{57                                                        (int)strlen(FILENAME) + 6,                  \(\backslash\)}
+\DoxyCodeLine{58                                                        (int)funcName.length() + 6,                 \(\backslash\)}
+\DoxyCodeLine{59                                                        (int)strlen("{}WARN ASSERTION FAILED"{}));      \(\backslash\)}
+\DoxyCodeLine{60             std::string formatted = fmt::format(                                                   \(\backslash\)}
+\DoxyCodeLine{61               "{}[\{0:-\/\string^\{5\}\}]\(\backslash\)n[File \{1:>\{6\}\}]\(\backslash\)n[Function "{}                                           \(\backslash\)}
+\DoxyCodeLine{62               "{}\{2:>\{7\}\}]\(\backslash\)n[Line \{3:>\{8\}\}]\(\backslash\)n\{4\}\(\backslash\)n"{},                                                 \(\backslash\)}
+\DoxyCodeLine{63               "{}ERROR"{},                                                                             \(\backslash\)}
+\DoxyCodeLine{64               FILENAME,                                                                            \(\backslash\)}
+\DoxyCodeLine{65               funcName,                                                                            \(\backslash\)}
+\DoxyCodeLine{66               \_\_LINE\_\_,                                                                            \(\backslash\)}
+\DoxyCodeLine{67               fmt::format(msg, \_\_VA\_ARGS\_\_),                                                       \(\backslash\)}
+\DoxyCodeLine{68               maxLen + 5,                                                                          \(\backslash\)}
+\DoxyCodeLine{69               maxLen + 0,                                                                          \(\backslash\)}
+\DoxyCodeLine{70               maxLen -\/ 4,                                                                          \(\backslash\)}
+\DoxyCodeLine{71               maxLen);                                                                             \(\backslash\)}
+\DoxyCodeLine{72             if (librapid::global::throwOnAssert) \{                                                 \(\backslash\)}
+\DoxyCodeLine{73                 throw std::runtime\_error(formatted);                                               \(\backslash\)}
+\DoxyCodeLine{74             \} else \{                                                                               \(\backslash\)}
+\DoxyCodeLine{75                 fmt::print(fmt::fg(fmt::color::red), formatted);                                   \(\backslash\)}
+\DoxyCodeLine{76                 std::exit(1);                                                                      \(\backslash\)}
+\DoxyCodeLine{77             \}                                                                                      \(\backslash\)}
+\DoxyCodeLine{78         \} while (0)}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80 \textcolor{preprocessor}{\#   define LIBRAPID\_WASSERT(cond, msg, ...)                                                       \(\backslash\)}}
+\DoxyCodeLine{81 \textcolor{preprocessor}{        std::string funcName = FUNCTION;                                                           \(\backslash\)}}
+\DoxyCodeLine{82 \textcolor{preprocessor}{        if (funcName.length() > 75) funcName = "{}<Signature too Long>"{}};                             \(\backslash\)}
+\DoxyCodeLine{83         do \{                                                                                       \(\backslash\)}
+\DoxyCodeLine{84             if (!(cond)) \{                                                                         \(\backslash\)}
+\DoxyCodeLine{85                 int maxLen = librapid::detail::internalMax((int)std::ceil(std::log(\_\_LINE\_\_)) + 6, \(\backslash\)}
+\DoxyCodeLine{86                                                            (int)strlen(FILENAME) + 6,              \(\backslash\)}
+\DoxyCodeLine{87                                                            (int)funcName.length() + 6,             \(\backslash\)}
+\DoxyCodeLine{88                                                            (int)strlen(\#cond) + 6,                 \(\backslash\)}
+\DoxyCodeLine{89                                                            (int)strlen("{}WARN ASSERTION FAILED"{}));  \(\backslash\)}
+\DoxyCodeLine{90                 fmt::print(fmt::fg(fmt::color::yellow),                                            \(\backslash\)}
+\DoxyCodeLine{91                            "{}[\{0:-\/\string^\{6\}\}]\(\backslash\)n[File \{1:>\{7\}\}]\(\backslash\)n[Function "{}                              \(\backslash\)}
+\DoxyCodeLine{92                            "{}\{2:>\{8\}\}]\(\backslash\)n[Line \{3:>\{9\}\}]\(\backslash\)n[Condition "{}                               \(\backslash\)}
+\DoxyCodeLine{93                            "{}\{4:>\{10\}\}]\(\backslash\)n\{5\}\(\backslash\)n"{},                                                    \(\backslash\)}
+\DoxyCodeLine{94                            "{}WARN ASSERTION FAILED"{},                                                \(\backslash\)}
+\DoxyCodeLine{95                            FILENAME,                                                               \(\backslash\)}
+\DoxyCodeLine{96                            funcName,                                                               \(\backslash\)}
+\DoxyCodeLine{97                            \_\_LINE\_\_,                                                               \(\backslash\)}
+\DoxyCodeLine{98                            \#cond,                                                                  \(\backslash\)}
+\DoxyCodeLine{99                            fmt::format(msg, \_\_VA\_ARGS\_\_),                                          \(\backslash\)}
+\DoxyCodeLine{100                            maxLen + 5,                                                             \(\backslash\)}
+\DoxyCodeLine{101                            maxLen + 0,                                                             \(\backslash\)}
+\DoxyCodeLine{102                            maxLen -\/ 4,                                                             \(\backslash\)}
+\DoxyCodeLine{103                            maxLen + 0,                                                             \(\backslash\)}
+\DoxyCodeLine{104                            maxLen -\/ 5);                                                            \(\backslash\)}
+\DoxyCodeLine{105             \}                                                                                      \(\backslash\)}
+\DoxyCodeLine{106         \} while (0)}
+\DoxyCodeLine{107 }
+\DoxyCodeLine{108 \textcolor{preprocessor}{\#   define LIBRAPID\_ASSERT(cond, msg, ...)                                                        \(\backslash\)}}
+\DoxyCodeLine{109 \textcolor{preprocessor}{        do \{                                                                                       \(\backslash\)}}
+\DoxyCodeLine{110 \textcolor{preprocessor}{            if (!(cond)) \{                                                                         \(\backslash\)}}
+\DoxyCodeLine{111 \textcolor{preprocessor}{                std::string funcName = FUNCTION;                                                   \(\backslash\)}}
+\DoxyCodeLine{112 \textcolor{preprocessor}{                if (funcName.length() > 75) funcName = "{}<Signature too Long>"{}};                     \(\backslash\)}
+\DoxyCodeLine{113                 int maxLen = librapid::detail::internalMax((int)std::ceil(std::log(\_\_LINE\_\_)),     \(\backslash\)}
+\DoxyCodeLine{114                                                            (int)strlen(FILENAME),                  \(\backslash\)}
+\DoxyCodeLine{115                                                            (int)funcName.length(),                 \(\backslash\)}
+\DoxyCodeLine{116                                                            (int)strlen(\#cond),                     \(\backslash\)}
+\DoxyCodeLine{117                                                            (int)strlen("{}ASSERTION FAILED"{}));       \(\backslash\)}
+\DoxyCodeLine{118                 std::string formatted = fmt::format(                                               \(\backslash\)}
+\DoxyCodeLine{119                   "{}[\{0:-\/\string^\{6\}\}]\(\backslash\)n[File \{1:>\{7\}\}]\(\backslash\)n[Function "{}                                       \(\backslash\)}
+\DoxyCodeLine{120                   "{}\{2:>\{8\}\}]\(\backslash\)n[Line \{3:>\{9\}\}]\(\backslash\)n[Condition "{}                                        \(\backslash\)}
+\DoxyCodeLine{121                   "{}\{4:>\{10\}\}]\(\backslash\)n\{5\}\(\backslash\)n"{},                                                             \(\backslash\)}
+\DoxyCodeLine{122                   "{}ASSERTION FAILED"{},                                                              \(\backslash\)}
+\DoxyCodeLine{123                   FILENAME,                                                                        \(\backslash\)}
+\DoxyCodeLine{124                   funcName,                                                                        \(\backslash\)}
+\DoxyCodeLine{125                   \_\_LINE\_\_,                                                                        \(\backslash\)}
+\DoxyCodeLine{126                   \#cond,                                                                           \(\backslash\)}
+\DoxyCodeLine{127                   fmt::format(msg, \_\_VA\_ARGS\_\_),                                                   \(\backslash\)}
+\DoxyCodeLine{128                   maxLen + 14,                                                                     \(\backslash\)}
+\DoxyCodeLine{129                   maxLen + 9,                                                                      \(\backslash\)}
+\DoxyCodeLine{130                   maxLen + 5,                                                                      \(\backslash\)}
+\DoxyCodeLine{131                   maxLen + 9,                                                                      \(\backslash\)}
+\DoxyCodeLine{132                   maxLen + 4);                                                                     \(\backslash\)}
+\DoxyCodeLine{133                 if (librapid::global::throwOnAssert) \{                                             \(\backslash\)}
+\DoxyCodeLine{134                     throw std::runtime\_error(formatted);                                           \(\backslash\)}
+\DoxyCodeLine{135                 \} else \{                                                                           \(\backslash\)}
+\DoxyCodeLine{136                     fmt::print(fmt::fg(fmt::color::red), formatted);                               \(\backslash\)}
+\DoxyCodeLine{137                     std::exit(1);                                                                  \(\backslash\)}
+\DoxyCodeLine{138                 \}                                                                                  \(\backslash\)}
+\DoxyCodeLine{139             \}                                                                                      \(\backslash\)}
+\DoxyCodeLine{140         \} while (0)}
+\DoxyCodeLine{141 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{142 \textcolor{preprocessor}{\#   define LIBRAPID\_WARN\_ONCE(msg, ...)                                                           \(\backslash\)}}
+\DoxyCodeLine{143 \textcolor{preprocessor}{        do \{                                                                                       \(\backslash\)}}
+\DoxyCodeLine{144 \textcolor{preprocessor}{        \} while (0)}}
+\DoxyCodeLine{145 \textcolor{preprocessor}{\#   define LIBRAPID\_STATUS(msg, ...)                                                              \(\backslash\)}}
+\DoxyCodeLine{146 \textcolor{preprocessor}{        do \{                                                                                       \(\backslash\)}}
+\DoxyCodeLine{147 \textcolor{preprocessor}{        \} while (0)}}
+\DoxyCodeLine{148 \textcolor{preprocessor}{\#   define LIBRAPID\_WARN(msg, ...)                                                                \(\backslash\)}}
+\DoxyCodeLine{149 \textcolor{preprocessor}{        do \{                                                                                       \(\backslash\)}}
+\DoxyCodeLine{150 \textcolor{preprocessor}{        \} while (0)}}
+\DoxyCodeLine{151 \textcolor{preprocessor}{\#   define LIBRAPID\_ERROR(msg, ...)                                                               \(\backslash\)}}
+\DoxyCodeLine{152 \textcolor{preprocessor}{        do \{                                                                                       \(\backslash\)}}
+\DoxyCodeLine{153 \textcolor{preprocessor}{        \} while (0)}}
+\DoxyCodeLine{154 \textcolor{preprocessor}{\#   define LIBRAPID\_LOG(msg, ...)                                                                 \(\backslash\)}}
+\DoxyCodeLine{155 \textcolor{preprocessor}{        do \{                                                                                       \(\backslash\)}}
+\DoxyCodeLine{156 \textcolor{preprocessor}{        \} while (0)}}
+\DoxyCodeLine{157 \textcolor{preprocessor}{\#   define LIBRAPID\_WASSERT(cond, ...)                                                            \(\backslash\)}}
+\DoxyCodeLine{158 \textcolor{preprocessor}{        do \{                                                                                       \(\backslash\)}}
+\DoxyCodeLine{159 \textcolor{preprocessor}{        \} while (0)}}
+\DoxyCodeLine{160 \textcolor{preprocessor}{\#   define LIBRAPID\_ASSERT(cond, ...)                                                             \(\backslash\)}}
+\DoxyCodeLine{161 \textcolor{preprocessor}{        do \{                                                                                       \(\backslash\)}}
+\DoxyCodeLine{162 \textcolor{preprocessor}{        \} while (0)}}
+\DoxyCodeLine{163 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_ENABLE\_ASSERT}}
+\DoxyCodeLine{164 }
+\DoxyCodeLine{165 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_CORE\_MSVC\_CONFIG\_HPP}}
+
+\end{DoxyCode}

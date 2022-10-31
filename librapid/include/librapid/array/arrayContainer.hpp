@@ -123,7 +123,12 @@ namespace librapid {
 	  const detail::Function<desc, Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT
 			: m_shape(function.shape()),
 			  m_storage(m_shape.size()) {
-		detail::assign(*this, function);
+#if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
+		if (m_storage.size() > global::multithreadThreshold && global::numThreads > 1)
+			detail::assignParallel(*this, function);
+		else
+#endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
+			detail::assign(*this, function);
 	}
 
 	template<typename ShapeType_, typename StorageType_>
@@ -131,10 +136,12 @@ namespace librapid {
 	ArrayContainer<ShapeType_, StorageType_> &ArrayContainer<ShapeType_, StorageType_>::operator=(
 	  const detail::Function<desc, Functor_, Args...> &function) {
 		m_storage.resize(function.shape().size(), 0);
-		if (m_storage.size() < global::multithreadThreshold)
-			detail::assign(*this, function);
-		else
+#if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
+		if (m_storage.size() > global::multithreadThreshold && global::numThreads > 1)
 			detail::assignParallel(*this, function);
+		else
+#endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
+			detail::assign(*this, function);
 		return *this;
 	}
 
@@ -156,8 +163,7 @@ namespace librapid {
 	}
 
 	template<typename ShapeType_, typename StorageType_>
-	void ArrayContainer<ShapeType_, StorageType_>::writePacket(size_t index,
-															   const Packet &value) {
+	void ArrayContainer<ShapeType_, StorageType_>::writePacket(size_t index, const Packet &value) {
 		value.store(m_storage.begin() + index);
 	}
 
