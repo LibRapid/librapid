@@ -1,0 +1,325 @@
+\hypertarget{helper__timer_8h_source}{}\doxysection{helper\+\_\+timer.\+h}
+\label{helper__timer_8h_source}\index{librapid/include/librapid/cuda/helper\_timer.h@{librapid/include/librapid/cuda/helper\_timer.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/* Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{4 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{5 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{6 \textcolor{comment}{ *  * Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{7 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{8 \textcolor{comment}{ *  * Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{9 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{10 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{11 \textcolor{comment}{ *  * Neither the name of NVIDIA CORPORATION nor the names of its}}
+\DoxyCodeLine{12 \textcolor{comment}{ *    contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{13 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{14 \textcolor{comment}{ *}}
+\DoxyCodeLine{15 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY}}
+\DoxyCodeLine{16 \textcolor{comment}{ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{17 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR}}
+\DoxyCodeLine{18 \textcolor{comment}{ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR}}
+\DoxyCodeLine{19 \textcolor{comment}{ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,}}
+\DoxyCodeLine{20 \textcolor{comment}{ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,}}
+\DoxyCodeLine{21 \textcolor{comment}{ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR}}
+\DoxyCodeLine{22 \textcolor{comment}{ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY}}
+\DoxyCodeLine{23 \textcolor{comment}{ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{24 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{25 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{26 \textcolor{comment}{ */}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{comment}{// Helper Timing Functions}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#ifndef COMMON\_HELPER\_TIMER\_H\_}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#define COMMON\_HELPER\_TIMER\_H\_}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#ifndef EXIT\_WAIVED}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#   define EXIT\_WAIVED 2}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{comment}{// includes, system}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{comment}{// includes, project}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#include "{}exception.h"{}}}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 \textcolor{comment}{// Definition of the StopWatch Interface, this is used if we don't want to use}}
+\DoxyCodeLine{43 \textcolor{comment}{// the CUT functions But rather in a self contained class interface}}
+\DoxyCodeLine{44 \textcolor{keyword}{class }\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} \{}
+\DoxyCodeLine{45 \textcolor{keyword}{public}:}
+\DoxyCodeLine{46     \mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}}() \{\}}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_stop_watch_interface}{\string~StopWatchInterface}}() \{\}}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50 \textcolor{keyword}{public}:}
+\DoxyCodeLine{52     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_interface_a753200dac75f85ed691fc496d8343248}{start}}() = 0;}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{55     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_interface_a53280ad65e3800cf608315afa3a20554}{stop}}() = 0;}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{58     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_interface_af38c96a046bc667528a8500d69106b09}{reset}}() = 0;}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{63     \textcolor{keyword}{virtual} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_interface_ab2127ae16fd7cafec70246fa07f2025f}{getTime}}() = 0;}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{67     \textcolor{keyword}{virtual} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_interface_a049e581ad35895795be1e04763d40cc3}{getAverageTime}}() = 0;}
+\DoxyCodeLine{68 \};}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{71 \textcolor{comment}{// Begin Stopwatch timer class definitions for all OS platforms //}}
+\DoxyCodeLine{73 \textcolor{comment}{}\textcolor{preprocessor}{\#if defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{74 \textcolor{comment}{// includes, system}}
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#   define WINDOWS\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{77 \textcolor{preprocessor}{\#   include <Windows.h>}}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79 \textcolor{preprocessor}{\#   undef min}}
+\DoxyCodeLine{80 \textcolor{preprocessor}{\#   undef max}}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{83 \textcolor{keyword}{class }StopWatchWin : \textcolor{keyword}{public} \mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} \{}
+\DoxyCodeLine{84 \textcolor{keyword}{public}:}
+\DoxyCodeLine{86     StopWatchWin() :}
+\DoxyCodeLine{87             start\_time(), end\_time(), diff\_time(0.0f), total\_time(0.0f), running(\textcolor{keyword}{false}),}
+\DoxyCodeLine{88             clock\_sessions(0), freq(0), freq\_set(\textcolor{keyword}{false}) \{}
+\DoxyCodeLine{89         \textcolor{keywordflow}{if} (!freq\_set) \{}
+\DoxyCodeLine{90             \textcolor{comment}{// helper variable}}
+\DoxyCodeLine{91             LARGE\_INTEGER temp;}
+\DoxyCodeLine{92 }
+\DoxyCodeLine{93             \textcolor{comment}{// get the tick frequency from the OS}}
+\DoxyCodeLine{94             QueryPerformanceFrequency(\textcolor{keyword}{reinterpret\_cast<}LARGE\_INTEGER *\textcolor{keyword}{>}(\&temp));}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{96             \textcolor{comment}{// convert to type in which it is needed}}
+\DoxyCodeLine{97             freq = (\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(temp.QuadPart)) / 1000.0;}
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99             \textcolor{comment}{// rememeber query}}
+\DoxyCodeLine{100             freq\_set = \textcolor{keyword}{true};}
+\DoxyCodeLine{101         \}}
+\DoxyCodeLine{102     \}}
+\DoxyCodeLine{103 }
+\DoxyCodeLine{104     \textcolor{comment}{// Destructor}}
+\DoxyCodeLine{105     \string~StopWatchWin() \{\}}
+\DoxyCodeLine{106 }
+\DoxyCodeLine{107 \textcolor{keyword}{public}:}
+\DoxyCodeLine{109     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_interface_a753200dac75f85ed691fc496d8343248}{start}}();}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{112     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_interface_a53280ad65e3800cf608315afa3a20554}{stop}}();}
+\DoxyCodeLine{113 }
+\DoxyCodeLine{115     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_interface_af38c96a046bc667528a8500d69106b09}{reset}}();}
+\DoxyCodeLine{116 }
+\DoxyCodeLine{120     \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_interface_ab2127ae16fd7cafec70246fa07f2025f}{getTime}}();}
+\DoxyCodeLine{121 }
+\DoxyCodeLine{124     \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_interface_a049e581ad35895795be1e04763d40cc3}{getAverageTime}}();}
+\DoxyCodeLine{125 }
+\DoxyCodeLine{126 \textcolor{keyword}{private}:}
+\DoxyCodeLine{127     \textcolor{comment}{// member variables}}
+\DoxyCodeLine{128 }
+\DoxyCodeLine{130     LARGE\_INTEGER start\_time;}
+\DoxyCodeLine{132     LARGE\_INTEGER end\_time;}
+\DoxyCodeLine{133 }
+\DoxyCodeLine{135     \textcolor{keywordtype}{float} diff\_time;}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{138     \textcolor{keywordtype}{float} total\_time;}
+\DoxyCodeLine{139 }
+\DoxyCodeLine{141     \textcolor{keywordtype}{bool} running;}
+\DoxyCodeLine{142 }
+\DoxyCodeLine{145     \textcolor{keywordtype}{int} clock\_sessions;}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{148     \textcolor{keywordtype}{double} freq;}
+\DoxyCodeLine{149 }
+\DoxyCodeLine{151     \textcolor{keywordtype}{bool} freq\_set;}
+\DoxyCodeLine{152 \};}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{154 \textcolor{comment}{// functions, inlined}}
+\DoxyCodeLine{155 }
+\DoxyCodeLine{159 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} StopWatchWin::start() \{}
+\DoxyCodeLine{160     QueryPerformanceCounter(\textcolor{keyword}{reinterpret\_cast<}LARGE\_INTEGER *\textcolor{keyword}{>}(\&start\_time));}
+\DoxyCodeLine{161     running = \textcolor{keyword}{true};}
+\DoxyCodeLine{162 \}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{168 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} StopWatchWin::stop() \{}
+\DoxyCodeLine{169     QueryPerformanceCounter(\textcolor{keyword}{reinterpret\_cast<}LARGE\_INTEGER *\textcolor{keyword}{>}(\&end\_time));}
+\DoxyCodeLine{170     diff\_time = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(}
+\DoxyCodeLine{171       ((\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(end\_time.QuadPart) -\/ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(start\_time.QuadPart)) / freq));}
+\DoxyCodeLine{172 }
+\DoxyCodeLine{173     total\_time += diff\_time;}
+\DoxyCodeLine{174     clock\_sessions++;}
+\DoxyCodeLine{175     running = \textcolor{keyword}{false};}
+\DoxyCodeLine{176 \}}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{182 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} StopWatchWin::reset() \{}
+\DoxyCodeLine{183     diff\_time      = 0;}
+\DoxyCodeLine{184     total\_time     = 0;}
+\DoxyCodeLine{185     clock\_sessions = 0;}
+\DoxyCodeLine{186 }
+\DoxyCodeLine{187     \textcolor{keywordflow}{if} (running) \{ QueryPerformanceCounter(\textcolor{keyword}{reinterpret\_cast<}LARGE\_INTEGER *\textcolor{keyword}{>}(\&start\_time)); \}}
+\DoxyCodeLine{188 \}}
+\DoxyCodeLine{189 }
+\DoxyCodeLine{196 \textcolor{keyword}{inline} \textcolor{keywordtype}{float} StopWatchWin::getTime() \{}
+\DoxyCodeLine{197     \textcolor{comment}{// Return the TOTAL time to date}}
+\DoxyCodeLine{198     \textcolor{keywordtype}{float} retval = total\_time;}
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200     \textcolor{keywordflow}{if} (running) \{}
+\DoxyCodeLine{201         LARGE\_INTEGER temp;}
+\DoxyCodeLine{202         QueryPerformanceCounter(\textcolor{keyword}{reinterpret\_cast<}LARGE\_INTEGER *\textcolor{keyword}{>}(\&temp));}
+\DoxyCodeLine{203         retval += \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(}
+\DoxyCodeLine{204           ((\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(temp.QuadPart) -\/ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(start\_time.QuadPart)) / freq));}
+\DoxyCodeLine{205     \}}
+\DoxyCodeLine{206 }
+\DoxyCodeLine{207     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{208 \}}
+\DoxyCodeLine{209 }
+\DoxyCodeLine{214 \textcolor{keyword}{inline} \textcolor{keywordtype}{float} StopWatchWin::getAverageTime() \{}
+\DoxyCodeLine{215     \textcolor{keywordflow}{return} (clock\_sessions > 0) ? (total\_time / clock\_sessions) : 0.0f;}
+\DoxyCodeLine{216 \}}
+\DoxyCodeLine{217 }
+\DoxyCodeLine{218 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{219 \textcolor{comment}{// Declarations for Stopwatch on Linux and Mac OSX}}
+\DoxyCodeLine{220 \textcolor{comment}{// includes, system}}
+\DoxyCodeLine{221 \textcolor{preprocessor}{\#   include <ctime>}}
+\DoxyCodeLine{222 \textcolor{preprocessor}{\#   include <sys/time.h>}}
+\DoxyCodeLine{223 }
+\DoxyCodeLine{225 \textcolor{keyword}{class }\mbox{\hyperlink{class_stop_watch_linux}{StopWatchLinux}} : \textcolor{keyword}{public} \mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} \{}
+\DoxyCodeLine{226 \textcolor{keyword}{public}:}
+\DoxyCodeLine{228     \mbox{\hyperlink{class_stop_watch_linux_adb421b1d92bec2a59e564c053d94075f}{StopWatchLinux}}() :}
+\DoxyCodeLine{229             start\_time(), diff\_time(0.0), total\_time(0.0), running(false), clock\_sessions(0) \{\}}
+\DoxyCodeLine{230 }
+\DoxyCodeLine{231     \textcolor{comment}{// Destructor}}
+\DoxyCodeLine{232     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_stop_watch_linux}{\string~StopWatchLinux}}() \{\}}
+\DoxyCodeLine{233 }
+\DoxyCodeLine{234 \textcolor{keyword}{public}:}
+\DoxyCodeLine{236     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_linux_a5b48161b757890313c93cdcbf6470258}{start}}();}
+\DoxyCodeLine{237 }
+\DoxyCodeLine{239     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_linux_aea4fb94c36ad6d01cb371afa0aae0926}{stop}}();}
+\DoxyCodeLine{240 }
+\DoxyCodeLine{242     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_linux_ae609a527c56e658941f539a8aaf43c71}{reset}}();}
+\DoxyCodeLine{243 }
+\DoxyCodeLine{247     \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_linux_a7e211f57179ab20e6814127318e9f0f8}{getTime}}();}
+\DoxyCodeLine{248 }
+\DoxyCodeLine{251     \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_linux_a702b38009675968d5798796978007376}{getAverageTime}}();}
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253 \textcolor{keyword}{private}:}
+\DoxyCodeLine{254     \textcolor{comment}{// helper functions}}
+\DoxyCodeLine{255 }
+\DoxyCodeLine{257     \textcolor{keyword}{inline} \textcolor{keywordtype}{float} getDiffTime();}
+\DoxyCodeLine{258 }
+\DoxyCodeLine{259 \textcolor{keyword}{private}:}
+\DoxyCodeLine{260     \textcolor{comment}{// member variables}}
+\DoxyCodeLine{261 }
+\DoxyCodeLine{263     \textcolor{keyword}{struct }timeval start\_time;}
+\DoxyCodeLine{264 }
+\DoxyCodeLine{266     \textcolor{keywordtype}{float} diff\_time;}
+\DoxyCodeLine{267 }
+\DoxyCodeLine{269     \textcolor{keywordtype}{float} total\_time;}
+\DoxyCodeLine{270 }
+\DoxyCodeLine{272     \textcolor{keywordtype}{bool} running;}
+\DoxyCodeLine{273 }
+\DoxyCodeLine{276     \textcolor{keywordtype}{int} clock\_sessions;}
+\DoxyCodeLine{277 \};}
+\DoxyCodeLine{278 }
+\DoxyCodeLine{279 \textcolor{comment}{// functions, inlined}}
+\DoxyCodeLine{280 }
+\DoxyCodeLine{284 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_linux_a5b48161b757890313c93cdcbf6470258}{StopWatchLinux::start}}() \{}
+\DoxyCodeLine{285     gettimeofday(\&start\_time, 0);}
+\DoxyCodeLine{286     running = \textcolor{keyword}{true};}
+\DoxyCodeLine{287 \}}
+\DoxyCodeLine{288 }
+\DoxyCodeLine{293 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_linux_aea4fb94c36ad6d01cb371afa0aae0926}{StopWatchLinux::stop}}() \{}
+\DoxyCodeLine{294     diff\_time = getDiffTime();}
+\DoxyCodeLine{295     total\_time += diff\_time;}
+\DoxyCodeLine{296     running = \textcolor{keyword}{false};}
+\DoxyCodeLine{297     clock\_sessions++;}
+\DoxyCodeLine{298 \}}
+\DoxyCodeLine{299 }
+\DoxyCodeLine{304 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_linux_ae609a527c56e658941f539a8aaf43c71}{StopWatchLinux::reset}}() \{}
+\DoxyCodeLine{305     diff\_time      = 0;}
+\DoxyCodeLine{306     total\_time     = 0;}
+\DoxyCodeLine{307     clock\_sessions = 0;}
+\DoxyCodeLine{308 }
+\DoxyCodeLine{309     \textcolor{keywordflow}{if} (running) \{ gettimeofday(\&start\_time, 0); \}}
+\DoxyCodeLine{310 \}}
+\DoxyCodeLine{311 }
+\DoxyCodeLine{318 \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_linux_a7e211f57179ab20e6814127318e9f0f8}{StopWatchLinux::getTime}}() \{}
+\DoxyCodeLine{319     \textcolor{comment}{// Return the TOTAL time to date}}
+\DoxyCodeLine{320     \textcolor{keywordtype}{float} retval = total\_time;}
+\DoxyCodeLine{321 }
+\DoxyCodeLine{322     \textcolor{keywordflow}{if} (running) \{ retval += getDiffTime(); \}}
+\DoxyCodeLine{323 }
+\DoxyCodeLine{324     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{325 \}}
+\DoxyCodeLine{326 }
+\DoxyCodeLine{331 \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_linux_a702b38009675968d5798796978007376}{StopWatchLinux::getAverageTime}}() \{}
+\DoxyCodeLine{332     \textcolor{keywordflow}{return} (clock\_sessions > 0) ? (total\_time / clock\_sessions) : 0.0f;}
+\DoxyCodeLine{333 \}}
+\DoxyCodeLine{335 }
+\DoxyCodeLine{337 \textcolor{keyword}{inline} \textcolor{keywordtype}{float} StopWatchLinux::getDiffTime() \{}
+\DoxyCodeLine{338     \textcolor{keyword}{struct }timeval t\_time;}
+\DoxyCodeLine{339     gettimeofday(\&t\_time, 0);}
+\DoxyCodeLine{340 }
+\DoxyCodeLine{341     \textcolor{comment}{// time difference in milli-\/seconds}}
+\DoxyCodeLine{342     \textcolor{keywordflow}{return} \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(1000.0 * (t\_time.tv\_sec -\/ start\_time.tv\_sec) +}
+\DoxyCodeLine{343                               (0.001 * (t\_time.tv\_usec -\/ start\_time.tv\_usec)));}
+\DoxyCodeLine{344 \}}
+\DoxyCodeLine{345 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// WIN32}}
+\DoxyCodeLine{346 }
+\DoxyCodeLine{349 }
+\DoxyCodeLine{355 \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} sdkCreateTimer(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{356 \textcolor{comment}{// printf("{}sdkCreateTimer called object \%08x\(\backslash\)n"{}, (void *)*timer\_interface);}}
+\DoxyCodeLine{357 \textcolor{preprocessor}{\#if defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{358     *timer\_interface = \textcolor{keyword}{reinterpret\_cast<}\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} *\textcolor{keyword}{>}(\textcolor{keyword}{new} StopWatchWin());}
+\DoxyCodeLine{359 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{360     *timer\_interface = \textcolor{keyword}{reinterpret\_cast<}\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} *\textcolor{keyword}{>}(\textcolor{keyword}{new} \mbox{\hyperlink{class_stop_watch_linux}{StopWatchLinux}}());}
+\DoxyCodeLine{361 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{362     \textcolor{keywordflow}{return} (*timer\_interface != NULL) ? true : \textcolor{keyword}{false};}
+\DoxyCodeLine{363 \}}
+\DoxyCodeLine{364 }
+\DoxyCodeLine{370 \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} sdkDeleteTimer(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{371     \textcolor{comment}{// printf("{}sdkDeleteTimer called object \%08x\(\backslash\)n"{}, (void *)*timer\_interface);}}
+\DoxyCodeLine{372     \textcolor{keywordflow}{if} (*timer\_interface) \{}
+\DoxyCodeLine{373         \textcolor{keyword}{delete} *timer\_interface;}
+\DoxyCodeLine{374         *timer\_interface = NULL;}
+\DoxyCodeLine{375     \}}
+\DoxyCodeLine{376 }
+\DoxyCodeLine{377     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{378 \}}
+\DoxyCodeLine{379 }
+\DoxyCodeLine{384 \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} sdkStartTimer(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{385     \textcolor{comment}{// printf("{}sdkStartTimer called object \%08x\(\backslash\)n"{}, (void *)*timer\_interface);}}
+\DoxyCodeLine{386     \textcolor{keywordflow}{if} (*timer\_interface) \{ (*timer\_interface)-\/>start(); \}}
+\DoxyCodeLine{387 }
+\DoxyCodeLine{388     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{389 \}}
+\DoxyCodeLine{390 }
+\DoxyCodeLine{395 \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} sdkStopTimer(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{396     \textcolor{comment}{// printf("{}sdkStopTimer called object \%08x\(\backslash\)n"{}, (void *)*timer\_interface);}}
+\DoxyCodeLine{397     \textcolor{keywordflow}{if} (*timer\_interface) \{ (*timer\_interface)-\/>stop(); \}}
+\DoxyCodeLine{398 }
+\DoxyCodeLine{399     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{400 \}}
+\DoxyCodeLine{401 }
+\DoxyCodeLine{406 \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} sdkResetTimer(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{407     \textcolor{comment}{// printf("{}sdkResetTimer called object \%08x\(\backslash\)n"{}, (void *)*timer\_interface);}}
+\DoxyCodeLine{408     \textcolor{keywordflow}{if} (*timer\_interface) \{ (*timer\_interface)-\/>reset(); \}}
+\DoxyCodeLine{409 }
+\DoxyCodeLine{410     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{411 \}}
+\DoxyCodeLine{412 }
+\DoxyCodeLine{420 \textcolor{keyword}{inline} \textcolor{keywordtype}{float} sdkGetAverageTimerValue(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{421     \textcolor{comment}{//  printf("{}sdkGetAverageTimerValue called object \%08x\(\backslash\)n"{}, (void}}
+\DoxyCodeLine{422     \textcolor{comment}{//  *)*timer\_interface);}}
+\DoxyCodeLine{423     \textcolor{keywordflow}{if} (*timer\_interface) \{}
+\DoxyCodeLine{424         \textcolor{keywordflow}{return} (*timer\_interface)-\/>getAverageTime();}
+\DoxyCodeLine{425     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{426         \textcolor{keywordflow}{return} 0.0f;}
+\DoxyCodeLine{427     \}}
+\DoxyCodeLine{428 \}}
+\DoxyCodeLine{429 }
+\DoxyCodeLine{435 \textcolor{keyword}{inline} \textcolor{keywordtype}{float} sdkGetTimerValue(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{436     \textcolor{comment}{// printf("{}sdkGetTimerValue called object \%08x\(\backslash\)n"{}, (void}}
+\DoxyCodeLine{437     \textcolor{comment}{// *)*timer\_interface);}}
+\DoxyCodeLine{438     \textcolor{keywordflow}{if} (*timer\_interface) \{}
+\DoxyCodeLine{439         \textcolor{keywordflow}{return} (*timer\_interface)-\/>getTime();}
+\DoxyCodeLine{440     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{441         \textcolor{keywordflow}{return} 0.0f;}
+\DoxyCodeLine{442     \}}
+\DoxyCodeLine{443 \}}
+\DoxyCodeLine{444 }
+\DoxyCodeLine{445 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// COMMON\_HELPER\_TIMER\_H\_}}
+
+\end{DoxyCode}

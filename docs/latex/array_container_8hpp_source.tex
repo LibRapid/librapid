@@ -1,0 +1,137 @@
+\hypertarget{array_container_8hpp_source}{}\doxysection{array\+Container.\+hpp}
+\label{array_container_8hpp_source}\index{librapid/include/librapid/array/arrayContainer.hpp@{librapid/include/librapid/array/arrayContainer.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef LIBRAPID\_ARRAY\_ARRAY\_CONTAINER\_HPP}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define LIBRAPID\_ARRAY\_ARRAY\_CONTAINER\_HPP}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{keyword}{namespace }librapid \{}
+\DoxyCodeLine{5     \textcolor{keyword}{namespace }typetraits \{}
+\DoxyCodeLine{6         \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_>}
+\DoxyCodeLine{7         \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<\mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer}}<ShapeType\_, StorageType\_>> \{}
+\DoxyCodeLine{8             \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType = \textcolor{keyword}{true};}
+\DoxyCodeLine{9             \textcolor{keyword}{using} Scalar                         = \textcolor{keyword}{typename} TypeInfo<StorageType\_>::Scalar;}
+\DoxyCodeLine{10         \};}
+\DoxyCodeLine{11     \} \textcolor{comment}{// namespace typetraits}}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_>}
+\DoxyCodeLine{14     \textcolor{keyword}{class }\mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer}} \{}
+\DoxyCodeLine{15     \textcolor{keyword}{public}:}
+\DoxyCodeLine{16         \textcolor{keyword}{using} StorageType = StorageType\_;}
+\DoxyCodeLine{17         \textcolor{keyword}{using} ShapeType   = ShapeType\_;}
+\DoxyCodeLine{18         \textcolor{keyword}{using} SizeType    = \textcolor{keyword}{typename} ShapeType::SizeType;}
+\DoxyCodeLine{19         \textcolor{keyword}{using} Scalar      = \textcolor{keyword}{typename} StorageType::Scalar;}
+\DoxyCodeLine{20         \textcolor{keyword}{using} Packet      = \textcolor{keyword}{typename} typetraits::TypeInfo<Scalar>::Packet;}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{23         \mbox{\hyperlink{classlibrapid_1_1_array_container_a0dff3c2c902b45beb4b1bca707b51201}{ArrayContainer}}() = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{27         LIBRAPID\_ALWAYS\_INLINE \textcolor{keyword}{explicit} \mbox{\hyperlink{classlibrapid_1_1_array_container_a0dff3c2c902b45beb4b1bca707b51201}{ArrayContainer}}(\textcolor{keyword}{const} ShapeType \&\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}});}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{33         LIBRAPID\_ALWAYS\_INLINE \mbox{\hyperlink{classlibrapid_1_1_array_container_a0dff3c2c902b45beb4b1bca707b51201}{ArrayContainer}}(\textcolor{keyword}{const} ShapeType \&\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}}, \textcolor{keyword}{const} Scalar \&value);}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{37         LIBRAPID\_ALWAYS\_INLINE \textcolor{keyword}{explicit} \mbox{\hyperlink{classlibrapid_1_1_array_container_a0dff3c2c902b45beb4b1bca707b51201}{ArrayContainer}}(ShapeType \&\&\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}});}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{41         LIBRAPID\_ALWAYS\_INLINE \mbox{\hyperlink{classlibrapid_1_1_array_container_ab2a5bef1e630be315bf0b1a731423aaf}{ArrayContainer}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer}} \&other) = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{45         LIBRAPID\_ALWAYS\_INLINE \mbox{\hyperlink{classlibrapid_1_1_array_container_abdf1b2b56d9e95c28e0f4f5052ed6482}{ArrayContainer}}(\mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer}} \&\&other) \textcolor{keyword}{noexcept} = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{53         \textcolor{keyword}{template}<detail::Descriptor desc, \textcolor{keyword}{typename} Functor\_, \textcolor{keyword}{typename}... Args>}
+\DoxyCodeLine{54         LIBRAPID\_ALWAYS\_INLINE \textcolor{keyword}{explicit} \mbox{\hyperlink{classlibrapid_1_1_array_container_a95d0bd0534be26fc9aeaffd90267ba52}{ArrayContainer}}(}
+\DoxyCodeLine{55           \textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail::Function<desc, Functor\_, Args...>}} \&function) LIBRAPID\_RELEASE\_NOEXCEPT;}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{60         LIBRAPID\_ALWAYS\_INLINE \mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer}} \&\mbox{\hyperlink{classlibrapid_1_1_array_container_a0fb53059ddfe8b76fcead44c79082131}{operator=}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer}} \&other) = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{65         LIBRAPID\_ALWAYS\_INLINE \mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer}} \&\mbox{\hyperlink{classlibrapid_1_1_array_container_a36742d998ad5d658a07325d998b2b0d9}{operator=}}(\mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer}} \&\&other) \textcolor{keyword}{noexcept} = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{66 }
+\DoxyCodeLine{73         \textcolor{keyword}{template}<detail::Descriptor desc, \textcolor{keyword}{typename} Functor\_, \textcolor{keyword}{typename}... Args>}
+\DoxyCodeLine{74         LIBRAPID\_ALWAYS\_INLINE \mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer}} \&}
+\DoxyCodeLine{75         \mbox{\hyperlink{classlibrapid_1_1_array_container_aef4ec738c598c0764561f5dfc2f382de}{operator=}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail::Function<desc, Functor\_, Args...>}} \&function);}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{79         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE \textcolor{keyword}{const} ShapeType \&\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}}() const noexcept;}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{84         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE Packet \mbox{\hyperlink{classlibrapid_1_1_array_container_a3db13b260dd97d72b7bedef0aebc9478}{packet}}(\textcolor{keywordtype}{size\_t} index) const;}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{89         LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE Scalar \mbox{\hyperlink{classlibrapid_1_1_array_container_a3acda710f0b321e1ffe08c6fa4d3a40c}{scalar}}(\textcolor{keywordtype}{size\_t} index) const;}
+\DoxyCodeLine{90 }
+\DoxyCodeLine{94         LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{void} \mbox{\hyperlink{classlibrapid_1_1_array_container_a5700d3ef2612505be244cc5e629f3cda}{writePacket}}(\textcolor{keywordtype}{size\_t} index, const Packet \&value);}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{99         LIBRAPID\_ALWAYS\_INLINE \textcolor{keywordtype}{void} \mbox{\hyperlink{classlibrapid_1_1_array_container_a83cd9c71be6bd76c5690a598c78dd5ff}{write}}(\textcolor{keywordtype}{size\_t} index, const Scalar \&value);}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101     private:}
+\DoxyCodeLine{102         ShapeType m\_shape;}
+\DoxyCodeLine{103         StorageType m\_storage;}
+\DoxyCodeLine{104     \};}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{106     template<typename ShapeType\_, typename StorageType\_>}
+\DoxyCodeLine{107     \mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer}}<ShapeType\_, StorageType\_>::\mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer}}(const ShapeType \&\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}}) :}
+\DoxyCodeLine{108             m\_shape(\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}}), m\_storage(\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}}.size()) \{\}}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{110     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_>}
+\DoxyCodeLine{111     \mbox{\hyperlink{classlibrapid_1_1_array_container_a0dff3c2c902b45beb4b1bca707b51201}{ArrayContainer<ShapeType\_, StorageType\_>::ArrayContainer}}(\textcolor{keyword}{const} ShapeType \&\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}},}
+\DoxyCodeLine{112                                                              \textcolor{keyword}{const} Scalar \&value) :}
+\DoxyCodeLine{113             m\_shape(\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}}),}
+\DoxyCodeLine{114             m\_storage(\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}}.size(), value) \{\}}
+\DoxyCodeLine{115 }
+\DoxyCodeLine{116     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_>}
+\DoxyCodeLine{117     \mbox{\hyperlink{classlibrapid_1_1_array_container_a0dff3c2c902b45beb4b1bca707b51201}{ArrayContainer<ShapeType\_, StorageType\_>::ArrayContainer}}(ShapeType\_ \&\&shape) :}
+\DoxyCodeLine{118             m\_shape(std::forward<ShapeType\_>(shape)), m\_storage(m\_shape.size()) \{\}}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_>}
+\DoxyCodeLine{121     \textcolor{keyword}{template}<detail::Descriptor desc, \textcolor{keyword}{typename} Functor\_, \textcolor{keyword}{typename}... Args>}
+\DoxyCodeLine{122     \mbox{\hyperlink{classlibrapid_1_1_array_container_a0dff3c2c902b45beb4b1bca707b51201}{ArrayContainer<ShapeType\_, StorageType\_>::ArrayContainer}}(}
+\DoxyCodeLine{123       \textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail::Function<desc, Functor\_, Args...>}} \&function) LIBRAPID\_RELEASE\_NOEXCEPT}
+\DoxyCodeLine{124             : m\_shape(function.shape()),}
+\DoxyCodeLine{125               m\_storage(m\_shape.size()) \{}
+\DoxyCodeLine{126 \textcolor{preprocessor}{\#if !defined(LIBRAPID\_OPTIMISE\_SMALL\_ARRAYS)}}
+\DoxyCodeLine{127         \textcolor{keywordflow}{if} (m\_storage.size() > global::multithreadThreshold \&\& global::numThreads > 1)}
+\DoxyCodeLine{128             detail::assignParallel(*\textcolor{keyword}{this}, function);}
+\DoxyCodeLine{129         \textcolor{keywordflow}{else}}
+\DoxyCodeLine{130 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_OPTIMISE\_SMALL\_ARRAYS}}
+\DoxyCodeLine{131             detail::assign(*\textcolor{keyword}{this}, function);}
+\DoxyCodeLine{132     \}}
+\DoxyCodeLine{133 }
+\DoxyCodeLine{134     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_>}
+\DoxyCodeLine{135     \textcolor{keyword}{template}<detail::Descriptor desc, \textcolor{keyword}{typename} Functor\_, \textcolor{keyword}{typename}... Args>}
+\DoxyCodeLine{136     ArrayContainer<ShapeType\_, StorageType\_> \&\mbox{\hyperlink{classlibrapid_1_1_array_container_a0fb53059ddfe8b76fcead44c79082131}{ArrayContainer<ShapeType\_, StorageType\_>::operator=}}(}
+\DoxyCodeLine{137       \textcolor{keyword}{const} detail::Function<desc, Functor\_, Args...> \&function) \{}
+\DoxyCodeLine{138         m\_storage.resize(function.shape().size(), 0);}
+\DoxyCodeLine{139 \textcolor{preprocessor}{\#if !defined(LIBRAPID\_OPTIMISE\_SMALL\_ARRAYS)}}
+\DoxyCodeLine{140         \textcolor{keywordflow}{if} (m\_storage.size() > global::multithreadThreshold \&\& global::numThreads > 1)}
+\DoxyCodeLine{141             detail::assignParallel(*\textcolor{keyword}{this}, function);}
+\DoxyCodeLine{142         \textcolor{keywordflow}{else}}
+\DoxyCodeLine{143 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_OPTIMISE\_SMALL\_ARRAYS}}
+\DoxyCodeLine{144             detail::assign(*\textcolor{keyword}{this}, function);}
+\DoxyCodeLine{145         \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{146     \}}
+\DoxyCodeLine{147 }
+\DoxyCodeLine{148     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_>}
+\DoxyCodeLine{149     \textcolor{keyword}{auto} \mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{ArrayContainer<ShapeType\_, StorageType\_>::shape}}() const noexcept -\/> const ShapeType \& \{}
+\DoxyCodeLine{150         \textcolor{keywordflow}{return} m\_shape;}
+\DoxyCodeLine{151     \}}
+\DoxyCodeLine{152 }
+\DoxyCodeLine{153     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_>}
+\DoxyCodeLine{154     \textcolor{keyword}{auto} \mbox{\hyperlink{classlibrapid_1_1_array_container_a3db13b260dd97d72b7bedef0aebc9478}{ArrayContainer<ShapeType\_, StorageType\_>::packet}}(\textcolor{keywordtype}{size\_t} index) \textcolor{keyword}{const} -\/> Packet \{}
+\DoxyCodeLine{155         Packet res;}
+\DoxyCodeLine{156         res.load(m\_storage.begin() + index);}
+\DoxyCodeLine{157         \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{158     \}}
+\DoxyCodeLine{159 }
+\DoxyCodeLine{160     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_>}
+\DoxyCodeLine{161     \textcolor{keyword}{auto} \mbox{\hyperlink{classlibrapid_1_1_array_container_a3acda710f0b321e1ffe08c6fa4d3a40c}{ArrayContainer<ShapeType\_, StorageType\_>::scalar}}(\textcolor{keywordtype}{size\_t} index) \textcolor{keyword}{const} -\/> Scalar \{}
+\DoxyCodeLine{162         \textcolor{keywordflow}{return} m\_storage[index];}
+\DoxyCodeLine{163     \}}
+\DoxyCodeLine{164 }
+\DoxyCodeLine{165     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_>}
+\DoxyCodeLine{166     \textcolor{keywordtype}{void} \mbox{\hyperlink{classlibrapid_1_1_array_container_a5700d3ef2612505be244cc5e629f3cda}{ArrayContainer<ShapeType\_, StorageType\_>::writePacket}}(\textcolor{keywordtype}{size\_t} index, \textcolor{keyword}{const} Packet \&value) \{}
+\DoxyCodeLine{167         value.store(m\_storage.begin() + index);}
+\DoxyCodeLine{168     \}}
+\DoxyCodeLine{169 }
+\DoxyCodeLine{170     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_>}
+\DoxyCodeLine{171     \textcolor{keywordtype}{void} \mbox{\hyperlink{classlibrapid_1_1_array_container_a83cd9c71be6bd76c5690a598c78dd5ff}{ArrayContainer<ShapeType\_, StorageType\_>::write}}(\textcolor{keywordtype}{size\_t} index, \textcolor{keyword}{const} Scalar \&value) \{}
+\DoxyCodeLine{172         m\_storage[index] = value;}
+\DoxyCodeLine{173     \}}
+\DoxyCodeLine{174 \} \textcolor{comment}{// namespace librapid}}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{176 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_ARRAY\_ARRAY\_CONTAINER\_HPP}}
+
+\end{DoxyCode}

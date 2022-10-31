@@ -1,0 +1,131 @@
+\hypertarget{helper__multiprocess_8h_source}{}\doxysection{helper\+\_\+multiprocess.\+h}
+\label{helper__multiprocess_8h_source}\index{librapid/include/librapid/cuda/helper\_multiprocess.h@{librapid/include/librapid/cuda/helper\_multiprocess.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/* Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{4 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{5 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{6 \textcolor{comment}{ *  * Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{7 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{8 \textcolor{comment}{ *  * Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{9 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{10 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{11 \textcolor{comment}{ *  * Neither the name of NVIDIA CORPORATION nor the names of its}}
+\DoxyCodeLine{12 \textcolor{comment}{ *    contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{13 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{14 \textcolor{comment}{ *}}
+\DoxyCodeLine{15 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY}}
+\DoxyCodeLine{16 \textcolor{comment}{ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{17 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR}}
+\DoxyCodeLine{18 \textcolor{comment}{ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR}}
+\DoxyCodeLine{19 \textcolor{comment}{ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,}}
+\DoxyCodeLine{20 \textcolor{comment}{ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,}}
+\DoxyCodeLine{21 \textcolor{comment}{ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR}}
+\DoxyCodeLine{22 \textcolor{comment}{ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY}}
+\DoxyCodeLine{23 \textcolor{comment}{ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{24 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{25 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{26 \textcolor{comment}{ */}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#ifndef HELPER\_MULTIPROCESS\_H}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#define HELPER\_MULTIPROCESS\_H}}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#if defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#   ifndef WIN32\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#       define WIN32\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#   include <AclAPI.h>}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#   include <iostream>}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#   include <sddl.h>}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#   include <stdio.h>}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#   include <strsafe.h>}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#   include <tchar.h>}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#   include <Windows.h>}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#   include <winternl.h>}}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#   include <errno.h>}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#   include <fcntl.h>}}
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#   include <memory.h>}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#   include <stdio.h>}}
+\DoxyCodeLine{50 \textcolor{preprocessor}{\#   include <sys/mman.h>}}
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#   include <sys/socket.h>}}
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#   include <sys/types.h>}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#   include <sys/un.h>}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#   include <sys/wait.h>}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#   include <unistd.h>}}
+\DoxyCodeLine{56 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structshared_memory_info__st}{sharedMemoryInfo\_st}} \{}
+\DoxyCodeLine{61     \textcolor{keywordtype}{void} *addr;}
+\DoxyCodeLine{62     \textcolor{keywordtype}{size\_t} size;}
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#if defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{64     HANDLE shmHandle;}
+\DoxyCodeLine{65 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{66     \textcolor{keywordtype}{int} shmFd;}
+\DoxyCodeLine{67 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{68 \} \mbox{\hyperlink{structshared_memory_info__st}{sharedMemoryInfo}};}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \textcolor{keywordtype}{int} sharedMemoryCreate(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *name, \textcolor{keywordtype}{size\_t} sz, \mbox{\hyperlink{structshared_memory_info__st}{sharedMemoryInfo}} *info);}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72 \textcolor{keywordtype}{int} sharedMemoryOpen(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *name, \textcolor{keywordtype}{size\_t} sz, \mbox{\hyperlink{structshared_memory_info__st}{sharedMemoryInfo}} *info);}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{74 \textcolor{keywordtype}{void} sharedMemoryClose(\mbox{\hyperlink{structshared_memory_info__st}{sharedMemoryInfo}} *info);}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76 \textcolor{preprocessor}{\#if defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 \textcolor{keyword}{typedef} PROCESS\_INFORMATION Process;}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{81 \textcolor{keyword}{typedef} pid\_t Process;}
+\DoxyCodeLine{82 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{83 }
+\DoxyCodeLine{84 \textcolor{keywordtype}{int} spawnProcess(Process *process, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *app, \textcolor{keywordtype}{char} *\textcolor{keyword}{const} *args);}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{86 \textcolor{keywordtype}{int} waitProcess(Process *process);}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{88 \textcolor{preprocessor}{\#define checkIpcErrors(ipcFuncResult)                                                              \(\backslash\)}}
+\DoxyCodeLine{89 \textcolor{preprocessor}{    if (ipcFuncResult == -\/1) \{                                                                     \(\backslash\)}}
+\DoxyCodeLine{90 \textcolor{preprocessor}{        fprintf(stderr, "{}Failure at \%u \%s\(\backslash\)n"{}}, \_\_LINE\_\_, \_\_FILE\_\_);                                 \(\backslash\)}
+\DoxyCodeLine{91         exit(EXIT\_FAILURE);                                                                        \(\backslash\)}
+\DoxyCodeLine{92     \}}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{94 \textcolor{preprocessor}{\#if defined(\_\_linux\_\_)}}
+\DoxyCodeLine{95 \textcolor{keyword}{struct }ipcHandle\_st \{}
+\DoxyCodeLine{96     \textcolor{keywordtype}{int} socket;}
+\DoxyCodeLine{97     \textcolor{keywordtype}{char} *socketName;}
+\DoxyCodeLine{98 \};}
+\DoxyCodeLine{99 \textcolor{keyword}{typedef} \textcolor{keywordtype}{int} ShareableHandle;}
+\DoxyCodeLine{100 \textcolor{preprocessor}{\#elif defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{101 \textcolor{keyword}{struct }ipcHandle\_st \{}
+\DoxyCodeLine{102     std::vector<HANDLE> hMailslot; \textcolor{comment}{// 1 Handle in case of child and `num}}
+\DoxyCodeLine{103                                    \textcolor{comment}{// children` Handles for parent.}}
+\DoxyCodeLine{104 \};}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{106 \textcolor{keyword}{typedef} HANDLE ShareableHandle;}
+\DoxyCodeLine{107 }
+\DoxyCodeLine{108 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{110 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }ipcHandle\_st ipcHandle;}
+\DoxyCodeLine{111 }
+\DoxyCodeLine{112 \textcolor{keywordtype}{int} ipcCreateSocket(ipcHandle *\&handle, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *name, \textcolor{keyword}{const} std::vector<Process> \&processes);}
+\DoxyCodeLine{113 }
+\DoxyCodeLine{114 \textcolor{keywordtype}{int} ipcOpenSocket(ipcHandle *\&handle);}
+\DoxyCodeLine{115 }
+\DoxyCodeLine{116 \textcolor{keywordtype}{int} ipcCloseSocket(ipcHandle *handle);}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118 \textcolor{keywordtype}{int} ipcRecvShareableHandles(ipcHandle *handle, std::vector<ShareableHandle> \&shareableHandles);}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120 \textcolor{keywordtype}{int} ipcSendShareableHandles(ipcHandle *handle, \textcolor{keyword}{const} std::vector<ShareableHandle> \&shareableHandles,}
+\DoxyCodeLine{121                             \textcolor{keyword}{const} std::vector<Process> \&processes);}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{123 \textcolor{keywordtype}{int} ipcCloseShareableHandle(ShareableHandle shHandle);}
+\DoxyCodeLine{124 }
+\DoxyCodeLine{125 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// HELPER\_MULTIPROCESS\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,106 @@
+\hypertarget{exception_8h_source}{}\doxysection{exception.\+h}
+\label{exception_8h_source}\index{librapid/include/librapid/cuda/exception.h@{librapid/include/librapid/cuda/exception.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/* Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{4 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{5 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{6 \textcolor{comment}{ *  * Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{7 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{8 \textcolor{comment}{ *  * Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{9 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{10 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{11 \textcolor{comment}{ *  * Neither the name of NVIDIA CORPORATION nor the names of its}}
+\DoxyCodeLine{12 \textcolor{comment}{ *    contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{13 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{14 \textcolor{comment}{ *}}
+\DoxyCodeLine{15 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY}}
+\DoxyCodeLine{16 \textcolor{comment}{ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{17 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR}}
+\DoxyCodeLine{18 \textcolor{comment}{ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR}}
+\DoxyCodeLine{19 \textcolor{comment}{ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,}}
+\DoxyCodeLine{20 \textcolor{comment}{ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,}}
+\DoxyCodeLine{21 \textcolor{comment}{ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR}}
+\DoxyCodeLine{22 \textcolor{comment}{ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY}}
+\DoxyCodeLine{23 \textcolor{comment}{ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{24 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{25 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{26 \textcolor{comment}{ */}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{comment}{/* CUda UTility Library */}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#ifndef COMMON\_EXCEPTION\_H\_}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#define COMMON\_EXCEPTION\_H\_}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{comment}{// includes, system}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#include <exception>}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#include <stdexcept>}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{41 \textcolor{keyword}{template}<\textcolor{keyword}{class} Std\_Exception>}
+\DoxyCodeLine{42 \textcolor{keyword}{class }\mbox{\hyperlink{class_exception}{Exception}} : \textcolor{keyword}{public} Std\_Exception \{}
+\DoxyCodeLine{43 \textcolor{keyword}{public}:}
+\DoxyCodeLine{49     \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_exception_ac0904205ad66f00c7287a3cbf3d17838}{throw\_it}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *file, \textcolor{keyword}{const} \textcolor{keywordtype}{int} line, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *detailed = \textcolor{stringliteral}{"{}-\/"{}});}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{56     \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_exception_ac0904205ad66f00c7287a3cbf3d17838}{throw\_it}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *file, \textcolor{keyword}{const} \textcolor{keywordtype}{int} line, \textcolor{keyword}{const} std::string \&detailed);}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{59     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_exception_ac4bfac227d7e53fa707b91a88159d3a8}{\string~Exception}}() \textcolor{keywordflow}{throw}();}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61 \textcolor{keyword}{private}:}
+\DoxyCodeLine{63     \mbox{\hyperlink{class_exception}{Exception}}();}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{67     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_exception}{Exception}}(\textcolor{keyword}{const} std::string \&str);}
+\DoxyCodeLine{68 \};}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{74 \textcolor{keyword}{template}<\textcolor{keyword}{class} Exception\_Typ>}
+\DoxyCodeLine{75 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} handleException(\textcolor{keyword}{const} Exception\_Typ \&ex) \{}
+\DoxyCodeLine{76     std::cerr << ex.what() << std::endl;}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78     exit(EXIT\_FAILURE);}
+\DoxyCodeLine{79 \}}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{82 }
+\DoxyCodeLine{84 \textcolor{preprocessor}{\#define RUNTIME\_EXCEPTION(msg) Exception<std::runtime\_error>::throw\_it(\_\_FILE\_\_, \_\_LINE\_\_, msg)}}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{87 \textcolor{preprocessor}{\#define LOGIC\_EXCEPTION(msg) Exception<std::logic\_error>::throw\_it(\_\_FILE\_\_, \_\_LINE\_\_, msg)}}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{90 \textcolor{preprocessor}{\#define RANGE\_EXCEPTION(msg) Exception<std::range\_error>::throw\_it(\_\_FILE\_\_, \_\_LINE\_\_, msg)}}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{94 }
+\DoxyCodeLine{95 \textcolor{comment}{// includes, system}}
+\DoxyCodeLine{96 \textcolor{preprocessor}{\#include <sstream>}}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{102 \textcolor{comment}{/*static*/} \textcolor{keyword}{template}<\textcolor{keyword}{class} Std\_Exception>}
+\DoxyCodeLine{103 \textcolor{keywordtype}{void} \mbox{\hyperlink{class_exception_ac0904205ad66f00c7287a3cbf3d17838}{Exception<Std\_Exception>::throw\_it}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *file, \textcolor{keyword}{const} \textcolor{keywordtype}{int} line, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *detailed) \{}
+\DoxyCodeLine{104     std::stringstream s;}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{106     \textcolor{comment}{// Quiet heavy-\/weight but exceptions are not for}}
+\DoxyCodeLine{107     \textcolor{comment}{// performance / release versions}}
+\DoxyCodeLine{108     s << \textcolor{stringliteral}{"{}Exception in file '"{}} << file << \textcolor{stringliteral}{"{}' in line "{}} << line << \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{109       << \textcolor{stringliteral}{"{}Detailed description: "{}} << detailed << \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{111     \textcolor{keywordflow}{throw} \mbox{\hyperlink{class_exception}{Exception}}(s.str());}
+\DoxyCodeLine{112 \}}
+\DoxyCodeLine{113 }
+\DoxyCodeLine{118 \textcolor{comment}{/*static*/} \textcolor{keyword}{template}<\textcolor{keyword}{class} Std\_Exception>}
+\DoxyCodeLine{119 \textcolor{keywordtype}{void} \mbox{\hyperlink{class_exception_ac0904205ad66f00c7287a3cbf3d17838}{Exception<Std\_Exception>::throw\_it}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *file, \textcolor{keyword}{const} \textcolor{keywordtype}{int} line, \textcolor{keyword}{const} std::string \&msg) \{}
+\DoxyCodeLine{120     throw\_it(file, line, msg.c\_str());}
+\DoxyCodeLine{121 \}}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{126 \textcolor{keyword}{template}<\textcolor{keyword}{class} Std\_Exception>}
+\DoxyCodeLine{127 \mbox{\hyperlink{class_exception}{Exception<Std\_Exception>::Exception}}() : Std\_Exception(\textcolor{stringliteral}{"{}Unknown Exception.\(\backslash\)n"{}}) \{\}}
+\DoxyCodeLine{128 }
+\DoxyCodeLine{133 \textcolor{keyword}{template}<\textcolor{keyword}{class} Std\_Exception>}
+\DoxyCodeLine{134 \mbox{\hyperlink{class_exception}{Exception<Std\_Exception>::Exception}}(\textcolor{keyword}{const} std::string \&s) : Std\_Exception(s) \{\}}
+\DoxyCodeLine{135 }
+\DoxyCodeLine{139 \textcolor{keyword}{template}<\textcolor{keyword}{class} Std\_Exception>}
+\DoxyCodeLine{140 \mbox{\hyperlink{class_exception_ac4bfac227d7e53fa707b91a88159d3a8}{Exception<Std\_Exception>::\string~Exception}}() throw() \{\}}
+\DoxyCodeLine{141 }
+\DoxyCodeLine{142 \textcolor{comment}{// functions, exported}}
+\DoxyCodeLine{143 }
+\DoxyCodeLine{144 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// COMMON\_EXCEPTION\_H\_}}
+
+\end{DoxyCode}

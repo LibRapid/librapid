@@ -16,7 +16,7 @@ namespace librapid::detail {
 	template<typename ShapeType_, typename StorageType_, typename Functor_, typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
 	assign(ArrayContainer<ShapeType_, StorageType_> &lhs,
-		   const detail::Function<detail::Descriptor::Trivial, Functor_, Args...> &function) {
+		   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar				  = typename ArrayContainer<ShapeType_, StorageType_>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
@@ -39,9 +39,9 @@ namespace librapid::detail {
 	}
 
 	template<typename ShapeType_, typename StorageType_, typename Functor_, typename... Args>
-	LIBRAPID_ALWAYS_INLINE void assignParallel(
-	  ArrayContainer<ShapeType_, StorageType_> &lhs,
-	  const detail::Function<detail::Descriptor::Trivial, Functor_, Args...> &function) {
+	LIBRAPID_ALWAYS_INLINE void
+	assignParallel(ArrayContainer<ShapeType_, StorageType_> &lhs,
+				   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar				  = typename ArrayContainer<ShapeType_, StorageType_>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 

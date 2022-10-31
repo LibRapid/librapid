@@ -1,0 +1,25 @@
+\hypertarget{core_math_8hpp_source}{}\doxysection{core\+Math.\+hpp}
+\label{core_math_8hpp_source}\index{librapid/include/librapid/math/coreMath.hpp@{librapid/include/librapid/math/coreMath.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef LIBRAPID\_MATH\_CORE\_MATH\_HPP}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define LIBRAPID\_MATH\_CORE\_MATH\_HPP}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{comment}{/*}}
+\DoxyCodeLine{5 \textcolor{comment}{ * This file defines a wide range of core operations on many data types.}}
+\DoxyCodeLine{6 \textcolor{comment}{ * Many of these functions will end up calling the C++ STL function for}}
+\DoxyCodeLine{7 \textcolor{comment}{ * primitive types, though for types defined by LibRapid, custom implementations}}
+\DoxyCodeLine{8 \textcolor{comment}{ * will be required.}}
+\DoxyCodeLine{9 \textcolor{comment}{ */}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{namespace }librapid \{}
+\DoxyCodeLine{16     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{17     T min(\textcolor{keyword}{const} T \&val);}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{23     \textcolor{keyword}{template}<\textcolor{keyword}{typename} First, \textcolor{keyword}{typename}... Rest>}
+\DoxyCodeLine{24     \textcolor{keyword}{auto} min(\textcolor{keyword}{const} First \&first, \textcolor{keyword}{const} Rest \&...rest);}
+\DoxyCodeLine{25 \} \textcolor{comment}{// namespace librapid}}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_MATH\_CORE\_MATH\_HPP}}
+
+\end{DoxyCode}

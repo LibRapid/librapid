@@ -1,0 +1,322 @@
+\hypertarget{traits_8hpp_source}{}\doxysection{traits.\+hpp}
+\label{traits_8hpp_source}\index{librapid/include/librapid/core/traits.hpp@{librapid/include/librapid/core/traits.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef LIBRAPID\_CORE\_TRAITS\_HPP}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define LIBRAPID\_CORE\_TRAITS\_HPP}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{comment}{/*}}
+\DoxyCodeLine{5 \textcolor{comment}{ * The TypeInfo struct provides compile-\/time about types (templated types, in particular).}}
+\DoxyCodeLine{6 \textcolor{comment}{ * This allows for easier SFINAE implementations and simpler function dispatching.}}
+\DoxyCodeLine{7 \textcolor{comment}{ * Furthermore, the TypeInfo struct defines some useful conversion functions to cast between}}
+\DoxyCodeLine{8 \textcolor{comment}{ * types without raising compiler warnings, or worse, errors.}}
+\DoxyCodeLine{9 \textcolor{comment}{ *}}
+\DoxyCodeLine{10 \textcolor{comment}{ * A TypeInfo struct should be defined for every class defined by LibRapid.}}
+\DoxyCodeLine{11 \textcolor{comment}{ */}}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{keyword}{namespace }librapid::typetraits \{}
+\DoxyCodeLine{14     \textcolor{keyword}{namespace }detail \{}
+\DoxyCodeLine{15         \textcolor{comment}{/*}}
+\DoxyCodeLine{16 \textcolor{comment}{         * Pretty string representations of data types at compile time. This is adapted from}}
+\DoxyCodeLine{17 \textcolor{comment}{         * https://bitwizeshift.github.io/posts/2021/03/09/getting-\/an-\/unmangled-\/type-\/name-\/at-\/compile-\/time/}}
+\DoxyCodeLine{18 \textcolor{comment}{         * and I have simply adapted it to work with LibRapid.}}
+\DoxyCodeLine{19 \textcolor{comment}{         */}}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21         \textcolor{keyword}{template}<std::size\_t... Idxs>}
+\DoxyCodeLine{22         \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} substringAsArray(std::string\_view str, std::index\_sequence<Idxs...>) \{}
+\DoxyCodeLine{23             \textcolor{keywordflow}{return} std::array \{str[Idxs]...\};}
+\DoxyCodeLine{24         \}}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26         \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{27         \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} typeNameArray() \{}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#if defined(\_\_clang\_\_)}}
+\DoxyCodeLine{29             \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} prefix   = std::string\_view \{\textcolor{stringliteral}{"{}[T = "{}}\};}
+\DoxyCodeLine{30             \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} suffix   = std::string\_view \{\textcolor{stringliteral}{"{}]"{}}\};}
+\DoxyCodeLine{31             \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} function = std::string\_view \{\_\_PRETTY\_FUNCTION\_\_\};}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#elif defined(\_\_GNUC\_\_)}}
+\DoxyCodeLine{33             \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} prefix   = std::string\_view \{\textcolor{stringliteral}{"{}with T = "{}}\};}
+\DoxyCodeLine{34             \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} suffix   = std::string\_view \{\textcolor{stringliteral}{"{}]"{}}\};}
+\DoxyCodeLine{35             \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} function = std::string\_view \{\_\_PRETTY\_FUNCTION\_\_\};}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#elif defined(\_MSC\_VER)}}
+\DoxyCodeLine{37             \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} prefix   = std::string\_view \{\textcolor{stringliteral}{"{}type\_name\_array<"{}}\};}
+\DoxyCodeLine{38             \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} suffix   = std::string\_view \{\textcolor{stringliteral}{"{}>(void)"{}}\};}
+\DoxyCodeLine{39             \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} function = std::string\_view \{\_\_FUNCSIG\_\_\};}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#   define LIBRAPID\_NO\_TYPE\_TO\_STRING}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#if !defined(LIBRAPID\_NO\_TYPE\_TO\_STRING)}}
+\DoxyCodeLine{45             \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} start = function.find(prefix) + prefix.size();}
+\DoxyCodeLine{46             \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} end   = function.rfind(suffix);}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48             \textcolor{keyword}{static\_assert}(start < end);}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50             \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} name = function.substr(start, (end -\/ start));}
+\DoxyCodeLine{51             \textcolor{keywordflow}{return} substringAsArray(name, std::make\_index\_sequence<name.size()> \{\});}
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{53             \textcolor{keywordflow}{return} std::array<char, 0> \{\};}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{55         \}}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57         \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{58         \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1detail_1_1_type_name_holder}{TypeNameHolder}} \{}
+\DoxyCodeLine{59             \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} value = typeNameArray<T>();}
+\DoxyCodeLine{60         \};}
+\DoxyCodeLine{61     \} \textcolor{comment}{// namespace detail}}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{64     \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} typeName() -\/> std::string\_view \{}
+\DoxyCodeLine{65         \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} \&value = \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1detail_1_1_type_name_holder}{detail::TypeNameHolder<T>::value}};}
+\DoxyCodeLine{66         \textcolor{keywordflow}{return} std::string\_view \{value.data(), value.size()\};}
+\DoxyCodeLine{67     \}}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{72     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{73     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}} \{}
+\DoxyCodeLine{74         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{75         \textcolor{keyword}{using} Scalar                             = T;}
+\DoxyCodeLine{76         \textcolor{keyword}{using} Packet                             = std::false\_type;}
+\DoxyCodeLine{77         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = 1;}
+\DoxyCodeLine{78         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}[NO DEFINED TYPE]"{}};}
+\DoxyCodeLine{79         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{true};}
+\DoxyCodeLine{80         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{true};}
+\DoxyCodeLine{81         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{true};}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{83 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{84         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_64F;}
+\DoxyCodeLine{85 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{86         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{87         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{88     \};}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{90     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{91     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<bool> \{}
+\DoxyCodeLine{92         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{93         \textcolor{keyword}{using} Scalar                             = bool;}
+\DoxyCodeLine{94         \textcolor{keyword}{using} Packet                             = std::false\_type;}
+\DoxyCodeLine{95         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = 1;}
+\DoxyCodeLine{96         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}char"{}};}
+\DoxyCodeLine{97         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{false};}
+\DoxyCodeLine{98         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{false};}
+\DoxyCodeLine{99         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{true};}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{102         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_8I;}
+\DoxyCodeLine{103 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{105         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{106         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{107     \};}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{110     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<char> \{}
+\DoxyCodeLine{111         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{112         \textcolor{keyword}{using} Scalar                             = char;}
+\DoxyCodeLine{113         \textcolor{keyword}{using} Packet                             = std::false\_type;}
+\DoxyCodeLine{114         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = 1;}
+\DoxyCodeLine{115         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}bool"{}};}
+\DoxyCodeLine{116         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{false};}
+\DoxyCodeLine{117         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{false};}
+\DoxyCodeLine{118         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{true};}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{121         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_8I;}
+\DoxyCodeLine{122 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{125         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{126     \};}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{129     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<int8\_t> \{}
+\DoxyCodeLine{130         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{131         \textcolor{keyword}{using} Scalar                             = int8\_t;}
+\DoxyCodeLine{132         \textcolor{keyword}{using} Packet                             = Vc::Vector<int8\_t>;}
+\DoxyCodeLine{133         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = Packet::size();}
+\DoxyCodeLine{134         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}int8\_t"{}};}
+\DoxyCodeLine{135         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{true};}
+\DoxyCodeLine{136         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{true};}
+\DoxyCodeLine{137         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{true};}
+\DoxyCodeLine{138 }
+\DoxyCodeLine{139 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{140         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_8I;}
+\DoxyCodeLine{141 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{142 }
+\DoxyCodeLine{143         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{144         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{145     \};}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{147     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{148     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<uint8\_t> \{}
+\DoxyCodeLine{149         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{150         \textcolor{keyword}{using} Scalar                             = uint8\_t;}
+\DoxyCodeLine{151         \textcolor{keyword}{using} Packet                             = Vc::Vector<uint8\_t>;}
+\DoxyCodeLine{152         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = Packet::size();}
+\DoxyCodeLine{153         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}uint8\_t"{}};}
+\DoxyCodeLine{154         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{true};}
+\DoxyCodeLine{155         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{true};}
+\DoxyCodeLine{156         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{true};}
+\DoxyCodeLine{157 }
+\DoxyCodeLine{158 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{159         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_8U;}
+\DoxyCodeLine{160 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{161 }
+\DoxyCodeLine{162         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{163         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{164     \};}
+\DoxyCodeLine{165 }
+\DoxyCodeLine{166     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{167     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<int16\_t> \{}
+\DoxyCodeLine{168         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{169         \textcolor{keyword}{using} Scalar                             = int16\_t;}
+\DoxyCodeLine{170         \textcolor{keyword}{using} Packet                             = Vc::Vector<int16\_t>;}
+\DoxyCodeLine{171         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = Packet::size();}
+\DoxyCodeLine{172         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}int16\_t"{}};}
+\DoxyCodeLine{173         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{true};}
+\DoxyCodeLine{174         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{true};}
+\DoxyCodeLine{175         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{true};}
+\DoxyCodeLine{176 }
+\DoxyCodeLine{177 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{178         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_16I;}
+\DoxyCodeLine{179 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{180 }
+\DoxyCodeLine{181         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{182         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{183     \};}
+\DoxyCodeLine{184 }
+\DoxyCodeLine{185     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{186     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<uint16\_t> \{}
+\DoxyCodeLine{187         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{188         \textcolor{keyword}{using} Scalar                             = uint16\_t;}
+\DoxyCodeLine{189         \textcolor{keyword}{using} Packet                             = Vc::Vector<uint16\_t>;}
+\DoxyCodeLine{190         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = Packet::size();}
+\DoxyCodeLine{191         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}uint16\_t"{}};}
+\DoxyCodeLine{192         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{true};}
+\DoxyCodeLine{193         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{true};}
+\DoxyCodeLine{194         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{true};}
+\DoxyCodeLine{195 }
+\DoxyCodeLine{196 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{197         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_16U;}
+\DoxyCodeLine{198 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{201         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{202     \};}
+\DoxyCodeLine{203 }
+\DoxyCodeLine{204     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{205     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<int32\_t> \{}
+\DoxyCodeLine{206         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{207         \textcolor{keyword}{using} Scalar                             = int32\_t;}
+\DoxyCodeLine{208         \textcolor{keyword}{using} Packet                             = Vc::Vector<int32\_t>;}
+\DoxyCodeLine{209         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = Packet::size();}
+\DoxyCodeLine{210         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}int32\_t"{}};}
+\DoxyCodeLine{211         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{true};}
+\DoxyCodeLine{212         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{true};}
+\DoxyCodeLine{213         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{true};}
+\DoxyCodeLine{214 }
+\DoxyCodeLine{215 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{216         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_32I;}
+\DoxyCodeLine{217 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{218 }
+\DoxyCodeLine{219         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{220         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{221     \};}
+\DoxyCodeLine{222 }
+\DoxyCodeLine{223     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{224     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<uint32\_t> \{}
+\DoxyCodeLine{225         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{226         \textcolor{keyword}{using} Scalar                             = uint32\_t;}
+\DoxyCodeLine{227         \textcolor{keyword}{using} Packet                             = Vc::Vector<uint32\_t>;}
+\DoxyCodeLine{228         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = Packet::size();}
+\DoxyCodeLine{229         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}uint32\_t"{}};}
+\DoxyCodeLine{230         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{true};}
+\DoxyCodeLine{231         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{true};}
+\DoxyCodeLine{232         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{true};}
+\DoxyCodeLine{233 }
+\DoxyCodeLine{234 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{235         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_32U;}
+\DoxyCodeLine{236 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{237 }
+\DoxyCodeLine{238         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{239         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{240     \};}
+\DoxyCodeLine{241 }
+\DoxyCodeLine{242     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{243     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<int64\_t> \{}
+\DoxyCodeLine{244         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{245         \textcolor{keyword}{using} Scalar                             = int64\_t;}
+\DoxyCodeLine{246         \textcolor{keyword}{using} Packet                             = Vc::Vector<int64\_t>;}
+\DoxyCodeLine{247         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = Packet::size();}
+\DoxyCodeLine{248         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}int64\_t"{}};}
+\DoxyCodeLine{249         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{true};}
+\DoxyCodeLine{250         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{true};}
+\DoxyCodeLine{251         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{true};}
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{254         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_64I;}
+\DoxyCodeLine{255 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{256 }
+\DoxyCodeLine{257         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{258         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{259     \};}
+\DoxyCodeLine{260 }
+\DoxyCodeLine{261     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{262     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<uint64\_t> \{}
+\DoxyCodeLine{263         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{264         \textcolor{keyword}{using} Scalar                             = uint64\_t;}
+\DoxyCodeLine{265         \textcolor{keyword}{using} Packet                             = Vc::Vector<uint64\_t>;}
+\DoxyCodeLine{266         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = Packet::size();}
+\DoxyCodeLine{267         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}uint64\_t"{}};}
+\DoxyCodeLine{268         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{true};}
+\DoxyCodeLine{269         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{true};}
+\DoxyCodeLine{270         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{true};}
+\DoxyCodeLine{271 }
+\DoxyCodeLine{272 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{273         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_64U;}
+\DoxyCodeLine{274 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{275 }
+\DoxyCodeLine{276         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{277         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{278     \};}
+\DoxyCodeLine{279 }
+\DoxyCodeLine{280     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{281     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<float> \{}
+\DoxyCodeLine{282         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{283         \textcolor{keyword}{using} Scalar                             = float;}
+\DoxyCodeLine{284         \textcolor{keyword}{using} Packet                             = Vc::Vector<float>;}
+\DoxyCodeLine{285         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = Packet::size();}
+\DoxyCodeLine{286         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}float"{}};}
+\DoxyCodeLine{287         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{true};}
+\DoxyCodeLine{288         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{true};}
+\DoxyCodeLine{289         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{false};}
+\DoxyCodeLine{290 }
+\DoxyCodeLine{291 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{292         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_32F;}
+\DoxyCodeLine{293 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{294 }
+\DoxyCodeLine{295         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{296         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{297     \};}
+\DoxyCodeLine{298 }
+\DoxyCodeLine{299     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{300     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{TypeInfo}}<double> \{}
+\DoxyCodeLine{301         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} isLibRapidType     = \textcolor{keyword}{false};}
+\DoxyCodeLine{302         \textcolor{keyword}{using} Scalar                             = double;}
+\DoxyCodeLine{303         \textcolor{keyword}{using} Packet                             = Vc::Vector<double>;}
+\DoxyCodeLine{304         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} int64\_t packetWidth     = Packet::size();}
+\DoxyCodeLine{305         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{char} name[]             = \textcolor{stringliteral}{"{}double"{}};}
+\DoxyCodeLine{306         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsArithmetic = \textcolor{keyword}{true};}
+\DoxyCodeLine{307         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsLogical    = \textcolor{keyword}{true};}
+\DoxyCodeLine{308         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} supportsBinary     = \textcolor{keyword}{false};}
+\DoxyCodeLine{309 }
+\DoxyCodeLine{310 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_CUDA)}}
+\DoxyCodeLine{311         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} cudaDataType\_t CudaType = cudaDataType\_t::CUDA\_R\_64F;}
+\DoxyCodeLine{312 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{313 }
+\DoxyCodeLine{314         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canAlign  = \textcolor{keyword}{true};}
+\DoxyCodeLine{315         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} canMemcpy = \textcolor{keyword}{true};}
+\DoxyCodeLine{316     \};}
+\DoxyCodeLine{317 \} \textcolor{comment}{// namespace librapid::typetraits}}
+\DoxyCodeLine{318 }
+\DoxyCodeLine{319 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_CORE\_TRAITS\_HPP}}
+
+\end{DoxyCode}
