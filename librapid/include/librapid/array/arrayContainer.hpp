@@ -131,7 +131,10 @@ namespace librapid {
 	ArrayContainer<ShapeType_, StorageType_> &ArrayContainer<ShapeType_, StorageType_>::operator=(
 	  const detail::Function<desc, Functor_, Args...> &function) {
 		m_storage.resize(function.shape().size(), 0);
-		detail::assign(*this, function);
+		if (m_storage.size() < global::multithreadThreshold)
+			detail::assign(*this, function);
+		else
+			detail::assignParallel(*this, function);
 		return *this;
 	}
 
