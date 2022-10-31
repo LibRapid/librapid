@@ -46,12 +46,13 @@ namespace librapid {
 
 		/// Construct an array container from a function object. This will assign the result of
 		/// the function to the array container, evaluating it accordingly.
+		/// \tparam desc The assignment descriptor
 		/// \tparam Functor_ The function type
 		/// \tparam Args The argument types of the function
 		/// \param function The function to assign
-		template<typename Functor_, typename... Args>
+		template<detail::Descriptor desc, typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE explicit ArrayContainer(
-		  const detail::Function<Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT;
+		  const detail::Function<desc, Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT;
 
 		/// Assign an array container to this array container.
 		/// \param other The array container to copy.
@@ -69,9 +70,9 @@ namespace librapid {
 		/// \tparam Args The argument types of the function
 		/// \param function The function to assign
 		/// \return A reference to this array container.
-		template<typename Functor_, typename... Args>
+		template<detail::Descriptor desc, typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE ArrayContainer &
-		operator=(const detail::Function<Functor_, Args...> &function);
+		operator=(const detail::Function<desc, Functor_, Args...> &function);
 
 		/// Return the shape of the array container. This is an immutable reference.
 		/// \return The shape of the array container.
@@ -97,7 +98,7 @@ namespace librapid {
 		/// \param value The value to write to the array's storage
 		LIBRAPID_ALWAYS_INLINE void write(size_t index, const Scalar &value);
 
-	public:
+	private:
 		ShapeType m_shape;
 		StorageType m_storage;
 	};
@@ -113,22 +114,22 @@ namespace librapid {
 			m_storage(shape.size(), value) {}
 
 	template<typename ShapeType_, typename StorageType_>
-	ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(ShapeType &&shape) :
-			m_shape(std::move(shape)), m_storage(m_shape.size()) {}
+	ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(ShapeType_ &&shape) :
+			m_shape(std::forward<ShapeType_>(shape)), m_storage(m_shape.size()) {}
 
 	template<typename ShapeType_, typename StorageType_>
-	template<typename Functor_, typename... Args>
+	template<detail::Descriptor desc, typename Functor_, typename... Args>
 	ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
-	  const detail::Function<Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT
+	  const detail::Function<desc, Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT
 			: m_shape(function.shape()),
 			  m_storage(m_shape.size()) {
 		detail::assign(*this, function);
 	}
 
 	template<typename ShapeType_, typename StorageType_>
-	template<typename Functor_, typename... Args>
+	template<detail::Descriptor desc, typename Functor_, typename... Args>
 	ArrayContainer<ShapeType_, StorageType_> &ArrayContainer<ShapeType_, StorageType_>::operator=(
-	  const detail::Function<Functor_, Args...> &function) {
+	  const detail::Function<desc, Functor_, Args...> &function) {
 		m_storage.resize(function.shape().size(), 0);
 		detail::assign(*this, function);
 		return *this;
@@ -152,7 +153,8 @@ namespace librapid {
 	}
 
 	template<typename ShapeType_, typename StorageType_>
-	void ArrayContainer<ShapeType_, StorageType_>::writePacket(size_t index, const Packet &value) {
+	void ArrayContainer<ShapeType_, StorageType_>::writePacket(size_t index,
+															   const Packet &value) {
 		value.store(m_storage.begin() + index);
 	}
 
