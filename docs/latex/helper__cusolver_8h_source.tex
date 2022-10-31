@@ -1,0 +1,169 @@
+\hypertarget{helper__cusolver_8h_source}{}\doxysection{helper\+\_\+cusolver.\+h}
+\label{helper__cusolver_8h_source}\index{librapid/include/librapid/cuda/helper\_cusolver.h@{librapid/include/librapid/cuda/helper\_cusolver.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/* Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{4 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{5 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{6 \textcolor{comment}{ *  * Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{7 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{8 \textcolor{comment}{ *  * Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{9 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{10 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{11 \textcolor{comment}{ *  * Neither the name of NVIDIA CORPORATION nor the names of its}}
+\DoxyCodeLine{12 \textcolor{comment}{ *    contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{13 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{14 \textcolor{comment}{ *}}
+\DoxyCodeLine{15 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY}}
+\DoxyCodeLine{16 \textcolor{comment}{ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{17 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR}}
+\DoxyCodeLine{18 \textcolor{comment}{ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR}}
+\DoxyCodeLine{19 \textcolor{comment}{ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,}}
+\DoxyCodeLine{20 \textcolor{comment}{ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,}}
+\DoxyCodeLine{21 \textcolor{comment}{ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR}}
+\DoxyCodeLine{22 \textcolor{comment}{ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY}}
+\DoxyCodeLine{23 \textcolor{comment}{ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{24 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{25 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{26 \textcolor{comment}{ */}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#ifndef HELPER\_CUSOLVER}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#define HELPER\_CUSOLVER}}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#include "{}cusparse.h"{}}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#include <ctype.h>}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#include <cuda\_runtime.h>}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#include <math.h>}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include <string.h>}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#define SWITCH\_CHAR '-\/'}}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 \textcolor{keyword}{struct }\mbox{\hyperlink{structtest_opts}{testOpts}} \{}
+\DoxyCodeLine{42     \textcolor{keywordtype}{char} *sparse\_mat\_filename; \textcolor{comment}{// by switch -\/F<filename>}}
+\DoxyCodeLine{43     \textcolor{keyword}{const} \textcolor{keywordtype}{char} *testFunc;      \textcolor{comment}{// by switch -\/R<name>}}
+\DoxyCodeLine{44     \textcolor{keyword}{const} \textcolor{keywordtype}{char} *reorder;       \textcolor{comment}{// by switch -\/P<name>}}
+\DoxyCodeLine{45     \textcolor{keywordtype}{int} lda;                   \textcolor{comment}{// by switch -\/lda<int>}}
+\DoxyCodeLine{46 \};}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 \textcolor{keywordtype}{double} vec\_norminf(\textcolor{keywordtype}{int} n, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *x) \{}
+\DoxyCodeLine{49     \textcolor{keywordtype}{double} norminf = 0;}
+\DoxyCodeLine{50     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} j = 0; j < n; j++) \{}
+\DoxyCodeLine{51         \textcolor{keywordtype}{double} x\_abs = fabs(x[j]);}
+\DoxyCodeLine{52         norminf      = (norminf > x\_abs) ? norminf : x\_abs;}
+\DoxyCodeLine{53     \}}
+\DoxyCodeLine{54     \textcolor{keywordflow}{return} norminf;}
+\DoxyCodeLine{55 \}}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{comment}{/*}}
+\DoxyCodeLine{58 \textcolor{comment}{ * |A| = max \{ |A|*ones(m,1) \}}}
+\DoxyCodeLine{59 \textcolor{comment}{ */}}
+\DoxyCodeLine{60 \textcolor{keywordtype}{double} mat\_norminf(\textcolor{keywordtype}{int} m, \textcolor{keywordtype}{int} n, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *A, \textcolor{keywordtype}{int} lda) \{}
+\DoxyCodeLine{61     \textcolor{keywordtype}{double} norminf = 0;}
+\DoxyCodeLine{62     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < m; i++) \{}
+\DoxyCodeLine{63         \textcolor{keywordtype}{double} sum = 0.0;}
+\DoxyCodeLine{64         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} j = 0; j < n; j++) \{}
+\DoxyCodeLine{65             \textcolor{keywordtype}{double} A\_abs = fabs(A[i + j * lda]);}
+\DoxyCodeLine{66             sum += A\_abs;}
+\DoxyCodeLine{67         \}}
+\DoxyCodeLine{68         norminf = (norminf > sum) ? norminf : sum;}
+\DoxyCodeLine{69     \}}
+\DoxyCodeLine{70     \textcolor{keywordflow}{return} norminf;}
+\DoxyCodeLine{71 \}}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{73 \textcolor{comment}{/*}}
+\DoxyCodeLine{74 \textcolor{comment}{ * |A| = max \{ |A|*ones(m,1) \}}}
+\DoxyCodeLine{75 \textcolor{comment}{ */}}
+\DoxyCodeLine{76 \textcolor{keywordtype}{double} csr\_mat\_norminf(\textcolor{keywordtype}{int} m, \textcolor{keywordtype}{int} n, \textcolor{keywordtype}{int} nnzA, \textcolor{keyword}{const} cusparseMatDescr\_t descrA,}
+\DoxyCodeLine{77                        \textcolor{keyword}{const} \textcolor{keywordtype}{double} *csrValA, \textcolor{keyword}{const} \textcolor{keywordtype}{int} *csrRowPtrA, \textcolor{keyword}{const} \textcolor{keywordtype}{int} *csrColIndA) \{}
+\DoxyCodeLine{78     \textcolor{keyword}{const} \textcolor{keywordtype}{int} baseA = (CUSPARSE\_INDEX\_BASE\_ONE == cusparseGetMatIndexBase(descrA)) ? 1 : 0;}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80     \textcolor{keywordtype}{double} norminf = 0;}
+\DoxyCodeLine{81     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < m; i++) \{}
+\DoxyCodeLine{82         \textcolor{keywordtype}{double} sum      = 0.0;}
+\DoxyCodeLine{83         \textcolor{keyword}{const} \textcolor{keywordtype}{int} start = csrRowPtrA[i] -\/ baseA;}
+\DoxyCodeLine{84         \textcolor{keyword}{const} \textcolor{keywordtype}{int} end   = csrRowPtrA[i + 1] -\/ baseA;}
+\DoxyCodeLine{85         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} colidx = start; colidx < end; colidx++) \{}
+\DoxyCodeLine{86             \textcolor{comment}{// const int j = csrColIndA[colidx] -\/ baseA;}}
+\DoxyCodeLine{87             \textcolor{keywordtype}{double} A\_abs = fabs(csrValA[colidx]);}
+\DoxyCodeLine{88             sum += A\_abs;}
+\DoxyCodeLine{89         \}}
+\DoxyCodeLine{90         norminf = (norminf > sum) ? norminf : sum;}
+\DoxyCodeLine{91     \}}
+\DoxyCodeLine{92     \textcolor{keywordflow}{return} norminf;}
+\DoxyCodeLine{93 \}}
+\DoxyCodeLine{94 }
+\DoxyCodeLine{95 \textcolor{keywordtype}{void} display\_matrix(\textcolor{keywordtype}{int} m, \textcolor{keywordtype}{int} n, \textcolor{keywordtype}{int} nnzA, \textcolor{keyword}{const} cusparseMatDescr\_t descrA, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *csrValA,}
+\DoxyCodeLine{96                     \textcolor{keyword}{const} \textcolor{keywordtype}{int} *csrRowPtrA, \textcolor{keyword}{const} \textcolor{keywordtype}{int} *csrColIndA) \{}
+\DoxyCodeLine{97     \textcolor{keyword}{const} \textcolor{keywordtype}{int} baseA = (CUSPARSE\_INDEX\_BASE\_ONE == cusparseGetMatIndexBase(descrA)) ? 1 : 0;}
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99     printf(\textcolor{stringliteral}{"{}m = \%d, n = \%d, nnz = \%d, matlab base-\/1\(\backslash\)n"{}}, m, n, nnzA);}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} row = 0; row < m; row++) \{}
+\DoxyCodeLine{102         \textcolor{keyword}{const} \textcolor{keywordtype}{int} start = csrRowPtrA[row] -\/ baseA;}
+\DoxyCodeLine{103         \textcolor{keyword}{const} \textcolor{keywordtype}{int} end   = csrRowPtrA[row + 1] -\/ baseA;}
+\DoxyCodeLine{104         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} colidx = start; colidx < end; colidx++) \{}
+\DoxyCodeLine{105             \textcolor{keyword}{const} \textcolor{keywordtype}{int} col = csrColIndA[colidx] -\/ baseA;}
+\DoxyCodeLine{106             \textcolor{keywordtype}{double} Areg   = csrValA[colidx];}
+\DoxyCodeLine{107             printf(\textcolor{stringliteral}{"{}A(\%d, \%d) = \%20.16E\(\backslash\)n"{}}, row + 1, col + 1, Areg);}
+\DoxyCodeLine{108         \}}
+\DoxyCodeLine{109     \}}
+\DoxyCodeLine{110 \}}
+\DoxyCodeLine{111 }
+\DoxyCodeLine{112 \textcolor{preprocessor}{\#if defined(\_WIN32)}}
+\DoxyCodeLine{113 \textcolor{preprocessor}{\#   if !defined(WIN32\_LEAN\_AND\_MEAN)}}
+\DoxyCodeLine{114 \textcolor{preprocessor}{\#       define WIN32\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{115 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{116 }
+\DoxyCodeLine{117 \textcolor{preprocessor}{\#   include <Windows.h>}}
+\DoxyCodeLine{118 }
+\DoxyCodeLine{119 \textcolor{keywordtype}{double} second(\textcolor{keywordtype}{void}) \{}
+\DoxyCodeLine{120     LARGE\_INTEGER t;}
+\DoxyCodeLine{121     \textcolor{keyword}{static} \textcolor{keywordtype}{double} oofreq;}
+\DoxyCodeLine{122     \textcolor{keyword}{static} \textcolor{keywordtype}{int} checkedForHighResTimer;}
+\DoxyCodeLine{123     \textcolor{keyword}{static} BOOL hasHighResTimer;}
+\DoxyCodeLine{124 }
+\DoxyCodeLine{125     \textcolor{keywordflow}{if} (!checkedForHighResTimer) \{}
+\DoxyCodeLine{126         hasHighResTimer        = QueryPerformanceFrequency(\&t);}
+\DoxyCodeLine{127         oofreq                 = 1.0 / (double)t.QuadPart;}
+\DoxyCodeLine{128         checkedForHighResTimer = 1;}
+\DoxyCodeLine{129     \}}
+\DoxyCodeLine{130     \textcolor{keywordflow}{if} (hasHighResTimer) \{}
+\DoxyCodeLine{131         QueryPerformanceCounter(\&t);}
+\DoxyCodeLine{132         \textcolor{keywordflow}{return} (\textcolor{keywordtype}{double})t.QuadPart * oofreq;}
+\DoxyCodeLine{133     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{134         \textcolor{keywordflow}{return} (\textcolor{keywordtype}{double})GetTickCount() / 1000.0;}
+\DoxyCodeLine{135     \}}
+\DoxyCodeLine{136 \}}
+\DoxyCodeLine{137 }
+\DoxyCodeLine{138 \textcolor{preprocessor}{\#elif defined(\_\_linux\_\_) || defined(\_\_QNX\_\_)}}
+\DoxyCodeLine{139 \textcolor{preprocessor}{\#   include <stddef.h>}}
+\DoxyCodeLine{140 \textcolor{preprocessor}{\#   include <sys/resource.h>}}
+\DoxyCodeLine{141 \textcolor{preprocessor}{\#   include <sys/time.h>}}
+\DoxyCodeLine{142 \textcolor{keywordtype}{double} second(\textcolor{keywordtype}{void}) \{}
+\DoxyCodeLine{143     \textcolor{keyword}{struct }timeval tv;}
+\DoxyCodeLine{144     gettimeofday(\&tv, NULL);}
+\DoxyCodeLine{145     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{double})tv.tv\_sec + (double)tv.tv\_usec / 1000000.0;}
+\DoxyCodeLine{146 \}}
+\DoxyCodeLine{147 }
+\DoxyCodeLine{148 \textcolor{preprocessor}{\#elif defined(\_\_APPLE\_\_)}}
+\DoxyCodeLine{149 \textcolor{preprocessor}{\#   include <stddef.h>}}
+\DoxyCodeLine{150 \textcolor{preprocessor}{\#   include <sys/resource.h>}}
+\DoxyCodeLine{151 \textcolor{preprocessor}{\#   include <sys/sysctl.h>}}
+\DoxyCodeLine{152 \textcolor{preprocessor}{\#   include <sys/time.h>}}
+\DoxyCodeLine{153 \textcolor{preprocessor}{\#   include <sys/types.h>}}
+\DoxyCodeLine{154 \textcolor{keywordtype}{double} second(\textcolor{keywordtype}{void}) \{}
+\DoxyCodeLine{155     \textcolor{keyword}{struct }timeval tv;}
+\DoxyCodeLine{156     gettimeofday(\&tv, NULL);}
+\DoxyCodeLine{157     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{double})tv.tv\_sec + (double)tv.tv\_usec / 1000000.0;}
+\DoxyCodeLine{158 \}}
+\DoxyCodeLine{159 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{160 \textcolor{preprocessor}{\#   error unsupported platform}}
+\DoxyCodeLine{161 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{162 }
+\DoxyCodeLine{163 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

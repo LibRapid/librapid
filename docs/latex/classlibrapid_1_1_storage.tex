@@ -1,0 +1,285 @@
+\hypertarget{classlibrapid_1_1_storage}{}\doxysection{librapid\+::Storage\texorpdfstring{$<$}{<} Scalar\+\_\+, Allocator\+\_\+ \texorpdfstring{$>$}{>} Class Template Reference}
+\label{classlibrapid_1_1_storage}\index{librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_aec163f63def86c31242f97923dc18d88}\label{classlibrapid_1_1_storage_aec163f63def86c31242f97923dc18d88}} 
+using {\bfseries Allocator} = Allocator\+\_\+
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a9d5007a5ffa2a949fad13b40d854fb05}\label{classlibrapid_1_1_storage_a9d5007a5ffa2a949fad13b40d854fb05}} 
+using {\bfseries Scalar} = Scalar\+\_\+
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a51802f024ed62b540bdf378451f00345}\label{classlibrapid_1_1_storage_a51802f024ed62b540bdf378451f00345}} 
+using {\bfseries Pointer} = typename std\+::allocator\+\_\+traits$<$ Allocator $>$\+::pointer
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_aed4d97613bb5fbc0e1c2cecabdbccc45}\label{classlibrapid_1_1_storage_aed4d97613bb5fbc0e1c2cecabdbccc45}} 
+using {\bfseries Const\+Pointer} = typename std\+::allocator\+\_\+traits$<$ Allocator $>$\+::const\+\_\+pointer
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_aaa1c2d774c3b67e2ad1fbb48c3779fe3}\label{classlibrapid_1_1_storage_aaa1c2d774c3b67e2ad1fbb48c3779fe3}} 
+using {\bfseries Reference} = Scalar \&
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_aa0592fffa9c2941a0ad0271b6ef32dba}\label{classlibrapid_1_1_storage_aa0592fffa9c2941a0ad0271b6ef32dba}} 
+using {\bfseries Const\+Reference} = const Scalar \&
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a8ac1c579565b256766f32bc4b0ed1405}\label{classlibrapid_1_1_storage_a8ac1c579565b256766f32bc4b0ed1405}} 
+using {\bfseries Size\+Type} = typename std\+::allocator\+\_\+traits$<$ Allocator $>$\+::size\+\_\+type
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_afa2af71066e7b96ca42b07c3c8c18c3a}\label{classlibrapid_1_1_storage_afa2af71066e7b96ca42b07c3c8c18c3a}} 
+using {\bfseries Difference\+Type} = typename std\+::allocator\+\_\+traits$<$ Allocator $>$\+::difference\+\_\+type
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_ae2054f1605894dd4397dc92ea3bc32d5}\label{classlibrapid_1_1_storage_ae2054f1605894dd4397dc92ea3bc32d5}} 
+using {\bfseries Iterator} = Pointer
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_aedd5efa91d2b0312ba095a046d4dba08}\label{classlibrapid_1_1_storage_aedd5efa91d2b0312ba095a046d4dba08}} 
+using {\bfseries Const\+Iterator} = Const\+Pointer
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_af637e0f4c6a7f298436e9a7aeeac8bf1}\label{classlibrapid_1_1_storage_af637e0f4c6a7f298436e9a7aeeac8bf1}} 
+using {\bfseries Reverse\+Iterator} = std\+::reverse\+\_\+iterator$<$ Iterator $>$
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a1f7674f95d175f258ab8de4bc3773dab}\label{classlibrapid_1_1_storage_a1f7674f95d175f258ab8de4bc3773dab}} 
+using {\bfseries Const\+Reverse\+Iterator} = std\+::reverse\+\_\+iterator$<$ Const\+Iterator $>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}\label{classlibrapid_1_1_storage_a2236763dda1d80beda26bce3bfbad5c7}} 
+{\bfseries Storage} ()=default
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE \mbox{\hyperlink{classlibrapid_1_1_storage_aa1dbdc875198f9c8a7f0bb5d3ff30c08}{Storage}} (Size\+Type size, const Allocator \&alloc=Allocator())
+\item 
+LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE \mbox{\hyperlink{classlibrapid_1_1_storage_a04a2785390c8a96fd6240bba73b77836}{Storage}} (Size\+Type size, Const\+Reference value, const Allocator \&alloc=Allocator())
+\item 
+LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE \mbox{\hyperlink{classlibrapid_1_1_storage_a426199dc669ec91e47acc00e21283915}{Storage}} (const \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&other, const Allocator \&alloc=Allocator())
+\item 
+LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE \mbox{\hyperlink{classlibrapid_1_1_storage_a9c24f4eeb279febb3a8f41a170ce0cb5}{Storage}} (\mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&\&other) noexcept
+\item 
+{\footnotesize template$<$typename V $>$ }\\LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE \mbox{\hyperlink{classlibrapid_1_1_storage_ad71195bfc1241bd16be6cbf33b7d84bd}{Storage}} (const std\+::initializer\+\_\+list$<$ V $>$ \&list, const Allocator \&alloc=Allocator())
+\item 
+{\footnotesize template$<$typename V $>$ }\\LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE \mbox{\hyperlink{classlibrapid_1_1_storage_a1be479e553cd8647347127790c61cb2c}{Storage}} (const std\+::vector$<$ V $>$ \&vec, const Allocator \&alloc=Allocator())
+\item 
+LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \& \mbox{\hyperlink{classlibrapid_1_1_storage_a645549771b97c5a5fc50a425d9ca77d1}{operator=}} (const \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&other)
+\item 
+LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \& \mbox{\hyperlink{classlibrapid_1_1_storage_ab59bc5d7b4eea3bb9aaa4ded12ee80e9}{operator=}} (\mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} \&\&other) noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a72b91a469fd786401a1346b9baefaf55}\label{classlibrapid_1_1_storage_a72b91a469fd786401a1346b9baefaf55}} 
+{\bfseries $\sim$\+Storage} ()
+\begin{DoxyCompactList}\small\item\em Free a \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object. \end{DoxyCompactList}\item 
+LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE void \mbox{\hyperlink{classlibrapid_1_1_storage_abe34d150799358f4c44af37da3189332}{resize}} (Size\+Type new\+Size)
+\item 
+LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE void \mbox{\hyperlink{classlibrapid_1_1_storage_ae846419d12d88d87a23f57e8349e8013}{resize}} (Size\+Type new\+Size, int)
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_aadb39794ce4c7bba15a6cfe00cac2b41}\label{classlibrapid_1_1_storage_aadb39794ce4c7bba15a6cfe00cac2b41}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Size\+Type {\bfseries size} () const noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a34cdd32ed8b67418b1f5833cdd031d64}\label{classlibrapid_1_1_storage_a34cdd32ed8b67418b1f5833cdd031d64}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Const\+Reference {\bfseries operator\mbox{[}$\,$\mbox{]}} (Size\+Type index) const
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a526f7807802f8b951855860f06780045}\label{classlibrapid_1_1_storage_a526f7807802f8b951855860f06780045}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Reference {\bfseries operator\mbox{[}$\,$\mbox{]}} (Size\+Type index)
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_aef7691919471d207ef78557d9a37f0c2}\label{classlibrapid_1_1_storage_aef7691919471d207ef78557d9a37f0c2}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Iterator {\bfseries begin} () noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_af3a214fecd3ffa5d294b7b9889e9ef41}\label{classlibrapid_1_1_storage_af3a214fecd3ffa5d294b7b9889e9ef41}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Iterator {\bfseries end} () noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a8e455e95349f32acf46b942148fd80c1}\label{classlibrapid_1_1_storage_a8e455e95349f32acf46b942148fd80c1}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Const\+Iterator {\bfseries begin} () const noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_adcfb992de759904c2584d84ed7355bb6}\label{classlibrapid_1_1_storage_adcfb992de759904c2584d84ed7355bb6}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Const\+Iterator {\bfseries end} () const noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a8e2e56b1796868dd5adca39eccac83a6}\label{classlibrapid_1_1_storage_a8e2e56b1796868dd5adca39eccac83a6}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Const\+Iterator {\bfseries cbegin} () const noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_ae980fea60c5e884582605a51ca1badbb}\label{classlibrapid_1_1_storage_ae980fea60c5e884582605a51ca1badbb}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Const\+Iterator {\bfseries cend} () const noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_af0a1839336cfff8a77745f9a7237a7b7}\label{classlibrapid_1_1_storage_af0a1839336cfff8a77745f9a7237a7b7}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Reverse\+Iterator {\bfseries rbegin} () noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_aaf2aa5cb83cfd58e10d61ff1c286af51}\label{classlibrapid_1_1_storage_aaf2aa5cb83cfd58e10d61ff1c286af51}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Reverse\+Iterator {\bfseries rend} () noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a62ea09193d0d0999cef59c0a078ae670}\label{classlibrapid_1_1_storage_a62ea09193d0d0999cef59c0a078ae670}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Const\+Reverse\+Iterator {\bfseries rbegin} () const noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a33f9b69a2bd93a5e07de59891fabf084}\label{classlibrapid_1_1_storage_a33f9b69a2bd93a5e07de59891fabf084}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Const\+Reverse\+Iterator {\bfseries rend} () const noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a205da5497efe3755b06e34d362bcbd1f}\label{classlibrapid_1_1_storage_a205da5497efe3755b06e34d362bcbd1f}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Const\+Reverse\+Iterator {\bfseries crbegin} () const noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a7ec5320264326a2a8086f6a078e18f47}\label{classlibrapid_1_1_storage_a7ec5320264326a2a8086f6a078e18f47}} 
+LIBRAPID\+\_\+\+NODISCARD LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE Const\+Reverse\+Iterator {\bfseries crend} () const noexcept
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a018cd63a7e0789ce40e8cb144a49d98b}\label{classlibrapid_1_1_storage_a018cd63a7e0789ce40e8cb144a49d98b}} 
+{\footnotesize template$<$typename V $>$ }\\{\bfseries Storage} (const std\+::initializer\+\_\+list$<$ V $>$ \&list, const Allocator \&alloc)
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a8bec87e9cb26ae0c06d827fcb932bdfe}\label{classlibrapid_1_1_storage_a8bec87e9cb26ae0c06d827fcb932bdfe}} 
+{\footnotesize template$<$typename V $>$ }\\{\bfseries Storage} (const std\+::vector$<$ V $>$ \&vector, const Allocator \&alloc)
+\item 
+\mbox{\Hypertarget{classlibrapid_1_1_storage_af61284cfa7fa3349b55acd94df9d9029}\label{classlibrapid_1_1_storage_af61284cfa7fa3349b55acd94df9d9029}} 
+{\footnotesize template$<$typename P $>$ }\\void {\bfseries init\+Data} (P begin, P end)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classlibrapid_1_1_storage_aa1dbdc875198f9c8a7f0bb5d3ff30c08}\label{classlibrapid_1_1_storage_aa1dbdc875198f9c8a7f0bb5d3ff30c08}} 
+\index{librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}!Storage@{Storage}}
+\index{Storage@{Storage}!librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}}
+\doxysubsubsection{\texorpdfstring{Storage()}{Storage()}\hspace{0.1cm}{\footnotesize\ttfamily [1/6]}}
+{\footnotesize\ttfamily template$<$typename T , typename A $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_storage}{librapid\+::\+Storage}}$<$ T, A $>$\+::\+Storage (\begin{DoxyParamCaption}\item[{Size\+Type}]{size,  }\item[{const Allocator \&}]{alloc = {\ttfamily Allocator()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Create a \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object with {\ttfamily size} elements and, optionally, a custom allocator. 
+\begin{DoxyParams}{Parameters}
+{\em size} & Number of elements to allocate \\
+\hline
+{\em alloc} & Allocator to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a04a2785390c8a96fd6240bba73b77836}\label{classlibrapid_1_1_storage_a04a2785390c8a96fd6240bba73b77836}} 
+\index{librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}!Storage@{Storage}}
+\index{Storage@{Storage}!librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}}
+\doxysubsubsection{\texorpdfstring{Storage()}{Storage()}\hspace{0.1cm}{\footnotesize\ttfamily [2/6]}}
+{\footnotesize\ttfamily template$<$typename T , typename A $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_storage}{librapid\+::\+Storage}}$<$ T, A $>$\+::\+Storage (\begin{DoxyParamCaption}\item[{Size\+Type}]{size,  }\item[{Const\+Reference}]{value,  }\item[{const Allocator \&}]{alloc = {\ttfamily Allocator()} }\end{DoxyParamCaption})}
+
+Create a \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object with {\ttfamily size} elements, each initialized to {\ttfamily value}. Optionally, a custom allocator can be used. 
+\begin{DoxyParams}{Parameters}
+{\em size} & Number of elements to allocate \\
+\hline
+{\em value} & Value to initialize each element to \\
+\hline
+{\em alloc} & Allocator to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a426199dc669ec91e47acc00e21283915}\label{classlibrapid_1_1_storage_a426199dc669ec91e47acc00e21283915}} 
+\index{librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}!Storage@{Storage}}
+\index{Storage@{Storage}!librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}}
+\doxysubsubsection{\texorpdfstring{Storage()}{Storage()}\hspace{0.1cm}{\footnotesize\ttfamily [3/6]}}
+{\footnotesize\ttfamily template$<$typename T , typename A $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_storage}{librapid\+::\+Storage}}$<$ T, A $>$\+::\+Storage (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}}$<$ Scalar\+\_\+, Allocator\+\_\+ $>$ \&}]{other,  }\item[{const Allocator \&}]{alloc = {\ttfamily Allocator()} }\end{DoxyParamCaption})}
+
+Create a \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object from another \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object. Additionally a custom allocator can be used. 
+\begin{DoxyParams}{Parameters}
+{\em other} & \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object to copy \\
+\hline
+{\em alloc} & Allocator to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a9c24f4eeb279febb3a8f41a170ce0cb5}\label{classlibrapid_1_1_storage_a9c24f4eeb279febb3a8f41a170ce0cb5}} 
+\index{librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}!Storage@{Storage}}
+\index{Storage@{Storage}!librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}}
+\doxysubsubsection{\texorpdfstring{Storage()}{Storage()}\hspace{0.1cm}{\footnotesize\ttfamily [4/6]}}
+{\footnotesize\ttfamily template$<$typename T , typename A $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_storage}{librapid\+::\+Storage}}$<$ T, A $>$\+::\+Storage (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}}$<$ Scalar\+\_\+, Allocator\+\_\+ $>$ \&\&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+Move a \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object into this object. 
+\begin{DoxyParams}{Parameters}
+{\em other} & \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object to move \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classlibrapid_1_1_storage_ad71195bfc1241bd16be6cbf33b7d84bd}\label{classlibrapid_1_1_storage_ad71195bfc1241bd16be6cbf33b7d84bd}} 
+\index{librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}!Storage@{Storage}}
+\index{Storage@{Storage}!librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}}
+\doxysubsubsection{\texorpdfstring{Storage()}{Storage()}\hspace{0.1cm}{\footnotesize\ttfamily [5/6]}}
+{\footnotesize\ttfamily template$<$typename Scalar\+\_\+ , typename Allocator\+\_\+  = std\+::allocator$<$\+Scalar\+\_\+$>$$>$ \\
+template$<$typename V $>$ \\
+LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE \mbox{\hyperlink{classlibrapid_1_1_storage}{librapid\+::\+Storage}}$<$ Scalar\+\_\+, Allocator\+\_\+ $>$\+::\+Storage (\begin{DoxyParamCaption}\item[{const std\+::initializer\+\_\+list$<$ V $>$ \&}]{list,  }\item[{const Allocator \&}]{alloc = {\ttfamily Allocator()} }\end{DoxyParamCaption})}
+
+Create a \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object from an std\+::initializer\+\_\+list 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em V} & Type of the elements in the initializer list \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Initializer list to copy \\
+\hline
+{\em alloc} & Allocator to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a1be479e553cd8647347127790c61cb2c}\label{classlibrapid_1_1_storage_a1be479e553cd8647347127790c61cb2c}} 
+\index{librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}!Storage@{Storage}}
+\index{Storage@{Storage}!librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}}
+\doxysubsubsection{\texorpdfstring{Storage()}{Storage()}\hspace{0.1cm}{\footnotesize\ttfamily [6/6]}}
+{\footnotesize\ttfamily template$<$typename Scalar\+\_\+ , typename Allocator\+\_\+  = std\+::allocator$<$\+Scalar\+\_\+$>$$>$ \\
+template$<$typename V $>$ \\
+LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE \mbox{\hyperlink{classlibrapid_1_1_storage}{librapid\+::\+Storage}}$<$ Scalar\+\_\+, Allocator\+\_\+ $>$\+::\+Storage (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ V $>$ \&}]{vec,  }\item[{const Allocator \&}]{alloc = {\ttfamily Allocator()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Create a \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object from a std\+::vector 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em V} & Type of the elements in the vector \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em vec} & Vector to copy \\
+\hline
+{\em alloc} & Allocator to use \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classlibrapid_1_1_storage_a645549771b97c5a5fc50a425d9ca77d1}\label{classlibrapid_1_1_storage_a645549771b97c5a5fc50a425d9ca77d1}} 
+\index{librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T , typename A $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}}$<$ T, A $>$ \& \mbox{\hyperlink{classlibrapid_1_1_storage}{librapid\+::\+Storage}}$<$ T, A $>$\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}}$<$ Scalar\+\_\+, Allocator\+\_\+ $>$ \&}]{other }\end{DoxyParamCaption})}
+
+Assignment operator for a \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object 
+\begin{DoxyParams}{Parameters}
+{\em other} & \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object to copy \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$this 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classlibrapid_1_1_storage_ab59bc5d7b4eea3bb9aaa4ded12ee80e9}\label{classlibrapid_1_1_storage_ab59bc5d7b4eea3bb9aaa4ded12ee80e9}} 
+\index{librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T , typename A $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}}$<$ T, A $>$ \& \mbox{\hyperlink{classlibrapid_1_1_storage}{librapid\+::\+Storage}}$<$ T, A $>$\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}}$<$ Scalar\+\_\+, Allocator\+\_\+ $>$ \&\&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+Move assignment operator for a \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object 
+\begin{DoxyParams}{Parameters}
+{\em other} & \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object to move \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$this 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classlibrapid_1_1_storage_abe34d150799358f4c44af37da3189332}\label{classlibrapid_1_1_storage_abe34d150799358f4c44af37da3189332}} 
+\index{librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}!resize@{resize}}
+\index{resize@{resize}!librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}}
+\doxysubsubsection{\texorpdfstring{resize()}{resize()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T , typename A $>$ \\
+void \mbox{\hyperlink{classlibrapid_1_1_storage}{librapid\+::\+Storage}}$<$ T, A $>$\+::resize (\begin{DoxyParamCaption}\item[{Size\+Type}]{new\+Size }\end{DoxyParamCaption})}
+
+Resize a \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object to {\ttfamily size} elements. Existing elements are preserved. 
+\begin{DoxyParams}{Parameters}
+{\em size} & New size of the \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classlibrapid_1_1_storage_ae846419d12d88d87a23f57e8349e8013}\label{classlibrapid_1_1_storage_ae846419d12d88d87a23f57e8349e8013}} 
+\index{librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}!resize@{resize}}
+\index{resize@{resize}!librapid::Storage$<$ Scalar\_, Allocator\_ $>$@{librapid::Storage$<$ Scalar\_, Allocator\_ $>$}}
+\doxysubsubsection{\texorpdfstring{resize()}{resize()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T , typename A $>$ \\
+void \mbox{\hyperlink{classlibrapid_1_1_storage}{librapid\+::\+Storage}}$<$ T, A $>$\+::resize (\begin{DoxyParamCaption}\item[{Size\+Type}]{new\+Size,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+Resize a \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object to {\ttfamily size} elements. Existing elements are not preserved 
+\begin{DoxyParams}{Parameters}
+{\em size} & New size of the \mbox{\hyperlink{classlibrapid_1_1_storage}{Storage}} object \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+librapid/include/librapid/array/storage.\+hpp\end{DoxyCompactItemize}

@@ -5,10 +5,6 @@ librapid/openblas_install
 librapid/blas
 openblas_install
 
-docs
-latex
-html
-
 *.i
 *.ii
 *.gpu

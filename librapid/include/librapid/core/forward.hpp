@@ -19,17 +19,16 @@ namespace librapid {
 		template<Descriptor desc, typename Functor_, typename... Args>
 		class Function;
 
-		template<Descriptor desc, typename ShapeType_, typename StorageType_, typename Functor_,
-				 typename... Args>
+		template<typename ShapeType_, typename StorageType_, typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
 		assign(ArrayContainer<ShapeType_, StorageType_> &lhs,
-			   const detail::Function<desc, ShapeType_, Args...> &function);
+			   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function);
 
-		template<Descriptor desc, typename ShapeType_, typename StorageType_, typename Functor_,
-				 typename... Args>
+		template<typename ShapeType_, typename StorageType_, typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
 		assignParallel(ArrayContainer<ShapeType_, StorageType_> &lhs,
-					   const detail::Function<desc, ShapeType_, Args...> &function);
+					   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function);
+
 	} // namespace detail
 } // namespace librapid
 

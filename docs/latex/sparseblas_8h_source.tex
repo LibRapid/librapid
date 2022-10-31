@@ -1,0 +1,196 @@
+\hypertarget{sparseblas_8h_source}{}\doxysection{sparseblas.\+h}
+\label{sparseblas_8h_source}\index{librapid/cxxblas/drivers/sparseblas.h@{librapid/cxxblas/drivers/sparseblas.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ *   Modification of mkl\_spblas.h}}
+\DoxyCodeLine{3 \textcolor{comment}{ */}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef CXXBLAS\_DRIVERS\_SPARSEBLAS\_H}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define CXXBLAS\_DRIVERS\_SPARSEBLAS\_H 1}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}cxxblas/drivers/mklblas.h"{}}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#ifndef SPARSEBLAS\_INT}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#   define SPARSEBLAS\_INT int}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CBLAS\_INT}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#ifndef SPARSEBLAS\_INDEX}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#   define SPARSEBLAS\_INDEX int}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CBLAS\_INT}}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{19 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \{}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{comment}{//-\/-\/ LEVEL 2 -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 \textcolor{comment}{// mv}}
+\DoxyCodeLine{25 \textcolor{keywordtype}{void} mkl\_scscmv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *k, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha,}
+\DoxyCodeLine{26                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{27                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *beta,}
+\DoxyCodeLine{28                 \textcolor{keywordtype}{float} *y);}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 \textcolor{keywordtype}{void} mkl\_scsrmv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *k, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha,}
+\DoxyCodeLine{31                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{32                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *beta,}
+\DoxyCodeLine{33                 \textcolor{keywordtype}{float} *y);}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35 \textcolor{keywordtype}{void} mkl\_dcscmv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *k, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha,}
+\DoxyCodeLine{36                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{37                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *x, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *beta,}
+\DoxyCodeLine{38                 \textcolor{keywordtype}{double} *y);}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{keywordtype}{void} mkl\_dcsrmv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *k, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha,}
+\DoxyCodeLine{41                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{42                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *x, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *beta,}
+\DoxyCodeLine{43                 \textcolor{keywordtype}{double} *y);}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{keywordtype}{void} mkl\_ccscmv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *k, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha,}
+\DoxyCodeLine{46                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{47                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *beta,}
+\DoxyCodeLine{48                 \textcolor{keywordtype}{float} *y);}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50 \textcolor{keywordtype}{void} mkl\_ccsrmv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *k, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha,}
+\DoxyCodeLine{51                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{52                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *beta,}
+\DoxyCodeLine{53                 \textcolor{keywordtype}{float} *y);}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55 \textcolor{keywordtype}{void} mkl\_zcscmv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *k, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha,}
+\DoxyCodeLine{56                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{57                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *x, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *beta,}
+\DoxyCodeLine{58                 \textcolor{keywordtype}{double} *y);}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 \textcolor{keywordtype}{void} mkl\_zcsrmv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *k, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha,}
+\DoxyCodeLine{61                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{62                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *x, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *beta,}
+\DoxyCodeLine{63                 \textcolor{keywordtype}{double} *y);}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65 \textcolor{comment}{// sv}}
+\DoxyCodeLine{66 \textcolor{keywordtype}{void} mkl\_scsrsv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra,}
+\DoxyCodeLine{67                 \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx, \textcolor{keyword}{const} CBLAS\_INT *pntrb,}
+\DoxyCodeLine{68                 \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x, \textcolor{keywordtype}{float} *y);}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \textcolor{keywordtype}{void} mkl\_scscsv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra,}
+\DoxyCodeLine{71                 \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx, \textcolor{keyword}{const} CBLAS\_INT *pntrb,}
+\DoxyCodeLine{72                 \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x, \textcolor{keywordtype}{float} *y);}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{74 \textcolor{keywordtype}{void} mkl\_dcsrsv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra,}
+\DoxyCodeLine{75                 \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val, \textcolor{keyword}{const} CBLAS\_INT *indx, \textcolor{keyword}{const} CBLAS\_INT *pntrb,}
+\DoxyCodeLine{76                 \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *x, \textcolor{keywordtype}{double} *y);}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 \textcolor{keywordtype}{void} mkl\_dcscsv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra,}
+\DoxyCodeLine{79                 \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val, \textcolor{keyword}{const} CBLAS\_INT *indx, \textcolor{keyword}{const} CBLAS\_INT *pntrb,}
+\DoxyCodeLine{80                 \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *x, \textcolor{keywordtype}{double} *y);}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82 \textcolor{keywordtype}{void} mkl\_ccsrsv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra,}
+\DoxyCodeLine{83                 \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx, \textcolor{keyword}{const} CBLAS\_INT *pntrb,}
+\DoxyCodeLine{84                 \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x, \textcolor{keywordtype}{float} *y);}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{86 \textcolor{keywordtype}{void} mkl\_ccscsv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra,}
+\DoxyCodeLine{87                 \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx, \textcolor{keyword}{const} CBLAS\_INT *pntrb,}
+\DoxyCodeLine{88                 \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x, \textcolor{keywordtype}{float} *y);}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{90 \textcolor{keywordtype}{void} mkl\_zcsrsv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra,}
+\DoxyCodeLine{91                 \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val, \textcolor{keyword}{const} CBLAS\_INT *indx, \textcolor{keyword}{const} CBLAS\_INT *pntrb,}
+\DoxyCodeLine{92                 \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *x, \textcolor{keywordtype}{double} *y);}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{94 \textcolor{keywordtype}{void} mkl\_zcscsv(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra,}
+\DoxyCodeLine{95                 \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val, \textcolor{keyword}{const} CBLAS\_INT *indx, \textcolor{keyword}{const} CBLAS\_INT *pntrb,}
+\DoxyCodeLine{96                 \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *x, \textcolor{keywordtype}{double} *y);}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98 \textcolor{comment}{// Level 3}}
+\DoxyCodeLine{99 }
+\DoxyCodeLine{100 \textcolor{comment}{// mm}}
+\DoxyCodeLine{101 \textcolor{keywordtype}{void} mkl\_scscmm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} CBLAS\_INT *k,}
+\DoxyCodeLine{102                 \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha, \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{103                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *b, CBLAS\_INT *ldb,}
+\DoxyCodeLine{104                 \textcolor{keyword}{const} \textcolor{keywordtype}{float} *beta, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *c, CBLAS\_INT *ldc);}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{106 \textcolor{keywordtype}{void} mkl\_scsrmm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} CBLAS\_INT *k,}
+\DoxyCodeLine{107                 \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{108                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *b,}
+\DoxyCodeLine{109                 \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *beta, \textcolor{keywordtype}{float} *c, \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{111 \textcolor{keywordtype}{void} mkl\_dcscmm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} CBLAS\_INT *k,}
+\DoxyCodeLine{112                 \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val,}
+\DoxyCodeLine{113                 \textcolor{keyword}{const} CBLAS\_INT *indx, \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre,}
+\DoxyCodeLine{114                 \textcolor{keyword}{const} \textcolor{keywordtype}{double} *b, \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *beta, \textcolor{keywordtype}{double} *c,}
+\DoxyCodeLine{115                 \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{116 }
+\DoxyCodeLine{117 \textcolor{keywordtype}{void} mkl\_dcsrmm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} CBLAS\_INT *k,}
+\DoxyCodeLine{118                 \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val,}
+\DoxyCodeLine{119                 \textcolor{keyword}{const} CBLAS\_INT *indx, \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre,}
+\DoxyCodeLine{120                 \textcolor{keyword}{const} \textcolor{keywordtype}{double} *b, \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *beta, \textcolor{keywordtype}{double} *c,}
+\DoxyCodeLine{121                 \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{123 \textcolor{keywordtype}{void} mkl\_ccscmm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} CBLAS\_INT *k,}
+\DoxyCodeLine{124                 \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{125                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *b,}
+\DoxyCodeLine{126                 \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *beta, \textcolor{keywordtype}{float} *c, \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128 \textcolor{keywordtype}{void} mkl\_ccsrmm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} CBLAS\_INT *k,}
+\DoxyCodeLine{129                 \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{130                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *b,}
+\DoxyCodeLine{131                 \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *beta, \textcolor{keywordtype}{float} *c, \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{132 }
+\DoxyCodeLine{133 \textcolor{keywordtype}{void} mkl\_zcscmm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} CBLAS\_INT *k,}
+\DoxyCodeLine{134                 \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val,}
+\DoxyCodeLine{135                 \textcolor{keyword}{const} CBLAS\_INT *indx, \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre,}
+\DoxyCodeLine{136                 \textcolor{keyword}{const} \textcolor{keywordtype}{double} *b, \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *beta, \textcolor{keywordtype}{double} *c,}
+\DoxyCodeLine{137                 \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{138 }
+\DoxyCodeLine{139 \textcolor{keywordtype}{void} mkl\_zcsrmm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} CBLAS\_INT *k,}
+\DoxyCodeLine{140                 \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val,}
+\DoxyCodeLine{141                 \textcolor{keyword}{const} CBLAS\_INT *indx, \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre,}
+\DoxyCodeLine{142                 \textcolor{keyword}{const} \textcolor{keywordtype}{double} *b, \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *beta, \textcolor{keywordtype}{double} *c,}
+\DoxyCodeLine{143                 \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{144 }
+\DoxyCodeLine{145 \textcolor{comment}{// sm}}
+\DoxyCodeLine{146 \textcolor{keywordtype}{void} mkl\_scsrsm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha,}
+\DoxyCodeLine{147                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{148                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *b,}
+\DoxyCodeLine{149                 \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keywordtype}{float} *c, \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{150 }
+\DoxyCodeLine{151 \textcolor{keywordtype}{void} mkl\_scscsm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha,}
+\DoxyCodeLine{152                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{153                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *b,}
+\DoxyCodeLine{154                 \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keywordtype}{float} *c, \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{155 }
+\DoxyCodeLine{156 \textcolor{keywordtype}{void} mkl\_dcsrsm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha,}
+\DoxyCodeLine{157                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{158                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *b,}
+\DoxyCodeLine{159                 \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keywordtype}{double} *c, \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{160 }
+\DoxyCodeLine{161 \textcolor{keywordtype}{void} mkl\_dcscsm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha,}
+\DoxyCodeLine{162                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{163                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *b,}
+\DoxyCodeLine{164                 \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keywordtype}{double} *c, \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{165 }
+\DoxyCodeLine{166 \textcolor{keywordtype}{void} mkl\_ccsrsm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha,}
+\DoxyCodeLine{167                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{168                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *b,}
+\DoxyCodeLine{169                 \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keywordtype}{float} *c, \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{170 }
+\DoxyCodeLine{171 \textcolor{keywordtype}{void} mkl\_ccscsm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *alpha,}
+\DoxyCodeLine{172                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{173                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *b,}
+\DoxyCodeLine{174                 \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keywordtype}{float} *c, \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{176 \textcolor{keywordtype}{void} mkl\_zcsrsm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha,}
+\DoxyCodeLine{177                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{178                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *b,}
+\DoxyCodeLine{179                 \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keywordtype}{double} *c, \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{180 }
+\DoxyCodeLine{181 \textcolor{keywordtype}{void} mkl\_zcscsm(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *transa, \textcolor{keyword}{const} CBLAS\_INT *m, \textcolor{keyword}{const} CBLAS\_INT *n, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *alpha,}
+\DoxyCodeLine{182                 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *matdescra, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *val, \textcolor{keyword}{const} CBLAS\_INT *indx,}
+\DoxyCodeLine{183                 \textcolor{keyword}{const} CBLAS\_INT *pntrb, \textcolor{keyword}{const} CBLAS\_INT *pntre, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *b,}
+\DoxyCodeLine{184                 \textcolor{keyword}{const} CBLAS\_INT *ldb, \textcolor{keywordtype}{double} *c, \textcolor{keyword}{const} CBLAS\_INT *ldc);}
+\DoxyCodeLine{185 }
+\DoxyCodeLine{186 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{187 \} \textcolor{comment}{// extern "{}C"{}}}
+\DoxyCodeLine{188 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{189 }
+\DoxyCodeLine{190 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CXXBLAS\_DRIVERS\_SPARSEBLAS\_H}}
+
+\end{DoxyCode}

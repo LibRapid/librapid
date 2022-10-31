@@ -1,0 +1,395 @@
+\hypertarget{helper__cuda__drvapi_8h_source}{}\doxysection{helper\+\_\+cuda\+\_\+drvapi.\+h}
+\label{helper__cuda__drvapi_8h_source}\index{librapid/include/librapid/cuda/helper\_cuda\_drvapi.h@{librapid/include/librapid/cuda/helper\_cuda\_drvapi.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/* Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{4 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{5 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{6 \textcolor{comment}{ *  * Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{7 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{8 \textcolor{comment}{ *  * Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{9 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{10 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{11 \textcolor{comment}{ *  * Neither the name of NVIDIA CORPORATION nor the names of its}}
+\DoxyCodeLine{12 \textcolor{comment}{ *    contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{13 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{14 \textcolor{comment}{ *}}
+\DoxyCodeLine{15 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY}}
+\DoxyCodeLine{16 \textcolor{comment}{ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{17 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR}}
+\DoxyCodeLine{18 \textcolor{comment}{ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR}}
+\DoxyCodeLine{19 \textcolor{comment}{ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,}}
+\DoxyCodeLine{20 \textcolor{comment}{ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,}}
+\DoxyCodeLine{21 \textcolor{comment}{ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR}}
+\DoxyCodeLine{22 \textcolor{comment}{ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY}}
+\DoxyCodeLine{23 \textcolor{comment}{ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{24 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{25 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{26 \textcolor{comment}{ */}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{comment}{// Helper functions for CUDA Driver API error handling (make sure that CUDA\_H is}}
+\DoxyCodeLine{29 \textcolor{comment}{// included in your projects)}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#ifndef COMMON\_HELPER\_CUDA\_DRVAPI\_H\_}}
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#define COMMON\_HELPER\_CUDA\_DRVAPI\_H\_}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#include <cstring>}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#include "{}helper\_string.h"{}}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include <sstream>}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#include <string.h>}}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#ifndef MAX}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#   define MAX(a, b) (a > b ? a : b)}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#ifndef COMMON\_HELPER\_CUDA\_H\_}}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{keyword}{inline} \textcolor{keywordtype}{int} ftoi(\textcolor{keywordtype}{float} value) \{}
+\DoxyCodeLine{48     \textcolor{keywordflow}{return} (value >= 0 ? \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(value + 0.5) : \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(value -\/ 0.5));}
+\DoxyCodeLine{49 \}}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#ifndef EXIT\_WAIVED}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#   define EXIT\_WAIVED 2}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{58 \textcolor{comment}{// These are CUDA Helper functions}}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 \textcolor{comment}{// add a level of protection to the CUDA SDK samples, let's force samples to}}
+\DoxyCodeLine{61 \textcolor{comment}{// explicitly include CUDA.H}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#ifdef \_\_cuda\_cuda\_h\_\_}}
+\DoxyCodeLine{63 \textcolor{comment}{// This will output the proper CUDA error strings in the event that a CUDA host}}
+\DoxyCodeLine{64 \textcolor{comment}{// call returns an error}}
+\DoxyCodeLine{65 \textcolor{preprocessor}{\#   ifndef checkCudaErrors}}
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#       define checkCudaErrors(err) \_\_checkCudaErrors(err, \_\_FILE\_\_, \_\_LINE\_\_)}}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68 \textcolor{comment}{// These are the inline versions for all of the SDK helper functions}}
+\DoxyCodeLine{69 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \_\_checkCudaErrors(CUresult err, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *file, \textcolor{keyword}{const} \textcolor{keywordtype}{int} line) \{}
+\DoxyCodeLine{70     \textcolor{keywordflow}{if} (CUDA\_SUCCESS != err) \{}
+\DoxyCodeLine{71         \textcolor{keyword}{const} \textcolor{keywordtype}{char} *errorStr = NULL;}
+\DoxyCodeLine{72         cuGetErrorString(err, \&errorStr);}
+\DoxyCodeLine{73         fprintf(stderr,}
+\DoxyCodeLine{74                 \textcolor{stringliteral}{"{}checkCudaErrors() Driver API error = \%04d \(\backslash\)"{}\%s\(\backslash\)"{} from file <\%s>, "{}}}
+\DoxyCodeLine{75                 \textcolor{stringliteral}{"{}line \%i.\(\backslash\)n"{}},}
+\DoxyCodeLine{76                 err,}
+\DoxyCodeLine{77                 errorStr,}
+\DoxyCodeLine{78                 file,}
+\DoxyCodeLine{79                 line);}
+\DoxyCodeLine{80         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{81     \}}
+\DoxyCodeLine{82 \}}
+\DoxyCodeLine{83 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{84 }
+\DoxyCodeLine{85 \textcolor{comment}{// This function wraps the CUDA Driver API into a template function}}
+\DoxyCodeLine{86 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{87 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} getCudaAttribute(T *attribute, CUdevice\_attribute device\_attribute, \textcolor{keywordtype}{int} device) \{}
+\DoxyCodeLine{88     checkCudaErrors(cuDeviceGetAttribute(attribute, device\_attribute, device));}
+\DoxyCodeLine{89 \}}
+\DoxyCodeLine{90 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{92 \textcolor{comment}{// Beginning of GPU Architecture definitions}}
+\DoxyCodeLine{93 \textcolor{keyword}{inline} \textcolor{keywordtype}{int} \_ConvertSMVer2CoresDRV(\textcolor{keywordtype}{int} major, \textcolor{keywordtype}{int} minor) \{}
+\DoxyCodeLine{94     \textcolor{comment}{// Defines for GPU Architecture types (using the SM version to determine the}}
+\DoxyCodeLine{95     \textcolor{comment}{// \# of cores per SM}}
+\DoxyCodeLine{96     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{97         \textcolor{keywordtype}{int} SM; \textcolor{comment}{// 0xMm (hexidecimal notation), M = SM Major version, and m = SM}}
+\DoxyCodeLine{98         \textcolor{comment}{// minor version}}
+\DoxyCodeLine{99         \textcolor{keywordtype}{int} Cores;}
+\DoxyCodeLine{100     \} sSMtoCores;}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{102     sSMtoCores nGpuArchCoresPerSM[] = \{\{0x30, 192\},}
+\DoxyCodeLine{103                                        \{0x32, 192\},}
+\DoxyCodeLine{104                                        \{0x35, 192\},}
+\DoxyCodeLine{105                                        \{0x37, 192\},}
+\DoxyCodeLine{106                                        \{0x50, 128\},}
+\DoxyCodeLine{107                                        \{0x52, 128\},}
+\DoxyCodeLine{108                                        \{0x53, 128\},}
+\DoxyCodeLine{109                                        \{0x60, 64\},}
+\DoxyCodeLine{110                                        \{0x61, 128\},}
+\DoxyCodeLine{111                                        \{0x62, 128\},}
+\DoxyCodeLine{112                                        \{0x70, 64\},}
+\DoxyCodeLine{113                                        \{0x72, 64\},}
+\DoxyCodeLine{114                                        \{0x75, 64\},}
+\DoxyCodeLine{115                                        \{0x80, 64\},}
+\DoxyCodeLine{116                                        \{0x86, 128\},}
+\DoxyCodeLine{117                                        \{-\/1, -\/1\}\};}
+\DoxyCodeLine{118 }
+\DoxyCodeLine{119     \textcolor{keywordtype}{int} index = 0;}
+\DoxyCodeLine{120 }
+\DoxyCodeLine{121     \textcolor{keywordflow}{while} (nGpuArchCoresPerSM[index].SM != -\/1) \{}
+\DoxyCodeLine{122         \textcolor{keywordflow}{if} (nGpuArchCoresPerSM[index].SM == ((major << 4) + minor)) \{}
+\DoxyCodeLine{123             \textcolor{keywordflow}{return} nGpuArchCoresPerSM[index].Cores;}
+\DoxyCodeLine{124         \}}
+\DoxyCodeLine{125 }
+\DoxyCodeLine{126         index++;}
+\DoxyCodeLine{127     \}}
+\DoxyCodeLine{128 }
+\DoxyCodeLine{129     \textcolor{comment}{// If we don't find the values, we default use the previous one to run}}
+\DoxyCodeLine{130     \textcolor{comment}{// properly}}
+\DoxyCodeLine{131     printf(\textcolor{stringliteral}{"{}MapSMtoCores for SM \%d.\%d is undefined.  Default to use \%d Cores/SM\(\backslash\)n"{}},}
+\DoxyCodeLine{132            major,}
+\DoxyCodeLine{133            minor,}
+\DoxyCodeLine{134            nGpuArchCoresPerSM[index -\/ 1].Cores);}
+\DoxyCodeLine{135     \textcolor{keywordflow}{return} nGpuArchCoresPerSM[index -\/ 1].Cores;}
+\DoxyCodeLine{136 \}}
+\DoxyCodeLine{137 \textcolor{comment}{// end of GPU Architecture definitions}}
+\DoxyCodeLine{138 }
+\DoxyCodeLine{139 \textcolor{preprocessor}{\#ifdef \_\_cuda\_cuda\_h\_\_}}
+\DoxyCodeLine{140 \textcolor{comment}{// General GPU Device CUDA Initialization}}
+\DoxyCodeLine{141 \textcolor{keyword}{inline} \textcolor{keywordtype}{int} gpuDeviceInitDRV(\textcolor{keywordtype}{int} ARGC, \textcolor{keyword}{const} \textcolor{keywordtype}{char} **ARGV) \{}
+\DoxyCodeLine{142     \textcolor{keywordtype}{int} cuDevice    = 0;}
+\DoxyCodeLine{143     \textcolor{keywordtype}{int} deviceCount = 0;}
+\DoxyCodeLine{144     checkCudaErrors(cuInit(0));}
+\DoxyCodeLine{145 }
+\DoxyCodeLine{146     checkCudaErrors(cuDeviceGetCount(\&deviceCount));}
+\DoxyCodeLine{147 }
+\DoxyCodeLine{148     \textcolor{keywordflow}{if} (deviceCount == 0) \{}
+\DoxyCodeLine{149         fprintf(stderr, \textcolor{stringliteral}{"{}cudaDeviceInit error: no devices supporting CUDA\(\backslash\)n"{}});}
+\DoxyCodeLine{150         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{151     \}}
+\DoxyCodeLine{152 }
+\DoxyCodeLine{153     \textcolor{keywordtype}{int} dev = 0;}
+\DoxyCodeLine{154     dev     = getCmdLineArgumentInt(ARGC, (\textcolor{keyword}{const} \textcolor{keywordtype}{char} **)ARGV, \textcolor{stringliteral}{"{}device="{}});}
+\DoxyCodeLine{155 }
+\DoxyCodeLine{156     \textcolor{keywordflow}{if} (dev < 0) \{ dev = 0; \}}
+\DoxyCodeLine{157 }
+\DoxyCodeLine{158     \textcolor{keywordflow}{if} (dev > deviceCount -\/ 1) \{}
+\DoxyCodeLine{159         fprintf(stderr, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{160         fprintf(stderr, \textcolor{stringliteral}{"{}>> \%d CUDA capable GPU device(s) detected. <<\(\backslash\)n"{}}, deviceCount);}
+\DoxyCodeLine{161         fprintf(stderr, \textcolor{stringliteral}{"{}>> cudaDeviceInit (-\/device=\%d) is not a valid GPU device. <<\(\backslash\)n"{}}, dev);}
+\DoxyCodeLine{162         fprintf(stderr, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{163         \textcolor{keywordflow}{return} -\/dev;}
+\DoxyCodeLine{164     \}}
+\DoxyCodeLine{165 }
+\DoxyCodeLine{166     checkCudaErrors(cuDeviceGet(\&cuDevice, dev));}
+\DoxyCodeLine{167     \textcolor{keywordtype}{char} name[100];}
+\DoxyCodeLine{168     checkCudaErrors(cuDeviceGetName(name, 100, cuDevice));}
+\DoxyCodeLine{169 }
+\DoxyCodeLine{170     \textcolor{keywordtype}{int} computeMode;}
+\DoxyCodeLine{171     getCudaAttribute<int>(\&computeMode, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_MODE, dev);}
+\DoxyCodeLine{172 }
+\DoxyCodeLine{173     \textcolor{keywordflow}{if} (computeMode == CU\_COMPUTEMODE\_PROHIBITED) \{}
+\DoxyCodeLine{174         fprintf(stderr,}
+\DoxyCodeLine{175                 \textcolor{stringliteral}{"{}Error: device is running in <CU\_COMPUTEMODE\_PROHIBITED>, no "{}}}
+\DoxyCodeLine{176                 \textcolor{stringliteral}{"{}threads can use this CUDA Device.\(\backslash\)n"{}});}
+\DoxyCodeLine{177         \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{178     \}}
+\DoxyCodeLine{179 }
+\DoxyCodeLine{180     \textcolor{keywordflow}{if} (checkCmdLineFlag(ARGC, (\textcolor{keyword}{const} \textcolor{keywordtype}{char} **)ARGV, \textcolor{stringliteral}{"{}quiet"{}}) == \textcolor{keyword}{false}) \{}
+\DoxyCodeLine{181         printf(\textcolor{stringliteral}{"{}gpuDeviceInitDRV() Using CUDA Device [\%d]: \%s\(\backslash\)n"{}}, dev, name);}
+\DoxyCodeLine{182     \}}
+\DoxyCodeLine{183 }
+\DoxyCodeLine{184     \textcolor{keywordflow}{return} dev;}
+\DoxyCodeLine{185 \}}
+\DoxyCodeLine{186 }
+\DoxyCodeLine{187 \textcolor{comment}{// This function returns the best GPU based on performance}}
+\DoxyCodeLine{188 \textcolor{keyword}{inline} \textcolor{keywordtype}{int} gpuGetMaxGflopsDeviceIdDRV() \{}
+\DoxyCodeLine{189     CUdevice current\_device             = 0;}
+\DoxyCodeLine{190     CUdevice max\_perf\_device            = 0;}
+\DoxyCodeLine{191     \textcolor{keywordtype}{int} device\_count                    = 0;}
+\DoxyCodeLine{192     \textcolor{keywordtype}{int} sm\_per\_multiproc                = 0;}
+\DoxyCodeLine{193     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} max\_compute\_perf = 0;}
+\DoxyCodeLine{194     \textcolor{keywordtype}{int} major                           = 0;}
+\DoxyCodeLine{195     \textcolor{keywordtype}{int} minor                           = 0;}
+\DoxyCodeLine{196     \textcolor{keywordtype}{int} multiProcessorCount;}
+\DoxyCodeLine{197     \textcolor{keywordtype}{int} clockRate;}
+\DoxyCodeLine{198     \textcolor{keywordtype}{int} devices\_prohibited = 0;}
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200     cuInit(0);}
+\DoxyCodeLine{201     checkCudaErrors(cuDeviceGetCount(\&device\_count));}
+\DoxyCodeLine{202 }
+\DoxyCodeLine{203     \textcolor{keywordflow}{if} (device\_count == 0) \{}
+\DoxyCodeLine{204         fprintf(stderr, \textcolor{stringliteral}{"{}gpuGetMaxGflopsDeviceIdDRV error: no devices supporting CUDA\(\backslash\)n"{}});}
+\DoxyCodeLine{205         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{206     \}}
+\DoxyCodeLine{207 }
+\DoxyCodeLine{208     \textcolor{comment}{// Find the best CUDA capable GPU device}}
+\DoxyCodeLine{209     current\_device = 0;}
+\DoxyCodeLine{210 }
+\DoxyCodeLine{211     \textcolor{keywordflow}{while} (current\_device < device\_count) \{}
+\DoxyCodeLine{212         checkCudaErrors(cuDeviceGetAttribute(}
+\DoxyCodeLine{213           \&multiProcessorCount, CU\_DEVICE\_ATTRIBUTE\_MULTIPROCESSOR\_COUNT, current\_device));}
+\DoxyCodeLine{214         checkCudaErrors(}
+\DoxyCodeLine{215           cuDeviceGetAttribute(\&clockRate, CU\_DEVICE\_ATTRIBUTE\_CLOCK\_RATE, current\_device));}
+\DoxyCodeLine{216         checkCudaErrors(cuDeviceGetAttribute(}
+\DoxyCodeLine{217           \&major, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_CAPABILITY\_MAJOR, current\_device));}
+\DoxyCodeLine{218         checkCudaErrors(cuDeviceGetAttribute(}
+\DoxyCodeLine{219           \&minor, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_CAPABILITY\_MINOR, current\_device));}
+\DoxyCodeLine{220 }
+\DoxyCodeLine{221         \textcolor{keywordtype}{int} computeMode;}
+\DoxyCodeLine{222         getCudaAttribute<int>(\&computeMode, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_MODE, current\_device);}
+\DoxyCodeLine{223 }
+\DoxyCodeLine{224         \textcolor{keywordflow}{if} (computeMode != CU\_COMPUTEMODE\_PROHIBITED) \{}
+\DoxyCodeLine{225             \textcolor{keywordflow}{if} (major == 9999 \&\& minor == 9999) \{}
+\DoxyCodeLine{226                 sm\_per\_multiproc = 1;}
+\DoxyCodeLine{227             \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{228                 sm\_per\_multiproc = \_ConvertSMVer2CoresDRV(major, minor);}
+\DoxyCodeLine{229             \}}
+\DoxyCodeLine{230 }
+\DoxyCodeLine{231             \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} compute\_perf =}
+\DoxyCodeLine{232               (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} long)(multiProcessorCount * sm\_per\_multiproc * clockRate);}
+\DoxyCodeLine{233 }
+\DoxyCodeLine{234             \textcolor{keywordflow}{if} (compute\_perf > max\_compute\_perf) \{}
+\DoxyCodeLine{235                 max\_compute\_perf = compute\_perf;}
+\DoxyCodeLine{236                 max\_perf\_device  = current\_device;}
+\DoxyCodeLine{237             \}}
+\DoxyCodeLine{238         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{239             devices\_prohibited++;}
+\DoxyCodeLine{240         \}}
+\DoxyCodeLine{241 }
+\DoxyCodeLine{242         ++current\_device;}
+\DoxyCodeLine{243     \}}
+\DoxyCodeLine{244 }
+\DoxyCodeLine{245     \textcolor{keywordflow}{if} (devices\_prohibited == device\_count) \{}
+\DoxyCodeLine{246         fprintf(stderr,}
+\DoxyCodeLine{247                 \textcolor{stringliteral}{"{}gpuGetMaxGflopsDeviceIdDRV error: all devices have compute mode "{}}}
+\DoxyCodeLine{248                 \textcolor{stringliteral}{"{}prohibited.\(\backslash\)n"{}});}
+\DoxyCodeLine{249         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{250     \}}
+\DoxyCodeLine{251 }
+\DoxyCodeLine{252     \textcolor{keywordflow}{return} max\_perf\_device;}
+\DoxyCodeLine{253 \}}
+\DoxyCodeLine{254 }
+\DoxyCodeLine{255 \textcolor{comment}{// General initialization call to pick the best CUDA Device}}
+\DoxyCodeLine{256 \textcolor{keyword}{inline} CUdevice findCudaDeviceDRV(\textcolor{keywordtype}{int} argc, \textcolor{keyword}{const} \textcolor{keywordtype}{char} **argv) \{}
+\DoxyCodeLine{257     CUdevice cuDevice;}
+\DoxyCodeLine{258     \textcolor{keywordtype}{int} devID = 0;}
+\DoxyCodeLine{259 }
+\DoxyCodeLine{260     \textcolor{comment}{// If the command-\/line has a device number specified, use it}}
+\DoxyCodeLine{261     \textcolor{keywordflow}{if} (checkCmdLineFlag(argc, (\textcolor{keyword}{const} \textcolor{keywordtype}{char} **)argv, \textcolor{stringliteral}{"{}device"{}})) \{}
+\DoxyCodeLine{262         devID = gpuDeviceInitDRV(argc, argv);}
+\DoxyCodeLine{263 }
+\DoxyCodeLine{264         \textcolor{keywordflow}{if} (devID < 0) \{}
+\DoxyCodeLine{265             printf(\textcolor{stringliteral}{"{}exiting...\(\backslash\)n"{}});}
+\DoxyCodeLine{266             exit(EXIT\_SUCCESS);}
+\DoxyCodeLine{267         \}}
+\DoxyCodeLine{268     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{269         \textcolor{comment}{// Otherwise pick the device with highest Gflops/s}}
+\DoxyCodeLine{270         \textcolor{keywordtype}{char} name[100];}
+\DoxyCodeLine{271         devID = gpuGetMaxGflopsDeviceIdDRV();}
+\DoxyCodeLine{272         checkCudaErrors(cuDeviceGet(\&cuDevice, devID));}
+\DoxyCodeLine{273         cuDeviceGetName(name, 100, cuDevice);}
+\DoxyCodeLine{274         printf(\textcolor{stringliteral}{"{}> Using CUDA Device [\%d]: \%s\(\backslash\)n"{}}, devID, name);}
+\DoxyCodeLine{275     \}}
+\DoxyCodeLine{276 }
+\DoxyCodeLine{277     cuDeviceGet(\&cuDevice, devID);}
+\DoxyCodeLine{278 }
+\DoxyCodeLine{279     \textcolor{keywordflow}{return} cuDevice;}
+\DoxyCodeLine{280 \}}
+\DoxyCodeLine{281 }
+\DoxyCodeLine{282 \textcolor{keyword}{inline} CUdevice findIntegratedGPUDrv() \{}
+\DoxyCodeLine{283     CUdevice current\_device = 0;}
+\DoxyCodeLine{284     \textcolor{keywordtype}{int} device\_count        = 0;}
+\DoxyCodeLine{285     \textcolor{keywordtype}{int} devices\_prohibited  = 0;}
+\DoxyCodeLine{286     \textcolor{keywordtype}{int} isIntegrated;}
+\DoxyCodeLine{287 }
+\DoxyCodeLine{288     cuInit(0);}
+\DoxyCodeLine{289     checkCudaErrors(cuDeviceGetCount(\&device\_count));}
+\DoxyCodeLine{290 }
+\DoxyCodeLine{291     \textcolor{keywordflow}{if} (device\_count == 0) \{}
+\DoxyCodeLine{292         fprintf(stderr, \textcolor{stringliteral}{"{}CUDA error: no devices supporting CUDA.\(\backslash\)n"{}});}
+\DoxyCodeLine{293         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{294     \}}
+\DoxyCodeLine{295 }
+\DoxyCodeLine{296     \textcolor{comment}{// Find the integrated GPU which is compute capable}}
+\DoxyCodeLine{297     \textcolor{keywordflow}{while} (current\_device < device\_count) \{}
+\DoxyCodeLine{298         \textcolor{keywordtype}{int} computeMode = -\/1;}
+\DoxyCodeLine{299         checkCudaErrors(}
+\DoxyCodeLine{300           cuDeviceGetAttribute(\&isIntegrated, CU\_DEVICE\_ATTRIBUTE\_INTEGRATED, current\_device));}
+\DoxyCodeLine{301         checkCudaErrors(}
+\DoxyCodeLine{302           cuDeviceGetAttribute(\&computeMode, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_MODE, current\_device));}
+\DoxyCodeLine{303 }
+\DoxyCodeLine{304         \textcolor{comment}{// If GPU is integrated and is not running on Compute Mode prohibited}}
+\DoxyCodeLine{305         \textcolor{comment}{// use that}}
+\DoxyCodeLine{306         \textcolor{keywordflow}{if} (isIntegrated \&\& (computeMode != CU\_COMPUTEMODE\_PROHIBITED)) \{}
+\DoxyCodeLine{307             \textcolor{keywordtype}{int} major = 0, minor = 0;}
+\DoxyCodeLine{308             \textcolor{keywordtype}{char} deviceName[256];}
+\DoxyCodeLine{309             checkCudaErrors(cuDeviceGetAttribute(}
+\DoxyCodeLine{310               \&major, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_CAPABILITY\_MAJOR, current\_device));}
+\DoxyCodeLine{311             checkCudaErrors(cuDeviceGetAttribute(}
+\DoxyCodeLine{312               \&minor, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_CAPABILITY\_MINOR, current\_device));}
+\DoxyCodeLine{313             checkCudaErrors(cuDeviceGetName(deviceName, 256, current\_device));}
+\DoxyCodeLine{314             printf(\textcolor{stringliteral}{"{}GPU Device \%d: \(\backslash\)"{}\%s\(\backslash\)"{} with compute capability \%d.\%d\(\backslash\)n\(\backslash\)n"{}},}
+\DoxyCodeLine{315                    current\_device,}
+\DoxyCodeLine{316                    deviceName,}
+\DoxyCodeLine{317                    major,}
+\DoxyCodeLine{318                    minor);}
+\DoxyCodeLine{319 }
+\DoxyCodeLine{320             \textcolor{keywordflow}{return} current\_device;}
+\DoxyCodeLine{321         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{322             devices\_prohibited++;}
+\DoxyCodeLine{323         \}}
+\DoxyCodeLine{324 }
+\DoxyCodeLine{325         current\_device++;}
+\DoxyCodeLine{326     \}}
+\DoxyCodeLine{327 }
+\DoxyCodeLine{328     \textcolor{keywordflow}{if} (devices\_prohibited == device\_count) \{}
+\DoxyCodeLine{329         fprintf(stderr, \textcolor{stringliteral}{"{}CUDA error: No Integrated CUDA capable GPU found.\(\backslash\)n"{}});}
+\DoxyCodeLine{330         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{331     \}}
+\DoxyCodeLine{332 }
+\DoxyCodeLine{333     \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{334 \}}
+\DoxyCodeLine{335 }
+\DoxyCodeLine{336 \textcolor{comment}{// General check for CUDA GPU SM Capabilities}}
+\DoxyCodeLine{337 \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} checkCudaCapabilitiesDRV(\textcolor{keywordtype}{int} major\_version, \textcolor{keywordtype}{int} minor\_version, \textcolor{keywordtype}{int} devID) \{}
+\DoxyCodeLine{338     CUdevice cuDevice;}
+\DoxyCodeLine{339     \textcolor{keywordtype}{char} name[256];}
+\DoxyCodeLine{340     \textcolor{keywordtype}{int} major = 0, minor = 0;}
+\DoxyCodeLine{341 }
+\DoxyCodeLine{342     checkCudaErrors(cuDeviceGet(\&cuDevice, devID));}
+\DoxyCodeLine{343     checkCudaErrors(cuDeviceGetName(name, 100, cuDevice));}
+\DoxyCodeLine{344     checkCudaErrors(}
+\DoxyCodeLine{345       cuDeviceGetAttribute(\&major, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_CAPABILITY\_MAJOR, cuDevice));}
+\DoxyCodeLine{346     checkCudaErrors(}
+\DoxyCodeLine{347       cuDeviceGetAttribute(\&minor, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_CAPABILITY\_MINOR, cuDevice));}
+\DoxyCodeLine{348 }
+\DoxyCodeLine{349     \textcolor{keywordflow}{if} ((major > major\_version) || (major == major\_version \&\& minor >= minor\_version)) \{}
+\DoxyCodeLine{350         printf(\textcolor{stringliteral}{"{}> Device \%d: <\%16s >, Compute SM \%d.\%d detected\(\backslash\)n"{}}, devID, name, major, minor);}
+\DoxyCodeLine{351         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{352     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{353         printf(}
+\DoxyCodeLine{354           \textcolor{stringliteral}{"{}No GPU device was found that can support CUDA compute capability "{}}}
+\DoxyCodeLine{355           \textcolor{stringliteral}{"{}\%d.\%d.\(\backslash\)n"{}},}
+\DoxyCodeLine{356           major\_version,}
+\DoxyCodeLine{357           minor\_version);}
+\DoxyCodeLine{358         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{359     \}}
+\DoxyCodeLine{360 \}}
+\DoxyCodeLine{361 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{362 }
+\DoxyCodeLine{363 \textcolor{keywordtype}{bool} \textcolor{keyword}{inline} findFatbinPath(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *module\_file, std::string \&module\_path, \textcolor{keywordtype}{char} **argv,}
+\DoxyCodeLine{364                            std::ostringstream \&ostrm) \{}
+\DoxyCodeLine{365     \textcolor{keywordtype}{char} *actual\_path = sdkFindFilePath(module\_file, argv[0]);}
+\DoxyCodeLine{366 }
+\DoxyCodeLine{367     \textcolor{keywordflow}{if} (actual\_path) \{}
+\DoxyCodeLine{368         module\_path = actual\_path;}
+\DoxyCodeLine{369     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{370         printf(\textcolor{stringliteral}{"{}> findModulePath file not found: <\%s> \(\backslash\)n"{}}, module\_file);}
+\DoxyCodeLine{371         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{372     \}}
+\DoxyCodeLine{373 }
+\DoxyCodeLine{374     \textcolor{keywordflow}{if} (module\_path.empty()) \{}
+\DoxyCodeLine{375         printf(\textcolor{stringliteral}{"{}> findModulePath could not find file: <\%s> \(\backslash\)n"{}}, module\_file);}
+\DoxyCodeLine{376         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{377     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{378         printf(\textcolor{stringliteral}{"{}> findModulePath found file at <\%s>\(\backslash\)n"{}}, module\_path.c\_str());}
+\DoxyCodeLine{379         \textcolor{keywordflow}{if} (module\_path.rfind(\textcolor{stringliteral}{"{}fatbin"{}}) != std::string::npos) \{}
+\DoxyCodeLine{380             std::ifstream fileIn(module\_path.c\_str(), std::ios::binary);}
+\DoxyCodeLine{381             ostrm << fileIn.rdbuf();}
+\DoxyCodeLine{382             fileIn.close();}
+\DoxyCodeLine{383         \}}
+\DoxyCodeLine{384         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{385     \}}
+\DoxyCodeLine{386 \}}
+\DoxyCodeLine{387 }
+\DoxyCodeLine{388 \textcolor{comment}{// end of CUDA Helper Functions}}
+\DoxyCodeLine{389 }
+\DoxyCodeLine{390 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// COMMON\_HELPER\_CUDA\_DRVAPI\_H\_}}
+
+\end{DoxyCode}

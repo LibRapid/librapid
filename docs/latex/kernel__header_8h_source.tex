@@ -1,0 +1,294 @@
+\hypertarget{kernel__header_8h_source}{}\doxysection{kernel\+\_\+header.\+h}
+\label{kernel__header_8h_source}\index{librapid/include/librapid/cuda/kernel\_header.h@{librapid/include/librapid/cuda/kernel\_header.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{keyword}{namespace }librapid::imp \{}
+\DoxyCodeLine{6     \textcolor{keyword}{inline} \textcolor{keyword}{const} jitify::detail::vector<std::string> cudaHeaders = \{ \textcolor{comment}{// CUDA\_INCLUDE\_DIRS,}}
+\DoxyCodeLine{7       CUDA\_INCLUDE\_DIRS + std::string(\textcolor{stringliteral}{"{}/curand.h"{}}),}
+\DoxyCodeLine{8       CUDA\_INCLUDE\_DIRS + std::string(\textcolor{stringliteral}{"{}/curand\_kernel.h"{}}),}
+\DoxyCodeLine{9       CUDA\_INCLUDE\_DIRS + std::string(\textcolor{stringliteral}{"{}/cublas\_v2.h"{}}),}
+\DoxyCodeLine{10       CUDA\_INCLUDE\_DIRS + std::string(\textcolor{stringliteral}{"{}/cublas\_api.h"{}}),}
+\DoxyCodeLine{11       CUDA\_INCLUDE\_DIRS + std::string(\textcolor{stringliteral}{"{}/cuda\_fp16.h"{}}),}
+\DoxyCodeLine{12       CUDA\_INCLUDE\_DIRS + std::string(\textcolor{stringliteral}{"{}/cuda\_bf16.h"{}})\};}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14     \textcolor{keyword}{inline} \textcolor{keyword}{const} std::vector<std::string> cudaParams = \{}
+\DoxyCodeLine{15       \textcolor{stringliteral}{"{}-\/-\/disable-\/warnings"{}}, \textcolor{stringliteral}{"{}-\/std=c++17"{}}, std::string(\textcolor{stringliteral}{"{}-\/I"{}}) + CUDA\_INCLUDE\_DIRS\};}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17     \textcolor{keyword}{inline} std::string genKernelHeader() \{}
+\DoxyCodeLine{18         \textcolor{keywordflow}{return} fmt::format(R\textcolor{stringliteral}{"{}V0G0N(}}
+\DoxyCodeLine{19 \textcolor{stringliteral}{\#include <"{}\{0\}/curand\_kernel.h>}}
+\DoxyCodeLine{20 \textcolor{stringliteral}{\#include <"{}\{0\}"{}/curand.h>}}
+\DoxyCodeLine{21 \textcolor{stringliteral}{\#include <stdint.h>}}
+\DoxyCodeLine{22 \textcolor{stringliteral}{\#include <type\_traits>}}
+\DoxyCodeLine{23 \textcolor{stringliteral}{}}
+\DoxyCodeLine{24 \textcolor{stringliteral}{\#ifndef LIBRAPID\_CUSTOM\_COMPLEX}}
+\DoxyCodeLine{25 \textcolor{stringliteral}{\#define LIBRAPID\_CUSTOM\_COMPLEX}}
+\DoxyCodeLine{26 \textcolor{stringliteral}{}}
+\DoxyCodeLine{27 \textcolor{stringliteral}{namespace librapid \{\{}}
+\DoxyCodeLine{28 \textcolor{stringliteral}{}}
+\DoxyCodeLine{29 \textcolor{stringliteral}{    template<class T>}}
+\DoxyCodeLine{30 \textcolor{stringliteral}{    class Complex \{\{}}
+\DoxyCodeLine{31 \textcolor{stringliteral}{    public:}}
+\DoxyCodeLine{32 \textcolor{stringliteral}{        Complex(const T \&real\_val = T(), const T \&imag\_val = T())}}
+\DoxyCodeLine{33 \textcolor{stringliteral}{                : m\_real(real\_val), m\_imag(imag\_val) \{\{\}\}}}
+\DoxyCodeLine{34 \textcolor{stringliteral}{}}
+\DoxyCodeLine{35 \textcolor{stringliteral}{        Complex \&operator=(const T \&val) \{\{}}
+\DoxyCodeLine{36 \textcolor{stringliteral}{            m\_real = val;}}
+\DoxyCodeLine{37 \textcolor{stringliteral}{            m\_imag = 0;}}
+\DoxyCodeLine{38 \textcolor{stringliteral}{            return *this;}}
+\DoxyCodeLine{39 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{40 \textcolor{stringliteral}{}}
+\DoxyCodeLine{41 \textcolor{stringliteral}{        template<class V>}}
+\DoxyCodeLine{42 \textcolor{stringliteral}{        Complex(const Complex<V> \&other)}}
+\DoxyCodeLine{43 \textcolor{stringliteral}{                : Complex(static\_cast<T>(other.real()), static\_cast<T>(other.imag())) \{\{\}\}}}
+\DoxyCodeLine{44 \textcolor{stringliteral}{}}
+\DoxyCodeLine{45 \textcolor{stringliteral}{        template<class V>}}
+\DoxyCodeLine{46 \textcolor{stringliteral}{        Complex \&operator=(const Complex<V> \&other) \{\{}}
+\DoxyCodeLine{47 \textcolor{stringliteral}{            m\_real = static\_cast<T>(other.real());}}
+\DoxyCodeLine{48 \textcolor{stringliteral}{            m\_imag = static\_cast<T>(other.imag());}}
+\DoxyCodeLine{49 \textcolor{stringliteral}{            return *this;}}
+\DoxyCodeLine{50 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{51 \textcolor{stringliteral}{}}
+\DoxyCodeLine{52 \textcolor{stringliteral}{        Complex copy() const \{\{}}
+\DoxyCodeLine{53 \textcolor{stringliteral}{            return Complex<T>(m\_real, m\_imag);}}
+\DoxyCodeLine{54 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{55 \textcolor{stringliteral}{}}
+\DoxyCodeLine{56 \textcolor{stringliteral}{        inline Complex operator-\/() const \{\{}}
+\DoxyCodeLine{57 \textcolor{stringliteral}{            return Complex<T>(-\/m\_real, -\/m\_imag);}}
+\DoxyCodeLine{58 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{59 \textcolor{stringliteral}{}}
+\DoxyCodeLine{60 \textcolor{stringliteral}{        template<typename V, typename std::enable\_if<std::is\_scalar<V>::value, int>::type = 0>}}
+\DoxyCodeLine{61 \textcolor{stringliteral}{        inline Complex operator+(const V \&other) const \{\{}}
+\DoxyCodeLine{62 \textcolor{stringliteral}{            return Complex<T>(m\_real + other, m\_imag);}}
+\DoxyCodeLine{63 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{64 \textcolor{stringliteral}{}}
+\DoxyCodeLine{65 \textcolor{stringliteral}{        template<typename V, typename std::enable\_if<std::is\_scalar<V>::value, int>::type = 0>}}
+\DoxyCodeLine{66 \textcolor{stringliteral}{        inline Complex operator-\/(const V \&other) const \{\{}}
+\DoxyCodeLine{67 \textcolor{stringliteral}{            return Complex<T>(m\_real -\/ other, m\_imag);}}
+\DoxyCodeLine{68 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{69 \textcolor{stringliteral}{}}
+\DoxyCodeLine{70 \textcolor{stringliteral}{        template<typename V, typename std::enable\_if<std::is\_scalar<V>::value, int>::type = 0>}}
+\DoxyCodeLine{71 \textcolor{stringliteral}{        inline Complex operator*(const V \&other) const \{\{}}
+\DoxyCodeLine{72 \textcolor{stringliteral}{            return Complex<T>(m\_real * other, m\_imag * other);}}
+\DoxyCodeLine{73 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{74 \textcolor{stringliteral}{}}
+\DoxyCodeLine{75 \textcolor{stringliteral}{        template<typename V, typename std::enable\_if<std::is\_scalar<V>::value, int>::type = 0>}}
+\DoxyCodeLine{76 \textcolor{stringliteral}{        inline Complex operator/(const V \&other) const \{\{}}
+\DoxyCodeLine{77 \textcolor{stringliteral}{            return Complex<T>(m\_real / other, m\_imag / other);}}
+\DoxyCodeLine{78 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{79 \textcolor{stringliteral}{}}
+\DoxyCodeLine{80 \textcolor{stringliteral}{        template<typename V, typename std::enable\_if<std::is\_scalar<V>::value, int>::type = 0>}}
+\DoxyCodeLine{81 \textcolor{stringliteral}{        inline Complex \&operator+=(const V \&other) \{\{}}
+\DoxyCodeLine{82 \textcolor{stringliteral}{            m\_real += other;}}
+\DoxyCodeLine{83 \textcolor{stringliteral}{            return *this;}}
+\DoxyCodeLine{84 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{85 \textcolor{stringliteral}{}}
+\DoxyCodeLine{86 \textcolor{stringliteral}{        template<typename V, typename std::enable\_if<std::is\_scalar<V>::value, int>::type = 0>}}
+\DoxyCodeLine{87 \textcolor{stringliteral}{        inline Complex \&operator-\/=(const V \&other) \{\{}}
+\DoxyCodeLine{88 \textcolor{stringliteral}{            m\_real -\/= other;}}
+\DoxyCodeLine{89 \textcolor{stringliteral}{            return *this;}}
+\DoxyCodeLine{90 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{91 \textcolor{stringliteral}{}}
+\DoxyCodeLine{92 \textcolor{stringliteral}{        template<typename V, typename std::enable\_if<std::is\_scalar<V>::value, int>::type = 0>}}
+\DoxyCodeLine{93 \textcolor{stringliteral}{        inline Complex \&operator*=(const V \&other) \{\{}}
+\DoxyCodeLine{94 \textcolor{stringliteral}{            m\_real *= other;}}
+\DoxyCodeLine{95 \textcolor{stringliteral}{            m\_imag *= other;}}
+\DoxyCodeLine{96 \textcolor{stringliteral}{            return *this;}}
+\DoxyCodeLine{97 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{98 \textcolor{stringliteral}{}}
+\DoxyCodeLine{99 \textcolor{stringliteral}{        template<typename V, typename std::enable\_if<std::is\_scalar<V>::value, int>::type = 0>}}
+\DoxyCodeLine{100 \textcolor{stringliteral}{        inline Complex \&operator/=(const V \&other) \{\{}}
+\DoxyCodeLine{101 \textcolor{stringliteral}{            m\_real /= other;}}
+\DoxyCodeLine{102 \textcolor{stringliteral}{            m\_imag /= other;}}
+\DoxyCodeLine{103 \textcolor{stringliteral}{            return *this;}}
+\DoxyCodeLine{104 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{105 \textcolor{stringliteral}{}}
+\DoxyCodeLine{106 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{107 \textcolor{stringliteral}{        inline Complex operator+(const Complex<V> \&other) const \{\{}}
+\DoxyCodeLine{108 \textcolor{stringliteral}{            return Complex(m\_real + other.real(),}}
+\DoxyCodeLine{109 \textcolor{stringliteral}{                           m\_imag + other.imag());}}
+\DoxyCodeLine{110 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{111 \textcolor{stringliteral}{}}
+\DoxyCodeLine{112 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{113 \textcolor{stringliteral}{        inline Complex operator-\/(const Complex<V> \&other) const \{\{}}
+\DoxyCodeLine{114 \textcolor{stringliteral}{            return Complex(m\_real -\/ other.real(),}}
+\DoxyCodeLine{115 \textcolor{stringliteral}{                           m\_imag -\/ other.imag());}}
+\DoxyCodeLine{116 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{117 \textcolor{stringliteral}{}}
+\DoxyCodeLine{118 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{119 \textcolor{stringliteral}{        inline Complex operator*(const Complex<V> \&other) const \{\{}}
+\DoxyCodeLine{120 \textcolor{stringliteral}{            return Complex((m\_real * other.real()) -\/ (m\_imag * other.imag()),}}
+\DoxyCodeLine{121 \textcolor{stringliteral}{                           (m\_real * other.imag()) + (m\_imag * other.real()));}}
+\DoxyCodeLine{122 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{123 \textcolor{stringliteral}{}}
+\DoxyCodeLine{124 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{125 \textcolor{stringliteral}{        inline Complex operator/(const Complex<V> \&other) const \{\{}}
+\DoxyCodeLine{126 \textcolor{stringliteral}{            return Complex((m\_real * other.real()) + (m\_imag * other.imag()) /}}
+\DoxyCodeLine{127 \textcolor{stringliteral}{                                                     ((other.real() * other.real()) + (other.imag() * other.imag())),}}
+\DoxyCodeLine{128 \textcolor{stringliteral}{                           (m\_real * other.real()) -\/ (m\_imag * other.imag()) /}}
+\DoxyCodeLine{129 \textcolor{stringliteral}{                                                     ((other.real() * other.real()) + (other.imag() * other.imag())));}}
+\DoxyCodeLine{130 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{131 \textcolor{stringliteral}{}}
+\DoxyCodeLine{132 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{133 \textcolor{stringliteral}{        inline Complex \&operator+=(const Complex<V> \&other) \{\{}}
+\DoxyCodeLine{134 \textcolor{stringliteral}{            m\_real = m\_real + other.real();}}
+\DoxyCodeLine{135 \textcolor{stringliteral}{            m\_imag = m\_imag + other.imag();}}
+\DoxyCodeLine{136 \textcolor{stringliteral}{            return *this;}}
+\DoxyCodeLine{137 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{138 \textcolor{stringliteral}{}}
+\DoxyCodeLine{139 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{140 \textcolor{stringliteral}{        inline Complex \&operator-\/=(const Complex<V> \&other) \{\{}}
+\DoxyCodeLine{141 \textcolor{stringliteral}{            m\_real = m\_real -\/ other.real();}}
+\DoxyCodeLine{142 \textcolor{stringliteral}{            m\_imag = m\_imag -\/ other.imag();}}
+\DoxyCodeLine{143 \textcolor{stringliteral}{            return *this;}}
+\DoxyCodeLine{144 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{145 \textcolor{stringliteral}{}}
+\DoxyCodeLine{146 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{147 \textcolor{stringliteral}{        inline Complex \&operator*=(const Complex<V> \&other) \{\{}}
+\DoxyCodeLine{148 \textcolor{stringliteral}{            m\_real = (m\_real * other.real()) -\/ (m\_imag * other.imag());}}
+\DoxyCodeLine{149 \textcolor{stringliteral}{            m\_imag = (m\_real * other.imag()) + (imag() * other.real());}}
+\DoxyCodeLine{150 \textcolor{stringliteral}{            return *this;}}
+\DoxyCodeLine{151 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{152 \textcolor{stringliteral}{}}
+\DoxyCodeLine{153 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{154 \textcolor{stringliteral}{        inline Complex \&operator/=(const Complex<V> \&other) \{\{}}
+\DoxyCodeLine{155 \textcolor{stringliteral}{            m\_real = (m\_real * other.real()) + (m\_imag * other.imag()) /}}
+\DoxyCodeLine{156 \textcolor{stringliteral}{                                               ((other.real() * other.real()) + (other.imag() * other.imag()));}}
+\DoxyCodeLine{157 \textcolor{stringliteral}{            m\_imag = (m\_real * other.real()) -\/ (m\_imag * other.imag()) /}}
+\DoxyCodeLine{158 \textcolor{stringliteral}{                                               ((other.real() * other.real()) + (other.imag() * other.imag()));}}
+\DoxyCodeLine{159 \textcolor{stringliteral}{            return *this;}}
+\DoxyCodeLine{160 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{161 \textcolor{stringliteral}{}}
+\DoxyCodeLine{162 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{163 \textcolor{stringliteral}{        inline bool operator==(const Complex<V> \&other) const \{\{}}
+\DoxyCodeLine{164 \textcolor{stringliteral}{            return m\_real == other.real() \&\& m\_imag == other.imag();}}
+\DoxyCodeLine{165 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{166 \textcolor{stringliteral}{}}
+\DoxyCodeLine{167 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{168 \textcolor{stringliteral}{        inline bool operator!=(const Complex<V> \&other) const \{\{}}
+\DoxyCodeLine{169 \textcolor{stringliteral}{            return !(*this == other);}}
+\DoxyCodeLine{170 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{171 \textcolor{stringliteral}{}}
+\DoxyCodeLine{172 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{173 \textcolor{stringliteral}{        inline bool operator==(const V \&other) const \{\{}}
+\DoxyCodeLine{174 \textcolor{stringliteral}{            return m\_real == other \&\& m\_imag == 0;}}
+\DoxyCodeLine{175 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{176 \textcolor{stringliteral}{}}
+\DoxyCodeLine{177 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{178 \textcolor{stringliteral}{        inline bool operator!=(const V \&other) const \{\{}}
+\DoxyCodeLine{179 \textcolor{stringliteral}{            return !(*this == other);}}
+\DoxyCodeLine{180 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{181 \textcolor{stringliteral}{}}
+\DoxyCodeLine{182 \textcolor{stringliteral}{        inline T mag() const \{\{}}
+\DoxyCodeLine{183 \textcolor{stringliteral}{            return std::sqrt(m\_real * m\_real + m\_imag * m\_imag);}}
+\DoxyCodeLine{184 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{185 \textcolor{stringliteral}{}}
+\DoxyCodeLine{186 \textcolor{stringliteral}{        inline T angle() const \{\{}}
+\DoxyCodeLine{187 \textcolor{stringliteral}{            return std::atan2(m\_real, m\_imag);}}
+\DoxyCodeLine{188 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{189 \textcolor{stringliteral}{}}
+\DoxyCodeLine{190 \textcolor{stringliteral}{        inline Complex<T> log() const \{\{}}
+\DoxyCodeLine{191 \textcolor{stringliteral}{            return Complex<T>(std::log(mag()), angle());}}
+\DoxyCodeLine{192 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{193 \textcolor{stringliteral}{}}
+\DoxyCodeLine{194 \textcolor{stringliteral}{        inline Complex<T> conjugate() const \{\{}}
+\DoxyCodeLine{195 \textcolor{stringliteral}{            return Complex<T>(m\_real, -\/m\_imag);}}
+\DoxyCodeLine{196 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{197 \textcolor{stringliteral}{}}
+\DoxyCodeLine{198 \textcolor{stringliteral}{        inline Complex<T> reciprocal() const \{\{}}
+\DoxyCodeLine{199 \textcolor{stringliteral}{            return Complex<T>((m\_real) / (m\_real * m\_real + m\_imag * m\_imag),}}
+\DoxyCodeLine{200 \textcolor{stringliteral}{                              -\/(m\_imag) / (m\_real * m\_real + m\_imag * m\_imag));}}
+\DoxyCodeLine{201 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{202 \textcolor{stringliteral}{}}
+\DoxyCodeLine{203 \textcolor{stringliteral}{        inline const T \&real() const \{\{}}
+\DoxyCodeLine{204 \textcolor{stringliteral}{            return m\_real;}}
+\DoxyCodeLine{205 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{206 \textcolor{stringliteral}{}}
+\DoxyCodeLine{207 \textcolor{stringliteral}{        inline T \&real() \{\{}}
+\DoxyCodeLine{208 \textcolor{stringliteral}{            return m\_real;}}
+\DoxyCodeLine{209 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{210 \textcolor{stringliteral}{}}
+\DoxyCodeLine{211 \textcolor{stringliteral}{        inline const T \&imag() const \{\{}}
+\DoxyCodeLine{212 \textcolor{stringliteral}{            return m\_imag;}}
+\DoxyCodeLine{213 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{214 \textcolor{stringliteral}{}}
+\DoxyCodeLine{215 \textcolor{stringliteral}{        inline T \&imag() \{\{}}
+\DoxyCodeLine{216 \textcolor{stringliteral}{            return m\_imag;}}
+\DoxyCodeLine{217 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{218 \textcolor{stringliteral}{}}
+\DoxyCodeLine{219 \textcolor{stringliteral}{        inline explicit operator std::string() const \{\{}}
+\DoxyCodeLine{220 \textcolor{stringliteral}{            return str();}}
+\DoxyCodeLine{221 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{222 \textcolor{stringliteral}{}}
+\DoxyCodeLine{223 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{224 \textcolor{stringliteral}{        inline operator V() const \{\{}}
+\DoxyCodeLine{225 \textcolor{stringliteral}{            return m\_real;}}
+\DoxyCodeLine{226 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{227 \textcolor{stringliteral}{}}
+\DoxyCodeLine{228 \textcolor{stringliteral}{        template<typename V>}}
+\DoxyCodeLine{229 \textcolor{stringliteral}{        inline explicit operator std::complex<V>() const \{\{}}
+\DoxyCodeLine{230 \textcolor{stringliteral}{            return std::complex<V>(m\_real, m\_imag);}}
+\DoxyCodeLine{231 \textcolor{stringliteral}{        \}\}}}
+\DoxyCodeLine{232 \textcolor{stringliteral}{}}
+\DoxyCodeLine{233 \textcolor{stringliteral}{    private:}}
+\DoxyCodeLine{234 \textcolor{stringliteral}{        T m\_real = 0;}}
+\DoxyCodeLine{235 \textcolor{stringliteral}{        T m\_imag = 0;}}
+\DoxyCodeLine{236 \textcolor{stringliteral}{    \}\};}}
+\DoxyCodeLine{237 \textcolor{stringliteral}{}}
+\DoxyCodeLine{238 \textcolor{stringliteral}{    template<typename A, typename B, typename std::enable\_if<std::is\_scalar<A>::value, int>::type = 0>}}
+\DoxyCodeLine{239 \textcolor{stringliteral}{    Complex<B> operator+(const A \&a, const Complex<B> \&b) \{\{}}
+\DoxyCodeLine{240 \textcolor{stringliteral}{        return Complex<B>(a) + b;}}
+\DoxyCodeLine{241 \textcolor{stringliteral}{    \}\}}}
+\DoxyCodeLine{242 \textcolor{stringliteral}{}}
+\DoxyCodeLine{243 \textcolor{stringliteral}{    template<typename A, typename B, typename std::enable\_if<std::is\_scalar<A>::value, int>::type = 0>}}
+\DoxyCodeLine{244 \textcolor{stringliteral}{    inline Complex<B> operator-\/(const A \&a, const Complex<B> \&b) \{\{}}
+\DoxyCodeLine{245 \textcolor{stringliteral}{        return Complex<B>(a) -\/ b;}}
+\DoxyCodeLine{246 \textcolor{stringliteral}{    \}\}}}
+\DoxyCodeLine{247 \textcolor{stringliteral}{}}
+\DoxyCodeLine{248 \textcolor{stringliteral}{    template<typename A, typename B, typename std::enable\_if<std::is\_scalar<A>::value, int>::type = 0>}}
+\DoxyCodeLine{249 \textcolor{stringliteral}{    inline Complex<B> operator*(const A \&a, const Complex<B> \&b) \{\{}}
+\DoxyCodeLine{250 \textcolor{stringliteral}{        return Complex<B>(a) * b;}}
+\DoxyCodeLine{251 \textcolor{stringliteral}{    \}\}}}
+\DoxyCodeLine{252 \textcolor{stringliteral}{}}
+\DoxyCodeLine{253 \textcolor{stringliteral}{    template<typename A, typename B, typename std::enable\_if<std::is\_scalar<A>::value, int>::type = 0>}}
+\DoxyCodeLine{254 \textcolor{stringliteral}{    inline Complex<B> operator/(const A \&a, const Complex<B> \&b) \{\{}}
+\DoxyCodeLine{255 \textcolor{stringliteral}{        return Complex<B>(a) / b;}}
+\DoxyCodeLine{256 \textcolor{stringliteral}{    \}\}}}
+\DoxyCodeLine{257 \textcolor{stringliteral}{}}
+\DoxyCodeLine{258 \textcolor{stringliteral}{    template<typename A, typename B, typename std::enable\_if<std::is\_scalar<A>::value, int>::type = 0>}}
+\DoxyCodeLine{259 \textcolor{stringliteral}{    inline A \&operator+=(A \&a, const Complex<B> \&b) \{\{}}
+\DoxyCodeLine{260 \textcolor{stringliteral}{        a += b.real();}}
+\DoxyCodeLine{261 \textcolor{stringliteral}{        return a;}}
+\DoxyCodeLine{262 \textcolor{stringliteral}{    \}\}}}
+\DoxyCodeLine{263 \textcolor{stringliteral}{}}
+\DoxyCodeLine{264 \textcolor{stringliteral}{    template<typename A, typename B, typename std::enable\_if<std::is\_scalar<A>::value, int>::type = 0>}}
+\DoxyCodeLine{265 \textcolor{stringliteral}{    inline A \&operator-\/=(A \&a, const Complex<B> \&b) \{\{}}
+\DoxyCodeLine{266 \textcolor{stringliteral}{        a -\/= b.real();}}
+\DoxyCodeLine{267 \textcolor{stringliteral}{        return a;}}
+\DoxyCodeLine{268 \textcolor{stringliteral}{    \}\}}}
+\DoxyCodeLine{269 \textcolor{stringliteral}{}}
+\DoxyCodeLine{270 \textcolor{stringliteral}{    template<typename A, typename B, typename std::enable\_if<std::is\_scalar<A>::value, int>::type = 0>}}
+\DoxyCodeLine{271 \textcolor{stringliteral}{    inline A \&operator*=(A \&a, const Complex<B> \&b) \{\{}}
+\DoxyCodeLine{272 \textcolor{stringliteral}{        a *= b.real();}}
+\DoxyCodeLine{273 \textcolor{stringliteral}{        return a;}}
+\DoxyCodeLine{274 \textcolor{stringliteral}{    \}\}}}
+\DoxyCodeLine{275 \textcolor{stringliteral}{}}
+\DoxyCodeLine{276 \textcolor{stringliteral}{    template<typename A, typename B, typename std::enable\_if<std::is\_scalar<A>::value, int>::type = 0>}}
+\DoxyCodeLine{277 \textcolor{stringliteral}{    inline A \&operator/=(A \&a, const Complex<B> \&b) \{\{}}
+\DoxyCodeLine{278 \textcolor{stringliteral}{        a /= b.real();}}
+\DoxyCodeLine{279 \textcolor{stringliteral}{        return a;}}
+\DoxyCodeLine{280 \textcolor{stringliteral}{    \}\}}}
+\DoxyCodeLine{281 \textcolor{stringliteral}{}}
+\DoxyCodeLine{282 \textcolor{stringliteral}{\}\}}}
+\DoxyCodeLine{283 \textcolor{stringliteral}{}}
+\DoxyCodeLine{284 \textcolor{stringliteral}{\#endif // LIBRAPID\_CUSTOM\_COMPLEX}}
+\DoxyCodeLine{285 \textcolor{stringliteral}{        )V0G0N"{},}}
+\DoxyCodeLine{286 \textcolor{stringliteral}{                           CUDA\_INCLUDE\_DIRS);}}
+\DoxyCodeLine{287 \textcolor{stringliteral}{    \}}}
+\DoxyCodeLine{288 \textcolor{stringliteral}{\} }\textcolor{comment}{// namespace librapid::imp}}
+
+\end{DoxyCode}

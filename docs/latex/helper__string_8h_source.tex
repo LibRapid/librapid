@@ -1,0 +1,352 @@
+\hypertarget{helper__string_8h_source}{}\doxysection{helper\+\_\+string.\+h}
+\label{helper__string_8h_source}\index{librapid/include/librapid/cuda/helper\_string.h@{librapid/include/librapid/cuda/helper\_string.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/* Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{4 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{5 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{6 \textcolor{comment}{ *  * Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{7 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{8 \textcolor{comment}{ *  * Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{9 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{10 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{11 \textcolor{comment}{ *  * Neither the name of NVIDIA CORPORATION nor the names of its}}
+\DoxyCodeLine{12 \textcolor{comment}{ *    contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{13 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{14 \textcolor{comment}{ *}}
+\DoxyCodeLine{15 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY}}
+\DoxyCodeLine{16 \textcolor{comment}{ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{17 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR}}
+\DoxyCodeLine{18 \textcolor{comment}{ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR}}
+\DoxyCodeLine{19 \textcolor{comment}{ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,}}
+\DoxyCodeLine{20 \textcolor{comment}{ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,}}
+\DoxyCodeLine{21 \textcolor{comment}{ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR}}
+\DoxyCodeLine{22 \textcolor{comment}{ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY}}
+\DoxyCodeLine{23 \textcolor{comment}{ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{24 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{25 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{26 \textcolor{comment}{ */}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{comment}{// These are helper functions for the SDK samples (string parsing, timers, etc)}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#ifndef COMMON\_HELPER\_STRING\_H\_}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#define COMMON\_HELPER\_STRING\_H\_}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#if defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#   ifndef \_CRT\_SECURE\_NO\_DEPRECATE}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#       define \_CRT\_SECURE\_NO\_DEPRECATE}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#   ifndef STRCASECMP}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#       define STRCASECMP \_stricmp}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#   ifndef STRNCASECMP}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#       define STRNCASECMP \_strnicmp}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#   ifndef STRCPY}}
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#       define STRCPY(sFilePath, nLength, sPath) strcpy\_s(sFilePath, nLength, sPath)}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#   ifndef FOPEN}}
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#       define FOPEN(fHandle, filename, mode) fopen\_s(\&fHandle, filename, mode)}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#   ifndef FOPEN\_FAIL}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#       define FOPEN\_FAIL(result) (result != 0)}}
+\DoxyCodeLine{56 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#   ifndef SSCANF}}
+\DoxyCodeLine{58 \textcolor{preprocessor}{\#       define SSCANF sscanf\_s}}
+\DoxyCodeLine{59 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#   ifndef SPRINTF}}
+\DoxyCodeLine{61 \textcolor{preprocessor}{\#       define SPRINTF sprintf\_s}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#else }\textcolor{comment}{// Linux Includes}}
+\DoxyCodeLine{64 \textcolor{preprocessor}{\#   include <string.h>}}
+\DoxyCodeLine{65 \textcolor{preprocessor}{\#   include <strings.h>}}
+\DoxyCodeLine{66 }
+\DoxyCodeLine{67 \textcolor{preprocessor}{\#   ifndef STRCASECMP}}
+\DoxyCodeLine{68 \textcolor{preprocessor}{\#       define STRCASECMP strcasecmp}}
+\DoxyCodeLine{69 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{70 \textcolor{preprocessor}{\#   ifndef STRNCASECMP}}
+\DoxyCodeLine{71 \textcolor{preprocessor}{\#       define STRNCASECMP strncasecmp}}
+\DoxyCodeLine{72 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{73 \textcolor{preprocessor}{\#   ifndef STRCPY}}
+\DoxyCodeLine{74 \textcolor{preprocessor}{\#       define STRCPY(sFilePath, nLength, sPath) strcpy(sFilePath, sPath)}}
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{77 \textcolor{preprocessor}{\#   ifndef FOPEN}}
+\DoxyCodeLine{78 \textcolor{preprocessor}{\#       define FOPEN(fHandle, filename, mode) (fHandle = fopen(filename, mode))}}
+\DoxyCodeLine{79 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{80 \textcolor{preprocessor}{\#   ifndef FOPEN\_FAIL}}
+\DoxyCodeLine{81 \textcolor{preprocessor}{\#       define FOPEN\_FAIL(result) (result == NULL)}}
+\DoxyCodeLine{82 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{83 \textcolor{preprocessor}{\#   ifndef SSCANF}}
+\DoxyCodeLine{84 \textcolor{preprocessor}{\#       define SSCANF sscanf}}
+\DoxyCodeLine{85 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{86 \textcolor{preprocessor}{\#   ifndef SPRINTF}}
+\DoxyCodeLine{87 \textcolor{preprocessor}{\#       define SPRINTF sprintf}}
+\DoxyCodeLine{88 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{89 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{90 }
+\DoxyCodeLine{91 \textcolor{preprocessor}{\#ifndef EXIT\_WAIVED}}
+\DoxyCodeLine{92 \textcolor{preprocessor}{\#   define EXIT\_WAIVED 2}}
+\DoxyCodeLine{93 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{94 }
+\DoxyCodeLine{95 \textcolor{comment}{// CUDA Utility Helper Functions}}
+\DoxyCodeLine{96 \textcolor{keyword}{inline} \textcolor{keywordtype}{int} stringRemoveDelimiter(\textcolor{keywordtype}{char} delimiter, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *\textcolor{keywordtype}{string}) \{}
+\DoxyCodeLine{97     \textcolor{keywordtype}{int} string\_start = 0;}
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99     \textcolor{keywordflow}{while} (\textcolor{keywordtype}{string}[string\_start] == delimiter) \{ string\_start++; \}}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101     \textcolor{keywordflow}{if} (string\_start >= \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(strlen(\textcolor{keywordtype}{string}) -\/ 1)) \{ \textcolor{keywordflow}{return} 0; \}}
+\DoxyCodeLine{102 }
+\DoxyCodeLine{103     \textcolor{keywordflow}{return} string\_start;}
+\DoxyCodeLine{104 \}}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{106 \textcolor{keyword}{inline} \textcolor{keywordtype}{int} getFileExtension(\textcolor{keywordtype}{char} *filename, \textcolor{keywordtype}{char} **extension) \{}
+\DoxyCodeLine{107     \textcolor{keywordtype}{int} string\_length = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(strlen(filename));}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109     \textcolor{keywordflow}{while} (filename[string\_length-\/-\/] != \textcolor{charliteral}{'.'}) \{}
+\DoxyCodeLine{110         \textcolor{keywordflow}{if} (string\_length == 0) \textcolor{keywordflow}{break};}
+\DoxyCodeLine{111     \}}
+\DoxyCodeLine{112 }
+\DoxyCodeLine{113     \textcolor{keywordflow}{if} (string\_length > 0) string\_length += 2;}
+\DoxyCodeLine{114 }
+\DoxyCodeLine{115     \textcolor{keywordflow}{if} (string\_length == 0)}
+\DoxyCodeLine{116         *extension = NULL;}
+\DoxyCodeLine{117     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{118         *extension = \&filename[string\_length];}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120     \textcolor{keywordflow}{return} string\_length;}
+\DoxyCodeLine{121 \}}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{123 \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} checkCmdLineFlag(\textcolor{keyword}{const} \textcolor{keywordtype}{int} argc, \textcolor{keyword}{const} \textcolor{keywordtype}{char} **argv, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *string\_ref) \{}
+\DoxyCodeLine{124     \textcolor{keywordtype}{bool} bFound = \textcolor{keyword}{false};}
+\DoxyCodeLine{125 }
+\DoxyCodeLine{126     \textcolor{keywordflow}{if} (argc >= 1) \{}
+\DoxyCodeLine{127         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 1; i < argc; i++) \{}
+\DoxyCodeLine{128             \textcolor{keywordtype}{int} string\_start        = stringRemoveDelimiter(\textcolor{charliteral}{'-\/'}, argv[i]);}
+\DoxyCodeLine{129             \textcolor{keyword}{const} \textcolor{keywordtype}{char} *string\_argv = \&argv[i][string\_start];}
+\DoxyCodeLine{130 }
+\DoxyCodeLine{131             \textcolor{keyword}{const} \textcolor{keywordtype}{char} *equal\_pos = strchr(string\_argv, \textcolor{charliteral}{'='});}
+\DoxyCodeLine{132             \textcolor{keywordtype}{int} argv\_length =}
+\DoxyCodeLine{133               \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(equal\_pos == 0 ? strlen(string\_argv) : equal\_pos -\/ string\_argv);}
+\DoxyCodeLine{134 }
+\DoxyCodeLine{135             \textcolor{keywordtype}{int} length = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(strlen(string\_ref));}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{137             \textcolor{keywordflow}{if} (length == argv\_length \&\& !STRNCASECMP(string\_argv, string\_ref, length)) \{}
+\DoxyCodeLine{138                 bFound = \textcolor{keyword}{true};}
+\DoxyCodeLine{139                 \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{140             \}}
+\DoxyCodeLine{141         \}}
+\DoxyCodeLine{142     \}}
+\DoxyCodeLine{143 }
+\DoxyCodeLine{144     \textcolor{keywordflow}{return} bFound;}
+\DoxyCodeLine{145 \}}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{147 \textcolor{comment}{// This function wraps the CUDA Driver API into a template function}}
+\DoxyCodeLine{148 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{149 \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} getCmdLineArgumentValue(\textcolor{keyword}{const} \textcolor{keywordtype}{int} argc, \textcolor{keyword}{const} \textcolor{keywordtype}{char} **argv, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *string\_ref,}
+\DoxyCodeLine{150                                     T *value) \{}
+\DoxyCodeLine{151     \textcolor{keywordtype}{bool} bFound = \textcolor{keyword}{false};}
+\DoxyCodeLine{152 }
+\DoxyCodeLine{153     \textcolor{keywordflow}{if} (argc >= 1) \{}
+\DoxyCodeLine{154         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 1; i < argc; i++) \{}
+\DoxyCodeLine{155             \textcolor{keywordtype}{int} string\_start        = stringRemoveDelimiter(\textcolor{charliteral}{'-\/'}, argv[i]);}
+\DoxyCodeLine{156             \textcolor{keyword}{const} \textcolor{keywordtype}{char} *string\_argv = \&argv[i][string\_start];}
+\DoxyCodeLine{157             \textcolor{keywordtype}{int} length              = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(strlen(string\_ref));}
+\DoxyCodeLine{158 }
+\DoxyCodeLine{159             \textcolor{keywordflow}{if} (!STRNCASECMP(string\_argv, string\_ref, length)) \{}
+\DoxyCodeLine{160                 \textcolor{keywordflow}{if} (length + 1 <= \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(strlen(string\_argv))) \{}
+\DoxyCodeLine{161                     \textcolor{keywordtype}{int} auto\_inc = (string\_argv[length] == \textcolor{charliteral}{'='}) ? 1 : 0;}
+\DoxyCodeLine{162                     *value       = (T)atoi(\&string\_argv[length + auto\_inc]);}
+\DoxyCodeLine{163                 \}}
+\DoxyCodeLine{164 }
+\DoxyCodeLine{165                 bFound = \textcolor{keyword}{true};}
+\DoxyCodeLine{166                 i      = argc;}
+\DoxyCodeLine{167             \}}
+\DoxyCodeLine{168         \}}
+\DoxyCodeLine{169     \}}
+\DoxyCodeLine{170 }
+\DoxyCodeLine{171     \textcolor{keywordflow}{return} bFound;}
+\DoxyCodeLine{172 \}}
+\DoxyCodeLine{173 }
+\DoxyCodeLine{174 \textcolor{keyword}{inline} \textcolor{keywordtype}{int} getCmdLineArgumentInt(\textcolor{keyword}{const} \textcolor{keywordtype}{int} argc, \textcolor{keyword}{const} \textcolor{keywordtype}{char} **argv, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *string\_ref) \{}
+\DoxyCodeLine{175     \textcolor{keywordtype}{bool} bFound = \textcolor{keyword}{false};}
+\DoxyCodeLine{176     \textcolor{keywordtype}{int} value   = -\/1;}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178     \textcolor{keywordflow}{if} (argc >= 1) \{}
+\DoxyCodeLine{179         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 1; i < argc; i++) \{}
+\DoxyCodeLine{180             \textcolor{keywordtype}{int} string\_start        = stringRemoveDelimiter(\textcolor{charliteral}{'-\/'}, argv[i]);}
+\DoxyCodeLine{181             \textcolor{keyword}{const} \textcolor{keywordtype}{char} *string\_argv = \&argv[i][string\_start];}
+\DoxyCodeLine{182             \textcolor{keywordtype}{int} length              = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(strlen(string\_ref));}
+\DoxyCodeLine{183 }
+\DoxyCodeLine{184             \textcolor{keywordflow}{if} (!STRNCASECMP(string\_argv, string\_ref, length)) \{}
+\DoxyCodeLine{185                 \textcolor{keywordflow}{if} (length + 1 <= \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(strlen(string\_argv))) \{}
+\DoxyCodeLine{186                     \textcolor{keywordtype}{int} auto\_inc = (string\_argv[length] == \textcolor{charliteral}{'='}) ? 1 : 0;}
+\DoxyCodeLine{187                     value        = atoi(\&string\_argv[length + auto\_inc]);}
+\DoxyCodeLine{188                 \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{189                     value = 0;}
+\DoxyCodeLine{190                 \}}
+\DoxyCodeLine{191 }
+\DoxyCodeLine{192                 bFound = \textcolor{keyword}{true};}
+\DoxyCodeLine{193                 \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{194             \}}
+\DoxyCodeLine{195         \}}
+\DoxyCodeLine{196     \}}
+\DoxyCodeLine{197 }
+\DoxyCodeLine{198     \textcolor{keywordflow}{if} (bFound) \{}
+\DoxyCodeLine{199         \textcolor{keywordflow}{return} value;}
+\DoxyCodeLine{200     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{201         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{202     \}}
+\DoxyCodeLine{203 \}}
+\DoxyCodeLine{204 }
+\DoxyCodeLine{205 \textcolor{keyword}{inline} \textcolor{keywordtype}{float} getCmdLineArgumentFloat(\textcolor{keyword}{const} \textcolor{keywordtype}{int} argc, \textcolor{keyword}{const} \textcolor{keywordtype}{char} **argv, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *string\_ref) \{}
+\DoxyCodeLine{206     \textcolor{keywordtype}{bool} bFound = \textcolor{keyword}{false};}
+\DoxyCodeLine{207     \textcolor{keywordtype}{float} value = -\/1;}
+\DoxyCodeLine{208 }
+\DoxyCodeLine{209     \textcolor{keywordflow}{if} (argc >= 1) \{}
+\DoxyCodeLine{210         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 1; i < argc; i++) \{}
+\DoxyCodeLine{211             \textcolor{keywordtype}{int} string\_start        = stringRemoveDelimiter(\textcolor{charliteral}{'-\/'}, argv[i]);}
+\DoxyCodeLine{212             \textcolor{keyword}{const} \textcolor{keywordtype}{char} *string\_argv = \&argv[i][string\_start];}
+\DoxyCodeLine{213             \textcolor{keywordtype}{int} length              = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(strlen(string\_ref));}
+\DoxyCodeLine{214 }
+\DoxyCodeLine{215             \textcolor{keywordflow}{if} (!STRNCASECMP(string\_argv, string\_ref, length)) \{}
+\DoxyCodeLine{216                 \textcolor{keywordflow}{if} (length + 1 <= \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(strlen(string\_argv))) \{}
+\DoxyCodeLine{217                     \textcolor{keywordtype}{int} auto\_inc = (string\_argv[length] == \textcolor{charliteral}{'='}) ? 1 : 0;}
+\DoxyCodeLine{218                     value        = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(atof(\&string\_argv[length + auto\_inc]));}
+\DoxyCodeLine{219                 \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{220                     value = 0.f;}
+\DoxyCodeLine{221                 \}}
+\DoxyCodeLine{222 }
+\DoxyCodeLine{223                 bFound = \textcolor{keyword}{true};}
+\DoxyCodeLine{224                 \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{225             \}}
+\DoxyCodeLine{226         \}}
+\DoxyCodeLine{227     \}}
+\DoxyCodeLine{228 }
+\DoxyCodeLine{229     \textcolor{keywordflow}{if} (bFound) \{}
+\DoxyCodeLine{230         \textcolor{keywordflow}{return} value;}
+\DoxyCodeLine{231     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{232         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{233     \}}
+\DoxyCodeLine{234 \}}
+\DoxyCodeLine{235 }
+\DoxyCodeLine{236 \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} getCmdLineArgumentString(\textcolor{keyword}{const} \textcolor{keywordtype}{int} argc, \textcolor{keyword}{const} \textcolor{keywordtype}{char} **argv, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *string\_ref,}
+\DoxyCodeLine{237                                      \textcolor{keywordtype}{char} **string\_retval) \{}
+\DoxyCodeLine{238     \textcolor{keywordtype}{bool} bFound = \textcolor{keyword}{false};}
+\DoxyCodeLine{239 }
+\DoxyCodeLine{240     \textcolor{keywordflow}{if} (argc >= 1) \{}
+\DoxyCodeLine{241         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 1; i < argc; i++) \{}
+\DoxyCodeLine{242             \textcolor{keywordtype}{int} string\_start  = stringRemoveDelimiter(\textcolor{charliteral}{'-\/'}, argv[i]);}
+\DoxyCodeLine{243             \textcolor{keywordtype}{char} *string\_argv = \textcolor{keyword}{const\_cast<}\textcolor{keywordtype}{char} *\textcolor{keyword}{>}(\&argv[i][string\_start]);}
+\DoxyCodeLine{244             \textcolor{keywordtype}{int} length        = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(strlen(string\_ref));}
+\DoxyCodeLine{245 }
+\DoxyCodeLine{246             \textcolor{keywordflow}{if} (!STRNCASECMP(string\_argv, string\_ref, length)) \{}
+\DoxyCodeLine{247                 *string\_retval = \&string\_argv[length + 1];}
+\DoxyCodeLine{248                 bFound         = \textcolor{keyword}{true};}
+\DoxyCodeLine{249                 \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{250             \}}
+\DoxyCodeLine{251         \}}
+\DoxyCodeLine{252     \}}
+\DoxyCodeLine{253 }
+\DoxyCodeLine{254     \textcolor{keywordflow}{if} (!bFound) \{ *string\_retval = NULL; \}}
+\DoxyCodeLine{255 }
+\DoxyCodeLine{256     \textcolor{keywordflow}{return} bFound;}
+\DoxyCodeLine{257 \}}
+\DoxyCodeLine{258 }
+\DoxyCodeLine{267 \textcolor{keyword}{inline} \textcolor{keywordtype}{char} *sdkFindFilePath(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *filename, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *executable\_path) \{}
+\DoxyCodeLine{268     \textcolor{comment}{// <executable\_name> defines a variable that is replaced with the name of}}
+\DoxyCodeLine{269     \textcolor{comment}{// the executable}}
+\DoxyCodeLine{270 }
+\DoxyCodeLine{271     \textcolor{comment}{// Typical relative search paths to locate needed companion files (e.g.}}
+\DoxyCodeLine{272     \textcolor{comment}{// sample input data, or JIT source files) The origin for the relative}}
+\DoxyCodeLine{273     \textcolor{comment}{// search may be the .exe file, a .bat file launching an .exe, a browser}}
+\DoxyCodeLine{274     \textcolor{comment}{// .exe launching the .exe or .bat, etc}}
+\DoxyCodeLine{275     \textcolor{keyword}{const} \textcolor{keywordtype}{char} *searchPath[] = \{}
+\DoxyCodeLine{276       \textcolor{stringliteral}{"{}./"{}},                                          \textcolor{comment}{// same dir}}
+\DoxyCodeLine{277       \textcolor{stringliteral}{"{}./data/"{}},                                     \textcolor{comment}{// same dir}}
+\DoxyCodeLine{278       \textcolor{stringliteral}{"{}../../../../Samples/<executable\_name>/"{}},      \textcolor{comment}{// up 4 in tree}}
+\DoxyCodeLine{279       \textcolor{stringliteral}{"{}../../../Samples/<executable\_name>/"{}},         \textcolor{comment}{// up 3 in tree}}
+\DoxyCodeLine{280       \textcolor{stringliteral}{"{}../../Samples/<executable\_name>/"{}},            \textcolor{comment}{// up 2 in tree}}
+\DoxyCodeLine{281       \textcolor{stringliteral}{"{}../../../../Samples/<executable\_name>/data/"{}}, \textcolor{comment}{// up 4 in tree}}
+\DoxyCodeLine{282       \textcolor{stringliteral}{"{}../../../Samples/<executable\_name>/data/"{}},    \textcolor{comment}{// up 3 in tree}}
+\DoxyCodeLine{283       \textcolor{stringliteral}{"{}../../Samples/<executable\_name>/data/"{}},       \textcolor{comment}{// up 2 in tree}}
+\DoxyCodeLine{284       \textcolor{stringliteral}{"{}../../../../Common/data/"{}},                    \textcolor{comment}{// up 4 in tree}}
+\DoxyCodeLine{285       \textcolor{stringliteral}{"{}../../../Common/data/"{}},                       \textcolor{comment}{// up 3 in tree}}
+\DoxyCodeLine{286       \textcolor{stringliteral}{"{}../../Common/data/"{}}                           \textcolor{comment}{// up 2 in tree}}
+\DoxyCodeLine{287     \};}
+\DoxyCodeLine{288 }
+\DoxyCodeLine{289     \textcolor{comment}{// Extract the executable name}}
+\DoxyCodeLine{290     std::string executable\_name;}
+\DoxyCodeLine{291 }
+\DoxyCodeLine{292     \textcolor{keywordflow}{if} (executable\_path != 0) \{}
+\DoxyCodeLine{293         executable\_name = std::string(executable\_path);}
+\DoxyCodeLine{294 }
+\DoxyCodeLine{295 \textcolor{preprocessor}{\#if defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{296         \textcolor{comment}{// Windows path delimiter}}
+\DoxyCodeLine{297         \textcolor{keywordtype}{size\_t} delimiter\_pos = executable\_name.find\_last\_of(\textcolor{charliteral}{'\(\backslash\)\(\backslash\)'});}
+\DoxyCodeLine{298         executable\_name.erase(0, delimiter\_pos + 1);}
+\DoxyCodeLine{299 }
+\DoxyCodeLine{300         \textcolor{keywordflow}{if} (executable\_name.rfind(\textcolor{stringliteral}{"{}.exe"{}}) != std::string::npos) \{}
+\DoxyCodeLine{301             \textcolor{comment}{// we strip .exe, only if the .exe is found}}
+\DoxyCodeLine{302             executable\_name.resize(executable\_name.size() -\/ 4);}
+\DoxyCodeLine{303         \}}
+\DoxyCodeLine{304 }
+\DoxyCodeLine{305 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{306         \textcolor{comment}{// Linux \& OSX path delimiter}}
+\DoxyCodeLine{307         \textcolor{keywordtype}{size\_t} delimiter\_pos = executable\_name.find\_last\_of(\textcolor{charliteral}{'/'});}
+\DoxyCodeLine{308         executable\_name.erase(0, delimiter\_pos + 1);}
+\DoxyCodeLine{309 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{310     \}}
+\DoxyCodeLine{311 }
+\DoxyCodeLine{312     \textcolor{comment}{// Loop over all search paths and return the first hit}}
+\DoxyCodeLine{313     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i = 0; i < \textcolor{keyword}{sizeof}(searchPath) / \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char} *); ++i) \{}
+\DoxyCodeLine{314         std::string path(searchPath[i]);}
+\DoxyCodeLine{315         \textcolor{keywordtype}{size\_t} executable\_name\_pos = path.find(\textcolor{stringliteral}{"{}<executable\_name>"{}});}
+\DoxyCodeLine{316 }
+\DoxyCodeLine{317         \textcolor{comment}{// If there is executable\_name variable in the searchPath}}
+\DoxyCodeLine{318         \textcolor{comment}{// replace it with the value}}
+\DoxyCodeLine{319         \textcolor{keywordflow}{if} (executable\_name\_pos != std::string::npos) \{}
+\DoxyCodeLine{320             \textcolor{keywordflow}{if} (executable\_path != 0) \{}
+\DoxyCodeLine{321                 path.replace(executable\_name\_pos, strlen(\textcolor{stringliteral}{"{}<executable\_name>"{}}), executable\_name);}
+\DoxyCodeLine{322             \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{323                 \textcolor{comment}{// Skip this path entry if no executable argument is given}}
+\DoxyCodeLine{324                 \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{325             \}}
+\DoxyCodeLine{326         \}}
+\DoxyCodeLine{327 }
+\DoxyCodeLine{328 \textcolor{preprocessor}{\#ifdef \_DEBUG}}
+\DoxyCodeLine{329         printf(\textcolor{stringliteral}{"{}sdkFindFilePath <\%s> in \%s\(\backslash\)n"{}}, filename, path.c\_str());}
+\DoxyCodeLine{330 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{331 }
+\DoxyCodeLine{332         \textcolor{comment}{// Test if the file exists}}
+\DoxyCodeLine{333         path.append(filename);}
+\DoxyCodeLine{334         FILE *fp;}
+\DoxyCodeLine{335         FOPEN(fp, path.c\_str(), \textcolor{stringliteral}{"{}rb"{}});}
+\DoxyCodeLine{336 }
+\DoxyCodeLine{337         \textcolor{keywordflow}{if} (fp != NULL) \{}
+\DoxyCodeLine{338             fclose(fp);}
+\DoxyCodeLine{339             \textcolor{comment}{// File found}}
+\DoxyCodeLine{340             \textcolor{comment}{// returning an allocated array here for backwards compatibility}}
+\DoxyCodeLine{341             \textcolor{comment}{// reasons}}
+\DoxyCodeLine{342             \textcolor{keywordtype}{char} *file\_path = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{char} *\textcolor{keyword}{>}(malloc(path.length() + 1));}
+\DoxyCodeLine{343             STRCPY(file\_path, path.length() + 1, path.c\_str());}
+\DoxyCodeLine{344             \textcolor{keywordflow}{return} file\_path;}
+\DoxyCodeLine{345         \}}
+\DoxyCodeLine{346 }
+\DoxyCodeLine{347         \textcolor{keywordflow}{if} (fp) \{ fclose(fp); \}}
+\DoxyCodeLine{348     \}}
+\DoxyCodeLine{349 }
+\DoxyCodeLine{350     \textcolor{comment}{// File not found}}
+\DoxyCodeLine{351     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{352 \}}
+\DoxyCodeLine{353 }
+\DoxyCodeLine{354 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// COMMON\_HELPER\_STRING\_H\_}}
+
+\end{DoxyCode}
