@@ -9,19 +9,21 @@ namespace librapid {
 	class ArrayContainer;
 
 	namespace detail {
-		template<typename Functor_, typename... Args>
+		/// \brief Identifies which type of function is being used
+		enum class Descriptor {
+			Trivial,   /// Operation is trivial and can be done with a vectorised loop
+			Transpose, /// Operation is a matrix/array transposition
+			Matmul	   /// Operation is a matrix/array multiplication
+		};
+
+		template<Descriptor desc, typename Functor_, typename... Args>
 		class Function;
 
-		/// Assign a function to an array container
-		/// \tparam ShapeType_ The shape type of the array container
-		/// \tparam StorageType_ The storage type of the array container
-		/// \tparam Functor_ The function type
-		/// \tparam Args The argument types of the function
-		/// \param lhs The array container to assign to
-		/// \param function The function to assign
-		template<typename ShapeType_, typename StorageType_, typename Functor_, typename... Args>
-		LIBRAPID_ALWAYS_INLINE void assign(ArrayContainer<ShapeType_, StorageType_> &lhs,
-										   const detail::Function<Functor_, Args...> &function);
+		template<Descriptor desc, typename ShapeType_, typename StorageType_, typename Functor_,
+				 typename... Args>
+		LIBRAPID_ALWAYS_INLINE void
+		assign(ArrayContainer<ShapeType_, StorageType_> &lhs,
+			   const detail::Function<desc, ShapeType_, Args...> &function);
 	} // namespace detail
 } // namespace librapid
 

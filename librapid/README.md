@@ -2,8 +2,6 @@
 
 High Performance C++ Library Mathematical Programs
 
----
-
 ## Installation
 
 To use LibRapid in your CMake project, first clone the project:

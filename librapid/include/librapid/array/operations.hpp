@@ -19,17 +19,18 @@
 #define LIBRAPID_BINARY_OPERATION(NAME_, OP_)                                                      \
 	template<class LHS, class RHS>                                                                 \
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator OP_(LHS &&lhs, RHS &&rhs)              \
-	  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<detail::NAME_, LHS, RHS> {                       \
+	  LIBRAPID_RELEASE_NOEXCEPT                                                                    \
+		->detail::Function<detail::Descriptor::Trivial, detail::NAME_, LHS, RHS> {                 \
 		LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");                       \
-		return detail::makeFunction<detail::NAME_>(std::forward<LHS>(lhs),                         \
-												   std::forward<RHS>(rhs));                        \
+		return detail::makeFunction<detail::Descriptor::Trivial, detail::NAME_>(                   \
+		  std::forward<LHS>(lhs), std::forward<RHS>(rhs));                                         \
 	}
 
 namespace librapid {
 	namespace detail {
-		template<typename Functor, typename... Args>
+		template<Descriptor desc, typename Functor, typename... Args>
 		auto makeFunction(Args &&...args) {
-			using OperationType = Function<Functor, Args...>;
+			using OperationType = Function<desc, Functor, Args...>;
 			return OperationType(Functor(), std::forward<Args>(args)...);
 		}
 
