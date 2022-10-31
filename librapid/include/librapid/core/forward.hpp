@@ -24,6 +24,12 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void
 		assign(ArrayContainer<ShapeType_, StorageType_> &lhs,
 			   const detail::Function<desc, ShapeType_, Args...> &function);
+
+		template<Descriptor desc, typename ShapeType_, typename StorageType_, typename Functor_,
+				 typename... Args>
+		LIBRAPID_ALWAYS_INLINE void
+		assignParallel(ArrayContainer<ShapeType_, StorageType_> &lhs,
+					   const detail::Function<desc, ShapeType_, Args...> &function);
 	} // namespace detail
 } // namespace librapid
 
