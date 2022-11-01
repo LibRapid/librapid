@@ -2,6 +2,10 @@
 
 High Performance C++ Library Mathematical Programs
 
+<!-- <a href="refman.pdf" target="_blank"><b>PDF Documentation</b></a> -->
+
+<a href="https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html" target="_blank"><b>Latest Documentation</b></a>
+
 ## Installation
 
 To use LibRapid in your CMake project, first clone the project:
