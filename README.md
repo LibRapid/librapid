@@ -8,7 +8,6 @@
 
 ![PyPI](https://img.shields.io/pypi/v/librapid?color=green&label=Release&logo=python&logoColor=green) ![PyPI - License](https://img.shields.io/pypi/l/librapid?color=gray&label=Licensed%20under) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/librapid?color=blue&label=Version&logo=python&logoColor=green) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC) ![PyPI - Downloads](https://img.shields.io/pypi/dm/librapid?color=blue&label=Downloads&logo=python&logoColor=green) ![C++ Version](https://img.shields.io/badge/Language-C%2B%2B%2017-orange)
 
-
 ---
 
 [![Compile](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml) \
@@ -16,6 +15,12 @@
 [![Documentation Online](https://github.com/LibRapid/librapid/actions/workflows/static.yaml/badge.svg)](https://librapid.github.io/librapid/)
 
 ---
+
+# Documentation
+
+<a href="https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html" target="_blank"><b>Latest Documentation</b></a>
+
+LibRapid uses [Doxygen](https://doxygen.nl/) and [Doxygen Awesome CSS](https://github.com/jothepro/doxygen-awesome-css) to automatically generate the documentation.
 
 # What is LibRapid?
 

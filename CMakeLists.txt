@@ -22,7 +22,7 @@ message(STATUS "LibRapid Version: v${LIBRAPID_MAJOR}.${LIBRAPID_MINOR}.${LIBRAPI
 option(LIBRAPID_BUILD_EXAMPLES "Compile LibRapid C++ Examples" OFF)
 option(LIBRAPID_BUILD_TESTS "Compile LibRapid C++ Tests" OFF)
 
-option(LIBRAPID_STRICT "Force all warnings into errors (use with caution)" OFF)
+option(LIBRAPID_STRICT "Force all warnings into errors (use with caution)" ON)
 option(LIBRAPID_QUIET "Hide warnings generated WITHIN LibRapid's source" OFF)
 
 option(LIBRAPID_GET_BLAS "Download pre-built OpenBLAS binaries and use them" OFF)
