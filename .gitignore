@@ -5,6 +5,8 @@ librapid/openblas_install
 librapid/blas
 openblas_install
 
+docs
+
 *.i
 *.ii
 *.gpu

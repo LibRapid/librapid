@@ -11,11 +11,9 @@
 
 ---
 
-[![Compile](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml)
-
-[![Documentation Build](https://github.com/LibRapid/librapid/actions/workflows/build-docs.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/build-docs.yaml)
-
-[![Documentation Online](https://readthedocs.org/projects/librapid/badge/?version=latest)](https://librapid.readthedocs.io/en/latest/?badge=latest)
+[![Compile](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml) \
+[![Documentation Build](https://github.com/LibRapid/librapid/actions/workflows/build-docs.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/build-docs.yaml) \
+[![Documentation Online](https://github.com/LibRapid/librapid/actions/workflows/static.yaml/badge.svg)](https://librapid.github.io/librapid/)
 
 ---
 
@@ -28,7 +26,7 @@ necessary) to make them as fast as possible on any given machine.
 There are also a wide range of helper functions and classes to aid the development of your own project.
 
 LibRapid is highly templated, meaning it can conform to exactly your needs with minimal compile-times and even support
-for custom datatypes.
+for custom data types.
 
 # Current Development Stage
 
@@ -41,24 +39,28 @@ to us on [Discord](https://discord.com/invite/cGxTFTgCAC). Any help is greatly a
 
 # Future Plans
 
-My goal for LibRapid is to develop the C++ interface further, at least initially. At some point I want to add Python and
-Javascript interfaces (in that order) to increase the range of people who can benefit from the library, but the most
-important thing is the performance of the underlying C++ code.
+My goal for LibRapid is to make it faster and easier to use than existing libraries, such as Eigen and XTensor. I plan
+to develop an extensive testing and benchmarking suite alongside the code base, to ensure that everything is running as
+fast as possible.
+
+My main goal for the future is to implement as many features as possible, while maintaining the high performance
+LibRapid requires.
 
 # External Dependencies
 
 LibRapid has a few external dependencies to improve functionality and performance. Some of these are optional, and can
-be included with a CMake option. The following is a list of the external dependencies and their purpose:
+be included with a CMake option. The following is a list of the external dependencies and their purpose (these are all
+submodules of the library. You don't need to do anything different):
 
 - Required
     - [fmt](https://github.com/fmtlib/fmt) - Advanced string formatting
     - [scnlib](https://github.com/eliaskosunen/scnlib) - Advanced string parsing
     - [thread-pool](https://github.com/bshoshany/thread-pool) - Thread pool for parallel execution
+    - [Vc](https://github.com/VcDevel/Vc) - SIMD library
 - Optional
     - [OpenMP](https://www.openmp.org/) - Multi-threading library
     - [CUDA](https://developer.nvidia.com/cuda-zone) - GPU computing library
     - [mpfr](https://github.com/Pencilcaseman/mpfr) - Arbitrary precision numbers (integer, real, rational)
-    - [Vc](https://github.com/VcDevel/Vc) - SIMD library
 
 # Star History
 
