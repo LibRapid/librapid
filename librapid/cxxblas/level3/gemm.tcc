@@ -229,7 +229,7 @@ namespace cxxblas {
 							   const BETA &beta, MC *__restrict C, IndexType ldC) {
 		CXXBLAS_DEBUG_OUT("gemm_generic_parallel");
 
-		int threads = static_cast<int>(librapid::global::numThreads);
+		[[maybe_unused]] auto threads = static_cast<int>(librapid::global::numThreads);
 
 		if ((m == 0) || (n == 0)) { return; }
 		if (order == ColMajor) {
