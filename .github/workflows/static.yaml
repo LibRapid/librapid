@@ -33,22 +33,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Update Source Distribution
-        run:
-          sudo apt-get dist-upgrade
-
-      - name: Install Requirements
-        run: |
-          sudo apt-get install -y doxygen
-          sudo apt-get install -y texlive-full
-
-      - name: Update Distribution
-        run: |
-          sudo apt-get dist-upgrade
-
-      # - name: Build Documentation
-      #   run: doxygen
-
       # On Linux, the apt package doesn't build the search engine for some reason.
       # By building and installing doxygen ourselves, we can ensure that the documentation
       # has a working search engine.
@@ -61,6 +45,9 @@ jobs:
           cmake .. -DCMAKE_BUILD_TYPE=Release
           cmake --build . --config Release
           sudo make install
+
+      - name: Run Doxygen
+        run: doxygen
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
