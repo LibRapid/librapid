@@ -1,0 +1,48 @@
+\hypertarget{helper_macros_8hpp_source}{}\doxysection{helper\+Macros.\+hpp}
+\label{helper_macros_8hpp_source}\index{librapid/include/librapid/core/helperMacros.hpp@{librapid/include/librapid/core/helperMacros.hpp}}
+\mbox{\hyperlink{helper_macros_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00001}00001 \textcolor{preprocessor}{\#ifndef LIBRAPID\_CORE\_HELPER\_MACROS}}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00002}00002 \textcolor{preprocessor}{\#define LIBRAPID\_CORE\_HELPER\_MACROS}}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00003}00003 }
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00004}00004 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00005}00005 \textcolor{comment}{ * Defines a set of basic macros for common uses}}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00006}00006 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00007}00007 }
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00008}\mbox{\hyperlink{helper_macros_8hpp_aa2f49001be13949a16a57e6c99ab00ad}{00008}} \textcolor{preprocessor}{\#define COMMA ,}}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00009}00009 }
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00010}00010 \textcolor{comment}{// Provide \{fmt\} printing capabilities}}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00011}\mbox{\hyperlink{helper_macros_8hpp_a7d2d70de14d74180114ba0c483f78d87}{00011}} \textcolor{preprocessor}{\#define LIBRAPID\_SIMPLE\_IO\_IMPL(TEMPLATE\_, TYPE\_)                                                  \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00012}00012 \textcolor{preprocessor}{    template<TEMPLATE\_>                                                                            \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00013}00013 \textcolor{preprocessor}{    struct fmt::formatter<TYPE\_> \{                                                                 \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00014}00014 \textcolor{preprocessor}{        std::string formatStr = "{}\{\}"{}};                                                              \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00015}00015                                                                                                    \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00016}00016         template<typename ParseContext>                                                            \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00017}00017         constexpr auto parse(ParseContext \&ctx) \{                                                  \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00018}00018             formatStr = "{}\{:"{};                                                                      \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00019}00019             auto it   = ctx.begin();                                                               \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00020}00020             for (; it != ctx.end(); ++it) \{                                                        \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00021}00021                 if (*it == '\}') break;                                                             \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00022}00022                 formatStr += *it;                                                                  \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00023}00023             \}                                                                                      \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00024}00024             formatStr += "{}\}"{};                                                                      \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00025}00025             return it;                                                                             \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00026}00026         \}                                                                                          \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00027}00027                                                                                                    \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00028}00028         template<typename FormatContext>                                                           \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00029}00029         auto format(const TYPE\_ \&object, FormatContext \&ctx) \{                                     \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00030}00030             try \{                                                                                  \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00031}00031                 return fmt::format\_to(ctx.out(), object.str());                                    \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00032}00032             \} catch (std::exception \& e) \{ return fmt::format\_to(ctx.out(), e.what()); \}           \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00033}00033         \}                                                                                          \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00034}00034     \};                                                                                             \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00035}00035                                                                                                    \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00036}00036     template<TEMPLATE\_>                                                                            \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00037}00037     std::ostream \&operator<<(std::ostream \&os, const TYPE\_ \&object) \{                              \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00038}00038         os << object.str();                                                                        \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00039}00039         return os;                                                                                 \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00040}00040     \}}
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00041}00041 }
+\DoxyCodeLine{\Hypertarget{helper_macros_8hpp_source_l00042}00042 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_CORE\_HELPER\_MACROS}}
+
+\end{DoxyCode}

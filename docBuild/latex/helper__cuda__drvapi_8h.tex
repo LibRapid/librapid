@@ -1,0 +1,69 @@
+\hypertarget{helper__cuda__drvapi_8h}{}\doxysection{librapid/include/librapid/cuda/helper\+\_\+cuda\+\_\+drvapi.h File Reference}
+\label{helper__cuda__drvapi_8h}\index{librapid/include/librapid/cuda/helper\_cuda\_drvapi.h@{librapid/include/librapid/cuda/helper\_cuda\_drvapi.h}}
+{\ttfamily \#include $<$cstring$>$}\newline
+{\ttfamily \#include \char`\"{}helper\+\_\+string.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{helper__cuda__drvapi_8h_afa99ec4acc4ecb2dc3c2d05da15d0e3f}{MAX}}(a,  b)~(a $>$ b ? a \+: b)
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{helper__cuda__drvapi_8h_afe9ccb8dde63e20ae24933aa14b90c0e}{ftoi}} (float value)
+\item 
+int \mbox{\hyperlink{helper__cuda__drvapi_8h_afc0adc5e6b1d11343ab0eb58db0e3e39}{\+\_\+\+Convert\+SMVer2\+Cores\+DRV}} (int major, int minor)
+\item 
+bool \mbox{\hyperlink{helper__cuda__drvapi_8h_ad663d929d9666c32c54f9867e641a9e6}{find\+Fatbin\+Path}} (const char $\ast$module\+\_\+file, std\+::string \&module\+\_\+path, char $\ast$$\ast$argv, std\+::ostringstream \&ostrm)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{helper__cuda__drvapi_8h_afa99ec4acc4ecb2dc3c2d05da15d0e3f}\label{helper__cuda__drvapi_8h_afa99ec4acc4ecb2dc3c2d05da15d0e3f}} 
+\index{helper\_cuda\_drvapi.h@{helper\_cuda\_drvapi.h}!MAX@{MAX}}
+\index{MAX@{MAX}!helper\_cuda\_drvapi.h@{helper\_cuda\_drvapi.h}}
+\doxysubsubsection{\texorpdfstring{MAX}{MAX}}
+{\footnotesize\ttfamily \#define MAX(\begin{DoxyParamCaption}\item[{}]{a,  }\item[{}]{b }\end{DoxyParamCaption})~(a $>$ b ? a \+: b)}
+
+
+
+Definition at line \mbox{\hyperlink{helper__cuda__drvapi_8h_source_l00042}{42}} of file \mbox{\hyperlink{helper__cuda__drvapi_8h_source}{helper\+\_\+cuda\+\_\+drvapi.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{helper__cuda__drvapi_8h_afc0adc5e6b1d11343ab0eb58db0e3e39}\label{helper__cuda__drvapi_8h_afc0adc5e6b1d11343ab0eb58db0e3e39}} 
+\index{helper\_cuda\_drvapi.h@{helper\_cuda\_drvapi.h}!\_ConvertSMVer2CoresDRV@{\_ConvertSMVer2CoresDRV}}
+\index{\_ConvertSMVer2CoresDRV@{\_ConvertSMVer2CoresDRV}!helper\_cuda\_drvapi.h@{helper\_cuda\_drvapi.h}}
+\doxysubsubsection{\texorpdfstring{\_ConvertSMVer2CoresDRV()}{\_ConvertSMVer2CoresDRV()}}
+{\footnotesize\ttfamily int \+\_\+\+Convert\+SMVer2\+Cores\+DRV (\begin{DoxyParamCaption}\item[{int}]{major,  }\item[{int}]{minor }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__cuda__drvapi_8h_source_l00093}{93}} of file \mbox{\hyperlink{helper__cuda__drvapi_8h_source}{helper\+\_\+cuda\+\_\+drvapi.\+h}}.
+
+\mbox{\Hypertarget{helper__cuda__drvapi_8h_ad663d929d9666c32c54f9867e641a9e6}\label{helper__cuda__drvapi_8h_ad663d929d9666c32c54f9867e641a9e6}} 
+\index{helper\_cuda\_drvapi.h@{helper\_cuda\_drvapi.h}!findFatbinPath@{findFatbinPath}}
+\index{findFatbinPath@{findFatbinPath}!helper\_cuda\_drvapi.h@{helper\_cuda\_drvapi.h}}
+\doxysubsubsection{\texorpdfstring{findFatbinPath()}{findFatbinPath()}}
+{\footnotesize\ttfamily bool find\+Fatbin\+Path (\begin{DoxyParamCaption}\item[{const char $\ast$}]{module\+\_\+file,  }\item[{std\+::string \&}]{module\+\_\+path,  }\item[{char $\ast$$\ast$}]{argv,  }\item[{std\+::ostringstream \&}]{ostrm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__cuda__drvapi_8h_source_l00363}{363}} of file \mbox{\hyperlink{helper__cuda__drvapi_8h_source}{helper\+\_\+cuda\+\_\+drvapi.\+h}}.
+
+\mbox{\Hypertarget{helper__cuda__drvapi_8h_afe9ccb8dde63e20ae24933aa14b90c0e}\label{helper__cuda__drvapi_8h_afe9ccb8dde63e20ae24933aa14b90c0e}} 
+\index{helper\_cuda\_drvapi.h@{helper\_cuda\_drvapi.h}!ftoi@{ftoi}}
+\index{ftoi@{ftoi}!helper\_cuda\_drvapi.h@{helper\_cuda\_drvapi.h}}
+\doxysubsubsection{\texorpdfstring{ftoi()}{ftoi()}}
+{\footnotesize\ttfamily int ftoi (\begin{DoxyParamCaption}\item[{float}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__cuda__drvapi_8h_source_l00047}{47}} of file \mbox{\hyperlink{helper__cuda__drvapi_8h_source}{helper\+\_\+cuda\+\_\+drvapi.\+h}}.
+

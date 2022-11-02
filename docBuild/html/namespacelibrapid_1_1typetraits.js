@@ -1,0 +1,38 @@
+var namespacelibrapid_1_1typetraits =
+[
+    [ "detail", "namespacelibrapid_1_1typetraits_1_1detail.html", "namespacelibrapid_1_1typetraits_1_1detail" ],
+    [ "impl", "namespacelibrapid_1_1typetraits_1_1impl.html", [
+      [ "testAddition", "namespacelibrapid_1_1typetraits_1_1impl.html#adfcb2dc45fd94c735592700e40897fde", null ],
+      [ "testAddition", "namespacelibrapid_1_1typetraits_1_1impl.html#a8979c0d42f06120b023f6f908fa4ce0e", null ],
+      [ "testCast", "namespacelibrapid_1_1typetraits_1_1impl.html#a2354c060489f0084633d106f44c54f5b", null ],
+      [ "testCast", "namespacelibrapid_1_1typetraits_1_1impl.html#a69e381454bd5edfca9462f5c88376c0a", null ],
+      [ "testMultiplication", "namespacelibrapid_1_1typetraits_1_1impl.html#a38ab6e28df13c02db6d0dfdd5da550fd", null ],
+      [ "testMultiplication", "namespacelibrapid_1_1typetraits_1_1impl.html#a010526521848e8fce0c283d6d6da1a12", null ],
+      [ "testSubscript", "namespacelibrapid_1_1typetraits_1_1impl.html#a7005145040e6223139c5fadc51c68f7d", null ],
+      [ "testSubscript", "namespacelibrapid_1_1typetraits_1_1impl.html#a10fe8ed5bc301fec64946591cdcd3398", null ]
+    ] ],
+    [ "CanCast", "structlibrapid_1_1typetraits_1_1_can_cast.html", null ],
+    [ "HasAddition", "structlibrapid_1_1typetraits_1_1_has_addition.html", null ],
+    [ "HasMultiplication", "structlibrapid_1_1typetraits_1_1_has_multiplication.html", null ],
+    [ "HasSubscript", "structlibrapid_1_1typetraits_1_1_has_subscript.html", null ],
+    [ "TypeInfo", "structlibrapid_1_1typetraits_1_1_type_info.html", "structlibrapid_1_1typetraits_1_1_type_info" ],
+    [ "TypeInfo< ArrayContainer< ShapeType_, StorageType_ > >", "structlibrapid_1_1typetraits_1_1_type_info_3_01_array_container_3_01_shape_type___00_01_storage_type___01_4_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01_array_container_3_01_shape_type___00_01_storage_type___01_4_01_4" ],
+    [ "TypeInfo< bool >", "structlibrapid_1_1typetraits_1_1_type_info_3_01bool_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01bool_01_4" ],
+    [ "TypeInfo< char >", "structlibrapid_1_1typetraits_1_1_type_info_3_01char_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01char_01_4" ],
+    [ "TypeInfo< double >", "structlibrapid_1_1typetraits_1_1_type_info_3_01double_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01double_01_4" ],
+    [ "TypeInfo< float >", "structlibrapid_1_1typetraits_1_1_type_info_3_01float_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01float_01_4" ],
+    [ "TypeInfo< int16_t >", "structlibrapid_1_1typetraits_1_1_type_info_3_01int16__t_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01int16__t_01_4" ],
+    [ "TypeInfo< int32_t >", "structlibrapid_1_1typetraits_1_1_type_info_3_01int32__t_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01int32__t_01_4" ],
+    [ "TypeInfo< int64_t >", "structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4" ],
+    [ "TypeInfo< int8_t >", "structlibrapid_1_1typetraits_1_1_type_info_3_01int8__t_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01int8__t_01_4" ],
+    [ "TypeInfo< Storage< Scalar_, Allocator_ > >", "structlibrapid_1_1typetraits_1_1_type_info_3_01_storage_3_01_scalar___00_01_allocator___01_4_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01_storage_3_01_scalar___00_01_allocator___01_4_01_4" ],
+    [ "TypeInfo< uint16_t >", "structlibrapid_1_1typetraits_1_1_type_info_3_01uint16__t_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01uint16__t_01_4" ],
+    [ "TypeInfo< uint32_t >", "structlibrapid_1_1typetraits_1_1_type_info_3_01uint32__t_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01uint32__t_01_4" ],
+    [ "TypeInfo< uint64_t >", "structlibrapid_1_1typetraits_1_1_type_info_3_01uint64__t_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01uint64__t_01_4" ],
+    [ "TypeInfo< uint8_t >", "structlibrapid_1_1typetraits_1_1_type_info_3_01uint8__t_01_4.html", "structlibrapid_1_1typetraits_1_1_type_info_3_01uint8__t_01_4" ],
+    [ "TypeInfo<::librapid::detail::Function< desc, Functor_, Args... > >", "structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c.html", "structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c" ],
+    [ "EnableIf", "namespacelibrapid_1_1typetraits.html#ab40d2f867f8f2c70d62af985f0c002d9", null ],
+    [ "TriviallyDefaultConstructible", "namespacelibrapid_1_1typetraits.html#acde6527a5cda3f0e5879c473e83eb168", null ],
+    [ "typeName", "namespacelibrapid_1_1typetraits.html#a1154585d4ba78602d51ea6b5d2b256a8", null ],
+    [ "IsSame", "namespacelibrapid_1_1typetraits.html#a6fc44dd4d430e7dc87b0a604ac6f5b27", null ]
+];

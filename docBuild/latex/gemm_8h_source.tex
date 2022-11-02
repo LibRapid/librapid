@@ -1,0 +1,91 @@
+\hypertarget{gemm_8h_source}{}\doxysection{gemm.\+h}
+\label{gemm_8h_source}\index{librapid/cxxblas/level3/gemm.h@{librapid/cxxblas/level3/gemm.h}}
+\mbox{\hyperlink{gemm_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00001}00001 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00002}00002 \textcolor{comment}{ *   Copyright (c) 2010, Michael Lehn}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00003}00003 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00004}00004 \textcolor{comment}{ *   All rights reserved.}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00005}00005 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00006}00006 \textcolor{comment}{ *   Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00007}00007 \textcolor{comment}{ *   modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00008}00008 \textcolor{comment}{ *   are met:}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00009}00009 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00010}00010 \textcolor{comment}{ *   1) Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00011}00011 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00012}00012 \textcolor{comment}{ *   2) Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00013}00013 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer in}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00014}00014 \textcolor{comment}{ *      the documentation and/or other materials provided with the}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00015}00015 \textcolor{comment}{ *      distribution.}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00016}00016 \textcolor{comment}{ *   3) Neither the name of the FLENS development group nor the names of}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00017}00017 \textcolor{comment}{ *      its contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00018}00018 \textcolor{comment}{ *      from this software without specific prior written permission.}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00019}00019 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00020}00020 \textcolor{comment}{ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00021}00021 \textcolor{comment}{ *   "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00022}00022 \textcolor{comment}{ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00023}00023 \textcolor{comment}{ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00024}00024 \textcolor{comment}{ *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00025}00025 \textcolor{comment}{ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00026}00026 \textcolor{comment}{ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00027}00027 \textcolor{comment}{ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00028}00028 \textcolor{comment}{ *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00029}00029 \textcolor{comment}{ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00030}00030 \textcolor{comment}{ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00031}00031 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00033}00033 \textcolor{preprocessor}{\#ifndef CXXBLAS\_LEVEL3\_GEMM\_H}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00034}00034 \textcolor{preprocessor}{\#define CXXBLAS\_LEVEL3\_GEMM\_H 1}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00036}00036 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{drivers_8h}{cxxblas/drivers/drivers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00037}00037 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{typedefs_8h}{cxxblas/typedefs.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00038}00038 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00039}\mbox{\hyperlink{gemm_8h_a703dd64a8b94ebd8ee66bcea604bfca6}{00039}} \textcolor{preprocessor}{\#define HAVE\_CXXBLAS\_GEMM 1}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00040}00040 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00041}00041 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespacecxxblas}{cxxblas}} \{}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00042}00042 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00043}00043     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType, \textcolor{keyword}{typename} ALPHA, \textcolor{keyword}{typename} MA, \textcolor{keyword}{typename} MB, \textcolor{keyword}{typename} BETA,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00044}00044              \textcolor{keyword}{typename} MC>}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00045}\mbox{\hyperlink{namespacecxxblas_a317cdbf872a1d7431ae0356a15d871fa}{00045}}     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespacecxxblas_a317cdbf872a1d7431ae0356a15d871fa}{gemm}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transB, IndexType m, IndexType n,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00046}00046               IndexType k, \textcolor{keyword}{const} ALPHA \&alpha, \textcolor{keyword}{const} MA *A, IndexType ldA, \textcolor{keyword}{const} MB *B,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00047}00047               IndexType ldB, \textcolor{keyword}{const} BETA \&beta, MC *C, IndexType ldC);}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00048}00048 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00049}00049 \textcolor{preprocessor}{\#ifdef HAVE\_CBLAS}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00050}00050 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00051}00051     \textcolor{comment}{// sgemm}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00052}00052     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00053}00053     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00054}00054     \mbox{\hyperlink{namespacecxxblas_a317cdbf872a1d7431ae0356a15d871fa}{gemm}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transB, IndexType m, IndexType n,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00055}00055          IndexType k, \textcolor{keywordtype}{float} alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *A, IndexType ldA, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *B, IndexType ldB,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00056}00056          \textcolor{keywordtype}{float} beta, \textcolor{keywordtype}{float} *C, IndexType ldC);}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00057}00057 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00058}00058     \textcolor{comment}{// dgemm}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00059}00059     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00060}00060     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00061}00061     \mbox{\hyperlink{namespacecxxblas_a317cdbf872a1d7431ae0356a15d871fa}{gemm}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transB, IndexType m, IndexType n,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00062}00062          IndexType k, \textcolor{keywordtype}{double} alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *A, IndexType ldA, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *B, IndexType ldB,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00063}00063          \textcolor{keywordtype}{double} beta, \textcolor{keywordtype}{double} *C, IndexType ldC);}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00064}00064 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00065}00065     \textcolor{comment}{// cgemm}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00066}00066     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00067}00067     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00068}00068     \mbox{\hyperlink{namespacecxxblas_a317cdbf872a1d7431ae0356a15d871fa}{gemm}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transB, IndexType m, IndexType n,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00069}00069          IndexType k, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} \&alpha, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} *A, IndexType ldA,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00070}00070          \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} *B, IndexType ldB, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} \&beta, \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} *C,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00071}00071          IndexType ldC);}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00072}00072 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00073}00073     \textcolor{comment}{// zgemm}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00074}00074     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00075}00075     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00076}00076     \mbox{\hyperlink{namespacecxxblas_a317cdbf872a1d7431ae0356a15d871fa}{gemm}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transB, IndexType m, IndexType n,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00077}00077          IndexType k, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} \&alpha, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} *A, IndexType ldA,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00078}00078          \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} *B, IndexType ldB, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} \&beta, \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} *C,}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00079}00079          IndexType ldC);}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00080}00080 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00081}00081 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// HAVE\_CBLAS}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00082}00082 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00083}00083 \} \textcolor{comment}{// namespace cxxblas}}
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00084}00084 }
+\DoxyCodeLine{\Hypertarget{gemm_8h_source_l00085}00085 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CXXBLAS\_LEVEL3\_GEMM\_H}}
+
+\end{DoxyCode}

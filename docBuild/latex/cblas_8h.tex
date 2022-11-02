@@ -1,0 +1,1310 @@
+\hypertarget{cblas_8h}{}\doxysection{librapid/cxxblas/drivers/cblas.h File Reference}
+\label{cblas_8h}\index{librapid/cxxblas/drivers/cblas.h@{librapid/cxxblas/drivers/cblas.h}}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{cblas_8h_ac28e6243e4c6cd0b876f1c60a7c228c1}{CBLAS\+\_\+\+INT}}~int
+\item 
+\#define \mbox{\hyperlink{cblas_8h_a0cc6c9831e05958bc66dc000e02f33b9}{CBLAS\+\_\+\+INDEX}}~int
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} \{ \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6feac02c7e388901d8d297241db643467721}{Cblas\+Row\+Major}} = 101
+, \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fea36cca34e7a4808c97e4d234193dee127}{Cblas\+Col\+Major}} = 102
+ \}
+\item 
+enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} \{ \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9a078792a66863859407a99ddb06312e79}{Cblas\+No\+Trans}} = 111
+, \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9a267e1fb6eb583ddefd2923d95a944ec8}{Cblas\+Trans}} = 112
+, \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9a9f6c122ea555e68fef871c94bd58342f}{Cblas\+Conj\+Trans}} = 113
+, \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9a99355a2fe91017a188e531dd71d52f82}{Cblas\+Conj\+No\+Trans}} = 114
+ \}
+\item 
+enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} \{ \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892faca9d16a7c20129fcb9b5a9c8ab90b813}{Cblas\+Upper}} = 121
+, \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892fa68d86f377636767065ef016b13801c47}{Cblas\+Lower}} = 122
+ \}
+\item 
+enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} \{ \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3a82bfd6c5bb4a1b1361fc5d661a6c7a38}{Cblas\+Non\+Unit}} = 131
+, \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3a1fe5b22dd62df9d1b86e27b006b349a0}{Cblas\+Unit}} = 132
+ \}
+\item 
+enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} \{ \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5daa40b040f8f2a954ad3f3b5f1b4573793}{Cblas\+Left}} = 141
+, \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5da69a5fc61edf60c56342e4baa15809c30}{Cblas\+Right}} = 142
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{cblas_8h_ab31f7367a068937c0315f7df6d2c724d}{cblas\+\_\+sasum}} (int n, const float $\ast$x, int incX)
+\item 
+double \mbox{\hyperlink{cblas_8h_a1e1e258b0b3c71f06372bc98d118bf29}{cblas\+\_\+dasum}} (int n, const double $\ast$x, int incX)
+\item 
+float \mbox{\hyperlink{cblas_8h_a1ee0659bf1bb389ae588ca91b7e04443}{cblas\+\_\+scasum}} (int n, const float $\ast$x, int incX)
+\item 
+double \mbox{\hyperlink{cblas_8h_a3622ce676376f1b05e7be3fa7d235a1d}{cblas\+\_\+dzasum}} (int n, const double $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a9015a9b6b04b472d2cbe7b3a149559c1}{cblas\+\_\+saxpy}} (int n, float alpha, const float $\ast$x, int incX, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_adc6d85ba1ff20ca4d8e7684f2be67c4b}{cblas\+\_\+daxpy}} (int n, double alpha, const double $\ast$x, int incX, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a73cbe6354a384e1e34bf8e4b51be9739}{cblas\+\_\+caxpy}} (int n, const float $\ast$alpha, const float $\ast$x, int incX, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a6810dd25265182925c99a46e8b15d517}{cblas\+\_\+zaxpy}} (int n, const double $\ast$alpha, const double $\ast$x, int incX, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_ae417b0fae6ac8ef74e90670bddb507b2}{cblas\+\_\+scopy}} (int n, const float $\ast$x, int incX, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a13a045348e81985c373780e6acce1ebb}{cblas\+\_\+dcopy}} (int n, const double $\ast$x, int incX, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_ae1d2bc5a38e683face8b61bc1c5a0565}{cblas\+\_\+ccopy}} (int n, const float $\ast$x, int incX, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_aaa96f0e233114bef94f8045e36e779c0}{cblas\+\_\+zcopy}} (int n, const double $\ast$x, int incX, double $\ast$y, int incY)
+\item 
+float \mbox{\hyperlink{cblas_8h_a56ac912501cf33d915c7c775951b0ff1}{cblas\+\_\+sdsdot}} (int n, float alpha, const float $\ast$x, int incX, const float $\ast$y, int incY)
+\item 
+double \mbox{\hyperlink{cblas_8h_a7f2b74e4d13e221f1fd89405053cedb0}{cblas\+\_\+dsdot}} (int n, const float $\ast$x, int incX, const float $\ast$y, int incY)
+\item 
+float \mbox{\hyperlink{cblas_8h_ad774d62ed8599867735642cb9f7c7f5a}{cblas\+\_\+sdot}} (int n, const float $\ast$x, int incX, const float $\ast$y, int incY)
+\item 
+double \mbox{\hyperlink{cblas_8h_add501872652109658f582fc617ad96c7}{cblas\+\_\+ddot}} (int n, const double $\ast$x, int incX, const double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a168f1efe1fb0246b072bf2c0cccaee46}{cblas\+\_\+cdotu\+\_\+sub}} (int n, const float $\ast$x, int incX, const float $\ast$y, int incY, float $\ast$result)
+\item 
+void \mbox{\hyperlink{cblas_8h_af147f192db5ff8c0dfbd660b02f0d82b}{cblas\+\_\+cdotc\+\_\+sub}} (int n, const float $\ast$x, int incX, const float $\ast$y, int incY, float $\ast$result)
+\item 
+void \mbox{\hyperlink{cblas_8h_a9c3975c523616885c4a74202da9adf08}{cblas\+\_\+zdotu\+\_\+sub}} (int n, const double $\ast$x, int incX, const double $\ast$y, int incY, double $\ast$result)
+\item 
+void \mbox{\hyperlink{cblas_8h_a07181b9f5f96db0455c59bad40adb089}{cblas\+\_\+zdotc\+\_\+sub}} (int n, const double $\ast$x, int incX, const double $\ast$y, int incY, double $\ast$result)
+\item 
+int \mbox{\hyperlink{cblas_8h_a6347f8fdde70110822a655c290a8da80}{cblas\+\_\+isamax}} (int n, const float $\ast$x, int incX)
+\item 
+int \mbox{\hyperlink{cblas_8h_a203aa34312e59c9a62ab662552f7aec6}{cblas\+\_\+idamax}} (int n, const double $\ast$x, int incX)
+\item 
+int \mbox{\hyperlink{cblas_8h_adeaba7135fbe0d406634b01c3579d377}{cblas\+\_\+icamax}} (int n, const float $\ast$x, int incX)
+\item 
+int \mbox{\hyperlink{cblas_8h_a4d9f98c227056c4467d041cfab9b2093}{cblas\+\_\+izamax}} (int n, const double $\ast$x, int incX)
+\item 
+float \mbox{\hyperlink{cblas_8h_a5399601aa23ba120502e47491406e45f}{cblas\+\_\+snrm2}} (int n, const float $\ast$X, int incX)
+\item 
+double \mbox{\hyperlink{cblas_8h_addd6a5c9aeb18cd5162a90a302acae12}{cblas\+\_\+dnrm2}} (int n, const double $\ast$X, int incX)
+\item 
+float \mbox{\hyperlink{cblas_8h_a9181e63d168baaaf5f50aeb711566629}{cblas\+\_\+scnrm2}} (int n, const float $\ast$X, int incX)
+\item 
+double \mbox{\hyperlink{cblas_8h_a0e35ba1571f13a79f44ad5eeafa30904}{cblas\+\_\+dznrm2}} (int n, const double $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a9c900fe8a2188308c5d6ec9310039b1a}{cblas\+\_\+srot}} (int n, float $\ast$X, int incX, float $\ast$Y, int incY, float c, float s)
+\item 
+void \mbox{\hyperlink{cblas_8h_a6bf06266a691d6e54cf5491fb1108f8f}{cblas\+\_\+drot}} (int n, double $\ast$X, int incX, double $\ast$Y, int incY, double c, double s)
+\item 
+void \mbox{\hyperlink{cblas_8h_aa9c8e8c02791bc4c1ea56d509bff5c82}{cblas\+\_\+srotg}} (float $\ast$a, float $\ast$b, float $\ast$c, float $\ast$s)
+\item 
+void \mbox{\hyperlink{cblas_8h_ae9c72609641108287193098b5e3016fb}{cblas\+\_\+drotg}} (double $\ast$a, double $\ast$b, double $\ast$c, double $\ast$s)
+\item 
+void \mbox{\hyperlink{cblas_8h_a269dcb3b870c74654649e6b476d8b275}{cblas\+\_\+srotm}} (int n, float $\ast$X, int incX, float $\ast$Y, int incY, const float $\ast$P)
+\item 
+void \mbox{\hyperlink{cblas_8h_af98c7947d76b666a61e79a5f1d217f74}{cblas\+\_\+drotm}} (int n, double $\ast$X, int incX, double $\ast$Y, int incY, const double $\ast$P)
+\item 
+void \mbox{\hyperlink{cblas_8h_a40f8610a00fd94202486ea00ba65b9f6}{cblas\+\_\+srotmg}} (float $\ast$d1, float $\ast$d2, float $\ast$b1, float $\ast$b2, float $\ast$P)
+\item 
+void \mbox{\hyperlink{cblas_8h_ace7f55f66fe36bf441bddc7750384da6}{cblas\+\_\+drotmg}} (double $\ast$d1, double $\ast$d2, double $\ast$b1, double $\ast$b2, double $\ast$P)
+\item 
+void \mbox{\hyperlink{cblas_8h_a64ea962c438efa93e6fb581533acc149}{cblas\+\_\+sscal}} (int n, float alpha, float $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a77395c6c682d2c587abe4b3bee04c021}{cblas\+\_\+dscal}} (int n, double alpha, double $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_ab090d2dd5c01df7af47450b8f6189d28}{cblas\+\_\+cscal}} (int n, const float $\ast$alpha, float $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a07489bc1f1bc0b1ead374d2ba9267437}{cblas\+\_\+zscal}} (int n, const double $\ast$alpha, double $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a746c28ba2457772b38a6d9191e1317a1}{cblas\+\_\+csscal}} (int n, float alpha, float $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a77b0d7bc9a073dcfcedc609387bf75ba}{cblas\+\_\+zdscal}} (int n, double alpha, double $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a525c0bcf8552996048de927fce2e9f98}{cblas\+\_\+sswap}} (int n, float $\ast$x, int incX, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a364efa4c7c9fbf611f20b7b4e2718e9b}{cblas\+\_\+dswap}} (int n, double $\ast$x, int incX, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a0ff61aeaaacd31fd78db2bbdec709716}{cblas\+\_\+cswap}} (int n, float $\ast$x, int incX, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_aa0f682aaa21f66bfae0d9452f183f4ec}{cblas\+\_\+zswap}} (int n, double $\ast$x, int incX, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_ac0ef39edde52901dd8498cb0a6f8f16e}{cblas\+\_\+sgbmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int m, int n, int kl, int ku, float alpha, const float $\ast$A, int ldA, const float $\ast$x, int incX, float beta, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_aaa35d90f30f7a24573b77206f9dee120}{cblas\+\_\+dgbmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int m, int n, int kl, int ku, double alpha, const double $\ast$A, int ldA, const double $\ast$x, int incX, double beta, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_aa55693b0445330c28297a65567f5f17e}{cblas\+\_\+cgbmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int m, int n, int kl, int ku, const float $\ast$alpha, const float $\ast$A, int ldA, const float $\ast$x, int incX, const float $\ast$beta, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_aa22149b6ad1293f101a10e0fffebdb02}{cblas\+\_\+zgbmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int m, int n, int kl, int ku, const double $\ast$alpha, const double $\ast$A, int ldA, const double $\ast$x, int incX, const double $\ast$beta, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a426cffb1fa5a1968f802b9769503aa7a}{cblas\+\_\+sgemv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int m, int n, float alpha, const float $\ast$A, int ldA, const float $\ast$x, int incX, float beta, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a9ca57589b5dab2242cef3022d56479e9}{cblas\+\_\+dgemv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int m, int n, double alpha, const double $\ast$A, int ldA, const double $\ast$x, int incX, double beta, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a2cde571d7978ec8f37424929ee2c4bb8}{cblas\+\_\+cgemv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int m, int n, const float $\ast$alpha, const float $\ast$A, int ldA, const float $\ast$x, int incX, const float $\ast$beta, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_af897405b1c1aed1c82a2496c63cc73a6}{cblas\+\_\+zgemv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int m, int n, const double $\ast$alpha, const double $\ast$A, int ldA, const double $\ast$x, int incX, const double $\ast$beta, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a9d7ca83f4ac1ac5a02e5756d69603149}{cblas\+\_\+ssbmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, int k, float alpha, const float $\ast$A, int ldA, const float $\ast$x, int incX, float beta, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_accf23e9bfc0712315a0d889e6ac73e8e}{cblas\+\_\+dsbmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, int k, double alpha, const double $\ast$A, int ldA, const double $\ast$x, int incX, double beta, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a0287c14887c8985260b153f763572dfc}{cblas\+\_\+ssymv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, float alpha, const float $\ast$A, int ldA, const float $\ast$x, int incX, float beta, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a56ca35d81f5363bf1081db01ef9e8a4a}{cblas\+\_\+dsymv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, double alpha, const double $\ast$A, int ldA, const double $\ast$x, int incX, double beta, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a9ccedcf3a2cdd9e01b47717cae21a455}{cblas\+\_\+sspmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, float alpha, const float $\ast$Ap, const float $\ast$x, int incX, float beta, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a2835cbd7d5019c574d7feaffb34d799a}{cblas\+\_\+dspmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, double alpha, const double $\ast$Ap, const double $\ast$x, int incX, double beta, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a19acb1fa148514d91fb398bdd6b933d9}{cblas\+\_\+chbmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, int k, const float $\ast$alpha, const float $\ast$A, int ldA, const float $\ast$x, int incX, const float $\ast$beta, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a1913f5b2afeaa0b326c7f09420d5b535}{cblas\+\_\+zhbmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, int k, const double $\ast$alpha, const double $\ast$A, int ldA, const double $\ast$x, int incX, const double $\ast$beta, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a32a9d2f0bfb575b821608a94a3c9b23f}{cblas\+\_\+chemv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, const float $\ast$alpha, const float $\ast$A, int ldA, const float $\ast$x, int incX, const float $\ast$beta, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a17daec2a2fa760f1bb4685ed371b1633}{cblas\+\_\+zhemv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, const double $\ast$alpha, const double $\ast$A, int ldA, const double $\ast$x, int incX, const double $\ast$beta, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_ab645059a4198ed2a3a3a06332d23ec15}{cblas\+\_\+chpmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, const float $\ast$alpha, const float $\ast$Ap, const float $\ast$x, int incX, const float $\ast$beta, float $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_a36a0ea6bbbe1ce8beb70601aaef62401}{cblas\+\_\+zhpmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, const double $\ast$alpha, const double $\ast$Ap, const double $\ast$x, int incX, const double $\ast$beta, double $\ast$y, int incY)
+\item 
+void \mbox{\hyperlink{cblas_8h_ab5d84f531703bacc4360f81cf0f37690}{cblas\+\_\+stbsv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, int k, const float $\ast$A, int lda, float $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a4b1a0d7bf6952382c317fafebcddfa51}{cblas\+\_\+dtbsv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, int k, const double $\ast$A, int lda, double $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a98c2a01720725ada93a860662b3822e8}{cblas\+\_\+ctbsv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, int k, const float $\ast$A, int lda, float $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_ab821d8b0188b37aa8439179092c4c342}{cblas\+\_\+ztbsv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, int k, const double $\ast$A, int lda, double $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_aad152279caf35f2cb36373ab6e2ca3a2}{cblas\+\_\+strsv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const float $\ast$A, int lda, float $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_aa8a8e8adb171d696605373b9fe3b1339}{cblas\+\_\+dtrsv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const double $\ast$A, int lda, double $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_aa3b3eabdb4c0978c748584c308fdb4b9}{cblas\+\_\+ctrsv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const float $\ast$A, int lda, float $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_ad0aff6150360963ff70fe8f165de5e07}{cblas\+\_\+ztrsv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const double $\ast$A, int lda, double $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_ac2f2410d564b7192e47b40e211e71f7c}{cblas\+\_\+stpsv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const float $\ast$A, float $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_aa60899cae179c6d15bb6af29c833c45c}{cblas\+\_\+dtpsv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const double $\ast$A, double $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a945a46754f55d389a7eb1de5a127b625}{cblas\+\_\+ctpsv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const float $\ast$A, float $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a41f61aac9e3c6a965ddf0c4454a21c58}{cblas\+\_\+ztpsv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const double $\ast$A, double $\ast$X, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a43a7c28c20ab6cee30ef992f1669d7ba}{cblas\+\_\+stbmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, int k, const float $\ast$A, int lda, float $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a352fa38238af6e79c1977db954dfb797}{cblas\+\_\+dtbmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, int k, const double $\ast$A, int lda, double $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a6dc20ad03d8b0b895fdc8d3673f8097e}{cblas\+\_\+ctbmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, int k, const float $\ast$A, int lda, float $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a76d0eb0455d43f0ee2ec6a7bbc4e9f44}{cblas\+\_\+ztbmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int N, int k, const double $\ast$A, int lda, double $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a92612deb61b8b775419b584361728725}{cblas\+\_\+strmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const float $\ast$A, int lda, float $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_ab56cfc981b81f3551796c87b714bf294}{cblas\+\_\+dtrmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const double $\ast$A, int lda, double $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_ab022ec6faf451dcf6f65b290b1a3bcec}{cblas\+\_\+ctrmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const float $\ast$A, int lda, float $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a27acf52c56da2b71683b3fbd904c82e4}{cblas\+\_\+ztrmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int N, const double $\ast$A, int lda, double $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_aa7f4ef08d6ccab36278dba4704a152ac}{cblas\+\_\+stpmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const float $\ast$Ap, float $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_ad29ccc2c7198d4d945c8200867fbb813}{cblas\+\_\+dtpmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const double $\ast$Ap, double $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a2f38446decde78b3f88552bf5e72833e}{cblas\+\_\+ctpmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int n, const float $\ast$Ap, float $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a33a37270e792b4e6866b89c38f357583}{cblas\+\_\+ztpmv}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int N, const double $\ast$Ap, double $\ast$x, int incX)
+\item 
+void \mbox{\hyperlink{cblas_8h_a67e6faa0c944bbcea376342e3c097ef1}{cblas\+\_\+sger}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, int m, int n, float alpha, const float $\ast$X, int incX, const float $\ast$Y, int incY, float $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_acfb89c0add4f256c35743c830a6f6aa5}{cblas\+\_\+dger}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, int m, int n, double alpha, const double $\ast$X, int incX, const double $\ast$Y, int incY, double $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_aa15e9d7e5468f440382350c3c6dba7c9}{cblas\+\_\+cgeru}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, int m, int n, const float $\ast$alpha, const float $\ast$X, int incX, const float $\ast$Y, int incY, float $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_aa0b8631f9ea52f2c44fdb3e049cca1ee}{cblas\+\_\+cgerc}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, int m, int n, const float $\ast$alpha, const float $\ast$X, int incX, const float $\ast$Y, int incY, float $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_aa645e1bdef2ec0bd34a836d8a9094711}{cblas\+\_\+zgeru}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, int m, int n, const double $\ast$alpha, const double $\ast$X, int incX, const double $\ast$Y, int incY, double $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_abaa51b8f1904e4ec698dda710bea7914}{cblas\+\_\+zgerc}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, int m, int n, const double $\ast$alpha, const double $\ast$X, int incX, const double $\ast$Y, int incY, double $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_a92df1b25c691d6f88a962af34c1559d6}{cblas\+\_\+ssyr}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, float alpha, const float $\ast$X, int incX, float $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_a9d9d9e1d909239b67b3cfbd3871974b4}{cblas\+\_\+dsyr}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, double alpha, const double $\ast$X, int incX, double $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_a0146f13febcb6cc3c2623cb473480394}{cblas\+\_\+sspr}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, float alpha, const float $\ast$X, int incX, float $\ast$A)
+\item 
+void \mbox{\hyperlink{cblas_8h_a0a9b03d0794ea3f63102cc880f41dd8b}{cblas\+\_\+dspr}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, double alpha, const double $\ast$X, int incX, double $\ast$A)
+\item 
+void \mbox{\hyperlink{cblas_8h_a16c2dfa30ad65e417c954890b91efdff}{cblas\+\_\+cher}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, float alpha, const float $\ast$X, int incX, float $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_a0bcf7a3f5a4b867852aa0a7f667f59d0}{cblas\+\_\+zher}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, double alpha, const double $\ast$X, int incX, double $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_a78857de508303c8e7e873e48b25b90bd}{cblas\+\_\+chpr}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, float alpha, const float $\ast$X, int incX, float $\ast$A)
+\item 
+void \mbox{\hyperlink{cblas_8h_af1ea1b4ce3310125c2383af6c913f3bd}{cblas\+\_\+zhpr}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, double alpha, const double $\ast$X, int incX, double $\ast$A)
+\item 
+void \mbox{\hyperlink{cblas_8h_ab216a471fcf6417046bbc0818b5911ba}{cblas\+\_\+sspr2}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, float alpha, const float $\ast$X, int incX, const float $\ast$Y, int incY, float $\ast$A)
+\item 
+void \mbox{\hyperlink{cblas_8h_ab1c8975f7c4a72b2a86ba2dc6cc434d8}{cblas\+\_\+dspr2}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, double alpha, const double $\ast$X, int incX, const double $\ast$Y, int incY, double $\ast$A)
+\item 
+void \mbox{\hyperlink{cblas_8h_a15fb2bc4b43f73340e3e4a8a602c58d4}{cblas\+\_\+ssyr2}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, float alpha, const float $\ast$X, int incX, const float $\ast$Y, int incY, float $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_ae460e1cae610941059fa8eb167255094}{cblas\+\_\+dsyr2}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, double alpha, const double $\ast$X, int incX, const double $\ast$Y, int incY, double $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_a821776f2066999d38e5d8d4bfed000c1}{cblas\+\_\+cher2}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, const float $\ast$alpha, const float $\ast$X, int incX, const float $\ast$Y, int incY, float $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_a323361a6c2b500864e9bdff632692824}{cblas\+\_\+zher2}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, const double $\ast$alpha, const double $\ast$X, int incX, const double $\ast$Y, int incY, double $\ast$A, int lda)
+\item 
+void \mbox{\hyperlink{cblas_8h_ab3fd3cd82ae964d4683694693a5e67cb}{cblas\+\_\+chpr2}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, const float $\ast$alpha, const float $\ast$X, int incX, const float $\ast$Y, int incY, float $\ast$A)
+\item 
+void \mbox{\hyperlink{cblas_8h_ad4e9a1ce02439060951e7b4577b884bb}{cblas\+\_\+zhpr2}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int n, const double $\ast$alpha, const double $\ast$X, int incX, const double $\ast$Y, int incY, double $\ast$A)
+\item 
+void \mbox{\hyperlink{cblas_8h_adb0abff65bfd61543789aac22aed9de9}{cblas\+\_\+sgemm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transB, int m, int n, int k, float alpha, const float $\ast$A, int ldA, const float $\ast$B, int ldB, float beta, float $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a3be8a52442a5c9425509ba167bf24680}{cblas\+\_\+dgemm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transB, int m, int n, int k, double alpha, const double $\ast$A, int ldA, const double $\ast$B, int ldB, double beta, double $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a92aad2328ac4362ce95832e34a407a76}{cblas\+\_\+cgemm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transB, int m, int n, int k, const float $\ast$alpha, const float $\ast$A, int ldA, const float $\ast$B, int ldB, const float $\ast$beta, float $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a633b787dd200b3f04da88b6c01127a42}{cblas\+\_\+zgemm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transB, int m, int n, int k, const double $\ast$alpha, const double $\ast$A, int ldA, const double $\ast$B, int ldB, const double $\ast$beta, double $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a0994b443224c8cb4fce7332ea2b0b64d}{cblas\+\_\+chemm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int m, int n, const float $\ast$alpha, const float $\ast$A, int ldA, const float $\ast$B, int ldB, const float $\ast$beta, float $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a30efa3ff66c2c8901e2f8f07fe5173fc}{cblas\+\_\+zhemm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int m, int n, const double $\ast$alpha, const double $\ast$A, int ldA, const double $\ast$B, int ldB, const double $\ast$beta, double $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a9ae279fa4385747b84a2a003c9a16d30}{cblas\+\_\+cherk}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int n, int k, float alpha, const float $\ast$A, int ldA, float beta, float $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a280ec1e240772e35f08149213355b200}{cblas\+\_\+zherk}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int n, int k, double alpha, const double $\ast$A, int ldA, double beta, double $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_ab45b96dc6337a7bf25c98edf81873e07}{cblas\+\_\+cher2k}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int n, int k, const float $\ast$alpha, const float $\ast$A, int ldA, const float $\ast$B, int ldB, float beta, float $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a38d3d2d802dd2b27b1bc71dc323a69a0}{cblas\+\_\+zher2k}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int n, int k, const double $\ast$alpha, const double $\ast$A, int ldA, const double $\ast$B, int ldB, double beta, double $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_ab7254e7984e34c2fdd200a0f30b9a6b1}{cblas\+\_\+ssymm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int m, int n, float alpha, const float $\ast$A, int ldA, const float $\ast$B, int ldB, float beta, float $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_ad43fe927162c99bdd828a36ffc7ea566}{cblas\+\_\+dsymm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int m, int n, double alpha, const double $\ast$A, int ldA, const double $\ast$B, int ldB, double beta, double $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a528a402e132f612ef9722fa4861f063e}{cblas\+\_\+csymm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int m, int n, const float $\ast$alpha, const float $\ast$A, int ldA, const float $\ast$B, int ldB, const float $\ast$beta, float $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_add8f3fd75b593864d31b07b660b22cd0}{cblas\+\_\+zsymm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, int m, int n, const double $\ast$alpha, const double $\ast$A, int ldA, const double $\ast$B, int ldB, const double $\ast$beta, double $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a087e88e01550e2d1f2f9724a2bb87123}{cblas\+\_\+ssyrk}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int n, int k, float alpha, const float $\ast$A, int ldA, float beta, float $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_af3dcc219ba2bb4265e26db773bb7c562}{cblas\+\_\+dsyrk}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int n, int k, double alpha, const double $\ast$A, int ldA, double beta, double $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a76c13ab91caec92e47c82fb6c7b82824}{cblas\+\_\+csyrk}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int n, int k, const float $\ast$alpha, const float $\ast$A, int ldA, const float $\ast$beta, float $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a8c7df385ac7d82fd63077ae05e2fd3f4}{cblas\+\_\+zsyrk}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int n, int k, const double $\ast$alpha, const double $\ast$A, int ldA, const double $\ast$beta, double $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_ac0ad28b661fef2f1301cf731be37a22c}{cblas\+\_\+ssyr2k}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int n, int k, float alpha, const float $\ast$A, int ldA, const float $\ast$B, int ldB, float beta, float $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a9d58ba26009cca92b57ff199c79c1dfa}{cblas\+\_\+dsyr2k}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int n, int k, double alpha, const double $\ast$A, int ldA, const double $\ast$B, int ldB, double beta, double $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a64ac2e87bf038195da5e13365b6c67cc}{cblas\+\_\+csyr2k}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int n, int k, const float $\ast$alpha, const float $\ast$A, int ldA, const float $\ast$B, int ldB, const float $\ast$beta, float $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_a0f1e5a5614a639b04305d50c53dc247f}{cblas\+\_\+zsyr2k}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} trans, int n, int k, const double $\ast$alpha, const double $\ast$A, int ldA, const double $\ast$B, int ldB, const double $\ast$beta, double $\ast$C, int ldC)
+\item 
+void \mbox{\hyperlink{cblas_8h_af298e36765eba5536d75e3bb765ad61c}{cblas\+\_\+strmm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int m, int n, float alpha, const float $\ast$A, int ldA, float $\ast$B, int ldB)
+\item 
+void \mbox{\hyperlink{cblas_8h_abd34bd322d6de36e33d9473ebefcbac7}{cblas\+\_\+dtrmm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int m, int n, double alpha, const double $\ast$A, int ldA, double $\ast$B, int ldB)
+\item 
+void \mbox{\hyperlink{cblas_8h_a840c09e521e92a9738cbf7eaed5ee784}{cblas\+\_\+ctrmm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int m, int n, const float $\ast$alpha, const float $\ast$A, int ldA, float $\ast$B, int ldB)
+\item 
+void \mbox{\hyperlink{cblas_8h_a0de3bd55bb4ddd48026eaa2e8b5bd6b8}{cblas\+\_\+ztrmm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int m, int n, const double $\ast$alpha, const double $\ast$A, int ldA, double $\ast$B, int ldB)
+\item 
+void \mbox{\hyperlink{cblas_8h_a968771c48c9cf567cc13f7ff49b23aad}{cblas\+\_\+strsm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int m, int n, float alpha, const float $\ast$A, int ldA, float $\ast$B, int ldB)
+\item 
+void \mbox{\hyperlink{cblas_8h_ab00122ffde79c595c0a6962743c657e3}{cblas\+\_\+dtrsm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int m, int n, double alpha, const double $\ast$A, int ldA, double $\ast$B, int ldB)
+\item 
+void \mbox{\hyperlink{cblas_8h_a6eb231418cf49b9f9379b6351cbaeb19}{cblas\+\_\+ctrsm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int m, int n, const float $\ast$alpha, const float $\ast$A, int ldA, float $\ast$B, int ldB)
+\item 
+void \mbox{\hyperlink{cblas_8h_a372e5a311d5d23cc77332a3b1ebfca37}{cblas\+\_\+ztrsm}} (enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}} order, enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}} side, enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}} up\+Lo, enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}} transA, enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}} diag, int m, int n, const double $\ast$alpha, const double $\ast$A, int ldA, double $\ast$B, int ldB)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{cblas_8h_a0cc6c9831e05958bc66dc000e02f33b9}\label{cblas_8h_a0cc6c9831e05958bc66dc000e02f33b9}} 
+\index{cblas.h@{cblas.h}!CBLAS\_INDEX@{CBLAS\_INDEX}}
+\index{CBLAS\_INDEX@{CBLAS\_INDEX}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{CBLAS\_INDEX}{CBLAS\_INDEX}}
+{\footnotesize\ttfamily \#define CBLAS\+\_\+\+INDEX~int}
+
+
+
+Definition at line \mbox{\hyperlink{cblas_8h_source_l00014}{14}} of file \mbox{\hyperlink{cblas_8h_source}{cblas.\+h}}.
+
+\mbox{\Hypertarget{cblas_8h_ac28e6243e4c6cd0b876f1c60a7c228c1}\label{cblas_8h_ac28e6243e4c6cd0b876f1c60a7c228c1}} 
+\index{cblas.h@{cblas.h}!CBLAS\_INT@{CBLAS\_INT}}
+\index{CBLAS\_INT@{CBLAS\_INT}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{CBLAS\_INT}{CBLAS\_INT}}
+{\footnotesize\ttfamily \#define CBLAS\+\_\+\+INT~int}
+
+
+
+Definition at line \mbox{\hyperlink{cblas_8h_source_l00010}{10}} of file \mbox{\hyperlink{cblas_8h_source}{cblas.\+h}}.
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}\label{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}} 
+\index{cblas.h@{cblas.h}!CBLAS\_DIAG@{CBLAS\_DIAG}}
+\index{CBLAS\_DIAG@{CBLAS\_DIAG}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{CBLAS\_DIAG}{CBLAS\_DIAG}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CblasNonUnit@{CblasNonUnit}!cblas.h@{cblas.h}}\index{cblas.h@{cblas.h}!CblasNonUnit@{CblasNonUnit}}}\mbox{\Hypertarget{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3a82bfd6c5bb4a1b1361fc5d661a6c7a38}\label{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3a82bfd6c5bb4a1b1361fc5d661a6c7a38}} 
+Cblas\+Non\+Unit&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CblasUnit@{CblasUnit}!cblas.h@{cblas.h}}\index{cblas.h@{cblas.h}!CblasUnit@{CblasUnit}}}\mbox{\Hypertarget{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3a1fe5b22dd62df9d1b86e27b006b349a0}\label{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3a1fe5b22dd62df9d1b86e27b006b349a0}} 
+Cblas\+Unit&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{cblas_8h_source_l00029}{29}} of file \mbox{\hyperlink{cblas_8h_source}{cblas.\+h}}.
+
+\mbox{\Hypertarget{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}\label{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}} 
+\index{cblas.h@{cblas.h}!CBLAS\_ORDER@{CBLAS\_ORDER}}
+\index{CBLAS\_ORDER@{CBLAS\_ORDER}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{CBLAS\_ORDER}{CBLAS\_ORDER}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CblasRowMajor@{CblasRowMajor}!cblas.h@{cblas.h}}\index{cblas.h@{cblas.h}!CblasRowMajor@{CblasRowMajor}}}\mbox{\Hypertarget{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6feac02c7e388901d8d297241db643467721}\label{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6feac02c7e388901d8d297241db643467721}} 
+Cblas\+Row\+Major&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CblasColMajor@{CblasColMajor}!cblas.h@{cblas.h}}\index{cblas.h@{cblas.h}!CblasColMajor@{CblasColMajor}}}\mbox{\Hypertarget{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fea36cca34e7a4808c97e4d234193dee127}\label{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fea36cca34e7a4808c97e4d234193dee127}} 
+Cblas\+Col\+Major&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{cblas_8h_source_l00021}{21}} of file \mbox{\hyperlink{cblas_8h_source}{cblas.\+h}}.
+
+\mbox{\Hypertarget{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}\label{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}} 
+\index{cblas.h@{cblas.h}!CBLAS\_SIDE@{CBLAS\_SIDE}}
+\index{CBLAS\_SIDE@{CBLAS\_SIDE}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{CBLAS\_SIDE}{CBLAS\_SIDE}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CblasLeft@{CblasLeft}!cblas.h@{cblas.h}}\index{cblas.h@{cblas.h}!CblasLeft@{CblasLeft}}}\mbox{\Hypertarget{cblas_8h_a4eba77400344ce7896faccf423c7fd5daa40b040f8f2a954ad3f3b5f1b4573793}\label{cblas_8h_a4eba77400344ce7896faccf423c7fd5daa40b040f8f2a954ad3f3b5f1b4573793}} 
+Cblas\+Left&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CblasRight@{CblasRight}!cblas.h@{cblas.h}}\index{cblas.h@{cblas.h}!CblasRight@{CblasRight}}}\mbox{\Hypertarget{cblas_8h_a4eba77400344ce7896faccf423c7fd5da69a5fc61edf60c56342e4baa15809c30}\label{cblas_8h_a4eba77400344ce7896faccf423c7fd5da69a5fc61edf60c56342e4baa15809c30}} 
+Cblas\+Right&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{cblas_8h_source_l00030}{30}} of file \mbox{\hyperlink{cblas_8h_source}{cblas.\+h}}.
+
+\mbox{\Hypertarget{cblas_8h_a44dfaddb823648755b110dbad849c5a9}\label{cblas_8h_a44dfaddb823648755b110dbad849c5a9}} 
+\index{cblas.h@{cblas.h}!CBLAS\_TRANSPOSE@{CBLAS\_TRANSPOSE}}
+\index{CBLAS\_TRANSPOSE@{CBLAS\_TRANSPOSE}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{CBLAS\_TRANSPOSE}{CBLAS\_TRANSPOSE}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CblasNoTrans@{CblasNoTrans}!cblas.h@{cblas.h}}\index{cblas.h@{cblas.h}!CblasNoTrans@{CblasNoTrans}}}\mbox{\Hypertarget{cblas_8h_a44dfaddb823648755b110dbad849c5a9a078792a66863859407a99ddb06312e79}\label{cblas_8h_a44dfaddb823648755b110dbad849c5a9a078792a66863859407a99ddb06312e79}} 
+Cblas\+No\+Trans&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CblasTrans@{CblasTrans}!cblas.h@{cblas.h}}\index{cblas.h@{cblas.h}!CblasTrans@{CblasTrans}}}\mbox{\Hypertarget{cblas_8h_a44dfaddb823648755b110dbad849c5a9a267e1fb6eb583ddefd2923d95a944ec8}\label{cblas_8h_a44dfaddb823648755b110dbad849c5a9a267e1fb6eb583ddefd2923d95a944ec8}} 
+Cblas\+Trans&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CblasConjTrans@{CblasConjTrans}!cblas.h@{cblas.h}}\index{cblas.h@{cblas.h}!CblasConjTrans@{CblasConjTrans}}}\mbox{\Hypertarget{cblas_8h_a44dfaddb823648755b110dbad849c5a9a9f6c122ea555e68fef871c94bd58342f}\label{cblas_8h_a44dfaddb823648755b110dbad849c5a9a9f6c122ea555e68fef871c94bd58342f}} 
+Cblas\+Conj\+Trans&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CblasConjNoTrans@{CblasConjNoTrans}!cblas.h@{cblas.h}}\index{cblas.h@{cblas.h}!CblasConjNoTrans@{CblasConjNoTrans}}}\mbox{\Hypertarget{cblas_8h_a44dfaddb823648755b110dbad849c5a9a99355a2fe91017a188e531dd71d52f82}\label{cblas_8h_a44dfaddb823648755b110dbad849c5a9a99355a2fe91017a188e531dd71d52f82}} 
+Cblas\+Conj\+No\+Trans&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{cblas_8h_source_l00022}{22}} of file \mbox{\hyperlink{cblas_8h_source}{cblas.\+h}}.
+
+\mbox{\Hypertarget{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}\label{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}} 
+\index{cblas.h@{cblas.h}!CBLAS\_UPLO@{CBLAS\_UPLO}}
+\index{CBLAS\_UPLO@{CBLAS\_UPLO}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{CBLAS\_UPLO}{CBLAS\_UPLO}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CblasUpper@{CblasUpper}!cblas.h@{cblas.h}}\index{cblas.h@{cblas.h}!CblasUpper@{CblasUpper}}}\mbox{\Hypertarget{cblas_8h_a1e6fa56583dce4a18e619688ff08892faca9d16a7c20129fcb9b5a9c8ab90b813}\label{cblas_8h_a1e6fa56583dce4a18e619688ff08892faca9d16a7c20129fcb9b5a9c8ab90b813}} 
+Cblas\+Upper&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CblasLower@{CblasLower}!cblas.h@{cblas.h}}\index{cblas.h@{cblas.h}!CblasLower@{CblasLower}}}\mbox{\Hypertarget{cblas_8h_a1e6fa56583dce4a18e619688ff08892fa68d86f377636767065ef016b13801c47}\label{cblas_8h_a1e6fa56583dce4a18e619688ff08892fa68d86f377636767065ef016b13801c47}} 
+Cblas\+Lower&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{cblas_8h_source_l00028}{28}} of file \mbox{\hyperlink{cblas_8h_source}{cblas.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{cblas_8h_a73cbe6354a384e1e34bf8e4b51be9739}\label{cblas_8h_a73cbe6354a384e1e34bf8e4b51be9739}} 
+\index{cblas.h@{cblas.h}!cblas\_caxpy@{cblas\_caxpy}}
+\index{cblas\_caxpy@{cblas\_caxpy}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_caxpy()}{cblas\_caxpy()}}
+{\footnotesize\ttfamily void cblas\+\_\+caxpy (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ae1d2bc5a38e683face8b61bc1c5a0565}\label{cblas_8h_ae1d2bc5a38e683face8b61bc1c5a0565}} 
+\index{cblas.h@{cblas.h}!cblas\_ccopy@{cblas\_ccopy}}
+\index{cblas\_ccopy@{cblas\_ccopy}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ccopy()}{cblas\_ccopy()}}
+{\footnotesize\ttfamily void cblas\+\_\+ccopy (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_af147f192db5ff8c0dfbd660b02f0d82b}\label{cblas_8h_af147f192db5ff8c0dfbd660b02f0d82b}} 
+\index{cblas.h@{cblas.h}!cblas\_cdotc\_sub@{cblas\_cdotc\_sub}}
+\index{cblas\_cdotc\_sub@{cblas\_cdotc\_sub}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cdotc\_sub()}{cblas\_cdotc\_sub()}}
+{\footnotesize\ttfamily void cblas\+\_\+cdotc\+\_\+sub (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{y,  }\item[{int}]{incY,  }\item[{float $\ast$}]{result }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a168f1efe1fb0246b072bf2c0cccaee46}\label{cblas_8h_a168f1efe1fb0246b072bf2c0cccaee46}} 
+\index{cblas.h@{cblas.h}!cblas\_cdotu\_sub@{cblas\_cdotu\_sub}}
+\index{cblas\_cdotu\_sub@{cblas\_cdotu\_sub}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cdotu\_sub()}{cblas\_cdotu\_sub()}}
+{\footnotesize\ttfamily void cblas\+\_\+cdotu\+\_\+sub (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{y,  }\item[{int}]{incY,  }\item[{float $\ast$}]{result }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aa55693b0445330c28297a65567f5f17e}\label{cblas_8h_aa55693b0445330c28297a65567f5f17e}} 
+\index{cblas.h@{cblas.h}!cblas\_cgbmv@{cblas\_cgbmv}}
+\index{cblas\_cgbmv@{cblas\_cgbmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cgbmv()}{cblas\_cgbmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+cgbmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{int}]{kl,  }\item[{int}]{ku,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{beta,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a92aad2328ac4362ce95832e34a407a76}\label{cblas_8h_a92aad2328ac4362ce95832e34a407a76}} 
+\index{cblas.h@{cblas.h}!cblas\_cgemm@{cblas\_cgemm}}
+\index{cblas\_cgemm@{cblas\_cgemm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cgemm()}{cblas\_cgemm()}}
+{\footnotesize\ttfamily void cblas\+\_\+cgemm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transB,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{const float $\ast$}]{beta,  }\item[{float $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a2cde571d7978ec8f37424929ee2c4bb8}\label{cblas_8h_a2cde571d7978ec8f37424929ee2c4bb8}} 
+\index{cblas.h@{cblas.h}!cblas\_cgemv@{cblas\_cgemv}}
+\index{cblas\_cgemv@{cblas\_cgemv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cgemv()}{cblas\_cgemv()}}
+{\footnotesize\ttfamily void cblas\+\_\+cgemv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{beta,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aa0b8631f9ea52f2c44fdb3e049cca1ee}\label{cblas_8h_aa0b8631f9ea52f2c44fdb3e049cca1ee}} 
+\index{cblas.h@{cblas.h}!cblas\_cgerc@{cblas\_cgerc}}
+\index{cblas\_cgerc@{cblas\_cgerc}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cgerc()}{cblas\_cgerc()}}
+{\footnotesize\ttfamily void cblas\+\_\+cgerc (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{float $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aa15e9d7e5468f440382350c3c6dba7c9}\label{cblas_8h_aa15e9d7e5468f440382350c3c6dba7c9}} 
+\index{cblas.h@{cblas.h}!cblas\_cgeru@{cblas\_cgeru}}
+\index{cblas\_cgeru@{cblas\_cgeru}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cgeru()}{cblas\_cgeru()}}
+{\footnotesize\ttfamily void cblas\+\_\+cgeru (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{float $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a19acb1fa148514d91fb398bdd6b933d9}\label{cblas_8h_a19acb1fa148514d91fb398bdd6b933d9}} 
+\index{cblas.h@{cblas.h}!cblas\_chbmv@{cblas\_chbmv}}
+\index{cblas\_chbmv@{cblas\_chbmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_chbmv()}{cblas\_chbmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+chbmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{beta,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a0994b443224c8cb4fce7332ea2b0b64d}\label{cblas_8h_a0994b443224c8cb4fce7332ea2b0b64d}} 
+\index{cblas.h@{cblas.h}!cblas\_chemm@{cblas\_chemm}}
+\index{cblas\_chemm@{cblas\_chemm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_chemm()}{cblas\_chemm()}}
+{\footnotesize\ttfamily void cblas\+\_\+chemm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{const float $\ast$}]{beta,  }\item[{float $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a32a9d2f0bfb575b821608a94a3c9b23f}\label{cblas_8h_a32a9d2f0bfb575b821608a94a3c9b23f}} 
+\index{cblas.h@{cblas.h}!cblas\_chemv@{cblas\_chemv}}
+\index{cblas\_chemv@{cblas\_chemv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_chemv()}{cblas\_chemv()}}
+{\footnotesize\ttfamily void cblas\+\_\+chemv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{beta,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a16c2dfa30ad65e417c954890b91efdff}\label{cblas_8h_a16c2dfa30ad65e417c954890b91efdff}} 
+\index{cblas.h@{cblas.h}!cblas\_cher@{cblas\_cher}}
+\index{cblas\_cher@{cblas\_cher}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cher()}{cblas\_cher()}}
+{\footnotesize\ttfamily void cblas\+\_\+cher (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{float $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a821776f2066999d38e5d8d4bfed000c1}\label{cblas_8h_a821776f2066999d38e5d8d4bfed000c1}} 
+\index{cblas.h@{cblas.h}!cblas\_cher2@{cblas\_cher2}}
+\index{cblas\_cher2@{cblas\_cher2}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cher2()}{cblas\_cher2()}}
+{\footnotesize\ttfamily void cblas\+\_\+cher2 (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{float $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab45b96dc6337a7bf25c98edf81873e07}\label{cblas_8h_ab45b96dc6337a7bf25c98edf81873e07}} 
+\index{cblas.h@{cblas.h}!cblas\_cher2k@{cblas\_cher2k}}
+\index{cblas\_cher2k@{cblas\_cher2k}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cher2k()}{cblas\_cher2k()}}
+{\footnotesize\ttfamily void cblas\+\_\+cher2k (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{float}]{beta,  }\item[{float $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a9ae279fa4385747b84a2a003c9a16d30}\label{cblas_8h_a9ae279fa4385747b84a2a003c9a16d30}} 
+\index{cblas.h@{cblas.h}!cblas\_cherk@{cblas\_cherk}}
+\index{cblas\_cherk@{cblas\_cherk}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cherk()}{cblas\_cherk()}}
+{\footnotesize\ttfamily void cblas\+\_\+cherk (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{float}]{beta,  }\item[{float $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab645059a4198ed2a3a3a06332d23ec15}\label{cblas_8h_ab645059a4198ed2a3a3a06332d23ec15}} 
+\index{cblas.h@{cblas.h}!cblas\_chpmv@{cblas\_chpmv}}
+\index{cblas\_chpmv@{cblas\_chpmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_chpmv()}{cblas\_chpmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+chpmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{Ap,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{beta,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a78857de508303c8e7e873e48b25b90bd}\label{cblas_8h_a78857de508303c8e7e873e48b25b90bd}} 
+\index{cblas.h@{cblas.h}!cblas\_chpr@{cblas\_chpr}}
+\index{cblas\_chpr@{cblas\_chpr}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_chpr()}{cblas\_chpr()}}
+{\footnotesize\ttfamily void cblas\+\_\+chpr (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{float $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab3fd3cd82ae964d4683694693a5e67cb}\label{cblas_8h_ab3fd3cd82ae964d4683694693a5e67cb}} 
+\index{cblas.h@{cblas.h}!cblas\_chpr2@{cblas\_chpr2}}
+\index{cblas\_chpr2@{cblas\_chpr2}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_chpr2()}{cblas\_chpr2()}}
+{\footnotesize\ttfamily void cblas\+\_\+chpr2 (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{float $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab090d2dd5c01df7af47450b8f6189d28}\label{cblas_8h_ab090d2dd5c01df7af47450b8f6189d28}} 
+\index{cblas.h@{cblas.h}!cblas\_cscal@{cblas\_cscal}}
+\index{cblas\_cscal@{cblas\_cscal}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cscal()}{cblas\_cscal()}}
+{\footnotesize\ttfamily void cblas\+\_\+cscal (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a746c28ba2457772b38a6d9191e1317a1}\label{cblas_8h_a746c28ba2457772b38a6d9191e1317a1}} 
+\index{cblas.h@{cblas.h}!cblas\_csscal@{cblas\_csscal}}
+\index{cblas\_csscal@{cblas\_csscal}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_csscal()}{cblas\_csscal()}}
+{\footnotesize\ttfamily void cblas\+\_\+csscal (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a0ff61aeaaacd31fd78db2bbdec709716}\label{cblas_8h_a0ff61aeaaacd31fd78db2bbdec709716}} 
+\index{cblas.h@{cblas.h}!cblas\_cswap@{cblas\_cswap}}
+\index{cblas\_cswap@{cblas\_cswap}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_cswap()}{cblas\_cswap()}}
+{\footnotesize\ttfamily void cblas\+\_\+cswap (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a528a402e132f612ef9722fa4861f063e}\label{cblas_8h_a528a402e132f612ef9722fa4861f063e}} 
+\index{cblas.h@{cblas.h}!cblas\_csymm@{cblas\_csymm}}
+\index{cblas\_csymm@{cblas\_csymm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_csymm()}{cblas\_csymm()}}
+{\footnotesize\ttfamily void cblas\+\_\+csymm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{const float $\ast$}]{beta,  }\item[{float $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a64ac2e87bf038195da5e13365b6c67cc}\label{cblas_8h_a64ac2e87bf038195da5e13365b6c67cc}} 
+\index{cblas.h@{cblas.h}!cblas\_csyr2k@{cblas\_csyr2k}}
+\index{cblas\_csyr2k@{cblas\_csyr2k}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_csyr2k()}{cblas\_csyr2k()}}
+{\footnotesize\ttfamily void cblas\+\_\+csyr2k (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{const float $\ast$}]{beta,  }\item[{float $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a76c13ab91caec92e47c82fb6c7b82824}\label{cblas_8h_a76c13ab91caec92e47c82fb6c7b82824}} 
+\index{cblas.h@{cblas.h}!cblas\_csyrk@{cblas\_csyrk}}
+\index{cblas\_csyrk@{cblas\_csyrk}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_csyrk()}{cblas\_csyrk()}}
+{\footnotesize\ttfamily void cblas\+\_\+csyrk (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{beta,  }\item[{float $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a6dc20ad03d8b0b895fdc8d3673f8097e}\label{cblas_8h_a6dc20ad03d8b0b895fdc8d3673f8097e}} 
+\index{cblas.h@{cblas.h}!cblas\_ctbmv@{cblas\_ctbmv}}
+\index{cblas\_ctbmv@{cblas\_ctbmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ctbmv()}{cblas\_ctbmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ctbmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const float $\ast$}]{A,  }\item[{int}]{lda,  }\item[{float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a98c2a01720725ada93a860662b3822e8}\label{cblas_8h_a98c2a01720725ada93a860662b3822e8}} 
+\index{cblas.h@{cblas.h}!cblas\_ctbsv@{cblas\_ctbsv}}
+\index{cblas\_ctbsv@{cblas\_ctbsv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ctbsv()}{cblas\_ctbsv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ctbsv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const float $\ast$}]{A,  }\item[{int}]{lda,  }\item[{float $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a2f38446decde78b3f88552bf5e72833e}\label{cblas_8h_a2f38446decde78b3f88552bf5e72833e}} 
+\index{cblas.h@{cblas.h}!cblas\_ctpmv@{cblas\_ctpmv}}
+\index{cblas\_ctpmv@{cblas\_ctpmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ctpmv()}{cblas\_ctpmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ctpmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const float $\ast$}]{Ap,  }\item[{float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a945a46754f55d389a7eb1de5a127b625}\label{cblas_8h_a945a46754f55d389a7eb1de5a127b625}} 
+\index{cblas.h@{cblas.h}!cblas\_ctpsv@{cblas\_ctpsv}}
+\index{cblas\_ctpsv@{cblas\_ctpsv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ctpsv()}{cblas\_ctpsv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ctpsv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const float $\ast$}]{A,  }\item[{float $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a840c09e521e92a9738cbf7eaed5ee784}\label{cblas_8h_a840c09e521e92a9738cbf7eaed5ee784}} 
+\index{cblas.h@{cblas.h}!cblas\_ctrmm@{cblas\_ctrmm}}
+\index{cblas\_ctrmm@{cblas\_ctrmm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ctrmm()}{cblas\_ctrmm()}}
+{\footnotesize\ttfamily void cblas\+\_\+ctrmm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{float $\ast$}]{B,  }\item[{int}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab022ec6faf451dcf6f65b290b1a3bcec}\label{cblas_8h_ab022ec6faf451dcf6f65b290b1a3bcec}} 
+\index{cblas.h@{cblas.h}!cblas\_ctrmv@{cblas\_ctrmv}}
+\index{cblas\_ctrmv@{cblas\_ctrmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ctrmv()}{cblas\_ctrmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ctrmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const float $\ast$}]{A,  }\item[{int}]{lda,  }\item[{float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a6eb231418cf49b9f9379b6351cbaeb19}\label{cblas_8h_a6eb231418cf49b9f9379b6351cbaeb19}} 
+\index{cblas.h@{cblas.h}!cblas\_ctrsm@{cblas\_ctrsm}}
+\index{cblas\_ctrsm@{cblas\_ctrsm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ctrsm()}{cblas\_ctrsm()}}
+{\footnotesize\ttfamily void cblas\+\_\+ctrsm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const float $\ast$}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{float $\ast$}]{B,  }\item[{int}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aa3b3eabdb4c0978c748584c308fdb4b9}\label{cblas_8h_aa3b3eabdb4c0978c748584c308fdb4b9}} 
+\index{cblas.h@{cblas.h}!cblas\_ctrsv@{cblas\_ctrsv}}
+\index{cblas\_ctrsv@{cblas\_ctrsv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ctrsv()}{cblas\_ctrsv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ctrsv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const float $\ast$}]{A,  }\item[{int}]{lda,  }\item[{float $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a1e1e258b0b3c71f06372bc98d118bf29}\label{cblas_8h_a1e1e258b0b3c71f06372bc98d118bf29}} 
+\index{cblas.h@{cblas.h}!cblas\_dasum@{cblas\_dasum}}
+\index{cblas\_dasum@{cblas\_dasum}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dasum()}{cblas\_dasum()}}
+{\footnotesize\ttfamily double cblas\+\_\+dasum (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_adc6d85ba1ff20ca4d8e7684f2be67c4b}\label{cblas_8h_adc6d85ba1ff20ca4d8e7684f2be67c4b}} 
+\index{cblas.h@{cblas.h}!cblas\_daxpy@{cblas\_daxpy}}
+\index{cblas\_daxpy@{cblas\_daxpy}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_daxpy()}{cblas\_daxpy()}}
+{\footnotesize\ttfamily void cblas\+\_\+daxpy (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a13a045348e81985c373780e6acce1ebb}\label{cblas_8h_a13a045348e81985c373780e6acce1ebb}} 
+\index{cblas.h@{cblas.h}!cblas\_dcopy@{cblas\_dcopy}}
+\index{cblas\_dcopy@{cblas\_dcopy}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dcopy()}{cblas\_dcopy()}}
+{\footnotesize\ttfamily void cblas\+\_\+dcopy (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_add501872652109658f582fc617ad96c7}\label{cblas_8h_add501872652109658f582fc617ad96c7}} 
+\index{cblas.h@{cblas.h}!cblas\_ddot@{cblas\_ddot}}
+\index{cblas\_ddot@{cblas\_ddot}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ddot()}{cblas\_ddot()}}
+{\footnotesize\ttfamily double cblas\+\_\+ddot (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aaa35d90f30f7a24573b77206f9dee120}\label{cblas_8h_aaa35d90f30f7a24573b77206f9dee120}} 
+\index{cblas.h@{cblas.h}!cblas\_dgbmv@{cblas\_dgbmv}}
+\index{cblas\_dgbmv@{cblas\_dgbmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dgbmv()}{cblas\_dgbmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+dgbmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{int}]{kl,  }\item[{int}]{ku,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{double}]{beta,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a3be8a52442a5c9425509ba167bf24680}\label{cblas_8h_a3be8a52442a5c9425509ba167bf24680}} 
+\index{cblas.h@{cblas.h}!cblas\_dgemm@{cblas\_dgemm}}
+\index{cblas\_dgemm@{cblas\_dgemm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dgemm()}{cblas\_dgemm()}}
+{\footnotesize\ttfamily void cblas\+\_\+dgemm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transB,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{double}]{beta,  }\item[{double $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a9ca57589b5dab2242cef3022d56479e9}\label{cblas_8h_a9ca57589b5dab2242cef3022d56479e9}} 
+\index{cblas.h@{cblas.h}!cblas\_dgemv@{cblas\_dgemv}}
+\index{cblas\_dgemv@{cblas\_dgemv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dgemv()}{cblas\_dgemv()}}
+{\footnotesize\ttfamily void cblas\+\_\+dgemv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{double}]{beta,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_acfb89c0add4f256c35743c830a6f6aa5}\label{cblas_8h_acfb89c0add4f256c35743c830a6f6aa5}} 
+\index{cblas.h@{cblas.h}!cblas\_dger@{cblas\_dger}}
+\index{cblas\_dger@{cblas\_dger}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dger()}{cblas\_dger()}}
+{\footnotesize\ttfamily void cblas\+\_\+dger (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{double $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_addd6a5c9aeb18cd5162a90a302acae12}\label{cblas_8h_addd6a5c9aeb18cd5162a90a302acae12}} 
+\index{cblas.h@{cblas.h}!cblas\_dnrm2@{cblas\_dnrm2}}
+\index{cblas\_dnrm2@{cblas\_dnrm2}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dnrm2()}{cblas\_dnrm2()}}
+{\footnotesize\ttfamily double cblas\+\_\+dnrm2 (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a6bf06266a691d6e54cf5491fb1108f8f}\label{cblas_8h_a6bf06266a691d6e54cf5491fb1108f8f}} 
+\index{cblas.h@{cblas.h}!cblas\_drot@{cblas\_drot}}
+\index{cblas\_drot@{cblas\_drot}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_drot()}{cblas\_drot()}}
+{\footnotesize\ttfamily void cblas\+\_\+drot (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{double $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{double}]{c,  }\item[{double}]{s }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ae9c72609641108287193098b5e3016fb}\label{cblas_8h_ae9c72609641108287193098b5e3016fb}} 
+\index{cblas.h@{cblas.h}!cblas\_drotg@{cblas\_drotg}}
+\index{cblas\_drotg@{cblas\_drotg}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_drotg()}{cblas\_drotg()}}
+{\footnotesize\ttfamily void cblas\+\_\+drotg (\begin{DoxyParamCaption}\item[{double $\ast$}]{a,  }\item[{double $\ast$}]{b,  }\item[{double $\ast$}]{c,  }\item[{double $\ast$}]{s }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_af98c7947d76b666a61e79a5f1d217f74}\label{cblas_8h_af98c7947d76b666a61e79a5f1d217f74}} 
+\index{cblas.h@{cblas.h}!cblas\_drotm@{cblas\_drotm}}
+\index{cblas\_drotm@{cblas\_drotm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_drotm()}{cblas\_drotm()}}
+{\footnotesize\ttfamily void cblas\+\_\+drotm (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{double $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{const double $\ast$}]{P }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ace7f55f66fe36bf441bddc7750384da6}\label{cblas_8h_ace7f55f66fe36bf441bddc7750384da6}} 
+\index{cblas.h@{cblas.h}!cblas\_drotmg@{cblas\_drotmg}}
+\index{cblas\_drotmg@{cblas\_drotmg}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_drotmg()}{cblas\_drotmg()}}
+{\footnotesize\ttfamily void cblas\+\_\+drotmg (\begin{DoxyParamCaption}\item[{double $\ast$}]{d1,  }\item[{double $\ast$}]{d2,  }\item[{double $\ast$}]{b1,  }\item[{double $\ast$}]{b2,  }\item[{double $\ast$}]{P }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_accf23e9bfc0712315a0d889e6ac73e8e}\label{cblas_8h_accf23e9bfc0712315a0d889e6ac73e8e}} 
+\index{cblas.h@{cblas.h}!cblas\_dsbmv@{cblas\_dsbmv}}
+\index{cblas\_dsbmv@{cblas\_dsbmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dsbmv()}{cblas\_dsbmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+dsbmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{double}]{beta,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a77395c6c682d2c587abe4b3bee04c021}\label{cblas_8h_a77395c6c682d2c587abe4b3bee04c021}} 
+\index{cblas.h@{cblas.h}!cblas\_dscal@{cblas\_dscal}}
+\index{cblas\_dscal@{cblas\_dscal}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dscal()}{cblas\_dscal()}}
+{\footnotesize\ttfamily void cblas\+\_\+dscal (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a7f2b74e4d13e221f1fd89405053cedb0}\label{cblas_8h_a7f2b74e4d13e221f1fd89405053cedb0}} 
+\index{cblas.h@{cblas.h}!cblas\_dsdot@{cblas\_dsdot}}
+\index{cblas\_dsdot@{cblas\_dsdot}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dsdot()}{cblas\_dsdot()}}
+{\footnotesize\ttfamily double cblas\+\_\+dsdot (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a2835cbd7d5019c574d7feaffb34d799a}\label{cblas_8h_a2835cbd7d5019c574d7feaffb34d799a}} 
+\index{cblas.h@{cblas.h}!cblas\_dspmv@{cblas\_dspmv}}
+\index{cblas\_dspmv@{cblas\_dspmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dspmv()}{cblas\_dspmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+dspmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{Ap,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{double}]{beta,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a0a9b03d0794ea3f63102cc880f41dd8b}\label{cblas_8h_a0a9b03d0794ea3f63102cc880f41dd8b}} 
+\index{cblas.h@{cblas.h}!cblas\_dspr@{cblas\_dspr}}
+\index{cblas\_dspr@{cblas\_dspr}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dspr()}{cblas\_dspr()}}
+{\footnotesize\ttfamily void cblas\+\_\+dspr (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{double $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab1c8975f7c4a72b2a86ba2dc6cc434d8}\label{cblas_8h_ab1c8975f7c4a72b2a86ba2dc6cc434d8}} 
+\index{cblas.h@{cblas.h}!cblas\_dspr2@{cblas\_dspr2}}
+\index{cblas\_dspr2@{cblas\_dspr2}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dspr2()}{cblas\_dspr2()}}
+{\footnotesize\ttfamily void cblas\+\_\+dspr2 (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{double $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a364efa4c7c9fbf611f20b7b4e2718e9b}\label{cblas_8h_a364efa4c7c9fbf611f20b7b4e2718e9b}} 
+\index{cblas.h@{cblas.h}!cblas\_dswap@{cblas\_dswap}}
+\index{cblas\_dswap@{cblas\_dswap}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dswap()}{cblas\_dswap()}}
+{\footnotesize\ttfamily void cblas\+\_\+dswap (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ad43fe927162c99bdd828a36ffc7ea566}\label{cblas_8h_ad43fe927162c99bdd828a36ffc7ea566}} 
+\index{cblas.h@{cblas.h}!cblas\_dsymm@{cblas\_dsymm}}
+\index{cblas\_dsymm@{cblas\_dsymm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dsymm()}{cblas\_dsymm()}}
+{\footnotesize\ttfamily void cblas\+\_\+dsymm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{double}]{beta,  }\item[{double $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a56ca35d81f5363bf1081db01ef9e8a4a}\label{cblas_8h_a56ca35d81f5363bf1081db01ef9e8a4a}} 
+\index{cblas.h@{cblas.h}!cblas\_dsymv@{cblas\_dsymv}}
+\index{cblas\_dsymv@{cblas\_dsymv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dsymv()}{cblas\_dsymv()}}
+{\footnotesize\ttfamily void cblas\+\_\+dsymv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{double}]{beta,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a9d9d9e1d909239b67b3cfbd3871974b4}\label{cblas_8h_a9d9d9e1d909239b67b3cfbd3871974b4}} 
+\index{cblas.h@{cblas.h}!cblas\_dsyr@{cblas\_dsyr}}
+\index{cblas\_dsyr@{cblas\_dsyr}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dsyr()}{cblas\_dsyr()}}
+{\footnotesize\ttfamily void cblas\+\_\+dsyr (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{double $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ae460e1cae610941059fa8eb167255094}\label{cblas_8h_ae460e1cae610941059fa8eb167255094}} 
+\index{cblas.h@{cblas.h}!cblas\_dsyr2@{cblas\_dsyr2}}
+\index{cblas\_dsyr2@{cblas\_dsyr2}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dsyr2()}{cblas\_dsyr2()}}
+{\footnotesize\ttfamily void cblas\+\_\+dsyr2 (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{double $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a9d58ba26009cca92b57ff199c79c1dfa}\label{cblas_8h_a9d58ba26009cca92b57ff199c79c1dfa}} 
+\index{cblas.h@{cblas.h}!cblas\_dsyr2k@{cblas\_dsyr2k}}
+\index{cblas\_dsyr2k@{cblas\_dsyr2k}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dsyr2k()}{cblas\_dsyr2k()}}
+{\footnotesize\ttfamily void cblas\+\_\+dsyr2k (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{double}]{beta,  }\item[{double $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_af3dcc219ba2bb4265e26db773bb7c562}\label{cblas_8h_af3dcc219ba2bb4265e26db773bb7c562}} 
+\index{cblas.h@{cblas.h}!cblas\_dsyrk@{cblas\_dsyrk}}
+\index{cblas\_dsyrk@{cblas\_dsyrk}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dsyrk()}{cblas\_dsyrk()}}
+{\footnotesize\ttfamily void cblas\+\_\+dsyrk (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{double}]{beta,  }\item[{double $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a352fa38238af6e79c1977db954dfb797}\label{cblas_8h_a352fa38238af6e79c1977db954dfb797}} 
+\index{cblas.h@{cblas.h}!cblas\_dtbmv@{cblas\_dtbmv}}
+\index{cblas\_dtbmv@{cblas\_dtbmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dtbmv()}{cblas\_dtbmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+dtbmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const double $\ast$}]{A,  }\item[{int}]{lda,  }\item[{double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a4b1a0d7bf6952382c317fafebcddfa51}\label{cblas_8h_a4b1a0d7bf6952382c317fafebcddfa51}} 
+\index{cblas.h@{cblas.h}!cblas\_dtbsv@{cblas\_dtbsv}}
+\index{cblas\_dtbsv@{cblas\_dtbsv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dtbsv()}{cblas\_dtbsv()}}
+{\footnotesize\ttfamily void cblas\+\_\+dtbsv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const double $\ast$}]{A,  }\item[{int}]{lda,  }\item[{double $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ad29ccc2c7198d4d945c8200867fbb813}\label{cblas_8h_ad29ccc2c7198d4d945c8200867fbb813}} 
+\index{cblas.h@{cblas.h}!cblas\_dtpmv@{cblas\_dtpmv}}
+\index{cblas\_dtpmv@{cblas\_dtpmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dtpmv()}{cblas\_dtpmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+dtpmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const double $\ast$}]{Ap,  }\item[{double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aa60899cae179c6d15bb6af29c833c45c}\label{cblas_8h_aa60899cae179c6d15bb6af29c833c45c}} 
+\index{cblas.h@{cblas.h}!cblas\_dtpsv@{cblas\_dtpsv}}
+\index{cblas\_dtpsv@{cblas\_dtpsv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dtpsv()}{cblas\_dtpsv()}}
+{\footnotesize\ttfamily void cblas\+\_\+dtpsv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const double $\ast$}]{A,  }\item[{double $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_abd34bd322d6de36e33d9473ebefcbac7}\label{cblas_8h_abd34bd322d6de36e33d9473ebefcbac7}} 
+\index{cblas.h@{cblas.h}!cblas\_dtrmm@{cblas\_dtrmm}}
+\index{cblas\_dtrmm@{cblas\_dtrmm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dtrmm()}{cblas\_dtrmm()}}
+{\footnotesize\ttfamily void cblas\+\_\+dtrmm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{double $\ast$}]{B,  }\item[{int}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab56cfc981b81f3551796c87b714bf294}\label{cblas_8h_ab56cfc981b81f3551796c87b714bf294}} 
+\index{cblas.h@{cblas.h}!cblas\_dtrmv@{cblas\_dtrmv}}
+\index{cblas\_dtrmv@{cblas\_dtrmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dtrmv()}{cblas\_dtrmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+dtrmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const double $\ast$}]{A,  }\item[{int}]{lda,  }\item[{double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab00122ffde79c595c0a6962743c657e3}\label{cblas_8h_ab00122ffde79c595c0a6962743c657e3}} 
+\index{cblas.h@{cblas.h}!cblas\_dtrsm@{cblas\_dtrsm}}
+\index{cblas\_dtrsm@{cblas\_dtrsm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dtrsm()}{cblas\_dtrsm()}}
+{\footnotesize\ttfamily void cblas\+\_\+dtrsm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{double $\ast$}]{B,  }\item[{int}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aa8a8e8adb171d696605373b9fe3b1339}\label{cblas_8h_aa8a8e8adb171d696605373b9fe3b1339}} 
+\index{cblas.h@{cblas.h}!cblas\_dtrsv@{cblas\_dtrsv}}
+\index{cblas\_dtrsv@{cblas\_dtrsv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dtrsv()}{cblas\_dtrsv()}}
+{\footnotesize\ttfamily void cblas\+\_\+dtrsv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const double $\ast$}]{A,  }\item[{int}]{lda,  }\item[{double $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a3622ce676376f1b05e7be3fa7d235a1d}\label{cblas_8h_a3622ce676376f1b05e7be3fa7d235a1d}} 
+\index{cblas.h@{cblas.h}!cblas\_dzasum@{cblas\_dzasum}}
+\index{cblas\_dzasum@{cblas\_dzasum}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dzasum()}{cblas\_dzasum()}}
+{\footnotesize\ttfamily double cblas\+\_\+dzasum (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a0e35ba1571f13a79f44ad5eeafa30904}\label{cblas_8h_a0e35ba1571f13a79f44ad5eeafa30904}} 
+\index{cblas.h@{cblas.h}!cblas\_dznrm2@{cblas\_dznrm2}}
+\index{cblas\_dznrm2@{cblas\_dznrm2}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_dznrm2()}{cblas\_dznrm2()}}
+{\footnotesize\ttfamily double cblas\+\_\+dznrm2 (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_adeaba7135fbe0d406634b01c3579d377}\label{cblas_8h_adeaba7135fbe0d406634b01c3579d377}} 
+\index{cblas.h@{cblas.h}!cblas\_icamax@{cblas\_icamax}}
+\index{cblas\_icamax@{cblas\_icamax}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_icamax()}{cblas\_icamax()}}
+{\footnotesize\ttfamily int cblas\+\_\+icamax (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a203aa34312e59c9a62ab662552f7aec6}\label{cblas_8h_a203aa34312e59c9a62ab662552f7aec6}} 
+\index{cblas.h@{cblas.h}!cblas\_idamax@{cblas\_idamax}}
+\index{cblas\_idamax@{cblas\_idamax}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_idamax()}{cblas\_idamax()}}
+{\footnotesize\ttfamily int cblas\+\_\+idamax (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a6347f8fdde70110822a655c290a8da80}\label{cblas_8h_a6347f8fdde70110822a655c290a8da80}} 
+\index{cblas.h@{cblas.h}!cblas\_isamax@{cblas\_isamax}}
+\index{cblas\_isamax@{cblas\_isamax}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_isamax()}{cblas\_isamax()}}
+{\footnotesize\ttfamily int cblas\+\_\+isamax (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a4d9f98c227056c4467d041cfab9b2093}\label{cblas_8h_a4d9f98c227056c4467d041cfab9b2093}} 
+\index{cblas.h@{cblas.h}!cblas\_izamax@{cblas\_izamax}}
+\index{cblas\_izamax@{cblas\_izamax}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_izamax()}{cblas\_izamax()}}
+{\footnotesize\ttfamily int cblas\+\_\+izamax (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab31f7367a068937c0315f7df6d2c724d}\label{cblas_8h_ab31f7367a068937c0315f7df6d2c724d}} 
+\index{cblas.h@{cblas.h}!cblas\_sasum@{cblas\_sasum}}
+\index{cblas\_sasum@{cblas\_sasum}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_sasum()}{cblas\_sasum()}}
+{\footnotesize\ttfamily float cblas\+\_\+sasum (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a9015a9b6b04b472d2cbe7b3a149559c1}\label{cblas_8h_a9015a9b6b04b472d2cbe7b3a149559c1}} 
+\index{cblas.h@{cblas.h}!cblas\_saxpy@{cblas\_saxpy}}
+\index{cblas\_saxpy@{cblas\_saxpy}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_saxpy()}{cblas\_saxpy()}}
+{\footnotesize\ttfamily void cblas\+\_\+saxpy (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a1ee0659bf1bb389ae588ca91b7e04443}\label{cblas_8h_a1ee0659bf1bb389ae588ca91b7e04443}} 
+\index{cblas.h@{cblas.h}!cblas\_scasum@{cblas\_scasum}}
+\index{cblas\_scasum@{cblas\_scasum}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_scasum()}{cblas\_scasum()}}
+{\footnotesize\ttfamily float cblas\+\_\+scasum (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a9181e63d168baaaf5f50aeb711566629}\label{cblas_8h_a9181e63d168baaaf5f50aeb711566629}} 
+\index{cblas.h@{cblas.h}!cblas\_scnrm2@{cblas\_scnrm2}}
+\index{cblas\_scnrm2@{cblas\_scnrm2}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_scnrm2()}{cblas\_scnrm2()}}
+{\footnotesize\ttfamily float cblas\+\_\+scnrm2 (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ae417b0fae6ac8ef74e90670bddb507b2}\label{cblas_8h_ae417b0fae6ac8ef74e90670bddb507b2}} 
+\index{cblas.h@{cblas.h}!cblas\_scopy@{cblas\_scopy}}
+\index{cblas\_scopy@{cblas\_scopy}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_scopy()}{cblas\_scopy()}}
+{\footnotesize\ttfamily void cblas\+\_\+scopy (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ad774d62ed8599867735642cb9f7c7f5a}\label{cblas_8h_ad774d62ed8599867735642cb9f7c7f5a}} 
+\index{cblas.h@{cblas.h}!cblas\_sdot@{cblas\_sdot}}
+\index{cblas\_sdot@{cblas\_sdot}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_sdot()}{cblas\_sdot()}}
+{\footnotesize\ttfamily float cblas\+\_\+sdot (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a56ac912501cf33d915c7c775951b0ff1}\label{cblas_8h_a56ac912501cf33d915c7c775951b0ff1}} 
+\index{cblas.h@{cblas.h}!cblas\_sdsdot@{cblas\_sdsdot}}
+\index{cblas\_sdsdot@{cblas\_sdsdot}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_sdsdot()}{cblas\_sdsdot()}}
+{\footnotesize\ttfamily float cblas\+\_\+sdsdot (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ac0ef39edde52901dd8498cb0a6f8f16e}\label{cblas_8h_ac0ef39edde52901dd8498cb0a6f8f16e}} 
+\index{cblas.h@{cblas.h}!cblas\_sgbmv@{cblas\_sgbmv}}
+\index{cblas\_sgbmv@{cblas\_sgbmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_sgbmv()}{cblas\_sgbmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+sgbmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{int}]{kl,  }\item[{int}]{ku,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{float}]{beta,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_adb0abff65bfd61543789aac22aed9de9}\label{cblas_8h_adb0abff65bfd61543789aac22aed9de9}} 
+\index{cblas.h@{cblas.h}!cblas\_sgemm@{cblas\_sgemm}}
+\index{cblas\_sgemm@{cblas\_sgemm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_sgemm()}{cblas\_sgemm()}}
+{\footnotesize\ttfamily void cblas\+\_\+sgemm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transB,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{float}]{beta,  }\item[{float $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a426cffb1fa5a1968f802b9769503aa7a}\label{cblas_8h_a426cffb1fa5a1968f802b9769503aa7a}} 
+\index{cblas.h@{cblas.h}!cblas\_sgemv@{cblas\_sgemv}}
+\index{cblas\_sgemv@{cblas\_sgemv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_sgemv()}{cblas\_sgemv()}}
+{\footnotesize\ttfamily void cblas\+\_\+sgemv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{float}]{beta,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a67e6faa0c944bbcea376342e3c097ef1}\label{cblas_8h_a67e6faa0c944bbcea376342e3c097ef1}} 
+\index{cblas.h@{cblas.h}!cblas\_sger@{cblas\_sger}}
+\index{cblas\_sger@{cblas\_sger}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_sger()}{cblas\_sger()}}
+{\footnotesize\ttfamily void cblas\+\_\+sger (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{float $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a5399601aa23ba120502e47491406e45f}\label{cblas_8h_a5399601aa23ba120502e47491406e45f}} 
+\index{cblas.h@{cblas.h}!cblas\_snrm2@{cblas\_snrm2}}
+\index{cblas\_snrm2@{cblas\_snrm2}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_snrm2()}{cblas\_snrm2()}}
+{\footnotesize\ttfamily float cblas\+\_\+snrm2 (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a9c900fe8a2188308c5d6ec9310039b1a}\label{cblas_8h_a9c900fe8a2188308c5d6ec9310039b1a}} 
+\index{cblas.h@{cblas.h}!cblas\_srot@{cblas\_srot}}
+\index{cblas\_srot@{cblas\_srot}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_srot()}{cblas\_srot()}}
+{\footnotesize\ttfamily void cblas\+\_\+srot (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{float $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{float}]{c,  }\item[{float}]{s }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aa9c8e8c02791bc4c1ea56d509bff5c82}\label{cblas_8h_aa9c8e8c02791bc4c1ea56d509bff5c82}} 
+\index{cblas.h@{cblas.h}!cblas\_srotg@{cblas\_srotg}}
+\index{cblas\_srotg@{cblas\_srotg}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_srotg()}{cblas\_srotg()}}
+{\footnotesize\ttfamily void cblas\+\_\+srotg (\begin{DoxyParamCaption}\item[{float $\ast$}]{a,  }\item[{float $\ast$}]{b,  }\item[{float $\ast$}]{c,  }\item[{float $\ast$}]{s }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a269dcb3b870c74654649e6b476d8b275}\label{cblas_8h_a269dcb3b870c74654649e6b476d8b275}} 
+\index{cblas.h@{cblas.h}!cblas\_srotm@{cblas\_srotm}}
+\index{cblas\_srotm@{cblas\_srotm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_srotm()}{cblas\_srotm()}}
+{\footnotesize\ttfamily void cblas\+\_\+srotm (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{float $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{const float $\ast$}]{P }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a40f8610a00fd94202486ea00ba65b9f6}\label{cblas_8h_a40f8610a00fd94202486ea00ba65b9f6}} 
+\index{cblas.h@{cblas.h}!cblas\_srotmg@{cblas\_srotmg}}
+\index{cblas\_srotmg@{cblas\_srotmg}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_srotmg()}{cblas\_srotmg()}}
+{\footnotesize\ttfamily void cblas\+\_\+srotmg (\begin{DoxyParamCaption}\item[{float $\ast$}]{d1,  }\item[{float $\ast$}]{d2,  }\item[{float $\ast$}]{b1,  }\item[{float $\ast$}]{b2,  }\item[{float $\ast$}]{P }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a9d7ca83f4ac1ac5a02e5756d69603149}\label{cblas_8h_a9d7ca83f4ac1ac5a02e5756d69603149}} 
+\index{cblas.h@{cblas.h}!cblas\_ssbmv@{cblas\_ssbmv}}
+\index{cblas\_ssbmv@{cblas\_ssbmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ssbmv()}{cblas\_ssbmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ssbmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{float}]{beta,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a64ea962c438efa93e6fb581533acc149}\label{cblas_8h_a64ea962c438efa93e6fb581533acc149}} 
+\index{cblas.h@{cblas.h}!cblas\_sscal@{cblas\_sscal}}
+\index{cblas\_sscal@{cblas\_sscal}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_sscal()}{cblas\_sscal()}}
+{\footnotesize\ttfamily void cblas\+\_\+sscal (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a9ccedcf3a2cdd9e01b47717cae21a455}\label{cblas_8h_a9ccedcf3a2cdd9e01b47717cae21a455}} 
+\index{cblas.h@{cblas.h}!cblas\_sspmv@{cblas\_sspmv}}
+\index{cblas\_sspmv@{cblas\_sspmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_sspmv()}{cblas\_sspmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+sspmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{Ap,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{float}]{beta,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a0146f13febcb6cc3c2623cb473480394}\label{cblas_8h_a0146f13febcb6cc3c2623cb473480394}} 
+\index{cblas.h@{cblas.h}!cblas\_sspr@{cblas\_sspr}}
+\index{cblas\_sspr@{cblas\_sspr}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_sspr()}{cblas\_sspr()}}
+{\footnotesize\ttfamily void cblas\+\_\+sspr (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{float $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab216a471fcf6417046bbc0818b5911ba}\label{cblas_8h_ab216a471fcf6417046bbc0818b5911ba}} 
+\index{cblas.h@{cblas.h}!cblas\_sspr2@{cblas\_sspr2}}
+\index{cblas\_sspr2@{cblas\_sspr2}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_sspr2()}{cblas\_sspr2()}}
+{\footnotesize\ttfamily void cblas\+\_\+sspr2 (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{float $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a525c0bcf8552996048de927fce2e9f98}\label{cblas_8h_a525c0bcf8552996048de927fce2e9f98}} 
+\index{cblas.h@{cblas.h}!cblas\_sswap@{cblas\_sswap}}
+\index{cblas\_sswap@{cblas\_sswap}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_sswap()}{cblas\_sswap()}}
+{\footnotesize\ttfamily void cblas\+\_\+sswap (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab7254e7984e34c2fdd200a0f30b9a6b1}\label{cblas_8h_ab7254e7984e34c2fdd200a0f30b9a6b1}} 
+\index{cblas.h@{cblas.h}!cblas\_ssymm@{cblas\_ssymm}}
+\index{cblas\_ssymm@{cblas\_ssymm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ssymm()}{cblas\_ssymm()}}
+{\footnotesize\ttfamily void cblas\+\_\+ssymm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{float}]{beta,  }\item[{float $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a0287c14887c8985260b153f763572dfc}\label{cblas_8h_a0287c14887c8985260b153f763572dfc}} 
+\index{cblas.h@{cblas.h}!cblas\_ssymv@{cblas\_ssymv}}
+\index{cblas\_ssymv@{cblas\_ssymv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ssymv()}{cblas\_ssymv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ssymv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{x,  }\item[{int}]{incX,  }\item[{float}]{beta,  }\item[{float $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a92df1b25c691d6f88a962af34c1559d6}\label{cblas_8h_a92df1b25c691d6f88a962af34c1559d6}} 
+\index{cblas.h@{cblas.h}!cblas\_ssyr@{cblas\_ssyr}}
+\index{cblas\_ssyr@{cblas\_ssyr}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ssyr()}{cblas\_ssyr()}}
+{\footnotesize\ttfamily void cblas\+\_\+ssyr (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{float $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a15fb2bc4b43f73340e3e4a8a602c58d4}\label{cblas_8h_a15fb2bc4b43f73340e3e4a8a602c58d4}} 
+\index{cblas.h@{cblas.h}!cblas\_ssyr2@{cblas\_ssyr2}}
+\index{cblas\_ssyr2@{cblas\_ssyr2}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ssyr2()}{cblas\_ssyr2()}}
+{\footnotesize\ttfamily void cblas\+\_\+ssyr2 (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const float $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{float $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ac0ad28b661fef2f1301cf731be37a22c}\label{cblas_8h_ac0ad28b661fef2f1301cf731be37a22c}} 
+\index{cblas.h@{cblas.h}!cblas\_ssyr2k@{cblas\_ssyr2k}}
+\index{cblas\_ssyr2k@{cblas\_ssyr2k}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ssyr2k()}{cblas\_ssyr2k()}}
+{\footnotesize\ttfamily void cblas\+\_\+ssyr2k (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const float $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{float}]{beta,  }\item[{float $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a087e88e01550e2d1f2f9724a2bb87123}\label{cblas_8h_a087e88e01550e2d1f2f9724a2bb87123}} 
+\index{cblas.h@{cblas.h}!cblas\_ssyrk@{cblas\_ssyrk}}
+\index{cblas\_ssyrk@{cblas\_ssyrk}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ssyrk()}{cblas\_ssyrk()}}
+{\footnotesize\ttfamily void cblas\+\_\+ssyrk (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{float}]{beta,  }\item[{float $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a43a7c28c20ab6cee30ef992f1669d7ba}\label{cblas_8h_a43a7c28c20ab6cee30ef992f1669d7ba}} 
+\index{cblas.h@{cblas.h}!cblas\_stbmv@{cblas\_stbmv}}
+\index{cblas\_stbmv@{cblas\_stbmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_stbmv()}{cblas\_stbmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+stbmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const float $\ast$}]{A,  }\item[{int}]{lda,  }\item[{float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab5d84f531703bacc4360f81cf0f37690}\label{cblas_8h_ab5d84f531703bacc4360f81cf0f37690}} 
+\index{cblas.h@{cblas.h}!cblas\_stbsv@{cblas\_stbsv}}
+\index{cblas\_stbsv@{cblas\_stbsv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_stbsv()}{cblas\_stbsv()}}
+{\footnotesize\ttfamily void cblas\+\_\+stbsv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const float $\ast$}]{A,  }\item[{int}]{lda,  }\item[{float $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aa7f4ef08d6ccab36278dba4704a152ac}\label{cblas_8h_aa7f4ef08d6ccab36278dba4704a152ac}} 
+\index{cblas.h@{cblas.h}!cblas\_stpmv@{cblas\_stpmv}}
+\index{cblas\_stpmv@{cblas\_stpmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_stpmv()}{cblas\_stpmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+stpmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const float $\ast$}]{Ap,  }\item[{float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ac2f2410d564b7192e47b40e211e71f7c}\label{cblas_8h_ac2f2410d564b7192e47b40e211e71f7c}} 
+\index{cblas.h@{cblas.h}!cblas\_stpsv@{cblas\_stpsv}}
+\index{cblas\_stpsv@{cblas\_stpsv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_stpsv()}{cblas\_stpsv()}}
+{\footnotesize\ttfamily void cblas\+\_\+stpsv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const float $\ast$}]{A,  }\item[{float $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_af298e36765eba5536d75e3bb765ad61c}\label{cblas_8h_af298e36765eba5536d75e3bb765ad61c}} 
+\index{cblas.h@{cblas.h}!cblas\_strmm@{cblas\_strmm}}
+\index{cblas\_strmm@{cblas\_strmm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_strmm()}{cblas\_strmm()}}
+{\footnotesize\ttfamily void cblas\+\_\+strmm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{float $\ast$}]{B,  }\item[{int}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a92612deb61b8b775419b584361728725}\label{cblas_8h_a92612deb61b8b775419b584361728725}} 
+\index{cblas.h@{cblas.h}!cblas\_strmv@{cblas\_strmv}}
+\index{cblas\_strmv@{cblas\_strmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_strmv()}{cblas\_strmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+strmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const float $\ast$}]{A,  }\item[{int}]{lda,  }\item[{float $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a968771c48c9cf567cc13f7ff49b23aad}\label{cblas_8h_a968771c48c9cf567cc13f7ff49b23aad}} 
+\index{cblas.h@{cblas.h}!cblas\_strsm@{cblas\_strsm}}
+\index{cblas\_strsm@{cblas\_strsm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_strsm()}{cblas\_strsm()}}
+{\footnotesize\ttfamily void cblas\+\_\+strsm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{float}]{alpha,  }\item[{const float $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{float $\ast$}]{B,  }\item[{int}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aad152279caf35f2cb36373ab6e2ca3a2}\label{cblas_8h_aad152279caf35f2cb36373ab6e2ca3a2}} 
+\index{cblas.h@{cblas.h}!cblas\_strsv@{cblas\_strsv}}
+\index{cblas\_strsv@{cblas\_strsv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_strsv()}{cblas\_strsv()}}
+{\footnotesize\ttfamily void cblas\+\_\+strsv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const float $\ast$}]{A,  }\item[{int}]{lda,  }\item[{float $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a6810dd25265182925c99a46e8b15d517}\label{cblas_8h_a6810dd25265182925c99a46e8b15d517}} 
+\index{cblas.h@{cblas.h}!cblas\_zaxpy@{cblas\_zaxpy}}
+\index{cblas\_zaxpy@{cblas\_zaxpy}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zaxpy()}{cblas\_zaxpy()}}
+{\footnotesize\ttfamily void cblas\+\_\+zaxpy (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aaa96f0e233114bef94f8045e36e779c0}\label{cblas_8h_aaa96f0e233114bef94f8045e36e779c0}} 
+\index{cblas.h@{cblas.h}!cblas\_zcopy@{cblas\_zcopy}}
+\index{cblas\_zcopy@{cblas\_zcopy}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zcopy()}{cblas\_zcopy()}}
+{\footnotesize\ttfamily void cblas\+\_\+zcopy (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a07181b9f5f96db0455c59bad40adb089}\label{cblas_8h_a07181b9f5f96db0455c59bad40adb089}} 
+\index{cblas.h@{cblas.h}!cblas\_zdotc\_sub@{cblas\_zdotc\_sub}}
+\index{cblas\_zdotc\_sub@{cblas\_zdotc\_sub}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zdotc\_sub()}{cblas\_zdotc\_sub()}}
+{\footnotesize\ttfamily void cblas\+\_\+zdotc\+\_\+sub (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{y,  }\item[{int}]{incY,  }\item[{double $\ast$}]{result }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a9c3975c523616885c4a74202da9adf08}\label{cblas_8h_a9c3975c523616885c4a74202da9adf08}} 
+\index{cblas.h@{cblas.h}!cblas\_zdotu\_sub@{cblas\_zdotu\_sub}}
+\index{cblas\_zdotu\_sub@{cblas\_zdotu\_sub}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zdotu\_sub()}{cblas\_zdotu\_sub()}}
+{\footnotesize\ttfamily void cblas\+\_\+zdotu\+\_\+sub (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{y,  }\item[{int}]{incY,  }\item[{double $\ast$}]{result }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a77b0d7bc9a073dcfcedc609387bf75ba}\label{cblas_8h_a77b0d7bc9a073dcfcedc609387bf75ba}} 
+\index{cblas.h@{cblas.h}!cblas\_zdscal@{cblas\_zdscal}}
+\index{cblas\_zdscal@{cblas\_zdscal}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zdscal()}{cblas\_zdscal()}}
+{\footnotesize\ttfamily void cblas\+\_\+zdscal (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aa22149b6ad1293f101a10e0fffebdb02}\label{cblas_8h_aa22149b6ad1293f101a10e0fffebdb02}} 
+\index{cblas.h@{cblas.h}!cblas\_zgbmv@{cblas\_zgbmv}}
+\index{cblas\_zgbmv@{cblas\_zgbmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zgbmv()}{cblas\_zgbmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+zgbmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{int}]{kl,  }\item[{int}]{ku,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{beta,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a633b787dd200b3f04da88b6c01127a42}\label{cblas_8h_a633b787dd200b3f04da88b6c01127a42}} 
+\index{cblas.h@{cblas.h}!cblas\_zgemm@{cblas\_zgemm}}
+\index{cblas\_zgemm@{cblas\_zgemm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zgemm()}{cblas\_zgemm()}}
+{\footnotesize\ttfamily void cblas\+\_\+zgemm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transB,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{const double $\ast$}]{beta,  }\item[{double $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_af897405b1c1aed1c82a2496c63cc73a6}\label{cblas_8h_af897405b1c1aed1c82a2496c63cc73a6}} 
+\index{cblas.h@{cblas.h}!cblas\_zgemv@{cblas\_zgemv}}
+\index{cblas\_zgemv@{cblas\_zgemv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zgemv()}{cblas\_zgemv()}}
+{\footnotesize\ttfamily void cblas\+\_\+zgemv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{beta,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_abaa51b8f1904e4ec698dda710bea7914}\label{cblas_8h_abaa51b8f1904e4ec698dda710bea7914}} 
+\index{cblas.h@{cblas.h}!cblas\_zgerc@{cblas\_zgerc}}
+\index{cblas\_zgerc@{cblas\_zgerc}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zgerc()}{cblas\_zgerc()}}
+{\footnotesize\ttfamily void cblas\+\_\+zgerc (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{double $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aa645e1bdef2ec0bd34a836d8a9094711}\label{cblas_8h_aa645e1bdef2ec0bd34a836d8a9094711}} 
+\index{cblas.h@{cblas.h}!cblas\_zgeru@{cblas\_zgeru}}
+\index{cblas\_zgeru@{cblas\_zgeru}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zgeru()}{cblas\_zgeru()}}
+{\footnotesize\ttfamily void cblas\+\_\+zgeru (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{double $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a1913f5b2afeaa0b326c7f09420d5b535}\label{cblas_8h_a1913f5b2afeaa0b326c7f09420d5b535}} 
+\index{cblas.h@{cblas.h}!cblas\_zhbmv@{cblas\_zhbmv}}
+\index{cblas\_zhbmv@{cblas\_zhbmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zhbmv()}{cblas\_zhbmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+zhbmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{beta,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a30efa3ff66c2c8901e2f8f07fe5173fc}\label{cblas_8h_a30efa3ff66c2c8901e2f8f07fe5173fc}} 
+\index{cblas.h@{cblas.h}!cblas\_zhemm@{cblas\_zhemm}}
+\index{cblas\_zhemm@{cblas\_zhemm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zhemm()}{cblas\_zhemm()}}
+{\footnotesize\ttfamily void cblas\+\_\+zhemm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{const double $\ast$}]{beta,  }\item[{double $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a17daec2a2fa760f1bb4685ed371b1633}\label{cblas_8h_a17daec2a2fa760f1bb4685ed371b1633}} 
+\index{cblas.h@{cblas.h}!cblas\_zhemv@{cblas\_zhemv}}
+\index{cblas\_zhemv@{cblas\_zhemv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zhemv()}{cblas\_zhemv()}}
+{\footnotesize\ttfamily void cblas\+\_\+zhemv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{beta,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a0bcf7a3f5a4b867852aa0a7f667f59d0}\label{cblas_8h_a0bcf7a3f5a4b867852aa0a7f667f59d0}} 
+\index{cblas.h@{cblas.h}!cblas\_zher@{cblas\_zher}}
+\index{cblas\_zher@{cblas\_zher}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zher()}{cblas\_zher()}}
+{\footnotesize\ttfamily void cblas\+\_\+zher (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{double $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a323361a6c2b500864e9bdff632692824}\label{cblas_8h_a323361a6c2b500864e9bdff632692824}} 
+\index{cblas.h@{cblas.h}!cblas\_zher2@{cblas\_zher2}}
+\index{cblas\_zher2@{cblas\_zher2}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zher2()}{cblas\_zher2()}}
+{\footnotesize\ttfamily void cblas\+\_\+zher2 (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{double $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a38d3d2d802dd2b27b1bc71dc323a69a0}\label{cblas_8h_a38d3d2d802dd2b27b1bc71dc323a69a0}} 
+\index{cblas.h@{cblas.h}!cblas\_zher2k@{cblas\_zher2k}}
+\index{cblas\_zher2k@{cblas\_zher2k}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zher2k()}{cblas\_zher2k()}}
+{\footnotesize\ttfamily void cblas\+\_\+zher2k (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{double}]{beta,  }\item[{double $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a280ec1e240772e35f08149213355b200}\label{cblas_8h_a280ec1e240772e35f08149213355b200}} 
+\index{cblas.h@{cblas.h}!cblas\_zherk@{cblas\_zherk}}
+\index{cblas\_zherk@{cblas\_zherk}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zherk()}{cblas\_zherk()}}
+{\footnotesize\ttfamily void cblas\+\_\+zherk (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{double}]{beta,  }\item[{double $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a36a0ea6bbbe1ce8beb70601aaef62401}\label{cblas_8h_a36a0ea6bbbe1ce8beb70601aaef62401}} 
+\index{cblas.h@{cblas.h}!cblas\_zhpmv@{cblas\_zhpmv}}
+\index{cblas\_zhpmv@{cblas\_zhpmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zhpmv()}{cblas\_zhpmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+zhpmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{Ap,  }\item[{const double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{beta,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_af1ea1b4ce3310125c2383af6c913f3bd}\label{cblas_8h_af1ea1b4ce3310125c2383af6c913f3bd}} 
+\index{cblas.h@{cblas.h}!cblas\_zhpr@{cblas\_zhpr}}
+\index{cblas\_zhpr@{cblas\_zhpr}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zhpr()}{cblas\_zhpr()}}
+{\footnotesize\ttfamily void cblas\+\_\+zhpr (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{double}]{alpha,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{double $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ad4e9a1ce02439060951e7b4577b884bb}\label{cblas_8h_ad4e9a1ce02439060951e7b4577b884bb}} 
+\index{cblas.h@{cblas.h}!cblas\_zhpr2@{cblas\_zhpr2}}
+\index{cblas\_zhpr2@{cblas\_zhpr2}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zhpr2()}{cblas\_zhpr2()}}
+{\footnotesize\ttfamily void cblas\+\_\+zhpr2 (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{X,  }\item[{int}]{incX,  }\item[{const double $\ast$}]{Y,  }\item[{int}]{incY,  }\item[{double $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a07489bc1f1bc0b1ead374d2ba9267437}\label{cblas_8h_a07489bc1f1bc0b1ead374d2ba9267437}} 
+\index{cblas.h@{cblas.h}!cblas\_zscal@{cblas\_zscal}}
+\index{cblas\_zscal@{cblas\_zscal}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zscal()}{cblas\_zscal()}}
+{\footnotesize\ttfamily void cblas\+\_\+zscal (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_aa0f682aaa21f66bfae0d9452f183f4ec}\label{cblas_8h_aa0f682aaa21f66bfae0d9452f183f4ec}} 
+\index{cblas.h@{cblas.h}!cblas\_zswap@{cblas\_zswap}}
+\index{cblas\_zswap@{cblas\_zswap}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zswap()}{cblas\_zswap()}}
+{\footnotesize\ttfamily void cblas\+\_\+zswap (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double $\ast$}]{x,  }\item[{int}]{incX,  }\item[{double $\ast$}]{y,  }\item[{int}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_add8f3fd75b593864d31b07b660b22cd0}\label{cblas_8h_add8f3fd75b593864d31b07b660b22cd0}} 
+\index{cblas.h@{cblas.h}!cblas\_zsymm@{cblas\_zsymm}}
+\index{cblas\_zsymm@{cblas\_zsymm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zsymm()}{cblas\_zsymm()}}
+{\footnotesize\ttfamily void cblas\+\_\+zsymm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{const double $\ast$}]{beta,  }\item[{double $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a0f1e5a5614a639b04305d50c53dc247f}\label{cblas_8h_a0f1e5a5614a639b04305d50c53dc247f}} 
+\index{cblas.h@{cblas.h}!cblas\_zsyr2k@{cblas\_zsyr2k}}
+\index{cblas\_zsyr2k@{cblas\_zsyr2k}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zsyr2k()}{cblas\_zsyr2k()}}
+{\footnotesize\ttfamily void cblas\+\_\+zsyr2k (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{B,  }\item[{int}]{ldB,  }\item[{const double $\ast$}]{beta,  }\item[{double $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a8c7df385ac7d82fd63077ae05e2fd3f4}\label{cblas_8h_a8c7df385ac7d82fd63077ae05e2fd3f4}} 
+\index{cblas.h@{cblas.h}!cblas\_zsyrk@{cblas\_zsyrk}}
+\index{cblas\_zsyrk@{cblas\_zsyrk}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_zsyrk()}{cblas\_zsyrk()}}
+{\footnotesize\ttfamily void cblas\+\_\+zsyrk (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{trans,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{const double $\ast$}]{beta,  }\item[{double $\ast$}]{C,  }\item[{int}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a76d0eb0455d43f0ee2ec6a7bbc4e9f44}\label{cblas_8h_a76d0eb0455d43f0ee2ec6a7bbc4e9f44}} 
+\index{cblas.h@{cblas.h}!cblas\_ztbmv@{cblas\_ztbmv}}
+\index{cblas\_ztbmv@{cblas\_ztbmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ztbmv()}{cblas\_ztbmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ztbmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{N,  }\item[{int}]{k,  }\item[{const double $\ast$}]{A,  }\item[{int}]{lda,  }\item[{double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ab821d8b0188b37aa8439179092c4c342}\label{cblas_8h_ab821d8b0188b37aa8439179092c4c342}} 
+\index{cblas.h@{cblas.h}!cblas\_ztbsv@{cblas\_ztbsv}}
+\index{cblas\_ztbsv@{cblas\_ztbsv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ztbsv()}{cblas\_ztbsv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ztbsv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{int}]{k,  }\item[{const double $\ast$}]{A,  }\item[{int}]{lda,  }\item[{double $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a33a37270e792b4e6866b89c38f357583}\label{cblas_8h_a33a37270e792b4e6866b89c38f357583}} 
+\index{cblas.h@{cblas.h}!cblas\_ztpmv@{cblas\_ztpmv}}
+\index{cblas\_ztpmv@{cblas\_ztpmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ztpmv()}{cblas\_ztpmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ztpmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{N,  }\item[{const double $\ast$}]{Ap,  }\item[{double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a41f61aac9e3c6a965ddf0c4454a21c58}\label{cblas_8h_a41f61aac9e3c6a965ddf0c4454a21c58}} 
+\index{cblas.h@{cblas.h}!cblas\_ztpsv@{cblas\_ztpsv}}
+\index{cblas\_ztpsv@{cblas\_ztpsv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ztpsv()}{cblas\_ztpsv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ztpsv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const double $\ast$}]{A,  }\item[{double $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a0de3bd55bb4ddd48026eaa2e8b5bd6b8}\label{cblas_8h_a0de3bd55bb4ddd48026eaa2e8b5bd6b8}} 
+\index{cblas.h@{cblas.h}!cblas\_ztrmm@{cblas\_ztrmm}}
+\index{cblas\_ztrmm@{cblas\_ztrmm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ztrmm()}{cblas\_ztrmm()}}
+{\footnotesize\ttfamily void cblas\+\_\+ztrmm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{double $\ast$}]{B,  }\item[{int}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a27acf52c56da2b71683b3fbd904c82e4}\label{cblas_8h_a27acf52c56da2b71683b3fbd904c82e4}} 
+\index{cblas.h@{cblas.h}!cblas\_ztrmv@{cblas\_ztrmv}}
+\index{cblas\_ztrmv@{cblas\_ztrmv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ztrmv()}{cblas\_ztrmv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ztrmv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{N,  }\item[{const double $\ast$}]{A,  }\item[{int}]{lda,  }\item[{double $\ast$}]{x,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_a372e5a311d5d23cc77332a3b1ebfca37}\label{cblas_8h_a372e5a311d5d23cc77332a3b1ebfca37}} 
+\index{cblas.h@{cblas.h}!cblas\_ztrsm@{cblas\_ztrsm}}
+\index{cblas\_ztrsm@{cblas\_ztrsm}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ztrsm()}{cblas\_ztrsm()}}
+{\footnotesize\ttfamily void cblas\+\_\+ztrsm (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\+\_\+\+SIDE}}}]{side,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{m,  }\item[{int}]{n,  }\item[{const double $\ast$}]{alpha,  }\item[{const double $\ast$}]{A,  }\item[{int}]{ldA,  }\item[{double $\ast$}]{B,  }\item[{int}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{cblas_8h_ad0aff6150360963ff70fe8f165de5e07}\label{cblas_8h_ad0aff6150360963ff70fe8f165de5e07}} 
+\index{cblas.h@{cblas.h}!cblas\_ztrsv@{cblas\_ztrsv}}
+\index{cblas\_ztrsv@{cblas\_ztrsv}!cblas.h@{cblas.h}}
+\doxysubsubsection{\texorpdfstring{cblas\_ztrsv()}{cblas\_ztrsv()}}
+{\footnotesize\ttfamily void cblas\+\_\+ztrsv (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\+\_\+\+ORDER}}}]{order,  }\item[{enum \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\+\_\+\+UPLO}}}]{up\+Lo,  }\item[{enum \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\+\_\+\+TRANSPOSE}}}]{transA,  }\item[{enum \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\+\_\+\+DIAG}}}]{diag,  }\item[{int}]{n,  }\item[{const double $\ast$}]{A,  }\item[{int}]{lda,  }\item[{double $\ast$}]{X,  }\item[{int}]{incX }\end{DoxyParamCaption})}
+

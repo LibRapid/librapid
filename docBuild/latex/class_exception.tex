@@ -1,0 +1,164 @@
+\hypertarget{class_exception}{}\doxysection{Exception\texorpdfstring{$<$}{<} Std\+\_\+\+Exception \texorpdfstring{$>$}{>} Class Template Reference}
+\label{class_exception}\index{Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}}
+
+
+{\ttfamily \#include $<$exception.\+h$>$}
+
+Inheritance diagram for Exception\texorpdfstring{$<$}{<} Std\+\_\+\+Exception \texorpdfstring{$>$}{>}\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_exception}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{class_exception_ac4bfac227d7e53fa707b91a88159d3a8}{$\sim$\+Exception}} ()  throw ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_exception_ac0904205ad66f00c7287a3cbf3d17838}{throw\+\_\+it}} (const char $\ast$file, const int line, const char $\ast$detailed=\char`\"{}-\/\char`\"{})
+\begin{DoxyCompactList}\small\item\em Static construction interface. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_exception_a9e38551a20583643b1d2efe535577e08}{throw\+\_\+it}} (const char $\ast$file, const int line, const std\+::string \&detailed)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_exception_ad7f0e1e6cdc0021d666af088b35e017d}{Exception}} ()
+\begin{DoxyCompactList}\small\item\em Constructor, default (private) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_exception_afc2589c568718ba90fbf8daa0e2fc758}{Exception}} (const std\+::string \&str)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$class Std\+\_\+\+Exception$>$\newline
+class Exception$<$ Std\+\_\+\+Exception $>$}
+\mbox{\hyperlink{class_exception}{Exception}} wrapper. 
+\begin{DoxyParams}{Parameters}
+{\em Std\+\_\+\+Exception} & \mbox{\hyperlink{class_exception}{Exception}} out of namespace std for easy typing. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{exception_8h_source_l00042}{42}} of file \mbox{\hyperlink{exception_8h_source}{exception.\+h}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_exception_ac4bfac227d7e53fa707b91a88159d3a8}\label{class_exception_ac4bfac227d7e53fa707b91a88159d3a8}} 
+\index{Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}!````~Exception@{$\sim$Exception}}
+\index{````~Exception@{$\sim$Exception}!Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}}
+\doxysubsubsection{\texorpdfstring{$\sim$Exception()}{~Exception()}}
+{\footnotesize\ttfamily template$<$class Std\+\_\+\+Exception $>$ \\
+\mbox{\hyperlink{class_exception}{Exception}}$<$ Std\+\_\+\+Exception $>$\+::$\sim$\mbox{\hyperlink{class_exception}{Exception}} throw ( ) \hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Destructor. 
+
+
+
+Definition at line \mbox{\hyperlink{exception_8h_source_l00140}{140}} of file \mbox{\hyperlink{exception_8h_source}{exception.\+h}}.
+
+\mbox{\Hypertarget{class_exception_ad7f0e1e6cdc0021d666af088b35e017d}\label{class_exception_ad7f0e1e6cdc0021d666af088b35e017d}} 
+\index{Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}!Exception@{Exception}}
+\index{Exception@{Exception}!Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}}
+\doxysubsubsection{\texorpdfstring{Exception()}{Exception()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class Std\+\_\+\+Exception $>$ \\
+\mbox{\hyperlink{class_exception}{Exception}}$<$ Std\+\_\+\+Exception $>$\mbox{\hyperlink{class_exception}{\+::\+Exception}}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Constructor, default (private) 
+
+Constructor, default (private). 
+
+Definition at line \mbox{\hyperlink{exception_8h_source_l00127}{127}} of file \mbox{\hyperlink{exception_8h_source}{exception.\+h}}.
+
+\mbox{\Hypertarget{class_exception_afc2589c568718ba90fbf8daa0e2fc758}\label{class_exception_afc2589c568718ba90fbf8daa0e2fc758}} 
+\index{Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}!Exception@{Exception}}
+\index{Exception@{Exception}!Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}}
+\doxysubsubsection{\texorpdfstring{Exception()}{Exception()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class Std\+\_\+\+Exception $>$ \\
+\mbox{\hyperlink{class_exception}{Exception}}$<$ Std\+\_\+\+Exception $>$\mbox{\hyperlink{class_exception}{\+::\+Exception}} (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [private]}}
+
+Constructor, standard 
+\begin{DoxyParams}{Parameters}
+{\em str} & string returned by what()\\
+\hline
+\end{DoxyParams}
+Constructor, standard (private). String returned by what(). 
+
+Definition at line \mbox{\hyperlink{exception_8h_source_l00134}{134}} of file \mbox{\hyperlink{exception_8h_source}{exception.\+h}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_exception_ac0904205ad66f00c7287a3cbf3d17838}\label{class_exception_ac0904205ad66f00c7287a3cbf3d17838}} 
+\index{Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}!throw\_it@{throw\_it}}
+\index{throw\_it@{throw\_it}!Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}}
+\doxysubsubsection{\texorpdfstring{throw\_it()}{throw\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class Std\+\_\+\+Exception $>$ \\
+void \mbox{\hyperlink{class_exception}{Exception}}$<$ Std\+\_\+\+Exception $>$\+::throw\+\_\+it (\begin{DoxyParamCaption}\item[{const char $\ast$}]{file,  }\item[{const int}]{line,  }\item[{const char $\ast$}]{detailed = {\ttfamily \char`\"{}-\/\char`\"{}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Static construction interface. 
+
+Implementation.
+
+\begin{DoxyReturn}{Returns}
+Alwayss throws ( Located\+\_\+\+Exception$<$\+Exception$>$) 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em file} & file in which the \mbox{\hyperlink{class_exception}{Exception}} occurs \\
+\hline
+{\em line} & line in which the \mbox{\hyperlink{class_exception}{Exception}} occurs \\
+\hline
+{\em detailed} & details on the code fragment causing the \mbox{\hyperlink{class_exception}{Exception}}\\
+\hline
+\end{DoxyParams}
+Static construction interface. 
+\begin{DoxyParams}{Parameters}
+{\em \mbox{\hyperlink{class_exception}{Exception}}} & causing code fragment (file and line) and detailed infos. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{exception_8h_source_l00103}{103}} of file \mbox{\hyperlink{exception_8h_source}{exception.\+h}}.
+
+\mbox{\Hypertarget{class_exception_a9e38551a20583643b1d2efe535577e08}\label{class_exception_a9e38551a20583643b1d2efe535577e08}} 
+\index{Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}!throw\_it@{throw\_it}}
+\index{throw\_it@{throw\_it}!Exception$<$ Std\_Exception $>$@{Exception$<$ Std\_Exception $>$}}
+\doxysubsubsection{\texorpdfstring{throw\_it()}{throw\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class Std\+\_\+\+Exception $>$ \\
+void \mbox{\hyperlink{class_exception}{Exception}}$<$ Std\+\_\+\+Exception $>$\+::throw\+\_\+it (\begin{DoxyParamCaption}\item[{const char $\ast$}]{file,  }\item[{const int}]{line,  }\item[{const std\+::string \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Static construction interface \begin{DoxyReturn}{Returns}
+Alwayss throws ( Located\+\_\+\+Exception$<$\+Exception$>$) 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em file} & file in which the \mbox{\hyperlink{class_exception}{Exception}} occurs \\
+\hline
+{\em line} & line in which the \mbox{\hyperlink{class_exception}{Exception}} occurs \\
+\hline
+{\em detailed} & details on the code fragment causing the \mbox{\hyperlink{class_exception}{Exception}}\\
+\hline
+\end{DoxyParams}
+Static construction interface. 
+\begin{DoxyParams}{Parameters}
+{\em \mbox{\hyperlink{class_exception}{Exception}}} & causing code fragment (file and line) and detailed infos. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{exception_8h_source_l00119}{119}} of file \mbox{\hyperlink{exception_8h_source}{exception.\+h}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+librapid/include/librapid/cuda/\mbox{\hyperlink{exception_8h}{exception.\+h}}\end{DoxyCompactItemize}

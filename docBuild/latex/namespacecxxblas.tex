@@ -1,0 +1,1393 @@
+\hypertarget{namespacecxxblas}{}\doxysection{cxxblas Namespace Reference}
+\label{namespacecxxblas}\index{cxxblas@{cxxblas}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_complex_trait}{Complex\+Trait}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_complex_trait_3_01std_1_1complex_3_01_t_01_4_01_4}{Complex\+Trait$<$ std\+::complex$<$ T $>$ $>$}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_if}{If}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_if_3_01int_01_4}{If$<$ int $>$}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_if_3_01long_01_4}{If$<$ long $>$}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_is_complex}{Is\+Complex}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_is_not_complex}{Is\+Not\+Complex}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_is_not_complex_3_01std_1_1complex_3_01_t_01_4_01_4}{Is\+Not\+Complex$<$ std\+::complex$<$ T $>$ $>$}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_is_same_3_01_t_01_4}{Is\+Same$<$ T $>$}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_is_same_3_01_t_00_01_t_01_4}{Is\+Same$<$ T, T $>$}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_is_same_3_01_t_00_01_t_00_01_args_8_8_8_01_4}{Is\+Same$<$ T, T, Args... $>$}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_restrict_to_3_01true_00_01_t_01_4}{Restrict\+To$<$ true, T $>$}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::complex$<$ float $>$ \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{Complex\+Float}}
+\item 
+typedef std\+::complex$<$ double $>$ \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{Complex\+Double}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} \{ \mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68a746c8afda1b7bb0f80c4853fde1edd05}{Row\+Major}}
+, \mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68aad9cd0535867752083896cd2861cd907}{Col\+Major}}
+ \}
+\item 
+enum \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} \{ \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7a37aa39af32043a5cc803b7f391035393}{Upper}} = \textquotesingle{}U\textquotesingle{}
+, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7a5d4f0e9e2ade8265626081ff772f3cd1}{Lower}} = \textquotesingle{}L\textquotesingle{}
+ \}
+\item 
+enum \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} \{ \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6aea4d8eafe201686e94642101b3be8163}{Unit}} = \textquotesingle{}U\textquotesingle{}
+, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6a82be9b897400986d48ea221e4a837b2d}{Non\+Unit}} = \textquotesingle{}N\textquotesingle{}
+ \}
+\item 
+enum \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}} \{ \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947ab2dc76441030cc13b9fbb2b65fd953fc}{Left}} = \textquotesingle{}L\textquotesingle{}
+, \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947a49f14d940c2e0e526a3a53a739dffe7e}{Right}} = \textquotesingle{}R\textquotesingle{}
+ \}
+\item 
+enum \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} \{ \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30a6ff86ac122ab2d5a805c768d29a15809}{No\+Trans}} = 0
+, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30aaadde075a6e8b482fa14d032cd54f64b}{Conj}} = 1
+, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30a0f956f88c118f2f3b478474693315722}{Trans}} = 2
+, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30a1c689914790d2fe73f783b40657eaec0}{Conj\+Trans}} = 3
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{cxxblas\+::\+Restrict\+To}}$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, constT \& $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_a474f34e884dba1e0cf4add8f152262e4}{conjugate}} (const T \&x)
+\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{cxxblas\+::\+Restrict\+To}}$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, std\+::complex$<$ T $>$ $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_a00ad52895d2c9e7bdf1a45da3544555d}{conjugate}} (const std\+::complex$<$ T $>$ \&x)
+\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{cxxblas\+::\+Restrict\+To}}$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, constT \& $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_a3d275b0495109a8b14abd9033f12be4a}{real}} (const T \&x)
+\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{cxxblas\+::\+Restrict\+To}}$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, constT $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_a220d587643d2b96498ef5bb68abffa96}{real}} (const std\+::complex$<$ T $>$ \&x)
+\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{cxxblas\+::\+Restrict\+To}}$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, constT $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_ae82659a87bf6e9fe546012726a9621bc}{imag}} (const T \&x)
+\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{cxxblas\+::\+Restrict\+To}}$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, constT $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_abc878e93f25954e71c1d7d311e5c1d7d}{imag}} (const std\+::complex$<$ T $>$ \&x)
+\item 
+{\footnotesize template$<$typename T $>$ }\\T \mbox{\hyperlink{namespacecxxblas_a57cfcc008948e3c8df22f86cb6e671d4}{abs1}} (const std\+::complex$<$ T $>$ \&x)
+\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ T, int $>$\+::value, T $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_a8961e0a9acd6aa1dae9dd36c04ec8649}{pow}} (const T \&base, const T \&exponent)
+\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$!\mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ T, int $>$\+::value \&\&!\mbox{\hyperlink{structcxxblas_1_1_is_complex}{Is\+Complex}}$<$ T $>$\+::value, T $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_afb01362b28c7c964b8b34b8d29f5abde}{pow}} (const T \&base, int exponent)
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::complex$<$ T $>$ \mbox{\hyperlink{namespacecxxblas_ae42b0b500646d70657827ef160849448}{pow}} (const std\+::complex$<$ T $>$ \&base, int exponent)
+\item 
+{\footnotesize template$<$typename CHAR $>$ }\\const CHAR $\ast$ \mbox{\hyperlink{namespacecxxblas_af90758661694282ee9516470d96c0887}{blas\+Impl}} ()
+\item 
+{\footnotesize template$<$typename ENUM $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ ENUM, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} $>$\+::value, char $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_abb65f6752487d758ce2be8e30e10202a}{get\+F77\+Blas\+Char}} (ENUM trans)
+\item 
+{\footnotesize template$<$typename ENUM $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ ENUM, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} $>$\+::value, char $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_a2e912f6be2475ad21be3f52ec9b5fc20}{get\+F77\+Blas\+Char}} (ENUM diag)
+\item 
+{\footnotesize template$<$typename ENUM $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ ENUM, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} $>$\+::value, char $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_a6fa84144e95aeddbc38c7718b8123499}{get\+F77\+Blas\+Char}} (ENUM up\+Lo)
+\item 
+{\footnotesize template$<$typename ENUM $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ ENUM, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} $>$\+::value, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_aa5cec6414633269a7d1de92637bee039}{get\+Cxx\+Blas\+Enum}} (char trans)
+\item 
+{\footnotesize template$<$typename ENUM $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ ENUM, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} $>$\+::value, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_abd2de56f837a3338235ec32c5fd64f99}{get\+Cxx\+Blas\+Enum}} (char diag)
+\item 
+{\footnotesize template$<$typename ENUM $>$ }\\\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ ENUM, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} $>$\+::value, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_a9d2990c6095e23948174dece35a3e17c}{get\+Cxx\+Blas\+Enum}} (char up\+Lo)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X , typename T $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a40137bd5541db32eee00eae763621783}{asum}} (Index\+Type n, const X $\ast$x, Index\+Type incX, T \&abs\+Sum)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename X , typename Y $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a628ad662f9e86b8b12b207f5f5e4a2fe}{axpy}} (Index\+Type n, const ALPHA \&alpha, const X $\ast$x, Index\+Type incX, Y $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X , typename Y $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a5301c325a16dd6cba3e48ac337ebb995}{copy}} (Index\+Type n, const X $\ast$x, Index\+Type incX, Y $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X , typename Y , typename Result $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a1b0a1e1b75a6be2dd7236387039700b3}{dotu}} (Index\+Type n, const X $\ast$x, Index\+Type incX, const Y $\ast$y, Index\+Type incY, Result \&result)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X , typename Y , typename Result $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a88b5b182d09d1becc3d58554fe918f67}{dot}} (Index\+Type n, const X $\ast$x, Index\+Type incX, const Y $\ast$y, Index\+Type incY, Result \&result)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X $>$ }\\void \mbox{\hyperlink{namespacecxxblas_adf3885c29ce43bdcacf248d15b29a0cf}{iamax}} (Index\+Type n, const X $\ast$x, Index\+Type incX, Index\+Type \&i)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X $>$ }\\Index\+Type \mbox{\hyperlink{namespacecxxblas_ae2f286b82beddcdc1fb9180a613cc680}{iamax}} (Index\+Type n, const X $\ast$x, Index\+Type incX)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X , typename T $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a21204d60dceff90aba9425722a67286c}{nrm2}} (Index\+Type n, const X $\ast$x, Index\+Type incX, T \&norm)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X , typename Y , typename T $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a349fce9d9f91633c51797ef6a3370d6e}{rot}} (Index\+Type n, X $\ast$x, Index\+Type incX, Y $\ast$y, Index\+Type incY, T c, T s)
+\item 
+{\footnotesize template$<$typename A , typename B , typename T $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a7e48adce6802e678f44175d5be21104d}{rotg}} (A \&a, B \&b, T \&c, T \&s)
+\item 
+{\footnotesize template$<$typename TA , typename TB , typename T $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a8c7482ae68541492e49757eef148b9b7}{rotg}} (std\+::complex$<$ TA $>$ \&a, std\+::complex$<$ TB $>$ \&b, T \&c, std\+::complex$<$ T $>$ \&s)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X , typename Y , typename T $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a467b9552266ca0125a739e16a6e3623d}{rot}} (Index\+Type n, std\+::complex$<$ X $>$ $\ast$x, Index\+Type incX, std\+::complex$<$ Y $>$ $\ast$y, Index\+Type incY, T c, const std\+::complex$<$ T $>$ \&s)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename Y $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a08ccdb209146b5674a899ac8b66476d1}{scal}} (Index\+Type n, const ALPHA \&alpha, Y $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X , typename Y $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a0d5308e62de64b9d010a29edfcea24be}{swap}} (Index\+Type n, X $\ast$x, Index\+Type incX, Y $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename X , typename BETA , typename Y $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a1f144db6f67dd9e5552f5cee6f659255}{acxpby}} (Index\+Type n, const ALPHA \&alpha, const X $\ast$x, Index\+Type incX, const BETA \&beta, Y $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename X , typename Y $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ab02d8b28c53d1cdff0a8373f935fc903}{acxpy}} (Index\+Type n, const ALPHA \&alpha, const X $\ast$x, Index\+Type incX, Y $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X , typename T $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a7b2e8839404740632544c93463f02b6a}{asum1}} (Index\+Type n, const X $\ast$x, Index\+Type incX, T \&abs\+Sum)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename X , typename BETA , typename Y $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a72a7cfa4dffc0eea0ee2c4a78077472b}{axpby}} (Index\+Type n, const ALPHA \&alpha, const X $\ast$x, Index\+Type incX, const BETA \&beta, Y $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X , typename Y $>$ }\\void \mbox{\hyperlink{namespacecxxblas_aeb9b5ab9972d9023dda5ee4114e1cf1f}{ccopy}} (Index\+Type n, const X $\ast$x, Index\+Type incX, Y $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename BETA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a540f1b6734e3b9a6dd90f525788abc12}{gbaxpby}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type m, Index\+Type n, Index\+Type kl, Index\+Type ku, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const BETA \&beta, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a5272f959d6eb0c316a1f24959268b52b}{gbaxpy}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type m, Index\+Type n, Index\+Type kl, Index\+Type ku, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_aeef3e395d7f9ce3bc0ed508110559076}{gbcopy}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type m, Index\+Type n, Index\+Type kl, Index\+Type ku, const MA $\ast$A, Index\+Type ldA, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_aec0690f72678e152ad743eee7672ea73}{gbcotr}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type m, Index\+Type n, Index\+Type kl, Index\+Type ku, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a46aa895292ca51f850f3ae4ab3a70f1e}{gbscal}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, Index\+Type m, Index\+Type n, Index\+Type kl, Index\+Type ku, const ALPHA \&alpha, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename BETA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a76e4fb4d468857bae0a94a42ba17f6aa}{geaxpby}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const BETA \&beta, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a1a39f3a5d911fd8499a708b12636fd99}{geaxpy}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_aecc761d3935cacb8462c7e56d43e48a7}{gecopy}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type m, Index\+Type n, const MA $\ast$A, Index\+Type ldA, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a472d33d8aea25abf081525e1825b5df7}{gecotr}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type m, Index\+Type n, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a94ccc5a31f2234ae8f04892afdb0bfeb}{geraxpy}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a62fb647f2421f14b5cf565c424a1dcda}{gerscal}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, Index\+Type m, Index\+Type n, const ALPHA \&alpha, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ad3fe690cd28fe6122bd8bfd0c2f174ac}{gescal\+\_\+init}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, Index\+Type m, Index\+Type n, const ALPHA \&alpha, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_adbcf8aadb803d38fd8cc2965b3a41347}{gescal}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, Index\+Type m, Index\+Type n, const ALPHA \&alpha, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a4045c3c917e36826284e797cd4255eca}{geswap}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} orderA, \mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} orderB, Index\+Type m, Index\+Type n, MA $\ast$A, Index\+Type ldA, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_acbf59c568b533e47c98cff4af397cf18}{hescal}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+LoA, Index\+Type n, const ALPHA \&alpha, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ad80e389058c9817a0b6926038d2675fb}{imax1}} (Index\+Type n, const X $\ast$x, Index\+Type incX, Index\+Type \&i)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename X $>$ }\\Index\+Type \mbox{\hyperlink{namespacecxxblas_a1af0c3d7ddd053d26987d2cfa0e64601}{imax1}} (Index\+Type n, const X $\ast$x, Index\+Type incX)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename X , typename Y $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ae08a309fa649181eeb0e5cdbf27ad4e5}{racxpy}} (Index\+Type n, const ALPHA \&alpha, const X $\ast$x, Index\+Type incX, Y $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename X , typename Y $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a304af4f47d6988ce035e71969accda7d}{raxpy}} (Index\+Type n, const ALPHA \&alpha, const X $\ast$x, Index\+Type incX, Y $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename Y $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ac8343a406f58d2ad9196cedd4c8919d3}{rscal}} (Index\+Type n, const ALPHA \&alpha, Y $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a35721a100d8e23644df11d1111421520}{syscal}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+LoA, Index\+Type n, const ALPHA \&alpha, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename BETA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a995d9f87d93d7b8a0a61971dc02801bc}{tpaxpby}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, const BETA \&beta, MB $\ast$B)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a066d91f21146a70cd1947f1322de7a6e}{tpaxpy}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, MB $\ast$B)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_af4f8d6eaca3a270d3aa6096a59287d96}{tpcopy}} (\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type n, const MA $\ast$A, MB $\ast$B)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a81720f4c6003c3c7ea8a6db329be1098}{tpscal}} (\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type n, const ALPHA \&alpha, MA $\ast$A)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename BETA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a562d50662cfa7554a8365132b349ab9f}{traxpby}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const BETA \&beta, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a713fafcdcddcf8a446af19dc158d8ac0}{traxpy}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a54687e9f6ae6e83bfc606e5644d380dc}{trcopy}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type m, Index\+Type n, const MA $\ast$A, Index\+Type ldA, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a3669cd7dade784c2d170a341999e626e}{trscal}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type m, Index\+Type n, const ALPHA \&alpha, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_af96f3660ebb7d246c04e1271497486a4}{gbmv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type m, Index\+Type n, Index\+Type kl, Index\+Type ku, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const VX $\ast$x, Index\+Type incX, const BETA \&beta, VY $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_af157e00f82332329ffb6bb2b39b51b8a}{gemv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const VX $\ast$x, Index\+Type incX, const BETA \&beta, VY $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a74e0faabc444361effb892b464c36518}{ger}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, const VY $\ast$y, Index\+Type incY, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ae4a46596dae3e8043d5cdef6d824c7d6}{geru}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, const VY $\ast$y, Index\+Type incY, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_aeba174efe04c349b03431748a58fbeb0}{gerc}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, const VY $\ast$y, Index\+Type incY, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a63f999a0acd2debfac8535a8b5ba751d}{hbmv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, Index\+Type k, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const VX $\ast$x, Index\+Type incX, const BETA \&beta, VY $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a4db803d445c2f618f74c5d29ab55290f}{hemv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const VX $\ast$x, Index\+Type incX, const BETA \&beta, VY $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_adf0095a209e21f33f12c8f7147e2a2b7}{her}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a5e2297713ac844c98863abc3fe1400b4}{her2}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, const VY $\ast$y, Index\+Type incY, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a379201fb1f6f882ed012646b9fc4ed43}{hpmv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, const VX $\ast$x, Index\+Type incX, const BETA \&beta, VY $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_af12f2cc3b5d36e037cc98218dfd46192}{hpr}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, MA $\ast$A)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a09b7ba4abfda4c6e420cbc64705251a9}{hpr2}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, const VY $\ast$y, Index\+Type incY, MA $\ast$A)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_adbcfa2ce382211f52e6bdb9295b8080d}{sbmv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, Index\+Type k, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const VX $\ast$x, Index\+Type incX, const BETA \&beta, VY $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_aa77d8da7d659a64de6fd13a8ae362167}{spmv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, const VX $\ast$x, Index\+Type incX, const BETA \&beta, VY $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a317cc1159290f2d31a38e68d7c30d71d}{spr}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, MA $\ast$A)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a3762f47ac4be918f23339fa1db139813}{spr2}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, const VY $\ast$y, Index\+Type incY, MA $\ast$A)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a327a3a7be630a57e7db0095585b1664d}{symv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const VX $\ast$x, Index\+Type incX, const BETA \&beta, VY $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_aab487999ce165cdce24733bdf98355d9}{syr}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a7534c1282c3a7862cc929a91bcb67ae7}{syr2}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, const VY $\ast$y, Index\+Type incY, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA , typename VX $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ae10c353061383965c18d7993ee4f1ea9}{tbmv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type n, Index\+Type k, const MA $\ast$A, Index\+Type ldA, VX $\ast$x, Index\+Type incX)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA , typename VX $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a006d9f8ebd218e3d1b3fc7a559bdefd0}{tbsv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type n, Index\+Type k, const MA $\ast$A, Index\+Type ldA, VX $\ast$x, Index\+Type incX)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA , typename VX $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a9aab852dd286992ae532223788b1278a}{tpmv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type n, const MA $\ast$A, VX $\ast$x, Index\+Type incX)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA , typename VX $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a10adf6b143d483feb106f96525f02267}{tpsv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type n, const MA $\ast$A, VX $\ast$x, Index\+Type incX)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA , typename VX $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a509587086c2f5ea1a623bb9468f9618d}{trmv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type n, const MA $\ast$A, Index\+Type ldA, VX $\ast$x, Index\+Type incX)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename MA , typename VX $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a679afb6df98e4dac29936d0c5e4803bf}{trsv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type n, const MA $\ast$A, Index\+Type ldA, VX $\ast$x, Index\+Type incX)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ad0298236719344fede510d61585dfaf3}{gbmv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} conjX, Index\+Type m, Index\+Type n, Index\+Type ku, Index\+Type kl, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const VX $\ast$x, Index\+Type incX, const BETA \&beta, VY $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ae34d05c217bfca2fdcd68c77845a2ba3}{gemv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} conjX, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const VX $\ast$x, Index\+Type incX, const BETA \&beta, VY $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ab6ac5d1fe50822a2476217b760698c4c}{hemv}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} conjugateA, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const VX $\ast$x, Index\+Type incX, const BETA \&beta, VY $\ast$y, Index\+Type incY)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_adee7ee56710863f6a02fd986f7c0086f}{her}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} conjugateA, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ac6832e892e6fb0d5872770cbec6277f8}{her2}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} conjugateA, Index\+Type n, const ALPHA \&alpha, const VX $\ast$x, Index\+Type incX, const VY $\ast$y, Index\+Type incY, MA $\ast$A, Index\+Type ldA)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a317cdbf872a1d7431ae0356a15d871fa}{gemm}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transB, Index\+Type m, Index\+Type n, Index\+Type k, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, MC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_aac3afe9c1a8ba01259b978a6645de818}{hemm}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}} side, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, MC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_aeaf8c7939ca633d2ef130ff5dfc6af44}{her2k}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type n, Index\+Type k, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, MC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename BETA , typename MC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a713aa0c5248df3900ecf49da8f66b1a6}{herk}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type n, Index\+Type k, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const BETA \&beta, MC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a171dd32f962d97065f32a4f46c506c0e}{symm}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}} side, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, MC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a7021af75c1f70121e72acc56f3125b0a}{syr2k}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type n, Index\+Type k, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, MC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename BETA , typename MC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_adfe19b49568f9f80a00c3e4cffe3f76c}{syrk}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type n, Index\+Type k, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const BETA \&beta, MC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a520fcdf8969f11bebc8d765cebf89db4}{trmm}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}} side, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_af75fa55610eb9f88787fc76a1eb60e6e}{trsm}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}} side, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename VC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ab07e0ca3444f8278865d15a296089713}{gbmm}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}} side, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transB, Index\+Type m, Index\+Type n, Index\+Type kl, Index\+Type ku, Index\+Type l, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, VC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename VC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a244944a48e5299b4c19e6276a8e5af0d}{hbmm}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}} side, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type m, Index\+Type k, Index\+Type l, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, VC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename VC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a6ade7fb0e9b1867073f26946621e466b}{sbmm}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}} side, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type m, Index\+Type k, Index\+Type l, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, VC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a50a0c6340cb829a4333fe8f45c17cf94}{tbmm}} (\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}} order, \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}} side, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, Index\+Type m, Index\+Type n, Index\+Type k, const ALPHA \&alpha, const MA $\ast$A, Index\+Type ldA, MB $\ast$B, Index\+Type ldB)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a6ec933681140acbddbd145f3ea6f5f23}{gecrsmv}} (\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, const Index\+Type $\ast$ia, const Index\+Type $\ast$ja, const VX $\ast$x, const BETA \&beta, VY $\ast$y)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a899793e0132ff4083fe1e1c7136af178}{heccsmv}} (\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, const Index\+Type $\ast$ia, const Index\+Type $\ast$ja, const VX $\ast$x, const BETA \&beta, VY $\ast$y)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a1ce109c6f3179f533a373db492829de7}{hecrsmv}} (\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, const Index\+Type $\ast$ia, const Index\+Type $\ast$ja, const VX $\ast$x, const BETA \&beta, VY $\ast$y)
+\item 
+{\footnotesize template$<$typename Index\+Type $>$ }\\char \mbox{\hyperlink{namespacecxxblas_a91d3ee2957cdb5d9555c4a46f2570a0d}{get\+Index\+Base\+Char}} (Index\+Type x)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a1eef9de05868831254b01429f6a98332}{syccsmv}} (\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, const Index\+Type $\ast$ia, const Index\+Type $\ast$ja, const VX $\ast$x, const BETA \&beta, VY $\ast$y)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ }\\void \mbox{\hyperlink{namespacecxxblas_acd8c09c48224851868995c6ef7291b5b}{sycrsmv}} (\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, const Index\+Type $\ast$ia, const Index\+Type $\ast$ja, const VX $\ast$x, const BETA \&beta, VY $\ast$y)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ae33661d0514c35ad476a303c743e445b}{gecrsmm}} (\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, Index\+Type m, Index\+Type n, Index\+Type k, const ALPHA \&alpha, const MA $\ast$A, const Index\+Type $\ast$ia, const Index\+Type $\ast$ja, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, MC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_ab5ab5724368af5cc84c96de0dcc74f78}{heccsmm}} (\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, const Index\+Type $\ast$ia, const Index\+Type $\ast$ja, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, MC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a7f814b6fd18aeab77c561f384e218ba0}{hecrsmm}} (\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, const Index\+Type $\ast$ia, const Index\+Type $\ast$ja, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, MC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a8780438cf0f2099cf973ebf1e97f4423}{syccsmm}} (\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, const Index\+Type $\ast$ia, const Index\+Type $\ast$ja, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, MC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ }\\void \mbox{\hyperlink{namespacecxxblas_a6bb4f8ff1fe4463f216b2b9e82cca334}{sycrsmm}} (\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} up\+Lo, Index\+Type m, Index\+Type n, const ALPHA \&alpha, const MA $\ast$A, const Index\+Type $\ast$ia, const Index\+Type $\ast$ja, const MB $\ast$B, Index\+Type ldB, const BETA \&beta, MC $\ast$C, Index\+Type ldC)
+\item 
+{\footnotesize template$<$int n, typename ALPHA , typename X , int incX, typename BETA , typename Y , int incY$>$ }\\void \mbox{\hyperlink{namespacecxxblas_abf38ef890ae7a5594fd3eb4dd960fc26}{acxpby}} (const ALPHA \&alpha, const X $\ast$x, const BETA \&beta, Y $\ast$y)
+\item 
+{\footnotesize template$<$int n, typename ALPHA , typename X , int incX, typename Y , int incY$>$ }\\void \mbox{\hyperlink{namespacecxxblas_a3747c4bd123a69a4b45e28d1925e859c}{acxpy}} (const ALPHA \&alpha, const X $\ast$x, Y $\ast$y)
+\item 
+{\footnotesize template$<$int n, typename ALPHA , typename X , int incX, typename BETA , typename Y , int incY$>$ }\\void \mbox{\hyperlink{namespacecxxblas_a3be880728d1aa838bac884a9e5a98787}{axpby}} (const ALPHA \&alpha, const X $\ast$x, const BETA \&beta, Y $\ast$y)
+\item 
+{\footnotesize template$<$int n, typename ALPHA , typename X , int incX, typename Y , int incY$>$ }\\void \mbox{\hyperlink{namespacecxxblas_a2f92bf5aae26b5f931d5af232c5461eb}{axpy}} (const ALPHA \&alpha, const X $\ast$x, Y $\ast$y)
+\item 
+{\footnotesize template$<$int n, typename X , int incX, typename Y , int incY$>$ }\\void \mbox{\hyperlink{namespacecxxblas_a4b1b57e7597a556ef49270f9efac8d51}{ccopy}} (const X $\ast$x, Y $\ast$y)
+\item 
+{\footnotesize template$<$int n, typename X , int incX, typename Y , int incY$>$ }\\void \mbox{\hyperlink{namespacecxxblas_af9104779674deb0065e4b7a5e08b3dd0}{copy}} (const X $\ast$x, Y $\ast$y)
+\item 
+{\footnotesize template$<$int m, int n, typename ALPHA , typename MA , int ldA, typename MB , int ldB$>$ }\\void \mbox{\hyperlink{namespacecxxblas_a77247fb8edce11274b57ba1096cace52}{geaxpy}} (\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, const ALPHA \&alpha, const MA $\ast$A, MB $\ast$B)
+\item 
+{\footnotesize template$<$int m, int n, typename MA , int ldA, typename MB , int ldB$>$ }\\void \mbox{\hyperlink{namespacecxxblas_afbfec068f4d86e88ffb00b4e5cc1d2cc}{gecopy}} (\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, const MA $\ast$A, MB $\ast$B)
+\item 
+{\footnotesize template$<$int m, int n, typename ALPHA , typename MA , int ldA$>$ }\\void \mbox{\hyperlink{namespacecxxblas_af2f0872d93bd5149d88153debcbf8966}{gerscal}} (const ALPHA \&alpha, MA $\ast$A)
+\item 
+{\footnotesize template$<$int m, int n, typename ALPHA , typename MA , int ldA$>$ }\\void \mbox{\hyperlink{namespacecxxblas_ac2d47ed57f85d21b7a04ba4d20721458}{gescal}} (const ALPHA \&alpha, MA $\ast$A)
+\item 
+{\footnotesize template$<$int n, typename ALPHA , typename Y , int incY$>$ }\\void \mbox{\hyperlink{namespacecxxblas_aa44fc271dab7baf15da866f6d60c618c}{rscal}} (const ALPHA \&alpha, Y $\ast$y)
+\item 
+{\footnotesize template$<$int n, typename ALPHA , typename Y , int incY$>$ }\\void \mbox{\hyperlink{namespacecxxblas_ad98068e958511bc9d3392d93d5bd97b5}{scal}} (const ALPHA \&alpha, Y $\ast$y)
+\item 
+{\footnotesize template$<$int m, int n, typename MA , int ldA, typename VX , int incX, typename VY , int incY$>$ }\\void \mbox{\hyperlink{namespacecxxblas_a57b616943a5d6c153fa6a34166c125f6}{gemv}} (\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} trans, MA alpha, const MA $\ast$A, const VX $\ast$x, VY beta, VY $\ast$y)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}\label{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}} 
+\index{cxxblas@{cxxblas}!ComplexDouble@{ComplexDouble}}
+\index{ComplexDouble@{ComplexDouble}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{ComplexDouble}{ComplexDouble}}
+{\footnotesize\ttfamily typedef std\+::complex$<$double$>$ \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{cxxblas\+::\+Complex\+Double}}}
+
+
+
+Definition at line \mbox{\hyperlink{typedefs_8h_source_l00043}{43}} of file \mbox{\hyperlink{typedefs_8h_source}{typedefs.\+h}}.
+
+\mbox{\Hypertarget{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}\label{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}} 
+\index{cxxblas@{cxxblas}!ComplexFloat@{ComplexFloat}}
+\index{ComplexFloat@{ComplexFloat}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{ComplexFloat}{ComplexFloat}}
+{\footnotesize\ttfamily typedef std\+::complex$<$float$>$ \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{cxxblas\+::\+Complex\+Float}}}
+
+
+
+Definition at line \mbox{\hyperlink{typedefs_8h_source_l00042}{42}} of file \mbox{\hyperlink{typedefs_8h_source}{typedefs.\+h}}.
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}\label{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}} 
+\index{cxxblas@{cxxblas}!Diag@{Diag}}
+\index{Diag@{Diag}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{Diag}{Diag}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{cxxblas\+::\+Diag}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Unit@{Unit}!cxxblas@{cxxblas}}\index{cxxblas@{cxxblas}!Unit@{Unit}}}\mbox{\Hypertarget{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6aea4d8eafe201686e94642101b3be8163}\label{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6aea4d8eafe201686e94642101b3be8163}} 
+Unit&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NonUnit@{NonUnit}!cxxblas@{cxxblas}}\index{cxxblas@{cxxblas}!NonUnit@{NonUnit}}}\mbox{\Hypertarget{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6a82be9b897400986d48ea221e4a837b2d}\label{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6a82be9b897400986d48ea221e4a837b2d}} 
+Non\+Unit&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{typedefs_8h_source_l00050}{50}} of file \mbox{\hyperlink{typedefs_8h_source}{typedefs.\+h}}.
+
+\mbox{\Hypertarget{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}\label{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}} 
+\index{cxxblas@{cxxblas}!Side@{Side}}
+\index{Side@{Side}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{Side}{Side}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{cxxblas\+::\+Side}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Left@{Left}!cxxblas@{cxxblas}}\index{cxxblas@{cxxblas}!Left@{Left}}}\mbox{\Hypertarget{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947ab2dc76441030cc13b9fbb2b65fd953fc}\label{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947ab2dc76441030cc13b9fbb2b65fd953fc}} 
+Left&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Right@{Right}!cxxblas@{cxxblas}}\index{cxxblas@{cxxblas}!Right@{Right}}}\mbox{\Hypertarget{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947a49f14d940c2e0e526a3a53a739dffe7e}\label{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947a49f14d940c2e0e526a3a53a739dffe7e}} 
+Right&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{typedefs_8h_source_l00052}{52}} of file \mbox{\hyperlink{typedefs_8h_source}{typedefs.\+h}}.
+
+\mbox{\Hypertarget{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}\label{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}} 
+\index{cxxblas@{cxxblas}!StorageOrder@{StorageOrder}}
+\index{StorageOrder@{StorageOrder}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{StorageOrder}{StorageOrder}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{cxxblas\+::\+Storage\+Order}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RowMajor@{RowMajor}!cxxblas@{cxxblas}}\index{cxxblas@{cxxblas}!RowMajor@{RowMajor}}}\mbox{\Hypertarget{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68a746c8afda1b7bb0f80c4853fde1edd05}\label{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68a746c8afda1b7bb0f80c4853fde1edd05}} 
+Row\+Major&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ColMajor@{ColMajor}!cxxblas@{cxxblas}}\index{cxxblas@{cxxblas}!ColMajor@{ColMajor}}}\mbox{\Hypertarget{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68aad9cd0535867752083896cd2861cd907}\label{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68aad9cd0535867752083896cd2861cd907}} 
+Col\+Major&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{typedefs_8h_source_l00046}{46}} of file \mbox{\hyperlink{typedefs_8h_source}{typedefs.\+h}}.
+
+\mbox{\Hypertarget{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}\label{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}} 
+\index{cxxblas@{cxxblas}!StorageUpLo@{StorageUpLo}}
+\index{StorageUpLo@{StorageUpLo}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{StorageUpLo}{StorageUpLo}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{cxxblas\+::\+Storage\+Up\+Lo}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Upper@{Upper}!cxxblas@{cxxblas}}\index{cxxblas@{cxxblas}!Upper@{Upper}}}\mbox{\Hypertarget{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7a37aa39af32043a5cc803b7f391035393}\label{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7a37aa39af32043a5cc803b7f391035393}} 
+Upper&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Lower@{Lower}!cxxblas@{cxxblas}}\index{cxxblas@{cxxblas}!Lower@{Lower}}}\mbox{\Hypertarget{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7a5d4f0e9e2ade8265626081ff772f3cd1}\label{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7a5d4f0e9e2ade8265626081ff772f3cd1}} 
+Lower&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{typedefs_8h_source_l00048}{48}} of file \mbox{\hyperlink{typedefs_8h_source}{typedefs.\+h}}.
+
+\mbox{\Hypertarget{namespacecxxblas_a710044b98080b10301734289c63b1e30}\label{namespacecxxblas_a710044b98080b10301734289c63b1e30}} 
+\index{cxxblas@{cxxblas}!Transpose@{Transpose}}
+\index{Transpose@{Transpose}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{Transpose}{Transpose}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{cxxblas\+::\+Transpose}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NoTrans@{NoTrans}!cxxblas@{cxxblas}}\index{cxxblas@{cxxblas}!NoTrans@{NoTrans}}}\mbox{\Hypertarget{namespacecxxblas_a710044b98080b10301734289c63b1e30a6ff86ac122ab2d5a805c768d29a15809}\label{namespacecxxblas_a710044b98080b10301734289c63b1e30a6ff86ac122ab2d5a805c768d29a15809}} 
+No\+Trans&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Conj@{Conj}!cxxblas@{cxxblas}}\index{cxxblas@{cxxblas}!Conj@{Conj}}}\mbox{\Hypertarget{namespacecxxblas_a710044b98080b10301734289c63b1e30aaadde075a6e8b482fa14d032cd54f64b}\label{namespacecxxblas_a710044b98080b10301734289c63b1e30aaadde075a6e8b482fa14d032cd54f64b}} 
+Conj&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Trans@{Trans}!cxxblas@{cxxblas}}\index{cxxblas@{cxxblas}!Trans@{Trans}}}\mbox{\Hypertarget{namespacecxxblas_a710044b98080b10301734289c63b1e30a0f956f88c118f2f3b478474693315722}\label{namespacecxxblas_a710044b98080b10301734289c63b1e30a0f956f88c118f2f3b478474693315722}} 
+Trans&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ConjTrans@{ConjTrans}!cxxblas@{cxxblas}}\index{cxxblas@{cxxblas}!ConjTrans@{ConjTrans}}}\mbox{\Hypertarget{namespacecxxblas_a710044b98080b10301734289c63b1e30a1c689914790d2fe73f783b40657eaec0}\label{namespacecxxblas_a710044b98080b10301734289c63b1e30a1c689914790d2fe73f783b40657eaec0}} 
+Conj\+Trans&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{typedefs_8h_source_l00054}{54}} of file \mbox{\hyperlink{typedefs_8h_source}{typedefs.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacecxxblas_a57cfcc008948e3c8df22f86cb6e671d4}\label{namespacecxxblas_a57cfcc008948e3c8df22f86cb6e671d4}} 
+\index{cxxblas@{cxxblas}!abs1@{abs1}}
+\index{abs1@{abs1}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{abs1()}{abs1()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T cxxblas\+::abs1 (\begin{DoxyParamCaption}\item[{const std\+::complex$<$ T $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_abf38ef890ae7a5594fd3eb4dd960fc26}\label{namespacecxxblas_abf38ef890ae7a5594fd3eb4dd960fc26}} 
+\index{cxxblas@{cxxblas}!acxpby@{acxpby}}
+\index{acxpby@{acxpby}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{acxpby()}{acxpby()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$int n, typename ALPHA , typename X , int incX, typename BETA , typename Y , int incY$>$ \\
+void cxxblas\+::acxpby (\begin{DoxyParamCaption}\item[{const ALPHA \&}]{alpha,  }\item[{const X $\ast$}]{x,  }\item[{const BETA \&}]{beta,  }\item[{Y $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a1f144db6f67dd9e5552f5cee6f659255}\label{namespacecxxblas_a1f144db6f67dd9e5552f5cee6f659255}} 
+\index{cxxblas@{cxxblas}!acxpby@{acxpby}}
+\index{acxpby@{acxpby}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{acxpby()}{acxpby()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename X , typename BETA , typename Y $>$ \\
+void cxxblas\+::acxpby (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{Y $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a3747c4bd123a69a4b45e28d1925e859c}\label{namespacecxxblas_a3747c4bd123a69a4b45e28d1925e859c}} 
+\index{cxxblas@{cxxblas}!acxpy@{acxpy}}
+\index{acxpy@{acxpy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{acxpy()}{acxpy()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$int n, typename ALPHA , typename X , int incX, typename Y , int incY$>$ \\
+void cxxblas\+::acxpy (\begin{DoxyParamCaption}\item[{const ALPHA \&}]{alpha,  }\item[{const X $\ast$}]{x,  }\item[{Y $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ab02d8b28c53d1cdff0a8373f935fc903}\label{namespacecxxblas_ab02d8b28c53d1cdff0a8373f935fc903}} 
+\index{cxxblas@{cxxblas}!acxpy@{acxpy}}
+\index{acxpy@{acxpy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{acxpy()}{acxpy()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename X , typename Y $>$ \\
+void cxxblas\+::acxpy (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{Y $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a40137bd5541db32eee00eae763621783}\label{namespacecxxblas_a40137bd5541db32eee00eae763621783}} 
+\index{cxxblas@{cxxblas}!asum@{asum}}
+\index{asum@{asum}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{asum()}{asum()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X , typename T $>$ \\
+void cxxblas\+::asum (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{T \&}]{abs\+Sum }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a7b2e8839404740632544c93463f02b6a}\label{namespacecxxblas_a7b2e8839404740632544c93463f02b6a}} 
+\index{cxxblas@{cxxblas}!asum1@{asum1}}
+\index{asum1@{asum1}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{asum1()}{asum1()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X , typename T $>$ \\
+void cxxblas\+::asum1 (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{T \&}]{abs\+Sum }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a3be880728d1aa838bac884a9e5a98787}\label{namespacecxxblas_a3be880728d1aa838bac884a9e5a98787}} 
+\index{cxxblas@{cxxblas}!axpby@{axpby}}
+\index{axpby@{axpby}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{axpby()}{axpby()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$int n, typename ALPHA , typename X , int incX, typename BETA , typename Y , int incY$>$ \\
+void cxxblas\+::axpby (\begin{DoxyParamCaption}\item[{const ALPHA \&}]{alpha,  }\item[{const X $\ast$}]{x,  }\item[{const BETA \&}]{beta,  }\item[{Y $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a72a7cfa4dffc0eea0ee2c4a78077472b}\label{namespacecxxblas_a72a7cfa4dffc0eea0ee2c4a78077472b}} 
+\index{cxxblas@{cxxblas}!axpby@{axpby}}
+\index{axpby@{axpby}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{axpby()}{axpby()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename X , typename BETA , typename Y $>$ \\
+void cxxblas\+::axpby (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{Y $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a2f92bf5aae26b5f931d5af232c5461eb}\label{namespacecxxblas_a2f92bf5aae26b5f931d5af232c5461eb}} 
+\index{cxxblas@{cxxblas}!axpy@{axpy}}
+\index{axpy@{axpy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{axpy()}{axpy()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$int n, typename ALPHA , typename X , int incX, typename Y , int incY$>$ \\
+void cxxblas\+::axpy (\begin{DoxyParamCaption}\item[{const ALPHA \&}]{alpha,  }\item[{const X $\ast$}]{x,  }\item[{Y $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a628ad662f9e86b8b12b207f5f5e4a2fe}\label{namespacecxxblas_a628ad662f9e86b8b12b207f5f5e4a2fe}} 
+\index{cxxblas@{cxxblas}!axpy@{axpy}}
+\index{axpy@{axpy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{axpy()}{axpy()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename X , typename Y $>$ \\
+void cxxblas\+::axpy (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{Y $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_af90758661694282ee9516470d96c0887}\label{namespacecxxblas_af90758661694282ee9516470d96c0887}} 
+\index{cxxblas@{cxxblas}!blasImpl@{blasImpl}}
+\index{blasImpl@{blasImpl}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{blasImpl()}{blasImpl()}}
+{\footnotesize\ttfamily template$<$typename CHAR $>$ \\
+const CHAR $\ast$ cxxblas\+::blas\+Impl (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a4b1b57e7597a556ef49270f9efac8d51}\label{namespacecxxblas_a4b1b57e7597a556ef49270f9efac8d51}} 
+\index{cxxblas@{cxxblas}!ccopy@{ccopy}}
+\index{ccopy@{ccopy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{ccopy()}{ccopy()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$int n, typename X , int incX, typename Y , int incY$>$ \\
+void cxxblas\+::ccopy (\begin{DoxyParamCaption}\item[{const X $\ast$}]{x,  }\item[{Y $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_aeb9b5ab9972d9023dda5ee4114e1cf1f}\label{namespacecxxblas_aeb9b5ab9972d9023dda5ee4114e1cf1f}} 
+\index{cxxblas@{cxxblas}!ccopy@{ccopy}}
+\index{ccopy@{ccopy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{ccopy()}{ccopy()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X , typename Y $>$ \\
+void cxxblas\+::ccopy (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{Y $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a00ad52895d2c9e7bdf1a45da3544555d}\label{namespacecxxblas_a00ad52895d2c9e7bdf1a45da3544555d}} 
+\index{cxxblas@{cxxblas}!conjugate@{conjugate}}
+\index{conjugate@{conjugate}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{conjugate()}{conjugate()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{cxxblas\+::\+Restrict\+To}}$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, std\+::complex$<$ T $>$ $>$\+::\+Type cxxblas\+::conjugate (\begin{DoxyParamCaption}\item[{const std\+::complex$<$ T $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a474f34e884dba1e0cf4add8f152262e4}\label{namespacecxxblas_a474f34e884dba1e0cf4add8f152262e4}} 
+\index{cxxblas@{cxxblas}!conjugate@{conjugate}}
+\index{conjugate@{conjugate}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{conjugate()}{conjugate()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{cxxblas\+::\+Restrict\+To}}$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, constT \& $>$\+::\+Type cxxblas\+::conjugate (\begin{DoxyParamCaption}\item[{const T \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_af9104779674deb0065e4b7a5e08b3dd0}\label{namespacecxxblas_af9104779674deb0065e4b7a5e08b3dd0}} 
+\index{cxxblas@{cxxblas}!copy@{copy}}
+\index{copy@{copy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{copy()}{copy()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$int n, typename X , int incX, typename Y , int incY$>$ \\
+void cxxblas\+::copy (\begin{DoxyParamCaption}\item[{const X $\ast$}]{x,  }\item[{Y $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a5301c325a16dd6cba3e48ac337ebb995}\label{namespacecxxblas_a5301c325a16dd6cba3e48ac337ebb995}} 
+\index{cxxblas@{cxxblas}!copy@{copy}}
+\index{copy@{copy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{copy()}{copy()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X , typename Y $>$ \\
+void cxxblas\+::copy (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{Y $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a88b5b182d09d1becc3d58554fe918f67}\label{namespacecxxblas_a88b5b182d09d1becc3d58554fe918f67}} 
+\index{cxxblas@{cxxblas}!dot@{dot}}
+\index{dot@{dot}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{dot()}{dot()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X , typename Y , typename Result $>$ \\
+void cxxblas\+::dot (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const Y $\ast$}]{y,  }\item[{Index\+Type}]{incY,  }\item[{Result \&}]{result }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a1b0a1e1b75a6be2dd7236387039700b3}\label{namespacecxxblas_a1b0a1e1b75a6be2dd7236387039700b3}} 
+\index{cxxblas@{cxxblas}!dotu@{dotu}}
+\index{dotu@{dotu}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{dotu()}{dotu()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X , typename Y , typename Result $>$ \\
+void cxxblas\+::dotu (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const Y $\ast$}]{y,  }\item[{Index\+Type}]{incY,  }\item[{Result \&}]{result }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a540f1b6734e3b9a6dd90f525788abc12}\label{namespacecxxblas_a540f1b6734e3b9a6dd90f525788abc12}} 
+\index{cxxblas@{cxxblas}!gbaxpby@{gbaxpby}}
+\index{gbaxpby@{gbaxpby}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gbaxpby()}{gbaxpby()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename BETA , typename MB $>$ \\
+void cxxblas\+::gbaxpby (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{kl,  }\item[{Index\+Type}]{ku,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const BETA \&}]{beta,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a5272f959d6eb0c316a1f24959268b52b}\label{namespacecxxblas_a5272f959d6eb0c316a1f24959268b52b}} 
+\index{cxxblas@{cxxblas}!gbaxpy@{gbaxpy}}
+\index{gbaxpy@{gbaxpy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gbaxpy()}{gbaxpy()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ \\
+void cxxblas\+::gbaxpy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{kl,  }\item[{Index\+Type}]{ku,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_aeef3e395d7f9ce3bc0ed508110559076}\label{namespacecxxblas_aeef3e395d7f9ce3bc0ed508110559076}} 
+\index{cxxblas@{cxxblas}!gbcopy@{gbcopy}}
+\index{gbcopy@{gbcopy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gbcopy()}{gbcopy()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA , typename MB $>$ \\
+void cxxblas\+::gbcopy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{kl,  }\item[{Index\+Type}]{ku,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_aec0690f72678e152ad743eee7672ea73}\label{namespacecxxblas_aec0690f72678e152ad743eee7672ea73}} 
+\index{cxxblas@{cxxblas}!gbcotr@{gbcotr}}
+\index{gbcotr@{gbcotr}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gbcotr()}{gbcotr()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA $>$ \\
+void cxxblas\+::gbcotr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{kl,  }\item[{Index\+Type}]{ku,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ab07e0ca3444f8278865d15a296089713}\label{namespacecxxblas_ab07e0ca3444f8278865d15a296089713}} 
+\index{cxxblas@{cxxblas}!gbmm@{gbmm}}
+\index{gbmm@{gbmm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gbmm()}{gbmm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename VC $>$ \\
+void cxxblas\+::gbmm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}}}]{side,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transB,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{kl,  }\item[{Index\+Type}]{ku,  }\item[{Index\+Type}]{l,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{VC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_af96f3660ebb7d246c04e1271497486a4}\label{namespacecxxblas_af96f3660ebb7d246c04e1271497486a4}} 
+\index{cxxblas@{cxxblas}!gbmv@{gbmv}}
+\index{gbmv@{gbmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gbmv()}{gbmv()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::gbmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{kl,  }\item[{Index\+Type}]{ku,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ad0298236719344fede510d61585dfaf3}\label{namespacecxxblas_ad0298236719344fede510d61585dfaf3}} 
+\index{cxxblas@{cxxblas}!gbmv@{gbmv}}
+\index{gbmv@{gbmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gbmv()}{gbmv()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::gbmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{conjX,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{ku,  }\item[{Index\+Type}]{kl,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a46aa895292ca51f850f3ae4ab3a70f1e}\label{namespacecxxblas_a46aa895292ca51f850f3ae4ab3a70f1e}} 
+\index{cxxblas@{cxxblas}!gbscal@{gbscal}}
+\index{gbscal@{gbscal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gbscal()}{gbscal()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA $>$ \\
+void cxxblas\+::gbscal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{kl,  }\item[{Index\+Type}]{ku,  }\item[{const ALPHA \&}]{alpha,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a76e4fb4d468857bae0a94a42ba17f6aa}\label{namespacecxxblas_a76e4fb4d468857bae0a94a42ba17f6aa}} 
+\index{cxxblas@{cxxblas}!geaxpby@{geaxpby}}
+\index{geaxpby@{geaxpby}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{geaxpby()}{geaxpby()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename BETA , typename MB $>$ \\
+void cxxblas\+::geaxpby (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const BETA \&}]{beta,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a1a39f3a5d911fd8499a708b12636fd99}\label{namespacecxxblas_a1a39f3a5d911fd8499a708b12636fd99}} 
+\index{cxxblas@{cxxblas}!geaxpy@{geaxpy}}
+\index{geaxpy@{geaxpy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{geaxpy()}{geaxpy()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ \\
+void cxxblas\+::geaxpy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a77247fb8edce11274b57ba1096cace52}\label{namespacecxxblas_a77247fb8edce11274b57ba1096cace52}} 
+\index{cxxblas@{cxxblas}!geaxpy@{geaxpy}}
+\index{geaxpy@{geaxpy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{geaxpy()}{geaxpy()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$int m, int n, typename ALPHA , typename MA , int ldA, typename MB , int ldB$>$ \\
+void cxxblas\+::geaxpy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{MB $\ast$}]{B }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_aecc761d3935cacb8462c7e56d43e48a7}\label{namespacecxxblas_aecc761d3935cacb8462c7e56d43e48a7}} 
+\index{cxxblas@{cxxblas}!gecopy@{gecopy}}
+\index{gecopy@{gecopy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gecopy()}{gecopy()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA , typename MB $>$ \\
+void cxxblas\+::gecopy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_afbfec068f4d86e88ffb00b4e5cc1d2cc}\label{namespacecxxblas_afbfec068f4d86e88ffb00b4e5cc1d2cc}} 
+\index{cxxblas@{cxxblas}!gecopy@{gecopy}}
+\index{gecopy@{gecopy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gecopy()}{gecopy()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$int m, int n, typename MA , int ldA, typename MB , int ldB$>$ \\
+void cxxblas\+::gecopy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{const MA $\ast$}]{A,  }\item[{MB $\ast$}]{B }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a472d33d8aea25abf081525e1825b5df7}\label{namespacecxxblas_a472d33d8aea25abf081525e1825b5df7}} 
+\index{cxxblas@{cxxblas}!gecotr@{gecotr}}
+\index{gecotr@{gecotr}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gecotr()}{gecotr()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA $>$ \\
+void cxxblas\+::gecotr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ae33661d0514c35ad476a303c743e445b}\label{namespacecxxblas_ae33661d0514c35ad476a303c743e445b}} 
+\index{cxxblas@{cxxblas}!gecrsmm@{gecrsmm}}
+\index{gecrsmm@{gecrsmm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gecrsmm()}{gecrsmm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ \\
+void cxxblas\+::gecrsmm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{k,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const Index\+Type $\ast$}]{ia,  }\item[{const Index\+Type $\ast$}]{ja,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{MC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a6ec933681140acbddbd145f3ea6f5f23}\label{namespacecxxblas_a6ec933681140acbddbd145f3ea6f5f23}} 
+\index{cxxblas@{cxxblas}!gecrsmv@{gecrsmv}}
+\index{gecrsmv@{gecrsmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gecrsmv()}{gecrsmv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::gecrsmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const Index\+Type $\ast$}]{ia,  }\item[{const Index\+Type $\ast$}]{ja,  }\item[{const VX $\ast$}]{x,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a317cdbf872a1d7431ae0356a15d871fa}\label{namespacecxxblas_a317cdbf872a1d7431ae0356a15d871fa}} 
+\index{cxxblas@{cxxblas}!gemm@{gemm}}
+\index{gemm@{gemm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gemm()}{gemm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ \\
+void cxxblas\+::gemm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transB,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{k,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{MC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_af157e00f82332329ffb6bb2b39b51b8a}\label{namespacecxxblas_af157e00f82332329ffb6bb2b39b51b8a}} 
+\index{cxxblas@{cxxblas}!gemv@{gemv}}
+\index{gemv@{gemv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gemv()}{gemv()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::gemv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ae34d05c217bfca2fdcd68c77845a2ba3}\label{namespacecxxblas_ae34d05c217bfca2fdcd68c77845a2ba3}} 
+\index{cxxblas@{cxxblas}!gemv@{gemv}}
+\index{gemv@{gemv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gemv()}{gemv()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::gemv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{conjX,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a57b616943a5d6c153fa6a34166c125f6}\label{namespacecxxblas_a57b616943a5d6c153fa6a34166c125f6}} 
+\index{cxxblas@{cxxblas}!gemv@{gemv}}
+\index{gemv@{gemv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gemv()}{gemv()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily template$<$int m, int n, typename MA , int ldA, typename VX , int incX, typename VY , int incY$>$ \\
+void cxxblas\+::gemv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{MA}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const VX $\ast$}]{x,  }\item[{VY}]{beta,  }\item[{VY $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a74e0faabc444361effb892b464c36518}\label{namespacecxxblas_a74e0faabc444361effb892b464c36518}} 
+\index{cxxblas@{cxxblas}!ger@{ger}}
+\index{ger@{ger}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{ger()}{ger()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ \\
+void cxxblas\+::ger (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const VY $\ast$}]{y,  }\item[{Index\+Type}]{incY,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a94ccc5a31f2234ae8f04892afdb0bfeb}\label{namespacecxxblas_a94ccc5a31f2234ae8f04892afdb0bfeb}} 
+\index{cxxblas@{cxxblas}!geraxpy@{geraxpy}}
+\index{geraxpy@{geraxpy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{geraxpy()}{geraxpy()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ \\
+void cxxblas\+::geraxpy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_aeba174efe04c349b03431748a58fbeb0}\label{namespacecxxblas_aeba174efe04c349b03431748a58fbeb0}} 
+\index{cxxblas@{cxxblas}!gerc@{gerc}}
+\index{gerc@{gerc}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gerc()}{gerc()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ \\
+void cxxblas\+::gerc (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const VY $\ast$}]{y,  }\item[{Index\+Type}]{incY,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_af2f0872d93bd5149d88153debcbf8966}\label{namespacecxxblas_af2f0872d93bd5149d88153debcbf8966}} 
+\index{cxxblas@{cxxblas}!gerscal@{gerscal}}
+\index{gerscal@{gerscal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gerscal()}{gerscal()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$int m, int n, typename ALPHA , typename MA , int ldA$>$ \\
+void cxxblas\+::gerscal (\begin{DoxyParamCaption}\item[{const ALPHA \&}]{alpha,  }\item[{MA $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a62fb647f2421f14b5cf565c424a1dcda}\label{namespacecxxblas_a62fb647f2421f14b5cf565c424a1dcda}} 
+\index{cxxblas@{cxxblas}!gerscal@{gerscal}}
+\index{gerscal@{gerscal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gerscal()}{gerscal()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA $>$ \\
+void cxxblas\+::gerscal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ae4a46596dae3e8043d5cdef6d824c7d6}\label{namespacecxxblas_ae4a46596dae3e8043d5cdef6d824c7d6}} 
+\index{cxxblas@{cxxblas}!geru@{geru}}
+\index{geru@{geru}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{geru()}{geru()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ \\
+void cxxblas\+::geru (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const VY $\ast$}]{y,  }\item[{Index\+Type}]{incY,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ac2d47ed57f85d21b7a04ba4d20721458}\label{namespacecxxblas_ac2d47ed57f85d21b7a04ba4d20721458}} 
+\index{cxxblas@{cxxblas}!gescal@{gescal}}
+\index{gescal@{gescal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gescal()}{gescal()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$int m, int n, typename ALPHA , typename MA , int ldA$>$ \\
+void cxxblas\+::gescal (\begin{DoxyParamCaption}\item[{const ALPHA \&}]{alpha,  }\item[{MA $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_adbcf8aadb803d38fd8cc2965b3a41347}\label{namespacecxxblas_adbcf8aadb803d38fd8cc2965b3a41347}} 
+\index{cxxblas@{cxxblas}!gescal@{gescal}}
+\index{gescal@{gescal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gescal()}{gescal()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA $>$ \\
+void cxxblas\+::gescal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ad3fe690cd28fe6122bd8bfd0c2f174ac}\label{namespacecxxblas_ad3fe690cd28fe6122bd8bfd0c2f174ac}} 
+\index{cxxblas@{cxxblas}!gescal\_init@{gescal\_init}}
+\index{gescal\_init@{gescal\_init}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{gescal\_init()}{gescal\_init()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA $>$ \\
+void cxxblas\+::gescal\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a4045c3c917e36826284e797cd4255eca}\label{namespacecxxblas_a4045c3c917e36826284e797cd4255eca}} 
+\index{cxxblas@{cxxblas}!geswap@{geswap}}
+\index{geswap@{geswap}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{geswap()}{geswap()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA , typename MB $>$ \\
+void cxxblas\+::geswap (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{orderA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{orderB,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_abd2de56f837a3338235ec32c5fd64f99}\label{namespacecxxblas_abd2de56f837a3338235ec32c5fd64f99}} 
+\index{cxxblas@{cxxblas}!getCxxBlasEnum@{getCxxBlasEnum}}
+\index{getCxxBlasEnum@{getCxxBlasEnum}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{getCxxBlasEnum()}{getCxxBlasEnum()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily template$<$typename ENUM $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ ENUM, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} $>$\+::value, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} $>$\+::\+Type cxxblas\+::get\+Cxx\+Blas\+Enum (\begin{DoxyParamCaption}\item[{char}]{diag }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_aa5cec6414633269a7d1de92637bee039}\label{namespacecxxblas_aa5cec6414633269a7d1de92637bee039}} 
+\index{cxxblas@{cxxblas}!getCxxBlasEnum@{getCxxBlasEnum}}
+\index{getCxxBlasEnum@{getCxxBlasEnum}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{getCxxBlasEnum()}{getCxxBlasEnum()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily template$<$typename ENUM $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ ENUM, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} $>$\+::value, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} $>$\+::\+Type cxxblas\+::get\+Cxx\+Blas\+Enum (\begin{DoxyParamCaption}\item[{char}]{trans }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a9d2990c6095e23948174dece35a3e17c}\label{namespacecxxblas_a9d2990c6095e23948174dece35a3e17c}} 
+\index{cxxblas@{cxxblas}!getCxxBlasEnum@{getCxxBlasEnum}}
+\index{getCxxBlasEnum@{getCxxBlasEnum}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{getCxxBlasEnum()}{getCxxBlasEnum()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily template$<$typename ENUM $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ ENUM, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} $>$\+::value, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} $>$\+::\+Type cxxblas\+::get\+Cxx\+Blas\+Enum (\begin{DoxyParamCaption}\item[{char}]{up\+Lo }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a2e912f6be2475ad21be3f52ec9b5fc20}\label{namespacecxxblas_a2e912f6be2475ad21be3f52ec9b5fc20}} 
+\index{cxxblas@{cxxblas}!getF77BlasChar@{getF77BlasChar}}
+\index{getF77BlasChar@{getF77BlasChar}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{getF77BlasChar()}{getF77BlasChar()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily template$<$typename ENUM $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ ENUM, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} $>$\+::value, char $>$\+::\+Type cxxblas\+::get\+F77\+Blas\+Char (\begin{DoxyParamCaption}\item[{ENUM}]{diag }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_abb65f6752487d758ce2be8e30e10202a}\label{namespacecxxblas_abb65f6752487d758ce2be8e30e10202a}} 
+\index{cxxblas@{cxxblas}!getF77BlasChar@{getF77BlasChar}}
+\index{getF77BlasChar@{getF77BlasChar}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{getF77BlasChar()}{getF77BlasChar()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily template$<$typename ENUM $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ ENUM, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} $>$\+::value, char $>$\+::\+Type cxxblas\+::get\+F77\+Blas\+Char (\begin{DoxyParamCaption}\item[{ENUM}]{trans }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a6fa84144e95aeddbc38c7718b8123499}\label{namespacecxxblas_a6fa84144e95aeddbc38c7718b8123499}} 
+\index{cxxblas@{cxxblas}!getF77BlasChar@{getF77BlasChar}}
+\index{getF77BlasChar@{getF77BlasChar}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{getF77BlasChar()}{getF77BlasChar()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily template$<$typename ENUM $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ ENUM, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}} $>$\+::value, char $>$\+::\+Type cxxblas\+::get\+F77\+Blas\+Char (\begin{DoxyParamCaption}\item[{ENUM}]{up\+Lo }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a91d3ee2957cdb5d9555c4a46f2570a0d}\label{namespacecxxblas_a91d3ee2957cdb5d9555c4a46f2570a0d}} 
+\index{cxxblas@{cxxblas}!getIndexBaseChar@{getIndexBaseChar}}
+\index{getIndexBaseChar@{getIndexBaseChar}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{getIndexBaseChar()}{getIndexBaseChar()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type $>$ \\
+char cxxblas\+::get\+Index\+Base\+Char (\begin{DoxyParamCaption}\item[{Index\+Type}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a244944a48e5299b4c19e6276a8e5af0d}\label{namespacecxxblas_a244944a48e5299b4c19e6276a8e5af0d}} 
+\index{cxxblas@{cxxblas}!hbmm@{hbmm}}
+\index{hbmm@{hbmm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{hbmm()}{hbmm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename VC $>$ \\
+void cxxblas\+::hbmm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}}}]{side,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{k,  }\item[{Index\+Type}]{l,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{VC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a63f999a0acd2debfac8535a8b5ba751d}\label{namespacecxxblas_a63f999a0acd2debfac8535a8b5ba751d}} 
+\index{cxxblas@{cxxblas}!hbmv@{hbmv}}
+\index{hbmv@{hbmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{hbmv()}{hbmv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::hbmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{k,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ab5ab5724368af5cc84c96de0dcc74f78}\label{namespacecxxblas_ab5ab5724368af5cc84c96de0dcc74f78}} 
+\index{cxxblas@{cxxblas}!heccsmm@{heccsmm}}
+\index{heccsmm@{heccsmm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{heccsmm()}{heccsmm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ \\
+void cxxblas\+::heccsmm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const Index\+Type $\ast$}]{ia,  }\item[{const Index\+Type $\ast$}]{ja,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{MC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a899793e0132ff4083fe1e1c7136af178}\label{namespacecxxblas_a899793e0132ff4083fe1e1c7136af178}} 
+\index{cxxblas@{cxxblas}!heccsmv@{heccsmv}}
+\index{heccsmv@{heccsmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{heccsmv()}{heccsmv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::heccsmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const Index\+Type $\ast$}]{ia,  }\item[{const Index\+Type $\ast$}]{ja,  }\item[{const VX $\ast$}]{x,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a7f814b6fd18aeab77c561f384e218ba0}\label{namespacecxxblas_a7f814b6fd18aeab77c561f384e218ba0}} 
+\index{cxxblas@{cxxblas}!hecrsmm@{hecrsmm}}
+\index{hecrsmm@{hecrsmm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{hecrsmm()}{hecrsmm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ \\
+void cxxblas\+::hecrsmm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const Index\+Type $\ast$}]{ia,  }\item[{const Index\+Type $\ast$}]{ja,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{MC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a1ce109c6f3179f533a373db492829de7}\label{namespacecxxblas_a1ce109c6f3179f533a373db492829de7}} 
+\index{cxxblas@{cxxblas}!hecrsmv@{hecrsmv}}
+\index{hecrsmv@{hecrsmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{hecrsmv()}{hecrsmv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::hecrsmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const Index\+Type $\ast$}]{ia,  }\item[{const Index\+Type $\ast$}]{ja,  }\item[{const VX $\ast$}]{x,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_aac3afe9c1a8ba01259b978a6645de818}\label{namespacecxxblas_aac3afe9c1a8ba01259b978a6645de818}} 
+\index{cxxblas@{cxxblas}!hemm@{hemm}}
+\index{hemm@{hemm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{hemm()}{hemm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ \\
+void cxxblas\+::hemm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}}}]{side,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{MC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a4db803d445c2f618f74c5d29ab55290f}\label{namespacecxxblas_a4db803d445c2f618f74c5d29ab55290f}} 
+\index{cxxblas@{cxxblas}!hemv@{hemv}}
+\index{hemv@{hemv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{hemv()}{hemv()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::hemv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ab6ac5d1fe50822a2476217b760698c4c}\label{namespacecxxblas_ab6ac5d1fe50822a2476217b760698c4c}} 
+\index{cxxblas@{cxxblas}!hemv@{hemv}}
+\index{hemv@{hemv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{hemv()}{hemv()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::hemv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{conjugateA,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_adf0095a209e21f33f12c8f7147e2a2b7}\label{namespacecxxblas_adf0095a209e21f33f12c8f7147e2a2b7}} 
+\index{cxxblas@{cxxblas}!her@{her}}
+\index{her@{her}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{her()}{her()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename MA $>$ \\
+void cxxblas\+::her (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_adee7ee56710863f6a02fd986f7c0086f}\label{namespacecxxblas_adee7ee56710863f6a02fd986f7c0086f}} 
+\index{cxxblas@{cxxblas}!her@{her}}
+\index{her@{her}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{her()}{her()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename MA $>$ \\
+void cxxblas\+::her (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{conjugateA,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a5e2297713ac844c98863abc3fe1400b4}\label{namespacecxxblas_a5e2297713ac844c98863abc3fe1400b4}} 
+\index{cxxblas@{cxxblas}!her2@{her2}}
+\index{her2@{her2}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{her2()}{her2()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ \\
+void cxxblas\+::her2 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const VY $\ast$}]{y,  }\item[{Index\+Type}]{incY,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ac6832e892e6fb0d5872770cbec6277f8}\label{namespacecxxblas_ac6832e892e6fb0d5872770cbec6277f8}} 
+\index{cxxblas@{cxxblas}!her2@{her2}}
+\index{her2@{her2}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{her2()}{her2()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ \\
+void cxxblas\+::her2 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{conjugateA,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const VY $\ast$}]{y,  }\item[{Index\+Type}]{incY,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_aeaf8c7939ca633d2ef130ff5dfc6af44}\label{namespacecxxblas_aeaf8c7939ca633d2ef130ff5dfc6af44}} 
+\index{cxxblas@{cxxblas}!her2k@{her2k}}
+\index{her2k@{her2k}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{her2k()}{her2k()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ \\
+void cxxblas\+::her2k (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{k,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{MC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a713aa0c5248df3900ecf49da8f66b1a6}\label{namespacecxxblas_a713aa0c5248df3900ecf49da8f66b1a6}} 
+\index{cxxblas@{cxxblas}!herk@{herk}}
+\index{herk@{herk}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{herk()}{herk()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename BETA , typename MC $>$ \\
+void cxxblas\+::herk (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{k,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const BETA \&}]{beta,  }\item[{MC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_acbf59c568b533e47c98cff4af397cf18}\label{namespacecxxblas_acbf59c568b533e47c98cff4af397cf18}} 
+\index{cxxblas@{cxxblas}!hescal@{hescal}}
+\index{hescal@{hescal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{hescal()}{hescal()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA $>$ \\
+void cxxblas\+::hescal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+LoA,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a379201fb1f6f882ed012646b9fc4ed43}\label{namespacecxxblas_a379201fb1f6f882ed012646b9fc4ed43}} 
+\index{cxxblas@{cxxblas}!hpmv@{hpmv}}
+\index{hpmv@{hpmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{hpmv()}{hpmv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::hpmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_af12f2cc3b5d36e037cc98218dfd46192}\label{namespacecxxblas_af12f2cc3b5d36e037cc98218dfd46192}} 
+\index{cxxblas@{cxxblas}!hpr@{hpr}}
+\index{hpr@{hpr}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{hpr()}{hpr()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename MA $>$ \\
+void cxxblas\+::hpr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{MA $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a09b7ba4abfda4c6e420cbc64705251a9}\label{namespacecxxblas_a09b7ba4abfda4c6e420cbc64705251a9}} 
+\index{cxxblas@{cxxblas}!hpr2@{hpr2}}
+\index{hpr2@{hpr2}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{hpr2()}{hpr2()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ \\
+void cxxblas\+::hpr2 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const VY $\ast$}]{y,  }\item[{Index\+Type}]{incY,  }\item[{MA $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ae2f286b82beddcdc1fb9180a613cc680}\label{namespacecxxblas_ae2f286b82beddcdc1fb9180a613cc680}} 
+\index{cxxblas@{cxxblas}!iamax@{iamax}}
+\index{iamax@{iamax}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{iamax()}{iamax()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X $>$ \\
+Index\+Type cxxblas\+::iamax (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_adf3885c29ce43bdcacf248d15b29a0cf}\label{namespacecxxblas_adf3885c29ce43bdcacf248d15b29a0cf}} 
+\index{cxxblas@{cxxblas}!iamax@{iamax}}
+\index{iamax@{iamax}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{iamax()}{iamax()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X $>$ \\
+void cxxblas\+::iamax (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{Index\+Type \&}]{i }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_abc878e93f25954e71c1d7d311e5c1d7d}\label{namespacecxxblas_abc878e93f25954e71c1d7d311e5c1d7d}} 
+\index{cxxblas@{cxxblas}!imag@{imag}}
+\index{imag@{imag}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{imag()}{imag()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{cxxblas\+::\+Restrict\+To}}$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, constT $>$\+::\+Type cxxblas\+::imag (\begin{DoxyParamCaption}\item[{const std\+::complex$<$ T $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ae82659a87bf6e9fe546012726a9621bc}\label{namespacecxxblas_ae82659a87bf6e9fe546012726a9621bc}} 
+\index{cxxblas@{cxxblas}!imag@{imag}}
+\index{imag@{imag}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{imag()}{imag()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{cxxblas\+::\+Restrict\+To}}$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, constT $>$\+::\+Type cxxblas\+::imag (\begin{DoxyParamCaption}\item[{const T \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a1af0c3d7ddd053d26987d2cfa0e64601}\label{namespacecxxblas_a1af0c3d7ddd053d26987d2cfa0e64601}} 
+\index{cxxblas@{cxxblas}!imax1@{imax1}}
+\index{imax1@{imax1}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{imax1()}{imax1()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X $>$ \\
+Index\+Type cxxblas\+::imax1 (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ad80e389058c9817a0b6926038d2675fb}\label{namespacecxxblas_ad80e389058c9817a0b6926038d2675fb}} 
+\index{cxxblas@{cxxblas}!imax1@{imax1}}
+\index{imax1@{imax1}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{imax1()}{imax1()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X $>$ \\
+void cxxblas\+::imax1 (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{Index\+Type \&}]{i }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a21204d60dceff90aba9425722a67286c}\label{namespacecxxblas_a21204d60dceff90aba9425722a67286c}} 
+\index{cxxblas@{cxxblas}!nrm2@{nrm2}}
+\index{nrm2@{nrm2}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{nrm2()}{nrm2()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X , typename T $>$ \\
+void cxxblas\+::nrm2 (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{T \&}]{norm }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ae42b0b500646d70657827ef160849448}\label{namespacecxxblas_ae42b0b500646d70657827ef160849448}} 
+\index{cxxblas@{cxxblas}!pow@{pow}}
+\index{pow@{pow}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{pow()}{pow()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::complex$<$ T $>$ cxxblas\+::pow (\begin{DoxyParamCaption}\item[{const std\+::complex$<$ T $>$ \&}]{base,  }\item[{int}]{exponent }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a8961e0a9acd6aa1dae9dd36c04ec8649}\label{namespacecxxblas_a8961e0a9acd6aa1dae9dd36c04ec8649}} 
+\index{cxxblas@{cxxblas}!pow@{pow}}
+\index{pow@{pow}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{pow()}{pow()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$ \mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ T, int $>$\+::value, T $>$\+::\+Type cxxblas\+::pow (\begin{DoxyParamCaption}\item[{const T \&}]{base,  }\item[{const T \&}]{exponent }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_afb01362b28c7c964b8b34b8d29f5abde}\label{namespacecxxblas_afb01362b28c7c964b8b34b8d29f5abde}} 
+\index{cxxblas@{cxxblas}!pow@{pow}}
+\index{pow@{pow}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{pow()}{pow()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{Restrict\+To}}$<$!\mbox{\hyperlink{structcxxblas_1_1_is_same}{Is\+Same}}$<$ T, int $>$\+::value \&\&!\mbox{\hyperlink{structcxxblas_1_1_is_complex}{Is\+Complex}}$<$ T $>$\+::value, T $>$\+::\+Type cxxblas\+::pow (\begin{DoxyParamCaption}\item[{const T \&}]{base,  }\item[{int}]{exponent }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ae08a309fa649181eeb0e5cdbf27ad4e5}\label{namespacecxxblas_ae08a309fa649181eeb0e5cdbf27ad4e5}} 
+\index{cxxblas@{cxxblas}!racxpy@{racxpy}}
+\index{racxpy@{racxpy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{racxpy()}{racxpy()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename X , typename Y $>$ \\
+void cxxblas\+::racxpy (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{Y $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a304af4f47d6988ce035e71969accda7d}\label{namespacecxxblas_a304af4f47d6988ce035e71969accda7d}} 
+\index{cxxblas@{cxxblas}!raxpy@{raxpy}}
+\index{raxpy@{raxpy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{raxpy()}{raxpy()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename X , typename Y $>$ \\
+void cxxblas\+::raxpy (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{Y $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a220d587643d2b96498ef5bb68abffa96}\label{namespacecxxblas_a220d587643d2b96498ef5bb68abffa96}} 
+\index{cxxblas@{cxxblas}!real@{real}}
+\index{real@{real}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{real()}{real()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{cxxblas\+::\+Restrict\+To}}$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, constT $>$\+::\+Type cxxblas\+::real (\begin{DoxyParamCaption}\item[{const std\+::complex$<$ T $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a3d275b0495109a8b14abd9033f12be4a}\label{namespacecxxblas_a3d275b0495109a8b14abd9033f12be4a}} 
+\index{cxxblas@{cxxblas}!real@{real}}
+\index{real@{real}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{real()}{real()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{structcxxblas_1_1_restrict_to}{cxxblas\+::\+Restrict\+To}}$<$ std\+::is\+\_\+arithmetic$<$ T $>$\+::value, constT \& $>$\+::\+Type cxxblas\+::real (\begin{DoxyParamCaption}\item[{const T \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a467b9552266ca0125a739e16a6e3623d}\label{namespacecxxblas_a467b9552266ca0125a739e16a6e3623d}} 
+\index{cxxblas@{cxxblas}!rot@{rot}}
+\index{rot@{rot}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{rot()}{rot()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X , typename Y , typename T $>$ \\
+void cxxblas\+::rot (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{std\+::complex$<$ X $>$ $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{std\+::complex$<$ Y $>$ $\ast$}]{y,  }\item[{Index\+Type}]{incY,  }\item[{T}]{c,  }\item[{const std\+::complex$<$ T $>$ \&}]{s }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a349fce9d9f91633c51797ef6a3370d6e}\label{namespacecxxblas_a349fce9d9f91633c51797ef6a3370d6e}} 
+\index{cxxblas@{cxxblas}!rot@{rot}}
+\index{rot@{rot}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{rot()}{rot()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X , typename Y , typename T $>$ \\
+void cxxblas\+::rot (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{Y $\ast$}]{y,  }\item[{Index\+Type}]{incY,  }\item[{T}]{c,  }\item[{T}]{s }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a7e48adce6802e678f44175d5be21104d}\label{namespacecxxblas_a7e48adce6802e678f44175d5be21104d}} 
+\index{cxxblas@{cxxblas}!rotg@{rotg}}
+\index{rotg@{rotg}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{rotg()}{rotg()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename A , typename B , typename T $>$ \\
+void cxxblas\+::rotg (\begin{DoxyParamCaption}\item[{A \&}]{a,  }\item[{B \&}]{b,  }\item[{T \&}]{c,  }\item[{T \&}]{s }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a8c7482ae68541492e49757eef148b9b7}\label{namespacecxxblas_a8c7482ae68541492e49757eef148b9b7}} 
+\index{cxxblas@{cxxblas}!rotg@{rotg}}
+\index{rotg@{rotg}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{rotg()}{rotg()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename TA , typename TB , typename T $>$ \\
+void cxxblas\+::rotg (\begin{DoxyParamCaption}\item[{std\+::complex$<$ TA $>$ \&}]{a,  }\item[{std\+::complex$<$ TB $>$ \&}]{b,  }\item[{T \&}]{c,  }\item[{std\+::complex$<$ T $>$ \&}]{s }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_aa44fc271dab7baf15da866f6d60c618c}\label{namespacecxxblas_aa44fc271dab7baf15da866f6d60c618c}} 
+\index{cxxblas@{cxxblas}!rscal@{rscal}}
+\index{rscal@{rscal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{rscal()}{rscal()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$int n, typename ALPHA , typename Y , int incY$>$ \\
+void cxxblas\+::rscal (\begin{DoxyParamCaption}\item[{const ALPHA \&}]{alpha,  }\item[{Y $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ac8343a406f58d2ad9196cedd4c8919d3}\label{namespacecxxblas_ac8343a406f58d2ad9196cedd4c8919d3}} 
+\index{cxxblas@{cxxblas}!rscal@{rscal}}
+\index{rscal@{rscal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{rscal()}{rscal()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename Y $>$ \\
+void cxxblas\+::rscal (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{Y $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a6ade7fb0e9b1867073f26946621e466b}\label{namespacecxxblas_a6ade7fb0e9b1867073f26946621e466b}} 
+\index{cxxblas@{cxxblas}!sbmm@{sbmm}}
+\index{sbmm@{sbmm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{sbmm()}{sbmm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename VC $>$ \\
+void cxxblas\+::sbmm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}}}]{side,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{k,  }\item[{Index\+Type}]{l,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{VC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_adbcfa2ce382211f52e6bdb9295b8080d}\label{namespacecxxblas_adbcfa2ce382211f52e6bdb9295b8080d}} 
+\index{cxxblas@{cxxblas}!sbmv@{sbmv}}
+\index{sbmv@{sbmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{sbmv()}{sbmv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::sbmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{k,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ad98068e958511bc9d3392d93d5bd97b5}\label{namespacecxxblas_ad98068e958511bc9d3392d93d5bd97b5}} 
+\index{cxxblas@{cxxblas}!scal@{scal}}
+\index{scal@{scal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{scal()}{scal()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$int n, typename ALPHA , typename Y , int incY$>$ \\
+void cxxblas\+::scal (\begin{DoxyParamCaption}\item[{const ALPHA \&}]{alpha,  }\item[{Y $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a08ccdb209146b5674a899ac8b66476d1}\label{namespacecxxblas_a08ccdb209146b5674a899ac8b66476d1}} 
+\index{cxxblas@{cxxblas}!scal@{scal}}
+\index{scal@{scal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{scal()}{scal()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename Y $>$ \\
+void cxxblas\+::scal (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{Y $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_aa77d8da7d659a64de6fd13a8ae362167}\label{namespacecxxblas_aa77d8da7d659a64de6fd13a8ae362167}} 
+\index{cxxblas@{cxxblas}!spmv@{spmv}}
+\index{spmv@{spmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{spmv()}{spmv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::spmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a317cc1159290f2d31a38e68d7c30d71d}\label{namespacecxxblas_a317cc1159290f2d31a38e68d7c30d71d}} 
+\index{cxxblas@{cxxblas}!spr@{spr}}
+\index{spr@{spr}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{spr()}{spr()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename MA $>$ \\
+void cxxblas\+::spr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{MA $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a3762f47ac4be918f23339fa1db139813}\label{namespacecxxblas_a3762f47ac4be918f23339fa1db139813}} 
+\index{cxxblas@{cxxblas}!spr2@{spr2}}
+\index{spr2@{spr2}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{spr2()}{spr2()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ \\
+void cxxblas\+::spr2 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const VY $\ast$}]{y,  }\item[{Index\+Type}]{incY,  }\item[{MA $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a0d5308e62de64b9d010a29edfcea24be}\label{namespacecxxblas_a0d5308e62de64b9d010a29edfcea24be}} 
+\index{cxxblas@{cxxblas}!swap@{swap}}
+\index{swap@{swap}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{swap()}{swap()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename X , typename Y $>$ \\
+void cxxblas\+::swap (\begin{DoxyParamCaption}\item[{Index\+Type}]{n,  }\item[{X $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{Y $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a8780438cf0f2099cf973ebf1e97f4423}\label{namespacecxxblas_a8780438cf0f2099cf973ebf1e97f4423}} 
+\index{cxxblas@{cxxblas}!syccsmm@{syccsmm}}
+\index{syccsmm@{syccsmm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{syccsmm()}{syccsmm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ \\
+void cxxblas\+::syccsmm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const Index\+Type $\ast$}]{ia,  }\item[{const Index\+Type $\ast$}]{ja,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{MC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a1eef9de05868831254b01429f6a98332}\label{namespacecxxblas_a1eef9de05868831254b01429f6a98332}} 
+\index{cxxblas@{cxxblas}!syccsmv@{syccsmv}}
+\index{syccsmv@{syccsmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{syccsmv()}{syccsmv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::syccsmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const Index\+Type $\ast$}]{ia,  }\item[{const Index\+Type $\ast$}]{ja,  }\item[{const VX $\ast$}]{x,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a6bb4f8ff1fe4463f216b2b9e82cca334}\label{namespacecxxblas_a6bb4f8ff1fe4463f216b2b9e82cca334}} 
+\index{cxxblas@{cxxblas}!sycrsmm@{sycrsmm}}
+\index{sycrsmm@{sycrsmm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{sycrsmm()}{sycrsmm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ \\
+void cxxblas\+::sycrsmm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const Index\+Type $\ast$}]{ia,  }\item[{const Index\+Type $\ast$}]{ja,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{MC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_acd8c09c48224851868995c6ef7291b5b}\label{namespacecxxblas_acd8c09c48224851868995c6ef7291b5b}} 
+\index{cxxblas@{cxxblas}!sycrsmv@{sycrsmv}}
+\index{sycrsmv@{sycrsmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{sycrsmv()}{sycrsmv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::sycrsmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const Index\+Type $\ast$}]{ia,  }\item[{const Index\+Type $\ast$}]{ja,  }\item[{const VX $\ast$}]{x,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a171dd32f962d97065f32a4f46c506c0e}\label{namespacecxxblas_a171dd32f962d97065f32a4f46c506c0e}} 
+\index{cxxblas@{cxxblas}!symm@{symm}}
+\index{symm@{symm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{symm()}{symm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ \\
+void cxxblas\+::symm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}}}]{side,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{MC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a327a3a7be630a57e7db0095585b1664d}\label{namespacecxxblas_a327a3a7be630a57e7db0095585b1664d}} 
+\index{cxxblas@{cxxblas}!symv@{symv}}
+\index{symv@{symv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{symv()}{symv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename VX , typename BETA , typename VY $>$ \\
+void cxxblas\+::symv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const BETA \&}]{beta,  }\item[{VY $\ast$}]{y,  }\item[{Index\+Type}]{incY }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_aab487999ce165cdce24733bdf98355d9}\label{namespacecxxblas_aab487999ce165cdce24733bdf98355d9}} 
+\index{cxxblas@{cxxblas}!syr@{syr}}
+\index{syr@{syr}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{syr()}{syr()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename MA $>$ \\
+void cxxblas\+::syr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a7534c1282c3a7862cc929a91bcb67ae7}\label{namespacecxxblas_a7534c1282c3a7862cc929a91bcb67ae7}} 
+\index{cxxblas@{cxxblas}!syr2@{syr2}}
+\index{syr2@{syr2}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{syr2()}{syr2()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename VX , typename VY , typename MA $>$ \\
+void cxxblas\+::syr2 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const VX $\ast$}]{x,  }\item[{Index\+Type}]{incX,  }\item[{const VY $\ast$}]{y,  }\item[{Index\+Type}]{incY,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a7021af75c1f70121e72acc56f3125b0a}\label{namespacecxxblas_a7021af75c1f70121e72acc56f3125b0a}} 
+\index{cxxblas@{cxxblas}!syr2k@{syr2k}}
+\index{syr2k@{syr2k}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{syr2k()}{syr2k()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB , typename BETA , typename MC $>$ \\
+void cxxblas\+::syr2k (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{k,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB,  }\item[{const BETA \&}]{beta,  }\item[{MC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_adfe19b49568f9f80a00c3e4cffe3f76c}\label{namespacecxxblas_adfe19b49568f9f80a00c3e4cffe3f76c}} 
+\index{cxxblas@{cxxblas}!syrk@{syrk}}
+\index{syrk@{syrk}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{syrk()}{syrk()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename BETA , typename MC $>$ \\
+void cxxblas\+::syrk (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{k,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const BETA \&}]{beta,  }\item[{MC $\ast$}]{C,  }\item[{Index\+Type}]{ldC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a35721a100d8e23644df11d1111421520}\label{namespacecxxblas_a35721a100d8e23644df11d1111421520}} 
+\index{cxxblas@{cxxblas}!syscal@{syscal}}
+\index{syscal@{syscal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{syscal()}{syscal()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA $>$ \\
+void cxxblas\+::syscal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+LoA,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a50a0c6340cb829a4333fe8f45c17cf94}\label{namespacecxxblas_a50a0c6340cb829a4333fe8f45c17cf94}} 
+\index{cxxblas@{cxxblas}!tbmm@{tbmm}}
+\index{tbmm@{tbmm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{tbmm()}{tbmm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ \\
+void cxxblas\+::tbmm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}}}]{side,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{k,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_ae10c353061383965c18d7993ee4f1ea9}\label{namespacecxxblas_ae10c353061383965c18d7993ee4f1ea9}} 
+\index{cxxblas@{cxxblas}!tbmv@{tbmv}}
+\index{tbmv@{tbmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{tbmv()}{tbmv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA , typename VX $>$ \\
+void cxxblas\+::tbmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{k,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{VX $\ast$}]{x,  }\item[{Index\+Type}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a006d9f8ebd218e3d1b3fc7a559bdefd0}\label{namespacecxxblas_a006d9f8ebd218e3d1b3fc7a559bdefd0}} 
+\index{cxxblas@{cxxblas}!tbsv@{tbsv}}
+\index{tbsv@{tbsv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{tbsv()}{tbsv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA , typename VX $>$ \\
+void cxxblas\+::tbsv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{n,  }\item[{Index\+Type}]{k,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{VX $\ast$}]{x,  }\item[{Index\+Type}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a995d9f87d93d7b8a0a61971dc02801bc}\label{namespacecxxblas_a995d9f87d93d7b8a0a61971dc02801bc}} 
+\index{cxxblas@{cxxblas}!tpaxpby@{tpaxpby}}
+\index{tpaxpby@{tpaxpby}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{tpaxpby()}{tpaxpby()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename BETA , typename MB $>$ \\
+void cxxblas\+::tpaxpby (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{const BETA \&}]{beta,  }\item[{MB $\ast$}]{B }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a066d91f21146a70cd1947f1322de7a6e}\label{namespacecxxblas_a066d91f21146a70cd1947f1322de7a6e}} 
+\index{cxxblas@{cxxblas}!tpaxpy@{tpaxpy}}
+\index{tpaxpy@{tpaxpy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{tpaxpy()}{tpaxpy()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ \\
+void cxxblas\+::tpaxpy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{MB $\ast$}]{B }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_af4f8d6eaca3a270d3aa6096a59287d96}\label{namespacecxxblas_af4f8d6eaca3a270d3aa6096a59287d96}} 
+\index{cxxblas@{cxxblas}!tpcopy@{tpcopy}}
+\index{tpcopy@{tpcopy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{tpcopy()}{tpcopy()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA , typename MB $>$ \\
+void cxxblas\+::tpcopy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{n,  }\item[{const MA $\ast$}]{A,  }\item[{MB $\ast$}]{B }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a9aab852dd286992ae532223788b1278a}\label{namespacecxxblas_a9aab852dd286992ae532223788b1278a}} 
+\index{cxxblas@{cxxblas}!tpmv@{tpmv}}
+\index{tpmv@{tpmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{tpmv()}{tpmv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA , typename VX $>$ \\
+void cxxblas\+::tpmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{n,  }\item[{const MA $\ast$}]{A,  }\item[{VX $\ast$}]{x,  }\item[{Index\+Type}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a81720f4c6003c3c7ea8a6db329be1098}\label{namespacecxxblas_a81720f4c6003c3c7ea8a6db329be1098}} 
+\index{cxxblas@{cxxblas}!tpscal@{tpscal}}
+\index{tpscal@{tpscal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{tpscal()}{tpscal()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA $>$ \\
+void cxxblas\+::tpscal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{MA $\ast$}]{A }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a10adf6b143d483feb106f96525f02267}\label{namespacecxxblas_a10adf6b143d483feb106f96525f02267}} 
+\index{cxxblas@{cxxblas}!tpsv@{tpsv}}
+\index{tpsv@{tpsv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{tpsv()}{tpsv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA , typename VX $>$ \\
+void cxxblas\+::tpsv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{n,  }\item[{const MA $\ast$}]{A,  }\item[{VX $\ast$}]{x,  }\item[{Index\+Type}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a562d50662cfa7554a8365132b349ab9f}\label{namespacecxxblas_a562d50662cfa7554a8365132b349ab9f}} 
+\index{cxxblas@{cxxblas}!traxpby@{traxpby}}
+\index{traxpby@{traxpby}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{traxpby()}{traxpby()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename BETA , typename MB $>$ \\
+void cxxblas\+::traxpby (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{const BETA \&}]{beta,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a713fafcdcddcf8a446af19dc158d8ac0}\label{namespacecxxblas_a713fafcdcddcf8a446af19dc158d8ac0}} 
+\index{cxxblas@{cxxblas}!traxpy@{traxpy}}
+\index{traxpy@{traxpy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{traxpy()}{traxpy()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ \\
+void cxxblas\+::traxpy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a54687e9f6ae6e83bfc606e5644d380dc}\label{namespacecxxblas_a54687e9f6ae6e83bfc606e5644d380dc}} 
+\index{cxxblas@{cxxblas}!trcopy@{trcopy}}
+\index{trcopy@{trcopy}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{trcopy()}{trcopy()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA , typename MB $>$ \\
+void cxxblas\+::trcopy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{trans,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a520fcdf8969f11bebc8d765cebf89db4}\label{namespacecxxblas_a520fcdf8969f11bebc8d765cebf89db4}} 
+\index{cxxblas@{cxxblas}!trmm@{trmm}}
+\index{trmm@{trmm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{trmm()}{trmm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ \\
+void cxxblas\+::trmm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}}}]{side,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a509587086c2f5ea1a623bb9468f9618d}\label{namespacecxxblas_a509587086c2f5ea1a623bb9468f9618d}} 
+\index{cxxblas@{cxxblas}!trmv@{trmv}}
+\index{trmv@{trmv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{trmv()}{trmv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA , typename VX $>$ \\
+void cxxblas\+::trmv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{n,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{VX $\ast$}]{x,  }\item[{Index\+Type}]{incX }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a3669cd7dade784c2d170a341999e626e}\label{namespacecxxblas_a3669cd7dade784c2d170a341999e626e}} 
+\index{cxxblas@{cxxblas}!trscal@{trscal}}
+\index{trscal@{trscal}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{trscal()}{trscal()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA $>$ \\
+void cxxblas\+::trscal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_af75fa55610eb9f88787fc76a1eb60e6e}\label{namespacecxxblas_af75fa55610eb9f88787fc76a1eb60e6e}} 
+\index{cxxblas@{cxxblas}!trsm@{trsm}}
+\index{trsm@{trsm}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{trsm()}{trsm()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename ALPHA , typename MA , typename MB $>$ \\
+void cxxblas\+::trsm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}}}]{side,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{m,  }\item[{Index\+Type}]{n,  }\item[{const ALPHA \&}]{alpha,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{MB $\ast$}]{B,  }\item[{Index\+Type}]{ldB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecxxblas_a679afb6df98e4dac29936d0c5e4803bf}\label{namespacecxxblas_a679afb6df98e4dac29936d0c5e4803bf}} 
+\index{cxxblas@{cxxblas}!trsv@{trsv}}
+\index{trsv@{trsv}!cxxblas@{cxxblas}}
+\doxysubsubsection{\texorpdfstring{trsv()}{trsv()}}
+{\footnotesize\ttfamily template$<$typename Index\+Type , typename MA , typename VX $>$ \\
+void cxxblas\+::trsv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{Storage\+Order}}}]{order,  }\item[{\mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{Storage\+Up\+Lo}}}]{up\+Lo,  }\item[{\mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}}]{transA,  }\item[{\mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}}]{diag,  }\item[{Index\+Type}]{n,  }\item[{const MA $\ast$}]{A,  }\item[{Index\+Type}]{ldA,  }\item[{VX $\ast$}]{x,  }\item[{Index\+Type}]{incX }\end{DoxyParamCaption})}
+

@@ -1,0 +1,225 @@
+\hypertarget{helper__string_8h}{}\doxysection{librapid/include/librapid/cuda/helper\+\_\+string.h File Reference}
+\label{helper__string_8h}\index{librapid/include/librapid/cuda/helper\_string.h@{librapid/include/librapid/cuda/helper\_string.h}}
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$strings.\+h$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{helper__string_8h_a96baadbb7d3a25a8a5b99aef8b342392}{STRCASECMP}}~strcasecmp
+\item 
+\#define \mbox{\hyperlink{helper__string_8h_a9af901db56190e28d0bb87847215287c}{STRNCASECMP}}~strncasecmp
+\item 
+\#define \mbox{\hyperlink{helper__string_8h_a6f91b8244b0156a49518375c45b099c3}{STRCPY}}(s\+File\+Path,  n\+Length,  s\+Path)~strcpy(s\+File\+Path, s\+Path)
+\item 
+\#define \mbox{\hyperlink{helper__string_8h_a98ac53af189101aa315d57a1a55cf516}{FOPEN}}(f\+Handle,  filename,  mode)~(f\+Handle = fopen(filename, mode))
+\item 
+\#define \mbox{\hyperlink{helper__string_8h_a898f874115493c8e5299e56578ee3d43}{FOPEN\+\_\+\+FAIL}}(result)~(result == NULL)
+\item 
+\#define \mbox{\hyperlink{helper__string_8h_a26322ca1613f09e983e5b67fbeeec6ea}{SSCANF}}~sscanf
+\item 
+\#define \mbox{\hyperlink{helper__string_8h_a92d04fe74201d58bc774099a3f5a52da}{SPRINTF}}~sprintf
+\item 
+\#define \mbox{\hyperlink{helper__string_8h_ad20838a18f49298dae4d0ee29a0bb7a9}{EXIT\+\_\+\+WAIVED}}~2
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{helper__string_8h_ac58c822a5ef82babc6a997386ef77469}{string\+Remove\+Delimiter}} (char delimiter, const char $\ast$string)
+\item 
+int \mbox{\hyperlink{helper__string_8h_a68aac3a4ecf6a6cf17b78f06d61b9c35}{get\+File\+Extension}} (char $\ast$filename, char $\ast$$\ast$extension)
+\item 
+bool \mbox{\hyperlink{helper__string_8h_ac4941870cb5a1c286453eccb73e2e2a6}{check\+Cmd\+Line\+Flag}} (const int argc, const char $\ast$$\ast$argv, const char $\ast$string\+\_\+ref)
+\item 
+{\footnotesize template$<$class T $>$ }\\bool \mbox{\hyperlink{helper__string_8h_a885b977ee2b2ce6e95e5e80e96c6535f}{get\+Cmd\+Line\+Argument\+Value}} (const int argc, const char $\ast$$\ast$argv, const char $\ast$string\+\_\+ref, T $\ast$value)
+\item 
+int \mbox{\hyperlink{helper__string_8h_ade9cb99a49aabcdf5ddcc8d276174576}{get\+Cmd\+Line\+Argument\+Int}} (const int argc, const char $\ast$$\ast$argv, const char $\ast$string\+\_\+ref)
+\item 
+float \mbox{\hyperlink{helper__string_8h_a58201641910e5cd66b8ff4efde6c4fca}{get\+Cmd\+Line\+Argument\+Float}} (const int argc, const char $\ast$$\ast$argv, const char $\ast$string\+\_\+ref)
+\item 
+bool \mbox{\hyperlink{helper__string_8h_a21bc9c16271b623400816c8839c862bb}{get\+Cmd\+Line\+Argument\+String}} (const int argc, const char $\ast$$\ast$argv, const char $\ast$string\+\_\+ref, char $\ast$$\ast$string\+\_\+retval)
+\item 
+char $\ast$ \mbox{\hyperlink{helper__string_8h_a2f7f20ba2a009934e429a70f5e8e99ef}{sdk\+Find\+File\+Path}} (const char $\ast$filename, const char $\ast$executable\+\_\+path)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{helper__string_8h_ad20838a18f49298dae4d0ee29a0bb7a9}\label{helper__string_8h_ad20838a18f49298dae4d0ee29a0bb7a9}} 
+\index{helper\_string.h@{helper\_string.h}!EXIT\_WAIVED@{EXIT\_WAIVED}}
+\index{EXIT\_WAIVED@{EXIT\_WAIVED}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{EXIT\_WAIVED}{EXIT\_WAIVED}}
+{\footnotesize\ttfamily \#define EXIT\+\_\+\+WAIVED~2}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00092}{92}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_a98ac53af189101aa315d57a1a55cf516}\label{helper__string_8h_a98ac53af189101aa315d57a1a55cf516}} 
+\index{helper\_string.h@{helper\_string.h}!FOPEN@{FOPEN}}
+\index{FOPEN@{FOPEN}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{FOPEN}{FOPEN}}
+{\footnotesize\ttfamily \#define FOPEN(\begin{DoxyParamCaption}\item[{}]{f\+Handle,  }\item[{}]{filename,  }\item[{}]{mode }\end{DoxyParamCaption})~(f\+Handle = fopen(filename, mode))}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00078}{78}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_a898f874115493c8e5299e56578ee3d43}\label{helper__string_8h_a898f874115493c8e5299e56578ee3d43}} 
+\index{helper\_string.h@{helper\_string.h}!FOPEN\_FAIL@{FOPEN\_FAIL}}
+\index{FOPEN\_FAIL@{FOPEN\_FAIL}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{FOPEN\_FAIL}{FOPEN\_FAIL}}
+{\footnotesize\ttfamily \#define FOPEN\+\_\+\+FAIL(\begin{DoxyParamCaption}\item[{}]{result }\end{DoxyParamCaption})~(result == NULL)}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00081}{81}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_a92d04fe74201d58bc774099a3f5a52da}\label{helper__string_8h_a92d04fe74201d58bc774099a3f5a52da}} 
+\index{helper\_string.h@{helper\_string.h}!SPRINTF@{SPRINTF}}
+\index{SPRINTF@{SPRINTF}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{SPRINTF}{SPRINTF}}
+{\footnotesize\ttfamily \#define SPRINTF~sprintf}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00087}{87}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_a26322ca1613f09e983e5b67fbeeec6ea}\label{helper__string_8h_a26322ca1613f09e983e5b67fbeeec6ea}} 
+\index{helper\_string.h@{helper\_string.h}!SSCANF@{SSCANF}}
+\index{SSCANF@{SSCANF}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{SSCANF}{SSCANF}}
+{\footnotesize\ttfamily \#define SSCANF~sscanf}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00084}{84}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_a96baadbb7d3a25a8a5b99aef8b342392}\label{helper__string_8h_a96baadbb7d3a25a8a5b99aef8b342392}} 
+\index{helper\_string.h@{helper\_string.h}!STRCASECMP@{STRCASECMP}}
+\index{STRCASECMP@{STRCASECMP}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{STRCASECMP}{STRCASECMP}}
+{\footnotesize\ttfamily \#define STRCASECMP~strcasecmp}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00068}{68}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_a6f91b8244b0156a49518375c45b099c3}\label{helper__string_8h_a6f91b8244b0156a49518375c45b099c3}} 
+\index{helper\_string.h@{helper\_string.h}!STRCPY@{STRCPY}}
+\index{STRCPY@{STRCPY}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{STRCPY}{STRCPY}}
+{\footnotesize\ttfamily \#define STRCPY(\begin{DoxyParamCaption}\item[{}]{s\+File\+Path,  }\item[{}]{n\+Length,  }\item[{}]{s\+Path }\end{DoxyParamCaption})~strcpy(s\+File\+Path, s\+Path)}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00074}{74}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_a9af901db56190e28d0bb87847215287c}\label{helper__string_8h_a9af901db56190e28d0bb87847215287c}} 
+\index{helper\_string.h@{helper\_string.h}!STRNCASECMP@{STRNCASECMP}}
+\index{STRNCASECMP@{STRNCASECMP}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{STRNCASECMP}{STRNCASECMP}}
+{\footnotesize\ttfamily \#define STRNCASECMP~strncasecmp}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00071}{71}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{helper__string_8h_ac4941870cb5a1c286453eccb73e2e2a6}\label{helper__string_8h_ac4941870cb5a1c286453eccb73e2e2a6}} 
+\index{helper\_string.h@{helper\_string.h}!checkCmdLineFlag@{checkCmdLineFlag}}
+\index{checkCmdLineFlag@{checkCmdLineFlag}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{checkCmdLineFlag()}{checkCmdLineFlag()}}
+{\footnotesize\ttfamily bool check\+Cmd\+Line\+Flag (\begin{DoxyParamCaption}\item[{const int}]{argc,  }\item[{const char $\ast$$\ast$}]{argv,  }\item[{const char $\ast$}]{string\+\_\+ref }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00123}{123}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_a58201641910e5cd66b8ff4efde6c4fca}\label{helper__string_8h_a58201641910e5cd66b8ff4efde6c4fca}} 
+\index{helper\_string.h@{helper\_string.h}!getCmdLineArgumentFloat@{getCmdLineArgumentFloat}}
+\index{getCmdLineArgumentFloat@{getCmdLineArgumentFloat}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{getCmdLineArgumentFloat()}{getCmdLineArgumentFloat()}}
+{\footnotesize\ttfamily float get\+Cmd\+Line\+Argument\+Float (\begin{DoxyParamCaption}\item[{const int}]{argc,  }\item[{const char $\ast$$\ast$}]{argv,  }\item[{const char $\ast$}]{string\+\_\+ref }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00205}{205}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_ade9cb99a49aabcdf5ddcc8d276174576}\label{helper__string_8h_ade9cb99a49aabcdf5ddcc8d276174576}} 
+\index{helper\_string.h@{helper\_string.h}!getCmdLineArgumentInt@{getCmdLineArgumentInt}}
+\index{getCmdLineArgumentInt@{getCmdLineArgumentInt}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{getCmdLineArgumentInt()}{getCmdLineArgumentInt()}}
+{\footnotesize\ttfamily int get\+Cmd\+Line\+Argument\+Int (\begin{DoxyParamCaption}\item[{const int}]{argc,  }\item[{const char $\ast$$\ast$}]{argv,  }\item[{const char $\ast$}]{string\+\_\+ref }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00174}{174}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_a21bc9c16271b623400816c8839c862bb}\label{helper__string_8h_a21bc9c16271b623400816c8839c862bb}} 
+\index{helper\_string.h@{helper\_string.h}!getCmdLineArgumentString@{getCmdLineArgumentString}}
+\index{getCmdLineArgumentString@{getCmdLineArgumentString}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{getCmdLineArgumentString()}{getCmdLineArgumentString()}}
+{\footnotesize\ttfamily bool get\+Cmd\+Line\+Argument\+String (\begin{DoxyParamCaption}\item[{const int}]{argc,  }\item[{const char $\ast$$\ast$}]{argv,  }\item[{const char $\ast$}]{string\+\_\+ref,  }\item[{char $\ast$$\ast$}]{string\+\_\+retval }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00236}{236}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_a885b977ee2b2ce6e95e5e80e96c6535f}\label{helper__string_8h_a885b977ee2b2ce6e95e5e80e96c6535f}} 
+\index{helper\_string.h@{helper\_string.h}!getCmdLineArgumentValue@{getCmdLineArgumentValue}}
+\index{getCmdLineArgumentValue@{getCmdLineArgumentValue}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{getCmdLineArgumentValue()}{getCmdLineArgumentValue()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+bool get\+Cmd\+Line\+Argument\+Value (\begin{DoxyParamCaption}\item[{const int}]{argc,  }\item[{const char $\ast$$\ast$}]{argv,  }\item[{const char $\ast$}]{string\+\_\+ref,  }\item[{T $\ast$}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00149}{149}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_a68aac3a4ecf6a6cf17b78f06d61b9c35}\label{helper__string_8h_a68aac3a4ecf6a6cf17b78f06d61b9c35}} 
+\index{helper\_string.h@{helper\_string.h}!getFileExtension@{getFileExtension}}
+\index{getFileExtension@{getFileExtension}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{getFileExtension()}{getFileExtension()}}
+{\footnotesize\ttfamily int get\+File\+Extension (\begin{DoxyParamCaption}\item[{char $\ast$}]{filename,  }\item[{char $\ast$$\ast$}]{extension }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00106}{106}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_a2f7f20ba2a009934e429a70f5e8e99ef}\label{helper__string_8h_a2f7f20ba2a009934e429a70f5e8e99ef}} 
+\index{helper\_string.h@{helper\_string.h}!sdkFindFilePath@{sdkFindFilePath}}
+\index{sdkFindFilePath@{sdkFindFilePath}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{sdkFindFilePath()}{sdkFindFilePath()}}
+{\footnotesize\ttfamily char $\ast$ sdk\+Find\+File\+Path (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename,  }\item[{const char $\ast$}]{executable\+\_\+path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Find the path for a file assuming that files are found in the search\+Path.
+
+\begin{DoxyReturn}{Returns}
+the path if succeeded, otherwise 0 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & name of the file \\
+\hline
+{\em executable\+\_\+path} & optional absolute path of the executable \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00267}{267}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+
+\mbox{\Hypertarget{helper__string_8h_ac58c822a5ef82babc6a997386ef77469}\label{helper__string_8h_ac58c822a5ef82babc6a997386ef77469}} 
+\index{helper\_string.h@{helper\_string.h}!stringRemoveDelimiter@{stringRemoveDelimiter}}
+\index{stringRemoveDelimiter@{stringRemoveDelimiter}!helper\_string.h@{helper\_string.h}}
+\doxysubsubsection{\texorpdfstring{stringRemoveDelimiter()}{stringRemoveDelimiter()}}
+{\footnotesize\ttfamily int string\+Remove\+Delimiter (\begin{DoxyParamCaption}\item[{char}]{delimiter,  }\item[{const char $\ast$}]{string }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__string_8h_source_l00096}{96}} of file \mbox{\hyperlink{helper__string_8h_source}{helper\+\_\+string.\+h}}.
+

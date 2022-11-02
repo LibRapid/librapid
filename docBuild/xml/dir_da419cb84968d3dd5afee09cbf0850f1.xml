@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_da419cb84968d3dd5afee09cbf0850f1" kind="dir">
+    <compoundname>librapid/cxxblas/level3</compoundname>
+    <innerfile refid="gemm_8h">gemm.h</innerfile>
+    <innerfile refid="hemm_8h">hemm.h</innerfile>
+    <innerfile refid="her2k_8h">her2k.h</innerfile>
+    <innerfile refid="herk_8h">herk.h</innerfile>
+    <innerfile refid="level3_8h">level3.h</innerfile>
+    <innerfile refid="symm_8h">symm.h</innerfile>
+    <innerfile refid="syr2k_8h">syr2k.h</innerfile>
+    <innerfile refid="syrk_8h">syrk.h</innerfile>
+    <innerfile refid="trmm_8h">trmm.h</innerfile>
+    <innerfile refid="trsm_8h">trsm.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/cxxblas/level3/"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_0fe2240ade4d4bbba0ca7080875dc323" kind="dir">
+    <compoundname>librapid/cxxblas/auxiliary</compoundname>
+    <innerfile refid="auxiliary_8h">auxiliary.h</innerfile>
+    <innerfile refid="complex_8h">complex.h</innerfile>
+    <innerfile refid="complextrait_8h">complextrait.h</innerfile>
+    <innerfile refid="debugmacro_8h">debugmacro.h</innerfile>
+    <innerfile refid="fakeuse_8h">fakeuse.h</innerfile>
+    <innerfile refid="iscomplex_8h">iscomplex.h</innerfile>
+    <innerfile refid="ismpfrreal_8h">ismpfrreal.h</innerfile>
+    <innerfile refid="issame_8h">issame.h</innerfile>
+    <innerfile refid="pow_8h">pow.h</innerfile>
+    <innerfile refid="restrictto_8h">restrictto.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/cxxblas/auxiliary/"/>
+  </compounddef>
+</doxygen>

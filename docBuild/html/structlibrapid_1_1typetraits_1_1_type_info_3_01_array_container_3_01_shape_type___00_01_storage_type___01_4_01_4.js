@@ -1,0 +1,5 @@
+var structlibrapid_1_1typetraits_1_1_type_info_3_01_array_container_3_01_shape_type___00_01_storage_type___01_4_01_4 =
+[
+    [ "Scalar", "structlibrapid_1_1typetraits_1_1_type_info_3_01_array_container_3_01_shape_type___00_01_storage_type___01_4_01_4.html#a1a1e4358df9bf7294dab97822bbf9e99", null ],
+    [ "isLibRapidType", "structlibrapid_1_1typetraits_1_1_type_info_3_01_array_container_3_01_shape_type___00_01_storage_type___01_4_01_4.html#a3468e37fbfde5a715ee990a137635b71", null ]
+];

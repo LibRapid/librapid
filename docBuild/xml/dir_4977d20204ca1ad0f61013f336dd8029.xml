@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_4977d20204ca1ad0f61013f336dd8029" kind="dir">
+    <compoundname>librapid/cxxblas/tinylevel2</compoundname>
+    <innerfile refid="tinylevel2_2gemv_8h">gemv.h</innerfile>
+    <innerfile refid="tinylevel2_8h">tinylevel2.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/cxxblas/tinylevel2/"/>
+  </compounddef>
+</doxygen>

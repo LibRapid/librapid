@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_858097f9de45d6d0fe95f786f45372cf" kind="dir">
+    <compoundname>librapid/include/librapid/array</compoundname>
+    <innerfile refid="array_8hpp">array.hpp</innerfile>
+    <innerfile refid="array_container_8hpp">arrayContainer.hpp</innerfile>
+    <innerfile refid="assign_ops_8hpp">assignOps.hpp</innerfile>
+    <innerfile refid="function_8hpp">function.hpp</innerfile>
+    <innerfile refid="operations_8hpp">operations.hpp</innerfile>
+    <innerfile refid="sizetype_8hpp">sizetype.hpp</innerfile>
+    <innerfile refid="storage_8hpp">storage.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/array/"/>
+  </compounddef>
+</doxygen>

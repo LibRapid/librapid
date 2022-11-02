@@ -1,0 +1,86 @@
+\hypertarget{helper__cusolver_8h}{}\doxysection{librapid/include/librapid/cuda/helper\+\_\+cusolver.h File Reference}
+\label{helper__cusolver_8h}\index{librapid/include/librapid/cuda/helper\_cusolver.h@{librapid/include/librapid/cuda/helper\_cusolver.h}}
+{\ttfamily \#include \char`\"{}cusparse.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$ctype.\+h$>$}\newline
+{\ttfamily \#include $<$cuda\+\_\+runtime.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structtest_opts}{test\+Opts}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{helper__cusolver_8h_ae65157e75da61ee20cff8734cd90eada}{SWITCH\+\_\+\+CHAR}}~\textquotesingle{}-\/\textquotesingle{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{helper__cusolver_8h_a259616a7c0fc746e639c531cd68f32e4}{vec\+\_\+norminf}} (int n, const double $\ast$x)
+\item 
+double \mbox{\hyperlink{helper__cusolver_8h_a66066542513544b6881c45e677b8f92e}{mat\+\_\+norminf}} (int m, int n, const double $\ast$A, int lda)
+\item 
+double \mbox{\hyperlink{helper__cusolver_8h_acc115ad8f91197d469e02b12a5219c24}{csr\+\_\+mat\+\_\+norminf}} (int m, int n, int nnzA, const cusparse\+Mat\+Descr\+\_\+t descrA, const double $\ast$csr\+ValA, const int $\ast$csr\+Row\+PtrA, const int $\ast$csr\+Col\+IndA)
+\item 
+void \mbox{\hyperlink{helper__cusolver_8h_a03deaaef3191a7219adfd058918b0438}{display\+\_\+matrix}} (int m, int n, int nnzA, const cusparse\+Mat\+Descr\+\_\+t descrA, const double $\ast$csr\+ValA, const int $\ast$csr\+Row\+PtrA, const int $\ast$csr\+Col\+IndA)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{helper__cusolver_8h_ae65157e75da61ee20cff8734cd90eada}\label{helper__cusolver_8h_ae65157e75da61ee20cff8734cd90eada}} 
+\index{helper\_cusolver.h@{helper\_cusolver.h}!SWITCH\_CHAR@{SWITCH\_CHAR}}
+\index{SWITCH\_CHAR@{SWITCH\_CHAR}!helper\_cusolver.h@{helper\_cusolver.h}}
+\doxysubsubsection{\texorpdfstring{SWITCH\_CHAR}{SWITCH\_CHAR}}
+{\footnotesize\ttfamily \#define SWITCH\+\_\+\+CHAR~\textquotesingle{}-\/\textquotesingle{}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__cusolver_8h_source_l00039}{39}} of file \mbox{\hyperlink{helper__cusolver_8h_source}{helper\+\_\+cusolver.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{helper__cusolver_8h_acc115ad8f91197d469e02b12a5219c24}\label{helper__cusolver_8h_acc115ad8f91197d469e02b12a5219c24}} 
+\index{helper\_cusolver.h@{helper\_cusolver.h}!csr\_mat\_norminf@{csr\_mat\_norminf}}
+\index{csr\_mat\_norminf@{csr\_mat\_norminf}!helper\_cusolver.h@{helper\_cusolver.h}}
+\doxysubsubsection{\texorpdfstring{csr\_mat\_norminf()}{csr\_mat\_norminf()}}
+{\footnotesize\ttfamily double csr\+\_\+mat\+\_\+norminf (\begin{DoxyParamCaption}\item[{int}]{m,  }\item[{int}]{n,  }\item[{int}]{nnzA,  }\item[{const cusparse\+Mat\+Descr\+\_\+t}]{descrA,  }\item[{const double $\ast$}]{csr\+ValA,  }\item[{const int $\ast$}]{csr\+Row\+PtrA,  }\item[{const int $\ast$}]{csr\+Col\+IndA }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{helper__cusolver_8h_source_l00076}{76}} of file \mbox{\hyperlink{helper__cusolver_8h_source}{helper\+\_\+cusolver.\+h}}.
+
+\mbox{\Hypertarget{helper__cusolver_8h_a03deaaef3191a7219adfd058918b0438}\label{helper__cusolver_8h_a03deaaef3191a7219adfd058918b0438}} 
+\index{helper\_cusolver.h@{helper\_cusolver.h}!display\_matrix@{display\_matrix}}
+\index{display\_matrix@{display\_matrix}!helper\_cusolver.h@{helper\_cusolver.h}}
+\doxysubsubsection{\texorpdfstring{display\_matrix()}{display\_matrix()}}
+{\footnotesize\ttfamily void display\+\_\+matrix (\begin{DoxyParamCaption}\item[{int}]{m,  }\item[{int}]{n,  }\item[{int}]{nnzA,  }\item[{const cusparse\+Mat\+Descr\+\_\+t}]{descrA,  }\item[{const double $\ast$}]{csr\+ValA,  }\item[{const int $\ast$}]{csr\+Row\+PtrA,  }\item[{const int $\ast$}]{csr\+Col\+IndA }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{helper__cusolver_8h_source_l00095}{95}} of file \mbox{\hyperlink{helper__cusolver_8h_source}{helper\+\_\+cusolver.\+h}}.
+
+\mbox{\Hypertarget{helper__cusolver_8h_a66066542513544b6881c45e677b8f92e}\label{helper__cusolver_8h_a66066542513544b6881c45e677b8f92e}} 
+\index{helper\_cusolver.h@{helper\_cusolver.h}!mat\_norminf@{mat\_norminf}}
+\index{mat\_norminf@{mat\_norminf}!helper\_cusolver.h@{helper\_cusolver.h}}
+\doxysubsubsection{\texorpdfstring{mat\_norminf()}{mat\_norminf()}}
+{\footnotesize\ttfamily double mat\+\_\+norminf (\begin{DoxyParamCaption}\item[{int}]{m,  }\item[{int}]{n,  }\item[{const double $\ast$}]{A,  }\item[{int}]{lda }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{helper__cusolver_8h_source_l00060}{60}} of file \mbox{\hyperlink{helper__cusolver_8h_source}{helper\+\_\+cusolver.\+h}}.
+
+\mbox{\Hypertarget{helper__cusolver_8h_a259616a7c0fc746e639c531cd68f32e4}\label{helper__cusolver_8h_a259616a7c0fc746e639c531cd68f32e4}} 
+\index{helper\_cusolver.h@{helper\_cusolver.h}!vec\_norminf@{vec\_norminf}}
+\index{vec\_norminf@{vec\_norminf}!helper\_cusolver.h@{helper\_cusolver.h}}
+\doxysubsubsection{\texorpdfstring{vec\_norminf()}{vec\_norminf()}}
+{\footnotesize\ttfamily double vec\+\_\+norminf (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{const double $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{helper__cusolver_8h_source_l00048}{48}} of file \mbox{\hyperlink{helper__cusolver_8h_source}{helper\+\_\+cusolver.\+h}}.
+

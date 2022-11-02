@@ -1,0 +1,1344 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="typedefs_8h" kind="file" language="C++">
+    <compoundname>typedefs.h</compoundname>
+    <includedby refid="complex_8h" local="yes">librapid/cxxblas/auxiliary/complex.h</includedby>
+    <includedby refid="cxxblas_8h" local="yes">librapid/cxxblas/cxxblas.h</includedby>
+    <includedby refid="drivers_8h" local="yes">librapid/cxxblas/drivers/drivers.h</includedby>
+    <includedby refid="asum_8h" local="yes">librapid/cxxblas/level1/asum.h</includedby>
+    <includedby refid="level1_2axpy_8h" local="yes">librapid/cxxblas/level1/axpy.h</includedby>
+    <includedby refid="level1_2copy_8h" local="yes">librapid/cxxblas/level1/copy.h</includedby>
+    <includedby refid="iamax_8h" local="yes">librapid/cxxblas/level1/iamax.h</includedby>
+    <includedby refid="nrm2_8h" local="yes">librapid/cxxblas/level1/nrm2.h</includedby>
+    <includedby refid="rot_8h" local="yes">librapid/cxxblas/level1/rot.h</includedby>
+    <includedby refid="rotm_8h" local="yes">librapid/cxxblas/level1/rotm.h</includedby>
+    <includedby refid="level1_2scal_8h" local="yes">librapid/cxxblas/level1/scal.h</includedby>
+    <includedby refid="swap_8h" local="yes">librapid/cxxblas/level1/swap.h</includedby>
+    <includedby refid="level1extensions_2acxpby_8h" local="yes">librapid/cxxblas/level1extensions/acxpby.h</includedby>
+    <includedby refid="level1extensions_2acxpy_8h" local="yes">librapid/cxxblas/level1extensions/acxpy.h</includedby>
+    <includedby refid="asum1_8h" local="yes">librapid/cxxblas/level1extensions/asum1.h</includedby>
+    <includedby refid="level1extensions_2axpby_8h" local="yes">librapid/cxxblas/level1extensions/axpby.h</includedby>
+    <includedby refid="level1extensions_2axpy_8h" local="yes">librapid/cxxblas/level1extensions/axpy.h</includedby>
+    <includedby refid="level1extensions_2ccopy_8h" local="yes">librapid/cxxblas/level1extensions/ccopy.h</includedby>
+    <includedby refid="level1extensions_2dot_8h" local="yes">librapid/cxxblas/level1extensions/dot.h</includedby>
+    <includedby refid="gbaxpby_8h" local="yes">librapid/cxxblas/level1extensions/gbaxpby.h</includedby>
+    <includedby refid="gbaxpy_8h" local="yes">librapid/cxxblas/level1extensions/gbaxpy.h</includedby>
+    <includedby refid="gbcopy_8h" local="yes">librapid/cxxblas/level1extensions/gbcopy.h</includedby>
+    <includedby refid="gbcotr_8h" local="yes">librapid/cxxblas/level1extensions/gbcotr.h</includedby>
+    <includedby refid="gbscal_8h" local="yes">librapid/cxxblas/level1extensions/gbscal.h</includedby>
+    <includedby refid="geaxpby_8h" local="yes">librapid/cxxblas/level1extensions/geaxpby.h</includedby>
+    <includedby refid="level1extensions_2geaxpy_8h" local="yes">librapid/cxxblas/level1extensions/geaxpy.h</includedby>
+    <includedby refid="level1extensions_2gecopy_8h" local="yes">librapid/cxxblas/level1extensions/gecopy.h</includedby>
+    <includedby refid="gecotr_8h" local="yes">librapid/cxxblas/level1extensions/gecotr.h</includedby>
+    <includedby refid="geraxpy_8h" local="yes">librapid/cxxblas/level1extensions/geraxpy.h</includedby>
+    <includedby refid="level1extensions_2gerscal_8h" local="yes">librapid/cxxblas/level1extensions/gerscal.h</includedby>
+    <includedby refid="level1extensions_2gescal_8h" local="yes">librapid/cxxblas/level1extensions/gescal.h</includedby>
+    <includedby refid="geswap_8h" local="yes">librapid/cxxblas/level1extensions/geswap.h</includedby>
+    <includedby refid="hescal_8h" local="yes">librapid/cxxblas/level1extensions/hescal.h</includedby>
+    <includedby refid="imax1_8h" local="yes">librapid/cxxblas/level1extensions/imax1.h</includedby>
+    <includedby refid="racxpy_8h" local="yes">librapid/cxxblas/level1extensions/racxpy.h</includedby>
+    <includedby refid="raxpy_8h" local="yes">librapid/cxxblas/level1extensions/raxpy.h</includedby>
+    <includedby refid="level1extensions_2rscal_8h" local="yes">librapid/cxxblas/level1extensions/rscal.h</includedby>
+    <includedby refid="syscal_8h" local="yes">librapid/cxxblas/level1extensions/syscal.h</includedby>
+    <includedby refid="tpaxpby_8h" local="yes">librapid/cxxblas/level1extensions/tpaxpby.h</includedby>
+    <includedby refid="tpaxpy_8h" local="yes">librapid/cxxblas/level1extensions/tpaxpy.h</includedby>
+    <includedby refid="tpcopy_8h" local="yes">librapid/cxxblas/level1extensions/tpcopy.h</includedby>
+    <includedby refid="tpscal_8h" local="yes">librapid/cxxblas/level1extensions/tpscal.h</includedby>
+    <includedby refid="traxpby_8h" local="yes">librapid/cxxblas/level1extensions/traxpby.h</includedby>
+    <includedby refid="traxpy_8h" local="yes">librapid/cxxblas/level1extensions/traxpy.h</includedby>
+    <includedby refid="trcopy_8h" local="yes">librapid/cxxblas/level1extensions/trcopy.h</includedby>
+    <includedby refid="trscal_8h" local="yes">librapid/cxxblas/level1extensions/trscal.h</includedby>
+    <includedby refid="level2_2gbmv_8h" local="yes">librapid/cxxblas/level2/gbmv.h</includedby>
+    <includedby refid="level2_2gemv_8h" local="yes">librapid/cxxblas/level2/gemv.h</includedby>
+    <includedby refid="ger_8h" local="yes">librapid/cxxblas/level2/ger.h</includedby>
+    <includedby refid="hbmv_8h" local="yes">librapid/cxxblas/level2/hbmv.h</includedby>
+    <includedby refid="level2_2hemv_8h" local="yes">librapid/cxxblas/level2/hemv.h</includedby>
+    <includedby refid="level2_2her_8h" local="yes">librapid/cxxblas/level2/her.h</includedby>
+    <includedby refid="level2_2her2_8h" local="yes">librapid/cxxblas/level2/her2.h</includedby>
+    <includedby refid="hpmv_8h" local="yes">librapid/cxxblas/level2/hpmv.h</includedby>
+    <includedby refid="hpr_8h" local="yes">librapid/cxxblas/level2/hpr.h</includedby>
+    <includedby refid="hpr2_8h" local="yes">librapid/cxxblas/level2/hpr2.h</includedby>
+    <includedby refid="sbmv_8h" local="yes">librapid/cxxblas/level2/sbmv.h</includedby>
+    <includedby refid="spmv_8h" local="yes">librapid/cxxblas/level2/spmv.h</includedby>
+    <includedby refid="spr_8h" local="yes">librapid/cxxblas/level2/spr.h</includedby>
+    <includedby refid="spr2_8h" local="yes">librapid/cxxblas/level2/spr2.h</includedby>
+    <includedby refid="level2_2symv_8h" local="yes">librapid/cxxblas/level2/symv.h</includedby>
+    <includedby refid="syr_8h" local="yes">librapid/cxxblas/level2/syr.h</includedby>
+    <includedby refid="syr2_8h" local="yes">librapid/cxxblas/level2/syr2.h</includedby>
+    <includedby refid="tbmv_8h" local="yes">librapid/cxxblas/level2/tbmv.h</includedby>
+    <includedby refid="tbsv_8h" local="yes">librapid/cxxblas/level2/tbsv.h</includedby>
+    <includedby refid="tpmv_8h" local="yes">librapid/cxxblas/level2/tpmv.h</includedby>
+    <includedby refid="tpsv_8h" local="yes">librapid/cxxblas/level2/tpsv.h</includedby>
+    <includedby refid="level2_2trmv_8h" local="yes">librapid/cxxblas/level2/trmv.h</includedby>
+    <includedby refid="level2_2trsv_8h" local="yes">librapid/cxxblas/level2/trsv.h</includedby>
+    <includedby refid="level2extensions_2gbmv_8h" local="yes">librapid/cxxblas/level2extensions/gbmv.h</includedby>
+    <includedby refid="level2extensions_2gemv_8h" local="yes">librapid/cxxblas/level2extensions/gemv.h</includedby>
+    <includedby refid="level2extensions_2hemv_8h" local="yes">librapid/cxxblas/level2extensions/hemv.h</includedby>
+    <includedby refid="level2extensions_2her_8h" local="yes">librapid/cxxblas/level2extensions/her.h</includedby>
+    <includedby refid="level2extensions_2her2_8h" local="yes">librapid/cxxblas/level2extensions/her2.h</includedby>
+    <includedby refid="level2extensions_2symv_8h" local="yes">librapid/cxxblas/level2extensions/symv.h</includedby>
+    <includedby refid="level2extensions_2trmv_8h" local="yes">librapid/cxxblas/level2extensions/trmv.h</includedby>
+    <includedby refid="level2extensions_2trsv_8h" local="yes">librapid/cxxblas/level2extensions/trsv.h</includedby>
+    <includedby refid="gemm_8h" local="yes">librapid/cxxblas/level3/gemm.h</includedby>
+    <includedby refid="hemm_8h" local="yes">librapid/cxxblas/level3/hemm.h</includedby>
+    <includedby refid="her2k_8h" local="yes">librapid/cxxblas/level3/her2k.h</includedby>
+    <includedby refid="herk_8h" local="yes">librapid/cxxblas/level3/herk.h</includedby>
+    <includedby refid="symm_8h" local="yes">librapid/cxxblas/level3/symm.h</includedby>
+    <includedby refid="syr2k_8h" local="yes">librapid/cxxblas/level3/syr2k.h</includedby>
+    <includedby refid="syrk_8h" local="yes">librapid/cxxblas/level3/syrk.h</includedby>
+    <includedby refid="trmm_8h" local="yes">librapid/cxxblas/level3/trmm.h</includedby>
+    <includedby refid="trsm_8h" local="yes">librapid/cxxblas/level3/trsm.h</includedby>
+    <includedby refid="gbmm_8h" local="yes">librapid/cxxblas/level3extensions/gbmm.h</includedby>
+    <includedby refid="hbmm_8h" local="yes">librapid/cxxblas/level3extensions/hbmm.h</includedby>
+    <includedby refid="sbmm_8h" local="yes">librapid/cxxblas/level3extensions/sbmm.h</includedby>
+    <includedby refid="tbmm_8h" local="yes">librapid/cxxblas/level3extensions/tbmm.h</includedby>
+    <includedby refid="gecrsmv_8h" local="yes">librapid/cxxblas/sparselevel2/gecrsmv.h</includedby>
+    <includedby refid="heccsmv_8h" local="yes">librapid/cxxblas/sparselevel2/heccsmv.h</includedby>
+    <includedby refid="hecrsmv_8h" local="yes">librapid/cxxblas/sparselevel2/hecrsmv.h</includedby>
+    <includedby refid="syccsmv_8h" local="yes">librapid/cxxblas/sparselevel2/syccsmv.h</includedby>
+    <includedby refid="sycrsmv_8h" local="yes">librapid/cxxblas/sparselevel2/sycrsmv.h</includedby>
+    <includedby refid="trccssv_8h" local="yes">librapid/cxxblas/sparselevel2/trccssv.h</includedby>
+    <includedby refid="trcrssv_8h" local="yes">librapid/cxxblas/sparselevel2/trcrssv.h</includedby>
+    <includedby refid="gecrsmm_8h" local="yes">librapid/cxxblas/sparselevel3/gecrsmm.h</includedby>
+    <includedby refid="heccsmm_8h" local="yes">librapid/cxxblas/sparselevel3/heccsmm.h</includedby>
+    <includedby refid="hecrsmm_8h" local="yes">librapid/cxxblas/sparselevel3/hecrsmm.h</includedby>
+    <includedby refid="syccsmm_8h" local="yes">librapid/cxxblas/sparselevel3/syccsmm.h</includedby>
+    <includedby refid="sycrsmm_8h" local="yes">librapid/cxxblas/sparselevel3/sycrsmm.h</includedby>
+    <includedby refid="trccssm_8h" local="yes">librapid/cxxblas/sparselevel3/trccssm.h</includedby>
+    <includedby refid="trcrssm_8h" local="yes">librapid/cxxblas/sparselevel3/trcrssm.h</includedby>
+    <includedby refid="tinylevel1_2acxpby_8h" local="yes">librapid/cxxblas/tinylevel1/acxpby.h</includedby>
+    <includedby refid="tinylevel1_2acxpy_8h" local="yes">librapid/cxxblas/tinylevel1/acxpy.h</includedby>
+    <includedby refid="tinylevel1_2axpby_8h" local="yes">librapid/cxxblas/tinylevel1/axpby.h</includedby>
+    <includedby refid="tinylevel1_2axpy_8h" local="yes">librapid/cxxblas/tinylevel1/axpy.h</includedby>
+    <includedby refid="tinylevel1_2ccopy_8h" local="yes">librapid/cxxblas/tinylevel1/ccopy.h</includedby>
+    <includedby refid="tinylevel1_2copy_8h" local="yes">librapid/cxxblas/tinylevel1/copy.h</includedby>
+    <includedby refid="tinylevel1_2geaxpy_8h" local="yes">librapid/cxxblas/tinylevel1/geaxpy.h</includedby>
+    <includedby refid="tinylevel1_2gecopy_8h" local="yes">librapid/cxxblas/tinylevel1/gecopy.h</includedby>
+    <includedby refid="tinylevel1_2gerscal_8h" local="yes">librapid/cxxblas/tinylevel1/gerscal.h</includedby>
+    <includedby refid="tinylevel1_2gescal_8h" local="yes">librapid/cxxblas/tinylevel1/gescal.h</includedby>
+    <includedby refid="tinylevel1_2rscal_8h" local="yes">librapid/cxxblas/tinylevel1/rscal.h</includedby>
+    <includedby refid="tinylevel1_2scal_8h" local="yes">librapid/cxxblas/tinylevel1/scal.h</includedby>
+    <includedby refid="tinylevel2_2gemv_8h" local="yes">librapid/cxxblas/tinylevel2/gemv.h</includedby>
+    <invincdepgraph>
+      <node id="3">
+        <label>librapid/cxxblas/auxiliary/auxiliary.h</label>
+        <link refid="auxiliary_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>librapid/cxxblas/auxiliary/complex.h</label>
+        <link refid="complex_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>librapid/cxxblas/cxxblas.cxx</label>
+        <link refid="cxxblas_8cxx"/>
+      </node>
+      <node id="4">
+        <label>librapid/cxxblas/cxxblas.h</label>
+        <link refid="cxxblas_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>librapid/cxxblas/drivers/drivers.h</label>
+        <link refid="drivers_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+        <childnode refid="50" relation="include">
+        </childnode>
+        <childnode refid="51" relation="include">
+        </childnode>
+        <childnode refid="52" relation="include">
+        </childnode>
+        <childnode refid="54" relation="include">
+        </childnode>
+        <childnode refid="55" relation="include">
+        </childnode>
+        <childnode refid="56" relation="include">
+        </childnode>
+        <childnode refid="57" relation="include">
+        </childnode>
+        <childnode refid="58" relation="include">
+        </childnode>
+        <childnode refid="59" relation="include">
+        </childnode>
+        <childnode refid="60" relation="include">
+        </childnode>
+        <childnode refid="61" relation="include">
+        </childnode>
+        <childnode refid="62" relation="include">
+        </childnode>
+        <childnode refid="64" relation="include">
+        </childnode>
+        <childnode refid="65" relation="include">
+        </childnode>
+        <childnode refid="66" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>librapid/cxxblas/level1/asum.h</label>
+        <link refid="asum_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="14">
+        <label>librapid/cxxblas/level1/axpy.h</label>
+        <link refid="level1_2axpy_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>librapid/cxxblas/level1/copy.h</label>
+        <link refid="level1_2copy_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>librapid/cxxblas/level1/dot.h</label>
+        <link refid="level1_2dot_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>librapid/cxxblas/level1/iamax.h</label>
+        <link refid="iamax_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>librapid/cxxblas/level1/level1.h</label>
+        <link refid="level1_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>librapid/cxxblas/level1/nrm2.h</label>
+        <link refid="nrm2_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>librapid/cxxblas/level1/rot.h</label>
+        <link refid="rot_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>librapid/cxxblas/level1/rotm.h</label>
+        <link refid="rotm_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>librapid/cxxblas/level1/scal.h</label>
+        <link refid="level1_2scal_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>librapid/cxxblas/level1/swap.h</label>
+        <link refid="swap_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="67">
+        <label>librapid/cxxblas/level1extensions/acxpby.h</label>
+        <link refid="level1extensions_2acxpby_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="68">
+        <label>librapid/cxxblas/level1extensions/acxpy.h</label>
+        <link refid="level1extensions_2acxpy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>librapid/cxxblas/level1extensions/asum1.h</label>
+        <link refid="asum1_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="69">
+        <label>librapid/cxxblas/level1extensions/axpby.h</label>
+        <link refid="level1extensions_2axpby_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="70">
+        <label>librapid/cxxblas/level1extensions/axpy.h</label>
+        <link refid="level1extensions_2axpy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="71">
+        <label>librapid/cxxblas/level1extensions/ccopy.h</label>
+        <link refid="level1extensions_2ccopy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="72">
+        <label>librapid/cxxblas/level1extensions/dot.h</label>
+        <link refid="level1extensions_2dot_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="73">
+        <label>librapid/cxxblas/level1extensions/gbaxpby.h</label>
+        <link refid="gbaxpby_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="74">
+        <label>librapid/cxxblas/level1extensions/gbaxpy.h</label>
+        <link refid="gbaxpy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="75">
+        <label>librapid/cxxblas/level1extensions/gbcopy.h</label>
+        <link refid="gbcopy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="76">
+        <label>librapid/cxxblas/level1extensions/gbcotr.h</label>
+        <link refid="gbcotr_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="77">
+        <label>librapid/cxxblas/level1extensions/gbscal.h</label>
+        <link refid="gbscal_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="78">
+        <label>librapid/cxxblas/level1extensions/geaxpby.h</label>
+        <link refid="geaxpby_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="79">
+        <label>librapid/cxxblas/level1extensions/geaxpy.h</label>
+        <link refid="level1extensions_2geaxpy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="80">
+        <label>librapid/cxxblas/level1extensions/gecopy.h</label>
+        <link refid="level1extensions_2gecopy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="81">
+        <label>librapid/cxxblas/level1extensions/gecotr.h</label>
+        <link refid="gecotr_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="82">
+        <label>librapid/cxxblas/level1extensions/geraxpy.h</label>
+        <link refid="geraxpy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="83">
+        <label>librapid/cxxblas/level1extensions/gerscal.h</label>
+        <link refid="level1extensions_2gerscal_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="84">
+        <label>librapid/cxxblas/level1extensions/gescal.h</label>
+        <link refid="level1extensions_2gescal_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="85">
+        <label>librapid/cxxblas/level1extensions/geswap.h</label>
+        <link refid="geswap_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="86">
+        <label>librapid/cxxblas/level1extensions/hescal.h</label>
+        <link refid="hescal_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="87">
+        <label>librapid/cxxblas/level1extensions/imax1.h</label>
+        <link refid="imax1_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>librapid/cxxblas/level1extensions/level1extensions.h</label>
+        <link refid="level1extensions_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="88">
+        <label>librapid/cxxblas/level1extensions/racxpy.h</label>
+        <link refid="racxpy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="89">
+        <label>librapid/cxxblas/level1extensions/raxpy.h</label>
+        <link refid="raxpy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="90">
+        <label>librapid/cxxblas/level1extensions/rscal.h</label>
+        <link refid="level1extensions_2rscal_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="91">
+        <label>librapid/cxxblas/level1extensions/syscal.h</label>
+        <link refid="syscal_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="92">
+        <label>librapid/cxxblas/level1extensions/tpaxpby.h</label>
+        <link refid="tpaxpby_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="93">
+        <label>librapid/cxxblas/level1extensions/tpaxpy.h</label>
+        <link refid="tpaxpy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="94">
+        <label>librapid/cxxblas/level1extensions/tpcopy.h</label>
+        <link refid="tpcopy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="95">
+        <label>librapid/cxxblas/level1extensions/tpscal.h</label>
+        <link refid="tpscal_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="96">
+        <label>librapid/cxxblas/level1extensions/traxpby.h</label>
+        <link refid="traxpby_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="97">
+        <label>librapid/cxxblas/level1extensions/traxpy.h</label>
+        <link refid="traxpy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="98">
+        <label>librapid/cxxblas/level1extensions/trcopy.h</label>
+        <link refid="trcopy_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="99">
+        <label>librapid/cxxblas/level1extensions/trscal.h</label>
+        <link refid="trscal_8h"/>
+      </node>
+      <node id="24">
+        <label>librapid/cxxblas/level2/gbmv.h</label>
+        <link refid="level2_2gbmv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>librapid/cxxblas/level2/gemv.h</label>
+        <link refid="level2_2gemv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>librapid/cxxblas/level2/ger.h</label>
+        <link refid="ger_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>librapid/cxxblas/level2/hbmv.h</label>
+        <link refid="hbmv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
+        <label>librapid/cxxblas/level2/hemv.h</label>
+        <link refid="level2_2hemv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>librapid/cxxblas/level2/her.h</label>
+        <link refid="level2_2her_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="31">
+        <label>librapid/cxxblas/level2/her2.h</label>
+        <link refid="level2_2her2_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="32">
+        <label>librapid/cxxblas/level2/hpmv.h</label>
+        <link refid="hpmv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="33">
+        <label>librapid/cxxblas/level2/hpr.h</label>
+        <link refid="hpr_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="34">
+        <label>librapid/cxxblas/level2/hpr2.h</label>
+        <link refid="hpr2_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>librapid/cxxblas/level2/level2.h</label>
+        <link refid="level2_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="35">
+        <label>librapid/cxxblas/level2/sbmv.h</label>
+        <link refid="sbmv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="36">
+        <label>librapid/cxxblas/level2/spmv.h</label>
+        <link refid="spmv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>librapid/cxxblas/level2/spr.h</label>
+        <link refid="spr_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="38">
+        <label>librapid/cxxblas/level2/spr2.h</label>
+        <link refid="spr2_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="39">
+        <label>librapid/cxxblas/level2/symv.h</label>
+        <link refid="level2_2symv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="40">
+        <label>librapid/cxxblas/level2/syr.h</label>
+        <link refid="syr_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="41">
+        <label>librapid/cxxblas/level2/syr2.h</label>
+        <link refid="syr2_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="42">
+        <label>librapid/cxxblas/level2/tbmv.h</label>
+        <link refid="tbmv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="43">
+        <label>librapid/cxxblas/level2/tbsv.h</label>
+        <link refid="tbsv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="44">
+        <label>librapid/cxxblas/level2/tpmv.h</label>
+        <link refid="tpmv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="45">
+        <label>librapid/cxxblas/level2/tpsv.h</label>
+        <link refid="tpsv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="46">
+        <label>librapid/cxxblas/level2/trmv.h</label>
+        <link refid="level2_2trmv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="47">
+        <label>librapid/cxxblas/level2/trsv.h</label>
+        <link refid="level2_2trsv_8h"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="100">
+        <label>librapid/cxxblas/level2extensions/gbmv.h</label>
+        <link refid="level2extensions_2gbmv_8h"/>
+        <childnode refid="49" relation="include">
+        </childnode>
+      </node>
+      <node id="101">
+        <label>librapid/cxxblas/level2extensions/gemv.h</label>
+        <link refid="level2extensions_2gemv_8h"/>
+        <childnode refid="49" relation="include">
+        </childnode>
+      </node>
+      <node id="102">
+        <label>librapid/cxxblas/level2extensions/hemv.h</label>
+        <link refid="level2extensions_2hemv_8h"/>
+        <childnode refid="49" relation="include">
+        </childnode>
+      </node>
+      <node id="103">
+        <label>librapid/cxxblas/level2extensions/her.h</label>
+        <link refid="level2extensions_2her_8h"/>
+        <childnode refid="49" relation="include">
+        </childnode>
+      </node>
+      <node id="104">
+        <label>librapid/cxxblas/level2extensions/her2.h</label>
+        <link refid="level2extensions_2her2_8h"/>
+        <childnode refid="49" relation="include">
+        </childnode>
+      </node>
+      <node id="49">
+        <label>librapid/cxxblas/level2extensions/level2extensions.h</label>
+        <link refid="level2extensions_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="48">
+        <label>librapid/cxxblas/level2extensions/symv.h</label>
+        <link refid="level2extensions_2symv_8h"/>
+        <childnode refid="49" relation="include">
+        </childnode>
+      </node>
+      <node id="50">
+        <label>librapid/cxxblas/level2extensions/trmv.h</label>
+        <link refid="level2extensions_2trmv_8h"/>
+        <childnode refid="49" relation="include">
+        </childnode>
+      </node>
+      <node id="51">
+        <label>librapid/cxxblas/level2extensions/trsv.h</label>
+        <link refid="level2extensions_2trsv_8h"/>
+        <childnode refid="49" relation="include">
+        </childnode>
+      </node>
+      <node id="52">
+        <label>librapid/cxxblas/level3/gemm.h</label>
+        <link refid="gemm_8h"/>
+        <childnode refid="53" relation="include">
+        </childnode>
+      </node>
+      <node id="54">
+        <label>librapid/cxxblas/level3/hemm.h</label>
+        <link refid="hemm_8h"/>
+        <childnode refid="53" relation="include">
+        </childnode>
+      </node>
+      <node id="55">
+        <label>librapid/cxxblas/level3/her2k.h</label>
+        <link refid="her2k_8h"/>
+        <childnode refid="53" relation="include">
+        </childnode>
+      </node>
+      <node id="56">
+        <label>librapid/cxxblas/level3/herk.h</label>
+        <link refid="herk_8h"/>
+        <childnode refid="53" relation="include">
+        </childnode>
+      </node>
+      <node id="53">
+        <label>librapid/cxxblas/level3/level3.h</label>
+        <link refid="level3_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="57">
+        <label>librapid/cxxblas/level3/symm.h</label>
+        <link refid="symm_8h"/>
+        <childnode refid="53" relation="include">
+        </childnode>
+      </node>
+      <node id="58">
+        <label>librapid/cxxblas/level3/syr2k.h</label>
+        <link refid="syr2k_8h"/>
+        <childnode refid="53" relation="include">
+        </childnode>
+      </node>
+      <node id="59">
+        <label>librapid/cxxblas/level3/syrk.h</label>
+        <link refid="syrk_8h"/>
+        <childnode refid="53" relation="include">
+        </childnode>
+      </node>
+      <node id="60">
+        <label>librapid/cxxblas/level3/trmm.h</label>
+        <link refid="trmm_8h"/>
+        <childnode refid="53" relation="include">
+        </childnode>
+      </node>
+      <node id="61">
+        <label>librapid/cxxblas/level3/trsm.h</label>
+        <link refid="trsm_8h"/>
+        <childnode refid="53" relation="include">
+        </childnode>
+      </node>
+      <node id="62">
+        <label>librapid/cxxblas/level3extensions/gbmm.h</label>
+        <link refid="gbmm_8h"/>
+        <childnode refid="63" relation="include">
+        </childnode>
+      </node>
+      <node id="64">
+        <label>librapid/cxxblas/level3extensions/hbmm.h</label>
+        <link refid="hbmm_8h"/>
+        <childnode refid="63" relation="include">
+        </childnode>
+      </node>
+      <node id="63">
+        <label>librapid/cxxblas/level3extensions/level3extensions.h</label>
+        <link refid="level3extensions_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="65">
+        <label>librapid/cxxblas/level3extensions/sbmm.h</label>
+        <link refid="sbmm_8h"/>
+        <childnode refid="63" relation="include">
+        </childnode>
+      </node>
+      <node id="66">
+        <label>librapid/cxxblas/level3extensions/tbmm.h</label>
+        <link refid="tbmm_8h"/>
+        <childnode refid="63" relation="include">
+        </childnode>
+      </node>
+      <node id="105">
+        <label>librapid/cxxblas/sparselevel2/gecrsmv.h</label>
+        <link refid="gecrsmv_8h"/>
+        <childnode refid="106" relation="include">
+        </childnode>
+      </node>
+      <node id="107">
+        <label>librapid/cxxblas/sparselevel2/heccsmv.h</label>
+        <link refid="heccsmv_8h"/>
+        <childnode refid="106" relation="include">
+        </childnode>
+      </node>
+      <node id="108">
+        <label>librapid/cxxblas/sparselevel2/hecrsmv.h</label>
+        <link refid="hecrsmv_8h"/>
+        <childnode refid="106" relation="include">
+        </childnode>
+      </node>
+      <node id="106">
+        <label>librapid/cxxblas/sparselevel2/sparselevel2.h</label>
+        <link refid="sparselevel2_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="109">
+        <label>librapid/cxxblas/sparselevel2/syccsmv.h</label>
+        <link refid="syccsmv_8h"/>
+        <childnode refid="106" relation="include">
+        </childnode>
+      </node>
+      <node id="110">
+        <label>librapid/cxxblas/sparselevel2/sycrsmv.h</label>
+        <link refid="sycrsmv_8h"/>
+        <childnode refid="106" relation="include">
+        </childnode>
+      </node>
+      <node id="111">
+        <label>librapid/cxxblas/sparselevel2/trccssv.h</label>
+        <link refid="trccssv_8h"/>
+        <childnode refid="106" relation="include">
+        </childnode>
+      </node>
+      <node id="112">
+        <label>librapid/cxxblas/sparselevel2/trcrssv.h</label>
+        <link refid="trcrssv_8h"/>
+        <childnode refid="106" relation="include">
+        </childnode>
+      </node>
+      <node id="113">
+        <label>librapid/cxxblas/sparselevel3/gecrsmm.h</label>
+        <link refid="gecrsmm_8h"/>
+        <childnode refid="114" relation="include">
+        </childnode>
+      </node>
+      <node id="115">
+        <label>librapid/cxxblas/sparselevel3/heccsmm.h</label>
+        <link refid="heccsmm_8h"/>
+        <childnode refid="114" relation="include">
+        </childnode>
+      </node>
+      <node id="116">
+        <label>librapid/cxxblas/sparselevel3/hecrsmm.h</label>
+        <link refid="hecrsmm_8h"/>
+        <childnode refid="114" relation="include">
+        </childnode>
+      </node>
+      <node id="114">
+        <label>librapid/cxxblas/sparselevel3/sparselevel3.h</label>
+        <link refid="sparselevel3_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="117">
+        <label>librapid/cxxblas/sparselevel3/syccsmm.h</label>
+        <link refid="syccsmm_8h"/>
+        <childnode refid="114" relation="include">
+        </childnode>
+      </node>
+      <node id="118">
+        <label>librapid/cxxblas/sparselevel3/sycrsmm.h</label>
+        <link refid="sycrsmm_8h"/>
+        <childnode refid="114" relation="include">
+        </childnode>
+      </node>
+      <node id="119">
+        <label>librapid/cxxblas/sparselevel3/trccssm.h</label>
+        <link refid="trccssm_8h"/>
+        <childnode refid="114" relation="include">
+        </childnode>
+      </node>
+      <node id="120">
+        <label>librapid/cxxblas/sparselevel3/trcrssm.h</label>
+        <link refid="trcrssm_8h"/>
+        <childnode refid="114" relation="include">
+        </childnode>
+      </node>
+      <node id="121">
+        <label>librapid/cxxblas/tinylevel1/acxpby.h</label>
+        <link refid="tinylevel1_2acxpby_8h"/>
+        <childnode refid="122" relation="include">
+        </childnode>
+      </node>
+      <node id="123">
+        <label>librapid/cxxblas/tinylevel1/acxpy.h</label>
+        <link refid="tinylevel1_2acxpy_8h"/>
+        <childnode refid="122" relation="include">
+        </childnode>
+      </node>
+      <node id="124">
+        <label>librapid/cxxblas/tinylevel1/axpby.h</label>
+        <link refid="tinylevel1_2axpby_8h"/>
+        <childnode refid="122" relation="include">
+        </childnode>
+      </node>
+      <node id="125">
+        <label>librapid/cxxblas/tinylevel1/axpy.h</label>
+        <link refid="tinylevel1_2axpy_8h"/>
+        <childnode refid="122" relation="include">
+        </childnode>
+      </node>
+      <node id="126">
+        <label>librapid/cxxblas/tinylevel1/ccopy.h</label>
+        <link refid="tinylevel1_2ccopy_8h"/>
+        <childnode refid="122" relation="include">
+        </childnode>
+      </node>
+      <node id="127">
+        <label>librapid/cxxblas/tinylevel1/copy.h</label>
+        <link refid="tinylevel1_2copy_8h"/>
+        <childnode refid="122" relation="include">
+        </childnode>
+      </node>
+      <node id="128">
+        <label>librapid/cxxblas/tinylevel1/geaxpy.h</label>
+        <link refid="tinylevel1_2geaxpy_8h"/>
+        <childnode refid="122" relation="include">
+        </childnode>
+      </node>
+      <node id="129">
+        <label>librapid/cxxblas/tinylevel1/gecopy.h</label>
+        <link refid="tinylevel1_2gecopy_8h"/>
+        <childnode refid="122" relation="include">
+        </childnode>
+      </node>
+      <node id="130">
+        <label>librapid/cxxblas/tinylevel1/gerscal.h</label>
+        <link refid="tinylevel1_2gerscal_8h"/>
+        <childnode refid="122" relation="include">
+        </childnode>
+      </node>
+      <node id="131">
+        <label>librapid/cxxblas/tinylevel1/gescal.h</label>
+        <link refid="tinylevel1_2gescal_8h"/>
+        <childnode refid="122" relation="include">
+        </childnode>
+      </node>
+      <node id="132">
+        <label>librapid/cxxblas/tinylevel1/rscal.h</label>
+        <link refid="tinylevel1_2rscal_8h"/>
+        <childnode refid="122" relation="include">
+        </childnode>
+      </node>
+      <node id="133">
+        <label>librapid/cxxblas/tinylevel1/scal.h</label>
+        <link refid="tinylevel1_2scal_8h"/>
+        <childnode refid="122" relation="include">
+        </childnode>
+      </node>
+      <node id="122">
+        <label>librapid/cxxblas/tinylevel1/tinylevel1.h</label>
+        <link refid="tinylevel1_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="134">
+        <label>librapid/cxxblas/tinylevel2/gemv.h</label>
+        <link refid="tinylevel2_2gemv_8h"/>
+        <childnode refid="135" relation="include">
+        </childnode>
+      </node>
+      <node id="135">
+        <label>librapid/cxxblas/tinylevel2/tinylevel2.h</label>
+        <link refid="tinylevel2_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>librapid/cxxblas/typedefs.h</label>
+        <link refid="typedefs_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="67" relation="include">
+        </childnode>
+        <childnode refid="68" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="69" relation="include">
+        </childnode>
+        <childnode refid="70" relation="include">
+        </childnode>
+        <childnode refid="71" relation="include">
+        </childnode>
+        <childnode refid="72" relation="include">
+        </childnode>
+        <childnode refid="73" relation="include">
+        </childnode>
+        <childnode refid="74" relation="include">
+        </childnode>
+        <childnode refid="75" relation="include">
+        </childnode>
+        <childnode refid="76" relation="include">
+        </childnode>
+        <childnode refid="77" relation="include">
+        </childnode>
+        <childnode refid="78" relation="include">
+        </childnode>
+        <childnode refid="79" relation="include">
+        </childnode>
+        <childnode refid="80" relation="include">
+        </childnode>
+        <childnode refid="81" relation="include">
+        </childnode>
+        <childnode refid="82" relation="include">
+        </childnode>
+        <childnode refid="83" relation="include">
+        </childnode>
+        <childnode refid="84" relation="include">
+        </childnode>
+        <childnode refid="85" relation="include">
+        </childnode>
+        <childnode refid="86" relation="include">
+        </childnode>
+        <childnode refid="87" relation="include">
+        </childnode>
+        <childnode refid="88" relation="include">
+        </childnode>
+        <childnode refid="89" relation="include">
+        </childnode>
+        <childnode refid="90" relation="include">
+        </childnode>
+        <childnode refid="91" relation="include">
+        </childnode>
+        <childnode refid="92" relation="include">
+        </childnode>
+        <childnode refid="93" relation="include">
+        </childnode>
+        <childnode refid="94" relation="include">
+        </childnode>
+        <childnode refid="95" relation="include">
+        </childnode>
+        <childnode refid="96" relation="include">
+        </childnode>
+        <childnode refid="97" relation="include">
+        </childnode>
+        <childnode refid="98" relation="include">
+        </childnode>
+        <childnode refid="99" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="100" relation="include">
+        </childnode>
+        <childnode refid="101" relation="include">
+        </childnode>
+        <childnode refid="102" relation="include">
+        </childnode>
+        <childnode refid="103" relation="include">
+        </childnode>
+        <childnode refid="104" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+        <childnode refid="50" relation="include">
+        </childnode>
+        <childnode refid="51" relation="include">
+        </childnode>
+        <childnode refid="52" relation="include">
+        </childnode>
+        <childnode refid="54" relation="include">
+        </childnode>
+        <childnode refid="55" relation="include">
+        </childnode>
+        <childnode refid="56" relation="include">
+        </childnode>
+        <childnode refid="57" relation="include">
+        </childnode>
+        <childnode refid="58" relation="include">
+        </childnode>
+        <childnode refid="59" relation="include">
+        </childnode>
+        <childnode refid="60" relation="include">
+        </childnode>
+        <childnode refid="61" relation="include">
+        </childnode>
+        <childnode refid="62" relation="include">
+        </childnode>
+        <childnode refid="64" relation="include">
+        </childnode>
+        <childnode refid="65" relation="include">
+        </childnode>
+        <childnode refid="66" relation="include">
+        </childnode>
+        <childnode refid="105" relation="include">
+        </childnode>
+        <childnode refid="107" relation="include">
+        </childnode>
+        <childnode refid="108" relation="include">
+        </childnode>
+        <childnode refid="109" relation="include">
+        </childnode>
+        <childnode refid="110" relation="include">
+        </childnode>
+        <childnode refid="111" relation="include">
+        </childnode>
+        <childnode refid="112" relation="include">
+        </childnode>
+        <childnode refid="113" relation="include">
+        </childnode>
+        <childnode refid="115" relation="include">
+        </childnode>
+        <childnode refid="116" relation="include">
+        </childnode>
+        <childnode refid="117" relation="include">
+        </childnode>
+        <childnode refid="118" relation="include">
+        </childnode>
+        <childnode refid="119" relation="include">
+        </childnode>
+        <childnode refid="120" relation="include">
+        </childnode>
+        <childnode refid="121" relation="include">
+        </childnode>
+        <childnode refid="123" relation="include">
+        </childnode>
+        <childnode refid="124" relation="include">
+        </childnode>
+        <childnode refid="125" relation="include">
+        </childnode>
+        <childnode refid="126" relation="include">
+        </childnode>
+        <childnode refid="127" relation="include">
+        </childnode>
+        <childnode refid="128" relation="include">
+        </childnode>
+        <childnode refid="129" relation="include">
+        </childnode>
+        <childnode refid="130" relation="include">
+        </childnode>
+        <childnode refid="131" relation="include">
+        </childnode>
+        <childnode refid="132" relation="include">
+        </childnode>
+        <childnode refid="133" relation="include">
+        </childnode>
+        <childnode refid="134" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>librapid/include/librapid/core/core.hpp</label>
+        <link refid="core_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>librapid/include/librapid/librapid.hpp</label>
+        <link refid="librapid_8hpp"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>librapid/src/global.cpp</label>
+        <link refid="global_8cpp"/>
+      </node>
+      <node id="11">
+        <label>librapid/src/helper_cuda.cpp</label>
+        <link refid="helper__cuda_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespacecxxblas">cxxblas</innernamespace>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="typedefs_8h_1aa4060a1b53da329abf33ab832f61c2c0" prot="public" static="no">
+        <name>CXXBLAS_COMPLEX_TYPES</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/cxxblas/typedefs.h" line="41" column="10" bodyfile="librapid/cxxblas/typedefs.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Copyright<sp/>(c)<sp/>2009,<sp/>Michael<sp/>Lehn</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/><sp/><sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Redistribution<sp/>and<sp/>use<sp/>in<sp/>source<sp/>and<sp/>binary<sp/>forms,<sp/>with<sp/>or<sp/>without</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/><sp/><sp/>modification,<sp/>are<sp/>permitted<sp/>provided<sp/>that<sp/>the<sp/>following<sp/>conditions</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/><sp/><sp/>are<sp/>met:</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/><sp/><sp/>1)<sp/>Redistributions<sp/>of<sp/>source<sp/>code<sp/>must<sp/>retain<sp/>the<sp/>above<sp/>copyright</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>notice,<sp/>this<sp/>list<sp/>of<sp/>conditions<sp/>and<sp/>the<sp/>following<sp/>disclaimer.</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/><sp/><sp/>2)<sp/>Redistributions<sp/>in<sp/>binary<sp/>form<sp/>must<sp/>reproduce<sp/>the<sp/>above<sp/>copyright</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>notice,<sp/>this<sp/>list<sp/>of<sp/>conditions<sp/>and<sp/>the<sp/>following<sp/>disclaimer<sp/>in</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>the<sp/>documentation<sp/>and/or<sp/>other<sp/>materials<sp/>provided<sp/>with<sp/>the</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>distribution.</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/><sp/><sp/>3)<sp/>Neither<sp/>the<sp/>name<sp/>of<sp/>the<sp/>FLENS<sp/>development<sp/>group<sp/>nor<sp/>the<sp/>names<sp/>of</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>its<sp/>contributors<sp/>may<sp/>be<sp/>used<sp/>to<sp/>endorse<sp/>or<sp/>promote<sp/>products<sp/>derived</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>from<sp/>this<sp/>software<sp/>without<sp/>specific<sp/>prior<sp/>written<sp/>permission.</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/><sp/><sp/>THIS<sp/>SOFTWARE<sp/>IS<sp/>PROVIDED<sp/>BY<sp/>THE<sp/>COPYRIGHT<sp/>HOLDERS<sp/>AND<sp/>CONTRIBUTORS</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/><sp/><sp/>&quot;AS<sp/>IS&quot;<sp/>AND<sp/>ANY<sp/>EXPRESS<sp/>OR<sp/>IMPLIED<sp/>WARRANTIES,<sp/>INCLUDING,<sp/>BUT<sp/>NOT</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/><sp/><sp/>LIMITED<sp/>TO,<sp/>THE<sp/>IMPLIED<sp/>WARRANTIES<sp/>OF<sp/>MERCHANTABILITY<sp/>AND<sp/>FITNESS<sp/>FOR</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*<sp/><sp/><sp/>A<sp/>PARTICULAR<sp/>PURPOSE<sp/>ARE<sp/>DISCLAIMED.<sp/>IN<sp/>NO<sp/>EVENT<sp/>SHALL<sp/>THE<sp/>COPYRIGHT</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*<sp/><sp/><sp/>OWNER<sp/>OR<sp/>CONTRIBUTORS<sp/>BE<sp/>LIABLE<sp/>FOR<sp/>ANY<sp/>DIRECT,<sp/>INDIRECT,<sp/>INCIDENTAL,</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/>*<sp/><sp/><sp/>SPECIAL,<sp/>EXEMPLARY,<sp/>OR<sp/>CONSEQUENTIAL<sp/>DAMAGES<sp/>(INCLUDING,<sp/>BUT<sp/>NOT</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/>*<sp/><sp/><sp/>LIMITED<sp/>TO,<sp/>PROCUREMENT<sp/>OF<sp/>SUBSTITUTE<sp/>GOODS<sp/>OR<sp/>SERVICES;<sp/>LOSS<sp/>OF<sp/>USE,</highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/>*<sp/><sp/><sp/>DATA,<sp/>OR<sp/>PROFITS;<sp/>OR<sp/>BUSINESS<sp/>INTERRUPTION)<sp/>HOWEVER<sp/>CAUSED<sp/>AND<sp/>ON<sp/>ANY</highlight></codeline>
+<codeline lineno="28"><highlight class="comment"><sp/>*<sp/><sp/><sp/>THEORY<sp/>OF<sp/>LIABILITY,<sp/>WHETHER<sp/>IN<sp/>CONTRACT,<sp/>STRICT<sp/>LIABILITY,<sp/>OR<sp/>TORT</highlight></codeline>
+<codeline lineno="29"><highlight class="comment"><sp/>*<sp/><sp/><sp/>(INCLUDING<sp/>NEGLIGENCE<sp/>OR<sp/>OTHERWISE)<sp/>ARISING<sp/>IN<sp/>ANY<sp/>WAY<sp/>OUT<sp/>OF<sp/>THE<sp/>USE</highlight></codeline>
+<codeline lineno="30"><highlight class="comment"><sp/>*<sp/><sp/><sp/>OF<sp/>THIS<sp/>SOFTWARE,<sp/>EVEN<sp/>IF<sp/>ADVISED<sp/>OF<sp/>THE<sp/>POSSIBILITY<sp/>OF<sp/>SUCH<sp/>DAMAGE.</highlight></codeline>
+<codeline lineno="31"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CXXBLAS_TYPEDEFS_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CXXBLAS_TYPEDEFS_H<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#include<sp/>&lt;complex&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecxxblas" kindref="compound">cxxblas</ref><sp/>{</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CXXBLAS_COMPLEX_TYPES</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="typedefs_8h_1aa4060a1b53da329abf33ab832f61c2c0" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/><sp/>define<sp/>CXXBLAS_COMPLEX_TYPES<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42" refid="namespacecxxblas_1a0aa58e56aafd7cc3e106560ba53a7d68" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>std::complex&lt;float&gt;<sp/><ref refid="namespacecxxblas_1a0aa58e56aafd7cc3e106560ba53a7d68" kindref="member">ComplexFloat</ref>;</highlight></codeline>
+<codeline lineno="43" refid="namespacecxxblas_1a3745a448677a66aa383ccc8bf3d09716" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>std::complex&lt;double&gt;<sp/><ref refid="namespacecxxblas_1a3745a448677a66aa383ccc8bf3d09716" kindref="member">ComplexDouble</ref>;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>CXXBLAS_COMPLEX_TYPES</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46" refid="namespacecxxblas_1a918cd7933fff546379a8b1a0ab283f68aad9cd0535867752083896cd2861cd907" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="namespacecxxblas_1a918cd7933fff546379a8b1a0ab283f68" kindref="member">StorageOrder</ref><sp/>{<sp/><ref refid="namespacecxxblas_1a918cd7933fff546379a8b1a0ab283f68a746c8afda1b7bb0f80c4853fde1edd05" kindref="member">RowMajor</ref>,<sp/><ref refid="namespacecxxblas_1a918cd7933fff546379a8b1a0ab283f68aad9cd0535867752083896cd2861cd907" kindref="member">ColMajor</ref><sp/>};</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="namespacecxxblas_1ad69d92c1688aa626f694b26a1da27df7a5d4f0e9e2ade8265626081ff772f3cd1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="namespacecxxblas_1ad69d92c1688aa626f694b26a1da27df7" kindref="member">StorageUpLo</ref><sp/>{<sp/><ref refid="namespacecxxblas_1ad69d92c1688aa626f694b26a1da27df7a37aa39af32043a5cc803b7f391035393" kindref="member">Upper</ref><sp/>=<sp/></highlight><highlight class="charliteral">&apos;U&apos;</highlight><highlight class="normal">,<sp/><ref refid="namespacecxxblas_1ad69d92c1688aa626f694b26a1da27df7a5d4f0e9e2ade8265626081ff772f3cd1" kindref="member">Lower</ref><sp/>=<sp/></highlight><highlight class="charliteral">&apos;L&apos;</highlight><highlight class="normal"><sp/>};</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50" refid="namespacecxxblas_1a3e3f7c313cf3b7c24d37c13aac2ae4a6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="namespacecxxblas_1a3e3f7c313cf3b7c24d37c13aac2ae4a6" kindref="member">Diag</ref><sp/>{<sp/><ref refid="namespacecxxblas_1a3e3f7c313cf3b7c24d37c13aac2ae4a6aea4d8eafe201686e94642101b3be8163" kindref="member">Unit</ref><sp/>=<sp/></highlight><highlight class="charliteral">&apos;U&apos;</highlight><highlight class="normal">,<sp/><ref refid="namespacecxxblas_1a3e3f7c313cf3b7c24d37c13aac2ae4a6a82be9b897400986d48ea221e4a837b2d" kindref="member">NonUnit</ref><sp/>=<sp/></highlight><highlight class="charliteral">&apos;N&apos;</highlight><highlight class="normal"><sp/>};</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52" refid="namespacecxxblas_1a3321b2c6f9fc9d90f6c3d502a999d947ab2dc76441030cc13b9fbb2b65fd953fc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="namespacecxxblas_1a3321b2c6f9fc9d90f6c3d502a999d947" kindref="member">Side</ref><sp/>{<sp/><ref refid="namespacecxxblas_1a3321b2c6f9fc9d90f6c3d502a999d947ab2dc76441030cc13b9fbb2b65fd953fc" kindref="member">Left</ref><sp/>=<sp/></highlight><highlight class="charliteral">&apos;L&apos;</highlight><highlight class="normal">,<sp/><ref refid="namespacecxxblas_1a3321b2c6f9fc9d90f6c3d502a999d947a49f14d940c2e0e526a3a53a739dffe7e" kindref="member">Right</ref><sp/>=<sp/></highlight><highlight class="charliteral">&apos;R&apos;</highlight><highlight class="normal"><sp/>};</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54" refid="namespacecxxblas_1a710044b98080b10301734289c63b1e30aaadde075a6e8b482fa14d032cd54f64b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="namespacecxxblas_1a710044b98080b10301734289c63b1e30" kindref="member">Transpose</ref><sp/>{<sp/><ref refid="namespacecxxblas_1a710044b98080b10301734289c63b1e30a6ff86ac122ab2d5a805c768d29a15809" kindref="member">NoTrans</ref><sp/>=<sp/>0,<sp/><ref refid="namespacecxxblas_1a710044b98080b10301734289c63b1e30aaadde075a6e8b482fa14d032cd54f64b" kindref="member">Conj</ref><sp/>=<sp/>1,<sp/><ref refid="namespacecxxblas_1a710044b98080b10301734289c63b1e30a0f956f88c118f2f3b478474693315722" kindref="member">Trans</ref><sp/>=<sp/>2,<sp/><ref refid="namespacecxxblas_1a710044b98080b10301734289c63b1e30a1c689914790d2fe73f783b40657eaec0" kindref="member">ConjTrans</ref><sp/>=<sp/>3<sp/>};</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cxxblas</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>CXXBLAS_TYPEDEFS_H</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="librapid/cxxblas/typedefs.h"/>
+  </compounddef>
+</doxygen>

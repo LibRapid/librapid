@@ -1,0 +1,36 @@
+\hypertarget{drivers_8h}{}\doxysection{librapid/cxxblas/drivers/drivers.h File Reference}
+\label{drivers_8h}\index{librapid/cxxblas/drivers/drivers.h@{librapid/cxxblas/drivers/drivers.h}}
+{\ttfamily \#include \char`\"{}cxxblas/auxiliary/issame.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cxxblas/auxiliary/restrictto.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cxxblas/typedefs.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_if}{cxxblas\+::\+If$<$ Any $>$}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_if_3_01int_01_4}{cxxblas\+::\+If$<$ int $>$}}
+\item 
+struct \mbox{\hyperlink{structcxxblas_1_1_if_3_01long_01_4}{cxxblas\+::\+If$<$ long $>$}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacecxxblas}{cxxblas}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename CHAR $>$ }\\const CHAR $\ast$ \mbox{\hyperlink{namespacecxxblas_af90758661694282ee9516470d96c0887}{cxxblas\+::blas\+Impl}} ()
+\item 
+{\footnotesize template$<$typename ENUM $>$ }\\Restrict\+To$<$ Is\+Same$<$ ENUM, Transpose $>$\+::value, char $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_abb65f6752487d758ce2be8e30e10202a}{cxxblas\+::get\+F77\+Blas\+Char}} (ENUM trans)
+\item 
+{\footnotesize template$<$typename ENUM $>$ }\\Restrict\+To$<$ Is\+Same$<$ ENUM, Diag $>$\+::value, char $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_a2e912f6be2475ad21be3f52ec9b5fc20}{cxxblas\+::get\+F77\+Blas\+Char}} (ENUM diag)
+\item 
+{\footnotesize template$<$typename ENUM $>$ }\\Restrict\+To$<$ Is\+Same$<$ ENUM, Storage\+Up\+Lo $>$\+::value, char $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_a6fa84144e95aeddbc38c7718b8123499}{cxxblas\+::get\+F77\+Blas\+Char}} (ENUM up\+Lo)
+\item 
+{\footnotesize template$<$typename ENUM $>$ }\\Restrict\+To$<$ Is\+Same$<$ ENUM, Transpose $>$\+::value, Transpose $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_aa5cec6414633269a7d1de92637bee039}{cxxblas\+::get\+Cxx\+Blas\+Enum}} (char trans)
+\item 
+{\footnotesize template$<$typename ENUM $>$ }\\Restrict\+To$<$ Is\+Same$<$ ENUM, Diag $>$\+::value, Diag $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_abd2de56f837a3338235ec32c5fd64f99}{cxxblas\+::get\+Cxx\+Blas\+Enum}} (char diag)
+\item 
+{\footnotesize template$<$typename ENUM $>$ }\\Restrict\+To$<$ Is\+Same$<$ ENUM, Storage\+Up\+Lo $>$\+::value, Storage\+Up\+Lo $>$\+::\+Type \mbox{\hyperlink{namespacecxxblas_a9d2990c6095e23948174dece35a3e17c}{cxxblas\+::get\+Cxx\+Blas\+Enum}} (char up\+Lo)
+\end{DoxyCompactItemize}

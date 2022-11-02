@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_573a72289b17cf9947039cbc2f2956bb" kind="dir">
+    <compoundname>librapid/include/librapid/cuda</compoundname>
+    <innerfile refid="exception_8h">exception.h</innerfile>
+    <innerfile refid="helper__cuda_8h">helper_cuda.h</innerfile>
+    <innerfile refid="helper__cuda__drvapi_8h">helper_cuda_drvapi.h</innerfile>
+    <innerfile refid="helper__cusolver_8h">helper_cusolver.h</innerfile>
+    <innerfile refid="helper__functions_8h">helper_functions.h</innerfile>
+    <innerfile refid="helper__image_8h">helper_image.h</innerfile>
+    <innerfile refid="helper__math_8h">helper_math.h</innerfile>
+    <innerfile refid="helper__multiprocess_8h">helper_multiprocess.h</innerfile>
+    <innerfile refid="helper__string_8h">helper_string.h</innerfile>
+    <innerfile refid="helper__timer_8h">helper_timer.h</innerfile>
+    <innerfile refid="kernel__header_8h">kernel_header.h</innerfile>
+    <innerfile refid="nvrtc__helper_8h">nvrtc_helper.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/cuda/"/>
+  </compounddef>
+</doxygen>

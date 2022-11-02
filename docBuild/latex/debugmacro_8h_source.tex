@@ -1,0 +1,102 @@
+\hypertarget{debugmacro_8h_source}{}\doxysection{debugmacro.\+h}
+\label{debugmacro_8h_source}\index{librapid/cxxblas/auxiliary/debugmacro.h@{librapid/cxxblas/auxiliary/debugmacro.h}}
+\mbox{\hyperlink{debugmacro_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00001}00001 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00002}00002 \textcolor{comment}{ *   Copyright (c) 2009, Michael Lehn}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00003}00003 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00004}00004 \textcolor{comment}{ *   All rights reserved.}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00005}00005 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00006}00006 \textcolor{comment}{ *   Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00007}00007 \textcolor{comment}{ *   modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00008}00008 \textcolor{comment}{ *   are met:}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00009}00009 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00010}00010 \textcolor{comment}{ *   1) Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00011}00011 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00012}00012 \textcolor{comment}{ *   2) Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00013}00013 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer in}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00014}00014 \textcolor{comment}{ *      the documentation and/or other materials provided with the}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00015}00015 \textcolor{comment}{ *      distribution.}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00016}00016 \textcolor{comment}{ *   3) Neither the name of the FLENS development group nor the names of}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00017}00017 \textcolor{comment}{ *      its contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00018}00018 \textcolor{comment}{ *      from this software without specific prior written permission.}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00019}00019 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00020}00020 \textcolor{comment}{ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00021}00021 \textcolor{comment}{ *   "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00022}00022 \textcolor{comment}{ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00023}00023 \textcolor{comment}{ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00024}00024 \textcolor{comment}{ *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00025}00025 \textcolor{comment}{ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00026}00026 \textcolor{comment}{ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00027}00027 \textcolor{comment}{ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00028}00028 \textcolor{comment}{ *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00029}00029 \textcolor{comment}{ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00030}00030 \textcolor{comment}{ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00031}00031 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00033}00033 \textcolor{preprocessor}{\#ifndef CXXBLAS\_AUXILIARY\_DEBUGMACRO\_H}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00034}00034 \textcolor{preprocessor}{\#define CXXBLAS\_AUXILIARY\_DEBUGMACRO\_H 1}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00036}00036 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00037}00037 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00038}00038 \textcolor{comment}{//-\/-\/ CXXBLAS\_DEBUG\_OUT -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00039}00039 \textcolor{preprocessor}{\#ifdef CXXBLAS\_DEBUG}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00040}00040 \textcolor{preprocessor}{\#   ifndef CXXBLAS\_DEBUG\_OUT}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00041}00041 \textcolor{preprocessor}{\#       define CXXBLAS\_DEBUG\_OUT(msg) std::cerr << "{}CXXBLAS: "{}} << msg << std::endl}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00042}00042 \textcolor{preprocessor}{\#   endif }\textcolor{comment}{// CXXBLAS\_DEBUG\_OUT}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00043}00043 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00044}00044 \textcolor{preprocessor}{\#   ifndef CXXBLAS\_DEBUG\_OUT}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00045}\mbox{\hyperlink{debugmacro_8h_a2b88260c6f1b31f5ac993d5d9fd6473d}{00045}} \textcolor{preprocessor}{\#       define CXXBLAS\_DEBUG\_OUT(msg)}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00046}00046 \textcolor{preprocessor}{\#   endif }\textcolor{comment}{// CXXBLAS\_DEBUG\_OUT}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00047}00047 \textcolor{preprocessor}{\#endif     }\textcolor{comment}{// CXXBLAS\_DEBUG}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00048}00048 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00049}00049 \textcolor{preprocessor}{\#include <cassert>}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00050}00050 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00051}00051 \textcolor{comment}{//-\/-\/ ASSERT -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00052}00052 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00053}00053 \textcolor{comment}{// ASSERT which prints out a trace back of the call}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00054}00054 \textcolor{preprocessor}{\#if defined(TRACEBACK\_ASSERT) \&\& !defined(NDEBUG)}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00055}00055 \textcolor{preprocessor}{\#   include <execinfo.h>}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00056}00056 \textcolor{preprocessor}{\#   ifndef ASSERT}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00057}00057 \textcolor{preprocessor}{\#       define ASSERT(x)                                                                          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00058}00058 \textcolor{preprocessor}{            if (!(x)) \{                                                                            \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00059}00059 \textcolor{preprocessor}{                void *callstack[128];                                                              \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00060}00060 \textcolor{preprocessor}{                int frames  = backtrace(callstack, 128);                                           \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00061}00061 \textcolor{preprocessor}{                char **strs = backtrace\_symbols(callstack, frames);                                \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00062}00062 \textcolor{preprocessor}{                for (int i = 0; i < frames; ++i) \{ std::cerr << strs[i] << std::endl; \}            \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00063}00063 \textcolor{preprocessor}{                free(strs);                                                                        \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00064}00064 \textcolor{preprocessor}{            \}                                                                                      \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00065}00065 \textcolor{preprocessor}{            assert(x);}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00066}00066 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00067}00067 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00068}00068 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00069}00069 \textcolor{comment}{// Default ASSERT Macro}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00070}00070 \textcolor{preprocessor}{\#ifndef ASSERT}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00071}\mbox{\hyperlink{debugmacro_8h_aca68c0d4ac8df0838e209fb5300f7be3}{00071}} \textcolor{preprocessor}{\#   define ASSERT(x) assert(x)}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00072}00072 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00073}00073 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00074}00074 \textcolor{comment}{// Prevent warings because some function parameters are only used in debug}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00075}00075 \textcolor{comment}{// mode within assertions.  In non-\/debug mode this causes warnings because}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00076}00076 \textcolor{comment}{// of unused variables.}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00077}00077 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00078}00078 \textcolor{preprocessor}{\#ifndef NDEBUG}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00079}00079 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00080}00080 \textcolor{preprocessor}{\#   ifndef DEBUG\_VAR}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00081}\mbox{\hyperlink{debugmacro_8h_a23bbecf2f76856ec2c58ba1191d0c902}{00081}} \textcolor{preprocessor}{\#       define DEBUG\_VAR(x) x}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00082}00082 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00083}00083 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00084}00084 \textcolor{preprocessor}{\#   ifndef FAKE\_USE\_NDEBUG}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00085}\mbox{\hyperlink{debugmacro_8h_af2cfdb820a9da81d0b1f254f6bbce275}{00085}} \textcolor{preprocessor}{\#       define FAKE\_USE\_NDEBUG(x)}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00086}00086 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00087}00087 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00088}00088 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00089}00089 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00090}00090 \textcolor{preprocessor}{\#   ifndef FAKE\_USE\_NDEBUG}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00091}00091 \textcolor{preprocessor}{\#       define FAKE\_USE\_NDEBUG(x) (void)x}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00092}00092 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00093}00093 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00094}00094 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00095}00095 }
+\DoxyCodeLine{\Hypertarget{debugmacro_8h_source_l00096}00096 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CXXBLAS\_AUXILIARY\_DEBUGMACRO\_H}}
+
+\end{DoxyCode}

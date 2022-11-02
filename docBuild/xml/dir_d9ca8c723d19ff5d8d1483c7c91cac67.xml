@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_d9ca8c723d19ff5d8d1483c7c91cac67" kind="dir">
+    <compoundname>librapid/include/librapid</compoundname>
+    <innerdir refid="dir_858097f9de45d6d0fe95f786f45372cf">librapid/include/librapid/array</innerdir>
+    <innerdir refid="dir_8451aace1a67b97d6efef22e6bc81eb6">librapid/include/librapid/core</innerdir>
+    <innerdir refid="dir_573a72289b17cf9947039cbc2f2956bb">librapid/include/librapid/cuda</innerdir>
+    <innerdir refid="dir_85d43d587f489a5ede1088f3b42dcce2">librapid/include/librapid/math</innerdir>
+    <innerfile refid="librapid_8hpp">librapid.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/"/>
+  </compounddef>
+</doxygen>

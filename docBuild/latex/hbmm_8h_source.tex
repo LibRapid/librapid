@@ -1,0 +1,57 @@
+\hypertarget{hbmm_8h_source}{}\doxysection{hbmm.\+h}
+\label{hbmm_8h_source}\index{librapid/cxxblas/level3extensions/hbmm.h@{librapid/cxxblas/level3extensions/hbmm.h}}
+\mbox{\hyperlink{hbmm_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00001}00001 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00002}00002 \textcolor{comment}{ *   Copyright (c) 2012, Klaus Pototzky}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00003}00003 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00004}00004 \textcolor{comment}{ *   All rights reserved.}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00005}00005 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00006}00006 \textcolor{comment}{ *   Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00007}00007 \textcolor{comment}{ *   modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00008}00008 \textcolor{comment}{ *   are met:}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00009}00009 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00010}00010 \textcolor{comment}{ *   1) Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00011}00011 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00012}00012 \textcolor{comment}{ *   2) Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00013}00013 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer in}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00014}00014 \textcolor{comment}{ *      the documentation and/or other materials provided with the}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00015}00015 \textcolor{comment}{ *      distribution.}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00016}00016 \textcolor{comment}{ *   3) Neither the name of the FLENS development group nor the names of}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00017}00017 \textcolor{comment}{ *      its contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00018}00018 \textcolor{comment}{ *      from this software without specific prior written permission.}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00019}00019 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00020}00020 \textcolor{comment}{ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00021}00021 \textcolor{comment}{ *   "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00022}00022 \textcolor{comment}{ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00023}00023 \textcolor{comment}{ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00024}00024 \textcolor{comment}{ *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00025}00025 \textcolor{comment}{ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00026}00026 \textcolor{comment}{ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00027}00027 \textcolor{comment}{ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00028}00028 \textcolor{comment}{ *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00029}00029 \textcolor{comment}{ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00030}00030 \textcolor{comment}{ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00031}00031 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00033}00033 \textcolor{preprocessor}{\#ifndef CXXBLAS\_LEVEL3EXTENSION\_HBMM\_H}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00034}00034 \textcolor{preprocessor}{\#define CXXBLAS\_LEVEL3EXTENSION\_HBMM\_H 1}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00036}00036 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{drivers_8h}{cxxblas/drivers/drivers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00037}00037 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{typedefs_8h}{cxxblas/typedefs.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00038}00038 }
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00039}\mbox{\hyperlink{hbmm_8h_a8acc16e844f8efcb32f01d49c63109f2}{00039}} \textcolor{preprocessor}{\#define HAVE\_CXXBLAS\_HBMM 1}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00040}00040 }
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00041}00041 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespacecxxblas}{cxxblas}} \{}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00042}00042 }
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00043}00043     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType, \textcolor{keyword}{typename} ALPHA, \textcolor{keyword}{typename} MA, \textcolor{keyword}{typename} MB, \textcolor{keyword}{typename} BETA,}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00044}00044              \textcolor{keyword}{typename} VC>}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00045}\mbox{\hyperlink{namespacecxxblas_a244944a48e5299b4c19e6276a8e5af0d}{00045}}     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespacecxxblas_a244944a48e5299b4c19e6276a8e5af0d}{hbmm}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_a3321b2c6f9fc9d90f6c3d502a999d947}{Side}} side, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{StorageUpLo}} upLo, IndexType m, IndexType k,}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00046}00046               IndexType l, \textcolor{keyword}{const} ALPHA \&alpha, \textcolor{keyword}{const} MA *A, IndexType ldA, \textcolor{keyword}{const} MB *B,}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00047}00047               IndexType ldB, \textcolor{keyword}{const} BETA \&beta, VC *C, IndexType ldC);}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00048}00048 }
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00049}00049 \} \textcolor{comment}{// namespace cxxblas}}
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00050}00050 }
+\DoxyCodeLine{\Hypertarget{hbmm_8h_source_l00051}00051 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CXXBLAS\_LEVEL3EXTENSION\_HBMM\_H}}
+
+\end{DoxyCode}

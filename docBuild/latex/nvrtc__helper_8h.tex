@@ -1,0 +1,69 @@
+\hypertarget{nvrtc__helper_8h}{}\doxysection{librapid/include/librapid/cuda/nvrtc\+\_\+helper.h File Reference}
+\label{nvrtc__helper_8h}\index{librapid/include/librapid/cuda/nvrtc\_helper.h@{librapid/include/librapid/cuda/nvrtc\_helper.h}}
+{\ttfamily \#include $<$cuda.\+h$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include \char`\"{}helper\+\_\+cuda\+\_\+drvapi.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$nvrtc.\+h$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{nvrtc__helper_8h_ac2df5c42a26f2b5bdd4c18c99acbfe78}{NVRTC\+\_\+\+SAFE\+\_\+\+CALL}}(Name,  x)
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{nvrtc__helper_8h_af3d9ee68f96b5977e82c869df95896d2}{compile\+File\+To\+CUBIN}} (char $\ast$filename, int argc, char $\ast$$\ast$argv, char $\ast$$\ast$cubin\+Result, size\+\_\+t $\ast$cubin\+Result\+Size, int requires\+CGheaders)
+\item 
+CUmodule \mbox{\hyperlink{nvrtc__helper_8h_ab7732861dd0db42569bf30a1a2889c87}{load\+CUBIN}} (char $\ast$cubin, int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{nvrtc__helper_8h_ac2df5c42a26f2b5bdd4c18c99acbfe78}\label{nvrtc__helper_8h_ac2df5c42a26f2b5bdd4c18c99acbfe78}} 
+\index{nvrtc\_helper.h@{nvrtc\_helper.h}!NVRTC\_SAFE\_CALL@{NVRTC\_SAFE\_CALL}}
+\index{NVRTC\_SAFE\_CALL@{NVRTC\_SAFE\_CALL}!nvrtc\_helper.h@{nvrtc\_helper.h}}
+\doxysubsubsection{\texorpdfstring{NVRTC\_SAFE\_CALL}{NVRTC\_SAFE\_CALL}}
+{\footnotesize\ttfamily \#define NVRTC\+\_\+\+SAFE\+\_\+\+CALL(\begin{DoxyParamCaption}\item[{}]{Name,  }\item[{}]{x }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \textcolor{keywordflow}{do} \{                                                                                           \(\backslash\)}
+\DoxyCodeLine{        nvrtcResult result = x;                                                                    \(\backslash\)}
+\DoxyCodeLine{        if (result != NVRTC\_SUCCESS) \{                                                             \(\backslash\)}
+\DoxyCodeLine{            std::cerr << \textcolor{stringliteral}{"{}\(\backslash\)nerror: "{}} << Name << \textcolor{stringliteral}{"{} failed with error "{}}                              \(\backslash\)}
+\DoxyCodeLine{                      << nvrtcGetErrorString(result);                                              \(\backslash\)}
+\DoxyCodeLine{            exit(1);                                                                               \(\backslash\)}
+\DoxyCodeLine{        \}                                                                                          \(\backslash\)}
+\DoxyCodeLine{    \} \textcolor{keywordflow}{while} (0)}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{nvrtc__helper_8h_source_l00040}{40}} of file \mbox{\hyperlink{nvrtc__helper_8h_source}{nvrtc\+\_\+helper.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{nvrtc__helper_8h_af3d9ee68f96b5977e82c869df95896d2}\label{nvrtc__helper_8h_af3d9ee68f96b5977e82c869df95896d2}} 
+\index{nvrtc\_helper.h@{nvrtc\_helper.h}!compileFileToCUBIN@{compileFileToCUBIN}}
+\index{compileFileToCUBIN@{compileFileToCUBIN}!nvrtc\_helper.h@{nvrtc\_helper.h}}
+\doxysubsubsection{\texorpdfstring{compileFileToCUBIN()}{compileFileToCUBIN()}}
+{\footnotesize\ttfamily void compile\+File\+To\+CUBIN (\begin{DoxyParamCaption}\item[{char $\ast$}]{filename,  }\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv,  }\item[{char $\ast$$\ast$}]{cubin\+Result,  }\item[{size\+\_\+t $\ast$}]{cubin\+Result\+Size,  }\item[{int}]{requires\+CGheaders }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{nvrtc__helper_8h_source_l00050}{50}} of file \mbox{\hyperlink{nvrtc__helper_8h_source}{nvrtc\+\_\+helper.\+h}}.
+
+\mbox{\Hypertarget{nvrtc__helper_8h_ab7732861dd0db42569bf30a1a2889c87}\label{nvrtc__helper_8h_ab7732861dd0db42569bf30a1a2889c87}} 
+\index{nvrtc\_helper.h@{nvrtc\_helper.h}!loadCUBIN@{loadCUBIN}}
+\index{loadCUBIN@{loadCUBIN}!nvrtc\_helper.h@{nvrtc\_helper.h}}
+\doxysubsubsection{\texorpdfstring{loadCUBIN()}{loadCUBIN()}}
+{\footnotesize\ttfamily CUmodule load\+CUBIN (\begin{DoxyParamCaption}\item[{char $\ast$}]{cubin,  }\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{nvrtc__helper_8h_source_l00180}{180}} of file \mbox{\hyperlink{nvrtc__helper_8h_source}{nvrtc\+\_\+helper.\+h}}.
+

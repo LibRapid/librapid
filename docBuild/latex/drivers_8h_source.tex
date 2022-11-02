@@ -1,0 +1,142 @@
+\hypertarget{drivers_8h_source}{}\doxysection{drivers.\+h}
+\label{drivers_8h_source}\index{librapid/cxxblas/drivers/drivers.h@{librapid/cxxblas/drivers/drivers.h}}
+\mbox{\hyperlink{drivers_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00001}00001 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00002}00002 \textcolor{comment}{ *   Copyright (c) 2010, Michael Lehn}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00003}00003 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00004}00004 \textcolor{comment}{ *   All rights reserved.}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00005}00005 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00006}00006 \textcolor{comment}{ *   Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00007}00007 \textcolor{comment}{ *   modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00008}00008 \textcolor{comment}{ *   are met:}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00009}00009 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00010}00010 \textcolor{comment}{ *   1) Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00011}00011 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00012}00012 \textcolor{comment}{ *   2) Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00013}00013 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer in}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00014}00014 \textcolor{comment}{ *      the documentation and/or other materials provided with the}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00015}00015 \textcolor{comment}{ *      distribution.}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00016}00016 \textcolor{comment}{ *   3) Neither the name of the FLENS development group nor the names of}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00017}00017 \textcolor{comment}{ *      its contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00018}00018 \textcolor{comment}{ *      from this software without specific prior written permission.}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00019}00019 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00020}00020 \textcolor{comment}{ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00021}00021 \textcolor{comment}{ *   "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00022}00022 \textcolor{comment}{ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00023}00023 \textcolor{comment}{ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00024}00024 \textcolor{comment}{ *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00025}00025 \textcolor{comment}{ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00026}00026 \textcolor{comment}{ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00027}00027 \textcolor{comment}{ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00028}00028 \textcolor{comment}{ *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00029}00029 \textcolor{comment}{ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00030}00030 \textcolor{comment}{ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00031}00031 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00033}00033 \textcolor{preprocessor}{\#ifndef CXXBLAS\_DRIVERS\_DRIVERS\_H}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00034}00034 \textcolor{preprocessor}{\#define CXXBLAS\_DRIVERS\_DRIVERS\_H 1}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00036}00036 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{issame_8h}{cxxblas/auxiliary/issame.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00037}00037 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{restrictto_8h}{cxxblas/auxiliary/restrictto.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00038}00038 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00039}00039 \textcolor{comment}{// define implementation specific constants, macros, etc.}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00040}00040 \textcolor{preprocessor}{\#if defined(LIBRAPID\_BLAS\_ATLAS)}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00041}00041 \textcolor{preprocessor}{\#   include "{}\mbox{\hyperlink{atlas_8h}{cxxblas/drivers/atlas.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00042}00042 \textcolor{preprocessor}{\#elif defined(LIBRAPID\_BLAS\_GOTOBLAS)}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00043}00043 \textcolor{preprocessor}{\#   include "{}\mbox{\hyperlink{gotoblas_8h}{cxxblas/drivers/gotoblas.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00044}00044 \textcolor{preprocessor}{\#elif defined(LIBRAPID\_BLAS\_OPENBLAS)}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00045}00045 \textcolor{preprocessor}{\#   include "{}\mbox{\hyperlink{openblas_8h}{cxxblas/drivers/openblas.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00046}00046 \textcolor{preprocessor}{\#elif defined(LIBRAPID\_BLAS\_VECLIB)}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00047}00047 \textcolor{preprocessor}{\#   include "{}\mbox{\hyperlink{veclib_8h}{cxxblas/drivers/veclib.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00048}00048 \textcolor{preprocessor}{\#elif defined(LIBRAPID\_BLAS\_MKLBLAS)}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00049}00049 \textcolor{preprocessor}{\#   include "{}\mbox{\hyperlink{mklblas_8h}{cxxblas/drivers/mklblas.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00050}00050 \textcolor{preprocessor}{\#elif defined(LIBRAPID\_BLAS\_REFBLAS)}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00051}00051 \textcolor{preprocessor}{\#   include "{}\mbox{\hyperlink{refblas_8h}{cxxblas/drivers/refblas.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00052}00052 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00053}00053 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00054}00054 \textcolor{preprocessor}{\#ifdef HAVE\_CBLAS}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00055}00055 \textcolor{preprocessor}{\#   include "{}\mbox{\hyperlink{cblas_8h}{cxxblas/drivers/cblas.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00056}00056 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00057}00057 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00058}00058 \textcolor{preprocessor}{\#ifdef HAVE\_SPARSEBLAS}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00059}00059 \textcolor{preprocessor}{\#   include "{}\mbox{\hyperlink{sparseblas_8h}{cxxblas/drivers/sparseblas.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00060}00060 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00061}00061 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00062}00062 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{typedefs_8h}{cxxblas/typedefs.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00063}00063 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00064}00064 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespacecxxblas}{cxxblas}} \{}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00065}00065 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00066}00066     \textcolor{keyword}{template}<\textcolor{keyword}{typename} CHAR>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00067}\mbox{\hyperlink{namespacecxxblas_af90758661694282ee9516470d96c0887}{00067}}     \textcolor{keyword}{const} CHAR *\mbox{\hyperlink{namespacecxxblas_af90758661694282ee9516470d96c0887}{blasImpl}}();}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00068}00068 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00069}00069     \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00070}00070 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00071}00071     \textcolor{keyword}{template}<\textcolor{keyword}{typename} Any>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00072}\mbox{\hyperlink{structcxxblas_1_1_if}{00072}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_if}{If}} \{\};}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00073}00073 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00074}00074     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00075}\mbox{\hyperlink{structcxxblas_1_1_if_3_01int_01_4}{00075}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_if}{If}}<int> \{}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00076}\mbox{\hyperlink{structcxxblas_1_1_if_3_01int_01_4_a0ecfa949b3c2a703dd3d7948cdd646a8}{00076}}         \textcolor{keyword}{typedef} \textcolor{keywordtype}{void} \mbox{\hyperlink{structcxxblas_1_1_if_3_01int_01_4_a0ecfa949b3c2a703dd3d7948cdd646a8}{isBlasCompatibleInteger}};}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00077}00077     \};}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00078}00078 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00079}00079     \textcolor{keyword}{template}<>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00080}\mbox{\hyperlink{structcxxblas_1_1_if_3_01long_01_4}{00080}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_if}{If}}<long> \{}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00081}\mbox{\hyperlink{structcxxblas_1_1_if_3_01long_01_4_a1c8e9ca8458cfa50598bd585539f055e}{00081}}         \textcolor{keyword}{typedef} \textcolor{keywordtype}{void} \mbox{\hyperlink{structcxxblas_1_1_if_3_01long_01_4_a1c8e9ca8458cfa50598bd585539f055e}{isBlasCompatibleInteger}};}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00082}00082     \};}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00083}00083 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00084}00084     \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00085}00085     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ENUM>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00086}\mbox{\hyperlink{namespacecxxblas_abb65f6752487d758ce2be8e30e10202a}{00086}}     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_restrict_to}{RestrictTo<IsSame<ENUM, Transpose>::value}}, \textcolor{keywordtype}{char}>::Type \mbox{\hyperlink{namespacecxxblas_abb65f6752487d758ce2be8e30e10202a}{getF77BlasChar}}(ENUM trans);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00087}00087 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00088}00088     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ENUM>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00089}\mbox{\hyperlink{namespacecxxblas_a2e912f6be2475ad21be3f52ec9b5fc20}{00089}}     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_restrict_to}{RestrictTo<IsSame<ENUM, Diag>::value}}, \textcolor{keywordtype}{char}>::Type \mbox{\hyperlink{namespacecxxblas_abb65f6752487d758ce2be8e30e10202a}{getF77BlasChar}}(ENUM diag);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00090}00090 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00091}00091     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ENUM>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00092}\mbox{\hyperlink{namespacecxxblas_a6fa84144e95aeddbc38c7718b8123499}{00092}}     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_restrict_to}{RestrictTo<IsSame<ENUM, StorageUpLo>::value}}, \textcolor{keywordtype}{char}>::Type \mbox{\hyperlink{namespacecxxblas_abb65f6752487d758ce2be8e30e10202a}{getF77BlasChar}}(ENUM upLo);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00093}00093 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00094}00094     \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00095}00095     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ENUM>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00096}\mbox{\hyperlink{namespacecxxblas_aa5cec6414633269a7d1de92637bee039}{00096}}     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_restrict_to}{RestrictTo<IsSame<ENUM, Transpose>::value}}, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}}>::Type \mbox{\hyperlink{namespacecxxblas_aa5cec6414633269a7d1de92637bee039}{getCxxBlasEnum}}(\textcolor{keywordtype}{char} trans);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00097}00097 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00098}00098     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ENUM>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00099}\mbox{\hyperlink{namespacecxxblas_abd2de56f837a3338235ec32c5fd64f99}{00099}}     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_restrict_to}{RestrictTo<IsSame<ENUM, Diag>::value}}, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}}>::Type \mbox{\hyperlink{namespacecxxblas_aa5cec6414633269a7d1de92637bee039}{getCxxBlasEnum}}(\textcolor{keywordtype}{char} diag);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00100}00100 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00101}00101     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ENUM>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00102}00102     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_restrict_to}{RestrictTo<IsSame<ENUM, StorageUpLo>::value}}, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{StorageUpLo}}>::Type}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00103}\mbox{\hyperlink{namespacecxxblas_a9d2990c6095e23948174dece35a3e17c}{00103}}     \mbox{\hyperlink{namespacecxxblas_aa5cec6414633269a7d1de92637bee039}{getCxxBlasEnum}}(\textcolor{keywordtype}{char} upLo);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00104}00104 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00105}00105 \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00106}00106 \textcolor{preprocessor}{\#ifdef HAVE\_CBLAS}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00107}00107 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00108}00108     \textcolor{keyword}{namespace }CBLAS \{}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00109}00109 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00110}00110         \textcolor{comment}{// TODO: rename these to getCblasEnum}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00111}00111 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00112}00112         \textcolor{keyword}{template}<\textcolor{keyword}{typename} ENUM>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00113}00113         \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_restrict_to}{RestrictTo<IsSame<ENUM, StorageOrder>::value}}, \mbox{\hyperlink{cblas_8h_a1716cd55ff3d4e9dfa8491a3c177c6fe}{CBLAS\_ORDER}}>::Type}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00114}00114         getCblasType(ENUM order);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00115}00115 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00116}00116         \textcolor{keyword}{template}<\textcolor{keyword}{typename} ENUM>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00117}00117         \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_restrict_to}{RestrictTo<IsSame<ENUM, Transpose>::value}}, \mbox{\hyperlink{cblas_8h_a44dfaddb823648755b110dbad849c5a9}{CBLAS\_TRANSPOSE}}>::Type}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00118}00118         getCblasType(ENUM trans);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00119}00119 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00120}00120         \textcolor{keyword}{template}<\textcolor{keyword}{typename} ENUM>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00121}00121         \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_restrict_to}{RestrictTo<IsSame<ENUM, StorageUpLo>::value}}, \mbox{\hyperlink{cblas_8h_a1e6fa56583dce4a18e619688ff08892f}{CBLAS\_UPLO}}>::Type}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00122}00122         getCblasType(ENUM upLo);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00123}00123 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00124}00124         \textcolor{keyword}{template}<\textcolor{keyword}{typename} ENUM>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00125}00125         \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_restrict_to}{RestrictTo<IsSame<ENUM, Side>::value}}, \mbox{\hyperlink{cblas_8h_a4eba77400344ce7896faccf423c7fd5d}{CBLAS\_SIDE}}>::Type getCblasType(ENUM side);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00126}00126 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00127}00127         \textcolor{keyword}{template}<\textcolor{keyword}{typename} ENUM>}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00128}00128         \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_restrict_to}{RestrictTo<IsSame<ENUM, Diag>::value}}, \mbox{\hyperlink{cblas_8h_aa03704b21f66a3d37d33a2cf65e2cbb3}{CBLAS\_DIAG}}>::Type getCblasType(ENUM diag);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00129}00129 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00130}00130     \} \textcolor{comment}{// namespace CBLAS}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00131}00131 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00132}00132 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// HAVE\_CBLAS}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00133}00133 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00134}00134 \} \textcolor{comment}{// namespace cxxblas}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00135}00135 }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00136}00136 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CXXBLAS\_DRIVERS\_DRIVERS\_H}}
+
+\end{DoxyCode}
