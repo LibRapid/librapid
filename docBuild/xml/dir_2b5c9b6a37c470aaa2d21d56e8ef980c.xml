@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_2b5c9b6a37c470aaa2d21d56e8ef980c" kind="dir">
+    <compoundname>librapid/cxxblas/level1</compoundname>
+    <innerfile refid="asum_8h">asum.h</innerfile>
+    <innerfile refid="level1_2axpy_8h">axpy.h</innerfile>
+    <innerfile refid="level1_2copy_8h">copy.h</innerfile>
+    <innerfile refid="level1_2dot_8h">dot.h</innerfile>
+    <innerfile refid="iamax_8h">iamax.h</innerfile>
+    <innerfile refid="level1_8h">level1.h</innerfile>
+    <innerfile refid="nrm2_8h">nrm2.h</innerfile>
+    <innerfile refid="rot_8h">rot.h</innerfile>
+    <innerfile refid="rotm_8h">rotm.h</innerfile>
+    <innerfile refid="level1_2scal_8h">scal.h</innerfile>
+    <innerfile refid="swap_8h">swap.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/cxxblas/level1/"/>
+  </compounddef>
+</doxygen>

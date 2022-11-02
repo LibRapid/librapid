@@ -1,0 +1,83 @@
+\hypertarget{tbsv_8h_source}{}\doxysection{tbsv.\+h}
+\label{tbsv_8h_source}\index{librapid/cxxblas/level2/tbsv.h@{librapid/cxxblas/level2/tbsv.h}}
+\mbox{\hyperlink{tbsv_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00001}00001 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00002}00002 \textcolor{comment}{ *   Copyright (c) 2009, Michael Lehn}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00003}00003 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00004}00004 \textcolor{comment}{ *   All rights reserved.}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00005}00005 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00006}00006 \textcolor{comment}{ *   Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00007}00007 \textcolor{comment}{ *   modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00008}00008 \textcolor{comment}{ *   are met:}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00009}00009 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00010}00010 \textcolor{comment}{ *   1) Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00011}00011 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00012}00012 \textcolor{comment}{ *   2) Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00013}00013 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer in}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00014}00014 \textcolor{comment}{ *      the documentation and/or other materials provided with the}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00015}00015 \textcolor{comment}{ *      distribution.}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00016}00016 \textcolor{comment}{ *   3) Neither the name of the FLENS development group nor the names of}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00017}00017 \textcolor{comment}{ *      its contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00018}00018 \textcolor{comment}{ *      from this software without specific prior written permission.}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00019}00019 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00020}00020 \textcolor{comment}{ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00021}00021 \textcolor{comment}{ *   "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00022}00022 \textcolor{comment}{ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00023}00023 \textcolor{comment}{ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00024}00024 \textcolor{comment}{ *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00025}00025 \textcolor{comment}{ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00026}00026 \textcolor{comment}{ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00027}00027 \textcolor{comment}{ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00028}00028 \textcolor{comment}{ *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00029}00029 \textcolor{comment}{ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00030}00030 \textcolor{comment}{ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00031}00031 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00033}00033 \textcolor{preprocessor}{\#ifndef CXXBLAS\_LEVEL2\_TBSV\_H}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00034}00034 \textcolor{preprocessor}{\#define CXXBLAS\_LEVEL2\_TBSV\_H 1}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00036}00036 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{drivers_8h}{cxxblas/drivers/drivers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00037}00037 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{typedefs_8h}{cxxblas/typedefs.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00038}00038 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00039}\mbox{\hyperlink{tbsv_8h_a4eceb9597024c598dc56cb69e9b9eb1d}{00039}} \textcolor{preprocessor}{\#define HAVE\_CXXBLAS\_TBSV 1}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00040}00040 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00041}00041 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespacecxxblas}{cxxblas}} \{}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00042}00042 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00043}00043     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType, \textcolor{keyword}{typename} MA, \textcolor{keyword}{typename} VX>}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00044}\mbox{\hyperlink{namespacecxxblas_a006d9f8ebd218e3d1b3fc7a559bdefd0}{00044}}     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespacecxxblas_a006d9f8ebd218e3d1b3fc7a559bdefd0}{tbsv}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{StorageUpLo}} upLo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, IndexType n,}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00045}00045               IndexType k, \textcolor{keyword}{const} MA *A, IndexType ldA, VX *x, IndexType incX);}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00046}00046 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00047}00047 \textcolor{preprocessor}{\#ifdef HAVE\_CBLAS}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00048}00048 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00049}00049     \textcolor{comment}{// stbsv}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00050}00050     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00051}00051     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00052}00052     \mbox{\hyperlink{namespacecxxblas_a006d9f8ebd218e3d1b3fc7a559bdefd0}{tbsv}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{StorageUpLo}} upLo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, IndexType n,}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00053}00053          IndexType k, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *A, IndexType ldA, \textcolor{keywordtype}{float} *x, IndexType incX);}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00054}00054 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00055}00055     \textcolor{comment}{// dtbsv}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00056}00056     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00057}00057     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00058}00058     \mbox{\hyperlink{namespacecxxblas_a006d9f8ebd218e3d1b3fc7a559bdefd0}{tbsv}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{StorageUpLo}} upLo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, IndexType n,}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00059}00059          IndexType k, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *A, IndexType ldA, \textcolor{keywordtype}{double} *x, IndexType incX);}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00060}00060 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00061}00061     \textcolor{comment}{// ctbsv}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00062}00062     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00063}00063     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00064}00064     \mbox{\hyperlink{namespacecxxblas_a006d9f8ebd218e3d1b3fc7a559bdefd0}{tbsv}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{StorageUpLo}} upLo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, IndexType n,}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00065}00065          IndexType k, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} *A, IndexType ldA, \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} *x, IndexType incX);}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00066}00066 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00067}00067     \textcolor{comment}{// ztbsv}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00068}00068     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00069}00069     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00070}00070     \mbox{\hyperlink{namespacecxxblas_a006d9f8ebd218e3d1b3fc7a559bdefd0}{tbsv}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{StorageUpLo}} upLo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, IndexType n,}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00071}00071          IndexType k, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} *A, IndexType ldA, \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} *x, IndexType incX);}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00072}00072 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00073}00073 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// HAVE\_CBLAS}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00074}00074 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00075}00075 \} \textcolor{comment}{// namespace cxxblas}}
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00076}00076 }
+\DoxyCodeLine{\Hypertarget{tbsv_8h_source_l00077}00077 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CXXBLAS\_LEVEL2\_TBSV\_H}}
+
+\end{DoxyCode}

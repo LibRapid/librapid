@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_b998d7c0c5d9bf2319c1ca1a6b8ebd55" kind="dir">
+    <compoundname>librapid/include</compoundname>
+    <innerdir refid="dir_d9ca8c723d19ff5d8d1483c7c91cac67">librapid/include/librapid</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/"/>
+  </compounddef>
+</doxygen>

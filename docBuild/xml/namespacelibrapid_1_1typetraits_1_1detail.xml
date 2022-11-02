@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="namespacelibrapid_1_1typetraits_1_1detail" kind="namespace" language="C++">
+    <compoundname>librapid::typetraits::detail</compoundname>
+    <innerclass refid="structlibrapid_1_1typetraits_1_1detail_1_1_type_name_holder" prot="public">librapid::typetraits::detail::TypeNameHolder</innerclass>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespacelibrapid_1_1typetraits_1_1detail_1a5851e2a25c0e056a67fdb9581492bb38" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>std::size_t...</type>
+            <declname>Idxs</declname>
+            <defname>Idxs</defname>
+          </param>
+        </templateparamlist>
+        <type>constexpr auto</type>
+        <definition>constexpr auto librapid::typetraits::detail::substringAsArray</definition>
+        <argsstring>(std::string_view str, std::index_sequence&lt; Idxs... &gt;)</argsstring>
+        <name>substringAsArray</name>
+        <qualifiedname>librapid::typetraits::detail::substringAsArray</qualifiedname>
+        <param>
+          <type>std::string_view</type>
+          <declname>str</declname>
+        </param>
+        <param>
+          <type>std::index_sequence&lt; Idxs... &gt;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/traits.hpp" line="22" column="16" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="22" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacelibrapid_1_1typetraits_1_1detail_1af94cc513edb1f5fc04f1cf884cbb9273" prot="public" static="no" constexpr="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>constexpr auto</type>
+        <definition>constexpr auto librapid::typetraits::detail::typeNameArray</definition>
+        <argsstring>()</argsstring>
+        <name>typeNameArray</name>
+        <qualifiedname>librapid::typetraits::detail::typeNameArray</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/traits.hpp" line="27" column="16" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="27" bodyend="55"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/core/traits.hpp" line="14" column="1"/>
+  </compounddef>
+</doxygen>

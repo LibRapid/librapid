@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="namespacelibrapid_1_1device" kind="namespace" language="C++">
+    <compoundname>librapid::device</compoundname>
+    <innerclass refid="structlibrapid_1_1device_1_1_c_p_u" prot="public">librapid::device::CPU</innerclass>
+    <innerclass refid="structlibrapid_1_1device_1_1_g_p_u" prot="public">librapid::device::GPU</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/core/cudaConfig.hpp" line="71" column="1"/>
+  </compounddef>
+</doxygen>

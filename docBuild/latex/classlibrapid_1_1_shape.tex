@@ -1,0 +1,517 @@
+\hypertarget{classlibrapid_1_1_shape}{}\doxysection{librapid\+::Shape\texorpdfstring{$<$}{<} T, N \texorpdfstring{$>$}{>} Class Template Reference}
+\label{classlibrapid_1_1_shape}\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+
+
+{\ttfamily \#include $<$sizetype.\+hpp$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classlibrapid_1_1_shape_a6778051d7d75730417c85a945337af14}{Size\+Type}} = T
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape}} ()=default
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename V , typename \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{typetraits\+::\+Enable\+If}}$<$ \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{typetraits\+::\+Can\+Cast}}$<$ V, T $>$\+::value $>$  = 0$>$ }\\\mbox{\hyperlink{classlibrapid_1_1_shape_a62319e87033fd3989e54588bf2356cfc}{Shape}} (const std\+::initializer\+\_\+list$<$ V $>$ \&vals)
+\item 
+{\footnotesize template$<$typename V , typename \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{typetraits\+::\+Enable\+If}}$<$ \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{typetraits\+::\+Can\+Cast}}$<$ V, T $>$\+::value $>$  = 0$>$ }\\\mbox{\hyperlink{classlibrapid_1_1_shape_aceac931d256c40598e2de23aa976ba36}{Shape}} (const std\+::vector$<$ V $>$ \&vals)
+\item 
+\mbox{\hyperlink{classlibrapid_1_1_shape_a795789743e7fdf35c3d2e40a9d57a387}{Shape}} (const \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other)=default
+\item 
+\mbox{\hyperlink{classlibrapid_1_1_shape_a6b5f814b0da20d3e39ab7da4ed5f3d39}{Shape}} (\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&\&other) noexcept=default
+\item 
+{\footnotesize template$<$typename V , size\+\_\+t Dim$>$ }\\\mbox{\hyperlink{classlibrapid_1_1_shape_a9e59b3e603930f8c27acc8b3dd41b489}{Shape}} (const \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ V, Dim $>$ \&other)
+\item 
+{\footnotesize template$<$typename V , size\+\_\+t Dim$>$ }\\\mbox{\hyperlink{classlibrapid_1_1_shape_a37740810da08c607414ac8df75e9468a}{Shape}} (\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ V, Dim $>$ \&\&other) noexcept
+\item 
+{\footnotesize template$<$typename V , typename \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{typetraits\+::\+Enable\+If}}$<$ \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{typetraits\+::\+Can\+Cast}}$<$ V, T $>$\+::value $>$  = 0$>$ }\\\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \& \mbox{\hyperlink{classlibrapid_1_1_shape_a132608c1705432153d0f5275c6275567}{operator=}} (const std\+::initializer\+\_\+list$<$ V $>$ \&vals)
+\item 
+{\footnotesize template$<$typename V , typename \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{typetraits\+::\+Enable\+If}}$<$ \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{typetraits\+::\+Can\+Cast}}$<$ V, T $>$\+::value $>$  = 0$>$ }\\\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \& \mbox{\hyperlink{classlibrapid_1_1_shape_aeeba65680903f473abb6ea4b0720539b}{operator=}} (const std\+::vector$<$ V $>$ \&vals)
+\item 
+\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \& \mbox{\hyperlink{classlibrapid_1_1_shape_aaf9205371c0b2dc0e12ffd52add08c86}{operator=}} (\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&\&other) noexcept=default
+\item 
+{\footnotesize template$<$typename Index $>$ }\\\mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}} \mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} const T \& \mbox{\hyperlink{classlibrapid_1_1_shape_a2fead305af4ab538bcde7e83dd522ddc}{operator\mbox{[}$\,$\mbox{]}}} (Index index) const
+\item 
+{\footnotesize template$<$typename Index $>$ }\\\mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}} \mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} T \& \mbox{\hyperlink{classlibrapid_1_1_shape_a10aa7713d0c7f914cc23ceeb703392d3}{operator\mbox{[}$\,$\mbox{]}}} (Index index)
+\item 
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} bool \mbox{\hyperlink{classlibrapid_1_1_shape_a6c0dd7521d282b8b3679f3badbe535da}{operator==}} (const \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other) const
+\item 
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} bool \mbox{\hyperlink{classlibrapid_1_1_shape_ae4856ffa1441d77aaf2e6e10d485a762}{operator!=}} (const \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other) const
+\item 
+\mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}} T \mbox{\hyperlink{classlibrapid_1_1_shape_ab5d977f7d716aaeb122ec2b0fe681b4d}{ndim}} () const
+\item 
+\mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}} \mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} T \mbox{\hyperlink{classlibrapid_1_1_shape_a8de69ce9f6e9d4625b99a82f652301a8}{size}} () const
+\item 
+\mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}} std\+::string \mbox{\hyperlink{classlibrapid_1_1_shape_a17feb24542bb561a8a53711b68f8e0c1}{str}} () const
+\item 
+{\footnotesize template$<$typename V , typename \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{typetraits\+::\+Enable\+If}}$<$ \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{typetraits\+::\+Can\+Cast}}$<$ V, T $>$\+::value $>$ $>$ }\\\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ T, N $>$ \& \mbox{\hyperlink{classlibrapid_1_1_shape_a0266f42361b7c13ff6cae58184bf669e}{operator=}} (const std\+::initializer\+\_\+list$<$ V $>$ \&vals)
+\item 
+{\footnotesize template$<$typename V , typename \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{typetraits\+::\+Enable\+If}}$<$ \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{typetraits\+::\+Can\+Cast}}$<$ V, T $>$\+::value $>$ $>$ }\\\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ T, N $>$ \& \mbox{\hyperlink{classlibrapid_1_1_shape_aa6ee48720d8ef2077fc75306581e1af0}{operator=}} (const std\+::vector$<$ V $>$ \&vals)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \mbox{\hyperlink{classlibrapid_1_1_shape_a407b80d75b21d23c9f4a8b7f69adfd93}{zeros}} (size\+\_\+t dims)
+\item 
+static \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \mbox{\hyperlink{classlibrapid_1_1_shape_a556872fe85e1b79a7472652449de4c24}{ones}} (size\+\_\+t dims)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr size\+\_\+t \mbox{\hyperlink{classlibrapid_1_1_shape_abed6e0d3861a5258c0c78cf7ea22eb72}{Max\+Dimensions}} = N
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+T \mbox{\hyperlink{classlibrapid_1_1_shape_ac29a39ec3113acefef839c1579c05603}{m\+\_\+dims}}
+\item 
+std\+::array$<$ T, N $>$ \mbox{\hyperlink{classlibrapid_1_1_shape_a3de2ef5c2e3399ede89feaa7a4f9a6c6}{m\+\_\+data}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T = size\+\_\+t, size\+\_\+t N = 32$>$\newline
+class librapid\+::\+Shape$<$ T, N $>$}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00011}{11}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a6778051d7d75730417c85a945337af14}\label{classlibrapid_1_1_shape_a6778051d7d75730417c85a945337af14}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!SizeType@{SizeType}}
+\index{SizeType@{SizeType}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{SizeType}{SizeType}}
+{\footnotesize\ttfamily template$<$typename T  = size\+\_\+t, size\+\_\+t N = 32$>$ \\
+using \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::\+Size\+Type =  T}
+
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00013}{13}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}\label{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!Shape@{Shape}}
+\index{Shape@{Shape}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{Shape()}{Shape()}\hspace{0.1cm}{\footnotesize\ttfamily [1/7]}}
+{\footnotesize\ttfamily template$<$typename T  = size\+\_\+t, size\+\_\+t N = 32$>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::\+Shape (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+Default constructor. 
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a62319e87033fd3989e54588bf2356cfc}\label{classlibrapid_1_1_shape_a62319e87033fd3989e54588bf2356cfc}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!Shape@{Shape}}
+\index{Shape@{Shape}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{Shape()}{Shape()}\hspace{0.1cm}{\footnotesize\ttfamily [2/7]}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+template$<$typename V , typename \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{typetraits\+::\+Enable\+If}}$<$ \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{typetraits\+::\+Can\+Cast}}$<$ V, T $>$\+::value $>$ $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::\+Shape (\begin{DoxyParamCaption}\item[{const std\+::initializer\+\_\+list$<$ V $>$ \&}]{vals }\end{DoxyParamCaption})}
+
+Create a \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object from a list of values 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em V} & Scalar type of the values \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em vals} & The dimensions for the object \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00126}{126}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_aceac931d256c40598e2de23aa976ba36}\label{classlibrapid_1_1_shape_aceac931d256c40598e2de23aa976ba36}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!Shape@{Shape}}
+\index{Shape@{Shape}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{Shape()}{Shape()}\hspace{0.1cm}{\footnotesize\ttfamily [3/7]}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+template$<$typename V , typename \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{typetraits\+::\+Enable\+If}}$<$ \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{typetraits\+::\+Can\+Cast}}$<$ V, T $>$\+::value $>$ $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::\+Shape (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ V $>$ \&}]{vals }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Create a \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object from a vector of values 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em V} & Scalar type of the values \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em vals} & The dimensions for the object \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00136}{136}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a795789743e7fdf35c3d2e40a9d57a387}\label{classlibrapid_1_1_shape_a795789743e7fdf35c3d2e40a9d57a387}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!Shape@{Shape}}
+\index{Shape@{Shape}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{Shape()}{Shape()}\hspace{0.1cm}{\footnotesize\ttfamily [4/7]}}
+{\footnotesize\ttfamily template$<$typename T  = size\+\_\+t, size\+\_\+t N = 32$>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::\+Shape (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ T, N $>$ \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Create a copy of a \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object 
+\begin{DoxyParams}{Parameters}
+{\em other} & \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object to copy \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a6b5f814b0da20d3e39ab7da4ed5f3d39}\label{classlibrapid_1_1_shape_a6b5f814b0da20d3e39ab7da4ed5f3d39}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!Shape@{Shape}}
+\index{Shape@{Shape}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{Shape()}{Shape()}\hspace{0.1cm}{\footnotesize\ttfamily [5/7]}}
+{\footnotesize\ttfamily template$<$typename T  = size\+\_\+t, size\+\_\+t N = 32$>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::\+Shape (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ T, N $>$ \&\&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+Create a \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} from an RValue 
+\begin{DoxyParams}{Parameters}
+{\em other} & Temporary \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object to copy \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a9e59b3e603930f8c27acc8b3dd41b489}\label{classlibrapid_1_1_shape_a9e59b3e603930f8c27acc8b3dd41b489}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!Shape@{Shape}}
+\index{Shape@{Shape}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{Shape()}{Shape()}\hspace{0.1cm}{\footnotesize\ttfamily [6/7]}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+template$<$typename V , size\+\_\+t Dim$>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::\+Shape (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ V, Dim $>$ \&}]{other }\end{DoxyParamCaption})}
+
+Create a \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object from one with a different type and number of dimensions. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em V} & Scalar type of the values \\
+\hline
+{\em Dim} & Number of dimensions \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em other} & \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object to copy \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00146}{146}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a37740810da08c607414ac8df75e9468a}\label{classlibrapid_1_1_shape_a37740810da08c607414ac8df75e9468a}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!Shape@{Shape}}
+\index{Shape@{Shape}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{Shape()}{Shape()}\hspace{0.1cm}{\footnotesize\ttfamily [7/7]}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+template$<$typename V , size\+\_\+t Dim$>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::\+Shape (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ V, Dim $>$ \&\&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+Create a \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object from one with a different type and number of dimensions, moving it instead of copying it. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em V} & Scalar type of the values \\
+\hline
+{\em Dim} & Number of dimensions \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em other} & Temporary \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object to move \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00156}{156}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classlibrapid_1_1_shape_ab5d977f7d716aaeb122ec2b0fe681b4d}\label{classlibrapid_1_1_shape_ab5d977f7d716aaeb122ec2b0fe681b4d}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!ndim@{ndim}}
+\index{ndim@{ndim}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{ndim()}{ndim()}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+\mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}} T \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::ndim}
+
+Return the number of dimensions in the \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object \begin{DoxyReturn}{Returns}
+Number of dimensions 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00231}{231}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a556872fe85e1b79a7472652449de4c24}\label{classlibrapid_1_1_shape_a556872fe85e1b79a7472652449de4c24}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!ones@{ones}}
+\index{ones@{ones}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{ones()}{ones()}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ T, N $>$ \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::ones (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{dims }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Return a \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object with {\ttfamily dims} dimensions, all initialized to one. 
+\begin{DoxyParams}{Parameters}
+{\em dims} & Number of dimensions \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+New \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00197}{197}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_ae4856ffa1441d77aaf2e6e10d485a762}\label{classlibrapid_1_1_shape_ae4856ffa1441d77aaf2e6e10d485a762}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} bool \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::operator!= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ T, N $>$ \&}]{other }\end{DoxyParamCaption}) const}
+
+Compare two \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} objects, returning true if and only if they are not identical 
+\begin{DoxyParams}{Parameters}
+{\em other} & \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object to compare \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the objects are not identical 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00226}{226}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a132608c1705432153d0f5275c6275567}\label{classlibrapid_1_1_shape_a132608c1705432153d0f5275c6275567}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
+{\footnotesize\ttfamily template$<$typename T  = size\+\_\+t, size\+\_\+t N = 32$>$ \\
+template$<$typename V , typename \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{typetraits\+::\+Enable\+If}}$<$ \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{typetraits\+::\+Can\+Cast}}$<$ V, T $>$\+::value $>$  = 0$>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \& \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::operator= (\begin{DoxyParamCaption}\item[{const std\+::initializer\+\_\+list$<$ V $>$ \&}]{vals }\end{DoxyParamCaption})}
+
+Assign a \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object to this object 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em V} & Scalar type of the \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em vals} & Dimensions of the \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$this 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a0266f42361b7c13ff6cae58184bf669e}\label{classlibrapid_1_1_shape_a0266f42361b7c13ff6cae58184bf669e}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
+{\footnotesize\ttfamily template$<$typename T  = size\+\_\+t, size\+\_\+t N = 32$>$ \\
+template$<$typename V , typename \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{typetraits\+::\+Enable\+If}}$<$ \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{typetraits\+::\+Can\+Cast}}$<$ V, T $>$\+::value $>$ $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ T, N $>$ \& \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::operator= (\begin{DoxyParamCaption}\item[{const std\+::initializer\+\_\+list$<$ V $>$ \&}]{vals }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00166}{166}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_aeeba65680903f473abb6ea4b0720539b}\label{classlibrapid_1_1_shape_aeeba65680903f473abb6ea4b0720539b}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
+{\footnotesize\ttfamily template$<$typename T  = size\+\_\+t, size\+\_\+t N = 32$>$ \\
+template$<$typename V , typename \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{typetraits\+::\+Enable\+If}}$<$ \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{typetraits\+::\+Can\+Cast}}$<$ V, T $>$\+::value $>$  = 0$>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \& \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::operator= (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ V $>$ \&}]{vals }\end{DoxyParamCaption})}
+
+Assign a \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object to this object 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em V} & Scalar type of the \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em vals} & Dimensions of the \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$this 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classlibrapid_1_1_shape_aa6ee48720d8ef2077fc75306581e1af0}\label{classlibrapid_1_1_shape_aa6ee48720d8ef2077fc75306581e1af0}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily template$<$typename T  = size\+\_\+t, size\+\_\+t N = 32$>$ \\
+template$<$typename V , typename \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{typetraits\+::\+Enable\+If}}$<$ \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{typetraits\+::\+Can\+Cast}}$<$ V, T $>$\+::value $>$ $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ T, N $>$ \& \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::operator= (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ V $>$ \&}]{vals }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00178}{178}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_aaf9205371c0b2dc0e12ffd52add08c86}\label{classlibrapid_1_1_shape_aaf9205371c0b2dc0e12ffd52add08c86}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily template$<$typename T  = size\+\_\+t, size\+\_\+t N = 32$>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \& \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ T, N $>$ \&\&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+Assign an RValue \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} to this object 
+\begin{DoxyParams}{Parameters}
+{\em other} & RValue to move \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a6c0dd7521d282b8b3679f3badbe535da}\label{classlibrapid_1_1_shape_a6c0dd7521d282b8b3679f3badbe535da}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!operator==@{operator==}}
+\index{operator==@{operator==}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} bool \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::operator== (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ T, N $>$ \&}]{other }\end{DoxyParamCaption}) const}
+
+Compare two \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} objects, returning true if and only if they are identical 
+\begin{DoxyParams}{Parameters}
+{\em other} & \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object to compare \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the objects are identical 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00217}{217}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a10aa7713d0c7f914cc23ceeb703392d3}\label{classlibrapid_1_1_shape_a10aa7713d0c7f914cc23ceeb703392d3}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+template$<$typename Index $>$ \\
+\mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}} \mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} T \& \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{Index}]{index }\end{DoxyParamCaption})}
+
+Access an element of the \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Index} & Typename of the index \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Index to access \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to the value at the index 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00212}{212}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a2fead305af4ab538bcde7e83dd522ddc}\label{classlibrapid_1_1_shape_a2fead305af4ab538bcde7e83dd522ddc}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+template$<$typename Index $>$ \\
+\mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}} \mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} const T \& \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{Index}]{index }\end{DoxyParamCaption}) const}
+
+Access an element of the \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Index} & Typename of the index \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Index to access \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value at the index 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00206}{206}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a8de69ce9f6e9d4625b99a82f652301a8}\label{classlibrapid_1_1_shape_a8de69ce9f6e9d4625b99a82f652301a8}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!size@{size}}
+\index{size@{size}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+\mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}} \mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} T \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::size}
+
+Return the number of elements the \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object represents \begin{DoxyReturn}{Returns}
+Number of elements 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00236}{236}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a17feb24542bb561a8a53711b68f8e0c1}\label{classlibrapid_1_1_shape_a17feb24542bb561a8a53711b68f8e0c1}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!str@{str}}
+\index{str@{str}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{str()}{str()}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+std\+::string \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::str}
+
+Convert a \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object into a string representation \begin{DoxyReturn}{Returns}
+A string representation of the \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00243}{243}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a407b80d75b21d23c9f4a8b7f69adfd93}\label{classlibrapid_1_1_shape_a407b80d75b21d23c9f4a8b7f69adfd93}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!zeros@{zeros}}
+\index{zeros@{zeros}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{zeros()}{zeros()}}
+{\footnotesize\ttfamily template$<$typename T , size\+\_\+t N$>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}}$<$ T, N $>$ \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::zeros (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{dims }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Return a \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object with {\ttfamily dims} dimensions, all initialized to zero. 
+\begin{DoxyParams}{Parameters}
+{\em dims} & Number of dimensions \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+New \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} object 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00189}{189}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classlibrapid_1_1_shape_a3de2ef5c2e3399ede89feaa7a4f9a6c6}\label{classlibrapid_1_1_shape_a3de2ef5c2e3399ede89feaa7a4f9a6c6}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!m\_data@{m\_data}}
+\index{m\_data@{m\_data}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{m\_data}{m\_data}}
+{\footnotesize\ttfamily template$<$typename T  = size\+\_\+t, size\+\_\+t N = 32$>$ \\
+std\+::array$<$T, N$>$ \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::m\+\_\+data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00121}{121}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_ac29a39ec3113acefef839c1579c05603}\label{classlibrapid_1_1_shape_ac29a39ec3113acefef839c1579c05603}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!m\_dims@{m\_dims}}
+\index{m\_dims@{m\_dims}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{m\_dims}{m\_dims}}
+{\footnotesize\ttfamily template$<$typename T  = size\+\_\+t, size\+\_\+t N = 32$>$ \\
+T \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::m\+\_\+dims\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00120}{120}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_shape_abed6e0d3861a5258c0c78cf7ea22eb72}\label{classlibrapid_1_1_shape_abed6e0d3861a5258c0c78cf7ea22eb72}} 
+\index{librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}!MaxDimensions@{MaxDimensions}}
+\index{MaxDimensions@{MaxDimensions}!librapid::Shape$<$ T, N $>$@{librapid::Shape$<$ T, N $>$}}
+\doxysubsubsection{\texorpdfstring{MaxDimensions}{MaxDimensions}}
+{\footnotesize\ttfamily template$<$typename T  = size\+\_\+t, size\+\_\+t N = 32$>$ \\
+constexpr size\+\_\+t \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid\+::\+Shape}}$<$ T, N $>$\+::\+Max\+Dimensions = N\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+
+
+Definition at line \mbox{\hyperlink{sizetype_8hpp_source_l00014}{14}} of file \mbox{\hyperlink{sizetype_8hpp_source}{sizetype.\+hpp}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+librapid/include/librapid/array/\mbox{\hyperlink{sizetype_8hpp}{sizetype.\+hpp}}\end{DoxyCompactItemize}

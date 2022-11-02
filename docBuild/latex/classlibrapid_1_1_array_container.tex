@@ -1,0 +1,438 @@
+\hypertarget{classlibrapid_1_1_array_container}{}\doxysection{librapid\+::Array\+Container\texorpdfstring{$<$}{<} Shape\+Type\+\_\+, Storage\+Type\+\_\+ \texorpdfstring{$>$}{>} Class Template Reference}
+\label{classlibrapid_1_1_array_container}\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+
+
+{\ttfamily \#include $<$array\+Container.\+hpp$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classlibrapid_1_1_array_container_ae5527acec5ef0fbfe765f756b3f200e0}{Storage\+Type}} = Storage\+Type\+\_\+
+\item 
+using \mbox{\hyperlink{classlibrapid_1_1_array_container_a4f2597c693c94c3c6012206913ab2d42}{Shape\+Type}} = Shape\+Type\+\_\+
+\item 
+using \mbox{\hyperlink{classlibrapid_1_1_array_container_a31175313ca27fc6379bd0d422c8bc913}{Size\+Type}} = typename Shape\+Type\+::\+Size\+Type
+\item 
+using \mbox{\hyperlink{classlibrapid_1_1_array_container_a0f89930b43a972a9233927465fa91065}{Scalar}} = typename Storage\+Type\+::\+Scalar
+\item 
+using \mbox{\hyperlink{classlibrapid_1_1_array_container_afaf88d296c3dcfc4754eaa3b1cb2a0f9}{Packet}} = typename \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{typetraits\+::\+Type\+Info}}$<$ \mbox{\hyperlink{classlibrapid_1_1_array_container_a0f89930b43a972a9233927465fa91065}{Scalar}} $>$\+::\+Packet
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classlibrapid_1_1_array_container_a0dff3c2c902b45beb4b1bca707b51201}{Array\+Container}} ()=default
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container_a85097455ec30b2e0adbb636294bb0a55}{Array\+Container}} (const \mbox{\hyperlink{classlibrapid_1_1_array_container_a4f2597c693c94c3c6012206913ab2d42}{Shape\+Type}} \&\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}})
+\item 
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container_abcbf3404c1071d8ac491d37b79bee4ed}{Array\+Container}} (const \mbox{\hyperlink{classlibrapid_1_1_array_container_a4f2597c693c94c3c6012206913ab2d42}{Shape\+Type}} \&\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}}, const \mbox{\hyperlink{classlibrapid_1_1_array_container_a0f89930b43a972a9233927465fa91065}{Scalar}} \&value)
+\item 
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container_ad2d2d0a4f7f737732ac4a17773288011}{Array\+Container}} (\mbox{\hyperlink{classlibrapid_1_1_array_container_a4f2597c693c94c3c6012206913ab2d42}{Shape\+Type}} \&\&\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}})
+\item 
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container_ab2a5bef1e630be315bf0b1a731423aaf}{Array\+Container}} (const \mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}} \&other)=default
+\item 
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container_abdf1b2b56d9e95c28e0f4f5052ed6482}{Array\+Container}} (\mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}} \&\&other) noexcept=default
+\item 
+{\footnotesize template$<$\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3}{detail\+::\+Descriptor}} desc, typename Functor\+\_\+ , typename... Args$>$ }\\\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container_a95d0bd0534be26fc9aeaffd90267ba52}{Array\+Container}} (const \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail\+::\+Function}}$<$ desc, Functor\+\_\+, Args... $>$ \&function) \mbox{\hyperlink{config_8hpp_aaa2763e652006648e9ae602dc1c56414}{LIBRAPID\+\_\+\+RELEASE\+\_\+\+NOEXCEPT}}
+\item 
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}} \& \mbox{\hyperlink{classlibrapid_1_1_array_container_a0fb53059ddfe8b76fcead44c79082131}{operator=}} (const \mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}} \&other)=default
+\item 
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}} \& \mbox{\hyperlink{classlibrapid_1_1_array_container_a36742d998ad5d658a07325d998b2b0d9}{operator=}} (\mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}} \&\&other) noexcept=default
+\item 
+{\footnotesize template$<$\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3}{detail\+::\+Descriptor}} desc, typename Functor\+\_\+ , typename... Args$>$ }\\\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}} \& \mbox{\hyperlink{classlibrapid_1_1_array_container_aef4ec738c598c0764561f5dfc2f382de}{operator=}} (const \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail\+::\+Function}}$<$ desc, Functor\+\_\+, Args... $>$ \&function)
+\item 
+\mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}} \mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} const \mbox{\hyperlink{classlibrapid_1_1_array_container_a4f2597c693c94c3c6012206913ab2d42}{Shape\+Type}} \& \mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}} () const noexcept
+\item 
+\mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}} \mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container_afaf88d296c3dcfc4754eaa3b1cb2a0f9}{Packet}} \mbox{\hyperlink{classlibrapid_1_1_array_container_a3db13b260dd97d72b7bedef0aebc9478}{packet}} (size\+\_\+t index) const
+\item 
+\mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}} \mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container_a0f89930b43a972a9233927465fa91065}{Scalar}} \mbox{\hyperlink{classlibrapid_1_1_array_container_a3acda710f0b321e1ffe08c6fa4d3a40c}{scalar}} (size\+\_\+t index) const
+\item 
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} void \mbox{\hyperlink{classlibrapid_1_1_array_container_a5700d3ef2612505be244cc5e629f3cda}{write\+Packet}} (size\+\_\+t index, const \mbox{\hyperlink{classlibrapid_1_1_array_container_afaf88d296c3dcfc4754eaa3b1cb2a0f9}{Packet}} \&value)
+\item 
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} void \mbox{\hyperlink{classlibrapid_1_1_array_container_a83cd9c71be6bd76c5690a598c78dd5ff}{write}} (size\+\_\+t index, const \mbox{\hyperlink{classlibrapid_1_1_array_container_a0f89930b43a972a9233927465fa91065}{Scalar}} \&value)
+\item 
+{\footnotesize template$<$\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3}{detail\+::\+Descriptor}} desc, typename Functor\+\_\+ , typename... Args$>$ }\\\mbox{\hyperlink{classlibrapid_1_1_array_container_a1f2b1c2e81c17173ba9e15f2efa51773}{Array\+Container}} (const \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail\+::\+Function}}$<$ desc, Functor\+\_\+, Args... $>$ \&function) \mbox{\hyperlink{config_8hpp_aaa2763e652006648e9ae602dc1c56414}{LIBRAPID\+\_\+\+RELEASE\+\_\+\+NOEXCEPT}}
+\item 
+{\footnotesize template$<$\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3}{detail\+::\+Descriptor}} desc, typename Functor\+\_\+ , typename... Args$>$ }\\\mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$ \& \mbox{\hyperlink{classlibrapid_1_1_array_container_a97b566a47947006d224070731eaa991f}{operator=}} (const \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail\+::\+Function}}$<$ desc, Functor\+\_\+, Args... $>$ \&function)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classlibrapid_1_1_array_container_a4f2597c693c94c3c6012206913ab2d42}{Shape\+Type}} \mbox{\hyperlink{classlibrapid_1_1_array_container_a842b7e36494926b9733a07c3e86a689f}{m\+\_\+shape}}
+\item 
+\mbox{\hyperlink{classlibrapid_1_1_array_container_ae5527acec5ef0fbfe765f756b3f200e0}{Storage\+Type}} \mbox{\hyperlink{classlibrapid_1_1_array_container_a43df30526c58bf93e96e035279e1cec1}{m\+\_\+storage}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename Shape\+Type\+\_\+, typename Storage\+Type\+\_\+$>$\newline
+class librapid\+::\+Array\+Container$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$}
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00014}{14}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_afaf88d296c3dcfc4754eaa3b1cb2a0f9}\label{classlibrapid_1_1_array_container_afaf88d296c3dcfc4754eaa3b1cb2a0f9}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!Packet@{Packet}}
+\index{Packet@{Packet}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{Packet}{Packet}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+using \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Packet =  typename \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{typetraits\+::\+Type\+Info}}$<$\mbox{\hyperlink{classlibrapid_1_1_array_container_a0f89930b43a972a9233927465fa91065}{Scalar}}$>$\+::\+Packet}
+
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00020}{20}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a0f89930b43a972a9233927465fa91065}\label{classlibrapid_1_1_array_container_a0f89930b43a972a9233927465fa91065}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!Scalar@{Scalar}}
+\index{Scalar@{Scalar}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{Scalar}{Scalar}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+using \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Scalar =  typename Storage\+Type\+::\+Scalar}
+
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00019}{19}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a4f2597c693c94c3c6012206913ab2d42}\label{classlibrapid_1_1_array_container_a4f2597c693c94c3c6012206913ab2d42}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!ShapeType@{ShapeType}}
+\index{ShapeType@{ShapeType}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{ShapeType}{ShapeType}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+using \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Shape\+Type =  Shape\+Type\+\_\+}
+
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00017}{17}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a31175313ca27fc6379bd0d422c8bc913}\label{classlibrapid_1_1_array_container_a31175313ca27fc6379bd0d422c8bc913}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!SizeType@{SizeType}}
+\index{SizeType@{SizeType}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{SizeType}{SizeType}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+using \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Size\+Type =  typename Shape\+Type\+::\+Size\+Type}
+
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00018}{18}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_ae5527acec5ef0fbfe765f756b3f200e0}\label{classlibrapid_1_1_array_container_ae5527acec5ef0fbfe765f756b3f200e0}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!StorageType@{StorageType}}
+\index{StorageType@{StorageType}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{StorageType}{StorageType}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+using \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Storage\+Type =  Storage\+Type\+\_\+}
+
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00016}{16}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a0dff3c2c902b45beb4b1bca707b51201}\label{classlibrapid_1_1_array_container_a0dff3c2c902b45beb4b1bca707b51201}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!ArrayContainer@{ArrayContainer}}
+\index{ArrayContainer@{ArrayContainer}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{ArrayContainer()}{ArrayContainer()}\hspace{0.1cm}{\footnotesize\ttfamily [1/8]}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Array\+Container (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+Default constructor. 
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a85097455ec30b2e0adbb636294bb0a55}\label{classlibrapid_1_1_array_container_a85097455ec30b2e0adbb636294bb0a55}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!ArrayContainer@{ArrayContainer}}
+\index{ArrayContainer@{ArrayContainer}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{ArrayContainer()}{ArrayContainer()}\hspace{0.1cm}{\footnotesize\ttfamily [2/8]}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Array\+Container (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1_array_container_a4f2597c693c94c3c6012206913ab2d42}{Shape\+Type}} \&}]{shape }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Constructs an array container from a shape 
+\begin{DoxyParams}{Parameters}
+{\em shape} & The shape of the array container \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00107}{107}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_abcbf3404c1071d8ac491d37b79bee4ed}\label{classlibrapid_1_1_array_container_abcbf3404c1071d8ac491d37b79bee4ed}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!ArrayContainer@{ArrayContainer}}
+\index{ArrayContainer@{ArrayContainer}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{ArrayContainer()}{ArrayContainer()}\hspace{0.1cm}{\footnotesize\ttfamily [3/8]}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Array\+Container (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1_array_container_a4f2597c693c94c3c6012206913ab2d42}{Shape\+Type}} \&}]{shape,  }\item[{const \mbox{\hyperlink{classlibrapid_1_1_array_container_a0f89930b43a972a9233927465fa91065}{Scalar}} \&}]{value }\end{DoxyParamCaption})}
+
+Create an array container from a shape and a scalar value. The scalar value represents the value the memory is initialized with. 
+\begin{DoxyParams}{Parameters}
+{\em shape} & The shape of the array container \\
+\hline
+{\em value} & The value to initialize the memory with \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00111}{111}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_ad2d2d0a4f7f737732ac4a17773288011}\label{classlibrapid_1_1_array_container_ad2d2d0a4f7f737732ac4a17773288011}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!ArrayContainer@{ArrayContainer}}
+\index{ArrayContainer@{ArrayContainer}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{ArrayContainer()}{ArrayContainer()}\hspace{0.1cm}{\footnotesize\ttfamily [4/8]}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Array\+Container (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classlibrapid_1_1_array_container_a4f2597c693c94c3c6012206913ab2d42}{Shape\+Type}} \&\&}]{shape }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Construct an array container from a shape, which is moved, not copied. 
+\begin{DoxyParams}{Parameters}
+{\em shape} & The shape of the array container \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00117}{117}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_ab2a5bef1e630be315bf0b1a731423aaf}\label{classlibrapid_1_1_array_container_ab2a5bef1e630be315bf0b1a731423aaf}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!ArrayContainer@{ArrayContainer}}
+\index{ArrayContainer@{ArrayContainer}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{ArrayContainer()}{ArrayContainer()}\hspace{0.1cm}{\footnotesize\ttfamily [5/8]}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Array\+Container (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$ \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Construct an array container from another array container. 
+\begin{DoxyParams}{Parameters}
+{\em other} & The array container to copy. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_abdf1b2b56d9e95c28e0f4f5052ed6482}\label{classlibrapid_1_1_array_container_abdf1b2b56d9e95c28e0f4f5052ed6482}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!ArrayContainer@{ArrayContainer}}
+\index{ArrayContainer@{ArrayContainer}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{ArrayContainer()}{ArrayContainer()}\hspace{0.1cm}{\footnotesize\ttfamily [6/8]}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Array\+Container (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$ \&\&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+Construct an array container from a temporary array container. 
+\begin{DoxyParams}{Parameters}
+{\em other} & The array container to move. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a95d0bd0534be26fc9aeaffd90267ba52}\label{classlibrapid_1_1_array_container_a95d0bd0534be26fc9aeaffd90267ba52}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!ArrayContainer@{ArrayContainer}}
+\index{ArrayContainer@{ArrayContainer}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{ArrayContainer()}{ArrayContainer()}\hspace{0.1cm}{\footnotesize\ttfamily [7/8]}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+template$<$\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3}{detail\+::\+Descriptor}} desc, typename Functor\+\_\+ , typename... Args$>$ \\
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Array\+Container (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail\+::\+Function}}$<$ desc, Functor\+\_\+, Args... $>$ \&}]{function }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Construct an array container from a function object. This will assign the result of the function to the array container, evaluating it accordingly. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em desc} & The assignment descriptor \\
+\hline
+{\em Functor\+\_\+} & The function type \\
+\hline
+{\em Args} & The argument types of the function \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em function} & The function to assign \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a1f2b1c2e81c17173ba9e15f2efa51773}\label{classlibrapid_1_1_array_container_a1f2b1c2e81c17173ba9e15f2efa51773}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!ArrayContainer@{ArrayContainer}}
+\index{ArrayContainer@{ArrayContainer}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{ArrayContainer()}{ArrayContainer()}\hspace{0.1cm}{\footnotesize\ttfamily [8/8]}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+template$<$\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3}{detail\+::\+Descriptor}} desc, typename Functor\+\_\+ , typename... Args$>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::\+Array\+Container (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail\+::\+Function}}$<$ desc, Functor\+\_\+, Args... $>$ \&}]{function }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00122}{122}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a36742d998ad5d658a07325d998b2b0d9}\label{classlibrapid_1_1_array_container_a36742d998ad5d658a07325d998b2b0d9}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}} \& \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$ \&\&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+Assign a temporary array container to this array container. 
+\begin{DoxyParams}{Parameters}
+{\em other} & The array container to move. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to this array container. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a0fb53059ddfe8b76fcead44c79082131}\label{classlibrapid_1_1_array_container_a0fb53059ddfe8b76fcead44c79082131}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}} \& \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$ \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Assign an array container to this array container. 
+\begin{DoxyParams}{Parameters}
+{\em other} & The array container to copy. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to this array container. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_aef4ec738c598c0764561f5dfc2f382de}\label{classlibrapid_1_1_array_container_aef4ec738c598c0764561f5dfc2f382de}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+template$<$\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3}{detail\+::\+Descriptor}} desc, typename Functor\+\_\+ , typename... Args$>$ \\
+\mbox{\hyperlink{msvc_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\+\_\+\+ALWAYS\+\_\+\+INLINE}} \mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}} \& \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail\+::\+Function}}$<$ desc, Functor\+\_\+, Args... $>$ \&}]{function }\end{DoxyParamCaption})}
+
+Assign a function object to this array container. This will assign the result of the function to the array container, evaluating it accordingly. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Functor\+\_\+} & The function type \\
+\hline
+{\em Args} & The argument types of the function \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em function} & The function to assign \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to this array container. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a97b566a47947006d224070731eaa991f}\label{classlibrapid_1_1_array_container_a97b566a47947006d224070731eaa991f}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+template$<$\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3}{detail\+::\+Descriptor}} desc, typename Functor\+\_\+ , typename... Args$>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_array_container}{Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$ \& \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail\+::\+Function}}$<$ desc, Functor\+\_\+, Args... $>$ \&}]{function }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00136}{136}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a3db13b260dd97d72b7bedef0aebc9478}\label{classlibrapid_1_1_array_container_a3db13b260dd97d72b7bedef0aebc9478}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!packet@{packet}}
+\index{packet@{packet}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{packet()}{packet()}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+auto \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::packet (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{index }\end{DoxyParamCaption}) const}
+
+Return a Packet object from the array\textquotesingle{}s storage at a specific index. 
+\begin{DoxyParams}{Parameters}
+{\em index} & The index to get the packet from \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Packet object from the array\textquotesingle{}s storage at a specific index 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00154}{154}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a3acda710f0b321e1ffe08c6fa4d3a40c}\label{classlibrapid_1_1_array_container_a3acda710f0b321e1ffe08c6fa4d3a40c}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!scalar@{scalar}}
+\index{scalar@{scalar}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{scalar()}{scalar()}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+auto \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::scalar (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{index }\end{DoxyParamCaption}) const}
+
+Return a Scalar from the array\textquotesingle{}s storage at a specific index. 
+\begin{DoxyParams}{Parameters}
+{\em index} & The index to get the scalar from \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Scalar from the array\textquotesingle{}s storage at a specific index 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00161}{161}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}\label{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!shape@{shape}}
+\index{shape@{shape}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{shape()}{shape()}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+auto \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::shape\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+Return the shape of the array container. This is an immutable reference. \begin{DoxyReturn}{Returns}
+The shape of the array container. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00149}{149}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a83cd9c71be6bd76c5690a598c78dd5ff}\label{classlibrapid_1_1_array_container_a83cd9c71be6bd76c5690a598c78dd5ff}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!write@{write}}
+\index{write@{write}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+void \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::write (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{index,  }\item[{const \mbox{\hyperlink{classlibrapid_1_1_array_container_a0f89930b43a972a9233927465fa91065}{Scalar}} \&}]{value }\end{DoxyParamCaption})}
+
+Write a Scalar to the array\textquotesingle{}s storage at a specific index 
+\begin{DoxyParams}{Parameters}
+{\em index} & The index to write the scalar to \\
+\hline
+{\em value} & The value to write to the array\textquotesingle{}s storage \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00171}{171}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a5700d3ef2612505be244cc5e629f3cda}\label{classlibrapid_1_1_array_container_a5700d3ef2612505be244cc5e629f3cda}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!writePacket@{writePacket}}
+\index{writePacket@{writePacket}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{writePacket()}{writePacket()}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+void \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::write\+Packet (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{index,  }\item[{const \mbox{\hyperlink{classlibrapid_1_1_array_container_afaf88d296c3dcfc4754eaa3b1cb2a0f9}{Packet}} \&}]{value }\end{DoxyParamCaption})}
+
+Write a Packet object to the array\textquotesingle{}s storage at a specific index 
+\begin{DoxyParams}{Parameters}
+{\em index} & The index to write the packet to \\
+\hline
+{\em value} & The value to write to the array\textquotesingle{}s storage \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00166}{166}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a842b7e36494926b9733a07c3e86a689f}\label{classlibrapid_1_1_array_container_a842b7e36494926b9733a07c3e86a689f}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!m\_shape@{m\_shape}}
+\index{m\_shape@{m\_shape}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{m\_shape}{m\_shape}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_array_container_a4f2597c693c94c3c6012206913ab2d42}{Shape\+Type}} \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::m\+\_\+shape\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00102}{102}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+\mbox{\Hypertarget{classlibrapid_1_1_array_container_a43df30526c58bf93e96e035279e1cec1}\label{classlibrapid_1_1_array_container_a43df30526c58bf93e96e035279e1cec1}} 
+\index{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}!m\_storage@{m\_storage}}
+\index{m\_storage@{m\_storage}!librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$@{librapid::ArrayContainer$<$ ShapeType\_, StorageType\_ $>$}}
+\doxysubsubsection{\texorpdfstring{m\_storage}{m\_storage}}
+{\footnotesize\ttfamily template$<$typename Shape\+Type\+\_\+ , typename Storage\+Type\+\_\+ $>$ \\
+\mbox{\hyperlink{classlibrapid_1_1_array_container_ae5527acec5ef0fbfe765f756b3f200e0}{Storage\+Type}} \mbox{\hyperlink{classlibrapid_1_1_array_container}{librapid\+::\+Array\+Container}}$<$ Shape\+Type\+\_\+, Storage\+Type\+\_\+ $>$\+::m\+\_\+storage\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{array_container_8hpp_source_l00103}{103}} of file \mbox{\hyperlink{array_container_8hpp_source}{array\+Container.\+hpp}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+librapid/include/librapid/array/\mbox{\hyperlink{array_container_8hpp}{array\+Container.\+hpp}}\end{DoxyCompactItemize}

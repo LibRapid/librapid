@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_eb4bdb9ca314aeee199c890e741764ed" kind="dir">
+    <compoundname>librapid/cxxblas/sparselevel2</compoundname>
+    <innerfile refid="gecrsmv_8h">gecrsmv.h</innerfile>
+    <innerfile refid="heccsmv_8h">heccsmv.h</innerfile>
+    <innerfile refid="hecrsmv_8h">hecrsmv.h</innerfile>
+    <innerfile refid="sparselevel2_8h">sparselevel2.h</innerfile>
+    <innerfile refid="syccsmv_8h">syccsmv.h</innerfile>
+    <innerfile refid="sycrsmv_8h">sycrsmv.h</innerfile>
+    <innerfile refid="trccssv_8h">trccssv.h</innerfile>
+    <innerfile refid="trcrssv_8h">trcrssv.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/cxxblas/sparselevel2/"/>
+  </compounddef>
+</doxygen>

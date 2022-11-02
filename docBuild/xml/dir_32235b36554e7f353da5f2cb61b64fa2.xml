@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_32235b36554e7f353da5f2cb61b64fa2" kind="dir">
+    <compoundname>librapid/cxxblas/level3extensions</compoundname>
+    <innerfile refid="gbmm_8h">gbmm.h</innerfile>
+    <innerfile refid="hbmm_8h">hbmm.h</innerfile>
+    <innerfile refid="level3extensions_8h">level3extensions.h</innerfile>
+    <innerfile refid="sbmm_8h">sbmm.h</innerfile>
+    <innerfile refid="tbmm_8h">tbmm.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/cxxblas/level3extensions/"/>
+  </compounddef>
+</doxygen>

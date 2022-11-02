@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="forward_8hpp" kind="file" language="C++">
+    <compoundname>forward.hpp</compoundname>
+    <includedby refid="core_8hpp" local="yes">librapid/include/librapid/core/core.hpp</includedby>
+    <invincdepgraph>
+      <node id="4">
+        <label>librapid/cxxblas/cxxblas.cxx</label>
+        <link refid="cxxblas_8cxx"/>
+      </node>
+      <node id="3">
+        <label>librapid/cxxblas/cxxblas.h</label>
+        <link refid="cxxblas_8h"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>librapid/cxxblas/level1/dot.h</label>
+        <link refid="level1_2dot_8h"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>librapid/cxxblas/level1/level1.h</label>
+        <link refid="level1_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>librapid/include/librapid/core/core.hpp</label>
+        <link refid="core_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>librapid/include/librapid/core/forward.hpp</label>
+        <link refid="forward_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>librapid/include/librapid/librapid.hpp</label>
+        <link refid="librapid_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>librapid/src/global.cpp</label>
+        <link refid="global_8cpp"/>
+      </node>
+      <node id="9">
+        <label>librapid/src/helper_cuda.cpp</label>
+        <link refid="helper__cuda_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespacelibrapid">librapid</innernamespace>
+    <innernamespace refid="namespacelibrapid_1_1detail">librapid::detail</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>LIBRAPID_CORE_FORWARD_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LIBRAPID_CORE_FORWARD_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacelibrapid" kindref="compound">librapid</ref><sp/>{</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Scalar_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Allocator_&gt;</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Storage;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ShapeType_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>StorageType_&gt;</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">ArrayContainer;</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">detail<sp/>{</highlight></codeline>
+<codeline lineno="13" refid="namespacelibrapid_1_1detail_1acac64eb9d77033562afff081348c9ad3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">enum<sp/>class</highlight><highlight class="normal"><sp/><ref refid="namespacelibrapid_1_1detail_1acac64eb9d77033562afff081348c9ad3" kindref="member">Descriptor</ref><sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacelibrapid_1_1detail_1acac64eb9d77033562afff081348c9ad3a6d2adfdfd6f2a24cc46e5fdbb5679135" kindref="member">Trivial</ref>,<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Transpose,<sp/></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacelibrapid_1_1detail_1acac64eb9d77033562afff081348c9ad3a3543268dcb012cef3d015e2f64983872" kindref="member">Matmul</ref><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;<ref refid="namespacelibrapid_1_1detail_1acac64eb9d77033562afff081348c9ad3" kindref="member">Descriptor</ref><sp/>desc,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Functor_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal">...<sp/>Args&gt;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Function;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ShapeType_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>StorageType_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Functor_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal">...<sp/>Args&gt;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="generic_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacelibrapid_1_1detail_1afe5d9038d0369e6a867d04d8a604162b" kindref="member">assign</ref>(<ref refid="classlibrapid_1_1_array_container" kindref="compound">ArrayContainer&lt;ShapeType_, StorageType_&gt;</ref><sp/>&amp;lhs,</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classlibrapid_1_1detail_1_1_function" kindref="compound">detail::Function&lt;Descriptor::Trivial, Functor_, Args...&gt;</ref><sp/>&amp;function);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ShapeType_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>StorageType_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Functor_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal">...<sp/>Args&gt;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="generic_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacelibrapid_1_1detail_1a9e9fc1b1f91fbf9bd69880cfa3e1086b" kindref="member">assignParallel</ref>(<ref refid="classlibrapid_1_1_array_container" kindref="compound">ArrayContainer&lt;ShapeType_, StorageType_&gt;</ref><sp/>&amp;lhs,</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classlibrapid_1_1detail_1_1_function" kindref="compound">detail::Function&lt;Descriptor::Trivial, Functor_, Args...&gt;</ref><sp/>&amp;function);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>detail</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>librapid</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>LIBRAPID_CORE_FORWARD_HPP</highlight></codeline>
+    </programlisting>
+    <location file="librapid/include/librapid/core/forward.hpp"/>
+  </compounddef>
+</doxygen>

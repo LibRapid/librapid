@@ -1,0 +1,92 @@
+\hypertarget{librapid_pch_8hpp_source}{}\doxysection{librapid\+Pch.\+hpp}
+\label{librapid_pch_8hpp_source}\index{librapid/include/librapid/core/librapidPch.hpp@{librapid/include/librapid/core/librapidPch.hpp}}
+\mbox{\hyperlink{librapid_pch_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00001}00001 \textcolor{preprocessor}{\#ifndef LIBRAPID\_CORE\_LIBRAPID\_PCH\_HPP}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00002}00002 \textcolor{preprocessor}{\#define LIBRAPID\_CORE\_LIBRAPID\_PCH\_HPP}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00003}00003 }
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00004}00004 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00005}00005 \textcolor{comment}{ * Include standard library headers and precompile them as part of}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00006}00006 \textcolor{comment}{ * librapid. This reduces compile times dramatically.}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00007}00007 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00008}00008 \textcolor{comment}{ * Additionally, include the header files of dependencies.}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00009}00009 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00010}00010 }
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00011}00011 \textcolor{comment}{// Standard Library}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00012}00012 \textcolor{preprocessor}{\#include <algorithm>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00013}00013 \textcolor{preprocessor}{\#include <array>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00014}00014 \textcolor{preprocessor}{\#include <atomic>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00015}00015 \textcolor{preprocessor}{\#include <cfenv>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00016}00016 \textcolor{preprocessor}{\#include <cfloat>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00017}00017 \textcolor{preprocessor}{\#include <cmath>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00018}00018 \textcolor{preprocessor}{\#include <cmath>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00019}00019 \textcolor{preprocessor}{\#include <complex>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00020}00020 \textcolor{preprocessor}{\#include <cstddef>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00021}00021 \textcolor{preprocessor}{\#include <cstdint>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00022}00022 \textcolor{preprocessor}{\#include <cstdlib>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00023}00023 \textcolor{preprocessor}{\#include <cstdlib>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00024}00024 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00025}00025 \textcolor{preprocessor}{\#include <future>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00026}00026 \textcolor{preprocessor}{\#include <iomanip>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00027}00027 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00028}00028 \textcolor{preprocessor}{\#include <iterator>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00029}00029 \textcolor{preprocessor}{\#include <limits>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00030}00030 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00031}00031 \textcolor{preprocessor}{\#include <memory>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00032}00032 \textcolor{preprocessor}{\#include <mutex>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00033}00033 \textcolor{preprocessor}{\#include <numeric>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00034}00034 \textcolor{preprocessor}{\#include <queue>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00035}00035 \textcolor{preprocessor}{\#include <random>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00036}00036 \textcolor{preprocessor}{\#include <regex>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00037}00037 \textcolor{preprocessor}{\#include <set>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00038}00038 \textcolor{preprocessor}{\#include <utility>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00039}00039 }
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00040}00040 \textcolor{preprocessor}{\#if defined(LIBRAPID\_HAS\_OMP)}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00041}00041 \textcolor{preprocessor}{\#   include <omp.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00042}00042 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_HAS\_OMP}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00043}00043 }
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00044}00044 \textcolor{preprocessor}{\#if defined(\_WIN32) || defined(\_WIN64)}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00045}00045 \textcolor{preprocessor}{\#   define WIN32\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00046}00046 \textcolor{preprocessor}{\#   include <Windows.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00047}00047 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00048}00048 }
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00049}00049 \textcolor{comment}{// Remove a few macros}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00050}00050 \textcolor{preprocessor}{\#undef min}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00051}00051 \textcolor{preprocessor}{\#undef max}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00052}00052 }
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00053}00053 \textcolor{comment}{// fmtlib}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00054}00054 \textcolor{preprocessor}{\#include <fmt/core.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00055}00055 \textcolor{preprocessor}{\#include <fmt/format.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00056}00056 \textcolor{preprocessor}{\#include <fmt/ranges.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00057}00057 \textcolor{preprocessor}{\#include <fmt/chrono.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00058}00058 \textcolor{preprocessor}{\#include <fmt/compile.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00059}00059 \textcolor{preprocessor}{\#include <fmt/color.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00060}00060 \textcolor{preprocessor}{\#include <fmt/os.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00061}00061 \textcolor{preprocessor}{\#include <fmt/ostream.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00062}00062 \textcolor{preprocessor}{\#include <fmt/printf.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00063}00063 \textcolor{preprocessor}{\#include <fmt/xchar.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00064}00064 }
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00065}00065 \textcolor{comment}{// scnlib}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00066}00066 \textcolor{preprocessor}{\#include <scn/scn.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00067}00067 \textcolor{preprocessor}{\#include <scn/tuple\_return/tuple\_return.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00068}00068 }
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00069}00069 \textcolor{comment}{// Vc -\/-\/ SIMD instructions}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00070}00070 \textcolor{preprocessor}{\#if defined(\_MSC\_VER)}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00071}00071 \textcolor{comment}{// For Vc, we need to disable the following warnings}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00072}00072 \textcolor{preprocessor}{\#   pragma warning(push)}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00073}00073 \textcolor{preprocessor}{\#   pragma warning(disable : 4244) }\textcolor{comment}{// conversion from 'int' to 'float', possible loss of data}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00074}00074 \textcolor{preprocessor}{\#   pragma warning(disable : 4324) }\textcolor{comment}{// structure was padded due to alignment specifier}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00075}00075 \textcolor{preprocessor}{\#   pragma warning(disable : 4127) }\textcolor{comment}{// conditional expression is constant}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00076}00076 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00077}00077 }
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00078}00078 \textcolor{preprocessor}{\#include <Vc/Vc>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00079}00079 \textcolor{preprocessor}{\#include <Vc/algorithm>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00080}00080 \textcolor{preprocessor}{\#include <Vc/cpuid.h>}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00081}00081 }
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00082}00082 \textcolor{preprocessor}{\#if defined(\_MSC\_VER)}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00083}00083 \textcolor{preprocessor}{\#   pragma warning(pop)}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00084}00084 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00085}00085 }
+\DoxyCodeLine{\Hypertarget{librapid_pch_8hpp_source_l00086}00086 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_CORE\_LIBRAPID\_PCH\_HPP}}
+
+\end{DoxyCode}

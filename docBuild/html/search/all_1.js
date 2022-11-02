@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['abs_0',['abs',['../helper__math_8h.html#a7655a657941c02d7cc078ab3ec252ca0',1,'abs(int4 v):&#160;helper_math.h'],['../helper__math_8h.html#afe553b3ddd067e12861af3967b19f1cd',1,'abs(int3 v):&#160;helper_math.h'],['../helper__math_8h.html#ae4378072f9d836b0d4770a1514db2be3',1,'abs(int2 v):&#160;helper_math.h']]],
+  ['abs1_1',['abs1',['../namespacecxxblas.html#a57cfcc008948e3c8df22f86cb6e671d4',1,'cxxblas']]],
+  ['acxpby_2',['acxpby',['../namespacecxxblas.html#abf38ef890ae7a5594fd3eb4dd960fc26',1,'cxxblas::acxpby(const ALPHA &amp;alpha, const X *x, const BETA &amp;beta, Y *y)'],['../namespacecxxblas.html#a1f144db6f67dd9e5552f5cee6f659255',1,'cxxblas::acxpby(IndexType n, const ALPHA &amp;alpha, const X *x, IndexType incX, const BETA &amp;beta, Y *y, IndexType incY)']]],
+  ['acxpby_2eh_3',['acxpby.h',['../level1extensions_2acxpby_8h.html',1,'(Global Namespace)'],['../tinylevel1_2acxpby_8h.html',1,'(Global Namespace)']]],
+  ['acxpy_4',['acxpy',['../namespacecxxblas.html#ab02d8b28c53d1cdff0a8373f935fc903',1,'cxxblas::acxpy(IndexType n, const ALPHA &amp;alpha, const X *x, IndexType incX, Y *y, IndexType incY)'],['../namespacecxxblas.html#a3747c4bd123a69a4b45e28d1925e859c',1,'cxxblas::acxpy(const ALPHA &amp;alpha, const X *x, Y *y)']]],
+  ['acxpy_2eh_5',['acxpy.h',['../tinylevel1_2acxpy_8h.html',1,'(Global Namespace)'],['../level1extensions_2acxpy_8h.html',1,'(Global Namespace)']]],
+  ['addr_6',['addr',['../structshared_memory_info__st.html#ac2cdf8965b877e223302a8c133c98f3d',1,'sharedMemoryInfo_st']]],
+  ['allocator_7',['Allocator',['../classlibrapid_1_1_storage.html#aec163f63def86c31242f97923dc18d88',1,'librapid::Storage']]],
+  ['array_2ehpp_8',['array.hpp',['../array_8hpp.html',1,'']]],
+  ['arraycontainer_9',['ArrayContainer',['../classlibrapid_1_1_array_container.html#ad2d2d0a4f7f737732ac4a17773288011',1,'librapid::ArrayContainer::ArrayContainer(ShapeType &amp;&amp;shape)'],['../classlibrapid_1_1_array_container.html#a1f2b1c2e81c17173ba9e15f2efa51773',1,'librapid::ArrayContainer::ArrayContainer(const detail::Function&lt; desc, Functor_, Args... &gt; &amp;function) LIBRAPID_RELEASE_NOEXCEPT'],['../classlibrapid_1_1_array_container.html#a95d0bd0534be26fc9aeaffd90267ba52',1,'librapid::ArrayContainer::ArrayContainer(const detail::Function&lt; desc, Functor_, Args... &gt; &amp;function) LIBRAPID_RELEASE_NOEXCEPT'],['../classlibrapid_1_1_array_container.html#abdf1b2b56d9e95c28e0f4f5052ed6482',1,'librapid::ArrayContainer::ArrayContainer(ArrayContainer &amp;&amp;other) noexcept=default'],['../classlibrapid_1_1_array_container.html#ab2a5bef1e630be315bf0b1a731423aaf',1,'librapid::ArrayContainer::ArrayContainer(const ArrayContainer &amp;other)=default'],['../classlibrapid_1_1_array_container.html#a0dff3c2c902b45beb4b1bca707b51201',1,'librapid::ArrayContainer::ArrayContainer()=default'],['../classlibrapid_1_1_array_container.html#a85097455ec30b2e0adbb636294bb0a55',1,'librapid::ArrayContainer::ArrayContainer(const ShapeType &amp;shape)'],['../classlibrapid_1_1_array_container.html#abcbf3404c1071d8ac491d37b79bee4ed',1,'librapid::ArrayContainer::ArrayContainer(const ShapeType &amp;shape, const Scalar &amp;value)'],['../classlibrapid_1_1_array_container.html',1,'librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;']]],
+  ['arraycontainer_2ehpp_10',['arrayContainer.hpp',['../array_container_8hpp.html',1,'']]],
+  ['assert_11',['ASSERT',['../debugmacro_8h.html#aca68c0d4ac8df0838e209fb5300f7be3',1,'debugmacro.h']]],
+  ['assign_12',['assign',['../namespacelibrapid_1_1detail.html#afe5d9038d0369e6a867d04d8a604162b',1,'librapid::detail']]],
+  ['assignops_2ehpp_13',['assignOps.hpp',['../assign_ops_8hpp.html',1,'']]],
+  ['assignparallel_14',['assignParallel',['../namespacelibrapid_1_1detail.html#a9e9fc1b1f91fbf9bd69880cfa3e1086b',1,'librapid::detail']]],
+  ['asum_15',['asum',['../namespacecxxblas.html#a40137bd5541db32eee00eae763621783',1,'cxxblas']]],
+  ['asum_2eh_16',['asum.h',['../asum_8h.html',1,'']]],
+  ['asum1_17',['asum1',['../namespacecxxblas.html#a7b2e8839404740632544c93463f02b6a',1,'cxxblas']]],
+  ['asum1_2eh_18',['asum1.h',['../asum1_8h.html',1,'']]],
+  ['atlas_2eh_19',['atlas.h',['../atlas_8h.html',1,'']]],
+  ['auxiliary_2eh_20',['auxiliary.h',['../auxiliary_8h.html',1,'']]],
+  ['axpby_21',['axpby',['../namespacecxxblas.html#a72a7cfa4dffc0eea0ee2c4a78077472b',1,'cxxblas::axpby(IndexType n, const ALPHA &amp;alpha, const X *x, IndexType incX, const BETA &amp;beta, Y *y, IndexType incY)'],['../namespacecxxblas.html#a3be880728d1aa838bac884a9e5a98787',1,'cxxblas::axpby(const ALPHA &amp;alpha, const X *x, const BETA &amp;beta, Y *y)']]],
+  ['axpby_2eh_22',['axpby.h',['../tinylevel1_2axpby_8h.html',1,'(Global Namespace)'],['../level1extensions_2axpby_8h.html',1,'(Global Namespace)']]],
+  ['axpy_23',['axpy',['../namespacecxxblas.html#a628ad662f9e86b8b12b207f5f5e4a2fe',1,'cxxblas::axpy(IndexType n, const ALPHA &amp;alpha, const X *x, IndexType incX, Y *y, IndexType incY)'],['../namespacecxxblas.html#a2f92bf5aae26b5f931d5af232c5461eb',1,'cxxblas::axpy(const ALPHA &amp;alpha, const X *x, Y *y)']]],
+  ['axpy_2eh_24',['axpy.h',['../level1extensions_2axpy_8h.html',1,'(Global Namespace)'],['../tinylevel1_2axpy_8h.html',1,'(Global Namespace)'],['../level1_2axpy_8h.html',1,'(Global Namespace)']]]
+];

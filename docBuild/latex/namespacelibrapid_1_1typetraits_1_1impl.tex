@@ -1,0 +1,80 @@
+\hypertarget{namespacelibrapid_1_1typetraits_1_1impl}{}\doxysection{librapid\+::typetraits\+::impl Namespace Reference}
+\label{namespacelibrapid_1_1typetraits_1_1impl}\index{librapid::typetraits::impl@{librapid::typetraits::impl}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T , typename Index , typename  = decltype(std\+::declval$<$\+T \&$>$()\mbox{[}std\+::declval$<$\+Index$>$()\mbox{]})$>$ }\\std\+::true\+\_\+type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a10fe8ed5bc301fec64946591cdcd3398}{test\+Subscript}} (int)
+\item 
+{\footnotesize template$<$typename T , typename Index $>$ }\\std\+::false\+\_\+type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a7005145040e6223139c5fadc51c68f7d}{test\+Subscript}} (float)
+\item 
+{\footnotesize template$<$typename T , typename V , typename  = decltype(std\+::declval$<$\+T \&$>$() + std\+::declval$<$\+V \&$>$())$>$ }\\std\+::true\+\_\+type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a8979c0d42f06120b023f6f908fa4ce0e}{test\+Addition}} (int)
+\item 
+{\footnotesize template$<$typename T , typename V $>$ }\\std\+::false\+\_\+type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_adfcb2dc45fd94c735592700e40897fde}{test\+Addition}} (float)
+\item 
+{\footnotesize template$<$typename T , typename V , typename  = decltype(std\+::declval$<$\+T \&$>$() $\ast$ std\+::declval$<$\+V \&$>$())$>$ }\\std\+::true\+\_\+type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a010526521848e8fce0c283d6d6da1a12}{test\+Multiplication}} (int)
+\item 
+{\footnotesize template$<$typename T , typename V $>$ }\\std\+::false\+\_\+type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a38ab6e28df13c02db6d0dfdd5da550fd}{test\+Multiplication}} (float)
+\item 
+{\footnotesize template$<$typename From , typename To , typename  = decltype((\+From)std\+::declval$<$\+From \&$>$())$>$ }\\std\+::true\+\_\+type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a69e381454bd5edfca9462f5c88376c0a}{test\+Cast}} (int)
+\item 
+{\footnotesize template$<$typename From , typename To $>$ }\\std\+::false\+\_\+type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a2354c060489f0084633d106f44c54f5b}{test\+Cast}} (float)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacelibrapid_1_1typetraits_1_1impl_adfcb2dc45fd94c735592700e40897fde}\label{namespacelibrapid_1_1typetraits_1_1impl_adfcb2dc45fd94c735592700e40897fde}} 
+\index{librapid::typetraits::impl@{librapid::typetraits::impl}!testAddition@{testAddition}}
+\index{testAddition@{testAddition}!librapid::typetraits::impl@{librapid::typetraits::impl}}
+\doxysubsubsection{\texorpdfstring{testAddition()}{testAddition()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T , typename V $>$ \\
+std\+::false\+\_\+type librapid\+::typetraits\+::impl\+::test\+Addition (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacelibrapid_1_1typetraits_1_1impl_a8979c0d42f06120b023f6f908fa4ce0e}\label{namespacelibrapid_1_1typetraits_1_1impl_a8979c0d42f06120b023f6f908fa4ce0e}} 
+\index{librapid::typetraits::impl@{librapid::typetraits::impl}!testAddition@{testAddition}}
+\index{testAddition@{testAddition}!librapid::typetraits::impl@{librapid::typetraits::impl}}
+\doxysubsubsection{\texorpdfstring{testAddition()}{testAddition()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T , typename V , typename  = decltype(std\+::declval$<$\+T \&$>$() + std\+::declval$<$\+V \&$>$())$>$ \\
+std\+::true\+\_\+type librapid\+::typetraits\+::impl\+::test\+Addition (\begin{DoxyParamCaption}\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacelibrapid_1_1typetraits_1_1impl_a2354c060489f0084633d106f44c54f5b}\label{namespacelibrapid_1_1typetraits_1_1impl_a2354c060489f0084633d106f44c54f5b}} 
+\index{librapid::typetraits::impl@{librapid::typetraits::impl}!testCast@{testCast}}
+\index{testCast@{testCast}!librapid::typetraits::impl@{librapid::typetraits::impl}}
+\doxysubsubsection{\texorpdfstring{testCast()}{testCast()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename From , typename To $>$ \\
+std\+::false\+\_\+type librapid\+::typetraits\+::impl\+::test\+Cast (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacelibrapid_1_1typetraits_1_1impl_a69e381454bd5edfca9462f5c88376c0a}\label{namespacelibrapid_1_1typetraits_1_1impl_a69e381454bd5edfca9462f5c88376c0a}} 
+\index{librapid::typetraits::impl@{librapid::typetraits::impl}!testCast@{testCast}}
+\index{testCast@{testCast}!librapid::typetraits::impl@{librapid::typetraits::impl}}
+\doxysubsubsection{\texorpdfstring{testCast()}{testCast()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename From , typename To , typename  = decltype((\+From)std\+::declval$<$\+From \&$>$())$>$ \\
+std\+::true\+\_\+type librapid\+::typetraits\+::impl\+::test\+Cast (\begin{DoxyParamCaption}\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacelibrapid_1_1typetraits_1_1impl_a38ab6e28df13c02db6d0dfdd5da550fd}\label{namespacelibrapid_1_1typetraits_1_1impl_a38ab6e28df13c02db6d0dfdd5da550fd}} 
+\index{librapid::typetraits::impl@{librapid::typetraits::impl}!testMultiplication@{testMultiplication}}
+\index{testMultiplication@{testMultiplication}!librapid::typetraits::impl@{librapid::typetraits::impl}}
+\doxysubsubsection{\texorpdfstring{testMultiplication()}{testMultiplication()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T , typename V $>$ \\
+std\+::false\+\_\+type librapid\+::typetraits\+::impl\+::test\+Multiplication (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacelibrapid_1_1typetraits_1_1impl_a010526521848e8fce0c283d6d6da1a12}\label{namespacelibrapid_1_1typetraits_1_1impl_a010526521848e8fce0c283d6d6da1a12}} 
+\index{librapid::typetraits::impl@{librapid::typetraits::impl}!testMultiplication@{testMultiplication}}
+\index{testMultiplication@{testMultiplication}!librapid::typetraits::impl@{librapid::typetraits::impl}}
+\doxysubsubsection{\texorpdfstring{testMultiplication()}{testMultiplication()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T , typename V , typename  = decltype(std\+::declval$<$\+T \&$>$() $\ast$ std\+::declval$<$\+V \&$>$())$>$ \\
+std\+::true\+\_\+type librapid\+::typetraits\+::impl\+::test\+Multiplication (\begin{DoxyParamCaption}\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacelibrapid_1_1typetraits_1_1impl_a7005145040e6223139c5fadc51c68f7d}\label{namespacelibrapid_1_1typetraits_1_1impl_a7005145040e6223139c5fadc51c68f7d}} 
+\index{librapid::typetraits::impl@{librapid::typetraits::impl}!testSubscript@{testSubscript}}
+\index{testSubscript@{testSubscript}!librapid::typetraits::impl@{librapid::typetraits::impl}}
+\doxysubsubsection{\texorpdfstring{testSubscript()}{testSubscript()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T , typename Index $>$ \\
+std\+::false\+\_\+type librapid\+::typetraits\+::impl\+::test\+Subscript (\begin{DoxyParamCaption}\item[{float}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacelibrapid_1_1typetraits_1_1impl_a10fe8ed5bc301fec64946591cdcd3398}\label{namespacelibrapid_1_1typetraits_1_1impl_a10fe8ed5bc301fec64946591cdcd3398}} 
+\index{librapid::typetraits::impl@{librapid::typetraits::impl}!testSubscript@{testSubscript}}
+\index{testSubscript@{testSubscript}!librapid::typetraits::impl@{librapid::typetraits::impl}}
+\doxysubsubsection{\texorpdfstring{testSubscript()}{testSubscript()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T , typename Index , typename  = decltype(std\+::declval$<$\+T \&$>$()\mbox{[}std\+::declval$<$\+Index$>$()\mbox{]})$>$ \\
+std\+::true\+\_\+type librapid\+::typetraits\+::impl\+::test\+Subscript (\begin{DoxyParamCaption}\item[{int}]{ }\end{DoxyParamCaption})}
+

@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['gbaxpby_2eh_0',['gbaxpby.h',['../gbaxpby_8h.html',1,'']]],
+  ['gbaxpy_2eh_1',['gbaxpy.h',['../gbaxpy_8h.html',1,'']]],
+  ['gbcopy_2eh_2',['gbcopy.h',['../gbcopy_8h.html',1,'']]],
+  ['gbcotr_2eh_3',['gbcotr.h',['../gbcotr_8h.html',1,'']]],
+  ['gbmm_2eh_4',['gbmm.h',['../gbmm_8h.html',1,'']]],
+  ['gbmv_2eh_5',['gbmv.h',['../level2_2gbmv_8h.html',1,'(Global Namespace)'],['../level2extensions_2gbmv_8h.html',1,'(Global Namespace)']]],
+  ['gbscal_2eh_6',['gbscal.h',['../gbscal_8h.html',1,'']]],
+  ['geaxpby_2eh_7',['geaxpby.h',['../geaxpby_8h.html',1,'']]],
+  ['geaxpy_2eh_8',['geaxpy.h',['../level1extensions_2geaxpy_8h.html',1,'(Global Namespace)'],['../tinylevel1_2geaxpy_8h.html',1,'(Global Namespace)']]],
+  ['gecopy_2eh_9',['gecopy.h',['../level1extensions_2gecopy_8h.html',1,'(Global Namespace)'],['../tinylevel1_2gecopy_8h.html',1,'(Global Namespace)']]],
+  ['gecotr_2eh_10',['gecotr.h',['../gecotr_8h.html',1,'']]],
+  ['gecrsmm_2eh_11',['gecrsmm.h',['../gecrsmm_8h.html',1,'']]],
+  ['gecrsmv_2eh_12',['gecrsmv.h',['../gecrsmv_8h.html',1,'']]],
+  ['gemm_2eh_13',['gemm.h',['../gemm_8h.html',1,'']]],
+  ['gemv_2eh_14',['gemv.h',['../level2_2gemv_8h.html',1,'(Global Namespace)'],['../level2extensions_2gemv_8h.html',1,'(Global Namespace)'],['../tinylevel2_2gemv_8h.html',1,'(Global Namespace)']]],
+  ['genericconfig_2ehpp_15',['genericConfig.hpp',['../generic_config_8hpp.html',1,'']]],
+  ['ger_2eh_16',['ger.h',['../ger_8h.html',1,'']]],
+  ['geraxpy_2eh_17',['geraxpy.h',['../geraxpy_8h.html',1,'']]],
+  ['gerscal_2eh_18',['gerscal.h',['../level1extensions_2gerscal_8h.html',1,'(Global Namespace)'],['../tinylevel1_2gerscal_8h.html',1,'(Global Namespace)']]],
+  ['gescal_2eh_19',['gescal.h',['../level1extensions_2gescal_8h.html',1,'(Global Namespace)'],['../tinylevel1_2gescal_8h.html',1,'(Global Namespace)']]],
+  ['geswap_2eh_20',['geswap.h',['../geswap_8h.html',1,'']]],
+  ['global_2ecpp_21',['global.cpp',['../global_8cpp.html',1,'']]],
+  ['global_2ehpp_22',['global.hpp',['../global_8hpp.html',1,'']]],
+  ['gnuconfig_2ehpp_23',['gnuConfig.hpp',['../gnu_config_8hpp.html',1,'']]],
+  ['gotoblas_2eh_24',['gotoblas.h',['../gotoblas_8h.html',1,'']]]
+];

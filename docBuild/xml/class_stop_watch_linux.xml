@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="class_stop_watch_linux" kind="class" language="C++" prot="public">
+    <compoundname>StopWatchLinux</compoundname>
+    <basecompoundref refid="class_stop_watch_interface" prot="public" virt="non-virtual">StopWatchInterface</basecompoundref>
+    <includes refid="helper__timer_8h" local="no">helper_timer.h</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_stop_watch_linux_1aeea9d454621ed9246317c5c6793db1ed" prot="private" static="no" mutable="no">
+        <type>struct timeval</type>
+        <definition>struct timeval StopWatchLinux::start_time</definition>
+        <argsstring></argsstring>
+        <name>start_time</name>
+        <qualifiedname>StopWatchLinux::start_time</qualifiedname>
+        <briefdescription>
+<para>Start of measurement. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="263" column="14" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="263" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_stop_watch_linux_1adedd72587f2caf53a4f0af0fd90090a6" prot="private" static="no" mutable="no">
+        <type>float</type>
+        <definition>float StopWatchLinux::diff_time</definition>
+        <argsstring></argsstring>
+        <name>diff_time</name>
+        <qualifiedname>StopWatchLinux::diff_time</qualifiedname>
+        <briefdescription>
+<para>Time difference between the last start and stop. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="266" column="7" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="266" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_stop_watch_linux_1a709a9567a4868e7920132959ae8a00bf" prot="private" static="no" mutable="no">
+        <type>float</type>
+        <definition>float StopWatchLinux::total_time</definition>
+        <argsstring></argsstring>
+        <name>total_time</name>
+        <qualifiedname>StopWatchLinux::total_time</qualifiedname>
+        <briefdescription>
+<para>TOTAL time difference between starts and stops. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="269" column="7" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="269" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_stop_watch_linux_1ada79dea0dc663ac4101a6d01a12b10bb" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool StopWatchLinux::running</definition>
+        <argsstring></argsstring>
+        <name>running</name>
+        <qualifiedname>StopWatchLinux::running</qualifiedname>
+        <briefdescription>
+<para>flag if the stop watch is running </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="272" column="6" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="272" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_stop_watch_linux_1a5d40c14043e5a732c908da418eeada77" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int StopWatchLinux::clock_sessions</definition>
+        <argsstring></argsstring>
+        <name>clock_sessions</name>
+        <qualifiedname>StopWatchLinux::clock_sessions</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Number of times clock has been started and stopped to allow averaging </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="276" column="5" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="276" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_stop_watch_linux_1adb421b1d92bec2a59e564c053d94075f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>StopWatchLinux::StopWatchLinux</definition>
+        <argsstring>()</argsstring>
+        <name>StopWatchLinux</name>
+        <qualifiedname>StopWatchLinux::StopWatchLinux</qualifiedname>
+        <briefdescription>
+<para>Constructor, default. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="228" column="1" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="228" bodyend="229"/>
+      </memberdef>
+      <memberdef kind="function" id="class_stop_watch_linux_1a2063456840d915094595e8e3273d38c5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual StopWatchLinux::~StopWatchLinux</definition>
+        <argsstring>()</argsstring>
+        <name>~StopWatchLinux</name>
+        <qualifiedname>StopWatchLinux::~StopWatchLinux</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="232" column="9" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="232" bodyend="232"/>
+      </memberdef>
+      <memberdef kind="function" id="class_stop_watch_linux_1a5b48161b757890313c93cdcbf6470258" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void StopWatchLinux::start</definition>
+        <argsstring>()</argsstring>
+        <name>start</name>
+        <qualifiedname>StopWatchLinux::start</qualifiedname>
+        <reimplements refid="class_stop_watch_interface_1a753200dac75f85ed691fc496d8343248">start</reimplements>
+        <briefdescription>
+<para>Start time measurement. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="236" column="13" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="284" bodyend="287"/>
+      </memberdef>
+      <memberdef kind="function" id="class_stop_watch_linux_1aea4fb94c36ad6d01cb371afa0aae0926" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void StopWatchLinux::stop</definition>
+        <argsstring>()</argsstring>
+        <name>stop</name>
+        <qualifiedname>StopWatchLinux::stop</qualifiedname>
+        <reimplements refid="class_stop_watch_interface_1a53280ad65e3800cf608315afa3a20554">stop</reimplements>
+        <briefdescription>
+<para>Stop time measurement. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Stop time measurement and increment add to the current diff_time summation variable. Also increment the number of times this clock has been run. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="239" column="13" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="293" bodyend="298"/>
+      </memberdef>
+      <memberdef kind="function" id="class_stop_watch_linux_1ae609a527c56e658941f539a8aaf43c71" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void StopWatchLinux::reset</definition>
+        <argsstring>()</argsstring>
+        <name>reset</name>
+        <qualifiedname>StopWatchLinux::reset</qualifiedname>
+        <reimplements refid="class_stop_watch_interface_1af38c96a046bc667528a8500d69106b09">reset</reimplements>
+        <briefdescription>
+<para>Reset time counters to zero. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Reset the timer to 0. Does not change the timer running state but does recapture this point in time as the current start time if it is running. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="242" column="13" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="304" bodyend="310"/>
+      </memberdef>
+      <memberdef kind="function" id="class_stop_watch_linux_1a7e211f57179ab20e6814127318e9f0f8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>float</type>
+        <definition>float StopWatchLinux::getTime</definition>
+        <argsstring>()</argsstring>
+        <name>getTime</name>
+        <qualifiedname>StopWatchLinux::getTime</qualifiedname>
+        <reimplements refid="class_stop_watch_interface_1ab2127ae16fd7cafec70246fa07f2025f">getTime</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Time in msec. after start. If the stop watch is still running (i.e. there was no call to <ref refid="class_stop_watch_linux_1aea4fb94c36ad6d01cb371afa0aae0926" kindref="member">stop()</ref>) then the elapsed time is returned, otherwise the time between the last <ref refid="class_stop_watch_linux_1a5b48161b757890313c93cdcbf6470258" kindref="member">start()</ref> and stop call is returned</para>
+<para>Time in msec. after start. If the stop watch is still running (i.e. there was no call to <ref refid="class_stop_watch_linux_1aea4fb94c36ad6d01cb371afa0aae0926" kindref="member">stop()</ref>) then the elapsed time is returned added to the current diff_time sum, otherwise the current summed time difference alone is returned. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="247" column="14" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="318" bodyend="325"/>
+      </memberdef>
+      <memberdef kind="function" id="class_stop_watch_linux_1a702b38009675968d5798796978007376" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>float</type>
+        <definition>float StopWatchLinux::getAverageTime</definition>
+        <argsstring>()</argsstring>
+        <name>getAverageTime</name>
+        <qualifiedname>StopWatchLinux::getAverageTime</qualifiedname>
+        <reimplements refid="class_stop_watch_interface_1a049e581ad35895795be1e04763d40cc3">getAverageTime</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Mean time to date based on the number of times the stopwatch has been <emphasis>stopped</emphasis> (ie finished sessions) and the current total time</para>
+<para>Time in msec. for a single run based on the total number of COMPLETED runs and the total time. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="251" column="14" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="331" bodyend="333"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_stop_watch_linux_1a3f7b53a7d64f4ffaa243eceee6f44b83" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>float</type>
+        <definition>float StopWatchLinux::getDiffTime</definition>
+        <argsstring>()</argsstring>
+        <name>getDiffTime</name>
+        <qualifiedname>StopWatchLinux::getDiffTime</qualifiedname>
+        <briefdescription>
+<para>Get difference between start time and current time. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_timer.h" line="257" column="14" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="337" bodyend="344"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Windows specific implementation of StopWatch. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>StopWatchInterface</label>
+        <link refid="class_stop_watch_interface"/>
+      </node>
+      <node id="1">
+        <label>StopWatchLinux</label>
+        <link refid="class_stop_watch_linux"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>StopWatchInterface</label>
+        <link refid="class_stop_watch_interface"/>
+      </node>
+      <node id="1">
+        <label>StopWatchLinux</label>
+        <link refid="class_stop_watch_linux"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="librapid/include/librapid/cuda/helper_timer.h" line="225" column="1" bodyfile="librapid/include/librapid/cuda/helper_timer.h" bodystart="225" bodyend="277"/>
+    <listofallmembers>
+      <member refid="class_stop_watch_linux_1a5d40c14043e5a732c908da418eeada77" prot="private" virt="non-virtual"><scope>StopWatchLinux</scope><name>clock_sessions</name></member>
+      <member refid="class_stop_watch_linux_1adedd72587f2caf53a4f0af0fd90090a6" prot="private" virt="non-virtual"><scope>StopWatchLinux</scope><name>diff_time</name></member>
+      <member refid="class_stop_watch_linux_1a702b38009675968d5798796978007376" prot="public" virt="virtual"><scope>StopWatchLinux</scope><name>getAverageTime</name></member>
+      <member refid="class_stop_watch_linux_1a3f7b53a7d64f4ffaa243eceee6f44b83" prot="private" virt="non-virtual"><scope>StopWatchLinux</scope><name>getDiffTime</name></member>
+      <member refid="class_stop_watch_linux_1a7e211f57179ab20e6814127318e9f0f8" prot="public" virt="virtual"><scope>StopWatchLinux</scope><name>getTime</name></member>
+      <member refid="class_stop_watch_linux_1ae609a527c56e658941f539a8aaf43c71" prot="public" virt="virtual"><scope>StopWatchLinux</scope><name>reset</name></member>
+      <member refid="class_stop_watch_linux_1ada79dea0dc663ac4101a6d01a12b10bb" prot="private" virt="non-virtual"><scope>StopWatchLinux</scope><name>running</name></member>
+      <member refid="class_stop_watch_linux_1a5b48161b757890313c93cdcbf6470258" prot="public" virt="virtual"><scope>StopWatchLinux</scope><name>start</name></member>
+      <member refid="class_stop_watch_linux_1aeea9d454621ed9246317c5c6793db1ed" prot="private" virt="non-virtual"><scope>StopWatchLinux</scope><name>start_time</name></member>
+      <member refid="class_stop_watch_linux_1aea4fb94c36ad6d01cb371afa0aae0926" prot="public" virt="virtual"><scope>StopWatchLinux</scope><name>stop</name></member>
+      <member refid="class_stop_watch_interface_1a3b16caaf562bcb9e5b20053738729850" prot="public" virt="non-virtual"><scope>StopWatchLinux</scope><name>StopWatchInterface</name></member>
+      <member refid="class_stop_watch_linux_1adb421b1d92bec2a59e564c053d94075f" prot="public" virt="non-virtual"><scope>StopWatchLinux</scope><name>StopWatchLinux</name></member>
+      <member refid="class_stop_watch_linux_1a709a9567a4868e7920132959ae8a00bf" prot="private" virt="non-virtual"><scope>StopWatchLinux</scope><name>total_time</name></member>
+      <member refid="class_stop_watch_interface_1ae6fe6ad45faa59f367624de26b808fc4" prot="public" virt="virtual"><scope>StopWatchLinux</scope><name>~StopWatchInterface</name></member>
+      <member refid="class_stop_watch_linux_1a2063456840d915094595e8e3273d38c5" prot="public" virt="virtual"><scope>StopWatchLinux</scope><name>~StopWatchLinux</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

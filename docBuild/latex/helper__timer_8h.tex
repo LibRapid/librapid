@@ -1,0 +1,166 @@
+\hypertarget{helper__timer_8h}{}\doxysection{librapid/include/librapid/cuda/helper\+\_\+timer.h File Reference}
+\label{helper__timer_8h}\index{librapid/include/librapid/cuda/helper\_timer.h@{librapid/include/librapid/cuda/helper\_timer.h}}
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}exception.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}}
+\item 
+class \mbox{\hyperlink{class_stop_watch_linux}{Stop\+Watch\+Linux}}
+\begin{DoxyCompactList}\small\item\em Windows specific implementation of Stop\+Watch. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{helper__timer_8h_ad20838a18f49298dae4d0ee29a0bb7a9}{EXIT\+\_\+\+WAIVED}}~2
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{helper__timer_8h_aa0a197b1848bce4d73807f7297d708df}{sdk\+Create\+Timer}} (\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$timer\+\_\+interface)
+\begin{DoxyCompactList}\small\item\em Timer functionality exported. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{helper__timer_8h_a629749b153ff9be740765149b3c652b6}{sdk\+Delete\+Timer}} (\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$timer\+\_\+interface)
+\item 
+bool \mbox{\hyperlink{helper__timer_8h_aa5d0a7252c27daa16091863ff789e38f}{sdk\+Start\+Timer}} (\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$timer\+\_\+interface)
+\item 
+bool \mbox{\hyperlink{helper__timer_8h_afef340cd9aa6f9fc7ddf20e2525bb531}{sdk\+Stop\+Timer}} (\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$timer\+\_\+interface)
+\item 
+bool \mbox{\hyperlink{helper__timer_8h_a700f4d51fe548d47bf77c4c029d91c75}{sdk\+Reset\+Timer}} (\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$timer\+\_\+interface)
+\item 
+float \mbox{\hyperlink{helper__timer_8h_a52ab86f6d212465929808592e3a1054f}{sdk\+Get\+Average\+Timer\+Value}} (\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$timer\+\_\+interface)
+\item 
+float \mbox{\hyperlink{helper__timer_8h_ac50364748b6574878cea082c9bd1b068}{sdk\+Get\+Timer\+Value}} (\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$timer\+\_\+interface)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{helper__timer_8h_ad20838a18f49298dae4d0ee29a0bb7a9}\label{helper__timer_8h_ad20838a18f49298dae4d0ee29a0bb7a9}} 
+\index{helper\_timer.h@{helper\_timer.h}!EXIT\_WAIVED@{EXIT\_WAIVED}}
+\index{EXIT\_WAIVED@{EXIT\_WAIVED}!helper\_timer.h@{helper\_timer.h}}
+\doxysubsubsection{\texorpdfstring{EXIT\_WAIVED}{EXIT\_WAIVED}}
+{\footnotesize\ttfamily \#define EXIT\+\_\+\+WAIVED~2}
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00033}{33}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{helper__timer_8h_aa0a197b1848bce4d73807f7297d708df}\label{helper__timer_8h_aa0a197b1848bce4d73807f7297d708df}} 
+\index{helper\_timer.h@{helper\_timer.h}!sdkCreateTimer@{sdkCreateTimer}}
+\index{sdkCreateTimer@{sdkCreateTimer}!helper\_timer.h@{helper\_timer.h}}
+\doxysubsubsection{\texorpdfstring{sdkCreateTimer()}{sdkCreateTimer()}}
+{\footnotesize\ttfamily bool sdk\+Create\+Timer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$}]{timer\+\_\+interface }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Timer functionality exported. 
+
+Create a new timer \begin{DoxyReturn}{Returns}
+true if a time has been created, otherwise false 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of the new timer, 0 if the creation failed \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00355}{355}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{helper__timer_8h_a629749b153ff9be740765149b3c652b6}\label{helper__timer_8h_a629749b153ff9be740765149b3c652b6}} 
+\index{helper\_timer.h@{helper\_timer.h}!sdkDeleteTimer@{sdkDeleteTimer}}
+\index{sdkDeleteTimer@{sdkDeleteTimer}!helper\_timer.h@{helper\_timer.h}}
+\doxysubsubsection{\texorpdfstring{sdkDeleteTimer()}{sdkDeleteTimer()}}
+{\footnotesize\ttfamily bool sdk\+Delete\+Timer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$}]{timer\+\_\+interface }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Delete a timer \begin{DoxyReturn}{Returns}
+true if a time has been deleted, otherwise false 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of the timer to delete \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00370}{370}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{helper__timer_8h_a52ab86f6d212465929808592e3a1054f}\label{helper__timer_8h_a52ab86f6d212465929808592e3a1054f}} 
+\index{helper\_timer.h@{helper\_timer.h}!sdkGetAverageTimerValue@{sdkGetAverageTimerValue}}
+\index{sdkGetAverageTimerValue@{sdkGetAverageTimerValue}!helper\_timer.h@{helper\_timer.h}}
+\doxysubsubsection{\texorpdfstring{sdkGetAverageTimerValue()}{sdkGetAverageTimerValue()}}
+{\footnotesize\ttfamily float sdk\+Get\+Average\+Timer\+Value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$}]{timer\+\_\+interface }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Return the average time for timer execution as the total time for the timer dividied by the number of completed (stopped) runs the timer has made. Excludes the current running time if the timer is currently running. 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the timer to return the time of \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00420}{420}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{helper__timer_8h_ac50364748b6574878cea082c9bd1b068}\label{helper__timer_8h_ac50364748b6574878cea082c9bd1b068}} 
+\index{helper\_timer.h@{helper\_timer.h}!sdkGetTimerValue@{sdkGetTimerValue}}
+\index{sdkGetTimerValue@{sdkGetTimerValue}!helper\_timer.h@{helper\_timer.h}}
+\doxysubsubsection{\texorpdfstring{sdkGetTimerValue()}{sdkGetTimerValue()}}
+{\footnotesize\ttfamily float sdk\+Get\+Timer\+Value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$}]{timer\+\_\+interface }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Total execution time for the timer over all runs since the last reset or timer creation. 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the timer to obtain the value of. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00435}{435}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{helper__timer_8h_a700f4d51fe548d47bf77c4c029d91c75}\label{helper__timer_8h_a700f4d51fe548d47bf77c4c029d91c75}} 
+\index{helper\_timer.h@{helper\_timer.h}!sdkResetTimer@{sdkResetTimer}}
+\index{sdkResetTimer@{sdkResetTimer}!helper\_timer.h@{helper\_timer.h}}
+\doxysubsubsection{\texorpdfstring{sdkResetTimer()}{sdkResetTimer()}}
+{\footnotesize\ttfamily bool sdk\+Reset\+Timer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$}]{timer\+\_\+interface }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Resets the timer\textquotesingle{}s counter. 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the timer to reset. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00406}{406}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{helper__timer_8h_aa5d0a7252c27daa16091863ff789e38f}\label{helper__timer_8h_aa5d0a7252c27daa16091863ff789e38f}} 
+\index{helper\_timer.h@{helper\_timer.h}!sdkStartTimer@{sdkStartTimer}}
+\index{sdkStartTimer@{sdkStartTimer}!helper\_timer.h@{helper\_timer.h}}
+\doxysubsubsection{\texorpdfstring{sdkStartTimer()}{sdkStartTimer()}}
+{\footnotesize\ttfamily bool sdk\+Start\+Timer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$}]{timer\+\_\+interface }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Start the time with name {\itshape name} 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the timer to start \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00384}{384}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{helper__timer_8h_afef340cd9aa6f9fc7ddf20e2525bb531}\label{helper__timer_8h_afef340cd9aa6f9fc7ddf20e2525bb531}} 
+\index{helper\_timer.h@{helper\_timer.h}!sdkStopTimer@{sdkStopTimer}}
+\index{sdkStopTimer@{sdkStopTimer}!helper\_timer.h@{helper\_timer.h}}
+\doxysubsubsection{\texorpdfstring{sdkStopTimer()}{sdkStopTimer()}}
+{\footnotesize\ttfamily bool sdk\+Stop\+Timer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_stop_watch_interface}{Stop\+Watch\+Interface}} $\ast$$\ast$}]{timer\+\_\+interface }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Stop the time with name {\itshape name}. Does not reset. 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the timer to stop \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00395}{395}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+

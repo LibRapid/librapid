@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_44c032aed6daab1e20a834f75bdf3996" kind="dir">
+    <compoundname>librapid/cxxblas</compoundname>
+    <innerdir refid="dir_0fe2240ade4d4bbba0ca7080875dc323">librapid/cxxblas/auxiliary</innerdir>
+    <innerdir refid="dir_470203699321a77e3c9ebc4c7dd77140">librapid/cxxblas/drivers</innerdir>
+    <innerdir refid="dir_2b5c9b6a37c470aaa2d21d56e8ef980c">librapid/cxxblas/level1</innerdir>
+    <innerdir refid="dir_a1c2fae230ad14e5d6980a50e35c56b4">librapid/cxxblas/level1extensions</innerdir>
+    <innerdir refid="dir_20ccf7e466ea9c17367c75b71a2bc2ff">librapid/cxxblas/level2</innerdir>
+    <innerdir refid="dir_82039885fc4716c4d8cb10be6599d9c4">librapid/cxxblas/level2extensions</innerdir>
+    <innerdir refid="dir_da419cb84968d3dd5afee09cbf0850f1">librapid/cxxblas/level3</innerdir>
+    <innerdir refid="dir_32235b36554e7f353da5f2cb61b64fa2">librapid/cxxblas/level3extensions</innerdir>
+    <innerdir refid="dir_eb4bdb9ca314aeee199c890e741764ed">librapid/cxxblas/sparselevel2</innerdir>
+    <innerdir refid="dir_d5b6b79de5e706df2c6c6a0e5d26fadd">librapid/cxxblas/sparselevel3</innerdir>
+    <innerdir refid="dir_97047182a261c246b9a584e9ef15ac61">librapid/cxxblas/tinylevel1</innerdir>
+    <innerdir refid="dir_4977d20204ca1ad0f61013f336dd8029">librapid/cxxblas/tinylevel2</innerdir>
+    <innerfile refid="cxxblas_8cxx">cxxblas.cxx</innerfile>
+    <innerfile refid="cxxblas_8h">cxxblas.h</innerfile>
+    <innerfile refid="typedefs_8h">typedefs.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/cxxblas/"/>
+  </compounddef>
+</doxygen>

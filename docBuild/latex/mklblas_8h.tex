@@ -1,0 +1,152 @@
+\hypertarget{mklblas_8h}{}\doxysection{librapid/cxxblas/drivers/mklblas.h File Reference}
+\label{mklblas_8h}\index{librapid/cxxblas/drivers/mklblas.h@{librapid/cxxblas/drivers/mklblas.h}}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{mklblas_8h_a44285e5a3f17af0a5dc5b22de44805be}{HAVE\+\_\+\+CBLAS}}~1
+\item 
+\#define \mbox{\hyperlink{mklblas_8h_ac95039b753ad3c07a119d5805f5a5ade}{HAVE\+\_\+\+SPARSEBLAS}}~1
+\item 
+\#define \mbox{\hyperlink{mklblas_8h_a01dd3e374df805644babdab2465b7f39}{WITH\+\_\+\+MKLDSS}}~1
+\item 
+\#define \mbox{\hyperlink{mklblas_8h_ac28e6243e4c6cd0b876f1c60a7c228c1}{CBLAS\+\_\+\+INT}}~int
+\item 
+\#define \mbox{\hyperlink{mklblas_8h_a0cc6c9831e05958bc66dc000e02f33b9}{CBLAS\+\_\+\+INDEX}}~int
+\item 
+\#define \mbox{\hyperlink{mklblas_8h_a616c2c268e9968d9c9e1e4bb10e7f125}{BLAS\+\_\+\+IMPL}}~\char`\"{}MKLBLAS\char`\"{}
+\item 
+\#define \mbox{\hyperlink{mklblas_8h_a50791673dd7a75e8ca719d432ce2b20a}{HAVE\+\_\+\+CBLAS\+\_\+\+AXPBY}}
+\item 
+\#define \mbox{\hyperlink{mklblas_8h_ab21da2a62c65e7a51da419f4ad816f56}{BLAS\+\_\+\+EXT}}(x)~cblas\+\_\+\#\#x
+\item 
+\#define \mbox{\hyperlink{mklblas_8h_afe95c4f567fc3dd79fb8680d6969d7ba}{USE\+\_\+\+CXXLAPACK}}~1
+\item 
+\#define \mbox{\hyperlink{mklblas_8h_aa408c37d4cd84ad52f036f7c66cd17d7}{HAVE\+\_\+\+FFTW}}~1
+\item 
+\#define \mbox{\hyperlink{mklblas_8h_a233a4b71a521d50bf55ea832e9df0779}{HAVE\+\_\+\+FFTW\+\_\+\+FLOAT}}~1
+\item 
+\#define \mbox{\hyperlink{mklblas_8h_a2bca50e1260fcad482cb90332c215825}{HAVE\+\_\+\+FFTW\+\_\+\+DOUBLE}}~1
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{mklblas_8h_ab21da2a62c65e7a51da419f4ad816f56}\label{mklblas_8h_ab21da2a62c65e7a51da419f4ad816f56}} 
+\index{mklblas.h@{mklblas.h}!BLAS\_EXT@{BLAS\_EXT}}
+\index{BLAS\_EXT@{BLAS\_EXT}!mklblas.h@{mklblas.h}}
+\doxysubsubsection{\texorpdfstring{BLAS\_EXT}{BLAS\_EXT}}
+{\footnotesize\ttfamily \#define BLAS\+\_\+\+EXT(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~cblas\+\_\+\#\#x}
+
+
+
+Definition at line \mbox{\hyperlink{mklblas_8h_source_l00051}{51}} of file \mbox{\hyperlink{mklblas_8h_source}{mklblas.\+h}}.
+
+\mbox{\Hypertarget{mklblas_8h_a616c2c268e9968d9c9e1e4bb10e7f125}\label{mklblas_8h_a616c2c268e9968d9c9e1e4bb10e7f125}} 
+\index{mklblas.h@{mklblas.h}!BLAS\_IMPL@{BLAS\_IMPL}}
+\index{BLAS\_IMPL@{BLAS\_IMPL}!mklblas.h@{mklblas.h}}
+\doxysubsubsection{\texorpdfstring{BLAS\_IMPL}{BLAS\_IMPL}}
+{\footnotesize\ttfamily \#define BLAS\+\_\+\+IMPL~\char`\"{}MKLBLAS\char`\"{}}
+
+
+
+Definition at line \mbox{\hyperlink{mklblas_8h_source_l00046}{46}} of file \mbox{\hyperlink{mklblas_8h_source}{mklblas.\+h}}.
+
+\mbox{\Hypertarget{mklblas_8h_a0cc6c9831e05958bc66dc000e02f33b9}\label{mklblas_8h_a0cc6c9831e05958bc66dc000e02f33b9}} 
+\index{mklblas.h@{mklblas.h}!CBLAS\_INDEX@{CBLAS\_INDEX}}
+\index{CBLAS\_INDEX@{CBLAS\_INDEX}!mklblas.h@{mklblas.h}}
+\doxysubsubsection{\texorpdfstring{CBLAS\_INDEX}{CBLAS\_INDEX}}
+{\footnotesize\ttfamily \#define CBLAS\+\_\+\+INDEX~int}
+
+
+
+Definition at line \mbox{\hyperlink{mklblas_8h_source_l00044}{44}} of file \mbox{\hyperlink{mklblas_8h_source}{mklblas.\+h}}.
+
+\mbox{\Hypertarget{mklblas_8h_ac28e6243e4c6cd0b876f1c60a7c228c1}\label{mklblas_8h_ac28e6243e4c6cd0b876f1c60a7c228c1}} 
+\index{mklblas.h@{mklblas.h}!CBLAS\_INT@{CBLAS\_INT}}
+\index{CBLAS\_INT@{CBLAS\_INT}!mklblas.h@{mklblas.h}}
+\doxysubsubsection{\texorpdfstring{CBLAS\_INT}{CBLAS\_INT}}
+{\footnotesize\ttfamily \#define CBLAS\+\_\+\+INT~int}
+
+
+
+Definition at line \mbox{\hyperlink{mklblas_8h_source_l00043}{43}} of file \mbox{\hyperlink{mklblas_8h_source}{mklblas.\+h}}.
+
+\mbox{\Hypertarget{mklblas_8h_a44285e5a3f17af0a5dc5b22de44805be}\label{mklblas_8h_a44285e5a3f17af0a5dc5b22de44805be}} 
+\index{mklblas.h@{mklblas.h}!HAVE\_CBLAS@{HAVE\_CBLAS}}
+\index{HAVE\_CBLAS@{HAVE\_CBLAS}!mklblas.h@{mklblas.h}}
+\doxysubsubsection{\texorpdfstring{HAVE\_CBLAS}{HAVE\_CBLAS}}
+{\footnotesize\ttfamily \#define HAVE\+\_\+\+CBLAS~1}
+
+
+
+Definition at line \mbox{\hyperlink{mklblas_8h_source_l00036}{36}} of file \mbox{\hyperlink{mklblas_8h_source}{mklblas.\+h}}.
+
+\mbox{\Hypertarget{mklblas_8h_a50791673dd7a75e8ca719d432ce2b20a}\label{mklblas_8h_a50791673dd7a75e8ca719d432ce2b20a}} 
+\index{mklblas.h@{mklblas.h}!HAVE\_CBLAS\_AXPBY@{HAVE\_CBLAS\_AXPBY}}
+\index{HAVE\_CBLAS\_AXPBY@{HAVE\_CBLAS\_AXPBY}!mklblas.h@{mklblas.h}}
+\doxysubsubsection{\texorpdfstring{HAVE\_CBLAS\_AXPBY}{HAVE\_CBLAS\_AXPBY}}
+{\footnotesize\ttfamily \#define HAVE\+\_\+\+CBLAS\+\_\+\+AXPBY}
+
+
+
+Definition at line \mbox{\hyperlink{mklblas_8h_source_l00050}{50}} of file \mbox{\hyperlink{mklblas_8h_source}{mklblas.\+h}}.
+
+\mbox{\Hypertarget{mklblas_8h_aa408c37d4cd84ad52f036f7c66cd17d7}\label{mklblas_8h_aa408c37d4cd84ad52f036f7c66cd17d7}} 
+\index{mklblas.h@{mklblas.h}!HAVE\_FFTW@{HAVE\_FFTW}}
+\index{HAVE\_FFTW@{HAVE\_FFTW}!mklblas.h@{mklblas.h}}
+\doxysubsubsection{\texorpdfstring{HAVE\_FFTW}{HAVE\_FFTW}}
+{\footnotesize\ttfamily \#define HAVE\+\_\+\+FFTW~1}
+
+
+
+Definition at line \mbox{\hyperlink{mklblas_8h_source_l00060}{60}} of file \mbox{\hyperlink{mklblas_8h_source}{mklblas.\+h}}.
+
+\mbox{\Hypertarget{mklblas_8h_a2bca50e1260fcad482cb90332c215825}\label{mklblas_8h_a2bca50e1260fcad482cb90332c215825}} 
+\index{mklblas.h@{mklblas.h}!HAVE\_FFTW\_DOUBLE@{HAVE\_FFTW\_DOUBLE}}
+\index{HAVE\_FFTW\_DOUBLE@{HAVE\_FFTW\_DOUBLE}!mklblas.h@{mklblas.h}}
+\doxysubsubsection{\texorpdfstring{HAVE\_FFTW\_DOUBLE}{HAVE\_FFTW\_DOUBLE}}
+{\footnotesize\ttfamily \#define HAVE\+\_\+\+FFTW\+\_\+\+DOUBLE~1}
+
+
+
+Definition at line \mbox{\hyperlink{mklblas_8h_source_l00066}{66}} of file \mbox{\hyperlink{mklblas_8h_source}{mklblas.\+h}}.
+
+\mbox{\Hypertarget{mklblas_8h_a233a4b71a521d50bf55ea832e9df0779}\label{mklblas_8h_a233a4b71a521d50bf55ea832e9df0779}} 
+\index{mklblas.h@{mklblas.h}!HAVE\_FFTW\_FLOAT@{HAVE\_FFTW\_FLOAT}}
+\index{HAVE\_FFTW\_FLOAT@{HAVE\_FFTW\_FLOAT}!mklblas.h@{mklblas.h}}
+\doxysubsubsection{\texorpdfstring{HAVE\_FFTW\_FLOAT}{HAVE\_FFTW\_FLOAT}}
+{\footnotesize\ttfamily \#define HAVE\+\_\+\+FFTW\+\_\+\+FLOAT~1}
+
+
+
+Definition at line \mbox{\hyperlink{mklblas_8h_source_l00063}{63}} of file \mbox{\hyperlink{mklblas_8h_source}{mklblas.\+h}}.
+
+\mbox{\Hypertarget{mklblas_8h_ac95039b753ad3c07a119d5805f5a5ade}\label{mklblas_8h_ac95039b753ad3c07a119d5805f5a5ade}} 
+\index{mklblas.h@{mklblas.h}!HAVE\_SPARSEBLAS@{HAVE\_SPARSEBLAS}}
+\index{HAVE\_SPARSEBLAS@{HAVE\_SPARSEBLAS}!mklblas.h@{mklblas.h}}
+\doxysubsubsection{\texorpdfstring{HAVE\_SPARSEBLAS}{HAVE\_SPARSEBLAS}}
+{\footnotesize\ttfamily \#define HAVE\+\_\+\+SPARSEBLAS~1}
+
+
+
+Definition at line \mbox{\hyperlink{mklblas_8h_source_l00037}{37}} of file \mbox{\hyperlink{mklblas_8h_source}{mklblas.\+h}}.
+
+\mbox{\Hypertarget{mklblas_8h_afe95c4f567fc3dd79fb8680d6969d7ba}\label{mklblas_8h_afe95c4f567fc3dd79fb8680d6969d7ba}} 
+\index{mklblas.h@{mklblas.h}!USE\_CXXLAPACK@{USE\_CXXLAPACK}}
+\index{USE\_CXXLAPACK@{USE\_CXXLAPACK}!mklblas.h@{mklblas.h}}
+\doxysubsubsection{\texorpdfstring{USE\_CXXLAPACK}{USE\_CXXLAPACK}}
+{\footnotesize\ttfamily \#define USE\+\_\+\+CXXLAPACK~1}
+
+
+
+Definition at line \mbox{\hyperlink{mklblas_8h_source_l00056}{56}} of file \mbox{\hyperlink{mklblas_8h_source}{mklblas.\+h}}.
+
+\mbox{\Hypertarget{mklblas_8h_a01dd3e374df805644babdab2465b7f39}\label{mklblas_8h_a01dd3e374df805644babdab2465b7f39}} 
+\index{mklblas.h@{mklblas.h}!WITH\_MKLDSS@{WITH\_MKLDSS}}
+\index{WITH\_MKLDSS@{WITH\_MKLDSS}!mklblas.h@{mklblas.h}}
+\doxysubsubsection{\texorpdfstring{WITH\_MKLDSS}{WITH\_MKLDSS}}
+{\footnotesize\ttfamily \#define WITH\+\_\+\+MKLDSS~1}
+
+
+
+Definition at line \mbox{\hyperlink{mklblas_8h_source_l00038}{38}} of file \mbox{\hyperlink{mklblas_8h_source}{mklblas.\+h}}.
+

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="namespacehelper__image__internal" kind="namespace" language="C++">
+    <compoundname>helper_image_internal</compoundname>
+    <innerclass refid="structhelper__image__internal_1_1_converter_from_u_byte" prot="public">helper_image_internal::ConverterFromUByte</innerclass>
+    <innerclass refid="structhelper__image__internal_1_1_converter_from_u_byte_3_01float_01_4" prot="public">helper_image_internal::ConverterFromUByte&lt; float &gt;</innerclass>
+    <innerclass refid="structhelper__image__internal_1_1_converter_from_u_byte_3_01unsigned_01char_01_4" prot="public">helper_image_internal::ConverterFromUByte&lt; unsigned char &gt;</innerclass>
+    <innerclass refid="structhelper__image__internal_1_1_converter_to_u_byte" prot="public">helper_image_internal::ConverterToUByte</innerclass>
+    <innerclass refid="structhelper__image__internal_1_1_converter_to_u_byte_3_01float_01_4" prot="public">helper_image_internal::ConverterToUByte&lt; float &gt;</innerclass>
+    <innerclass refid="structhelper__image__internal_1_1_converter_to_u_byte_3_01unsigned_01char_01_4" prot="public">helper_image_internal::ConverterToUByte&lt; unsigned char &gt;</innerclass>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacehelper__image__internal_1ac91339a55ca3c89b8355df2abf470cd2" prot="public" static="no" mutable="no">
+        <type>const unsigned int</type>
+        <definition>const unsigned int helper_image_internal::PGMHeaderSize</definition>
+        <argsstring></argsstring>
+        <name>PGMHeaderSize</name>
+        <qualifiedname>helper_image_internal::PGMHeaderSize</qualifiedname>
+        <initializer>= 0x40</initializer>
+        <briefdescription>
+<para>size of PGM file header </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_image.h" line="58" column="20" bodyfile="librapid/include/librapid/cuda/helper_image.h" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/cuda/helper_image.h" line="56" column="1"/>
+  </compounddef>
+</doxygen>

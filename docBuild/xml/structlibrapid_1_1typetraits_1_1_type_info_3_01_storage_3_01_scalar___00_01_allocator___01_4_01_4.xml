@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="structlibrapid_1_1typetraits_1_1_type_info_3_01_storage_3_01_scalar___00_01_allocator___01_4_01_4" kind="struct" language="C++" prot="public">
+    <compoundname>librapid::typetraits::TypeInfo&lt; Storage&lt; Scalar_, Allocator_ &gt; &gt;</compoundname>
+    <includes refid="storage_8hpp" local="no">storage.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>typename Scalar_</type>
+      </param>
+      <param>
+        <type>typename Allocator_</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structlibrapid_1_1typetraits_1_1_type_info_3_01_storage_3_01_scalar___00_01_allocator___01_4_01_4_1ae0206bc9f8acf8b55cf485e6a47d7e7a" prot="public" static="no">
+        <type>Scalar_</type>
+        <definition>using librapid::typetraits::TypeInfo&lt; Storage&lt; Scalar_, Allocator_ &gt; &gt;::Scalar =  Scalar_</definition>
+        <argsstring></argsstring>
+        <name>Scalar</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt; Storage&lt; Scalar_, Allocator_ &gt; &gt;::Scalar</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/storage.hpp" line="14" column="1" bodyfile="librapid/include/librapid/array/storage.hpp" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_01_storage_3_01_scalar___00_01_allocator___01_4_01_4_1a74b040eb86889fa3420e990282a9a466" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr bool</type>
+        <definition>constexpr bool librapid::typetraits::TypeInfo&lt; Storage&lt; Scalar_, Allocator_ &gt; &gt;::isLibRapidType</definition>
+        <argsstring></argsstring>
+        <name>isLibRapidType</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt; Storage&lt; Scalar_, Allocator_ &gt; &gt;::isLibRapidType</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/storage.hpp" line="13" column="23" bodyfile="librapid/include/librapid/array/storage.hpp" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/array/storage.hpp" line="12" column="1" bodyfile="librapid/include/librapid/array/storage.hpp" bodystart="12" bodyend="15"/>
+    <listofallmembers>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_01_storage_3_01_scalar___00_01_allocator___01_4_01_4_1a74b040eb86889fa3420e990282a9a466" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt; Storage&lt; Scalar_, Allocator_ &gt; &gt;</scope><name>isLibRapidType</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_01_storage_3_01_scalar___00_01_allocator___01_4_01_4_1ae0206bc9f8acf8b55cf485e6a47d7e7a" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt; Storage&lt; Scalar_, Allocator_ &gt; &gt;</scope><name>Scalar</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

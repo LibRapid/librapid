@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="class_exception" kind="class" language="C++" prot="public">
+    <compoundname>Exception</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">Std_Exception</basecompoundref>
+    <includes refid="exception_8h" local="no">exception.h</includes>
+    <templateparamlist>
+      <param>
+        <type>class Std_Exception</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_exception_1ac0904205ad66f00c7287a3cbf3d17838" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Exception&lt; Std_Exception &gt;::throw_it</definition>
+        <argsstring>(const char *file, const int line, const char *detailed=&quot;-&quot;)</argsstring>
+        <name>throw_it</name>
+        <qualifiedname>Exception::throw_it</qualifiedname>
+        <param>
+          <type>const char *</type>
+          <declname>file</declname>
+        </param>
+        <param>
+          <type>const int</type>
+          <declname>line</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>detailed</declname>
+          <defval>&quot;-&quot;</defval>
+        </param>
+        <briefdescription>
+<para>Static construction interface. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Implementation.</para>
+<para><simplesect kind="return"><para>Alwayss throws ( Located_Exception&lt;Exception&gt;) </para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>file</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>file in which the <ref refid="class_exception" kindref="compound">Exception</ref> occurs </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>line</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>line in which the <ref refid="class_exception" kindref="compound">Exception</ref> occurs </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>detailed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>details on the code fragment causing the <ref refid="class_exception" kindref="compound">Exception</ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+Static construction interface. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername><ref refid="class_exception" kindref="compound">Exception</ref></parametername>
+</parameternamelist>
+<parameterdescription>
+<para>causing code fragment (file and line) and detailed infos. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/exception.h" line="49" column="13" bodyfile="librapid/include/librapid/cuda/exception.h" bodystart="103" bodyend="112"/>
+      </memberdef>
+      <memberdef kind="function" id="class_exception_1a9e38551a20583643b1d2efe535577e08" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Exception&lt; Std_Exception &gt;::throw_it</definition>
+        <argsstring>(const char *file, const int line, const std::string &amp;detailed)</argsstring>
+        <name>throw_it</name>
+        <qualifiedname>Exception::throw_it</qualifiedname>
+        <param>
+          <type>const char *</type>
+          <declname>file</declname>
+        </param>
+        <param>
+          <type>const int</type>
+          <declname>line</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>detailed</declname>
+          <defname>msg</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Static construction interface <simplesect kind="return"><para>Alwayss throws ( Located_Exception&lt;Exception&gt;) </para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>file</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>file in which the <ref refid="class_exception" kindref="compound">Exception</ref> occurs </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>line</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>line in which the <ref refid="class_exception" kindref="compound">Exception</ref> occurs </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>detailed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>details on the code fragment causing the <ref refid="class_exception" kindref="compound">Exception</ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+Static construction interface. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername><ref refid="class_exception" kindref="compound">Exception</ref></parametername>
+</parameternamelist>
+<parameterdescription>
+<para>causing code fragment (file and line) and detailed infos. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/exception.h" line="56" column="13" bodyfile="librapid/include/librapid/cuda/exception.h" bodystart="119" bodyend="121"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_exception_1ac4bfac227d7e53fa707b91a88159d3a8" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type></type>
+        <definition>Exception&lt; Std_Exception &gt;::~Exception</definition>
+        <argsstring>()</argsstring>
+        <name>~Exception</name>
+        <qualifiedname>Exception::~Exception</qualifiedname>
+        <exceptions> throw ()</exceptions>
+        <briefdescription>
+<para>Destructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/exception.h" line="59" column="9" bodyfile="librapid/include/librapid/cuda/exception.h" bodystart="140" bodyend="140"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_exception_1ad7f0e1e6cdc0021d666af088b35e017d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Exception&lt; Std_Exception &gt;::Exception</definition>
+        <argsstring>()</argsstring>
+        <name>Exception</name>
+        <qualifiedname>Exception::Exception</qualifiedname>
+        <briefdescription>
+<para>Constructor, default (private) </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Constructor, default (private). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/exception.h" line="63" column="1" bodyfile="librapid/include/librapid/cuda/exception.h" bodystart="127" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="function" id="class_exception_1afc2589c568718ba90fbf8daa0e2fc758" prot="private" static="no" const="no" explicit="yes" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Exception&lt; Std_Exception &gt;::Exception</definition>
+        <argsstring>(const std::string &amp;str)</argsstring>
+        <name>Exception</name>
+        <qualifiedname>Exception::Exception</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>str</declname>
+          <defname>s</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constructor, standard <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>str</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>string returned by what()</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+Constructor, standard (private). String returned by what(). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/exception.h" line="67" column="10" bodyfile="librapid/include/librapid/cuda/exception.h" bodystart="134" bodyend="134"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><ref refid="class_exception" kindref="compound">Exception</ref> wrapper. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Std_Exception</parametername>
+</parameternamelist>
+<parameterdescription>
+<para><ref refid="class_exception" kindref="compound">Exception</ref> out of namespace std for easy typing. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>Exception&lt; Std_Exception &gt;</label>
+        <link refid="class_exception"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Std_Exception</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>Exception&lt; Std_Exception &gt;</label>
+        <link refid="class_exception"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Std_Exception</label>
+      </node>
+    </collaborationgraph>
+    <location file="librapid/include/librapid/cuda/exception.h" line="42" column="1" bodyfile="librapid/include/librapid/cuda/exception.h" bodystart="42" bodyend="68"/>
+    <listofallmembers>
+      <member refid="class_exception_1ad7f0e1e6cdc0021d666af088b35e017d" prot="private" virt="non-virtual"><scope>Exception</scope><name>Exception</name></member>
+      <member refid="class_exception_1afc2589c568718ba90fbf8daa0e2fc758" prot="private" virt="non-virtual"><scope>Exception</scope><name>Exception</name></member>
+      <member refid="class_exception_1ac0904205ad66f00c7287a3cbf3d17838" prot="public" virt="non-virtual"><scope>Exception</scope><name>throw_it</name></member>
+      <member refid="class_exception_1a9e38551a20583643b1d2efe535577e08" prot="public" virt="non-virtual"><scope>Exception</scope><name>throw_it</name></member>
+      <member refid="class_exception_1ac4bfac227d7e53fa707b91a88159d3a8" prot="public" virt="virtual"><scope>Exception</scope><name>~Exception</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

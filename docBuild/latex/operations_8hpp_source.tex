@@ -1,0 +1,89 @@
+\hypertarget{operations_8hpp_source}{}\doxysection{operations.\+hpp}
+\label{operations_8hpp_source}\index{librapid/include/librapid/array/operations.hpp@{librapid/include/librapid/array/operations.hpp}}
+\mbox{\hyperlink{operations_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00001}00001 \textcolor{preprocessor}{\#ifndef LIBRAPID\_ARRAY\_OPERATIONS\_HPP}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00002}00002 \textcolor{preprocessor}{\#define LIBRAPID\_ARRAY\_OPERATIONS\_HPP}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00003}00003 }
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00004}\mbox{\hyperlink{operations_8hpp_a1c6b68febd855088c5830f136343d1d2}{00004}} \textcolor{preprocessor}{\#define LIBRAPID\_BINARY\_FUNCTOR(NAME\_, OP\_)                                                        \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00005}00005 \textcolor{preprocessor}{    struct NAME\_ \{                                                                                 \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00006}00006 \textcolor{preprocessor}{        template<typename T, typename V>                                                           \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00007}00007 \textcolor{preprocessor}{        LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE auto operator()(const T \&lhs,                    \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00008}00008 \textcolor{preprocessor}{                                                                  const V \&rhs) const \{            \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00009}00009 \textcolor{preprocessor}{            return lhs OP\_ rhs;                                                                    \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00010}00010 \textcolor{preprocessor}{        \}                                                                                          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00011}00011 \textcolor{preprocessor}{                                                                                                   \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00012}00012 \textcolor{preprocessor}{        template<typename Packet>                                                                  \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00013}00013 \textcolor{preprocessor}{        LIBRAPID\_NODISCARD LIBRAPID\_ALWAYS\_INLINE auto packet(const Packet \&lhs,                   \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00014}00014 \textcolor{preprocessor}{                                                              const Packet \&rhs) const \{           \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00015}00015 \textcolor{preprocessor}{            return lhs OP\_ rhs;                                                                    \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00016}00016 \textcolor{preprocessor}{        \}                                                                                          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00017}00017 \textcolor{preprocessor}{    \}}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00018}00018 }
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00019}00019 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespacelibrapid}{librapid}} \{}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00020}00020     \textcolor{keyword}{namespace }detail \{}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00021}00021         \textcolor{keyword}{template}<\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3}{Descriptor}} desc, \textcolor{keyword}{typename} Functor, \textcolor{keyword}{typename}... Args>}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00022}\mbox{\hyperlink{namespacelibrapid_1_1detail_ad2e404dc0a775162d44e686c3fad8470}{00022}}         \textcolor{keyword}{auto} \mbox{\hyperlink{namespacelibrapid_1_1detail_ad2e404dc0a775162d44e686c3fad8470}{makeFunction}}(Args \&\&...args) \{}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00023}00023             \textcolor{keyword}{using} OperationType = \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{Function}}<desc, Functor, Args...>;}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00024}00024             \textcolor{keywordflow}{return} OperationType(Functor(), std::forward<Args>(args)...);}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00025}00025         \}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00026}00026 }
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00027}\mbox{\hyperlink{structlibrapid_1_1detail_1_1_plus_a19996b7efdd8059b23cdb86798233436}{00027}}         \mbox{\hyperlink{operations_8hpp_a1c6b68febd855088c5830f136343d1d2}{LIBRAPID\_BINARY\_FUNCTOR}}(\mbox{\hyperlink{structlibrapid_1_1detail_1_1_plus}{Plus}}, +);      \textcolor{comment}{// a + b}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00028}\mbox{\hyperlink{structlibrapid_1_1detail_1_1_minus_a82e62479d57f590bbb01ee40538e4d96}{00028}}         \mbox{\hyperlink{operations_8hpp_a1c6b68febd855088c5830f136343d1d2}{LIBRAPID\_BINARY\_FUNCTOR}}(\mbox{\hyperlink{structlibrapid_1_1detail_1_1_minus}{Minus}}, -\/);    \textcolor{comment}{// a -\/ b}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00029}\mbox{\hyperlink{structlibrapid_1_1detail_1_1_multiply_a7d67897050473cce6c3fdedbdc6e4dc1}{00029}}         \mbox{\hyperlink{operations_8hpp_a1c6b68febd855088c5830f136343d1d2}{LIBRAPID\_BINARY\_FUNCTOR}}(\mbox{\hyperlink{structlibrapid_1_1detail_1_1_multiply}{Multiply}}, *); \textcolor{comment}{// a * b}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00030}\mbox{\hyperlink{structlibrapid_1_1detail_1_1_divide_a72f72075f9c0df795ff584efd133d3d8}{00030}}         \mbox{\hyperlink{operations_8hpp_a1c6b68febd855088c5830f136343d1d2}{LIBRAPID\_BINARY\_FUNCTOR}}(\mbox{\hyperlink{structlibrapid_1_1detail_1_1_divide}{Divide}}, /);      \textcolor{comment}{// a / b}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00031}00031 }
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00032}00032     \} \textcolor{comment}{// namespace detail}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00033}00033 }
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00044}00044     \textcolor{keyword}{template}<\textcolor{keyword}{class} LHS, \textcolor{keyword}{class} RHS>}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00045}\mbox{\hyperlink{namespacelibrapid_ace1856766f37ba615f6a0591b11efce0}{00045}}     \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} \textcolor{keyword}{auto} \mbox{\hyperlink{namespacelibrapid_ace1856766f37ba615f6a0591b11efce0}{operator+}}(LHS \&\&lhs,}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00046}00046                                                              RHS \&\&rhs) \mbox{\hyperlink{config_8hpp_aaa2763e652006648e9ae602dc1c56414}{LIBRAPID\_RELEASE\_NOEXCEPT}}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00047}00047       -\/>detail::Function<\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3a6d2adfdfd6f2a24cc46e5fdbb5679135}{detail::Descriptor::Trivial}}, \mbox{\hyperlink{structlibrapid_1_1detail_1_1_plus}{detail::Plus}}, LHS, RHS> \{}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00048}00048         \textcolor{keyword}{static\_assert}(typetraits::IsSame<typename typetraits::TypeInfo<std::decay\_t<LHS>>::Scalar,}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00049}00049                                          \textcolor{keyword}{typename} \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{typetraits::TypeInfo<std::decay\_t<RHS>}}>::Scalar>,}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00050}00050                       \textcolor{stringliteral}{"{}Operands must have the same data type"{}});}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00051}00051         \mbox{\hyperlink{generic_config_8hpp_a69e316f2ab927d2834e632a12968e268}{LIBRAPID\_ASSERT}}(lhs.shape() == rhs.shape(), \textcolor{stringliteral}{"{}Shapes must be equal"{}});}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00052}00052         \textcolor{keywordflow}{return} detail::makeFunction<detail::Descriptor::Trivial, detail::Plus>(}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00053}00053           std::forward<LHS>(lhs), std::forward<RHS>(rhs));}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00054}00054     \}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00055}00055 }
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00066}00066     \textcolor{keyword}{template}<\textcolor{keyword}{class} LHS, \textcolor{keyword}{class} RHS>}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00067}\mbox{\hyperlink{namespacelibrapid_a9276a515a5140503a5db45e01a2f2302}{00067}}     \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} \textcolor{keyword}{auto} \mbox{\hyperlink{namespacelibrapid_a9276a515a5140503a5db45e01a2f2302}{operator-\/}}(LHS \&\&lhs,}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00068}00068                                                              RHS \&\&rhs) \mbox{\hyperlink{config_8hpp_aaa2763e652006648e9ae602dc1c56414}{LIBRAPID\_RELEASE\_NOEXCEPT}}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00069}00069       -\/>detail::Function<\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3a6d2adfdfd6f2a24cc46e5fdbb5679135}{detail::Descriptor::Trivial}}, \mbox{\hyperlink{structlibrapid_1_1detail_1_1_minus}{detail::Minus}}, LHS, RHS> \{}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00070}00070         \textcolor{keyword}{static\_assert}(typetraits::IsSame<typename typetraits::TypeInfo<std::decay\_t<LHS>>::Scalar,}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00071}00071                                          \textcolor{keyword}{typename} \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{typetraits::TypeInfo<std::decay\_t<RHS>}}>::Scalar>,}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00072}00072                       \textcolor{stringliteral}{"{}Operands must have the same data type"{}});}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00073}00073         \mbox{\hyperlink{generic_config_8hpp_a69e316f2ab927d2834e632a12968e268}{LIBRAPID\_ASSERT}}(lhs.shape() == rhs.shape(), \textcolor{stringliteral}{"{}Shapes must be equal"{}});}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00074}00074         \textcolor{keywordflow}{return} detail::makeFunction<detail::Descriptor::Trivial, detail::Minus>(}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00075}00075           std::forward<LHS>(lhs), std::forward<RHS>(rhs));}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00076}00076     \}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00077}00077 }
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00088}00088     \textcolor{keyword}{template}<\textcolor{keyword}{class} LHS, \textcolor{keyword}{class} RHS>}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00089}\mbox{\hyperlink{namespacelibrapid_a70f519a4a3c27718d1ec40b98a87c441}{00089}}     \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} \textcolor{keyword}{auto} \mbox{\hyperlink{namespacelibrapid_a70f519a4a3c27718d1ec40b98a87c441}{operator*}}(LHS \&\&lhs,}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00090}00090                                                              RHS \&\&rhs) \mbox{\hyperlink{config_8hpp_aaa2763e652006648e9ae602dc1c56414}{LIBRAPID\_RELEASE\_NOEXCEPT}}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00091}00091       -\/>detail::Function<\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3a6d2adfdfd6f2a24cc46e5fdbb5679135}{detail::Descriptor::Trivial}}, \mbox{\hyperlink{structlibrapid_1_1detail_1_1_multiply}{detail::Multiply}}, LHS, RHS> \{}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00092}00092         \textcolor{keyword}{static\_assert}(typetraits::IsSame<typename typetraits::TypeInfo<std::decay\_t<LHS>>::Scalar,}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00093}00093                                          \textcolor{keyword}{typename} \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{typetraits::TypeInfo<std::decay\_t<RHS>}}>::Scalar>,}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00094}00094                       \textcolor{stringliteral}{"{}Operands must have the same data type"{}});}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00095}00095         \mbox{\hyperlink{generic_config_8hpp_a69e316f2ab927d2834e632a12968e268}{LIBRAPID\_ASSERT}}(lhs.shape() == rhs.shape(), \textcolor{stringliteral}{"{}Shapes must be equal"{}});}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00096}00096         \textcolor{keywordflow}{return} detail::makeFunction<detail::Descriptor::Trivial, detail::Multiply>(}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00097}00097           std::forward<LHS>(lhs), std::forward<RHS>(rhs));}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00098}00098     \}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00099}00099 }
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00110}00110     \textcolor{keyword}{template}<\textcolor{keyword}{class} LHS, \textcolor{keyword}{class} RHS>}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00111}\mbox{\hyperlink{namespacelibrapid_a5655d3d2d13515f121f88d0a7b5b4b0c}{00111}}     \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} \textcolor{keyword}{auto} \mbox{\hyperlink{namespacelibrapid_a5655d3d2d13515f121f88d0a7b5b4b0c}{operator/}}(LHS \&\&lhs,}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00112}00112                                                              RHS \&\&rhs) \mbox{\hyperlink{config_8hpp_aaa2763e652006648e9ae602dc1c56414}{LIBRAPID\_RELEASE\_NOEXCEPT}}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00113}00113       -\/>detail::Function<\mbox{\hyperlink{namespacelibrapid_1_1detail_acac64eb9d77033562afff081348c9ad3a6d2adfdfd6f2a24cc46e5fdbb5679135}{detail::Descriptor::Trivial}}, \mbox{\hyperlink{structlibrapid_1_1detail_1_1_divide}{detail::Divide}}, LHS, RHS> \{}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00114}00114         \textcolor{keyword}{static\_assert}(typetraits::IsSame<typename typetraits::TypeInfo<std::decay\_t<LHS>>::Scalar,}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00115}00115                                          \textcolor{keyword}{typename} \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{typetraits::TypeInfo<std::decay\_t<RHS>}}>::Scalar>,}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00116}00116                       \textcolor{stringliteral}{"{}Operands must have the same data type"{}});}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00117}00117         \mbox{\hyperlink{generic_config_8hpp_a69e316f2ab927d2834e632a12968e268}{LIBRAPID\_ASSERT}}(lhs.shape() == rhs.shape(), \textcolor{stringliteral}{"{}Shapes must be equal"{}});}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00118}00118         \textcolor{keywordflow}{return} detail::makeFunction<detail::Descriptor::Trivial, detail::Divide>(}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00119}00119           std::forward<LHS>(lhs), std::forward<RHS>(rhs));}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00120}00120     \}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00121}00121 \} \textcolor{comment}{// namespace librapid}}
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00122}00122 }
+\DoxyCodeLine{\Hypertarget{operations_8hpp_source_l00123}00123 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_ARRAY\_OPERATIONS\_HPP}}
+
+\end{DoxyCode}

@@ -1,0 +1,58 @@
+\hypertarget{complextrait_8h_source}{}\doxysection{complextrait.\+h}
+\label{complextrait_8h_source}\index{librapid/cxxblas/auxiliary/complextrait.h@{librapid/cxxblas/auxiliary/complextrait.h}}
+\mbox{\hyperlink{complextrait_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00001}00001 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00002}00002 \textcolor{comment}{ *   Copyright (c) 2012, Michael Lehn}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00003}00003 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00004}00004 \textcolor{comment}{ *   All rights reserved.}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00005}00005 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00006}00006 \textcolor{comment}{ *   Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00007}00007 \textcolor{comment}{ *   modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00008}00008 \textcolor{comment}{ *   are met:}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00009}00009 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00010}00010 \textcolor{comment}{ *   1) Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00011}00011 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00012}00012 \textcolor{comment}{ *   2) Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00013}00013 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer in}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00014}00014 \textcolor{comment}{ *      the documentation and/or other materials provided with the}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00015}00015 \textcolor{comment}{ *      distribution.}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00016}00016 \textcolor{comment}{ *   3) Neither the name of the FLENS development group nor the names of}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00017}00017 \textcolor{comment}{ *      its contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00018}00018 \textcolor{comment}{ *      from this software without specific prior written permission.}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00019}00019 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00020}00020 \textcolor{comment}{ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00021}00021 \textcolor{comment}{ *   "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00022}00022 \textcolor{comment}{ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00023}00023 \textcolor{comment}{ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00024}00024 \textcolor{comment}{ *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00025}00025 \textcolor{comment}{ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00026}00026 \textcolor{comment}{ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00027}00027 \textcolor{comment}{ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00028}00028 \textcolor{comment}{ *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00029}00029 \textcolor{comment}{ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00030}00030 \textcolor{comment}{ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00031}00031 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00033}00033 \textcolor{preprocessor}{\#ifndef CXXBLAS\_AUXILIARY\_COMPLEXTRAIT\_H}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00034}00034 \textcolor{preprocessor}{\#define CXXBLAS\_AUXILIARY\_COMPLEXTRAIT\_H 1}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00036}00036 \textcolor{preprocessor}{\#include <complex>}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00037}00037 }
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00038}00038 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespacecxxblas}{cxxblas}} \{}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00039}00039 }
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00040}00040     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00041}\mbox{\hyperlink{structcxxblas_1_1_complex_trait}{00041}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_complex_trait}{ComplexTrait}} \{}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00042}\mbox{\hyperlink{structcxxblas_1_1_complex_trait_a6b4ed210bf7bc646ddbab7993b395532}{00042}}         \textcolor{keyword}{typedef} T \mbox{\hyperlink{structcxxblas_1_1_complex_trait_a6b4ed210bf7bc646ddbab7993b395532}{PrimitiveType}};}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00043}00043     \};}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00044}00044 }
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00045}00045     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00046}\mbox{\hyperlink{structcxxblas_1_1_complex_trait_3_01std_1_1complex_3_01_t_01_4_01_4}{00046}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_complex_trait}{ComplexTrait}}<std::complex<T>> \{}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00047}\mbox{\hyperlink{structcxxblas_1_1_complex_trait_3_01std_1_1complex_3_01_t_01_4_01_4_aee6ff7f45ced3276f0f596c8913cd61c}{00047}}         \textcolor{keyword}{typedef} T \mbox{\hyperlink{structcxxblas_1_1_complex_trait_3_01std_1_1complex_3_01_t_01_4_01_4_aee6ff7f45ced3276f0f596c8913cd61c}{PrimitiveType}};}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00048}00048     \};}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00049}00049 }
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00050}00050 \} \textcolor{comment}{// namespace cxxblas}}
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00051}00051 }
+\DoxyCodeLine{\Hypertarget{complextrait_8h_source_l00052}00052 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CXXBLAS\_AUXILIARY\_COMPLEXTRAIT\_H}}
+
+\end{DoxyCode}

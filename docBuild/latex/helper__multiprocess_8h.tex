@@ -1,0 +1,176 @@
+\hypertarget{helper__multiprocess_8h}{}\doxysection{librapid/include/librapid/cuda/helper\+\_\+multiprocess.h File Reference}
+\label{helper__multiprocess_8h}\index{librapid/include/librapid/cuda/helper\_multiprocess.h@{librapid/include/librapid/cuda/helper\_multiprocess.h}}
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$memory.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$sys/mman.\+h$>$}\newline
+{\ttfamily \#include $<$sys/socket.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$sys/un.\+h$>$}\newline
+{\ttfamily \#include $<$sys/wait.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structshared_memory_info__st}{shared\+Memory\+Info\+\_\+st}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{helper__multiprocess_8h_a963c63f1d4be099ba2afec1e8d4af4b9}{check\+Ipc\+Errors}}(ipc\+Func\+Result)
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structshared_memory_info__st}{shared\+Memory\+Info\+\_\+st}} \mbox{\hyperlink{helper__multiprocess_8h_add8daa71fee7607cb8c939a2928467db}{shared\+Memory\+Info}}
+\item 
+typedef pid\+\_\+t \mbox{\hyperlink{helper__multiprocess_8h_a87c9efdf573e374c279d7d3dca3a6c6b}{Process}}
+\item 
+typedef struct ipc\+Handle\+\_\+st \mbox{\hyperlink{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}{ipc\+Handle}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{helper__multiprocess_8h_a503ee2388b065930081b941be9082916}{shared\+Memory\+Create}} (const char $\ast$name, size\+\_\+t sz, \mbox{\hyperlink{helper__multiprocess_8h_add8daa71fee7607cb8c939a2928467db}{shared\+Memory\+Info}} $\ast$info)
+\item 
+int \mbox{\hyperlink{helper__multiprocess_8h_aacbe70b5cdfc5bb8a0ab1f1062e83bab}{shared\+Memory\+Open}} (const char $\ast$name, size\+\_\+t sz, \mbox{\hyperlink{helper__multiprocess_8h_add8daa71fee7607cb8c939a2928467db}{shared\+Memory\+Info}} $\ast$info)
+\item 
+void \mbox{\hyperlink{helper__multiprocess_8h_a560676a6060a32d64d2db2e8b5b6559a}{shared\+Memory\+Close}} (\mbox{\hyperlink{helper__multiprocess_8h_add8daa71fee7607cb8c939a2928467db}{shared\+Memory\+Info}} $\ast$info)
+\item 
+int \mbox{\hyperlink{helper__multiprocess_8h_a594c7d8f3a6d09ddf53617fae9df2c5b}{spawn\+Process}} (\mbox{\hyperlink{helper__multiprocess_8h_a87c9efdf573e374c279d7d3dca3a6c6b}{Process}} $\ast$process, const char $\ast$app, char $\ast$const $\ast$args)
+\item 
+int \mbox{\hyperlink{helper__multiprocess_8h_a75cf5647404c986eaeadf65109fffd33}{wait\+Process}} (\mbox{\hyperlink{helper__multiprocess_8h_a87c9efdf573e374c279d7d3dca3a6c6b}{Process}} $\ast$process)
+\item 
+int \mbox{\hyperlink{helper__multiprocess_8h_af2042d7235b516ac4ea894d65a6260ea}{ipc\+Create\+Socket}} (\mbox{\hyperlink{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}{ipc\+Handle}} $\ast$\&handle, const char $\ast$name, const std\+::vector$<$ \mbox{\hyperlink{helper__multiprocess_8h_a87c9efdf573e374c279d7d3dca3a6c6b}{Process}} $>$ \&processes)
+\item 
+int \mbox{\hyperlink{helper__multiprocess_8h_a85f7c32285488f12ca8b1e0faa0527e8}{ipc\+Open\+Socket}} (\mbox{\hyperlink{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}{ipc\+Handle}} $\ast$\&handle)
+\item 
+int \mbox{\hyperlink{helper__multiprocess_8h_a3afc6ff6d726527d0b88b12766be6c2d}{ipc\+Close\+Socket}} (\mbox{\hyperlink{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}{ipc\+Handle}} $\ast$handle)
+\item 
+int \mbox{\hyperlink{helper__multiprocess_8h_a41ef9ea693af23bbcd4b4be37b98e3c4}{ipc\+Recv\+Shareable\+Handles}} (\mbox{\hyperlink{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}{ipc\+Handle}} $\ast$handle, std\+::vector$<$ Shareable\+Handle $>$ \&shareable\+Handles)
+\item 
+int \mbox{\hyperlink{helper__multiprocess_8h_a5db6d3174573b7fe49215c2f419b359b}{ipc\+Send\+Shareable\+Handles}} (\mbox{\hyperlink{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}{ipc\+Handle}} $\ast$handle, const std\+::vector$<$ Shareable\+Handle $>$ \&shareable\+Handles, const std\+::vector$<$ \mbox{\hyperlink{helper__multiprocess_8h_a87c9efdf573e374c279d7d3dca3a6c6b}{Process}} $>$ \&processes)
+\item 
+int \mbox{\hyperlink{helper__multiprocess_8h_a4df371b40842bf0eb1684c4b0770387b}{ipc\+Close\+Shareable\+Handle}} (Shareable\+Handle sh\+Handle)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{helper__multiprocess_8h_a963c63f1d4be099ba2afec1e8d4af4b9}\label{helper__multiprocess_8h_a963c63f1d4be099ba2afec1e8d4af4b9}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!checkIpcErrors@{checkIpcErrors}}
+\index{checkIpcErrors@{checkIpcErrors}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{checkIpcErrors}{checkIpcErrors}}
+{\footnotesize\ttfamily \#define check\+Ipc\+Errors(\begin{DoxyParamCaption}\item[{}]{ipc\+Func\+Result }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \textcolor{keywordflow}{if} (ipcFuncResult == -\/1) \{                                                                     \(\backslash\)}
+\DoxyCodeLine{        fprintf(stderr, \textcolor{stringliteral}{"{}Failure at \%u \%s\(\backslash\)n"{}}, \_\_LINE\_\_, \_\_FILE\_\_);                                 \(\backslash\)}
+\DoxyCodeLine{        exit(EXIT\_FAILURE);                                                                        \(\backslash\)}
+\DoxyCodeLine{    \}}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{helper__multiprocess_8h_source_l00088}{88}} of file \mbox{\hyperlink{helper__multiprocess_8h_source}{helper\+\_\+multiprocess.\+h}}.
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}\label{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!ipcHandle@{ipcHandle}}
+\index{ipcHandle@{ipcHandle}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{ipcHandle}{ipcHandle}}
+{\footnotesize\ttfamily typedef struct ipc\+Handle\+\_\+st \mbox{\hyperlink{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}{ipc\+Handle}}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__multiprocess_8h_source_l00110}{110}} of file \mbox{\hyperlink{helper__multiprocess_8h_source}{helper\+\_\+multiprocess.\+h}}.
+
+\mbox{\Hypertarget{helper__multiprocess_8h_a87c9efdf573e374c279d7d3dca3a6c6b}\label{helper__multiprocess_8h_a87c9efdf573e374c279d7d3dca3a6c6b}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!Process@{Process}}
+\index{Process@{Process}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{Process}{Process}}
+{\footnotesize\ttfamily typedef pid\+\_\+t \mbox{\hyperlink{helper__multiprocess_8h_a87c9efdf573e374c279d7d3dca3a6c6b}{Process}}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__multiprocess_8h_source_l00081}{81}} of file \mbox{\hyperlink{helper__multiprocess_8h_source}{helper\+\_\+multiprocess.\+h}}.
+
+\mbox{\Hypertarget{helper__multiprocess_8h_add8daa71fee7607cb8c939a2928467db}\label{helper__multiprocess_8h_add8daa71fee7607cb8c939a2928467db}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!sharedMemoryInfo@{sharedMemoryInfo}}
+\index{sharedMemoryInfo@{sharedMemoryInfo}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{sharedMemoryInfo}{sharedMemoryInfo}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structshared_memory_info__st}{shared\+Memory\+Info\+\_\+st}} \mbox{\hyperlink{helper__multiprocess_8h_add8daa71fee7607cb8c939a2928467db}{shared\+Memory\+Info}}}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{helper__multiprocess_8h_a4df371b40842bf0eb1684c4b0770387b}\label{helper__multiprocess_8h_a4df371b40842bf0eb1684c4b0770387b}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!ipcCloseShareableHandle@{ipcCloseShareableHandle}}
+\index{ipcCloseShareableHandle@{ipcCloseShareableHandle}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{ipcCloseShareableHandle()}{ipcCloseShareableHandle()}}
+{\footnotesize\ttfamily int ipc\+Close\+Shareable\+Handle (\begin{DoxyParamCaption}\item[{Shareable\+Handle}]{sh\+Handle }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{helper__multiprocess_8h_a3afc6ff6d726527d0b88b12766be6c2d}\label{helper__multiprocess_8h_a3afc6ff6d726527d0b88b12766be6c2d}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!ipcCloseSocket@{ipcCloseSocket}}
+\index{ipcCloseSocket@{ipcCloseSocket}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{ipcCloseSocket()}{ipcCloseSocket()}}
+{\footnotesize\ttfamily int ipc\+Close\+Socket (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}{ipc\+Handle}} $\ast$}]{handle }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{helper__multiprocess_8h_af2042d7235b516ac4ea894d65a6260ea}\label{helper__multiprocess_8h_af2042d7235b516ac4ea894d65a6260ea}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!ipcCreateSocket@{ipcCreateSocket}}
+\index{ipcCreateSocket@{ipcCreateSocket}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{ipcCreateSocket()}{ipcCreateSocket()}}
+{\footnotesize\ttfamily int ipc\+Create\+Socket (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}{ipc\+Handle}} $\ast$\&}]{handle,  }\item[{const char $\ast$}]{name,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{helper__multiprocess_8h_a87c9efdf573e374c279d7d3dca3a6c6b}{Process}} $>$ \&}]{processes }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{helper__multiprocess_8h_a85f7c32285488f12ca8b1e0faa0527e8}\label{helper__multiprocess_8h_a85f7c32285488f12ca8b1e0faa0527e8}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!ipcOpenSocket@{ipcOpenSocket}}
+\index{ipcOpenSocket@{ipcOpenSocket}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{ipcOpenSocket()}{ipcOpenSocket()}}
+{\footnotesize\ttfamily int ipc\+Open\+Socket (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}{ipc\+Handle}} $\ast$\&}]{handle }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{helper__multiprocess_8h_a41ef9ea693af23bbcd4b4be37b98e3c4}\label{helper__multiprocess_8h_a41ef9ea693af23bbcd4b4be37b98e3c4}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!ipcRecvShareableHandles@{ipcRecvShareableHandles}}
+\index{ipcRecvShareableHandles@{ipcRecvShareableHandles}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{ipcRecvShareableHandles()}{ipcRecvShareableHandles()}}
+{\footnotesize\ttfamily int ipc\+Recv\+Shareable\+Handles (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}{ipc\+Handle}} $\ast$}]{handle,  }\item[{std\+::vector$<$ Shareable\+Handle $>$ \&}]{shareable\+Handles }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{helper__multiprocess_8h_a5db6d3174573b7fe49215c2f419b359b}\label{helper__multiprocess_8h_a5db6d3174573b7fe49215c2f419b359b}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!ipcSendShareableHandles@{ipcSendShareableHandles}}
+\index{ipcSendShareableHandles@{ipcSendShareableHandles}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{ipcSendShareableHandles()}{ipcSendShareableHandles()}}
+{\footnotesize\ttfamily int ipc\+Send\+Shareable\+Handles (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{helper__multiprocess_8h_a8ae553a283c4fd3170de6eebec33dced}{ipc\+Handle}} $\ast$}]{handle,  }\item[{const std\+::vector$<$ Shareable\+Handle $>$ \&}]{shareable\+Handles,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{helper__multiprocess_8h_a87c9efdf573e374c279d7d3dca3a6c6b}{Process}} $>$ \&}]{processes }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{helper__multiprocess_8h_a560676a6060a32d64d2db2e8b5b6559a}\label{helper__multiprocess_8h_a560676a6060a32d64d2db2e8b5b6559a}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!sharedMemoryClose@{sharedMemoryClose}}
+\index{sharedMemoryClose@{sharedMemoryClose}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{sharedMemoryClose()}{sharedMemoryClose()}}
+{\footnotesize\ttfamily void shared\+Memory\+Close (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{helper__multiprocess_8h_add8daa71fee7607cb8c939a2928467db}{shared\+Memory\+Info}} $\ast$}]{info }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{helper__multiprocess_8h_a503ee2388b065930081b941be9082916}\label{helper__multiprocess_8h_a503ee2388b065930081b941be9082916}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!sharedMemoryCreate@{sharedMemoryCreate}}
+\index{sharedMemoryCreate@{sharedMemoryCreate}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{sharedMemoryCreate()}{sharedMemoryCreate()}}
+{\footnotesize\ttfamily int shared\+Memory\+Create (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{size\+\_\+t}]{sz,  }\item[{\mbox{\hyperlink{helper__multiprocess_8h_add8daa71fee7607cb8c939a2928467db}{shared\+Memory\+Info}} $\ast$}]{info }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{helper__multiprocess_8h_aacbe70b5cdfc5bb8a0ab1f1062e83bab}\label{helper__multiprocess_8h_aacbe70b5cdfc5bb8a0ab1f1062e83bab}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!sharedMemoryOpen@{sharedMemoryOpen}}
+\index{sharedMemoryOpen@{sharedMemoryOpen}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{sharedMemoryOpen()}{sharedMemoryOpen()}}
+{\footnotesize\ttfamily int shared\+Memory\+Open (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{size\+\_\+t}]{sz,  }\item[{\mbox{\hyperlink{helper__multiprocess_8h_add8daa71fee7607cb8c939a2928467db}{shared\+Memory\+Info}} $\ast$}]{info }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{helper__multiprocess_8h_a594c7d8f3a6d09ddf53617fae9df2c5b}\label{helper__multiprocess_8h_a594c7d8f3a6d09ddf53617fae9df2c5b}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!spawnProcess@{spawnProcess}}
+\index{spawnProcess@{spawnProcess}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{spawnProcess()}{spawnProcess()}}
+{\footnotesize\ttfamily int spawn\+Process (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{helper__multiprocess_8h_a87c9efdf573e374c279d7d3dca3a6c6b}{Process}} $\ast$}]{process,  }\item[{const char $\ast$}]{app,  }\item[{char $\ast$const $\ast$}]{args }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{helper__multiprocess_8h_a75cf5647404c986eaeadf65109fffd33}\label{helper__multiprocess_8h_a75cf5647404c986eaeadf65109fffd33}} 
+\index{helper\_multiprocess.h@{helper\_multiprocess.h}!waitProcess@{waitProcess}}
+\index{waitProcess@{waitProcess}!helper\_multiprocess.h@{helper\_multiprocess.h}}
+\doxysubsubsection{\texorpdfstring{waitProcess()}{waitProcess()}}
+{\footnotesize\ttfamily int wait\+Process (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{helper__multiprocess_8h_a87c9efdf573e374c279d7d3dca3a6c6b}{Process}} $\ast$}]{process }\end{DoxyParamCaption})}
+

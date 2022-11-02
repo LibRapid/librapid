@@ -1,0 +1,65 @@
+\hypertarget{helper_macros_8hpp}{}\doxysection{librapid/include/librapid/core/helper\+Macros.hpp File Reference}
+\label{helper_macros_8hpp}\index{librapid/include/librapid/core/helperMacros.hpp@{librapid/include/librapid/core/helperMacros.hpp}}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{helper_macros_8hpp_aa2f49001be13949a16a57e6c99ab00ad}{COMMA}}~,
+\item 
+\#define \mbox{\hyperlink{helper_macros_8hpp_a7d2d70de14d74180114ba0c483f78d87}{LIBRAPID\+\_\+\+SIMPLE\+\_\+\+IO\+\_\+\+IMPL}}(TEMPLATE\+\_\+,  TYPE\+\_\+)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{helper_macros_8hpp_aa2f49001be13949a16a57e6c99ab00ad}\label{helper_macros_8hpp_aa2f49001be13949a16a57e6c99ab00ad}} 
+\index{helperMacros.hpp@{helperMacros.hpp}!COMMA@{COMMA}}
+\index{COMMA@{COMMA}!helperMacros.hpp@{helperMacros.hpp}}
+\doxysubsubsection{\texorpdfstring{COMMA}{COMMA}}
+{\footnotesize\ttfamily \#define COMMA~,}
+
+
+
+Definition at line \mbox{\hyperlink{helper_macros_8hpp_source_l00008}{8}} of file \mbox{\hyperlink{helper_macros_8hpp_source}{helper\+Macros.\+hpp}}.
+
+\mbox{\Hypertarget{helper_macros_8hpp_a7d2d70de14d74180114ba0c483f78d87}\label{helper_macros_8hpp_a7d2d70de14d74180114ba0c483f78d87}} 
+\index{helperMacros.hpp@{helperMacros.hpp}!LIBRAPID\_SIMPLE\_IO\_IMPL@{LIBRAPID\_SIMPLE\_IO\_IMPL}}
+\index{LIBRAPID\_SIMPLE\_IO\_IMPL@{LIBRAPID\_SIMPLE\_IO\_IMPL}!helperMacros.hpp@{helperMacros.hpp}}
+\doxysubsubsection{\texorpdfstring{LIBRAPID\_SIMPLE\_IO\_IMPL}{LIBRAPID\_SIMPLE\_IO\_IMPL}}
+{\footnotesize\ttfamily \#define LIBRAPID\+\_\+\+SIMPLE\+\_\+\+IO\+\_\+\+IMPL(\begin{DoxyParamCaption}\item[{}]{TEMPLATE\+\_\+,  }\item[{}]{TYPE\+\_\+ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \textcolor{keyword}{template}<TEMPLATE\_>                                                                            \(\backslash\)}
+\DoxyCodeLine{    struct fmt::formatter<TYPE\_> \{                                                                 \(\backslash\)}
+\DoxyCodeLine{        std::string formatStr = \textcolor{stringliteral}{"{}\{\}"{}};                                                              \(\backslash\)}
+\DoxyCodeLine{                                                                                                   \(\backslash\)}
+\DoxyCodeLine{        template<typename ParseContext>                                                            \(\backslash\)}
+\DoxyCodeLine{        constexpr \textcolor{keyword}{auto} parse(ParseContext \&ctx) \{                                                  \(\backslash\)}
+\DoxyCodeLine{            formatStr = \textcolor{stringliteral}{"{}\{:"{}};                                                                      \(\backslash\)}
+\DoxyCodeLine{            auto it   = ctx.begin();                                                               \(\backslash\)}
+\DoxyCodeLine{            for (; it != ctx.end(); ++it) \{                                                        \(\backslash\)}
+\DoxyCodeLine{                if (*it == \textcolor{charliteral}{'\}'}) break;                                                             \(\backslash\)}
+\DoxyCodeLine{                formatStr += *it;                                                                  \(\backslash\)}
+\DoxyCodeLine{            \}                                                                                      \(\backslash\)}
+\DoxyCodeLine{            formatStr += "{}\}"{};                                                                      \(\backslash\)}
+\DoxyCodeLine{            return it;                                                                             \(\backslash\)}
+\DoxyCodeLine{        \}                                                                                          \(\backslash\)}
+\DoxyCodeLine{                                                                                                   \(\backslash\)}
+\DoxyCodeLine{        template<typename FormatContext>                                                           \(\backslash\)}
+\DoxyCodeLine{        auto format(const TYPE\_ \&\textcolor{keywordtype}{object}, FormatContext \&ctx) \{                                     \(\backslash\)}
+\DoxyCodeLine{            try \{                                                                                  \(\backslash\)}
+\DoxyCodeLine{                return fmt::format\_to(ctx.out(), \textcolor{keywordtype}{object}.str());                                    \(\backslash\)}
+\DoxyCodeLine{            \} \textcolor{keywordflow}{catch} (std::exception \& e) \{ \textcolor{keywordflow}{return} fmt::format\_to(ctx.out(), e.what()); \}           \(\backslash\)}
+\DoxyCodeLine{        \}                                                                                          \(\backslash\)}
+\DoxyCodeLine{    \};                                                                                             \(\backslash\)}
+\DoxyCodeLine{                                                                                                   \(\backslash\)}
+\DoxyCodeLine{    template<TEMPLATE\_>                                                                            \(\backslash\)}
+\DoxyCodeLine{    std::ostream \&operator<<(std::ostream \&os, \textcolor{keyword}{const} TYPE\_ \&\textcolor{keywordtype}{object}) \{                              \(\backslash\)}
+\DoxyCodeLine{        os << \textcolor{keywordtype}{object}.str();                                                                        \(\backslash\)}
+\DoxyCodeLine{        return os;                                                                                 \(\backslash\)}
+\DoxyCodeLine{    \}}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{helper_macros_8hpp_source_l00011}{11}} of file \mbox{\hyperlink{helper_macros_8hpp_source}{helper\+Macros.\+hpp}}.
+

@@ -53,11 +53,11 @@ jobs:
 
       - name: Build LaTeX Documentation
         run: |
-          cd docs/latex
+          cd docBuild/latex
           make
         
       - name: Store Artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: docs
+          path: docBuild
           

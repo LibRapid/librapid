@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="classlibrapid_1_1detail_1_1_pre_main" kind="class" language="C++" prot="public">
+    <compoundname>librapid::detail::PreMain</compoundname>
+    <includes refid="pre_main_8hpp" local="no">preMain.hpp</includes>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classlibrapid_1_1detail_1_1_pre_main_1a53e2d6a634235e919a577fa521ef3fd5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>librapid::detail::PreMain::PreMain</definition>
+        <argsstring>()</argsstring>
+        <name>PreMain</name>
+        <qualifiedname>librapid::detail::PreMain::PreMain</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/preMain.hpp" line="11" column="1" bodyfile="librapid/include/librapid/core/preMain.hpp" bodystart="11" bodyend="16"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/core/preMain.hpp" line="9" column="1" bodyfile="librapid/include/librapid/core/preMain.hpp" bodystart="9" bodyend="19"/>
+    <listofallmembers>
+      <member refid="classlibrapid_1_1detail_1_1_pre_main_1a53e2d6a634235e919a577fa521ef3fd5" prot="public" virt="non-virtual"><scope>librapid::detail::PreMain</scope><name>PreMain</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

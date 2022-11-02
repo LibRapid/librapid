@@ -1,0 +1,64 @@
+\hypertarget{helper__functions_8h_source}{}\doxysection{helper\+\_\+functions.\+h}
+\label{helper__functions_8h_source}\index{librapid/include/librapid/cuda/helper\_functions.h@{librapid/include/librapid/cuda/helper\_functions.h}}
+\mbox{\hyperlink{helper__functions_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00001}00001 \textcolor{comment}{/* Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00002}00002 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00003}00003 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00004}00004 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00005}00005 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00006}00006 \textcolor{comment}{ *  * Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00007}00007 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00008}00008 \textcolor{comment}{ *  * Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00009}00009 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00010}00010 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00011}00011 \textcolor{comment}{ *  * Neither the name of NVIDIA CORPORATION nor the names of its}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00012}00012 \textcolor{comment}{ *    contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00013}00013 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00014}00014 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00015}00015 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00016}00016 \textcolor{comment}{ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00017}00017 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00018}00018 \textcolor{comment}{ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00019}00019 \textcolor{comment}{ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00020}00020 \textcolor{comment}{ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00021}00021 \textcolor{comment}{ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00022}00022 \textcolor{comment}{ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00023}00023 \textcolor{comment}{ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00024}00024 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00025}00025 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00026}00026 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00027}00027 }
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00028}00028 \textcolor{comment}{// These are helper functions for the SDK samples (string parsing,}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00029}00029 \textcolor{comment}{// timers, image helpers, etc)}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00030}00030 \textcolor{preprocessor}{\#ifndef COMMON\_HELPER\_FUNCTIONS\_H\_}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00031}00031 \textcolor{preprocessor}{\#define COMMON\_HELPER\_FUNCTIONS\_H\_}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00033}00033 \textcolor{preprocessor}{\#ifdef WIN32}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00034}00034 \textcolor{preprocessor}{\#   pragma warning(disable : 4996)}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00035}00035 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00036}00036 }
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00037}00037 \textcolor{comment}{// includes, project}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00038}00038 \textcolor{preprocessor}{\#include <algorithm>}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00039}00039 \textcolor{preprocessor}{\#include <assert.h>}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00040}00040 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{exception_8h}{exception.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00041}00041 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00042}00042 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00043}00043 \textcolor{preprocessor}{\#include <math.h>}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00044}00044 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00045}00045 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00046}00046 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00047}00047 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00048}00048 }
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00049}00049 \textcolor{comment}{// includes, timer, string parsing, image helpers}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00050}00050 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{helper__image_8h}{helper\_image.h}}"{}}  \textcolor{comment}{// helper functions for image compare, dump, data comparisons}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00051}00051 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{helper__string_8h}{helper\_string.h}}"{}} \textcolor{comment}{// helper functions for string parsing}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00052}00052 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{helper__timer_8h}{helper\_timer.h}}"{}}  \textcolor{comment}{// helper functions for timers}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00053}00053 }
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00054}00054 \textcolor{preprocessor}{\#ifndef EXIT\_WAIVED}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00055}00055 \textcolor{preprocessor}{\#   define EXIT\_WAIVED 2}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00056}00056 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00057}00057 }
+\DoxyCodeLine{\Hypertarget{helper__functions_8h_source_l00058}00058 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// COMMON\_HELPER\_FUNCTIONS\_H\_}}
+
+\end{DoxyCode}

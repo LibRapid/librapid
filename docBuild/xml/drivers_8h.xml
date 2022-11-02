@@ -1,0 +1,710 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="drivers_8h" kind="file" language="C++">
+    <compoundname>drivers.h</compoundname>
+    <includes refid="issame_8h" local="yes">cxxblas/auxiliary/issame.h</includes>
+    <includes refid="restrictto_8h" local="yes">cxxblas/auxiliary/restrictto.h</includes>
+    <includes refid="typedefs_8h" local="yes">cxxblas/typedefs.h</includes>
+    <includedby refid="cxxblas_8h" local="yes">librapid/cxxblas/cxxblas.h</includedby>
+    <includedby refid="asum_8h" local="yes">librapid/cxxblas/level1/asum.h</includedby>
+    <includedby refid="level1_2axpy_8h" local="yes">librapid/cxxblas/level1/axpy.h</includedby>
+    <includedby refid="level1_2copy_8h" local="yes">librapid/cxxblas/level1/copy.h</includedby>
+    <includedby refid="iamax_8h" local="yes">librapid/cxxblas/level1/iamax.h</includedby>
+    <includedby refid="nrm2_8h" local="yes">librapid/cxxblas/level1/nrm2.h</includedby>
+    <includedby refid="rot_8h" local="yes">librapid/cxxblas/level1/rot.h</includedby>
+    <includedby refid="rotm_8h" local="yes">librapid/cxxblas/level1/rotm.h</includedby>
+    <includedby refid="level1_2scal_8h" local="yes">librapid/cxxblas/level1/scal.h</includedby>
+    <includedby refid="swap_8h" local="yes">librapid/cxxblas/level1/swap.h</includedby>
+    <includedby refid="asum1_8h" local="yes">librapid/cxxblas/level1extensions/asum1.h</includedby>
+    <includedby refid="level2_2gbmv_8h" local="yes">librapid/cxxblas/level2/gbmv.h</includedby>
+    <includedby refid="level2_2gemv_8h" local="yes">librapid/cxxblas/level2/gemv.h</includedby>
+    <includedby refid="ger_8h" local="yes">librapid/cxxblas/level2/ger.h</includedby>
+    <includedby refid="hbmv_8h" local="yes">librapid/cxxblas/level2/hbmv.h</includedby>
+    <includedby refid="level2_2hemv_8h" local="yes">librapid/cxxblas/level2/hemv.h</includedby>
+    <includedby refid="level2_2her_8h" local="yes">librapid/cxxblas/level2/her.h</includedby>
+    <includedby refid="level2_2her2_8h" local="yes">librapid/cxxblas/level2/her2.h</includedby>
+    <includedby refid="hpmv_8h" local="yes">librapid/cxxblas/level2/hpmv.h</includedby>
+    <includedby refid="hpr_8h" local="yes">librapid/cxxblas/level2/hpr.h</includedby>
+    <includedby refid="hpr2_8h" local="yes">librapid/cxxblas/level2/hpr2.h</includedby>
+    <includedby refid="sbmv_8h" local="yes">librapid/cxxblas/level2/sbmv.h</includedby>
+    <includedby refid="spmv_8h" local="yes">librapid/cxxblas/level2/spmv.h</includedby>
+    <includedby refid="spr_8h" local="yes">librapid/cxxblas/level2/spr.h</includedby>
+    <includedby refid="spr2_8h" local="yes">librapid/cxxblas/level2/spr2.h</includedby>
+    <includedby refid="level2_2symv_8h" local="yes">librapid/cxxblas/level2/symv.h</includedby>
+    <includedby refid="syr_8h" local="yes">librapid/cxxblas/level2/syr.h</includedby>
+    <includedby refid="syr2_8h" local="yes">librapid/cxxblas/level2/syr2.h</includedby>
+    <includedby refid="tbmv_8h" local="yes">librapid/cxxblas/level2/tbmv.h</includedby>
+    <includedby refid="tbsv_8h" local="yes">librapid/cxxblas/level2/tbsv.h</includedby>
+    <includedby refid="tpmv_8h" local="yes">librapid/cxxblas/level2/tpmv.h</includedby>
+    <includedby refid="tpsv_8h" local="yes">librapid/cxxblas/level2/tpsv.h</includedby>
+    <includedby refid="level2_2trmv_8h" local="yes">librapid/cxxblas/level2/trmv.h</includedby>
+    <includedby refid="level2_2trsv_8h" local="yes">librapid/cxxblas/level2/trsv.h</includedby>
+    <includedby refid="level2extensions_2symv_8h" local="yes">librapid/cxxblas/level2extensions/symv.h</includedby>
+    <includedby refid="level2extensions_2trmv_8h" local="yes">librapid/cxxblas/level2extensions/trmv.h</includedby>
+    <includedby refid="level2extensions_2trsv_8h" local="yes">librapid/cxxblas/level2extensions/trsv.h</includedby>
+    <includedby refid="gemm_8h" local="yes">librapid/cxxblas/level3/gemm.h</includedby>
+    <includedby refid="hemm_8h" local="yes">librapid/cxxblas/level3/hemm.h</includedby>
+    <includedby refid="her2k_8h" local="yes">librapid/cxxblas/level3/her2k.h</includedby>
+    <includedby refid="herk_8h" local="yes">librapid/cxxblas/level3/herk.h</includedby>
+    <includedby refid="symm_8h" local="yes">librapid/cxxblas/level3/symm.h</includedby>
+    <includedby refid="syr2k_8h" local="yes">librapid/cxxblas/level3/syr2k.h</includedby>
+    <includedby refid="syrk_8h" local="yes">librapid/cxxblas/level3/syrk.h</includedby>
+    <includedby refid="trmm_8h" local="yes">librapid/cxxblas/level3/trmm.h</includedby>
+    <includedby refid="trsm_8h" local="yes">librapid/cxxblas/level3/trsm.h</includedby>
+    <includedby refid="gbmm_8h" local="yes">librapid/cxxblas/level3extensions/gbmm.h</includedby>
+    <includedby refid="hbmm_8h" local="yes">librapid/cxxblas/level3extensions/hbmm.h</includedby>
+    <includedby refid="sbmm_8h" local="yes">librapid/cxxblas/level3extensions/sbmm.h</includedby>
+    <includedby refid="tbmm_8h" local="yes">librapid/cxxblas/level3extensions/tbmm.h</includedby>
+    <incdepgraph>
+      <node id="2">
+        <label>cxxblas/auxiliary/issame.h</label>
+        <link refid="issame_8h"/>
+      </node>
+      <node id="3">
+        <label>cxxblas/auxiliary/restrictto.h</label>
+        <link refid="restrictto_8h"/>
+      </node>
+      <node id="1">
+        <label>librapid/cxxblas/drivers/drivers.h</label>
+        <link refid="drivers_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>cxxblas/typedefs.h</label>
+        <link refid="typedefs_8h"/>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="3">
+        <label>librapid/cxxblas/cxxblas.cxx</label>
+        <link refid="cxxblas_8cxx"/>
+      </node>
+      <node id="2">
+        <label>librapid/cxxblas/cxxblas.h</label>
+        <link refid="cxxblas_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>librapid/cxxblas/drivers/drivers.h</label>
+        <link refid="drivers_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+        <childnode refid="49" relation="include">
+        </childnode>
+        <childnode refid="51" relation="include">
+        </childnode>
+        <childnode refid="52" relation="include">
+        </childnode>
+        <childnode refid="53" relation="include">
+        </childnode>
+        <childnode refid="54" relation="include">
+        </childnode>
+        <childnode refid="55" relation="include">
+        </childnode>
+        <childnode refid="56" relation="include">
+        </childnode>
+        <childnode refid="57" relation="include">
+        </childnode>
+        <childnode refid="58" relation="include">
+        </childnode>
+        <childnode refid="59" relation="include">
+        </childnode>
+        <childnode refid="61" relation="include">
+        </childnode>
+        <childnode refid="62" relation="include">
+        </childnode>
+        <childnode refid="63" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>librapid/cxxblas/level1/asum.h</label>
+        <link refid="asum_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>librapid/cxxblas/level1/axpy.h</label>
+        <link refid="level1_2axpy_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>librapid/cxxblas/level1/copy.h</label>
+        <link refid="level1_2copy_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>librapid/cxxblas/level1/dot.h</label>
+        <link refid="level1_2dot_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>librapid/cxxblas/level1/iamax.h</label>
+        <link refid="iamax_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>librapid/cxxblas/level1/level1.h</label>
+        <link refid="level1_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="14">
+        <label>librapid/cxxblas/level1/nrm2.h</label>
+        <link refid="nrm2_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>librapid/cxxblas/level1/rot.h</label>
+        <link refid="rot_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>librapid/cxxblas/level1/rotm.h</label>
+        <link refid="rotm_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>librapid/cxxblas/level1/scal.h</label>
+        <link refid="level1_2scal_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>librapid/cxxblas/level1/swap.h</label>
+        <link refid="swap_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>librapid/cxxblas/level1extensions/asum1.h</label>
+        <link refid="asum1_8h"/>
+        <childnode refid="20" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>librapid/cxxblas/level1extensions/level1extensions.h</label>
+        <link refid="level1extensions_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>librapid/cxxblas/level2/gbmv.h</label>
+        <link refid="level2_2gbmv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>librapid/cxxblas/level2/gemv.h</label>
+        <link refid="level2_2gemv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>librapid/cxxblas/level2/ger.h</label>
+        <link refid="ger_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>librapid/cxxblas/level2/hbmv.h</label>
+        <link refid="hbmv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>librapid/cxxblas/level2/hemv.h</label>
+        <link refid="level2_2hemv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>librapid/cxxblas/level2/her.h</label>
+        <link refid="level2_2her_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>librapid/cxxblas/level2/her2.h</label>
+        <link refid="level2_2her2_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
+        <label>librapid/cxxblas/level2/hpmv.h</label>
+        <link refid="hpmv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>librapid/cxxblas/level2/hpr.h</label>
+        <link refid="hpr_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="31">
+        <label>librapid/cxxblas/level2/hpr2.h</label>
+        <link refid="hpr2_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>librapid/cxxblas/level2/level2.h</label>
+        <link refid="level2_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="32">
+        <label>librapid/cxxblas/level2/sbmv.h</label>
+        <link refid="sbmv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="33">
+        <label>librapid/cxxblas/level2/spmv.h</label>
+        <link refid="spmv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="34">
+        <label>librapid/cxxblas/level2/spr.h</label>
+        <link refid="spr_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="35">
+        <label>librapid/cxxblas/level2/spr2.h</label>
+        <link refid="spr2_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="36">
+        <label>librapid/cxxblas/level2/symv.h</label>
+        <link refid="level2_2symv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>librapid/cxxblas/level2/syr.h</label>
+        <link refid="syr_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="38">
+        <label>librapid/cxxblas/level2/syr2.h</label>
+        <link refid="syr2_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="39">
+        <label>librapid/cxxblas/level2/tbmv.h</label>
+        <link refid="tbmv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="40">
+        <label>librapid/cxxblas/level2/tbsv.h</label>
+        <link refid="tbsv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="41">
+        <label>librapid/cxxblas/level2/tpmv.h</label>
+        <link refid="tpmv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="42">
+        <label>librapid/cxxblas/level2/tpsv.h</label>
+        <link refid="tpsv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="43">
+        <label>librapid/cxxblas/level2/trmv.h</label>
+        <link refid="level2_2trmv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="44">
+        <label>librapid/cxxblas/level2/trsv.h</label>
+        <link refid="level2_2trsv_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="46">
+        <label>librapid/cxxblas/level2extensions/level2extensions.h</label>
+        <link refid="level2extensions_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="45">
+        <label>librapid/cxxblas/level2extensions/symv.h</label>
+        <link refid="level2extensions_2symv_8h"/>
+        <childnode refid="46" relation="include">
+        </childnode>
+      </node>
+      <node id="47">
+        <label>librapid/cxxblas/level2extensions/trmv.h</label>
+        <link refid="level2extensions_2trmv_8h"/>
+        <childnode refid="46" relation="include">
+        </childnode>
+      </node>
+      <node id="48">
+        <label>librapid/cxxblas/level2extensions/trsv.h</label>
+        <link refid="level2extensions_2trsv_8h"/>
+        <childnode refid="46" relation="include">
+        </childnode>
+      </node>
+      <node id="49">
+        <label>librapid/cxxblas/level3/gemm.h</label>
+        <link refid="gemm_8h"/>
+        <childnode refid="50" relation="include">
+        </childnode>
+      </node>
+      <node id="51">
+        <label>librapid/cxxblas/level3/hemm.h</label>
+        <link refid="hemm_8h"/>
+        <childnode refid="50" relation="include">
+        </childnode>
+      </node>
+      <node id="52">
+        <label>librapid/cxxblas/level3/her2k.h</label>
+        <link refid="her2k_8h"/>
+        <childnode refid="50" relation="include">
+        </childnode>
+      </node>
+      <node id="53">
+        <label>librapid/cxxblas/level3/herk.h</label>
+        <link refid="herk_8h"/>
+        <childnode refid="50" relation="include">
+        </childnode>
+      </node>
+      <node id="50">
+        <label>librapid/cxxblas/level3/level3.h</label>
+        <link refid="level3_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="54">
+        <label>librapid/cxxblas/level3/symm.h</label>
+        <link refid="symm_8h"/>
+        <childnode refid="50" relation="include">
+        </childnode>
+      </node>
+      <node id="55">
+        <label>librapid/cxxblas/level3/syr2k.h</label>
+        <link refid="syr2k_8h"/>
+        <childnode refid="50" relation="include">
+        </childnode>
+      </node>
+      <node id="56">
+        <label>librapid/cxxblas/level3/syrk.h</label>
+        <link refid="syrk_8h"/>
+        <childnode refid="50" relation="include">
+        </childnode>
+      </node>
+      <node id="57">
+        <label>librapid/cxxblas/level3/trmm.h</label>
+        <link refid="trmm_8h"/>
+        <childnode refid="50" relation="include">
+        </childnode>
+      </node>
+      <node id="58">
+        <label>librapid/cxxblas/level3/trsm.h</label>
+        <link refid="trsm_8h"/>
+        <childnode refid="50" relation="include">
+        </childnode>
+      </node>
+      <node id="59">
+        <label>librapid/cxxblas/level3extensions/gbmm.h</label>
+        <link refid="gbmm_8h"/>
+        <childnode refid="60" relation="include">
+        </childnode>
+      </node>
+      <node id="61">
+        <label>librapid/cxxblas/level3extensions/hbmm.h</label>
+        <link refid="hbmm_8h"/>
+        <childnode refid="60" relation="include">
+        </childnode>
+      </node>
+      <node id="60">
+        <label>librapid/cxxblas/level3extensions/level3extensions.h</label>
+        <link refid="level3extensions_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="62">
+        <label>librapid/cxxblas/level3extensions/sbmm.h</label>
+        <link refid="sbmm_8h"/>
+        <childnode refid="60" relation="include">
+        </childnode>
+      </node>
+      <node id="63">
+        <label>librapid/cxxblas/level3extensions/tbmm.h</label>
+        <link refid="tbmm_8h"/>
+        <childnode refid="60" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>librapid/include/librapid/core/core.hpp</label>
+        <link refid="core_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>librapid/include/librapid/librapid.hpp</label>
+        <link refid="librapid_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>librapid/src/global.cpp</label>
+        <link refid="global_8cpp"/>
+      </node>
+      <node id="9">
+        <label>librapid/src/helper_cuda.cpp</label>
+        <link refid="helper__cuda_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structcxxblas_1_1_if" prot="public">cxxblas::If</innerclass>
+    <innerclass refid="structcxxblas_1_1_if_3_01int_01_4" prot="public">cxxblas::If&lt; int &gt;</innerclass>
+    <innerclass refid="structcxxblas_1_1_if_3_01long_01_4" prot="public">cxxblas::If&lt; long &gt;</innerclass>
+    <innernamespace refid="namespacecxxblas">cxxblas</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Copyright<sp/>(c)<sp/>2010,<sp/>Michael<sp/>Lehn</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/><sp/><sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Redistribution<sp/>and<sp/>use<sp/>in<sp/>source<sp/>and<sp/>binary<sp/>forms,<sp/>with<sp/>or<sp/>without</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/><sp/><sp/>modification,<sp/>are<sp/>permitted<sp/>provided<sp/>that<sp/>the<sp/>following<sp/>conditions</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/><sp/><sp/>are<sp/>met:</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/><sp/><sp/>1)<sp/>Redistributions<sp/>of<sp/>source<sp/>code<sp/>must<sp/>retain<sp/>the<sp/>above<sp/>copyright</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>notice,<sp/>this<sp/>list<sp/>of<sp/>conditions<sp/>and<sp/>the<sp/>following<sp/>disclaimer.</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/><sp/><sp/>2)<sp/>Redistributions<sp/>in<sp/>binary<sp/>form<sp/>must<sp/>reproduce<sp/>the<sp/>above<sp/>copyright</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>notice,<sp/>this<sp/>list<sp/>of<sp/>conditions<sp/>and<sp/>the<sp/>following<sp/>disclaimer<sp/>in</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>the<sp/>documentation<sp/>and/or<sp/>other<sp/>materials<sp/>provided<sp/>with<sp/>the</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>distribution.</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/><sp/><sp/>3)<sp/>Neither<sp/>the<sp/>name<sp/>of<sp/>the<sp/>FLENS<sp/>development<sp/>group<sp/>nor<sp/>the<sp/>names<sp/>of</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>its<sp/>contributors<sp/>may<sp/>be<sp/>used<sp/>to<sp/>endorse<sp/>or<sp/>promote<sp/>products<sp/>derived</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>from<sp/>this<sp/>software<sp/>without<sp/>specific<sp/>prior<sp/>written<sp/>permission.</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/><sp/><sp/>THIS<sp/>SOFTWARE<sp/>IS<sp/>PROVIDED<sp/>BY<sp/>THE<sp/>COPYRIGHT<sp/>HOLDERS<sp/>AND<sp/>CONTRIBUTORS</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/><sp/><sp/>&quot;AS<sp/>IS&quot;<sp/>AND<sp/>ANY<sp/>EXPRESS<sp/>OR<sp/>IMPLIED<sp/>WARRANTIES,<sp/>INCLUDING,<sp/>BUT<sp/>NOT</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/><sp/><sp/>LIMITED<sp/>TO,<sp/>THE<sp/>IMPLIED<sp/>WARRANTIES<sp/>OF<sp/>MERCHANTABILITY<sp/>AND<sp/>FITNESS<sp/>FOR</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*<sp/><sp/><sp/>A<sp/>PARTICULAR<sp/>PURPOSE<sp/>ARE<sp/>DISCLAIMED.<sp/>IN<sp/>NO<sp/>EVENT<sp/>SHALL<sp/>THE<sp/>COPYRIGHT</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*<sp/><sp/><sp/>OWNER<sp/>OR<sp/>CONTRIBUTORS<sp/>BE<sp/>LIABLE<sp/>FOR<sp/>ANY<sp/>DIRECT,<sp/>INDIRECT,<sp/>INCIDENTAL,</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/>*<sp/><sp/><sp/>SPECIAL,<sp/>EXEMPLARY,<sp/>OR<sp/>CONSEQUENTIAL<sp/>DAMAGES<sp/>(INCLUDING,<sp/>BUT<sp/>NOT</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/>*<sp/><sp/><sp/>LIMITED<sp/>TO,<sp/>PROCUREMENT<sp/>OF<sp/>SUBSTITUTE<sp/>GOODS<sp/>OR<sp/>SERVICES;<sp/>LOSS<sp/>OF<sp/>USE,</highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/>*<sp/><sp/><sp/>DATA,<sp/>OR<sp/>PROFITS;<sp/>OR<sp/>BUSINESS<sp/>INTERRUPTION)<sp/>HOWEVER<sp/>CAUSED<sp/>AND<sp/>ON<sp/>ANY</highlight></codeline>
+<codeline lineno="28"><highlight class="comment"><sp/>*<sp/><sp/><sp/>THEORY<sp/>OF<sp/>LIABILITY,<sp/>WHETHER<sp/>IN<sp/>CONTRACT,<sp/>STRICT<sp/>LIABILITY,<sp/>OR<sp/>TORT</highlight></codeline>
+<codeline lineno="29"><highlight class="comment"><sp/>*<sp/><sp/><sp/>(INCLUDING<sp/>NEGLIGENCE<sp/>OR<sp/>OTHERWISE)<sp/>ARISING<sp/>IN<sp/>ANY<sp/>WAY<sp/>OUT<sp/>OF<sp/>THE<sp/>USE</highlight></codeline>
+<codeline lineno="30"><highlight class="comment"><sp/>*<sp/><sp/><sp/>OF<sp/>THIS<sp/>SOFTWARE,<sp/>EVEN<sp/>IF<sp/>ADVISED<sp/>OF<sp/>THE<sp/>POSSIBILITY<sp/>OF<sp/>SUCH<sp/>DAMAGE.</highlight></codeline>
+<codeline lineno="31"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CXXBLAS_DRIVERS_DRIVERS_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CXXBLAS_DRIVERS_DRIVERS_H<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="issame_8h" kindref="compound">cxxblas/auxiliary/issame.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="restrictto_8h" kindref="compound">cxxblas/auxiliary/restrictto.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="comment">//<sp/>define<sp/>implementation<sp/>specific<sp/>constants,<sp/>macros,<sp/>etc.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(LIBRAPID_BLAS_ATLAS)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/><sp/>include<sp/>&quot;<ref refid="atlas_8h" kindref="compound">cxxblas/drivers/atlas.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>defined(LIBRAPID_BLAS_GOTOBLAS)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/><sp/>include<sp/>&quot;<ref refid="gotoblas_8h" kindref="compound">cxxblas/drivers/gotoblas.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>defined(LIBRAPID_BLAS_OPENBLAS)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/><sp/>include<sp/>&quot;<ref refid="openblas_8h" kindref="compound">cxxblas/drivers/openblas.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>defined(LIBRAPID_BLAS_VECLIB)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/><sp/>include<sp/>&quot;<ref refid="veclib_8h" kindref="compound">cxxblas/drivers/veclib.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>defined(LIBRAPID_BLAS_MKLBLAS)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/><sp/>include<sp/>&quot;<ref refid="mklblas_8h" kindref="compound">cxxblas/drivers/mklblas.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>defined(LIBRAPID_BLAS_REFBLAS)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/><sp/>include<sp/>&quot;<ref refid="refblas_8h" kindref="compound">cxxblas/drivers/refblas.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>HAVE_CBLAS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/><sp/>include<sp/>&quot;<ref refid="cblas_8h" kindref="compound">cxxblas/drivers/cblas.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>HAVE_SPARSEBLAS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="preprocessor">#<sp/><sp/><sp/>include<sp/>&quot;<ref refid="sparseblas_8h" kindref="compound">cxxblas/drivers/sparseblas.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="typedefs_8h" kindref="compound">cxxblas/typedefs.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecxxblas" kindref="compound">cxxblas</ref><sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>CHAR&gt;</highlight></codeline>
+<codeline lineno="67" refid="namespacecxxblas_1af90758661694282ee9516470d96c0887" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>CHAR<sp/>*<ref refid="namespacecxxblas_1af90758661694282ee9516470d96c0887" kindref="member">blasImpl</ref>();</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//------------------------------------------------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Any&gt;</highlight></codeline>
+<codeline lineno="72" refid="structcxxblas_1_1_if" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcxxblas_1_1_if" kindref="compound">If</ref><sp/>{};</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;&gt;</highlight></codeline>
+<codeline lineno="75" refid="structcxxblas_1_1_if_3_01int_01_4" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcxxblas_1_1_if" kindref="compound">If</ref>&lt;int&gt;<sp/>{</highlight></codeline>
+<codeline lineno="76" refid="structcxxblas_1_1_if_3_01int_01_4_1a0ecfa949b3c2a703dd3d7948cdd646a8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_if_3_01int_01_4_1a0ecfa949b3c2a703dd3d7948cdd646a8" kindref="member">isBlasCompatibleInteger</ref>;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;&gt;</highlight></codeline>
+<codeline lineno="80" refid="structcxxblas_1_1_if_3_01long_01_4" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcxxblas_1_1_if" kindref="compound">If</ref>&lt;long&gt;<sp/>{</highlight></codeline>
+<codeline lineno="81" refid="structcxxblas_1_1_if_3_01long_01_4_1a1c8e9ca8458cfa50598bd585539f055e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_if_3_01long_01_4_1a1c8e9ca8458cfa50598bd585539f055e" kindref="member">isBlasCompatibleInteger</ref>;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//------------------------------------------------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ENUM&gt;</highlight></codeline>
+<codeline lineno="86" refid="namespacecxxblas_1abb65f6752487d758ce2be8e30e10202a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_restrict_to" kindref="compound">RestrictTo&lt;IsSame&lt;ENUM, Transpose&gt;::value</ref>,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">&gt;::Type<sp/><ref refid="namespacecxxblas_1abb65f6752487d758ce2be8e30e10202a" kindref="member">getF77BlasChar</ref>(ENUM<sp/>trans);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ENUM&gt;</highlight></codeline>
+<codeline lineno="89" refid="namespacecxxblas_1a2e912f6be2475ad21be3f52ec9b5fc20" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_restrict_to" kindref="compound">RestrictTo&lt;IsSame&lt;ENUM, Diag&gt;::value</ref>,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">&gt;::Type<sp/><ref refid="namespacecxxblas_1abb65f6752487d758ce2be8e30e10202a" kindref="member">getF77BlasChar</ref>(ENUM<sp/>diag);</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ENUM&gt;</highlight></codeline>
+<codeline lineno="92" refid="namespacecxxblas_1a6fa84144e95aeddbc38c7718b8123499" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_restrict_to" kindref="compound">RestrictTo&lt;IsSame&lt;ENUM, StorageUpLo&gt;::value</ref>,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">&gt;::Type<sp/><ref refid="namespacecxxblas_1abb65f6752487d758ce2be8e30e10202a" kindref="member">getF77BlasChar</ref>(ENUM<sp/>upLo);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//------------------------------------------------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ENUM&gt;</highlight></codeline>
+<codeline lineno="96" refid="namespacecxxblas_1aa5cec6414633269a7d1de92637bee039" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_restrict_to" kindref="compound">RestrictTo&lt;IsSame&lt;ENUM, Transpose&gt;::value</ref>,<sp/><ref refid="namespacecxxblas_1a710044b98080b10301734289c63b1e30" kindref="member">Transpose</ref>&gt;::Type<sp/><ref refid="namespacecxxblas_1aa5cec6414633269a7d1de92637bee039" kindref="member">getCxxBlasEnum</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>trans);</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ENUM&gt;</highlight></codeline>
+<codeline lineno="99" refid="namespacecxxblas_1abd2de56f837a3338235ec32c5fd64f99" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_restrict_to" kindref="compound">RestrictTo&lt;IsSame&lt;ENUM, Diag&gt;::value</ref>,<sp/><ref refid="namespacecxxblas_1a3e3f7c313cf3b7c24d37c13aac2ae4a6" kindref="member">Diag</ref>&gt;::Type<sp/><ref refid="namespacecxxblas_1aa5cec6414633269a7d1de92637bee039" kindref="member">getCxxBlasEnum</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>diag);</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ENUM&gt;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_restrict_to" kindref="compound">RestrictTo&lt;IsSame&lt;ENUM, StorageUpLo&gt;::value</ref>,<sp/><ref refid="namespacecxxblas_1ad69d92c1688aa626f694b26a1da27df7" kindref="member">StorageUpLo</ref>&gt;::Type</highlight></codeline>
+<codeline lineno="103" refid="namespacecxxblas_1a9d2990c6095e23948174dece35a3e17c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacecxxblas_1aa5cec6414633269a7d1de92637bee039" kindref="member">getCxxBlasEnum</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>upLo);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight><highlight class="comment">//------------------------------------------------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>HAVE_CBLAS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">CBLAS<sp/>{</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>TODO:<sp/>rename<sp/>these<sp/>to<sp/>getCblasEnum</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ENUM&gt;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_restrict_to" kindref="compound">RestrictTo&lt;IsSame&lt;ENUM, StorageOrder&gt;::value</ref>,<sp/><ref refid="cblas_8h_1a1716cd55ff3d4e9dfa8491a3c177c6fe" kindref="member">CBLAS_ORDER</ref>&gt;::Type</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>getCblasType(ENUM<sp/>order);</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ENUM&gt;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_restrict_to" kindref="compound">RestrictTo&lt;IsSame&lt;ENUM, Transpose&gt;::value</ref>,<sp/><ref refid="cblas_8h_1a44dfaddb823648755b110dbad849c5a9" kindref="member">CBLAS_TRANSPOSE</ref>&gt;::Type</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>getCblasType(ENUM<sp/>trans);</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ENUM&gt;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_restrict_to" kindref="compound">RestrictTo&lt;IsSame&lt;ENUM, StorageUpLo&gt;::value</ref>,<sp/><ref refid="cblas_8h_1a1e6fa56583dce4a18e619688ff08892f" kindref="member">CBLAS_UPLO</ref>&gt;::Type</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>getCblasType(ENUM<sp/>upLo);</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ENUM&gt;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_restrict_to" kindref="compound">RestrictTo&lt;IsSame&lt;ENUM, Side&gt;::value</ref>,<sp/><ref refid="cblas_8h_1a4eba77400344ce7896faccf423c7fd5d" kindref="member">CBLAS_SIDE</ref>&gt;::Type<sp/>getCblasType(ENUM<sp/>side);</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ENUM&gt;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="structcxxblas_1_1_restrict_to" kindref="compound">RestrictTo&lt;IsSame&lt;ENUM, Diag&gt;::value</ref>,<sp/><ref refid="cblas_8h_1aa03704b21f66a3d37d33a2cf65e2cbb3" kindref="member">CBLAS_DIAG</ref>&gt;::Type<sp/>getCblasType(ENUM<sp/>diag);</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>CBLAS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>HAVE_CBLAS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cxxblas</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>CXXBLAS_DRIVERS_DRIVERS_H</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="librapid/cxxblas/drivers/drivers.h"/>
+  </compounddef>
+</doxygen>

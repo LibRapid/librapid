@@ -1,0 +1,263 @@
+\hypertarget{class_stop_watch_linux}{}\doxysection{Stop\+Watch\+Linux Class Reference}
+\label{class_stop_watch_linux}\index{StopWatchLinux@{StopWatchLinux}}
+
+
+Windows specific implementation of Stop\+Watch.  
+
+
+
+
+{\ttfamily \#include $<$helper\+\_\+timer.\+h$>$}
+
+Inheritance diagram for Stop\+Watch\+Linux\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_stop_watch_linux}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_stop_watch_linux_adb421b1d92bec2a59e564c053d94075f}{Stop\+Watch\+Linux}} ()
+\begin{DoxyCompactList}\small\item\em Constructor, default. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{class_stop_watch_linux_a2063456840d915094595e8e3273d38c5}{$\sim$\+Stop\+Watch\+Linux}} ()
+\item 
+void \mbox{\hyperlink{class_stop_watch_linux_a5b48161b757890313c93cdcbf6470258}{start}} ()
+\begin{DoxyCompactList}\small\item\em Start time measurement. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_stop_watch_linux_aea4fb94c36ad6d01cb371afa0aae0926}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Stop time measurement. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_stop_watch_linux_ae609a527c56e658941f539a8aaf43c71}{reset}} ()
+\begin{DoxyCompactList}\small\item\em Reset time counters to zero. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_stop_watch_linux_a7e211f57179ab20e6814127318e9f0f8}{get\+Time}} ()
+\item 
+float \mbox{\hyperlink{class_stop_watch_linux_a702b38009675968d5798796978007376}{get\+Average\+Time}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{class_stop_watch_linux_a3f7b53a7d64f4ffaa243eceee6f44b83}{get\+Diff\+Time}} ()
+\begin{DoxyCompactList}\small\item\em Get difference between start time and current time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+struct timeval \mbox{\hyperlink{class_stop_watch_linux_aeea9d454621ed9246317c5c6793db1ed}{start\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em Start of measurement. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_stop_watch_linux_adedd72587f2caf53a4f0af0fd90090a6}{diff\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em Time difference between the last start and stop. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_stop_watch_linux_a709a9567a4868e7920132959ae8a00bf}{total\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em TOTAL time difference between starts and stops. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_stop_watch_linux_ada79dea0dc663ac4101a6d01a12b10bb}{running}}
+\begin{DoxyCompactList}\small\item\em flag if the stop watch is running \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_stop_watch_linux_a5d40c14043e5a732c908da418eeada77}{clock\+\_\+sessions}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Windows specific implementation of Stop\+Watch. 
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00225}{225}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_stop_watch_linux_adb421b1d92bec2a59e564c053d94075f}\label{class_stop_watch_linux_adb421b1d92bec2a59e564c053d94075f}} 
+\index{StopWatchLinux@{StopWatchLinux}!StopWatchLinux@{StopWatchLinux}}
+\index{StopWatchLinux@{StopWatchLinux}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{StopWatchLinux()}{StopWatchLinux()}}
+{\footnotesize\ttfamily Stop\+Watch\+Linux\+::\+Stop\+Watch\+Linux (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor, default. 
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00228}{228}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{class_stop_watch_linux_a2063456840d915094595e8e3273d38c5}\label{class_stop_watch_linux_a2063456840d915094595e8e3273d38c5}} 
+\index{StopWatchLinux@{StopWatchLinux}!````~StopWatchLinux@{$\sim$StopWatchLinux}}
+\index{````~StopWatchLinux@{$\sim$StopWatchLinux}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{$\sim$StopWatchLinux()}{~StopWatchLinux()}}
+{\footnotesize\ttfamily virtual Stop\+Watch\+Linux\+::$\sim$\+Stop\+Watch\+Linux (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00232}{232}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_stop_watch_linux_a702b38009675968d5798796978007376}\label{class_stop_watch_linux_a702b38009675968d5798796978007376}} 
+\index{StopWatchLinux@{StopWatchLinux}!getAverageTime@{getAverageTime}}
+\index{getAverageTime@{getAverageTime}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{getAverageTime()}{getAverageTime()}}
+{\footnotesize\ttfamily float Stop\+Watch\+Linux\+::get\+Average\+Time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+Mean time to date based on the number of times the stopwatch has been {\itshape stopped} (ie finished sessions) and the current total time
+
+Time in msec. for a single run based on the total number of COMPLETED runs and the total time. 
+
+Implements \mbox{\hyperlink{class_stop_watch_interface_a049e581ad35895795be1e04763d40cc3}{Stop\+Watch\+Interface}}.
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00331}{331}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{class_stop_watch_linux_a3f7b53a7d64f4ffaa243eceee6f44b83}\label{class_stop_watch_linux_a3f7b53a7d64f4ffaa243eceee6f44b83}} 
+\index{StopWatchLinux@{StopWatchLinux}!getDiffTime@{getDiffTime}}
+\index{getDiffTime@{getDiffTime}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{getDiffTime()}{getDiffTime()}}
+{\footnotesize\ttfamily float Stop\+Watch\+Linux\+::get\+Diff\+Time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+Get difference between start time and current time. 
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00337}{337}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{class_stop_watch_linux_a7e211f57179ab20e6814127318e9f0f8}\label{class_stop_watch_linux_a7e211f57179ab20e6814127318e9f0f8}} 
+\index{StopWatchLinux@{StopWatchLinux}!getTime@{getTime}}
+\index{getTime@{getTime}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{getTime()}{getTime()}}
+{\footnotesize\ttfamily float Stop\+Watch\+Linux\+::get\+Time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+Time in msec. after start. If the stop watch is still running (i.\+e. there was no call to \mbox{\hyperlink{class_stop_watch_linux_aea4fb94c36ad6d01cb371afa0aae0926}{stop()}}) then the elapsed time is returned, otherwise the time between the last \mbox{\hyperlink{class_stop_watch_linux_a5b48161b757890313c93cdcbf6470258}{start()}} and stop call is returned
+
+Time in msec. after start. If the stop watch is still running (i.\+e. there was no call to \mbox{\hyperlink{class_stop_watch_linux_aea4fb94c36ad6d01cb371afa0aae0926}{stop()}}) then the elapsed time is returned added to the current diff\+\_\+time sum, otherwise the current summed time difference alone is returned. 
+
+Implements \mbox{\hyperlink{class_stop_watch_interface_ab2127ae16fd7cafec70246fa07f2025f}{Stop\+Watch\+Interface}}.
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00318}{318}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{class_stop_watch_linux_ae609a527c56e658941f539a8aaf43c71}\label{class_stop_watch_linux_ae609a527c56e658941f539a8aaf43c71}} 
+\index{StopWatchLinux@{StopWatchLinux}!reset@{reset}}
+\index{reset@{reset}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{reset()}{reset()}}
+{\footnotesize\ttfamily void Stop\+Watch\+Linux\+::reset (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Reset time counters to zero. 
+
+Reset the timer to 0. Does not change the timer running state but does recapture this point in time as the current start time if it is running. 
+
+Implements \mbox{\hyperlink{class_stop_watch_interface_af38c96a046bc667528a8500d69106b09}{Stop\+Watch\+Interface}}.
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00304}{304}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{class_stop_watch_linux_a5b48161b757890313c93cdcbf6470258}\label{class_stop_watch_linux_a5b48161b757890313c93cdcbf6470258}} 
+\index{StopWatchLinux@{StopWatchLinux}!start@{start}}
+\index{start@{start}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily void Stop\+Watch\+Linux\+::start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Start time measurement. 
+
+
+
+Implements \mbox{\hyperlink{class_stop_watch_interface_a753200dac75f85ed691fc496d8343248}{Stop\+Watch\+Interface}}.
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00284}{284}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{class_stop_watch_linux_aea4fb94c36ad6d01cb371afa0aae0926}\label{class_stop_watch_linux_aea4fb94c36ad6d01cb371afa0aae0926}} 
+\index{StopWatchLinux@{StopWatchLinux}!stop@{stop}}
+\index{stop@{stop}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily void Stop\+Watch\+Linux\+::stop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Stop time measurement. 
+
+Stop time measurement and increment add to the current diff\+\_\+time summation variable. Also increment the number of times this clock has been run. 
+
+Implements \mbox{\hyperlink{class_stop_watch_interface_a53280ad65e3800cf608315afa3a20554}{Stop\+Watch\+Interface}}.
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00293}{293}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_stop_watch_linux_a5d40c14043e5a732c908da418eeada77}\label{class_stop_watch_linux_a5d40c14043e5a732c908da418eeada77}} 
+\index{StopWatchLinux@{StopWatchLinux}!clock\_sessions@{clock\_sessions}}
+\index{clock\_sessions@{clock\_sessions}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{clock\_sessions}{clock\_sessions}}
+{\footnotesize\ttfamily int Stop\+Watch\+Linux\+::clock\+\_\+sessions\hspace{0.3cm}{\ttfamily [private]}}
+
+Number of times clock has been started and stopped to allow averaging 
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00276}{276}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{class_stop_watch_linux_adedd72587f2caf53a4f0af0fd90090a6}\label{class_stop_watch_linux_adedd72587f2caf53a4f0af0fd90090a6}} 
+\index{StopWatchLinux@{StopWatchLinux}!diff\_time@{diff\_time}}
+\index{diff\_time@{diff\_time}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{diff\_time}{diff\_time}}
+{\footnotesize\ttfamily float Stop\+Watch\+Linux\+::diff\+\_\+time\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Time difference between the last start and stop. 
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00266}{266}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{class_stop_watch_linux_ada79dea0dc663ac4101a6d01a12b10bb}\label{class_stop_watch_linux_ada79dea0dc663ac4101a6d01a12b10bb}} 
+\index{StopWatchLinux@{StopWatchLinux}!running@{running}}
+\index{running@{running}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{running}{running}}
+{\footnotesize\ttfamily bool Stop\+Watch\+Linux\+::running\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+flag if the stop watch is running 
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00272}{272}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{class_stop_watch_linux_aeea9d454621ed9246317c5c6793db1ed}\label{class_stop_watch_linux_aeea9d454621ed9246317c5c6793db1ed}} 
+\index{StopWatchLinux@{StopWatchLinux}!start\_time@{start\_time}}
+\index{start\_time@{start\_time}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{start\_time}{start\_time}}
+{\footnotesize\ttfamily struct timeval Stop\+Watch\+Linux\+::start\+\_\+time\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Start of measurement. 
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00263}{263}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+\mbox{\Hypertarget{class_stop_watch_linux_a709a9567a4868e7920132959ae8a00bf}\label{class_stop_watch_linux_a709a9567a4868e7920132959ae8a00bf}} 
+\index{StopWatchLinux@{StopWatchLinux}!total\_time@{total\_time}}
+\index{total\_time@{total\_time}!StopWatchLinux@{StopWatchLinux}}
+\doxysubsubsection{\texorpdfstring{total\_time}{total\_time}}
+{\footnotesize\ttfamily float Stop\+Watch\+Linux\+::total\+\_\+time\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+TOTAL time difference between starts and stops. 
+
+
+
+Definition at line \mbox{\hyperlink{helper__timer_8h_source_l00269}{269}} of file \mbox{\hyperlink{helper__timer_8h_source}{helper\+\_\+timer.\+h}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+librapid/include/librapid/cuda/\mbox{\hyperlink{helper__timer_8h}{helper\+\_\+timer.\+h}}\end{DoxyCompactItemize}
