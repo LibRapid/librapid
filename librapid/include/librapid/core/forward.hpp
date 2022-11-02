@@ -5,6 +5,9 @@ namespace librapid {
 	template<typename Scalar_, typename Allocator_>
 	class Storage;
 
+	template<typename Scalar_>
+	class CudaStorage;
+
 	template<typename ShapeType_, typename StorageType_>
 	class ArrayContainer;
 

@@ -3,6 +3,7 @@
 
 #include "sizetype.hpp"
 #include "storage.hpp"
+#include "cudaStorage.hpp"
 #include "arrayContainer.hpp"
 #include "operations.hpp"
 #include "function.hpp"
