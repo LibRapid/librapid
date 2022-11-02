@@ -46,8 +46,21 @@ jobs:
         run: |
           sudo apt-get dist-upgrade
 
-      - name: Build Documentation
-        run: doxygen
+      # - name: Build Documentation
+      #   run: doxygen
+
+      # On Linux, the apt package doesn't build the search engine for some reason.
+      # By building and installing doxygen ourselves, we can ensure that the documentation
+      # has a working search engine.
+      - name: Build Doxygen
+        run: |
+          git clone --recursive https://github.com/doxygen/doxygen.git
+          cd doxygen
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+          sudo make install
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
