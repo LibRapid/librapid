@@ -1,0 +1,469 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="level1extensions_8h" kind="file" language="C++">
+    <compoundname>level1extensions.h</compoundname>
+    <includes refid="level1extensions_2acxpby_8h" local="yes">cxxblas/level1extensions/acxpby.h</includes>
+    <includes refid="level1extensions_2acxpy_8h" local="yes">cxxblas/level1extensions/acxpy.h</includes>
+    <includes refid="asum1_8h" local="yes">cxxblas/level1extensions/asum1.h</includes>
+    <includes refid="level1extensions_2axpby_8h" local="yes">cxxblas/level1extensions/axpby.h</includes>
+    <includes refid="level1extensions_2axpy_8h" local="yes">cxxblas/level1extensions/axpy.h</includes>
+    <includes refid="level1extensions_2ccopy_8h" local="yes">cxxblas/level1extensions/ccopy.h</includes>
+    <includes refid="level1extensions_2dot_8h" local="yes">cxxblas/level1extensions/dot.h</includes>
+    <includes refid="gbaxpby_8h" local="yes">cxxblas/level1extensions/gbaxpby.h</includes>
+    <includes refid="gbaxpy_8h" local="yes">cxxblas/level1extensions/gbaxpy.h</includes>
+    <includes refid="gbcopy_8h" local="yes">cxxblas/level1extensions/gbcopy.h</includes>
+    <includes refid="gbcotr_8h" local="yes">cxxblas/level1extensions/gbcotr.h</includes>
+    <includes refid="gbscal_8h" local="yes">cxxblas/level1extensions/gbscal.h</includes>
+    <includes refid="geaxpby_8h" local="yes">cxxblas/level1extensions/geaxpby.h</includes>
+    <includes refid="level1extensions_2geaxpy_8h" local="yes">cxxblas/level1extensions/geaxpy.h</includes>
+    <includes refid="level1extensions_2gecopy_8h" local="yes">cxxblas/level1extensions/gecopy.h</includes>
+    <includes refid="gecotr_8h" local="yes">cxxblas/level1extensions/gecotr.h</includes>
+    <includes refid="geraxpy_8h" local="yes">cxxblas/level1extensions/geraxpy.h</includes>
+    <includes refid="level1extensions_2gerscal_8h" local="yes">cxxblas/level1extensions/gerscal.h</includes>
+    <includes refid="level1extensions_2gescal_8h" local="yes">cxxblas/level1extensions/gescal.h</includes>
+    <includes refid="geswap_8h" local="yes">cxxblas/level1extensions/geswap.h</includes>
+    <includes refid="hescal_8h" local="yes">cxxblas/level1extensions/hescal.h</includes>
+    <includes refid="imax1_8h" local="yes">cxxblas/level1extensions/imax1.h</includes>
+    <includes refid="syscal_8h" local="yes">cxxblas/level1extensions/syscal.h</includes>
+    <includes refid="racxpy_8h" local="yes">cxxblas/level1extensions/racxpy.h</includes>
+    <includes refid="raxpy_8h" local="yes">cxxblas/level1extensions/raxpy.h</includes>
+    <includes refid="level1extensions_2rscal_8h" local="yes">cxxblas/level1extensions/rscal.h</includes>
+    <includes refid="traxpby_8h" local="yes">cxxblas/level1extensions/traxpby.h</includes>
+    <includes refid="traxpy_8h" local="yes">cxxblas/level1extensions/traxpy.h</includes>
+    <includes refid="trcopy_8h" local="yes">cxxblas/level1extensions/trcopy.h</includes>
+    <includes refid="tpaxpby_8h" local="yes">cxxblas/level1extensions/tpaxpby.h</includes>
+    <includes refid="tpaxpy_8h" local="yes">cxxblas/level1extensions/tpaxpy.h</includes>
+    <includes refid="tpcopy_8h" local="yes">cxxblas/level1extensions/tpcopy.h</includes>
+    <includes refid="tpscal_8h" local="yes">cxxblas/level1extensions/tpscal.h</includes>
+    <includedby refid="cxxblas_8h" local="yes">librapid/cxxblas/cxxblas.h</includedby>
+    <incdepgraph>
+      <node id="7">
+        <label>cxxblas/auxiliary/issame.h</label>
+        <link refid="issame_8h"/>
+      </node>
+      <node id="8">
+        <label>cxxblas/auxiliary/restrictto.h</label>
+        <link refid="restrictto_8h"/>
+      </node>
+      <node id="6">
+        <label>cxxblas/drivers/drivers.h</label>
+        <link refid="drivers_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cxxblas/level1extensions/acxpby.h</label>
+        <link refid="level1extensions_2acxpby_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>cxxblas/level1extensions/acxpy.h</label>
+        <link refid="level1extensions_2acxpy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>cxxblas/level1extensions/asum1.h</label>
+        <link refid="asum1_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>cxxblas/level1extensions/axpby.h</label>
+        <link refid="level1extensions_2axpby_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>cxxblas/level1extensions/axpy.h</label>
+        <link refid="level1extensions_2axpy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>cxxblas/level1extensions/ccopy.h</label>
+        <link refid="level1extensions_2ccopy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>cxxblas/level1extensions/dot.h</label>
+        <link refid="level1extensions_2dot_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>cxxblas/level1extensions/gbaxpby.h</label>
+        <link refid="gbaxpby_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="14">
+        <label>cxxblas/level1extensions/gbaxpy.h</label>
+        <link refid="gbaxpy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>cxxblas/level1extensions/gbcopy.h</label>
+        <link refid="gbcopy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>cxxblas/level1extensions/gbcotr.h</label>
+        <link refid="gbcotr_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>cxxblas/level1extensions/gbscal.h</label>
+        <link refid="gbscal_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>cxxblas/level1extensions/geaxpby.h</label>
+        <link refid="geaxpby_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>cxxblas/level1extensions/geaxpy.h</label>
+        <link refid="level1extensions_2geaxpy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>cxxblas/level1extensions/gecopy.h</label>
+        <link refid="level1extensions_2gecopy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>cxxblas/level1extensions/gecotr.h</label>
+        <link refid="gecotr_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>cxxblas/level1extensions/geraxpy.h</label>
+        <link refid="geraxpy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>cxxblas/level1extensions/gerscal.h</label>
+        <link refid="level1extensions_2gerscal_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>cxxblas/level1extensions/gescal.h</label>
+        <link refid="level1extensions_2gescal_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>cxxblas/level1extensions/geswap.h</label>
+        <link refid="geswap_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>cxxblas/level1extensions/hescal.h</label>
+        <link refid="hescal_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>cxxblas/level1extensions/imax1.h</label>
+        <link refid="imax1_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>librapid/cxxblas/level1extensions/level1extensions.h</label>
+        <link refid="level1extensions_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
+        <label>cxxblas/level1extensions/racxpy.h</label>
+        <link refid="racxpy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>cxxblas/level1extensions/raxpy.h</label>
+        <link refid="raxpy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="31">
+        <label>cxxblas/level1extensions/rscal.h</label>
+        <link refid="level1extensions_2rscal_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="28">
+        <label>cxxblas/level1extensions/syscal.h</label>
+        <link refid="syscal_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="35">
+        <label>cxxblas/level1extensions/tpaxpby.h</label>
+        <link refid="tpaxpby_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="36">
+        <label>cxxblas/level1extensions/tpaxpy.h</label>
+        <link refid="tpaxpy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>cxxblas/level1extensions/tpcopy.h</label>
+        <link refid="tpcopy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="38">
+        <label>cxxblas/level1extensions/tpscal.h</label>
+        <link refid="tpscal_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="32">
+        <label>cxxblas/level1extensions/traxpby.h</label>
+        <link refid="traxpby_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="33">
+        <label>cxxblas/level1extensions/traxpy.h</label>
+        <link refid="traxpy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="34">
+        <label>cxxblas/level1extensions/trcopy.h</label>
+        <link refid="trcopy_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>cxxblas/typedefs.h</label>
+        <link refid="typedefs_8h"/>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="3">
+        <label>librapid/cxxblas/cxxblas.cxx</label>
+        <link refid="cxxblas_8cxx"/>
+      </node>
+      <node id="2">
+        <label>librapid/cxxblas/cxxblas.h</label>
+        <link refid="cxxblas_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>librapid/cxxblas/level1/dot.h</label>
+        <link refid="level1_2dot_8h"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>librapid/cxxblas/level1/level1.h</label>
+        <link refid="level1_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>librapid/cxxblas/level1extensions/level1extensions.h</label>
+        <link refid="level1extensions_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>librapid/include/librapid/core/core.hpp</label>
+        <link refid="core_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>librapid/include/librapid/librapid.hpp</label>
+        <link refid="librapid_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>librapid/src/global.cpp</label>
+        <link refid="global_8cpp"/>
+      </node>
+      <node id="9">
+        <label>librapid/src/helper_cuda.cpp</label>
+        <link refid="helper__cuda_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Copyright<sp/>(c)<sp/>2010,<sp/>Michael<sp/>Lehn</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/><sp/><sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Redistribution<sp/>and<sp/>use<sp/>in<sp/>source<sp/>and<sp/>binary<sp/>forms,<sp/>with<sp/>or<sp/>without</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/><sp/><sp/>modification,<sp/>are<sp/>permitted<sp/>provided<sp/>that<sp/>the<sp/>following<sp/>conditions</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/><sp/><sp/>are<sp/>met:</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/><sp/><sp/>1)<sp/>Redistributions<sp/>of<sp/>source<sp/>code<sp/>must<sp/>retain<sp/>the<sp/>above<sp/>copyright</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>notice,<sp/>this<sp/>list<sp/>of<sp/>conditions<sp/>and<sp/>the<sp/>following<sp/>disclaimer.</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/><sp/><sp/>2)<sp/>Redistributions<sp/>in<sp/>binary<sp/>form<sp/>must<sp/>reproduce<sp/>the<sp/>above<sp/>copyright</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>notice,<sp/>this<sp/>list<sp/>of<sp/>conditions<sp/>and<sp/>the<sp/>following<sp/>disclaimer<sp/>in</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>the<sp/>documentation<sp/>and/or<sp/>other<sp/>materials<sp/>provided<sp/>with<sp/>the</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>distribution.</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/><sp/><sp/>3)<sp/>Neither<sp/>the<sp/>name<sp/>of<sp/>the<sp/>FLENS<sp/>development<sp/>group<sp/>nor<sp/>the<sp/>names<sp/>of</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>its<sp/>contributors<sp/>may<sp/>be<sp/>used<sp/>to<sp/>endorse<sp/>or<sp/>promote<sp/>products<sp/>derived</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/>from<sp/>this<sp/>software<sp/>without<sp/>specific<sp/>prior<sp/>written<sp/>permission.</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/><sp/><sp/>THIS<sp/>SOFTWARE<sp/>IS<sp/>PROVIDED<sp/>BY<sp/>THE<sp/>COPYRIGHT<sp/>HOLDERS<sp/>AND<sp/>CONTRIBUTORS</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/><sp/><sp/>&quot;AS<sp/>IS&quot;<sp/>AND<sp/>ANY<sp/>EXPRESS<sp/>OR<sp/>IMPLIED<sp/>WARRANTIES,<sp/>INCLUDING,<sp/>BUT<sp/>NOT</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/><sp/><sp/>LIMITED<sp/>TO,<sp/>THE<sp/>IMPLIED<sp/>WARRANTIES<sp/>OF<sp/>MERCHANTABILITY<sp/>AND<sp/>FITNESS<sp/>FOR</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*<sp/><sp/><sp/>A<sp/>PARTICULAR<sp/>PURPOSE<sp/>ARE<sp/>DISCLAIMED.<sp/>IN<sp/>NO<sp/>EVENT<sp/>SHALL<sp/>THE<sp/>COPYRIGHT</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*<sp/><sp/><sp/>OWNER<sp/>OR<sp/>CONTRIBUTORS<sp/>BE<sp/>LIABLE<sp/>FOR<sp/>ANY<sp/>DIRECT,<sp/>INDIRECT,<sp/>INCIDENTAL,</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/>*<sp/><sp/><sp/>SPECIAL,<sp/>EXEMPLARY,<sp/>OR<sp/>CONSEQUENTIAL<sp/>DAMAGES<sp/>(INCLUDING,<sp/>BUT<sp/>NOT</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/>*<sp/><sp/><sp/>LIMITED<sp/>TO,<sp/>PROCUREMENT<sp/>OF<sp/>SUBSTITUTE<sp/>GOODS<sp/>OR<sp/>SERVICES;<sp/>LOSS<sp/>OF<sp/>USE,</highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/>*<sp/><sp/><sp/>DATA,<sp/>OR<sp/>PROFITS;<sp/>OR<sp/>BUSINESS<sp/>INTERRUPTION)<sp/>HOWEVER<sp/>CAUSED<sp/>AND<sp/>ON<sp/>ANY</highlight></codeline>
+<codeline lineno="28"><highlight class="comment"><sp/>*<sp/><sp/><sp/>THEORY<sp/>OF<sp/>LIABILITY,<sp/>WHETHER<sp/>IN<sp/>CONTRACT,<sp/>STRICT<sp/>LIABILITY,<sp/>OR<sp/>TORT</highlight></codeline>
+<codeline lineno="29"><highlight class="comment"><sp/>*<sp/><sp/><sp/>(INCLUDING<sp/>NEGLIGENCE<sp/>OR<sp/>OTHERWISE)<sp/>ARISING<sp/>IN<sp/>ANY<sp/>WAY<sp/>OUT<sp/>OF<sp/>THE<sp/>USE</highlight></codeline>
+<codeline lineno="30"><highlight class="comment"><sp/>*<sp/><sp/><sp/>OF<sp/>THIS<sp/>SOFTWARE,<sp/>EVEN<sp/>IF<sp/>ADVISED<sp/>OF<sp/>THE<sp/>POSSIBILITY<sp/>OF<sp/>SUCH<sp/>DAMAGE.</highlight></codeline>
+<codeline lineno="31"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CXXBLAS_LEVEL1EXTENSIONS_LEVEL1EXTENSIONS_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CXXBLAS_LEVEL1EXTENSIONS_LEVEL1EXTENSIONS_H<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="level1extensions_2acxpby_8h" kindref="compound">cxxblas/level1extensions/acxpby.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="level1extensions_2acxpy_8h" kindref="compound">cxxblas/level1extensions/acxpy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="asum1_8h" kindref="compound">cxxblas/level1extensions/asum1.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="level1extensions_2axpby_8h" kindref="compound">cxxblas/level1extensions/axpby.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="level1extensions_2axpy_8h" kindref="compound">cxxblas/level1extensions/axpy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="level1extensions_2ccopy_8h" kindref="compound">cxxblas/level1extensions/ccopy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="level1extensions_2dot_8h" kindref="compound">cxxblas/level1extensions/dot.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="gbaxpby_8h" kindref="compound">cxxblas/level1extensions/gbaxpby.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="gbaxpy_8h" kindref="compound">cxxblas/level1extensions/gbaxpy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="gbcopy_8h" kindref="compound">cxxblas/level1extensions/gbcopy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="gbcotr_8h" kindref="compound">cxxblas/level1extensions/gbcotr.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="gbscal_8h" kindref="compound">cxxblas/level1extensions/gbscal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="geaxpby_8h" kindref="compound">cxxblas/level1extensions/geaxpby.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="level1extensions_2geaxpy_8h" kindref="compound">cxxblas/level1extensions/geaxpy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="level1extensions_2gecopy_8h" kindref="compound">cxxblas/level1extensions/gecopy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="gecotr_8h" kindref="compound">cxxblas/level1extensions/gecotr.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="geraxpy_8h" kindref="compound">cxxblas/level1extensions/geraxpy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="level1extensions_2gerscal_8h" kindref="compound">cxxblas/level1extensions/gerscal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="level1extensions_2gescal_8h" kindref="compound">cxxblas/level1extensions/gescal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="geswap_8h" kindref="compound">cxxblas/level1extensions/geswap.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="hescal_8h" kindref="compound">cxxblas/level1extensions/hescal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="imax1_8h" kindref="compound">cxxblas/level1extensions/imax1.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="syscal_8h" kindref="compound">cxxblas/level1extensions/syscal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="racxpy_8h" kindref="compound">cxxblas/level1extensions/racxpy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="raxpy_8h" kindref="compound">cxxblas/level1extensions/raxpy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="level1extensions_2rscal_8h" kindref="compound">cxxblas/level1extensions/rscal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="traxpby_8h" kindref="compound">cxxblas/level1extensions/traxpby.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="traxpy_8h" kindref="compound">cxxblas/level1extensions/traxpy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="trcopy_8h" kindref="compound">cxxblas/level1extensions/trcopy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="tpaxpby_8h" kindref="compound">cxxblas/level1extensions/tpaxpby.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="tpaxpy_8h" kindref="compound">cxxblas/level1extensions/tpaxpy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="tpcopy_8h" kindref="compound">cxxblas/level1extensions/tpcopy.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="tpscal_8h" kindref="compound">cxxblas/level1extensions/tpscal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>CXXBLAS_LEVEL1EXTENSIONS_LEVEL1EXTENSIONS_H</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="librapid/cxxblas/level1extensions/level1extensions.h"/>
+  </compounddef>
+</doxygen>

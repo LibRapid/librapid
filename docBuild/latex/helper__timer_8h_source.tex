@@ -1,0 +1,325 @@
+\hypertarget{helper__timer_8h_source}{}\doxysection{helper\+\_\+timer.\+h}
+\label{helper__timer_8h_source}\index{librapid/include/librapid/cuda/helper\_timer.h@{librapid/include/librapid/cuda/helper\_timer.h}}
+\mbox{\hyperlink{helper__timer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00001}00001 \textcolor{comment}{/* Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00002}00002 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00003}00003 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00004}00004 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00005}00005 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00006}00006 \textcolor{comment}{ *  * Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00007}00007 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00008}00008 \textcolor{comment}{ *  * Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00009}00009 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00010}00010 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00011}00011 \textcolor{comment}{ *  * Neither the name of NVIDIA CORPORATION nor the names of its}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00012}00012 \textcolor{comment}{ *    contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00013}00013 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00014}00014 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00015}00015 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00016}00016 \textcolor{comment}{ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00017}00017 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00018}00018 \textcolor{comment}{ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00019}00019 \textcolor{comment}{ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00020}00020 \textcolor{comment}{ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00021}00021 \textcolor{comment}{ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00022}00022 \textcolor{comment}{ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00023}00023 \textcolor{comment}{ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00024}00024 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00025}00025 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00026}00026 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00027}00027 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00028}00028 \textcolor{comment}{// Helper Timing Functions}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00029}00029 \textcolor{preprocessor}{\#ifndef COMMON\_HELPER\_TIMER\_H\_}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00030}00030 \textcolor{preprocessor}{\#define COMMON\_HELPER\_TIMER\_H\_}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00031}00031 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00032}00032 \textcolor{preprocessor}{\#ifndef EXIT\_WAIVED}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00033}\mbox{\hyperlink{helper__timer_8h_ad20838a18f49298dae4d0ee29a0bb7a9}{00033}} \textcolor{preprocessor}{\#   define EXIT\_WAIVED 2}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00034}00034 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00036}00036 \textcolor{comment}{// includes, system}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00037}00037 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00038}00038 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00039}00039 \textcolor{comment}{// includes, project}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00040}00040 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{exception_8h}{exception.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00041}00041 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00042}00042 \textcolor{comment}{// Definition of the StopWatch Interface, this is used if we don't want to use}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00043}00043 \textcolor{comment}{// the CUT functions But rather in a self contained class interface}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00044}\mbox{\hyperlink{class_stop_watch_interface}{00044}} \textcolor{keyword}{class }\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00045}00045 \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00046}\mbox{\hyperlink{class_stop_watch_interface_a3b16caaf562bcb9e5b20053738729850}{00046}}     \mbox{\hyperlink{class_stop_watch_interface_a3b16caaf562bcb9e5b20053738729850}{StopWatchInterface}}() \{\}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00047}00047 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00048}\mbox{\hyperlink{class_stop_watch_interface_ae6fe6ad45faa59f367624de26b808fc4}{00048}}     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_stop_watch_interface_ae6fe6ad45faa59f367624de26b808fc4}{\string~StopWatchInterface}}() \{\}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00049}00049 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00050}00050 \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00052}\mbox{\hyperlink{class_stop_watch_interface_a753200dac75f85ed691fc496d8343248}{00052}}     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_interface_a753200dac75f85ed691fc496d8343248}{start}}() = 0;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00053}00053 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00055}\mbox{\hyperlink{class_stop_watch_interface_a53280ad65e3800cf608315afa3a20554}{00055}}     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_interface_a53280ad65e3800cf608315afa3a20554}{stop}}() = 0;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00056}00056 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00058}\mbox{\hyperlink{class_stop_watch_interface_af38c96a046bc667528a8500d69106b09}{00058}}     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_interface_af38c96a046bc667528a8500d69106b09}{reset}}() = 0;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00059}00059 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00063}\mbox{\hyperlink{class_stop_watch_interface_ab2127ae16fd7cafec70246fa07f2025f}{00063}}     \textcolor{keyword}{virtual} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_interface_ab2127ae16fd7cafec70246fa07f2025f}{getTime}}() = 0;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00064}00064 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00067}\mbox{\hyperlink{class_stop_watch_interface_a049e581ad35895795be1e04763d40cc3}{00067}}     \textcolor{keyword}{virtual} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_interface_a049e581ad35895795be1e04763d40cc3}{getAverageTime}}() = 0;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00068}00068 \};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00069}00069 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00071}00071 \textcolor{comment}{// Begin Stopwatch timer class definitions for all OS platforms //}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00073}00073 \textcolor{comment}{}\textcolor{preprocessor}{\#if defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00074}00074 \textcolor{comment}{// includes, system}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00075}00075 \textcolor{preprocessor}{\#   define WINDOWS\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00076}00076 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00077}00077 \textcolor{preprocessor}{\#   include <Windows.h>}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00078}00078 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00079}00079 \textcolor{preprocessor}{\#   undef min}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00080}00080 \textcolor{preprocessor}{\#   undef max}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00081}00081 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00083}00083 \textcolor{keyword}{class }StopWatchWin : \textcolor{keyword}{public} \mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00084}00084 \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00086}00086     StopWatchWin() :}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00087}00087             start\_time(), end\_time(), diff\_time(0.0f), total\_time(0.0f), running(\textcolor{keyword}{false}),}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00088}00088             clock\_sessions(0), freq(0), freq\_set(\textcolor{keyword}{false}) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00089}00089         \textcolor{keywordflow}{if} (!freq\_set) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00090}00090             \textcolor{comment}{// helper variable}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00091}00091             LARGE\_INTEGER temp;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00092}00092 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00093}00093             \textcolor{comment}{// get the tick frequency from the OS}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00094}00094             QueryPerformanceFrequency(\textcolor{keyword}{reinterpret\_cast<}LARGE\_INTEGER *\textcolor{keyword}{>}(\&temp));}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00095}00095 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00096}00096             \textcolor{comment}{// convert to type in which it is needed}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00097}00097             freq = (\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(temp.QuadPart)) / 1000.0;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00098}00098 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00099}00099             \textcolor{comment}{// rememeber query}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00100}00100             freq\_set = \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00101}00101         \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00102}00102     \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00103}00103 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00104}00104     \textcolor{comment}{// Destructor}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00105}00105     \string~StopWatchWin() \{\}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00106}00106 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00107}00107 \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00109}00109     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_interface_a753200dac75f85ed691fc496d8343248}{start}}();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00110}00110 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00112}00112     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_interface_a53280ad65e3800cf608315afa3a20554}{stop}}();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00113}00113 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00115}00115     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_interface_af38c96a046bc667528a8500d69106b09}{reset}}();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00116}00116 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00120}00120     \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_interface_ab2127ae16fd7cafec70246fa07f2025f}{getTime}}();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00121}00121 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00124}00124     \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_interface_a049e581ad35895795be1e04763d40cc3}{getAverageTime}}();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00125}00125 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00126}00126 \textcolor{keyword}{private}:}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00127}00127     \textcolor{comment}{// member variables}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00128}00128 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00130}00130     LARGE\_INTEGER start\_time;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00132}00132     LARGE\_INTEGER end\_time;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00133}00133 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00135}00135     \textcolor{keywordtype}{float} diff\_time;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00136}00136 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00138}00138     \textcolor{keywordtype}{float} total\_time;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00139}00139 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00141}00141     \textcolor{keywordtype}{bool} running;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00142}00142 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00145}00145     \textcolor{keywordtype}{int} clock\_sessions;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00146}00146 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00148}00148     \textcolor{keywordtype}{double} freq;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00149}00149 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00151}00151     \textcolor{keywordtype}{bool} freq\_set;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00152}00152 \};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00153}00153 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00154}00154 \textcolor{comment}{// functions, inlined}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00155}00155 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00159}00159 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} StopWatchWin::start() \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00160}00160     QueryPerformanceCounter(\textcolor{keyword}{reinterpret\_cast<}LARGE\_INTEGER *\textcolor{keyword}{>}(\&start\_time));}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00161}00161     running = \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00162}00162 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00163}00163 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00168}00168 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} StopWatchWin::stop() \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00169}00169     QueryPerformanceCounter(\textcolor{keyword}{reinterpret\_cast<}LARGE\_INTEGER *\textcolor{keyword}{>}(\&end\_time));}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00170}00170     diff\_time = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00171}00171       ((\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(end\_time.QuadPart) -\/ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(start\_time.QuadPart)) / freq));}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00172}00172 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00173}00173     total\_time += diff\_time;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00174}00174     clock\_sessions++;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00175}00175     running = \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00176}00176 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00177}00177 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00182}00182 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} StopWatchWin::reset() \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00183}00183     diff\_time      = 0;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00184}00184     total\_time     = 0;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00185}00185     clock\_sessions = 0;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00186}00186 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00187}00187     \textcolor{keywordflow}{if} (running) \{ QueryPerformanceCounter(\textcolor{keyword}{reinterpret\_cast<}LARGE\_INTEGER *\textcolor{keyword}{>}(\&start\_time)); \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00188}00188 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00189}00189 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00196}00196 \textcolor{keyword}{inline} \textcolor{keywordtype}{float} StopWatchWin::getTime() \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00197}00197     \textcolor{comment}{// Return the TOTAL time to date}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00198}00198     \textcolor{keywordtype}{float} retval = total\_time;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00199}00199 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00200}00200     \textcolor{keywordflow}{if} (running) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00201}00201         LARGE\_INTEGER temp;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00202}00202         QueryPerformanceCounter(\textcolor{keyword}{reinterpret\_cast<}LARGE\_INTEGER *\textcolor{keyword}{>}(\&temp));}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00203}00203         retval += \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00204}00204           ((\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(temp.QuadPart) -\/ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(start\_time.QuadPart)) / freq));}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00205}00205     \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00206}00206 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00207}00207     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00208}00208 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00209}00209 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00214}00214 \textcolor{keyword}{inline} \textcolor{keywordtype}{float} StopWatchWin::getAverageTime() \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00215}00215     \textcolor{keywordflow}{return} (clock\_sessions > 0) ? (total\_time / clock\_sessions) : 0.0f;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00216}00216 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00217}00217 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00218}00218 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00219}00219 \textcolor{comment}{// Declarations for Stopwatch on Linux and Mac OSX}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00220}00220 \textcolor{comment}{// includes, system}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00221}00221 \textcolor{preprocessor}{\#   include <ctime>}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00222}00222 \textcolor{preprocessor}{\#   include <sys/time.h>}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00223}00223 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00225}\mbox{\hyperlink{class_stop_watch_linux}{00225}} \textcolor{keyword}{class }\mbox{\hyperlink{class_stop_watch_linux}{StopWatchLinux}} : \textcolor{keyword}{public} \mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00226}00226 \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00228}\mbox{\hyperlink{class_stop_watch_linux_adb421b1d92bec2a59e564c053d94075f}{00228}}     \mbox{\hyperlink{class_stop_watch_linux_adb421b1d92bec2a59e564c053d94075f}{StopWatchLinux}}() :}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00229}00229             \mbox{\hyperlink{class_stop_watch_linux_aeea9d454621ed9246317c5c6793db1ed}{start\_time}}(), \mbox{\hyperlink{class_stop_watch_linux_adedd72587f2caf53a4f0af0fd90090a6}{diff\_time}}(0.0), \mbox{\hyperlink{class_stop_watch_linux_a709a9567a4868e7920132959ae8a00bf}{total\_time}}(0.0), \mbox{\hyperlink{class_stop_watch_linux_ada79dea0dc663ac4101a6d01a12b10bb}{running}}(false), \mbox{\hyperlink{class_stop_watch_linux_a5d40c14043e5a732c908da418eeada77}{clock\_sessions}}(0) \{\}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00230}00230 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00231}00231     \textcolor{comment}{// Destructor}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00232}\mbox{\hyperlink{class_stop_watch_linux_a2063456840d915094595e8e3273d38c5}{00232}}     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_stop_watch_linux_a2063456840d915094595e8e3273d38c5}{\string~StopWatchLinux}}() \{\}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00233}00233 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00234}00234 \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00236}00236     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_linux_a5b48161b757890313c93cdcbf6470258}{start}}();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00237}00237 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00239}00239     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_linux_aea4fb94c36ad6d01cb371afa0aae0926}{stop}}();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00240}00240 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00242}00242     \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_linux_ae609a527c56e658941f539a8aaf43c71}{reset}}();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00243}00243 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00247}00247     \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_linux_a7e211f57179ab20e6814127318e9f0f8}{getTime}}();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00248}00248 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00251}00251     \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_linux_a702b38009675968d5798796978007376}{getAverageTime}}();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00252}00252 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00253}00253 \textcolor{keyword}{private}:}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00254}00254     \textcolor{comment}{// helper functions}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00255}00255 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00257}00257     \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_linux_a3f7b53a7d64f4ffaa243eceee6f44b83}{getDiffTime}}();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00258}00258 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00259}00259 \textcolor{keyword}{private}:}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00260}00260     \textcolor{comment}{// member variables}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00261}00261 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00263}\mbox{\hyperlink{class_stop_watch_linux_aeea9d454621ed9246317c5c6793db1ed}{00263}}     \textcolor{keyword}{struct }timeval \mbox{\hyperlink{class_stop_watch_linux_aeea9d454621ed9246317c5c6793db1ed}{start\_time}};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00264}00264 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00266}\mbox{\hyperlink{class_stop_watch_linux_adedd72587f2caf53a4f0af0fd90090a6}{00266}}     \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_linux_adedd72587f2caf53a4f0af0fd90090a6}{diff\_time}};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00267}00267 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00269}\mbox{\hyperlink{class_stop_watch_linux_a709a9567a4868e7920132959ae8a00bf}{00269}}     \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_linux_a709a9567a4868e7920132959ae8a00bf}{total\_time}};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00270}00270 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00272}\mbox{\hyperlink{class_stop_watch_linux_ada79dea0dc663ac4101a6d01a12b10bb}{00272}}     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_stop_watch_linux_ada79dea0dc663ac4101a6d01a12b10bb}{running}};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00273}00273 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00276}\mbox{\hyperlink{class_stop_watch_linux_a5d40c14043e5a732c908da418eeada77}{00276}}     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_stop_watch_linux_a5d40c14043e5a732c908da418eeada77}{clock\_sessions}};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00277}00277 \};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00278}00278 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00279}00279 \textcolor{comment}{// functions, inlined}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00280}00280 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00284}\mbox{\hyperlink{class_stop_watch_linux_a5b48161b757890313c93cdcbf6470258}{00284}} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_linux_a5b48161b757890313c93cdcbf6470258}{StopWatchLinux::start}}() \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00285}00285     gettimeofday(\&\mbox{\hyperlink{class_stop_watch_linux_aeea9d454621ed9246317c5c6793db1ed}{start\_time}}, 0);}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00286}00286     \mbox{\hyperlink{class_stop_watch_linux_ada79dea0dc663ac4101a6d01a12b10bb}{running}} = \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00287}00287 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00288}00288 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00293}\mbox{\hyperlink{class_stop_watch_linux_aea4fb94c36ad6d01cb371afa0aae0926}{00293}} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_linux_aea4fb94c36ad6d01cb371afa0aae0926}{StopWatchLinux::stop}}() \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00294}00294     \mbox{\hyperlink{class_stop_watch_linux_adedd72587f2caf53a4f0af0fd90090a6}{diff\_time}} = \mbox{\hyperlink{class_stop_watch_linux_a3f7b53a7d64f4ffaa243eceee6f44b83}{getDiffTime}}();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00295}00295     \mbox{\hyperlink{class_stop_watch_linux_a709a9567a4868e7920132959ae8a00bf}{total\_time}} += \mbox{\hyperlink{class_stop_watch_linux_adedd72587f2caf53a4f0af0fd90090a6}{diff\_time}};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00296}00296     \mbox{\hyperlink{class_stop_watch_linux_ada79dea0dc663ac4101a6d01a12b10bb}{running}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00297}00297     \mbox{\hyperlink{class_stop_watch_linux_a5d40c14043e5a732c908da418eeada77}{clock\_sessions}}++;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00298}00298 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00299}00299 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00304}\mbox{\hyperlink{class_stop_watch_linux_ae609a527c56e658941f539a8aaf43c71}{00304}} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_stop_watch_linux_ae609a527c56e658941f539a8aaf43c71}{StopWatchLinux::reset}}() \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00305}00305     \mbox{\hyperlink{class_stop_watch_linux_adedd72587f2caf53a4f0af0fd90090a6}{diff\_time}}     = 0;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00306}00306     \mbox{\hyperlink{class_stop_watch_linux_a709a9567a4868e7920132959ae8a00bf}{total\_time}}       = 0;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00307}00307     \mbox{\hyperlink{class_stop_watch_linux_a5d40c14043e5a732c908da418eeada77}{clock\_sessions}} = 0;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00308}00308 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00309}00309     \textcolor{keywordflow}{if} (\mbox{\hyperlink{class_stop_watch_linux_ada79dea0dc663ac4101a6d01a12b10bb}{running}}) \{ gettimeofday(\&\mbox{\hyperlink{class_stop_watch_linux_aeea9d454621ed9246317c5c6793db1ed}{start\_time}}, 0); \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00310}00310 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00311}00311 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00318}\mbox{\hyperlink{class_stop_watch_linux_a7e211f57179ab20e6814127318e9f0f8}{00318}} \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_linux_a7e211f57179ab20e6814127318e9f0f8}{StopWatchLinux::getTime}}() \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00319}00319     \textcolor{comment}{// Return the TOTAL time to date}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00320}00320     \textcolor{keywordtype}{float} retval = \mbox{\hyperlink{class_stop_watch_linux_a709a9567a4868e7920132959ae8a00bf}{total\_time}};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00321}00321 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00322}00322     \textcolor{keywordflow}{if} (\mbox{\hyperlink{class_stop_watch_linux_ada79dea0dc663ac4101a6d01a12b10bb}{running}}) \{ retval += \mbox{\hyperlink{class_stop_watch_linux_a3f7b53a7d64f4ffaa243eceee6f44b83}{getDiffTime}}(); \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00323}00323 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00324}00324     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00325}00325 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00326}00326 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00331}\mbox{\hyperlink{class_stop_watch_linux_a702b38009675968d5798796978007376}{00331}} \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_linux_a702b38009675968d5798796978007376}{StopWatchLinux::getAverageTime}}() \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00332}00332     \textcolor{keywordflow}{return} (\mbox{\hyperlink{class_stop_watch_linux_a5d40c14043e5a732c908da418eeada77}{clock\_sessions}} > 0) ? (\mbox{\hyperlink{class_stop_watch_linux_a709a9567a4868e7920132959ae8a00bf}{total\_time}} / \mbox{\hyperlink{class_stop_watch_linux_a5d40c14043e5a732c908da418eeada77}{clock\_sessions}}) : 0.0f;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00333}00333 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00335}00335 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00337}\mbox{\hyperlink{class_stop_watch_linux_a3f7b53a7d64f4ffaa243eceee6f44b83}{00337}} \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_stop_watch_linux_a3f7b53a7d64f4ffaa243eceee6f44b83}{StopWatchLinux::getDiffTime}}() \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00338}00338     \textcolor{keyword}{struct }timeval t\_time;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00339}00339     gettimeofday(\&t\_time, 0);}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00340}00340 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00341}00341     \textcolor{comment}{// time difference in milli-\/seconds}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00342}00342     \textcolor{keywordflow}{return} \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(1000.0 * (t\_time.tv\_sec -\/ \mbox{\hyperlink{class_stop_watch_linux_aeea9d454621ed9246317c5c6793db1ed}{start\_time}}.tv\_sec) +}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00343}00343                               (0.001 * (t\_time.tv\_usec -\/ \mbox{\hyperlink{class_stop_watch_linux_aeea9d454621ed9246317c5c6793db1ed}{start\_time}}.tv\_usec)));}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00344}00344 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00345}00345 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// WIN32}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00346}00346 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00349}00349 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00355}\mbox{\hyperlink{helper__timer_8h_aa0a197b1848bce4d73807f7297d708df}{00355}} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{helper__timer_8h_aa0a197b1848bce4d73807f7297d708df}{sdkCreateTimer}}(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00356}00356 \textcolor{comment}{// printf("{}sdkCreateTimer called object \%08x\(\backslash\)n"{}, (void *)*timer\_interface);}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00357}00357 \textcolor{preprocessor}{\#if defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00358}00358     *timer\_interface = \textcolor{keyword}{reinterpret\_cast<}\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} *\textcolor{keyword}{>}(\textcolor{keyword}{new} StopWatchWin());}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00359}00359 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00360}00360     *timer\_interface = \textcolor{keyword}{reinterpret\_cast<}\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} *\textcolor{keyword}{>}(\textcolor{keyword}{new} \mbox{\hyperlink{class_stop_watch_linux}{StopWatchLinux}}());}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00361}00361 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00362}00362     \textcolor{keywordflow}{return} (*timer\_interface != NULL) ? true : \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00363}00363 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00364}00364 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00370}\mbox{\hyperlink{helper__timer_8h_a629749b153ff9be740765149b3c652b6}{00370}} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{helper__timer_8h_a629749b153ff9be740765149b3c652b6}{sdkDeleteTimer}}(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00371}00371     \textcolor{comment}{// printf("{}sdkDeleteTimer called object \%08x\(\backslash\)n"{}, (void *)*timer\_interface);}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00372}00372     \textcolor{keywordflow}{if} (*timer\_interface) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00373}00373         \textcolor{keyword}{delete} *timer\_interface;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00374}00374         *timer\_interface = NULL;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00375}00375     \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00376}00376 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00377}00377     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00378}00378 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00379}00379 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00384}\mbox{\hyperlink{helper__timer_8h_aa5d0a7252c27daa16091863ff789e38f}{00384}} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{helper__timer_8h_aa5d0a7252c27daa16091863ff789e38f}{sdkStartTimer}}(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00385}00385     \textcolor{comment}{// printf("{}sdkStartTimer called object \%08x\(\backslash\)n"{}, (void *)*timer\_interface);}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00386}00386     \textcolor{keywordflow}{if} (*timer\_interface) \{ (*timer\_interface)-\/>start(); \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00387}00387 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00388}00388     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00389}00389 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00390}00390 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00395}\mbox{\hyperlink{helper__timer_8h_afef340cd9aa6f9fc7ddf20e2525bb531}{00395}} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{helper__timer_8h_afef340cd9aa6f9fc7ddf20e2525bb531}{sdkStopTimer}}(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00396}00396     \textcolor{comment}{// printf("{}sdkStopTimer called object \%08x\(\backslash\)n"{}, (void *)*timer\_interface);}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00397}00397     \textcolor{keywordflow}{if} (*timer\_interface) \{ (*timer\_interface)-\/>stop(); \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00398}00398 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00399}00399     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00400}00400 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00401}00401 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00406}\mbox{\hyperlink{helper__timer_8h_a700f4d51fe548d47bf77c4c029d91c75}{00406}} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{helper__timer_8h_a700f4d51fe548d47bf77c4c029d91c75}{sdkResetTimer}}(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00407}00407     \textcolor{comment}{// printf("{}sdkResetTimer called object \%08x\(\backslash\)n"{}, (void *)*timer\_interface);}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00408}00408     \textcolor{keywordflow}{if} (*timer\_interface) \{ (*timer\_interface)-\/>reset(); \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00409}00409 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00410}00410     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00411}00411 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00412}00412 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00420}\mbox{\hyperlink{helper__timer_8h_a52ab86f6d212465929808592e3a1054f}{00420}} \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{helper__timer_8h_a52ab86f6d212465929808592e3a1054f}{sdkGetAverageTimerValue}}(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00421}00421     \textcolor{comment}{//  printf("{}sdkGetAverageTimerValue called object \%08x\(\backslash\)n"{}, (void}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00422}00422     \textcolor{comment}{//  *)*timer\_interface);}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00423}00423     \textcolor{keywordflow}{if} (*timer\_interface) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00424}00424         \textcolor{keywordflow}{return} (*timer\_interface)-\/>getAverageTime();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00425}00425     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00426}00426         \textcolor{keywordflow}{return} 0.0f;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00427}00427     \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00428}00428 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00429}00429 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00435}\mbox{\hyperlink{helper__timer_8h_ac50364748b6574878cea082c9bd1b068}{00435}} \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{helper__timer_8h_ac50364748b6574878cea082c9bd1b068}{sdkGetTimerValue}}(\mbox{\hyperlink{class_stop_watch_interface}{StopWatchInterface}} **timer\_interface) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00436}00436     \textcolor{comment}{// printf("{}sdkGetTimerValue called object \%08x\(\backslash\)n"{}, (void}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00437}00437     \textcolor{comment}{// *)*timer\_interface);}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00438}00438     \textcolor{keywordflow}{if} (*timer\_interface) \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00439}00439         \textcolor{keywordflow}{return} (*timer\_interface)-\/>getTime();}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00440}00440     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00441}00441         \textcolor{keywordflow}{return} 0.0f;}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00442}00442     \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00443}00443 \}}
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00444}00444 }
+\DoxyCodeLine{\Hypertarget{helper__timer_8h_source_l00445}00445 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// COMMON\_HELPER\_TIMER\_H\_}}
+
+\end{DoxyCode}

@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>LibRapid</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">High<sp/>Performance<sp/>C++<sp/>Library<sp/>Mathematical<sp/>Programs</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;!--<sp/>&lt;a<sp/>href=&quot;refman.pdf&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;b&gt;PDF<sp/>Documentation&lt;/b&gt;&lt;/a&gt;<sp/>--&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">&lt;a<sp/>href=&quot;https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html&quot;<sp/>target=&quot;_blank&quot;&gt;&lt;b&gt;Latest<sp/>Documentation&lt;/b&gt;&lt;/a&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>use<sp/>LibRapid<sp/>in<sp/>your<sp/>CMake<sp/>project,<sp/>first<sp/>clone<sp/>the<sp/>project:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>clone<sp/>--recursive<sp/>https://github.com/LibRapid/libRapid.git</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">add<sp/>the<sp/>following<sp/>to<sp/>your<sp/>`CMakeLists.txt`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```cmake</highlight></codeline>
+<codeline><highlight class="normal">add_subdirectory(librapid)</highlight></codeline>
+<codeline><highlight class="normal">target_link_libraries(yourTarget<sp/>PUBLIC<sp/>librapid)</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Now,<sp/>in<sp/>your<sp/>code,<sp/>add<sp/>the<sp/>following<sp/>where<sp/>required:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```cpp</highlight></codeline>
+<codeline><highlight class="normal">#include<sp/>&lt;librapid&gt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">namespace<sp/>lrc<sp/>=<sp/>librapid;<sp/>//<sp/>Optional<sp/>--<sp/>for<sp/>brevity</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">While<sp/>I&apos;ve<sp/>done<sp/>the<sp/>best<sp/>to<sp/>provide<sp/>optimal<sp/>default<sp/>settings,<sp/>sometimes<sp/>they<sp/>won&apos;t<sp/>give<sp/>you<sp/>the<sp/>results<sp/>you<sp/>want.</highlight></codeline>
+<codeline><highlight class="normal">LibRapid<sp/>provides<sp/>a<sp/>range<sp/>of<sp/>runtime<sp/>and<sp/>compile-time<sp/>options<sp/>to<sp/>customise<sp/>the<sp/>behaviour<sp/>of<sp/>your<sp/>code.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>CMake<sp/>Options</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>using<sp/>LibRapid<sp/>in<sp/>your<sp/>CMake<sp/>project,<sp/>the<sp/>following<sp/>options<sp/>are<sp/>configurable<sp/>(`name<sp/>=&gt;<sp/>default`):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`LIBRAPID_BUILD_EXAMPLES<sp/>=&gt;<sp/>OFF`<sp/>(Build<sp/>examples?)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`LIBRAPID_BUILD_TESTS<sp/>=&gt;<sp/>OFF`<sp/>(Build<sp/>tests?)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`LIBRAPID_STRICT<sp/>=&gt;<sp/>OFF`<sp/>(Force<sp/>warnings<sp/>into<sp/>errors?)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`LIBRAPID_QUIET<sp/>=&gt;<sp/>OFF`<sp/>(Disable<sp/>warnings)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`LIBRAPID_GET_BLAS<sp/>=&gt;<sp/>OFF`<sp/>(Clone<sp/>a<sp/>prebuilt<sp/>version<sp/>of<sp/>OpenBLAS?)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`LIBRAPID_USE_CUDA<sp/>=&gt;<sp/>ON`<sp/>(Automatically<sp/>search<sp/>for<sp/>CUDA?)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`LIBRAPID_USE_OMP<sp/>=&gt;<sp/>ON`<sp/>(Automatically<sp/>search<sp/>for<sp/>OpenMP?)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`LIBRAPID_USE_MULTIPREC<sp/>=&gt;<sp/>OFF`<sp/>(Include<sp/>multiprecision<sp/>library<sp/>--<sp/>more<sp/>on<sp/>this<sp/>elsewhere<sp/>in<sp/>documentation)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Multithreading</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">By<sp/>default,<sp/>LibRapid<sp/>will<sp/>automatically<sp/>run<sp/>sufficiently<sp/>large<sp/>loops<sp/>in<sp/>paralle,<sp/>however,<sp/>the<sp/>branch<sp/>required<sp/>for<sp/>this</highlight></codeline>
+<codeline><highlight class="normal">dynamic<sp/>selection<sp/>can<sp/>cause<sp/>a<sp/>very<sp/>slight<sp/>performance<sp/>hit<sp/>with<sp/>smaller<sp/>arrays.<sp/>For<sp/>this<sp/>reason,<sp/>if<sp/>you<sp/>know<sp/>you&apos;ll<sp/>only</highlight></codeline>
+<codeline><highlight class="normal">be<sp/>dealing<sp/>with<sp/>relatively<sp/>small<sp/>arrays<sp/>(500x500<sp/>or<sp/>smaller),<sp/>it<sp/>might<sp/>make<sp/>sense<sp/>to<sp/>disable<sp/>this.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>do<sp/>so,<sp/>simply<sp/>define<sp/>`LIBRAPID_OPTIMISE_SMALL_ARRAYS`<sp/>before<sp/>your<sp/>`#include<sp/>&lt;librapid&gt;`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>more<sp/>multithreading<sp/>options,<sp/>check<sp/>out<sp/>the<sp/>`librapid::global`<sp/>namespace<sp/>in<sp/>the<sp/>documentation.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Debug<sp/>Information</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">When<sp/>compiling<sp/>LibRapid<sp/>in<sp/>Release<sp/>mode,<sp/>you<sp/>may<sp/>want<sp/>to<sp/>enable<sp/>the<sp/>error<sp/>checking<sp/>and<sp/>logging.<sp/>It&apos;s<sp/>enabled<sp/>by<sp/>default</highlight></codeline>
+<codeline><highlight class="normal">in<sp/>debug<sp/>mode.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>enable<sp/>this,<sp/>define<sp/>`LIBRAPID_ENABLE_ASSERT`<sp/>before<sp/>including<sp/>LibRapid.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Again,<sp/>there<sp/>are<sp/>a<sp/>few<sp/>more<sp/>settings<sp/>for<sp/>assertions<sp/>in<sp/>`librapid::global`</highlight></codeline>
+    </programlisting>
+    <location file="librapid/README.md"/>
+  </compounddef>
+</doxygen>

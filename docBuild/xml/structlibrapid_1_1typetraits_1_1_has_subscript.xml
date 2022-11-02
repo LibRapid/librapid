@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="structlibrapid_1_1typetraits_1_1_has_subscript" kind="struct" language="C++" prot="public">
+    <compoundname>librapid::typetraits::HasSubscript</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">decltypeimpl::testSubscript&lt; T, int64_t &gt;</basecompoundref>
+    <includes refid="typetraits_8hpp" local="no">typetraits.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>typename T</type>
+      </param>
+      <param>
+        <type>typename Index</type>
+        <defval>int64_t</defval>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>decltypeimpl::testSubscript&lt; T, int64_t  &gt;</label>
+      </node>
+      <node id="1">
+        <label>librapid::typetraits::HasSubscript&lt; T, Index &gt;</label>
+        <link refid="structlibrapid_1_1typetraits_1_1_has_subscript"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>decltypeimpl::testSubscript&lt; T, int64_t  &gt;</label>
+      </node>
+      <node id="1">
+        <label>librapid::typetraits::HasSubscript&lt; T, Index &gt;</label>
+        <link refid="structlibrapid_1_1typetraits_1_1_has_subscript"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="librapid/include/librapid/core/typetraits.hpp" line="52" column="1" bodyfile="librapid/include/librapid/core/typetraits.hpp" bodystart="52" bodyend="52"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,74 @@
+\hypertarget{typetraits_8hpp_source}{}\doxysection{typetraits.\+hpp}
+\label{typetraits_8hpp_source}\index{librapid/include/librapid/core/typetraits.hpp@{librapid/include/librapid/core/typetraits.hpp}}
+\mbox{\hyperlink{typetraits_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00001}00001 \textcolor{preprocessor}{\#ifndef LIBRAPID\_CORE\_TYPETRAITS\_HPP}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00002}00002 \textcolor{preprocessor}{\#define LIBRAPID\_CORE\_TYPETRAITS\_HPP}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00003}00003 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00004}00004 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00005}00005 \textcolor{comment}{ * Defines a range of helper template types to increase code clarity}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00006}00006 \textcolor{comment}{ * while simultaneously reducing code verbosity.}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00007}00007 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00008}00008 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00009}00009 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespacelibrapid_1_1typetraits}{librapid::typetraits}} \{}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00010}00010     \textcolor{keyword}{template}<\textcolor{keywordtype}{bool} Cond, \textcolor{keyword}{typename} T = \textcolor{keywordtype}{int}>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00011}\mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{00011}}     \textcolor{keyword}{using} \mbox{\hyperlink{namespacelibrapid_1_1typetraits_ab40d2f867f8f2c70d62af985f0c002d9}{EnableIf}} = std::enable\_if\_t<Cond, T>;}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00012}00012 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00013}00013     \textcolor{keyword}{template}<\textcolor{keyword}{typename} A, \textcolor{keyword}{typename} B>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00014}\mbox{\hyperlink{namespacelibrapid_1_1typetraits_a6fc44dd4d430e7dc87b0a604ac6f5b27}{00014}}     \textcolor{keyword}{constexpr} \textcolor{keywordtype}{bool} \mbox{\hyperlink{namespacelibrapid_1_1typetraits_a6fc44dd4d430e7dc87b0a604ac6f5b27}{IsSame}} = std::is\_same<A, B>::value;}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00015}00015 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00016}\mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl}{00016}}     \textcolor{keyword}{namespace }impl \{}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00017}00017         \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00018}00018 \textcolor{comment}{         * These functions test for the presence of certain features of a type}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00019}00019 \textcolor{comment}{         * by providing two valid function overloads, but the preferred one}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00020}00020 \textcolor{comment}{         * (the one taking an integer) is only valid if the requested feature}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00021}00021 \textcolor{comment}{         * exists. The return type of both functions differ, and can be evaluated}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00022}00022 \textcolor{comment}{         * as "{}true"{} and "{}false"{} depending on the presence of the feature.}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00023}00023 \textcolor{comment}{         *}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00024}00024 \textcolor{comment}{         * This is really cool :)}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00025}00025 \textcolor{comment}{         */}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00026}00026 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00027}00027         \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} Index,}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00028}00028                  \textcolor{keyword}{typename} = \textcolor{keyword}{decltype}(std::declval<T \&>()[std::declval<Index>()])>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00029}\mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a10fe8ed5bc301fec64946591cdcd3398}{00029}}         std::true\_type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a10fe8ed5bc301fec64946591cdcd3398}{testSubscript}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00030}00030         \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} Index>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00031}\mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a7005145040e6223139c5fadc51c68f7d}{00031}}         std::false\_type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a10fe8ed5bc301fec64946591cdcd3398}{testSubscript}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00033}00033         \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} V,}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00034}00034                  \textcolor{keyword}{typename} = \textcolor{keyword}{decltype}(std::declval<T \&>() + std::declval<V \&>())>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00035}\mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a8979c0d42f06120b023f6f908fa4ce0e}{00035}}         std::true\_type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a8979c0d42f06120b023f6f908fa4ce0e}{testAddition}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00036}00036         \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} V>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00037}\mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_adfcb2dc45fd94c735592700e40897fde}{00037}}         std::false\_type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a8979c0d42f06120b023f6f908fa4ce0e}{testAddition}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00038}00038 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00039}00039         \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} V,}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00040}00040                  \textcolor{keyword}{typename} = \textcolor{keyword}{decltype}(std::declval<T \&>() * std::declval<V \&>())>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00041}\mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a010526521848e8fce0c283d6d6da1a12}{00041}}         std::true\_type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a010526521848e8fce0c283d6d6da1a12}{testMultiplication}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00042}00042         \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} V>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00043}\mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a38ab6e28df13c02db6d0dfdd5da550fd}{00043}}         std::false\_type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a010526521848e8fce0c283d6d6da1a12}{testMultiplication}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00044}00044 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00045}00045         template<typename From, typename To, typename = decltype((From)std::declval<From \&>())>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00046}\mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a69e381454bd5edfca9462f5c88376c0a}{00046}}         std::true\_type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a69e381454bd5edfca9462f5c88376c0a}{testCast}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00047}00047         \textcolor{keyword}{template}<\textcolor{keyword}{typename} From, \textcolor{keyword}{typename} To>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00048}\mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a2354c060489f0084633d106f44c54f5b}{00048}}         std::false\_type \mbox{\hyperlink{namespacelibrapid_1_1typetraits_1_1impl_a69e381454bd5edfca9462f5c88376c0a}{testCast}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00049}00049     \} \textcolor{comment}{// namespace impl}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00050}00050 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00051}00051     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} Index = \textcolor{keywordtype}{int}64\_t>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00052}\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_has_subscript}{00052}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_has_subscript}{HasSubscript}} : \textcolor{keyword}{public} \textcolor{keyword}{decltype}(impl::testSubscript<T, Index>(1)) \{\};}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00053}00053 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00054}00054     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} V = T>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00055}\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_has_addition}{00055}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_has_addition}{HasAddition}} : \textcolor{keyword}{public} \textcolor{keyword}{decltype}(impl::testAddition<T, V>(1)) \{\};}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00056}00056 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00057}00057     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename} V = T>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00058}\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_has_multiplication}{00058}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_has_multiplication}{HasMultiplication}} : \textcolor{keyword}{public} \textcolor{keyword}{decltype}(impl::testMultiplication<T, V>(1)) \{\};}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00059}00059 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00060}00060     \textcolor{keyword}{template}<\textcolor{keyword}{typename} From, \textcolor{keyword}{typename} To>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00061}\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{00061}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_can_cast}{CanCast}} : \textcolor{keyword}{public} \textcolor{keyword}{decltype}(impl::testCast<From, To>(1)) \{\};}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00062}00062 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00063}00063     \textcolor{comment}{// Detect whether a class can be default constructed}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00064}00064     \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00065}\mbox{\hyperlink{namespacelibrapid_1_1typetraits_acde6527a5cda3f0e5879c473e83eb168}{00065}}     \textcolor{keyword}{using} \mbox{\hyperlink{namespacelibrapid_1_1typetraits_acde6527a5cda3f0e5879c473e83eb168}{TriviallyDefaultConstructible}} = std::is\_trivially\_default\_constructible<T>;}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00066}00066 \} \textcolor{comment}{// namespace librapid::typetraits}}
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00067}00067 }
+\DoxyCodeLine{\Hypertarget{typetraits_8hpp_source_l00068}00068 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_CORE\_TYPETRAITS\_HPP}}
+
+\end{DoxyCode}

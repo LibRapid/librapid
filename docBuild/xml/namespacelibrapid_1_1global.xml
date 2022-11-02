@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="namespacelibrapid_1_1global" kind="namespace" language="C++">
+    <compoundname>librapid::global</compoundname>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacelibrapid_1_1global_1a236b8ce82086753adb9cdfba77b7217a" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool librapid::global::throwOnAssert</definition>
+        <argsstring></argsstring>
+        <name>throwOnAssert</name>
+        <qualifiedname>librapid::global::throwOnAssert</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/src/global.cpp" line="4" column="6" bodyfile="librapid/src/global.cpp" bodystart="4" bodyend="-1" declfile="librapid/include/librapid/core/global.hpp" declline="11" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacelibrapid_1_1global_1a90bac1d515a0f27808a6e8615ce467de" prot="public" static="no" mutable="no">
+        <type>int64_t</type>
+        <definition>int64_t librapid::global::multithreadThreshold</definition>
+        <argsstring></argsstring>
+        <name>multithreadThreshold</name>
+        <qualifiedname>librapid::global::multithreadThreshold</qualifiedname>
+        <initializer>= 5000</initializer>
+        <briefdescription>
+<para>Arrays with more elements than this will run with multithreaded implementations. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/src/global.cpp" line="5" column="9" bodyfile="librapid/src/global.cpp" bodystart="5" bodyend="-1" declfile="librapid/include/librapid/core/global.hpp" declline="14" declcolumn="16"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacelibrapid_1_1global_1a9a333eca8249991061231bd463e99c2a" prot="public" static="no" mutable="no">
+        <type>int64_t</type>
+        <definition>int64_t librapid::global::gemmMultithreadThreshold</definition>
+        <argsstring></argsstring>
+        <name>gemmMultithreadThreshold</name>
+        <qualifiedname>librapid::global::gemmMultithreadThreshold</qualifiedname>
+        <initializer>= 100</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/src/global.cpp" line="6" column="9" bodyfile="librapid/src/global.cpp" bodystart="6" bodyend="-1" declfile="librapid/include/librapid/core/global.hpp" declline="17" declcolumn="16"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacelibrapid_1_1global_1a008b586e9e2571b5863c6bb6cabebbe3" prot="public" static="no" mutable="no">
+        <type>int64_t</type>
+        <definition>int64_t librapid::global::numThreads</definition>
+        <argsstring></argsstring>
+        <name>numThreads</name>
+        <qualifiedname>librapid::global::numThreads</qualifiedname>
+        <initializer>= 1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/src/global.cpp" line="7" column="9" bodyfile="librapid/src/global.cpp" bodystart="7" bodyend="-1" declfile="librapid/include/librapid/core/global.hpp" declline="20" declcolumn="16"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/core/global.hpp" line="9" column="1"/>
+  </compounddef>
+</doxygen>

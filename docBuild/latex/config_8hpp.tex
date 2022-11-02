@@ -1,0 +1,168 @@
+\hypertarget{config_8hpp}{}\doxysection{librapid/include/librapid/core/config.hpp File Reference}
+\label{config_8hpp}\index{librapid/include/librapid/core/config.hpp@{librapid/include/librapid/core/config.hpp}}
+{\ttfamily \#include \char`\"{}librapid\+Pch.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}generic\+Config.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cuda\+Config.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}pre\+Main.\+hpp\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{config_8hpp_adbc9f65f1c90230f7e901266d1f33526}{LIBRAPID\+\_\+\+DEBUG}}
+\item 
+\#define \mbox{\hyperlink{config_8hpp_aaa2763e652006648e9ae602dc1c56414}{LIBRAPID\+\_\+\+RELEASE\+\_\+\+NOEXCEPT}}
+\item 
+\#define \mbox{\hyperlink{config_8hpp_af4e867850372ba3a4629accb142c7961}{LIBRAPID\+\_\+\+UNKNOWN}}
+\item 
+\#define \mbox{\hyperlink{config_8hpp_a5ab920323d64645fcf6ab1b121d300c9}{LIBRAPID\+\_\+\+OS\+\_\+\+NAME}}~\char`\"{}unknown\char`\"{}
+\item 
+\#define \mbox{\hyperlink{config_8hpp_afe2a8bdb8794b4ebba7a7883c0a8ee2b}{LIBRAPID\+\_\+\+LIKELY}}
+\item 
+\#define \mbox{\hyperlink{config_8hpp_abf892c8d3597c58cfddee5cecafe8d73}{LIBRAPID\+\_\+\+UNLIKELY}}
+\item 
+\#define \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\+\_\+\+NODISCARD}}~\mbox{[}\mbox{[}nodiscard\mbox{]}\mbox{]}
+\item 
+\#define \mbox{\hyperlink{config_8hpp_a8de29f7c8bbf1a81cc6e71ac602032d3}{FILENAME}}~(strrchr(\+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \textquotesingle{}/\textquotesingle{}) ? strrchr(\+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \textquotesingle{}/\textquotesingle{}) + 1 \+: \+\_\+\+\_\+\+FILE\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{config_8hpp_aee0cf83ee6d754df700e396da8987f1f}{FUNCTION}}~\char`\"{}Function Signature Unknown\char`\"{}
+\item 
+\#define \mbox{\hyperlink{config_8hpp_a51840e7e288c8d25587ce062de9d9515}{STRINGIFY}}(a)~\mbox{\hyperlink{config_8hpp_a0dc2a278334f84a8a7916128ba8c6fef}{STR\+\_\+\+IMPL\+\_\+}}(a)
+\item 
+\#define \mbox{\hyperlink{config_8hpp_a0dc2a278334f84a8a7916128ba8c6fef}{STR\+\_\+\+IMPL\+\_\+}}(a)~\#a
+\item 
+\#define \mbox{\hyperlink{config_8hpp_a7708473fb4e306ab8a01e62a6e25ccaa}{LIBRAPID\+\_\+\+ENABLE\+\_\+\+ASSERT}}
+\item 
+\#define \mbox{\hyperlink{config_8hpp_aab5e143c74758218342a6d73dd25fb9d}{LIBRAPID\+\_\+\+MAX\+\_\+\+ARRAY\+\_\+\+DIMS}}~32
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{config_8hpp_a8de29f7c8bbf1a81cc6e71ac602032d3}\label{config_8hpp_a8de29f7c8bbf1a81cc6e71ac602032d3}} 
+\index{config.hpp@{config.hpp}!FILENAME@{FILENAME}}
+\index{FILENAME@{FILENAME}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{FILENAME}{FILENAME}}
+{\footnotesize\ttfamily \#define FILENAME~(strrchr(\+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \textquotesingle{}/\textquotesingle{}) ? strrchr(\+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \textquotesingle{}/\textquotesingle{}) + 1 \+: \+\_\+\+\_\+\+FILE\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00187}{187}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+
+\mbox{\Hypertarget{config_8hpp_aee0cf83ee6d754df700e396da8987f1f}\label{config_8hpp_aee0cf83ee6d754df700e396da8987f1f}} 
+\index{config.hpp@{config.hpp}!FUNCTION@{FUNCTION}}
+\index{FUNCTION@{FUNCTION}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{FUNCTION}{FUNCTION}}
+{\footnotesize\ttfamily \#define FUNCTION~\char`\"{}Function Signature Unknown\char`\"{}}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00201}{201}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+
+\mbox{\Hypertarget{config_8hpp_adbc9f65f1c90230f7e901266d1f33526}\label{config_8hpp_adbc9f65f1c90230f7e901266d1f33526}} 
+\index{config.hpp@{config.hpp}!LIBRAPID\_DEBUG@{LIBRAPID\_DEBUG}}
+\index{LIBRAPID\_DEBUG@{LIBRAPID\_DEBUG}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{LIBRAPID\_DEBUG}{LIBRAPID\_DEBUG}}
+{\footnotesize\ttfamily \#define LIBRAPID\+\_\+\+DEBUG}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00014}{14}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+
+\mbox{\Hypertarget{config_8hpp_a7708473fb4e306ab8a01e62a6e25ccaa}\label{config_8hpp_a7708473fb4e306ab8a01e62a6e25ccaa}} 
+\index{config.hpp@{config.hpp}!LIBRAPID\_ENABLE\_ASSERT@{LIBRAPID\_ENABLE\_ASSERT}}
+\index{LIBRAPID\_ENABLE\_ASSERT@{LIBRAPID\_ENABLE\_ASSERT}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{LIBRAPID\_ENABLE\_ASSERT}{LIBRAPID\_ENABLE\_ASSERT}}
+{\footnotesize\ttfamily \#define LIBRAPID\+\_\+\+ENABLE\+\_\+\+ASSERT}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00211}{211}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+
+\mbox{\Hypertarget{config_8hpp_afe2a8bdb8794b4ebba7a7883c0a8ee2b}\label{config_8hpp_afe2a8bdb8794b4ebba7a7883c0a8ee2b}} 
+\index{config.hpp@{config.hpp}!LIBRAPID\_LIKELY@{LIBRAPID\_LIKELY}}
+\index{LIBRAPID\_LIKELY@{LIBRAPID\_LIKELY}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{LIBRAPID\_LIKELY}{LIBRAPID\_LIKELY}}
+{\footnotesize\ttfamily \#define LIBRAPID\+\_\+\+LIKELY}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00172}{172}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+
+\mbox{\Hypertarget{config_8hpp_aab5e143c74758218342a6d73dd25fb9d}\label{config_8hpp_aab5e143c74758218342a6d73dd25fb9d}} 
+\index{config.hpp@{config.hpp}!LIBRAPID\_MAX\_ARRAY\_DIMS@{LIBRAPID\_MAX\_ARRAY\_DIMS}}
+\index{LIBRAPID\_MAX\_ARRAY\_DIMS@{LIBRAPID\_MAX\_ARRAY\_DIMS}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{LIBRAPID\_MAX\_ARRAY\_DIMS}{LIBRAPID\_MAX\_ARRAY\_DIMS}}
+{\footnotesize\ttfamily \#define LIBRAPID\+\_\+\+MAX\+\_\+\+ARRAY\+\_\+\+DIMS~32}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00238}{238}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+
+\mbox{\Hypertarget{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}\label{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}} 
+\index{config.hpp@{config.hpp}!LIBRAPID\_NODISCARD@{LIBRAPID\_NODISCARD}}
+\index{LIBRAPID\_NODISCARD@{LIBRAPID\_NODISCARD}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{LIBRAPID\_NODISCARD}{LIBRAPID\_NODISCARD}}
+{\footnotesize\ttfamily \#define LIBRAPID\+\_\+\+NODISCARD~\mbox{[}\mbox{[}nodiscard\mbox{]}\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00177}{177}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+
+\mbox{\Hypertarget{config_8hpp_a5ab920323d64645fcf6ab1b121d300c9}\label{config_8hpp_a5ab920323d64645fcf6ab1b121d300c9}} 
+\index{config.hpp@{config.hpp}!LIBRAPID\_OS\_NAME@{LIBRAPID\_OS\_NAME}}
+\index{LIBRAPID\_OS\_NAME@{LIBRAPID\_OS\_NAME}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{LIBRAPID\_OS\_NAME}{LIBRAPID\_OS\_NAME}}
+{\footnotesize\ttfamily \#define LIBRAPID\+\_\+\+OS\+\_\+\+NAME~\char`\"{}unknown\char`\"{}}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00070}{70}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+
+\mbox{\Hypertarget{config_8hpp_aaa2763e652006648e9ae602dc1c56414}\label{config_8hpp_aaa2763e652006648e9ae602dc1c56414}} 
+\index{config.hpp@{config.hpp}!LIBRAPID\_RELEASE\_NOEXCEPT@{LIBRAPID\_RELEASE\_NOEXCEPT}}
+\index{LIBRAPID\_RELEASE\_NOEXCEPT@{LIBRAPID\_RELEASE\_NOEXCEPT}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{LIBRAPID\_RELEASE\_NOEXCEPT}{LIBRAPID\_RELEASE\_NOEXCEPT}}
+{\footnotesize\ttfamily \#define LIBRAPID\+\_\+\+RELEASE\+\_\+\+NOEXCEPT}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00015}{15}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+
+\mbox{\Hypertarget{config_8hpp_af4e867850372ba3a4629accb142c7961}\label{config_8hpp_af4e867850372ba3a4629accb142c7961}} 
+\index{config.hpp@{config.hpp}!LIBRAPID\_UNKNOWN@{LIBRAPID\_UNKNOWN}}
+\index{LIBRAPID\_UNKNOWN@{LIBRAPID\_UNKNOWN}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{LIBRAPID\_UNKNOWN}{LIBRAPID\_UNKNOWN}}
+{\footnotesize\ttfamily \#define LIBRAPID\+\_\+\+UNKNOWN}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00069}{69}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+
+\mbox{\Hypertarget{config_8hpp_abf892c8d3597c58cfddee5cecafe8d73}\label{config_8hpp_abf892c8d3597c58cfddee5cecafe8d73}} 
+\index{config.hpp@{config.hpp}!LIBRAPID\_UNLIKELY@{LIBRAPID\_UNLIKELY}}
+\index{LIBRAPID\_UNLIKELY@{LIBRAPID\_UNLIKELY}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{LIBRAPID\_UNLIKELY}{LIBRAPID\_UNLIKELY}}
+{\footnotesize\ttfamily \#define LIBRAPID\+\_\+\+UNLIKELY}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00173}{173}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+
+\mbox{\Hypertarget{config_8hpp_a0dc2a278334f84a8a7916128ba8c6fef}\label{config_8hpp_a0dc2a278334f84a8a7916128ba8c6fef}} 
+\index{config.hpp@{config.hpp}!STR\_IMPL\_@{STR\_IMPL\_}}
+\index{STR\_IMPL\_@{STR\_IMPL\_}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{STR\_IMPL\_}{STR\_IMPL\_}}
+{\footnotesize\ttfamily \#define STR\+\_\+\+IMPL\+\_\+(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~\#a}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00207}{207}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+
+\mbox{\Hypertarget{config_8hpp_a51840e7e288c8d25587ce062de9d9515}\label{config_8hpp_a51840e7e288c8d25587ce062de9d9515}} 
+\index{config.hpp@{config.hpp}!STRINGIFY@{STRINGIFY}}
+\index{STRINGIFY@{STRINGIFY}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{STRINGIFY}{STRINGIFY}}
+{\footnotesize\ttfamily \#define STRINGIFY(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~\mbox{\hyperlink{config_8hpp_a0dc2a278334f84a8a7916128ba8c6fef}{STR\+\_\+\+IMPL\+\_\+}}(a)}
+
+
+
+Definition at line \mbox{\hyperlink{config_8hpp_source_l00206}{206}} of file \mbox{\hyperlink{config_8hpp_source}{config.\+hpp}}.
+

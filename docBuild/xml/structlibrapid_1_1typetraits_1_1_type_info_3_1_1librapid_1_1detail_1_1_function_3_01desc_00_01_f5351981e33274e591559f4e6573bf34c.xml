@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c" kind="struct" language="C++" prot="public">
+    <compoundname>librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;</compoundname>
+    <includes refid="function_8hpp" local="no">function.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type><ref refid="namespacelibrapid_1_1detail_1acac64eb9d77033562afff081348c9ad3" kindref="member">::librapid::detail::Descriptor</ref></type>
+        <declname>desc</declname>
+        <defname>desc</defname>
+      </param>
+      <param>
+        <type>typename Functor_</type>
+      </param>
+      <param>
+        <type>typename...</type>
+        <declname>Args</declname>
+        <defname>Args</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1ada018c6c2463f8ba7e30e97e9f386b76" prot="public" static="no">
+        <type>decltype(std::declval&lt; Functor_ &gt;()(std::declval&lt; typename <ref refid="structlibrapid_1_1typetraits_1_1_type_info" kindref="compound">TypeInfo</ref>&lt; std::decay_t&lt; Args &gt; &gt;::Scalar &gt;()...))</type>
+        <definition>using librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;::Scalar =  decltype(std::declval&lt;Functor_&gt;()( std::declval&lt;typename TypeInfo&lt;std::decay_t&lt;Args&gt; &gt;::Scalar&gt;()...))</definition>
+        <argsstring></argsstring>
+        <name>Scalar</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;::Scalar</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/function.hpp" line="9" column="1" bodyfile="librapid/include/librapid/array/function.hpp" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1a63d6254cc487d53602b945e5a0ab874e" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr bool</type>
+        <definition>constexpr bool librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;::isLibRapidType</definition>
+        <argsstring></argsstring>
+        <name>isLibRapidType</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;::isLibRapidType</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/function.hpp" line="8" column="23" bodyfile="librapid/include/librapid/array/function.hpp" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1aafcf3a271aa9184e71d812ed3291b2a6" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr bool</type>
+        <definition>constexpr bool librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;::supportsArithmetic</definition>
+        <argsstring></argsstring>
+        <name>supportsArithmetic</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;::supportsArithmetic</qualifiedname>
+        <initializer>= <ref refid="structlibrapid_1_1typetraits_1_1_type_info" kindref="compound">TypeInfo</ref>&lt;<ref refid="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1ada018c6c2463f8ba7e30e97e9f386b76" kindref="member">Scalar</ref>&gt;::supportsArithmetic</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/function.hpp" line="11" column="23" bodyfile="librapid/include/librapid/array/function.hpp" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1a3711e62aea3156d7a5a4d53df6468013" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr bool</type>
+        <definition>constexpr bool librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;::supportsLogical</definition>
+        <argsstring></argsstring>
+        <name>supportsLogical</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;::supportsLogical</qualifiedname>
+        <initializer>= <ref refid="structlibrapid_1_1typetraits_1_1_type_info" kindref="compound">TypeInfo</ref>&lt;<ref refid="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1ada018c6c2463f8ba7e30e97e9f386b76" kindref="member">Scalar</ref>&gt;::supportsLogical</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/function.hpp" line="12" column="23" bodyfile="librapid/include/librapid/array/function.hpp" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1a062eede7dc92d278c0b01e96af8a5721" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr bool</type>
+        <definition>constexpr bool librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;::supportsBinary</definition>
+        <argsstring></argsstring>
+        <name>supportsBinary</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;::supportsBinary</qualifiedname>
+        <initializer>= <ref refid="structlibrapid_1_1typetraits_1_1_type_info" kindref="compound">TypeInfo</ref>&lt;<ref refid="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1ada018c6c2463f8ba7e30e97e9f386b76" kindref="member">Scalar</ref>&gt;::supportsBinary</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/function.hpp" line="13" column="23" bodyfile="librapid/include/librapid/array/function.hpp" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/array/function.hpp" line="7" column="1" bodyfile="librapid/include/librapid/array/function.hpp" bodystart="7" bodyend="14"/>
+    <listofallmembers>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1a63d6254cc487d53602b945e5a0ab874e" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;</scope><name>isLibRapidType</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1ada018c6c2463f8ba7e30e97e9f386b76" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;</scope><name>Scalar</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1aafcf3a271aa9184e71d812ed3291b2a6" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;</scope><name>supportsArithmetic</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1a062eede7dc92d278c0b01e96af8a5721" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;</scope><name>supportsBinary</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_1_1librapid_1_1detail_1_1_function_3_01desc_00_01_f5351981e33274e591559f4e6573bf34c_1a3711e62aea3156d7a5a4d53df6468013" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt;::librapid::detail::Function&lt; desc, Functor_, Args... &gt; &gt;</scope><name>supportsLogical</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

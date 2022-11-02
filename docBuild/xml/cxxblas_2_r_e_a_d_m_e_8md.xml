@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="cxxblas_2_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>FLENS:<sp/>Flexible<sp/>Library<sp/>for<sp/>Efficient<sp/>Numerical<sp/>Solutions</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>folder<sp/>contains<sp/>slightly<sp/>modified<sp/>code<sp/>from<sp/>the<sp/>[FLENS<sp/>Library](https://github.com/michael-lehn/FLENS).</highlight></codeline>
+<codeline><highlight class="normal">The<sp/>FLENS<sp/>library<sp/>is<sp/>published<sp/>under<sp/>a<sp/>BSD-3-Clause<sp/>license.</highlight></codeline>
+    </programlisting>
+    <location file="librapid/cxxblas/README.md"/>
+  </compounddef>
+</doxygen>

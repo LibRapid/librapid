@@ -1,0 +1,178 @@
+\hypertarget{openblas_8h}{}\doxysection{librapid/cxxblas/drivers/openblas.h File Reference}
+\label{openblas_8h}\index{librapid/cxxblas/drivers/openblas.h@{librapid/cxxblas/drivers/openblas.h}}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{openblas_8h_a44285e5a3f17af0a5dc5b22de44805be}{HAVE\+\_\+\+CBLAS}}~1
+\item 
+\#define \mbox{\hyperlink{openblas_8h_ac28e6243e4c6cd0b876f1c60a7c228c1}{CBLAS\+\_\+\+INT}}~int
+\item 
+\#define \mbox{\hyperlink{openblas_8h_a616c2c268e9968d9c9e1e4bb10e7f125}{BLAS\+\_\+\+IMPL}}~\char`\"{}Open\+BLAS\char`\"{}
+\item 
+\#define \mbox{\hyperlink{openblas_8h_a0cc6c9831e05958bc66dc000e02f33b9}{CBLAS\+\_\+\+INDEX}}~size\+\_\+t
+\item 
+\#define \mbox{\hyperlink{openblas_8h_a50791673dd7a75e8ca719d432ce2b20a}{HAVE\+\_\+\+CBLAS\+\_\+\+AXPBY}}
+\item 
+\#define \mbox{\hyperlink{openblas_8h_ab21da2a62c65e7a51da419f4ad816f56}{BLAS\+\_\+\+EXT}}(x)~cblas\+\_\+\#\#x
+\item 
+\#define \mbox{\hyperlink{openblas_8h_a5cf8e57106e033beb1ae0dbca1424d2b}{OPENBLAS\+\_\+\+SEQUENTIAL}}~0
+\item 
+\#define \mbox{\hyperlink{openblas_8h_a30ed6ab2c89274eb864828902cddc2ae}{OPENBLAS\+\_\+\+THREAD}}~1
+\item 
+\#define \mbox{\hyperlink{openblas_8h_affd921ac38d66c0e82bbf9cc65fb9ee2}{OPENBLAS\+\_\+\+OPENMP}}~2
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{openblas_8h_aa406a94b91fca1119d42385c388ff1ff}{openblas\+\_\+set\+\_\+num\+\_\+threads}} (int num\+\_\+threads)
+\item 
+void \mbox{\hyperlink{openblas_8h_af0ddc7c1a8b45db7535a699a33040f1d}{goto\+\_\+set\+\_\+num\+\_\+threads}} (int num\+\_\+threads)
+\item 
+int \mbox{\hyperlink{openblas_8h_ad46c55ce19ae682e7d16f097fe1d2883}{openblas\+\_\+get\+\_\+num\+\_\+threads}} (void)
+\item 
+int \mbox{\hyperlink{openblas_8h_a1ed8f612abd6afd684555424cca627af}{openblas\+\_\+get\+\_\+num\+\_\+procs}} (void)
+\item 
+char $\ast$ \mbox{\hyperlink{openblas_8h_a9ec856b957563e2154736724a65234a2}{openblas\+\_\+get\+\_\+config}} (void)
+\item 
+char $\ast$ \mbox{\hyperlink{openblas_8h_a47f5c27c86f514acdefc60648624d5d5}{openblas\+\_\+get\+\_\+corename}} (void)
+\item 
+int \mbox{\hyperlink{openblas_8h_a9f9abcf616041ffbac62a93cf9b84285}{openblas\+\_\+get\+\_\+parallel}} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{openblas_8h_ab21da2a62c65e7a51da419f4ad816f56}\label{openblas_8h_ab21da2a62c65e7a51da419f4ad816f56}} 
+\index{openblas.h@{openblas.h}!BLAS\_EXT@{BLAS\_EXT}}
+\index{BLAS\_EXT@{BLAS\_EXT}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{BLAS\_EXT}{BLAS\_EXT}}
+{\footnotesize\ttfamily \#define BLAS\+\_\+\+EXT(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~cblas\+\_\+\#\#x}
+
+
+
+Definition at line \mbox{\hyperlink{openblas_8h_source_l00050}{50}} of file \mbox{\hyperlink{openblas_8h_source}{openblas.\+h}}.
+
+\mbox{\Hypertarget{openblas_8h_a616c2c268e9968d9c9e1e4bb10e7f125}\label{openblas_8h_a616c2c268e9968d9c9e1e4bb10e7f125}} 
+\index{openblas.h@{openblas.h}!BLAS\_IMPL@{BLAS\_IMPL}}
+\index{BLAS\_IMPL@{BLAS\_IMPL}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{BLAS\_IMPL}{BLAS\_IMPL}}
+{\footnotesize\ttfamily \#define BLAS\+\_\+\+IMPL~\char`\"{}Open\+BLAS\char`\"{}}
+
+
+
+Definition at line \mbox{\hyperlink{openblas_8h_source_l00042}{42}} of file \mbox{\hyperlink{openblas_8h_source}{openblas.\+h}}.
+
+\mbox{\Hypertarget{openblas_8h_a0cc6c9831e05958bc66dc000e02f33b9}\label{openblas_8h_a0cc6c9831e05958bc66dc000e02f33b9}} 
+\index{openblas.h@{openblas.h}!CBLAS\_INDEX@{CBLAS\_INDEX}}
+\index{CBLAS\_INDEX@{CBLAS\_INDEX}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{CBLAS\_INDEX}{CBLAS\_INDEX}}
+{\footnotesize\ttfamily \#define CBLAS\+\_\+\+INDEX~size\+\_\+t}
+
+
+
+Definition at line \mbox{\hyperlink{openblas_8h_source_l00044}{44}} of file \mbox{\hyperlink{openblas_8h_source}{openblas.\+h}}.
+
+\mbox{\Hypertarget{openblas_8h_ac28e6243e4c6cd0b876f1c60a7c228c1}\label{openblas_8h_ac28e6243e4c6cd0b876f1c60a7c228c1}} 
+\index{openblas.h@{openblas.h}!CBLAS\_INT@{CBLAS\_INT}}
+\index{CBLAS\_INT@{CBLAS\_INT}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{CBLAS\_INT}{CBLAS\_INT}}
+{\footnotesize\ttfamily \#define CBLAS\+\_\+\+INT~int}
+
+
+
+Definition at line \mbox{\hyperlink{openblas_8h_source_l00040}{40}} of file \mbox{\hyperlink{openblas_8h_source}{openblas.\+h}}.
+
+\mbox{\Hypertarget{openblas_8h_a44285e5a3f17af0a5dc5b22de44805be}\label{openblas_8h_a44285e5a3f17af0a5dc5b22de44805be}} 
+\index{openblas.h@{openblas.h}!HAVE\_CBLAS@{HAVE\_CBLAS}}
+\index{HAVE\_CBLAS@{HAVE\_CBLAS}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{HAVE\_CBLAS}{HAVE\_CBLAS}}
+{\footnotesize\ttfamily \#define HAVE\+\_\+\+CBLAS~1}
+
+
+
+Definition at line \mbox{\hyperlink{openblas_8h_source_l00036}{36}} of file \mbox{\hyperlink{openblas_8h_source}{openblas.\+h}}.
+
+\mbox{\Hypertarget{openblas_8h_a50791673dd7a75e8ca719d432ce2b20a}\label{openblas_8h_a50791673dd7a75e8ca719d432ce2b20a}} 
+\index{openblas.h@{openblas.h}!HAVE\_CBLAS\_AXPBY@{HAVE\_CBLAS\_AXPBY}}
+\index{HAVE\_CBLAS\_AXPBY@{HAVE\_CBLAS\_AXPBY}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{HAVE\_CBLAS\_AXPBY}{HAVE\_CBLAS\_AXPBY}}
+{\footnotesize\ttfamily \#define HAVE\+\_\+\+CBLAS\+\_\+\+AXPBY}
+
+
+
+Definition at line \mbox{\hyperlink{openblas_8h_source_l00049}{49}} of file \mbox{\hyperlink{openblas_8h_source}{openblas.\+h}}.
+
+\mbox{\Hypertarget{openblas_8h_affd921ac38d66c0e82bbf9cc65fb9ee2}\label{openblas_8h_affd921ac38d66c0e82bbf9cc65fb9ee2}} 
+\index{openblas.h@{openblas.h}!OPENBLAS\_OPENMP@{OPENBLAS\_OPENMP}}
+\index{OPENBLAS\_OPENMP@{OPENBLAS\_OPENMP}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{OPENBLAS\_OPENMP}{OPENBLAS\_OPENMP}}
+{\footnotesize\ttfamily \#define OPENBLAS\+\_\+\+OPENMP~2}
+
+
+
+Definition at line \mbox{\hyperlink{openblas_8h_source_l00081}{81}} of file \mbox{\hyperlink{openblas_8h_source}{openblas.\+h}}.
+
+\mbox{\Hypertarget{openblas_8h_a5cf8e57106e033beb1ae0dbca1424d2b}\label{openblas_8h_a5cf8e57106e033beb1ae0dbca1424d2b}} 
+\index{openblas.h@{openblas.h}!OPENBLAS\_SEQUENTIAL@{OPENBLAS\_SEQUENTIAL}}
+\index{OPENBLAS\_SEQUENTIAL@{OPENBLAS\_SEQUENTIAL}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{OPENBLAS\_SEQUENTIAL}{OPENBLAS\_SEQUENTIAL}}
+{\footnotesize\ttfamily \#define OPENBLAS\+\_\+\+SEQUENTIAL~0}
+
+
+
+Definition at line \mbox{\hyperlink{openblas_8h_source_l00077}{77}} of file \mbox{\hyperlink{openblas_8h_source}{openblas.\+h}}.
+
+\mbox{\Hypertarget{openblas_8h_a30ed6ab2c89274eb864828902cddc2ae}\label{openblas_8h_a30ed6ab2c89274eb864828902cddc2ae}} 
+\index{openblas.h@{openblas.h}!OPENBLAS\_THREAD@{OPENBLAS\_THREAD}}
+\index{OPENBLAS\_THREAD@{OPENBLAS\_THREAD}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{OPENBLAS\_THREAD}{OPENBLAS\_THREAD}}
+{\footnotesize\ttfamily \#define OPENBLAS\+\_\+\+THREAD~1}
+
+
+
+Definition at line \mbox{\hyperlink{openblas_8h_source_l00079}{79}} of file \mbox{\hyperlink{openblas_8h_source}{openblas.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{openblas_8h_af0ddc7c1a8b45db7535a699a33040f1d}\label{openblas_8h_af0ddc7c1a8b45db7535a699a33040f1d}} 
+\index{openblas.h@{openblas.h}!goto\_set\_num\_threads@{goto\_set\_num\_threads}}
+\index{goto\_set\_num\_threads@{goto\_set\_num\_threads}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{goto\_set\_num\_threads()}{goto\_set\_num\_threads()}}
+{\footnotesize\ttfamily void goto\+\_\+set\+\_\+num\+\_\+threads (\begin{DoxyParamCaption}\item[{int}]{num\+\_\+threads }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{openblas_8h_a9ec856b957563e2154736724a65234a2}\label{openblas_8h_a9ec856b957563e2154736724a65234a2}} 
+\index{openblas.h@{openblas.h}!openblas\_get\_config@{openblas\_get\_config}}
+\index{openblas\_get\_config@{openblas\_get\_config}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{openblas\_get\_config()}{openblas\_get\_config()}}
+{\footnotesize\ttfamily char $\ast$ openblas\+\_\+get\+\_\+config (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{openblas_8h_a47f5c27c86f514acdefc60648624d5d5}\label{openblas_8h_a47f5c27c86f514acdefc60648624d5d5}} 
+\index{openblas.h@{openblas.h}!openblas\_get\_corename@{openblas\_get\_corename}}
+\index{openblas\_get\_corename@{openblas\_get\_corename}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{openblas\_get\_corename()}{openblas\_get\_corename()}}
+{\footnotesize\ttfamily char $\ast$ openblas\+\_\+get\+\_\+corename (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{openblas_8h_a1ed8f612abd6afd684555424cca627af}\label{openblas_8h_a1ed8f612abd6afd684555424cca627af}} 
+\index{openblas.h@{openblas.h}!openblas\_get\_num\_procs@{openblas\_get\_num\_procs}}
+\index{openblas\_get\_num\_procs@{openblas\_get\_num\_procs}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{openblas\_get\_num\_procs()}{openblas\_get\_num\_procs()}}
+{\footnotesize\ttfamily int openblas\+\_\+get\+\_\+num\+\_\+procs (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{openblas_8h_ad46c55ce19ae682e7d16f097fe1d2883}\label{openblas_8h_ad46c55ce19ae682e7d16f097fe1d2883}} 
+\index{openblas.h@{openblas.h}!openblas\_get\_num\_threads@{openblas\_get\_num\_threads}}
+\index{openblas\_get\_num\_threads@{openblas\_get\_num\_threads}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{openblas\_get\_num\_threads()}{openblas\_get\_num\_threads()}}
+{\footnotesize\ttfamily int openblas\+\_\+get\+\_\+num\+\_\+threads (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{openblas_8h_a9f9abcf616041ffbac62a93cf9b84285}\label{openblas_8h_a9f9abcf616041ffbac62a93cf9b84285}} 
+\index{openblas.h@{openblas.h}!openblas\_get\_parallel@{openblas\_get\_parallel}}
+\index{openblas\_get\_parallel@{openblas\_get\_parallel}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{openblas\_get\_parallel()}{openblas\_get\_parallel()}}
+{\footnotesize\ttfamily int openblas\+\_\+get\+\_\+parallel (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{openblas_8h_aa406a94b91fca1119d42385c388ff1ff}\label{openblas_8h_aa406a94b91fca1119d42385c388ff1ff}} 
+\index{openblas.h@{openblas.h}!openblas\_set\_num\_threads@{openblas\_set\_num\_threads}}
+\index{openblas\_set\_num\_threads@{openblas\_set\_num\_threads}!openblas.h@{openblas.h}}
+\doxysubsubsection{\texorpdfstring{openblas\_set\_num\_threads()}{openblas\_set\_num\_threads()}}
+{\footnotesize\ttfamily void openblas\+\_\+set\+\_\+num\+\_\+threads (\begin{DoxyParamCaption}\item[{int}]{num\+\_\+threads }\end{DoxyParamCaption})}
+

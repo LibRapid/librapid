@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="structcxxblas_1_1_is_same_3_01_t_00_01_t_01_4" kind="struct" language="C++" prot="public">
+    <compoundname>cxxblas::IsSame&lt; T, T &gt;</compoundname>
+    <includes refid="issame_8h" local="no">issame.h</includes>
+    <templateparamlist>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="structcxxblas_1_1_is_same_3_01_t_00_01_t_01_4_1a4b71c63883201c0a8f91d1fa2444916e" prot="public" static="yes" mutable="no">
+        <type>const bool</type>
+        <definition>const bool cxxblas::IsSame&lt; T, T &gt;::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <qualifiedname>cxxblas::IsSame&lt; T, T &gt;::value</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/cxxblas/auxiliary/issame.h" line="50" column="19" bodyfile="librapid/cxxblas/auxiliary/issame.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/cxxblas/auxiliary/issame.h" line="49" column="1" bodyfile="librapid/cxxblas/auxiliary/issame.h" bodystart="49" bodyend="51"/>
+    <listofallmembers>
+      <member refid="structcxxblas_1_1_is_same_3_01_t_00_01_t_01_4_1a4b71c63883201c0a8f91d1fa2444916e" prot="public" virt="non-virtual"><scope>cxxblas::IsSame&lt; T, T &gt;</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

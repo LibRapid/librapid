@@ -1,0 +1,65 @@
+\hypertarget{level2extensions_2trsv_8h_source}{}\doxysection{trsv.\+h}
+\label{level2extensions_2trsv_8h_source}\index{librapid/cxxblas/level2extensions/trsv.h@{librapid/cxxblas/level2extensions/trsv.h}}
+\mbox{\hyperlink{level2extensions_2trsv_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00001}00001 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00002}00002 \textcolor{comment}{ *   Copyright (c) 2012, Klaus Pototzky}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00003}00003 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00004}00004 \textcolor{comment}{ *   All rights reserved.}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00005}00005 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00006}00006 \textcolor{comment}{ *   Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00007}00007 \textcolor{comment}{ *   modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00008}00008 \textcolor{comment}{ *   are met:}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00009}00009 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00010}00010 \textcolor{comment}{ *   1) Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00011}00011 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00012}00012 \textcolor{comment}{ *   2) Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00013}00013 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer in}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00014}00014 \textcolor{comment}{ *      the documentation and/or other materials provided with the}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00015}00015 \textcolor{comment}{ *      distribution.}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00016}00016 \textcolor{comment}{ *   3) Neither the name of the FLENS development group nor the names of}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00017}00017 \textcolor{comment}{ *      its contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00018}00018 \textcolor{comment}{ *      from this software without specific prior written permission.}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00019}00019 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00020}00020 \textcolor{comment}{ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00021}00021 \textcolor{comment}{ *   "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00022}00022 \textcolor{comment}{ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00023}00023 \textcolor{comment}{ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00024}00024 \textcolor{comment}{ *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00025}00025 \textcolor{comment}{ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00026}00026 \textcolor{comment}{ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00027}00027 \textcolor{comment}{ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00028}00028 \textcolor{comment}{ *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00029}00029 \textcolor{comment}{ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00030}00030 \textcolor{comment}{ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00031}00031 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00033}00033 \textcolor{preprocessor}{\#ifndef CXXBLAS\_LEVEL2EXTENSIONS\_TRSV\_H}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00034}00034 \textcolor{preprocessor}{\#define CXXBLAS\_LEVEL2EXTENSIONS\_TRSV\_H 1}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00036}00036 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{drivers_8h}{cxxblas/drivers/drivers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00037}00037 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{typedefs_8h}{cxxblas/typedefs.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00038}00038 }
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00039}\mbox{\hyperlink{level2extensions_2trsv_8h_ad76beb60e5ec1d36c51aa4b47221d5e9}{00039}} \textcolor{preprocessor}{\#define HAVE\_CXXBLAS\_TRSV 1}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00040}00040 }
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00041}00041 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespacecxxblas}{cxxblas}} \{}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00042}00042 }
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00043}00043 \textcolor{preprocessor}{\#ifdef HAVE\_CBLAS}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00044}00044 }
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00045}00045     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00046}00046     \textcolor{keyword}{typename} If<IndexType>::isBlasCompatibleInteger}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00047}00047     \mbox{\hyperlink{namespacecxxblas_a679afb6df98e4dac29936d0c5e4803bf}{trsv}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{StorageUpLo}} upLo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, IndexType n,}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00048}00048          \textcolor{keyword}{const} \textcolor{keywordtype}{float} *A, IndexType ldA, \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} *x, IndexType incX);}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00049}00049 }
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00050}00050     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00051}00051     \textcolor{keyword}{typename} If<IndexType>::isBlasCompatibleInteger}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00052}00052     \mbox{\hyperlink{namespacecxxblas_a679afb6df98e4dac29936d0c5e4803bf}{trsv}}(\mbox{\hyperlink{namespacecxxblas_a918cd7933fff546379a8b1a0ab283f68}{StorageOrder}} order, \mbox{\hyperlink{namespacecxxblas_ad69d92c1688aa626f694b26a1da27df7}{StorageUpLo}} upLo, \mbox{\hyperlink{namespacecxxblas_a710044b98080b10301734289c63b1e30}{Transpose}} transA, \mbox{\hyperlink{namespacecxxblas_a3e3f7c313cf3b7c24d37c13aac2ae4a6}{Diag}} diag, IndexType n,}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00053}00053          \textcolor{keyword}{const} \textcolor{keywordtype}{double} *A, IndexType ldA, \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} *x, IndexType incX);}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00054}00054 }
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00055}00055 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00056}00056 }
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00057}00057 \} \textcolor{comment}{// namespace cxxblas}}
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00058}00058 }
+\DoxyCodeLine{\Hypertarget{level2extensions_2trsv_8h_source_l00059}00059 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CXXBLAS\_LEVEL2EXTENSIONS\_TRSV\_H}}
+
+\end{DoxyCode}

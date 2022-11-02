@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4" kind="struct" language="C++" prot="public">
+    <compoundname>librapid::typetraits::TypeInfo&lt; int64_t &gt;</compoundname>
+    <includes refid="traits_8hpp" local="no">traits.hpp</includes>
+    <templateparamlist>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1a1612b008bc24eac66c550546711d025e" prot="public" static="no">
+        <type>int64_t</type>
+        <definition>using librapid::typetraits::TypeInfo&lt; int64_t &gt;::Scalar =  int64_t</definition>
+        <argsstring></argsstring>
+        <name>Scalar</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt; int64_t &gt;::Scalar</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/traits.hpp" line="245" column="1" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="245" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1aa7b8e9989f0a5680196f6910cd9cd4a5" prot="public" static="no">
+        <type>Vc::Vector&lt; int64_t &gt;</type>
+        <definition>using librapid::typetraits::TypeInfo&lt; int64_t &gt;::Packet =  Vc::Vector&lt;int64_t&gt;</definition>
+        <argsstring></argsstring>
+        <name>Packet</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt; int64_t &gt;::Packet</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/traits.hpp" line="246" column="1" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="246" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1aa2aee67c82d9abb3fc499539665f4929" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr bool</type>
+        <definition>constexpr bool librapid::typetraits::TypeInfo&lt; int64_t &gt;::isLibRapidType</definition>
+        <argsstring></argsstring>
+        <name>isLibRapidType</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt; int64_t &gt;::isLibRapidType</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/traits.hpp" line="244" column="23" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="244" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1ad6d209c08b1cbecd40137b807ce14cae" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr int64_t</type>
+        <definition>constexpr int64_t librapid::typetraits::TypeInfo&lt; int64_t &gt;::packetWidth</definition>
+        <argsstring></argsstring>
+        <name>packetWidth</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt; int64_t &gt;::packetWidth</qualifiedname>
+        <initializer>= Packet::size()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/traits.hpp" line="247" column="26" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="247" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1a90f6e4f15cb37baf5a1558f0611b1cde" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr char</type>
+        <definition>constexpr char librapid::typetraits::TypeInfo&lt; int64_t &gt;::name[]</definition>
+        <argsstring>[]</argsstring>
+        <name>name</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt; int64_t &gt;::name</qualifiedname>
+        <initializer>= &quot;int64_t&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/traits.hpp" line="248" column="23" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="248" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1a8c4784351589aba2b7c61daaa3a9a0b9" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr bool</type>
+        <definition>constexpr bool librapid::typetraits::TypeInfo&lt; int64_t &gt;::supportsArithmetic</definition>
+        <argsstring></argsstring>
+        <name>supportsArithmetic</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt; int64_t &gt;::supportsArithmetic</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/traits.hpp" line="249" column="23" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="249" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1a6e5aa434a67591184bf08357325550a9" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr bool</type>
+        <definition>constexpr bool librapid::typetraits::TypeInfo&lt; int64_t &gt;::supportsLogical</definition>
+        <argsstring></argsstring>
+        <name>supportsLogical</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt; int64_t &gt;::supportsLogical</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/traits.hpp" line="250" column="23" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="250" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1a2c2062b3d84abdada2ae939e3bce7213" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr bool</type>
+        <definition>constexpr bool librapid::typetraits::TypeInfo&lt; int64_t &gt;::supportsBinary</definition>
+        <argsstring></argsstring>
+        <name>supportsBinary</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt; int64_t &gt;::supportsBinary</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/traits.hpp" line="251" column="23" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="251" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1ae9302f7a3726a9069cd11365e11245aa" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr bool</type>
+        <definition>constexpr bool librapid::typetraits::TypeInfo&lt; int64_t &gt;::canAlign</definition>
+        <argsstring></argsstring>
+        <name>canAlign</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt; int64_t &gt;::canAlign</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/traits.hpp" line="257" column="23" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="257" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1ac7116d4a3b20b6deb2977bca87afad76" prot="public" static="yes" constexpr="yes" mutable="no">
+        <type>constexpr bool</type>
+        <definition>constexpr bool librapid::typetraits::TypeInfo&lt; int64_t &gt;::canMemcpy</definition>
+        <argsstring></argsstring>
+        <name>canMemcpy</name>
+        <qualifiedname>librapid::typetraits::TypeInfo&lt; int64_t &gt;::canMemcpy</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/core/traits.hpp" line="258" column="23" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="258" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/core/traits.hpp" line="243" column="1" bodyfile="librapid/include/librapid/core/traits.hpp" bodystart="243" bodyend="259"/>
+    <listofallmembers>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1ae9302f7a3726a9069cd11365e11245aa" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt; int64_t &gt;</scope><name>canAlign</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1ac7116d4a3b20b6deb2977bca87afad76" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt; int64_t &gt;</scope><name>canMemcpy</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1aa2aee67c82d9abb3fc499539665f4929" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt; int64_t &gt;</scope><name>isLibRapidType</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1a90f6e4f15cb37baf5a1558f0611b1cde" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt; int64_t &gt;</scope><name>name</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1aa7b8e9989f0a5680196f6910cd9cd4a5" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt; int64_t &gt;</scope><name>Packet</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1ad6d209c08b1cbecd40137b807ce14cae" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt; int64_t &gt;</scope><name>packetWidth</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1a1612b008bc24eac66c550546711d025e" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt; int64_t &gt;</scope><name>Scalar</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1a8c4784351589aba2b7c61daaa3a9a0b9" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt; int64_t &gt;</scope><name>supportsArithmetic</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1a2c2062b3d84abdada2ae939e3bce7213" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt; int64_t &gt;</scope><name>supportsBinary</name></member>
+      <member refid="structlibrapid_1_1typetraits_1_1_type_info_3_01int64__t_01_4_1a6e5aa434a67591184bf08357325550a9" prot="public" virt="non-virtual"><scope>librapid::typetraits::TypeInfo&lt; int64_t &gt;</scope><name>supportsLogical</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

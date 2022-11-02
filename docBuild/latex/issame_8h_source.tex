@@ -1,0 +1,66 @@
+\hypertarget{issame_8h_source}{}\doxysection{issame.\+h}
+\label{issame_8h_source}\index{librapid/cxxblas/auxiliary/issame.h@{librapid/cxxblas/auxiliary/issame.h}}
+\mbox{\hyperlink{issame_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00001}00001 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00002}00002 \textcolor{comment}{ *   Copyright (c) 2004, Alexander Stippler}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00003}00003 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00004}00004 \textcolor{comment}{ *   All rights reserved.}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00005}00005 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00006}00006 \textcolor{comment}{ *   Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00007}00007 \textcolor{comment}{ *   modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00008}00008 \textcolor{comment}{ *   are met:}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00009}00009 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00010}00010 \textcolor{comment}{ *   1) Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00011}00011 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00012}00012 \textcolor{comment}{ *   2) Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00013}00013 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer in}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00014}00014 \textcolor{comment}{ *      the documentation and/or other materials provided with the}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00015}00015 \textcolor{comment}{ *      distribution.}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00016}00016 \textcolor{comment}{ *   3) Neither the name of the FLENS development group nor the names of}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00017}00017 \textcolor{comment}{ *      its contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00018}00018 \textcolor{comment}{ *      from this software without specific prior written permission.}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00019}00019 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00020}00020 \textcolor{comment}{ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00021}00021 \textcolor{comment}{ *   "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00022}00022 \textcolor{comment}{ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00023}00023 \textcolor{comment}{ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00024}00024 \textcolor{comment}{ *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00025}00025 \textcolor{comment}{ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00026}00026 \textcolor{comment}{ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00027}00027 \textcolor{comment}{ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00028}00028 \textcolor{comment}{ *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00029}00029 \textcolor{comment}{ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00030}00030 \textcolor{comment}{ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00031}00031 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00033}00033 \textcolor{preprocessor}{\#ifndef CXXBLAS\_AUXILIARY\_ISSAME\_H}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00034}00034 \textcolor{preprocessor}{\#define CXXBLAS\_AUXILIARY\_ISSAME\_H 1}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00036}00036 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespacecxxblas}{cxxblas}} \{}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00037}00037 }
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00038}00038     \textcolor{keyword}{template}<\textcolor{keyword}{typename}... Args>}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00039}\mbox{\hyperlink{structcxxblas_1_1_is_same}{00039}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_is_same}{IsSame}} \{}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00040}\mbox{\hyperlink{structcxxblas_1_1_is_same_accbaf8ec543d1fbe42a250a35cfb9961}{00040}}         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \mbox{\hyperlink{structcxxblas_1_1_is_same_accbaf8ec543d1fbe42a250a35cfb9961}{value}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00041}00041     \};}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00042}00042 }
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00043}00043     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00044}\mbox{\hyperlink{structcxxblas_1_1_is_same_3_01_t_01_4}{00044}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_is_same}{IsSame}}<T> \{}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00045}\mbox{\hyperlink{structcxxblas_1_1_is_same_3_01_t_01_4_a2ede42afe69026d5819575fd8301af20}{00045}}         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \mbox{\hyperlink{structcxxblas_1_1_is_same_accbaf8ec543d1fbe42a250a35cfb9961}{value}} = \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00046}00046     \};}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00047}00047 }
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00048}00048     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00049}\mbox{\hyperlink{structcxxblas_1_1_is_same_3_01_t_00_01_t_01_4}{00049}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_is_same}{IsSame}}<T, T> \{}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00050}\mbox{\hyperlink{structcxxblas_1_1_is_same_3_01_t_00_01_t_01_4_a4b71c63883201c0a8f91d1fa2444916e}{00050}}         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \mbox{\hyperlink{structcxxblas_1_1_is_same_accbaf8ec543d1fbe42a250a35cfb9961}{value}} = \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00051}00051     \};}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00052}00052 }
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00053}00053     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keyword}{typename}... Args>}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00054}\mbox{\hyperlink{structcxxblas_1_1_is_same_3_01_t_00_01_t_00_01_args_8_8_8_01_4}{00054}}     \textcolor{keyword}{struct }\mbox{\hyperlink{structcxxblas_1_1_is_same}{IsSame}}<T, T, Args...> \{}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00055}\mbox{\hyperlink{structcxxblas_1_1_is_same_3_01_t_00_01_t_00_01_args_8_8_8_01_4_a2a1d2b1bafb3bad69783b3b0605b2a26}{00055}}         \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{bool} \mbox{\hyperlink{structcxxblas_1_1_is_same_accbaf8ec543d1fbe42a250a35cfb9961}{value}} = \mbox{\hyperlink{structcxxblas_1_1_is_same}{IsSame}}<T, Args...>\mbox{\hyperlink{structcxxblas_1_1_is_same_accbaf8ec543d1fbe42a250a35cfb9961}{::value}};}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00056}00056     \};}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00057}00057 }
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00058}00058 \} \textcolor{comment}{// namespace cxxblas}}
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00059}00059 }
+\DoxyCodeLine{\Hypertarget{issame_8h_source_l00060}00060 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CXXBLAS\_AUXILIARY\_ISSAME\_H}}
+
+\end{DoxyCode}

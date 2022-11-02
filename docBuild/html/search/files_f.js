@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['sbmm_2eh_0',['sbmm.h',['../sbmm_8h.html',1,'']]],
+  ['sbmv_2eh_1',['sbmv.h',['../sbmv_8h.html',1,'']]],
+  ['scal_2eh_2',['scal.h',['../level1_2scal_8h.html',1,'(Global Namespace)'],['../tinylevel1_2scal_8h.html',1,'(Global Namespace)']]],
+  ['sizetype_2ehpp_3',['sizetype.hpp',['../sizetype_8hpp.html',1,'']]],
+  ['sparseblas_2eh_4',['sparseblas.h',['../sparseblas_8h.html',1,'']]],
+  ['sparselevel2_2eh_5',['sparselevel2.h',['../sparselevel2_8h.html',1,'']]],
+  ['sparselevel3_2eh_6',['sparselevel3.h',['../sparselevel3_8h.html',1,'']]],
+  ['spmv_2eh_7',['spmv.h',['../spmv_8h.html',1,'']]],
+  ['spr_2eh_8',['spr.h',['../spr_8h.html',1,'']]],
+  ['spr2_2eh_9',['spr2.h',['../spr2_8h.html',1,'']]],
+  ['storage_2ehpp_10',['storage.hpp',['../storage_8hpp.html',1,'']]],
+  ['swap_2eh_11',['swap.h',['../swap_8h.html',1,'']]],
+  ['syccsmm_2eh_12',['syccsmm.h',['../syccsmm_8h.html',1,'']]],
+  ['syccsmv_2eh_13',['syccsmv.h',['../syccsmv_8h.html',1,'']]],
+  ['sycrsmm_2eh_14',['sycrsmm.h',['../sycrsmm_8h.html',1,'']]],
+  ['sycrsmv_2eh_15',['sycrsmv.h',['../sycrsmv_8h.html',1,'']]],
+  ['symm_2eh_16',['symm.h',['../symm_8h.html',1,'']]],
+  ['symv_2eh_17',['symv.h',['../level2_2symv_8h.html',1,'(Global Namespace)'],['../level2extensions_2symv_8h.html',1,'(Global Namespace)']]],
+  ['syr_2eh_18',['syr.h',['../syr_8h.html',1,'']]],
+  ['syr2_2eh_19',['syr2.h',['../syr2_8h.html',1,'']]],
+  ['syr2k_2eh_20',['syr2k.h',['../syr2k_8h.html',1,'']]],
+  ['syrk_2eh_21',['syrk.h',['../syrk_8h.html',1,'']]],
+  ['syscal_2eh_22',['syscal.h',['../syscal_8h.html',1,'']]]
+];

@@ -1,0 +1,730 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="classlibrapid_1_1_array_container" kind="class" language="C++" prot="public">
+    <compoundname>librapid::ArrayContainer</compoundname>
+    <includes refid="array_container_8hpp" local="no">arrayContainer.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>typename ShapeType_</type>
+      </param>
+      <param>
+        <type>typename StorageType_</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="classlibrapid_1_1_array_container_1ae5527acec5ef0fbfe765f756b3f200e0" prot="public" static="no">
+        <type>StorageType_</type>
+        <definition>using librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::StorageType =  StorageType_</definition>
+        <argsstring></argsstring>
+        <name>StorageType</name>
+        <qualifiedname>librapid::ArrayContainer::StorageType</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="16" column="1" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classlibrapid_1_1_array_container_1a4f2597c693c94c3c6012206913ab2d42" prot="public" static="no">
+        <type>ShapeType_</type>
+        <definition>using librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::ShapeType =  ShapeType_</definition>
+        <argsstring></argsstring>
+        <name>ShapeType</name>
+        <qualifiedname>librapid::ArrayContainer::ShapeType</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="17" column="1" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classlibrapid_1_1_array_container_1a31175313ca27fc6379bd0d422c8bc913" prot="public" static="no">
+        <type>typename ShapeType::SizeType</type>
+        <definition>using librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::SizeType =  typename ShapeType::SizeType</definition>
+        <argsstring></argsstring>
+        <name>SizeType</name>
+        <qualifiedname>librapid::ArrayContainer::SizeType</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="18" column="1" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classlibrapid_1_1_array_container_1a0f89930b43a972a9233927465fa91065" prot="public" static="no">
+        <type>typename StorageType::Scalar</type>
+        <definition>using librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::Scalar =  typename StorageType::Scalar</definition>
+        <argsstring></argsstring>
+        <name>Scalar</name>
+        <qualifiedname>librapid::ArrayContainer::Scalar</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="19" column="1" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classlibrapid_1_1_array_container_1afaf88d296c3dcfc4754eaa3b1cb2a0f9" prot="public" static="no">
+        <type>typename <ref refid="structlibrapid_1_1typetraits_1_1_type_info" kindref="compound">typetraits::TypeInfo</ref>&lt; <ref refid="classlibrapid_1_1_array_container_1a0f89930b43a972a9233927465fa91065" kindref="member">Scalar</ref> &gt;::Packet</type>
+        <definition>using librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::Packet =  typename typetraits::TypeInfo&lt;Scalar&gt;::Packet</definition>
+        <argsstring></argsstring>
+        <name>Packet</name>
+        <qualifiedname>librapid::ArrayContainer::Packet</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="20" column="1" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classlibrapid_1_1_array_container_1a842b7e36494926b9733a07c3e86a689f" prot="private" static="no" mutable="no">
+        <type><ref refid="classlibrapid_1_1_array_container_1a4f2597c693c94c3c6012206913ab2d42" kindref="member">ShapeType</ref></type>
+        <definition>ShapeType librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::m_shape</definition>
+        <argsstring></argsstring>
+        <name>m_shape</name>
+        <qualifiedname>librapid::ArrayContainer::m_shape</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="102" column="11" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classlibrapid_1_1_array_container_1a43df30526c58bf93e96e035279e1cec1" prot="private" static="no" mutable="no">
+        <type><ref refid="classlibrapid_1_1_array_container_1ae5527acec5ef0fbfe765f756b3f200e0" kindref="member">StorageType</ref></type>
+        <definition>StorageType librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::m_storage</definition>
+        <argsstring></argsstring>
+        <name>m_storage</name>
+        <qualifiedname>librapid::ArrayContainer::m_storage</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="103" column="13" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1a0dff3c2c902b45beb4b1bca707b51201" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::ArrayContainer</definition>
+        <argsstring>()=default</argsstring>
+        <name>ArrayContainer</name>
+        <qualifiedname>librapid::ArrayContainer::ArrayContainer</qualifiedname>
+        <briefdescription>
+<para>Default constructor. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="23" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1a85097455ec30b2e0adbb636294bb0a55" prot="public" static="no" const="no" explicit="yes" inline="no" virt="non-virtual">
+        <type><ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref></type>
+        <definition>librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::ArrayContainer</definition>
+        <argsstring>(const ShapeType &amp;shape)</argsstring>
+        <name>ArrayContainer</name>
+        <qualifiedname>librapid::ArrayContainer::ArrayContainer</qualifiedname>
+        <param>
+          <type>const <ref refid="classlibrapid_1_1_array_container_1a4f2597c693c94c3c6012206913ab2d42" kindref="member">ShapeType</ref> &amp;</type>
+          <declname>shape</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constructs an array container from a shape <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>shape</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The shape of the array container </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="27" column="33" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="107" bodyend="108"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1abcbf3404c1071d8ac491d37b79bee4ed" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref></type>
+        <definition>librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::ArrayContainer</definition>
+        <argsstring>(const ShapeType &amp;shape, const Scalar &amp;value)</argsstring>
+        <name>ArrayContainer</name>
+        <qualifiedname>librapid::ArrayContainer::ArrayContainer</qualifiedname>
+        <param>
+          <type>const <ref refid="classlibrapid_1_1_array_container_1a4f2597c693c94c3c6012206913ab2d42" kindref="member">ShapeType</ref> &amp;</type>
+          <declname>shape</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classlibrapid_1_1_array_container_1a0f89930b43a972a9233927465fa91065" kindref="member">Scalar</ref> &amp;</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Create an array container from a shape and a scalar value. The scalar value represents the value the memory is initialized with. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>shape</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The shape of the array container </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The value to initialize the memory with </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="33" column="24" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="111" bodyend="114"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1ad2d2d0a4f7f737732ac4a17773288011" prot="public" static="no" const="no" explicit="yes" inline="no" virt="non-virtual">
+        <type><ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref></type>
+        <definition>librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::ArrayContainer</definition>
+        <argsstring>(ShapeType &amp;&amp;shape)</argsstring>
+        <name>ArrayContainer</name>
+        <qualifiedname>librapid::ArrayContainer::ArrayContainer</qualifiedname>
+        <param>
+          <type><ref refid="classlibrapid_1_1_array_container_1a4f2597c693c94c3c6012206913ab2d42" kindref="member">ShapeType</ref> &amp;&amp;</type>
+          <declname>shape</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Construct an array container from a shape, which is moved, not copied. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>shape</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The shape of the array container </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="37" column="33" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="117" bodyend="118"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1ab2a5bef1e630be315bf0b1a731423aaf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref></type>
+        <definition>LIBRAPID_ALWAYS_INLINE librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::ArrayContainer</definition>
+        <argsstring>(const ArrayContainer &amp;other)=default</argsstring>
+        <name>ArrayContainer</name>
+        <qualifiedname>librapid::ArrayContainer::ArrayContainer</qualifiedname>
+        <param>
+          <type>const <ref refid="classlibrapid_1_1_array_container" kindref="compound">ArrayContainer</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Construct an array container from another array container. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>other</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The array container to copy. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="41" column="24"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1abdf1b2b56d9e95c28e0f4f5052ed6482" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <type><ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref></type>
+        <definition>LIBRAPID_ALWAYS_INLINE librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::ArrayContainer</definition>
+        <argsstring>(ArrayContainer &amp;&amp;other) noexcept=default</argsstring>
+        <name>ArrayContainer</name>
+        <qualifiedname>librapid::ArrayContainer::ArrayContainer</qualifiedname>
+        <param>
+          <type><ref refid="classlibrapid_1_1_array_container" kindref="compound">ArrayContainer</ref> &amp;&amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Construct an array container from a temporary array container. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>other</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The array container to move. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="45" column="24"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1a95d0bd0534be26fc9aeaffd90267ba52" prot="public" static="no" const="no" explicit="yes" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type><ref refid="namespacelibrapid_1_1detail_1acac64eb9d77033562afff081348c9ad3" kindref="member">detail::Descriptor</ref></type>
+            <declname>desc</declname>
+            <defname>desc</defname>
+          </param>
+          <param>
+            <type>typename Functor_</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Args</declname>
+            <defname>Args</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref></type>
+        <definition>LIBRAPID_ALWAYS_INLINE librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::ArrayContainer</definition>
+        <argsstring>(const detail::Function&lt; desc, Functor_, Args... &gt; &amp;function) LIBRAPID_RELEASE_NOEXCEPT</argsstring>
+        <name>ArrayContainer</name>
+        <qualifiedname>librapid::ArrayContainer::ArrayContainer</qualifiedname>
+        <param>
+          <type>const <ref refid="classlibrapid_1_1detail_1_1_function" kindref="compound">detail::Function</ref>&lt; desc, Functor_, Args... &gt; &amp;</type>
+          <declname>function</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Construct an array container from a function object. This will assign the result of the function to the array container, evaluating it accordingly. <parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>desc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The assignment descriptor </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>Functor_</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The function type </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>Args</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The argument types of the function </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>function</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The function to assign </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="54" column="33"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1a0fb53059ddfe8b76fcead44c79082131" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref> <ref refid="classlibrapid_1_1_array_container" kindref="compound">ArrayContainer</ref> &amp;</type>
+        <definition>LIBRAPID_ALWAYS_INLINE ArrayContainer &amp; librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::operator=</definition>
+        <argsstring>(const ArrayContainer &amp;other)=default</argsstring>
+        <name>operator=</name>
+        <qualifiedname>librapid::ArrayContainer::operator=</qualifiedname>
+        <param>
+          <type>const <ref refid="classlibrapid_1_1_array_container" kindref="compound">ArrayContainer</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Assign an array container to this array container. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>other</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The array container to copy. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A reference to this array container. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="60" column="39"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1a36742d998ad5d658a07325d998b2b0d9" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <type><ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref> <ref refid="classlibrapid_1_1_array_container" kindref="compound">ArrayContainer</ref> &amp;</type>
+        <definition>LIBRAPID_ALWAYS_INLINE ArrayContainer &amp; librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::operator=</definition>
+        <argsstring>(ArrayContainer &amp;&amp;other) noexcept=default</argsstring>
+        <name>operator=</name>
+        <qualifiedname>librapid::ArrayContainer::operator=</qualifiedname>
+        <param>
+          <type><ref refid="classlibrapid_1_1_array_container" kindref="compound">ArrayContainer</ref> &amp;&amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Assign a temporary array container to this array container. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>other</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The array container to move. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A reference to this array container. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="65" column="39"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1aef4ec738c598c0764561f5dfc2f382de" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type><ref refid="namespacelibrapid_1_1detail_1acac64eb9d77033562afff081348c9ad3" kindref="member">detail::Descriptor</ref></type>
+            <declname>desc</declname>
+            <defname>desc</defname>
+          </param>
+          <param>
+            <type>typename Functor_</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Args</declname>
+            <defname>Args</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref> <ref refid="classlibrapid_1_1_array_container" kindref="compound">ArrayContainer</ref> &amp;</type>
+        <definition>LIBRAPID_ALWAYS_INLINE ArrayContainer &amp; librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::operator=</definition>
+        <argsstring>(const detail::Function&lt; desc, Functor_, Args... &gt; &amp;function)</argsstring>
+        <name>operator=</name>
+        <qualifiedname>librapid::ArrayContainer::operator=</qualifiedname>
+        <param>
+          <type>const <ref refid="classlibrapid_1_1detail_1_1_function" kindref="compound">detail::Function</ref>&lt; desc, Functor_, Args... &gt; &amp;</type>
+          <declname>function</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Assign a function object to this array container. This will assign the result of the function to the array container, evaluating it accordingly. <parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>Functor_</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The function type </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>Args</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The argument types of the function </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>function</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The function to assign </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A reference to this array container. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="75" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1af84a9f624b56c1c54e1d107a3549eb0a" prot="public" static="no" const="yes" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <type><ref refid="config_8hpp_1a75d0fe130ecba37781dedf98fb68bc0c" kindref="member">LIBRAPID_NODISCARD</ref> <ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref> const <ref refid="classlibrapid_1_1_array_container_1a4f2597c693c94c3c6012206913ab2d42" kindref="member">ShapeType</ref> &amp;</type>
+        <definition>auto librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::shape</definition>
+        <argsstring>() const noexcept</argsstring>
+        <name>shape</name>
+        <qualifiedname>librapid::ArrayContainer::shape</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Return the shape of the array container. This is an immutable reference. <simplesect kind="return"><para>The shape of the array container. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="79" column="59" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="149" bodyend="151"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1a3db13b260dd97d72b7bedef0aebc9478" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="config_8hpp_1a75d0fe130ecba37781dedf98fb68bc0c" kindref="member">LIBRAPID_NODISCARD</ref> <ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref> <ref refid="classlibrapid_1_1_array_container_1afaf88d296c3dcfc4754eaa3b1cb2a0f9" kindref="member">Packet</ref></type>
+        <definition>auto librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::packet</definition>
+        <argsstring>(size_t index) const</argsstring>
+        <name>packet</name>
+        <qualifiedname>librapid::ArrayContainer::packet</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Return a Packet object from the array&apos;s storage at a specific index. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>index</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The index to get the packet from </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A Packet object from the array&apos;s storage at a specific index </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="84" column="50" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="154" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1a3acda710f0b321e1ffe08c6fa4d3a40c" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="config_8hpp_1a75d0fe130ecba37781dedf98fb68bc0c" kindref="member">LIBRAPID_NODISCARD</ref> <ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref> <ref refid="classlibrapid_1_1_array_container_1a0f89930b43a972a9233927465fa91065" kindref="member">Scalar</ref></type>
+        <definition>auto librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::scalar</definition>
+        <argsstring>(size_t index) const</argsstring>
+        <name>scalar</name>
+        <qualifiedname>librapid::ArrayContainer::scalar</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Return a Scalar from the array&apos;s storage at a specific index. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>index</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The index to get the scalar from </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A Scalar from the array&apos;s storage at a specific index </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="89" column="50" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="161" bodyend="163"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1a5700d3ef2612505be244cc5e629f3cda" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref> void</type>
+        <definition>void librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::writePacket</definition>
+        <argsstring>(size_t index, const Packet &amp;value)</argsstring>
+        <name>writePacket</name>
+        <qualifiedname>librapid::ArrayContainer::writePacket</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>index</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classlibrapid_1_1_array_container_1afaf88d296c3dcfc4754eaa3b1cb2a0f9" kindref="member">Packet</ref> &amp;</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Write a Packet object to the array&apos;s storage at a specific index <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>index</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The index to write the packet to </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The value to write to the array&apos;s storage </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="94" column="29" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="166" bodyend="168"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1a83cd9c71be6bd76c5690a598c78dd5ff" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="msvc_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref> void</type>
+        <definition>void librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::write</definition>
+        <argsstring>(size_t index, const Scalar &amp;value)</argsstring>
+        <name>write</name>
+        <qualifiedname>librapid::ArrayContainer::write</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>index</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classlibrapid_1_1_array_container_1a0f89930b43a972a9233927465fa91065" kindref="member">Scalar</ref> &amp;</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Write a Scalar to the array&apos;s storage at a specific index <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>index</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The index to write the scalar to </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The value to write to the array&apos;s storage </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="99" column="29" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="171" bodyend="173"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1a1f2b1c2e81c17173ba9e15f2efa51773" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type><ref refid="namespacelibrapid_1_1detail_1acac64eb9d77033562afff081348c9ad3" kindref="member">detail::Descriptor</ref></type>
+            <declname>desc</declname>
+            <defname>desc</defname>
+          </param>
+          <param>
+            <type>typename Functor_</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Args</declname>
+            <defname>Args</defname>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::ArrayContainer</definition>
+        <argsstring>(const detail::Function&lt; desc, Functor_, Args... &gt; &amp;function) LIBRAPID_RELEASE_NOEXCEPT</argsstring>
+        <name>ArrayContainer</name>
+        <qualifiedname>librapid::ArrayContainer::ArrayContainer</qualifiedname>
+        <param>
+          <type>const <ref refid="classlibrapid_1_1detail_1_1_function" kindref="compound">detail::Function</ref>&lt; desc, Functor_, Args... &gt; &amp;</type>
+          <declname>function</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="122" column="16" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="122" bodyend="132"/>
+      </memberdef>
+      <memberdef kind="function" id="classlibrapid_1_1_array_container_1a97b566a47947006d224070731eaa991f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type><ref refid="namespacelibrapid_1_1detail_1acac64eb9d77033562afff081348c9ad3" kindref="member">detail::Descriptor</ref></type>
+            <declname>desc</declname>
+            <defname>desc</defname>
+          </param>
+          <param>
+            <type>typename Functor_</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Args</declname>
+            <defname>Args</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classlibrapid_1_1_array_container" kindref="compound">ArrayContainer</ref>&lt; ShapeType_, StorageType_ &gt; &amp;</type>
+        <definition>ArrayContainer&lt; ShapeType_, StorageType_ &gt; &amp; librapid::ArrayContainer&lt; ShapeType_, StorageType_ &gt;::operator=</definition>
+        <argsstring>(const detail::Function&lt; desc, Functor_, Args... &gt; &amp;function)</argsstring>
+        <name>operator=</name>
+        <qualifiedname>librapid::ArrayContainer::operator=</qualifiedname>
+        <param>
+          <type>const <ref refid="classlibrapid_1_1detail_1_1_function" kindref="compound">detail::Function</ref>&lt; desc, Functor_, Args... &gt; &amp;</type>
+          <declname>function</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/array/arrayContainer.hpp" line="136" column="31" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="136" bodyend="146"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/array/arrayContainer.hpp" line="14" column="1" bodyfile="librapid/include/librapid/array/arrayContainer.hpp" bodystart="14" bodyend="104"/>
+    <listofallmembers>
+      <member refid="classlibrapid_1_1_array_container_1a0dff3c2c902b45beb4b1bca707b51201" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>ArrayContainer</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a85097455ec30b2e0adbb636294bb0a55" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>ArrayContainer</name></member>
+      <member refid="classlibrapid_1_1_array_container_1abcbf3404c1071d8ac491d37b79bee4ed" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>ArrayContainer</name></member>
+      <member refid="classlibrapid_1_1_array_container_1ad2d2d0a4f7f737732ac4a17773288011" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>ArrayContainer</name></member>
+      <member refid="classlibrapid_1_1_array_container_1ab2a5bef1e630be315bf0b1a731423aaf" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>ArrayContainer</name></member>
+      <member refid="classlibrapid_1_1_array_container_1abdf1b2b56d9e95c28e0f4f5052ed6482" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>ArrayContainer</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a95d0bd0534be26fc9aeaffd90267ba52" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>ArrayContainer</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a1f2b1c2e81c17173ba9e15f2efa51773" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>ArrayContainer</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a842b7e36494926b9733a07c3e86a689f" prot="private" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>m_shape</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a43df30526c58bf93e96e035279e1cec1" prot="private" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>m_storage</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a0fb53059ddfe8b76fcead44c79082131" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>operator=</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a36742d998ad5d658a07325d998b2b0d9" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>operator=</name></member>
+      <member refid="classlibrapid_1_1_array_container_1aef4ec738c598c0764561f5dfc2f382de" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>operator=</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a97b566a47947006d224070731eaa991f" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>operator=</name></member>
+      <member refid="classlibrapid_1_1_array_container_1afaf88d296c3dcfc4754eaa3b1cb2a0f9" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>Packet</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a3db13b260dd97d72b7bedef0aebc9478" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>packet</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a0f89930b43a972a9233927465fa91065" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>Scalar</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a3acda710f0b321e1ffe08c6fa4d3a40c" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>scalar</name></member>
+      <member refid="classlibrapid_1_1_array_container_1af84a9f624b56c1c54e1d107a3549eb0a" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>shape</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a4f2597c693c94c3c6012206913ab2d42" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>ShapeType</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a31175313ca27fc6379bd0d422c8bc913" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>SizeType</name></member>
+      <member refid="classlibrapid_1_1_array_container_1ae5527acec5ef0fbfe765f756b3f200e0" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>StorageType</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a83cd9c71be6bd76c5690a598c78dd5ff" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>write</name></member>
+      <member refid="classlibrapid_1_1_array_container_1a5700d3ef2612505be244cc5e629f3cda" prot="public" virt="non-virtual"><scope>librapid::ArrayContainer</scope><name>writePacket</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

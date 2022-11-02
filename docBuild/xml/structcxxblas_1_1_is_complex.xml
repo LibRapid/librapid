@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="structcxxblas_1_1_is_complex" kind="struct" language="C++" prot="public">
+    <compoundname>cxxblas::IsComplex</compoundname>
+    <includes refid="iscomplex_8h" local="no">iscomplex.h</includes>
+    <templateparamlist>
+      <param>
+        <type>typename T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="structcxxblas_1_1_is_complex_1a0c419c9791ccc07cf77d596da5d9267e" prot="public" static="yes" mutable="no">
+        <type>const bool</type>
+        <definition>const bool cxxblas::IsComplex&lt; T &gt;::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <qualifiedname>cxxblas::IsComplex::value</qualifiedname>
+        <initializer>= !<ref refid="structcxxblas_1_1_is_not_complex" kindref="compound">IsNotComplex</ref>&lt;T&gt;::value</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/cxxblas/auxiliary/iscomplex.h" line="52" column="19" bodyfile="librapid/cxxblas/auxiliary/iscomplex.h" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/cxxblas/auxiliary/iscomplex.h" line="51" column="1" bodyfile="librapid/cxxblas/auxiliary/iscomplex.h" bodystart="51" bodyend="53"/>
+    <listofallmembers>
+      <member refid="structcxxblas_1_1_is_complex_1a0c419c9791ccc07cf77d596da5d9267e" prot="public" virt="non-virtual"><scope>cxxblas::IsComplex</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

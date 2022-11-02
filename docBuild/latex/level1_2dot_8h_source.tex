@@ -1,0 +1,108 @@
+\hypertarget{level1_2dot_8h_source}{}\doxysection{dot.\+h}
+\label{level1_2dot_8h_source}\index{librapid/cxxblas/level1/dot.h@{librapid/cxxblas/level1/dot.h}}
+\mbox{\hyperlink{level1_2dot_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00001}00001 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00002}00002 \textcolor{comment}{ *   Copyright (c) 2009, Michael Lehn}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00003}00003 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00004}00004 \textcolor{comment}{ *   All rights reserved.}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00005}00005 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00006}00006 \textcolor{comment}{ *   Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00007}00007 \textcolor{comment}{ *   modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00008}00008 \textcolor{comment}{ *   are met:}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00009}00009 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00010}00010 \textcolor{comment}{ *   1) Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00011}00011 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00012}00012 \textcolor{comment}{ *   2) Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00013}00013 \textcolor{comment}{ *      notice, this list of conditions and the following disclaimer in}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00014}00014 \textcolor{comment}{ *      the documentation and/or other materials provided with the}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00015}00015 \textcolor{comment}{ *      distribution.}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00016}00016 \textcolor{comment}{ *   3) Neither the name of the FLENS development group nor the names of}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00017}00017 \textcolor{comment}{ *      its contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00018}00018 \textcolor{comment}{ *      from this software without specific prior written permission.}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00019}00019 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00020}00020 \textcolor{comment}{ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00021}00021 \textcolor{comment}{ *   "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00022}00022 \textcolor{comment}{ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00023}00023 \textcolor{comment}{ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00024}00024 \textcolor{comment}{ *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00025}00025 \textcolor{comment}{ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00026}00026 \textcolor{comment}{ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00027}00027 \textcolor{comment}{ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00028}00028 \textcolor{comment}{ *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00029}00029 \textcolor{comment}{ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00030}00030 \textcolor{comment}{ *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00031}00031 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00033}00033 \textcolor{preprocessor}{\#ifndef CXXBLAS\_LEVEL1\_DOT\_H}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00034}00034 \textcolor{preprocessor}{\#define CXXBLAS\_LEVEL1\_DOT\_H 1}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00036}00036 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{cxxblas_8h}{cxxblas/cxxblas.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00037}00037 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00038}\mbox{\hyperlink{level1_2dot_8h_afb3604412ec77bce4a504f0ce33cbf5d}{00038}} \textcolor{preprocessor}{\#define HAVE\_CXXBLAS\_DOT  1}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00039}\mbox{\hyperlink{level1_2dot_8h_ae315f13263fef6b767409b10ac0d47cb}{00039}} \textcolor{preprocessor}{\#define HAVE\_CXXBLAS\_DOTU 1}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00040}00040 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00041}00041 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespacecxxblas}{cxxblas}} \{}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00042}00042 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00043}00043     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType, \textcolor{keyword}{typename} X, \textcolor{keyword}{typename} Y, \textcolor{keyword}{typename} Result>}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00044}\mbox{\hyperlink{namespacecxxblas_a1b0a1e1b75a6be2dd7236387039700b3}{00044}}     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespacecxxblas_a1b0a1e1b75a6be2dd7236387039700b3}{dotu}}(IndexType n, \textcolor{keyword}{const} X *x, IndexType incX, \textcolor{keyword}{const} Y *y, IndexType incY, Result \&result);}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00045}00045 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00046}00046     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType, \textcolor{keyword}{typename} X, \textcolor{keyword}{typename} Y, \textcolor{keyword}{typename} Result>}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00047}\mbox{\hyperlink{namespacecxxblas_a88b5b182d09d1becc3d58554fe918f67}{00047}}     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespacecxxblas_a88b5b182d09d1becc3d58554fe918f67}{dot}}(IndexType n, \textcolor{keyword}{const} X *x, IndexType incX, \textcolor{keyword}{const} Y *y, IndexType incY, Result \&result);}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00048}00048 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00049}00049 \textcolor{preprocessor}{\#ifdef HAVE\_CBLAS}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00050}00050 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00051}00051     \textcolor{comment}{// sdsdot}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00052}00052     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00053}00053     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}} sdot(IndexType n, \textcolor{keywordtype}{float} alpha, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00054}00054                                                          IndexType incX, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *y,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00055}00055                                                          IndexType incY, \textcolor{keywordtype}{float} \&result);}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00056}00056 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00057}00057     \textcolor{comment}{// dsdot}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00058}00058     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00059}00059     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}} \mbox{\hyperlink{namespacecxxblas_a88b5b182d09d1becc3d58554fe918f67}{dot}}(IndexType n, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x, IndexType incX,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00060}00060                                                         \textcolor{keyword}{const} \textcolor{keywordtype}{float} *y, IndexType incY,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00061}00061                                                         \textcolor{keywordtype}{double} \&result);}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00062}00062 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00063}00063     \textcolor{comment}{// sdot}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00064}00064     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00065}00065     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00066}00066     \mbox{\hyperlink{namespacecxxblas_a88b5b182d09d1becc3d58554fe918f67}{dot}}(IndexType n, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *x, IndexType incX, \textcolor{keyword}{const} \textcolor{keywordtype}{float} *y, IndexType incY, \textcolor{keywordtype}{float} \&result);}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00067}00067 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00068}00068     \textcolor{comment}{// ddot}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00069}00069     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00070}00070     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}} \mbox{\hyperlink{namespacecxxblas_a88b5b182d09d1becc3d58554fe918f67}{dot}}(IndexType n, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *x,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00071}00071                                                         IndexType incX, \textcolor{keyword}{const} \textcolor{keywordtype}{double} *y,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00072}00072                                                         IndexType incY, \textcolor{keywordtype}{double} \&result);}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00073}00073 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00074}00074     \textcolor{comment}{// cdotu\_sub}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00075}00075     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00076}00076     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}} \mbox{\hyperlink{namespacecxxblas_a1b0a1e1b75a6be2dd7236387039700b3}{dotu}}(IndexType n, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} *x,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00077}00077                                                          IndexType incX, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} *y,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00078}00078                                                          IndexType incY, \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} \&result);}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00079}00079 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00080}00080     \textcolor{comment}{// cdotc\_sub}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00081}00081     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00082}00082     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}} \mbox{\hyperlink{namespacecxxblas_a88b5b182d09d1becc3d58554fe918f67}{dot}}(IndexType n, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} *x,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00083}00083                                                         IndexType incX, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} *y,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00084}00084                                                         IndexType incY, \mbox{\hyperlink{namespacecxxblas_a0aa58e56aafd7cc3e106560ba53a7d68}{ComplexFloat}} \&result);}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00085}00085 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00086}00086     \textcolor{comment}{// zdotu\_sub}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00087}00087     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00088}00088     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}} \mbox{\hyperlink{namespacecxxblas_a1b0a1e1b75a6be2dd7236387039700b3}{dotu}}(IndexType n, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} *x,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00089}00089                                                          IndexType incX, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} *y,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00090}00090                                                          IndexType incY, \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} \&result);}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00091}00091 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00092}00092     \textcolor{comment}{// zdotc\_sub}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00093}00093     \textcolor{keyword}{template}<\textcolor{keyword}{typename} IndexType>}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00094}00094     \textcolor{keyword}{typename} \mbox{\hyperlink{structcxxblas_1_1_if}{If<IndexType>::isBlasCompatibleInteger}} \mbox{\hyperlink{namespacecxxblas_a88b5b182d09d1becc3d58554fe918f67}{dot}}(IndexType n, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} *x,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00095}00095                                                         IndexType incX, \textcolor{keyword}{const} \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} *y,}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00096}00096                                                         IndexType incY, \mbox{\hyperlink{namespacecxxblas_a3745a448677a66aa383ccc8bf3d09716}{ComplexDouble}} \&result);}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00097}00097 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00098}00098 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// HAVE\_CBLAS}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00099}00099 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00100}00100 \} \textcolor{comment}{// namespace cxxblas}}
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00101}00101 }
+\DoxyCodeLine{\Hypertarget{level1_2dot_8h_source_l00102}00102 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// CXXBLAS\_LEVEL1\_DOT\_H}}
+
+\end{DoxyCode}

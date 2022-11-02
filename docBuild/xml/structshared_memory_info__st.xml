@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="structshared_memory_info__st" kind="struct" language="C++" prot="public">
+    <compoundname>sharedMemoryInfo_st</compoundname>
+    <includes refid="helper__multiprocess_8h" local="no">helper_multiprocess.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structshared_memory_info__st_1ac2cdf8965b877e223302a8c133c98f3d" prot="public" static="no" mutable="no">
+        <type>void *</type>
+        <definition>void* sharedMemoryInfo_st::addr</definition>
+        <argsstring></argsstring>
+        <name>addr</name>
+        <qualifiedname>sharedMemoryInfo_st::addr</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_multiprocess.h" line="61" column="6" bodyfile="librapid/include/librapid/cuda/helper_multiprocess.h" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structshared_memory_info__st_1a673f556df69750c8cc4e91daba53392e" prot="public" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t sharedMemoryInfo_st::size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <qualifiedname>sharedMemoryInfo_st::size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_multiprocess.h" line="62" column="8" bodyfile="librapid/include/librapid/cuda/helper_multiprocess.h" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structshared_memory_info__st_1a440522aeb6a5ede20fed1f6b797f9040" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int sharedMemoryInfo_st::shmFd</definition>
+        <argsstring></argsstring>
+        <name>shmFd</name>
+        <qualifiedname>sharedMemoryInfo_st::shmFd</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="librapid/include/librapid/cuda/helper_multiprocess.h" line="66" column="5" bodyfile="librapid/include/librapid/cuda/helper_multiprocess.h" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/cuda/helper_multiprocess.h" line="60" column="1" bodyfile="librapid/include/librapid/cuda/helper_multiprocess.h" bodystart="60" bodyend="68"/>
+    <listofallmembers>
+      <member refid="structshared_memory_info__st_1ac2cdf8965b877e223302a8c133c98f3d" prot="public" virt="non-virtual"><scope>sharedMemoryInfo_st</scope><name>addr</name></member>
+      <member refid="structshared_memory_info__st_1a440522aeb6a5ede20fed1f6b797f9040" prot="public" virt="non-virtual"><scope>sharedMemoryInfo_st</scope><name>shmFd</name></member>
+      <member refid="structshared_memory_info__st_1a673f556df69750c8cc4e91daba53392e" prot="public" virt="non-virtual"><scope>sharedMemoryInfo_st</scope><name>size</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

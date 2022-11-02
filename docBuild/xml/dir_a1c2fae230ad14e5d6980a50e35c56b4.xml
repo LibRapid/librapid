@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_a1c2fae230ad14e5d6980a50e35c56b4" kind="dir">
+    <compoundname>librapid/cxxblas/level1extensions</compoundname>
+    <innerfile refid="level1extensions_2acxpby_8h">acxpby.h</innerfile>
+    <innerfile refid="level1extensions_2acxpy_8h">acxpy.h</innerfile>
+    <innerfile refid="asum1_8h">asum1.h</innerfile>
+    <innerfile refid="level1extensions_2axpby_8h">axpby.h</innerfile>
+    <innerfile refid="level1extensions_2axpy_8h">axpy.h</innerfile>
+    <innerfile refid="level1extensions_2ccopy_8h">ccopy.h</innerfile>
+    <innerfile refid="level1extensions_2dot_8h">dot.h</innerfile>
+    <innerfile refid="gbaxpby_8h">gbaxpby.h</innerfile>
+    <innerfile refid="gbaxpy_8h">gbaxpy.h</innerfile>
+    <innerfile refid="gbcopy_8h">gbcopy.h</innerfile>
+    <innerfile refid="gbcotr_8h">gbcotr.h</innerfile>
+    <innerfile refid="gbscal_8h">gbscal.h</innerfile>
+    <innerfile refid="geaxpby_8h">geaxpby.h</innerfile>
+    <innerfile refid="level1extensions_2geaxpy_8h">geaxpy.h</innerfile>
+    <innerfile refid="level1extensions_2gecopy_8h">gecopy.h</innerfile>
+    <innerfile refid="gecotr_8h">gecotr.h</innerfile>
+    <innerfile refid="geraxpy_8h">geraxpy.h</innerfile>
+    <innerfile refid="level1extensions_2gerscal_8h">gerscal.h</innerfile>
+    <innerfile refid="level1extensions_2gescal_8h">gescal.h</innerfile>
+    <innerfile refid="geswap_8h">geswap.h</innerfile>
+    <innerfile refid="hescal_8h">hescal.h</innerfile>
+    <innerfile refid="imax1_8h">imax1.h</innerfile>
+    <innerfile refid="level1extensions_8h">level1extensions.h</innerfile>
+    <innerfile refid="racxpy_8h">racxpy.h</innerfile>
+    <innerfile refid="raxpy_8h">raxpy.h</innerfile>
+    <innerfile refid="level1extensions_2rscal_8h">rscal.h</innerfile>
+    <innerfile refid="syscal_8h">syscal.h</innerfile>
+    <innerfile refid="tpaxpby_8h">tpaxpby.h</innerfile>
+    <innerfile refid="tpaxpy_8h">tpaxpy.h</innerfile>
+    <innerfile refid="tpcopy_8h">tpcopy.h</innerfile>
+    <innerfile refid="tpscal_8h">tpscal.h</innerfile>
+    <innerfile refid="traxpby_8h">traxpby.h</innerfile>
+    <innerfile refid="traxpy_8h">traxpy.h</innerfile>
+    <innerfile refid="trcopy_8h">trcopy.h</innerfile>
+    <innerfile refid="trscal_8h">trscal.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/cxxblas/level1extensions/"/>
+  </compounddef>
+</doxygen>

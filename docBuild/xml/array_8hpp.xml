@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="array_8hpp" kind="file" language="C++">
+    <compoundname>array.hpp</compoundname>
+    <includes refid="sizetype_8hpp" local="yes">sizetype.hpp</includes>
+    <includes refid="storage_8hpp" local="yes">storage.hpp</includes>
+    <includes refid="array_container_8hpp" local="yes">arrayContainer.hpp</includes>
+    <includes refid="operations_8hpp" local="yes">operations.hpp</includes>
+    <includes refid="function_8hpp" local="yes">function.hpp</includes>
+    <includes refid="assign_ops_8hpp" local="yes">assignOps.hpp</includes>
+    <includedby refid="librapid_8hpp" local="yes">librapid/include/librapid/librapid.hpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>librapid/include/librapid/array/array.hpp</label>
+        <link refid="array_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>arrayContainer.hpp</label>
+        <link refid="array_container_8hpp"/>
+      </node>
+      <node id="7">
+        <label>assignOps.hpp</label>
+        <link refid="assign_ops_8hpp"/>
+      </node>
+      <node id="6">
+        <label>function.hpp</label>
+        <link refid="function_8hpp"/>
+      </node>
+      <node id="5">
+        <label>operations.hpp</label>
+        <link refid="operations_8hpp"/>
+      </node>
+      <node id="2">
+        <label>sizetype.hpp</label>
+        <link refid="sizetype_8hpp"/>
+      </node>
+      <node id="3">
+        <label>storage.hpp</label>
+        <link refid="storage_8hpp"/>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>librapid/include/librapid/array/array.hpp</label>
+        <link refid="array_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>librapid/include/librapid/librapid.hpp</label>
+        <link refid="librapid_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>librapid/src/global.cpp</label>
+        <link refid="global_8cpp"/>
+      </node>
+      <node id="4">
+        <label>librapid/src/helper_cuda.cpp</label>
+        <link refid="helper__cuda_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>LIBRAPID_ARRAY</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LIBRAPID_ARRAY</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="sizetype_8hpp" kindref="compound">sizetype.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="storage_8hpp" kindref="compound">storage.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="array_container_8hpp" kindref="compound">arrayContainer.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="operations_8hpp" kindref="compound">operations.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="function_8hpp" kindref="compound">function.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="assign_ops_8hpp" kindref="compound">assignOps.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>LIBRAPID_ARRAY</highlight></codeline>
+    </programlisting>
+    <location file="librapid/include/librapid/array/array.hpp"/>
+  </compounddef>
+</doxygen>

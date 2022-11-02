@@ -1,0 +1,212 @@
+\hypertarget{nvrtc__helper_8h_source}{}\doxysection{nvrtc\+\_\+helper.\+h}
+\label{nvrtc__helper_8h_source}\index{librapid/include/librapid/cuda/nvrtc\_helper.h@{librapid/include/librapid/cuda/nvrtc\_helper.h}}
+\mbox{\hyperlink{nvrtc__helper_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00001}00001 \textcolor{comment}{/* Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00002}00002 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00003}00003 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00004}00004 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00005}00005 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00006}00006 \textcolor{comment}{ *  * Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00007}00007 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00008}00008 \textcolor{comment}{ *  * Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00009}00009 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00010}00010 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00011}00011 \textcolor{comment}{ *  * Neither the name of NVIDIA CORPORATION nor the names of its}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00012}00012 \textcolor{comment}{ *    contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00013}00013 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00014}00014 \textcolor{comment}{ *}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00015}00015 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00016}00016 \textcolor{comment}{ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00017}00017 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00018}00018 \textcolor{comment}{ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00019}00019 \textcolor{comment}{ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00020}00020 \textcolor{comment}{ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00021}00021 \textcolor{comment}{ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00022}00022 \textcolor{comment}{ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00023}00023 \textcolor{comment}{ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00024}00024 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00025}00025 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00026}00026 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00027}00027 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00028}00028 \textcolor{preprocessor}{\#ifndef COMMON\_NVRTC\_HELPER\_H\_}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00029}00029 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00030}00030 \textcolor{preprocessor}{\#define COMMON\_NVRTC\_HELPER\_H\_ 1}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00031}00031 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00032}00032 \textcolor{preprocessor}{\#include <cuda.h>}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00033}00033 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00034}00034 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{helper__cuda__drvapi_8h}{helper\_cuda\_drvapi.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00035}00035 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00036}00036 \textcolor{preprocessor}{\#include <nvrtc.h>}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00037}00037 \textcolor{preprocessor}{\#include <sstream>}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00038}00038 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00039}00039 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00040}\mbox{\hyperlink{nvrtc__helper_8h_ac2df5c42a26f2b5bdd4c18c99acbfe78}{00040}} \textcolor{preprocessor}{\#define NVRTC\_SAFE\_CALL(Name, x)                                                                   \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00041}00041 \textcolor{preprocessor}{    do \{                                                                                           \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00042}00042 \textcolor{preprocessor}{        nvrtcResult result = x;                                                                    \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00043}00043 \textcolor{preprocessor}{        if (result != NVRTC\_SUCCESS) \{                                                             \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00044}00044 \textcolor{preprocessor}{            std::cerr << "{}\(\backslash\)nerror: "{}} << Name << "{} failed with error "{}                              \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00045}00045                       << nvrtcGetErrorString(result);                                              \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00046}00046             exit(1);                                                                               \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00047}00047         \}                                                                                          \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00048}00048     \} while (0)}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00049}00049 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00050}\mbox{\hyperlink{nvrtc__helper_8h_af3d9ee68f96b5977e82c869df95896d2}{00050}} \textcolor{keywordtype}{void} \mbox{\hyperlink{nvrtc__helper_8h_af3d9ee68f96b5977e82c869df95896d2}{compileFileToCUBIN}}(\textcolor{keywordtype}{char} *filename, \textcolor{keywordtype}{int} argc, \textcolor{keywordtype}{char} **argv, \textcolor{keywordtype}{char} **cubinResult,}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00051}00051                         \textcolor{keywordtype}{size\_t} *cubinResultSize, \textcolor{keywordtype}{int} requiresCGheaders) \{}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00052}00052     std::ifstream inputFile(filename, std::ios::in | std::ios::binary | std::ios::ate);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00053}00053 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00054}00054     \textcolor{keywordflow}{if} (!inputFile.is\_open()) \{}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00055}00055         std::cerr << \textcolor{stringliteral}{"{}\(\backslash\)nerror: unable to open "{}} << filename << \textcolor{stringliteral}{"{} for reading!\(\backslash\)n"{}};}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00056}00056         exit(1);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00057}00057     \}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00058}00058 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00059}00059     std::streampos pos = inputFile.tellg();}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00060}00060     \textcolor{keywordtype}{size\_t} inputSize   = (size\_t)pos;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00061}00061     \textcolor{keywordtype}{char} *memBlock     = \textcolor{keyword}{new} \textcolor{keywordtype}{char}[inputSize + 1];}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00062}00062 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00063}00063     inputFile.seekg(0, std::ios::beg);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00064}00064     inputFile.read(memBlock, inputSize);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00065}00065     inputFile.close();}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00066}00066     memBlock[inputSize] = \textcolor{stringliteral}{'\(\backslash\)x0'};}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00067}00067 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00068}00068     \textcolor{keywordtype}{int} numCompileOptions = 0;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00069}00069 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00070}00070     \textcolor{keywordtype}{char} *compileParams[2];}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00071}00071 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00072}00072     \textcolor{keywordtype}{int} major = 0, minor = 0;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00073}00073     \textcolor{keywordtype}{char} deviceName[256];}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00074}00074 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00075}00075     \textcolor{comment}{// Picks the best CUDA device available}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00076}00076     CUdevice cuDevice = findCudaDeviceDRV(argc, (\textcolor{keyword}{const} \textcolor{keywordtype}{char} **)argv);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00077}00077 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00078}00078     \textcolor{comment}{// get compute capabilities and the devicename}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00079}00079     checkCudaErrors(}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00080}00080       cuDeviceGetAttribute(\&major, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_CAPABILITY\_MAJOR, cuDevice));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00081}00081     checkCudaErrors(}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00082}00082       cuDeviceGetAttribute(\&minor, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_CAPABILITY\_MINOR, cuDevice));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00083}00083 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00084}00084     \{}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00085}00085         \textcolor{comment}{// Compile cubin for the GPU arch on which are going to run cuda kernel.}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00086}00086         std::string compileOptions;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00087}00087         compileOptions = \textcolor{stringliteral}{"{}-\/-\/gpu-\/architecture=sm\_"{}};}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00088}00088 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00089}00089         compileParams[numCompileOptions] =}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00090}00090           \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{char} *\textcolor{keyword}{>}(malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}) * (compileOptions.length() + 10)));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00091}00091 \textcolor{preprocessor}{\#if defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00092}00092         sprintf\_s(compileParams[numCompileOptions],}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00093}00093                   \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}) * (compileOptions.length() + 10),}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00094}00094                   \textcolor{stringliteral}{"{}\%s\%d\%d"{}},}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00095}00095                   compileOptions.c\_str(),}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00096}00096                   major,}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00097}00097                   minor);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00098}00098 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00099}00099         snprintf(compileParams[numCompileOptions],}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00100}00100                  compileOptions.size() + 10,}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00101}00101                  \textcolor{stringliteral}{"{}\%s\%d\%d"{}},}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00102}00102                  compileOptions.c\_str(),}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00103}00103                  major,}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00104}00104                  minor);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00105}00105 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00106}00106     \}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00107}00107 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00108}00108     numCompileOptions++;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00109}00109 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00110}00110     \textcolor{keywordflow}{if} (requiresCGheaders) \{}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00111}00111         std::string compileOptions;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00112}00112         \textcolor{keywordtype}{char} HeaderNames[256];}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00113}00113 \textcolor{preprocessor}{\#if defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00114}00114         sprintf\_s(HeaderNames, \textcolor{keyword}{sizeof}(HeaderNames), \textcolor{stringliteral}{"{}\%s"{}}, \textcolor{stringliteral}{"{}cooperative\_groups.h"{}});}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00115}00115 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00116}00116         snprintf(HeaderNames, \textcolor{keyword}{sizeof}(HeaderNames), \textcolor{stringliteral}{"{}\%s"{}}, \textcolor{stringliteral}{"{}cooperative\_groups.h"{}});}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00117}00117 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00118}00118 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00119}00119         compileOptions = \textcolor{stringliteral}{"{}-\/-\/include-\/path="{}};}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00120}00120 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00121}00121         std::string path = \mbox{\hyperlink{helper__string_8h_a2f7f20ba2a009934e429a70f5e8e99ef}{sdkFindFilePath}}(HeaderNames, argv[0]);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00122}00122         \textcolor{keywordflow}{if} (!path.empty()) \{}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00123}00123             std::size\_t found = path.find(HeaderNames);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00124}00124             path.erase(found);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00125}00125         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00126}00126             printf(}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00127}00127               \textcolor{stringliteral}{"{}\(\backslash\)nCooperativeGroups headers not found, please install it in \%s "{}}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00128}00128               \textcolor{stringliteral}{"{}sample directory..\(\backslash\)n Exiting..\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00129}00129               argv[0]);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00130}00130         \}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00131}00131         compileOptions += path.c\_str();}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00132}00132         compileParams[numCompileOptions] =}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00133}00133           \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{char} *\textcolor{keyword}{>}(malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}) * (compileOptions.length() + 1)));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00134}00134 \textcolor{preprocessor}{\#if defined(WIN32) || defined(\_WIN32) || defined(WIN64) || defined(\_WIN64)}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00135}00135         sprintf\_s(compileParams[numCompileOptions],}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00136}00136                   \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}) * (compileOptions.length() + 1),}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00137}00137                   \textcolor{stringliteral}{"{}\%s"{}},}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00138}00138                   compileOptions.c\_str());}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00139}00139 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00140}00140         snprintf(}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00141}00141           compileParams[numCompileOptions], compileOptions.size(), \textcolor{stringliteral}{"{}\%s"{}}, compileOptions.c\_str());}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00142}00142 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00143}00143         numCompileOptions++;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00144}00144     \}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00145}00145 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00146}00146     \textcolor{comment}{// compile}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00147}00147     nvrtcProgram prog;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00148}00148     \mbox{\hyperlink{nvrtc__helper_8h_ac2df5c42a26f2b5bdd4c18c99acbfe78}{NVRTC\_SAFE\_CALL}}(\textcolor{stringliteral}{"{}nvrtcCreateProgram"{}},}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00149}00149                     nvrtcCreateProgram(\&prog, memBlock, filename, 0, NULL, NULL));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00150}00150 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00151}00151     nvrtcResult res = nvrtcCompileProgram(prog, numCompileOptions, compileParams);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00152}00152 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00153}00153     \textcolor{comment}{// dump log}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00154}00154     \textcolor{keywordtype}{size\_t} logSize;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00155}00155     \mbox{\hyperlink{nvrtc__helper_8h_ac2df5c42a26f2b5bdd4c18c99acbfe78}{NVRTC\_SAFE\_CALL}}(\textcolor{stringliteral}{"{}nvrtcGetProgramLogSize"{}}, nvrtcGetProgramLogSize(prog, \&logSize));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00156}00156     \textcolor{keywordtype}{char} *log = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{char} *\textcolor{keyword}{>}(malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}) * logSize + 1));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00157}00157     \mbox{\hyperlink{nvrtc__helper_8h_ac2df5c42a26f2b5bdd4c18c99acbfe78}{NVRTC\_SAFE\_CALL}}(\textcolor{stringliteral}{"{}nvrtcGetProgramLog"{}}, nvrtcGetProgramLog(prog, log));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00158}00158     log[logSize] = \textcolor{stringliteral}{'\(\backslash\)x0'};}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00159}00159 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00160}00160     \textcolor{keywordflow}{if} (strlen(log) >= 2) \{}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00161}00161         std::cerr << \textcolor{stringliteral}{"{}\(\backslash\)n compilation log -\/-\/-\/\(\backslash\)n"{}};}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00162}00162         std::cerr << log;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00163}00163         std::cerr << \textcolor{stringliteral}{"{}\(\backslash\)n end log -\/-\/-\/\(\backslash\)n"{}};}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00164}00164     \}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00165}00165 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00166}00166     free(log);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00167}00167 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00168}00168     \mbox{\hyperlink{nvrtc__helper_8h_ac2df5c42a26f2b5bdd4c18c99acbfe78}{NVRTC\_SAFE\_CALL}}(\textcolor{stringliteral}{"{}nvrtcCompileProgram"{}}, res);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00169}00169 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00170}00170     \textcolor{keywordtype}{size\_t} codeSize;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00171}00171     \mbox{\hyperlink{nvrtc__helper_8h_ac2df5c42a26f2b5bdd4c18c99acbfe78}{NVRTC\_SAFE\_CALL}}(\textcolor{stringliteral}{"{}nvrtcGetCUBINSize"{}}, nvrtcGetCUBINSize(prog, \&codeSize));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00172}00172     \textcolor{keywordtype}{char} *code = \textcolor{keyword}{new} \textcolor{keywordtype}{char}[codeSize];}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00173}00173     \mbox{\hyperlink{nvrtc__helper_8h_ac2df5c42a26f2b5bdd4c18c99acbfe78}{NVRTC\_SAFE\_CALL}}(\textcolor{stringliteral}{"{}nvrtcGetCUBIN"{}}, nvrtcGetCUBIN(prog, code));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00174}00174     *cubinResult     = code;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00175}00175     *cubinResultSize = codeSize;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00176}00176 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00177}00177     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < numCompileOptions; i++) \{ free(compileParams[i]); \}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00178}00178 \}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00179}00179 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00180}\mbox{\hyperlink{nvrtc__helper_8h_ab7732861dd0db42569bf30a1a2889c87}{00180}} CUmodule \mbox{\hyperlink{nvrtc__helper_8h_ab7732861dd0db42569bf30a1a2889c87}{loadCUBIN}}(\textcolor{keywordtype}{char} *cubin, \textcolor{keywordtype}{int} argc, \textcolor{keywordtype}{char} **argv) \{}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00181}00181     CUmodule module;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00182}00182     CUcontext context;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00183}00183     \textcolor{keywordtype}{int} major = 0, minor = 0;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00184}00184     \textcolor{keywordtype}{char} deviceName[256];}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00185}00185 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00186}00186     \textcolor{comment}{// Picks the best CUDA device available}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00187}00187     CUdevice cuDevice = findCudaDeviceDRV(argc, (\textcolor{keyword}{const} \textcolor{keywordtype}{char} **)argv);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00188}00188 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00189}00189     \textcolor{comment}{// get compute capabilities and the devicename}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00190}00190     checkCudaErrors(}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00191}00191       cuDeviceGetAttribute(\&major, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_CAPABILITY\_MAJOR, cuDevice));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00192}00192     checkCudaErrors(}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00193}00193       cuDeviceGetAttribute(\&minor, CU\_DEVICE\_ATTRIBUTE\_COMPUTE\_CAPABILITY\_MINOR, cuDevice));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00194}00194     checkCudaErrors(cuDeviceGetName(deviceName, 256, cuDevice));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00195}00195     printf(\textcolor{stringliteral}{"{}> GPU Device has SM \%d.\%d compute capability\(\backslash\)n"{}}, major, minor);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00196}00196 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00197}00197     checkCudaErrors(cuInit(0));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00198}00198     checkCudaErrors(cuCtxCreate(\&context, 0, cuDevice));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00199}00199 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00200}00200     checkCudaErrors(cuModuleLoadData(\&module, cubin));}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00201}00201     free(cubin);}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00202}00202 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00203}00203     \textcolor{keywordflow}{return} module;}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00204}00204 \}}
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00205}00205 }
+\DoxyCodeLine{\Hypertarget{nvrtc__helper_8h_source_l00206}00206 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// COMMON\_NVRTC\_HELPER\_H\_}}
+
+\end{DoxyCode}

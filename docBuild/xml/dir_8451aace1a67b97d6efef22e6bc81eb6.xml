@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="dir_8451aace1a67b97d6efef22e6bc81eb6" kind="dir">
+    <compoundname>librapid/include/librapid/core</compoundname>
+    <innerfile refid="config_8hpp">config.hpp</innerfile>
+    <innerfile refid="core_8hpp">core.hpp</innerfile>
+    <innerfile refid="cuda_config_8hpp">cudaConfig.hpp</innerfile>
+    <innerfile refid="forward_8hpp">forward.hpp</innerfile>
+    <innerfile refid="generic_config_8hpp">genericConfig.hpp</innerfile>
+    <innerfile refid="global_8hpp">global.hpp</innerfile>
+    <innerfile refid="gnu_config_8hpp">gnuConfig.hpp</innerfile>
+    <innerfile refid="helper_macros_8hpp">helperMacros.hpp</innerfile>
+    <innerfile refid="librapid_pch_8hpp">librapidPch.hpp</innerfile>
+    <innerfile refid="msvc_config_8hpp">msvcConfig.hpp</innerfile>
+    <innerfile refid="pre_main_8hpp">preMain.hpp</innerfile>
+    <innerfile refid="traits_8hpp">traits.hpp</innerfile>
+    <innerfile refid="typetraits_8hpp">typetraits.hpp</innerfile>
+    <innerfile refid="warning_suppress_8hpp">warningSuppress.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="librapid/include/librapid/core/"/>
+  </compounddef>
+</doxygen>

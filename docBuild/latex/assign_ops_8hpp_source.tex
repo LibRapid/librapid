@@ -1,0 +1,67 @@
+\hypertarget{assign_ops_8hpp_source}{}\doxysection{assign\+Ops.\+hpp}
+\label{assign_ops_8hpp_source}\index{librapid/include/librapid/array/assignOps.hpp@{librapid/include/librapid/array/assignOps.hpp}}
+\mbox{\hyperlink{assign_ops_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00001}00001 \textcolor{preprocessor}{\#ifndef LIBRAPID\_ARRAY\_ASSIGN\_OPS\_HPP}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00002}00002 \textcolor{preprocessor}{\#define LIBRAPID\_ARRAY\_ASSIGN\_OPS\_HPP}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00003}00003 }
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00004}\mbox{\hyperlink{namespacelibrapid_1_1detail}{00004}} \textcolor{keyword}{namespace }\mbox{\hyperlink{namespacelibrapid_1_1detail}{librapid::detail}} \{}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00005}00005     \textcolor{comment}{// All assignment operators are forward declared in "{}forward.hpp"{} so they can be used}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00006}00006     \textcolor{comment}{// elsewhere. They are defined here.}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00007}00007 }
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00016}00016     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_, \textcolor{keyword}{typename} Functor\_, \textcolor{keyword}{typename}... Args>}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00017}00017     \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} \textcolor{keywordtype}{void}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00018}\mbox{\hyperlink{namespacelibrapid_1_1detail_afe5d9038d0369e6a867d04d8a604162b}{00018}}     \mbox{\hyperlink{namespacelibrapid_1_1detail_afe5d9038d0369e6a867d04d8a604162b}{assign}}(\mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer<ShapeType\_, StorageType\_>}} \&lhs,}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00019}00019            \textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail::Function<Descriptor::Trivial, Functor\_, Args...>}} \&function) \{}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00020}00020         \textcolor{keyword}{using} Scalar                  = \textcolor{keyword}{typename} \mbox{\hyperlink{classlibrapid_1_1_array_container_a0f89930b43a972a9233927465fa91065}{ArrayContainer<ShapeType\_, StorageType\_>::Scalar}};}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00021}00021         \textcolor{keyword}{constexpr} int64\_t packetWidth = \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{typetraits::TypeInfo<Scalar>::packetWidth}};}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00022}00022 }
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00023}00023         \textcolor{keyword}{const} int64\_t size       = function.\mbox{\hyperlink{classlibrapid_1_1detail_1_1_function_abfe8002bf9608317b55db0471059ad41}{shape}}().size();}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00024}00024         \textcolor{keyword}{const} int64\_t vectorSize = size -\/ (size \% packetWidth);}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00025}00025 }
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00026}00026         \textcolor{comment}{// Ensure the function can actually be assigned to the array container}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00027}00027         \textcolor{keyword}{static\_assert}(\mbox{\hyperlink{namespacelibrapid_1_1typetraits_a6fc44dd4d430e7dc87b0a604ac6f5b27}{typetraits::IsSame}}<Scalar, \textcolor{keyword}{typename} std::decay\_t<\textcolor{keyword}{decltype}(function)>::Scalar>,}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00028}00028                       \textcolor{stringliteral}{"{}Function return type must be the same as the array container's scalar type"{}});}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00029}00029         \mbox{\hyperlink{generic_config_8hpp_a69e316f2ab927d2834e632a12968e268}{LIBRAPID\_ASSERT}}(lhs.\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}}() == function.\mbox{\hyperlink{classlibrapid_1_1detail_1_1_function_abfe8002bf9608317b55db0471059ad41}{shape}}(), \textcolor{stringliteral}{"{}Shapes must be equal"{}});}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00030}00030 }
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00031}00031         \textcolor{keywordflow}{for} (int64\_t index = 0; index < vectorSize; index += packetWidth) \{}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00032}00032             lhs.\mbox{\hyperlink{classlibrapid_1_1_array_container_a5700d3ef2612505be244cc5e629f3cda}{writePacket}}(index, function.\mbox{\hyperlink{classlibrapid_1_1detail_1_1_function_a8fb5be37c8760e2461877b5b6e5d5298}{packet}}(index));}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00033}00033         \}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00034}00034 }
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00035}00035         \textcolor{comment}{// Assign the remaining elements}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00036}00036         \textcolor{keywordflow}{for} (int64\_t index = vectorSize; index < size; ++index) \{}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00037}00037             lhs.\mbox{\hyperlink{classlibrapid_1_1_array_container_a83cd9c71be6bd76c5690a598c78dd5ff}{write}}(index, function.\mbox{\hyperlink{classlibrapid_1_1detail_1_1_function_a3930166f66ecb486a1536cb2f483ea51}{scalar}}(index));}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00038}00038         \}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00039}00039     \}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00040}00040 }
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00041}00041     \textcolor{keyword}{template}<\textcolor{keyword}{typename} ShapeType\_, \textcolor{keyword}{typename} StorageType\_, \textcolor{keyword}{typename} Functor\_, \textcolor{keyword}{typename}... Args>}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00042}00042     \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} \textcolor{keywordtype}{void}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00043}\mbox{\hyperlink{namespacelibrapid_1_1detail_a9e9fc1b1f91fbf9bd69880cfa3e1086b}{00043}}     \mbox{\hyperlink{namespacelibrapid_1_1detail_a9e9fc1b1f91fbf9bd69880cfa3e1086b}{assignParallel}}(\mbox{\hyperlink{classlibrapid_1_1_array_container}{ArrayContainer<ShapeType\_, StorageType\_>}} \&lhs,}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00044}00044                    \textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1detail_1_1_function}{detail::Function<Descriptor::Trivial, Functor\_, Args...>}} \&function) \{}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00045}00045         \textcolor{keyword}{using} Scalar                  = \textcolor{keyword}{typename} \mbox{\hyperlink{classlibrapid_1_1_array_container_a0f89930b43a972a9233927465fa91065}{ArrayContainer<ShapeType\_, StorageType\_>::Scalar}};}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00046}00046         \textcolor{keyword}{constexpr} int64\_t packetWidth = \mbox{\hyperlink{structlibrapid_1_1typetraits_1_1_type_info}{typetraits::TypeInfo<Scalar>::packetWidth}};}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00047}00047 }
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00048}00048         \textcolor{keyword}{const} int64\_t size       = function.\mbox{\hyperlink{classlibrapid_1_1detail_1_1_function_abfe8002bf9608317b55db0471059ad41}{shape}}().size();}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00049}00049         \textcolor{keyword}{const} int64\_t vectorSize = size -\/ (size \% packetWidth);}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00050}00050 }
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00051}00051         \textcolor{comment}{// Ensure the function can actually be assigned to the array container}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00052}00052         \textcolor{keyword}{static\_assert}(\mbox{\hyperlink{namespacelibrapid_1_1typetraits_a6fc44dd4d430e7dc87b0a604ac6f5b27}{typetraits::IsSame}}<Scalar, \textcolor{keyword}{typename} std::decay\_t<\textcolor{keyword}{decltype}(function)>::Scalar>,}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00053}00053                       \textcolor{stringliteral}{"{}Function return type must be the same as the array container's scalar type"{}});}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00054}00054         \mbox{\hyperlink{generic_config_8hpp_a69e316f2ab927d2834e632a12968e268}{LIBRAPID\_ASSERT}}(lhs.\mbox{\hyperlink{classlibrapid_1_1_array_container_af84a9f624b56c1c54e1d107a3549eb0a}{shape}}() == function.\mbox{\hyperlink{classlibrapid_1_1detail_1_1_function_abfe8002bf9608317b55db0471059ad41}{shape}}(), \textcolor{stringliteral}{"{}Shapes must be equal"{}});}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00055}00055 }
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00056}00056 \textcolor{preprocessor}{\#pragma omp parallel for shared(vectorSize, lhs, function) default(none)                           \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00057}00057 \textcolor{preprocessor}{  num\_threads(global::numThreads)}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00058}00058         \textcolor{keywordflow}{for} (int64\_t index = 0; index < vectorSize; index += packetWidth) \{}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00059}00059             lhs.\mbox{\hyperlink{classlibrapid_1_1_array_container_a5700d3ef2612505be244cc5e629f3cda}{writePacket}}(index, function.\mbox{\hyperlink{classlibrapid_1_1detail_1_1_function_a8fb5be37c8760e2461877b5b6e5d5298}{packet}}(index));}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00060}00060         \}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00061}00061 }
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00062}00062         \textcolor{comment}{// Assign the remaining elements}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00063}00063         \textcolor{keywordflow}{for} (int64\_t index = vectorSize; index < size; ++index) \{}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00064}00064             lhs.\mbox{\hyperlink{classlibrapid_1_1_array_container_a83cd9c71be6bd76c5690a598c78dd5ff}{write}}(index, function.\mbox{\hyperlink{classlibrapid_1_1detail_1_1_function_a3930166f66ecb486a1536cb2f483ea51}{scalar}}(index));}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00065}00065         \}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00066}00066     \}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00067}00067 \} \textcolor{comment}{// namespace librapid::detail}}
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00068}00068 }
+\DoxyCodeLine{\Hypertarget{assign_ops_8hpp_source_l00069}00069 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_ARRAY\_ASSIGN\_OPS\_HPP}}
+
+\end{DoxyCode}

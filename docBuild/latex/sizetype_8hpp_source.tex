@@ -1,0 +1,230 @@
+\hypertarget{sizetype_8hpp_source}{}\doxysection{sizetype.\+hpp}
+\label{sizetype_8hpp_source}\index{librapid/include/librapid/array/sizetype.hpp@{librapid/include/librapid/array/sizetype.hpp}}
+\mbox{\hyperlink{sizetype_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00001}00001 \textcolor{preprocessor}{\#ifndef LIBRAPID\_ARRAY\_SIZETYPE\_HPP}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00002}00002 \textcolor{preprocessor}{\#define LIBRAPID\_ARRAY\_SIZETYPE\_HPP}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00003}00003 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00004}00004 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00005}00005 \textcolor{comment}{ * This file defines the Shape class and some helper functions,}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00006}00006 \textcolor{comment}{ * including stride operations.}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00007}00007 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00008}00008 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00009}00009 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespacelibrapid}{librapid}} \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00010}00010     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T = \textcolor{keywordtype}{size\_t}, \textcolor{keywordtype}{size\_t} N = 32>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00011}\mbox{\hyperlink{classlibrapid_1_1_shape}{00011}}     \textcolor{keyword}{class }\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00012}00012     \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00013}\mbox{\hyperlink{classlibrapid_1_1_shape_a6778051d7d75730417c85a945337af14}{00013}}         \textcolor{keyword}{using} \mbox{\hyperlink{classlibrapid_1_1_shape_a6778051d7d75730417c85a945337af14}{SizeType}}                        = T;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00014}\mbox{\hyperlink{classlibrapid_1_1_shape_abed6e0d3861a5258c0c78cf7ea22eb72}{00014}}         \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{classlibrapid_1_1_shape_abed6e0d3861a5258c0c78cf7ea22eb72}{MaxDimensions}} = N;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00015}00015 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00017}\mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{00017}}         \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape}}() = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00018}00018 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00022}00022         template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value> = 0>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00023}00023         \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape}}(\textcolor{keyword}{const} std::initializer\_list<V> \&vals);}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00024}00024 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00028}00028         template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value> = 0>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00029}00029         \textcolor{keyword}{explicit} \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape}}(\textcolor{keyword}{const} std::vector<V> \&vals);}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00030}00030 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00033}\mbox{\hyperlink{classlibrapid_1_1_shape_a795789743e7fdf35c3d2e40a9d57a387}{00033}}         \mbox{\hyperlink{classlibrapid_1_1_shape_a795789743e7fdf35c3d2e40a9d57a387}{Shape}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other) = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00034}00034 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00037}\mbox{\hyperlink{classlibrapid_1_1_shape_a6b5f814b0da20d3e39ab7da4ed5f3d39}{00037}}         \mbox{\hyperlink{classlibrapid_1_1_shape_a6b5f814b0da20d3e39ab7da4ed5f3d39}{Shape}}(\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&\&other) \textcolor{keyword}{noexcept} = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00038}00038 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00043}00043         \textcolor{keyword}{template}<\textcolor{keyword}{typename} V, \textcolor{keywordtype}{size\_t} Dim>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00044}00044         \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<V, Dim>}} \&other);}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00045}00045 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00051}00051         \textcolor{keyword}{template}<\textcolor{keyword}{typename} V, \textcolor{keywordtype}{size\_t} Dim>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00052}00052         \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape}}(\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<V, Dim>}} \&\&other) \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00053}00053 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00058}00058         template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value> = 0>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00059}\mbox{\hyperlink{classlibrapid_1_1_shape_a132608c1705432153d0f5275c6275567}{00059}}         \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&\mbox{\hyperlink{classlibrapid_1_1_shape_a132608c1705432153d0f5275c6275567}{operator=}}(\textcolor{keyword}{const} std::initializer\_list<V> \&vals);}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00060}00060 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00065}00065         template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value> = 0>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00066}\mbox{\hyperlink{classlibrapid_1_1_shape_aeeba65680903f473abb6ea4b0720539b}{00066}}         \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&\mbox{\hyperlink{classlibrapid_1_1_shape_aeeba65680903f473abb6ea4b0720539b}{operator=}}(\textcolor{keyword}{const} std::vector<V> \&vals);}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00067}00067 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00071}\mbox{\hyperlink{classlibrapid_1_1_shape_aaf9205371c0b2dc0e12ffd52add08c86}{00071}}         \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&\mbox{\hyperlink{classlibrapid_1_1_shape_aaf9205371c0b2dc0e12ffd52add08c86}{operator=}}(\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&\&other) \textcolor{keyword}{noexcept} = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00072}00072 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00076}00076         \textcolor{keyword}{static} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \mbox{\hyperlink{classlibrapid_1_1_shape_a407b80d75b21d23c9f4a8b7f69adfd93}{zeros}}(\textcolor{keywordtype}{size\_t} dims);}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00077}00077 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00081}00081         \textcolor{keyword}{static} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \mbox{\hyperlink{classlibrapid_1_1_shape_a556872fe85e1b79a7472652449de4c24}{ones}}(\textcolor{keywordtype}{size\_t} dims);}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00082}00082 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00087}00087         \textcolor{keyword}{template}<\textcolor{keyword}{typename} Index>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00088}00088         \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} \textcolor{keyword}{const} T \&\mbox{\hyperlink{classlibrapid_1_1_shape_a2fead305af4ab538bcde7e83dd522ddc}{operator[]}}(Index index) \textcolor{keyword}{const};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00089}00089 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00094}00094         \textcolor{keyword}{template}<\textcolor{keyword}{typename} Index>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00095}00095         \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} T \&\mbox{\hyperlink{classlibrapid_1_1_shape_a2fead305af4ab538bcde7e83dd522ddc}{operator[]}}(Index index);}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00096}00096 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00100}00100         \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classlibrapid_1_1_shape_a6c0dd7521d282b8b3679f3badbe535da}{operator==}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other) \textcolor{keyword}{const};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00101}00101 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00105}00105         \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classlibrapid_1_1_shape_ae4856ffa1441d77aaf2e6e10d485a762}{operator!=}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other) \textcolor{keyword}{const};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00106}00106 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00109}00109         \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} T \mbox{\hyperlink{classlibrapid_1_1_shape_ab5d977f7d716aaeb122ec2b0fe681b4d}{ndim}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00110}00110 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00113}00113         \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} T \mbox{\hyperlink{classlibrapid_1_1_shape_a8de69ce9f6e9d4625b99a82f652301a8}{size}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00114}00114 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00117}00117         \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} std::string \mbox{\hyperlink{classlibrapid_1_1_shape_a17feb24542bb561a8a53711b68f8e0c1}{str}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00118}00118 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00119}00119     \textcolor{keyword}{private}:}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00120}\mbox{\hyperlink{classlibrapid_1_1_shape_ac29a39ec3113acefef839c1579c05603}{00120}}         T \mbox{\hyperlink{classlibrapid_1_1_shape_ac29a39ec3113acefef839c1579c05603}{m\_dims}};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00121}\mbox{\hyperlink{classlibrapid_1_1_shape_a3de2ef5c2e3399ede89feaa7a4f9a6c6}{00121}}         std::array<T, N> \mbox{\hyperlink{classlibrapid_1_1_shape_a3de2ef5c2e3399ede89feaa7a4f9a6c6}{m\_data}};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00122}00122     \};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00123}00123 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00124}00124     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00125}00125     template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value>>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00126}\mbox{\hyperlink{classlibrapid_1_1_shape_a62319e87033fd3989e54588bf2356cfc}{00126}}     \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape<T, N>::Shape}}(\textcolor{keyword}{const} std::initializer\_list<V> \&vals) : m\_dims(vals.size()) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00127}00127         \mbox{\hyperlink{generic_config_8hpp_a69e316f2ab927d2834e632a12968e268}{LIBRAPID\_ASSERT}}(vals.size() <= N,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00128}00128                         \textcolor{stringliteral}{"{}Shape object is limited to \{\} dimensions. Cannot initialize with \{\}"{}},}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00129}00129                         N,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00130}00130                         vals.size());}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00131}00131         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < vals.size(); ++i) \{ \mbox{\hyperlink{classlibrapid_1_1_shape_a3de2ef5c2e3399ede89feaa7a4f9a6c6}{m\_data}}[i] = *(vals.begin() + i); \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00132}00132     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00133}00133 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00134}00134     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00135}00135     template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value>>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00136}\mbox{\hyperlink{classlibrapid_1_1_shape_aceac931d256c40598e2de23aa976ba36}{00136}}     \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape<T, N>::Shape}}(\textcolor{keyword}{const} std::vector<V> \&vals) : m\_dims(vals.size()) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00137}00137         \mbox{\hyperlink{generic_config_8hpp_a69e316f2ab927d2834e632a12968e268}{LIBRAPID\_ASSERT}}(vals.size() <= N,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00138}00138                         \textcolor{stringliteral}{"{}Shape object is limited to \{\} dimensions. Cannot initialize with \{\}"{}},}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00139}00139                         N,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00140}00140                         vals.size());}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00141}00141         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < vals.size(); ++i) \{ \mbox{\hyperlink{classlibrapid_1_1_shape_a3de2ef5c2e3399ede89feaa7a4f9a6c6}{m\_data}}[i] = vals[i]; \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00142}00142     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00143}00143 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00144}00144     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00145}00145     \textcolor{keyword}{template}<\textcolor{keyword}{typename} V, \textcolor{keywordtype}{size\_t} Dim>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00146}\mbox{\hyperlink{classlibrapid_1_1_shape_a9e59b3e603930f8c27acc8b3dd41b489}{00146}}     \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape<T, N>::Shape}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<V, Dim>}} \&other) : m\_dims(other.ndim()) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00147}00147         \mbox{\hyperlink{generic_config_8hpp_a69e316f2ab927d2834e632a12968e268}{LIBRAPID\_ASSERT}}(other.\mbox{\hyperlink{classlibrapid_1_1_shape_ab5d977f7d716aaeb122ec2b0fe681b4d}{ndim}}() <= N,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00148}00148                         \textcolor{stringliteral}{"{}Shape object is limited to \{\} dimensions. Cannot initialize with \{\}"{}},}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00149}00149                         N,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00150}00150                         other.\mbox{\hyperlink{classlibrapid_1_1_shape_ab5d977f7d716aaeb122ec2b0fe681b4d}{ndim}}());}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00151}00151         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < \mbox{\hyperlink{classlibrapid_1_1_shape_ac29a39ec3113acefef839c1579c05603}{m\_dims}}; ++i) \{ \mbox{\hyperlink{classlibrapid_1_1_shape_a3de2ef5c2e3399ede89feaa7a4f9a6c6}{m\_data}}[i] = other[i]; \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00152}00152     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00153}00153 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00154}00154     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00155}00155     \textcolor{keyword}{template}<\textcolor{keyword}{typename} V, \textcolor{keywordtype}{size\_t} Dim>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00156}\mbox{\hyperlink{classlibrapid_1_1_shape_a37740810da08c607414ac8df75e9468a}{00156}}     \mbox{\hyperlink{classlibrapid_1_1_shape_a17f66d1a98e86b13d765b2f48f23c4c5}{Shape<T, N>::Shape}}(\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<V, Dim>}} \&\&other) noexcept : m\_dims(other.ndim()) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00157}00157         \mbox{\hyperlink{generic_config_8hpp_a69e316f2ab927d2834e632a12968e268}{LIBRAPID\_ASSERT}}(other.ndim() <= N,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00158}00158                         \textcolor{stringliteral}{"{}Shape object is limited to \{\} dimensions. Cannot initialize with \{\}"{}},}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00159}00159                         N,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00160}00160                         other.ndim());}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00161}00161         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < m\_dims; ++i) \{ m\_data[i] = other[i]; \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00162}00162     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00163}00163 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00164}00164     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00165}00165     template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value>>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00166}\mbox{\hyperlink{classlibrapid_1_1_shape_a0266f42361b7c13ff6cae58184bf669e}{00166}}     \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T, N>}} \&\mbox{\hyperlink{classlibrapid_1_1_shape_a132608c1705432153d0f5275c6275567}{Shape<T, N>::operator=}}(\textcolor{keyword}{const} std::initializer\_list<V> \&vals) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00167}00167         \mbox{\hyperlink{generic_config_8hpp_a69e316f2ab927d2834e632a12968e268}{LIBRAPID\_ASSERT}}(vals.size() <= N,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00168}00168                         \textcolor{stringliteral}{"{}Shape object is limited to \{\} dimensions. Cannot initialize with \{\}"{}},}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00169}00169                         N,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00170}00170                         vals.size());}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00171}00171         m\_dims = vals.size();}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00172}00172         \textcolor{keywordflow}{for} (int64\_t i = 0; i < vals.size(); ++i) \{ m\_data[i] = *(vals.begin() + i); \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00173}00173         \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00174}00174     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00175}00175 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00176}00176     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00177}00177     template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value>>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00178}\mbox{\hyperlink{classlibrapid_1_1_shape_aa6ee48720d8ef2077fc75306581e1af0}{00178}}     \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T, N>}} \&\mbox{\hyperlink{classlibrapid_1_1_shape_a132608c1705432153d0f5275c6275567}{Shape<T, N>::operator=}}(\textcolor{keyword}{const} std::vector<V> \&vals) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00179}00179         \mbox{\hyperlink{generic_config_8hpp_a69e316f2ab927d2834e632a12968e268}{LIBRAPID\_ASSERT}}(vals.size() <= N,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00180}00180                         \textcolor{stringliteral}{"{}Shape object is limited to \{\} dimensions. Cannot initialize with \{\}"{}},}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00181}00181                         N,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00182}00182                         vals.size());}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00183}00183         m\_dims = vals.size();}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00184}00184         \textcolor{keywordflow}{for} (int64\_t i = 0; i < vals.size(); ++i) \{ m\_data[i] = vals[i]; \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00185}00185         \textcolor{keywordflow}{return} *\textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00186}00186     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00187}00187 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00188}00188     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00189}\mbox{\hyperlink{classlibrapid_1_1_shape_a407b80d75b21d23c9f4a8b7f69adfd93}{00189}}     \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T, N>}} \mbox{\hyperlink{classlibrapid_1_1_shape_a407b80d75b21d23c9f4a8b7f69adfd93}{Shape<T, N>::zeros}}(\textcolor{keywordtype}{size\_t} dims) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00190}00190         \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} res;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00191}00191         res.\mbox{\hyperlink{classlibrapid_1_1_shape_ac29a39ec3113acefef839c1579c05603}{m\_dims}} = dims;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00192}00192         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < dims; ++i) res.\mbox{\hyperlink{classlibrapid_1_1_shape_a3de2ef5c2e3399ede89feaa7a4f9a6c6}{m\_data}}[i] = 0;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00193}00193         \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00194}00194     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00195}00195 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00196}00196     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00197}\mbox{\hyperlink{classlibrapid_1_1_shape_a556872fe85e1b79a7472652449de4c24}{00197}}     \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T, N>}} \mbox{\hyperlink{classlibrapid_1_1_shape_a556872fe85e1b79a7472652449de4c24}{Shape<T, N>::ones}}(\textcolor{keywordtype}{size\_t} dims) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00198}00198         \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} res;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00199}00199         res.\mbox{\hyperlink{classlibrapid_1_1_shape_ac29a39ec3113acefef839c1579c05603}{m\_dims}} = dims;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00200}00200         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < dims; ++i) res.\mbox{\hyperlink{classlibrapid_1_1_shape_a3de2ef5c2e3399ede89feaa7a4f9a6c6}{m\_data}}[i] = 1;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00201}00201         \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00202}00202     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00203}00203 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00204}00204     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00205}00205     \textcolor{keyword}{template}<\textcolor{keyword}{typename} Index>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00206}\mbox{\hyperlink{classlibrapid_1_1_shape_a2fead305af4ab538bcde7e83dd522ddc}{00206}}     \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} \textcolor{keyword}{const} T \&\mbox{\hyperlink{classlibrapid_1_1_shape_a2fead305af4ab538bcde7e83dd522ddc}{Shape<T, N>::operator[]}}(Index index)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00207}00207         \textcolor{keywordflow}{return} m\_data[index];}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00208}00208     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00209}00209 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00210}00210     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00211}00211     \textcolor{keyword}{template}<\textcolor{keyword}{typename} Index>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00212}\mbox{\hyperlink{classlibrapid_1_1_shape_a10aa7713d0c7f914cc23ceeb703392d3}{00212}}     \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} T \&\mbox{\hyperlink{classlibrapid_1_1_shape_a2fead305af4ab538bcde7e83dd522ddc}{Shape<T, N>::operator[]}}(Index index) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00213}00213         \textcolor{keywordflow}{return} m\_data[index];}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00214}00214     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00215}00215 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00216}00216     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00217}\mbox{\hyperlink{classlibrapid_1_1_shape_a6c0dd7521d282b8b3679f3badbe535da}{00217}}     \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classlibrapid_1_1_shape_a6c0dd7521d282b8b3679f3badbe535da}{Shape<T, N>::operator==}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00218}00218         \textcolor{keywordflow}{if} (m\_dims != other.\mbox{\hyperlink{classlibrapid_1_1_shape_ac29a39ec3113acefef839c1579c05603}{m\_dims}}) \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00219}00219         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < m\_dims; ++i) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00220}00220             \textcolor{keywordflow}{if} (m\_data[i] != other.\mbox{\hyperlink{classlibrapid_1_1_shape_a3de2ef5c2e3399ede89feaa7a4f9a6c6}{m\_data}}[i]) \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00221}00221         \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00222}00222         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00223}00223     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00224}00224 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00225}00225     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00226}\mbox{\hyperlink{classlibrapid_1_1_shape_ae4856ffa1441d77aaf2e6e10d485a762}{00226}}     \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classlibrapid_1_1_shape_ae4856ffa1441d77aaf2e6e10d485a762}{Shape<T, N>::operator!=}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape}} \&other)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00227}00227         \textcolor{keywordflow}{return} !(*\textcolor{keyword}{this} == other);}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00228}00228     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00229}00229 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00230}00230     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00231}\mbox{\hyperlink{classlibrapid_1_1_shape_ab5d977f7d716aaeb122ec2b0fe681b4d}{00231}}     \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} T \mbox{\hyperlink{classlibrapid_1_1_shape_ab5d977f7d716aaeb122ec2b0fe681b4d}{Shape<T, N>::ndim}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00232}00232         \textcolor{keywordflow}{return} m\_dims;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00233}00233     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00234}00234 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00235}00235     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00236}\mbox{\hyperlink{classlibrapid_1_1_shape_a8de69ce9f6e9d4625b99a82f652301a8}{00236}}     \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} \mbox{\hyperlink{generic_config_8hpp_acd79ad2b933a0d50ede7ea0f03486aef}{LIBRAPID\_ALWAYS\_INLINE}} T \mbox{\hyperlink{classlibrapid_1_1_shape_a8de69ce9f6e9d4625b99a82f652301a8}{Shape<T, N>::size}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00237}00237         T res = 1;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00238}00238         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < m\_dims; ++i) res *= m\_data[i];}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00239}00239         \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00240}00240     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00241}00241 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00242}00242     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T, \textcolor{keywordtype}{size\_t} N>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00243}\mbox{\hyperlink{classlibrapid_1_1_shape_a17feb24542bb561a8a53711b68f8e0c1}{00243}}     std::string \mbox{\hyperlink{classlibrapid_1_1_shape_a17feb24542bb561a8a53711b68f8e0c1}{Shape<T, N>::str}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00244}00244         std::string result(\textcolor{stringliteral}{"{}("{}});}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00245}00245         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < m\_dims; ++i) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00246}00246             result += fmt::format(\textcolor{stringliteral}{"{}\{\}"{}}, m\_data[i]);}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00247}00247             \textcolor{keywordflow}{if} (i < m\_dims -\/ 1) result += std::string(\textcolor{stringliteral}{"{}, "{}});}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00248}00248         \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00249}00249         \textcolor{keywordflow}{return} \mbox{\hyperlink{namespacelibrapid_ace1856766f37ba615f6a0591b11efce0}{std::operator+}}(result, std::string(\textcolor{stringliteral}{"{})"{}}));}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00250}00250     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00251}00251 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00263}00263     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T1, \textcolor{keywordtype}{size\_t} N1, \textcolor{keyword}{typename} T2, \textcolor{keywordtype}{size\_t} N2, \textcolor{keyword}{typename}... Tn, \textcolor{keywordtype}{size\_t}... Nn>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00264}\mbox{\hyperlink{namespacelibrapid_abddf27fef3beb213792f9fb0e92e00cc}{00264}}     \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} \mbox{\hyperlink{generic_config_8hpp_a081e76ebcc44646fdd281550e21b1b03}{LIBRAPID\_INLINE}} \textcolor{keywordtype}{bool} \mbox{\hyperlink{namespacelibrapid_abddf27fef3beb213792f9fb0e92e00cc}{shapesMatch}}(\textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T1, N1>}} \&first,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00265}00265                                                         \textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T2, N2>}} \&second,}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00266}00266                                                         \textcolor{keyword}{const} \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<Tn, Nn>}} \&...shapes) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00267}00267         \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}...(Tn) == 0) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00268}00268             \textcolor{keywordflow}{return} first == second;}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00269}00269         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00270}00270             \textcolor{keywordflow}{return} first == second \&\& \mbox{\hyperlink{namespacelibrapid_abddf27fef3beb213792f9fb0e92e00cc}{shapesMatch}}(first, shapes...);}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00271}00271         \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00272}00272     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00273}00273 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00275}00275     \textcolor{keyword}{template}<\textcolor{keyword}{typename} T1, \textcolor{keywordtype}{size\_t} N1, \textcolor{keyword}{typename} T2, \textcolor{keywordtype}{size\_t} N2, \textcolor{keyword}{typename}... Tn, \textcolor{keywordtype}{size\_t}... Nn>}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00276}00276     \mbox{\hyperlink{config_8hpp_a75d0fe130ecba37781dedf98fb68bc0c}{LIBRAPID\_NODISCARD}} \mbox{\hyperlink{generic_config_8hpp_a081e76ebcc44646fdd281550e21b1b03}{LIBRAPID\_INLINE}} \textcolor{keywordtype}{bool}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00277}\mbox{\hyperlink{namespacelibrapid_a76827c461ec514d13594865944a58aae}{00277}}     \mbox{\hyperlink{namespacelibrapid_abddf27fef3beb213792f9fb0e92e00cc}{shapesMatch}}(\textcolor{keyword}{const} std::tuple<\mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T1, N1>}}, \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<T2, N2>}}, \mbox{\hyperlink{classlibrapid_1_1_shape}{Shape<Tn, Nn>}}...> \&shapes) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00278}00278         \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (\textcolor{keyword}{sizeof}...(Tn) == 0) \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00279}00279             \textcolor{keywordflow}{return} std::get<0>(shapes) == std::get<1>(shapes);}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00280}00280         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00281}00281             \textcolor{keywordflow}{return} std::get<0>(shapes) == std::get<1>(shapes) \&\&}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00282}00282                    \mbox{\hyperlink{namespacelibrapid_abddf27fef3beb213792f9fb0e92e00cc}{shapesMatch}}(std::apply(}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00283}00283                      [](\textcolor{keyword}{auto}, \textcolor{keyword}{auto}, \textcolor{keyword}{auto}... rest) \{ \textcolor{keywordflow}{return} std::make\_tuple(rest...); \}, shapes));}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00284}00284         \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00285}00285     \}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00286}00286 \} \textcolor{comment}{// namespace librapid}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00287}00287 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00288}00288 \textcolor{comment}{// Support FMT printing}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00289}00289 \textcolor{preprocessor}{\#ifdef FMT\_API}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00290}00290 \mbox{\hyperlink{helper_macros_8hpp_a7d2d70de14d74180114ba0c483f78d87}{LIBRAPID\_SIMPLE\_IO\_IMPL}}(\textcolor{keyword}{typename} T \mbox{\hyperlink{helper_macros_8hpp_aa2f49001be13949a16a57e6c99ab00ad}{COMMA}} \textcolor{keywordtype}{size\_t} N, \mbox{\hyperlink{classlibrapid_1_1_shape}{librapid::Shape<T COMMA N>}})}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00291}00291 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// FMT\_API}}
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00292}00292 }
+\DoxyCodeLine{\Hypertarget{sizetype_8hpp_source_l00293}00293 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// LIBRAPID\_ARRAY\_SIZETYPE\_HPP}}
+
+\end{DoxyCode}

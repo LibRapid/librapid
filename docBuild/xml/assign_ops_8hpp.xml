@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.3" xml:lang="en-US">
+  <compounddef id="assign_ops_8hpp" kind="file" language="C++">
+    <compoundname>assignOps.hpp</compoundname>
+    <includedby refid="array_8hpp" local="yes">librapid/include/librapid/array/array.hpp</includedby>
+    <invincdepgraph>
+      <node id="2">
+        <label>librapid/include/librapid/array/array.hpp</label>
+        <link refid="array_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>librapid/include/librapid/array/assignOps.hpp</label>
+        <link refid="assign_ops_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>librapid/include/librapid/librapid.hpp</label>
+        <link refid="librapid_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>librapid/src/global.cpp</label>
+        <link refid="global_8cpp"/>
+      </node>
+      <node id="5">
+        <label>librapid/src/helper_cuda.cpp</label>
+        <link refid="helper__cuda_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespacelibrapid">librapid</innernamespace>
+    <innernamespace refid="namespacelibrapid_1_1detail">librapid::detail</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>LIBRAPID_ARRAY_ASSIGN_OPS_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LIBRAPID_ARRAY_ASSIGN_OPS_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4" refid="namespacelibrapid_1_1detail" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacelibrapid_1_1detail" kindref="compound">librapid::detail</ref><sp/>{</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>All<sp/>assignment<sp/>operators<sp/>are<sp/>forward<sp/>declared<sp/>in<sp/>&quot;forward.hpp&quot;<sp/>so<sp/>they<sp/>can<sp/>be<sp/>used</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>elsewhere.<sp/>They<sp/>are<sp/>defined<sp/>here.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ShapeType_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>StorageType_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Functor_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal">...<sp/>Args&gt;</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="generic_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18" refid="namespacelibrapid_1_1detail_1afe5d9038d0369e6a867d04d8a604162b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacelibrapid_1_1detail_1afe5d9038d0369e6a867d04d8a604162b" kindref="member">assign</ref>(<ref refid="classlibrapid_1_1_array_container" kindref="compound">ArrayContainer&lt;ShapeType_, StorageType_&gt;</ref><sp/>&amp;lhs,</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classlibrapid_1_1detail_1_1_function" kindref="compound">detail::Function&lt;Descriptor::Trivial, Functor_, Args...&gt;</ref><sp/>&amp;function)<sp/>{</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>Scalar<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="classlibrapid_1_1_array_container_1a0f89930b43a972a9233927465fa91065" kindref="member">ArrayContainer&lt;ShapeType_, StorageType_&gt;::Scalar</ref>;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>int64_t<sp/>packetWidth<sp/>=<sp/><ref refid="structlibrapid_1_1typetraits_1_1_type_info" kindref="compound">typetraits::TypeInfo&lt;Scalar&gt;::packetWidth</ref>;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>int64_t<sp/>size<sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>function.<ref refid="classlibrapid_1_1detail_1_1_function_1abfe8002bf9608317b55db0471059ad41" kindref="member">shape</ref>().size();</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>int64_t<sp/>vectorSize<sp/>=<sp/>size<sp/>-<sp/>(size<sp/>%<sp/>packetWidth);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Ensure<sp/>the<sp/>function<sp/>can<sp/>actually<sp/>be<sp/>assigned<sp/>to<sp/>the<sp/>array<sp/>container</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(<ref refid="namespacelibrapid_1_1typetraits_1a6fc44dd4d430e7dc87b0a604ac6f5b27" kindref="member">typetraits::IsSame</ref>&lt;Scalar,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>std::decay_t&lt;</highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(function)&gt;::Scalar&gt;,</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Function<sp/>return<sp/>type<sp/>must<sp/>be<sp/>the<sp/>same<sp/>as<sp/>the<sp/>array<sp/>container&apos;s<sp/>scalar<sp/>type&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="generic_config_8hpp_1a69e316f2ab927d2834e632a12968e268" kindref="member">LIBRAPID_ASSERT</ref>(lhs.<ref refid="classlibrapid_1_1_array_container_1af84a9f624b56c1c54e1d107a3549eb0a" kindref="member">shape</ref>()<sp/>==<sp/>function.<ref refid="classlibrapid_1_1detail_1_1_function_1abfe8002bf9608317b55db0471059ad41" kindref="member">shape</ref>(),<sp/></highlight><highlight class="stringliteral">&quot;Shapes<sp/>must<sp/>be<sp/>equal&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(int64_t<sp/>index<sp/>=<sp/>0;<sp/>index<sp/>&lt;<sp/>vectorSize;<sp/>index<sp/>+=<sp/>packetWidth)<sp/>{</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lhs.<ref refid="classlibrapid_1_1_array_container_1a5700d3ef2612505be244cc5e629f3cda" kindref="member">writePacket</ref>(index,<sp/>function.<ref refid="classlibrapid_1_1detail_1_1_function_1a8fb5be37c8760e2461877b5b6e5d5298" kindref="member">packet</ref>(index));</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Assign<sp/>the<sp/>remaining<sp/>elements</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(int64_t<sp/>index<sp/>=<sp/>vectorSize;<sp/>index<sp/>&lt;<sp/>size;<sp/>++index)<sp/>{</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lhs.<ref refid="classlibrapid_1_1_array_container_1a83cd9c71be6bd76c5690a598c78dd5ff" kindref="member">write</ref>(index,<sp/>function.<ref refid="classlibrapid_1_1detail_1_1_function_1a3930166f66ecb486a1536cb2f483ea51" kindref="member">scalar</ref>(index));</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>ShapeType_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>StorageType_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Functor_,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal">...<sp/>Args&gt;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="generic_config_8hpp_1acd79ad2b933a0d50ede7ea0f03486aef" kindref="member">LIBRAPID_ALWAYS_INLINE</ref><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43" refid="namespacelibrapid_1_1detail_1a9e9fc1b1f91fbf9bd69880cfa3e1086b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacelibrapid_1_1detail_1a9e9fc1b1f91fbf9bd69880cfa3e1086b" kindref="member">assignParallel</ref>(<ref refid="classlibrapid_1_1_array_container" kindref="compound">ArrayContainer&lt;ShapeType_, StorageType_&gt;</ref><sp/>&amp;lhs,</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classlibrapid_1_1detail_1_1_function" kindref="compound">detail::Function&lt;Descriptor::Trivial, Functor_, Args...&gt;</ref><sp/>&amp;function)<sp/>{</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>Scalar<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/><ref refid="classlibrapid_1_1_array_container_1a0f89930b43a972a9233927465fa91065" kindref="member">ArrayContainer&lt;ShapeType_, StorageType_&gt;::Scalar</ref>;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>int64_t<sp/>packetWidth<sp/>=<sp/><ref refid="structlibrapid_1_1typetraits_1_1_type_info" kindref="compound">typetraits::TypeInfo&lt;Scalar&gt;::packetWidth</ref>;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>int64_t<sp/>size<sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>function.<ref refid="classlibrapid_1_1detail_1_1_function_1abfe8002bf9608317b55db0471059ad41" kindref="member">shape</ref>().size();</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>int64_t<sp/>vectorSize<sp/>=<sp/>size<sp/>-<sp/>(size<sp/>%<sp/>packetWidth);</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Ensure<sp/>the<sp/>function<sp/>can<sp/>actually<sp/>be<sp/>assigned<sp/>to<sp/>the<sp/>array<sp/>container</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_assert</highlight><highlight class="normal">(<ref refid="namespacelibrapid_1_1typetraits_1a6fc44dd4d430e7dc87b0a604ac6f5b27" kindref="member">typetraits::IsSame</ref>&lt;Scalar,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>std::decay_t&lt;</highlight><highlight class="keyword">decltype</highlight><highlight class="normal">(function)&gt;::Scalar&gt;,</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Function<sp/>return<sp/>type<sp/>must<sp/>be<sp/>the<sp/>same<sp/>as<sp/>the<sp/>array<sp/>container&apos;s<sp/>scalar<sp/>type&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="generic_config_8hpp_1a69e316f2ab927d2834e632a12968e268" kindref="member">LIBRAPID_ASSERT</ref>(lhs.<ref refid="classlibrapid_1_1_array_container_1af84a9f624b56c1c54e1d107a3549eb0a" kindref="member">shape</ref>()<sp/>==<sp/>function.<ref refid="classlibrapid_1_1detail_1_1_function_1abfe8002bf9608317b55db0471059ad41" kindref="member">shape</ref>(),<sp/></highlight><highlight class="stringliteral">&quot;Shapes<sp/>must<sp/>be<sp/>equal&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>omp<sp/>parallel<sp/>for<sp/>shared(vectorSize,<sp/>lhs,<sp/>function)<sp/>default(none)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="57"><highlight class="preprocessor"><sp/><sp/>num_threads(global::numThreads)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(int64_t<sp/>index<sp/>=<sp/>0;<sp/>index<sp/>&lt;<sp/>vectorSize;<sp/>index<sp/>+=<sp/>packetWidth)<sp/>{</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lhs.<ref refid="classlibrapid_1_1_array_container_1a5700d3ef2612505be244cc5e629f3cda" kindref="member">writePacket</ref>(index,<sp/>function.<ref refid="classlibrapid_1_1detail_1_1_function_1a8fb5be37c8760e2461877b5b6e5d5298" kindref="member">packet</ref>(index));</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Assign<sp/>the<sp/>remaining<sp/>elements</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(int64_t<sp/>index<sp/>=<sp/>vectorSize;<sp/>index<sp/>&lt;<sp/>size;<sp/>++index)<sp/>{</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lhs.<ref refid="classlibrapid_1_1_array_container_1a83cd9c71be6bd76c5690a598c78dd5ff" kindref="member">write</ref>(index,<sp/>function.<ref refid="classlibrapid_1_1detail_1_1_function_1a3930166f66ecb486a1536cb2f483ea51" kindref="member">scalar</ref>(index));</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="67"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>librapid::detail</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>LIBRAPID_ARRAY_ASSIGN_OPS_HPP</highlight></codeline>
+    </programlisting>
+    <location file="librapid/include/librapid/array/assignOps.hpp"/>
+  </compounddef>
+</doxygen>
