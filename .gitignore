@@ -5,7 +5,7 @@ librapid/openblas_install
 librapid/blas
 openblas_install
 
-docs
+docBuild
 
 *.i
 *.ii
