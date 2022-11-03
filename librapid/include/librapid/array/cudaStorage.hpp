@@ -54,8 +54,8 @@ namespace librapid {
 		/// \tparam V Type of the elements in the initializer list
 		/// \param list Initializer list of elements
 		template<typename V>
-        explicit CudaStorage(const std::initializer_list<V> &list);
-	}
+		explicit CudaStorage(const std::initializer_list<V> &list);
+	};
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_CUDA_STORAGE_HPP
