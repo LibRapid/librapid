@@ -98,6 +98,8 @@ namespace librapid {
 		/// \param size New size of the Storage object
 		LIBRAPID_ALWAYS_INLINE void resize(SizeType newSize, int);
 
+		/// Return the number of elements in the Storage object
+		/// \return
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE SizeType size() const noexcept;
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstReference operator[](SizeType index) const;
@@ -145,6 +147,15 @@ namespace librapid {
 	};
 
 	namespace detail {
+		/// Safely allocate memory for \p size elements using the allocator \p alloc. If the data
+		/// can be trivially default constructed, then the constructor is not called and no data
+		/// is initialized. Otherwise, the correct default constructor will be called for each
+		/// element in the data, making sure the returned pointer is safe to use.
+		/// \tparam A The allocator type to use
+		/// \param alloc The allocator object to use
+		/// \param size Number of elements to allocate
+		/// \return Pointer to the first element
+		/// \see safeDeallocate
 		template<typename A>
 		typename std::allocator_traits<A>::pointer
 		safeAllocate(A &alloc, typename std::allocator_traits<A>::size_type size) {
@@ -164,6 +175,13 @@ namespace librapid {
 			return ptr;
 		}
 
+		/// Safely deallocate memory for \p size elements, using an std::allocator \p alloc. If the
+		/// object cannot be trivially destroyed, the destructor will be called on each element of
+		/// the data, ensuring that it is safe to free the allocated memory.
+		/// \tparam A The allocator type
+		/// \param alloc The allocator object
+		/// \param ptr The pointer to free
+		/// \param size The number of elements of type \p in the memory block
 		template<typename A>
 		void safeDeallocate(A &alloc, typename std::allocator_traits<A>::pointer ptr,
 							typename std::allocator_traits<A>::size_type size) {
