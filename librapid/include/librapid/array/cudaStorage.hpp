@@ -72,7 +72,7 @@ namespace librapid {
 		/// Move assignment operator for a CudaStorage object
 		/// \param other CudaStorage object to move
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE CudaStorage &operator=(CudaStorage &&other) noexcept;
+		LIBRAPID_ALWAYS_INLINE CudaStorage &operator=(CudaStorage &&other) noexcept = default;
 
 		/// Free a CudaStorage object
 		~CudaStorage();
@@ -148,6 +148,21 @@ namespace librapid {
 			return result;
 		}
 	} // namespace detail
+
+	template<typename T>
+	CudaStorage<T>::CudaStorage(SizeType size) {
+		m_begin = detail::cudaSafeAllocate<T>(size);
+		m_end	= m_begin + size;
+	}
+
+	template<typename T>
+	CudaStorage<T>::CudaStorage(SizeType size, ConstReference value) {
+		m_begin = detail::cudaSafeAllocate<T>(size);
+		m_end	= m_begin + size;
+
+		// Fill the data with "value"
+
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_HAS_CUDA
