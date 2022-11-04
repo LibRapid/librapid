@@ -336,8 +336,9 @@ endif ()
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/fmt")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/cppfs")
 
-target_link_libraries(${module_name} PUBLIC fmt scn Vc)
+target_link_libraries(${module_name} PUBLIC fmt scn Vc cppfs)
 
 target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
 
