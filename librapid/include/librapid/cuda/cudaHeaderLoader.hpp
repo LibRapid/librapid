@@ -1,38 +1,30 @@
 #ifndef LIBRAPID_CUDA_HEADER_LOADER_HPP
 #define LIBRAPID_CUDA_HEADER_LOADER_HPP
 
-namespace librapid::detail {
-	/// Implement a simple cache for storing CUDA kernels
-	class KernelCache {
-	public:
-		/// Default constructor
-		KernelCache() = default;
+namespace librapid {
+	template<typename... templates, typename... Args>
+	void runCudaKernel(const jitify::Program &program, const std::string &kernelName,
+					   size_t elements, Args... arguments) {
+		size_t threadsPerBlock, blocksPerGrid;
 
-		/// Add a kernel to the cache, loading
-		/// \param name
-		/// \param kernel
-		void addKernel(const std::string &name, const std::string &kernel);
+		// Use 1 to 512 threads per block
+		if (elements < 512) {
+			threadsPerBlock = elements;
+			blocksPerGrid	= 1;
+		} else {
+			threadsPerBlock = 512;
+			blocksPerGrid	= static_cast<size_t>(
+				ceil(static_cast<double>(elements) / static_cast<double>(threadsPerBlock)));
+		}
 
-		/// Check if a kernel exists in the cache
-		/// \param name Name of the cached kernel
-		/// \return True if the cache exists
-		bool hasKernel(const std::string &name) const;
+		dim3 grid(blocksPerGrid);
+		dim3 block(threadsPerBlock);
 
-		/// Get a kernel from the cache
-		/// \param name Name of the kernel function
-		/// \return The kernel from the cache
-		std::string getKernel(const std::string &name) const;
-
-		/// Clear the cache
-		void clear();
-
-	private:
-		/// Map of kernel names to kernel code
-		std::unordered_map<std::string, std::string> m_cache;
-	};
-
-	std::string parseKernel(const std::string &filename,
-							const std::map<std::string, std::string> &replacements);
-} // namespace librapid::detail
+		jitifyCall(program.kernel(kernelName)
+					 .instantiate(jitify::reflection::Type<Args...>())
+					 .configure(grid, block, 0, global::cudaStream)
+					 .launch(arguments...));
+	}
+} // namespace librapid
 
 #endif // LIBRAPID_CUDA_HEADER_LOADER_HPP

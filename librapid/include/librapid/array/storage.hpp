@@ -299,23 +299,23 @@ namespace librapid {
 
 	template<typename T, typename A>
 	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize) {
+		if (newSize == size()) { return; }
+
 		SizeType oldSize = size();
 		Pointer oldBegin = m_begin;
-		if (oldSize != newSize) {
-			// Reallocate
-			m_begin = detail::safeAllocate(m_allocator, newSize);
-			m_end	= m_begin + newSize;
+		// Reallocate
+		m_begin = detail::safeAllocate(m_allocator, newSize);
+		m_end	= m_begin + newSize;
 
-			if constexpr (typetraits::TriviallyDefaultConstructible<T>::value) {
-				// Use a slightly faster memcpy if the type is trivially default constructible
-				std::uninitialized_copy(oldBegin, oldBegin + std::min(oldSize, newSize), m_begin);
-			} else {
-				// Otherwise, use the standard copy algorithm
-				std::copy(oldBegin, oldBegin + std::min(oldSize, newSize), m_begin);
-			}
-
-			detail::safeDeallocate(m_allocator, oldBegin, oldSize);
+		if constexpr (typetraits::TriviallyDefaultConstructible<T>::value) {
+			// Use a slightly faster memcpy if the type is trivially default constructible
+			std::uninitialized_copy(oldBegin, oldBegin + std::min(oldSize, newSize), m_begin);
+		} else {
+			// Otherwise, use the standard copy algorithm
+			std::copy(oldBegin, oldBegin + std::min(oldSize, newSize), m_begin);
 		}
+
+		detail::safeDeallocate(m_allocator, oldBegin, oldSize);
 	}
 
 	template<typename T, typename A>
