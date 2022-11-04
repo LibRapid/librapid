@@ -19,3 +19,6 @@
 [submodule "doxygenThemes"] # Make the documentation pretty
 	path = doxygenThemes
 	url = https://github.com/jothepro/doxygen-awesome-css.git
+[submodule "librapid/vendor/cppfs"]
+	path = librapid/vendor/cppfs
+	url = https://github.com/cginternals/cppfs.git
