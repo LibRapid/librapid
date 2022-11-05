@@ -83,8 +83,4 @@
 #	pragma warning(pop)
 #endif
 
-// cppfs -- Filesystem utilities
-#include <cppfs/fs.h>
-#include <cppfs/FileHandle.h>
-
 #endif // LIBRAPID_CORE_LIBRAPID_PCH_HPP
