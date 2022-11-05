@@ -34,7 +34,7 @@ namespace librapid {
 		/// Default constructor
 		Storage() = default;
 
-		/// Create a Storage object with \p elements and,
+		/// Create a Storage object with \p size elements and,
 		/// optionally, a custom allocator.
 		/// \param size Number of elements to allocate
 		/// \param alloc Allocator to use

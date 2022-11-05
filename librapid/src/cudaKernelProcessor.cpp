@@ -1,3 +1,5 @@
+#if defined(LIBRAPID_HAS_CUDA)
+
 #include <librapid/librapid.hpp>
 
 namespace librapid {
@@ -6,9 +8,8 @@ namespace librapid {
 
 		if (mapping.find(kernelName) != mapping.end()) { return mapping[kernelName]; }
 
-		auto path = fmt::format(
-		  "{}/include/librapid/cuda/kernels/{}.cu", LIBRAPID_SOURCE, kernelName);
-		fmt::print("path: {}\n", path);
+		auto path =
+		  fmt::format("{}/include/librapid/cuda/kernels/{}.cu", LIBRAPID_SOURCE, kernelName);
 		std::fstream file(path);
 		LIBRAPID_ASSERT(file.is_open(), "Failed to load CUDA kernel '{}.cu'", kernelName);
 		std::stringstream buffer;
@@ -19,3 +20,5 @@ namespace librapid {
 		return mapping[kernelName];
 	}
 } // namespace librapid
+
+#endif // LIBRAPID_HAS_CUDA

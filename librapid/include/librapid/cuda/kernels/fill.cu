@@ -1,3 +1,4 @@
+#include "kernelHelper.hpp"
 #include <stdint.h>
 #include <stdio.h>
 

@@ -28,8 +28,16 @@ namespace librapid {
 		LIBRAPID_BINARY_FUNCTOR(Minus, -);	  // a - b
 		LIBRAPID_BINARY_FUNCTOR(Multiply, *); // a * b
 		LIBRAPID_BINARY_FUNCTOR(Divide, /);	  // a / b
+	}										  // namespace detail
 
-	} // namespace detail
+	namespace typetraits {
+		template<>
+		struct TypeInfo<::librapid::detail::Plus> {
+			static constexpr const char *name		= "plus";
+			static constexpr const char *filename	= "arithmetic";
+			static constexpr const char *kernelName = "addArrays";
+		};
+	} // namespace typetraits
 
 	/// \brief Element-wise array addition
 	///

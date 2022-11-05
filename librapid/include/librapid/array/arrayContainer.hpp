@@ -78,6 +78,14 @@ namespace librapid {
 		/// \return The shape of the array container.
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ShapeType &shape() const noexcept;
 
+		/// Return the StorageType object of the ArrayContainer
+		/// \return The StorageType object of the ArrayContainer
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const StorageType &storage() const noexcept;
+
+		/// Return the StorageType object of the ArrayContainer
+		/// \return The StorageType object of the ArrayContainer
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE StorageType &storage() noexcept;
+
 		/// Return a Packet object from the array's storage at a specific index.
 		/// \param index The index to get the packet from
 		/// \return A Packet object from the array's storage at a specific index
@@ -148,6 +156,16 @@ namespace librapid {
 	template<typename ShapeType_, typename StorageType_>
 	auto ArrayContainer<ShapeType_, StorageType_>::shape() const noexcept -> const ShapeType & {
 		return m_shape;
+	}
+
+	template<typename ShapeType_, typename StorageType_>
+	auto ArrayContainer<ShapeType_, StorageType_>::storage() const noexcept -> const StorageType & {
+		return m_storage;
+	}
+
+	template<typename ShapeType_, typename StorageType_>
+	auto ArrayContainer<ShapeType_, StorageType_>::storage() noexcept -> StorageType & {
+		return m_storage;
 	}
 
 	template<typename ShapeType_, typename StorageType_>
