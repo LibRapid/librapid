@@ -1,6 +1,8 @@
 #ifndef LIBRAPID_CUDA_HEADER_LOADER_HPP
 #define LIBRAPID_CUDA_HEADER_LOADER_HPP
 
+#if defined(LIBRAPID_HAS_CUDA)
+
 namespace librapid {
 	/// Load a CUDA kernel from a file and return the string representation of it.
 	///
@@ -40,5 +42,7 @@ namespace librapid {
 		runKernelString<Templates...>(loadKernel(name), kernelName, elements, arguments...);
 	}
 } // namespace librapid
+
+#endif // LIBRAPID_HAS_CUDA
 
 #endif // LIBRAPID_CUDA_HEADER_LOADER_HPP
