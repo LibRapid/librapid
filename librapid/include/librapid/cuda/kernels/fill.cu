@@ -1,7 +1,8 @@
 #include <stdint.h>
+#include <stdio.h>
 
-__global__ template<typename Source, typename Destination>
-void fillArray(size_t elements, Source *src, Destination *dst) {
+template<typename Destination, typename Source>
+__global__ void fillArray(size_t elements, Destination *dst, Source value) {
 	const size_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
-	if (kernekIndex < elements) { dst[kernekIndex] = src[kernekIndex]; }
+	if (kernelIndex < elements) { dst[kernelIndex] = value; }
 }

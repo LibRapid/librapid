@@ -99,8 +99,8 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void write(size_t index, const Scalar &value);
 
 	private:
-		ShapeType m_shape;
-		StorageType m_storage;
+		ShapeType m_shape;	   // The shape type of the array
+		StorageType m_storage; // The storage container of the array
 	};
 
 	template<typename ShapeType_, typename StorageType_>
