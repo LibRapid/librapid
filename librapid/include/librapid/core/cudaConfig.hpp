@@ -89,6 +89,6 @@ namespace librapid::global {
 #endif // LIBRAPID_HAS_CUDA
 } // namespace librapid::global
 
-#include "../cuda/cudaHeaderLoader.hpp"
+#include "../cuda/cudaKernelProcesor.hpp"
 
 #endif // LIBRAPID_CORE_CUDA_CONFIG_HPP
