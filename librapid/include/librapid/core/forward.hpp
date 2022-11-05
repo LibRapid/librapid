@@ -22,16 +22,26 @@ namespace librapid {
 		template<Descriptor desc, typename Functor_, typename... Args>
 		class Function;
 
-		template<typename ShapeType_, typename StorageType_, typename Functor_, typename... Args>
+		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
+				 typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
-		assign(ArrayContainer<ShapeType_, StorageType_> &lhs,
+		assign(ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 			   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function);
 
-		template<typename ShapeType_, typename StorageType_, typename Functor_, typename... Args>
+		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
+				 typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
-		assignParallel(ArrayContainer<ShapeType_, StorageType_> &lhs,
+		assignParallel(ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 					   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function);
 
+#if defined(LIBRAPID_HAS_CUDA)
+		template<typename ShapeType_, typename StorageScalar,
+				 typename Functor_, typename... Args>
+		LIBRAPID_ALWAYS_INLINE void
+		assign(ArrayContainer<ShapeType_, CudaStorage<StorageScalar>> &lhs,
+			   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function);
+
+#endif // LIBRAPID_HAS_CUDA
 	} // namespace detail
 } // namespace librapid
 

@@ -159,6 +159,7 @@ namespace librapid {
 		m_end	= m_begin + size;
 
 		// Fill the data with "value"
+		runKernel<T, T>("fill", "fillArray", size, size, m_begin, value);
 	}
 
 	template<typename T>
