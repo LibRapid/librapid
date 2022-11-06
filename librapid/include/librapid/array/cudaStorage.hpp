@@ -50,19 +50,15 @@ namespace librapid {
 		/// Create a new CudaStorage object from a temporary one, moving the
 		/// data
 		/// \param other The array to move
-		LIBRAPID_ALWAYS_INLINE CudaStorage(const CudaStorage &&other) noexcept;
+		LIBRAPID_ALWAYS_INLINE CudaStorage(CudaStorage &&other) noexcept = default;
 
 		/// Create a CudaStorage object from an std::initializer_list
-		/// \tparam V Type of the elements in the initializer list
 		/// \param list Initializer list of elements
-		template<typename V>
-		LIBRAPID_ALWAYS_INLINE CudaStorage(const std::initializer_list<V> &list);
+		LIBRAPID_ALWAYS_INLINE CudaStorage(const std::initializer_list<Scalar> &list);
 
 		/// Create a CudaStorage object from an std::vector of values
-		/// \tparam V Vector element type
 		/// \param vec The vector to fill with
-		template<typename V>
-		LIBRAPID_ALWAYS_INLINE explicit CudaStorage(const std::vector<V> &vec);
+		LIBRAPID_ALWAYS_INLINE explicit CudaStorage(const std::vector<Scalar> &vec);
 
 		/// Assignment operator for a CudaStorage object
 		/// \param other CudaStorage object to copy
@@ -72,7 +68,7 @@ namespace librapid {
 		/// Move assignment operator for a CudaStorage object
 		/// \param other CudaStorage object to move
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE CudaStorage &operator=(CudaStorage &&other) noexcept;
+		LIBRAPID_ALWAYS_INLINE CudaStorage &operator=(CudaStorage &&other) noexcept = default;
 
 		/// Free a CudaStorage object
 		~CudaStorage();
@@ -95,7 +91,11 @@ namespace librapid {
 
 		/// Returns the pointer to the first element of the CudaStorage object
 		/// \return Pointer to the first element of the CudaStorage object
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Pointer data() const noexcept;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Pointer begin() const noexcept;
+
+		/// Returns the pointer to the last element of the CudaStorage object
+		/// \return A pointer to the last element of the CudaStorage
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Pointer end() const noexcept;
 
 	private:
 		// Copy data from \p begin to \p end into this Storage object
@@ -143,11 +143,121 @@ namespace librapid {
 		void cudaSafeDeallocate(T *__restrict data) {
 			static_assert(typetraits::TriviallyDefaultConstructible<T>::value,
 						  "Data type must be trivially constructable for use with CUDA");
-			T *result;
 			cudaSafeCall(cudaFreeAsync(data, global::cudaStream));
-			return result;
 		}
 	} // namespace detail
+
+	template<typename T>
+	CudaStorage<T>::CudaStorage(SizeType size) {
+		m_begin = detail::cudaSafeAllocate<T>(size);
+		m_end	= m_begin + size;
+	}
+
+	template<typename T>
+	CudaStorage<T>::CudaStorage(SizeType size, ConstReference value) {
+		m_begin = detail::cudaSafeAllocate<T>(size);
+		m_end	= m_begin + size;
+
+		// Fill the data with "value"
+		runKernel<T, T>("fill", "fillArray", size, size, m_begin, value);
+	}
+
+	template<typename T>
+	CudaStorage<T>::CudaStorage(const CudaStorage &other) {
+		m_begin = detail::cudaSafeAllocate<T>(other.size());
+		m_end	= m_begin + other.size();
+		cudaSafeCall(cudaMemcpyAsync(
+		  m_begin, other.begin(), sizeof(T) * other.size(), cudaMemcpyDeviceToDevice));
+	}
+
+	template<typename T>
+	CudaStorage<T>::CudaStorage(const std::initializer_list<T> &list) {
+		m_begin = detail::cudaSafeAllocate<T>(list.size());
+		m_end	= m_begin + list.size();
+		cudaSafeCall(cudaMemcpyAsync(m_begin, list.begin(), sizeof(T)));
+	}
+
+	template<typename T>
+	CudaStorage<T>::CudaStorage(const std::vector<T> &list) {
+		m_begin = detail::cudaSafeAllocate<T>(list.size());
+		m_end	= m_begin + list.size();
+		cudaSafeCall(cudaMemcpyAsync(m_begin, list.begin(), sizeof(T)));
+	}
+
+	template<typename T>
+	auto CudaStorage<T>::operator=(const CudaStorage<T> &storage) -> CudaStorage & {
+		m_begin = detail::cudaSafeAllocate<T>(storage.size());
+		m_end	= m_begin + storage.size();
+		cudaSafeCall(cudaMemcpyAsync(m_begin, storage.begin(), sizeof(T)));
+	}
+
+	template<typename T>
+	CudaStorage<T>::~CudaStorage() {
+		detail::cudaSafeDeallocate(m_begin);
+	}
+
+	template<typename T>
+	template<typename P>
+	void CudaStorage<T>::initData(P begin, P end) {
+		auto size = std::distance(begin, end);
+		m_begin	  = detail::cudaSafeAllocate<T>(size);
+		m_end	  = m_begin + size;
+		cudaSafeCall(cudaMemcpyAsync(m_begin, begin, sizeof(T) * size, global::cudaStream));
+	}
+
+	template<typename T>
+	void CudaStorage<T>::resize(SizeType newSize) {
+		resizeImpl(newSize);
+	}
+
+	template<typename T>
+	void CudaStorage<T>::resize(SizeType newSize, int) {
+		resizeImpl(newSize, 0);
+	}
+
+	template<typename T>
+	void CudaStorage<T>::resizeImpl(SizeType newSize) {
+		if (newSize == size()) { return; }
+
+		Pointer oldBegin = m_begin;
+
+		// Reallocate
+		m_begin = detail::cudaSafeAllocate<T>(newSize);
+		m_end	= m_begin + newSize;
+
+		// Copy old data
+		cudaSafeCall(cudaMemcpyAsync(m_begin, oldBegin, sizeof(T) * std::min(size(), newSize)));
+
+		// Free old data
+		detail::cudaSafeDeallocate(oldBegin);
+	}
+
+	template<typename T>
+	void CudaStorage<T>::resizeImpl(SizeType newSize, int) {
+		if (newSize == size()) { return; }
+
+		Pointer oldBegin = m_begin;
+		SizeType oldSize = size();
+		m_begin			 = detail::cudaSafeAllocate<T>(newSize);
+		m_end			 = m_begin + newSize;
+
+		detail::cudaSafeDeallocate(oldBegin);
+	}
+
+	template<typename T>
+	auto CudaStorage<T>::size() const noexcept -> SizeType {
+		return std::distance(m_begin, m_end);
+	}
+
+	template<typename T>
+	auto CudaStorage<T>::begin() const noexcept -> Pointer {
+		return m_begin;
+	}
+
+	template<typename T>
+	auto CudaStorage<T>::end() const noexcept -> Pointer {
+		return m_end;
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_HAS_CUDA
