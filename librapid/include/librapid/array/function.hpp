@@ -23,7 +23,6 @@ namespace librapid {
 			using Type	  = Function<desc, Functor_, Args...>;
 			using Functor = Functor_;
 			using Scalar  = typename typetraits::TypeInfo<Type>::Scalar;
-
 			using Packet = typename typetraits::TypeInfo<Scalar>::Packet;
 
 			Function() = default;
