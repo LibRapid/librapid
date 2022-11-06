@@ -78,6 +78,14 @@ namespace librapid {
 		/// \return The shape of the array container.
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ShapeType &shape() const noexcept;
 
+		/// Return the StorageType object of the ArrayContainer
+		/// \return The StorageType object of the ArrayContainer
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const StorageType &storage() const noexcept;
+
+		/// Return the StorageType object of the ArrayContainer
+		/// \return The StorageType object of the ArrayContainer
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE StorageType &storage() noexcept;
+
 		/// Return a Packet object from the array's storage at a specific index.
 		/// \param index The index to get the packet from
 		/// \return A Packet object from the array's storage at a specific index
@@ -99,8 +107,8 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void write(size_t index, const Scalar &value);
 
 	private:
-		ShapeType m_shape;
-		StorageType m_storage;
+		ShapeType m_shape;	   // The shape type of the array
+		StorageType m_storage; // The storage container of the array
 	};
 
 	template<typename ShapeType_, typename StorageType_>
@@ -151,6 +159,16 @@ namespace librapid {
 	}
 
 	template<typename ShapeType_, typename StorageType_>
+	auto ArrayContainer<ShapeType_, StorageType_>::storage() const noexcept -> const StorageType & {
+		return m_storage;
+	}
+
+	template<typename ShapeType_, typename StorageType_>
+	auto ArrayContainer<ShapeType_, StorageType_>::storage() noexcept -> StorageType & {
+		return m_storage;
+	}
+
+	template<typename ShapeType_, typename StorageType_>
 	auto ArrayContainer<ShapeType_, StorageType_>::packet(size_t index) const -> Packet {
 		Packet res;
 		res.load(m_storage.begin() + index);
@@ -171,6 +189,15 @@ namespace librapid {
 	void ArrayContainer<ShapeType_, StorageType_>::write(size_t index, const Scalar &value) {
 		m_storage[index] = value;
 	}
+
+	namespace typetraits {
+		template<typename T>
+		struct IsArrayContainer : std::false_type {};
+
+		template<typename SizeType, size_t dims, typename StorageScalar>
+		struct IsArrayContainer<ArrayContainer<Shape<SizeType, dims>, StorageScalar>>
+				: std::true_type {};
+	} // namespace typetraits
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_ARRAY_CONTAINER_HPP
