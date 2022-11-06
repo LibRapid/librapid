@@ -18,9 +18,11 @@
 
 # Documentation
 
-<a href="https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html" target="_blank"><b>Latest Documentation</b></a>
+<a href="https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html" target="_blank"><b>Latest
+Documentation</b></a>
 
-LibRapid uses [Doxygen](https://doxygen.nl/) and [Doxygen Awesome CSS](https://github.com/jothepro/doxygen-awesome-css) to automatically generate the documentation.
+LibRapid uses [Doxygen](https://doxygen.nl/) and [Doxygen Awesome CSS](https://github.com/jothepro/doxygen-awesome-css)
+to automatically generate the documentation.
 
 # What is LibRapid?
 
@@ -62,6 +64,7 @@ submodules of the library. You don't need to do anything different):
     - [scnlib](https://github.com/eliaskosunen/scnlib) - Advanced string parsing
     - [thread-pool](https://github.com/bshoshany/thread-pool) - Thread pool for parallel execution
     - [Vc](https://github.com/VcDevel/Vc) - SIMD library
+    - [cppfs](https://github.com/cginternals/cppfs.git) - Cross-platform filesystem library (required for CUDA support)
 - Optional
     - [OpenMP](https://www.openmp.org/) - Multi-threading library
     - [CUDA](https://developer.nvidia.com/cuda-zone) - GPU computing library
