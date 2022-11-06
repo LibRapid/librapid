@@ -189,6 +189,15 @@ namespace librapid {
 	void ArrayContainer<ShapeType_, StorageType_>::write(size_t index, const Scalar &value) {
 		m_storage[index] = value;
 	}
+
+	namespace typetraits {
+		template<typename T>
+		struct IsArrayContainer : std::false_type {};
+
+		template<typename SizeType, size_t dims, typename StorageScalar>
+		struct IsArrayContainer<ArrayContainer<Shape<SizeType, dims>, StorageScalar>>
+				: std::true_type {};
+	} // namespace typetraits
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_ARRAY_CONTAINER_HPP

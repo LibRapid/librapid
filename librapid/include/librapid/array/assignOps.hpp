@@ -82,6 +82,89 @@ namespace librapid::detail {
 
 #if defined(LIBRAPID_HAS_CUDA)
 
+	/*
+	 * Since we cannot (reasonably) generate the kernels at runtime (ease of development,
+	 * performance, etc.), operations such as (a + b) + c cannot be made into a singe kernel.
+	 * Therefore, we must employ a recursive evaluator to evaluate the expression tree.
+	 *
+	 * Unfortunately, this is surprisingly difficult to do with the setup used by the CPU side of
+	 * things.
+	 *
+	 * We can approach this problem as follows:
+	 * 1. Create a templated function to call the kernel
+	 * 2. Create a function with two specialisations
+	 *    - One for an ArrayContainer of some kind (this is the base case)
+	 *    - One for an Expression (this is the recursive case)
+	 *    - The base case returns the ArrayContainer's storage object
+	 *    - The recursive case returns the result of calling the templated function with the
+	 *      Expression's left and right children
+	 * 3. Call the templated function with the result of the recursive function
+	 */
+
+	namespace impl {
+		/// Helper for "evaluating" an ArrayContainer
+		/// \tparam ShapeType The shape type of the ArrayContainer
+		/// \tparam StorageScalar The scalar type of the ArrayContainer's storage object
+		/// \param container The ArrayContainer to evaluate
+		/// \return The ArrayContainer itself
+		template<typename ShapeType, typename StorageScalar>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const
+		  ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &
+		  cudaTupleEvaluator(
+			const ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &container) {
+			return container;
+		}
+
+		/// Helper for evaluating an expression
+		/// \tparam descriptor The descriptor of the expression
+		/// \tparam Functor The function type of the expression
+		/// \tparam Args The argument types of the expression
+		/// \param function The expression to evaluate
+		/// \return The result of evaluating the expression
+		template<Descriptor descriptor, typename Functor, typename... Args>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		cudaTupleEvaluator(const detail::Function<descriptor, Functor, Args...> &function) {
+			ArrayContainer<
+			  decltype(function.shape()),
+			  CudaStorage<typename detail::Function<descriptor, Functor, Args...>::Scalar>>
+			  result(function.shape());
+			assign(result, function);
+			return result;
+		}
+
+		/// Helper for evaluating a tuple
+		/// \tparam descriptor The descriptor of the Function
+		/// \tparam Functor The function type of the Function
+		/// \tparam Args The argument types of the Function
+		/// \tparam Pointer The pointer type of the destination
+		/// \tparam I Index sequence for the tuple
+		/// \param filename The filename of the kernel
+		/// \param kernelName The name of the kernel
+		/// \param dst The memory location to assign data to
+		/// \param function The Function to evaluate
+		template<Descriptor descriptor, typename Functor, typename... Args, typename Pointer,
+				 size_t... I>
+		LIBRAPID_ALWAYS_INLINE void
+		tupleEvaluator(std::index_sequence<I...>, const std::string &filename,
+					   const std::string &kernelName, Pointer *dst,
+					   const detail::Function<descriptor, Functor, Args...> &function) {
+			runKernel<Pointer, typename typetraits::TypeInfo<std::decay_t<Args>>::Scalar...>(
+			  filename,
+			  kernelName,
+			  function.shape().size(),
+			  function.shape().size(),
+			  dst,
+			  cudaTupleEvaluator(std::get<I>(function.args())).storage().begin()...);
+		}
+	} // namespace impl
+
+	/// Trivial assignment with CUDA execution
+	/// \tparam ShapeType_ The shape type of the array container
+	/// \tparam StorageScalar The scalar type of the storage object
+	/// \tparam Functor_ The function type
+	/// \tparam Args The argument types of the function
+	/// \param lhs The array container to assign to
+	/// \param function The function to assign
 	template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
 	assign(ArrayContainer<ShapeType_, CudaStorage<StorageScalar>> &lhs,
@@ -94,13 +177,13 @@ namespace librapid::detail {
 		constexpr const char *kernelName = typetraits::TypeInfo<Functor_>::kernelName;
 		using Scalar = typename ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>::Scalar;
 
-		runKernel<Scalar, Scalar, Scalar>(filename,
-										  kernelName,
-										  function.shape().size(),
-										  function.shape().size(),
-										  lhs.storage().begin(),
-										  std::get<0>(function.args()).storage().begin(),
-										  std::get<1>(function.args()).storage().begin());
+		const auto args			 = function.args();
+		constexpr size_t argSize = std::tuple_size<decltype(args)>::value;
+		impl::tupleEvaluator(std::make_index_sequence<argSize>(),
+							 filename,
+							 kernelName,
+							 lhs.storage().begin(),
+							 function);
 	}
 
 #endif // LIBRAPID_HAS_CUDA
