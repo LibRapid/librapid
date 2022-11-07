@@ -50,7 +50,7 @@ namespace librapid {
 		/// Create a new CudaStorage object from a temporary one, moving the
 		/// data
 		/// \param other The array to move
-		LIBRAPID_ALWAYS_INLINE CudaStorage(CudaStorage &&other) noexcept = default;
+		LIBRAPID_ALWAYS_INLINE CudaStorage(CudaStorage &&other) noexcept;
 
 		/// Create a CudaStorage object from an std::initializer_list
 		/// \param list Initializer list of elements
@@ -68,7 +68,7 @@ namespace librapid {
 		/// Move assignment operator for a CudaStorage object
 		/// \param other CudaStorage object to move
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE CudaStorage &operator=(CudaStorage &&other) noexcept = default;
+		LIBRAPID_ALWAYS_INLINE CudaStorage &operator=(CudaStorage &&other) noexcept;
 
 		/// Free a CudaStorage object
 		~CudaStorage();
@@ -171,6 +171,13 @@ namespace librapid {
 	}
 
 	template<typename T>
+	CudaStorage<T>::CudaStorage(CudaStorage &&other) noexcept :
+			m_begin(other.m_begin), m_end(other.m_end) {
+		other.m_begin = nullptr;
+		other.m_end	  = nullptr;
+	}
+
+	template<typename T>
 	CudaStorage<T>::CudaStorage(const std::initializer_list<T> &list) {
 		m_begin = detail::cudaSafeAllocate<T>(list.size());
 		m_end	= m_begin + list.size();
@@ -189,6 +196,15 @@ namespace librapid {
 		m_begin = detail::cudaSafeAllocate<T>(storage.size());
 		m_end	= m_begin + storage.size();
 		cudaSafeCall(cudaMemcpyAsync(m_begin, storage.begin(), sizeof(T)));
+	}
+
+	template<typename T>
+	auto CudaStorage<T>::operator=(CudaStorage &&other) noexcept -> CudaStorage & {
+		m_begin		  = other.m_begin;
+		m_end		  = other.m_end;
+		other.m_begin = nullptr;
+		other.m_end	  = nullptr;
+		return *this;
 	}
 
 	template<typename T>
