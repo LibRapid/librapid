@@ -1,6 +1,5 @@
 #include "kernelHelper.hpp"
-#include <stdint.h>
-#include <stdio.h>
+#include <cstdint>
 
 template<typename Destination, typename LHS, typename RHS>
 __global__ void addArrays(size_t elements, Destination *dst, LHS *lhs, RHS *rhs) {

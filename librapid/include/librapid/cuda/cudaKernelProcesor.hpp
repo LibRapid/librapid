@@ -5,11 +5,17 @@
 
 namespace librapid {
 	/// Load a CUDA kernel from a file and return the string representation of it.
-	///
-	/// \param relPath
-	/// \return
+	/// \param relPath File path relative to LibRapid's "cuda/kernels" directory
+	/// \return String representation of the kernel
 	std::string loadKernel(const std::string &relPath);
 
+	/// Run a kernel string on the GPU with the specified arguments
+	/// \tparam Templates Instantiation types passed to Jitify
+	/// \tparam Args Argument types passed to Jitify
+	/// \param kernel Kernel string to run
+	/// \param kernelName Name of the kernel
+	/// \param elements Number of elements to process
+	/// \param arguments Arguments to pass to the kernel
 	template<typename... Templates, typename... Args>
 	void runKernelString(const std::string &kernel, const std::string &kernelName, size_t elements,
 						 Args... arguments) {
@@ -36,6 +42,13 @@ namespace librapid {
 					 .launch(arguments...));
 	}
 
+	/// Run a kernel from a filename and kernel name with the specified arguments
+	/// \tparam Templates Instantiation types passed to Jitify
+	/// \tparam Args Argument types passed to Jitify
+	/// \param name Filename of the kernel
+	/// \param kernelName Name of the kernel
+	/// \param elements Number of elements to process
+	/// \param arguments Arguments to pass to the kernel
 	template<typename... Templates, typename... Args>
 	void runKernel(const std::string &name, const std::string &kernelName, size_t elements,
 				   Args... arguments) {
