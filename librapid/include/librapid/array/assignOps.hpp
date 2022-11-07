@@ -124,12 +124,13 @@ namespace librapid::detail {
 		template<Descriptor descriptor, typename Functor, typename... Args>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		cudaTupleEvaluator(const detail::Function<descriptor, Functor, Args...> &function) {
-			ArrayContainer<
-			  decltype(function.shape()),
-			  CudaStorage<typename detail::Function<descriptor, Functor, Args...>::Scalar>>
-			  result(function.shape());
-			assign(result, function);
-			return result;
+			// ArrayContainer<
+			//   decltype(function.shape()),
+			//   CudaStorage<typename detail::Function<descriptor, Functor, Args...>::Scalar>>
+			//   result(function.shape());
+			// assign(result, function);
+			// return result;
+			return std::get<0>(function.args());
 		}
 
 		/// Helper for evaluating a tuple
