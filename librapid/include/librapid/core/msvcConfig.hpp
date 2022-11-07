@@ -73,7 +73,7 @@
 				throw std::runtime_error(formatted);                                               \
 			} else {                                                                               \
 				fmt::print(fmt::fg(fmt::color::red), formatted);                                   \
-				std::exit(1);                                                                      \
+				psnip_trap();                                                                      \
 			}                                                                                      \
 		} while (0)
 
@@ -134,7 +134,7 @@
 					throw std::runtime_error(formatted);                                           \
 				} else {                                                                           \
 					fmt::print(fmt::fg(fmt::color::red), formatted);                               \
-					std::exit(1);                                                                  \
+					psnip_trap();                                                                  \
 				}                                                                                  \
 			}                                                                                      \
 		} while (0)
