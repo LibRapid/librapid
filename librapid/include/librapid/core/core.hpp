@@ -3,6 +3,7 @@
 
 #include "warningSuppress.hpp"
 #include "librapidPch.hpp"
+#include "debugTrap.hpp"
 #include "config.hpp"
 #include "global.hpp"
 #include "traits.hpp"
