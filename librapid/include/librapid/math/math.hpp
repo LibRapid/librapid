@@ -3,6 +3,6 @@
 
 #include "coreMath.hpp"
 #include "vector.hpp"
-#include "multiPrec.hpp"
+#include "multiprec.hpp"
 
 #endif // LIBRAPID_MATH
