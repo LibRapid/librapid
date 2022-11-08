@@ -126,6 +126,14 @@ namespace librapid {
 		mpfr::mpreal::set_default_prec((mpfr_prec_t)dig2);
 	}
 
+	/// Set the precision for multiprecision types
+	/// \param dig2
+	inline void prec2(int64_t dig2) {
+		dig2 += 8; // Add some extra precision
+		mpf_set_default_prec(dig2);
+		mpfr::mpreal::set_default_prec((mpfr_prec_t)dig2);
+	}
+
 	// Trigonometric Functionality for mpf
 
 	/// Sine of a multiprecision floating point value: \f$ \sin(x) \f$
