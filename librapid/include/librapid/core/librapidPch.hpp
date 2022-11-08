@@ -83,4 +83,10 @@
 #	pragma warning(pop)
 #endif
 
+// MPFR (modified) -- arbitrary precision floating point numbers
+#if defined(LIBRAPID_USE_MULTIPREC)
+#	include <mpirxx.h>
+#	include <mpreal.h>
+#endif // LIBRAPID_USE_MULTIPREC
+
 #endif // LIBRAPID_CORE_LIBRAPID_PCH_HPP
