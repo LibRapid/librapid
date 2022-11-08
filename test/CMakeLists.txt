@@ -8,3 +8,4 @@ endfunction()
 
 make_test(storage)
 make_test(sizetype)
+make_test(multiprecision)
