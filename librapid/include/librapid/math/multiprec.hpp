@@ -237,32 +237,32 @@ namespace librapid {
 	/// \return The hyperbolic arctangent of the value
 	mpfr atanh(const mpfr &val);
 
-	/// Hyperbolic cosec of a multiprecision floating point value: \f$ \text{csch}(x) \f$
+	/// Hyperbolic cosec of a multiprecision floating point value: \f$ csch(x) \f$
 	/// \param val The value to take the hyperbolic cosec of
 	/// \return The hyperbolic cosec of the value
 	mpfr csch(const mpfr &val);
 
-	/// Hyperbolic secant of a multiprecision floating point value: \f$ \text{sech}(x) \f$
+	/// Hyperbolic secant of a multiprecision floating point value: \f$ sech(x) \f$
 	/// \param val The value to take the hyperbolic secant of
 	/// \return The hyperbolic secant of the value
 	mpfr sech(const mpfr &val);
 
-	/// Hyperbolic cotangent of a multiprecision floating point value: \f$ \text{coth}(x) \f$
+	/// Hyperbolic cotangent of a multiprecision floating point value: \f$ coth(x) \f$
 	/// \param val The value to take the hyperbolic cotangent of
 	/// \return The hyperbolic cotangent of the value
 	mpfr coth(const mpfr &val);
 
-	/// Hyperbolic arccosec of a multiprecision floating point value: \f$ \text{csch}^{-1}(x) \f$
+	/// Hyperbolic arccosec of a multiprecision floating point value: \f$ csch^{-1}(x) \f$
 	/// \param val The value to take the hyperbolic arccosec of
 	/// \return The hyperbolic arccosec of the value
 	mpfr acsch(const mpfr &val);
 
-	/// Hyperbolic arcsecant of a multiprecision floating point value: \f$ \text{sech}^{-1}(x) \f$
+	/// Hyperbolic arcsecant of a multiprecision floating point value: \f$ sech^{-1}(x) \f$
 	/// \param val The value to take the hyperbolic arcsecant of
 	/// \return The hyperbolic arcsecant of the value
 	mpfr asech(const mpfr &val);
 
-	/// Hyperbolic arccotangent of a multiprecision floating point value: \f$ \text{coth}^{-1}(x)
+	/// Hyperbolic arccotangent of a multiprecision floating point value: \f$ coth^{-1}(x)
 	/// \f$ \param val The value to take the hyperbolic arccotangent of \return The hyperbolic
 	/// arccotangent of the value
 	mpfr acoth(const mpfr &val);
@@ -334,7 +334,7 @@ namespace librapid {
 	/// \return The ceiling of the value
 	mpfr ceil(const mpfr &val);
 
-	/// Floating point modulus of a multiprecision floating point value: \f$ x \mod y \f$
+	/// Floating point modulus of a multiprecision floating point value: \f$ x \bmod y \f$
 	/// \param val The value to take the modulus of
 	/// \param mod The modulus to take the value by
 	/// \return The modulus of the value
