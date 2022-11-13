@@ -3,6 +3,10 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
 
+/*
+ * Very incomplete testing. I'm going to assume that the mpfr library is correct :)
+ */
+
 namespace lrc = librapid;
 
 #if defined(LIBRAPID_USE_MULTIPREC)
@@ -39,6 +43,11 @@ TEST_CASE("Test Multiprecision", "[multiprecision]") {
 	REQUIRE(lrc::abs(lrc::cos(lrc::constPi()) - -1) < lrc::exp10(-15));
 	REQUIRE(lrc::abs(lrc::tan(lrc::constPi()) - 0) < lrc::exp10(-15));
 
+	REQUIRE(lrc::mpz("10") + lrc::mpz("100") == 110);
+	REQUIRE(lrc::mpq("10") + lrc::mpq("100") == 110);
+	REQUIRE(lrc::mpf("10") + lrc::mpf("100") == 110);
+	REQUIRE(lrc::mpfr("10") + lrc::mpfr("100") == 110);
+
 	lrc::prec(500);
 	REQUIRE(
 	  lrc::constPi() ==
@@ -56,9 +65,7 @@ TEST_CASE("Test Multiprecision", "[multiprecision]") {
 
 			lrc::mpz bigInt(1);
 			bigInt <<= prec;
-			BENCHMARK(fmt::format("Integer Addition\n[{} bits]", prec)) {
-				return bigInt + bigInt;
-			};
+			BENCHMARK(fmt::format("Integer Addition\n[{} bits]", prec)) { return bigInt + bigInt; };
 
 			BENCHMARK(fmt::format("Integer Multiplication\n[{} bits]", prec)) {
 				return bigInt * bigInt;
