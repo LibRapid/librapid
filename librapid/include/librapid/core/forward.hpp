@@ -5,6 +5,9 @@ namespace librapid {
 	template<typename Scalar_, typename Allocator_>
 	class Storage;
 
+	template<typename Scalar_, size_t... Dimensions>
+	class FixedStorage;
+
 	template<typename Scalar_>
 	class CudaStorage;
 
@@ -28,6 +31,12 @@ namespace librapid {
 		assign(ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 			   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function);
 
+		template<typename ShapeType_, typename StorageScalar, size_t... StorageDims,
+				 typename Functor_, typename... Args>
+		LIBRAPID_ALWAYS_INLINE void
+		assign(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageDims...>> &lhs,
+			   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function);
+
 		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
 				 typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
@@ -35,14 +44,13 @@ namespace librapid {
 					   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function);
 
 #if defined(LIBRAPID_HAS_CUDA)
-		template<typename ShapeType_, typename StorageScalar,
-				 typename Functor_, typename... Args>
+		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
 		assign(ArrayContainer<ShapeType_, CudaStorage<StorageScalar>> &lhs,
 			   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function);
 
 #endif // LIBRAPID_HAS_CUDA
-	} // namespace detail
+	}  // namespace detail
 } // namespace librapid
 
 #endif // LIBRAPID_CORE_FORWARD_HPP
