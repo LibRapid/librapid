@@ -119,6 +119,15 @@ namespace librapid {
 		Pointer m_end	= nullptr; // and end of the data block than to store the size
 	};
 
+	// Trait implementations
+	namespace typetraits {
+		template<typename T>
+		struct IsCudaStorage : std::false_type {};
+
+		template<typename Scalar>
+		struct IsCudaStorage<CudaStorage<Scalar>> : std::true_type {};
+	} // namespace typetraits
+
 	namespace detail {
 		/// Safely allocate memory for \p size elements of type on the GPU using CUDA.
 		/// \tparam T Scalar type
@@ -275,6 +284,12 @@ namespace librapid {
 		return m_end;
 	}
 } // namespace librapid
-
+#else
+// Trait implementations
+namespace librapid::typetraits {
+	// Define this so things still work correctly
+	template<typename T>
+	struct IsCudaStorage : std::false_type {};
+} // namespace librapid::typetraits
 #endif // LIBRAPID_HAS_CUDA
 #endif // LIBRAPID_ARRAY_CUDA_STORAGE_HPP

@@ -38,6 +38,10 @@ namespace librapid {
 		/// \param value The value to initialize the memory with
 		LIBRAPID_ALWAYS_INLINE ArrayContainer(const ShapeType &shape, const Scalar &value);
 
+		/// Allows for a fixed-size array to be constructed with a fill value
+		/// \param value The value to fill the array with
+		LIBRAPID_ALWAYS_INLINE explicit ArrayContainer(const Scalar &value);
+
 		/// Construct an array container from a shape, which is moved, not copied.
 		/// \param shape The shape of the array container
 		LIBRAPID_ALWAYS_INLINE explicit ArrayContainer(ShapeType &&shape);
@@ -125,7 +129,23 @@ namespace librapid {
 	ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const ShapeType &shape,
 															 const Scalar &value) :
 			m_shape(shape),
-			m_storage(shape.size(), value) {}
+			m_storage(shape.size(), value) {
+		static_assert(typetraits::IsStorage<StorageType_>::value ||
+						typetraits::IsCudaStorage<StorageType_>::value,
+					  "For a runtime-defined shape, "
+					  "the storage type must be "
+					  "either a Storage or a "
+					  "CudaStorage object");
+	}
+
+	template<typename ShapeType_, typename StorageType_>
+	ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const Scalar &value) :
+			m_shape(detail::shapeFromFixedStorage(m_storage)), m_storage(value) {
+		static_assert(typetraits::IsFixedStorage<StorageType_>::value,
+					  "For a compile-time-defined shape, "
+					  "the storage type must be "
+					  "a FixedStorage object");
+	}
 
 	template<typename ShapeType_, typename StorageType_>
 	ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(ShapeType_ &&shape) :

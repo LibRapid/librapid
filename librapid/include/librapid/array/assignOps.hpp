@@ -41,6 +41,33 @@ namespace librapid::detail {
 		}
 	}
 
+	template<typename ShapeType_, typename StorageScalar, size_t... StorageDims, typename Functor_,
+			 typename... Args>
+	LIBRAPID_ALWAYS_INLINE void
+	assign(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageDims...>> &lhs,
+		   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function) {
+		using Scalar =
+		  typename ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageDims...>>::Scalar;
+		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
+
+		constexpr int64_t size		 = product<StorageDims...>();
+		constexpr int64_t vectorSize = size - (size % packetWidth);
+
+		// Ensure the function can actually be assigned to the array container
+		static_assert(typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
+					  "Function return type must be the same as the array container's scalar type");
+		LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
+
+		for (int64_t index = 0; index < vectorSize; index += packetWidth) {
+			lhs.writePacket(index, function.packet(index));
+		}
+
+		// Assign the remaining elements
+		for (int64_t index = vectorSize; index < size; ++index) {
+			lhs.write(index, function.scalar(index));
+		}
+	}
+
 	/// Trivial assignment with parallel execution
 	/// \tparam ShapeType_
 	/// \tparam StorageScalar
