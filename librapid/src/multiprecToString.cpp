@@ -23,7 +23,7 @@ namespace librapid {
 
 	std::string str(const mpq &val, int base) { return val.get_str(base); }
 
-	std::string str(const mpfr &val, int base) {
+	std::string str(const mpfr &val, int) {
 		std::stringstream ss;
 		ss << std::fixed;
 		mp_prec_t dig2 = val.getPrecision() - 5;

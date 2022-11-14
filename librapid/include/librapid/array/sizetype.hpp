@@ -121,6 +121,13 @@ namespace librapid {
 		std::array<T, N> m_data;
 	};
 
+	namespace detail {
+		template<typename T, size_t... Dims>
+		Shape<size_t, 32> shapeFromFixedStorage(const FixedStorage<T, Dims...> &) {
+			return Shape<size_t, 32>({Dims...});
+		}
+	} // namespace detail
+
 	template<typename T, size_t N>
 	template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value>>
 	Shape<T, N>::Shape(const std::initializer_list<V> &vals) : m_dims(vals.size()) {

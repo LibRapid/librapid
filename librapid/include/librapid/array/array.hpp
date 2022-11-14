@@ -9,5 +9,6 @@
 #include "function.hpp"
 #include "../cuda/tupleEvaluator.hpp"
 #include "assignOps.hpp"
+#include "arrayTypeDef.hpp"
 
 #endif // LIBRAPID_ARRAY
