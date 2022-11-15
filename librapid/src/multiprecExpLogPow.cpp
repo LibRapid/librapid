@@ -17,8 +17,4 @@ namespace librapid {
 	mpfr log10(const mpfr &val) { return ::mpfr::log10(val); }
 } // namespace librapid
 
-#else
-
-[[maybe_unused]] LIBRAPID_NODISCARD int patch(int x) { return x; }
-
 #endif // LIBRAPID_USE_MULTIPREC
