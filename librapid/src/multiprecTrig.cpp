@@ -37,8 +37,4 @@ namespace librapid {
 	mpfr acoth(const mpfr &val) { return ::mpfr::acoth(val); }
 } // namespace librapid
 
-#else
-
-[[maybe_unused]] LIBRAPID_NODISCARD int patch(int x) { return x; }
-
 #endif // LIBRAPID_USE_MULTIPREC

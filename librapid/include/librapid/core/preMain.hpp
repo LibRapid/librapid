@@ -8,13 +8,7 @@
 namespace librapid::detail {
 	class PreMain {
 	public:
-		PreMain() {
-#if defined(LIBRAPID_WINDOWS)
-			// Force the terminal to accept ANSI characters
-			system(("chcp " + std::to_string(CP_UTF8)).c_str());
-#endif // LIBRAPID_WINDOWS
-		}
-
+		PreMain();
 	private:
 	};
 
@@ -30,7 +24,7 @@ namespace librapid::detail {
 		return val < maxOther ? maxOther : val;
 	}
 
-	[[maybe_unused]] static PreMain preMain = PreMain();
+	extern PreMain preMain;
 } // namespace librapid::detail
 
 #endif // LIBRAPID_CORE_PREMAIN
