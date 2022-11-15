@@ -11,7 +11,7 @@ on:
 
 jobs:
   compile:
-    name: LibRapid on ${{ matrix.os }} with ${{ matrix.cxx }}
+    name: LibRapid on ${{ matrix.os }} with ${{ matrix.cxx }} using CPP-${{ matrix.cpp }}
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -23,13 +23,6 @@ jobs:
             cxx: clang-12
             blas: on
             mpfr: on
-            stl: 14
-
-          - os: ubuntu-latest
-            cc: clang-12
-            cxx: clang-12
-            blas: on
-            mpfr: on
             stl: 17
 
           - os: ubuntu-latest
@@ -44,13 +37,6 @@ jobs:
             cxx: clang-13
             blas: on
             mpfr: on
-            stl: 14
-
-          - os: ubuntu-latest
-            cc: clang-13
-            cxx: clang-13
-            blas: on
-            mpfr: on
             stl: 17
 
           - os: ubuntu-latest
@@ -65,13 +51,6 @@ jobs:
             cxx: clang-14
             blas: on
             mpfr: on
-            stl: 14
-
-          - os: ubuntu-latest
-            cc: clang-14
-            cxx: clang-14
-            blas: on
-            mpfr: on
             stl: 17
 
           - os: ubuntu-latest
@@ -86,13 +65,6 @@ jobs:
             cxx: g++-9
             blas: on
             mpfr: on
-            stl: 14
-
-          - os: ubuntu-latest
-            cc: gcc-9
-            cxx: g++-9
-            blas: on
-            mpfr: on
             stl: 17
 
           - os: ubuntu-latest
@@ -107,13 +79,6 @@ jobs:
             cxx: g++-10
             blas: on
             mpfr: on
-            stl: 14
-
-          - os: ubuntu-latest
-            cc: gcc-10
-            cxx: g++-10
-            blas: on
-            mpfr: on
             stl: 17
 
           - os: ubuntu-latest
@@ -128,13 +93,6 @@ jobs:
             cxx: g++-11
             blas: on
             mpfr: on
-            stl: 14
-
-          - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
-            blas: on
-            mpfr: on
             stl: 17
 
           - os: ubuntu-latest
@@ -149,13 +107,6 @@ jobs:
             cxx: clang
             blas: on
             mpfr: on
-            stl: 14
-
-          - os: macos-latest
-            cc: clang
-            cxx: clang
-            blas: on
-            mpfr: on
             stl: 17
 
           - os: macos-latest
@@ -164,13 +115,6 @@ jobs:
             blas: on
             mpfr: on
             stl: 20
-
-          - os: macos-latest
-            cc: gcc-11
-            cxx: g++-11
-            blas: on
-            mpfr: on
-            stl: 14
 
           - os: macos-latest
             cc: gcc-11
@@ -191,15 +135,8 @@ jobs:
             cxx: msvc
             blas: on
             mpfr: on
-            stl: 14
-
-          - os: windows-latest
-            cc: msvc
-            cxx: msvc
-            blas: on
-            mpfr: on
             stl: 17
-            
+
           - os: windows-latest
             cc: msvc
             cxx: msvc
