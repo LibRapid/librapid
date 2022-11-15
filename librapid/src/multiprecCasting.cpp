@@ -24,8 +24,4 @@ namespace librapid {
 	mpfr toMpfr(const mpfr &other) { return other; }
 } // namespace librapid
 
-#else
-
-[[maybe_unused]] LIBRAPID_NODISCARD int patch(int x) { return x; }
-
 #endif // LIBRAPID_USE_MULTIPREC
