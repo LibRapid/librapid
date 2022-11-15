@@ -43,6 +43,12 @@ namespace librapid {
 		assignParallel(ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 					   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function);
 
+		template<typename ShapeType_, typename StorageScalar, size_t... StorageDims,
+				 typename Functor_, typename... Args>
+		LIBRAPID_ALWAYS_INLINE void
+		assignParallel(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageDims...>> &lhs,
+					   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function);
+
 #if defined(LIBRAPID_HAS_CUDA)
 		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
