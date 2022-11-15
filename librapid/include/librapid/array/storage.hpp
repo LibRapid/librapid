@@ -183,7 +183,7 @@ namespace librapid {
 		static constexpr SizeType Size = product<Dimensions...>();
 
 		/// Default constructor
-		FixedStorage() = default;
+		FixedStorage();
 
 		/// Create a FixedStorage object filled with \p value
 		/// \param value Value to fill the FixedStorage object with
@@ -537,6 +537,10 @@ namespace librapid {
 	auto Storage<T, A>::crend() const noexcept -> ConstReverseIterator {
 		return rend();
 	}
+
+	template<typename T, size_t... D>
+	FixedStorage<T, D...>::FixedStorage() :
+			m_data(new detail::FixedStorageContainer<Scalar, Size>) {}
 
 	template<typename T, size_t... D>
 	FixedStorage<T, D...>::FixedStorage(const Scalar &value) {
