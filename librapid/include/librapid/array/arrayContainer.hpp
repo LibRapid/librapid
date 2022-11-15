@@ -10,12 +10,6 @@ namespace librapid {
 		};
 	} // namespace typetraits
 
-	// template<typename Scalar, typename Device = device::CPU>
-	// using Array =
-	//   ArrayContainer<Shape<size_t, 32>,
-	// 				 typename std::conditional_t<typetraits::IsSame<Device, device::GPU>,
-	// 											 CudaStorage<Scalar>, Storage<Scalar>>>;
-
 	template<typename ShapeType_, typename StorageType_>
 	class ArrayContainer {
 	public:
