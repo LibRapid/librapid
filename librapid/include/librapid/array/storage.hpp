@@ -336,16 +336,14 @@ namespace librapid {
 	} // namespace detail
 
 	template<typename T, typename A>
-	Storage<T, A>::Storage(SizeType size, const Allocator &alloc) : m_allocator(alloc) {
-		m_begin = detail::safeAllocate(m_allocator, size);
-		m_end	= m_begin + size;
-	}
+	Storage<T, A>::Storage(SizeType size, const Allocator &alloc) :
+			m_allocator(alloc), m_begin(detail::safeAllocate(m_allocator, size)),
+			m_end(m_begin + size) {}
 
 	template<typename T, typename A>
 	Storage<T, A>::Storage(SizeType size, ConstReference value, const Allocator &alloc) :
-			m_allocator(alloc) {
-		m_begin = detail::safeAllocate(m_allocator, size);
-		m_end	= m_begin + size;
+			m_allocator(alloc), m_begin(detail::safeAllocate(m_allocator, size)),
+			m_end(m_begin + size) {
 		std::fill(m_begin, m_end, value);
 	}
 
