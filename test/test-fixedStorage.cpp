@@ -8,7 +8,7 @@ namespace lrc = librapid;
 #define REGISTER_CASES(TYPE)                                                                       \
 	SECTION("Type: " STRINGIFY(TYPE)) {                                                            \
 		using ScalarType = TYPE;                                                                   \
-		lrc::FixedStorage<ScalarType, 3, 3> storage;                                               \
+		lrc::FixedStorage<ScalarType, 9> storage;                                                  \
                                                                                                    \
 		REQUIRE(storage.size() == 9);                                                              \
                                                                                                    \
@@ -17,6 +17,47 @@ namespace lrc = librapid;
                                                                                                    \
 		REQUIRE(storage[0] == 1);                                                                  \
 		REQUIRE(storage[1] == 10);                                                                 \
+                                                                                                   \
+		lrc::FixedStorage<ScalarType, 10> storage2({1, 2, 3, 4, 5, 6, 7, 8, 9, 10});               \
+                                                                                                   \
+		REQUIRE(storage2.size() == 10);                                                            \
+		REQUIRE(storage2[0] == 1);                                                                 \
+		REQUIRE(storage2[1] == 2);                                                                 \
+		REQUIRE(storage2[8] == 9);                                                                 \
+		REQUIRE(storage2[9] == 10);                                                                \
+                                                                                                   \
+		lrc::FixedStorage<ScalarType, 20> storage3(1);                                             \
+                                                                                                   \
+		REQUIRE(storage3.size() == 20);                                                            \
+		REQUIRE(storage3[0] == 1);                                                                 \
+		REQUIRE(storage3[1] == 1);                                                                 \
+		REQUIRE(storage3[18] == 1);                                                                \
+		REQUIRE(storage3[19] == 1);                                                                \
+                                                                                                   \
+		auto storage4 = lrc::FixedStorage<ScalarType, 10>(storage2);                               \
+                                                                                                   \
+		REQUIRE(storage4.size() == 10);                                                            \
+		REQUIRE(storage4[0] == 1);                                                                 \
+		REQUIRE(storage4[1] == 2);                                                                 \
+		REQUIRE(storage4[8] == 9);                                                                 \
+		REQUIRE(storage4[9] == 10);                                                                \
+                                                                                                   \
+		SECTION("Const Iterator") {                                                                \
+			ScalarType i = 1;                                                                      \
+			for (const auto &val : storage2) {                                                     \
+				REQUIRE(val == i);                                                                 \
+				i += 1;                                                                            \
+			}                                                                                      \
+		}                                                                                          \
+                                                                                                   \
+		SECTION("Non-Const Iterator") {                                                            \
+			ScalarType i = 1;                                                                      \
+			for (auto &val : storage2) {                                                           \
+				REQUIRE(val == i);                                                                 \
+				val += 1;                                                                          \
+				i += 1;                                                                            \
+			}                                                                                      \
+		}                                                                                          \
 	}
 
 #define BENCHMARK_CONSTRUCTORS(TYPE_, FILL_)                                                       \
@@ -50,7 +91,7 @@ namespace lrc = librapid;
 		return storage.size();                                                                     \
 	}
 
-TEST_CASE("Test Storage<T>", "[storage]") {
+TEST_CASE("Test FixedStorage<T>", "[fixed-storage]") {
 	SECTION("Trivially Constructible Storage") {
 		REGISTER_CASES(char);
 		REGISTER_CASES(unsigned char);
