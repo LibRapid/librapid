@@ -411,7 +411,9 @@ struct fmt::formatter<mpz_class> {
 			ss.precision(specs_.precision < 1 ? 10 : specs_.precision);
 			ss << num;
 			return fmt::format_to(ctx.out(), ss.str());
-		} catch (std::exception &e) { return fmt::format_to(ctx.out(), "FORMAT ERROR"); }
+		} catch (std::exception &e) {
+			return fmt::format_to(ctx.out(), fmt::format("Format Error: {}", e.what()));
+		}
 	}
 };
 
@@ -443,7 +445,9 @@ struct fmt::formatter<mpf_class> {
 			ss.precision(specs_.precision);
 			ss << num;
 			return fmt::format_to(ctx.out(), ss.str());
-		} catch (std::exception &e) { return fmt::format_to(ctx.out(), "FORMAT ERROR"); }
+		} catch (std::exception &e) {
+			return fmt::format_to(ctx.out(), fmt::format("Format Error: {}", e.what()));
+		}
 	}
 };
 
@@ -475,7 +479,7 @@ struct fmt::formatter<mpq_class> {
 			ss << num;
 			return fmt::format_to(ctx.out(), ss.str());
 		} catch (std::exception &e) {
-			return fmt::format_to(ctx.out(), fmt::format("FORMAT ERROR: {}", e.what()));
+			return fmt::format_to(ctx.out(), fmt::format("Format Error: {}", e.what()));
 		}
 	}
 };
