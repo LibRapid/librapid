@@ -18,6 +18,8 @@ set(LIBRAPID_PATCH ${CMAKE_MATCH_1})
 message(STATUS "LibRapid Version: v${LIBRAPID_MAJOR}.${LIBRAPID_MINOR}.${LIBRAPID_PATCH}")
 
 # Optional LibRapid settings
+option(LIBRAPID_OPTIMIZE_SMALL_ARRAYS "Optimize for small arrays" OFF)
+
 option(LIBRAPID_BUILD_EXAMPLES "Compile LibRapid C++ Examples" OFF)
 option(LIBRAPID_BUILD_TESTS "Compile LibRapid C++ Tests" OFF)
 
@@ -98,6 +100,10 @@ endif ()
 
 if (LIBRAPID_STRICT AND LIBRAPID_QUIET)
     message(FATAL_ERROR "LIBRAPID_STRICT and LIBRAPID_QUIET cannot be enabled at the same time")
+endif ()
+
+if (LIBRAPID_OPTIMIZE_SMALL_ARRAYS)
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_OPTIMIZE_SMALL_ARRAYS)
 endif ()
 
 if (LIBRAPID_STRICT)
