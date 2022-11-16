@@ -7,7 +7,6 @@
 #include "arrayContainer.hpp"
 #include "operations.hpp"
 #include "function.hpp"
-#include "../cuda/tupleEvaluator.hpp"
 #include "assignOps.hpp"
 #include "arrayTypeDef.hpp"
 
