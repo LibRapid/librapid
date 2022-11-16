@@ -24,8 +24,8 @@ namespace librapid {
 	  ArrayContainer<Shape<Scalar>,
 					 typename detail::TypeDefStorageEvaluator<Scalar, StorageType>::Type>;
 
-	template<typename Scalar, size_t... Dims>
-	using FArray = ArrayContainer<Shape<Scalar>, FixedStorage<Scalar, Dims...>>;
+	template<typename Scalar, size_t... Dimensions>
+	using ArrayF = ArrayContainer<Shape<Scalar>, FixedStorage<Scalar, product<Dimensions...>()>>;
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_TYPE_DEF_HPP

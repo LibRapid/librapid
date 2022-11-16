@@ -14,8 +14,8 @@ namespace librapid {
 			using Scalar						 = Scalar_;
 		};
 
-		template<typename Scalar_, size_t... Dims>
-		struct TypeInfo<FixedStorage<Scalar_, Dims...>> {
+		template<typename Scalar_, size_t Dims>
+		struct TypeInfo<FixedStorage<Scalar_, Dims>> {
 			static constexpr bool isLibRapidType = true;
 			using Scalar						 = Scalar_;
 		};
@@ -166,7 +166,7 @@ namespace librapid {
 		};
 	} // namespace detail
 
-	template<typename Scalar_, size_t... Dimensions>
+	template<typename Scalar_, size_t Size_>
 	class FixedStorage {
 	public:
 		using Scalar				   = Scalar_;
@@ -180,7 +180,7 @@ namespace librapid {
 		using ConstIterator			   = ConstPointer;
 		using ReverseIterator		   = std::reverse_iterator<Iterator>;
 		using ConstReverseIterator	   = std::reverse_iterator<ConstIterator>;
-		static constexpr SizeType Size = product<Dimensions...>();
+		static constexpr SizeType Size = Size_;
 
 		/// Default constructor
 		FixedStorage();
@@ -263,9 +263,9 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstReverseIterator crend() const noexcept;
 
 	private:
-		detail::FixedStorageContainer<Scalar, product<Dimensions...>()> *m_data = nullptr;
-		Scalar *__restrict m_begin												= nullptr;
-		Scalar *__restrict m_end												= nullptr;
+		detail::FixedStorageContainer<Scalar, Size> *m_data = nullptr;
+		Scalar *__restrict m_begin							= nullptr;
+		Scalar *__restrict m_end							= nullptr;
 	};
 
 	// Trait implementations
@@ -279,8 +279,8 @@ namespace librapid {
 		template<typename T>
 		struct IsFixedStorage : std::false_type {};
 
-		template<typename Scalar, size_t... Dimensions>
-		struct IsFixedStorage<FixedStorage<Scalar, Dimensions...>> : std::true_type {};
+		template<typename Scalar, size_t Size>
+		struct IsFixedStorage<FixedStorage<Scalar, Size>> : std::true_type {};
 	} // namespace typetraits
 
 	namespace detail {
@@ -539,20 +539,20 @@ namespace librapid {
 		return rend();
 	}
 
-	template<typename T, size_t... D>
-	FixedStorage<T, D...>::FixedStorage() :
+	template<typename T, size_t D>
+	FixedStorage<T, D>::FixedStorage() :
 			m_data(new detail::FixedStorageContainer<Scalar, Size>), m_begin(m_data->data),
 			m_end(m_data->data + Size) {}
 
-	template<typename T, size_t... D>
-	FixedStorage<T, D...>::FixedStorage(const Scalar &value) :
+	template<typename T, size_t D>
+	FixedStorage<T, D>::FixedStorage(const Scalar &value) :
 			m_data(new detail::FixedStorageContainer<Scalar, Size>), m_begin(m_data->data),
 			m_end(m_data->data + Size) {
 		std::fill(begin(), end(), value);
 	}
 
-	template<typename T, size_t... D>
-	FixedStorage<T, D...>::FixedStorage(const FixedStorage &other) :
+	template<typename T, size_t D>
+	FixedStorage<T, D>::FixedStorage(const FixedStorage &other) :
 			m_data(new detail::FixedStorageContainer<Scalar, Size>), m_begin(m_data->data),
 			m_end(m_data->data + Size) {
 		if (typetraits::TriviallyDefaultConstructible<T>::value) {
@@ -564,8 +564,8 @@ namespace librapid {
 		}
 	}
 
-	template<typename T, size_t... D>
-	FixedStorage<T, D...>::FixedStorage(FixedStorage &&other) noexcept {
+	template<typename T, size_t D>
+	FixedStorage<T, D>::FixedStorage(FixedStorage &&other) noexcept {
 		m_data		  = other.m_data;
 		m_begin		  = other.m_begin;
 		m_end		  = other.m_end;
@@ -574,8 +574,8 @@ namespace librapid {
 		other.m_end	  = nullptr;
 	}
 
-	template<typename T, size_t... D>
-	FixedStorage<T, D...>::FixedStorage(const std::initializer_list<Scalar> &list) {
+	template<typename T, size_t D>
+	FixedStorage<T, D>::FixedStorage(const std::initializer_list<Scalar> &list) {
 		LIBRAPID_ASSERT(list.size() == size(), "Initializer list size does not match storage size");
 		m_data	= new detail::FixedStorageContainer<Scalar, Size>;
 		m_begin = m_data->data;
@@ -589,8 +589,8 @@ namespace librapid {
 		}
 	}
 
-	template<typename T, size_t... D>
-	FixedStorage<T, D...>::FixedStorage(const std::vector<Scalar> &vec) {
+	template<typename T, size_t D>
+	FixedStorage<T, D>::FixedStorage(const std::vector<Scalar> &vec) {
 		LIBRAPID_ASSERT(vec.size() == size(), "Initializer list size does not match storage size");
 		m_data	= new detail::FixedStorageContainer<Scalar, Size>;
 		m_begin = m_data->data;
@@ -604,14 +604,14 @@ namespace librapid {
 		}
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::operator=(const FixedStorage &other) -> FixedStorage & {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::operator=(const FixedStorage &other) -> FixedStorage & {
 		if (this != &other) std::copy(other.begin(), other.end(), begin());
 		return *this;
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::operator=(FixedStorage &&other) noexcept -> FixedStorage & {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::operator=(FixedStorage &&other) noexcept -> FixedStorage & {
 		if (this != &other) {
 			delete m_data;
 			m_data		  = other.m_data;
@@ -624,95 +624,95 @@ namespace librapid {
 		return *this;
 	}
 
-	template<typename T, size_t... D>
-	FixedStorage<T, D...>::~FixedStorage() {
+	template<typename T, size_t D>
+	FixedStorage<T, D>::~FixedStorage() {
 		delete m_data;
 	}
 
-	template<typename T, size_t... D>
-	void FixedStorage<T, D...>::resize(SizeType newSize) {
+	template<typename T, size_t D>
+	void FixedStorage<T, D>::resize(SizeType newSize) {
 		LIBRAPID_ASSERT(newSize == size(), "FixedStorage cannot be resized");
 	}
 
-	template<typename T, size_t... D>
-	void FixedStorage<T, D...>::resize(SizeType newSize, int) {
+	template<typename T, size_t D>
+	void FixedStorage<T, D>::resize(SizeType newSize, int) {
 		LIBRAPID_ASSERT(newSize == size(), "FixedStorage cannot be resized");
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::size() const noexcept -> SizeType {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::size() const noexcept -> SizeType {
 		return Size;
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::operator[](SizeType index) const -> ConstReference {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::operator[](SizeType index) const -> ConstReference {
 		LIBRAPID_ASSERT(index < size(), "Index out of bounds");
 		return m_begin[index];
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::operator[](SizeType index) -> Reference {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::operator[](SizeType index) -> Reference {
 		LIBRAPID_ASSERT(index < size(), "Index out of bounds");
 		return m_begin[index];
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::begin() noexcept -> Iterator {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::begin() noexcept -> Iterator {
 		return m_begin;
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::end() noexcept -> Iterator {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::end() noexcept -> Iterator {
 		return m_end;
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::begin() const noexcept -> ConstIterator {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::begin() const noexcept -> ConstIterator {
 		return m_data->data;
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::end() const noexcept -> ConstIterator {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::end() const noexcept -> ConstIterator {
 		return m_data->data + size();
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::cbegin() const noexcept -> ConstIterator {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::cbegin() const noexcept -> ConstIterator {
 		return begin();
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::cend() const noexcept -> ConstIterator {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::cend() const noexcept -> ConstIterator {
 		return end();
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::rbegin() noexcept -> ReverseIterator {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::rbegin() noexcept -> ReverseIterator {
 		return ReverseIterator(end());
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::rend() noexcept -> ReverseIterator {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::rend() noexcept -> ReverseIterator {
 		return ReverseIterator(begin());
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::rbegin() const noexcept -> ConstReverseIterator {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::rbegin() const noexcept -> ConstReverseIterator {
 		return ConstReverseIterator(end());
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::rend() const noexcept -> ConstReverseIterator {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::rend() const noexcept -> ConstReverseIterator {
 		return ConstReverseIterator(begin());
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::crbegin() const noexcept -> ConstReverseIterator {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::crbegin() const noexcept -> ConstReverseIterator {
 		return rbegin();
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::crend() const noexcept -> ConstReverseIterator {
+	template<typename T, size_t D>
+	auto FixedStorage<T, D>::crend() const noexcept -> ConstReverseIterator {
 		return rend();
 	}
 } // namespace librapid
