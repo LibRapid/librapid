@@ -41,17 +41,16 @@ namespace librapid::detail {
 		}
 	}
 
-	template<typename ShapeType_, typename StorageScalar, size_t... StorageDims, typename Functor_,
+	template<typename ShapeType_, typename StorageScalar, size_t StorageSize, typename Functor_,
 			 typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
-	assign(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageDims...>> &lhs,
+	assign(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
 		   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
-		  typename ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageDims...>>::Scalar;
+		  typename ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
-		constexpr int64_t size		 = product<StorageDims...>();
-		constexpr int64_t vectorSize = size - (size % packetWidth);
+		constexpr int64_t vectorSize = StorageSize - (StorageSize % packetWidth);
 
 		// Ensure the function can actually be assigned to the array container
 		static_assert(typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
@@ -63,7 +62,7 @@ namespace librapid::detail {
 		}
 
 		// Assign the remaining elements
-		for (int64_t index = vectorSize; index < size; ++index) {
+		for (int64_t index = vectorSize; index < StorageSize; ++index) {
 			lhs.write(index, function.scalar(index));
 		}
 	}
@@ -107,17 +106,16 @@ namespace librapid::detail {
 		}
 	}
 
-	template<typename ShapeType_, typename StorageScalar, size_t... StorageDims, typename Functor_,
+	template<typename ShapeType_, typename StorageScalar, size_t StorageSize, typename Functor_,
 			 typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
-	assignParallel(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageDims...>> &lhs,
+	assignParallel(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
 				   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
-		  typename ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageDims...>>::Scalar;
+		  typename ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
-		constexpr int64_t size		 = product<StorageDims...>();
-		constexpr int64_t vectorSize = size - (size % packetWidth);
+		constexpr int64_t vectorSize = StorageSize - (StorageSize % packetWidth);
 
 		// Ensure the function can actually be assigned to the array container
 		static_assert(typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
@@ -131,7 +129,7 @@ namespace librapid::detail {
 		}
 
 		// Assign the remaining elements
-		for (int64_t index = vectorSize; index < size; ++index) {
+		for (int64_t index = vectorSize; index < StorageSize; ++index) {
 			lhs.write(index, function.scalar(index));
 		}
 	}
