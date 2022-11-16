@@ -555,7 +555,13 @@ namespace librapid {
 	FixedStorage<T, D...>::FixedStorage(const FixedStorage &other) :
 			m_data(new detail::FixedStorageContainer<Scalar, Size>), m_begin(m_data->data),
 			m_end(m_data->data + Size) {
-		std::copy(other.begin(), other.end(), begin());
+		if (typetraits::TriviallyDefaultConstructible<T>::value) {
+			// Use a slightly faster memcpy if the type is trivially default constructible
+			std::uninitialized_copy(other.begin(), other.end(), m_begin);
+		} else {
+			// Otherwise, use the standard copy algorithm
+			std::copy(other.begin(), other.end(), m_begin);
+		}
 	}
 
 	template<typename T, size_t... D>
@@ -571,15 +577,31 @@ namespace librapid {
 	template<typename T, size_t... D>
 	FixedStorage<T, D...>::FixedStorage(const std::initializer_list<Scalar> &list) {
 		LIBRAPID_ASSERT(list.size() == size(), "Initializer list size does not match storage size");
-		m_data = new detail::FixedStorageContainer<Scalar, Size>;
-		std::copy(list.begin(), list.end(), begin());
+		m_data	= new detail::FixedStorageContainer<Scalar, Size>;
+		m_begin = m_data->data;
+		m_end	= m_data->data + Size;
+		if (typetraits::TriviallyDefaultConstructible<T>::value) {
+			// Use a slightly faster memcpy if the type is trivially default constructible
+			std::uninitialized_copy(list.begin(), list.end(), m_begin);
+		} else {
+			// Otherwise, use the standard copy algorithm
+			std::copy(list.begin(), list.end(), m_begin);
+		}
 	}
 
 	template<typename T, size_t... D>
-	FixedStorage<T, D...>::FixedStorage(const std::vector<Scalar> &list) {
-		LIBRAPID_ASSERT(list.size() == size(), "Initializer list size does not match storage size");
-		m_data = new detail::FixedStorageContainer<Scalar, Size>;
-		std::copy(list.begin(), list.end(), begin());
+	FixedStorage<T, D...>::FixedStorage(const std::vector<Scalar> &vec) {
+		LIBRAPID_ASSERT(vec.size() == size(), "Initializer list size does not match storage size");
+		m_data	= new detail::FixedStorageContainer<Scalar, Size>;
+		m_begin = m_data->data;
+		m_end	= m_data->data + Size;
+		if (typetraits::TriviallyDefaultConstructible<T>::value) {
+			// Use a slightly faster memcpy if the type is trivially default constructible
+			std::uninitialized_copy(vec.begin(), vec.end(), m_begin);
+		} else {
+			// Otherwise, use the standard copy algorithm
+			std::copy(vec.begin(), vec.end(), m_begin);
+		}
 	}
 
 	template<typename T, size_t... D>
