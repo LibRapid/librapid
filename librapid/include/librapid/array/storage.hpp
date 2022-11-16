@@ -263,8 +263,9 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstReverseIterator crend() const noexcept;
 
 	private:
-		// Scalar m_data[product<Dimensions...>()];
 		detail::FixedStorageContainer<Scalar, product<Dimensions...>()> *m_data = nullptr;
+		Scalar *__restrict m_begin												= nullptr;
+		Scalar *__restrict m_end												= nullptr;
 	};
 
 	// Trait implementations
@@ -540,24 +541,31 @@ namespace librapid {
 
 	template<typename T, size_t... D>
 	FixedStorage<T, D...>::FixedStorage() :
-			m_data(new detail::FixedStorageContainer<Scalar, Size>) {}
+			m_data(new detail::FixedStorageContainer<Scalar, Size>), m_begin(m_data->data),
+			m_end(m_data->data + Size) {}
 
 	template<typename T, size_t... D>
-	FixedStorage<T, D...>::FixedStorage(const Scalar &value) {
-		m_data = new detail::FixedStorageContainer<Scalar, Size>;
+	FixedStorage<T, D...>::FixedStorage(const Scalar &value) :
+			m_data(new detail::FixedStorageContainer<Scalar, Size>), m_begin(m_data->data),
+			m_end(m_data->data + Size) {
 		std::fill(begin(), end(), value);
 	}
 
 	template<typename T, size_t... D>
-	FixedStorage<T, D...>::FixedStorage(const FixedStorage &other) {
-		m_data = new detail::FixedStorageContainer<Scalar, Size>;
+	FixedStorage<T, D...>::FixedStorage(const FixedStorage &other) :
+			m_data(new detail::FixedStorageContainer<Scalar, Size>), m_begin(m_data->data),
+			m_end(m_data->data + Size) {
 		std::copy(other.begin(), other.end(), begin());
 	}
 
 	template<typename T, size_t... D>
 	FixedStorage<T, D...>::FixedStorage(FixedStorage &&other) noexcept {
-		m_data		 = other.m_data;
-		other.m_data = nullptr;
+		m_data		  = other.m_data;
+		m_begin		  = other.m_begin;
+		m_end		  = other.m_end;
+		other.m_data  = nullptr;
+		other.m_begin = nullptr;
+		other.m_end	  = nullptr;
 	}
 
 	template<typename T, size_t... D>
@@ -583,8 +591,13 @@ namespace librapid {
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::operator=(FixedStorage &&other) noexcept -> FixedStorage & {
 		if (this != &other) {
-			m_data		 = other.m_data;
-			other.m_data = nullptr;
+			delete m_data;
+			m_data		  = other.m_data;
+			m_begin		  = m_data->data;
+			m_end		  = m_data->data + Size;
+			other.m_data  = nullptr;
+			other.m_begin = nullptr;
+			other.m_end	  = nullptr;
 		}
 		return *this;
 	}
@@ -612,23 +625,23 @@ namespace librapid {
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::operator[](SizeType index) const -> ConstReference {
 		LIBRAPID_ASSERT(index < size(), "Index out of bounds");
-		return m_data->data[index];
+		return m_begin[index];
 	}
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::operator[](SizeType index) -> Reference {
 		LIBRAPID_ASSERT(index < size(), "Index out of bounds");
-		return m_data->data[index];
+		return m_begin[index];
 	}
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::begin() noexcept -> Iterator {
-		return m_data->data;
+		return m_begin;
 	}
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::end() noexcept -> Iterator {
-		return m_data->data + size();
+		return m_end;
 	}
 
 	template<typename T, size_t... D>

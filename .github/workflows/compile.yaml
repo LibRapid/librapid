@@ -11,7 +11,7 @@ on:
 
 jobs:
   compile:
-    name: LibRapid on ${{ matrix.os }} with ${{ matrix.cxx }} using CPP-${{ matrix.cpp }}
+    name: LibRapid on ${{ matrix.os }} with ${{ matrix.cxx }} using C++${{ matrix.cpp }}
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -23,126 +23,126 @@ jobs:
             cxx: clang-12
             blas: on
             mpfr: on
-            stl: 17
+            cpp: 17
 
           - os: ubuntu-latest
             cc: clang-12
             cxx: clang-12
             blas: on
             mpfr: on
-            stl: 20
+            cpp: 20
 
           - os: ubuntu-latest
             cc: clang-13
             cxx: clang-13
             blas: on
             mpfr: on
-            stl: 17
+            cpp: 17
 
           - os: ubuntu-latest
             cc: clang-13
             cxx: clang-13
             blas: on
             mpfr: on
-            stl: 20
+            cpp: 20
 
           - os: ubuntu-latest
             cc: clang-14
             cxx: clang-14
             blas: on
             mpfr: on
-            stl: 17
+            cpp: 17
 
           - os: ubuntu-latest
             cc: clang-14
             cxx: clang-14
             blas: on
             mpfr: on
-            stl: 20
+            cpp: 20
 
           - os: ubuntu-latest
             cc: gcc-9
             cxx: g++-9
             blas: on
             mpfr: on
-            stl: 17
+            cpp: 17
 
           - os: ubuntu-latest
             cc: gcc-9
             cxx: g++-9
             blas: on
             mpfr: on
-            stl: 20
+            cpp: 20
 
           - os: ubuntu-latest
             cc: gcc-10
             cxx: g++-10
             blas: on
             mpfr: on
-            stl: 17
+            cpp: 17
 
           - os: ubuntu-latest
             cc: gcc-10
             cxx: g++-10
             blas: on
             mpfr: on
-            stl: 20
+            cpp: 20
 
           - os: ubuntu-latest
             cc: gcc-11
             cxx: g++-11
             blas: on
             mpfr: on
-            stl: 17
+            cpp: 17
 
           - os: ubuntu-latest
             cc: gcc-11
             cxx: g++-11
             blas: on
             mpfr: on
-            stl: 20
+            cpp: 20
 
           - os: macos-latest
             cc: clang
             cxx: clang
             blas: on
             mpfr: on
-            stl: 17
+            cpp: 17
 
           - os: macos-latest
             cc: clang
             cxx: clang
             blas: on
             mpfr: on
-            stl: 20
+            cpp: 20
 
           - os: macos-latest
             cc: gcc-11
             cxx: g++-11
             blas: on
             mpfr: on
-            stl: 17
+            cpp: 17
 
           - os: macos-latest
             cc: gcc-11
             cxx: g++-11
             blas: on
             mpfr: on
-            stl: 20
-
-          # - os: windows-latest
-          #   cc: msvc
-          #   cxx: msvc
-          #   blas: on
-          #   mpfr: on
-          #   stl: 17
+            cpp: 20
 
           - os: windows-latest
             cc: msvc
             cxx: msvc
             blas: on
             mpfr: on
-            stl: 20
+            cpp: 17
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            blas: on
+            mpfr: on
+            cpp: 20
 
     steps:
       - name: Checkout LibRapid
@@ -154,7 +154,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{ matrix.stl }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
           cmake --build . --config Release
         env:
           CC: ${{ matrix.compiler.cc }}
