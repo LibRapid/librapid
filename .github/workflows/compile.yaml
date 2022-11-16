@@ -130,12 +130,12 @@ jobs:
             mpfr: on
             stl: 20
 
-          - os: windows-latest
-            cc: msvc
-            cxx: msvc
-            blas: on
-            mpfr: on
-            stl: 17
+          # - os: windows-latest
+          #   cc: msvc
+          #   cxx: msvc
+          #   blas: on
+          #   mpfr: on
+          #   stl: 17
 
           - os: windows-latest
             cc: msvc
