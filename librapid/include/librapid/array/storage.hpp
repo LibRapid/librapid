@@ -416,7 +416,13 @@ namespace librapid {
 		auto size = static_cast<SizeType>(std::distance(begin, end));
 		m_begin	  = detail::safeAllocate(m_allocator, size);
 		m_end	  = m_begin + size;
-		std::uninitialized_copy(begin, end, m_begin);
+		if (typetraits::TriviallyDefaultConstructible<T>::value) {
+			// Use a slightly faster memcpy if the type is trivially default constructible
+			std::uninitialized_copy(begin, end, m_begin);
+		} else {
+			// Otherwise, use the standard copy algorithm
+			std::copy(begin, end, m_begin);
+		}
 	}
 
 	template<typename T, typename A>
