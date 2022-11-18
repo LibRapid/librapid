@@ -15,7 +15,7 @@ set(LIBRAPID_MINOR ${CMAKE_MATCH_1})
 string(REGEX MATCH "PATCH ([0-9]*)" _ ${ver})
 set(LIBRAPID_PATCH ${CMAKE_MATCH_1})
 
-message(STATUS "LibRapid Version: v${LIBRAPID_MAJOR}.${LIBRAPID_MINOR}.${LIBRAPID_PATCH}")
+message(STATUS "[ LIBRAPID ] LibRapid Version: v${LIBRAPID_MAJOR}.${LIBRAPID_MINOR}.${LIBRAPID_PATCH}")
 
 # Optional LibRapid settings
 option(LIBRAPID_OPTIMISE_SMALL_ARRAYS "Optimise small arrays" OFF)
@@ -102,10 +102,6 @@ if (LIBRAPID_STRICT AND LIBRAPID_QUIET)
     message(FATAL_ERROR "LIBRAPID_STRICT and LIBRAPID_QUIET cannot be enabled at the same time")
 endif ()
 
-if (LIBRAPID_OPTIMIZE_SMALL_ARRAYS)
-    target_compile_definitions(${module_name} PUBLIC LIBRAPID_OPTIMIZE_SMALL_ARRAYS)
-endif ()
-
 if (LIBRAPID_STRICT)
     # Enable all warnings and treat them as errors
     if (MSVC)
@@ -139,7 +135,7 @@ endif ()
 # See if OpenMP should be linked against
 if (${LIBRAPID_USE_OMP})
     if (${OpenMP_FOUND})
-        message(STATUS "Linking against OpenMP")
+        message(STATUS "[ LIBRAPID ] Linking against OpenMP")
 
         # Link the required library
         target_link_libraries(${module_name} PUBLIC OpenMP::OpenMP_CXX)
@@ -153,7 +149,7 @@ if (${LIBRAPID_USE_OMP})
 endif ()
 
 if (${LIBRAPID_GET_BLAS})
-    message(STATUS "Downloading OpenBLAS Build...")
+    message(STATUS "[ LIBRAPID ] Downloading OpenBLAS Build...")
 
     if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/buildopenblas-src")
         FetchContent_Declare(
@@ -182,7 +178,7 @@ endif ()
 # See if BLAS should be linked against
 if (${LIBRAPID_USE_BLAS})
     if (${BLAS_FOUND})
-        message(STATUS "BLAS located was ${BLAS_LIBRARIES}")
+        message(STATUS "[ LIBRAPID ] BLAS located was ${BLAS_LIBRARIES}")
 
         list(GET ${BLAS_LIBRARIES} 0 LIBRAPID_BLAS)
 
@@ -190,7 +186,7 @@ if (${LIBRAPID_USE_BLAS})
             set(LIBRAPID_BLAS ${BLAS_LIBRARIES})
         endif ()
 
-        message(STATUS "Using BLAS (" ${LIBRAPID_BLAS} ")")
+        message(STATUS "[ LIBRAPID ] Using BLAS (" ${LIBRAPID_BLAS} ")")
 
         get_filename_component(filepath ${LIBRAPID_BLAS} DIRECTORY)
         get_filename_component(filename ${LIBRAPID_BLAS} NAME)
@@ -200,11 +196,11 @@ if (${LIBRAPID_USE_BLAS})
 
         # Copy include files
         set(inc_path "${filepath}/../include")
-        message(STATUS "Checking path ${inc_path} for include files")
+        message(STATUS "[ LIBRAPID ] Checking path ${inc_path} for include files")
         FILE(GLOB_RECURSE files "${filepath}/..")
-        message(STATUS "Information: ${files}")
+        message(STATUS "[ LIBRAPID ] Information: ${files}")
         if (NOT (EXISTS ${inc_path}))
-            message(STATUS "Could not locate include path for BLAS")
+            message(STATUS "[ LIBRAPID ] Could not locate include path for BLAS")
         endif ()
 
         set(has_cblas OFF)
@@ -231,14 +227,14 @@ if (${LIBRAPID_USE_BLAS})
             if (EXISTS "${inc_path}/openblas")
                 FILE(GLOB_RECURSE include_files "${inc_path}/openblas/*.*")
                 foreach (file IN LISTS include_files)
-                    message(STATUS "Found OpenBLAS include file " ${file})
+                    message(STATUS "[ LIBRAPID ] Found OpenBLAS include file " ${file})
                     get_filename_component(inc_file ${file} NAME)
                     configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${inc_file}" COPYONLY)
                 endforeach ()
             else ()
                 FILE(GLOB_RECURSE include_files "${inc_path}/*.*")
                 foreach (file IN LISTS include_files)
-                    message(STATUS "Found include file " ${file})
+                    message(STATUS "[ LIBRAPID ] Found include file " ${file})
                     get_filename_component(inc_file ${file} NAME)
                     configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${inc_file}" COPYONLY)
                 endforeach ()
@@ -246,7 +242,7 @@ if (${LIBRAPID_USE_BLAS})
 
             # Copy library files
             get_filename_component(lib_name ${LIBRAPID_BLAS} NAME)
-            # message(STATUS "Found library file ${lib_name}")
+            # message(STATUS "[ LIBRAPID ] Found library file ${lib_name}")
             configure_file(${LIBRAPID_BLAS} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${lib_name}" COPYONLY)
         endif ()
 
@@ -259,14 +255,14 @@ if (${LIBRAPID_USE_BLAS})
 
             FILE(GLOB_RECURSE include_files "${bin_path}/*.dll")
             foreach (file IN LISTS include_files)
-                message(STATUS "Found binary file " ${file})
+                message(STATUS "[ LIBRAPID ] Found binary file " ${file})
                 get_filename_component(filename ${file} NAME)
                 configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
             endforeach ()
 
             FILE(GLOB_RECURSE bin_files "${CMAKE_CURRENT_SOURCE_DIR}/*.dll")
             foreach (file IN LISTS bin_files)
-                message(STATUS "Found packaged binary file " ${file})
+                message(STATUS "[ LIBRAPID ] Found packaged binary file " ${file})
                 get_filename_component(filename ${file} NAME)
                 configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
             endforeach ()
@@ -296,11 +292,11 @@ endif ()
 # Check if CUDA should be used
 if (${LIBRAPID_USE_CUDA})
     if (${CUDAToolkit_FOUND})
-        message(STATUS "Using CUDA ${CUDAToolkit_VERSION}")
+        message(STATUS "[ LIBRAPID ] Using CUDA ${CUDAToolkit_VERSION}")
 
         # Ensure jitify is accessible
         if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/jitify")
-            message(STATUS "Jitify exists in LibRapid source tree")
+            message(STATUS "[ LIBRAPID ] Jitify exists in LibRapid source tree")
         else ()
             message(FATAL_ERROR "Jitify not found. Ensure the full LibRapid GitHub repo is cloned!")
         endif ()
@@ -330,7 +326,7 @@ if (${LIBRAPID_USE_CUDA})
 
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_CUDA)
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_CUDA_STREAM)
-        message(STATUS "CUDA include directories: ${CUDAToolkit_INCLUDE_DIRS}")
+        message(STATUS "[ LIBRAPID ] CUDA include directories: ${CUDAToolkit_INCLUDE_DIRS}")
         target_compile_definitions(${module_name} PUBLIC CUDA_INCLUDE_DIRS="${CUDAToolkit_INCLUDE_DIRS}")
         set(LIBRAPID_HAS_CUDA true)
     else ()
@@ -339,6 +335,7 @@ if (${LIBRAPID_USE_CUDA})
 endif ()
 
 if (${LIBRAPID_OPTIMISE_SMALL_ARRAYS})
+    message(STATUS "[ LIBRAPID ] Small array optimisations enabled")
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_OPTIMISE_SMALL_ARRAYS)
 endif ()
 
@@ -360,12 +357,12 @@ endif ()
 target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include")
 
 # if (${LIBRAPID_BUILD_EXAMPLES})
-#     message(STATUS "Building LibRapid Examples")
+#     message(STATUS "[ LIBRAPID ] Building LibRapid Examples")
 #     add_subdirectory(examples/cpp)
 # endif ()
 
 if (${LIBRAPID_BUILD_TESTS})
-    message(STATUS "Building LibRapid Tests")
+    message(STATUS "[ LIBRAPID ] Building LibRapid Tests")
     include(CTest)
 
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Catch2")

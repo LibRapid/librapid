@@ -2,8 +2,8 @@
 
 namespace librapid {
 	Timer::Timer(std::string name, bool printOnDestruct) :
-			m_name(std::move(name)), m_start(now<time::nanosecond>()), m_end(-1),
-			m_printOnDestruct(printOnDestruct) {}
+			m_name(std::move(name)), m_printOnDestruct(printOnDestruct),
+			m_start(now<time::nanosecond>()), m_end(-1) {}
 
 	Timer::~Timer() {
 		m_end = now<time::nanosecond>();
@@ -26,7 +26,6 @@ namespace librapid {
 		double tmpEnd = m_end;
 		if (tmpEnd < 0) tmpEnd = now<time::nanosecond>();
 
-		fmt::print(
-		  "[ TIMER ] {} : {}\n", m_name, formatTime<time::nanosecond>(tmpEnd - m_start));
+		fmt::print("[ TIMER ] {} : {}\n", m_name, formatTime<time::nanosecond>(tmpEnd - m_start));
 	}
-}
+} // namespace librapid
