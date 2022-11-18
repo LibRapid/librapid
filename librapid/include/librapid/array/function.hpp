@@ -50,9 +50,9 @@ namespace librapid {
 			/// \return A reference to this function.
 			LIBRAPID_ALWAYS_INLINE Function &operator=(Function &&other) noexcept = default;
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto shape() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto &shape() const;
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto args() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto &args() const;
 
 			/// Evaluates the function at the given index, returning a Packet result.
 			/// \param index The index to evaluate at.
@@ -92,12 +92,12 @@ namespace librapid {
 				m_functor(std::forward<Functor>(functor)), m_args(std::forward<Args>(args)...) {}
 
 		template<Descriptor desc, typename Functor, typename... Args>
-		auto Function<desc, Functor, Args...>::shape() const {
+		auto &Function<desc, Functor, Args...>::shape() const {
 			return std::get<0>(m_args).shape();
 		}
 
 		template<Descriptor desc, typename Functor, typename... Args>
-		auto Function<desc, Functor, Args...>::args() const {
+		auto &Function<desc, Functor, Args...>::args() const {
 			return m_args;
 		}
 

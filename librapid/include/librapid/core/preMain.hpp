@@ -24,7 +24,8 @@ namespace librapid::detail {
 		return val < maxOther ? maxOther : val;
 	}
 
-	extern PreMain preMain;
+	extern bool preMainRun;
+	static inline PreMain preMain = PreMain();
 } // namespace librapid::detail
 
 #endif // LIBRAPID_CORE_PREMAIN
