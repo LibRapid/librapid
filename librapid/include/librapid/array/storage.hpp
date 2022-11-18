@@ -379,7 +379,7 @@ namespace librapid {
 		if (this != &other) {
 			m_allocator =
 			  std::allocator_traits<A>::select_on_container_copy_construction(other.m_allocator);
-			resizeImpl(other.size());
+			resizeImpl(other.size(), 0);
 			if (typetraits::TriviallyDefaultConstructible<T>::value) {
 				// Use a slightly faster memcpy if the type is trivially default constructible
 				std::uninitialized_copy(other.begin(), other.end(), m_begin);
@@ -435,12 +435,12 @@ namespace librapid {
 
 	template<typename T, typename A>
 	void Storage<T, A>::resize(SizeType newSize, int) {
-		resizeImpl(newSize);
+		resizeImpl(newSize, 0);
 	}
 
 	template<typename T, typename A>
 	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize) {
-		if (newSize == size()) { return; }
+		if (newSize == size()) return;
 
 		SizeType oldSize = size();
 		Pointer oldBegin = m_begin;
@@ -461,14 +461,14 @@ namespace librapid {
 
 	template<typename T, typename A>
 	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize, int) {
+		if (size() == newSize) return;
+
 		SizeType oldSize = size();
 		Pointer oldBegin = m_begin;
-		if (oldSize != newSize) {
-			// Reallocate
-			m_begin = detail::safeAllocate(m_allocator, newSize);
-			m_end	= m_begin + newSize;
-			detail::safeDeallocate(m_allocator, oldBegin, oldSize);
-		}
+		// Reallocate
+		m_begin = detail::safeAllocate(m_allocator, newSize);
+		m_end	= m_begin + newSize;
+		detail::safeDeallocate(m_allocator, oldBegin, oldSize);
 	}
 
 	template<typename T, typename A>
