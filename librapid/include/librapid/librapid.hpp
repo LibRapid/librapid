@@ -3,6 +3,7 @@
 
 #include "core/core.hpp"
 #include "math/math.hpp"
+#include "utils/utils.hpp"
 #include "array/array.hpp"
 
 #endif // LIBRAPID_HPP

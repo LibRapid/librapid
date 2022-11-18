@@ -10,7 +10,8 @@ namespace librapid {
 		auto res = val.get_str(exp, base);
 
 		if (exp > 0) {
-			if (exp >= res.length()) res += std::string(exp - res.length() + 1, '0');
+			if (static_cast<size_t>(exp) >= res.length())
+				res += std::string(static_cast<size_t>(exp) - res.length() + 1, '0');
 			res.insert(exp, ".");
 			return res;
 		} else {
