@@ -639,7 +639,7 @@ namespace scn {
 #else
 
 namespace librapid {
-	LIBRAPID_ALWAYS_INLINE void prec(int64_t) {};
+	LIBRAPID_ALWAYS_INLINE void prec(int64_t) {}
 }
 
 #endif // LIBRAPID_USE_MULTIPREC
