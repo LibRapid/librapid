@@ -102,6 +102,10 @@ if (LIBRAPID_STRICT AND LIBRAPID_QUIET)
     message(FATAL_ERROR "LIBRAPID_STRICT and LIBRAPID_QUIET cannot be enabled at the same time")
 endif ()
 
+if (LIBRAPID_OPTIMIZE_SMALL_ARRAYS)
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_OPTIMIZE_SMALL_ARRAYS)
+endif ()
+
 if (LIBRAPID_STRICT)
     # Enable all warnings and treat them as errors
     if (MSVC)

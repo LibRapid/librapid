@@ -336,16 +336,14 @@ namespace librapid {
 	} // namespace detail
 
 	template<typename T, typename A>
-	Storage<T, A>::Storage(SizeType size, const Allocator &alloc) : m_allocator(alloc) {
-		m_begin = detail::safeAllocate(m_allocator, size);
-		m_end	= m_begin + size;
-	}
+	Storage<T, A>::Storage(SizeType size, const Allocator &alloc) :
+			m_allocator(alloc), m_begin(detail::safeAllocate(m_allocator, size)),
+			m_end(m_begin + size) {}
 
 	template<typename T, typename A>
 	Storage<T, A>::Storage(SizeType size, ConstReference value, const Allocator &alloc) :
-			m_allocator(alloc) {
-		m_begin = detail::safeAllocate(m_allocator, size);
-		m_end	= m_begin + size;
+			m_allocator(alloc), m_begin(detail::safeAllocate(m_allocator, size)),
+			m_end(m_begin + size) {
 		std::fill(m_begin, m_end, value);
 	}
 
@@ -416,7 +414,13 @@ namespace librapid {
 		auto size = static_cast<SizeType>(std::distance(begin, end));
 		m_begin	  = detail::safeAllocate(m_allocator, size);
 		m_end	  = m_begin + size;
-		std::uninitialized_copy(begin, end, m_begin);
+		if (typetraits::TriviallyDefaultConstructible<T>::value) {
+			// Use a slightly faster memcpy if the type is trivially default constructible
+			std::uninitialized_copy(begin, end, m_begin);
+		} else {
+			// Otherwise, use the standard copy algorithm
+			std::copy(begin, end, m_begin);
+		}
 	}
 
 	template<typename T, typename A>

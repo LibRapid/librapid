@@ -129,7 +129,7 @@ TEST_CASE("Test FixedStorage<T>", "[fixed-storage]") {
 		REQUIRE(storage3[18] == "Hello");
 		REQUIRE(storage3[19] == "Hello");
 
-		auto storage4 = lrc::FixedStorage<std::vector<std::string>, 5, 2>();
+		auto storage4 = lrc::FixedStorage<std::vector<std::string>, 10>();
 		REQUIRE(storage4.size() == 10);
 		storage4[0].push_back("Hello");
 		storage4[0].push_back("World");
