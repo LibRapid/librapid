@@ -52,7 +52,7 @@ namespace librapid {
 		static std::string prefix[] = {"ns", "µs", "ms", "s", "m", "h", "d", "y"};
 		static double divisor[]		= {1000, 1000, 1000, 60, 60, 24, 365, 1e300};
 		for (int i = 0; i < numUnits; ++i) {
-			if (ns < divisor[i]) return fmt::format(format, ns) + prefix[i];
+			if (ns < divisor[i]) return std::operator+(fmt::format(format, ns), prefix[i]);
 			ns /= divisor[i];
 		}
 		return fmt::format("{}ns", time * ns);
