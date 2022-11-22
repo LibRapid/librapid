@@ -18,7 +18,7 @@
 
 namespace librapid {
 	namespace detail {
-		template<Descriptor desc, typename Functor, typename... Args>
+		template<typename desc, typename Functor, typename... Args>
 		auto makeFunction(Args &&...args) {
 			using OperationType = Function<desc, Functor, Args...>;
 			return OperationType(Functor(), std::forward<Args>(args)...);
@@ -73,12 +73,12 @@ namespace librapid {
 	template<class LHS, class RHS>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(LHS &&lhs,
 															 RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<detail::Descriptor::Trivial, detail::Plus, LHS, RHS> {
+	  ->detail::Function<detail::descriptor::Trivial, detail::Plus, LHS, RHS> {
 		static_assert(typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 										 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 					  "Operands must have the same data type");
 		LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-		return detail::makeFunction<detail::Descriptor::Trivial, detail::Plus>(
+		return detail::makeFunction<detail::descriptor::Trivial, detail::Plus>(
 		  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 	}
 
@@ -95,12 +95,12 @@ namespace librapid {
 	template<class LHS, class RHS>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(LHS &&lhs,
 															 RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<detail::Descriptor::Trivial, detail::Minus, LHS, RHS> {
+	  ->detail::Function<detail::descriptor::Trivial, detail::Minus, LHS, RHS> {
 		static_assert(typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 										 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 					  "Operands must have the same data type");
 		LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-		return detail::makeFunction<detail::Descriptor::Trivial, detail::Minus>(
+		return detail::makeFunction<detail::descriptor::Trivial, detail::Minus>(
 		  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 	}
 
@@ -117,12 +117,12 @@ namespace librapid {
 	template<class LHS, class RHS>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(LHS &&lhs,
 															 RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<detail::Descriptor::Trivial, detail::Multiply, LHS, RHS> {
+	  ->detail::Function<detail::descriptor::Trivial, detail::Multiply, LHS, RHS> {
 		static_assert(typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 										 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 					  "Operands must have the same data type");
 		LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-		return detail::makeFunction<detail::Descriptor::Trivial, detail::Multiply>(
+		return detail::makeFunction<detail::descriptor::Trivial, detail::Multiply>(
 		  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 	}
 
@@ -139,12 +139,12 @@ namespace librapid {
 	template<class LHS, class RHS>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(LHS &&lhs,
 															 RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<detail::Descriptor::Trivial, detail::Divide, LHS, RHS> {
+	  ->detail::Function<detail::descriptor::Trivial, detail::Divide, LHS, RHS> {
 		static_assert(typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 										 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 					  "Operands must have the same data type");
 		LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-		return detail::makeFunction<detail::Descriptor::Trivial, detail::Divide>(
+		return detail::makeFunction<detail::descriptor::Trivial, detail::Divide>(
 		  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 	}
 } // namespace librapid

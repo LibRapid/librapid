@@ -18,7 +18,7 @@ namespace librapid::detail {
 			 typename Functor_, typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
 	assign(ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
-		   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function) {
+		   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
 		  typename ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
@@ -45,7 +45,7 @@ namespace librapid::detail {
 			 typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
 	assign(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
-		   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function) {
+		   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
 		  typename ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
@@ -76,12 +76,12 @@ namespace librapid::detail {
 	/// \param lhs
 	/// \param function
 	/// \see assign(ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
-	///				const detail::Function<Descriptor::Trivial, Functor_, Args...> &function)
+	///				const detail::Function<descriptor::Trivial, Functor_, Args...> &function)
 	template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
 			 typename Functor_, typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
 	assignParallel(ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
-				   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function) {
+				   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
 		  typename ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
@@ -110,7 +110,7 @@ namespace librapid::detail {
 			 typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
 	assignParallel(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
-				   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function) {
+				   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
 		  typename ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
@@ -175,7 +175,7 @@ namespace librapid::detail {
 		/// \tparam Args The argument types of the expression
 		/// \param function The expression to evaluate
 		/// \return The result of evaluating the expression
-		template<Descriptor descriptor, typename Functor, typename... Args>
+		template<typename descriptor, typename Functor, typename... Args>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		cudaTupleEvaluator(const detail::Function<descriptor, Functor, Args...> &function) {
 			ArrayContainer<
@@ -196,7 +196,7 @@ namespace librapid::detail {
 		/// \param kernelName The name of the kernel
 		/// \param dst The memory location to assign data to
 		/// \param function The Function to evaluate
-		template<Descriptor descriptor, typename Functor, typename... Args, typename Pointer,
+		template<typename descriptor, typename Functor, typename... Args, typename Pointer,
 				 size_t... I>
 		LIBRAPID_ALWAYS_INLINE void
 		tupleEvaluator(std::index_sequence<I...>, const std::string &filename,
@@ -222,7 +222,7 @@ namespace librapid::detail {
 	template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
 	assign(ArrayContainer<ShapeType_, CudaStorage<StorageScalar>> &lhs,
-		   const detail::Function<Descriptor::Trivial, Functor_, Args...> &function) {
+		   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		// Unfortunately, as we are not generating the kernels at runtime, we can't use
 		// temporary-free evaluation. Instead, we must recursively evaluate each sub-operation
 		// until a final result is computed
