@@ -25,8 +25,8 @@ namespace librapid {
 	/// \tparam StorageType The storage type of the array.
 	template<typename Scalar, typename StorageType = device::CPU>
 	using Array =
-	  ArrayContainer<Shape<size_t, 32>,
-					 typename detail::TypeDefStorageEvaluator<Scalar, StorageType>::Type>;
+	  array::ArrayContainer<Shape<size_t, 32>,
+							typename detail::TypeDefStorageEvaluator<Scalar, StorageType>::Type>;
 
 	/// A definition for fixed-size array objects.
 	/// \tparam Scalar The scalar type of the array.
@@ -34,7 +34,7 @@ namespace librapid {
 	/// \see Array
 	template<typename Scalar, size_t... Dimensions>
 	using ArrayF =
-	  ArrayContainer<Shape<size_t, 32>, FixedStorage<Scalar, product<Dimensions...>()>>;
+	  array::ArrayContainer<Shape<size_t, 32>, FixedStorage<Scalar, product<Dimensions...>()>>;
 
 	/// A reference type for Array objects. Use this to accept Array objects as parameters since
 	/// the compiler cannot determine the templates for the Array typedef. For more granularity,
@@ -43,7 +43,7 @@ namespace librapid {
 	/// \see Array
 	/// \see ArrayF
 	template<typename StorageType>
-	using ArrayRef = ArrayContainer<Shape<size_t, 32>, StorageType>;
+	using ArrayRef = array::ArrayContainer<Shape<size_t, 32>, StorageType>;
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_TYPE_DEF_HPP
