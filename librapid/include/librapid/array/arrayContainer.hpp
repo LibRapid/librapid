@@ -55,7 +55,7 @@ namespace librapid {
 		/// \tparam Functor_ The function type
 		/// \tparam Args The argument types of the function
 		/// \param function The function to assign
-		template<detail::Descriptor desc, typename Functor_, typename... Args>
+		template<typename desc, typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE explicit ArrayContainer(
 		  const detail::Function<desc, Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT;
 
@@ -75,7 +75,7 @@ namespace librapid {
 		/// \tparam Args The argument types of the function
 		/// \param function The function to assign
 		/// \return A reference to this array container.
-		template<detail::Descriptor desc, typename Functor_, typename... Args>
+		template<typename desc, typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE ArrayContainer &
 		operator=(const detail::Function<desc, Functor_, Args...> &function);
 
@@ -147,7 +147,7 @@ namespace librapid {
 			m_shape(std::forward<ShapeType_>(shape)), m_storage(m_shape.size()) {}
 
 	template<typename ShapeType_, typename StorageType_>
-	template<detail::Descriptor desc, typename Functor_, typename... Args>
+	template<typename desc, typename Functor_, typename... Args>
 	ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
 	  const detail::Function<desc, Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT
 			: m_shape(function.shape()),
@@ -161,7 +161,7 @@ namespace librapid {
 	}
 
 	template<typename ShapeType_, typename StorageType_>
-	template<detail::Descriptor desc, typename Functor_, typename... Args>
+	template<typename desc, typename Functor_, typename... Args>
 	ArrayContainer<ShapeType_, StorageType_> &ArrayContainer<ShapeType_, StorageType_>::operator=(
 	  const detail::Function<desc, Functor_, Args...> &function) {
 		m_storage.resize(function.shape().size(), 0);
