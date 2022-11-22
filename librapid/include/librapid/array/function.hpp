@@ -8,7 +8,7 @@ namespace librapid {
 			using Device = typename TypeInfo<std::decay_t<First>>::Device;
 		};
 
-		template<::librapid::detail::Descriptor desc, typename Functor_, typename... Args>
+		template<typename desc, typename Functor_, typename... Args>
 		struct TypeInfo<::librapid::detail::Function<desc, Functor_, Args...>> {
 			static constexpr bool isLibRapidType = true;
 			using Scalar						 = decltype(std::declval<Functor_>()(
@@ -23,7 +23,7 @@ namespace librapid {
 	namespace detail {
 		// Descriptor is defined in "forward.hpp"
 
-		template<Descriptor desc, typename Functor_, typename... Args>
+		template<typename desc, typename Functor_, typename... Args>
 		class Function {
 		public:
 			using Type	  = Function<desc, Functor_, Args...>;
@@ -102,34 +102,34 @@ namespace librapid {
 			std::tuple<Args...> m_args;
 		};
 
-		template<Descriptor desc, typename Functor, typename... Args>
+		template<typename desc, typename Functor, typename... Args>
 		Function<desc, Functor, Args...>::Function(Functor &&functor, Args &&...args) :
 				m_functor(std::forward<Functor>(functor)), m_args(std::forward<Args>(args)...) {}
 
-		template<Descriptor desc, typename Functor, typename... Args>
+		template<typename desc, typename Functor, typename... Args>
 		auto &Function<desc, Functor, Args...>::shape() const {
 			return std::get<0>(m_args).shape();
 		}
 
-		template<Descriptor desc, typename Functor, typename... Args>
+		template<typename desc, typename Functor, typename... Args>
 		auto &Function<desc, Functor, Args...>::args() const {
 			return m_args;
 		}
 
-		template<Descriptor desc, typename Functor, typename... Args>
+		template<typename desc, typename Functor, typename... Args>
 		auto Function<desc, Functor, Args...>::eval() const {
 			Array<Scalar, Device> res(shape());
 			res = *this;
 			return res;
 		}
 
-		template<Descriptor desc, typename Functor, typename... Args>
+		template<typename desc, typename Functor, typename... Args>
 		typename Function<desc, Functor, Args...>::Packet
 		Function<desc, Functor, Args...>::packet(size_t index) const {
 			return packetImpl(std::make_index_sequence<sizeof...(Args)>(), index);
 		}
 
-		template<Descriptor desc, typename Functor, typename... Args>
+		template<typename desc, typename Functor, typename... Args>
 		template<size_t... I>
 		typename Function<desc, Functor, Args...>::Packet
 		Function<desc, Functor, Args...>::packetImpl(std::index_sequence<I...>,
@@ -137,18 +137,21 @@ namespace librapid {
 			return m_functor.packet((std::get<I>(m_args).packet(index))...);
 		}
 
-		template<Descriptor desc, typename Functor, typename... Args>
+		template<typename desc, typename Functor, typename... Args>
 		auto Function<desc, Functor, Args...>::scalar(size_t index) const -> Scalar {
 			return scalarImpl(std::make_index_sequence<sizeof...(Args)>(), index);
 		}
 
-		template<Descriptor desc, typename Functor, typename... Args>
+		template<typename desc, typename Functor, typename... Args>
 		template<size_t... I>
 		auto Function<desc, Functor, Args...>::scalarImpl(std::index_sequence<I...>,
 														  size_t index) const -> Scalar {
 			return m_functor((std::get<I>(m_args).scalar(index))...);
 		}
 	} // namespace detail
+
+	template<typename... Inputs>
+	using FunctionRef = detail::Function<Inputs...>;
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_FUNCTION_HPP
