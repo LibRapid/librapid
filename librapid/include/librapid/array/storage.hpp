@@ -12,12 +12,14 @@ namespace librapid {
 		struct TypeInfo<Storage<Scalar_, Allocator_>> {
 			static constexpr bool isLibRapidType = true;
 			using Scalar						 = Scalar_;
+			using Device						 = device::CPU;
 		};
 
 		template<typename Scalar_, size_t Dims>
 		struct TypeInfo<FixedStorage<Scalar_, Dims>> {
 			static constexpr bool isLibRapidType = true;
 			using Scalar						 = Scalar_;
+			using Device						 = device::CPU;
 		};
 	} // namespace typetraits
 
