@@ -17,10 +17,10 @@ namespace librapid::detail {
 	template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
 			 typename Functor_, typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
-	assign(ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
+	assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 		   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
-		  typename ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>>::Scalar;
+		  typename array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
 		const int64_t size		 = function.shape().size();
@@ -44,10 +44,10 @@ namespace librapid::detail {
 	template<typename ShapeType_, typename StorageScalar, size_t StorageSize, typename Functor_,
 			 typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
-	assign(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
+	assign(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
 		   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
-		  typename ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>>::Scalar;
+		  typename array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
 		constexpr int64_t vectorSize = StorageSize - (StorageSize % packetWidth);
@@ -75,15 +75,15 @@ namespace librapid::detail {
 	/// \tparam Args
 	/// \param lhs
 	/// \param function
-	/// \see assign(ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
+	/// \see assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 	///				const detail::Function<descriptor::Trivial, Functor_, Args...> &function)
 	template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
 			 typename Functor_, typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
-	assignParallel(ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
+	assignParallel(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 				   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
-		  typename ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>>::Scalar;
+		  typename array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
 		const int64_t size		 = function.shape().size();
@@ -109,10 +109,10 @@ namespace librapid::detail {
 	template<typename ShapeType_, typename StorageScalar, size_t StorageSize, typename Functor_,
 			 typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
-	assignParallel(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
+	assignParallel(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
 				   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
-		  typename ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>>::Scalar;
+		  typename array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
 		constexpr int64_t vectorSize = StorageSize - (StorageSize % packetWidth);
@@ -147,25 +147,25 @@ namespace librapid::detail {
 	 * We can approach this problem as follows:
 	 * 1. Create a templated function to call the kernel
 	 * 2. Create a function with two specialisations
-	 *    - One for an ArrayContainer of some kind (this is the base case)
+	 *    - One for an array::ArrayContainer of some kind (this is the base case)
 	 *    - One for an Expression (this is the recursive case)
-	 *    - The base case returns the ArrayContainer's storage object
+	 *    - The base case returns the array::ArrayContainer's storage object
 	 *    - The recursive case returns the result of calling the templated function with the
 	 *      Expression's left and right children
 	 * 3. Call the templated function with the result of the recursive function
 	 */
 
 	namespace impl {
-		/// Helper for "evaluating" an ArrayContainer
-		/// \tparam ShapeType The shape type of the ArrayContainer
-		/// \tparam StorageScalar The scalar type of the ArrayContainer's storage object
-		/// \param container The ArrayContainer to evaluate
-		/// \return The ArrayContainer itself
+		/// Helper for "evaluating" an array::ArrayContainer
+		/// \tparam ShapeType The shape type of the array::ArrayContainer
+		/// \tparam StorageScalar The scalar type of the array::ArrayContainer's storage object
+		/// \param container The array::ArrayContainer to evaluate
+		/// \return The array::ArrayContainer itself
 		template<typename ShapeType, typename StorageScalar>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const
-		  ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &
+		  array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &
 		  cudaTupleEvaluator(
-			const ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &container) {
+			const array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &container) {
 			return container;
 		}
 
@@ -178,7 +178,7 @@ namespace librapid::detail {
 		template<typename descriptor, typename Functor, typename... Args>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		cudaTupleEvaluator(const detail::Function<descriptor, Functor, Args...> &function) {
-			ArrayContainer<
+			array::ArrayContainer<
 			  decltype(function.shape()),
 			  CudaStorage<typename detail::Function<descriptor, Functor, Args...>::Scalar>>
 			  result(function.shape());
@@ -221,7 +221,7 @@ namespace librapid::detail {
 	/// \param function The function to assign
 	template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
-	assign(ArrayContainer<ShapeType_, CudaStorage<StorageScalar>> &lhs,
+	assign(array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>> &lhs,
 		   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		// Unfortunately, as we are not generating the kernels at runtime, we can't use
 		// temporary-free evaluation. Instead, we must recursively evaluate each sub-operation
@@ -229,7 +229,7 @@ namespace librapid::detail {
 
 		constexpr const char *filename	 = typetraits::TypeInfo<Functor_>::filename;
 		constexpr const char *kernelName = typetraits::TypeInfo<Functor_>::kernelName;
-		using Scalar = typename ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>::Scalar;
+		using Scalar = typename array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>::Scalar;
 
 		const auto args			 = function.args();
 		constexpr size_t argSize = std::tuple_size<decltype(args)>::value;

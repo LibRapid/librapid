@@ -13,7 +13,7 @@ namespace librapid {
 			static constexpr bool isLibRapidType = true;
 			using Scalar						 = decltype(std::declval<Functor_>()(
 			  std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
-			using Device = typename typetraits::DeviceCheckAndExtract<Args...>::Device;
+			using Device = typename DeviceCheckAndExtract<Args...>::Device;
 			static constexpr bool supportsArithmetic = TypeInfo<Scalar>::supportsArithmetic;
 			static constexpr bool supportsLogical	 = TypeInfo<Scalar>::supportsLogical;
 			static constexpr bool supportsBinary	 = TypeInfo<Scalar>::supportsBinary;

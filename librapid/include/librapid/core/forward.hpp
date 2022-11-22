@@ -11,8 +11,10 @@ namespace librapid {
 	template<typename Scalar_>
 	class CudaStorage;
 
-	template<typename ShapeType_, typename StorageType_>
-	class ArrayContainer;
+	namespace array {
+		template<typename ShapeType_, typename StorageType_>
+		class ArrayContainer;
+	}
 
 	namespace detail {
 		/// \brief Identifies which type of function is being used
@@ -20,6 +22,7 @@ namespace librapid {
 			struct Trivial {};	 /// Operation is trivial and can be done with a vectorised loop
 			struct Transpose {}; /// Operation is a matrix/array transposition
 			struct Matmul {};	 /// Operation is a matrix/array multiplication
+			struct Combined {};	 /// Operation is a combination of the above
 		}						 // namespace descriptor
 
 		template<typename desc, typename Functor_, typename... Args>
@@ -28,31 +31,31 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
 				 typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
-		assign(ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
+		assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 		template<typename ShapeType_, typename StorageScalar, size_t StorageSize, typename Functor_,
 				 typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
-		assign(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
+		assign(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
 				 typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
-		assignParallel(ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
+		assignParallel(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 					   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 		template<typename ShapeType_, typename StorageScalar, size_t StorageSize, typename Functor_,
 				 typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
-		assignParallel(ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
+		assignParallel(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
 					   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 #if defined(LIBRAPID_HAS_CUDA)
 		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
-		assign(ArrayContainer<ShapeType_, CudaStorage<StorageScalar>> &lhs,
+		assign(array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 #endif // LIBRAPID_HAS_CUDA

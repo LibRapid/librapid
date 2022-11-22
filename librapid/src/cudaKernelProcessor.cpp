@@ -1,6 +1,6 @@
 #if defined(LIBRAPID_HAS_CUDA)
 
-#include <librapid/librapid.hpp>
+#	include <librapid/librapid.hpp>
 
 namespace librapid {
 	std::string loadKernel(const std::string &kernelName) {
