@@ -7,6 +7,7 @@ namespace librapid {
 		struct TypeInfo<ArrayContainer<ShapeType_, StorageType_>> {
 			static constexpr bool isLibRapidType = true;
 			using Scalar						 = typename TypeInfo<StorageType_>::Scalar;
+			using Device						 = typename TypeInfo<StorageType_>::Device;
 		};
 	} // namespace typetraits
 
