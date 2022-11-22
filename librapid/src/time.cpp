@@ -25,7 +25,6 @@ namespace librapid {
 	void Timer::print() const {
 		double tmpEnd = m_end;
 		if (tmpEnd < 0) tmpEnd = now<time::nanosecond>();
-
 		fmt::print("[ TIMER ] {} : {}\n", m_name, formatTime<time::nanosecond>(tmpEnd - m_start));
 	}
 } // namespace librapid
