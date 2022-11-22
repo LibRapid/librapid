@@ -3,11 +3,17 @@
 
 namespace librapid {
 	namespace typetraits {
+		template<typename First, typename... Rest>
+		struct DeviceCheckAndExtract {
+			using Device = typename TypeInfo<std::decay_t<First>>::Device;
+		};
+
 		template<::librapid::detail::Descriptor desc, typename Functor_, typename... Args>
 		struct TypeInfo<::librapid::detail::Function<desc, Functor_, Args...>> {
-			static constexpr bool isLibRapidType	 = true;
-			using Scalar							 = decltype(std::declval<Functor_>()(
+			static constexpr bool isLibRapidType = true;
+			using Scalar						 = decltype(std::declval<Functor_>()(
 			  std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
+			using Device = typename typetraits::DeviceCheckAndExtract<Args...>::Device;
 			static constexpr bool supportsArithmetic = TypeInfo<Scalar>::supportsArithmetic;
 			static constexpr bool supportsLogical	 = TypeInfo<Scalar>::supportsLogical;
 			static constexpr bool supportsBinary	 = TypeInfo<Scalar>::supportsBinary;
@@ -23,36 +29,45 @@ namespace librapid {
 			using Type	  = Function<desc, Functor_, Args...>;
 			using Functor = Functor_;
 			using Scalar  = typename typetraits::TypeInfo<Type>::Scalar;
-			using Packet = typename typetraits::TypeInfo<Scalar>::Packet;
+			using Device  = typename typetraits::TypeInfo<Type>::Device;
+			using Packet  = typename typetraits::TypeInfo<Scalar>::Packet;
 
 			Function() = default;
 
-			/// Constructs a function from a functor and arguments.
+			/// Constructs a Function from a functor and arguments.
 			/// \param functor The functor to use.
 			/// \param args The arguments to use.
 			LIBRAPID_ALWAYS_INLINE explicit Function(Functor &&functor, Args &&...args);
 
-			/// Constructs a function from another function.
-			/// \param other The function to copy.
+			/// Constructs a Function from another function.
+			/// \param other The Function to copy.
 			LIBRAPID_ALWAYS_INLINE Function(const Function &other) = default;
 
-			/// Construct a function from a temporary function.
-			/// \param other The function to move.
+			/// Construct a Function from a temporary function.
+			/// \param other The Function to move.
 			LIBRAPID_ALWAYS_INLINE Function(Function &&other) noexcept = default;
 
-			/// Assigns a function to this function.
-			/// \param other The function to copy.
-			/// \return A reference to this function.
+			/// Assigns a Function to this function.
+			/// \param other The Function to copy.
+			/// \return A reference to this Function.
 			LIBRAPID_ALWAYS_INLINE Function &operator=(const Function &other) = default;
 
-			/// Assigns a temporary function to this function.
-			/// \param other The function to move.
-			/// \return A reference to this function.
+			/// Assigns a temporary Function to this Function.
+			/// \param other The Function to move.
+			/// \return A reference to this Function.
 			LIBRAPID_ALWAYS_INLINE Function &operator=(Function &&other) noexcept = default;
 
+			/// Return the shape of the Function's result
+			/// \return The shape of the Function's result
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto &shape() const;
 
+			/// Return the arguments in the Function
+			/// \return The arguments in the Function
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto &args() const;
+
+			/// Return an evaluated Array object
+			/// \return
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto eval() const;
 
 			/// Evaluates the function at the given index, returning a Packet result.
 			/// \param index The index to evaluate at.
@@ -99,6 +114,13 @@ namespace librapid {
 		template<Descriptor desc, typename Functor, typename... Args>
 		auto &Function<desc, Functor, Args...>::args() const {
 			return m_args;
+		}
+
+		template<Descriptor desc, typename Functor, typename... Args>
+		auto Function<desc, Functor, Args...>::eval() const {
+			Array<Scalar, Device> res(shape());
+			res = *this;
+			return res;
 		}
 
 		template<Descriptor desc, typename Functor, typename... Args>

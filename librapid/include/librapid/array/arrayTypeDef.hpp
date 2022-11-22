@@ -21,11 +21,11 @@ namespace librapid {
 
 	template<typename Scalar, typename StorageType = device::CPU>
 	using Array =
-	  ArrayContainer<Shape<Scalar>,
+	  ArrayContainer<Shape<size_t, 32>,
 					 typename detail::TypeDefStorageEvaluator<Scalar, StorageType>::Type>;
 
 	template<typename Scalar, size_t... Dimensions>
-	using ArrayF = ArrayContainer<Shape<Scalar>, FixedStorage<Scalar, product<Dimensions...>()>>;
+	using ArrayF = ArrayContainer<Shape<size_t, 32>, FixedStorage<Scalar, product<Dimensions...>()>>;
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_TYPE_DEF_HPP

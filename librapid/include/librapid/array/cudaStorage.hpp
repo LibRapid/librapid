@@ -15,6 +15,7 @@ namespace librapid {
 		struct TypeInfo<CudaStorage<Scalar_>> {
 			static constexpr bool isLibRapidType = true;
 			using Scalar						 = Scalar_;
+			using Device						 = device::GPU;
 		};
 	} // namespace typetraits
 
