@@ -77,22 +77,38 @@ namespace librapid {
 			using Type = ::librapid::detail::descriptor::Trivial;
 		};
 
+		template<typename Descriptor, typename Functor, typename... Args>
+		struct DescriptorExtractor<::librapid::detail::Function<Descriptor, Functor, Args...>> {
+			using Type = Descriptor;
+		};
+
 		template<typename First, typename... Rest>
-		struct DescriptorExtractorMulti {
-			using Type =
-			  typename DescriptorMerger<typename DescriptorExtractor<First>::Type,
-										typename DescriptorExtractorMulti<Rest...>::Type>::Type;
+		struct DescriptorType;
+
+		namespace impl {
+			template<typename... Rest>
+			constexpr auto descriptorExtractor() {
+				if constexpr (sizeof...(Rest) > 0) {
+					using ReturnType = typename DescriptorType<Rest...>::Type;
+					return ReturnType {};
+				} else {
+					using ReturnType = ::librapid::detail::descriptor::Trivial;
+					return ReturnType {};
+				}
+			}
+		} // namespace impl
+
+		template<typename First, typename... Rest>
+		struct DescriptorType {
+			using FirstType		  = std::decay_t<First>;
+			using FirstDescriptor = typename DescriptorExtractor<FirstType>::Type;
+			using RestDescriptor  = decltype(impl::descriptorExtractor<Rest...>());
+
+			using Type = typename DescriptorMerger<FirstDescriptor, RestDescriptor>::Type;
 		};
 
-		template<typename desc, typename... Args>
-		struct DescriptorExtractor<::librapid::detail::Function<desc, Args...>> {
-			using Type = typename DescriptorMerger<desc, DescriptorExtractorMulti<Args...>>::Type;
-		};
-
-		template<typename Left, typename Right>
-		using DescriptorExtractorType =
-		  typename DescriptorMerger<typename DescriptorExtractor<std::decay_t<Left>>::Type,
-									typename DescriptorExtractor<std::decay_t<Right>>::Type>::Type;
+		template<typename... Args>
+		using DescriptorType_t = typename DescriptorType<Args...>::Type;
 
 		template<>
 		struct TypeInfo<::librapid::detail::Plus> {
@@ -168,8 +184,8 @@ namespace librapid {
 	namespace array {
 		/// \brief Element-wise array addition
 		///
-		/// Performs element-wise addition on two arrays. They must both be the same size and of the
-		/// same data type.
+		/// Performs element-wise addition on two arrays. They must both be the same size and of
+		/// the same data type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
@@ -177,23 +193,22 @@ namespace librapid {
 		/// \param rhs The second array
 		/// \return The element-wise sum of the two arrays
 		template<class LHS, class RHS>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorExtractorType<LHS, RHS>,
-													  detail::Plus, LHS, RHS> {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		operator+(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
+		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus, LHS, RHS> {
 			static_assert(
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorExtractorType<LHS, RHS>,
-										detail::Plus>(std::forward<LHS>(lhs),
-													  std::forward<RHS>(rhs));
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus>(
+			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
 
 		/// \brief Element-wise array subtraction
 		///
-		/// Performs element-wise subtraction on two arrays. They must both be the same size and of
-		/// the same data type.
+		/// Performs element-wise subtraction on two arrays. They must both be the same size and
+		/// of the same data type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
@@ -201,23 +216,22 @@ namespace librapid {
 		/// \param rhs The second array
 		/// \return The element-wise difference of the two arrays
 		template<class LHS, class RHS>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorExtractorType<LHS, RHS>,
-													  detail::Minus, LHS, RHS> {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		operator-(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
+		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus, LHS, RHS> {
 			static_assert(
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorExtractorType<LHS, RHS>,
-										detail::Minus>(std::forward<LHS>(lhs),
-													   std::forward<RHS>(rhs));
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus>(
+			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
 
 		/// \brief Element-wise array multiplication
 		///
-		/// Performs element-wise multiplication on two arrays. They must both be the same size and
-		/// of the same data type.
+		/// Performs element-wise multiplication on two arrays. They must both be the same size
+		/// and of the same data type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
@@ -225,17 +239,16 @@ namespace librapid {
 		/// \param rhs The second array
 		/// \return The element-wise product of the two arrays
 		template<class LHS, class RHS>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorExtractorType<LHS, RHS>,
-													  detail::Multiply, LHS, RHS> {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		operator*(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
+		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply, LHS, RHS> {
 			static_assert(
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorExtractorType<LHS, RHS>,
-										detail::Multiply>(std::forward<LHS>(lhs),
-														  std::forward<RHS>(rhs));
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply>(
+			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
 
 		/// \brief Element-wise array division
@@ -249,24 +262,23 @@ namespace librapid {
 		/// \param rhs The second array
 		/// \return The element-wise division of the two arrays
 		template<class LHS, class RHS>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorExtractorType<LHS, RHS>,
-													  detail::Divide, LHS, RHS> {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		operator/(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
+		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide, LHS, RHS> {
 			static_assert(
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorExtractorType<LHS, RHS>,
-										detail::Divide>(std::forward<LHS>(lhs),
-														std::forward<RHS>(rhs));
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide>(
+			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
 
 		/// \brief Element-wise array comparison, checking whether a < b for all a, b in input
 		/// arrays
 		///
-		/// Performs an element-wise comparison on two arrays, checking if the first value is less
-		/// than the second. They must both be the same size and of the same data type.
+		/// Performs an element-wise comparison on two arrays, checking if the first value is
+		/// less than the second. They must both be the same size and of the same data type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
@@ -274,17 +286,16 @@ namespace librapid {
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
 		template<class LHS, class RHS>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorExtractorType<LHS, RHS>,
-													  detail::LessThan, LHS, RHS> {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		operator<(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
+		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan, LHS, RHS> {
 			static_assert(
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorExtractorType<LHS, RHS>,
-										detail::LessThan>(std::forward<LHS>(lhs),
-														  std::forward<RHS>(rhs));
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan>(
+			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
 
 		/// \brief Element-wise array comparison, checking whether a > b for all a, b in input
@@ -300,14 +311,14 @@ namespace librapid {
 		/// \return The element-wise comparison of the two arrays
 		template<class LHS, class RHS>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorExtractorType<LHS, RHS>,
+		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::GreaterThan, LHS, RHS> {
 			static_assert(
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorExtractorType<LHS, RHS>,
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::GreaterThan>(std::forward<LHS>(lhs),
 															 std::forward<RHS>(rhs));
 		}
@@ -315,8 +326,9 @@ namespace librapid {
 		/// \brief Element-wise array comparison, checking whether a <= b for all a, b in input
 		/// arrays
 		///
-		/// Performs an element-wise comparison on two arrays, checking if the first value is less
-		/// than or equal to the second. They must both be the same size and of the same data type.
+		/// Performs an element-wise comparison on two arrays, checking if the first value is
+		/// less than or equal to the second. They must both be the same size and of the same
+		/// data type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
@@ -325,14 +337,14 @@ namespace librapid {
 		/// \return The element-wise comparison of the two arrays
 		template<class LHS, class RHS>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<=(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorExtractorType<LHS, RHS>,
+		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::LessThanEqual, LHS, RHS> {
 			static_assert(
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorExtractorType<LHS, RHS>,
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::LessThanEqual>(std::forward<LHS>(lhs),
 															   std::forward<RHS>(rhs));
 		}
@@ -351,14 +363,14 @@ namespace librapid {
 		/// \return The element-wise comparison of the two arrays
 		template<class LHS, class RHS>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>=(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorExtractorType<LHS, RHS>,
+		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::GreaterThanEqual, LHS, RHS> {
 			static_assert(
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorExtractorType<LHS, RHS>,
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::GreaterThanEqual>(std::forward<LHS>(lhs),
 																  std::forward<RHS>(rhs));
 		}
@@ -366,32 +378,7 @@ namespace librapid {
 		/// \brief Element-wise array comparison, checking whether a == b for all a, b in input
 		/// arrays
 		///
-		/// Performs an element-wise comparison on two arrays, checking if the first value is equal
-		/// to the second. They must both be the same size and of the same data type.
-		///
-		/// \tparam LHS Type of the LHS element
-		/// \tparam RHS Type of the RHS element
-		/// \param lhs The first array
-		/// \param rhs The second array
-		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorExtractorType<LHS, RHS>,
-													  detail::ElementWiseEqual, LHS, RHS> {
-			static_assert(
-			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
-								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
-			  "Operands must have the same data type");
-			LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorExtractorType<LHS, RHS>,
-										detail::ElementWiseEqual>(std::forward<LHS>(lhs),
-																  std::forward<RHS>(rhs));
-		}
-
-		/// \brief Element-wise array comparison, checking whether a != b for all a, b in input
-		/// arrays
-		///
-		/// Performs an element-wise comparison on two arrays, checking if the first value is not
+		/// Performs an element-wise comparison on two arrays, checking if the first value is
 		/// equal to the second. They must both be the same size and of the same data type.
 		///
 		/// \tparam LHS Type of the LHS element
@@ -400,15 +387,40 @@ namespace librapid {
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
 		template<class LHS, class RHS>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
+		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
+													  detail::ElementWiseEqual, LHS, RHS> {
+			static_assert(
+			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
+								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
+			  "Operands must have the same data type");
+			LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
+										detail::ElementWiseEqual>(std::forward<LHS>(lhs),
+																  std::forward<RHS>(rhs));
+		}
+
+		/// \brief Element-wise array comparison, checking whether a != b for all a, b in input
+		/// arrays
+		///
+		/// Performs an element-wise comparison on two arrays, checking if the first value is
+		/// not equal to the second. They must both be the same size and of the same data type.
+		///
+		/// \tparam LHS Type of the LHS element
+		/// \tparam RHS Type of the RHS element
+		/// \param lhs The first array
+		/// \param rhs The second array
+		/// \return The element-wise comparison of the two arrays
+		template<class LHS, class RHS>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorExtractorType<LHS, RHS>,
+		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::ElementWiseNotEqual, LHS, RHS> {
 			static_assert(
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape() == rhs.shape(), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorExtractorType<LHS, RHS>,
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::ElementWiseNotEqual>(std::forward<LHS>(lhs),
 																	 std::forward<RHS>(rhs));
 		}
