@@ -36,6 +36,12 @@
 
 namespace librapid {
 	namespace detail {
+		/// Construct a new function object with the given functor type and arguments.
+		/// \tparam desc Functor descriptor
+		/// \tparam Functor Function type
+		/// \tparam Args Argument types
+		/// \param args Arguments passed to the function (forwarded)
+		/// \return A new Function instance
 		template<typename desc, typename Functor, typename... Args>
 		auto makeFunction(Args &&...args) {
 			using OperationType = Function<desc, Functor, Args...>;
@@ -57,6 +63,10 @@ namespace librapid {
 	} // namespace detail
 
 	namespace typetraits {
+		/// Merge together two Descriptor types. Two trivial operations will result in another
+		/// trivial operation, while any other combination will result in a Combined operation.
+		/// \tparam Descriptor1 The first descriptor
+		/// \tparam Descriptor2 The second descriptor
 		template<typename Descriptor1, typename Descriptor2>
 		struct DescriptorMerger {
 			using Type = ::librapid::detail::descriptor::Combined;
@@ -67,6 +77,8 @@ namespace librapid {
 			using Type = Descriptor1;
 		};
 
+		/// Extracts the Descriptor type of the provided type.
+		/// \tparam T The type to extract the descriptor from
 		template<typename T>
 		struct DescriptorExtractor {
 			using Type = T;
@@ -82,10 +94,16 @@ namespace librapid {
 			using Type = Descriptor;
 		};
 
+		/// Return the combined Descriptor type of the provided types
+		/// \tparam First The first type to merge
+		/// \tparam Rest The remaining types
 		template<typename First, typename... Rest>
 		struct DescriptorType;
 
 		namespace impl {
+			/// A `constexpr` function which supports the DescriptorType for multi-type inputs
+			/// \tparam Rest
+			/// \return
 			template<typename... Rest>
 			constexpr auto descriptorExtractor() {
 				if constexpr (sizeof...(Rest) > 0) {
@@ -107,6 +125,9 @@ namespace librapid {
 			using Type = typename DescriptorMerger<FirstDescriptor, RestDescriptor>::Type;
 		};
 
+		/// A simplification of the DescriptorType to reduce code size
+		/// \tparam Args Input types
+		/// \see DescriptorType
 		template<typename... Args>
 		using DescriptorType_t = typename DescriptorType<Args...>::Type;
 
