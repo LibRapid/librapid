@@ -33,7 +33,7 @@ namespace librapid {
 			using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;
 
 			/// Default constructor.
-			ArrayContainer() = default;
+			ArrayContainer();
 
 			/// Constructs an array container from a shape
 			/// \param shape The shape of the array container
@@ -129,8 +129,17 @@ namespace librapid {
 		};
 
 		template<typename ShapeType_, typename StorageType_>
+		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer() :
+				m_shape(StorageType_::template defaultShape<ShapeType_>()) {}
+
+		template<typename ShapeType_, typename StorageType_>
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const ShapeType &shape) :
-				m_shape(shape), m_storage(shape.size()) {}
+				m_shape(shape), m_storage(shape.size()) {
+			static_assert(!typetraits::IsFixedStorage<StorageType_>::value,
+						  "For a compile-time-defined shape, "
+						  "the storage type must be "
+						  "a FixedStorage object");
+		}
 
 		template<typename ShapeType_, typename StorageType_>
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const ShapeType &shape,
@@ -143,6 +152,10 @@ namespace librapid {
 						  "the storage type must be "
 						  "either a Storage or a "
 						  "CudaStorage object");
+			static_assert(!typetraits::IsFixedStorage<StorageType_>::value,
+						  "For a compile-time-defined shape, "
+						  "the storage type must be "
+						  "a FixedStorage object");
 		}
 
 		template<typename ShapeType_, typename StorageType_>

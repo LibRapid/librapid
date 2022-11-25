@@ -34,7 +34,7 @@ namespace librapid {
 	/// \see Array
 	template<typename Scalar, size_t... Dimensions>
 	using ArrayF =
-	  array::ArrayContainer<Shape<size_t, 32>, FixedStorage<Scalar, product<Dimensions...>()>>;
+	  array::ArrayContainer<Shape<size_t, 32>, FixedStorage<Scalar, Dimensions...>>;
 
 	/// A reference type for Array objects. Use this to accept Array objects as parameters since
 	/// the compiler cannot determine the templates for the Array typedef. For more granularity,
