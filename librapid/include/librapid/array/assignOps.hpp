@@ -20,7 +20,8 @@ namespace librapid::detail {
 	assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 		   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
-		  typename array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>>::Scalar;
+		  typename array::ArrayContainer<ShapeType_,
+										 Storage<StorageScalar, StorageAllocator>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
 		const int64_t size		 = function.shape().size();
@@ -41,16 +42,18 @@ namespace librapid::detail {
 		}
 	}
 
-	template<typename ShapeType_, typename StorageScalar, size_t StorageSize, typename Functor_,
+	template<typename ShapeType_, typename StorageScalar, size_t... StorageSize, typename Functor_,
 			 typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
-	assign(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
+	assign(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 		   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
-		  typename array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>>::Scalar;
+		  typename array::ArrayContainer<ShapeType_,
+										 FixedStorage<StorageScalar, StorageSize...>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
-		constexpr int64_t vectorSize = StorageSize - (StorageSize % packetWidth);
+		constexpr int64_t elements	 = ::librapid::product<StorageSize...>();
+		constexpr int64_t vectorSize = elements - (elements % packetWidth);
 
 		// Ensure the function can actually be assigned to the array container
 		static_assert(typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
@@ -62,7 +65,7 @@ namespace librapid::detail {
 		}
 
 		// Assign the remaining elements
-		for (int64_t index = vectorSize; index < StorageSize; ++index) {
+		for (int64_t index = vectorSize; index < elements; ++index) {
 			lhs.write(index, function.scalar(index));
 		}
 	}
@@ -75,7 +78,8 @@ namespace librapid::detail {
 	/// \tparam Args
 	/// \param lhs
 	/// \param function
-	/// \see assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
+	/// \see assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>>
+	/// &lhs,
 	///				const detail::Function<descriptor::Trivial, Functor_, Args...> &function)
 	template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
 			 typename Functor_, typename... Args>
@@ -83,7 +87,8 @@ namespace librapid::detail {
 	assignParallel(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 				   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
-		  typename array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>>::Scalar;
+		  typename array::ArrayContainer<ShapeType_,
+										 Storage<StorageScalar, StorageAllocator>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
 		const int64_t size		 = function.shape().size();
@@ -106,16 +111,18 @@ namespace librapid::detail {
 		}
 	}
 
-	template<typename ShapeType_, typename StorageScalar, size_t StorageSize, typename Functor_,
+	template<typename ShapeType_, typename StorageScalar, size_t... StorageSize, typename Functor_,
 			 typename... Args>
-	LIBRAPID_ALWAYS_INLINE void
-	assignParallel(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
-				   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
+	LIBRAPID_ALWAYS_INLINE void assignParallel(
+	  array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
+	  const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 		using Scalar =
-		  typename array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>>::Scalar;
+		  typename array::ArrayContainer<ShapeType_,
+										 FixedStorage<StorageScalar, StorageSize...>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
-		constexpr int64_t vectorSize = StorageSize - (StorageSize % packetWidth);
+		constexpr int64_t elements	 = ::librapid::product<StorageSize...>();
+		constexpr int64_t vectorSize = elements - (elements % packetWidth);
 
 		// Ensure the function can actually be assigned to the array container
 		static_assert(typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
@@ -129,7 +136,7 @@ namespace librapid::detail {
 		}
 
 		// Assign the remaining elements
-		for (int64_t index = vectorSize; index < StorageSize; ++index) {
+		for (int64_t index = vectorSize; index < elements; ++index) {
 			lhs.write(index, function.scalar(index));
 		}
 	}
@@ -229,7 +236,8 @@ namespace librapid::detail {
 
 		constexpr const char *filename	 = typetraits::TypeInfo<Functor_>::filename;
 		constexpr const char *kernelName = typetraits::TypeInfo<Functor_>::kernelName;
-		using Scalar = typename array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>::Scalar;
+		using Scalar =
+		  typename array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>::Scalar;
 
 		const auto args			 = function.args();
 		constexpr size_t argSize = std::tuple_size<decltype(args)>::value;
