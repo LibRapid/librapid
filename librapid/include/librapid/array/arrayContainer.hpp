@@ -11,6 +11,8 @@ namespace librapid {
 		};
 
 		namespace typetraits {
+			/// Evaluates as true if the input type is an ArrayContainer instance
+			/// \tparam T Input type
 			template<typename T>
 			struct IsArrayContainer : std::false_type {};
 
@@ -18,7 +20,7 @@ namespace librapid {
 			struct IsArrayContainer<array::ArrayContainer<Shape<SizeType, dims>, StorageScalar>>
 					: std::true_type {};
 		} // namespace typetraits
-	} // namespace typetraits
+	}	  // namespace typetraits
 
 	namespace array {
 		template<typename ShapeType_, typename StorageType_>
@@ -37,7 +39,9 @@ namespace librapid {
 			/// \param shape The shape of the array container
 			LIBRAPID_ALWAYS_INLINE explicit ArrayContainer(const ShapeType &shape);
 
-			/// Create an array container from a shape and a scalar value. The scalar value represents the value the memory is initialized with. \param shape The shape of the array container \param value The value to initialize the memory with
+			/// Create an array container from a shape and a scalar value. The scalar value
+			/// represents the value the memory is initialized with. \param shape The shape of the
+			/// array container \param value The value to initialize the memory with
 			LIBRAPID_ALWAYS_INLINE ArrayContainer(const ShapeType &shape, const Scalar &value);
 
 			/// Allows for a fixed-size array to be constructed with a fill value
@@ -221,7 +225,7 @@ namespace librapid {
 		void ArrayContainer<ShapeType_, StorageType_>::write(size_t index, const Scalar &value) {
 			m_storage[index] = value;
 		}
-	}
+	} // namespace array
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_ARRAY_CONTAINER_HPP
