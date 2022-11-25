@@ -16,6 +16,14 @@ namespace librapid {
 		/// Default constructor
 		Shape() = default;
 
+		/// Create a shape object from the dimensions of a FixedStorage object. This is used
+		// mainly internally, but may serve some purpose I haven't yet thought of.
+		/// \tparam Scalar Scalar type of the FixedStorage object
+		/// \tparam Dimensions Dimensions of the FixedStorage object
+		/// \param fixed The FixedStorage object
+		template<typename Scalar, size_t... Dimensions>
+		Shape(const FixedStorage<Scalar, Dimensions...> &fixed);
+
 		/// Create a Shape object from a list of values
 		/// \tparam V Scalar type of the values
 		/// \param vals The dimensions for the object
@@ -123,10 +131,14 @@ namespace librapid {
 
 	namespace detail {
 		template<typename T, size_t... Dims>
-		Shape<size_t, 32> shapeFromFixedStorage(const FixedStorage<T, Dims...> &) {
+		Shape<size_t, 32> shapeFromFixedStorage(FixedStorage<T, Dims...> &&) {
 			return Shape<size_t, 32>({Dims...});
 		}
 	} // namespace detail
+
+	template<typename T, size_t N>
+	template<typename Scalar, size_t... Dimensions>
+	Shape<T, N>::Shape(const FixedStorage<Scalar, Dimensions...> &) : m_data({Dimensions...}) {}
 
 	template<typename T, size_t N>
 	template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value>>

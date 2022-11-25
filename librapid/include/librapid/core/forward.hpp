@@ -5,7 +5,7 @@ namespace librapid {
 	template<typename Scalar_, typename Allocator_>
 	class Storage;
 
-	template<typename Scalar_, size_t Dimensions>
+	template<typename Scalar_, size_t... Dimensions>
 	class FixedStorage;
 
 	template<typename Scalar_>
@@ -34,23 +34,23 @@ namespace librapid {
 		assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
-		template<typename ShapeType_, typename StorageScalar, size_t StorageSize, typename Functor_,
-				 typename... Args>
+		template<typename ShapeType_, typename StorageScalar, size_t... StorageSize,
+				 typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
-		assign(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
+		assign(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
 				 typename Functor_, typename... Args>
-		LIBRAPID_ALWAYS_INLINE void
-		assignParallel(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
-					   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
+		LIBRAPID_ALWAYS_INLINE void assignParallel(
+		  array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
+		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
-		template<typename ShapeType_, typename StorageScalar, size_t StorageSize, typename Functor_,
-				 typename... Args>
-		LIBRAPID_ALWAYS_INLINE void
-		assignParallel(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize>> &lhs,
-					   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
+		template<typename ShapeType_, typename StorageScalar, size_t... StorageSize,
+				 typename Functor_, typename... Args>
+		LIBRAPID_ALWAYS_INLINE void assignParallel(
+		  array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
+		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 #if defined(LIBRAPID_HAS_CUDA)
 		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
