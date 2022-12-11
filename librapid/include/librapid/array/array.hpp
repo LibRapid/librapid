@@ -9,5 +9,6 @@
 #include "operations.hpp"
 #include "function.hpp"
 #include "assignOps.hpp"
+#include "arrayView.hpp"
 
 #endif // LIBRAPID_ARRAY
