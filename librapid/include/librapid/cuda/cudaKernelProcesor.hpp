@@ -21,15 +21,15 @@ namespace librapid {
 						 Args... arguments) {
 		jitify::Program program = global::jitCache.program(kernel);
 
-		size_t threadsPerBlock, blocksPerGrid;
+		unsigned int threadsPerBlock, blocksPerGrid;
 
 		// Use 1 to 512 threads per block
 		if (elements < 512) {
-			threadsPerBlock = elements;
+			threadsPerBlock = static_cast<unsigned int>(elements);
 			blocksPerGrid	= 1;
 		} else {
 			threadsPerBlock = 512;
-			blocksPerGrid	= static_cast<size_t>(
+			blocksPerGrid	= static_cast<unsigned int>(
 				ceil(static_cast<double>(elements) / static_cast<double>(threadsPerBlock)));
 		}
 
