@@ -91,6 +91,10 @@ namespace librapid {
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &
 			operator=(const detail::Function<desc, Functor_, Args...> &function);
 
+			/// Return the number of dimensions of the ArrayContainer object
+			/// \return Number of dimensions of the ArrayContainer
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE typename ShapeType::SizeType ndim() const noexcept;
+
 			/// Return the shape of the array container. This is an immutable reference.
 			/// \return The shape of the array container.
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ShapeType &shape() const noexcept;
@@ -198,6 +202,12 @@ namespace librapid {
 #endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
 				detail::assign(*this, function);
 			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::ndim() const noexcept
+		  -> typename ShapeType_::SizeType {
+			return m_shape.ndim();
 		}
 
 		template<typename ShapeType_, typename StorageType_>
