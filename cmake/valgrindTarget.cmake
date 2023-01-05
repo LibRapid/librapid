@@ -2,9 +2,11 @@ function(addValgrind target)
     find_program(VALGRIND_PATH valgrind)
 
     if (NOT VALGRIND_PATH)
-        message(WARNING "Valgrind not found, cannot run ${target} under valgrind")
+        message(WARNING "[ LIBRAPID ] Valgrind not found, cannot run ${target} under valgrind")
         return()
     endif ()
+
+    message(STATUS "[ LIBRAPID ] Adding Valgrind target")
 
     set(VALGRIND_OPTIONS
             "--error-exitcode=1"
