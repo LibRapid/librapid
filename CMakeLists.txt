@@ -385,7 +385,15 @@ if (${LIBRAPID_BUILD_TESTS})
     message(STATUS "[ LIBRAPID ] Building LibRapid Tests")
     include(CTest)
 
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Catch2")
+    message(STATUS "[ LIBRAPID ] Cloning custom MPFR package")
+
+    FetchContent_Declare(
+            Catch2
+            GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+            GIT_TAG        origin/devel
+    )
+
+    FetchContent_MakeAvailable(Catch2)
     target_link_libraries(${module_name} PUBLIC Catch2::Catch2WithMain)
 
     enable_testing()
