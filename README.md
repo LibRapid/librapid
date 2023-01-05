@@ -62,9 +62,7 @@ submodules of the library. You don't need to do anything different):
 - Required
     - [fmt](https://github.com/fmtlib/fmt) - Advanced string formatting
     - [scnlib](https://github.com/eliaskosunen/scnlib) - Advanced string parsing
-    - [thread-pool](https://github.com/bshoshany/thread-pool) - Thread pool for parallel execution
     - [Vc](https://github.com/VcDevel/Vc) - SIMD library
-    - [cppfs](https://github.com/cginternals/cppfs.git) - Cross-platform filesystem library (required for CUDA support)
 - Optional
     - [OpenMP](https://www.openmp.org/) - Multi-threading library
     - [CUDA](https://developer.nvidia.com/cuda-zone) - GPU computing library
