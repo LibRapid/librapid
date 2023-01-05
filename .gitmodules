@@ -15,6 +15,3 @@
 	url = https://github.com/jothepro/doxygen-awesome-css.git
 
 # Removed
-[submodule "librapid/vendor/mpfr"] # Big number support with MPFR and MPIR
-	path = librapid/vendor/mpfr
-	url = https://github.com/pencilcaseman/mpfr
