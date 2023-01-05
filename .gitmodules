@@ -18,6 +18,3 @@
 [submodule "librapid/vendor/mpfr"] # Big number support with MPFR and MPIR
 	path = librapid/vendor/mpfr
 	url = https://github.com/pencilcaseman/mpfr
-[submodule "librapid/vendor/Catch2"] # Catch2 module for unit testing
-	path = librapid/vendor/Catch2
-	url = https://github.com/catchorg/Catch2.git
