@@ -80,7 +80,7 @@ add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_MAJOR=${LIBRAPID_MAJOR})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_MINOR=${LIBRAPID_MINOR})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_PATCH=${LIBRAPID_PATCH})
-target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE=${CMAKE_CURRENT_SOURCE_DIR}/librapid)
+target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE="${CMAKE_CURRENT_SOURCE_DIR}/librapid")
 
 # Precompiled Headers
 target_precompile_headers(${module_name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include/librapid/core/librapidPch.hpp")
@@ -328,7 +328,7 @@ if (${LIBRAPID_USE_CUDA})
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_CUDA)
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_CUDA_STREAM)
         message(STATUS "[ LIBRAPID ] CUDA include directories: ${CUDAToolkit_INCLUDE_DIRS}")
-        target_compile_definitions(${module_name} PUBLIC CUDA_INCLUDE_DIRS= "${CUDAToolkit_INCLUDE_DIRS}")
+        target_compile_definitions(${module_name} PUBLIC CUDA_INCLUDE_DIRS=${CUDAToolkit_INCLUDE_DIRS})
         set(LIBRAPID_HAS_CUDA true)
     else ()
         message(WARNING "CUDA support was requested, but a valid CUDA installation could not be found")
@@ -350,25 +350,40 @@ target_link_libraries(${module_name} PUBLIC fmt scn Vc)
 target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
 
 if (${LIBRAPID_USE_MULTIPREC})
-    find_package(MPFR)
+    # Load MPIR
     find_package(MPIR)
-    if (MPFR_FOUND AND MPIR_FOUND)
-        message(STATUS "[LIBRAPID] Found existing MPFR and MPIR packages")
-        target_include_directories(${module_name} PUBLIC MPFR_INCLUDES)
-        target_link_libraries(${module_name} PUBLIC MPFR_LIBRARIES)
+    if (MPIR_FOUND)
+        message(STATUS "[LIBRAPID] Found existing MPIR package")
+        target_include_directories(${module_name} PUBLIC ${MPIR_INCLUDE_DIR})
+        target_link_libraries(${module_name} PUBLIC ${MPIR_LIBRARY})
+        set(MPIR_INCLUDE ${MPIR_INCLUDE_DIR} CACHE INTERNAL "Include path for MPIR used by LibRapid")
+    else ()
+        message(STATUS "[ LIBRAPID ] Cloning custom MPIR package")
+        FetchContent_Declare(
+                mpir
+                GIT_REPOSITORY https://github.com/LibRapid/MPIR.git
+        )
+        FetchContent_MakeAvailable(mpir)
+        target_link_libraries(${module_name} PUBLIC mpir)
+        target_include_directories(${module_name} PUBLIC ${mpir_SOURCE_DIR}/mpir)
+        set(MPIR_INCLUDE ${mpir_SOURCE_DIR}/mpir CACHE INTERNAL "Include path for MPIR used by LibRapid")
+    endif ()
 
-        target_include_directories(${module_name} PUBLIC MPIR_INCLUDE_DIR)
-        target_link_libraries(${module_name} PUBLIC MPIR_LIBRARY)
+    # Load MPFR
+    find_package(MPFR)
+    if (MPFR_FOUND)
+        message(STATUS "[LIBRAPID] Found existing MPFR package")
+        target_include_directories(${module_name} PUBLIC ${MPFR_INCLUDES})
+        target_link_libraries(${module_name} PUBLIC ${MPFR_LIBRARIES})
     else ()
         message(STATUS "[ LIBRAPID ] Cloning custom MPFR package")
-
         FetchContent_Declare(
                 mpfr
-                GIT_REPOSITORY https://github.com/pencilcaseman/mpfr
+                GIT_REPOSITORY https://github.com/LibRapid/MPFR.git
         )
-
         FetchContent_MakeAvailable(mpfr)
         target_link_libraries(${module_name} PUBLIC mpfr)
+        target_include_directories(${module_name} PUBLIC ${mpfr_SOURCE_DIR}/mpfr/src)
     endif ()
 
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_USE_MULTIPREC)
@@ -390,7 +405,7 @@ if (${LIBRAPID_BUILD_TESTS})
     FetchContent_Declare(
             Catch2
             GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-            GIT_TAG        origin/devel
+            GIT_TAG origin/devel
     )
 
     FetchContent_MakeAvailable(Catch2)
