@@ -356,7 +356,8 @@ if (${LIBRAPID_USE_MULTIPREC})
         message(STATUS "[LIBRAPID] Found existing MPIR package")
         target_include_directories(${module_name} PUBLIC ${MPIR_INCLUDE_DIR})
         target_link_libraries(${module_name} PUBLIC ${MPIR_LIBRARY})
-        set(MPIR_INCLUDE ${MPIR_INCLUDE_DIR} CACHE INTERNAL "Include path for MPIR used by LibRapid")
+        set(LIBRAPID_MPIR_INCLUDE ${MPIR_INCLUDE_DIR} CACHE INTERNAL "Include path for MPIR used by LibRapid")
+        set(LIBRAPID_MPIR_LIBRARY ${MPIR_LIBRARY} CACHE INTERNAL "Library path for MPIR used by LibRapid")
     else ()
         message(STATUS "[ LIBRAPID ] Cloning custom MPIR package")
         FetchContent_Declare(
@@ -366,7 +367,11 @@ if (${LIBRAPID_USE_MULTIPREC})
         FetchContent_MakeAvailable(mpir)
         target_link_libraries(${module_name} PUBLIC mpir)
         target_include_directories(${module_name} PUBLIC ${mpir_SOURCE_DIR}/mpir)
-        set(MPIR_INCLUDE ${mpir_SOURCE_DIR}/mpir CACHE INTERNAL "Include path for MPIR used by LibRapid")
+
+        message(STATUS "[ LIBRAPID ] MPIR Binary Directory: ${mpir_BINARY_DIR}")
+
+        set(LIBRAPID_MPIR_INCLUDE ${mpir_SOURCE_DIR}/mpir CACHE INTERNAL "Include path for MPIR used by LibRapid")
+        set(LIBRAPID_MPIR_LIBRARY ${mpir_BINARY_DIR} CACHE INTERNAL "Library path for MPIR used by LibRapid")
     endif ()
 
     # Load MPFR
