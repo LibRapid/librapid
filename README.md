@@ -70,7 +70,19 @@ submodules of the library. You don't need to do anything different):
 
 # Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=LibRapid/librapid&type=Date)](https://star-history.com/#LibRapid/librapid&Date)
+<div align="center">
+  <a href="https://star-history.com/#Librapid/librapid/#date">
+    <img src="https://api.star-history.com/svg?repos=LibRapid/librapid&type=Date" alt="Star History" width="700">
+  </a>
+</div>
+
+# Contributors
+
+<div align="center">
+  <a href="https://github.com/LibRapid/librapid/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=LibRapid/librapid&max=300&columns=20" alt="Contributors">
+  </a>
+</div>
 
 # Support
 
