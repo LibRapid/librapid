@@ -44,6 +44,16 @@ I am currently doing my A-Levels and do not have time to work on the library as 
 someone you know might be willing to support the development of the library, feel free to create a pull request or chat
 to us on [Discord](https://discord.com/invite/cGxTFTgCAC). Any help is greatly appreciated!
 
+## [Roadmap](https://github.com/orgs/LibRapid/projects/5/views/1)
+
+The [roadmap](https://github.com/orgs/LibRapid/projects/5/views/1) is a rough outline of what I want to get implemented
+in the library and by what point, but **please don't count on features being implemented quickly** -- I can't promise
+I'll have the time to implement everything as soon as I'd like... (I'll try my best though!)
+
+If you have any feature requests or suggestions, feel free to create an issue describing it. I'll try to get it working
+as soon as possible. If you really need something implemented quickly, a small donation would be appreciated, and would
+allow me to bump it to the top of my list of features.
+
 # Future Plans
 
 My goal for LibRapid is to make it faster and easier to use than existing libraries, such as Eigen and XTensor. I plan
