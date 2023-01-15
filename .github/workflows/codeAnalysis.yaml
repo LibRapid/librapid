@@ -1,4 +1,4 @@
-name: Code Analysis
+name: Code Coverage
 
 on:
   push:
@@ -12,32 +12,15 @@ on:
 jobs:
   check-quality:
     runs-on: ubuntu-latest
-    name: Codiga Check
+    name: Code Coverage
     steps:
-      - name: Check code meets quality standards
-        id: codiga
-        uses: codiga/github-action@master
+      - name: Checkout Code
+        uses: actions/checkout@v3
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          codiga_api_token: ${{ secrets.CODIGA_API_TOKEN }}
-          min_quality_grade: 'WARNING'
-          min_quality_score: '50'
-          max_defects_rate: '0.2'
-          max_complex_functions_rate: '0.2'
-          max_long_functions_rate: '0.2'
-          project_name: 'librapid'
-          max_timeout_sec: '600'
-      - name: Check code meets quality standards with forced branch
-        id: codiga-with-forced-branch
-        uses: codiga/github-action@master
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Run Code Coverage
+        uses: codecov/codecov-action@v3
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          codiga_api_token: ${{ secrets.CODIGA_API_TOKEN }}
-          force_ref: ${{ github.event.inputs.BRANCH }}
-          min_quality_grade: 'WARNING'
-          min_quality_score: '50'
-          max_defects_rate: '0.2'
-          max_complex_functions_rate: '2'
-          max_long_functions_rate: '2'
-          project_name: 'librapid'
-          max_timeout_sec: '600'
+          verbose: true
