@@ -28,11 +28,16 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DLIBRAPID_BUILD_TESTS=on -DCMAKE_CXX_FLAGS=--coverage -DCMAKE_C_FLAGS=--coverage
+          cmake .. -DLIBRAPID_BUILD_TESTS=on -DCMAKE_CXX_FLAGS=--coverage -DCMAKE_C_FLAGS=--coverage -DCMAKE_BUILD_TYPE=Debug
           cmake --build . --parallel
         env:
           CC: gcc-9
           CXX: g++-9
+
+      - name: Run Executable
+        run: |
+          cd build
+          ctest -C Release --output-on-failure
 
       - name: Run Code Coverage
         uses: codecov/codecov-action@v3
