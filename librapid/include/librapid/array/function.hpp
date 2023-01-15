@@ -10,10 +10,10 @@ namespace librapid {
 
 		template<typename desc, typename Functor_, typename... Args>
 		struct TypeInfo<::librapid::detail::Function<desc, Functor_, Args...>> {
-			static constexpr bool isLibRapidType = true;
-			using Scalar						 = decltype(std::declval<Functor_>()(
-			  std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
-			using Device = typename DeviceCheckAndExtract<Args...>::Device;
+			detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
+			using Scalar			  = decltype(std::declval<Functor_>()(
+			   std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
+			using Device			  = typename DeviceCheckAndExtract<Args...>::Device;
 			static constexpr bool supportsArithmetic = TypeInfo<Scalar>::supportsArithmetic;
 			static constexpr bool supportsLogical	 = TypeInfo<Scalar>::supportsLogical;
 			static constexpr bool supportsBinary	 = TypeInfo<Scalar>::supportsBinary;
@@ -149,9 +149,6 @@ namespace librapid {
 			return m_functor((std::get<I>(m_args).scalar(index))...);
 		}
 	} // namespace detail
-
-	template<typename... Inputs>
-	using FunctionRef = detail::Function<Inputs...>;
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_FUNCTION_HPP
