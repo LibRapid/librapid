@@ -5,9 +5,9 @@ namespace librapid {
 	namespace typetraits {
 		template<typename ShapeType_, typename StorageType_>
 		struct TypeInfo<array::ArrayContainer<ShapeType_, StorageType_>> {
-			static constexpr bool isLibRapidType = true;
-			using Scalar						 = typename TypeInfo<StorageType_>::Scalar;
-			using Device						 = typename TypeInfo<StorageType_>::Device;
+			detail::LibRapidType type = detail::LibRapidType::ArrayContainer;
+			using Scalar			  = typename TypeInfo<StorageType_>::Scalar;
+			using Device			  = typename TypeInfo<StorageType_>::Device;
 		};
 
 		namespace typetraits {
@@ -93,7 +93,8 @@ namespace librapid {
 
 			/// Return the number of dimensions of the ArrayContainer object
 			/// \return Number of dimensions of the ArrayContainer
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE typename ShapeType::SizeType ndim() const noexcept;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE typename ShapeType::SizeType
+			ndim() const noexcept;
 
 			/// Return the shape of the array container. This is an immutable reference.
 			/// \return The shape of the array container.
@@ -205,8 +206,8 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		auto ArrayContainer<ShapeType_, StorageType_>::ndim() const noexcept
-		  -> typename ShapeType_::SizeType {
+		auto ArrayContainer<ShapeType_, StorageType_>::ndim() const noexcept ->
+		  typename ShapeType_::SizeType {
 			return m_shape.ndim();
 		}
 

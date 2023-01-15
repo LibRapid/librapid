@@ -33,17 +33,25 @@ namespace librapid {
 	/// \tparam Dimensions The dimensions of the array.
 	/// \see Array
 	template<typename Scalar, size_t... Dimensions>
-	using ArrayF =
-	  array::ArrayContainer<Shape<size_t, 32>, FixedStorage<Scalar, Dimensions...>>;
+	using ArrayF = array::ArrayContainer<Shape<size_t, 32>, FixedStorage<Scalar, Dimensions...>>;
 
 	/// A reference type for Array objects. Use this to accept Array objects as parameters since
-	/// the compiler cannot determine the templates for the Array typedef. For more granularity,
-	/// you can also accept a raw ArrayContainer object.
-	/// \tparam StorageType The storage type of the array.
-	/// \see Array
-	/// \see ArrayF
+	/// the compiler cannot determine the templates tingle for the Array typedef. For more
+	/// granularity, you can also accept a raw ArrayContainer object. \tparam StorageType The
+	/// storage type of the array. \see Array \see ArrayF \see Function \see FunctionRef
 	template<typename StorageType>
 	using ArrayRef = array::ArrayContainer<Shape<size_t, 32>, StorageType>;
+
+	/// A reference type for Array Function objects. Use this to accept Function objects as
+	/// parameters since the compiler cannot determine the templates for the typedef by default.
+	/// Additionally, this can be used to store references to Function objects.
+	/// \tparam Inputs The argument types to the function (template...)
+	/// \see Array
+	/// \see ArrayF
+	/// \see ArrayRef
+	/// \see Function
+	template<typename... Inputs>
+	using FunctionRef = detail::Function<Inputs...>;
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_TYPE_DEF_HPP

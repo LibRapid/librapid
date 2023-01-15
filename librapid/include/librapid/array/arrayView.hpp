@@ -5,7 +5,7 @@ namespace librapid::array {
 	template<typename T>
 	class ArrayView {
 	public:
-		using ArrayType		 = ArrayRef<T>;
+		using ArrayType		 = T;
 		using Reference		 = ArrayType &;
 		using ConstReference = ArrayType const &;
 		using StrideType	 = typename ArrayType::ShapeType;
@@ -14,6 +14,7 @@ namespace librapid::array {
 		ArrayView() = delete;
 		ArrayView(ArrayType &array);
 		ArrayView(const ArrayType &array);
+		ArrayView(const ArrayView &other) = default;
 
 	private:
 		Reference m_ref;
@@ -22,10 +23,10 @@ namespace librapid::array {
 	};
 
 	template<typename T>
-	ArrayView<T>::ArrayView(ArrayType &array) : m_ref(array) {}
+	ArrayView<T>::ArrayView(ArrayType &array) : m_ref(array), m_shape(array.shape()) {}
 
 	template<typename T>
-	ArrayView<T>::ArrayView(const ArrayType &array) : m_ref(array) {}
+	ArrayView<T>::ArrayView(const ArrayType &array) : m_ref(array), m_shape(array.shape()) {}
 } // namespace librapid::array
 
 #endif // LIBRAPID_ARRAY_ARRAY_VIEW_HPP
