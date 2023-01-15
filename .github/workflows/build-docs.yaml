@@ -40,9 +40,9 @@ jobs:
           sudo aptitude install -y doxygen
           sudo aptitude install -y texlive-full
 
-      - name: Update Distribution
-        run: |
-          sudo apt-get dist-upgrade
+      # - name: Update Distribution
+      #   run: |
+      #     sudo apt-get dist-upgrade
 
       - name: Build HTML Documentation
         run: |
