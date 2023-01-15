@@ -424,3 +424,10 @@ if (${LIBRAPID_BUILD_TESTS})
     include(valgrindTarget)
     addValgrind(${module_name})
 endif ()
+
+# Enable code coverage checking
+find_package(codecov)
+if (ENABLE_COVERAGE)
+    message(STATUS "[ LIBRAPID ] Enabling code coverage for ${module_name}")
+    add_coverage(${module_name})
+endif()
