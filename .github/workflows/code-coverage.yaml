@@ -26,7 +26,7 @@ jobs:
           cd build
           cmake .. -DENABLE_COVERAGE=on -DLIBRAPID_BUILD_TESTS=on -DCMAKE_BUILD_TYPE=Debug
           cmake --build .
-        with:
+        env:
           CC: gcc-9
           CXX: g++-9
 
