@@ -7,6 +7,7 @@
 </p>
 
 ![C++ Version](https://img.shields.io/badge/C++-17/22-purple.svg?style=flat&logo=c%2B%2B) ![License](https://img.shields.io/badge/License-MIT-orange.svg?style=flat) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLibRapid%2Flibrapid.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FLibRapid%2Flibrapid?ref=badge_shield)
 
 ---
 
@@ -103,3 +104,7 @@ Thanks to JetBrains for providing LibRapid with free licenses for their amazing 
     <img src="https://devclass.com/wp-content/uploads/2018/12/jetbrains-variant-4.png" alt="JetBrains" width="200"/>
   </a>
 </p>
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLibRapid%2Flibrapid.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FLibRapid%2Flibrapid?ref=badge_large)
