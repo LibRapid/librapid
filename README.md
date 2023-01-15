@@ -103,3 +103,9 @@ Thanks to JetBrains for providing LibRapid with free licenses for their amazing 
     <img src="https://devclass.com/wp-content/uploads/2018/12/jetbrains-variant-4.png" alt="JetBrains" width="200"/>
   </a>
 </p>
+
+# License Status
+
+<div align="center">
+<a href="https://app.fossa.com/projects/git%2Bgithub.com%2FLibRapid%2Flibrapid?ref=badge_large" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FLibRapid%2Flibrapid.svg?type=large"/></a>
+</div>
