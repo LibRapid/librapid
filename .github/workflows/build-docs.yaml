@@ -36,8 +36,9 @@ jobs:
 
       - name: Install Requirements
         run: |
-          sudo apt-get install -y doxygen
-          sudo apt-get install -y texlive-full
+          sudo apt-get install aptitude
+          sudo aptitude install -y doxygen
+          sudo aptitude install -y texlive-full
 
       - name: Update Distribution
         run: |
