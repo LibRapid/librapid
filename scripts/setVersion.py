@@ -40,7 +40,7 @@ if args.version and any([args.major, args.minor, args.patch]):
 
 newMajorVersion = args.major if args.major else currentMajorVersion
 newMinorVersion = args.minor if args.minor else currentMinorVersion
-newPatchVersion = args.patch if args.patch else currentPatchVersion
+newPatchVersion = args.patch if args.patch else str(int(currentPatchVersion) + 1)
 print(f"New Version: v{newMajorVersion}.{newMinorVersion}.{newPatchVersion}\n\n")
 
 # Write to version.txt
