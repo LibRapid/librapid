@@ -102,6 +102,26 @@ namespace librapid {
 		}
 	}
 
+	/// Return the first number raised to the power of the second number. The return value will be
+	/// promoted to the larger of the two input types.
+	/// \tparam T0 Data type of the first input value
+	/// \tparam T1 Data type of the second input value
+	/// \param val1 First input value
+	/// \param val2 Second input value
+	/// \return First input value raised to the power of the second input value
+	template<typename T0, typename T1, typename std::enable_if_t<std::is_fundamental_v<T0> && std::is_fundamental_v<T1>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto pow(T0 val1, T1 val2) {
+		if constexpr (std::is_integral_v<T0> && std::is_integral_v<T1>) {
+			return std::pow(static_cast<double>(val1), static_cast<double>(val2));
+		} else if constexpr (std::is_integral_v<T0>) {
+			return std::pow(static_cast<double>(val1), val2);
+		} else if constexpr (std::is_integral_v<T1>) {
+			return std::pow(val1, static_cast<double>(val2));
+		} else {
+			return std::pow(val1, val2);
+		}
+	}
+
 	/// Return the exponential of a given value. Note that, for integer values, this function
 	/// will cast the input value to a floating point type before calculating the exponential.
 	/// \tparam T Data type
@@ -169,6 +189,76 @@ namespace librapid {
 			return std::sin(static_cast<double>(val));
 		} else {
 			return std::sin(val);
+		}
+	}
+
+	/// Return the cosine of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before calculating the cosine.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Cosine of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto cos(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::cos(static_cast<double>(val));
+		} else {
+			return std::cos(val);
+		}
+	}
+
+	/// Return the tangent of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before calculating the tangent.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Tangent of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto tan(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::tan(static_cast<double>(val));
+		} else {
+			return std::tan(val);
+		}
+	}
+
+	/// Return the arcsine of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before calculating the arcsine.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Arcsine of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto asin(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::asin(static_cast<double>(val));
+		} else {
+			return std::asin(val);
+		}
+	}
+
+	/// Return the arccosine of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before calculating the arccosine.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Arccosine of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto acos(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::acos(static_cast<double>(val));
+		} else {
+			return std::acos(val);
+		}
+	}
+
+	/// Return the arctangent of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before calculating the arctangent.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Arctangent of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto atan(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::atan(static_cast<double>(val));
+		} else {
+			return std::atan(val);
 		}
 	}
 } // namespace librapid
