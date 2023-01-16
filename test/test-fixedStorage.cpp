@@ -66,13 +66,18 @@ namespace lrc = librapid;
 		return storage.size();                                                                     \
 	};                                                                                             \
                                                                                                    \
+	BENCHMARK("FixedStorage<" STRINGIFY(TYPE_) "> 100") {                                          \
+		lrc::FixedStorage<TYPE_, 100> storage;                                                     \
+		return storage.size();                                                                     \
+	};                                                                                             \
+                                                                                                   \
 	BENCHMARK("FixedStorage<" STRINGIFY(TYPE_) "> 1000") {                                         \
 		lrc::FixedStorage<TYPE_, 1000> storage;                                                    \
 		return storage.size();                                                                     \
 	};                                                                                             \
                                                                                                    \
-	BENCHMARK("FixedStorage<" STRINGIFY(TYPE_) "> 1000000") {                                      \
-		lrc::FixedStorage<TYPE_, 1000000> storage;                                                 \
+	BENCHMARK("FixedStorage<" STRINGIFY(TYPE_) "> 10000") {                                        \
+		lrc::FixedStorage<TYPE_, 10000> storage;                                                   \
 		return storage.size();                                                                     \
 	};                                                                                             \
                                                                                                    \
@@ -81,13 +86,18 @@ namespace lrc = librapid;
 		return storage.size();                                                                     \
 	};                                                                                             \
                                                                                                    \
+	BENCHMARK("FixedStorage<" STRINGIFY(TYPE_) "> 100 FILLED") {                                   \
+		lrc::FixedStorage<TYPE_, 100> storage(FILL_);                                              \
+		return storage.size();                                                                     \
+	};                                                                                             \
+                                                                                                   \
 	BENCHMARK("FixedStorage<" STRINGIFY(TYPE_) "> 1000 FILLED") {                                  \
 		lrc::FixedStorage<TYPE_, 1000> storage(FILL_);                                             \
 		return storage.size();                                                                     \
 	};                                                                                             \
                                                                                                    \
-	BENCHMARK("FixedStorage<" STRINGIFY(TYPE_) "> 1000000 FILLED") {                               \
-		lrc::FixedStorage<TYPE_, 1000000> storage(FILL_);                                          \
+	BENCHMARK("FixedStorage<" STRINGIFY(TYPE_) "> 10000 FILLED") {                                 \
+		lrc::FixedStorage<TYPE_, 10000> storage(FILL_);                                            \
 		return storage.size();                                                                     \
 	}
 
