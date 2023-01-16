@@ -4,7 +4,8 @@ High Performance C++ Library Mathematical Programs
 
 <!-- <a href="refman.pdf" target="_blank"><b>PDF Documentation</b></a> -->
 
-<a href="https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html" target="_blank"><b>Latest Documentation</b></a>
+<a href="https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html" target="_blank"><b>Latest
+Documentation</b></a>
 
 ## Installation
 
@@ -50,7 +51,7 @@ When using LibRapid in your CMake project, the following options are configurabl
 
 ### Multithreading
 
-By default, LibRapid will automatically run sufficiently large loops in paralle, however, the branch required for this
+By default, LibRapid will automatically run sufficiently large loops in parallel, however, the branch required for this
 dynamic selection can cause a very slight performance hit with smaller arrays. For this reason, if you know you'll only
 be dealing with relatively small arrays (500x500 or smaller), it might make sense to disable this.
 

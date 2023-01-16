@@ -9,7 +9,7 @@ namespace librapid {
 	/// \tparam Scalar The type of each element of the vector
 	/// \tparam Dims The number of dimensions of the vector
 	/// \tparam StorageType The type of the storage for the vector
-	template<typename Scalar, int64_t Dims, typename StorageType>
+	template<typename Scalar, int64_t Dims = 3, typename StorageType = Vc::SimdArray<Scalar, Dims>>
 	class VecImpl {
 	public:
 		/// Default constructor
@@ -41,6 +41,12 @@ namespace librapid {
 		template<typename... Args, int64_t size = sizeof...(Args),
 				 typename std::enable_if_t<size != Dims, int> = 0>
 		VecImpl(Args... args);
+
+		/// Construct a Vector object from an std::initializer_list
+		/// \tparam T The type of each element of the initializer list
+		/// \param list The initializer list to construct from
+		template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
+		VecImpl(const std::initializer_list<T> &list);
 
 		/// Create a Vector from another vector instance
 		/// \param other Vector to copy values from
@@ -80,52 +86,60 @@ namespace librapid {
 		/// Access a specific element of the vector
 		/// \param index The index of the element to access
 		/// \return Reference to the element
-		LIBRAPID_NODISCARD const Scalar &operator[](int64_t index) const;
+		LIBRAPID_NODISCARD auto operator[](int64_t index) const;
 
 		/// Access a specific element of the vector
 		/// \param index The index of the element to access
 		/// \return Reference to the element
-		LIBRAPID_NODISCARD Scalar &operator[](int64_t index);
+		LIBRAPID_NODISCARD auto operator[](int64_t index);
 
 		/// Add a vector to this vector, element-by-element
 		/// \param other The vector to add
 		/// \return Reference to this
-		LIBRAPID_ALWAYS_INLINE VecImpl &operator+=(const VecImpl &other);
+		template<typename T, int64_t d, typename S>
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator+=(const VecImpl<T, d, S> &other);
 
 		/// Subtract a vector from this vector, element-by-element
 		/// \param other The vector to subtract
 		/// \return Reference to this
-		LIBRAPID_ALWAYS_INLINE VecImpl &operator-=(const VecImpl &other);
+		template<typename T, int64_t d, typename S>
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator-=(const VecImpl<T, d, S> &other);
 
 		/// Multiply this vector by another vector, element-by-element
 		/// \param other The vector to multiply by
 		/// \return Reference to this
-		LIBRAPID_ALWAYS_INLINE VecImpl &operator*=(const VecImpl &other);
+		template<typename T, int64_t d, typename S>
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator*=(const VecImpl<T, d, S> &other);
 
 		/// Divide this vector by another vector, element-by-element
 		/// \param other The vector to divide by
 		/// \return Reference to this
-		LIBRAPID_ALWAYS_INLINE VecImpl &operator/=(const VecImpl &other);
+		template<typename T, int64_t d, typename S>
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator/=(const VecImpl<T, d, S> &other);
 
 		/// Add a scalar to this vector, element-by-element
 		/// \param other The scalar to add
 		/// \return Reference to this
-		LIBRAPID_ALWAYS_INLINE VecImpl &operator+=(const Scalar &value);
+		template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator+=(const T &value);
 
 		/// Subtract a scalar from this vector, element-by-element
 		/// \param other The scalar to subtract
 		/// \return Reference to this
-		LIBRAPID_ALWAYS_INLINE VecImpl &operator-=(const Scalar &value);
+		template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator-=(const T &value);
 
 		/// Multiply this vector by a scalar, element-by-element
 		/// \param other The scalar to multiply by
 		/// \return Reference to this
-		LIBRAPID_ALWAYS_INLINE VecImpl &operator*=(const Scalar &value);
+		template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator*=(const T &value);
 
 		/// Divide this vector by a scalar, element-by-element
 		/// \param other The scalar to divide by
 		/// \return Reference to this
-		LIBRAPID_ALWAYS_INLINE VecImpl &operator/=(const Scalar &value);
+		template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator/=(const T &value);
 
 		/// Negate this vector
 		/// \return Vector with all elements negated
@@ -141,8 +155,8 @@ namespace librapid {
 		/// - "ge" - Check if each element is greater than or equal to the corresponding element in
 		/// the other \param other The vector to compare to \param mode The comparison mode \return
 		/// Vector with each element set to 1 if the comparison is true, 0 otherwise
-		LIBRAPID_ALWAYS_INLINE
-		VecImpl cmp(const VecImpl &other, const char *mode) const;
+		template<typename T, int64_t d, typename S>
+		LIBRAPID_ALWAYS_INLINE VecImpl cmp(const VecImpl<T, d, S> &other, const char *mode) const;
 
 		/// Compare a vector and a scalar for equality. Available modes are:
 		/// - "eq" - Check for equality
@@ -154,79 +168,92 @@ namespace librapid {
 		/// \param value The scalar to compare to
 		/// \param mode The comparison mode
 		/// \return Vector with each element set to 1 if the comparison is true, 0 otherwise
-		LIBRAPID_ALWAYS_INLINE VecImpl cmp(const Scalar &value, const char *mode) const;
+		template<typename T>
+		LIBRAPID_ALWAYS_INLINE VecImpl cmp(const T &value, const char *mode) const;
 
 		/// Equivalent to calling cmp(other, "lt")
 		/// \param other The vector to compare to
 		/// \return See cmp()
 		/// \see cmp()
-		LIBRAPID_ALWAYS_INLINE VecImpl operator<(const VecImpl &other) const;
+		template<typename T, int64_t d, typename S>
+		LIBRAPID_ALWAYS_INLINE VecImpl operator<(const VecImpl<T, d, S> &other) const;
 
 		/// Equivalent to calling cmp(other, "le")
 		/// \param other The vector to compare to
 		/// \return See cmp()
 		/// \see cmp()
-		LIBRAPID_ALWAYS_INLINE VecImpl operator<=(const VecImpl &other) const;
+		template<typename T, int64_t d, typename S>
+		LIBRAPID_ALWAYS_INLINE VecImpl operator<=(const VecImpl<T, d, S> &other) const;
 
 		/// Equivalent to calling cmp(other, "gt")
 		/// \param other The vector to compare to
 		/// \return See cmp()
 		/// \see cmp()
-		LIBRAPID_ALWAYS_INLINE VecImpl operator>(const VecImpl &other) const;
+		template<typename T, int64_t d, typename S>
+		LIBRAPID_ALWAYS_INLINE VecImpl operator>(const VecImpl<T, d, S> &other) const;
 
 		/// Equivalent to calling cmp(other, "ge")
 		/// \param other The vector to compare to
 		/// \return See cmp()
 		/// \see cmp()
-		LIBRAPID_ALWAYS_INLINE VecImpl operator>=(const VecImpl &other) const;
+		template<typename T, int64_t d, typename S>
+		LIBRAPID_ALWAYS_INLINE VecImpl operator>=(const VecImpl<T, d, S> &other) const;
 
 		/// Equivalent to calling cmp(other, "eq")
 		/// \param other The vector to compare to
 		/// \return See cmp()
 		/// \see cmp()
-		LIBRAPID_ALWAYS_INLINE VecImpl operator==(const VecImpl &other) const;
+		template<typename T, int64_t d, typename S>
+		LIBRAPID_ALWAYS_INLINE VecImpl operator==(const VecImpl<T, d, S> &other) const;
 
 		/// Equivalent to calling cmp(other, "ne")
 		/// \param other The vector to compare to
 		/// \return See cmp()
 		/// \see cmp()
-		LIBRAPID_ALWAYS_INLINE VecImpl operator!=(const VecImpl &other) const;
+		template<typename T, int64_t d, typename S>
+		LIBRAPID_ALWAYS_INLINE VecImpl operator!=(const VecImpl<T, d, S> &other) const;
 
 		/// Equivalent to calling cmp(other, "lt")
 		/// \param value The scalar to compare to
 		/// \return See cmp()
 		/// \see cmp()
-		LIBRAPID_ALWAYS_INLINE VecImpl operator<(const Scalar &other) const;
+		template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE VecImpl operator<(const T &other) const;
 
 		/// Equivalent to calling cmp(other, "le")
 		/// \param value The scalar to compare to
 		/// \return See cmp()
 		/// \see cmp()
-		LIBRAPID_ALWAYS_INLINE VecImpl operator<=(const Scalar &other) const;
+		template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE VecImpl operator<=(const T &other) const;
 
 		/// Equivalent to calling cmp(other, "gt")
 		/// \param value The scalar to compare to
 		/// \return See cmp()
 		/// \see cmp()
-		LIBRAPID_ALWAYS_INLINE VecImpl operator>(const Scalar &other) const;
+		template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE VecImpl operator>(const T &other) const;
 
 		/// Equivalent to calling cmp(other, "ge")
 		/// \param value The scalar to compare to
 		/// \return See cmp()
 		/// \see cmp()
-		LIBRAPID_ALWAYS_INLINE VecImpl operator>=(const Scalar &other) const;
+		template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE VecImpl operator>=(const T &other) const;
 
 		/// Equivalent to calling cmp(other, "eq")
 		/// \param value The scalar to compare to
 		/// \return See cmp()
 		/// \see cmp()
-		LIBRAPID_ALWAYS_INLINE VecImpl operator==(const Scalar &other) const;
+		template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE VecImpl operator==(const T &other) const;
 
 		/// Equivalent to calling cmp(other, "ne")
 		/// \param value The scalar to compare to
 		/// \return See cmp()
 		/// \see cmp()
-		LIBRAPID_ALWAYS_INLINE VecImpl operator!=(const Scalar &other) const;
+		template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE VecImpl operator!=(const T &other) const;
 
 		/// Calculate the magnitude of this vector squared
 		/// \return The magnitude squared
@@ -254,14 +281,14 @@ namespace librapid {
 		/// \return The cross product
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE VecImpl cross(const VecImpl &other) const;
 
-		/// Cast this vector to a boolean. This is equivalent to calling mag2() != 0
-		/// \return True if the magnitude of this vector is not 0, false otherwise
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE explicit operator bool() const;
-
 		/// Project this vector onto another vector
 		/// \param other The vector to project onto
 		/// \return The projection of this vector onto the other vector
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE VecImpl project(const VecImpl &other) const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE VecImpl proj(const VecImpl &other) const;
+
+		/// Cast this vector to a boolean. This is equivalent to calling mag2() != 0
+		/// \return True if the magnitude of this vector is not 0, false otherwise
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE explicit operator bool() const;
 
 		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 2, StorageType> xy() const;
 		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 2, StorageType> yx() const;
@@ -389,14 +416,21 @@ namespace librapid {
 		for (int64_t i = 0; i < size; i++) { m_data[i] = expanded[i]; }
 	}
 
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
+	VecImpl<Scalar, Dims, StorageType>::VecImpl(const std::initializer_list<T> &list) {
+		assert(list.size() <= Dims);
+		int64_t i = 0;
+		for (const Scalar &val : list) { m_data[i++] = val; }
+	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType1, typename StorageType2>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType1>
 	operator&(const VecImpl<Scalar, Dims, StorageType1> &vec,
 			  const VecImpl<Scalar, Dims, StorageType2> &mask) {
 		VecImpl<Scalar, Dims, StorageType1> res(vec);
-		for (int64_t i = 0; i < Dims; ++i) {
-			if (!mask[i]) { res[i] = 0; }
-		}
+		for (int64_t i = 0; i < Dims; ++i)
+			if (!mask[i]) res[i] = 0;
 		return res;
 	}
 
@@ -421,64 +455,96 @@ namespace librapid {
 #endif // GLM_VERSION
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) const -> const Scalar & {
+	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) const {
 		LIBRAPID_ASSERT(
 		  0 <= index < Dims, "Index {} out of range for vector with {} dimensions", index, Dims);
 		return m_data[index];
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) -> Scalar & {
+	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) {
 		LIBRAPID_ASSERT(
 		  0 <= index < Dims, "Index {} out of range for vector with {} dimensions", index, Dims);
 		return m_data[index];
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator+=(const VecImpl &other) -> VecImpl & {
-		m_data += other.m_data;
+	template<typename T, int64_t d, typename S>
+	auto VecImpl<Scalar, Dims, StorageType>::operator+=(const VecImpl<T, d, S> &other)
+	  -> VecImpl & {
+		static_assert(d <= Dims, "Invalid number of dimensions");
+		if constexpr (Dims == d) {
+			m_data += other.m_data;
+		} else {
+			for (int64_t i = 0; i < d; ++i) { m_data[i] += other[i]; }
+		}
 		return *this;
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator-=(const VecImpl &other) -> VecImpl & {
-		m_data -= other.m_data;
+	template<typename T, int64_t d, typename S>
+	auto VecImpl<Scalar, Dims, StorageType>::operator-=(const VecImpl<T, d, S> &other)
+	  -> VecImpl & {
+		static_assert(d <= Dims, "Invalid number of dimensions");
+		if constexpr (Dims == d) {
+			m_data -= other.m_data;
+		} else {
+			for (int64_t i = 0; i < d; ++i) { m_data[i] -= other[i]; }
+		}
 		return *this;
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator*=(const VecImpl &other) -> VecImpl & {
-		m_data *= other.m_data;
+	template<typename T, int64_t d, typename S>
+	auto VecImpl<Scalar, Dims, StorageType>::operator*=(const VecImpl<T, d, S> &other)
+	  -> VecImpl & {
+		static_assert(d <= Dims, "Invalid number of dimensions");
+		if constexpr (Dims == d) {
+			m_data *= other.m_data;
+		} else {
+			for (int64_t i = 0; i < d; ++i) { m_data[i] *= other[i]; }
+		}
 		return *this;
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator/=(const VecImpl &other) -> VecImpl & {
-		m_data /= other.m_data;
+	template<typename T, int64_t d, typename S>
+	auto VecImpl<Scalar, Dims, StorageType>::operator/=(const VecImpl<T, d, S> &other)
+	  -> VecImpl & {
+		static_assert(d <= Dims, "Invalid number of dimensions");
+		if constexpr (Dims == d) {
+			m_data /= other.m_data;
+		} else {
+			for (int64_t i = 0; i < d; ++i) { m_data[i] /= other[i]; }
+		}
 		return *this;
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator+=(const Scalar &value) -> VecImpl & {
-		m_data += value;
+	template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
+	auto VecImpl<Scalar, Dims, StorageType>::operator+=(const T &value) -> VecImpl & {
+		m_data += static_cast<Scalar>(value);
 		return *this;
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator-=(const Scalar &value) -> VecImpl & {
-		m_data -= value;
+	template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
+	auto VecImpl<Scalar, Dims, StorageType>::operator-=(const T &value) -> VecImpl & {
+		m_data -= static_cast<Scalar>(value);
 		return *this;
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator*=(const Scalar &value) -> VecImpl & {
-		m_data *= value;
+	template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
+	auto VecImpl<Scalar, Dims, StorageType>::operator*=(const T &value) -> VecImpl & {
+		m_data *= static_cast<Scalar>(value);
 		return *this;
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator/=(const Scalar &value) -> VecImpl & {
-		m_data /= value;
+	template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
+	auto VecImpl<Scalar, Dims, StorageType>::operator/=(const T &value) -> VecImpl & {
+		m_data /= static_cast<Scalar>(value);
 		return *this;
 	}
 
@@ -490,47 +556,48 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::cmp(const VecImpl &other, const char *mode) const
-	  -> VecImpl {
+	template<typename T, int64_t d, typename S>
+	auto VecImpl<Scalar, Dims, StorageType>::cmp(const VecImpl<T, d, S> &other,
+												 const char *mode) const -> VecImpl {
 		VecImpl res(*this);
 		int16_t modeInt = *(int16_t *)mode;
 		for (int64_t i = 0; i < Dims; ++i) {
 			switch (modeInt) {
 				case 'e' | ('q' << 8):
 					if (res[i] == other[i])
-						res[i] = 1;
+						res[i] = Scalar(1);
 					else
-						res[i] = 0;
+						res[i] = Scalar(0);
 					break;
 				case 'n' | ('e' << 8):
 					if (res[i] != other[i])
-						res[i] = 1;
+						res[i] = Scalar(1);
 					else
-						res[i] = 0;
+						res[i] = Scalar(0);
 					break;
 				case 'l' | ('t' << 8):
 					if (res[i] < other[i])
-						res[i] = 1;
+						res[i] = Scalar(1);
 					else
-						res[i] = 0;
+						res[i] = Scalar(0);
 					break;
 				case 'l' | ('e' << 8):
 					if (res[i] <= other[i])
-						res[i] = 1;
+						res[i] = Scalar(1);
 					else
-						res[i] = 0;
+						res[i] = Scalar(0);
 					break;
 				case 'g' | ('t' << 8):
 					if (res[i] > other[i])
-						res[i] = 1;
+						res[i] = Scalar(1);
 					else
-						res[i] = 0;
+						res[i] = Scalar(0);
 					break;
 				case 'g' | ('e' << 8):
 					if (res[i] >= other[i])
-						res[i] = 1;
+						res[i] = Scalar(1);
 					else
-						res[i] = 0;
+						res[i] = Scalar(0);
 					break;
 				default: LIBRAPID_ASSERT(false, "Invalid mode {}", mode);
 			}
@@ -539,7 +606,8 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::cmp(const Scalar &value, const char *mode) const
+	template<typename T>
+	auto VecImpl<Scalar, Dims, StorageType>::cmp(const T &value, const char *mode) const
 	  -> VecImpl {
 		// Mode:
 		// 0: ==    1: !=
@@ -548,51 +616,43 @@ namespace librapid {
 
 		VecImpl res(*this);
 		int16_t modeInt = *(int16_t *)mode;
-		fmt::print("Info: {:Lb}\n", modeInt);
-		fmt::print("Info: {:Lb}\n", ('g' << 8) | 't');
 		for (int64_t i = 0; i < Dims; ++i) {
 			switch (modeInt) {
 				case 'e' | ('q' << 8):
-					if (res[i] == value) {
-						res[i] = 1;
-					} else {
-						res[i] = 0;
-					}
+					if (res[i] == Scalar(value))
+						res[i] = Scalar(1);
+					else
+						res[i] = Scalar(0);
 					break;
 				case 'n' | ('e' << 8):
-					if (res[i] != value) {
-						res[i] = 1;
-					} else {
-						res[i] = 0;
-					}
+					if (res[i] != Scalar(value))
+						res[i] = Scalar(1);
+					else
+						res[i] = Scalar(0);
 					break;
 				case 'l' | ('t' << 8):
-					if (res[i] < value) {
-						res[i] = 1;
-					} else {
-						res[i] = 0;
-					}
+					if (res[i] < Scalar(value))
+						res[i] = Scalar(1);
+					else
+						res[i] = Scalar(0);
 					break;
 				case 'l' | ('e' << 8):
-					if (res[i] <= value) {
-						res[i] = 1;
-					} else {
-						res[i] = 0;
-					}
+					if (res[i] <= Scalar(value))
+						res[i] = Scalar(1);
+					else
+						res[i] = Scalar(0);
 					break;
 				case 'g' | ('t' << 8):
-					if (res[i] > value) {
-						res[i] = 1;
-					} else {
-						res[i] = 0;
-					}
+					if (res[i] > Scalar(value))
+						res[i] = Scalar(1);
+					else
+						res[i] = Scalar(0);
 					break;
 				case 'g' | ('e' << 8):
-					if (res[i] >= value) {
-						res[i] = 1;
-					} else {
-						res[i] = 0;
-					}
+					if (res[i] >= Scalar(value))
+						res[i] = Scalar(1);
+					else
+						res[i] = Scalar(0);
 					break;
 				default: LIBRAPID_ASSERT(false, "Invalid mode {}", mode);
 			}
@@ -601,61 +661,80 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator<(const VecImpl &other) const -> VecImpl {
+	template<typename T, int64_t d, typename S>
+	auto VecImpl<Scalar, Dims, StorageType>::operator<(const VecImpl<T, d, S> &other) const
+	  -> VecImpl {
 		return cmp(other, "lt");
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator<=(const VecImpl &other) const -> VecImpl {
+	template<typename T, int64_t d, typename S>
+	auto VecImpl<Scalar, Dims, StorageType>::operator<=(const VecImpl<T, d, S> &other) const
+	  -> VecImpl {
 		return cmp(other, "le");
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator>(const VecImpl &other) const -> VecImpl {
+	template<typename T, int64_t d, typename S>
+	auto VecImpl<Scalar, Dims, StorageType>::operator>(const VecImpl<T, d, S> &other) const
+	  -> VecImpl {
 		return cmp(other, "gt");
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator>=(const VecImpl &other) const -> VecImpl {
+	template<typename T, int64_t d, typename S>
+	auto VecImpl<Scalar, Dims, StorageType>::operator>=(const VecImpl<T, d, S> &other) const
+	  -> VecImpl {
 		return cmp(other, "ge");
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator==(const VecImpl &other) const -> VecImpl {
+	template<typename T, int64_t d, typename S>
+	auto VecImpl<Scalar, Dims, StorageType>::operator==(const VecImpl<T, d, S> &other) const
+	  -> VecImpl {
 		return cmp(other, "eq");
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator!=(const VecImpl &other) const -> VecImpl {
+	template<typename T, int64_t d, typename S>
+	auto VecImpl<Scalar, Dims, StorageType>::operator!=(const VecImpl<T, d, S> &other) const
+	  -> VecImpl {
 		return cmp(other, "ne");
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator<(const Scalar &other) const -> VecImpl {
+	template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
+	auto VecImpl<Scalar, Dims, StorageType>::operator<(const T &other) const -> VecImpl {
 		return cmp(other, "lt");
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator<=(const Scalar &other) const -> VecImpl {
+	template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
+	auto VecImpl<Scalar, Dims, StorageType>::operator<=(const T &other) const -> VecImpl {
 		return cmp(other, "le");
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator>(const Scalar &other) const -> VecImpl {
+	template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
+	auto VecImpl<Scalar, Dims, StorageType>::operator>(const T &other) const -> VecImpl {
 		return cmp(other, "gt");
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator>=(const Scalar &other) const -> VecImpl {
+	template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
+	auto VecImpl<Scalar, Dims, StorageType>::operator>=(const T &other) const -> VecImpl {
 		return cmp(other, "ge");
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator==(const Scalar &other) const -> VecImpl {
+	template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
+	auto VecImpl<Scalar, Dims, StorageType>::operator==(const T &other) const -> VecImpl {
 		return cmp(other, "eq");
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator!=(const Scalar &other) const -> VecImpl {
+	template<typename T, typename std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
+	auto VecImpl<Scalar, Dims, StorageType>::operator!=(const T &other) const -> VecImpl {
 		return cmp(other, "ne");
 	}
 
@@ -690,15 +769,15 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::proj(const VecImpl &other) const -> VecImpl {
+		return other * (dot(other) / other.mag2());
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
 	VecImpl<Scalar, Dims, StorageType>::operator bool() const {
 		for (int64_t i = 0; i < Dims; ++i)
 			if (m_data[i] != 0) return true;
 		return false;
-	}
-
-	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::project(const VecImpl &other) const -> VecImpl {
-		return other * (dot(other) / other.mag2());
 	}
 
 	/// Add two Vector objects together and return the result
@@ -1461,6 +1540,30 @@ namespace librapid {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::log(vec.data()));
 	}
 
+	/// Calculate the log10 of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the log10 of
+	/// \return The log10 of each element of the vector
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
+	log10(const VecImpl<Scalar, Dims, StorageType> &vec) {
+		return VecImpl<Scalar, Dims, StorageType>(Vc::log10(vec.data()));
+	}
+
+	/// Calculate the log2 of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the log2 of
+	/// \return The log2 of each element of the vector
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
+	log2(const VecImpl<Scalar, Dims, StorageType> &vec) {
+		return VecImpl<Scalar, Dims, StorageType>(Vc::log2(vec.data()));
+	}
+
 	/// Calculate the sqrt of each element of a vector and return the result
 	/// \tparam Scalar The scalar type of the vector
 	/// \tparam Dims The dimensionality of the vector
@@ -1486,8 +1589,53 @@ namespace librapid {
 	pow(const VecImpl<Scalar, Dims, StorageType> &vec,
 		const VecImpl<Scalar, Dims, StorageType> &exp) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::pow(vec[i], exp[i]); }
+		for (int64_t i = 0; i < Dims; ++i) { res[i] = pow(vec[i], exp[i]); }
 		return res;
+	}
+
+	/// Raise each element of a vector to the power of a scalar and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \tparam T The scalar type of the exponent
+	/// \param vec Base vector
+	/// \param exp Scalar exponent
+	/// \return The result of raising each element of the vector to the power of the scalar
+	template<typename Scalar, int64_t Dims, typename StorageType, typename T>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
+	pow(const VecImpl<Scalar, Dims, StorageType> &vec, T exp) {
+		VecImpl<Scalar, Dims, StorageType> res;
+		for (int64_t i = 0; i < Dims; ++i) {
+			res[i] = static_cast<Scalar>(pow(vec[i], static_cast<Scalar>(exp)));
+		}
+		return res;
+	}
+
+	/// Raise a scalar to the power of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec Base vector
+	/// \param exp Scalar exponent
+	/// \return The result of raising the scalar to the power of each element of the vector
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
+	pow(Scalar vec, const VecImpl<Scalar, Dims, StorageType> &exp) {
+		VecImpl<Scalar, Dims, StorageType> res;
+		for (int64_t i = 0; i < Dims; ++i) { res[i] = pow(vec, exp[i]); }
+		return res;
+	}
+
+	/// Calculate the cbrt of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the cbrt of
+	/// \return The cbrt of each element of the vector
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
+	cbrt(const VecImpl<Scalar, Dims, StorageType> &vec) {
+		return pow(vec, 1.0 / 3.0);
 	}
 
 	/// Calculate the absolute value of each element of a vector and return the result
@@ -1541,6 +1689,12 @@ namespace librapid {
 	using Vec2d = Vec<double, 2>;
 	using Vec3d = Vec<double, 3>;
 	using Vec4d = Vec<double, 4>;
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	std::ostream &operator<<(std::ostream &os, const VecImpl<Scalar, Dims, StorageType> &vec) {
+		os << vec.str();
+		return os;
+	}
 } // namespace librapid
 
 #ifdef FMT_API
