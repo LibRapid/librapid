@@ -156,34 +156,111 @@ namespace librapid {
 		/// \return Vector with each element set to 1 if the comparison is true, 0 otherwise
 		LIBRAPID_ALWAYS_INLINE VecImpl cmp(const Scalar &value, const char *mode) const;
 
+		/// Equivalent to calling cmp(other, "lt")
+		/// \param other The vector to compare to
+		/// \return See cmp()
+		/// \see cmp()
 		LIBRAPID_ALWAYS_INLINE VecImpl operator<(const VecImpl &other) const;
+
+		/// Equivalent to calling cmp(other, "le")
+		/// \param other The vector to compare to
+		/// \return See cmp()
+		/// \see cmp()
 		LIBRAPID_ALWAYS_INLINE VecImpl operator<=(const VecImpl &other) const;
+
+		/// Equivalent to calling cmp(other, "gt")
+		/// \param other The vector to compare to
+		/// \return See cmp()
+		/// \see cmp()
 		LIBRAPID_ALWAYS_INLINE VecImpl operator>(const VecImpl &other) const;
+
+		/// Equivalent to calling cmp(other, "ge")
+		/// \param other The vector to compare to
+		/// \return See cmp()
+		/// \see cmp()
 		LIBRAPID_ALWAYS_INLINE VecImpl operator>=(const VecImpl &other) const;
+
+		/// Equivalent to calling cmp(other, "eq")
+		/// \param other The vector to compare to
+		/// \return See cmp()
+		/// \see cmp()
 		LIBRAPID_ALWAYS_INLINE VecImpl operator==(const VecImpl &other) const;
+
+		/// Equivalent to calling cmp(other, "ne")
+		/// \param other The vector to compare to
+		/// \return See cmp()
+		/// \see cmp()
 		LIBRAPID_ALWAYS_INLINE VecImpl operator!=(const VecImpl &other) const;
 
+		/// Equivalent to calling cmp(other, "lt")
+		/// \param value The scalar to compare to
+		/// \return See cmp()
+		/// \see cmp()
 		LIBRAPID_ALWAYS_INLINE VecImpl operator<(const Scalar &other) const;
+
+		/// Equivalent to calling cmp(other, "le")
+		/// \param value The scalar to compare to
+		/// \return See cmp()
+		/// \see cmp()
 		LIBRAPID_ALWAYS_INLINE VecImpl operator<=(const Scalar &other) const;
+
+		/// Equivalent to calling cmp(other, "gt")
+		/// \param value The scalar to compare to
+		/// \return See cmp()
+		/// \see cmp()
 		LIBRAPID_ALWAYS_INLINE VecImpl operator>(const Scalar &other) const;
+
+		/// Equivalent to calling cmp(other, "ge")
+		/// \param value The scalar to compare to
+		/// \return See cmp()
+		/// \see cmp()
 		LIBRAPID_ALWAYS_INLINE VecImpl operator>=(const Scalar &other) const;
+
+		/// Equivalent to calling cmp(other, "eq")
+		/// \param value The scalar to compare to
+		/// \return See cmp()
+		/// \see cmp()
 		LIBRAPID_ALWAYS_INLINE VecImpl operator==(const Scalar &other) const;
+
+		/// Equivalent to calling cmp(other, "ne")
+		/// \param value The scalar to compare to
+		/// \return See cmp()
+		/// \see cmp()
 		LIBRAPID_ALWAYS_INLINE VecImpl operator!=(const Scalar &other) const;
 
+		/// Calculate the magnitude of this vector squared
+		/// \return The magnitude squared
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar mag2() const;
 
+		/// Calculate the magnitude of this vector
+		/// \return The magnitude
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar mag() const;
 
+		/// Calculate 1/mag(this)
+		/// \return 1/mag(this)
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar invMag() const { return 1.0 / mag(); }
 
+		/// Calculate the normalized version of this vector
+		/// \return The normalized vector
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE VecImpl norm() const;
 
+		/// Calculate the dot product of this vector and another
+		/// \param other The other vector
+		/// \return The dot product
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar dot(const VecImpl &other) const;
 
+		/// Calculate the cross product of this vector and another
+		/// \param other The other vector
+		/// \return The cross product
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE VecImpl cross(const VecImpl &other) const;
 
+		/// Cast this vector to a boolean. This is equivalent to calling mag2() != 0
+		/// \return True if the magnitude of this vector is not 0, false otherwise
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE explicit operator bool() const;
 
+		/// Project this vector onto another vector
+		/// \param other The vector to project onto
+		/// \return The projection of this vector onto the other vector
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE VecImpl project(const VecImpl &other) const;
 
 		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 2, StorageType> xy() const;
@@ -241,61 +318,50 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> wzxy() const;
 		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> wzyx() const;
 
-		LIBRAPID_ALWAYS_INLINE const auto &data() const { return m_data; }
-		LIBRAPID_ALWAYS_INLINE auto &data() { return m_data; }
+		/// Return the underlying storage type
+		/// \return The underlying storage type
+		LIBRAPID_ALWAYS_INLINE const StorageType &data() const;
 
-		LIBRAPID_ALWAYS_INLINE Scalar x() const {
-			if constexpr (Dims < 1)
-				return 0;
-			else
-				return m_data[0];
-		}
+		/// Return the underlying storage type
+		/// \return The underlying storage type
+		LIBRAPID_ALWAYS_INLINE StorageType &data();
 
-		LIBRAPID_ALWAYS_INLINE void x(Scalar val) {
-			if constexpr (Dims >= 1) m_data[0] = val;
-		}
+		/// Access the x component of this vector
+		/// \return The x component of this vector
+		LIBRAPID_ALWAYS_INLINE Scalar x() const;
 
-		LIBRAPID_ALWAYS_INLINE Scalar y() const {
-			if constexpr (Dims < 2)
-				return 0;
-			else
-				return m_data[1];
-		}
+		/// Access the y component of this vector
+		/// \return The y component of this vector
+		LIBRAPID_ALWAYS_INLINE Scalar y() const;
 
-		LIBRAPID_ALWAYS_INLINE void y(Scalar val) {
-			if constexpr (Dims >= 2) m_data[1] = val;
-		}
+		/// Access the z component of this vector
+		/// \return The z component of this vector
+		LIBRAPID_ALWAYS_INLINE Scalar z() const;
 
-		LIBRAPID_ALWAYS_INLINE Scalar z() const {
-			if constexpr (Dims < 3)
-				return 0;
-			else
-				return m_data[2];
-		}
+		/// Access the w component of this vector
+		/// \return The w component of this vector
+		LIBRAPID_ALWAYS_INLINE Scalar w() const;
 
-		LIBRAPID_ALWAYS_INLINE void z(Scalar val) {
-			if constexpr (Dims >= 3) m_data[2] = val;
-		}
+		/// Set the x component of this vector
+		/// \param val The new value of the x component
+		LIBRAPID_ALWAYS_INLINE void x(Scalar val);
 
-		LIBRAPID_ALWAYS_INLINE Scalar w() const {
-			if constexpr (Dims < 4)
-				return 0;
-			else
-				return m_data[3];
-		}
+		/// Set the y component of this vector
+		/// \param val The new value of the y component
+		LIBRAPID_ALWAYS_INLINE void y(Scalar val);
 
-		LIBRAPID_ALWAYS_INLINE void w(Scalar val) {
-			if constexpr (Dims >= 4) m_data[3] = val;
-		}
+		/// Set the z component of this vector
+		/// \param val The new value of the z component
+		LIBRAPID_ALWAYS_INLINE void z(Scalar val);
 
-		LIBRAPID_NODISCARD std::string str() const {
-			std::string res = "(";
-			for (int64_t i = 0; i < Dims; ++i) {
-				res += std::to_string(m_data[i]);
-				if (i != Dims - 1) { res += ", "; }
-			}
-			return res + ")";
-		}
+		/// Set the w component of this vector
+		/// \param val The new value of the w component
+		LIBRAPID_ALWAYS_INLINE void w(Scalar val);
+
+		/// Convert a vector into a string representation -- "(x, y, z, w, ...)"
+		/// \param formatString The format string to use for each component
+		/// \return A string representation of this vector
+		LIBRAPID_NODISCARD std::string str(const std::string &formatString = "{}") const;
 
 	protected:
 		StorageType m_data {};
@@ -600,7 +666,7 @@ namespace librapid {
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::mag() const -> Scalar {
-		return ::librapid::sqrt(mag2());
+		return sqrt(mag2());
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
@@ -635,6 +701,13 @@ namespace librapid {
 		return other * (dot(other) / other.mag2());
 	}
 
+	/// Add two Vector objects together and return the result
+	/// \tparam Scalar The type of the scalar
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \param lhs The left hand side of the addition
+	/// \param rhs The right hand side of the addition
+	/// \return The result of the addition
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator+(const VecImpl<Scalar, Dims, StorageType> &lhs,
@@ -644,6 +717,13 @@ namespace librapid {
 		return res;
 	}
 
+	/// Subtract two Vector objects and return the result
+	/// \tparam Scalar The type of the scalar
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \param lhs The left hand side of the subtraction
+	/// \param rhs The right hand side of the subtraction
+	/// \return The result of the subtraction
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator-(const VecImpl<Scalar, Dims, StorageType> &lhs,
@@ -653,6 +733,13 @@ namespace librapid {
 		return res;
 	}
 
+	/// Multiply two Vector objects element-by-element and return the result
+	/// \tparam Scalar The type of the scalar
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \param lhs The left hand side of the multiplication
+	/// \param rhs The right hand side of the multiplication
+	/// \return The result of the multiplication
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator*(const VecImpl<Scalar, Dims, StorageType> &lhs,
@@ -662,6 +749,13 @@ namespace librapid {
 		return res;
 	}
 
+	/// Divide two Vector objects element-by-element and return the result
+	/// \tparam Scalar The type of the scalar
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \param lhs The left hand side of the division
+	/// \param rhs The right hand side of the division
+	/// \return The result of the division
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator/(const VecImpl<Scalar, Dims, StorageType> &lhs,
@@ -671,6 +765,14 @@ namespace librapid {
 		return res;
 	}
 
+	/// Add a scalar to a Vector object and return the result
+	/// \tparam Scalar The type of the scalar
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \tparam S The type of the scalar
+	/// \param lhs The left hand side of the addition
+	/// \param rhs The right hand side of the addition
+	/// \return The result of the addition
 	template<typename Scalar, int64_t Dims, typename StorageType, typename S>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator+(const VecImpl<Scalar, Dims, StorageType> &lhs, const S &rhs) {
@@ -679,6 +781,14 @@ namespace librapid {
 		return res;
 	}
 
+	/// Subtract a scalar from a Vector object and return the result
+	/// \tparam Scalar The type of the scalar
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \tparam S The type of the scalar
+	/// \param lhs The left hand side of the subtraction
+	/// \param rhs The right hand side of the subtraction
+	/// \return The result of the subtraction
 	template<typename Scalar, int64_t Dims, typename StorageType, typename S>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator-(const VecImpl<Scalar, Dims, StorageType> &lhs, const S &rhs) {
@@ -687,6 +797,14 @@ namespace librapid {
 		return res;
 	}
 
+	/// Multiply a Vector object by a scalar and return the result
+	/// \tparam Scalar The type of the scalar
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \tparam S The type of the scalar
+	/// \param lhs The left hand side of the multiplication
+	/// \param rhs The right hand side of the multiplication
+	/// \return The result of the multiplication
 	template<typename Scalar, int64_t Dims, typename StorageType, typename S>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator*(const VecImpl<Scalar, Dims, StorageType> &lhs, const S &rhs) {
@@ -695,6 +813,14 @@ namespace librapid {
 		return res;
 	}
 
+	/// Divide a Vector object by a scalar and return the result
+	/// \tparam Scalar The type of the scalar
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \tparam S The type of the scalar
+	/// \param lhs The left hand side of the division
+	/// \param rhs The right hand side of the division
+	/// \return The result of the division
 	template<typename Scalar, int64_t Dims, typename StorageType, typename S>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator/(const VecImpl<Scalar, Dims, StorageType> &lhs, const S &rhs) {
@@ -703,6 +829,14 @@ namespace librapid {
 		return res;
 	}
 
+	/// Add a scalar to a Vector object and return the result
+	/// \tparam S The type of the scalar
+	/// \tparam Scalar The scalar type of the Vector
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \param lhs The left hand side of the addition
+	/// \param rhs The right hand side of the addition
+	/// \return The result of the addition
 	template<typename S, typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator+(const S &lhs, const VecImpl<Scalar, Dims, StorageType> &rhs) {
@@ -711,6 +845,14 @@ namespace librapid {
 		return res;
 	}
 
+	/// Subtract a Vector object from a scalar and return the result
+	/// \tparam S The type of the scalar
+	/// \tparam Scalar The scalar type of the Vector
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \param lhs The left hand side of the subtraction
+	/// \param rhs The right hand side of the subtraction
+	/// \return The result of the subtraction
 	template<typename S, typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator-(const S &lhs, const VecImpl<Scalar, Dims, StorageType> &rhs) {
@@ -719,6 +861,14 @@ namespace librapid {
 		return res;
 	}
 
+	/// Multiply a scalar by a Vector object and return the result
+	/// \tparam S The type of the scalar
+	/// \tparam Scalar The scalar type of the Vector
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \param lhs The left hand side of the multiplication
+	/// \param rhs The right hand side of the multiplication
+	/// \return The result of the multiplication
 	template<typename S, typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator*(const S &lhs, const VecImpl<Scalar, Dims, StorageType> &rhs) {
@@ -727,6 +877,14 @@ namespace librapid {
 		return res;
 	}
 
+	/// Divide a scalar by a Vector object and return the result
+	/// \tparam S The type of the scalar
+	/// \tparam Scalar The scalar type of the Vector
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \param lhs The left hand side of the division
+	/// \param rhs The right hand side of the division
+	/// \return The result of the division
 	template<typename S, typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator/(const S &lhs, const VecImpl<Scalar, Dims, StorageType> &rhs) {
@@ -735,271 +893,472 @@ namespace librapid {
 		return res;
 	}
 
+	/// Add two Vector objects and return the result
+	/// \tparam Scalar The type of the scalar
+	/// \tparam Dims The number of dimensions
+	/// \tparam StorageType The type of the storage
+	/// \param lhs The left hand side of the addition
+	/// \param rhs The right hand side of the addition
+	/// \return The result of the addition
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xy() const -> VecImpl<Scalar, 2, StorageType> {
 		return {x(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::yx() const -> VecImpl<Scalar, 2, StorageType> {
 		return {y(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xz() const -> VecImpl<Scalar, 2, StorageType> {
 		return {x(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zx() const -> VecImpl<Scalar, 2, StorageType> {
 		return {z(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::yz() const -> VecImpl<Scalar, 2, StorageType> {
 		return {y(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zy() const -> VecImpl<Scalar, 2, StorageType> {
 		return {z(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xyz() const -> VecImpl<Scalar, 3, StorageType> {
 		return {x(), y(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xzy() const -> VecImpl<Scalar, 3, StorageType> {
 		return {x(), z(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::yxz() const -> VecImpl<Scalar, 3, StorageType> {
 		return {y(), x(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::yzx() const -> VecImpl<Scalar, 3, StorageType> {
 		return {y(), z(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zxy() const -> VecImpl<Scalar, 3, StorageType> {
 		return {z(), x(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zyx() const -> VecImpl<Scalar, 3, StorageType> {
 		return {z(), y(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xyw() const -> VecImpl<Scalar, 3, StorageType> {
 		return {x(), y(), w()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xwy() const -> VecImpl<Scalar, 3, StorageType> {
 		return {x(), w(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::yxw() const -> VecImpl<Scalar, 3, StorageType> {
 		return {y(), x(), w()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::ywx() const -> VecImpl<Scalar, 3, StorageType> {
 		return {y(), w(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::wxy() const -> VecImpl<Scalar, 3, StorageType> {
 		return {w(), x(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::wyx() const -> VecImpl<Scalar, 3, StorageType> {
 		return {w(), y(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xzw() const -> VecImpl<Scalar, 3, StorageType> {
 		return {x(), z(), w()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xwz() const -> VecImpl<Scalar, 3, StorageType> {
 		return {x(), w(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zxw() const -> VecImpl<Scalar, 3, StorageType> {
 		return {z(), x(), w()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zwx() const -> VecImpl<Scalar, 3, StorageType> {
 		return {z(), w(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::wxz() const -> VecImpl<Scalar, 3, StorageType> {
 		return {w(), x(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::wzx() const -> VecImpl<Scalar, 3, StorageType> {
 		return {w(), z(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::yzw() const -> VecImpl<Scalar, 3, StorageType> {
 		return {y(), z(), w()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::ywz() const -> VecImpl<Scalar, 3, StorageType> {
 		return {y(), w(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zyw() const -> VecImpl<Scalar, 3, StorageType> {
 		return {z(), y(), w()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zwy() const -> VecImpl<Scalar, 3, StorageType> {
 		return {z(), w(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::wyz() const -> VecImpl<Scalar, 3, StorageType> {
 		return {w(), y(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::wzy() const -> VecImpl<Scalar, 3, StorageType> {
 		return {w(), z(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xyzw() const -> VecImpl<Scalar, 4, StorageType> {
 		return {x(), y(), z(), w()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xywz() const -> VecImpl<Scalar, 4, StorageType> {
 		return {x(), y(), w(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xzyw() const -> VecImpl<Scalar, 4, StorageType> {
 		return {x(), z(), y(), w()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xzwy() const -> VecImpl<Scalar, 4, StorageType> {
 		return {x(), z(), w(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xwyz() const -> VecImpl<Scalar, 4, StorageType> {
 		return {x(), w(), y(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::xwzy() const -> VecImpl<Scalar, 4, StorageType> {
 		return {x(), w(), z(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::yxzw() const -> VecImpl<Scalar, 4, StorageType> {
 		return {y(), x(), z(), w()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::yxwz() const -> VecImpl<Scalar, 4, StorageType> {
 		return {y(), x(), w(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::yzxw() const -> VecImpl<Scalar, 4, StorageType> {
 		return {y(), z(), x(), w()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::yzwx() const -> VecImpl<Scalar, 4, StorageType> {
 		return {y(), z(), w(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::ywxz() const -> VecImpl<Scalar, 4, StorageType> {
 		return {y(), w(), x(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::ywzx() const -> VecImpl<Scalar, 4, StorageType> {
 		return {y(), w(), z(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zxyw() const -> VecImpl<Scalar, 4, StorageType> {
 		return {z(), x(), y(), w()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zxwy() const -> VecImpl<Scalar, 4, StorageType> {
 		return {z(), x(), w(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zyxw() const -> VecImpl<Scalar, 4, StorageType> {
 		return {z(), y(), x(), w()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zywx() const -> VecImpl<Scalar, 4, StorageType> {
 		return {z(), y(), w(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zwxy() const -> VecImpl<Scalar, 4, StorageType> {
 		return {z(), w(), x(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::zwyx() const -> VecImpl<Scalar, 4, StorageType> {
 		return {z(), w(), y(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::wxyz() const -> VecImpl<Scalar, 4, StorageType> {
 		return {w(), x(), y(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::wxzy() const -> VecImpl<Scalar, 4, StorageType> {
 		return {w(), x(), z(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::wyxz() const -> VecImpl<Scalar, 4, StorageType> {
 		return {w(), y(), x(), z()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::wyzx() const -> VecImpl<Scalar, 4, StorageType> {
 		return {w(), y(), z(), x()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::wzxy() const -> VecImpl<Scalar, 4, StorageType> {
 		return {w(), z(), x(), y()};
 	}
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::wzyx() const -> VecImpl<Scalar, 4, StorageType> {
 		return {w(), z(), y(), x()};
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::data() const -> const StorageType & {
+		return m_data;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::data() -> StorageType & {
+		return m_data;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::x() const -> Scalar {
+		if constexpr (Dims < 1)
+			return 0;
+		else
+			return m_data[0];
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::y() const -> Scalar {
+		if constexpr (Dims < 2)
+			return 0;
+		else
+			return m_data[1];
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::z() const -> Scalar {
+		if constexpr (Dims < 3)
+			return 0;
+		else
+			return m_data[2];
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::w() const -> Scalar {
+		if constexpr (Dims < 4)
+			return 0;
+		else
+			return m_data[3];
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	void VecImpl<Scalar, Dims, StorageType>::x(Scalar val) {
+		if constexpr (Dims >= 1) m_data[0] = val;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	void VecImpl<Scalar, Dims, StorageType>::y(Scalar val) {
+		if constexpr (Dims >= 2) m_data[1] = val;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	void VecImpl<Scalar, Dims, StorageType>::z(Scalar val) {
+		if constexpr (Dims >= 3) m_data[2] = val;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	void VecImpl<Scalar, Dims, StorageType>::w(Scalar val) {
+		if constexpr (Dims >= 4) m_data[3] = val;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::str(const std::string &formatString) const
+	  -> std::string {
+		std::string res = "(";
+		for (int64_t i = 0; i < Dims; ++i) {
+			res += fmt::format(formatString, m_data[i]);
+			if (i < Dims - 1) res += ", ";
+		}
+		return res + ")";
+	}
+
+	/// Calculate the squared distance between two vectors
+	/// \tparam Scalar The scalar type of the vectors
+	/// \tparam Dims The dimensionality of the vectors
+	/// \tparam StorageType The storage type of the vectors
+	/// \param lhs The first vector
+	/// \param rhs The second vector
+	/// \return The squared distance between the two vectors
+	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE Scalar dist2(const VecImpl<Scalar, Dims, StorageType> &lhs,
 										const VecImpl<Scalar, Dims, StorageType> &rhs) {
 		return (lhs - rhs).mag2();
 	}
 
+	/// Calculate the distance between two vectors
+	/// \tparam Scalar The scalar type of the vectors
+	/// \tparam Dims The dimensionality of the vectors
+	/// \tparam StorageType The storage type of the vectors
+	/// \param lhs The first vector
+	/// \param rhs The second vector
+	/// \return The distance between the two vectors
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE Scalar dist(const VecImpl<Scalar, Dims, StorageType> &lhs,
 									   const VecImpl<Scalar, Dims, StorageType> &rhs) {
 		return (lhs - rhs).mag();
 	}
 
+	/// Calculate the sin of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the sin of
+	/// \return The sin of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	sin(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::sin(vec.data()));
 	}
 
+	/// Calculate the cos of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the cos of
+	/// \return The cos of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	cos(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::cos(vec.data()));
 	}
 
+	/// Calculate the tan of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the tan of
+	/// \return The tan of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	tan(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(sin(vec) / cos(vec));
 	}
 
+	/// Calculate the asin of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the asin of
+	/// \return The asin of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	asin(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::asin(vec.data()));
 	}
 
+	/// Calculate the acos of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the acos of
+	/// \return The acos of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	acos(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(HALFPI - asin(vec));
 	}
 
+	/// Calculate the atan of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the atan of
+	/// \return The atan of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	atan(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::atan(vec.data()));
 	}
 
+	/// Calculate the atan2 of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the atan2 of
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
+	atan2(const VecImpl<Scalar, Dims, StorageType> &lhs,
+		  const VecImpl<Scalar, Dims, StorageType> &rhs) {
+		return VecImpl<Scalar, Dims, StorageType>(Vc::atan2(lhs.data(), rhs.data()));
+	}
+
+	/// Calculate the sinh of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the sinh of
+	/// \return The sinh of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	sinh(const VecImpl<Scalar, Dims, StorageType> &vec) {
@@ -1008,6 +1367,12 @@ namespace librapid {
 		return res;
 	}
 
+	/// Calculate the cosh of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the cosh of
+	/// \return The cosh of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	cosh(const VecImpl<Scalar, Dims, StorageType> &vec) {
@@ -1016,6 +1381,12 @@ namespace librapid {
 		return res;
 	}
 
+	/// Calculate the tanh of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the tanh of
+	/// \return The tanh of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	tanh(const VecImpl<Scalar, Dims, StorageType> &vec) {
@@ -1024,6 +1395,12 @@ namespace librapid {
 		return res;
 	}
 
+	/// Calculate the asinh of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the asinh of
+	/// \return The asinh of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	asinh(const VecImpl<Scalar, Dims, StorageType> &vec) {
@@ -1032,6 +1409,12 @@ namespace librapid {
 		return res;
 	}
 
+	/// Calculate the acosh of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the acosh of
+	/// \return The acosh of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	acosh(const VecImpl<Scalar, Dims, StorageType> &vec) {
@@ -1040,6 +1423,12 @@ namespace librapid {
 		return res;
 	}
 
+	/// Calculate the atanh of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the atanh of
+	/// \return The atanh of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	atanh(const VecImpl<Scalar, Dims, StorageType> &vec) {
@@ -1048,24 +1437,50 @@ namespace librapid {
 		return res;
 	}
 
+	/// Calculate the exp of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the exp of
+	/// \return The exp of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	exp(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::exp(vec.data()));
 	}
 
+	/// Calculate the log of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the log of
+	/// \return The log of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	log(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::log(vec.data()));
 	}
 
+	/// Calculate the sqrt of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the sqrt of
+	/// \return The sqrt of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	sqrt(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::sqrt(vec.data()));
 	}
 
+	/// Raise each element of a vector to the power of another vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec Base vector
+	/// \param exp Vector of exponents
+	/// \return The result of raising each element of the vector to the power of the corresponding
+	///         element of the exponent vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	pow(const VecImpl<Scalar, Dims, StorageType> &vec,
@@ -1075,24 +1490,45 @@ namespace librapid {
 		return res;
 	}
 
+	/// Calculate the absolute value of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the absolute value of
+	/// \return The absolute value of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	abs(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::abs(vec.data()));
 	}
 
+	/// Calculate the floor of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the floor of
+	/// \return The floor of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	floor(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::floor(vec.data()));
 	}
 
+	/// Calculate the ceil of each element of a vector and return the result
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
+	/// \tparam StorageType The storage type of the vector
+	/// \param vec The vector to calculate the ceil of
+	/// \return The ceil of each element of the vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	ceil(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::ceil(vec.data()));
 	}
 
+	/// A simplified interface to the VecImpl class, defaulting to Vc SimdArray storage
+	/// \tparam Scalar The scalar type of the vector
+	/// \tparam Dims The dimensionality of the vector
 	template<typename Scalar, int64_t Dims>
 	using Vec = VecImpl<Scalar, Dims, Vc::SimdArray<Scalar, Dims>>;
 
