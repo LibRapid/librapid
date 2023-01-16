@@ -19,6 +19,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#include <cfloat>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
