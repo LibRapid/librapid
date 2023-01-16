@@ -35,26 +35,39 @@ namespace librapid {
 
 		/// Construct a Vector object from an arbitrary number of arguments. See other
 		/// vector constructors for more information
-		/// \tparam Args
-		/// \tparam size
-		/// \param args
+		/// \tparam Args Parameter pack template type
+		/// \tparam size Number of arguments passed
+		/// \param args Values
 		template<typename... Args, int64_t size = sizeof...(Args),
 				 typename std::enable_if_t<size != Dims, int> = 0>
 		VecImpl(Args... args);
 
-		VecImpl(const VecImpl &other)				 = default;
-		VecImpl(VecImpl &&other) noexcept			 = default;
-		VecImpl &operator=(const VecImpl &other)	 = default;
+		/// Create a Vector from another vector instance
+		/// \param other Vector to copy values from
+		VecImpl(const VecImpl &other) = default;
+
+		/// Move constructor for Vector objects
+		/// \param other Vector to move
+		VecImpl(VecImpl &&other) noexcept = default;
+
+		/// Assignment operator for Vector objects
+		/// \param other Vector to copy values from
+		/// \return Reference to this
+		VecImpl &operator=(const VecImpl &other) = default;
+
+		/// Assignment move constructor for Vector objects
+		/// \param other Vector to move
+		/// \return Reference to this
 		VecImpl &operator=(VecImpl &&other) noexcept = default;
 
-		// Implement conversion to and from GLM datatypes
+		// Implement conversion to and from GLM data types
 #ifdef GLM_VERSION
 
+		/// Construct a Vector from a GLM Vector
 		template<glm::qualifier p = glm::defaultp>
-		VecImpl(const glm::vec<Dims, Scalar, p> &vec) {
-			for (int64_t i = 0; i < Dims; ++i) { m_data[i] = vec[i]; }
-		}
+		VecImpl(const glm::vec<Dims, Scalar, p> &vec);
 
+		/// Convert a GLM vector to a Vector object
 		template<glm::qualifier p = glm::defaultp>
 		operator glm::vec<Dims, Scalar, p>() const {
 			glm::vec<Dims, Scalar, p> res;
@@ -64,310 +77,218 @@ namespace librapid {
 
 #endif // GLM_VERSION
 
-		LR_NODISCARD("") auto operator[](int64_t index) const {
-			LR_ASSERT(0 <= index < Dims,
-					  "Index {} out of range for vector with {} dimensions",
-					  index,
-					  Dims);
-			return m_data[index];
-		}
+		/// Access a specific element of the vector
+		/// \param index The index of the element to access
+		/// \return Reference to the element
+		LIBRAPID_NODISCARD const Scalar &operator[](int64_t index) const;
 
-		LR_NODISCARD("") auto operator[](int64_t index) {
-			LR_ASSERT(0 <= index < Dims,
-					  "Index {} out of range for vector with {} dimensions",
-					  index,
-					  Dims);
-			return m_data[index];
-		}
+		/// Access a specific element of the vector
+		/// \param index The index of the element to access
+		/// \return Reference to the element
+		LIBRAPID_NODISCARD Scalar &operator[](int64_t index);
 
-		LR_FORCE_INLINE void operator+=(const VecImpl &other) { m_data += other.m_data; }
-		LR_FORCE_INLINE void operator-=(const VecImpl &other) { m_data -= other.m_data; }
-		LR_FORCE_INLINE void operator*=(const VecImpl &other) { m_data *= other.m_data; }
-		LR_FORCE_INLINE void operator/=(const VecImpl &other) { m_data /= other.m_data; }
+		/// Add a vector to this vector, element-by-element
+		/// \param other The vector to add
+		/// \return Reference to this
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator+=(const VecImpl &other);
 
-		LR_FORCE_INLINE void operator+=(const Scalar &value) { m_data += value; }
-		LR_FORCE_INLINE void operator-=(const Scalar &value) { m_data -= value; }
-		LR_FORCE_INLINE void operator*=(const Scalar &value) { m_data *= value; }
-		LR_FORCE_INLINE void operator/=(const Scalar &value) { m_data /= value; }
+		/// Subtract a vector from this vector, element-by-element
+		/// \param other The vector to subtract
+		/// \return Reference to this
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator-=(const VecImpl &other);
 
-		LR_FORCE_INLINE VecImpl operator-() const {
-			VecImpl res(*this);
-			res *= -1;
-			return res;
-		}
+		/// Multiply this vector by another vector, element-by-element
+		/// \param other The vector to multiply by
+		/// \return Reference to this
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator*=(const VecImpl &other);
 
-		LR_FORCE_INLINE
-		VecImpl cmp(const VecImpl &other, const char *mode) const {
-			// Mode:
-			// 0: ==
-			// 1: !=
-			// 2: <
-			// 3: <=
-			// 4: >
-			// 5: >=
+		/// Divide this vector by another vector, element-by-element
+		/// \param other The vector to divide by
+		/// \return Reference to this
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator/=(const VecImpl &other);
 
-			VecImpl res(*this);
-			i16 modeInt = *(i16 *)mode;
-			fmt::print("Info: {:Lb}\n", modeInt);
-			fmt::print("Info: {:Lb}\n", ('g' << 8) | 't');
-			for (int64_t i = 0; i < Dims; ++i) {
-				switch (modeInt) {
-					case 'e' | ('q' << 8):
-						if (res[i] == other[i]) {
-							res[i] = 1;
-						} else {
-							res[i] = 0;
-						}
-						break;
-					case 'n' | ('e' << 8):
-						if (res[i] != other[i]) {
-							res[i] = 1;
-						} else {
-							res[i] = 0;
-						}
-						break;
-					case 'l' | ('t' << 8):
-						if (res[i] < other[i]) {
-							res[i] = 1;
-						} else {
-							res[i] = 0;
-						}
-						break;
-					case 'l' | ('e' << 8):
-						if (res[i] <= other[i]) {
-							res[i] = 1;
-						} else {
-							res[i] = 0;
-						}
-						break;
-					case 'g' | ('t' << 8):
-						if (res[i] > other[i]) {
-							res[i] = 1;
-						} else {
-							res[i] = 0;
-						}
-						break;
-					case 'g' | ('e' << 8):
-						if (res[i] >= other[i]) {
-							res[i] = 1;
-						} else {
-							res[i] = 0;
-						}
-						break;
-					default: LR_ASSERT(false, "Invalid mode {}", mode);
-				}
-			}
-			return res;
-		}
+		/// Add a scalar to this vector, element-by-element
+		/// \param other The scalar to add
+		/// \return Reference to this
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator+=(const Scalar &value);
 
-		LR_FORCE_INLINE
-		VecImpl cmp(const Scalar &value, const char *mode) const {
-			// Mode:
-			// 0: ==
-			// 1: !=
-			// 2: <
-			// 3: <=
-			// 4: >
-			// 5: >=
+		/// Subtract a scalar from this vector, element-by-element
+		/// \param other The scalar to subtract
+		/// \return Reference to this
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator-=(const Scalar &value);
 
-			VecImpl res(*this);
-			i16 modeInt = *(i16 *)mode;
-			fmt::print("Info: {:Lb}\n", modeInt);
-			fmt::print("Info: {:Lb}\n", ('g' << 8) | 't');
-			for (int64_t i = 0; i < Dims; ++i) {
-				switch (modeInt) {
-					case 'e' | ('q' << 8):
-						if (res[i] == value) {
-							res[i] = 1;
-						} else {
-							res[i] = 0;
-						}
-						break;
-					case 'n' | ('e' << 8):
-						if (res[i] != value) {
-							res[i] = 1;
-						} else {
-							res[i] = 0;
-						}
-						break;
-					case 'l' | ('t' << 8):
-						if (res[i] < value) {
-							res[i] = 1;
-						} else {
-							res[i] = 0;
-						}
-						break;
-					case 'l' | ('e' << 8):
-						if (res[i] <= value) {
-							res[i] = 1;
-						} else {
-							res[i] = 0;
-						}
-						break;
-					case 'g' | ('t' << 8):
-						if (res[i] > value) {
-							res[i] = 1;
-						} else {
-							res[i] = 0;
-						}
-						break;
-					case 'g' | ('e' << 8):
-						if (res[i] >= value) {
-							res[i] = 1;
-						} else {
-							res[i] = 0;
-						}
-						break;
-					default: LR_ASSERT(false, "Invalid mode {}", mode);
-				}
-			}
-			return res;
-		}
+		/// Multiply this vector by a scalar, element-by-element
+		/// \param other The scalar to multiply by
+		/// \return Reference to this
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator*=(const Scalar &value);
 
-		LR_FORCE_INLINE VecImpl operator<(const VecImpl &other) const { return cmp(other, "lt"); }
-		LR_FORCE_INLINE VecImpl operator<=(const VecImpl &other) const { return cmp(other, "le"); }
-		LR_FORCE_INLINE VecImpl operator>(const VecImpl &other) const { return cmp(other, "gt"); }
-		LR_FORCE_INLINE VecImpl operator>=(const VecImpl &other) const { return cmp(other, "ge"); }
-		LR_FORCE_INLINE VecImpl operator==(const VecImpl &other) const { return cmp(other, "eq"); }
-		LR_FORCE_INLINE VecImpl operator!=(const VecImpl &other) const { return cmp(other, "ne"); }
+		/// Divide this vector by a scalar, element-by-element
+		/// \param other The scalar to divide by
+		/// \return Reference to this
+		LIBRAPID_ALWAYS_INLINE VecImpl &operator/=(const Scalar &value);
 
-		LR_FORCE_INLINE VecImpl operator<(const Scalar &other) const { return cmp(other, "lt"); }
-		LR_FORCE_INLINE VecImpl operator<=(const Scalar &other) const { return cmp(other, "le"); }
-		LR_FORCE_INLINE VecImpl operator>(const Scalar &other) const { return cmp(other, "gt"); }
-		LR_FORCE_INLINE VecImpl operator>=(const Scalar &other) const { return cmp(other, "ge"); }
-		LR_FORCE_INLINE VecImpl operator==(const Scalar &other) const { return cmp(other, "eq"); }
-		LR_FORCE_INLINE VecImpl operator!=(const Scalar &other) const { return cmp(other, "ne"); }
+		/// Negate this vector
+		/// \return Vector with all elements negated
+		LIBRAPID_ALWAYS_INLINE VecImpl operator-() const;
 
-		LR_NODISCARD("") LR_INLINE Scalar mag2() const { return (m_data * m_data).sum(); }
-		LR_NODISCARD("") LR_INLINE Scalar mag() const { return ::librapid::sqrt(mag2()); }
-		LR_NODISCARD("") LR_INLINE Scalar invMag() const { return 1.0 / mag(); }
+		/// Compare two vectors for equality. Available modes are:
+		/// - "eq" - Check for equality
+		/// - "ne" - Check for inequality
+		/// - "lt" - Check if each element is less than the corresponding element in the other
+		/// - "le" - Check if each element is less than or equal to the corresponding element in the
+		/// other
+		/// - "gt" - Check if each element is greater than the corresponding element in the other
+		/// - "ge" - Check if each element is greater than or equal to the corresponding element in
+		/// the other \param other The vector to compare to \param mode The comparison mode \return
+		/// Vector with each element set to 1 if the comparison is true, 0 otherwise
+		LIBRAPID_ALWAYS_INLINE
+		VecImpl cmp(const VecImpl &other, const char *mode) const;
 
-		LR_NODISCARD("") LR_INLINE VecImpl norm() const {
-			VecImpl res(*this);
-			res /= mag();
-			return res;
-		}
+		/// Compare a vector and a scalar for equality. Available modes are:
+		/// - "eq" - Check for equality
+		/// - "ne" - Check for inequality
+		/// - "lt" - Check if each element is less than the scalar
+		/// - "le" - Check if each element is less than or equal to the scalar
+		/// - "gt" - Check if each element is greater than the scalar
+		/// - "ge" - Check if each element is greater than or equal to the scalar
+		/// \param value The scalar to compare to
+		/// \param mode The comparison mode
+		/// \return Vector with each element set to 1 if the comparison is true, 0 otherwise
+		LIBRAPID_ALWAYS_INLINE VecImpl cmp(const Scalar &value, const char *mode) const;
 
-		LR_NODISCARD("") LR_INLINE Scalar dot(const VecImpl &other) const {
-			return (m_data * other.m_data).sum();
-		}
+		LIBRAPID_ALWAYS_INLINE VecImpl operator<(const VecImpl &other) const;
+		LIBRAPID_ALWAYS_INLINE VecImpl operator<=(const VecImpl &other) const;
+		LIBRAPID_ALWAYS_INLINE VecImpl operator>(const VecImpl &other) const;
+		LIBRAPID_ALWAYS_INLINE VecImpl operator>=(const VecImpl &other) const;
+		LIBRAPID_ALWAYS_INLINE VecImpl operator==(const VecImpl &other) const;
+		LIBRAPID_ALWAYS_INLINE VecImpl operator!=(const VecImpl &other) const;
 
-		LR_NODISCARD("") LR_INLINE VecImpl cross(const VecImpl &other) const {
-			static_assert(Dims == 3, "Cross product is only defined for 3D Vectors");
-			return VecImpl(y() * other.z() - z() * other.y(),
-						   z() * other.x() - x() * other.z(),
-						   x() * other.y() - y() * other.x());
-		}
+		LIBRAPID_ALWAYS_INLINE VecImpl operator<(const Scalar &other) const;
+		LIBRAPID_ALWAYS_INLINE VecImpl operator<=(const Scalar &other) const;
+		LIBRAPID_ALWAYS_INLINE VecImpl operator>(const Scalar &other) const;
+		LIBRAPID_ALWAYS_INLINE VecImpl operator>=(const Scalar &other) const;
+		LIBRAPID_ALWAYS_INLINE VecImpl operator==(const Scalar &other) const;
+		LIBRAPID_ALWAYS_INLINE VecImpl operator!=(const Scalar &other) const;
 
-		LR_NODISCARD("") LR_FORCE_INLINE explicit operator bool() const {
-			for (int64_t i = 0; i < Dims; ++i)
-				if (m_data[i] != 0) return true;
-			return false;
-		}
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar mag2() const;
 
-		LR_FORCE_INLINE Vec<Scalar, 2> xy() const { return {x(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 2> yx() const { return {y(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 2> xz() const { return {x(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 2> zx() const { return {z(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 2> yz() const { return {y(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 2> zy() const { return {z(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> xyz() const { return {x(), y(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> xzy() const { return {x(), z(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> yxz() const { return {y(), x(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> yzx() const { return {y(), z(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> zxy() const { return {z(), x(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> zyx() const { return {z(), y(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> xyw() const { return {x(), y(), w()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> xwy() const { return {x(), w(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> yxw() const { return {y(), x(), w()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> ywx() const { return {y(), w(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> wxy() const { return {w(), x(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> wyx() const { return {w(), y(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> xzw() const { return {x(), z(), w()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> xwz() const { return {x(), w(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> zxw() const { return {z(), x(), w()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> zwx() const { return {z(), w(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> wxz() const { return {w(), x(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> wzx() const { return {w(), z(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> yzw() const { return {y(), z(), w()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> ywz() const { return {y(), w(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> zyw() const { return {z(), y(), w()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> zwy() const { return {z(), w(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> wyz() const { return {w(), y(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 3> wzy() const { return {w(), z(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> xyzw() const { return {x(), y(), z(), w()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> xywz() const { return {x(), y(), w(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> xzyw() const { return {x(), z(), y(), w()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> xzwy() const { return {x(), z(), w(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> xwyz() const { return {x(), w(), y(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> xwzy() const { return {x(), w(), z(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> yxzw() const { return {y(), x(), z(), w()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> yxwz() const { return {y(), x(), w(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> yzxw() const { return {y(), z(), x(), w()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> yzwx() const { return {y(), z(), w(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> ywxz() const { return {y(), w(), x(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> ywzx() const { return {y(), w(), z(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> zxyw() const { return {z(), x(), y(), w()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> zxwy() const { return {z(), x(), w(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> zyxw() const { return {z(), y(), x(), w()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> zywx() const { return {z(), y(), w(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> zwxy() const { return {z(), w(), x(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> zwyx() const { return {z(), w(), y(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> wxyz() const { return {w(), x(), y(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> wxzy() const { return {w(), x(), z(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> wyxz() const { return {w(), y(), x(), z()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> wyzx() const { return {w(), y(), z(), x()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> wzxy() const { return {w(), z(), x(), y()}; }
-		LR_FORCE_INLINE Vec<Scalar, 4> wzyx() const { return {w(), z(), y(), x()}; }
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar mag() const;
 
-		LR_FORCE_INLINE const auto &data() const { return m_data; }
-		LR_FORCE_INLINE auto &data() { return m_data; }
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar invMag() const { return 1.0 / mag(); }
 
-		LR_FORCE_INLINE Scalar x() const {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE VecImpl norm() const;
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar dot(const VecImpl &other) const;
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE VecImpl cross(const VecImpl &other) const;
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE explicit operator bool() const;
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE VecImpl project(const VecImpl &other) const;
+
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 2, StorageType> xy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 2, StorageType> yx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 2, StorageType> xz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 2, StorageType> zx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 2, StorageType> yz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 2, StorageType> zy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> xyz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> xzy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> yxz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> yzx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> zxy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> zyx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> xyw() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> xwy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> yxw() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> ywx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> wxy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> wyx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> xzw() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> xwz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> zxw() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> zwx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> wxz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> wzx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> yzw() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> ywz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> zyw() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> zwy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> wyz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 3, StorageType> wzy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> xyzw() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> xywz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> xzyw() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> xzwy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> xwyz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> xwzy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> yxzw() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> yxwz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> yzxw() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> yzwx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> ywxz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> ywzx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> zxyw() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> zxwy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> zyxw() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> zywx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> zwxy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> zwyx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> wxyz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> wxzy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> wyxz() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> wyzx() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> wzxy() const;
+		LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, 4, StorageType> wzyx() const;
+
+		LIBRAPID_ALWAYS_INLINE const auto &data() const { return m_data; }
+		LIBRAPID_ALWAYS_INLINE auto &data() { return m_data; }
+
+		LIBRAPID_ALWAYS_INLINE Scalar x() const {
 			if constexpr (Dims < 1)
 				return 0;
 			else
 				return m_data[0];
 		}
 
-		LR_FORCE_INLINE void x(Scalar val) {
+		LIBRAPID_ALWAYS_INLINE void x(Scalar val) {
 			if constexpr (Dims >= 1) m_data[0] = val;
 		}
 
-		LR_FORCE_INLINE Scalar y() const {
+		LIBRAPID_ALWAYS_INLINE Scalar y() const {
 			if constexpr (Dims < 2)
 				return 0;
 			else
 				return m_data[1];
 		}
 
-		LR_FORCE_INLINE void y(Scalar val) {
+		LIBRAPID_ALWAYS_INLINE void y(Scalar val) {
 			if constexpr (Dims >= 2) m_data[1] = val;
 		}
 
-		LR_FORCE_INLINE Scalar z() const {
+		LIBRAPID_ALWAYS_INLINE Scalar z() const {
 			if constexpr (Dims < 3)
 				return 0;
 			else
 				return m_data[2];
 		}
 
-		LR_FORCE_INLINE void z(Scalar val) {
+		LIBRAPID_ALWAYS_INLINE void z(Scalar val) {
 			if constexpr (Dims >= 3) m_data[2] = val;
 		}
 
-		LR_FORCE_INLINE Scalar w() const {
+		LIBRAPID_ALWAYS_INLINE Scalar w() const {
 			if constexpr (Dims < 4)
 				return 0;
 			else
 				return m_data[3];
 		}
 
-		LR_FORCE_INLINE void w(Scalar val) {
+		LIBRAPID_ALWAYS_INLINE void w(Scalar val) {
 			if constexpr (Dims >= 4) m_data[3] = val;
 		}
 
-		LR_NODISCARD("") std::string str() const {
+		LIBRAPID_NODISCARD std::string str() const {
 			std::string res = "(";
 			for (int64_t i = 0; i < Dims; ++i) {
 				res += std::to_string(m_data[i]);
@@ -395,8 +316,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	template<typename... Args, int64_t size = sizeof...(Args),
-			 typename std::enable_if_t<size != Dims, int> = 0>
+	template<typename... Args, int64_t size, typename std::enable_if_t<size != Dims, int>>
 	VecImpl<Scalar, Dims, StorageType>::VecImpl(Args... args) {
 		static_assert(sizeof...(Args) <= Dims, "Invalid number of arguments");
 		const Scalar expanded[] = {static_cast<Scalar>(args)...};
@@ -404,7 +324,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType1, typename StorageType2>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType1>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType1>
 	operator&(const VecImpl<Scalar, Dims, StorageType1> &vec,
 			  const VecImpl<Scalar, Dims, StorageType2> &mask) {
 		VecImpl<Scalar, Dims, StorageType1> res(vec);
@@ -414,8 +334,309 @@ namespace librapid {
 		return res;
 	}
 
+#ifdef GLM_VERSION
+
+	/// Construct a Vector from a GLM Vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	template<glm::qualifier p = glm::defaultp>
+	VecImpl<Scalar, Dims, StorageType>::VecImpl(const glm::vec<Dims, Scalar, p> &vec) {
+		for (int64_t i = 0; i < Dims; ++i) { m_data[i] = vec[i]; }
+	}
+
+	/// Convert a GLM vector to a Vector object
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	template<glm::qualifier p = glm::defaultp>
+	VecImpl<Scalar, Dims, StorageType>::operator glm::vec<Dims, Scalar, p>() const {
+		glm::vec<Dims, Scalar, p> res;
+		for (int64_t i = 0; i < Dims; ++i) { res[i] = m_data[i]; }
+		return res;
+	}
+
+#endif // GLM_VERSION
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) const -> const Scalar & {
+		LIBRAPID_ASSERT(
+		  0 <= index < Dims, "Index {} out of range for vector with {} dimensions", index, Dims);
+		return m_data[index];
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) -> Scalar & {
+		LIBRAPID_ASSERT(
+		  0 <= index < Dims, "Index {} out of range for vector with {} dimensions", index, Dims);
+		return m_data[index];
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator+=(const VecImpl &other) -> VecImpl & {
+		m_data += other.m_data;
+		return *this;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator-=(const VecImpl &other) -> VecImpl & {
+		m_data -= other.m_data;
+		return *this;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator*=(const VecImpl &other) -> VecImpl & {
+		m_data *= other.m_data;
+		return *this;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator/=(const VecImpl &other) -> VecImpl & {
+		m_data /= other.m_data;
+		return *this;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator+=(const Scalar &value) -> VecImpl & {
+		m_data += value;
+		return *this;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator-=(const Scalar &value) -> VecImpl & {
+		m_data -= value;
+		return *this;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator*=(const Scalar &value) -> VecImpl & {
+		m_data *= value;
+		return *this;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator/=(const Scalar &value) -> VecImpl & {
+		m_data /= value;
+		return *this;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator-() const -> VecImpl {
+		VecImpl res(*this);
+		res *= -1;
+		return res;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::cmp(const VecImpl &other, const char *mode) const
+	  -> VecImpl {
+		VecImpl res(*this);
+		int16_t modeInt = *(int16_t *)mode;
+		for (int64_t i = 0; i < Dims; ++i) {
+			switch (modeInt) {
+				case 'e' | ('q' << 8):
+					if (res[i] == other[i])
+						res[i] = 1;
+					else
+						res[i] = 0;
+					break;
+				case 'n' | ('e' << 8):
+					if (res[i] != other[i])
+						res[i] = 1;
+					else
+						res[i] = 0;
+					break;
+				case 'l' | ('t' << 8):
+					if (res[i] < other[i])
+						res[i] = 1;
+					else
+						res[i] = 0;
+					break;
+				case 'l' | ('e' << 8):
+					if (res[i] <= other[i])
+						res[i] = 1;
+					else
+						res[i] = 0;
+					break;
+				case 'g' | ('t' << 8):
+					if (res[i] > other[i])
+						res[i] = 1;
+					else
+						res[i] = 0;
+					break;
+				case 'g' | ('e' << 8):
+					if (res[i] >= other[i])
+						res[i] = 1;
+					else
+						res[i] = 0;
+					break;
+				default: LIBRAPID_ASSERT(false, "Invalid mode {}", mode);
+			}
+		}
+		return res;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::cmp(const Scalar &value, const char *mode) const
+	  -> VecImpl {
+		// Mode:
+		// 0: ==    1: !=
+		// 2: <     3: <=
+		// 4: >     5: >=
+
+		VecImpl res(*this);
+		int16_t modeInt = *(int16_t *)mode;
+		fmt::print("Info: {:Lb}\n", modeInt);
+		fmt::print("Info: {:Lb}\n", ('g' << 8) | 't');
+		for (int64_t i = 0; i < Dims; ++i) {
+			switch (modeInt) {
+				case 'e' | ('q' << 8):
+					if (res[i] == value) {
+						res[i] = 1;
+					} else {
+						res[i] = 0;
+					}
+					break;
+				case 'n' | ('e' << 8):
+					if (res[i] != value) {
+						res[i] = 1;
+					} else {
+						res[i] = 0;
+					}
+					break;
+				case 'l' | ('t' << 8):
+					if (res[i] < value) {
+						res[i] = 1;
+					} else {
+						res[i] = 0;
+					}
+					break;
+				case 'l' | ('e' << 8):
+					if (res[i] <= value) {
+						res[i] = 1;
+					} else {
+						res[i] = 0;
+					}
+					break;
+				case 'g' | ('t' << 8):
+					if (res[i] > value) {
+						res[i] = 1;
+					} else {
+						res[i] = 0;
+					}
+					break;
+				case 'g' | ('e' << 8):
+					if (res[i] >= value) {
+						res[i] = 1;
+					} else {
+						res[i] = 0;
+					}
+					break;
+				default: LIBRAPID_ASSERT(false, "Invalid mode {}", mode);
+			}
+		}
+		return res;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator<(const VecImpl &other) const -> VecImpl {
+		return cmp(other, "lt");
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator<=(const VecImpl &other) const -> VecImpl {
+		return cmp(other, "le");
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator>(const VecImpl &other) const -> VecImpl {
+		return cmp(other, "gt");
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator>=(const VecImpl &other) const -> VecImpl {
+		return cmp(other, "ge");
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator==(const VecImpl &other) const -> VecImpl {
+		return cmp(other, "eq");
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator!=(const VecImpl &other) const -> VecImpl {
+		return cmp(other, "ne");
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator<(const Scalar &other) const -> VecImpl {
+		return cmp(other, "lt");
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator<=(const Scalar &other) const -> VecImpl {
+		return cmp(other, "le");
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator>(const Scalar &other) const -> VecImpl {
+		return cmp(other, "gt");
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator>=(const Scalar &other) const -> VecImpl {
+		return cmp(other, "ge");
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator==(const Scalar &other) const -> VecImpl {
+		return cmp(other, "eq");
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::operator!=(const Scalar &other) const -> VecImpl {
+		return cmp(other, "ne");
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::mag2() const -> Scalar {
+		return (m_data * m_data).sum();
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::mag() const -> Scalar {
+		return ::librapid::sqrt(mag2());
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::norm() const -> VecImpl {
+		VecImpl res(*this);
+		res /= mag();
+		return res;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::dot(const VecImpl &other) const -> Scalar {
+		return (m_data * other.m_data).sum();
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::cross(const VecImpl &other) const -> VecImpl {
+		static_assert(Dims == 3, "Cross product is only defined for 3D Vectors");
+		return VecImpl(y() * other.z() - z() * other.y(),
+					   z() * other.x() - x() * other.z(),
+					   x() * other.y() - y() * other.x());
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	VecImpl<Scalar, Dims, StorageType>::operator bool() const {
+		for (int64_t i = 0; i < Dims; ++i)
+			if (m_data[i] != 0) return true;
+		return false;
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::project(const VecImpl &other) const -> VecImpl {
+		return other * (dot(other) / other.mag2());
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator+(const VecImpl<Scalar, Dims, StorageType> &lhs,
 			  const VecImpl<Scalar, Dims, StorageType> &rhs) {
 		VecImpl<Scalar, Dims, StorageType> res(lhs);
@@ -424,7 +645,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator-(const VecImpl<Scalar, Dims, StorageType> &lhs,
 			  const VecImpl<Scalar, Dims, StorageType> &rhs) {
 		VecImpl<Scalar, Dims, StorageType> res(lhs);
@@ -433,7 +654,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator*(const VecImpl<Scalar, Dims, StorageType> &lhs,
 			  const VecImpl<Scalar, Dims, StorageType> &rhs) {
 		VecImpl<Scalar, Dims, StorageType> res(lhs);
@@ -442,7 +663,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator/(const VecImpl<Scalar, Dims, StorageType> &lhs,
 			  const VecImpl<Scalar, Dims, StorageType> &rhs) {
 		VecImpl<Scalar, Dims, StorageType> res(lhs);
@@ -451,7 +672,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType, typename S>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator+(const VecImpl<Scalar, Dims, StorageType> &lhs, const S &rhs) {
 		VecImpl<Scalar, Dims, StorageType> res(lhs);
 		res += rhs;
@@ -459,7 +680,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType, typename S>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator-(const VecImpl<Scalar, Dims, StorageType> &lhs, const S &rhs) {
 		VecImpl<Scalar, Dims, StorageType> res(lhs);
 		res -= rhs;
@@ -467,7 +688,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType, typename S>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator*(const VecImpl<Scalar, Dims, StorageType> &lhs, const S &rhs) {
 		VecImpl<Scalar, Dims, StorageType> res(lhs);
 		res *= rhs;
@@ -475,7 +696,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType, typename S>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator/(const VecImpl<Scalar, Dims, StorageType> &lhs, const S &rhs) {
 		VecImpl<Scalar, Dims, StorageType> res(lhs);
 		res /= rhs;
@@ -483,7 +704,7 @@ namespace librapid {
 	}
 
 	template<typename S, typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator+(const S &lhs, const VecImpl<Scalar, Dims, StorageType> &rhs) {
 		VecImpl<Scalar, Dims, StorageType> res(StorageType(static_cast<Scalar>(lhs)));
 		res += rhs;
@@ -491,7 +712,7 @@ namespace librapid {
 	}
 
 	template<typename S, typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator-(const S &lhs, const VecImpl<Scalar, Dims, StorageType> &rhs) {
 		VecImpl<Scalar, Dims, StorageType> res(StorageType(static_cast<Scalar>(lhs)));
 		res -= rhs;
@@ -499,7 +720,7 @@ namespace librapid {
 	}
 
 	template<typename S, typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator*(const S &lhs, const VecImpl<Scalar, Dims, StorageType> &rhs) {
 		VecImpl<Scalar, Dims, StorageType> res(StorageType(static_cast<Scalar>(lhs)));
 		res *= rhs;
@@ -507,7 +728,7 @@ namespace librapid {
 	}
 
 	template<typename S, typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	operator/(const S &lhs, const VecImpl<Scalar, Dims, StorageType> &rhs) {
 		VecImpl<Scalar, Dims, StorageType> res(StorageType(static_cast<Scalar>(lhs)));
 		res /= rhs;
@@ -515,55 +736,272 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE Scalar dist2(const VecImpl<Scalar, Dims, StorageType> &lhs,
-								 const VecImpl<Scalar, Dims, StorageType> &rhs) {
+	auto VecImpl<Scalar, Dims, StorageType>::xy() const -> VecImpl<Scalar, 2, StorageType> {
+		return {x(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::yx() const -> VecImpl<Scalar, 2, StorageType> {
+		return {y(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xz() const -> VecImpl<Scalar, 2, StorageType> {
+		return {x(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zx() const -> VecImpl<Scalar, 2, StorageType> {
+		return {z(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::yz() const -> VecImpl<Scalar, 2, StorageType> {
+		return {y(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zy() const -> VecImpl<Scalar, 2, StorageType> {
+		return {z(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xyz() const -> VecImpl<Scalar, 3, StorageType> {
+		return {x(), y(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xzy() const -> VecImpl<Scalar, 3, StorageType> {
+		return {x(), z(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::yxz() const -> VecImpl<Scalar, 3, StorageType> {
+		return {y(), x(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::yzx() const -> VecImpl<Scalar, 3, StorageType> {
+		return {y(), z(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zxy() const -> VecImpl<Scalar, 3, StorageType> {
+		return {z(), x(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zyx() const -> VecImpl<Scalar, 3, StorageType> {
+		return {z(), y(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xyw() const -> VecImpl<Scalar, 3, StorageType> {
+		return {x(), y(), w()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xwy() const -> VecImpl<Scalar, 3, StorageType> {
+		return {x(), w(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::yxw() const -> VecImpl<Scalar, 3, StorageType> {
+		return {y(), x(), w()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::ywx() const -> VecImpl<Scalar, 3, StorageType> {
+		return {y(), w(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::wxy() const -> VecImpl<Scalar, 3, StorageType> {
+		return {w(), x(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::wyx() const -> VecImpl<Scalar, 3, StorageType> {
+		return {w(), y(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xzw() const -> VecImpl<Scalar, 3, StorageType> {
+		return {x(), z(), w()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xwz() const -> VecImpl<Scalar, 3, StorageType> {
+		return {x(), w(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zxw() const -> VecImpl<Scalar, 3, StorageType> {
+		return {z(), x(), w()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zwx() const -> VecImpl<Scalar, 3, StorageType> {
+		return {z(), w(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::wxz() const -> VecImpl<Scalar, 3, StorageType> {
+		return {w(), x(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::wzx() const -> VecImpl<Scalar, 3, StorageType> {
+		return {w(), z(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::yzw() const -> VecImpl<Scalar, 3, StorageType> {
+		return {y(), z(), w()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::ywz() const -> VecImpl<Scalar, 3, StorageType> {
+		return {y(), w(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zyw() const -> VecImpl<Scalar, 3, StorageType> {
+		return {z(), y(), w()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zwy() const -> VecImpl<Scalar, 3, StorageType> {
+		return {z(), w(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::wyz() const -> VecImpl<Scalar, 3, StorageType> {
+		return {w(), y(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::wzy() const -> VecImpl<Scalar, 3, StorageType> {
+		return {w(), z(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xyzw() const -> VecImpl<Scalar, 4, StorageType> {
+		return {x(), y(), z(), w()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xywz() const -> VecImpl<Scalar, 4, StorageType> {
+		return {x(), y(), w(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xzyw() const -> VecImpl<Scalar, 4, StorageType> {
+		return {x(), z(), y(), w()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xzwy() const -> VecImpl<Scalar, 4, StorageType> {
+		return {x(), z(), w(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xwyz() const -> VecImpl<Scalar, 4, StorageType> {
+		return {x(), w(), y(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::xwzy() const -> VecImpl<Scalar, 4, StorageType> {
+		return {x(), w(), z(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::yxzw() const -> VecImpl<Scalar, 4, StorageType> {
+		return {y(), x(), z(), w()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::yxwz() const -> VecImpl<Scalar, 4, StorageType> {
+		return {y(), x(), w(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::yzxw() const -> VecImpl<Scalar, 4, StorageType> {
+		return {y(), z(), x(), w()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::yzwx() const -> VecImpl<Scalar, 4, StorageType> {
+		return {y(), z(), w(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::ywxz() const -> VecImpl<Scalar, 4, StorageType> {
+		return {y(), w(), x(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::ywzx() const -> VecImpl<Scalar, 4, StorageType> {
+		return {y(), w(), z(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zxyw() const -> VecImpl<Scalar, 4, StorageType> {
+		return {z(), x(), y(), w()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zxwy() const -> VecImpl<Scalar, 4, StorageType> {
+		return {z(), x(), w(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zyxw() const -> VecImpl<Scalar, 4, StorageType> {
+		return {z(), y(), x(), w()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zywx() const -> VecImpl<Scalar, 4, StorageType> {
+		return {z(), y(), w(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zwxy() const -> VecImpl<Scalar, 4, StorageType> {
+		return {z(), w(), x(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::zwyx() const -> VecImpl<Scalar, 4, StorageType> {
+		return {z(), w(), y(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::wxyz() const -> VecImpl<Scalar, 4, StorageType> {
+		return {w(), x(), y(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::wxzy() const -> VecImpl<Scalar, 4, StorageType> {
+		return {w(), x(), z(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::wyxz() const -> VecImpl<Scalar, 4, StorageType> {
+		return {w(), y(), x(), z()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::wyzx() const -> VecImpl<Scalar, 4, StorageType> {
+		return {w(), y(), z(), x()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::wzxy() const -> VecImpl<Scalar, 4, StorageType> {
+		return {w(), z(), x(), y()};
+	}
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	auto VecImpl<Scalar, Dims, StorageType>::wzyx() const -> VecImpl<Scalar, 4, StorageType> {
+		return {w(), z(), y(), x()};
+	}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	LIBRAPID_ALWAYS_INLINE Scalar dist2(const VecImpl<Scalar, Dims, StorageType> &lhs,
+										const VecImpl<Scalar, Dims, StorageType> &rhs) {
 		return (lhs - rhs).mag2();
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE Scalar dist(const VecImpl<Scalar, Dims, StorageType> &lhs,
-								const VecImpl<Scalar, Dims, StorageType> &rhs) {
+	LIBRAPID_ALWAYS_INLINE Scalar dist(const VecImpl<Scalar, Dims, StorageType> &lhs,
+									   const VecImpl<Scalar, Dims, StorageType> &rhs) {
 		return (lhs - rhs).mag();
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	sin(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::sin(vec.data()));
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	cos(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::cos(vec.data()));
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	tan(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(sin(vec) / cos(vec));
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	asin(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::asin(vec.data()));
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	acos(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(HALFPI - asin(vec));
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	atan(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::atan(vec.data()));
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	sinh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
 		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::sinh(vec[i]); }
@@ -571,7 +1009,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	cosh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
 		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::cosh(vec[i]); }
@@ -579,7 +1017,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	tanh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
 		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::tanh(vec[i]); }
@@ -587,7 +1025,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	asinh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
 		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::asinh(vec[i]); }
@@ -595,7 +1033,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	acosh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
 		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::acosh(vec[i]); }
@@ -603,7 +1041,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	atanh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
 		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::atanh(vec[i]); }
@@ -611,25 +1049,25 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	exp(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::exp(vec.data()));
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	log(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::log(vec.data()));
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	sqrt(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::sqrt(vec.data()));
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	pow(const VecImpl<Scalar, Dims, StorageType> &vec,
 		const VecImpl<Scalar, Dims, StorageType> &exp) {
 		VecImpl<Scalar, Dims, StorageType> res;
@@ -638,19 +1076,19 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	abs(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::abs(vec.data()));
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	floor(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::floor(vec.data()));
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	LR_FORCE_INLINE VecImpl<Scalar, Dims, StorageType>
+	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	ceil(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		return VecImpl<Scalar, Dims, StorageType>(Vc::ceil(vec.data()));
 	}
@@ -670,7 +1108,7 @@ namespace librapid {
 } // namespace librapid
 
 #ifdef FMT_API
-template<typename Scalar, librapid::int64_t D, typename StorageType>
+template<typename Scalar, int64_t D, typename StorageType>
 struct fmt::formatter<librapid::VecImpl<Scalar, D, StorageType>> {
 	template<typename ParseContext>
 	constexpr auto parse(ParseContext &ctx) {
