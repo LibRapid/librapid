@@ -1694,6 +1694,10 @@ namespace librapid {
 	using Vec3d = Vec<double, 3>;
 	using Vec4d = Vec<double, 4>;
 
+	using Vec2 = Vec2d;
+	using Vec3 = Vec3d;
+	using Vec4 = Vec4d;
+
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	std::ostream &operator<<(std::ostream &os, const VecImpl<Scalar, Dims, StorageType> &vec) {
 		os << vec.str();
