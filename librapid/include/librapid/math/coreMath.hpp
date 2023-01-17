@@ -56,6 +56,26 @@ namespace librapid {
 		return std::abs(val);
 	}
 
+	/// Map a value from one range to another
+	/// \tparam V Data type of the value to map
+	/// \tparam B1 Data type of the lower bound of the input range
+	/// \tparam E1 Data type of the upper bound of the input range
+	/// \tparam B2 Data type of the lower bound of the output range
+	/// \tparam E2 Data type of the upper bound of the output range
+	/// \param val Value to map
+	/// \param start1 Lower bound of the input range
+	/// \param stop1 Upper bound of the input range
+	/// \param start2 Lower bound of the output range
+	/// \param stop2 Upper bound of the output range
+	/// \return Mapped value
+	template<typename V, typename B1, typename E1, typename B2, typename E2>
+	LIBRAPID_INLINE auto map(V val, B1 start1, E1 stop1, B2 start2, E2 stop2) {
+		using T = decltype(val + start1 + stop1 + start2 + stop2); // Data type of the result
+		return static_cast<T>(start2) + (static_cast<T>(stop2) - static_cast<T>(start2)) *
+										  ((static_cast<T>(val) - static_cast<T>(start1)) /
+										   (static_cast<T>(stop1) - static_cast<T>(start1)));
+	}
+
 	/// Return the floor of a given value
 	/// \tparam T Data type
 	/// \param val Input value
@@ -109,7 +129,9 @@ namespace librapid {
 	/// \param val1 First input value
 	/// \param val2 Second input value
 	/// \return First input value raised to the power of the second input value
-	template<typename T0, typename T1, typename std::enable_if_t<std::is_fundamental_v<T0> && std::is_fundamental_v<T1>, int> = 0>
+	template<
+	  typename T0, typename T1,
+	  typename std::enable_if_t<std::is_fundamental_v<T0> && std::is_fundamental_v<T1>, int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto pow(T0 val1, T1 val2) {
 		if constexpr (std::is_integral_v<T0> && std::is_integral_v<T1>) {
 			return std::pow(static_cast<double>(val1), static_cast<double>(val2));
