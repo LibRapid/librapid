@@ -412,8 +412,12 @@ namespace librapid {
 	template<typename... Args, int64_t size, typename std::enable_if_t<size != Dims, int>>
 	VecImpl<Scalar, Dims, StorageType>::VecImpl(Args... args) {
 		static_assert(sizeof...(Args) <= Dims, "Invalid number of arguments");
-		const Scalar expanded[] = {static_cast<Scalar>(args)...};
-		for (int64_t i = 0; i < size; i++) { m_data[i] = expanded[i]; }
+		if constexpr (size == 1) {
+			m_data = StorageType(static_cast<Scalar>(args)...);
+		} else {
+			const Scalar expanded[] = {static_cast<Scalar>(args)...};
+			for (int64_t i = 0; i < size; i++) { m_data[i] = expanded[i]; }
+		}
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>

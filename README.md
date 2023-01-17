@@ -22,10 +22,64 @@ LibRapid is a high performance Array library, supporting a wide range of optimis
 on the CPU or GPU (via CUDA). All calculations are vectorised with SIMD instructions and are run on multiple threads (if
 necessary) to make them as fast as possible on any given machine.
 
-There are also a wide range of helper functions and classes to aid the development of your own project.
+## Why use LibRapid?
 
-LibRapid is highly templated, meaning it can conform to exactly your needs with minimal compile-times and even support
-for custom data types.
+LibRapid aims to provide a cohesive ecosystem of functions that interoperate with each other, allowing for faster
+development ***and*** faster code execution.
+
+For example, LibRapid implements a wide range of mathematical functions which can operate on primitive types,
+multi-precision types, vectors, and arrays. Due to the way these functions are implemented, a single function call can
+be used to operate on all of these types, reducing code duplication.
+
+### A small example
+
+To prove the point made above, let's take a look at a simple example. Here, we have a function that maps a value from
+one range to another:
+
+```cpp
+// Standard "double" implementation
+double map(double val, double start1, double stop1, double start2, double stop2) {
+    return start2 + (stop2 - start2) * ((val - start1) / (stop1 - start1));
+}
+
+// map(0.5, 0, 1, 0, 10) = 5
+// map(10, 0, 100, 0, 1) = 0.1
+// map(5, 0, 10, 0, 100) = 50
+```
+
+This function will accept integers, floats and doubles, but nothing else can be used, limiting its functionality.
+
+Of course, this could be templated to accept other types, but if you passed a `std::vector<double>` to this function,
+for example, you'd have to create an edge case to support it. **This is where LibRapid comes in.**
+
+Look at the function below:
+
+```cpp
+// An extremely versatile mapping function (used within LibRapid!)
+template<typename V, typename B1, typename E1, typename B2, typename E2>
+V map(V val, B1 start1, E1 stop1, B2 start2, E2 stop2) {
+    return start2 + (stop2 - start2) * ((val - start1) / (stop1 - start1));
+}
+```
+
+This may look excessively complicated with that many template parameters, but you don't actually need all of those! This
+just gives the greatest flexibility. This function can be called with ***almost any LibRapid type!***.
+
+```cpp
+map(0.5, 0, 1, 0, 100) //  . . . . . . . . . . . . . . . | 50
+map(lrc::Vec2d(0.2, 0.8), 0, 1, 0, 100) // . . . . . . . | (20, 80)
+map(0.5, 0, 1, 0, lrc::Vec2d(100, 200)) // . . . . . . . | (50, 100)
+map(lrc::Vec2d(-1, -2), 1, 0, lrc::Vec2d(100, 300)) // . | (75, 250)
+
+using namespace lrc::literals; // To use "_f" suffix
+// "0.5"_f in this case creates a multiprecision float :)
+map("0.5"_f, "0"_f, "1"_f, "0"_f, "100"_f) //  . . . . . | 50.00000000000000
+```
+
+Note: LibRapid's built-in `map` function has even more functionality! See the documentation for details. 
+
+This is just one example of how LibRapid's functions can be used to make your code more concise and more efficient, and
+hopefully it's clear to see how powerful this could be when working with more complex functions and types.
 
 # Documentation
 
