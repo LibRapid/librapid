@@ -16,6 +16,7 @@ namespace librapid::array {
 		ArrayView(const ArrayType &array);
 		ArrayView(const ArrayView &other) = default;
 
+
 	private:
 		Reference m_ref;
 		ShapeType m_shape;

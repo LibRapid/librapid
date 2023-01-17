@@ -124,7 +124,7 @@ namespace librapid {
 		/// \return A string representation of the Shape object
 		LIBRAPID_NODISCARD std::string str() const;
 
-	private:
+	protected:
 		T m_dims;
 		std::array<T, N> m_data;
 	};
