@@ -66,17 +66,17 @@ This may look excessively complicated with that many template parameters, but yo
 just gives the greatest flexibility. This function can be called with ***almost any LibRapid type!***.
 
 ```cpp
-map(0.5, 0, 1, 0, 100) //  . . . . . . . . . . . . . . . | 50
-map(lrc::Vec2d(0.2, 0.8), 0, 1, 0, 100) // . . . . . . . | (20, 80)
-map(0.5, 0, 1, 0, lrc::Vec2d(100, 200)) // . . . . . . . | (50, 100)
-map(lrc::Vec2d(-1, -2), 1, 0, lrc::Vec2d(100, 300)) // . | (75, 250)
+map(0.5, 0, 1, 0, 100); //  . . . . . . . . . . . . . . . | 50
+map(lrc::Vec2d(0.2, 0.8), 0, 1, 0, 100); // . . . . . . . | (20, 80)
+map(0.5, 0, 1, 0, lrc::Vec2d(100, 200)); // . . . . . . . | (50, 100)
+map(lrc::Vec2d(-1, -2), 1, 0, lrc::Vec2d(100, 300)); // . | (75, 250)
 
-using namespace lrc::literals; // To use "_f" suffix
+using namespace lrc::literals; // To use "_f" suffix (also requires multiprecision to be enabled)
 // "0.5"_f in this case creates a multiprecision float :)
-map("0.5"_f, "0"_f, "1"_f, "0"_f, "100"_f) //  . . . . . | 50.00000000000000
+map("0.5"_f, "0"_f, "1"_f, "0"_f, "100"_f); //  . . . . . | 50.00000000000000
 ```
 
-Note: LibRapid's built-in `map` function has even more functionality! See the documentation for details. 
+Note: LibRapid's built-in `map` function has even more functionality! See the [documentation](https://librapid.github.io/librapid/namespacelibrapid.html#aa77bd94fdda1a889654275f47d258390) for details. 
 
 This is just one example of how LibRapid's functions can be used to make your code more concise and more efficient, and
 hopefully it's clear to see how powerful this could be when working with more complex functions and types.
