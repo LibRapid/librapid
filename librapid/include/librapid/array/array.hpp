@@ -2,6 +2,7 @@
 #define LIBRAPID_ARRAY
 
 #include "sizetype.hpp"
+#include "strideTools.hpp"
 #include "storage.hpp"
 #include "cudaStorage.hpp"
 #include "arrayTypeDef.hpp"
