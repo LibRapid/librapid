@@ -52,6 +52,13 @@ namespace librapid {
 	/// \see Function
 	template<typename... Inputs>
 	using FunctionRef = detail::Function<Inputs...>;
+
+	namespace array {
+		/// An intermediate type to represent a slice or view of an array.
+		/// \tparam T The type of the array.
+		template<typename T>
+		class ArrayView;
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_TYPE_DEF_HPP
