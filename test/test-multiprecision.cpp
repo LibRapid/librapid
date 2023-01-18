@@ -12,6 +12,7 @@ namespace lrc = librapid;
 #if defined(LIBRAPID_USE_MULTIPREC)
 
 TEST_CASE("Test Multiprecision", "[multiprecision]") {
+	lrc::prec(16);
 	REQUIRE(lrc::mpz(1) == 1);
 	REQUIRE(lrc::mpq(1) == 1);
 	REQUIRE(lrc::mpf(1) == 1);
@@ -25,13 +26,13 @@ TEST_CASE("Test Multiprecision", "[multiprecision]") {
 	REQUIRE(fmt::format("{}", lrc::mpz(1)) == "1");
 	REQUIRE(fmt::format("{}", lrc::mpq(1)) == "1");
 	REQUIRE(fmt::format("{}", lrc::mpf(1)) == "1.0");
-	REQUIRE(fmt::format("{}", lrc::mpfr(1)) == "1.00000000000000");
+	REQUIRE(fmt::format("{}", lrc::mpfr(1)) == "1.0000000000000000");
 
 	REQUIRE(fmt::format("{}", lrc::mpz(1234)) == "1234");
 	REQUIRE(fmt::format("{}", lrc::mpq(1234)) == "1234");
 	REQUIRE(fmt::format("{}", lrc::mpf(1234)) == "1234.0");
-	REQUIRE(fmt::format("{}", lrc::mpfr(1234)) == "1234.00000000000000");
-	REQUIRE(fmt::format("{}", lrc::mpfr(3.1415926)) == "3.14159260000000");
+	REQUIRE(fmt::format("{}", lrc::mpfr(1234)) == "1234.0000000000000000");
+	REQUIRE(fmt::format("{}", lrc::mpfr(3.1415926)) == "3.1415926000000000");
 
 	REQUIRE(lrc::mpz("1234") == 1234);
 	REQUIRE(lrc::mpq("1234") == 1234);
