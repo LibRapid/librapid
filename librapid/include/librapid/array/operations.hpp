@@ -88,6 +88,11 @@ namespace librapid {
 			using Type = ::librapid::detail::descriptor::Trivial;
 		};
 
+		template<typename T>
+		struct DescriptorExtractor<array::ArrayView<T>> {
+			using Type = ::librapid::detail::descriptor::Trivial;
+		};
+
 		template<typename Descriptor, typename Functor, typename... Args>
 		struct DescriptorExtractor<::librapid::detail::Function<Descriptor, Functor, Args...>> {
 			using Type = Descriptor;

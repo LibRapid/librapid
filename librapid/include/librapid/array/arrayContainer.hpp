@@ -93,6 +93,9 @@ namespace librapid {
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &
 			operator=(const detail::Function<desc, Functor_, Args...> &function);
 
+			template<typename T>
+			detail::CommaInitializer<ArrayContainer> operator<<(const T &value);
+
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<ArrayContainer>
 			operator[](int64_t index) const;
 
@@ -132,6 +135,11 @@ namespace librapid {
 			/// \param index The index to write the scalar to
 			/// \param value The value to write to the array's storage
 			LIBRAPID_ALWAYS_INLINE void write(size_t index, const Scalar &value);
+
+			/// Return a string representation of the array container
+			/// \format The format to use for the string representation
+			/// \return A string representation of the array container
+			LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
 
 		private:
 			ShapeType m_shape;	   // The shape type of the array
@@ -211,6 +219,13 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		auto ArrayContainer<ShapeType_, typename StorageType_>::operator<<(const T &value)
+		  -> detail::CommaInitializer<ArrayContainer> {
+			return detail::CommaInitializer<ArrayContainer>(*this, value);
+		}
+
+		template<typename ShapeType_, typename StorageType_>
 		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const
 		  -> ArrayView<ArrayContainer> {
 			LIBRAPID_ASSERT(
@@ -270,7 +285,18 @@ namespace librapid {
 		void ArrayContainer<ShapeType_, StorageType_>::write(size_t index, const Scalar &value) {
 			m_storage[index] = value;
 		}
+
+		template<typename ShapeType_, typename StorageType_>
+		std::string ArrayContainer<ShapeType_, StorageType_>::str(const std::string &format) const {
+			return ArrayView(*this).str(format);
+		}
 	} // namespace array
 } // namespace librapid
+
+// Support FMT printing
+#ifdef FMT_API
+LIBRAPID_SIMPLE_IO_IMPL(typename ShapeType_ COMMA typename StorageType_,
+						librapid::array::ArrayContainer<ShapeType_ COMMA StorageType_>)
+#endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_ARRAY_CONTAINER_HPP
