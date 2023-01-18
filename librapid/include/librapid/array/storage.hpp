@@ -480,13 +480,13 @@ namespace librapid {
 
 	template<typename T, typename A>
 	auto Storage<T, A>::operator[](Storage<T, A>::SizeType index) const -> ConstReference {
-		LIBRAPID_ASSERT(index < size(), "Index out of bounds");
+		LIBRAPID_ASSERT(index < size(), "Index {} out of bounds for size {}", index, size());
 		return m_begin[index];
 	}
 
 	template<typename T, typename A>
 	auto Storage<T, A>::operator[](Storage<T, A>::SizeType index) -> Reference {
-		LIBRAPID_ASSERT(index < size(), "Index out of bounds");
+		LIBRAPID_ASSERT(index < size(), "Index {} out of bounds for size {}", index, size());
 		return m_begin[index];
 	}
 

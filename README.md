@@ -86,8 +86,8 @@ hopefully it's clear to see how powerful this could be when working with more co
 <a href="https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html" target="_blank"><b>Latest
 Documentation</b></a>
 
-LibRapid uses [Doxygen](https://doxygen.nl/) and [Doxygen Awesome CSS](https://github.com/jothepro/doxygen-awesome-css)
-to automatically generate the documentation.
+LibRapid uses [Doxygen](https://doxygen.nl/) to automatically generate the documentation, and
+[Doxygen Awesome CSS](https://github.com/jothepro/doxygen-awesome-css) to improve Doxygen's outdated styling.
 
 # Current Development Stage
 
