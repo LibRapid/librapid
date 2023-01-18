@@ -83,16 +83,26 @@ namespace librapid {
 			using Type = T;
 		};
 
+		/// Extracts the Descriptor type of an ArrayContainer object. In this case, the Descriptor
+		/// is Trivial
+		/// \tparam ShapeType The shape type of the ArrayContainer
+		/// \tparam StorageType The storage type of the ArrayContainer
 		template<typename ShapeType, typename StorageType>
 		struct DescriptorExtractor<array::ArrayContainer<ShapeType, StorageType>> {
 			using Type = ::librapid::detail::descriptor::Trivial;
 		};
 
+		/// Extracts the Descriptor type of an ArrayView object
+		/// \tparam T The Array type of the ArrayView
 		template<typename T>
 		struct DescriptorExtractor<array::ArrayView<T>> {
 			using Type = ::librapid::detail::descriptor::Trivial;
 		};
 
+		/// Extracts the Descriptor type of a Function object
+		/// \tparam Descriptor The descriptor of the Function
+		/// \tparam Functor The functor type of the Function
+		/// \tparam Args The argument types of the Function
 		template<typename Descriptor, typename Functor, typename... Args>
 		struct DescriptorExtractor<::librapid::detail::Function<Descriptor, Functor, Args...>> {
 			using Type = Descriptor;
@@ -120,6 +130,10 @@ namespace librapid {
 			}
 		} // namespace impl
 
+		/// Allows a number of Descriptor types to be merged together into a single Descriptor type.
+		/// The Descriptors used are extracted from the ***typenames*** of the provided types.
+		/// \tparam First The first type to merge
+		/// \tparam Rest The remaining types
 		template<typename First, typename... Rest>
 		struct DescriptorType {
 			using FirstType		  = std::decay_t<First>;

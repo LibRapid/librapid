@@ -180,55 +180,6 @@ namespace librapid::detail {
 		}
 	}
 
-//	namespace impl {
-//		template<typename ShapeType, typename StorageScalar>
-//		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const
-//		  array::ArrayContainer<ShapeType, Storage<StorageScalar>> &
-//		  tupleEvaluatorImpl(
-//			const array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &container) {
-//			return container;
-//		}
-//
-//		template<typename T>
-//		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const auto &
-//		tupleEvaluatorImpl(const array::ArrayView<T> &container) {
-//			return container.eval();
-//		}
-//
-//		template<typename descriptor, typename Functor, typename... Args>
-//		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-//		tupleEvaluatorImpl(const detail::Function<descriptor, Functor, Args...> &function) {
-//			array::ArrayContainer<
-//			  decltype(function.shape()),
-//			  Storage<typename detail::Function<descriptor, Functor, Args...>::Scalar>>
-//			  result(function.shape());
-//			assign(result, function);
-//			return result;
-//		}
-//
-//		template<typename ShapeType, typename StorageScalar, typename Allocator,
-//				 typename descriptor, typename Functor, typename... Args, size_t... I>
-//		LIBRAPID_ALWAYS_INLINE void
-//		tupleEvaluator(std::index_sequence<I...>,
-//					   array::ArrayContainer<ShapeType, Storage<StorageScalar, Allocator>> &dst,
-//					   const detail::Function<descriptor, Functor, Args...> &function) {
-//			dst = function(tupleEvaluatorImpl(std::get<I>(function.args()))...);
-//		}
-//	} // namespace impl
-//
-//	template<typename ShapeType_, typename StorageScalar, typename Allocator, typename Functor_,
-//			 typename... Args>
-//	LIBRAPID_ALWAYS_INLINE void
-//	assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, Allocator>> &lhs,
-//		   const detail::Function<descriptor::Combined, Functor_, Args...> &function) {
-//		using Scalar =
-//		  typename array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>::Scalar;
-//
-//		const auto args			 = function.args();
-//		constexpr size_t argSize = std::tuple_size<decltype(args)>::value;
-//		impl::tupleEvaluator(std::make_index_sequence<argSize>(), lhs, function);
-//	}
-
 #if defined(LIBRAPID_HAS_CUDA)
 
 	/*
