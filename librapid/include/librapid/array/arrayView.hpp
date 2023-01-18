@@ -81,7 +81,7 @@ namespace librapid {
 		template<typename T>
 		auto ArrayView<T>::operator[](int64_t index) const -> ArrayView<ArrayType> {
 			LIBRAPID_ASSERT(
-			  index >= 0 && index < m_shape[0],
+			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
 			  m_shape[0]);

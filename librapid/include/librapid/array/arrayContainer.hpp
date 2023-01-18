@@ -93,9 +93,19 @@ namespace librapid {
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &
 			operator=(const detail::Function<desc, Functor_, Args...> &function);
 
+			/// Allow ArrayContainer objects to be initialized with a comma separated list of
+			/// values. This makes use of the CommaInitializer class
+			/// \tparam T The type of the values
+			/// \param value The value to set in the Array object
+			/// \return The comma initializer object
 			template<typename T>
 			detail::CommaInitializer<ArrayContainer> operator<<(const T &value);
 
+			/// Access a sub-array of this ArrayContainer instance. The sub-array will reference
+			/// the same memory as this ArrayContainer instance.
+			/// \param index The index of the sub-array
+			/// \return A reference to the sub-array (ArrayView)
+			/// \see ArrayView
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<ArrayContainer>
 			operator[](int64_t index) const;
 
@@ -222,14 +232,14 @@ namespace librapid {
 		template<typename T>
 		auto ArrayContainer<ShapeType_, StorageType_>::operator<<(const T &value)
 		  -> detail::CommaInitializer<ArrayContainer> {
-			return detail::CommaInitializer<ArrayContainer>(*this, value);
+			return detail::CommaInitializer<ArrayContainer>(*this, static_cast<Scalar>(value));
 		}
 
 		template<typename ShapeType_, typename StorageType_>
 		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const
 		  -> ArrayView<ArrayContainer> {
 			LIBRAPID_ASSERT(
-			  index >= 0 && index < m_shape[0],
+			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
 			  m_shape[0]);

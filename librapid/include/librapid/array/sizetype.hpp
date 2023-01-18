@@ -234,7 +234,7 @@ namespace librapid {
 	template<typename T, size_t N>
 	template<typename Index>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const T &Shape<T, N>::operator[](Index index) const {
-		LIBRAPID_ASSERT(index < m_dims, "Index out of bounds");
+		LIBRAPID_ASSERT(static_cast<T>(index) < m_dims, "Index out of bounds");
 		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
 		return m_data[index];
 	}
@@ -242,7 +242,7 @@ namespace librapid {
 	template<typename T, size_t N>
 	template<typename Index>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T &Shape<T, N>::operator[](Index index) {
-		LIBRAPID_ASSERT(index < m_dims, "Index out of bounds");
+		LIBRAPID_ASSERT(static_cast<T>(index) < m_dims, "Index out of bounds");
 		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
 		return m_data[index];
 	}
