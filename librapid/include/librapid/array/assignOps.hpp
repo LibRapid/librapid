@@ -22,7 +22,9 @@ namespace librapid::detail {
 		using Scalar =
 		  typename array::ArrayContainer<ShapeType_,
 										 Storage<StorageScalar, StorageAllocator>>::Scalar;
-		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
+		constexpr int64_t packetWidth	  = typetraits::TypeInfo<Scalar>::packetWidth;
+		constexpr bool allowVectorisation = typetraits::TypeInfo<
+		  detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation;
 
 		const int64_t size		 = function.shape().size();
 		const int64_t vectorSize = size - (size % packetWidth);
@@ -32,16 +34,29 @@ namespace librapid::detail {
 					  "Function return type must be the same as the array container's scalar type");
 		LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
 
-		for (int64_t index = 0; index < vectorSize; index += packetWidth) {
-			lhs.writePacket(index, function.packet(index));
-		}
+		if constexpr (allowVectorisation) {
+			for (int64_t index = 0; index < vectorSize; index += packetWidth) {
+				lhs.writePacket(index, function.packet(index));
+			}
 
-		// Assign the remaining elements
-		for (int64_t index = vectorSize; index < size; ++index) {
-			lhs.write(index, function.scalar(index));
+			// Assign the remaining elements
+			for (int64_t index = vectorSize; index < size; ++index) {
+				lhs.write(index, function.scalar(index));
+			}
+		} else {
+			// Assign the remaining elements
+			for (int64_t index = 0; index < size; ++index) {
+				lhs.write(index, function.scalar(index));
+			}
 		}
 	}
 
+	/// Trivial assignment with fixed-size arrays
+	/// \tparam ShapeType_ The shape type of the array container
+	/// \tparam StorageScalar The scalar type of the storage object
+	/// \tparam StorageSize The size of the storage object
+	/// \tparam Functor_ The function type
+	/// \tparam Args The argument types of the function
 	template<typename ShapeType_, typename StorageScalar, size_t... StorageSize, typename Functor_,
 			 typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
@@ -50,37 +65,44 @@ namespace librapid::detail {
 		using Scalar =
 		  typename array::ArrayContainer<ShapeType_,
 										 FixedStorage<StorageScalar, StorageSize...>>::Scalar;
-		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
-
-		constexpr int64_t elements	 = ::librapid::product<StorageSize...>();
-		constexpr int64_t vectorSize = elements - (elements % packetWidth);
+		constexpr int64_t packetWidth	  = typetraits::TypeInfo<Scalar>::packetWidth;
+		constexpr int64_t elements		  = ::librapid::product<StorageSize...>();
+		constexpr int64_t vectorSize	  = elements - (elements % packetWidth);
+		constexpr bool allowVectorisation = typetraits::TypeInfo<
+		  detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation;
 
 		// Ensure the function can actually be assigned to the array container
 		static_assert(typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
 					  "Function return type must be the same as the array container's scalar type");
 		LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
 
-		for (int64_t index = 0; index < vectorSize; index += packetWidth) {
-			lhs.writePacket(index, function.packet(index));
-		}
+		if constexpr (allowVectorisation) {
+			for (int64_t index = 0; index < vectorSize; index += packetWidth) {
+				lhs.writePacket(index, function.packet(index));
+			}
 
-		// Assign the remaining elements
-		for (int64_t index = vectorSize; index < elements; ++index) {
-			lhs.write(index, function.scalar(index));
+			// Assign the remaining elements
+			for (int64_t index = vectorSize; index < elements; ++index) {
+				lhs.write(index, function.scalar(index));
+			}
+		} else {
+			// Assign the remaining elements
+			for (int64_t index = 0; index < elements; ++index) {
+				lhs.write(index, function.scalar(index));
+			}
 		}
 	}
 
 	/// Trivial assignment with parallel execution
-	/// \tparam ShapeType_
-	/// \tparam StorageScalar
-	/// \tparam StorageAllocator
-	/// \tparam Functor_
-	/// \tparam Args
-	/// \param lhs
-	/// \param function
+	/// \tparam ShapeType_ The shape type of the array container
+	/// \tparam StorageScalar The scalar type of the storage object
+	/// \tparam StorageAllocator The Allocator of the Storage object
+	/// \tparam Functor_ The function type
+	/// \tparam Args The argument types of the function
+	/// \param lhs The array container to assign to
+	/// \param function The function to assign
 	/// \see assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>>
-	/// &lhs,
-	///				const detail::Function<descriptor::Trivial, Functor_, Args...> &function)
+	/// &lhs, const detail::Function<descriptor::Trivial, Functor_, Args...> &function)
 	template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
 			 typename Functor_, typename... Args>
 	LIBRAPID_ALWAYS_INLINE void
@@ -91,6 +113,9 @@ namespace librapid::detail {
 										 Storage<StorageScalar, StorageAllocator>>::Scalar;
 		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
+		constexpr bool allowVectorisation = typetraits::TypeInfo<
+		  detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation;
+
 		const int64_t size		 = function.shape().size();
 		const int64_t vectorSize = size - (size % packetWidth);
 
@@ -99,18 +124,32 @@ namespace librapid::detail {
 					  "Function return type must be the same as the array container's scalar type");
 		LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
 
+		if constexpr (allowVectorisation) {
 #pragma omp parallel for shared(vectorSize, lhs, function) default(none)                           \
   num_threads(global::numThreads)
-		for (int64_t index = 0; index < vectorSize; index += packetWidth) {
-			lhs.writePacket(index, function.packet(index));
-		}
+			for (int64_t index = 0; index < vectorSize; index += packetWidth) {
+				lhs.writePacket(index, function.packet(index));
+			}
 
-		// Assign the remaining elements
-		for (int64_t index = vectorSize; index < size; ++index) {
-			lhs.write(index, function.scalar(index));
+			// Assign the remaining elements
+			for (int64_t index = vectorSize; index < size; ++index) {
+				lhs.write(index, function.scalar(index));
+			}
+		} else {
+#pragma omp parallel for shared(vectorSize, lhs, function) default(none)                           \
+  num_threads(global::numThreads)
+			for (int64_t index = vectorSize; index < size; ++index) {
+				lhs.write(index, function.scalar(index));
+			}
 		}
 	}
 
+	/// Trivial assignment with fixed-size arrays and parallel execution
+	/// \tparam ShapeType_ The shape type of the array container
+	/// \tparam StorageScalar The scalar type of the storage object
+	/// \tparam StorageSize The size of the storage object
+	/// \tparam Functor_ The function type
+	/// \tparam Args The argument types of the function
 	template<typename ShapeType_, typename StorageScalar, size_t... StorageSize, typename Functor_,
 			 typename... Args>
 	LIBRAPID_ALWAYS_INLINE void assignParallel(

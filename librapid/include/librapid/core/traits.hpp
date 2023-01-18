@@ -14,7 +14,7 @@ namespace librapid {
 	namespace detail {
 		/// An enum class representing different types within LibRapid. Intended maily for
 		/// internal use
-		enum class LibRapidType { Scalar, ArrayContainer, ArrayFunction };
+		enum class LibRapidType { Scalar, ArrayContainer, ArrayFunction, ArrayView};
 
 		/*
 		 * Pretty string representations of data types at compile time. This is adapted from

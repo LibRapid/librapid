@@ -78,6 +78,11 @@ namespace librapid {
 		/// \return
 		Shape &operator=(Shape &&other) noexcept = default;
 
+		/// Assign a Shape to this object
+		/// \param other Shape to copy
+		/// \return
+		Shape &operator=(const Shape &other) = default;
+
 		/// Return a Shape object with \p dims dimensions, all initialized to zero.
 		/// \param dims Number of dimensions
 		/// \return New Shape object
@@ -115,6 +120,12 @@ namespace librapid {
 		/// Return the number of dimensions in the Shape object
 		/// \return Number of dimensions
 		LIBRAPID_NODISCARD T ndim() const;
+
+		/// Return a subshape of the Shape object
+		/// \param start Starting index
+		/// \param end Ending index
+		/// \return Subshape
+		LIBRAPID_NODISCARD Shape subshape(size_t start, size_t end) const;
 
 		/// Return the number of elements the Shape object represents
 		/// \return Number of elements
@@ -249,6 +260,19 @@ namespace librapid {
 	template<typename T, size_t N>
 	LIBRAPID_NODISCARD T Shape<T, N>::ndim() const {
 		return m_dims;
+	}
+
+	template<typename T, size_t N>
+	LIBRAPID_NODISCARD auto Shape<T, N>::subshape(size_t start, size_t end) const -> Shape {
+		LIBRAPID_ASSERT(start < end, "Start index must be less than end index");
+		LIBRAPID_ASSERT(end <= m_dims,
+						"End index must be less than or equal to the number of dimensions");
+		LIBRAPID_ASSERT(start >= 0, "Start index must be greater than or equal to 0");
+
+		Shape res;
+		res.m_dims = end - start;
+		for (size_t i = 0; i < res.m_dims; ++i) res.m_data[i] = m_data[i + start];
+		return res;
 	}
 
 	template<typename T, size_t N>
