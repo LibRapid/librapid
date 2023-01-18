@@ -220,7 +220,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		auto ArrayContainer<ShapeType_, typename StorageType_>::operator<<(const T &value)
+		auto ArrayContainer<ShapeType_, StorageType_>::operator<<(const T &value)
 		  -> detail::CommaInitializer<ArrayContainer> {
 			return detail::CommaInitializer<ArrayContainer>(*this, value);
 		}
