@@ -11,5 +11,6 @@
 #include "function.hpp"
 #include "assignOps.hpp"
 #include "arrayView.hpp"
+#include "arrayViewString.hpp"
 
 #endif // LIBRAPID_ARRAY

@@ -93,7 +93,7 @@ namespace librapid {
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &
 			operator=(const detail::Function<desc, Functor_, Args...> &function);
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ArrayView<ArrayContainer>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<ArrayContainer>
 			operator[](int64_t index) const;
 
 			/// Return the number of dimensions of the ArrayContainer object
@@ -212,7 +212,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const
-		  -> const ArrayView<ArrayContainer> {
+		  -> ArrayView<ArrayContainer> {
 			LIBRAPID_ASSERT(
 			  index >= 0 && index < m_shape[0],
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",

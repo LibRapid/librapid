@@ -234,12 +234,16 @@ namespace librapid {
 	template<typename T, size_t N>
 	template<typename Index>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const T &Shape<T, N>::operator[](Index index) const {
+		LIBRAPID_ASSERT(index < m_dims, "Index out of bounds");
+		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
 		return m_data[index];
 	}
 
 	template<typename T, size_t N>
 	template<typename Index>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T &Shape<T, N>::operator[](Index index) {
+		LIBRAPID_ASSERT(index < m_dims, "Index out of bounds");
+		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
 		return m_data[index];
 	}
 
@@ -264,7 +268,7 @@ namespace librapid {
 
 	template<typename T, size_t N>
 	LIBRAPID_NODISCARD auto Shape<T, N>::subshape(size_t start, size_t end) const -> Shape {
-		LIBRAPID_ASSERT(start < end, "Start index must be less than end index");
+		LIBRAPID_ASSERT(start <= end, "Start index must be less than end index");
 		LIBRAPID_ASSERT(end <= m_dims,
 						"End index must be less than or equal to the number of dimensions");
 		LIBRAPID_ASSERT(start >= 0, "Start index must be greater than or equal to 0");
