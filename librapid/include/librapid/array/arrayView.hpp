@@ -19,7 +19,6 @@ namespace librapid {
 			using ArrayType		 = T;
 			using Reference		 = ArrayType &;
 			using ConstReference = const ArrayType &;
-			using ConstReference = ArrayType const &;
 			using StrideType	 = typename ArrayType::StrideType;
 			using ShapeType		 = typename ArrayType::ShapeType;
 			using Scalar		 = typename typetraits::TypeInfo<ArrayType>::Scalar;
