@@ -3,6 +3,16 @@
 
 namespace librapid {
 	namespace typetraits {
+		// Extract allowVectorisation from the input types
+		template<typename First, typename... T>
+		constexpr bool checkAllowVectorisation() {
+			if constexpr (sizeof...(T) == 0) {
+				return TypeInfo<std::decay_t<First>>::allowVectorisation;
+			} else {
+				return TypeInfo<std::decay_t<First>>::allowVectorisation && checkAllowVectorisation<T...>();
+			}
+		}
+
 		template<typename First, typename... Rest>
 		struct DeviceCheckAndExtract {
 			using Device = typename TypeInfo<std::decay_t<First>>::Device;
@@ -14,6 +24,9 @@ namespace librapid {
 			using Scalar			  = decltype(std::declval<Functor_>()(
 			   std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
 			using Device			  = typename DeviceCheckAndExtract<Args...>::Device;
+
+			static constexpr bool allowVectorisation = checkAllowVectorisation<Args...>();
+
 			static constexpr bool supportsArithmetic = TypeInfo<Scalar>::supportsArithmetic;
 			static constexpr bool supportsLogical	 = TypeInfo<Scalar>::supportsLogical;
 			static constexpr bool supportsBinary	 = TypeInfo<Scalar>::supportsBinary;
