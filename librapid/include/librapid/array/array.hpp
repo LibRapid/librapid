@@ -6,6 +6,7 @@
 #include "storage.hpp"
 #include "cudaStorage.hpp"
 #include "arrayTypeDef.hpp"
+#include "commaInitializer.hpp"
 #include "arrayContainer.hpp"
 #include "operations.hpp"
 #include "function.hpp"

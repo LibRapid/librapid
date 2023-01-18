@@ -9,7 +9,8 @@ namespace librapid {
 			if constexpr (sizeof...(T) == 0) {
 				return TypeInfo<std::decay_t<First>>::allowVectorisation;
 			} else {
-				return TypeInfo<std::decay_t<First>>::allowVectorisation && checkAllowVectorisation<T...>();
+				return TypeInfo<std::decay_t<First>>::allowVectorisation &&
+					   checkAllowVectorisation<T...>();
 			}
 		}
 
@@ -39,11 +40,12 @@ namespace librapid {
 		template<typename desc, typename Functor_, typename... Args>
 		class Function {
 		public:
-			using Type	  = Function<desc, Functor_, Args...>;
-			using Functor = Functor_;
-			using Scalar  = typename typetraits::TypeInfo<Type>::Scalar;
-			using Device  = typename typetraits::TypeInfo<Type>::Device;
-			using Packet  = typename typetraits::TypeInfo<Scalar>::Packet;
+			using Type		 = Function<desc, Functor_, Args...>;
+			using Functor	 = Functor_;
+			using Scalar	 = typename typetraits::TypeInfo<Type>::Scalar;
+			using Device	 = typename typetraits::TypeInfo<Type>::Device;
+			using Packet	 = typename typetraits::TypeInfo<Scalar>::Packet;
+			using Descriptor = desc;
 
 			Function() = default;
 
@@ -72,7 +74,7 @@ namespace librapid {
 
 			/// Return the shape of the Function's result
 			/// \return The shape of the Function's result
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto &shape() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto shape() const;
 
 			/// Return the arguments in the Function
 			/// \return The arguments in the Function
@@ -91,6 +93,11 @@ namespace librapid {
 			/// \param index The index to evaluate at.
 			/// \return The result of the function (scalar).
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar scalar(size_t index) const;
+
+			/// Return a string representation of the Function
+			/// \param format The format to use.
+			/// \return A string representation of the Function
+			LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
 
 		private:
 			/// Implementation detail -- evaluates the function at the given index,
@@ -120,7 +127,7 @@ namespace librapid {
 				m_functor(std::forward<Functor>(functor)), m_args(std::forward<Args>(args)...) {}
 
 		template<typename desc, typename Functor, typename... Args>
-		auto &Function<desc, Functor, Args...>::shape() const {
+		auto Function<desc, Functor, Args...>::shape() const {
 			return std::get<0>(m_args).shape();
 		}
 
@@ -161,7 +168,18 @@ namespace librapid {
 														  size_t index) const -> Scalar {
 			return m_functor((std::get<I>(m_args).scalar(index))...);
 		}
+
+		template<typename desc, typename Functor, typename... Args>
+		std::string Function<desc, Functor, Args...>::str(const std::string &format) const {
+			return eval().str(format);
+		}
 	} // namespace detail
 } // namespace librapid
+
+// Support FMT printing
+#ifdef FMT_API
+LIBRAPID_SIMPLE_IO_IMPL(typename desc COMMA typename Functor COMMA typename... Args,
+						librapid::detail::Function<desc COMMA Functor COMMA Args...>)
+#endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_FUNCTION_HPP
