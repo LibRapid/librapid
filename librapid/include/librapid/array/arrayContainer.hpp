@@ -5,9 +5,10 @@ namespace librapid {
 	namespace typetraits {
 		template<typename ShapeType_, typename StorageType_>
 		struct TypeInfo<array::ArrayContainer<ShapeType_, StorageType_>> {
-			detail::LibRapidType type = detail::LibRapidType::ArrayContainer;
-			using Scalar			  = typename TypeInfo<StorageType_>::Scalar;
-			using Device			  = typename TypeInfo<StorageType_>::Device;
+			detail::LibRapidType type				 = detail::LibRapidType::ArrayContainer;
+			using Scalar							 = typename TypeInfo<StorageType_>::Scalar;
+			using Device							 = typename TypeInfo<StorageType_>::Device;
+			static constexpr bool allowVectorisation = TypeInfo<Scalar>::packetWidth > 1;
 		};
 
 		namespace typetraits {
@@ -28,11 +29,12 @@ namespace librapid {
 		public:
 			using StorageType = StorageType_;
 			using ShapeType	  = ShapeType_;
+			using StrideType  = Stride<size_t, 32>;
 			using SizeType	  = typename ShapeType::SizeType;
 			using Scalar	  = typename StorageType::Scalar;
 			using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;
 
-			/// Default constructor.
+			/// Default constructor
 			ArrayContainer();
 
 			/// Constructs an array container from a shape
@@ -90,6 +92,9 @@ namespace librapid {
 			template<typename desc, typename Functor_, typename... Args>
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &
 			operator=(const detail::Function<desc, Functor_, Args...> &function);
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ArrayView<ArrayContainer>
+			operator[](int64_t index) const;
 
 			/// Return the number of dimensions of the ArrayContainer object
 			/// \return Number of dimensions of the ArrayContainer
@@ -203,6 +208,22 @@ namespace librapid {
 #endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
 				detail::assign(*this, function);
 			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const
+		  -> const ArrayView<ArrayContainer> {
+			LIBRAPID_ASSERT(
+			  index >= 0 && index < m_shape[0],
+			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
+			  index,
+			  m_shape[0]);
+			ArrayView<ArrayContainer> view(*this);
+			const auto stride = Stride(m_shape);
+			view.setShape(m_shape.subshape(1, ndim()));
+			view.setStride(stride.subshape(1, ndim()));
+			view.setOffset(index * stride[0]);
+			return view;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
