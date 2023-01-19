@@ -70,10 +70,19 @@ namespace librapid {
 	/// \return Mapped value
 	template<typename V, typename B1, typename E1, typename B2, typename E2>
 	LIBRAPID_INLINE auto map(V val, B1 start1, E1 stop1, B2 start2, E2 stop2) {
-		using T = decltype(val + start1 + stop1 + start2 + stop2); // Data type of the result
-		return static_cast<T>(start2) + (static_cast<T>(stop2) - static_cast<T>(start2)) *
-										  ((static_cast<T>(val) - static_cast<T>(start1)) /
-										   (static_cast<T>(stop1) - static_cast<T>(start1)));
+		// using T = decltype([&]() {
+		// 	auto tmp = val + start1 + stop1 + start2 + stop2;
+		// 	if constexpr (std::is_fundamental_v<decltype(tmp)>) {
+		// 		return tmp;
+		// 	} else {
+		// 		return 0;
+		// 	}
+		// }); // Data type of the result
+		// return static_cast<T>(start2) + (static_cast<T>(stop2) - static_cast<T>(start2)) *
+		// 								  ((static_cast<T>(val) - static_cast<T>(start1)) /
+		// 								   (static_cast<T>(stop1) - static_cast<T>(start1)));
+
+		return start2 + (stop2 - start2) * ((val - start1) / (stop1 - start1));
 	}
 
 	/// Return the floor of a given value
