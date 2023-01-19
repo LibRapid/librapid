@@ -79,11 +79,11 @@ map("0.5"_f, "0"_f, "1"_f, "0"_f, "100"_f); //  . . . . . | 50.00000000000000
 
 // ---------------------------------------------------------------------
 
-auto val	= lrc::Array<float>(lrc::Shape({2, 2}));
+auto val    = lrc::Array<float>(lrc::Shape({2, 2}));
 auto start1 = lrc::Array<float>(lrc::Shape({2, 2}));
-auto end1	= lrc::Array<float>(lrc::Shape({2, 2}));
+auto end1   = lrc::Array<float>(lrc::Shape({2, 2}));
 auto start2 = lrc::Array<float>(lrc::Shape({2, 2}));
-auto end2	= lrc::Array<float>(lrc::Shape({2, 2}));
+auto end2   = lrc::Array<float>(lrc::Shape({2, 2}));
 
 val    << 1, 2, 3, 4;
 start1 << 0, 0, 0, 0;
