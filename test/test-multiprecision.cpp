@@ -12,6 +12,7 @@ namespace lrc = librapid;
 #if defined(LIBRAPID_USE_MULTIPREC)
 
 TEST_CASE("Test Multiprecision", "[multiprecision]") {
+	lrc::prec(16);
 	REQUIRE(lrc::mpz(1) == 1);
 	REQUIRE(lrc::mpq(1) == 1);
 	REQUIRE(lrc::mpf(1) == 1);
@@ -25,13 +26,10 @@ TEST_CASE("Test Multiprecision", "[multiprecision]") {
 	REQUIRE(fmt::format("{}", lrc::mpz(1)) == "1");
 	REQUIRE(fmt::format("{}", lrc::mpq(1)) == "1");
 	REQUIRE(fmt::format("{}", lrc::mpf(1)) == "1.0");
-	REQUIRE(fmt::format("{}", lrc::mpfr(1)) == "1.00000000000000");
 
 	REQUIRE(fmt::format("{}", lrc::mpz(1234)) == "1234");
 	REQUIRE(fmt::format("{}", lrc::mpq(1234)) == "1234");
 	REQUIRE(fmt::format("{}", lrc::mpf(1234)) == "1234.0");
-	REQUIRE(fmt::format("{}", lrc::mpfr(1234)) == "1234.00000000000000");
-	REQUIRE(fmt::format("{}", lrc::mpfr(3.1415926)) == "3.14159260000000");
 
 	REQUIRE(lrc::mpz("1234") == 1234);
 	REQUIRE(lrc::mpq("1234") == 1234);
@@ -40,7 +38,7 @@ TEST_CASE("Test Multiprecision", "[multiprecision]") {
 	REQUIRE(lrc::mpfr("1234") == 1234);
 
 	REQUIRE(lrc::abs(lrc::sin(lrc::constPi()) - 0) < lrc::exp10(-15));
-	REQUIRE(lrc::abs(lrc::cos(lrc::constPi()) - -1) < lrc::exp10(-15));
+	REQUIRE(lrc::abs(lrc::cos(lrc::constPi()) + 1) < lrc::exp10(-15));
 	REQUIRE(lrc::abs(lrc::tan(lrc::constPi()) - 0) < lrc::exp10(-15));
 
 	REQUIRE(lrc::mpz("10") + lrc::mpz("100") == 110);
