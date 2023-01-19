@@ -19,10 +19,10 @@ namespace librapid {
 			using ArrayType		 = T;
 			using Reference		 = ArrayType &;
 			using ConstReference = const ArrayType &;
-			using ConstReference = ArrayType const &;
 			using StrideType	 = typename ArrayType::StrideType;
 			using ShapeType		 = typename ArrayType::ShapeType;
 			using Scalar		 = typename typetraits::TypeInfo<ArrayType>::Scalar;
+			using Device		 = typename typetraits::TypeInfo<ArrayType>::Device;
 
 			ArrayView() = delete;
 			ArrayView(const ArrayType &array);
@@ -42,6 +42,11 @@ namespace librapid {
 			/// \return A reference to this ArrayView.
 			ArrayView &operator=(ArrayView &&other) = default;
 
+			/// Access a sub-array of this ArrayView.
+			/// \param index The index of the sub-array.
+			/// \return An ArrayView from this
+			ArrayView<ArrayType> operator[](int64_t index) const;
+
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ShapeType shape() const;
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE StrideType stride() const;
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE int64_t offset() const;
@@ -50,7 +55,13 @@ namespace librapid {
 			void setStride(const StrideType &stride);
 			void setOffset(const int64_t &offset);
 
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE int64_t ndim() const;
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalar(int64_t index) const;
+
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayType eval() const;
+
+			LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
 
 		private:
 			ConstReference m_ref;
@@ -66,6 +77,24 @@ namespace librapid {
 		template<typename T>
 		ArrayView<T>::ArrayView(const ArrayType &array) :
 				m_ref(array), m_shape(array.shape()), m_stride(array.shape()) {}
+
+		template<typename T>
+		auto ArrayView<T>::operator[](int64_t index) const -> ArrayView<ArrayType> {
+			LIBRAPID_ASSERT(
+			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
+			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
+			  index,
+			  m_shape[0]);
+			ArrayView<ArrayType> view(m_ref);
+			const auto stride = Stride(m_shape);
+			view.setShape(m_shape.subshape(1, ndim()));
+			if (ndim() == 1)
+				view.setStride(Stride({1}));
+			else
+				view.setStride(stride.subshape(1, ndim()));
+			view.setOffset(m_offset + index * stride[0]);
+			return view;
+		}
 
 		template<typename T>
 		auto ArrayView<T>::shape() const -> ShapeType {
@@ -98,6 +127,26 @@ namespace librapid {
 		}
 
 		template<typename T>
+		auto ArrayView<T>::ndim() const -> int64_t {
+			return m_shape.ndim();
+		}
+
+		template<typename T>
+		auto ArrayView<T>::scalar(int64_t index) const -> auto {
+			if (ndim() == 0) return m_ref.scalar(m_offset);
+
+			ShapeType tmp	= ShapeType::zeros(ndim());
+			tmp[ndim() - 1] = index % m_shape[ndim() - 1];
+			for (int64_t i = ndim() - 2; i >= 0; --i) {
+				index /= m_shape[i + 1];
+				tmp[i] = index % m_shape[i];
+			}
+			int64_t offset = 0;
+			for (int64_t i = 0; i < ndim(); ++i) { offset += tmp[i] * m_stride[i]; }
+			return m_ref.scalar(m_offset + offset);
+		}
+
+		template<typename T>
 		auto ArrayView<T>::eval() const -> ArrayType {
 			ArrayType res(m_shape);
 			ShapeType coord = ShapeType::zeros(m_shape.ndim());
@@ -124,5 +173,10 @@ namespace librapid {
 		}
 	} // namespace array
 } // namespace librapid
+
+// Support FMT printing
+#ifdef FMT_API
+LIBRAPID_SIMPLE_IO_IMPL(typename T, librapid::array::ArrayView<T>)
+#endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_ARRAY_VIEW_HPP
