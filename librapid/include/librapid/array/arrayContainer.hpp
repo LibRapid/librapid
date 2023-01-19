@@ -305,36 +305,34 @@ namespace librapid {
 	namespace detail {
 		template<typename T>
 		struct IsArrayType {
-			using val = std::false_type;
+			static constexpr bool val = false;
 		};
 
 		template<typename T>
 		struct IsArrayType<ArrayRef<T>> {
-			using val = std::true_type;
+			static constexpr bool val = true;
 		};
 
 		template<typename... T>
 		struct IsArrayType<FunctionRef<T...>> {
-			using val = std::true_type;
+			static constexpr bool val = true;
 		};
 
 		template<typename T>
 		struct IsArrayType<array::ArrayView<T>> {
-			using val = std::true_type;
+			static constexpr bool val = true;
 		};
 
 		template<typename First, typename... Types>
 		struct ContainsArrayType {
 			static constexpr auto evaluator = []() {
 				if constexpr (sizeof...(Types) == 0)
-					return IsArrayType<First>::val();
+					return IsArrayType<First>::val;
 				else
-					return std::conditional_t<IsArrayType<First>::val::value,
-											  std::true_type,
-											  typename ContainsArrayType<Types...>::val>();
+					return IsArrayType<First>::val || ContainsArrayType<Types...>::val;
 			};
 
-			using val = decltype(evaluator());
+			static constexpr bool val = evaluator();
 		};
 	}; // namespace detail
 } // namespace librapid
