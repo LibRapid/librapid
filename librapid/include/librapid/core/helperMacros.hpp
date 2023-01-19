@@ -28,14 +28,14 @@
 		template<typename FormatContext>                                                           \
 		auto format(const TYPE_ &object, FormatContext &ctx) {                                     \
 			try {                                                                                  \
-				return fmt::format_to(ctx.out(), object.str());                                    \
+				return fmt::format_to(ctx.out(), object.str(formatStr));                           \
 			} catch (std::exception & e) { return fmt::format_to(ctx.out(), e.what()); }           \
 		}                                                                                          \
 	};                                                                                             \
                                                                                                    \
 	template<TEMPLATE_>                                                                            \
 	std::ostream &operator<<(std::ostream &os, const TYPE_ &object) {                              \
-		os << object.str();                                                                        \
+		os << object.str();                                                               \
 		return os;                                                                                 \
 	}
 

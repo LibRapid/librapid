@@ -3,9 +3,9 @@
 #if defined(LIBRAPID_USE_MULTIPREC)
 
 namespace librapid {
-	std::string str(const mpz &val, int base) { return val.get_str(base); }
+	std::string str(const mpz &val, int64_t, int base) { return val.get_str(base); }
 
-	std::string str(const mpf_class &val, int base) {
+	std::string str(const mpf_class &val, int64_t, int base) {
 		mp_exp_t exp;
 		auto res = val.get_str(exp, base);
 
@@ -22,13 +22,13 @@ namespace librapid {
 		}
 	}
 
-	std::string str(const mpq &val, int base) { return val.get_str(base); }
+	std::string str(const mpq &val, int64_t, int base) { return val.get_str(base); }
 
-	std::string str(const mpfr &val, int) {
+	std::string str(const mpfr &val, int64_t digits, int) {
 		std::stringstream ss;
 		ss << std::fixed;
-		mp_prec_t dig2 = val.getPrecision() - 5;
-		dig2		   = ::mpfr::bits2digits(dig2);
+		mp_prec_t dig2 = val.getPrecision();
+		dig2		   = ::mpfr::bits2digits(digits < 0 ? dig2 : static_cast<mp_prec_t>(digits));
 		ss.precision(dig2);
 		ss << val;
 		return ss.str();

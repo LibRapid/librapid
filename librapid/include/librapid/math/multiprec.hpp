@@ -17,25 +17,25 @@ namespace librapid {
 	/// \param val The value to convert
 	/// \param base The base to convert to
 	/// \return The converted value
-	std::string str(const mpz &val, int base = 10);
+	std::string str(const mpz &val, int64_t digits = -1, int base = 10);
 
 	/// Convert a multiprecision floating point type to a string with a given base
 	/// \param val The value to convert
 	/// \param base The base to convert to
 	/// \return The converted value
-	std::string str(const mpf &val, int base = 10);
+	std::string str(const mpf &val, int64_t digits = -1, int base = 10);
 
 	/// Convert a multiprecision rational type to a string with a given base
 	/// \param val The value to convert
 	/// \param base The base to convert to
 	/// \return The converted value
-	std::string str(const mpq &val, int base = 10);
+	std::string str(const mpq &val, int64_t digits = -1, int base = 10);
 
 	/// Convert a multiprecision floating point type to a string with a given base
 	/// \param val The value to convert
 	/// \param base The base to convert to
 	/// \return The converted value
-	std::string str(const mpfr &val, int base = 10);
+	std::string str(const mpfr &val, int64_t digits = -1, int base = 10);
 
 	/// Multiprecision integer to multiprecision integer cast
 	/// \param other The value to cast
@@ -117,22 +117,6 @@ namespace librapid {
 	/// \param other The value to cast
 	/// \return The cast value
 	mpfr toMpfr(const mpfr &other);
-
-	/// Set the precision for multiprecision types
-	/// \param dig10
-	inline void prec(int64_t dig10) {
-		int64_t dig2 = (int64_t)((double)dig10 * 3.32192809488736234787) + 5;
-		mpf_set_default_prec(dig2);
-		mpfr::mpreal::set_default_prec((mpfr_prec_t)dig2);
-	}
-
-	/// Set the precision for multiprecision types
-	/// \param dig2
-	inline void prec2(int64_t dig2) {
-		dig2 += 8; // Add some extra precision
-		mpf_set_default_prec(dig2);
-		mpfr::mpreal::set_default_prec((mpfr_prec_t)dig2);
-	}
 
 	// Trigonometric Functionality for mpf
 
@@ -382,6 +366,21 @@ namespace librapid {
 
 	template<>
 	struct IsMultiprecision<mpfr> : public std::true_type {};
+
+	/// Set the number of base 10 digits to store accurately
+	/// \param dig10
+	inline void prec(int64_t dig10) {
+		int64_t dig2 = ::mpfr::digits2bits((int)dig10);
+		mpf_set_default_prec(dig2);
+		mpfr::mpreal::set_default_prec((mpfr_prec_t)dig2);
+	}
+
+	/// Set the number of bits used to represent each number
+	/// \param dig2
+	inline void prec2(int64_t dig2) {
+		mpf_set_default_prec(dig2);
+		mpfr::mpreal::set_default_prec((mpfr_prec_t)dig2);
+	}
 } // namespace librapid
 
 // Provide {fmt} printing capabilities
@@ -408,7 +407,7 @@ struct fmt::formatter<mpz_class> {
 		try {
 			std::stringstream ss;
 			ss << std::fixed;
-			ss.precision(specs_.precision < 1 ? 10 : specs_.precision);
+			ss.precision(specs_.precision < 0 ? 10 : specs_.precision);
 			ss << num;
 			return fmt::format_to(ctx.out(), ss.str());
 		} catch (std::exception &e) {
@@ -504,6 +503,7 @@ struct fmt::formatter<librapid::mpfr> {
 	template<typename FormatContext>
 	inline auto format(const librapid::mpfr &num, FormatContext &ctx) {
 		try {
+			fmt::print("DEBUG INFO: {}\n", specs_.precision);
 			if (specs_.precision < 1) return fmt::format_to(ctx.out(), librapid::str(num));
 
 			std::stringstream ss;
@@ -640,7 +640,7 @@ namespace scn {
 
 namespace librapid {
 	LIBRAPID_ALWAYS_INLINE void prec(int64_t) {}
-}
+} // namespace librapid
 
 #endif // LIBRAPID_USE_MULTIPREC
 
