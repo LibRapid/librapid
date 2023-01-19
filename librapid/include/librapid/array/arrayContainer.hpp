@@ -93,7 +93,20 @@ namespace librapid {
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &
 			operator=(const detail::Function<desc, Functor_, Args...> &function);
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ArrayView<ArrayContainer>
+			/// Allow ArrayContainer objects to be initialized with a comma separated list of
+			/// values. This makes use of the CommaInitializer class
+			/// \tparam T The type of the values
+			/// \param value The value to set in the Array object
+			/// \return The comma initializer object
+			template<typename T>
+			detail::CommaInitializer<ArrayContainer> operator<<(const T &value);
+
+			/// Access a sub-array of this ArrayContainer instance. The sub-array will reference
+			/// the same memory as this ArrayContainer instance.
+			/// \param index The index of the sub-array
+			/// \return A reference to the sub-array (ArrayView)
+			/// \see ArrayView
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<ArrayContainer>
 			operator[](int64_t index) const;
 
 			/// Return the number of dimensions of the ArrayContainer object
@@ -132,6 +145,11 @@ namespace librapid {
 			/// \param index The index to write the scalar to
 			/// \param value The value to write to the array's storage
 			LIBRAPID_ALWAYS_INLINE void write(size_t index, const Scalar &value);
+
+			/// Return a string representation of the array container
+			/// \format The format to use for the string representation
+			/// \return A string representation of the array container
+			LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
 
 		private:
 			ShapeType m_shape;	   // The shape type of the array
@@ -211,10 +229,17 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator<<(const T &value)
+		  -> detail::CommaInitializer<ArrayContainer> {
+			return detail::CommaInitializer<ArrayContainer>(*this, static_cast<Scalar>(value));
+		}
+
+		template<typename ShapeType_, typename StorageType_>
 		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const
-		  -> const ArrayView<ArrayContainer> {
+		  -> ArrayView<ArrayContainer> {
 			LIBRAPID_ASSERT(
-			  index >= 0 && index < m_shape[0],
+			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
 			  m_shape[0]);
@@ -270,7 +295,18 @@ namespace librapid {
 		void ArrayContainer<ShapeType_, StorageType_>::write(size_t index, const Scalar &value) {
 			m_storage[index] = value;
 		}
+
+		template<typename ShapeType_, typename StorageType_>
+		std::string ArrayContainer<ShapeType_, StorageType_>::str(const std::string &format) const {
+			return ArrayView(*this).str(format);
+		}
 	} // namespace array
 } // namespace librapid
+
+// Support FMT printing
+#ifdef FMT_API
+LIBRAPID_SIMPLE_IO_IMPL(typename ShapeType_ COMMA typename StorageType_,
+						librapid::array::ArrayContainer<ShapeType_ COMMA StorageType_>)
+#endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_ARRAY_CONTAINER_HPP
