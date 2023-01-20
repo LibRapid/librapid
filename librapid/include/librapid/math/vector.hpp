@@ -75,11 +75,7 @@ namespace librapid {
 
 		/// Convert a GLM vector to a Vector object
 		template<glm::qualifier p = glm::defaultp>
-		operator glm::vec<Dims, Scalar, p>() const {
-			glm::vec<Dims, Scalar, p> res;
-			for (int64_t i = 0; i < Dims; ++i) { res[i] = m_data[i]; }
-			return res;
-		}
+		operator glm::vec<Dims, Scalar, p>() const;
 
 #endif // GLM_VERSION
 
