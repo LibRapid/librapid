@@ -75,11 +75,7 @@ namespace librapid {
 
 		/// Convert a GLM vector to a Vector object
 		template<glm::qualifier p = glm::defaultp>
-		operator glm::vec<Dims, Scalar, p>() const {
-			glm::vec<Dims, Scalar, p> res;
-			for (int64_t i = 0; i < Dims; ++i) { res[i] = m_data[i]; }
-			return res;
-		}
+		operator glm::vec<Dims, Scalar, p>() const;
 
 #endif // GLM_VERSION
 
@@ -442,14 +438,14 @@ namespace librapid {
 
 	/// Construct a Vector from a GLM Vector
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	template<glm::qualifier p = glm::defaultp>
+	template<glm::qualifier p>
 	VecImpl<Scalar, Dims, StorageType>::VecImpl(const glm::vec<Dims, Scalar, p> &vec) {
 		for (int64_t i = 0; i < Dims; ++i) { m_data[i] = vec[i]; }
 	}
 
 	/// Convert a GLM vector to a Vector object
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	template<glm::qualifier p = glm::defaultp>
+	template<glm::qualifier p>
 	VecImpl<Scalar, Dims, StorageType>::operator glm::vec<Dims, Scalar, p>() const {
 		glm::vec<Dims, Scalar, p> res;
 		for (int64_t i = 0; i < Dims; ++i) { res[i] = m_data[i]; }

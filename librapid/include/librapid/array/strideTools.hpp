@@ -23,7 +23,7 @@ namespace librapid {
 
 		/// Copy a Stride object
 		/// \param other The Stride object to copy.
-		Stride(const Stride &other)		= default;
+		Stride(const Stride &other) = default;
 
 		/// Move a Stride object
 		/// \param other The Stride object to move.
@@ -31,7 +31,7 @@ namespace librapid {
 
 		/// Assign a Stride object to this Stride object.
 		/// \param other The Stride object to assign.
-		Stride &operator=(const Stride &other)	   = default;
+		Stride &operator=(const Stride &other) = default;
 
 		/// Move a Stride object to this Stride object.
 		/// \param other The Stride object to move.
