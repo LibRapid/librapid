@@ -71,9 +71,29 @@ map(lrc::Vec2d(0.2, 0.8), 0, 1, 0, 100); // . . . . . . . | (20, 80)
 map(0.5, 0, 1, 0, lrc::Vec2d(100, 200)); // . . . . . . . | (50, 100)
 map(lrc::Vec2d(-1, -2), 1, 0, lrc::Vec2d(100, 300)); // . | (75, 250)
 
+// ---------------------------------------------------------------------
+
 using namespace lrc::literals; // To use "_f" suffix (also requires multiprecision to be enabled)
 // "0.5"_f in this case creates a multiprecision float :)
 map("0.5"_f, "0"_f, "1"_f, "0"_f, "100"_f); //  . . . . . | 50.00000000000000
+
+// ---------------------------------------------------------------------
+
+auto val    = lrc::Array<float>(lrc::Shape({2, 2}));
+auto start1 = lrc::Array<float>(lrc::Shape({2, 2}));
+auto end1   = lrc::Array<float>(lrc::Shape({2, 2}));
+auto start2 = lrc::Array<float>(lrc::Shape({2, 2}));
+auto end2   = lrc::Array<float>(lrc::Shape({2, 2}));
+
+val    << 1, 2, 3, 4;
+start1 << 0, 0, 0, 0;
+end1   << 10, 10, 10, 10;
+start2 << 0, 0, 0, 0;
+end2   << 100, 100, 100, 100;
+
+fmt::print("{}\n", lrc::map(val, start1, end1, start2, end2));
+// [[10 20]
+//  [30 40]]
 ```
 
 Note: LibRapid's built-in `map` function has even more functionality! See the [documentation](https://librapid.github.io/librapid/namespacelibrapid.html#aa77bd94fdda1a889654275f47d258390) for details. 

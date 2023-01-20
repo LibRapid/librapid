@@ -133,7 +133,7 @@ namespace librapid {
 
 		/// Convert a Shape object into a string representation
 		/// \return A string representation of the Shape object
-		LIBRAPID_NODISCARD std::string str() const;
+		LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
 
 	protected:
 		T m_dims;
@@ -287,10 +287,10 @@ namespace librapid {
 	}
 
 	template<typename T, size_t N>
-	std::string Shape<T, N>::str() const {
+	std::string Shape<T, N>::str(const std::string &format) const {
 		std::string result("(");
 		for (size_t i = 0; i < m_dims; ++i) {
-			result += fmt::format("{}", m_data[i]);
+			result += fmt::format(format, m_data[i]);
 			if (i < m_dims - 1) result += std::string(", ");
 		}
 		return std::operator+(result, std::string(")"));
