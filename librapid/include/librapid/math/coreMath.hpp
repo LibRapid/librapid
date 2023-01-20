@@ -9,6 +9,11 @@
  */
 
 namespace librapid {
+	namespace detail {
+		template<typename First, typename... Types>
+		struct ContainsArrayType;
+	} // namespace detail
+
 	/// Return the smallest value of a given set of values
 	/// \tparam T Data type
 	/// \param val Input set
@@ -69,11 +74,16 @@ namespace librapid {
 	/// \param stop2 Upper bound of the output range
 	/// \return Mapped value
 	template<typename V, typename B1, typename E1, typename B2, typename E2>
-	LIBRAPID_INLINE auto map(V val, B1 start1, E1 stop1, B2 start2, E2 stop2) {
-		using T = decltype(val + start1 + stop1 + start2 + stop2); // Data type of the result
-		return static_cast<T>(start2) + (static_cast<T>(stop2) - static_cast<T>(start2)) *
-										  ((static_cast<T>(val) - static_cast<T>(start1)) /
-										   (static_cast<T>(stop1) - static_cast<T>(start1)));
+	LIBRAPID_INLINE auto map(const V &val, const B1 &start1, const E1 &stop1, const B2 &start2,
+							 const E2 &stop2) {
+		if constexpr (detail::ContainsArrayType<V, B1, E1, B2, E2>::val) {
+			return start2 + (val - start1) * (stop2 - start2) / (stop1 - start1);
+		} else {
+			using T = decltype((val - start1) * (stop2 - start2) / (stop1 - start1) + start2);
+			return static_cast<T>(start2) + (static_cast<T>(stop2) - static_cast<T>(start2)) *
+											  ((static_cast<T>(val) - static_cast<T>(start1)) /
+											   (static_cast<T>(stop1) - static_cast<T>(start1)));
+		}
 	}
 
 	/// Return the floor of a given value

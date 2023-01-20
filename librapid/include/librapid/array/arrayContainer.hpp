@@ -301,6 +301,40 @@ namespace librapid {
 			return ArrayView(*this).str(format);
 		}
 	} // namespace array
+
+	namespace detail {
+		template<typename T>
+		struct IsArrayType {
+			static constexpr bool val = false;
+		};
+
+		template<typename T>
+		struct IsArrayType<ArrayRef<T>> {
+			static constexpr bool val = true;
+		};
+
+		template<typename... T>
+		struct IsArrayType<FunctionRef<T...>> {
+			static constexpr bool val = true;
+		};
+
+		template<typename T>
+		struct IsArrayType<array::ArrayView<T>> {
+			static constexpr bool val = true;
+		};
+
+		template<typename First, typename... Types>
+		struct ContainsArrayType {
+			static constexpr auto evaluator = []() {
+				if constexpr (sizeof...(Types) == 0)
+					return IsArrayType<First>::val;
+				else
+					return IsArrayType<First>::val || ContainsArrayType<Types...>::val;
+			};
+
+			static constexpr bool val = evaluator();
+		};
+	}; // namespace detail
 } // namespace librapid
 
 // Support FMT printing
