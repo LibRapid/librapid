@@ -262,7 +262,7 @@ namespace librapid {
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
-			LIBRAPID_ASSERT(lhs.shape().operator=(rhs.shape()), "Shapes must be equal");
+			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -285,7 +285,7 @@ namespace librapid {
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
-			LIBRAPID_ASSERT(lhs.shape().operator=(rhs.shape()), "Shapes must be equal");
+			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -308,7 +308,7 @@ namespace librapid {
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
-			LIBRAPID_ASSERT(lhs.shape().operator=(rhs.shape()), "Shapes must be equal");
+			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -332,7 +332,7 @@ namespace librapid {
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
-			LIBRAPID_ASSERT(lhs.shape().operator=(rhs.shape()), "Shapes must be equal");
+			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -356,7 +356,7 @@ namespace librapid {
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
-			LIBRAPID_ASSERT(lhs.shape().operator=(rhs.shape()), "Shapes must be equal");
+			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::GreaterThan>(std::forward<LHS>(lhs),
 															 std::forward<RHS>(rhs));
@@ -382,7 +382,7 @@ namespace librapid {
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
-			LIBRAPID_ASSERT(lhs.shape().operator=(rhs.shape()), "Shapes must be equal");
+			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::LessThanEqual>(std::forward<LHS>(lhs),
 															   std::forward<RHS>(rhs));
@@ -408,7 +408,7 @@ namespace librapid {
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
-			LIBRAPID_ASSERT(lhs.shape().operator=(rhs.shape()), "Shapes must be equal");
+			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::GreaterThanEqual>(std::forward<LHS>(lhs),
 																  std::forward<RHS>(rhs));
@@ -433,7 +433,7 @@ namespace librapid {
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
-			LIBRAPID_ASSERT(lhs.shape().operator=(rhs.shape()), "Shapes must be equal");
+			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::ElementWiseEqual>(std::forward<LHS>(lhs),
 																  std::forward<RHS>(rhs));
@@ -458,7 +458,7 @@ namespace librapid {
 			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
-			LIBRAPID_ASSERT(lhs.shape().operator=(rhs.shape()), "Shapes must be equal");
+			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::ElementWiseNotEqual>(std::forward<LHS>(lhs),
 																	 std::forward<RHS>(rhs));
