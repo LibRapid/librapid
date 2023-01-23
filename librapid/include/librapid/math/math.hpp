@@ -4,7 +4,8 @@
 #include "compileTime.hpp"
 #include "constants.hpp"
 #include "coreMath.hpp"
-#include "vector.hpp"
 #include "multiprec.hpp"
+#include "vector.hpp"
+#include "complex.hpp"
 
 #endif // LIBRAPID_MATH
