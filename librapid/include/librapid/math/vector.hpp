@@ -474,14 +474,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) const {
 		LIBRAPID_ASSERT(
-		  0 <= index < Dims, "Index {} out of range for vector with {} dimensions", index, Dims);
+		  0 <= index && index < Dims, "Index {} out of range for vector with {} dimensions", index, Dims);
 		return m_data[index];
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) {
 		LIBRAPID_ASSERT(
-		  0 <= index < Dims, "Index {} out of range for vector with {} dimensions", index, Dims);
+		  0 <= index && index < Dims, "Index {} out of range for vector with {} dimensions", index, Dims);
 		return m_data[index];
 	}
 
