@@ -26,6 +26,15 @@ namespace librapid {
 		template<typename T, typename ABI>
 		explicit VecImpl(const Vc::Vector<T, ABI> &arr);
 
+		/// Construct a Vector from another Vector with potentially different dimensions,
+		/// scalar type and storage type
+		/// \tparam S The scalar type of the other vector
+		/// \tparam D The number of dimensions of
+		/// \tparam ST The storage type of the other vector
+		/// \param other The other vector to construct from
+		template<typename S, int64_t D, typename ST>
+		VecImpl(const VecImpl<S, D, ST> &other);
+
 		/// Construct a Vector object from n values, where n is the number of dimensions of the
 		/// vector
 		/// \tparam Args Parameter pack template type
@@ -396,6 +405,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	template<typename T, typename ABI>
 	VecImpl<Scalar, Dims, StorageType>::VecImpl(const Vc::Vector<T, ABI> &arr) : m_data {arr} {}
+
+	template<typename Scalar, int64_t Dims, typename StorageType>
+	template<typename S, int64_t D, typename ST>
+	VecImpl<Scalar, Dims, StorageType>::VecImpl(const VecImpl<S, D, ST> &other) {
+		for (int64_t i = 0; i < min(Dims, D); ++i) {
+			m_data[i] = static_cast<Scalar>(other[i]);
+		}
+	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	template<typename... Args, typename std::enable_if_t<sizeof...(Args) == Dims, int>>
