@@ -364,8 +364,8 @@ namespace librapid {
 
 		template<typename Other>
 		LIBRAPID_ALWAYS_INLINE Complex &operator=(const Complex<Other> &other) {
-			m_val[RE] = typetraits::TypeInfo<Other>::template cast<T>(other.real());
-			m_val[IM] = typetraits::TypeInfo<Other>::template cast<T>(other.real());
+			m_val[RE] = static_cast<T>(other.real());
+			m_val[IM] = static_cast<T>(other.real());
 			return *this;
 		}
 
@@ -446,8 +446,8 @@ namespace librapid {
 
 		template<typename Other>
 		LIBRAPID_ALWAYS_INLINE void _mul(const Complex<Other> &other) {
-			T otherReal = typetraits::TypeInfo<Other>::template cast<T>(other.real());
-			T otherImag = typetraits::TypeInfo<Other>::template cast<T>(other.imag());
+			T otherReal = static_cast<T>(other.real());
+			T otherImag = static_cast<T>(other.imag());
 
 			T tmp	  = m_val[RE] * otherReal - m_val[IM] * otherImag;
 			m_val[IM] = m_val[RE] * otherImag + m_val[IM] * otherReal;
@@ -456,8 +456,8 @@ namespace librapid {
 
 		template<typename Other>
 		LIBRAPID_ALWAYS_INLINE void _div(const Complex<Other> &other) {
-			T otherReal = typetraits::TypeInfo<Other>::template cast<T>(other.real());
-			T otherImag = typetraits::TypeInfo<Other>::template cast<T>(other.imag());
+			T otherReal = static_cast<T>(other.real());
+			T otherImag = static_cast<T>(other.imag());
 
 			if (::librapid::isNaN(otherReal) || ::librapid::isNaN(otherImag)) { // Set result to NaN
 				m_val[RE] = typetraits::TypeInfo<T>::quietNaN();
