@@ -381,6 +381,234 @@ namespace librapid {
 		mpf_set_default_prec(dig2);
 		mpfr::mpreal::set_default_prec((mpfr_prec_t)dig2);
 	}
+
+	/// Returns true if the passed value is not a number (NaN)
+	/// Note: MPIR does not support NaN, so chances are it'll have errored already...
+	/// \tparam A
+	/// \tparam B
+	/// \param val The value to check
+	/// \return True if the value is NaN
+	template<typename A, typename B>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isNaN(const __gmp_expr<A, B> &val) noexcept {
+		return false;
+	}
+
+	/// Returns true if the passed value is not a number (NaN)
+	/// \param val The value to check
+	/// \return True if the value is NaN
+	template<>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isNaN(const mpfr &val) noexcept {
+		return ::mpfr::isnan(val);
+	}
+
+	/// Returns true if the passed value is finite.
+	/// Note: MPIR does not support Inf, so we can probably just return true
+	/// \tparam A
+	/// \tparam B
+	/// \param val The value to check
+	/// \return True if the value is finite
+	template<typename A, typename B>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isFinite(const __gmp_expr<A, B> &val) noexcept {
+		return true;
+	}
+
+	/// Returns true if the passed value is finite.
+	/// \param val The value to check
+	/// \return True if the value is finite
+	template<>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isFinite(const mpfr &val) noexcept {
+		return ::mpfr::isfinite(val);
+	}
+
+	/// Returns true if the passed value is infinite.
+	/// Note: MPIR does not support Inf, so we can probably just return false
+	/// \tparam A
+	/// \tparam B
+	/// \param val The value to check
+	template<typename A, typename B>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isInf(const __gmp_expr<A, B> &val) noexcept {
+		return false;
+	}
+
+	/// Returns true if the passed value is infinite.
+	/// \param val The value to check
+	/// \return True if the value is infinite
+	template<>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isInf(const mpfr &val) noexcept {
+		return ::mpfr::isinf(val);
+	}
+
+	/// Copy the sign of a value to another value
+	/// \param mag The magnitude of the returned value
+	/// \param sign The sign of the returned value
+	/// \return (<sign> <mag>)
+	template<>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE mpfr copySign(const mpfr &mag,
+															const mpfr &sign) noexcept {
+		return ::mpfr::copysign(mag, sign);
+	}
+
+	/// Copy the sign of a value to another value
+	/// \tparam A
+	/// \tparam B
+	/// \return (<sign> <mag>)
+	template<typename A, typename B>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE __gmp_expr<A, B>
+	copySign(const __gmp_expr<A, B> &mag, const __gmp_expr<A, B> &sign) noexcept {
+		if (sign >= 0 && mag >= 0) return mag;
+		if (sign >= 0 && mag < 0) return -mag;
+		if (sign < 0 && mag >= 0) return -mag;
+		if (sign < 0 && mag < 0) return mag;
+		return 0; // Should never get here
+	}
+
+	/// Extract the sign bit of a value
+	/// \tparam A
+	/// \tparam B
+	/// \param val The value to extract the sign bit from
+	/// \return The sign bit of the value
+	template<typename A, typename B>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool signBit(const __gmp_expr<A, B> &val) noexcept {
+		return val < 0 || val == -0.0; // I have no idea if this works
+	}
+
+	/// Extract the sign bit of a value
+	/// \param val The value to extract the sign bit from
+	template<>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool signBit(const mpfr &val) noexcept {
+		return ::mpfr::signbit(val);
+	}
+
+	/// Multiply a value by 2 raised to the power of an exponent
+	/// \return x * 2^exp
+	template<>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE mpfr ldexp(const mpfr &x, const int64_t exp) noexcept {
+		return ::mpfr::ldexp(x, static_cast<mp_exp_t>(exp));
+	}
+
+	/// Multiply a value by 2 raised to the power of an exponent
+	/// \tparam x The value
+	/// \tparam exp The exponent
+	/// \return x * 2^exp
+	template<typename A, typename B>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE __gmp_expr<A, B> ldexp(const __gmp_expr<A, B> &x,
+																	 const int64_t exp) noexcept {
+		return x << exp;
+	}
+
+	namespace typetraits {
+		template<>
+		struct TypeInfo<mpz> {
+			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
+			using Scalar							 = mpz;
+			using Packet							 = std::false_type;
+			static constexpr int64_t packetWidth	 = 1;
+			static constexpr char name[]			 = "mpz";
+			static constexpr bool supportsArithmetic = true;
+			static constexpr bool supportsLogical	 = true;
+			static constexpr bool supportsBinary	 = true;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64I;
+#	endif
+
+			static constexpr bool canAlign	= false;
+			static constexpr bool canMemcpy = false;
+
+			LIMIT_IMPL(min) { return NUM_LIM(min); }
+			LIMIT_IMPL(max) { return NUM_LIM(max); }
+			LIMIT_IMPL(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+
+		template<>
+		struct TypeInfo<mpq> {
+			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
+			using Scalar							 = mpq;
+			using Packet							 = std::false_type;
+			static constexpr int64_t packetWidth	 = 1;
+			static constexpr char name[]			 = "mpq";
+			static constexpr bool supportsArithmetic = true;
+			static constexpr bool supportsLogical	 = true;
+			static constexpr bool supportsBinary	 = false;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+#	endif
+
+			static constexpr bool canAlign	= false;
+			static constexpr bool canMemcpy = false;
+
+			LIMIT_IMPL(min) { return NUM_LIM(min); }
+			LIMIT_IMPL(max) { return NUM_LIM(max); }
+			LIMIT_IMPL(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+
+		template<>
+		struct TypeInfo<mpf> {
+			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
+			using Scalar							 = mpf;
+			using Packet							 = std::false_type;
+			static constexpr int64_t packetWidth	 = 1;
+			static constexpr char name[]			 = "mpf";
+			static constexpr bool supportsArithmetic = true;
+			static constexpr bool supportsLogical	 = true;
+			static constexpr bool supportsBinary	 = false;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+#	endif
+
+			static constexpr bool canAlign	= false;
+			static constexpr bool canMemcpy = false;
+
+			LIMIT_IMPL(min) { return NUM_LIM(min); }
+			LIMIT_IMPL(max) { return NUM_LIM(max); }
+			LIMIT_IMPL(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+
+		template<>
+		struct TypeInfo<mpfr> {
+			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
+			using Scalar							 = mpfr;
+			using Packet							 = std::false_type;
+			static constexpr int64_t packetWidth	 = 1;
+			static constexpr char name[]			 = "mpfr";
+			static constexpr bool supportsArithmetic = true;
+			static constexpr bool supportsLogical	 = true;
+			static constexpr bool supportsBinary	 = false;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+#	endif
+
+			static constexpr bool canAlign	= false;
+			static constexpr bool canMemcpy = false;
+
+			LIMIT_IMPL(min) { return NUM_LIM(min); }
+			LIMIT_IMPL(max) { return NUM_LIM(max); }
+			LIMIT_IMPL(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+	} // namespace typetraits
 } // namespace librapid
 
 // Provide {fmt} printing capabilities
@@ -635,13 +863,6 @@ namespace scn {
 } // namespace scn
 
 #	endif // SCN_SCN_H
-
-#else
-
-namespace librapid {
-	LIBRAPID_ALWAYS_INLINE void prec(int64_t) {}
-} // namespace librapid
-
-#endif // LIBRAPID_USE_MULTIPREC
+#endif	   // LIBRAPID_USE_MULTIPREC
 
 #endif // LIBRAPID_MATH_MULTIPREC_HPP
