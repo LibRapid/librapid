@@ -446,7 +446,7 @@ namespace librapid {
 	operator&(const VecImpl<Scalar, Dims, StorageType1> &vec,
 			  const VecImpl<Scalar, Dims, StorageType2> &mask) {
 		VecImpl<Scalar, Dims, StorageType1> res(vec);
-		for (int64_t i = 0; i < Dims; ++i)
+		for (size_t i = 0; i < Dims; ++i)
 			if (!mask[i]) res[i] = 0;
 		return res;
 	}
@@ -457,7 +457,7 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	template<glm::qualifier p>
 	VecImpl<Scalar, Dims, StorageType>::VecImpl(const glm::vec<Dims, Scalar, p> &vec) {
-		for (int64_t i = 0; i < Dims; ++i) { m_data[i] = vec[i]; }
+		for (size_t i = 0; i < Dims; ++i) { m_data[i] = vec[i]; }
 	}
 
 	/// Convert a GLM vector to a Vector object
@@ -465,7 +465,7 @@ namespace librapid {
 	template<glm::qualifier p>
 	VecImpl<Scalar, Dims, StorageType>::operator glm::vec<Dims, Scalar, p>() const {
 		glm::vec<Dims, Scalar, p> res;
-		for (int64_t i = 0; i < Dims; ++i) { res[i] = m_data[i]; }
+		for (size_t i = 0; i < Dims; ++i) { res[i] = m_data[i]; }
 		return res;
 	}
 
@@ -578,7 +578,7 @@ namespace librapid {
 												 const char *mode) const -> VecImpl {
 		VecImpl res(*this);
 		int16_t modeInt = *(int16_t *)mode;
-		for (int64_t i = 0; i < Dims; ++i) {
+		for (size_t i = 0; i < Dims; ++i) {
 			switch (modeInt) {
 				case 'e' | ('q' << 8):
 					if (res[i] == other[i])
@@ -633,7 +633,7 @@ namespace librapid {
 
 		VecImpl res(*this);
 		int16_t modeInt = *(int16_t *)mode;
-		for (int64_t i = 0; i < Dims; ++i) {
+		for (size_t i = 0; i < Dims; ++i) {
 			switch (modeInt) {
 				case 'e' | ('q' << 8):
 					if (res[i] == Scalar(value))
@@ -792,7 +792,7 @@ namespace librapid {
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	VecImpl<Scalar, Dims, StorageType>::operator bool() const {
-		for (int64_t i = 0; i < Dims; ++i)
+		for (size_t i = 0; i < Dims; ++i)
 			if (m_data[i] != 0) return true;
 		return false;
 	}
@@ -1332,7 +1332,7 @@ namespace librapid {
 	auto VecImpl<Scalar, Dims, StorageType>::str(const std::string &formatString) const
 	  -> std::string {
 		std::string res = "(";
-		for (int64_t i = 0; i < Dims; ++i) {
+		for (size_t i = 0; i < Dims; ++i) {
 			res += fmt::format(formatString, m_data[i]);
 			if (i < Dims - 1) res += ", ";
 		}
@@ -1459,7 +1459,7 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	sinh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::sinh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) { res[i] = std::sinh(vec[i]); }
 		return res;
 	}
 
@@ -1473,7 +1473,7 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	cosh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::cosh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) { res[i] = std::cosh(vec[i]); }
 		return res;
 	}
 
@@ -1487,7 +1487,7 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	tanh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::tanh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) { res[i] = std::tanh(vec[i]); }
 		return res;
 	}
 
@@ -1501,7 +1501,7 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	asinh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::asinh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) { res[i] = std::asinh(vec[i]); }
 		return res;
 	}
 
@@ -1515,7 +1515,7 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	acosh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::acosh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) { res[i] = std::acosh(vec[i]); }
 		return res;
 	}
 
@@ -1529,7 +1529,7 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	atanh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (int64_t i = 0; i < Dims; ++i) { res[i] = std::atanh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) { res[i] = std::atanh(vec[i]); }
 		return res;
 	}
 
@@ -1606,7 +1606,7 @@ namespace librapid {
 	pow(const VecImpl<Scalar, Dims, StorageType> &vec,
 		const VecImpl<Scalar, Dims, StorageType> &exp) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (int64_t i = 0; i < Dims; ++i) { res[i] = pow(vec[i], exp[i]); }
+		for (size_t i = 0; i < Dims; ++i) { res[i] = pow(vec[i], exp[i]); }
 		return res;
 	}
 
@@ -1622,7 +1622,7 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	pow(const VecImpl<Scalar, Dims, StorageType> &vec, T exp) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (int64_t i = 0; i < Dims; ++i) {
+		for (size_t i = 0; i < Dims; ++i) {
 			res[i] = static_cast<Scalar>(pow(vec[i], static_cast<Scalar>(exp)));
 		}
 		return res;
@@ -1639,7 +1639,7 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	pow(Scalar vec, const VecImpl<Scalar, Dims, StorageType> &exp) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (int64_t i = 0; i < Dims; ++i) { res[i] = pow(vec, exp[i]); }
+		for (size_t i = 0; i < Dims; ++i) { res[i] = pow(vec, exp[i]); }
 		return res;
 	}
 
