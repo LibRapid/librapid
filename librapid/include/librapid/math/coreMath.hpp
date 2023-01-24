@@ -86,6 +86,15 @@ namespace librapid {
 		}
 	}
 
+	template<typename T1, typename T2>
+	LIBRAPID_INLINE auto mod(const T1 &val, const T2 &mod) {
+		if constexpr (std::is_floating_point_v<T1> || std::is_floating_point_v<T2>) {
+			return std::fmod(val, mod);
+		} else {
+			return val % mod;
+		}
+	}
+
 	/// Return the floor of a given value
 	/// \tparam T Data type
 	/// \param val Input value
