@@ -310,7 +310,7 @@ namespace librapid {
 				} else {
 #endif
 
-#if defined(LIBRAPID_MSVC_CXX)
+#if defined(LIBRAPID_MSVC)
 					auto tmp  = static_cast<double>(*pleft);
 					short ans = _CSTD _Exp(&tmp, static_cast<double>(right), exponent);
 					*pleft	  = static_cast<T>(tmp);
