@@ -118,6 +118,22 @@ namespace librapid {
 		}
 	}
 
+	/// Return the hypotenuse of a right triangle given the lengths of the two legs. Note that,
+	/// for integer values, this function will cast the input values to a floating point type
+	/// before calculating the hypotenuse.
+	/// \tparam T Data type
+	/// \param leg1 Length of the first leg
+	/// \param leg2 Length of the second leg
+	/// \return Hypotenuse of the right triangle
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto hypot(T leg1, T leg2) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::hypot(static_cast<double>(leg1), static_cast<double>(leg2));
+		} else {
+			return std::hypot(leg1, leg2);
+		}
+	}
+
 	/// Return the cube root of a given value. Note that, for integer values, this function
 	/// will cast the input value to a floating point type before calculating the cube root.
 	/// \tparam T Data type
