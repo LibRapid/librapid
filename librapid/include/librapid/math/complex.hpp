@@ -663,7 +663,7 @@ namespace librapid {
 
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T abs(const Complex<T> &val) {
-		return ::librapid::hypot(val.real(), val.imag());
+		return hypot(val.real(), val.imag());
 	}
 
 	template<typename T>
