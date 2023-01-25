@@ -20,8 +20,16 @@ namespace librapid {
 #elif defined(LIBRAPID_MSVC)
 		// MSVC doesn't support std::bit_cast until C++20
 		return *(To *)(&val);
-#else
+#elif defined(LIBRAPID_GCC) || defined(LIBRAPID_CLANG)
+#	if __cplusplus > 201703l && __has_builtin(__builtin_bit_cast)
 		return __builtin_bit_cast(To, val);
+#	else
+		// Fallback option
+		return *(To *)(&val);
+#	endif // __has_builtin(__builtin_bit_cast)
+#else
+		// Further fallback option
+		return *(To *)(&val);
 #endif
 	}
 
