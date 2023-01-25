@@ -731,7 +731,6 @@ struct fmt::formatter<librapid::mpfr> {
 	template<typename FormatContext>
 	inline auto format(const librapid::mpfr &num, FormatContext &ctx) {
 		try {
-			fmt::print("DEBUG INFO: {}\n", specs_.precision);
 			if (specs_.precision < 1) return fmt::format_to(ctx.out(), librapid::str(num));
 
 			std::stringstream ss;

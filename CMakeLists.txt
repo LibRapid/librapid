@@ -29,6 +29,7 @@ option(LIBRAPID_STRICT "Force all warnings into errors (use with caution)" OFF)
 option(LIBRAPID_QUIET "Hide warnings generated WITHIN LibRapid's source" OFF)
 
 option(LIBRAPID_GET_BLAS "Download pre-built OpenBLAS binaries and use them" OFF)
+option(LIBRAPID_GET_MULTIPREC "Download generic multiprecision libraries, as opposed to trying to find one on the system" OFF)
 
 option(LIBRAPID_USE_BLAS "Attempt to use a BLAS library" ON)
 option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
@@ -353,7 +354,7 @@ target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
 if (${LIBRAPID_USE_MULTIPREC})
     # Load MPIR
     find_package(MPIR)
-    if (MPIR_FOUND)
+    if (NOT LIBRAPID_GET_MULTIPREC AND MPIR_FOUND)
         message(STATUS "[ LIBRAPID ] Found existing MPIR package")
         target_include_directories(${module_name} PUBLIC ${MPIR_INCLUDE_DIR})
         target_link_libraries(${module_name} PUBLIC ${MPIR_LIBRARY})
@@ -377,7 +378,7 @@ if (${LIBRAPID_USE_MULTIPREC})
 
     # Load MPFR
     find_package(MPFR)
-    if (MPFR_FOUND)
+    if (NOT LIBRAPID_GET_MULTIPREC AND MPFR_FOUND)
         message(STATUS "[ LIBRAPID ] Found existing MPFR package")
         target_include_directories(${module_name} PUBLIC ${MPFR_INCLUDES})
         target_link_libraries(${module_name} PUBLIC ${MPFR_LIBRARIES})
