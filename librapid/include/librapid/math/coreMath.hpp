@@ -332,6 +332,17 @@ namespace librapid {
 			return std::atan(val);
 		}
 	}
+
+	template<
+	  typename T1, typename T2,
+	  typename std::enable_if_t<std::is_fundamental_v<T1> && std::is_fundamental_v<T2>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto atan2(T1 dy, T2 dx) {
+		if constexpr (std::is_integral_v<T1> || std::is_integral_v<T2>) {
+			return std::atan2(static_cast<double>(dy), static_cast<double>(dx));
+		} else {
+			return std::atan2(dy, dx);
+		}
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_MATH_CORE_MATH_HPP
