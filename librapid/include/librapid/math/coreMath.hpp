@@ -333,6 +333,14 @@ namespace librapid {
 		}
 	}
 
+	/// Return the angle formed by a given y and x offset. This is often more useful than using
+	/// atan, since it gives more usable outputs. Note that, for integer values, this function
+	/// will cast the input values to a floating point type before calculating the angle.
+	/// \tparam T1
+	/// \tparam T2
+	/// \param dy
+	/// \param dx
+	/// \return
 	template<
 	  typename T1, typename T2,
 	  typename std::enable_if_t<std::is_fundamental_v<T1> && std::is_fundamental_v<T2>, int> = 0>
