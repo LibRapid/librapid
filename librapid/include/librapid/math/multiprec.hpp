@@ -335,10 +335,11 @@ namespace librapid {
 	/// \see prec
 	LIBRAPID_ALWAYS_INLINE mpfr constPi() { return ::mpfr::const_pi(); }
 
-	/// Calculate and return \f$ e \f$ with LibRapid's current precision
-	/// \return \f$ e \f$
+	/// Calculate and return \f$ \gamma \f$ with LibRapid's current precision, where \f$ \gamma \f$
+	/// is the Euler-Mascheroni constant
+	/// \return \f$ \gamma \f$
 	/// \see prec
-	LIBRAPID_ALWAYS_INLINE mpfr constEuler() { return ::mpfr::const_euler(); }
+	LIBRAPID_ALWAYS_INLINE mpfr constEulerMascheroni() { return ::mpfr::const_euler(); }
 
 	/// Calculate and return \f$ \log_e(2) \f$ with LibRapid's current precision
 	/// \return \f$ \log_e(2) \f$
