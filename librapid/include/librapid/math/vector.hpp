@@ -1450,7 +1450,7 @@ namespace librapid {
 	tan(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		using Type = VecImpl<Scalar, Dims, StorageType>;
 		if constexpr (Type::StorageHelper::isSimdArray) {
-			return VecImpl<Scalar, Dims, StorageType>(Vc::tan(vec.data()));
+			return sin(vec) / cos(vec);
 		} else {
 			VecImpl<Scalar, Dims, StorageType> res;
 			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::tan(vec[i]); }
