@@ -15,7 +15,7 @@ namespace librapid {
 
 		template<typename T, size_t D>
 		struct VectorIndexReturnTypeHelper<std::array<T, D>> {
-			using Type = T;
+			using Type = T &;
 		};
 
 		template<typename T, size_t Dims>
@@ -28,9 +28,9 @@ namespace librapid {
 				}
 			}
 
-			using Type				  = std::decay_t<decltype(typeHelperFunc())>;
-			using ConstReferenceIndex = const typename VectorIndexReturnTypeHelper<Type>::Type &;
-			using ReferenceIndex	  = typename VectorIndexReturnTypeHelper<Type>::Type &;
+			using Type						  = std::decay_t<decltype(typeHelperFunc())>;
+			using IndexType					  = typename VectorIndexReturnTypeHelper<Type>::Type;
+			using ConstIndexType			  = const IndexType;
 			static constexpr bool isSimdArray = typetraits::TypeInfo<T>::packetWidth > 1;
 		};
 	} // namespace detail
@@ -127,13 +127,12 @@ namespace librapid {
 		/// Access a specific element of the vector
 		/// \param index The index of the element to access
 		/// \return Reference to the element
-		LIBRAPID_NODISCARD typename StorageHelper::ConstReferenceIndex
-		operator[](int64_t index) const;
+		LIBRAPID_NODISCARD typename StorageHelper::ConstIndexType operator[](int64_t index) const;
 
 		/// Access a specific element of the vector
 		/// \param index The index of the element to access
 		/// \return Reference to the element
-		LIBRAPID_NODISCARD typename StorageHelper::ReferenceIndex operator[](int64_t index);
+		LIBRAPID_NODISCARD typename StorageHelper::IndexType operator[](int64_t index);
 
 		/// Add a vector to this vector, element-by-element
 		/// \param other The vector to add
@@ -508,7 +507,7 @@ namespace librapid {
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) const ->
-	  typename StorageHelper::ConstReferenceIndex {
+	  typename StorageHelper::ConstIndexType {
 		LIBRAPID_ASSERT(0 <= index && index < Dims,
 						"Index {} out of range for vector with {} dimensions",
 						index,
@@ -518,7 +517,7 @@ namespace librapid {
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) ->
-	  typename StorageHelper::ReferenceIndex {
+	  typename StorageHelper::IndexType {
 		LIBRAPID_ASSERT(0 <= index && index < Dims,
 						"Index {} out of range for vector with {} dimensions",
 						index,
