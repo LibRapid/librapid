@@ -3,9 +3,24 @@
 
 namespace librapid {
 	namespace detail {
+		template<typename T>
+		struct VectorIndexReturnTypeHelper {
+			using Type = std::false_type;
+		};
+
+		template<typename T, size_t D>
+		struct VectorIndexReturnTypeHelper<Vc::SimdArray<T, D>> {
+			using Type = decltype(std::declval<Vc::SimdArray<T, D>>()[0]);
+		};
+
+		template<typename T, size_t D>
+		struct VectorIndexReturnTypeHelper<std::array<T, D>> {
+			using Type = T;
+		};
+
 		template<typename T, size_t Dims>
 		struct VectorStorageTypeHelper {
-			static constexpr auto helperFunc() {
+			static constexpr auto typeHelperFunc() {
 				if constexpr (typetraits::TypeInfo<T>::packetWidth > 1) {
 					return Vc::SimdArray<T, Dims>();
 				} else {
@@ -13,7 +28,9 @@ namespace librapid {
 				}
 			}
 
-			using type						  = decltype(helperFunc());
+			using Type				  = std::decay_t<decltype(typeHelperFunc())>;
+			using ConstReferenceIndex = const typename VectorIndexReturnTypeHelper<Type>::Type &;
+			using ReferenceIndex	  = typename VectorIndexReturnTypeHelper<Type>::Type &;
 			static constexpr bool isSimdArray = typetraits::TypeInfo<T>::packetWidth > 1;
 		};
 	} // namespace detail
@@ -26,7 +43,7 @@ namespace librapid {
 	/// \tparam Dims The number of dimensions of the vector
 	/// \tparam StorageType The type of the storage for the vector
 	template<typename Scalar, int64_t Dims = 3,
-			 typename StorageType = typename detail::VectorStorageTypeHelper<Scalar, Dims>::type>
+			 typename StorageType = typename detail::VectorStorageTypeHelper<Scalar, Dims>::Type>
 	class VecImpl {
 	public:
 		using StorageHelper = detail::VectorStorageTypeHelper<Scalar, Dims>;
@@ -110,12 +127,13 @@ namespace librapid {
 		/// Access a specific element of the vector
 		/// \param index The index of the element to access
 		/// \return Reference to the element
-		LIBRAPID_NODISCARD const Scalar &operator[](int64_t index) const;
+		LIBRAPID_NODISCARD typename StorageHelper::ConstReferenceIndex
+		operator[](int64_t index) const;
 
 		/// Access a specific element of the vector
 		/// \param index The index of the element to access
 		/// \return Reference to the element
-		LIBRAPID_NODISCARD Scalar &operator[](int64_t index);
+		LIBRAPID_NODISCARD typename StorageHelper::ReferenceIndex operator[](int64_t index);
 
 		/// Add a vector to this vector, element-by-element
 		/// \param other The vector to add
@@ -489,7 +507,8 @@ namespace librapid {
 #endif // GLM_VERSION
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	const Scalar &VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) const {
+	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) const ->
+	  typename StorageHelper::ConstReferenceIndex {
 		LIBRAPID_ASSERT(0 <= index && index < Dims,
 						"Index {} out of range for vector with {} dimensions",
 						index,
@@ -498,7 +517,8 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	Scalar &VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) {
+	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) ->
+	  typename StorageHelper::ReferenceIndex {
 		LIBRAPID_ASSERT(0 <= index && index < Dims,
 						"Index {} out of range for vector with {} dimensions",
 						index,
