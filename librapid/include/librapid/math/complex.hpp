@@ -327,7 +327,7 @@ namespace librapid {
 		} // namespace algorithm
 	}	  // namespace detail
 
-	template<typename T = double>
+	template<typename T>
 	class Complex {
 	public:
 		Complex() : m_val {T(0), T(0)} {}
