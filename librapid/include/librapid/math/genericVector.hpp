@@ -418,12 +418,8 @@ namespace librapid {
 	template<typename... Args, int64_t size, std::enable_if_t<size != Dims, int>>
 	GenericVector<Scalar, Dims>::GenericVector(Args... args) {
 		static_assert(sizeof...(Args) <= Dims, "Invalid number of arguments");
-		if constexpr (size == 1) {
-			m_data = StorageType(static_cast<Scalar>(args)...);
-		} else {
-			const Scalar expanded[] = {static_cast<Scalar>(args)...};
-			for (int64_t i = 0; i < size; i++) { m_data[i] = expanded[i]; }
-		}
+		const Scalar expanded[] = {static_cast<Scalar>(args)...};
+		for (int64_t i = 0; i < size; i++) { m_data[i] = expanded[i]; }
 	}
 
 	template<typename Scalar, int64_t Dims>
