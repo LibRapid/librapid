@@ -351,6 +351,86 @@ namespace librapid {
 			return std::atan2(dy, dx);
 		}
 	}
+
+	/// Return the hyperbolic sine of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before calculating the hyperbolic sine.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Hyperbolic sine of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto sinh(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::sinh(static_cast<double>(val));
+		} else {
+			return std::sinh(val);
+		}
+	}
+
+	/// Return the hyperbolic cosine of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before calculating the hyperbolic cosine.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Hyperbolic cosine of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto cosh(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::cosh(static_cast<double>(val));
+		} else {
+			return std::cosh(val);
+		}
+	}
+
+	/// Return the hyperbolic tangent of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before calculating the hyperbolic
+	/// tangent. \tparam T Data type \param val Input value \return Hyperbolic tangent of the input
+	/// value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto tanh(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::tanh(static_cast<double>(val));
+		} else {
+			return std::tanh(val);
+		}
+	}
+
+	/// Return the hyperbolic arcsine of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before calculating the hyperbolic
+	/// arcsine. \tparam T Data type \param val Input value \return Hyperbolic arcsine of the input
+	/// value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto asinh(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::asinh(static_cast<double>(val));
+		} else {
+			return std::asinh(val);
+		}
+	}
+
+	/// Return the hyperbolic arccosine of a given value. Note that, for integer values, this
+	/// function will cast the input value to a floating point type before calculating the
+	/// hyperbolic arccosine. \tparam T Data type \param val Input value \return Hyperbolic
+	/// arccosine of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto acosh(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::acosh(static_cast<double>(val));
+		} else {
+			return std::acosh(val);
+		}
+	}
+
+	/// Return the hyperbolic arctangent of a given value. Note that, for integer values, this
+	/// function will cast the input value to a floating point type before calculating the
+	/// hyperbolic arctangent. \tparam T Data type \param val Input value \return Hyperbolic
+	/// arctangent of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto atanh(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::atanh(static_cast<double>(val));
+		} else {
+			return std::atanh(val);
+		}
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_MATH_CORE_MATH_HPP

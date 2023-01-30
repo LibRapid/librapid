@@ -915,8 +915,8 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename S>
 	LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, Dims>
 	operator+(const S &lhs, const GenericVector<Scalar, Dims> &rhs) {
-		GenericVector<Scalar, Dims> res(StorageType(static_cast<Scalar>(lhs)));
-		res += rhs;
+		GenericVector<Scalar, Dims> res;
+		for (int64_t i = 0; i < Dims; ++i) res[i] = lhs + rhs[i];
 		return res;
 	}
 
@@ -931,8 +931,8 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename S>
 	LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, Dims>
 	operator-(const S &lhs, const GenericVector<Scalar, Dims> &rhs) {
-		GenericVector<Scalar, Dims> res(StorageType(static_cast<Scalar>(lhs)));
-		res -= rhs;
+		GenericVector<Scalar, Dims> res;
+		for (int64_t i = 0; i < Dims; ++i) res[i] = lhs - rhs[i];
 		return res;
 	}
 
@@ -947,8 +947,8 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename S>
 	LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, Dims>
 	operator*(const S &lhs, const GenericVector<Scalar, Dims> &rhs) {
-		GenericVector<Scalar, Dims> res(StorageType(static_cast<Scalar>(lhs)));
-		res *= rhs;
+		GenericVector<Scalar, Dims> res;
+		for (int64_t i = 0; i < Dims; ++i) res[i] = lhs * rhs[i];
 		return res;
 	}
 
@@ -963,8 +963,8 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename S>
 	LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, Dims>
 	operator/(const S &lhs, const GenericVector<Scalar, Dims> &rhs) {
-		GenericVector<Scalar, Dims> res(StorageType(static_cast<Scalar>(lhs)));
-		res /= rhs;
+		GenericVector<Scalar, Dims> res;
+		for (int64_t i = 0; i < Dims; ++i) res[i] = lhs / rhs[i];
 		return res;
 	}
 
