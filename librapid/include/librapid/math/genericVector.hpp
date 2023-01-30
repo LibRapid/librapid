@@ -520,28 +520,28 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims>
 	template<typename T, std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
 	auto GenericVector<Scalar, Dims>::operator+=(const T &value) -> GenericVector & {
-		m_data += static_cast<Scalar>(value);
+		for (int64_t i = 0; i < Dims; ++i) m_data[i] += value;
 		return *this;
 	}
 
 	template<typename Scalar, int64_t Dims>
 	template<typename T, std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
 	auto GenericVector<Scalar, Dims>::operator-=(const T &value) -> GenericVector & {
-		m_data -= static_cast<Scalar>(value);
+		for (int64_t i = 0; i < Dims; ++i) m_data[i] -= value;
 		return *this;
 	}
 
 	template<typename Scalar, int64_t Dims>
 	template<typename T, std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
 	auto GenericVector<Scalar, Dims>::operator*=(const T &value) -> GenericVector & {
-		m_data *= static_cast<Scalar>(value);
+		for (int64_t i = 0; i < Dims; ++i) m_data[i] *= value;
 		return *this;
 	}
 
 	template<typename Scalar, int64_t Dims>
 	template<typename T, std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
 	auto GenericVector<Scalar, Dims>::operator/=(const T &value) -> GenericVector & {
-		m_data /= static_cast<Scalar>(value);
+		for (int64_t i = 0; i < Dims; ++i) m_data[i] /= value;
 		return *this;
 	}
 
