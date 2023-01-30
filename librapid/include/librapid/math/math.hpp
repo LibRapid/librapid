@@ -5,7 +5,8 @@
 #include "constants.hpp"
 #include "coreMath.hpp"
 #include "multiprec.hpp"
-#include "vector.hpp"
+#include "genericVector.hpp"
+// #include "simdVector.hpp"
 #include "complex.hpp"
 
 #endif // LIBRAPID_MATH
