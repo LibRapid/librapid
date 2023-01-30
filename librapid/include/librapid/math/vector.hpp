@@ -10,7 +10,9 @@ namespace librapid {
 
 		template<typename T, size_t D>
 		struct VectorIndexReturnTypeHelper<Vc::SimdArray<T, D>> {
-			using Type = decltype(std::declval<Vc::SimdArray<T, D>>()[0]);
+			using TmpStorage = Vc::SimdArray<T, D>;
+			static auto helper() { return TmpStorage()[0]; }
+			using Type = decltype(helper());
 		};
 
 		template<typename T, size_t D>
@@ -127,12 +129,12 @@ namespace librapid {
 		/// Access a specific element of the vector
 		/// \param index The index of the element to access
 		/// \return Reference to the element
-		LIBRAPID_NODISCARD typename StorageHelper::ConstIndexType operator[](int64_t index) const;
+		LIBRAPID_NODISCARD const auto &operator[](int64_t index) const;
 
 		/// Access a specific element of the vector
 		/// \param index The index of the element to access
 		/// \return Reference to the element
-		LIBRAPID_NODISCARD typename StorageHelper::IndexType operator[](int64_t index);
+		LIBRAPID_NODISCARD auto operator[](int64_t index);
 
 		/// Add a vector to this vector, element-by-element
 		/// \param other The vector to add
@@ -506,8 +508,7 @@ namespace librapid {
 #endif // GLM_VERSION
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) const ->
-	  typename StorageHelper::ConstIndexType {
+	const auto &VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) const {
 		LIBRAPID_ASSERT(0 <= index && index < Dims,
 						"Index {} out of range for vector with {} dimensions",
 						index,
@@ -516,8 +517,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) ->
-	  typename StorageHelper::IndexType {
+	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) {
 		LIBRAPID_ASSERT(0 <= index && index < Dims,
 						"Index {} out of range for vector with {} dimensions",
 						index,
@@ -1563,7 +1563,9 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	sinh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::sinh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::sinh(static_cast<Scalar>(vec[i]));
+		}
 		return res;
 	}
 
@@ -1577,7 +1579,9 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	cosh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::cosh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::cosh(static_cast<Scalar>(vec[i]));
+		}
 		return res;
 	}
 
@@ -1591,7 +1595,9 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	tanh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::tanh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::tanh(static_cast<Scalar>(vec[i]));
+		}
 		return res;
 	}
 
@@ -1605,7 +1611,9 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	asinh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::asinh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::asinh(static_cast<Scalar>(vec[i]));
+		}
 		return res;
 	}
 
@@ -1619,7 +1627,9 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	acosh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::acosh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::acosh(static_cast<Scalar>(vec[i]));
+		}
 		return res;
 	}
 
@@ -1633,7 +1643,9 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	atanh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::atanh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::atanh(static_cast<Scalar>(vec[i]));
+		}
 		return res;
 	}
 
@@ -1745,7 +1757,9 @@ namespace librapid {
 	pow(const VecImpl<Scalar, Dims, StorageType> &vec,
 		const VecImpl<Scalar, Dims, StorageType> &exp) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::pow(vec[i], exp[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::pow(static_cast<Scalar>(vec[i]), static_cast<Scalar>(exp[i]));
+		}
 		return res;
 	}
 
@@ -1762,7 +1776,8 @@ namespace librapid {
 	pow(const VecImpl<Scalar, Dims, StorageType> &vec, T exp) {
 		VecImpl<Scalar, Dims, StorageType> res;
 		for (size_t i = 0; i < Dims; ++i) {
-			res[i] = static_cast<Scalar>(pow(vec[i], static_cast<Scalar>(exp)));
+			res[i] =
+			  static_cast<Scalar>(pow(static_cast<Scalar>(vec[i]), static_cast<Scalar>(exp)));
 		}
 		return res;
 	}
