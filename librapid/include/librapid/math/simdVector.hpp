@@ -2,6 +2,41 @@
 #define LIBRAPID_MATH_VECTOR_HPP
 
 namespace librapid {
+	namespace detail {
+		template<typename T>
+		struct VectorIndexReturnTypeHelper {
+			using Type = std::false_type;
+		};
+
+		template<typename T, size_t D>
+		struct VectorIndexReturnTypeHelper<Vc::SimdArray<T, D>> {
+			using TmpStorage = Vc::SimdArray<T, D>;
+			static auto helper() { return TmpStorage()[0]; }
+			using Type = decltype(helper());
+		};
+
+		template<typename T, size_t D>
+		struct VectorIndexReturnTypeHelper<std::array<T, D>> {
+			using Type = T &;
+		};
+
+		template<typename T, size_t Dims>
+		struct VectorStorageTypeHelper {
+			static constexpr auto typeHelperFunc() {
+				if constexpr (typetraits::TypeInfo<T>::packetWidth > 1) {
+					return Vc::SimdArray<T, Dims>();
+				} else {
+					return std::array<T, Dims>();
+				}
+			}
+
+			using Type						  = std::decay_t<decltype(typeHelperFunc())>;
+			using IndexType					  = typename VectorIndexReturnTypeHelper<Type>::Type;
+			using ConstIndexType			  = const IndexType;
+			static constexpr bool isSimdArray = typetraits::TypeInfo<T>::packetWidth > 1;
+		};
+	} // namespace detail
+
 	/// The implementation for the Vector class. It is capable of representing
 	/// an n-dimensional vector with any data type and storage type. By default,
 	/// the storage type is a Vc Vector, but can be replaced with custom types
@@ -9,9 +44,12 @@ namespace librapid {
 	/// \tparam Scalar The type of each element of the vector
 	/// \tparam Dims The number of dimensions of the vector
 	/// \tparam StorageType The type of the storage for the vector
-	template<typename Scalar, int64_t Dims = 3, typename StorageType = Vc::SimdArray<Scalar, Dims>>
+	template<typename Scalar, int64_t Dims = 3,
+			 typename StorageType = typename detail::VectorStorageTypeHelper<Scalar, Dims>::Type>
 	class VecImpl {
 	public:
+		using StorageHelper = detail::VectorStorageTypeHelper<Scalar, Dims>;
+
 		/// Default constructor
 		VecImpl() = default;
 
@@ -91,7 +129,7 @@ namespace librapid {
 		/// Access a specific element of the vector
 		/// \param index The index of the element to access
 		/// \return Reference to the element
-		LIBRAPID_NODISCARD auto operator[](int64_t index) const;
+		LIBRAPID_NODISCARD const auto &operator[](int64_t index) const;
 
 		/// Access a specific element of the vector
 		/// \param index The index of the element to access
@@ -409,9 +447,7 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	template<typename S, int64_t D, typename ST>
 	VecImpl<Scalar, Dims, StorageType>::VecImpl(const VecImpl<S, D, ST> &other) {
-		for (int64_t i = 0; i < min(Dims, D); ++i) {
-			m_data[i] = static_cast<Scalar>(other[i]);
-		}
+		for (int64_t i = 0; i < min(Dims, D); ++i) { m_data[i] = static_cast<Scalar>(other[i]); }
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
@@ -472,16 +508,20 @@ namespace librapid {
 #endif // GLM_VERSION
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
-	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) const {
-		LIBRAPID_ASSERT(
-		  0 <= index && index < Dims, "Index {} out of range for vector with {} dimensions", index, Dims);
+	const auto &VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) const {
+		LIBRAPID_ASSERT(0 <= index && index < Dims,
+						"Index {} out of range for vector with {} dimensions",
+						index,
+						Dims);
 		return m_data[index];
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::operator[](int64_t index) {
-		LIBRAPID_ASSERT(
-		  0 <= index && index < Dims, "Index {} out of range for vector with {} dimensions", index, Dims);
+		LIBRAPID_ASSERT(0 <= index && index < Dims,
+						"Index {} out of range for vector with {} dimensions",
+						index,
+						Dims);
 		return m_data[index];
 	}
 
@@ -490,7 +530,7 @@ namespace librapid {
 	auto VecImpl<Scalar, Dims, StorageType>::operator+=(const VecImpl<T, d, S> &other)
 	  -> VecImpl & {
 		static_assert(d <= Dims, "Invalid number of dimensions");
-		if constexpr (Dims == d) {
+		if constexpr (Dims == d && StorageHelper::isSimdArray) {
 			m_data += other.m_data;
 		} else {
 			for (int64_t i = 0; i < d; ++i) { m_data[i] += other[i]; }
@@ -503,7 +543,7 @@ namespace librapid {
 	auto VecImpl<Scalar, Dims, StorageType>::operator-=(const VecImpl<T, d, S> &other)
 	  -> VecImpl & {
 		static_assert(d <= Dims, "Invalid number of dimensions");
-		if constexpr (Dims == d) {
+		if constexpr (Dims == d && StorageHelper::isSimdArray) {
 			m_data -= other.m_data;
 		} else {
 			for (int64_t i = 0; i < d; ++i) { m_data[i] -= other[i]; }
@@ -516,7 +556,7 @@ namespace librapid {
 	auto VecImpl<Scalar, Dims, StorageType>::operator*=(const VecImpl<T, d, S> &other)
 	  -> VecImpl & {
 		static_assert(d <= Dims, "Invalid number of dimensions");
-		if constexpr (Dims == d) {
+		if constexpr (Dims == d && StorageHelper::isSimdArray) {
 			m_data *= other.m_data;
 		} else {
 			for (int64_t i = 0; i < d; ++i) { m_data[i] *= other[i]; }
@@ -529,7 +569,7 @@ namespace librapid {
 	auto VecImpl<Scalar, Dims, StorageType>::operator/=(const VecImpl<T, d, S> &other)
 	  -> VecImpl & {
 		static_assert(d <= Dims, "Invalid number of dimensions");
-		if constexpr (Dims == d) {
+		if constexpr (Dims == d && StorageHelper::isSimdArray) {
 			m_data /= other.m_data;
 		} else {
 			for (int64_t i = 0; i < d; ++i) { m_data[i] /= other[i]; }
@@ -757,7 +797,13 @@ namespace librapid {
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::mag2() const -> Scalar {
-		return (m_data * m_data).sum();
+		if constexpr (StorageHelper::isSimdArray) {
+			return (m_data * m_data).sum();
+		} else {
+			Scalar res = 0;
+			for (int64_t i = 0; i < Dims; ++i) { res += m_data[i] * m_data[i]; }
+			return res;
+		}
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
@@ -774,7 +820,13 @@ namespace librapid {
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	auto VecImpl<Scalar, Dims, StorageType>::dot(const VecImpl &other) const -> Scalar {
-		return (m_data * other.m_data).sum();
+		if constexpr (StorageHelper::isSimdArray) {
+			return (m_data * other.m_data).sum();
+		} else {
+			Scalar res = 0;
+			for (int64_t i = 0; i < Dims; ++i) { res += m_data[i] * other.m_data[i]; }
+			return res;
+		}
 	}
 
 	template<typename Scalar, int64_t Dims, typename StorageType>
@@ -1374,7 +1426,17 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	sin(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::sin(vec.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return VecImpl<Scalar, Dims, StorageType>(Vc::sin(vec.data()));
+		} else {
+			VecImpl<Scalar, Dims, StorageType> res;
+			for (size_t i = 0; i < Dims; ++i) {
+				fmt::print("Info: {} -> {}\n", vec[i], ::librapid::sin(vec[i]));
+				res[i] = ::librapid::sin(vec[i]);
+			}
+			return res;
+		}
 	}
 
 	/// Calculate the cos of each element of a vector and return the result
@@ -1386,7 +1448,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	cos(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::cos(vec.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return VecImpl<Scalar, Dims, StorageType>(Vc::cos(vec.data()));
+		} else {
+			VecImpl<Scalar, Dims, StorageType> res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::cos(vec[i]); }
+			return res;
+		}
 	}
 
 	/// Calculate the tan of each element of a vector and return the result
@@ -1398,7 +1467,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	tan(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(sin(vec) / cos(vec));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return sin(vec) / cos(vec);
+		} else {
+			VecImpl<Scalar, Dims, StorageType> res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::tan(vec[i]); }
+			return res;
+		}
 	}
 
 	/// Calculate the asin of each element of a vector and return the result
@@ -1410,7 +1486,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	asin(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::asin(vec.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return VecImpl<Scalar, Dims, StorageType>(Vc::asin(vec.data()));
+		} else {
+			VecImpl<Scalar, Dims, StorageType> res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::asin(vec[i]); }
+			return res;
+		}
 	}
 
 	/// Calculate the acos of each element of a vector and return the result
@@ -1422,7 +1505,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	acos(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(HALFPI - asin(vec));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return VecImpl<Scalar, Dims, StorageType>(HALFPI - asin(vec));
+		} else {
+			VecImpl<Scalar, Dims, StorageType> res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::acos(vec[i]); }
+			return res;
+		}
 	}
 
 	/// Calculate the atan of each element of a vector and return the result
@@ -1434,7 +1524,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	atan(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::atan(vec.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return VecImpl<Scalar, Dims, StorageType>(Vc::atan(vec.data()));
+		} else {
+			VecImpl<Scalar, Dims, StorageType> res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::atan(vec[i]); }
+			return res;
+		}
 	}
 
 	/// Calculate the atan2 of each element of a vector and return the result
@@ -1446,7 +1543,14 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	atan2(const VecImpl<Scalar, Dims, StorageType> &lhs,
 		  const VecImpl<Scalar, Dims, StorageType> &rhs) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::atan2(lhs.data(), rhs.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return VecImpl<Scalar, Dims, StorageType>(Vc::atan2(lhs.data(), rhs.data()));
+		} else {
+			VecImpl<Scalar, Dims, StorageType> res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::atan2(lhs[i], rhs[i]); }
+			return res;
+		}
 	}
 
 	/// Calculate the sinh of each element of a vector and return the result
@@ -1459,7 +1563,9 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	sinh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = std::sinh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::sinh(static_cast<Scalar>(vec[i]));
+		}
 		return res;
 	}
 
@@ -1473,7 +1579,9 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	cosh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = std::cosh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::cosh(static_cast<Scalar>(vec[i]));
+		}
 		return res;
 	}
 
@@ -1487,7 +1595,9 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	tanh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = std::tanh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::tanh(static_cast<Scalar>(vec[i]));
+		}
 		return res;
 	}
 
@@ -1501,7 +1611,9 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	asinh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = std::asinh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::asinh(static_cast<Scalar>(vec[i]));
+		}
 		return res;
 	}
 
@@ -1515,7 +1627,9 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	acosh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = std::acosh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::acosh(static_cast<Scalar>(vec[i]));
+		}
 		return res;
 	}
 
@@ -1529,7 +1643,9 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	atanh(const VecImpl<Scalar, Dims, StorageType> &vec) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = std::atanh(vec[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::atanh(static_cast<Scalar>(vec[i]));
+		}
 		return res;
 	}
 
@@ -1542,7 +1658,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	exp(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::exp(vec.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return Type(Vc::exp(vec.data()));
+		} else {
+			Type res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::exp(vec[i]); }
+			return res;
+		}
 	}
 
 	/// Calculate the log of each element of a vector and return the result
@@ -1554,7 +1677,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	log(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::log(vec.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return Type(Vc::log(vec.data()));
+		} else {
+			Type res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::log(vec[i]); }
+			return res;
+		}
 	}
 
 	/// Calculate the log10 of each element of a vector and return the result
@@ -1566,7 +1696,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	log10(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::log10(vec.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return Type(Vc::log10(vec.data()));
+		} else {
+			Type res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::log10(vec[i]); }
+			return res;
+		}
 	}
 
 	/// Calculate the log2 of each element of a vector and return the result
@@ -1578,7 +1715,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	log2(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::log2(vec.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return Type(Vc::log2(vec.data()));
+		} else {
+			Type res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::log2(vec[i]); }
+			return res;
+		}
 	}
 
 	/// Calculate the sqrt of each element of a vector and return the result
@@ -1590,7 +1734,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	sqrt(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::sqrt(vec.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return Type(Vc::sqrt(vec.data()));
+		} else {
+			Type res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::sqrt(vec[i]); }
+			return res;
+		}
 	}
 
 	/// Raise each element of a vector to the power of another vector and return the result
@@ -1606,7 +1757,9 @@ namespace librapid {
 	pow(const VecImpl<Scalar, Dims, StorageType> &vec,
 		const VecImpl<Scalar, Dims, StorageType> &exp) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = pow(vec[i], exp[i]); }
+		for (size_t i = 0; i < Dims; ++i) {
+			res[i] = ::librapid::pow(static_cast<Scalar>(vec[i]), static_cast<Scalar>(exp[i]));
+		}
 		return res;
 	}
 
@@ -1623,7 +1776,8 @@ namespace librapid {
 	pow(const VecImpl<Scalar, Dims, StorageType> &vec, T exp) {
 		VecImpl<Scalar, Dims, StorageType> res;
 		for (size_t i = 0; i < Dims; ++i) {
-			res[i] = static_cast<Scalar>(pow(vec[i], static_cast<Scalar>(exp)));
+			res[i] =
+			  static_cast<Scalar>(pow(static_cast<Scalar>(vec[i]), static_cast<Scalar>(exp)));
 		}
 		return res;
 	}
@@ -1639,7 +1793,7 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	pow(Scalar vec, const VecImpl<Scalar, Dims, StorageType> &exp) {
 		VecImpl<Scalar, Dims, StorageType> res;
-		for (size_t i = 0; i < Dims; ++i) { res[i] = pow(vec, exp[i]); }
+		for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::pow(vec, exp[i]); }
 		return res;
 	}
 
@@ -1652,7 +1806,7 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	cbrt(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return pow(vec, 1.0 / 3.0);
+		return pow(vec, Scalar(1.0) / Scalar(3.0));
 	}
 
 	/// Calculate the absolute value of each element of a vector and return the result
@@ -1664,7 +1818,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	abs(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::abs(vec.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return Type(Vc::abs(vec.data()));
+		} else {
+			Type res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::abs(vec[i]); }
+			return res;
+		}
 	}
 
 	/// Calculate the floor of each element of a vector and return the result
@@ -1676,7 +1837,14 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	floor(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::floor(vec.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return Type(Vc::floor(vec.data()));
+		} else {
+			Type res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::floor(vec[i]); }
+			return res;
+		}
 	}
 
 	/// Calculate the ceil of each element of a vector and return the result
@@ -1688,14 +1856,21 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims, typename StorageType>
 	LIBRAPID_ALWAYS_INLINE VecImpl<Scalar, Dims, StorageType>
 	ceil(const VecImpl<Scalar, Dims, StorageType> &vec) {
-		return VecImpl<Scalar, Dims, StorageType>(Vc::ceil(vec.data()));
+		using Type = VecImpl<Scalar, Dims, StorageType>;
+		if constexpr (Type::StorageHelper::isSimdArray) {
+			return Type(Vc::ceil(vec.data()));
+		} else {
+			Type res;
+			for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::ceil(vec[i]); }
+			return res;
+		}
 	}
 
 	/// A simplified interface to the VecImpl class, defaulting to Vc SimdArray storage
 	/// \tparam Scalar The scalar type of the vector
 	/// \tparam Dims The dimensionality of the vector
 	template<typename Scalar, int64_t Dims>
-	using Vec = VecImpl<Scalar, Dims, Vc::SimdArray<Scalar, Dims>>;
+	using Vec = VecImpl<Scalar, Dims>;
 
 	using Vec2i = Vec<int32_t, 2>;
 	using Vec3i = Vec<int32_t, 3>;

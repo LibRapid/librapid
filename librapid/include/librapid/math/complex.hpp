@@ -310,7 +310,7 @@ namespace librapid {
 				} else {
 #endif
 
-#if defined(LIBRAPID_MSVC_CXX)
+#if defined(LIBRAPID_MSVC)
 					auto tmp  = static_cast<double>(*pleft);
 					short ans = _CSTD _Exp(&tmp, static_cast<double>(right), exponent);
 					*pleft	  = static_cast<T>(tmp);
@@ -327,7 +327,7 @@ namespace librapid {
 		} // namespace algorithm
 	}	  // namespace detail
 
-	template<typename T = double>
+	template<typename T>
 	class Complex {
 	public:
 		Complex() : m_val {T(0), T(0)} {}
@@ -663,7 +663,7 @@ namespace librapid {
 
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T abs(const Complex<T> &val) {
-		return hypot(val.real(), val.imag());
+		return ::librapid::hypot(val.real(), val.imag());
 	}
 
 	template<typename T>

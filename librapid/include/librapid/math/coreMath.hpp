@@ -86,6 +86,15 @@ namespace librapid {
 		}
 	}
 
+	template<typename T1, typename T2>
+	LIBRAPID_INLINE auto mod(const T1 &val, const T2 &mod) {
+		if constexpr (std::is_floating_point_v<T1> || std::is_floating_point_v<T2>) {
+			return std::fmod(val, mod);
+		} else {
+			return val % mod;
+		}
+	}
+
 	/// Return the floor of a given value
 	/// \tparam T Data type
 	/// \param val Input value
@@ -115,6 +124,22 @@ namespace librapid {
 			return std::sqrt(static_cast<double>(val));
 		} else {
 			return std::sqrt(val);
+		}
+	}
+
+	/// Return the hypotenuse of a right triangle given the lengths of the two legs. Note that,
+	/// for integer values, this function will cast the input values to a floating point type
+	/// before calculating the hypotenuse.
+	/// \tparam T Data type
+	/// \param leg1 Length of the first leg
+	/// \param leg2 Length of the second leg
+	/// \return Hypotenuse of the right triangle
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto hypot(T leg1, T leg2) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::hypot(static_cast<double>(leg1), static_cast<double>(leg2));
+		} else {
+			return std::hypot(leg1, leg2);
 		}
 	}
 
@@ -165,6 +190,20 @@ namespace librapid {
 			return std::exp(static_cast<double>(val));
 		} else {
 			return std::exp(val);
+		}
+	}
+
+	/// Return 2 raised to a given power. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before calculating the exponential.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return 2 raised to the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto exp2(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::exp2(static_cast<double>(val));
+		} else {
+			return std::exp2(val);
 		}
 	}
 
@@ -291,6 +330,109 @@ namespace librapid {
 			return std::atan(static_cast<double>(val));
 		} else {
 			return std::atan(val);
+		}
+	}
+
+	/// Return the angle formed by a given y and x offset. This is often more useful than using
+	/// atan, since it gives more usable outputs. Note that, for integer values, this function
+	/// will cast the input values to a floating point type before calculating the angle.
+	/// \tparam T1
+	/// \tparam T2
+	/// \param dy
+	/// \param dx
+	/// \return
+	template<
+	  typename T1, typename T2,
+	  typename std::enable_if_t<std::is_fundamental_v<T1> && std::is_fundamental_v<T2>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto atan2(T1 dy, T2 dx) {
+		if constexpr (std::is_integral_v<T1> || std::is_integral_v<T2>) {
+			return std::atan2(static_cast<double>(dy), static_cast<double>(dx));
+		} else {
+			return std::atan2(dy, dx);
+		}
+	}
+
+	/// Return the hyperbolic sin of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before computing the result.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Hyperbolic sine of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto sinh(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::sinh(static_cast<double>(val));
+		} else {
+			return std::sinh(val);
+		}
+	}
+
+	/// Return the hyperbolic cosine of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before computing the result.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Hyperbolic cosine of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto cosh(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::cosh(static_cast<double>(val));
+		} else {
+			return std::cosh(val);
+		}
+	}
+
+	/// Return the hyperbolic tangent of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before computing the result.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Hyperbolic tangent of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto tanh(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::tanh(static_cast<double>(val));
+		} else {
+			return std::tanh(val);
+		}
+	}
+
+	/// Return the hyperbolic arcsine of a given value. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before computing the result.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Hyperbolic arcsine of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto asinh(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::asinh(static_cast<double>(val));
+		} else {
+			return std::asinh(val);
+		}
+	}
+
+	/// Return the hyperbolic arccosine of a given value. Note that, for integer values, this
+	/// function will cast the input value to a floating point type before computing the result.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Hyperbolic arccosine of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto acosh(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::acosh(static_cast<double>(val));
+		} else {
+			return std::acosh(val);
+		}
+	}
+
+	/// Return the hyperbolic arctangent of a given value. Note that, for integer values, this
+	/// function will cast the input value to a floating point type before computing the result.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return Hyperbolic arctangent of the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto atanh(T val) {
+		if constexpr (std::is_integral_v<T>) {
+			return std::atanh(static_cast<double>(val));
+		} else {
+			return std::atanh(val);
 		}
 	}
 } // namespace librapid

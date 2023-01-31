@@ -335,10 +335,11 @@ namespace librapid {
 	/// \see prec
 	LIBRAPID_ALWAYS_INLINE mpfr constPi() { return ::mpfr::const_pi(); }
 
-	/// Calculate and return \f$ e \f$ with LibRapid's current precision
-	/// \return \f$ e \f$
+	/// Calculate and return \f$ \gamma \f$ with LibRapid's current precision, where \f$ \gamma \f$
+	/// is the Euler-Mascheroni constant
+	/// \return \f$ \gamma \f$
 	/// \see prec
-	LIBRAPID_ALWAYS_INLINE mpfr constEuler() { return ::mpfr::const_euler(); }
+	LIBRAPID_ALWAYS_INLINE mpfr constEulerMascheroni() { return ::mpfr::const_euler(); }
 
 	/// Calculate and return \f$ \log_e(2) \f$ with LibRapid's current precision
 	/// \return \f$ \log_e(2) \f$
@@ -644,7 +645,6 @@ struct fmt::formatter<mpz_class> {
 	}
 };
 
-// Even though `mpf` is not a typedef-ed type, we'll add printing support for it
 template<>
 struct fmt::formatter<mpf_class> {
 	detail::dynamic_format_specs<char> specs_;
@@ -664,6 +664,39 @@ struct fmt::formatter<mpf_class> {
 
 	template<typename FormatContext>
 	inline auto format(const mpf_class &num, FormatContext &ctx) {
+		try {
+			if (specs_.precision < 1) return fmt::format_to(ctx.out(), librapid::str(num));
+
+			std::stringstream ss;
+			ss << std::fixed;
+			ss.precision(specs_.precision);
+			ss << num;
+			return fmt::format_to(ctx.out(), ss.str());
+		} catch (std::exception &e) {
+			return fmt::format_to(ctx.out(), fmt::format("Format Error: {}", e.what()));
+		}
+	}
+};
+
+template<typename Type, typename Expression>
+struct fmt::formatter<__gmp_expr<Type, Expression>> {
+	detail::dynamic_format_specs<char> specs_;
+
+	template<typename ParseContext>
+	constexpr auto parse(ParseContext &ctx) {
+		auto begin = ctx.begin(), end = ctx.end();
+		if (begin == end) return begin;
+		using handler_type = detail::dynamic_specs_handler<ParseContext>;
+		auto type		   = detail::type_constant<mpf_class, char>::value;
+		auto checker	   = detail::specs_checker<handler_type>(handler_type(specs_, ctx), type);
+		auto it			   = detail::parse_format_specs(begin, end, checker);
+		auto eh			   = ctx.error_handler();
+		detail::parse_float_type_spec(specs_, eh);
+		return it;
+	}
+
+	template<typename FormatContext>
+	inline auto format(const __gmp_expr<Type, Expression> &num, FormatContext &ctx) {
 		try {
 			if (specs_.precision < 1) return fmt::format_to(ctx.out(), librapid::str(num));
 
@@ -731,7 +764,6 @@ struct fmt::formatter<librapid::mpfr> {
 	template<typename FormatContext>
 	inline auto format(const librapid::mpfr &num, FormatContext &ctx) {
 		try {
-			fmt::print("DEBUG INFO: {}\n", specs_.precision);
 			if (specs_.precision < 1) return fmt::format_to(ctx.out(), librapid::str(num));
 
 			std::stringstream ss;
