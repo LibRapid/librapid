@@ -33,7 +33,7 @@ namespace librapid {
 			// the result is exact when:
 			// 1) the result doesn't overflow
 			// 2) either underflow is gradual, or no internal underflow occurs
-			// 3) intermediate precision is either the same as _Ty, or greater than twice the
+			// 3) intermediate precision is either the same as T, or greater than twice the
 			// precision
 			//    of _Ty
 			// 4) parameters and local variables do not retain extra intermediate precision 5)
@@ -1333,12 +1333,6 @@ namespace librapid {
 			return -polarPositiveNanInfZeroRho(-rho, theta);
 		else
 			return polarPositiveNanInfZeroRho(rho, theta);
-	}
-
-	template<typename T>
-	LIBRAPID_NODISCARD Complex<T> atan2(const Complex<T> &y, const Complex<T> &x) {
-		LIBRAPID_ASSERT(false, "Complex atan2 is not yet implemented");
-		return {0};
 	}
 
 	template<typename T>
