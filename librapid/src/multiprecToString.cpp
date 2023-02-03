@@ -8,11 +8,11 @@ namespace librapid {
 	std::string str(const mpf &val, int64_t digits, int base) {
 		mp_exp_t exp;
 		std::string res = val.get_str(exp, base, digits);
-		bool sign = false;
+		bool sign		= false;
 
 		if (res[0] == '-') {
 			sign = true;
-			res = std::string(res.begin() + 1, res.end());
+			res	 = std::string(res.begin() + 1, res.end());
 		}
 
 		if (exp > 0) {
