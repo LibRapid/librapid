@@ -483,7 +483,8 @@ namespace librapid {
 	/// Multiply a value by 2 raised to the power of an exponent
 	/// \return x * 2^exp
 	template<>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE mpfr ldexp(const mpfr &x, const int64_t exp) noexcept {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE mpfr ldexp(const mpfr &x,
+														 const int64_t exp) noexcept {
 		return ::mpfr::ldexp(x, static_cast<mp_exp_t>(exp));
 	}
 
