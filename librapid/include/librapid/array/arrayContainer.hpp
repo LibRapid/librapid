@@ -157,8 +157,7 @@ namespace librapid {
 		};
 
 		template<typename ShapeType_, typename StorageType_>
-		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer() :
-				m_shape(StorageType_::template defaultShape<ShapeType_>()) {}
+		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer() : m_shape({0, 0}) {}
 
 		template<typename ShapeType_, typename StorageType_>
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const ShapeType &shape) :
