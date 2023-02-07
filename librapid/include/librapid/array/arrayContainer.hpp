@@ -106,8 +106,11 @@ namespace librapid {
 			/// \param index The index of the sub-array
 			/// \return A reference to the sub-array (ArrayView)
 			/// \see ArrayView
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<ArrayContainer>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<const ArrayContainer>
 			operator[](int64_t index) const;
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<ArrayContainer>
+			operator[](int64_t index);
 
 			/// Return the number of dimensions of the ArrayContainer object
 			/// \return Number of dimensions of the ArrayContainer
@@ -157,7 +160,7 @@ namespace librapid {
 		};
 
 		template<typename ShapeType_, typename StorageType_>
-		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer() : m_shape({0, 0}) {}
+		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer() : m_shape({0}) {}
 
 		template<typename ShapeType_, typename StorageType_>
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const ShapeType &shape) :
@@ -236,6 +239,22 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const
+		  -> ArrayView<const ArrayContainer> {
+			LIBRAPID_ASSERT(
+			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
+			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
+			  index,
+			  m_shape[0]);
+			ArrayView<const ArrayContainer> view(*this);
+			const auto stride = Stride(m_shape);
+			view.setShape(m_shape.subshape(1, ndim()));
+			view.setStride(stride.subshape(1, ndim()));
+			view.setOffset(index * stride[0]);
+			return view;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index)
 		  -> ArrayView<ArrayContainer> {
 			LIBRAPID_ASSERT(
 			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
