@@ -17,15 +17,17 @@ namespace librapid {
 		class ArrayView {
 		public:
 			using ArrayType		 = T;
-			using Reference		 = ArrayType &;
-			using ConstReference = const ArrayType &;
-			using StrideType	 = typename ArrayType::StrideType;
-			using ShapeType		 = typename ArrayType::ShapeType;
-			using Scalar		 = typename typetraits::TypeInfo<ArrayType>::Scalar;
-			using Device		 = typename typetraits::TypeInfo<ArrayType>::Device;
+			using BaseType		 = typename std::decay_t<T>;
+			using Scalar		 = typename typetraits::TypeInfo<BaseType>::Scalar;
+			using Reference		 = BaseType &;
+			using ConstReference = const BaseType &;
+			using StrideType	 = typename BaseType::StrideType;
+			using ShapeType		 = typename BaseType::ShapeType;
+			using Scalar		 = typename typetraits::TypeInfo<BaseType>::Scalar;
+			using Device		 = typename typetraits::TypeInfo<BaseType>::Device;
 
 			ArrayView() = delete;
-			ArrayView(const ArrayType &array);
+			ArrayView(ArrayType &array);
 			ArrayView(const ArrayView &other) = default;
 
 			/// Constructs an ArrayView from a temporary ArrayView.
@@ -40,7 +42,9 @@ namespace librapid {
 			/// Assigns a temporary ArrayView to this ArrayView.
 			/// \param other The ArrayView to move.
 			/// \return A reference to this ArrayView.
-			ArrayView &operator=(ArrayView &&other) = default;
+			ArrayView &operator=(ArrayView &&other) noexcept = default;
+
+			ArrayView &operator=(const Scalar &scalar);
 
 			/// Access a sub-array of this ArrayView.
 			/// \param index The index of the sub-array.
@@ -64,19 +68,23 @@ namespace librapid {
 			LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
 
 		private:
-			ConstReference m_ref;
+			// ConstReference m_ref;
+			ArrayType &m_ref;
 			ShapeType m_shape;
 			StrideType m_stride;
 			int64_t m_offset = 0;
 		};
 
-		// template<typename T>
-		// ArrayView<T>::ArrayView(ArrayType &array) :
-		// 		m_ref(array), m_shape(array.shape()), m_stride(array.shape()) {}
+		template<typename T>
+		ArrayView<T>::ArrayView(ArrayType &array) :
+				m_ref(array), m_shape(array.shape()), m_stride(array.shape()) {}
 
 		template<typename T>
-		ArrayView<T>::ArrayView(const ArrayType &array) :
-				m_ref(array), m_shape(array.shape()), m_stride(array.shape()) {}
+		ArrayView<T> &ArrayView<T>::operator=(const Scalar &scalar) {
+			LIBRAPID_ASSERT(m_shape.ndim() == 0, "Cannot assign to a non-scalar ArrayView.");
+			m_ref.storage()[m_offset] = static_cast<Scalar>(scalar);
+			return *this;
+		}
 
 		template<typename T>
 		auto ArrayView<T>::operator[](int64_t index) const -> ArrayView<ArrayType> {

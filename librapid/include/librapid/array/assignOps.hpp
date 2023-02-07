@@ -283,7 +283,7 @@ namespace librapid::detail {
 		impl::cudaTupleEvaluator(std::make_index_sequence<argSize>(),
 								 filename,
 								 kernelName,
-								 lhs.storage().begin(),
+								 lhs.storage().begin().get(),
 								 function);
 	}
 
