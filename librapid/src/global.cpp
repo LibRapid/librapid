@@ -9,6 +9,5 @@ namespace librapid::global {
 #if defined(LIBRAPID_HAS_CUDA)
 	cudaStream_t cudaStream;
 	jitify::JitCache jitCache;
-
 #endif // LIBRAPID_HAS_CUDA
 } // namespace librapid::global

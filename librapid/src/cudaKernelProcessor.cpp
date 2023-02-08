@@ -16,7 +16,7 @@ namespace librapid {
 		buffer << file.rdbuf();
 		file.close();
 
-		mapping[kernelName] = buffer.str();
+		mapping[kernelName] = kernelName + "\n" + buffer.str();
 		return mapping[kernelName];
 	}
 } // namespace librapid

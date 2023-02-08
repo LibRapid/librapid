@@ -83,9 +83,9 @@ namespace lrc = librapid;
 		testA[0][0] = 123;                                                                         \
 		testA[1][1] = 456;                                                                         \
 		testA[2][2] = 789;                                                                         \
-		REQUIRE(testA.storage()[0] == SCALAR(123));                                                \
-		REQUIRE(testA.storage()[4] == SCALAR(456));                                                \
-		REQUIRE(testA.storage()[8] == SCALAR(789));                                                \
+		REQUIRE((SCALAR)testA.storage()[0] == SCALAR(123));                                        \
+		REQUIRE((SCALAR)testA.storage()[4] == SCALAR(456));                                        \
+		REQUIRE((SCALAR)testA.storage()[8] == SCALAR(789));                                        \
 	}
 
 TEST_CASE("Test Array", "[array-lib]") {
@@ -101,6 +101,15 @@ TEST_CASE("Test Array", "[array-lib]") {
 	TEST_SUITE(double, lrc::device::CPU)
 
 	TEST_SUITE(int8_t, lrc::device::GPU)
+	TEST_SUITE(uint8_t, lrc::device::GPU)
+	TEST_SUITE(int16_t, lrc::device::GPU)
+	TEST_SUITE(uint16_t, lrc::device::GPU)
+	// TEST_SUITE(int32_t, lrc::device::GPU)
+	// TEST_SUITE(uint32_t, lrc::device::GPU)
+	// TEST_SUITE(int64_t, lrc::device::GPU)
+	// TEST_SUITE(uint64_t, lrc::device::GPU)
+	// TEST_SUITE(float, lrc::device::GPU)
+	// TEST_SUITE(double, lrc::device::GPU)
 
 	TEST_SUITE(lrc::mpz, lrc::device::CPU)
 	TEST_SUITE(lrc::mpq, lrc::device::CPU)
