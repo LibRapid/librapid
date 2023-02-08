@@ -50,6 +50,17 @@ namespace librapid {
 			/// \return An ArrayView from this
 			ArrayView<ArrayType> operator[](int64_t index) const;
 
+			/// Since even scalars are represented as an ArrayView object, it can be difficult to
+			/// operate on them directly. This allows you to extract the scalar value stored by a
+			/// zero-dimensional ArrayView object
+			/// \tparam CAST Type to cast to
+			/// \return The scalar represented by the ArrayView object
+			template<typename CAST = Scalar>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE CAST get() const;
+
+			template<typename CAST>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE operator CAST() const;
+
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ShapeType shape() const;
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE StrideType stride() const;
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE int64_t offset() const;
@@ -67,7 +78,6 @@ namespace librapid {
 			LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
 
 		private:
-			// ConstReference m_ref;
 			ArrayType &m_ref;
 			ShapeType m_shape;
 			StrideType m_stride;
@@ -101,6 +111,20 @@ namespace librapid {
 				view.setStride(stride.subshape(1, ndim()));
 			view.setOffset(m_offset + index * stride[0]);
 			return view;
+		}
+
+		template<typename T>
+		template<typename CAST>
+		CAST ArrayView<T>::get() const{
+			LIBRAPID_ASSERT(m_shape.ndim() == 0,
+							"Can only cast a scalar ArrayView to a salar object");
+			return scalar(0);
+		}
+
+		template<typename T>
+		template<typename CAST>
+		ArrayView<T>::operator CAST() const {
+			return get();
 		}
 
 		template<typename T>
