@@ -32,7 +32,7 @@ namespace librapid {
 																   const std::string &format) {
 			if (view.ndim() == 0) {
 				// Scalar
-				return {{countWidth(view.scalar(0), format)}};
+				return {countWidth(view.scalar(0), format)};
 			} else if (view.ndim() == 1) {
 				// Vector
 				std::vector<std::pair<int64_t, int64_t>> widths(view.shape()[0]);

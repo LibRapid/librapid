@@ -10,7 +10,7 @@ namespace librapid {
 
 		auto basePath = fmt::format("{}/include/librapid/cuda/kernels/", LIBRAPID_SOURCE);
 
-		std::string helperPath = fmt::format("{}/{}.cu", basePath, kernelName);
+		std::string helperPath = fmt::format("{}/kernelHelper.cuh", basePath);
 		std::string kernelPath = fmt::format("{}/{}.cu", basePath, kernelName);
 		std::fstream helper(helperPath);
 		std::fstream kernel(kernelPath);
@@ -18,6 +18,7 @@ namespace librapid {
 		LIBRAPID_ASSERT(kernel.is_open(), "Failed to load CUDA kernel '{}.cu'", kernelName);
 		std::stringstream buffer;
 		buffer << helper.rdbuf();
+		buffer << "\n\n";
 		buffer << kernel.rdbuf();
 		helper.close();
 		kernel.close();
