@@ -19,9 +19,6 @@ namespace librapid {
 	template<typename... Templates, typename... Args>
 	void runKernelString(const std::string &kernel, const std::string &kernelName, size_t elements,
 						 Args... arguments) {
-		fmt::print("Kernel: {}\n", kernel);
-		static std::string includePath =
-		  fmt::format("{}/include/librapid/cuda/kernels/", LIBRAPID_SOURCE);
 		jitify::Program program = global::jitCache.program(kernel);
 
 		unsigned int threadsPerBlock, blocksPerGrid;
