@@ -12,8 +12,8 @@ namespace librapid {
 		/// \param format The format string to use when converting the value to a String
 		/// \return The relevant widths of the value
 		template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
-		LIBRAPID_INLINE std::pair<size_t, size_t> countWidth(const T &val,
-															 const std::string &format) {
+		LIBRAPID_INLINE std::pair<int64_t, int64_t> countWidth(const T &val,
+															   const std::string &format) {
 			std::string str = fmt::format(format, val);
 			auto point		= str.find('.');
 			if (point == std::string::npos) { return {str.size(), 0}; }
@@ -21,8 +21,8 @@ namespace librapid {
 		}
 
 		template<typename T, typename std::enable_if_t<!std::is_fundamental_v<T>, int> = 0>
-		LIBRAPID_INLINE std::pair<size_t, size_t> countWidth(const T &val,
-															 const std::string &format) {
+		LIBRAPID_INLINE std::pair<int64_t, int64_t> countWidth(const T &val,
+															   const std::string &format) {
 			std::string str = fmt::format(format, val);
 			return {str.size(), 0};
 		}
