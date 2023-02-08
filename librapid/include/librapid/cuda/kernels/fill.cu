@@ -1,4 +1,4 @@
-#include "kernelHelper.hpp"
+#include "kernelHelper.cuh"
 #include <cstdint>
 
 template<typename Destination, typename Source>
