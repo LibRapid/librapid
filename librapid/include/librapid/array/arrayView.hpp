@@ -23,7 +23,6 @@ namespace librapid {
 			using ConstReference = const BaseType &;
 			using StrideType	 = typename BaseType::StrideType;
 			using ShapeType		 = typename BaseType::ShapeType;
-			using Scalar		 = typename typetraits::TypeInfo<BaseType>::Scalar;
 			using Device		 = typename typetraits::TypeInfo<BaseType>::Device;
 
 			ArrayView() = delete;
