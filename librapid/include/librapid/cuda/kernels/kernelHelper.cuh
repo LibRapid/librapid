@@ -1,6 +1,8 @@
 #ifndef LIBRAPID_CUDA_KERNEL_HELPER
 #define LIBRAPID_CUDA_KERNEL_HELPER
 
+#include <cstdint>
+
 // If compiling with NVCC, disable all macros, otherwise enable them so the IDE is happy
 #if defined(__NVCC__)
 #	define HAS_NVCC
