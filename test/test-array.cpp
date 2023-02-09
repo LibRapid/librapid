@@ -8,13 +8,13 @@ namespace lrc = librapid;
 #define TEST_CONSTRUCTORS(SCALAR, DEVICE)                                                          \
 	SECTION(fmt::format("Test Constructors [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {    \
 		lrc::Array<SCALAR, DEVICE> testA;                                                          \
-		REQUIRE(testA.shape() == lrc::Shape {0});                                                  \
+		REQUIRE(testA.shape() == lrc::Array<SCALAR, DEVICE>::ShapeType {0});                                                  \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testB(lrc::Shape {3, 4});                                       \
-		REQUIRE(testB.shape() == lrc::Shape {3, 4});                                               \
+		lrc::Array<SCALAR, DEVICE> testB(lrc::Array<SCALAR, DEVICE>::ShapeType {3, 4});                                       \
+		REQUIRE(testB.shape() == lrc::Array<SCALAR, DEVICE>::ShapeType {3, 4});                                               \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testC(lrc::Shape {3, 4}, 5);                                    \
-		REQUIRE(testC.shape() == lrc::Shape {3, 4});                                               \
+		lrc::Array<SCALAR, DEVICE> testC(lrc::Array<SCALAR, DEVICE>::ShapeType {3, 4}, 5);                                    \
+		REQUIRE(testC.shape() == lrc::Array<SCALAR, DEVICE>::ShapeType {3, 4});                                               \
 		REQUIRE(testC.storage()[0] == 5);                                                          \
 		REQUIRE(testC.storage()[1] == 5);                                                          \
 		REQUIRE(testC.storage()[2] == 5);                                                          \
@@ -28,12 +28,12 @@ namespace lrc = librapid;
 		REQUIRE(testD.storage()[2] == 3);                                                          \
 		REQUIRE(testD.storage()[3] == 3);                                                          \
                                                                                                    \
-		lrc::Shape tmpShape({2, 3});                                                               \
+		lrc::Array<SCALAR, DEVICE>::ShapeType tmpShape({2, 3});                                                               \
 		lrc::Array<SCALAR, DEVICE> testE(std::move(tmpShape));                                     \
-		REQUIRE(testE.shape() == lrc::Shape {2, 3});                                               \
+		REQUIRE(testE.shape() == lrc::Array<SCALAR, DEVICE>::ShapeType {2, 3});                                               \
                                                                                                    \
 		lrc::Array<SCALAR, DEVICE> testF(testC);                                                   \
-		REQUIRE(testF.shape() == lrc::Shape {3, 4});                                               \
+		REQUIRE(testF.shape() == lrc::Array<SCALAR, DEVICE>::ShapeType {3, 4});                                               \
 		REQUIRE(testF.storage()[0] == 5);                                                          \
 		REQUIRE(testF.storage()[1] == 5);                                                          \
 		REQUIRE(testF.storage()[2] == 5);                                                          \
@@ -41,7 +41,7 @@ namespace lrc = librapid;
 		REQUIRE(testF.storage()[10] == 5);                                                         \
 		REQUIRE(testF.storage()[11] == 5);                                                         \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testG(lrc::Shape {3, 4}, 10);                                   \
+		lrc::Array<SCALAR, DEVICE> testG(lrc::Array<SCALAR, DEVICE>::ShapeType {3, 4}, 10);                                   \
 		testC = testG;                                                                             \
 		REQUIRE(testC.storage()[0] == 10);                                                         \
 		REQUIRE(testC.storage()[1] == 10);                                                         \
@@ -50,7 +50,7 @@ namespace lrc = librapid;
 		REQUIRE(testC.storage()[10] == 10);                                                        \
 		REQUIRE(testC.storage()[11] == 10);                                                        \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testH(lrc::Shape {3, 3});                                       \
+		lrc::Array<SCALAR, DEVICE> testH(lrc::Array<SCALAR, DEVICE>::ShapeType {3, 3});                                       \
 		testH << 1, 2, 3, 4, 5, 6, 7, 8, 9;                                                        \
 		REQUIRE(testH.storage()[0] == 1);                                                          \
 		REQUIRE(testH.storage()[1] == 2);                                                          \
@@ -65,7 +65,7 @@ namespace lrc = librapid;
 
 #define TEST_INDEXING(SCALAR, DEVICE)                                                              \
 	SECTION(fmt::format("Test Indexing [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {        \
-		lrc::Array<SCALAR, DEVICE> testA(lrc::Shape({5, 3}));                                      \
+		lrc::Array<SCALAR, DEVICE> testA(lrc::Array<SCALAR, DEVICE>::ShapeType({5, 3}));                                      \
 		testA << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15;                                \
 		std::string index0 = fmt::format("[{} {} {}]", SCALAR(1), SCALAR(2), SCALAR(3));           \
 		std::string index1 = fmt::format("[{} {} {}]", SCALAR(4), SCALAR(5), SCALAR(6));           \
@@ -96,7 +96,7 @@ namespace lrc = librapid;
 #define TEST_STRING_FORMATTING(SCALAR, DEVICE)                                                     \
 	SECTION(                                                                                       \
 	  fmt::format("Test String Formatting [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {     \
-		lrc::Array<SCALAR, DEVICE> testA(lrc::Shape({2, 3}));                                      \
+		lrc::Array<SCALAR, DEVICE> testA(lrc::Array<SCALAR, DEVICE>::ShapeType({2, 3}));                                      \
 		testA << 1, 2, 3, 4, 5, 6;                                                                 \
                                                                                                    \
 		REQUIRE(testA.str() == fmt::format("[[{} {} {}]\n [{} {} {}]]",                            \
@@ -107,7 +107,7 @@ namespace lrc = librapid;
 										   SCALAR(5),                                              \
 										   SCALAR(6)));                                            \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testB(lrc::Shape({2, 3}));                                      \
+		lrc::Array<SCALAR, DEVICE> testB(lrc::Array<SCALAR, DEVICE>::ShapeType({2, 3}));                                      \
 		testB << 10, 2, 3, 4, 5, 6;                                                                \
                                                                                                    \
 		REQUIRE(testB.str() == fmt::format("[[{} {} {}]\n [ {} {} {}]]",                           \
