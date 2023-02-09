@@ -248,7 +248,10 @@ namespace librapid {
 			ArrayView<const ArrayContainer> view(*this);
 			const auto stride = Stride(m_shape);
 			view.setShape(m_shape.subshape(1, ndim()));
-			view.setStride(stride.subshape(1, ndim()));
+			if (ndim() == 1)
+				view.setStride(Stride({1}));
+			else
+				view.setStride(stride.subshape(1, ndim()));
 			view.setOffset(index * stride[0]);
 			return view;
 		}
@@ -264,7 +267,10 @@ namespace librapid {
 			ArrayView<ArrayContainer> view(*this);
 			const auto stride = Stride(m_shape);
 			view.setShape(m_shape.subshape(1, ndim()));
-			view.setStride(stride.subshape(1, ndim()));
+			if (ndim() == 1)
+				view.setStride(Stride({1}));
+			else
+				view.setStride(stride.subshape(1, ndim()));
 			view.setOffset(index * stride[0]);
 			return view;
 		}
