@@ -142,7 +142,7 @@ namespace librapid {
 
 	namespace detail {
 		template<typename T, size_t... Dims>
-		Shape<size_t, 32> shapeFromFixedStorage(FixedStorage<T, Dims...> &&) {
+		Shape<size_t, 32> shapeFromFixedStorage(const FixedStorage<T, Dims...> &) {
 			return Shape<size_t, 32>({Dims...});
 		}
 	} // namespace detail

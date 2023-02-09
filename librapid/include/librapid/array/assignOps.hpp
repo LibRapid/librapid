@@ -136,7 +136,7 @@ namespace librapid::detail {
 				lhs.write(index, function.scalar(index));
 			}
 		} else {
-#pragma omp parallel for shared(vectorSize, lhs, function) default(none)                           \
+#pragma omp parallel for shared(vectorSize, lhs, function, size) default(none)                           \
   num_threads(global::numThreads)
 			for (int64_t index = vectorSize; index < size; ++index) {
 				lhs.write(index, function.scalar(index));
@@ -283,7 +283,7 @@ namespace librapid::detail {
 		impl::cudaTupleEvaluator(std::make_index_sequence<argSize>(),
 								 filename,
 								 kernelName,
-								 lhs.storage().begin(),
+								 lhs.storage().begin().get(),
 								 function);
 	}
 
