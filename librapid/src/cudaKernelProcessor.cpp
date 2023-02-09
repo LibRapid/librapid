@@ -8,15 +8,22 @@ namespace librapid {
 
 		if (mapping.find(kernelName) != mapping.end()) { return mapping[kernelName]; }
 
-		auto path =
-		  fmt::format("{}/include/librapid/cuda/kernels/{}.cu", LIBRAPID_SOURCE, kernelName);
-		std::fstream file(path);
-		LIBRAPID_ASSERT(file.is_open(), "Failed to load CUDA kernel '{}.cu'", kernelName);
-		std::stringstream buffer;
-		buffer << file.rdbuf();
-		file.close();
+		auto basePath = fmt::format("{}/include/librapid/cuda/kernels/", LIBRAPID_SOURCE);
 
-		mapping[kernelName] = buffer.str();
+		std::string helperPath = fmt::format("{}/kernelHelper.cuh", basePath);
+		std::string kernelPath = fmt::format("{}/{}.cu", basePath, kernelName);
+		std::fstream helper(helperPath);
+		std::fstream kernel(kernelPath);
+		LIBRAPID_ASSERT(helper.is_open(), "Failed to load CUDA helper kernel");
+		LIBRAPID_ASSERT(kernel.is_open(), "Failed to load CUDA kernel '{}.cu'", kernelName);
+		std::stringstream buffer;
+		buffer << helper.rdbuf();
+		buffer << "\n\n";
+		buffer << kernel.rdbuf();
+		helper.close();
+		kernel.close();
+
+		mapping[kernelName] = kernelName + "\n" + buffer.str();
 		return mapping[kernelName];
 	}
 } // namespace librapid

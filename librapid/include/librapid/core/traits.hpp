@@ -329,8 +329,8 @@ namespace librapid {
 		struct TypeInfo<int64_t> {
 			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
 			using Scalar							 = int64_t;
-			using Packet							 = Vc::Vector<int64_t>;
-			static constexpr int64_t packetWidth	 = Packet::size();
+			using Packet							 = std::false_type;
+			static constexpr int64_t packetWidth	 = 1;
 			static constexpr char name[]			 = "int64_t";
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
@@ -357,8 +357,8 @@ namespace librapid {
 		struct TypeInfo<uint64_t> {
 			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
 			using Scalar							 = uint64_t;
-			using Packet							 = Vc::Vector<uint64_t>;
-			static constexpr int64_t packetWidth	 = Packet::size();
+			using Packet							 = std::false_type;
+			static constexpr int64_t packetWidth	 = 1;
 			static constexpr char name[]			 = "uint64_t";
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;

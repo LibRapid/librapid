@@ -43,6 +43,6 @@ namespace librapid::detail {
 		/// The current index of the Array object.
 		int64_t m_index = 0;
 	};
-}
+} // namespace librapid::detail
 
 #endif // LIBRAPID_ARRAY_COMMA_INITIALIZER_HPP

@@ -19,12 +19,50 @@ namespace librapid {
 		};
 	} // namespace typetraits
 
+	namespace detail {
+		/// Safely allocate memory for \p size elements of type on the GPU using CUDA.
+		/// \tparam T Scalar type
+		/// \param size Number of elements to allocate
+		/// \return GPU pointer
+		/// \see safeAllocate
+		template<typename T>
+		T *__restrict cudaSafeAllocate(size_t size);
+
+		/// Safely free memory for \p size elements of type on the GPU using CUDA.
+		/// \tparam T Scalar type
+		/// \param data The data to deallocate
+		/// \return GPU pointer
+		/// \see safeAllocate
+		template<typename T>
+		void cudaSafeDeallocate(T *__restrict data);
+
+		template<typename T>
+		std::shared_ptr<T> cudaSharedPtrAllocate(size_t size);
+
+		template<typename T>
+		class CudaRef {
+		public:
+			using PtrType = std::shared_ptr<T>;
+
+			CudaRef(const PtrType &ptr, size_t offset);
+
+			LIBRAPID_ALWAYS_INLINE CudaRef &operator=(const T &val);
+
+			template<typename CAST>
+			LIBRAPID_ALWAYS_INLINE operator CAST() const;
+
+		private:
+			std::shared_ptr<T> m_ptr;
+			size_t m_offset;
+		};
+	} // namespace detail
+
 	template<typename Scalar_>
 	class CudaStorage {
 	public:
 		using Scalar		 = Scalar_;
-		using Pointer		 = Scalar *__restrict;
-		using ConstPointer	 = const Scalar *__restrict;
+		using Pointer		 = std::shared_ptr<Scalar>;		  // Scalar *__restrict;
+		using ConstPointer	 = const std::shared_ptr<Scalar>; // const Scalar *__restrict;
 		using Reference		 = Scalar &;
 		using ConstReference = const Scalar &;
 		using DifferenceType = std::ptrdiff_t;
@@ -90,6 +128,12 @@ namespace librapid {
 		/// \return The number of elements
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE SizeType size() const noexcept;
 
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE detail::CudaRef<Scalar>
+		operator[](SizeType index) const;
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE detail::CudaRef<Scalar>
+		operator[](SizeType index);
+
 		/// Returns the pointer to the first element of the CudaStorage object
 		/// \return Pointer to the first element of the CudaStorage object
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Pointer begin() const noexcept;
@@ -117,7 +161,9 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize);
 
 		Pointer m_begin = nullptr; // It is more efficient to store pointers to the start
-		Pointer m_end	= nullptr; // and end of the data block than to store the size
+		size_t m_size;
+
+		// Pointer m_end	= nullptr; // and end of the data block than to store the size
 	};
 
 	// Trait implementations
@@ -130,11 +176,6 @@ namespace librapid {
 	} // namespace typetraits
 
 	namespace detail {
-		/// Safely allocate memory for \p size elements of type on the GPU using CUDA.
-		/// \tparam T Scalar type
-		/// \param size Number of elements to allocate
-		/// \return GPU pointer
-		/// \see safeAllocate
 		template<typename T>
 		T *__restrict cudaSafeAllocate(size_t size) {
 			static_assert(typetraits::TriviallyDefaultConstructible<T>::value,
@@ -144,29 +185,53 @@ namespace librapid {
 			return result;
 		}
 
-		/// Safely free memory for \p size elements of type on the GPU using CUDA.
-		/// \tparam T Scalar type
-		/// \param data The data to deallocate
-		/// \return GPU pointer
-		/// \see safeAllocate
 		template<typename T>
 		void cudaSafeDeallocate(T *__restrict data) {
 			static_assert(typetraits::TriviallyDefaultConstructible<T>::value,
 						  "Data type must be trivially constructable for use with CUDA");
 			cudaSafeCall(cudaFreeAsync(data, global::cudaStream));
 		}
+
+		template<typename T>
+		std::shared_ptr<T> cudaSharedPtrAllocate(size_t size) {
+			return std::shared_ptr<T>(cudaSafeAllocate<T>(size), cudaSafeDeallocate<T>);
+		}
+
+		template<typename T>
+		CudaRef<T>::CudaRef(const PtrType &ptr, size_t offset) : m_ptr(ptr), m_offset(offset) {}
+
+		template<typename T>
+		auto CudaRef<T>::operator=(const T &val) -> CudaRef & {
+			cudaSafeCall(cudaMemcpyAsync(
+			  m_ptr.get() + m_offset, &val, sizeof(T), cudaMemcpyHostToDevice, global::cudaStream));
+			return *this;
+		}
+
+		template<typename T>
+		template<typename CAST>
+		CudaRef<T>::operator CAST() const {
+			T tmp;
+			cudaSafeCall(cudaMemcpyAsync(
+			  &tmp, m_ptr.get() + m_offset, sizeof(T), cudaMemcpyDeviceToHost, global::cudaStream));
+			return static_cast<CAST>(tmp);
+		}
+
+		template<typename T, typename RHS>
+		auto operator==(const CudaRef<T> &lhs, const RHS &rhs) {
+			return static_cast<T>(lhs) == rhs;
+		}
 	} // namespace detail
 
 	template<typename T>
 	CudaStorage<T>::CudaStorage(SizeType size) {
-		m_begin = detail::cudaSafeAllocate<T>(size);
-		m_end	= m_begin + size;
+		m_begin = detail::cudaSharedPtrAllocate<T>(size);
+		m_size	= size;
 	}
 
 	template<typename T>
 	CudaStorage<T>::CudaStorage(SizeType size, ConstReference value) {
-		m_begin = detail::cudaSafeAllocate<T>(size);
-		m_end	= m_begin + size;
+		m_begin = detail::cudaSharedPtrAllocate<T>(size);
+		m_size	= size;
 
 		// Fill the data with "value"
 		runKernel<T, T>("fill", "fillArray", size, size, m_begin, value);
@@ -174,61 +239,82 @@ namespace librapid {
 
 	template<typename T>
 	CudaStorage<T>::CudaStorage(const CudaStorage &other) {
-		m_begin = detail::cudaSafeAllocate<T>(other.size());
-		m_end	= m_begin + other.size();
-		cudaSafeCall(cudaMemcpyAsync(
-		  m_begin, other.begin(), sizeof(T) * other.size(), cudaMemcpyDeviceToDevice));
+		m_begin = detail::cudaSharedPtrAllocate<T>(other.size());
+		m_size	= other.size();
+		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
+									 other.begin().get(),
+									 sizeof(T) * other.size(),
+									 cudaMemcpyDeviceToDevice,
+									 global::cudaStream));
 	}
 
 	template<typename T>
 	CudaStorage<T>::CudaStorage(CudaStorage &&other) noexcept :
-			m_begin(other.m_begin), m_end(other.m_end) {
+			m_begin(other.m_begin), m_size(other.m_size) {
 		other.m_begin = nullptr;
-		other.m_end	  = nullptr;
+		other.m_size  = 0;
 	}
 
 	template<typename T>
 	CudaStorage<T>::CudaStorage(const std::initializer_list<T> &list) {
-		m_begin = detail::cudaSafeAllocate<T>(list.size());
-		m_end	= m_begin + list.size();
-		cudaSafeCall(cudaMemcpyAsync(m_begin, list.begin(), sizeof(T)));
+		m_begin = detail::cudaSharedPtrAllocate<T>(list.size());
+		m_size	= list.size();
+		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
+									 list.begin().get(),
+									 sizeof(T) * m_size,
+									 cudaMemcpyDeviceToDevice,
+									 global::cudaStream));
 	}
 
 	template<typename T>
 	CudaStorage<T>::CudaStorage(const std::vector<T> &list) {
-		m_begin = detail::cudaSafeAllocate<T>(list.size());
-		m_end	= m_begin + list.size();
-		cudaSafeCall(cudaMemcpyAsync(m_begin, list.begin(), sizeof(T)));
+		m_begin = detail::cudaSharedPtrAllocate<T>(list.size());
+		m_size	= list.size();
+		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
+									 list.begin().get(),
+									 sizeof(T) * m_size,
+									 cudaMemcpyDeviceToDevice,
+									 global::cudaStream));
+		return *this;
 	}
 
 	template<typename T>
 	auto CudaStorage<T>::operator=(const CudaStorage<T> &storage) -> CudaStorage & {
-		m_begin = detail::cudaSafeAllocate<T>(storage.size());
-		m_end	= m_begin + storage.size();
-		cudaSafeCall(cudaMemcpyAsync(m_begin, storage.begin(), sizeof(T)));
+		m_begin = detail::cudaSharedPtrAllocate<T>(storage.size());
+		m_size	= storage.size();
+		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
+									 storage.begin().get(),
+									 sizeof(T) * m_size,
+									 cudaMemcpyDeviceToDevice,
+									 global::cudaStream));
+		return *this;
 	}
 
 	template<typename T>
 	auto CudaStorage<T>::operator=(CudaStorage &&other) noexcept -> CudaStorage & {
 		m_begin		  = other.m_begin;
-		m_end		  = other.m_end;
+		m_size		  = other.m_size;
 		other.m_begin = nullptr;
-		other.m_end	  = nullptr;
+		other.m_size  = 0;
 		return *this;
 	}
 
 	template<typename T>
 	CudaStorage<T>::~CudaStorage() {
-		detail::cudaSafeDeallocate(m_begin);
+		// detail::cudaSafeDeallocate(m_begin);
 	}
 
 	template<typename T>
 	template<typename P>
 	void CudaStorage<T>::initData(P begin, P end) {
 		auto size = std::distance(begin, end);
-		m_begin	  = detail::cudaSafeAllocate<T>(size);
-		m_end	  = m_begin + size;
-		cudaSafeCall(cudaMemcpyAsync(m_begin, begin, sizeof(T) * size, global::cudaStream));
+		m_begin	  = detail::cudaSharedPtrAllocate<T>(size);
+		m_size	  = size;
+		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
+									 begin.get(),
+									 sizeof(T) * size,
+									 cudaMemcpyDeviceToDevice,
+									 global::cudaStream));
 	}
 
 	template<typename T>
@@ -248,14 +334,17 @@ namespace librapid {
 		Pointer oldBegin = m_begin;
 
 		// Reallocate
-		m_begin = detail::cudaSafeAllocate<T>(newSize);
-		m_end	= m_begin + newSize;
+		m_begin = detail::cudaSharedPtrAllocate<T>(newSize);
+		m_size	= newSize;
 
 		// Copy old data
-		cudaSafeCall(cudaMemcpyAsync(m_begin, oldBegin, sizeof(T) * std::min(size(), newSize)));
+		cudaSafeCall(cudaMemcpyAsync(
+		  m_begin.get(),
+		  oldBegin.get(),
+		  sizeof(T) * std::min(size(), newSize, cudaMemcpyDeviceToDevice, global::cudaStream)));
 
 		// Free old data
-		detail::cudaSafeDeallocate(oldBegin);
+		// detail::cudaSafeDeallocate(oldBegin);
 	}
 
 	template<typename T>
@@ -264,15 +353,25 @@ namespace librapid {
 
 		Pointer oldBegin = m_begin;
 		SizeType oldSize = size();
-		m_begin			 = detail::cudaSafeAllocate<T>(newSize);
-		m_end			 = m_begin + newSize;
+		m_begin			 = detail::cudaSharedPtrAllocate<T>(newSize);
+		m_size			 = newSize;
 
-		detail::cudaSafeDeallocate(oldBegin);
+		// detail::cudaSafeDeallocate(oldBegin);
 	}
 
 	template<typename T>
 	auto CudaStorage<T>::size() const noexcept -> SizeType {
-		return std::distance(m_begin, m_end);
+		return m_size;
+	}
+
+	template<typename T>
+	auto CudaStorage<T>::operator[](SizeType index) const -> detail::CudaRef<Scalar> {
+		return {m_begin, index};
+	}
+
+	template<typename T>
+	auto CudaStorage<T>::operator[](SizeType index) -> detail::CudaRef<Scalar> {
+		return {m_begin, index};
 	}
 
 	template<typename T>
@@ -282,7 +381,7 @@ namespace librapid {
 
 	template<typename T>
 	auto CudaStorage<T>::end() const noexcept -> Pointer {
-		return m_end;
+		return m_begin + m_size;
 	}
 } // namespace librapid
 #else
