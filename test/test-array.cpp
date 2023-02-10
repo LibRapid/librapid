@@ -91,6 +91,11 @@ namespace lrc = librapid;
 		REQUIRE((SCALAR)testA.storage()[0] == SCALAR(123));                                        \
 		REQUIRE((SCALAR)testA.storage()[4] == SCALAR(456));                                        \
 		REQUIRE((SCALAR)testA.storage()[8] == SCALAR(789));                                        \
+                                                                                                   \
+		lrc::Array<SCALAR, DEVICE> testB(lrc::Array<SCALAR, DEVICE>::ShapeType({10}));             \
+		testB << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;                                                    \
+		REQUIRE(testB[0].get() == SCALAR(1));                                                      \
+		REQUIRE(testB[9].get() == SCALAR(10));                                                     \
 	}
 
 #define TEST_STRING_FORMATTING(SCALAR, DEVICE)                                                     \
@@ -117,6 +122,19 @@ namespace lrc = librapid;
 										   SCALAR(4),                                              \
 										   SCALAR(5),                                              \
 										   SCALAR(6)));                                            \
+                                                                                                   \
+		lrc::Array<SCALAR, DEVICE> testC(lrc::Array<SCALAR, DEVICE>::ShapeType({2, 2, 2}));        \
+		testC << 100, 2, 3, 4, 5, 6, 7, 8;                                                         \
+		REQUIRE(testC.str() ==                                                                     \
+				fmt::format("[[[{} {}]\n  [  {} {}]]\n\n [[  {} {}]\n  [  {} {}]]]",               \
+							SCALAR(100),                                                           \
+							SCALAR(2),                                                             \
+							SCALAR(3),                                                             \
+							SCALAR(4),                                                             \
+							SCALAR(5),                                                             \
+							SCALAR(6),                                                             \
+							SCALAR(7),                                                             \
+							SCALAR(8)));                                                           \
 	}
 
 #define TEST_ARITHMETIC(SCALAR, DEVICE)                                                            \
