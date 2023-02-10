@@ -398,11 +398,6 @@ endif ()
 
 target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include")
 
-# if (${LIBRAPID_BUILD_EXAMPLES})
-#     message(STATUS "[ LIBRAPID ] Building LibRapid Examples")
-#     add_subdirectory(examples/cpp)
-# endif ()
-
 if (${LIBRAPID_BUILD_TESTS})
     message(STATUS "[ LIBRAPID ] Building LibRapid Tests")
     include(CTest)
@@ -424,6 +419,12 @@ if (${LIBRAPID_BUILD_TESTS})
     # Add VALGRIND test if possible
     include(valgrindTarget)
     addValgrind(${module_name})
+endif ()
+
+# Compile the example projects
+if (${LIBRAPID_BUILD_EXAMPLES})
+    message(STATUS "[ LIBRAPID ] Building LibRapid Examples")
+    add_subdirectory(examples)
 endif ()
 
 # # Enable code coverage checking
