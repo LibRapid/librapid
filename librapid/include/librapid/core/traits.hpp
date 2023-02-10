@@ -93,6 +93,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
 			static constexpr bool supportsBinary	 = true;
+			static constexpr bool allowVectorisation = false;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
@@ -120,6 +121,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = false;
 			static constexpr bool supportsLogical	 = false;
 			static constexpr bool supportsBinary	 = true;
+			static constexpr bool allowVectorisation = false;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
@@ -139,6 +141,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = false;
 			static constexpr bool supportsLogical	 = false;
 			static constexpr bool supportsBinary	 = true;
+			static constexpr bool allowVectorisation = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
@@ -167,6 +170,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
 			static constexpr bool supportsBinary	 = true;
+			static constexpr bool allowVectorisation = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
@@ -195,6 +199,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
 			static constexpr bool supportsBinary	 = true;
+			static constexpr bool allowVectorisation = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8U;
@@ -223,6 +228,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
 			static constexpr bool supportsBinary	 = true;
+			static constexpr bool allowVectorisation = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_16I;
@@ -251,6 +257,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
 			static constexpr bool supportsBinary	 = true;
+			static constexpr bool allowVectorisation = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_16U;
@@ -279,6 +286,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
 			static constexpr bool supportsBinary	 = true;
+			static constexpr bool allowVectorisation = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32I;
@@ -307,6 +315,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
 			static constexpr bool supportsBinary	 = true;
+			static constexpr bool allowVectorisation = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32U;
@@ -335,6 +344,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
 			static constexpr bool supportsBinary	 = true;
+			static constexpr bool allowVectorisation = false;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64I;
@@ -363,6 +373,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
 			static constexpr bool supportsBinary	 = true;
+			static constexpr bool allowVectorisation = false;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64U;
@@ -391,6 +402,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
 			static constexpr bool supportsBinary	 = false;
+			static constexpr bool allowVectorisation = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32F;
@@ -419,6 +431,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
 			static constexpr bool supportsBinary	 = false;
+			static constexpr bool allowVectorisation = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
