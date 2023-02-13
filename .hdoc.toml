@@ -1,0 +1,15 @@
+[project]
+name = "LibRapid"
+version = "v0.6.6"
+num_threads = 2
+
+git_repo_url = "https://github.com/LibRapid/librapid/"
+git_default_branch = "master"
+
+[paths]
+compile_commands = "build/compile_commands.json"
+output_dir = "docs/build/"
+homepage = "docs/index.md"
+paths = [
+      "docs/gettingStarted.md"
+]

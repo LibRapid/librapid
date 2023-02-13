@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(librapid VERSION "0.5.0")
+project(librapid)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 cmake_policy(SET CMP0077 NEW)
 set(CMAKE_CXX_STANDARD 17)
