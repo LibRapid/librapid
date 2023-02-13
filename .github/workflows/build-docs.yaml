@@ -26,19 +26,19 @@ jobs:
           submodules: recursive
           ref: ${{ steps.extract_branch.outputs.branch }}
 
-      - name: Get latest CMake and ninja
-        uses: lukka/get-cmake@latest
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-
-      - name: Install Requirements
-        run: |
-          sudo apt-get install aptitude -o APT::Get::Fix-Missing=true
-          sudo aptitude install -y doxygen -o APT::Get::Fix-Missing=true
-          sudo aptitude install -y texlive-full -o APT::Get::Fix-Missing=true
+      #       - name: Get latest CMake and ninja
+      #         uses: lukka/get-cmake@latest
+      #
+      #       - name: Setup Python
+      #         uses: actions/setup-python@v4
+      #         with:
+      #           python-version: "3.9"
+      #
+      #       - name: Install Requirements
+      #         run: |
+      #           sudo apt-get install aptitude -o APT::Get::Fix-Missing=true
+      #           sudo aptitude install -y doxygen -o APT::Get::Fix-Missing=true
+      #           sudo aptitude install -y texlive-full -o APT::Get::Fix-Missing=true
 
       - name: Compile LibRapid
         run: |
@@ -47,19 +47,19 @@ jobs:
           cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=on -DLIBRAPID_USE_MULTIPREC=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1
           cmake --build . --config Release
 
-      - name: Build HTML Documentation
-        run: |
-          doxygen
+      #       - name: Build HTML Documentation
+      #         run: |
+      #           doxygen
+      #
+      #       - name: Build LaTeX Documentation
+      #         run: |
+      #           cd docBuild/latex
+      #           make
 
-      - name: Build LaTeX Documentation
-        run: |
-          cd docBuild/latex
-          make
-
-      - name: Store Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          path: docBuildDoxygen
+      #       - name: Store Artifacts
+      #         uses: actions/upload-artifact@v3
+      #         with:
+      #           path: docBuildDoxygen
 
       - name: Run HDoc
         uses: hdoc/hdoc-github-action@v2
