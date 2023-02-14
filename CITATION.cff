@@ -5,8 +5,8 @@ authors:
 - family-names: "Davis"
   given-names: "Toby"
 title: "LibRapid: Optimised Mathematics for C++"
-version: 0.6.6
-date-released: "2023-02-09"
+version: 0.6.7
+date-released: "2023-02-14"
 type: software
 url: "https://github.com/LibRapid/librapid"
 license: MIT
