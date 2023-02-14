@@ -96,15 +96,30 @@ fmt::print("{}\n", lrc::map(val, start1, end1, start2, end2));
 //  [30 40]]
 ```
 
-Note: LibRapid's built-in `map` function has even more functionality! See the [documentation](https://librapid.github.io/librapid/namespacelibrapid.html#aa77bd94fdda1a889654275f47d258390) for details. 
+Note: LibRapid's built-in `map` function has even more functionality! See
+the [documentation](https://docs.hdoc.io/pencilcaseman/LibRapid/f05EED763F184D09D.html) for
+details.
 
 This is just one example of how LibRapid's functions can be used to make your code more concise and more efficient, and
 hopefully it's clear to see how powerful this could be when working with more complex functions and types.
 
 # Documentation
 
-<a href="https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html" target="_blank"><b>Latest
+<a href="https://docs.hdoc.io/pencilcaseman/LibRapid/index.html" target="_blank"><b>Latest
 Documentation</b></a>
+
+LibRapid uses [HDoc](https://hdoc.io/) to automatically parse source files and extract the commented documentation
+for each symbol. This is the most up-to-date documentation available, and is the easiest way to get started with
+LibRapid.
+
+LibRapid also supports documentation generation via [Doxygen](https://doxygen.nl/), the hosted version of which
+can be found [here](https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html). There are also PDFs
+available from the [Build Documentation](https://github.com/LibRapid/librapid/actions/workflows/build-docs.yaml)
+GitHub Action.
+
+> **Warning**
+> While the Doxygen documentation will contain up-to-date code comments, the examples, tutorials and other 
+> information may not be up-to-date or exist at all.
 
 LibRapid uses [Doxygen](https://doxygen.nl/) to automatically generate the documentation, and
 [Doxygen Awesome CSS](https://github.com/jothepro/doxygen-awesome-css) to improve Doxygen's outdated styling.
