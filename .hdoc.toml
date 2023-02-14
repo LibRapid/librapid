@@ -15,7 +15,8 @@ homepage = "docs/index.md"
 paths = [
     "docs/Getting Started.md",
     "docs/CMake Integration.md",
-    "docs/Using LibRapid with CUDA.md"
+    "docs/Using LibRapid with CUDA.md",
+    "docs/Caution.md"
 ]
 
 [ignore]
