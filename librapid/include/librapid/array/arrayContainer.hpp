@@ -69,7 +69,7 @@ namespace librapid {
 			/// \tparam Args The argument types of the function
 			/// \param function The function to assign
 			template<typename desc, typename Functor_, typename... Args>
-			LIBRAPID_ALWAYS_INLINE explicit ArrayContainer(
+			LIBRAPID_ALWAYS_INLINE ArrayContainer(
 			  const detail::Function<desc, Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT;
 
 			/// Assign an array container to this array container.

@@ -1,9 +1,9 @@
 <p align="center">
-<img src="https://github.com/LibRapid/librapid_bin/blob/master/branding/LibRapid_light.png#gh-light-mode-only" width="800">
+<img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_light.png#gh-light-mode-only" width="800">
 </p>
 
 <p align="center">
-<img src="https://github.com/LibRapid/librapid_bin/blob/master/branding/LibRapid_dark.png#gh-dark-mode-only" width="800">
+<img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_dark.png#gh-dark-mode-only" width="800">
 </p>
 
 ![C++ Version](https://img.shields.io/badge/C++-17/22-purple.svg?style=flat&logo=c%2B%2B) ![License](https://img.shields.io/badge/License-MIT-orange.svg?style=flat) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC)
@@ -113,7 +113,7 @@ for each symbol. This is the most up-to-date documentation available, and is the
 LibRapid.
 
 LibRapid also supports documentation generation via [Doxygen](https://doxygen.nl/), the hosted version of which
-can be found [here](https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html). There are also PDFs
+can be found [here](https://librapid.github.io/librapid/). There are also PDFs
 available from the [Build Documentation](https://github.com/LibRapid/librapid/actions/workflows/build-docs.yaml)
 GitHub Action.
 
