@@ -74,3 +74,14 @@ with open("../CITATION.cff", "w") as citationFile:
     template = template.replace("$${{ INSERT_DATE_HERE }}$$", dateString)
     citationFile.write(template)
     print("Written to CITATION.cff")
+
+# Write to .hdoc.toml
+with open("tmp/hdocTemplate.toml", "r") as templateFile:
+    template = templateFile.read()
+    print("Loaded .hdoc.toml template")
+
+with open("../.hdoc.toml", "w") as hdocFile:
+    versionString = f"v{newMajorVersion}.{newMinorVersion}.{newPatchVersion}"
+    template = template.replace("$${{ INSERT_VERSION_NUMBER_HERE }}$$", versionString)
+    hdocFile.write(template)
+    print("Written to .hdoc.toml")
