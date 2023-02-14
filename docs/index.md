@@ -1,6 +1,4 @@
-# LibRapid Documentation
-
-![LibRapid](https://github.com/LibRapid/librapid_bin/blob/master/branding/LibRapid_dark.png)
+![LibRapid](https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_dark.png)
 
 ---
 
