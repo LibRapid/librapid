@@ -1,8 +1,6 @@
 # LibRapid Documentation
 
-<p align="center">
-<img src="https://github.com/LibRapid/librapid_bin/blob/master/branding/LibRapid_dark.png" width="800" alt="LibRapid">
-</p>
+![LibRapid](https://github.com/LibRapid/librapid_bin/blob/master/branding/LibRapid_dark.png)
 
 ---
 
@@ -92,14 +90,6 @@ details.
 
 This is just one example of how LibRapid's functions can be used to make your code more concise and more efficient, and
 hopefully it's clear to see how powerful this could be when working with more complex functions and types.
-
-# Documentation
-
-<a href="https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html" target="_blank"><b>Latest
-Documentation</b></a>
-
-LibRapid uses [Doxygen](https://doxygen.nl/) to automatically generate the documentation, and
-[Doxygen Awesome CSS](https://github.com/jothepro/doxygen-awesome-css) to improve Doxygen's outdated styling.
 
 # Current Development Stage
 
