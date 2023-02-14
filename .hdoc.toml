@@ -13,7 +13,9 @@ output_dir = "docs/build/"
 [pages]
 homepage = "docs/index.md"
 paths = [
-      "docs/gettingStarted.md"
+      "docs/Getting Started.md",
+      "docs/CMake Integration.md",
+      "docs/Using LibRapid with CUDA"
 ]
 
 [ignore]
@@ -22,5 +24,6 @@ paths = [
       "test",
       "librapid/vendor",
       "librapid/cxxblas",
-      "librapid/blas"
+      "librapid/blas",
+      "build/"
 ]
