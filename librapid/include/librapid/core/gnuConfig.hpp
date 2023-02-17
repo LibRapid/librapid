@@ -163,4 +163,6 @@
 		} while (0)
 #endif // LIBRAPID_ENABLE_ASSERT
 
+#define PURE_FUNCTION __attribute__((const))
+
 #endif // LIBRAPID_CORE_GNU_CONFIG_HPP
