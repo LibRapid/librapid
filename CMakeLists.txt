@@ -401,7 +401,7 @@ if (LIBRAPID_FAST_MATH)
     if (MSVC)
         target_compile_options(${module_name} PUBLIC /fp:fast)
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-        target_compile_options(${module_name} PUBLIC -ffp-model=fast -funsafe-math-optimizations -ffinite-math-only -fno-trapping-math -fno-math-errno)
+        target_compile_options(${module_name} PUBLIC -ffast-math)
     endif ()
 endif ()
 
