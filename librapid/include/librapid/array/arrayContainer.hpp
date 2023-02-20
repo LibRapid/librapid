@@ -77,6 +77,8 @@ namespace librapid {
 			/// \return A reference to this array container.
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator=(const ArrayContainer &other) = default;
 
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator=(const Scalar &value);
+
 			/// Assign a temporary array container to this array container.
 			/// \param other The array container to move.
 			/// \return A reference to this array container.
@@ -106,11 +108,16 @@ namespace librapid {
 			/// \param index The index of the sub-array
 			/// \return A reference to the sub-array (ArrayView)
 			/// \see ArrayView
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<const ArrayContainer>
+			// LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<const ArrayContainer>
+			// operator[](int64_t index) const;
+
+			// LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<ArrayContainer>
+			// operator[](int64_t index);
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ArrayContainer
 			operator[](int64_t index) const;
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<ArrayContainer>
-			operator[](int64_t index);
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayContainer operator[](int64_t index);
 
 			/// Return the number of dimensions of the ArrayContainer object
 			/// \return Number of dimensions of the ArrayContainer
@@ -217,9 +224,8 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename desc, typename Functor_, typename... Args>
-		ArrayContainer<ShapeType_, StorageType_> &
-		ArrayContainer<ShapeType_, StorageType_>::operator=(
-		  const detail::Function<desc, Functor_, Args...> &function) {
+		auto ArrayContainer<ShapeType_, StorageType_>::operator=(
+		  const detail::Function<desc, Functor_, Args...> &function) -> ArrayContainer & {
 			m_storage.resize(function.shape().size(), 0);
 #if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
 			if (m_storage.size() > global::multithreadThreshold && global::numThreads > 1)
@@ -231,48 +237,93 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator=(const Scalar &value)
+		  -> ArrayContainer & {
+			LIBRAPID_ASSERT(m_shape.ndim() == 0, "Cannot assign a scalar to an array");
+			m_storage[0] = value;
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
 		auto ArrayContainer<ShapeType_, StorageType_>::operator<<(const T &value)
 		  -> detail::CommaInitializer<ArrayContainer> {
 			return detail::CommaInitializer<ArrayContainer>(*this, static_cast<Scalar>(value));
 		}
 
+		// template<typename ShapeType_, typename StorageType_>
+		// auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const
+		//   -> ArrayView<const ArrayContainer> {
+		// 	LIBRAPID_ASSERT(
+		// 	  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
+		// 	  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
+		// 	  index,
+		// 	  m_shape[0]);
+		// 	ArrayView<const ArrayContainer> view(*this);
+		// 	const auto stride = Stride(m_shape);
+		// 	view.setShape(m_shape.subshape(1, ndim()));
+		// 	if (ndim() == 1)
+		// 		view.setStride(Stride({1}));
+		// 	else
+		// 		view.setStride(stride.subshape(1, ndim()));
+		// 	view.setOffset(index * stride[0]);
+		// 	return view;
+		// }
+
+		// template<typename ShapeType_, typename StorageType_>
+		// auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index)
+		//   -> ArrayView<ArrayContainer> {
+		// 	LIBRAPID_ASSERT(
+		// 	  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
+		// 	  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
+		// 	  index,
+		// 	  m_shape[0]);
+		// 	ArrayView<ArrayContainer> view(*this);
+		// 	const auto stride = Stride(m_shape);
+		// 	view.setShape(m_shape.subshape(1, ndim()));
+		// 	if (ndim() == 1)
+		// 		view.setStride(Stride({1}));
+		// 	else
+		// 		view.setStride(stride.subshape(1, ndim()));
+		// 	view.setOffset(index * stride[0]);
+		// 	return view;
+		// }
+
 		template<typename ShapeType_, typename StorageType_>
 		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const
-		  -> ArrayView<const ArrayContainer> {
+		  -> const ArrayContainer {
 			LIBRAPID_ASSERT(
 			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
 			  m_shape[0]);
-			ArrayView<const ArrayContainer> view(*this);
-			const auto stride = Stride(m_shape);
-			view.setShape(m_shape.subshape(1, ndim()));
-			if (ndim() == 1)
-				view.setStride(Stride({1}));
-			else
-				view.setStride(stride.subshape(1, ndim()));
-			view.setOffset(index * stride[0]);
-			return view;
+
+			ArrayContainer res;
+			res.m_shape = m_shape.subshape(1, ndim());
+			auto subSize = res.shape().size();
+			Scalar *begin = m_storage.begin() + index * subSize;
+			Scalar *end	  = begin + subSize;
+			res.m_storage = StorageType_(begin, end, false);
+
+			return res;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index)
-		  -> ArrayView<ArrayContainer> {
+		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) -> ArrayContainer {
 			LIBRAPID_ASSERT(
 			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
 			  m_shape[0]);
-			ArrayView<ArrayContainer> view(*this);
-			const auto stride = Stride(m_shape);
-			view.setShape(m_shape.subshape(1, ndim()));
-			if (ndim() == 1)
-				view.setStride(Stride({1}));
-			else
-				view.setStride(stride.subshape(1, ndim()));
-			view.setOffset(index * stride[0]);
-			return view;
+
+			ArrayContainer res;
+			res.m_shape = m_shape.subshape(1, ndim());
+			auto subSize = res.shape().size();
+			Scalar *begin = m_storage.begin() + index * subSize;
+			Scalar *end	  = begin + subSize;
+			res.m_storage = StorageType_(begin, end, false);
+
+			return res;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
