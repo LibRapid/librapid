@@ -118,7 +118,7 @@ namespace librapid {
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index);
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const Scalar &get() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar get() const;
 
 			/// Return the number of dimensions of the ArrayContainer object
 			/// \return Number of dimensions of the ArrayContainer
@@ -317,7 +317,7 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		auto ArrayContainer<ShapeType_, StorageType_>::get() const -> const Scalar & {
+		auto ArrayContainer<ShapeType_, StorageType_>::get() const -> Scalar {
 			LIBRAPID_ASSERT(m_shape.ndim() == 0,
 							"Can only cast a scalar ArrayView to a salar object");
 			return scalar(0);
