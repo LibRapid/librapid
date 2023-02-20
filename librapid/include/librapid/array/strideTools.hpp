@@ -40,6 +40,12 @@ namespace librapid {
 
 	template<typename T, size_t N>
 	Stride<T, N>::Stride(const Shape<T, N> &shape) : Shape<T, N>(shape) {
+		if (this->m_dims == 0) {
+			// Edge case for a zero-dimensional array
+			this->m_data[0] = 1;
+			return;
+		}
+
 		T tmp[N] {0};
 		tmp[this->m_dims - 1] = 1;
 		for (size_t i = this->m_dims - 1; i > 0; --i) tmp[i - 1] = tmp[i] * this->m_data[i];
