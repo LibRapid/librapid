@@ -114,10 +114,11 @@ namespace librapid {
 			// LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<ArrayContainer>
 			// operator[](int64_t index);
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ArrayContainer
-			operator[](int64_t index) const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index) const;
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayContainer operator[](int64_t index);
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index);
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const Scalar &get() const;
 
 			/// Return the number of dimensions of the ArrayContainer object
 			/// \return Number of dimensions of the ArrayContainer
@@ -251,79 +252,75 @@ namespace librapid {
 			return detail::CommaInitializer<ArrayContainer>(*this, static_cast<Scalar>(value));
 		}
 
-		// template<typename ShapeType_, typename StorageType_>
-		// auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const
-		//   -> ArrayView<const ArrayContainer> {
-		// 	LIBRAPID_ASSERT(
-		// 	  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
-		// 	  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
-		// 	  index,
-		// 	  m_shape[0]);
-		// 	ArrayView<const ArrayContainer> view(*this);
-		// 	const auto stride = Stride(m_shape);
-		// 	view.setShape(m_shape.subshape(1, ndim()));
-		// 	if (ndim() == 1)
-		// 		view.setStride(Stride({1}));
-		// 	else
-		// 		view.setStride(stride.subshape(1, ndim()));
-		// 	view.setOffset(index * stride[0]);
-		// 	return view;
-		// }
-
-		// template<typename ShapeType_, typename StorageType_>
-		// auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index)
-		//   -> ArrayView<ArrayContainer> {
-		// 	LIBRAPID_ASSERT(
-		// 	  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
-		// 	  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
-		// 	  index,
-		// 	  m_shape[0]);
-		// 	ArrayView<ArrayContainer> view(*this);
-		// 	const auto stride = Stride(m_shape);
-		// 	view.setShape(m_shape.subshape(1, ndim()));
-		// 	if (ndim() == 1)
-		// 		view.setStride(Stride({1}));
-		// 	else
-		// 		view.setStride(stride.subshape(1, ndim()));
-		// 	view.setOffset(index * stride[0]);
-		// 	return view;
-		// }
-
 		template<typename ShapeType_, typename StorageType_>
-		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const
-		  -> const ArrayContainer {
+		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const {
 			LIBRAPID_ASSERT(
 			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
 			  m_shape[0]);
 
-			ArrayContainer res;
-			res.m_shape = m_shape.subshape(1, ndim());
-			auto subSize = res.shape().size();
-			Scalar *begin = m_storage.begin() + index * subSize;
-			Scalar *end	  = begin + subSize;
-			res.m_storage = StorageType_(begin, end, false);
+			if constexpr (std::is_same_v<typename typetraits::TypeInfo<ArrayContainer>::Device,
+										 device::GPU>) {
+				// ArrayView is slower but works better with the GPU
+				ArrayView<const ArrayContainer> view(*this);
+				const auto stride = Stride(m_shape);
+				view.setShape(m_shape.subshape(1, ndim()));
+				if (ndim() == 1)
+					view.setStride(Stride({1}));
+				else
+					view.setStride(stride.subshape(1, ndim()));
+				view.setOffset(index * stride[0]);
+				return view;
+			} else {
+				ArrayContainer res;
+				res.m_shape	  = m_shape.subshape(1, ndim());
+				auto subSize  = res.shape().size();
+				Scalar *begin = m_storage.begin() + index * subSize;
+				Scalar *end	  = begin + subSize;
+				res.m_storage = StorageType_(begin, end, false);
 
-			return res;
+				return res;
+			}
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) -> ArrayContainer {
+		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) {
 			LIBRAPID_ASSERT(
 			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
 			  m_shape[0]);
 
-			ArrayContainer res;
-			res.m_shape = m_shape.subshape(1, ndim());
-			auto subSize = res.shape().size();
-			Scalar *begin = m_storage.begin() + index * subSize;
-			Scalar *end	  = begin + subSize;
-			res.m_storage = StorageType_(begin, end, false);
+			if constexpr (std::is_same_v<typename typetraits::TypeInfo<ArrayContainer>::Device,
+										 device::GPU>) {
+				// ArrayView is slower but works better with the GPU
+				ArrayView<const ArrayContainer> view(*this);
+				const auto stride = Stride(m_shape);
+				view.setShape(m_shape.subshape(1, ndim()));
+				if (ndim() == 1)
+					view.setStride(Stride({1}));
+				else
+					view.setStride(stride.subshape(1, ndim()));
+				view.setOffset(index * stride[0]);
+				return view;
+			} else {
+				ArrayContainer res;
+				res.m_shape	  = m_shape.subshape(1, ndim());
+				auto subSize  = res.shape().size();
+				Scalar *begin = m_storage.begin() + index * subSize;
+				Scalar *end	  = begin + subSize;
+				res.m_storage = StorageType_(begin, end, false);
 
-			return res;
+				return res;
+			}
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::get() const -> const Scalar & {
+			LIBRAPID_ASSERT(m_shape.ndim() == 0,
+							"Can only cast a scalar ArrayView to a salar object");
+			return scalar(0);
 		}
 
 		template<typename ShapeType_, typename StorageType_>

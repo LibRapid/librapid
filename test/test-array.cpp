@@ -67,6 +67,7 @@ namespace lrc = librapid;
 	SECTION(fmt::format("Test Indexing [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {        \
 		lrc::Array<SCALAR, DEVICE> testA(lrc::Array<SCALAR, DEVICE>::ShapeType({5, 3}));           \
 		testA << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15;                                \
+		testA[1][2]		   = 123;                                                                  \
 		std::string index0 = fmt::format("[{} {} {}]", SCALAR(1), SCALAR(2), SCALAR(3));           \
 		std::string index1 = fmt::format("[{} {} {}]", SCALAR(4), SCALAR(5), SCALAR(6));           \
 		std::string index2 = fmt::format("[{} {} {}]", SCALAR(7), SCALAR(8), SCALAR(9));           \
@@ -84,6 +85,7 @@ namespace lrc = librapid;
 		REQUIRE(testA[0][0].get() == SCALAR(1));                                                   \
 		REQUIRE(testA[1][1].get() == SCALAR(5));                                                   \
 		REQUIRE(testA[2][2].get() == SCALAR(9));                                                   \
+		REQUIRE(testA[1][2].get() == SCALAR(123));                                                 \
                                                                                                    \
 		testA[0][0] = 123;                                                                         \
 		testA[1][1] = 456;                                                                         \
