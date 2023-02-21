@@ -49,6 +49,8 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE explicit Storage(SizeType size,
 												const Allocator &alloc = Allocator());
 
+		LIBRAPID_ALWAYS_INLINE explicit Storage(Scalar *begin, Scalar *end, bool independent);
+
 		/// Create a Storage object with \p size elements, each initialized
 		/// to \p value. Optionally, a custom allocator can be used.
 		/// \param size Number of elements to allocate
@@ -82,6 +84,12 @@ namespace librapid {
 		template<typename V>
 		LIBRAPID_ALWAYS_INLINE explicit Storage(const std::vector<V> &vec,
 												const Allocator &alloc = Allocator());
+
+		template<typename V>
+		static Storage fromData(const std::initializer_list<V> &vec);
+
+		template<typename V>
+		static Storage fromData(const std::vector<V> &vec);
 
 		/// Assignment operator for a Storage object
 		/// \param other Storage object to copy
@@ -157,8 +165,9 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize);
 
 		Allocator m_allocator;
-		Pointer m_begin = nullptr; // It is more efficient to store pointers to the start
-		Pointer m_end	= nullptr; // and end of the data block than to store the size
+		Pointer m_begin	   = nullptr; // It is more efficient to store pointers to the start
+		Pointer m_end	   = nullptr; // and end of the data block than to store the size
+		bool m_independent = true;	  // If true, m_begin will be freed on destruct
 	};
 
 	namespace detail {
@@ -345,24 +354,30 @@ namespace librapid {
 	template<typename T, typename A>
 	Storage<T, A>::Storage(SizeType size, const Allocator &alloc) :
 			m_allocator(alloc), m_begin(detail::safeAllocate(m_allocator, size)),
-			m_end(m_begin + size) {}
+			m_end(m_begin + size), m_independent(true) {}
+
+	template<typename T, typename A>
+	Storage<T, A>::Storage(Scalar *begin, Scalar *end, bool independent) :
+			m_allocator(Allocator()), m_begin(begin), m_end(end), m_independent(independent) {}
 
 	template<typename T, typename A>
 	Storage<T, A>::Storage(SizeType size, ConstReference value, const Allocator &alloc) :
 			m_allocator(alloc), m_begin(detail::safeAllocate(m_allocator, size)),
-			m_end(m_begin + size) {
+			m_end(m_begin + size), m_independent(true) {
 		std::fill(m_begin, m_end, value);
 	}
 
 	template<typename T, typename A>
 	Storage<T, A>::Storage(const Storage &other, const Allocator &alloc) :
-			m_allocator(alloc), m_begin(nullptr), m_end(nullptr) {
+			m_allocator(alloc), m_begin(nullptr), m_end(nullptr),
+			m_independent(other.m_independent) {
 		initData(other.begin(), other.end());
 	}
 
 	template<typename T, typename A>
 	Storage<T, A>::Storage(Storage &&other) noexcept :
-			m_allocator(std::move(other.m_allocator)), m_begin(other.m_begin), m_end(other.m_end) {
+			m_allocator(std::move(other.m_allocator)), m_begin(other.m_begin), m_end(other.m_end),
+			m_independent(other.m_independent) {
 		other.m_begin = nullptr;
 		other.m_end	  = nullptr;
 	}
@@ -370,20 +385,42 @@ namespace librapid {
 	template<typename T, typename A>
 	template<typename V>
 	Storage<T, A>::Storage(const std::initializer_list<V> &list, const Allocator &alloc) :
-			m_allocator(alloc), m_begin(nullptr), m_end(nullptr) {
+			m_allocator(alloc), m_begin(nullptr), m_end(nullptr), m_independent(true) {
 		initData(list.begin(), list.end());
 	}
 
 	template<typename T, typename A>
 	template<typename V>
 	Storage<T, A>::Storage(const std::vector<V> &vector, const Allocator &alloc) :
-			m_allocator(alloc), m_begin(nullptr), m_end(nullptr) {
+			m_allocator(alloc), m_begin(nullptr), m_end(nullptr), m_independent(true) {
 		initData(vector.begin(), vector.end());
+	}
+
+	template<typename T, typename A>
+	template<typename V>
+	auto Storage<T, A>::fromData(const std::initializer_list<V> &list) -> Storage {
+		Storage ret;
+		ret.initData(list.begin(), list.end());
+		return ret;
+	}
+
+	template<typename T, typename A>
+	template<typename V>
+	auto Storage<T, A>::fromData(const std::vector<V> &vec) -> Storage {
+		Storage ret;
+		ret.initData(vec.begin(), vec.end());
+		return ret;
 	}
 
 	template<typename T, typename A>
 	Storage<T, A> &Storage<T, A>::operator=(const Storage &other) {
 		if (this != &other) {
+			LIBRAPID_ASSERT(!m_independent && size() == other.size(),
+							"Mismatched storage sizes. Cannot assign storage with {} elements to "
+							"dependent storage with {} elements",
+							other.size(),
+							size());
+
 			m_allocator =
 			  std::allocator_traits<A>::select_on_container_copy_construction(other.m_allocator);
 			resizeImpl(other.size(), 0);
@@ -401,15 +438,37 @@ namespace librapid {
 	template<typename T, typename A>
 	Storage<T, A> &Storage<T, A>::operator=(Storage &&other) noexcept {
 		if (this != &other) {
-			m_allocator = std::move(other.m_allocator);
-			std::swap(m_begin, other.m_begin);
-			std::swap(m_end, other.m_end);
+			if (m_independent) {
+				m_allocator = std::move(other.m_allocator);
+				std::swap(m_begin, other.m_begin);
+				std::swap(m_end, other.m_end);
+				m_independent = other.m_independent;
+			} else {
+				LIBRAPID_ASSERT(
+				  size() == other.size(),
+				  "Mismatched storage sizes. Cannot assign storage with {} elements to "
+				  "dependent storage with {} elements",
+				  other.size(),
+				  size());
+
+				m_allocator = std::allocator_traits<A>::select_on_container_copy_construction(
+				  other.m_allocator);
+				resizeImpl(other.size(), 0);
+				if (typetraits::TriviallyDefaultConstructible<T>::value) {
+					// Use a slightly faster memcpy if the type is trivially default constructible
+					std::uninitialized_copy(other.begin(), other.end(), m_begin);
+				} else {
+					// Otherwise, use the standard copy algorithm
+					std::copy(other.begin(), other.end(), m_begin);
+				}
+			}
 		}
 		return *this;
 	}
 
 	template<typename T, typename A>
 	Storage<T, A>::~Storage() {
+		if (!m_independent) return;
 		detail::safeDeallocate(m_allocator, m_begin, size());
 		m_begin = nullptr;
 		m_end	= nullptr;
@@ -448,6 +507,7 @@ namespace librapid {
 	template<typename T, typename A>
 	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize) {
 		if (newSize == size()) return;
+		LIBRAPID_ASSERT(!m_independent, "Dependent storage cannot be resized");
 
 		SizeType oldSize = size();
 		Pointer oldBegin = m_begin;
@@ -469,6 +529,7 @@ namespace librapid {
 	template<typename T, typename A>
 	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize, int) {
 		if (size() == newSize) return;
+		LIBRAPID_ASSERT(!m_independent, "Dependent storage cannot be resized");
 
 		SizeType oldSize = size();
 		Pointer oldBegin = m_begin;
