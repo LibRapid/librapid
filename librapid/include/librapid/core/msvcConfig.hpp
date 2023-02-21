@@ -162,4 +162,6 @@
 		} while (0)
 #endif // LIBRAPID_ENABLE_ASSERT
 
+#define PURE_FUNCTION [[nodiscard]] constexpr
+
 #endif // LIBRAPID_CORE_MSVC_CONFIG_HPP

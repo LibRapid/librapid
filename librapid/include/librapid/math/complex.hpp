@@ -330,18 +330,48 @@ namespace librapid {
 	template<typename T>
 	class Complex {
 	public:
+		/// \brief Default constructor
+		///
+		/// Create a new complex number. Both the real and imaginary components are set to zero
 		Complex() : m_val {T(0), T(0)} {}
 
+		/// \brief Construct a complex number from a real number
+		///
+		/// Create a complex number, setting only the real component. The imaginary component is
+		/// initialized to zero
+		///
+		/// \tparam R The type of the real component
+		/// \param realVal The real component
 		template<typename R>
 		explicit Complex(const R &realVal) : m_val {T(realVal), T(0)} {}
 
+		/// \brief Construct a complex number from real and imaginary components
+		///
+		/// Create a new complex number where both the real and imaginary parts are set from the
+		/// passed parameters
+		///
+		/// \tparam R The type of the real component
+		/// \tparam I The type of the imaginary component
+		/// \param realVal The real component
+		/// \param imagVal The imaginary component
 		template<typename R, typename I>
 		Complex(const R &realVal, const I &imagVal) : m_val {T(realVal), T(imagVal)} {}
 
+		/// \brief Complex number copy constructor
+		/// \param other The complex number to copy
 		Complex(const Complex<T> &other) : m_val {other.real(), other.imag()} {}
+
+		/// \brief Complex number move constructor
+		/// \param other The complex number to move
 		Complex(Complex<T> &&other) noexcept : m_val {other.real(), other.imag()} {}
+
+		/// \brief Construct a complex number from a std::complex
+		/// \param other The std::complex value to copy
 		explicit Complex(const std::complex<T> &other) : m_val {other.real(), other.imag()} {}
 
+		/// \brief Complex number assignment operator
+		/// \param other The value to assign
+		/// \return *this
 		Complex<T> &operator=(const Complex<T> &other) {
 			if (this == &other) return *this;
 			m_val[RE] = other.real();
@@ -349,19 +379,70 @@ namespace librapid {
 			return *this;
 		}
 
+		/// \breif Assign to the real component
+		///
+		/// Set the real component of this complex number to \p val
+		///
+		/// \param val The value to assign
 		LIBRAPID_ALWAYS_INLINE void real(const T &val) { m_val[RE] = val; }
+
+		/// \breif Assign to the imaginary component
+		///
+		/// Set the imaginary component of this complex number to \p val
+		///
+		/// \param val The value to assign
 		LIBRAPID_ALWAYS_INLINE void imag(const T &val) { m_val[IM] = val; }
+
+		/// \breif Access the real component
+		///
+		/// Returns a const reference to the real component of this complex number
+		///
+		/// \return Real component
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const T &real() const { return m_val[RE]; }
+
+		/// \breif Access the imaginary component
+		///
+		/// Returns a const reference to the imaginary component of this complex number
+		///
+		/// \return Imaginary component
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const T &imag() const { return m_val[IM]; }
+
+		/// \breif Access the real component
+		///
+		/// Returns a reference to the real component of this complex number. Since this is a
+		/// reference type, it can be assigned to
+		///
+		/// \return Real component
 		LIBRAPID_ALWAYS_INLINE T &real() { return m_val[RE]; }
+
+		/// \breif Access the imaginary component
+		///
+		/// Returns a reference to the imaginary component of this complex number. Since this is a
+		/// reference type, it can be assigned to
+		///
+		/// \return imaginary component
 		LIBRAPID_ALWAYS_INLINE T &imag() { return m_val[IM]; }
 
+		/// \brief Complex number assigment operator
+		///
+		/// Set the real component of this complex number to \p other, and the imaginary component
+		/// to 0
+		///
+		/// \param other
+		/// \return *this
 		LIBRAPID_ALWAYS_INLINE Complex &operator=(const T &other) {
 			m_val[RE] = other;
 			m_val[IM] = 0;
 			return *this;
 		}
 
+		/// \brief Complex number assigment operator
+		///
+		/// Assign another complex number to this one, copying the real and imaginary components
+		///
+		/// \tparam Other The type of the other complex number
+		/// \param other Complex number to assign
+		/// \return *this
 		template<typename Other>
 		LIBRAPID_ALWAYS_INLINE Complex &operator=(const Complex<Other> &other) {
 			m_val[RE] = static_cast<T>(other.real());
@@ -369,59 +450,127 @@ namespace librapid {
 			return *this;
 		}
 
+		/// \brief Inplace addition
+		///
+		/// Add a scalar value to the real component of this imaginary number
+		///
+		/// \param other Scalar value to add
+		/// \return *this
 		LIBRAPID_ALWAYS_INLINE Complex &operator+=(const T &other) {
 			m_val[RE] = m_val[RE] + other;
 			return *this;
 		}
 
+		/// \brief Inplace subtraction
+		///
+		/// Subtract a scalar value from the real component of this imaginary number
+		///
+		/// \param other Scalar value to subtract
+		/// \return *this
 		LIBRAPID_ALWAYS_INLINE Complex &operator-=(const T &other) {
 			m_val[RE] = m_val[RE] - other;
 			return *this;
 		}
 
+		/// \brief Inplace multiplication
+		///
+		/// Multiply both the real and imaginary components of this complex number by a scalar
+		///
+		/// \param other Scalar value to multiply by
+		/// \return *this
 		LIBRAPID_ALWAYS_INLINE Complex &operator*=(const T &other) {
 			m_val[RE] = m_val[RE] * other;
 			m_val[IM] = m_val[IM] * other;
 			return *this;
 		}
 
+		/// \brief Inplace division
+		///
+		/// Divide both the real and imaginary components of this complex number by a scalar
+		///
+		/// \param other Scalar value to divide by
+		/// \return *this
 		LIBRAPID_ALWAYS_INLINE Complex &operator/=(const T &other) {
 			m_val[RE] = m_val[RE] / other;
 			m_val[IM] = m_val[IM] / other;
 			return *this;
 		}
 
+		/// \brief Inplace addition
+		///
+		/// Add a complex number to this one
+		///
+		/// \param other Complex number to add
+		/// \return *this
 		LIBRAPID_ALWAYS_INLINE Complex &operator+=(const Complex &other) {
 			this->_add(other);
 			return *this;
 		}
 
+		/// \brief Inplace subtraction
+		///
+		/// Subtract a complex number from this one
+		///
+		/// \param other Complex number to subtract
+		/// \return *this
 		LIBRAPID_ALWAYS_INLINE Complex &operator-=(const Complex &other) {
 			this->_sub(other);
 			return *this;
 		}
 
+		/// \brief Inplace multiplication
+		///
+		/// Multiply this complex number by another one
+		///
+		/// \param other Complex number to multiply by
+		/// \return *this
 		LIBRAPID_ALWAYS_INLINE Complex &operator*=(const Complex &other) {
 			this->_mul(other);
 			return *this;
 		}
 
+		/// \brief Inplace division
+		///
+		/// Divide this complex number by another one
+		///
+		/// \param other Complex number to divide by
+		/// \return *this
 		LIBRAPID_ALWAYS_INLINE Complex &operator/=(const Complex &other) {
 			this->_div(other);
 			return *this;
 		}
 
+		/// \brief Cast to scalar types
+		///
+		/// Cast this complex number to a scalar type. This will extract only the real component.
+		///
+		/// \tparam To Type to cast to
+		/// \return Scalar
 		template<typename To>
 		LIBRAPID_ALWAYS_INLINE explicit operator To() const {
 			return typetraits::TypeInfo<T>::template cast<To>(m_val[RE]);
 		}
 
+		/// \brief Cast to a complex number with a different scalar type
+		///
+		/// Cast the real and imaginary components of this complex number to a different type and
+		/// return the result as a new complex number
+		///
+		/// \tparam To Scalar type to cast to
+		/// \return Complex number
 		template<typename To>
 		LIBRAPID_ALWAYS_INLINE explicit operator Complex<To>() const {
 			return Complex<To>(typetraits::TypeInfo<T>::template cast<To>(m_val[RE]),
 							   typetraits::TypeInfo<T>::template cast<To>(m_val[IM]));
 		}
 
+		/// \brief Complex number to string
+		///
+		/// Create a std::string representation of a complex number, formatting each component with
+		/// the format string
+		///
+		/// \param format Format string
+		/// \return std::string
 		LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const {
 			if (!::librapid::signBit(m_val[IM]))
 				return "(" + fmt::format(format, m_val[RE]) + "+" + fmt::format(format, m_val[IM]) +
@@ -500,11 +649,24 @@ namespace librapid {
 		static constexpr size_t IM = 1;
 	};
 
+	/// \brief Negate a complex number
+	/// \tparam T Scalar type of the complex number
+	/// \param other Complex number to negate
+	/// \return Negated complex number
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(const Complex<T> &other) {
 		return Complex<T>(-other.real(), -other.imag());
 	}
 
+	/// \brief Add two complex numbers
+	///
+	/// Add two complex numbers together, returning the result
+	///
+	/// \tparam L Scalar type of LHS
+	/// \tparam R Scalar type of RHS
+	/// \param left LHS complex number
+	/// \param right RHS complex number
+	/// \return Sum of LHS and RHS
 	template<typename L, typename R>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(const Complex<L> &left,
 															 const Complex<R> &right) {
@@ -514,6 +676,15 @@ namespace librapid {
 		return tmp;
 	}
 
+	/// \brief Add a complex number and a scalar
+	///
+	/// Add a real number to the real component of a complex number, returning the result
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \tparam R Type of the real number
+	/// \param left LHS complex number
+	/// \param right RHS scalar
+	/// \return Sum of LHS and RHS
 	template<typename T, typename R>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(const Complex<T> &left,
 															 const R &right) {

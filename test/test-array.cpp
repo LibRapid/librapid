@@ -61,6 +61,19 @@ namespace lrc = librapid;
 		REQUIRE(testH.storage()[6] == 7);                                                          \
 		REQUIRE(testH.storage()[7] == 8);                                                          \
 		REQUIRE(testH.storage()[8] == 9);                                                          \
+                                                                                                   \
+		/* Due to the way the code works, if this passes for a 3D array, it *must* pass all other  \
+		 * dimensions */                                                                           \
+		auto testI = lrc::fromData<SCALAR, DEVICE>({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}});          \
+		REQUIRE(testI.str() == fmt::format("[[[{} {}]\n  [{} {}]]\n\n[[{} {}]\n  [{} {}]]]",       \
+										   SCALAR(1),                                              \
+										   SCALAR(2),                                              \
+										   SCALAR(3),                                              \
+										   SCALAR(4),                                              \
+										   SCALAR(5),                                              \
+										   SCALAR(6),                                              \
+										   SCALAR(7),                                              \
+										   SCALAR(8)));                                            \
 	}
 
 #define TEST_INDEXING(SCALAR, DEVICE)                                                              \
@@ -81,9 +94,12 @@ namespace lrc = librapid;
 		REQUIRE(testA[1][1].str() == fmt::format("{}", SCALAR(5)));                                \
 		REQUIRE(testA[2][2].str() == fmt::format("{}", SCALAR(9)));                                \
                                                                                                    \
+		testA[1][2] = 123;                                                                         \
+                                                                                                   \
 		REQUIRE(testA[0][0].get() == SCALAR(1));                                                   \
 		REQUIRE(testA[1][1].get() == SCALAR(5));                                                   \
 		REQUIRE(testA[2][2].get() == SCALAR(9));                                                   \
+		REQUIRE(testA[1][2].get() == SCALAR(123));                                                 \
                                                                                                    \
 		testA[0][0] = 123;                                                                         \
 		testA[1][1] = 456;                                                                         \
