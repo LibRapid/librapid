@@ -85,6 +85,12 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE explicit Storage(const std::vector<V> &vec,
 												const Allocator &alloc = Allocator());
 
+		template<typename V>
+		static Storage fromData(const std::initializer_list<V> &vec);
+
+		template<typename V>
+		static Storage fromData(const std::vector<V> &vec);
+
 		/// Assignment operator for a Storage object
 		/// \param other Storage object to copy
 		/// \return *this
@@ -391,6 +397,22 @@ namespace librapid {
 	}
 
 	template<typename T, typename A>
+	template<typename V>
+	auto Storage<T, A>::fromData(const std::initializer_list<V> &list) -> Storage {
+		Storage ret;
+		ret.initData(list.begin(), list.end());
+		return ret;
+	}
+
+	template<typename T, typename A>
+	template<typename V>
+	auto Storage<T, A>::fromData(const std::vector<V> &vec) -> Storage {
+		Storage ret;
+		ret.initData(vec.begin(), vec.end());
+		return ret;
+	}
+
+	template<typename T, typename A>
 	Storage<T, A> &Storage<T, A>::operator=(const Storage &other) {
 		if (this != &other) {
 			LIBRAPID_ASSERT(!m_independent && size() == other.size(),
@@ -416,10 +438,30 @@ namespace librapid {
 	template<typename T, typename A>
 	Storage<T, A> &Storage<T, A>::operator=(Storage &&other) noexcept {
 		if (this != &other) {
-			m_allocator = std::move(other.m_allocator);
-			std::swap(m_begin, other.m_begin);
-			std::swap(m_end, other.m_end);
-			m_independent = other.m_independent;
+			if (m_independent) {
+				m_allocator = std::move(other.m_allocator);
+				std::swap(m_begin, other.m_begin);
+				std::swap(m_end, other.m_end);
+				m_independent = other.m_independent;
+			} else {
+				LIBRAPID_ASSERT(
+				  size() == other.size(),
+				  "Mismatched storage sizes. Cannot assign storage with {} elements to "
+				  "dependent storage with {} elements",
+				  other.size(),
+				  size());
+
+				m_allocator = std::allocator_traits<A>::select_on_container_copy_construction(
+				  other.m_allocator);
+				resizeImpl(other.size(), 0);
+				if (typetraits::TriviallyDefaultConstructible<T>::value) {
+					// Use a slightly faster memcpy if the type is trivially default constructible
+					std::uninitialized_copy(other.begin(), other.end(), m_begin);
+				} else {
+					// Otherwise, use the standard copy algorithm
+					std::copy(other.begin(), other.end(), m_begin);
+				}
+			}
 		}
 		return *this;
 	}
