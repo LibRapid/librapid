@@ -390,53 +390,6 @@ namespace librapid {
 		std::string ArrayContainer<ShapeType_, StorageType_>::str(const std::string &format) const {
 			return ArrayView(*this).str(format);
 		}
-
-		template<typename Scalar, typename Device = device::CPU>
-		LIBRAPID_NODISCARD Array<Scalar, Device>
-		fromData(const std::initializer_list<Scalar> &data) {
-			LIBRAPID_ASSERT(data.size() > 0, "Array must have at least one element");
-			return Array<Scalar, Device>(data);
-		}
-
-		template<typename Scalar, typename Device = device::CPU>
-		LIBRAPID_NODISCARD Array<Scalar, Device>
-		fromData(const std::initializer_list<std::initializer_list<Scalar>> &data) {
-			LIBRAPID_ASSERT(data.size() > 0, "Cannot create a zero-sized array");
-			using ShapeType = typename Array<Scalar, Device>::ShapeType;
-			auto newShape	= ShapeType({data.size(), data.begin()->size()});
-#if defined(LIBRAPID_ENABLE_ASSERT)
-			for (size_t i = 0; i < data.size(); ++i) {
-				LIBRAPID_ASSERT(data.begin()[i].size() == newShape[1],
-								"Arrays must have consistent shapes");
-			}
-#endif
-			auto res	  = Array<Scalar, Device>(newShape);
-			int64_t index = 0;
-			for (const auto &item : data) res[index++] = fromData(item);
-			return res;
-		}
-
-		template<typename Scalar, typename Device = device::CPU>
-		LIBRAPID_NODISCARD Array<Scalar, Device> fromData(
-		  const std::initializer_list<std::initializer_list<std::initializer_list<Scalar>>> &data) {
-			LIBRAPID_ASSERT(data.size() > 0, "Cannot create a zero-sized array");
-			std::vector<Array<Scalar, Device>> tmp;
-			for (const auto &item : data) tmp.push_back(fromData(item));
-			auto zeroShape = tmp[0].shape();
-#if defined(LIBRAPID_ENABLE_ASSERT)
-			for (const auto &item : tmp) {
-				// LIBRAPID_ASSERT((item.shape() == zeroShape), "Arrays must have consistent shapes");
-			}
-#endif
-			using ShapeType = typename Array<Scalar, Device>::ShapeType;
-			auto newShape	= ShapeType::zeros(zeroShape.ndim() + 1);
-			newShape[0]		= tmp.size();
-			for (size_t i = 0; i < zeroShape.ndim(); ++i) { newShape[i + 1] = zeroShape[i]; }
-			auto res	  = Array<Scalar, Device>(newShape);
-			int64_t index = 0;
-			for (const auto &item : tmp) res[index++] = item;
-			return res;
-		}
 	} // namespace array
 
 	namespace detail {
