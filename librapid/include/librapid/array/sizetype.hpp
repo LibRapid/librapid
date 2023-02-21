@@ -22,7 +22,7 @@ namespace librapid {
 		/// \tparam Dimensions Dimensions of the FixedStorage object
 		/// \param fixed The FixedStorage object
 		template<typename Scalar, size_t... Dimensions>
-		Shape(const FixedStorage<Scalar, Dimensions...> &fixed);
+		explicit Shape(const FixedStorage<Scalar, Dimensions...> &fixed);
 
 		/// Create a Shape object from a list of values
 		/// \tparam V Scalar type of the values
