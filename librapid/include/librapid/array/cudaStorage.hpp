@@ -259,8 +259,8 @@ namespace librapid {
 
 	template<typename T>
 	CudaStorage<T>::CudaStorage(const CudaStorage &other) {
-		m_begin = detail::cudaSharedPtrAllocate<T>(other.size());
-		m_size	= other.size();
+		m_begin		  = detail::cudaSharedPtrAllocate<T>(other.size());
+		m_size		  = other.size();
 		m_independent = other.m_independent;
 		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
 									 other.begin().get(),
@@ -371,11 +371,17 @@ namespace librapid {
 	template<typename T>
 	template<typename P>
 	void CudaStorage<T>::initData(P begin, P end) {
-		auto size = std::distance(begin, end);
-		m_begin	  = detail::cudaSharedPtrAllocate<T>(size);
-		m_size	  = size;
+		auto size	  = std::distance(begin, end);
+		m_begin		  = detail::cudaSharedPtrAllocate<T>(size);
+		m_size		  = size;
+		auto tmpBegin = [begin]() {
+			if constexpr (std::is_pointer_v<P>)
+				return begin;
+			else
+				return &(*begin);
+		}();
 		cudaSafeCall(cudaMemcpyAsync(
-		  m_begin.get(), begin, sizeof(T) * size, cudaMemcpyDefault, global::cudaStream));
+		  m_begin.get(), tmpBegin, sizeof(T) * size, cudaMemcpyDefault, global::cudaStream));
 	}
 
 	template<typename T>
