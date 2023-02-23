@@ -65,7 +65,7 @@ namespace lrc = librapid;
 		/* Due to the way the code works, if this passes for a 3D array, it *must* pass all other  \
 		 * dimensions */                                                                           \
 		auto testI = lrc::fromData<SCALAR, DEVICE>({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}});          \
-		REQUIRE(testI.str() == fmt::format("[[[{} {}]\n  [{} {}]]\n\n[[{} {}]\n  [{} {}]]]",       \
+		REQUIRE(testI.str() == fmt::format("[[[{} {}]\n  [{} {}]]\n\n [[{} {}]\n  [{} {}]]]",      \
 										   SCALAR(1),                                              \
 										   SCALAR(2),                                              \
 										   SCALAR(3),                                              \

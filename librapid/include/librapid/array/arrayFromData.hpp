@@ -28,7 +28,7 @@ namespace librapid {
 #endif
 		auto res	  = Array<Scalar, Device>(newShape);
 		int64_t index = 0;
-		for (const auto &item : data) res[index++] = fromData(item);
+		for (const auto &item : data) res[index++] = fromData<Scalar, Device>(item);
 		return res;
 	}
 
@@ -46,7 +46,7 @@ namespace librapid {
 #endif
 		auto res	  = Array<Scalar, Device>(newShape);
 		int64_t index = 0;
-		for (const auto &item : data) res[index++] = fromData(item);
+		for (const auto &item : data) res[index++] = fromData<Scalar, Device>(item);
 		return res;
 	}
 
