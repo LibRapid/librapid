@@ -1,3 +1,4 @@
+import sys
 """
 
 This script accepts a version number in the form X.Y.Z, where X, Y, and Z are integers.
@@ -5,6 +6,7 @@ It will then update all LibRapid version numbers to the specified version.
 
 """
 
+import sys
 import regex
 import argparse
 from datetime import datetime
@@ -24,7 +26,7 @@ try:
 except Exception as e:
     print("[ ERROR ] Failed to read version.txt")
     print(e)
-    exit(1)
+    sys.exit(1)
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-v", "--version", type=str, help="Full Version")
@@ -36,7 +38,7 @@ args = argParser.parse_args()
 
 if args.version and any([args.major, args.minor, args.patch]):
     print("[ ERROR ] -v and -M options cannot be used together")
-    exit(1)
+    sys.exit(1)
 
 newMajorVersion = args.major if args.major else currentMajorVersion
 newMinorVersion = args.minor if args.minor else currentMinorVersion
