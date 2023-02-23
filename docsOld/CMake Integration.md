@@ -14,4 +14,3 @@ When using LibRapid in your CMake project, the following options are configurabl
 - `LIBRAPID_USE_MULTIPREC => OFF` (Include multiprecision library -- more on this elsewhere in documentation)
 - `LIBRAPID_OPTIMISE_SMALL_ARRAYS => OFF` (Optimise small arrays?)
 - `LIBRAPID_FAST_MATH => OFF` (Use potentially less accurate operations to increase performance)
-
