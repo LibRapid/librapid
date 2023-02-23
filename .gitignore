@@ -5,7 +5,13 @@ librapid/openblas_install
 librapid/blas
 openblas_install
 
-docBuild
+docs/build
+docs/docs
+docs/html
+docs/latex
+docs/xml
+docs/source/api
+docs/source/docBuild
 
 *.i
 *.ii
