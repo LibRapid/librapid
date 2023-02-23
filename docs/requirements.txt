@@ -6,3 +6,4 @@ pydata-sphinx-theme==0.11.0
 numpydoc==1.5.0
 sphinx-panels==0.6.0
 regex
+sphinx-favicon

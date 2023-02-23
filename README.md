@@ -105,24 +105,17 @@ hopefully it's clear to see how powerful this could be when working with more co
 
 # Documentation
 
-<a href="https://docs.hdoc.io/pencilcaseman/LibRapid/index.html" target="_blank"><b>Latest
-Documentation</b></a>
+<a href="https://librapid.readthedocs.io/en/latest/" target="_blank"><b>Latest
+Documentation</b></a> \
+<a href="https://librapid.readthedocs.io/en/develop/" target="_blank"><b>Develop Branch Docs</b></a>
 
-LibRapid uses [HDoc](https://hdoc.io/) to automatically parse source files and extract the commented documentation
-for each symbol. This is the most up-to-date documentation available, and is the easiest way to get started with
-LibRapid.
+LibRapid uses [Doxygen](https://doxygen.nl/) to parse the source code and extract documentation information. We then use
+a combination
+of [Breathe](https://breathe.readthedocs.io/en/latest/), [Exhale](https://exhale.readthedocs.io/en/latest/)
+and [Sphinx](https://www.sphinx-doc.org/en/master/) to generate a website from this data. The final website is hosted on
+[Read the Docs](https://readthedocs.org/).
 
-LibRapid also supports documentation generation via [Doxygen](https://doxygen.nl/), the hosted version of which
-can be found [here](https://librapid.github.io/librapid/). There are also PDFs
-available from the [Build Documentation](https://github.com/LibRapid/librapid/actions/workflows/build-docs.yaml)
-GitHub Action.
-
-> **Warning**
-> While the Doxygen documentation will contain up-to-date code comments, the examples, tutorials and other 
-> information may not be up-to-date or exist at all.
-
-LibRapid uses [Doxygen](https://doxygen.nl/) to automatically generate the documentation, and
-[Doxygen Awesome CSS](https://github.com/jothepro/doxygen-awesome-css) to improve Doxygen's outdated styling.
+The documentation is rebuilt every time a change is made to the source code, meaning it is always up-to-date.
 
 # Current Development Stage
 
@@ -192,9 +185,3 @@ Thanks to JetBrains for providing LibRapid with free licenses for their amazing 
     <img src="https://devclass.com/wp-content/uploads/2018/12/jetbrains-variant-4.png" alt="JetBrains" width="200"/>
   </a>
 </p>
-
-# License Status
-
-<div align="center">
-<a href="https://app.fossa.com/projects/git%2Bgithub.com%2FLibRapid%2Flibrapid?ref=badge_large" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FLibRapid%2Flibrapid.svg?type=large"/></a>
-</div>
