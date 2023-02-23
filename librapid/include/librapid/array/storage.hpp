@@ -415,7 +415,7 @@ namespace librapid {
 	template<typename T, typename A>
 	Storage<T, A> &Storage<T, A>::operator=(const Storage &other) {
 		if (this != &other) {
-			LIBRAPID_ASSERT(!m_independent && size() == other.size(),
+			LIBRAPID_ASSERT(!m_independent || size() == other.size(),
 							"Mismatched storage sizes. Cannot assign storage with {} elements to "
 							"dependent storage with {} elements",
 							other.size(),
@@ -423,7 +423,7 @@ namespace librapid {
 
 			m_allocator =
 			  std::allocator_traits<A>::select_on_container_copy_construction(other.m_allocator);
-			resizeImpl(other.size(), 0);
+			resizeImpl(other.size(), 0); // Different sizes are handled here
 			if (typetraits::TriviallyDefaultConstructible<T>::value) {
 				// Use a slightly faster memcpy if the type is trivially default constructible
 				std::uninitialized_copy(other.begin(), other.end(), m_begin);

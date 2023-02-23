@@ -280,16 +280,24 @@ namespace librapid {
 
 			if constexpr (std::is_same_v<typename typetraits::TypeInfo<ArrayContainer>::Device,
 										 device::GPU>) {
-				// ArrayView is slower but works better with the GPU
-				ArrayView<const ArrayContainer> view(*this);
-				const auto stride = Stride(m_shape);
-				view.setShape(m_shape.subshape(1, ndim()));
-				if (ndim() == 1)
-					view.setStride(Stride({1}));
-				else
-					view.setStride(stride.subshape(1, ndim()));
-				view.setOffset(index * stride[0]);
-				return view;
+				// // ArrayView is slower but works better with the GPU
+				// ArrayView<const ArrayContainer> view(*this);
+				// const auto stride = Stride(m_shape);
+				// view.setShape(m_shape.subshape(1, ndim()));
+				// if (ndim() == 1)
+				// 	view.setStride(Stride({1}));
+				// else
+				// 	view.setStride(stride.subshape(1, ndim()));
+				// view.setOffset(index * stride[0]);
+				// return view;
+
+				ArrayContainer res;
+				res.m_shape	  = m_shape.subshape(1, ndim());
+				auto subSize  = res.shape().size();
+				Scalar *begin = m_storage.begin().get() + index * subSize;
+				res.m_storage = StorageType_(begin, subSize, false);
+
+				return res;
 			} else {
 				ArrayContainer res;
 				res.m_shape	  = m_shape.subshape(1, ndim());
@@ -312,16 +320,24 @@ namespace librapid {
 
 			if constexpr (std::is_same_v<typename typetraits::TypeInfo<ArrayContainer>::Device,
 										 device::GPU>) {
-				// ArrayView is slower but works better with the GPU
-				ArrayView<const ArrayContainer> view(*this);
-				const auto stride = Stride(m_shape);
-				view.setShape(m_shape.subshape(1, ndim()));
-				if (ndim() == 1)
-					view.setStride(Stride({1}));
-				else
-					view.setStride(stride.subshape(1, ndim()));
-				view.setOffset(index * stride[0]);
-				return view;
+				// // ArrayView is slower but works better with the GPU
+				// ArrayView<const ArrayContainer> view(*this);
+				// const auto stride = Stride(m_shape);
+				// view.setShape(m_shape.subshape(1, ndim()));
+				// if (ndim() == 1)
+				// 	view.setStride(Stride({1}));
+				// else
+				// 	view.setStride(stride.subshape(1, ndim()));
+				// view.setOffset(index * stride[0]);
+				// return view;
+
+				ArrayContainer res;
+				res.m_shape	  = m_shape.subshape(1, ndim());
+				auto subSize  = res.shape().size();
+				Scalar *begin = m_storage.begin().get() + index * subSize;
+				res.m_storage = StorageType_(begin, subSize, false);
+
+				return res;
 			} else {
 				ArrayContainer res;
 				res.m_shape	  = m_shape.subshape(1, ndim());
