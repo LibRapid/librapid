@@ -1,14 +1,4 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# This file only contains a selection of the most common options. For a full
-# list see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
-
-# -- Path setup --------------------------------------------------------------
-
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
+# Configuration file for the Sphinx documentation builder
 
 import os
 import sys
@@ -87,6 +77,7 @@ extensions = [
 	"breathe",
 	"exhale",
 	"numpydoc",
+	"sphinx-favicon"
 ]
 
 autosectionlabel_prefix_document = True
@@ -180,7 +171,38 @@ html_theme_options = {
 html_static_path = ["_static"]
 html_css_files = ['css/s4defs-roles.css']
 
-html_favicon = "/en/latest/_static/LR_icon.png"
+# html_favicon = "/en/latest/_static/LR_icon.png"
+favicons = [
+	{
+		"rel": "icon",
+		"static-file": "LR_icon_128.png",
+		"type": "image/png",
+	},
+	{
+		"rel": "icon",
+		"sizes": "16x16",
+		"href": "LR_icon_128.png",
+		"type": "image/png",
+	},
+	{
+		"rel": "icon",
+		"sizes": "32x32",
+		"href": "LR_icon_128.png",
+		"type": "image/png",
+	},
+	{
+		"rel": "icon",
+		"sizes": "64x64",
+		"href": "LR_icon_128.png",
+		"type": "image/png",
+	},
+	{
+		"rel": "apple-touch-icon",
+		"sizes": "180x180",
+		"href": "LR_icon.png",
+		"type": "image/png",
+	},
+]
 
 rst_prolog = """
 .. include:: <s5defs.txt>
