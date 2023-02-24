@@ -77,7 +77,8 @@ extensions = [
     "breathe",
     "exhale",
     "numpydoc",
-    "sphinx-favicon"
+    "sphinx-favicon",
+    "sphinx-copybutton"
 ]
 
 autosectionlabel_prefix_document = True
@@ -156,7 +157,7 @@ html_theme_options = {
     <img src="/en/latest/_static/LR_icon.png" alt="LibRapid" width="22.5"></img>
     <a href="https://github.com/sponsors/Pencilcaseman">
         <span class="banner-resize-text-lg">
-            If you like LibRapid, please consider giving a small donation to help keep it alive!
+            If you like LibRapid, please consider a small donation support its development!
         </span>
         <span class="banner-resize-text-sm">
             Please consider donating!
