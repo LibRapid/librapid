@@ -12,9 +12,9 @@ sys.path.insert(0, os.path.abspath("../.."))
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_dirs = [
-    "src/librapid/vendor",
-    "src/librapid/blas",
-    "src/librapid/cxxblas"
+    "librapid/vendor",
+    "librapid/blas",
+    "librapid/cxxblas"
 ]
 
 file_match = regex.compile(".*\..*")
@@ -64,7 +64,6 @@ except Exception as e:
 # extensions coming with Sphinx (named "sphinx.ext.*") or your custom
 # ones.
 extensions = [
-    # "furo", <= DO NOT comment back in -- it breaks everything
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx.ext.coverage",
@@ -73,12 +72,27 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.doctest",
     "sphinx.ext.inheritance_diagram",
-    "sphinx_panels",
     "breathe",
     "exhale",
     "numpydoc",
     "sphinx-favicon",
-    "sphinx-copybutton"
+    "myst_parser",
+    "sphinx_design",
+    "sphinx_copybutton"
+]
+
+myst_enable_extensions = [
+    "amsmath",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "html_admonition",
+    "html_image",
+    "linkify",
+    "replacements",
+    "smartquotes",
+    "substitution",
+    "tasklist",
 ]
 
 autosectionlabel_prefix_document = True
