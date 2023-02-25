@@ -34,10 +34,6 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Update Source Distribution
-        run:
-          sudo apt-get dist-upgrade
-
       # On Linux, the apt package doesn't build the search engine for some reason.
       # By building and installing doxygen ourselves, we can ensure that the documentation
       # has a working search engine.
