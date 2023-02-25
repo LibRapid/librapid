@@ -125,9 +125,10 @@ Contents
     gettingStarted.rst
     cmakeIntegration.rst
     caution.rst
+    classList.rst
 
 Licencing
-=========
+---------
 
 LibRapid is produced under the MIT License, so you are free to use the library
 how you like for personal and commercial purposes, though this is subject to

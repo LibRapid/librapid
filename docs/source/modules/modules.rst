@@ -7,3 +7,5 @@ Test Page
    :members:
    :protected-members:
    :undoc-members:
+
+.. doxygenfunction:: librapid::map
