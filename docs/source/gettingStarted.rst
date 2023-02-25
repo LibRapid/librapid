@@ -80,7 +80,7 @@ Here, we print out the Arrays we just created. Try changing the numbers to see h
 
 This line performs a simple arithmetic operation on our Arrays and prints the result.
 
-.. code-block: cpp
+.. code-block:: cpp
     :lineno-start: 15
 
     fmt::print("First row of my Array: {}\n", myFirstArray[0]);
