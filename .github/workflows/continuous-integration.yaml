@@ -209,7 +209,7 @@ jobs:
           CXX: g++
 
       - name: Install Doxygen on Error
-        if: steps.build_doxygen.outcome != "success"
+        if: steps.build_doxygen.outcome != 'success'
         run: |
           sudo apt install doxygen
 
