@@ -154,7 +154,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }} --parallel
           cmake --build . --config Release
         env:
           CC: ${{ matrix.compiler.cc }}
@@ -243,6 +243,8 @@ jobs:
     steps:
       - name: Create a Test File
         run: |
+          mkdir BENCH_RESULTS
+          touch BENCH_RESULTS/hello.txt
           echo "Hello, World!" > BENCH_RESULTS/hello.txt
 
       - name: Upload Benchmark Results
