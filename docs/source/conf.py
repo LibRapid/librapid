@@ -150,7 +150,7 @@ exclude_patterns = [
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 
-html_title = 'LibRapid Docs'
+html_title = "LibRapid Docs"
 html_theme = "furo"
 # html_theme = "pydata_sphinx_theme"
 # html_theme = "sphinx_book_theme"
@@ -158,10 +158,12 @@ html_theme = "furo"
 html_logo = "../../branding/LibRapid small space.png"
 
 html_context = {
+    "display_github": True,
     "github_user": "LibRapid",
     "github_repo": "librapid",
     "github_version": "master",
     "doc_path": "docs/source",
+    "conf_py_path": "docs/source"
 }
 
 html_theme_options = {
@@ -184,13 +186,20 @@ html_theme_options = {
     "dark_logo": "LibRapid_dark.png",
 }
 
+# CopyButton configuration
+copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
+copybutton_prompt_is_regexp = True
+copybutton_line_continuation_character = "\\"
+copybutton_here_doc_delimiter = "EOT"
+copybutton_selector = "div:not(.no-copybutton) > div.highlight > pre"
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 
 # These folders are copied to the documentation's HTML output
 html_static_path = ["_static"]
-html_css_files = ['css/s4defs-roles.css']
+html_css_files = ["css/s4defs-roles.css", "css/custom.css"]
 
 # html_favicon = "/en/latest/_static/LR_icon_128.png"
 favicons = [

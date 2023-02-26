@@ -1,8 +1,13 @@
 @import "../styles/furo.scss";
 
 .wy-nav-content {
-	padding: 1.618em 3.236em;
-	height: 100%;
-	/* max-width: 800px; */
-	margin: auto;
+    padding: 1.618em 3.236em;
+    height: 100%;
+    /* max-width: 800px; */
+    margin: auto;
+}
+
+/* Set var(--sidebar-item-line-height) for sidebar-tree */
+.sidebar-tree .reference {
+    --sidebar-item-line-height: 1.3rem !important;
 }
