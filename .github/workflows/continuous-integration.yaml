@@ -219,6 +219,10 @@ jobs:
           cd docs
           pip install -r requirements.txt
 
+      - name: Configure Files
+        run: |
+          touch .is_local
+
       - name: Build Documentation
         run: |
           cd docs
