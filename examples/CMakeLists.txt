@@ -5,7 +5,7 @@ function(make_example name)
     # Ensure all examples finish correctly
     message(STATUS "[ LIBRAPID ] Adding example ${name}")
     add_test(NAME ${name}
-            COMMAND example-${name})
+             COMMAND example-${name})
 endfunction()
 
 make_example(array-1)

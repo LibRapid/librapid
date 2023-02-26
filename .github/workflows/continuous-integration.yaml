@@ -1,12 +1,12 @@
-name: Compile LibRapid
+name: Continuous Integration
 
 on:
-  # push:
-  #   branches:
-  #     - "**"
-  # pull_request:
-  #   branches:
-  #     - "**"
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
   workflow_dispatch:
 
 jobs:
@@ -164,3 +164,106 @@ jobs:
         run: |
           cd build
           ctest -C Release --output-on-failure
+
+  quodona:
+    name: Run Qodana
+    needs: compile
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout LibRapid
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Qodana Scan
+        uses: JetBrains/qodana-action@main
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+
+  build-docs:
+    name: Build Documentation Locally
+    needs: [compile]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      # On Linux, the apt package doesn't build the search engine for some reason.
+      # By building and installing doxygen ourselves, we can ensure that the documentation
+      # has a working search engine.
+      - name: Build Doxygen
+        run: |
+          git clone --recursive https://github.com/doxygen/doxygen.git
+          cd doxygen
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release --parallel
+          sudo make install
+
+      - name: Install Requirements
+        run: |
+          sudo apt-get install -y texlive-full
+          cd docs
+          pip install -r requirements.txt
+
+      - name: Build Documentation
+        run: |
+          cd docs
+          make html latexpdf
+
+      - name: Store Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Documentation
+          path: docs/build/**
+          
+  run-benchmarks:
+    name: Run Benchmarks
+    needs: [compile]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create a Test File
+        run: |
+          echo "Hello, World!" > BENCH_RESULTS/hello.txt
+
+      - name: Upload Benchmark Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: benchmark-results-for-${{ github.sha }}
+          path: BENCH_RESULTS/
+
+  trigger-docs:
+    name: Trigger Documentation Build
+    needs: [run-benchmarks, quodona, build-docs]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout LibRapid
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Trigger RTDs build
+        uses: dfm/rtds-action@v1
+        with:
+          webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
+          webhook_token: ${{ secrets.RTDS_WEBHOOK_TOKEN }}
+          commit_ref: ${{ github.ref }}

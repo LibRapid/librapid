@@ -13,3 +13,5 @@ sphinx-favicon
 sphinx-autobuild
 sphinx-copybutton
 linkify-it-py
+
+rtds-action
