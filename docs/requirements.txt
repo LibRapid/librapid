@@ -6,3 +6,10 @@ pydata-sphinx-theme==0.11.0
 numpydoc==1.5.0
 sphinx-panels==0.6.0
 regex
+
+myst-parser
+sphinx-design
+sphinx-favicon
+sphinx-autobuild
+sphinx-copybutton
+linkify-it-py
