@@ -109,7 +109,7 @@ jobs:
           submodules: recursive
 
       - name: Set up Clang
-        if: ${{ matrix.cc  == cc }}
+        if: ${{ matrix.cc  == "cc" }}
         uses: egor-tensin/setup-clang@v1
         with:
           version: latest
