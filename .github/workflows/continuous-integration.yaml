@@ -19,8 +19,8 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            cc: ./llvm/bin/clang
-            cxx: ./llvm/bin/clang++
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
             blas: on
             mpfr: on
             cpp: 17
@@ -68,8 +68,8 @@ jobs:
             cpp: 20
 
           - os: macos-latest
-            cc: ./llvm/bin/clang
-            cxx: ./llvm/bin/clang++
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
             blas: on
             mpfr: on
             cpp: 17
@@ -89,8 +89,8 @@ jobs:
             cpp: 20
 
           - os: windows-latest
-            cc: ./llvm/clang
-            cxx: ./llvm/clang++
+            cc: ../llvm/clang
+            cxx: ../llvm/clang++
             blas: on
             mpfr: on
             cpp: 17
@@ -130,7 +130,7 @@ jobs:
       #     platform: x64
 
       - name: Install Clang
-        if: ${{ matrix.cc }} == "./llvm/bin/clang" || ${{ matrix.cc }} == "./llvm/clang"
+        if: ${{ matrix.cc }} == "../llvm/bin/clang-15" || ${{ matrix.cc }} == "../llvm/clang"
         uses: KyleMayes/install-llvm-action@v1
         with:
           version: "15.0"
