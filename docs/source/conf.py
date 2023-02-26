@@ -2,9 +2,8 @@
 
 import os
 import sys
-import textwrap
+
 import regex
-import subprocess
 
 sys.path.insert(0, os.path.abspath("../.."))
 
@@ -78,7 +77,9 @@ extensions = [
     "sphinx-favicon",
     "myst_parser",
     "sphinx_design",
-    "sphinx_copybutton"
+    "sphinx_copybutton",
+
+    "rtds_action"
 ]
 
 myst_enable_extensions = [
@@ -94,6 +95,14 @@ myst_enable_extensions = [
     "substitution",
     "tasklist",
 ]
+
+if not os.path.exists("../../.is_local"):
+    # Download the benchmark results from GitHub Actions
+    rtds_action_github_repo = "LibRapid/librapid"
+    rtds_action_path = "BENCH_RESULTS"
+    rtds_action_artifact_prefix = "benchmark-results-for-"
+    rtds_action_github_token = os.environ["GITHUB_TOKEN"]
+    rtds_action_error_if_missing = True
 
 autosectionlabel_prefix_document = True
 
