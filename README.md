@@ -11,8 +11,7 @@
 ---
 
 [![Compile](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml) \
-[![Documentation Build](https://github.com/LibRapid/librapid/actions/workflows/build-docs.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/build-docs.yaml) \
-[![Documentation Online](https://github.com/LibRapid/librapid/actions/workflows/static.yaml/badge.svg)](https://librapid.github.io/librapid/md_librapid__r_e_a_d_m_e.html)
+[![Documentation Status](https://readthedocs.org/projects/librapid/badge/?version=latest)](https://librapid.readthedocs.io/en/latest/?badge=latest)
 
 ---
 
