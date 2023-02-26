@@ -251,6 +251,23 @@ div.sphinxsidebar a {
     }
 }
 
+.banner-resize-text-lg{
+    display:inline-block;
+}
+
+.banner-resize-text-sm {
+    display:none;
+}
+
+@media screen and (max-width: 650px) {
+    .banner-resize-text-lg {
+        display:none;
+    }
+
+    .banner-resize-text-sm {
+        display:inline-block;
+    }
+}
 
 /* Social Icons in the sidebar (available: twitter, facebook, linkedin, google+, bitbucket, github) */
 
