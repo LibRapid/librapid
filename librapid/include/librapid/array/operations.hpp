@@ -176,7 +176,7 @@ namespace librapid {
 									 detail::LibRapidType::Scalar) {
 					return kernelNameScalarRhs;
 				} else {
-					static_assert(false, "Invalid type combination");
+					LIBRAPID_ASSERT(false, "Invalid type combination");
 				}
 			}
 		};
