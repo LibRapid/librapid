@@ -99,7 +99,7 @@ namespace librapid {
 		/// Move assignment operator for a Storage object
 		/// \param other Storage object to move
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE Storage &operator=(Storage &&other) noexcept;
+		LIBRAPID_ALWAYS_INLINE Storage &operator=(Storage &&other) LIBRAPID_RELEASE_NOEXCEPT;
 
 		/// Free a Storage object
 		~Storage();

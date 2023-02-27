@@ -151,9 +151,34 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<::librapid::detail::Plus> {
-			static constexpr const char *name		= "plus";
-			static constexpr const char *filename	= "arithmetic";
-			static constexpr const char *kernelName = "addArrays";
+			static constexpr const char *name				 = "plus";
+			static constexpr const char *filename			 = "arithmetic";
+			static constexpr const char *kernelName			 = "addArrays";
+			static constexpr const char *kernelNameScalarRhs = "addArraysScalarRhs";
+			static constexpr const char *kernelNameScalarLhs = "addArraysScalarLhs";
+
+			template<typename... Args>
+			static constexpr const char *getKernelName(std::tuple<Args...> args) {
+				static_assert(sizeof...(Args) == 2, "Invalid number of arguments for addition");
+				return getKernelNameImpl(args);
+			}
+
+		private:
+			template<typename T1, typename T2>
+			static constexpr const char *getKernelNameImpl(std::tuple<T1, T2> args) {
+				if constexpr (TypeInfo<std::decay_t<T1>>::type != detail::LibRapidType::Scalar &&
+							  TypeInfo<std::decay_t<T2>>::type != detail::LibRapidType::Scalar) {
+					return kernelName;
+				} else if constexpr (TypeInfo<std::decay_t<T1>>::type ==
+									 detail::LibRapidType::Scalar) {
+					return kernelNameScalarLhs;
+				} else if constexpr (TypeInfo<std::decay_t<T2>>::type ==
+									 detail::LibRapidType::Scalar) {
+					return kernelNameScalarRhs;
+				} else {
+					static_assert(false, "Invalid type combination");
+				}
+			}
 		};
 
 		template<>
