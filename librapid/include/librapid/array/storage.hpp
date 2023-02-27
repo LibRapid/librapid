@@ -436,7 +436,7 @@ namespace librapid {
 	}
 
 	template<typename T, typename A>
-	Storage<T, A> &Storage<T, A>::operator=(Storage &&other) noexcept {
+	Storage<T, A> &Storage<T, A>::operator=(Storage &&other) LIBRAPID_RELEASE_NOEXCEPT {
 		if (this != &other) {
 			if (m_independent) {
 				m_allocator = std::move(other.m_allocator);
