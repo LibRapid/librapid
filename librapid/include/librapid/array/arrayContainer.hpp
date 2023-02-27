@@ -248,7 +248,7 @@ namespace librapid {
 			using FunctionType = detail::Function<desc, Functor_, Args...>;
 			m_storage.resize(function.shape().size(), 0);
 #if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
-			if (!std::is_same_v<FunctionType::Device, device::GPU> &&
+			if (!std::is_same_v<typename FunctionType::Device, device::GPU> &&
 				m_storage.size() > global::multithreadThreshold && global::numThreads > 1)
 				detail::assignParallel(*this, function);
 			else
