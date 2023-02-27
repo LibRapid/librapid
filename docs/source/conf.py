@@ -77,9 +77,7 @@ extensions = [
     "sphinx-favicon",
     "myst_parser",
     "sphinx_design",
-    "sphinx_copybutton",
-
-    "rtds_action"
+    "sphinx_copybutton"
 ]
 
 myst_enable_extensions = [
@@ -98,6 +96,7 @@ myst_enable_extensions = [
 
 if not os.path.exists("../../.is_local"):
     # Download the benchmark results from GitHub Actions
+    extensions.append("rtds_action")
     rtds_action_github_repo = "LibRapid/librapid"
     rtds_action_path = "BENCH_RESULTS"
     rtds_action_artifact_prefix = "benchmark-results-for-"
