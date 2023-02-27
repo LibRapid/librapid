@@ -5,10 +5,10 @@ namespace librapid {
 	namespace typetraits {
 		template<typename ShapeType_, typename StorageType_>
 		struct TypeInfo<array::ArrayContainer<ShapeType_, StorageType_>> {
-			detail::LibRapidType type				 = detail::LibRapidType::ArrayContainer;
-			using Scalar							 = typename TypeInfo<StorageType_>::Scalar;
-			using Device							 = typename TypeInfo<StorageType_>::Device;
-			static constexpr bool allowVectorisation = TypeInfo<Scalar>::packetWidth > 1;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayContainer;
+			using Scalar							   = typename TypeInfo<StorageType_>::Scalar;
+			using Device							   = typename TypeInfo<StorageType_>::Device;
+			static constexpr bool allowVectorisation   = TypeInfo<Scalar>::packetWidth > 1;
 		};
 
 		namespace typetraits {

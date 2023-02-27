@@ -59,7 +59,7 @@ namespace librapid {
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(GreaterThanEqual, >=);	 // a >= b
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseEqual, ==);	 // a == b
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseNotEqual, !=); // a != b
-	} // namespace detail
+	}																 // namespace detail
 
 	namespace typetraits {
 		/// Merge together two Descriptor types. Two trivial operations will result in another
@@ -80,7 +80,7 @@ namespace librapid {
 		/// \tparam T The type to extract the descriptor from
 		template<typename T>
 		struct DescriptorExtractor {
-			using Type = T;
+			using Type = ::librapid::detail::descriptor::Trivial;
 		};
 
 		/// Extracts the Descriptor type of an ArrayContainer object. In this case, the Descriptor
@@ -231,7 +231,10 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise sum of the two arrays
-		template<class LHS, class RHS>
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<typetraits::TypeInfo<std::decay_t<RHS>>::type !=
+											 ::librapid::detail::LibRapidType::Scalar,
+										   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		operator+(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
 		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus, LHS, RHS> {
@@ -240,6 +243,17 @@ namespace librapid {
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus>(
+			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
+		}
+
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<typetraits::TypeInfo<std::decay_t<RHS>>::type ==
+											 ::librapid::detail::LibRapidType::Scalar,
+										   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		operator+(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
+		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
