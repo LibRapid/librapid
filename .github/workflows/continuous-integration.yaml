@@ -246,7 +246,7 @@ jobs:
           echo "Hello, World!" > BENCH_RESULTS/hello.txt
 
       - name: Upload Benchmark Results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: benchmark-results-for-${{ github.sha }}
           path: BENCH_RESULTS/
