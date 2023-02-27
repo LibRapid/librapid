@@ -1,3 +1,5 @@
+.is_local
+
 build
 buildWsl
 
