@@ -1,0 +1,269 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+  workflow_dispatch:
+
+jobs:
+  compile:
+    name: LibRapid on ${{ matrix.os }} with ${{ matrix.cxx }} using C++${{ matrix.cpp }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            blas: on
+            mpfr: on
+            cpp: 17
+
+          - os: ubuntu-latest
+            cc: gcc-9
+            cxx: g++-9
+            blas: on
+            mpfr: on
+            cpp: 17
+
+          - os: ubuntu-latest
+            cc: gcc-9
+            cxx: g++-9
+            blas: on
+            mpfr: on
+            cpp: 20
+
+          - os: ubuntu-latest
+            cc: gcc-10
+            cxx: g++-10
+            blas: on
+            mpfr: on
+            cpp: 17
+
+          - os: ubuntu-latest
+            cc: gcc-10
+            cxx: g++-10
+            blas: on
+            mpfr: on
+            cpp: 20
+
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            mpfr: on
+            cpp: 17
+
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            mpfr: on
+            cpp: 20
+
+          - os: macos-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            blas: on
+            mpfr: on
+            cpp: 17
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            mpfr: on
+            cpp: 17
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            mpfr: on
+            cpp: 20
+
+          - os: windows-latest
+            cc: ../llvm/clang
+            cxx: ../llvm/clang++
+            blas: on
+            mpfr: on
+            cpp: 17
+
+          - os: windows-latest
+            cc: ./llvm/clang
+            cxx: ./llvm/clang++
+            blas: on
+            mpfr: on
+            cpp: 20
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            blas: on
+            mpfr: on
+            cpp: 17
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            blas: on
+            mpfr: on
+            cpp: 20
+
+    steps:
+      - name: Checkout LibRapid
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      # - name: Set up Clang
+      #   if: ${{ matrix.cc }} == "cc"
+      #   uses: egor-tensin/setup-clang@v1
+      #   with:
+      #     version: latest
+      #     platform: x64
+
+      - name: Install Clang
+        if: ${{ matrix.cc }} == "../llvm/bin/clang-15" || ${{ matrix.cc }} == "../llvm/clang"
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "15.0"
+          directory: "./llvm"
+          env: on
+
+      - name: Compile
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
+          cmake --build . --config Release
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+
+      - name: Run Tests
+        run: |
+          cd build
+          ctest -C Release --output-on-failure
+
+  quodona:
+    name: Run Qodana
+    needs: compile
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout LibRapid
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Qodana Scan
+        uses: JetBrains/qodana-action@main
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+
+  build-docs:
+    name: Build Documentation Locally
+    needs: [ compile ]
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Build Doxygen
+        id: build_doxygen
+        continue-on-error: true
+        run: |
+          git clone --recursive https://github.com/doxygen/doxygen.git
+          cd doxygen
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
+          cmake --build . --config Release
+          sudo make install
+        env:
+          CC: gcc
+          CXX: g++
+
+      - name: Install Doxygen on Error
+        if: steps.build_doxygen.outcome != 'success'
+        run: |
+          sudo apt install doxygen
+
+      - name: Install Requirements
+        run: |
+          sudo apt-get install -y texlive-full
+          cd docs
+          pip install -r requirements.txt
+
+      - name: Configure Files
+        run: |
+          touch .is_local
+
+      - name: Build Documentation
+        run: |
+          cd docs
+          make html latexpdf
+
+      - name: Store Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Documentation
+          path: docs/build/**
+
+  run-benchmarks:
+    name: Run Benchmarks
+    needs: [ compile ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create a Test File
+        run: |
+          mkdir BENCH_RESULTS
+          touch BENCH_RESULTS/hello.txt
+          echo "Hello, World!" > BENCH_RESULTS/hello.txt
+
+      - name: Upload Benchmark Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: benchmark-results-for-${{ github.sha }}
+          path: BENCH_RESULTS/
+
+  trigger-docs:
+    name: Trigger Documentation Build
+    needs: [ run-benchmarks, quodona, build-docs ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout LibRapid
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Trigger RTDs build
+        uses: dfm/rtds-action@v1
+        with:
+          webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
+          webhook_token: ${{ secrets.RTDS_WEBHOOK_TOKEN }}
+          commit_ref: ${{ github.ref }}

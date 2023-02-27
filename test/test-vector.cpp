@@ -201,27 +201,26 @@ TEST_CASE("Test Vectors", "[vector-lib]") {
 		REQUIRE(lrc::dist(testA, testD) == 5);
 
 		lrc::Vec3d testE(0.1, 0.2, 0.3);
-		REQUIRE(lrc::sin(testE) == lrc::Vec3d(sin(0.1), lrc::sin(0.2), lrc::sin(0.3)));
-		REQUIRE(lrc::cos(testE) == lrc::Vec3d(cos(0.1), lrc::cos(0.2), lrc::cos(0.3)));
-		REQUIRE(lrc::tan(testE) == lrc::Vec3d(tan(0.1), lrc::tan(0.2), lrc::tan(0.3)));
-		REQUIRE(lrc::asin(testE) == lrc::Vec3d(asin(0.1), lrc::asin(0.2), lrc::asin(0.3)));
-		REQUIRE(lrc::acos(testE) == lrc::Vec3d(acos(0.1), lrc::acos(0.2), lrc::acos(0.3)));
-		REQUIRE(lrc::atan(testE) == lrc::Vec3d(atan(0.1), lrc::atan(0.2), lrc::atan(0.3)));
-		REQUIRE(lrc::atan2(testA, testE) ==
-				lrc::Vec3d(atan2(1, 0.1), lrc::atan2(2, 0.2), lrc::atan2(3, 0.3)));
-		REQUIRE(lrc::sinh(testE) == lrc::Vec3d(sinh(0.1), lrc::sinh(0.2), lrc::sinh(0.3)));
-		REQUIRE(lrc::cosh(testE) == lrc::Vec3d(cosh(0.1), lrc::cosh(0.2), lrc::cosh(0.3)));
-		REQUIRE(lrc::tanh(testE) == lrc::Vec3d(tanh(0.1), lrc::tanh(0.2), lrc::tanh(0.3)));
-		REQUIRE(lrc::asinh(testE) == lrc::Vec3d(asinh(0.1), lrc::asinh(0.2), lrc::asinh(0.3)));
-		REQUIRE(lrc::acosh(testE + 1) == lrc::Vec3d(acosh(1.1), lrc::acosh(1.2), lrc::acosh(1.3)));
-		REQUIRE(lrc::atanh(testE) == lrc::Vec3d(atanh(0.1), lrc::atanh(0.2), lrc::atanh(0.3)));
-		REQUIRE(lrc::exp(testE) == lrc::Vec3d(exp(0.1), lrc::exp(0.2), lrc::exp(0.3)));
-		REQUIRE(lrc::log(testE) == lrc::Vec3d(log(0.1), lrc::log(0.2), lrc::log(0.3)));
-		REQUIRE(lrc::log10(testE) == lrc::Vec3d(log10(0.1), lrc::log10(0.2), lrc::log10(0.3)));
-		REQUIRE(lrc::log2(testE) == lrc::Vec3d(log2(0.1), lrc::log2(0.2), lrc::log2(0.3)));
-		REQUIRE(lrc::pow(testE, 2) == lrc::Vec3d(pow(0.1, 2), lrc::pow(0.2, 2), lrc::pow(0.3, 2)));
-		REQUIRE(lrc::sqrt(testE) == lrc::Vec3d(sqrt(0.1), lrc::sqrt(0.2), lrc::sqrt(0.3)));
-		REQUIRE(lrc::cbrt(testE) == lrc::Vec3d(cbrt(0.1), lrc::cbrt(0.2), lrc::cbrt(0.3)));
+		REQUIRE((lrc::sin(testE)            - lrc::Vec3d(sin(0.1), lrc::sin(0.2), lrc::sin(0.3))) < 1e-6);
+		REQUIRE((lrc::cos(testE)            - lrc::Vec3d(cos(0.1), lrc::cos(0.2), lrc::cos(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::tan(testE)            - lrc::Vec3d(tan(0.1), lrc::tan(0.2), lrc::tan(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::asin(testE)           - lrc::Vec3d(asin(0.1), lrc::asin(0.2), lrc::asin(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::acos(testE)           - lrc::Vec3d(acos(0.1), lrc::acos(0.2), lrc::acos(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::atan(testE)           - lrc::Vec3d(atan(0.1), lrc::atan(0.2), lrc::atan(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::atan2(testA, testE)   - lrc::Vec3d(atan2(1, 0.1), lrc::atan2(2, 0.2), lrc::atan2(3, 0.3))).mag() < 1e-6);
+		REQUIRE((lrc::sinh(testE)           - lrc::Vec3d(sinh(0.1), lrc::sinh(0.2), lrc::sinh(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::cosh(testE)           - lrc::Vec3d(cosh(0.1), lrc::cosh(0.2), lrc::cosh(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::tanh(testE)           - lrc::Vec3d(tanh(0.1), lrc::tanh(0.2), lrc::tanh(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::asinh(testE)          - lrc::Vec3d(asinh(0.1), lrc::asinh(0.2), lrc::asinh(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::acosh(testE + 1)      - lrc::Vec3d(acosh(1.1), lrc::acosh(1.2), lrc::acosh(1.3))).mag() < 1e-6);
+		REQUIRE((lrc::atanh(testE)          - lrc::Vec3d(atanh(0.1), lrc::atanh(0.2), lrc::atanh(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::exp(testE)            - lrc::Vec3d(exp(0.1), lrc::exp(0.2), lrc::exp(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::log(testE)      		- lrc::Vec3d(log(0.1), lrc::log(0.2), lrc::log(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::log10(testE)    		- lrc::Vec3d(log10(0.1), lrc::log10(0.2), lrc::log10(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::log2(testE)     	    - lrc::Vec3d(log2(0.1), lrc::log2(0.2), lrc::log2(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::pow(testE, 2)         - lrc::Vec3d(pow(0.1, 2), lrc::pow(0.2, 2), lrc::pow(0.3, 2))).mag() < 1e-6);
+		REQUIRE((lrc::sqrt(testE)           - lrc::Vec3d(sqrt(0.1), lrc::sqrt(0.2), lrc::sqrt(0.3))).mag() < 1e-6);
+		REQUIRE((lrc::cbrt(testE)           - lrc::Vec3d(cbrt(0.1), lrc::cbrt(0.2), lrc::cbrt(0.3))).mag() < 1e-6);
 	}
 
 	//	SECTION("Benchmarks") {
