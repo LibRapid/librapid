@@ -19,12 +19,15 @@ namespace librapid::detail {
 	LIBRAPID_ALWAYS_INLINE void
 	assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 		   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
+		using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
 		using Scalar =
 		  typename array::ArrayContainer<ShapeType_,
 										 Storage<StorageScalar, StorageAllocator>>::Scalar;
-		constexpr int64_t packetWidth	  = typetraits::TypeInfo<Scalar>::packetWidth;
-		constexpr bool allowVectorisation = typetraits::TypeInfo<
-		  detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation;
+		constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
+		constexpr bool allowVectorisation =
+		  typetraits::TypeInfo<
+			detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation &&
+		  Function::argsAreSameType;
 
 		const int64_t size		 = function.shape().size();
 		const int64_t vectorSize = size - (size % packetWidth);
@@ -136,7 +139,7 @@ namespace librapid::detail {
 				lhs.write(index, function.scalar(index));
 			}
 		} else {
-#pragma omp parallel for shared(vectorSize, lhs, function, size) default(none)                           \
+#pragma omp parallel for shared(vectorSize, lhs, function, size) default(none)                     \
   num_threads(global::numThreads)
 			for (int64_t index = vectorSize; index < size; ++index) {
 				lhs.write(index, function.scalar(index));
@@ -202,6 +205,26 @@ namespace librapid::detail {
 	 */
 
 	namespace impl {
+		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
+														 ::librapid::detail::LibRapidType::Scalar,
+													   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
+			return obj.storage().begin();
+		}
+
+		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
+														 ::librapid::detail::LibRapidType::Scalar,
+													   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
+			return obj;
+		}
+
+		template<typename T>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const auto &
+		cudaTupleEvaluatorImpl(const T &scalar) {
+			return scalar;
+		}
+
 		/// Helper for "evaluating" an array::ArrayContainer
 		/// \tparam ShapeType The shape type of the array::ArrayContainer
 		/// \tparam StorageScalar The scalar type of the array::ArrayContainer's storage object
@@ -254,7 +277,8 @@ namespace librapid::detail {
 			  function.shape().size(),
 			  function.shape().size(),
 			  dst,
-			  cudaTupleEvaluatorImpl(std::get<I>(function.args())).storage().begin()...);
+			  // cudaTupleEvaluatorImpl(std::get<I>(function.args())).storage().begin()...);
+			  cudaTupleEvaluatorImpl(dataSourceExtractor(std::get<I>(function.args())))...);
 		}
 	} // namespace impl
 
@@ -273,8 +297,8 @@ namespace librapid::detail {
 		// temporary-free evaluation. Instead, we must recursively evaluate each sub-operation
 		// until a final result is computed
 
-		constexpr const char *filename	 = typetraits::TypeInfo<Functor_>::filename;
-		constexpr const char *kernelName = typetraits::TypeInfo<Functor_>::kernelName;
+		constexpr const char *filename = typetraits::TypeInfo<Functor_>::filename;
+		const char *kernelName = typetraits::TypeInfo<Functor_>::getKernelName(function.args());
 		using Scalar =
 		  typename array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>::Scalar;
 

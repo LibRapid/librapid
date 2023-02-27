@@ -37,6 +37,62 @@ namespace librapid {
 	namespace detail {
 		// Descriptor is defined in "forward.hpp"
 
+		template<
+		  typename Packet, typename T,
+		  typename std::enable_if_t<
+			typetraits::TypeInfo<T>::type != ::librapid::detail::LibRapidType::Scalar, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetExtractor(const T &obj,
+																		 size_t index) {
+			static_assert(std::is_same_v<Packet, decltype(obj.packet(index))>,
+						  "Packet types do not match");
+			return obj.packet(index);
+		}
+
+		template<
+		  typename Packet, typename T,
+		  typename std::enable_if_t<
+			typetraits::TypeInfo<T>::type == ::librapid::detail::LibRapidType::Scalar, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetExtractor(const T &obj, size_t) {
+			return Packet(obj);
+		}
+
+		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
+														 ::librapid::detail::LibRapidType::Scalar,
+													   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t index) {
+			return obj.scalar(index);
+		}
+
+		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
+														 ::librapid::detail::LibRapidType::Scalar,
+													   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t) {
+			return obj;
+		}
+
+		template<typename First, typename... Rest>
+		constexpr auto scalarTypesAreSame() {
+			if constexpr (sizeof...(Rest) == 0) {
+				using Scalar = typename typetraits::TypeInfo<std::decay_t<First>>::Scalar;
+				return Scalar {};
+			} else {
+				constexpr auto retRest = scalarTypesAreSame<Rest...>();
+				if constexpr (std::is_same_v<decltype(retRest), std::false_type>) {
+					return std::false_type {};
+				} else if constexpr (std::is_same_v<First, decltype(retRest)>) {
+					return retRest;
+				} else {
+					return std::false_type {};
+				}
+			}
+		}
+
+		// template<typename First, typename... Rest>
+		// constexpr bool scalarTypesAreSame(const std::tuple<First, Rest...> &tup) {
+		// 	constexpr auto ret = scalarTypesAreSameImpl(tup);
+		// 	return !std::is_same_v<decltype(ret), std::false_type>;
+		// };
+
 		template<typename desc, typename Functor_, typename... Args>
 		class Function {
 		public:
@@ -46,6 +102,8 @@ namespace librapid {
 			using Device	 = typename typetraits::TypeInfo<Type>::Device;
 			using Packet	 = typename typetraits::TypeInfo<Scalar>::Packet;
 			using Descriptor = desc;
+			static constexpr bool argsAreSameType =
+			  !std::is_same_v<decltype(scalarTypesAreSame<Args...>()), std::false_type>;
 
 			Function() = default;
 
@@ -151,10 +209,10 @@ namespace librapid {
 
 		template<typename desc, typename Functor, typename... Args>
 		template<size_t... I>
-		typename Function<desc, Functor, Args...>::Packet
-		Function<desc, Functor, Args...>::packetImpl(std::index_sequence<I...>,
-													 size_t index) const {
-			return m_functor.packet((std::get<I>(m_args).packet(index))...);
+		auto Function<desc, Functor, Args...>::packetImpl(std::index_sequence<I...>,
+														  size_t index) const -> Packet {
+			// return m_functor.packet((std::get<I>(m_args).packet(index))...);
+			return m_functor.packet(packetExtractor<Packet>(std::get<I>(m_args), index)...);
 		}
 
 		template<typename desc, typename Functor, typename... Args>
@@ -166,7 +224,8 @@ namespace librapid {
 		template<size_t... I>
 		auto Function<desc, Functor, Args...>::scalarImpl(std::index_sequence<I...>,
 														  size_t index) const -> Scalar {
-			return m_functor((std::get<I>(m_args).scalar(index))...);
+			// return m_functor((std::get<I>(m_args).scalar(index))...);
+			return m_functor(scalarExtractor(std::get<I>(m_args), index)...);
 		}
 
 		template<typename desc, typename Functor, typename... Args>
