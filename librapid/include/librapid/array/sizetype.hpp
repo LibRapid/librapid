@@ -330,6 +330,18 @@ namespace librapid {
 					 [](auto, auto, auto... rest) { return std::make_tuple(rest...); }, shapes));
 		}
 	}
+
+	namespace typetraits {
+		template<typename T>
+		struct IsSizeType {
+			using value = std::false_type;
+		};
+
+		template<typename T, size_t N>
+		struct IsShapeType<Shape<T, N>> {
+			using value = std::true_type;
+		};
+	} // namespace typetraits
 } // namespace librapid
 
 // Support FMT printing
