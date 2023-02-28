@@ -14,17 +14,34 @@ namespace librapid {
 			}
 		}
 
+		// template<typename First, typename... Rest>
+		// struct DeviceCheckAndExtract {
+		// 	using Device = typename TypeInfo<std::decay_t<First>>::Device;
+		// };
+
 		template<typename First, typename... Rest>
-		struct DeviceCheckAndExtract {
-			using Device = typename TypeInfo<std::decay_t<First>>::Device;
-		};
+		constexpr auto commonDevice() {
+			using FirstDevice = typename TypeInfo<std::decay_t<First>>::Device;
+			if constexpr (sizeof...(Rest) == 0) {
+				return FirstDevice {};
+			} else {
+				using RestDevice = decltype(commonDevice<Rest...>());
+				if constexpr (std::is_same_v<FirstDevice, device::GPU> ||
+							  std::is_same_v<RestDevice, device::GPU>) {
+					return device::GPU {};
+				} else {
+					return device::CPU {};
+				}
+			}
+		}
 
 		template<typename desc, typename Functor_, typename... Args>
 		struct TypeInfo<::librapid::detail::Function<desc, Functor_, Args...>> {
 			detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
 			using Scalar			  = decltype(std::declval<Functor_>()(
 			   std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
-			using Device			  = typename DeviceCheckAndExtract<Args...>::Device;
+			using Device =
+			  decltype(commonDevice<Args...>()); // typename DeviceCheckAndExtract<Args...>::Device;
 
 			static constexpr bool allowVectorisation = checkAllowVectorisation<Args...>();
 
@@ -186,7 +203,8 @@ namespace librapid {
 
 		template<typename desc, typename Functor, typename... Args>
 		auto Function<desc, Functor, Args...>::shape() const {
-			return std::get<0>(m_args).shape();
+			// return std::get<0>(m_args).shape();
+			return typetraits::TypeInfo<Functor>::getShape(m_args);
 		}
 
 		template<typename desc, typename Functor, typename... Args>

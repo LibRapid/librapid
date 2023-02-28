@@ -504,6 +504,7 @@ namespace librapid {
 			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
 			using Scalar							 = mpz;
 			using Packet							 = std::false_type;
+			using Device							 = device::CPU;
 			static constexpr int64_t packetWidth	 = 1;
 			static constexpr char name[]			 = "mpz";
 			static constexpr bool supportsArithmetic = true;
@@ -532,6 +533,7 @@ namespace librapid {
 			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
 			using Scalar							 = mpq;
 			using Packet							 = std::false_type;
+			using Device							 = device::CPU;
 			static constexpr int64_t packetWidth	 = 1;
 			static constexpr char name[]			 = "mpq";
 			static constexpr bool supportsArithmetic = true;
@@ -560,6 +562,7 @@ namespace librapid {
 			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
 			using Scalar							 = mpf;
 			using Packet							 = std::false_type;
+			using Device							 = device::CPU;
 			static constexpr int64_t packetWidth	 = 1;
 			static constexpr char name[]			 = "mpf";
 			static constexpr bool supportsArithmetic = true;
@@ -588,6 +591,7 @@ namespace librapid {
 			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
 			using Scalar							 = mpfr;
 			using Packet							 = std::false_type;
+			using Device							 = device::CPU;
 			static constexpr int64_t packetWidth	 = 1;
 			static constexpr char name[]			 = "mpfr";
 			static constexpr bool supportsArithmetic = true;

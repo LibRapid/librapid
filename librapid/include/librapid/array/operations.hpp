@@ -34,6 +34,43 @@
 		}                                                                                          \
 	}
 
+#define LIBRAPID_BINARY_KERNEL_GETTER                                                              \
+	template<typename T1, typename T2>                                                             \
+	static constexpr const char *getKernelNameImpl(std::tuple<T1, T2> args) {                      \
+		if constexpr (TypeInfo<std::decay_t<T1>>::type != detail::LibRapidType::Scalar &&          \
+					  TypeInfo<std::decay_t<T2>>::type != detail::LibRapidType::Scalar) {          \
+			return kernelName;                                                                     \
+		} else if constexpr (TypeInfo<std::decay_t<T1>>::type == detail::LibRapidType::Scalar) {   \
+			return kernelNameScalarLhs;                                                            \
+		} else if constexpr (TypeInfo<std::decay_t<T2>>::type == detail::LibRapidType::Scalar) {   \
+			return kernelNameScalarRhs;                                                            \
+		} else {                                                                                   \
+			return kernelName;                                                                     \
+		}                                                                                          \
+	}                                                                                              \
+                                                                                                   \
+	template<typename... Args>                                                                     \
+	static constexpr const char *getKernelName(std::tuple<Args...> args) {                         \
+		static_assert(sizeof...(Args) == 2, "Invalid number of arguments for addition");           \
+		return getKernelNameImpl(args);                                                            \
+	}
+
+#define LIBRAPID_BINARY_SHAPE_EXTRACTOR                                                            \
+	template<typename First, typename... Rest>                                                     \
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool getShape(                                       \
+	  const std::tuple<First, Rest...> &tup) {                                                     \
+		if constexpr (TypeInfo<T1>::type != detail::LibRapidType::Scalar &&                        \
+					  TypeInfo<T2>::type != detail::LibRapidType::Scalar) {                        \
+			LIBRAPID_ASSERT(input1.shape() == input2.shape(),                                      \
+							"Shapes must match for binary operations");                            \
+			return input1.shape();                                                                 \
+		} else if constexpr (TypeInfo<T1>::type == detail::LibRapidType::Scalar) {                 \
+			return input2.shape();                                                                 \
+		} else {                                                                                   \
+			return input1.shape();                                                                 \
+		}                                                                                          \
+	}
+
 namespace librapid {
 	namespace detail {
 		/// Construct a new function object with the given functor type and arguments.
@@ -62,10 +99,10 @@ namespace librapid {
 	}																 // namespace detail
 
 	namespace typetraits {
-		/// Merge together two Descriptor types. Two trivial operations will result in another
-		/// trivial operation, while any other combination will result in a Combined operation.
-		/// \tparam Descriptor1 The first descriptor
-		/// \tparam Descriptor2 The second descriptor
+		/// Merge together two Descriptor types. Two trivial operations will result in
+		/// another trivial operation, while any other combination will result in a Combined
+		/// operation. \tparam Descriptor1 The first descriptor \tparam Descriptor2 The
+		/// second descriptor
 		template<typename Descriptor1, typename Descriptor2>
 		struct DescriptorMerger {
 			using Type = ::librapid::detail::descriptor::Combined;
@@ -83,9 +120,8 @@ namespace librapid {
 			using Type = ::librapid::detail::descriptor::Trivial;
 		};
 
-		/// Extracts the Descriptor type of an ArrayContainer object. In this case, the Descriptor
-		/// is Trivial
-		/// \tparam ShapeType The shape type of the ArrayContainer
+		/// Extracts the Descriptor type of an ArrayContainer object. In this case, the
+		/// Descriptor is Trivial \tparam ShapeType The shape type of the ArrayContainer
 		/// \tparam StorageType The storage type of the ArrayContainer
 		template<typename ShapeType, typename StorageType>
 		struct DescriptorExtractor<array::ArrayContainer<ShapeType, StorageType>> {
@@ -115,9 +151,8 @@ namespace librapid {
 		struct DescriptorType;
 
 		namespace impl {
-			/// A `constexpr` function which supports the DescriptorType for multi-type inputs
-			/// \tparam Rest
-			/// \return
+			/// A `constexpr` function which supports the DescriptorType for multi-type
+			/// inputs \tparam Rest \return
 			template<typename... Rest>
 			constexpr auto descriptorExtractor() {
 				if constexpr (sizeof...(Rest) > 0) {
@@ -130,10 +165,10 @@ namespace librapid {
 			}
 		} // namespace impl
 
-		/// Allows a number of Descriptor types to be merged together into a single Descriptor type.
-		/// The Descriptors used are extracted from the ***typenames*** of the provided types.
-		/// \tparam First The first type to merge
-		/// \tparam Rest The remaining types
+		/// Allows a number of Descriptor types to be merged together into a single
+		/// Descriptor type. The Descriptors used are extracted from the ***typenames*** of
+		/// the provided types. \tparam First The first type to merge \tparam Rest The
+		/// remaining types
 		template<typename First, typename... Rest>
 		struct DescriptorType {
 			using FirstType		  = std::decay_t<First>;
@@ -156,100 +191,115 @@ namespace librapid {
 			static constexpr const char *kernelName			 = "addArrays";
 			static constexpr const char *kernelNameScalarRhs = "addArraysScalarRhs";
 			static constexpr const char *kernelNameScalarLhs = "addArraysScalarLhs";
-
-			template<typename... Args>
-			static constexpr const char *getKernelName(std::tuple<Args...> args) {
-				static_assert(sizeof...(Args) == 2, "Invalid number of arguments for addition");
-				return getKernelNameImpl(args);
-			}
-
-		private:
-			template<typename T1, typename T2>
-			static constexpr const char *getKernelNameImpl(std::tuple<T1, T2> args) {
-				if constexpr (TypeInfo<std::decay_t<T1>>::type != detail::LibRapidType::Scalar &&
-							  TypeInfo<std::decay_t<T2>>::type != detail::LibRapidType::Scalar) {
-					return kernelName;
-				} else if constexpr (TypeInfo<std::decay_t<T1>>::type ==
-									 detail::LibRapidType::Scalar) {
-					return kernelNameScalarLhs;
-				} else if constexpr (TypeInfo<std::decay_t<T2>>::type ==
-									 detail::LibRapidType::Scalar) {
-					return kernelNameScalarRhs;
-				} else {
-					LIBRAPID_ASSERT(false, "Invalid type combination");
-				}
-			}
+			LIBRAPID_BINARY_KERNEL_GETTER
+			LIBRAPID_BINARY_SHAPE_EXTRACTOR
 		};
 
 		template<>
 		struct TypeInfo<::librapid::detail::Minus> {
-			static constexpr const char *name		= "minus";
-			static constexpr const char *filename	= "arithmetic";
-			static constexpr const char *kernelName = "subArrays";
+			static constexpr const char *name				 = "minus";
+			static constexpr const char *filename			 = "arithmetic";
+			static constexpr const char *kernelName			 = "subArrays";
+			static constexpr const char *kernelNameScalarRhs = "subArraysScalarRhs";
+			static constexpr const char *kernelNameScalarLhs = "subArraysScalarLhs";
+			LIBRAPID_BINARY_KERNEL_GETTER
+			LIBRAPID_BINARY_SHAPE_EXTRACTOR
 		};
 
 		template<>
 		struct TypeInfo<::librapid::detail::Multiply> {
-			static constexpr const char *name		= "multiply";
-			static constexpr const char *filename	= "arithmetic";
-			static constexpr const char *kernelName = "mulArrays";
+			static constexpr const char *name				 = "multiply";
+			static constexpr const char *filename			 = "arithmetic";
+			static constexpr const char *kernelName			 = "mulArrays";
+			static constexpr const char *kernelNameScalarRhs = "mulArraysScalarRhs";
+			static constexpr const char *kernelNameScalarLhs = "mulArraysScalarLhs";
+			LIBRAPID_BINARY_KERNEL_GETTER
+			LIBRAPID_BINARY_SHAPE_EXTRACTOR
 		};
 
 		template<>
 		struct TypeInfo<::librapid::detail::Divide> {
-			static constexpr const char *name		= "divide";
-			static constexpr const char *filename	= "arithmetic";
-			static constexpr const char *kernelName = "divArrays";
+			static constexpr const char *name				 = "divide";
+			static constexpr const char *filename			 = "arithmetic";
+			static constexpr const char *kernelName			 = "divArrays";
+			static constexpr const char *kernelNameScalarRhs = "divArraysScalarRhs";
+			static constexpr const char *kernelNameScalarLhs = "divArraysScalarLhs";
+			LIBRAPID_BINARY_KERNEL_GETTER
+			LIBRAPID_BINARY_SHAPE_EXTRACTOR
 		};
 
 		template<>
 		struct TypeInfo<::librapid::detail::LessThan> {
-			static constexpr const char *name		= "less than";
-			static constexpr const char *filename	= "arithmetic";
-			static constexpr const char *kernelName = "lessThanArrays";
+			static constexpr const char *name				 = "less than";
+			static constexpr const char *filename			 = "arithmetic";
+			static constexpr const char *kernelName			 = "lessThanArrays";
+			static constexpr const char *kernelNameScalarRhs = "lessThanArraysScalarRhs";
+			static constexpr const char *kernelNameScalarLhs = "lessThanArraysScalarLhs";
+			LIBRAPID_BINARY_KERNEL_GETTER
+			LIBRAPID_BINARY_SHAPE_EXTRACTOR
 		};
 
 		template<>
 		struct TypeInfo<::librapid::detail::GreaterThan> {
-			static constexpr const char *name		= "greater than";
-			static constexpr const char *filename	= "arithmetic";
-			static constexpr const char *kernelName = "greaterThanArrays";
+			static constexpr const char *name				 = "greater than";
+			static constexpr const char *filename			 = "arithmetic";
+			static constexpr const char *kernelName			 = "greaterThanArrays";
+			static constexpr const char *kernelNameScalarRhs = "greaterThanArraysScalarRhs";
+			static constexpr const char *kernelNameScalarLhs = "greaterThanArraysScalarLhs";
+			LIBRAPID_BINARY_KERNEL_GETTER
+			LIBRAPID_BINARY_SHAPE_EXTRACTOR
 		};
 
 		template<>
 		struct TypeInfo<::librapid::detail::LessThanEqual> {
-			static constexpr const char *name		= "less than or equal";
-			static constexpr const char *filename	= "arithmetic";
-			static constexpr const char *kernelName = "lessThanEqualArrays";
+			static constexpr const char *name				 = "less than or equal";
+			static constexpr const char *filename			 = "arithmetic";
+			static constexpr const char *kernelName			 = "lessThanEqualArrays";
+			static constexpr const char *kernelNameScalarRhs = "lessThanEqualArraysScalarRhs";
+			static constexpr const char *kernelNameScalarLhs = "lessThanEqualArraysScalarLhs";
+			LIBRAPID_BINARY_KERNEL_GETTER
+			LIBRAPID_BINARY_SHAPE_EXTRACTOR
 		};
 
 		template<>
 		struct TypeInfo<::librapid::detail::GreaterThanEqual> {
-			static constexpr const char *name		= "greater than or equal";
-			static constexpr const char *filename	= "arithmetic";
-			static constexpr const char *kernelName = "greaterThanEqualArrays";
+			static constexpr const char *name				 = "greater than or equal";
+			static constexpr const char *filename			 = "arithmetic";
+			static constexpr const char *kernelName			 = "greaterThanEqualArrays";
+			static constexpr const char *kernelNameScalarRhs = "greaterThanEqualArraysScalarRhs";
+			static constexpr const char *kernelNameScalarLhs = "greaterThanEqualArraysScalarLhs";
+			LIBRAPID_BINARY_KERNEL_GETTER
+			LIBRAPID_BINARY_SHAPE_EXTRACTOR
 		};
 
 		template<>
 		struct TypeInfo<::librapid::detail::ElementWiseEqual> {
-			static constexpr const char *name		= "element wise equal";
-			static constexpr const char *filename	= "arithmetic";
-			static constexpr const char *kernelName = "elementWiseEqualArrays";
+			static constexpr const char *name				 = "element wise equal";
+			static constexpr const char *filename			 = "arithmetic";
+			static constexpr const char *kernelName			 = "elementWiseEqualArrays";
+			static constexpr const char *kernelNameScalarRhs = "elementWiseEqualArraysScalarRhs";
+			static constexpr const char *kernelNameScalarLhs = "elementWiseEqualArraysScalarLhs";
+			LIBRAPID_BINARY_KERNEL_GETTER
+			LIBRAPID_BINARY_SHAPE_EXTRACTOR
 		};
 
 		template<>
 		struct TypeInfo<::librapid::detail::ElementWiseNotEqual> {
-			static constexpr const char *name		= "element wise not equal";
-			static constexpr const char *filename	= "arithmetic";
-			static constexpr const char *kernelName = "elementWiseNotEqualArrays";
+			static constexpr const char *name				 = "element wise not equal";
+			static constexpr const char *filename			 = "arithmetic";
+			static constexpr const char *kernelName			 = "elementWiseNotEqualArrays";
+			static constexpr const char *kernelNameScalarRhs = "elementWiseNotEqualArraysScalarRhs";
+			static constexpr const char *kernelNameScalarLhs = "elementWiseNotEqualArraysScalarLhs";
+			LIBRAPID_BINARY_KERNEL_GETTER
+			LIBRAPID_BINARY_SHAPE_EXTRACTOR
 		};
 	} // namespace typetraits
 
 	namespace array {
 		/// \brief Element-wise array addition
 		///
-		/// Performs element-wise addition on two arrays. They must both be the same size and of
-		/// the same data type.
+		/// Performs element-wise addition on two arrays. They must both be the same size
+		/// and of the same data type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
@@ -257,8 +307,10 @@ namespace librapid {
 		/// \param rhs The second array
 		/// \return The element-wise sum of the two arrays
 		template<class LHS, class RHS,
-				 typename std::enable_if_t<typetraits::TypeInfo<std::decay_t<RHS>>::type !=
-											 ::librapid::detail::LibRapidType::Scalar,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type !=
+											::librapid::detail::LibRapidType::Scalar) &&
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type !=
+											  ::librapid::detail::LibRapidType::Scalar),
 										   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		operator+(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
@@ -273,8 +325,10 @@ namespace librapid {
 		}
 
 		template<class LHS, class RHS,
-				 typename std::enable_if_t<typetraits::TypeInfo<std::decay_t<RHS>>::type ==
-											 ::librapid::detail::LibRapidType::Scalar,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
+											::librapid::detail::LibRapidType::Scalar) ^
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
+											  ::librapid::detail::LibRapidType::Scalar),
 										   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		operator+(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
@@ -285,15 +339,20 @@ namespace librapid {
 
 		/// \brief Element-wise array subtraction
 		///
-		/// Performs element-wise subtraction on two arrays. They must both be the same size and
-		/// of the same data type.
+		/// Performs element-wise subtraction on two arrays. They must both be the same size
+		/// and of the same data type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise difference of the two arrays
-		template<class LHS, class RHS>
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type !=
+											::librapid::detail::LibRapidType::Scalar) &&
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type !=
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		operator-(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
 		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus, LHS, RHS> {
@@ -306,17 +365,35 @@ namespace librapid {
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
 
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
+											::librapid::detail::LibRapidType::Scalar) ^
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		operator-(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
+		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus, LHS, RHS> {
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus>(
+			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
+		}
+
 		/// \brief Element-wise array multiplication
 		///
-		/// Performs element-wise multiplication on two arrays. They must both be the same size
-		/// and of the same data type.
+		/// Performs element-wise multiplication on two arrays. They must both be the same
+		/// size and of the same data type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise product of the two arrays
-		template<class LHS, class RHS>
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type !=
+											::librapid::detail::LibRapidType::Scalar) &&
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type !=
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		operator*(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
 		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply, LHS, RHS> {
@@ -329,17 +406,35 @@ namespace librapid {
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
 
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
+											::librapid::detail::LibRapidType::Scalar) ^
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		operator*(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
+		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply, LHS, RHS> {
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply>(
+			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
+		}
+
 		/// \brief Element-wise array division
 		///
-		/// Performs element-wise division on two arrays. They must both be the same size and of
-		/// the same data type.
+		/// Performs element-wise division on two arrays. They must both be the same size
+		/// and of the same data type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise division of the two arrays
-		template<class LHS, class RHS>
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type !=
+											::librapid::detail::LibRapidType::Scalar) &&
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type !=
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		operator/(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
 		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide, LHS, RHS> {
@@ -352,18 +447,37 @@ namespace librapid {
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
 
-		/// \brief Element-wise array comparison, checking whether a < b for all a, b in input
-		/// arrays
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
+											::librapid::detail::LibRapidType::Scalar) ^
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		operator/(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
+		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide, LHS, RHS> {
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide>(
+			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
+		}
+
+		/// \brief Element-wise array comparison, checking whether a < b for all a, b in
+		/// input arrays
 		///
-		/// Performs an element-wise comparison on two arrays, checking if the first value is
-		/// less than the second. They must both be the same size and of the same data type.
+		/// Performs an element-wise comparison on two arrays, checking if the first value
+		/// is less than the second. They must both be the same size and of the same data
+		/// type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS>
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type !=
+											::librapid::detail::LibRapidType::Scalar) &&
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type !=
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		operator<(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
 		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan, LHS, RHS> {
@@ -376,18 +490,37 @@ namespace librapid {
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
 
-		/// \brief Element-wise array comparison, checking whether a > b for all a, b in input
-		/// arrays
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
+											::librapid::detail::LibRapidType::Scalar) ^
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		operator<(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
+		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan, LHS, RHS> {
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan>(
+			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
+		}
+
+		/// \brief Element-wise array comparison, checking whether a > b for all a, b in
+		/// input arrays
 		///
-		/// Performs an element-wise comparison on two arrays, checking if the first value is
-		/// greater than the second. They must both be the same size and of the same data type.
+		/// Performs an element-wise comparison on two arrays, checking if the first value
+		/// is greater than the second. They must both be the same size and of the same data
+		/// type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS>
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type !=
+											::librapid::detail::LibRapidType::Scalar) &&
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type !=
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::GreaterThan, LHS, RHS> {
@@ -401,19 +534,38 @@ namespace librapid {
 															 std::forward<RHS>(rhs));
 		}
 
-		/// \brief Element-wise array comparison, checking whether a <= b for all a, b in input
-		/// arrays
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
+											::librapid::detail::LibRapidType::Scalar) ^
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>(LHS &&lhs, RHS &&rhs)
+		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
+													  detail::GreaterThan, LHS, RHS> {
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
+										detail::GreaterThan>(std::forward<LHS>(lhs),
+															 std::forward<RHS>(rhs));
+		}
+
+		/// \brief Element-wise array comparison, checking whether a <= b for all a, b in
+		/// input arrays
 		///
-		/// Performs an element-wise comparison on two arrays, checking if the first value is
-		/// less than or equal to the second. They must both be the same size and of the same
-		/// data type.
+		/// Performs an element-wise comparison on two arrays, checking if the first value
+		/// is less than or equal to the second. They must both be the same size and of the
+		/// same data type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS>
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type !=
+											::librapid::detail::LibRapidType::Scalar) &&
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type !=
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<=(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::LessThanEqual, LHS, RHS> {
@@ -427,19 +579,38 @@ namespace librapid {
 															   std::forward<RHS>(rhs));
 		}
 
-		/// \brief Element-wise array comparison, checking whether a >= b for all a, b in input
-		/// arrays
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
+											::librapid::detail::LibRapidType::Scalar) ^
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<=(LHS &&lhs, RHS &&rhs)
+		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
+													  detail::LessThanEqual, LHS, RHS> {
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
+										detail::LessThanEqual>(std::forward<LHS>(lhs),
+															   std::forward<RHS>(rhs));
+		}
+
+		/// \brief Element-wise array comparison, checking whether a >= b for all a, b in
+		/// input arrays
 		///
-		/// Performs an element-wise comparison on two arrays, checking if the first value is
-		/// greater than or equal to the second. They must both be the same size and of the same
-		/// data type.
+		/// Performs an element-wise comparison on two arrays, checking if the first value
+		/// is greater than or equal to the second. They must both be the same size and of
+		/// the same data type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS>
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type !=
+											::librapid::detail::LibRapidType::Scalar) &&
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type !=
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>=(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::GreaterThanEqual, LHS, RHS> {
@@ -453,18 +624,38 @@ namespace librapid {
 																  std::forward<RHS>(rhs));
 		}
 
-		/// \brief Element-wise array comparison, checking whether a == b for all a, b in input
-		/// arrays
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
+											::librapid::detail::LibRapidType::Scalar) ^
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>=(LHS &&lhs, RHS &&rhs)
+		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
+													  detail::GreaterThanEqual, LHS, RHS> {
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
+										detail::GreaterThanEqual>(std::forward<LHS>(lhs),
+																  std::forward<RHS>(rhs));
+		}
+
+		/// \brief Element-wise array comparison, checking whether a == b for all a, b in
+		/// input arrays
 		///
-		/// Performs an element-wise comparison on two arrays, checking if the first value is
-		/// equal to the second. They must both be the same size and of the same data type.
+		/// Performs an element-wise comparison on two arrays, checking if the first value
+		/// is equal to the second. They must both be the same size and of the same data
+		/// type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS>
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type !=
+											::librapid::detail::LibRapidType::Scalar) &&
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type !=
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::ElementWiseEqual, LHS, RHS> {
@@ -478,18 +669,38 @@ namespace librapid {
 																  std::forward<RHS>(rhs));
 		}
 
-		/// \brief Element-wise array comparison, checking whether a != b for all a, b in input
-		/// arrays
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
+											::librapid::detail::LibRapidType::Scalar) ^
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
+		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
+													  detail::ElementWiseEqual, LHS, RHS> {
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
+										detail::ElementWiseEqual>(std::forward<LHS>(lhs),
+																  std::forward<RHS>(rhs));
+		}
+
+		/// \brief Element-wise array comparison, checking whether a != b for all a, b in
+		/// input arrays
 		///
-		/// Performs an element-wise comparison on two arrays, checking if the first value is
-		/// not equal to the second. They must both be the same size and of the same data type.
+		/// Performs an element-wise comparison on two arrays, checking if the first value
+		/// is not equal to the second. They must both be the same size and of the same data
+		/// type.
 		///
 		/// \tparam LHS Type of the LHS element
 		/// \tparam RHS Type of the RHS element
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS>
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type !=
+											::librapid::detail::LibRapidType::Scalar) &&
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type !=
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::ElementWiseNotEqual, LHS, RHS> {
@@ -498,6 +709,20 @@ namespace librapid {
 								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
 			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
+										detail::ElementWiseNotEqual>(std::forward<LHS>(lhs),
+																	 std::forward<RHS>(rhs));
+		}
+
+		template<class LHS, class RHS,
+				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
+											::librapid::detail::LibRapidType::Scalar) ^
+											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
+											  ::librapid::detail::LibRapidType::Scalar),
+										   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(LHS &&lhs, RHS &&rhs)
+		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
+													  detail::ElementWiseNotEqual, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::ElementWiseNotEqual>(std::forward<LHS>(lhs),
 																	 std::forward<RHS>(rhs));
