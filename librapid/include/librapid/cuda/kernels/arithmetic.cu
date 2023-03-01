@@ -1,3 +1,6 @@
+// Note: errors in this file will appear on the wrong line, since we copy another header file
+//       in to provide some utility functions (the include paths in Jitify are somewhat unreliable)
+
 template<typename Destination, typename LHS, typename RHS>
 __global__ void addArrays(size_t elements, Destination *dst, LHS *lhs, RHS *rhs) {
 	const size_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
@@ -13,7 +16,7 @@ __global__ void addArraysScalarRhs(size_t elements, Destination *dst, LHS *lhs, 
 template<typename Destination, typename LHS, typename RHS>
 __global__ void addArraysScalarLhs(size_t elements, Destination *dst, LHS lhs, RHS *rhs) {
 	const size_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
-	if (kernelIndex < elements) { dst[kernelIndex] = lhs rhs[kernelIndex]; }
+	if (kernelIndex < elements) { dst[kernelIndex] = lhs + rhs[kernelIndex]; }
 }
 
 template<typename Destination, typename LHS, typename RHS>
@@ -65,7 +68,7 @@ __global__ void divArraysScalarLhs(size_t elements, Destination *dst, LHS lhs, R
 }
 
 template<typename Destination, typename LHS, typename RHS>
-__global__ void divArrays(size_t elements, Destination *dst, LHS *lhs, RHS rhs) {
+__global__ void divArraysScalarRhs(size_t elements, Destination *dst, LHS *lhs, RHS rhs) {
 	const size_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
 	if (kernelIndex < elements) { dst[kernelIndex] = lhs[kernelIndex] / rhs; }
 }
@@ -95,7 +98,7 @@ __global__ void greaterThanArrays(size_t elements, Destination *dst, LHS *lhs, R
 }
 
 template<typename Destination, typename LHS, typename RHS>
-__global__ void greaterThanArraysScalarLhs(size_t elements, Destination *dst, LHS *hs, RHS *rhs) {
+__global__ void greaterThanArraysScalarLhs(size_t elements, Destination *dst, LHS lhs, RHS *rhs) {
 	const size_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
 	if (kernelIndex < elements) { dst[kernelIndex] = lhs > rhs[kernelIndex]; }
 }
@@ -113,15 +116,15 @@ __global__ void lessThanEqualArrays(size_t elements, Destination *dst, LHS *lhs,
 }
 
 template<typename Destination, typename LHS, typename RHS>
-__global__ void lessThanEqualArraysScalarRhs(size_t elements, Destination *dst, LHS lhs, RHS *rhs) {
+__global__ void lessThanEqualArraysScalarRhs(size_t elements, Destination *dst, LHS *lhs, RHS rhs) {
 	const size_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
-	if (kernelIndex < elements) { dst[kernelIndex] = lhs <= rhs[kernelIndex]; }
+	if (kernelIndex < elements) { dst[kernelIndex] = lhs[kernelIndex] <= rhs; }
 }
 
 template<typename Destination, typename LHS, typename RHS>
-__global__ void lessThanEqualArraysScalarLhs(size_t elements, Destination *dst, LHS *lhs, RHS rhs) {
+__global__ void lessThanEqualArraysScalarLhs(size_t elements, Destination *dst, LHS lhs, RHS *rhs) {
 	const size_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
-	if (kernelIndex < elements) { dst[kernelIndex] = lhs[kernelIndex] <= rhs; }
+	if (kernelIndex < elements) { dst[kernelIndex] = lhs <= rhs[kernelIndex]; }
 }
 
 template<typename Destination, typename LHS, typename RHS>

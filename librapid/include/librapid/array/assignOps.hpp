@@ -278,7 +278,7 @@ namespace librapid::detail {
 			  function.shape().size(),
 			  dst,
 			  // cudaTupleEvaluatorImpl(std::get<I>(function.args())).storage().begin()...);
-			  cudaTupleEvaluatorImpl(dataSourceExtractor(std::get<I>(function.args())))...);
+			  dataSourceExtractor(cudaTupleEvaluatorImpl(std::get<I>(function.args())))...);
 		}
 	} // namespace impl
 

@@ -51,24 +51,32 @@
                                                                                                    \
 	template<typename... Args>                                                                     \
 	static constexpr const char *getKernelName(std::tuple<Args...> args) {                         \
-		static_assert(sizeof...(Args) == 2, "Invalid number of arguments for addition");           \
+		static_assert(sizeof...(Args) == 2, "Invalid number of arguments for binary operation");   \
 		return getKernelNameImpl(args);                                                            \
 	}
 
 #define LIBRAPID_BINARY_SHAPE_EXTRACTOR                                                            \
-	template<typename First, typename... Rest>                                                     \
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool getShape(                                       \
-	  const std::tuple<First, Rest...> &tup) {                                                     \
-		if constexpr (TypeInfo<T1>::type != detail::LibRapidType::Scalar &&                        \
-					  TypeInfo<T2>::type != detail::LibRapidType::Scalar) {                        \
-			LIBRAPID_ASSERT(input1.shape() == input2.shape(),                                      \
+	template<typename First, typename Second>                                                      \
+	LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto getShapeImpl(                            \
+	  const std::tuple<First, Second> &tup) {                                                      \
+		if constexpr (TypeInfo<std::decay_t<First>>::type != detail::LibRapidType::Scalar &&       \
+					  TypeInfo<std::decay_t<Second>>::type != detail::LibRapidType::Scalar) {      \
+			LIBRAPID_ASSERT(std::get<0>(tup).shape() == std::get<1>(tup).shape(),                  \
 							"Shapes must match for binary operations");                            \
-			return input1.shape();                                                                 \
-		} else if constexpr (TypeInfo<T1>::type == detail::LibRapidType::Scalar) {                 \
-			return input2.shape();                                                                 \
+			return std::get<0>(tup).shape();                                                       \
+		} else if constexpr (TypeInfo<std::decay_t<First>>::type ==                                \
+							 detail::LibRapidType::Scalar) {                                       \
+			return std::get<1>(tup).shape();                                                       \
 		} else {                                                                                   \
-			return input1.shape();                                                                 \
+			return std::get<0>(tup).shape();                                                       \
 		}                                                                                          \
+	}                                                                                              \
+                                                                                                   \
+	template<typename... Args>                                                                     \
+	LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto getShape(                                \
+	  const std::tuple<Args...> &args) {                                                           \
+		static_assert(sizeof...(Args) == 2, "Invalid number of arguments for binary operation");   \
+		return getShapeImpl(args);                                                                 \
 	}
 
 namespace librapid {
@@ -315,10 +323,6 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		operator+(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
 		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus, LHS, RHS> {
-			static_assert(
-			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
-								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
-			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
@@ -356,10 +360,6 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		operator-(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
 		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus, LHS, RHS> {
-			static_assert(
-			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
-								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
-			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
@@ -397,10 +397,6 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		operator*(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
 		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply, LHS, RHS> {
-			static_assert(
-			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
-								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
-			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
@@ -438,10 +434,6 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		operator/(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
 		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide, LHS, RHS> {
-			static_assert(
-			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
-								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
-			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
@@ -481,10 +473,6 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		operator<(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
 		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan, LHS, RHS> {
-			static_assert(
-			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
-								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
-			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
@@ -524,10 +512,6 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::GreaterThan, LHS, RHS> {
-			static_assert(
-			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
-								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
-			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::GreaterThan>(std::forward<LHS>(lhs),
@@ -569,11 +553,6 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<=(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::LessThanEqual, LHS, RHS> {
-			static_assert(
-			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
-								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
-			  "Operands must have the same data type");
-			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::LessThanEqual>(std::forward<LHS>(lhs),
 															   std::forward<RHS>(rhs));
@@ -614,10 +593,6 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>=(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::GreaterThanEqual, LHS, RHS> {
-			static_assert(
-			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
-								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
-			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::GreaterThanEqual>(std::forward<LHS>(lhs),
@@ -659,10 +634,6 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::ElementWiseEqual, LHS, RHS> {
-			static_assert(
-			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
-								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
-			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::ElementWiseEqual>(std::forward<LHS>(lhs),
@@ -704,10 +675,6 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::ElementWiseNotEqual, LHS, RHS> {
-			static_assert(
-			  typetraits::IsSame<typename typetraits::TypeInfo<std::decay_t<LHS>>::Scalar,
-								 typename typetraits::TypeInfo<std::decay_t<RHS>>::Scalar>,
-			  "Operands must have the same data type");
 			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::ElementWiseNotEqual>(std::forward<LHS>(lhs),
