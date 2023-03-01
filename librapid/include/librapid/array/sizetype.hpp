@@ -338,7 +338,7 @@ namespace librapid {
 		};
 
 		template<typename T, size_t N>
-		struct IsShapeType<Shape<T, N>> {
+		struct IsSizeType<Shape<T, N>> {
 			using value = std::true_type;
 		};
 	} // namespace typetraits
