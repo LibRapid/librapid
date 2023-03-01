@@ -28,7 +28,7 @@ See all available CMake options to make the most of LibRapid's features.
 :link: apiReference
 :link-type: doc
 
-View LibRapid's API and its documentation.
+View LibRapid's API and documentation.
 :::
 
 :::{grid-item-card} {octicon}`mortar-board` Tutorials
@@ -59,7 +59,7 @@ View LibRapid's benchmark results.
 Getting Started <gettingStarted>
 CMake Integration <cmakeIntegration>
 Tutorials <tutorials>
-Feature List <featureList>
+API Reference <apiReference>
 Caution <caution>
 ```
 

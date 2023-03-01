@@ -154,7 +154,8 @@ namespace lrc = librapid;
 	}
 
 #define TEST_ARITHMETIC(SCALAR, DEVICE)                                                            \
-	SECTION(fmt::format("Test Operations [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {      \
+	SECTION(                                                                                       \
+	  fmt::format("Test Array Operations [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {      \
 		lrc::Array<SCALAR, DEVICE>::ShapeType shape({37, 41});                                     \
 		lrc::Array<SCALAR, DEVICE> testA(shape); /* Prime-dimensioned to force wrapping */         \
 		lrc::Array<SCALAR, DEVICE> testB(shape);                                                   \
@@ -212,8 +213,121 @@ namespace lrc = librapid;
 	do {                                                                                           \
 	} while (false)
 
+#define TEST_ARITHMETIC_ARRAY_SCALAR(SCALAR, DEVICE)                                               \
+	SECTION(fmt::format(                                                                           \
+	  "Test Array-Scalar Operations [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {           \
+		lrc::Array<SCALAR, DEVICE>::ShapeType shape({37, 41});                                     \
+		lrc::Array<SCALAR, DEVICE> testA(shape); /* Prime-dimensioned to force wrapping */         \
+                                                                                                   \
+		for (int64_t i = 0; i < shape[0]; ++i) {                                                   \
+			for (int64_t j = 0; j < shape[1]; ++j) {                                               \
+				SCALAR a	= j + i * shape[1] + SCALAR(1);                                        \
+				testA[i][j] = a;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+                                                                                                   \
+		auto sumResult = (testA + SCALAR(1)).eval();                                               \
+		bool sumValid  = true;                                                                     \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(sumResult.scalar(i) == testA.scalar(i) + SCALAR(1))) {                           \
+				REQUIRE(sumResult.scalar(i) == testA.scalar(i) + SCALAR(1));                       \
+				sumValid = false;                                                                  \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(sumValid);                                                                         \
+                                                                                                   \
+		auto diffResult = (testA - SCALAR(1)).eval();                                              \
+		bool diffValid	= true;                                                                    \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(diffResult.scalar(i) == testA.scalar(i) - SCALAR(1))) {                          \
+				REQUIRE(diffResult.scalar(i) == testA.scalar(i) - SCALAR(1));                      \
+				diffValid = false;                                                                 \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(diffValid);                                                                        \
+                                                                                                   \
+		auto prodResult = (testA * SCALAR(2)).eval();                                              \
+		bool prodValid	= true;                                                                    \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(prodResult.scalar(i) == testA.scalar(i) * SCALAR(2))) {                          \
+				REQUIRE(prodResult.scalar(i) == testA.scalar(i) * SCALAR(2));                      \
+				prodValid = false;                                                                 \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(prodValid);                                                                        \
+                                                                                                   \
+		auto divResult = (testA / SCALAR(2)).eval();                                               \
+		bool divValid  = true;                                                                     \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(divResult.scalar(i) == testA.scalar(i) / SCALAR(2))) {                           \
+				REQUIRE(divResult.scalar(i) == testA.scalar(i) / SCALAR(2));                       \
+				divValid = false;                                                                  \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(diffValid);                                                                        \
+	}                                                                                              \
+	do {                                                                                           \
+	} while (false)
+
+#define TEST_ARITHMETIC_SCALAR_ARRAY(SCALAR, DEVICE)                                               \
+	SECTION(fmt::format(                                                                           \
+	  "Test Scalar-Array Operations [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {           \
+		lrc::Array<SCALAR, DEVICE>::ShapeType shape({37, 41});                                     \
+		lrc::Array<SCALAR, DEVICE> testB(shape);                                                   \
+                                                                                                   \
+		for (int64_t i = 0; i < shape[0]; ++i) {                                                   \
+			for (int64_t j = 0; j < shape[1]; ++j) {                                               \
+				SCALAR b	= i + j * shape[0] + 1;                                                \
+				testB[i][j] = b != 0 ? b : 1;                                                      \
+			}                                                                                      \
+		}                                                                                          \
+                                                                                                   \
+		auto sumResult = (SCALAR(1) + testB).eval();                                               \
+		bool sumValid  = true;                                                                     \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(sumResult.scalar(i) == SCALAR(1) + testB.scalar(i))) {                           \
+				REQUIRE(sumResult.scalar(i) == SCALAR(1) + testB.scalar(i));                       \
+				sumValid = false;                                                                  \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(sumValid);                                                                         \
+                                                                                                   \
+		auto diffResult = (1 - testB).eval();                                                      \
+		bool diffValid	= true;                                                                    \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(diffResult.scalar(i) == SCALAR(1) - testB.scalar(i))) {                          \
+				REQUIRE(diffResult.scalar(i) == SCALAR(1) - testB.scalar(i));                      \
+				diffValid = false;                                                                 \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(diffValid);                                                                        \
+                                                                                                   \
+		auto prodResult = (SCALAR(2) * testB).eval();                                              \
+		bool prodValid	= true;                                                                    \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(prodResult.scalar(i) == SCALAR(2) * testB.scalar(i))) {                          \
+				REQUIRE(prodResult.scalar(i) == SCALAR(2) * testB.scalar(i));                      \
+				prodValid = false;                                                                 \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(prodValid);                                                                        \
+                                                                                                   \
+		auto divResult = (SCALAR(2) / testB).eval();                                               \
+		bool divValid  = true;                                                                     \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(divResult.scalar(i) == SCALAR(2) / testB.scalar(i))) {                           \
+				REQUIRE(divResult.scalar(i) == SCALAR(2) / testB.scalar(i));                       \
+				divValid = false;                                                                  \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(diffValid);                                                                        \
+	}                                                                                              \
+	do {                                                                                           \
+	} while (false)
+
 #define TEST_COMPARISONS(SCALAR, DEVICE)                                                           \
-	SECTION(fmt::format("Test Operations [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {      \
+	SECTION(                                                                                       \
+	  fmt::format("Test Array Comparisons [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {     \
 		lrc::Array<SCALAR, DEVICE>::ShapeType shape({53, 79});                                     \
 		lrc::Array<SCALAR, DEVICE> testA(shape); /* Prime-dimensioned to force wrapping */         \
 		lrc::Array<SCALAR, DEVICE> testB(shape);                                                   \
@@ -291,6 +405,169 @@ namespace lrc = librapid;
 	do {                                                                                           \
 	} while (false)
 
+#define TEST_COMPARISONS_ARRAY_SCALAR(SCALAR, DEVICE)                                              \
+	SECTION(fmt::format(                                                                           \
+	  "Test Array-Scalar Comparisons [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {          \
+		lrc::Array<SCALAR, DEVICE>::ShapeType shape({53, 79});                                     \
+		lrc::Array<SCALAR, DEVICE> testA(shape); /* Prime-dimensioned to force wrapping */         \
+                                                                                                   \
+		for (int64_t i = 0; i < shape[0]; ++i) {                                                   \
+			for (int64_t j = 0; j < shape[1]; ++j) {                                               \
+				SCALAR a	= j + i * shape[1] + 1;                                                \
+				testA[i][j] = a;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+                                                                                                   \
+		auto gtResult = (testA > SCALAR(64)).eval();                                               \
+		bool gtValid  = true;                                                                      \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(gtResult.scalar(i) == testA.scalar(i) > SCALAR(64))) {                           \
+				REQUIRE(gtResult.scalar(i) == testA.scalar(i) > SCALAR(64));                       \
+				gtValid = false;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(gtValid);                                                                          \
+                                                                                                   \
+		auto geResult = (testA >= SCALAR(64)).eval();                                              \
+		bool geValid  = true;                                                                      \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(geResult.scalar(i) == testA.scalar(i) >= SCALAR(64))) {                          \
+				REQUIRE(geResult.scalar(i) == testA.scalar(i) >= SCALAR(64));                      \
+				geValid = false;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(geValid);                                                                          \
+                                                                                                   \
+		auto ltResult = (testA < SCALAR(64)).eval();                                               \
+		bool ltValid  = true;                                                                      \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(ltResult.scalar(i) == testA.scalar(i) < SCALAR(64))) {                           \
+				REQUIRE(ltResult.scalar(i) == testA.scalar(i) < SCALAR(64));                       \
+				ltValid = false;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(ltValid);                                                                          \
+                                                                                                   \
+		auto leResult = (testA <= SCALAR(64)).eval();                                              \
+		bool leValid  = true;                                                                      \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(leResult.scalar(i) == testA.scalar(i) <= SCALAR(64))) {                          \
+				REQUIRE(leResult.scalar(i) == testA.scalar(i) <= SCALAR(64));                      \
+				leValid = false;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(leValid);                                                                          \
+                                                                                                   \
+		auto eqResult = (testA == SCALAR(64)).eval();                                              \
+		bool eqValid  = true;                                                                      \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(eqResult.scalar(i) == (testA.scalar(i) == SCALAR(64)))) {                        \
+				REQUIRE(eqResult.scalar(i) == (testA.scalar(i) == SCALAR(64)));                    \
+				eqValid = false;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(eqValid);                                                                          \
+                                                                                                   \
+		auto neResult = (testA != SCALAR(64)).eval();                                              \
+		bool neValid  = true;                                                                      \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(neResult.scalar(i) == (testA.scalar(i) != SCALAR(64)))) {                        \
+				REQUIRE(neResult.scalar(i) == (testA.scalar(i) != SCALAR(64)));                    \
+				neValid = false;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(neValid);                                                                          \
+	}                                                                                              \
+	do {                                                                                           \
+	} while (false)
+
+#define TEST_COMPARISONS_SCALAR_ARRAY(SCALAR, DEVICE)                                              \
+	SECTION(fmt::format(                                                                           \
+	  "Test Scalar-Array Comparisons [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {          \
+		lrc::Array<SCALAR, DEVICE>::ShapeType shape({53, 79});                                     \
+		lrc::Array<SCALAR, DEVICE> testA(shape); /* Prime-dimensioned to force wrapping */         \
+                                                                                                   \
+		for (int64_t i = 0; i < shape[0]; ++i) {                                                   \
+			for (int64_t j = 0; j < shape[1]; ++j) {                                               \
+				SCALAR a	= j + i * shape[1] + 1;                                                \
+				testA[i][j] = a;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+                                                                                                   \
+		auto gtResult = (SCALAR(64) > testA).eval();                                               \
+		bool gtValid  = true;                                                                      \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(gtResult.scalar(i) == SCALAR(64) > testA.scalar(i))) {                           \
+				REQUIRE(gtResult.scalar(i) == SCALAR(64) > testA.scalar(i));                       \
+				gtValid = false;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(gtValid);                                                                          \
+                                                                                                   \
+		auto geResult = (SCALAR(64) >= testA).eval();                                              \
+		bool geValid  = true;                                                                      \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(geResult.scalar(i) == SCALAR(64) >= testA.scalar(i))) {                          \
+				REQUIRE(geResult.scalar(i) == SCALAR(64) >= testA.scalar(i));                      \
+				geValid = false;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(geValid);                                                                          \
+                                                                                                   \
+		auto ltResult = (SCALAR(64) < testA).eval();                                               \
+		bool ltValid  = true;                                                                      \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(ltResult.scalar(i) == SCALAR(64) < testA.scalar(i))) {                           \
+				REQUIRE(ltResult.scalar(i) == SCALAR(64) < testA.scalar(i));                       \
+				ltValid = false;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(ltValid);                                                                          \
+                                                                                                   \
+		auto leResult = (SCALAR(64) <= testA).eval();                                              \
+		bool leValid  = true;                                                                      \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(leResult.scalar(i) == SCALAR(64) <= testA.scalar(i))) {                          \
+				REQUIRE(leResult.scalar(i) == SCALAR(64) <= testA.scalar(i));                      \
+				leValid = false;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(leValid);                                                                          \
+                                                                                                   \
+		auto eqResult = (SCALAR(64) == testA).eval();                                              \
+		bool eqValid  = true;                                                                      \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(eqResult.scalar(i) == (SCALAR(64) == testA.scalar(i)))) {                        \
+				REQUIRE(eqResult.scalar(i) == (SCALAR(64) == testA.scalar(i)));                    \
+				eqValid = false;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(eqValid);                                                                          \
+                                                                                                   \
+		auto neResult = (SCALAR(64) != testA).eval();                                              \
+		bool neValid  = true;                                                                      \
+		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
+			if (!(neResult.scalar(i) == (SCALAR(64) != testA.scalar(i)))) {                        \
+				REQUIRE(neResult.scalar(i) == (SCALAR(64) != testA.scalar(i)));                    \
+				neValid = false;                                                                   \
+			}                                                                                      \
+		}                                                                                          \
+		REQUIRE(neValid);                                                                          \
+	}                                                                                              \
+	do {                                                                                           \
+	} while (false)
+
+#define TEST_ALL(SCALAR, DEVICE)                                                                   \
+	TEST_CONSTRUCTORS(SCALAR, DEVICE);                                                             \
+	TEST_INDEXING(SCALAR, DEVICE);                                                                 \
+	TEST_STRING_FORMATTING(SCALAR, DEVICE);                                                        \
+	TEST_ARITHMETIC(SCALAR, DEVICE);                                                               \
+	TEST_ARITHMETIC_ARRAY_SCALAR(SCALAR, DEVICE);                                                  \
+	TEST_ARITHMETIC_SCALAR_ARRAY(SCALAR, DEVICE);                                                  \
+	TEST_COMPARISONS(SCALAR, DEVICE);                                                              \
+	TEST_COMPARISONS_ARRAY_SCALAR(SCALAR, DEVICE);                                                 \
+	TEST_COMPARISONS_SCALAR_ARRAY(SCALAR, DEVICE);
+
 TEST_CASE("Test Array -- int8_t CPU", "[array-lib]") {
 	TEST_CONSTRUCTORS(int8_t, lrc::device::CPU);
 	TEST_INDEXING(int8_t, lrc::device::CPU);
@@ -315,147 +592,44 @@ TEST_CASE("Test Array -- uint16_t CPU", "[array-lib]") {
 	TEST_STRING_FORMATTING(uint16_t, lrc::device::CPU);
 }
 
-TEST_CASE("Test Array -- int32_t CPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(int32_t, lrc::device::CPU);
-	TEST_INDEXING(int32_t, lrc::device::CPU);
-	TEST_STRING_FORMATTING(int32_t, lrc::device::CPU);
-	TEST_ARITHMETIC(int32_t, lrc::device::CPU);
-	TEST_COMPARISONS(int32_t, lrc::device::CPU);
-}
+TEST_CASE("Test Array -- int32_t CPU", "[array-lib]") { TEST_ALL(int32_t, lrc::device::CPU); }
 
-TEST_CASE("Test Array -- uint32_t CPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(uint32_t, lrc::device::CPU);
-	TEST_INDEXING(uint32_t, lrc::device::CPU);
-	TEST_ARITHMETIC(int32_t, lrc::device::CPU);
-	TEST_STRING_FORMATTING(uint32_t, lrc::device::CPU);
-	TEST_COMPARISONS(uint32_t, lrc::device::CPU);
-}
+TEST_CASE("Test Array -- uint32_t CPU", "[array-lib]") { TEST_ALL(uint32_t, lrc::device::CPU); }
 
-TEST_CASE("Test Array -- int64_t CPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(int64_t, lrc::device::CPU);
-	TEST_INDEXING(uint32_t, lrc::device::CPU);
-	TEST_ARITHMETIC(int64_t, lrc::device::CPU);
-	TEST_STRING_FORMATTING(int64_t, lrc::device::CPU);
-	TEST_COMPARISONS(int64_t, lrc::device::CPU);
-}
+TEST_CASE("Test Array -- int64_t CPU", "[array-lib]") { TEST_ALL(int64_t, lrc::device::CPU); }
 
-TEST_CASE("Test Array -- uint64_t CPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(uint64_t, lrc::device::CPU);
-	TEST_INDEXING(uint64_t, lrc::device::CPU);
-	TEST_ARITHMETIC(uint64_t, lrc::device::CPU);
-	TEST_STRING_FORMATTING(uint64_t, lrc::device::CPU);
-	TEST_COMPARISONS(uint64_t, lrc::device::CPU);
-}
+TEST_CASE("Test Array -- uint64_t CPU", "[array-lib]") { TEST_ALL(uint64_t, lrc::device::CPU); }
 
-TEST_CASE("Test Array -- float CPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(float, lrc::device::CPU);
-	TEST_INDEXING(float, lrc::device::CPU);
-	TEST_ARITHMETIC(float, lrc::device::CPU);
-	TEST_STRING_FORMATTING(float, lrc::device::CPU);
-	TEST_COMPARISONS(float, lrc::device::CPU);
-}
+TEST_CASE("Test Array -- float CPU", "[array-lib]") { TEST_ALL(float, lrc::device::CPU); }
 
-TEST_CASE("Test Array -- double CPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(double, lrc::device::CPU);
-	TEST_INDEXING(double, lrc::device::CPU);
-	TEST_ARITHMETIC(double, lrc::device::CPU);
-	TEST_STRING_FORMATTING(double, lrc::device::CPU);
-	TEST_COMPARISONS(double, lrc::device::CPU);
-}
+TEST_CASE("Test Array -- double CPU", "[array-lib]") { TEST_ALL(double, lrc::device::CPU); }
 
 #if defined(LIBRAPID_USE_MULTIPREC)
 
-TEST_CASE("Test Array -- lrc::mpfr CPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(lrc::mpfr, lrc::device::CPU);
-	TEST_INDEXING(lrc::mpfr, lrc::device::CPU);
-	TEST_ARITHMETIC(lrc::mpfr, lrc::device::CPU);
-	TEST_STRING_FORMATTING(lrc::mpfr, lrc::device::CPU);
-	TEST_COMPARISONS(lrc::mpfr, lrc::device::CPU);
-}
+TEST_CASE("Test Array -- lrc::mpfr CPU", "[array-lib]") { TEST_ALL(lrc::mpfr, lrc::device::CPU); }
 
 #endif // LIBRAPID_USE_MULTIPREC
 
 #if defined(LIBRAPID_HAS_CUDA)
 
-TEST_CASE("Test Array -- int8_t GPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(int8_t, lrc::device::GPU);
-	TEST_INDEXING(int8_t, lrc::device::GPU);
-	TEST_ARITHMETIC(int8_t, lrc::device::GPU);
-	TEST_STRING_FORMATTING(int8_t, lrc::device::GPU);
-	TEST_COMPARISONS(int8_t, lrc::device::GPU);
-}
+TEST_CASE("Test Array -- int8_t GPU", "[array-lib]") { TEST_ALL(int8_t, lrc::device::GPU); }
 
-TEST_CASE("Test Array -- uint8_t GPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(uint8_t, lrc::device::GPU);
-	TEST_INDEXING(uint8_t, lrc::device::GPU);
-	TEST_ARITHMETIC(uint8_t, lrc::device::GPU);
-	TEST_STRING_FORMATTING(uint8_t, lrc::device::GPU);
-	TEST_COMPARISONS(uint8_t, lrc::device::GPU);
-}
+TEST_CASE("Test Array -- uint8_t GPU", "[array-lib]") { TEST_ALL(uint8_t, lrc::device::GPU); }
 
-TEST_CASE("Test Array -- int16_t GPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(int16_t, lrc::device::GPU);
-	TEST_INDEXING(int16_t, lrc::device::GPU);
-	TEST_ARITHMETIC(int16_t, lrc::device::GPU);
-	TEST_STRING_FORMATTING(int16_t, lrc::device::GPU);
-	TEST_COMPARISONS(int16_t, lrc::device::GPU);
-	TEST_COMPARISONS(int16_t, lrc::device::GPU);
-}
+TEST_CASE("Test Array -- int16_t GPU", "[array-lib]") { TEST_ALL(int16_t, lrc::device::GPU); }
 
-TEST_CASE("Test Array -- uint16_t GPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(uint16_t, lrc::device::GPU);
-	TEST_INDEXING(uint16_t, lrc::device::GPU);
-	TEST_ARITHMETIC(uint16_t, lrc::device::GPU);
-	TEST_STRING_FORMATTING(uint16_t, lrc::device::GPU);
-	TEST_COMPARISONS(uint16_t, lrc::device::GPU);
-}
+TEST_CASE("Test Array -- uint16_t GPU", "[array-lib]") { TEST_ALL(uint16_t, lrc::device::GPU); }
 
-TEST_CASE("Test Array -- int32_t GPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(int32_t, lrc::device::GPU);
-	TEST_INDEXING(int32_t, lrc::device::GPU);
-	TEST_ARITHMETIC(int32_t, lrc::device::GPU);
-	TEST_STRING_FORMATTING(int32_t, lrc::device::GPU);
-	TEST_COMPARISONS(int32_t, lrc::device::GPU);
-}
+TEST_CASE("Test Array -- int32_t GPU", "[array-lib]") { TEST_ALL(int32_t, lrc::device::GPU); }
 
-TEST_CASE("Test Array -- uint32_t GPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(uint32_t, lrc::device::GPU);
-	TEST_INDEXING(uint32_t, lrc::device::GPU);
-	TEST_ARITHMETIC(uint32_t, lrc::device::GPU);
-	TEST_STRING_FORMATTING(uint32_t, lrc::device::GPU);
-	TEST_COMPARISONS(uint32_t, lrc::device::GPU);
-}
+TEST_CASE("Test Array -- uint32_t GPU", "[array-lib]") { TEST_ALL(uint32_t, lrc::device::GPU); }
 
-TEST_CASE("Test Array -- int64_t GPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(int64_t, lrc::device::GPU);
-	TEST_INDEXING(int64_t, lrc::device::GPU);
-	TEST_ARITHMETIC(int64_t, lrc::device::GPU);
-	TEST_STRING_FORMATTING(int64_t, lrc::device::GPU);
-	TEST_COMPARISONS(int64_t, lrc::device::GPU);
-}
+TEST_CASE("Test Array -- int64_t GPU", "[array-lib]") { TEST_ALL(int64_t, lrc::device::GPU); }
 
-TEST_CASE("Test Array -- uint64_t GPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(uint64_t, lrc::device::GPU);
-	TEST_INDEXING(uint64_t, lrc::device::GPU);
-	TEST_ARITHMETIC(uint64_t, lrc::device::GPU);
-	TEST_STRING_FORMATTING(uint64_t, lrc::device::GPU);
-	TEST_COMPARISONS(uint64_t, lrc::device::GPU);
-}
+TEST_CASE("Test Array -- uint64_t GPU", "[array-lib]") { TEST_ALL(uint64_t, lrc::device::GPU); }
 
-TEST_CASE("Test Array -- float GPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(float, lrc::device::GPU);
-	TEST_INDEXING(float, lrc::device::GPU);
-	TEST_ARITHMETIC(float, lrc::device::GPU);
-	TEST_STRING_FORMATTING(float, lrc::device::GPU);
-	TEST_COMPARISONS(float, lrc::device::GPU);
-}
+TEST_CASE("Test Array -- float GPU", "[array-lib]") { TEST_ALL(float, lrc::device::GPU); }
 
-TEST_CASE("Test Array -- double GPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(double, lrc::device::GPU);
-	TEST_INDEXING(double, lrc::device::GPU);
-	TEST_ARITHMETIC(double, lrc::device::GPU);
-	TEST_STRING_FORMATTING(double, lrc::device::GPU);
-	TEST_COMPARISONS(double, lrc::device::GPU);
-}
+TEST_CASE("Test Array -- double GPU", "[array-lib]") { TEST_ALL(double, lrc::device::GPU); }
 
 #endif // LIBRAPID_HAS_CUDA
