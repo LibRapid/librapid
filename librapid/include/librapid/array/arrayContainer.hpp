@@ -5,10 +5,10 @@ namespace librapid {
 	namespace typetraits {
 		template<typename ShapeType_, typename StorageType_>
 		struct TypeInfo<array::ArrayContainer<ShapeType_, StorageType_>> {
-			detail::LibRapidType type				 = detail::LibRapidType::ArrayContainer;
-			using Scalar							 = typename TypeInfo<StorageType_>::Scalar;
-			using Device							 = typename TypeInfo<StorageType_>::Device;
-			static constexpr bool allowVectorisation = TypeInfo<Scalar>::packetWidth > 1;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayContainer;
+			using Scalar							   = typename TypeInfo<StorageType_>::Scalar;
+			using Device							   = typename TypeInfo<StorageType_>::Device;
+			static constexpr bool allowVectorisation   = TypeInfo<Scalar>::packetWidth > 1;
 		};
 
 		namespace typetraits {
@@ -245,9 +245,11 @@ namespace librapid {
 		template<typename desc, typename Functor_, typename... Args>
 		auto ArrayContainer<ShapeType_, StorageType_>::operator=(
 		  const detail::Function<desc, Functor_, Args...> &function) -> ArrayContainer & {
+			using FunctionType = detail::Function<desc, Functor_, Args...>;
 			m_storage.resize(function.shape().size(), 0);
 #if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
-			if (m_storage.size() > global::multithreadThreshold && global::numThreads > 1)
+			if (!std::is_same_v<typename FunctionType::Device, device::GPU> &&
+				m_storage.size() > global::multithreadThreshold && global::numThreads > 1)
 				detail::assignParallel(*this, function);
 			else
 #endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
