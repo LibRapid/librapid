@@ -213,9 +213,21 @@ jobs:
         run: |
           sudo apt install doxygen
 
-      - name: Install Requirements
+      - name: Upgrade Source Distribution
+        continue-on-error: true
+        run: |
+          sudo apt update
+          sudo apt upgrade -y
+          sudo apt autoremove -y
+
+      - name: Install LaTeX
+        continue-on-error: true
         run: |
           sudo apt-get install -y texlive-full
+
+      - name: Install Requirements
+        continue-on-error: true
+        run: |
           cd docs
           pip install -r requirements.txt
 
@@ -246,7 +258,7 @@ jobs:
           echo "Hello, World!" > BENCH_RESULTS/hello.txt
 
       - name: Upload Benchmark Results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: benchmark-results-for-${{ github.sha }}
           path: BENCH_RESULTS/
