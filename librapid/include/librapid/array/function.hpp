@@ -38,8 +38,8 @@ namespace librapid {
 		template<typename desc, typename Functor_, typename... Args>
 		struct TypeInfo<::librapid::detail::Function<desc, Functor_, Args...>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
-			using Scalar			  = decltype(std::declval<Functor_>()(
-			   std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
+			using Scalar							   = decltype(std::declval<Functor_>()(
+				std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
 			using Device =
 			  decltype(commonDevice<Args...>()); // typename DeviceCheckAndExtract<Args...>::Device;
 
@@ -94,10 +94,10 @@ namespace librapid {
 				return Scalar {};
 			} else {
 				using RestType = decltype(scalarTypesAreSame<Rest...>());
-				if constexpr (std::is_same_v<RestType, std::false_type>) {
-					return std::false_type {};
-				} else if constexpr (std::is_same_v<First, RestType>) {
-					return RestType{};
+				if constexpr (std::is_same_v<
+								typename typetraits::TypeInfo<std::decay_t<First>>::Scalar,
+								RestType>) {
+					return RestType {};
 				} else {
 					return std::false_type {};
 				}
