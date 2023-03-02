@@ -74,7 +74,7 @@ extensions = [
     "breathe",
     "exhale",
     "numpydoc",
-    "sphinx-favicon",
+    "sphinx_favicon",
     "myst_parser",
     "sphinx_design",
     "sphinx_copybutton"
