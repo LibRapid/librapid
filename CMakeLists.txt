@@ -53,16 +53,16 @@ ENDMACRO()
 
 # Attempt to locate the required packages
 include(FetchContent)
-if (${LIBRAPID_USE_CUDA})
-    find_package(CUDAToolkit QUIET)
+if (LIBRAPID_USE_CUDA)
+    find_package(CUDAToolkit REQUIRED)
 endif ()
 
-if (${LIBRAPID_USE_BLAS})
-    find_package(BLAS QUIET)
+if (LIBRAPID_USE_BLAS)
+    find_package(BLAS REQUIRED)
 endif ()
 
-if (${LIBRAPID_USE_OMP})
-    find_package(OpenMP QUIET)
+if (LIBRAPID_USE_OMP)
+    find_package(OpenMP REQUIRED)
 endif ()
 
 set(LIBRAPID_HAS_OMP false)
@@ -137,7 +137,7 @@ if (MSVC)
 endif ()
 
 # See if OpenMP should be linked against
-if (${LIBRAPID_USE_OMP})
+if (LIBRAPID_USE_OMP)
     if (${OpenMP_FOUND})
         message(STATUS "[ LIBRAPID ] Linking against OpenMP")
 
@@ -152,7 +152,7 @@ if (${LIBRAPID_USE_OMP})
     endif ()
 endif ()
 
-if (${LIBRAPID_GET_BLAS})
+if (LIBRAPID_GET_BLAS)
     message(STATUS "[ LIBRAPID ] Downloading OpenBLAS Build...")
 
     if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/buildopenblas-src")
@@ -180,7 +180,7 @@ if (${LIBRAPID_GET_BLAS})
 endif ()
 
 # See if BLAS should be linked against
-if (${LIBRAPID_USE_BLAS})
+if (LIBRAPID_USE_BLAS)
     if (${BLAS_FOUND})
         message(STATUS "[ LIBRAPID ] BLAS located was ${BLAS_LIBRARIES}")
 
@@ -294,7 +294,7 @@ if (${LIBRAPID_USE_BLAS})
 endif ()
 
 # Check if CUDA should be used
-if (${LIBRAPID_USE_CUDA})
+if (LIBRAPID_USE_CUDA)
     if (${CUDAToolkit_FOUND})
         message(STATUS "[ LIBRAPID ] Using CUDA ${CUDAToolkit_VERSION}")
 
@@ -442,3 +442,18 @@ endif ()
 #     message(STATUS "[ LIBRAPID ] Enabling code coverage for ${module_name}")
 #     add_coverage(${module_name})
 # endif()
+
+if (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    message(STATUS "[ LIBRAPID ] Enabling code coverage")
+    # Add required flags (GCC & LLVM/Clang)
+    target_compile_options(${module_name} INTERFACE
+            -O0        # no optimization
+            -g         # generate debug info
+            --coverage # sets all required flags
+            )
+    if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+        target_link_options(${module_name} INTERFACE --coverage)
+    else ()
+        target_link_libraries(${module_name} INTERFACE --coverage)
+    endif ()
+endif (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
