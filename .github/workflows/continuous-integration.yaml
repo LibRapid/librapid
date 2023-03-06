@@ -122,13 +122,6 @@ jobs:
         with:
           submodules: recursive
 
-      # - name: Set up Clang
-      #   if: ${{ matrix.cc }} == "cc"
-      #   uses: egor-tensin/setup-clang@v1
-      #   with:
-      #     version: latest
-      #     platform: x64
-
       - name: Install Clang
         if: ${{ matrix.cc }} == "../llvm/bin/clang-15" || ${{ matrix.cc }} == "../llvm/clang"
         uses: KyleMayes/install-llvm-action@v1
@@ -137,7 +130,23 @@ jobs:
           directory: "./llvm"
           env: on
 
-      - name: Compile
+      # Tests must pass in both debug and release mode
+      - name: Compile (Debug)
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
+          cmake --build . --config Debug
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+
+      - name: Run Tests (Debug)
+        run: |
+          cd build
+          ctest -C Debug --output-on-failure
+
+      - name: Compile (Release)
         run: |
           mkdir build
           cd build
@@ -147,7 +156,7 @@ jobs:
           CC: ${{ matrix.cc }}
           CXX: ${{ matrix.cxx }}
 
-      - name: Run Tests
+      - name: Run Tests (Release)
         run: |
           cd build
           ctest -C Release --output-on-failure
@@ -262,6 +271,33 @@ jobs:
         with:
           name: benchmark-results-for-${{ github.sha }}
           path: BENCH_RESULTS/
+
+  code-coverage:
+    name: Code Coverage
+    needs: [ compile ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "15.0"
+          directory: "./llvm"
+          env: on
+
+      - name: Compile and Run
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=on -DLIBRAPID_USE_MULTIPREC=on
+          cmake --build . --parallel
+        env:
+          CC: ./llvm/clang
+          CXX: ./llvm/clang++
 
   trigger-docs:
     name: Trigger Documentation Build

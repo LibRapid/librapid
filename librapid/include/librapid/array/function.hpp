@@ -14,11 +14,6 @@ namespace librapid {
 			}
 		}
 
-		// template<typename First, typename... Rest>
-		// struct DeviceCheckAndExtract {
-		// 	using Device = typename TypeInfo<std::decay_t<First>>::Device;
-		// };
-
 		template<typename First, typename... Rest>
 		constexpr auto commonDevice() {
 			using FirstDevice = typename TypeInfo<std::decay_t<First>>::Device;
@@ -115,9 +110,12 @@ namespace librapid {
 		public:
 			using Type		 = Function<desc, Functor_, Args...>;
 			using Functor	 = Functor_;
+			using ShapeType	 = Shape<size_t, 32>;
+			using StrideType = ShapeType;
 			using Scalar	 = typename typetraits::TypeInfo<Type>::Scalar;
 			using Device	 = typename typetraits::TypeInfo<Type>::Device;
 			using Packet	 = typename typetraits::TypeInfo<Scalar>::Packet;
+
 			using Descriptor = desc;
 			static constexpr bool argsAreSameType =
 			  !std::is_same_v<decltype(scalarTypesAreSame<Args...>()), std::false_type>;
@@ -158,6 +156,8 @@ namespace librapid {
 			/// Return an evaluated Array object
 			/// \return
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto eval() const;
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index) const;
 
 			/// Evaluates the function at the given index, returning a Packet result.
 			/// \param index The index to evaluate at.
@@ -210,6 +210,11 @@ namespace librapid {
 		template<typename desc, typename Functor, typename... Args>
 		auto &Function<desc, Functor, Args...>::args() const {
 			return m_args;
+		}
+
+		template<typename desc, typename Functor, typename... Args>
+		auto Function<desc, Functor, Args...>::operator[](int64_t index) const {
+			return array::ArrayView(*this)[index];
 		}
 
 		template<typename desc, typename Functor, typename... Args>
