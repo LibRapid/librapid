@@ -114,12 +114,6 @@ namespace librapid {
 			/// \param index The index of the sub-array
 			/// \return A reference to the sub-array (ArrayView)
 			/// \see ArrayView
-			// LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<const ArrayContainer>
-			// operator[](int64_t index) const;
-
-			// LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayView<ArrayContainer>
-			// operator[](int64_t index);
-
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index) const;
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index);
@@ -174,7 +168,8 @@ namespace librapid {
 		};
 
 		template<typename ShapeType_, typename StorageType_>
-		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer() : m_shape({0}) {}
+		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer() :
+				m_shape(StorageType_::template defaultShape<ShapeType_>()) {}
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
@@ -282,17 +277,6 @@ namespace librapid {
 
 			if constexpr (std::is_same_v<typename typetraits::TypeInfo<ArrayContainer>::Device,
 										 device::GPU>) {
-				// // ArrayView is slower but works better with the GPU
-				// ArrayView<const ArrayContainer> view(*this);
-				// const auto stride = Stride(m_shape);
-				// view.setShape(m_shape.subshape(1, ndim()));
-				// if (ndim() == 1)
-				// 	view.setStride(Stride({1}));
-				// else
-				// 	view.setStride(stride.subshape(1, ndim()));
-				// view.setOffset(index * stride[0]);
-				// return view;
-
 				ArrayContainer res;
 				res.m_shape	  = m_shape.subshape(1, ndim());
 				auto subSize  = res.shape().size();
@@ -322,17 +306,6 @@ namespace librapid {
 
 			if constexpr (std::is_same_v<typename typetraits::TypeInfo<ArrayContainer>::Device,
 										 device::GPU>) {
-				// // ArrayView is slower but works better with the GPU
-				// ArrayView<const ArrayContainer> view(*this);
-				// const auto stride = Stride(m_shape);
-				// view.setShape(m_shape.subshape(1, ndim()));
-				// if (ndim() == 1)
-				// 	view.setStride(Stride({1}));
-				// else
-				// 	view.setStride(stride.subshape(1, ndim()));
-				// view.setOffset(index * stride[0]);
-				// return view;
-
 				ArrayContainer res;
 				res.m_shape	  = m_shape.subshape(1, ndim());
 				auto subSize  = res.shape().size();
@@ -341,14 +314,18 @@ namespace librapid {
 
 				return res;
 			} else {
-				ArrayContainer res;
-				res.m_shape	  = m_shape.subshape(1, ndim());
-				auto subSize  = res.shape().size();
-				Scalar *begin = m_storage.begin() + index * subSize;
-				Scalar *end	  = begin + subSize;
-				res.m_storage = StorageType_(begin, end, false);
+				if constexpr (typetraits::IsFixedStorage<StorageType_>::value) {
+					return ArrayView(*this)[index];
+				} else {
+					ArrayContainer res;
+					res.m_shape	  = m_shape.subshape(1, ndim());
+					auto subSize  = res.shape().size();
+					Scalar *begin = m_storage.begin() + index * subSize;
+					Scalar *end	  = begin + subSize;
+					res.m_storage = StorageType_(begin, end, false);
 
-				return res;
+					return res;
+				}
 			}
 		}
 

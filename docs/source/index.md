@@ -38,8 +38,9 @@ View LibRapid's API and documentation.
 Learn how to use some of LibRapid's features.
 :::
 
-:::{grid-item-card} {octicon}`stopwatch` Benchmarks
-:link: https://github.com/LibRapid/BenchmarksCPP/
+:::{grid-item-card} {octicon}`stopwatch` Performance and Benchmarks
+:link: performance/performance
+:link-type: doc
 
 View LibRapid's benchmark results.
 :::

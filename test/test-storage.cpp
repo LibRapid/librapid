@@ -26,13 +26,13 @@ namespace lrc = librapid;
 		REQUIRE(storage2[8] == 9);                                                                 \
 		REQUIRE(storage2[9] == 10);                                                                \
                                                                                                    \
-		lrc::Storage<ScalarType> storage3(20, 1);                                                  \
+		lrc::Storage<ScalarType> storage3(100, 1);                                                  \
                                                                                                    \
-		REQUIRE(storage3.size() == 20);                                                            \
+		REQUIRE(storage3.size() == 100);                                                            \
 		REQUIRE(storage3[0] == 1);                                                                 \
 		REQUIRE(storage3[1] == 1);                                                                 \
-		REQUIRE(storage3[18] == 1);                                                                \
-		REQUIRE(storage3[19] == 1);                                                                \
+		REQUIRE(storage3[98] == 1);                                                                \
+		REQUIRE(storage3[99] == 1);                                                                \
                                                                                                    \
 		auto storage4 = lrc::Storage<ScalarType>(storage2);                                        \
                                                                                                    \

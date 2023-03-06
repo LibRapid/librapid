@@ -104,6 +104,9 @@ namespace librapid {
 		/// Free a Storage object
 		~Storage();
 
+		template<typename ShapeType>
+		static ShapeType defaultShape();
+
 		/// Resize a Storage object to \p size elements. Existing elements
 		/// are preserved.
 		/// \param size New size of the Storage object
@@ -487,6 +490,12 @@ namespace librapid {
 			// Otherwise, use the standard copy algorithm
 			std::copy(begin, end, m_begin);
 		}
+	}
+
+	template<typename T, typename A>
+	template<typename ShapeType>
+	auto Storage<T, A>::defaultShape() -> ShapeType {
+		return ShapeType({0});
 	}
 
 	template<typename T, typename A>
