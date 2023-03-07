@@ -418,7 +418,7 @@ namespace librapid {
 	template<typename T, typename A>
 	Storage<T, A> &Storage<T, A>::operator=(const Storage &other) {
 		if (this != &other) {
-			LIBRAPID_ASSERT(!m_independent || size() == other.size(),
+			LIBRAPID_ASSERT(m_independent || size() == other.size(),
 							"Mismatched storage sizes. Cannot assign storage with {} elements to "
 							"dependent storage with {} elements",
 							other.size(),
@@ -538,7 +538,7 @@ namespace librapid {
 	template<typename T, typename A>
 	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize, int) {
 		if (size() == newSize) return;
-		LIBRAPID_ASSERT(!m_independent, "Dependent storage cannot be resized");
+		LIBRAPID_ASSERT(m_independent, "Dependent storage cannot be resized");
 
 		SizeType oldSize = size();
 		Pointer oldBegin = m_begin;
