@@ -303,6 +303,11 @@ jobs:
           directory: "./llvm"
           env: on
 
+      - name: Install Coverage Tools
+        run: |
+          sudo apt install lcov
+          sudo apt install gcovr
+
       - name: Compile and Run
         run: |
           mkdir build
