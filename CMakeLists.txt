@@ -446,7 +446,7 @@ endif ()
 if (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     message(STATUS "[ LIBRAPID ] Enabling code coverage") # Requires gcovr -- sudo apt install gcovr
     include(CodeCoverage)
-    append_coverage_compiler_flags()
+    append_coverage_compiler_flags_to_target(${module_name})
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_WITH_COVERAGE)
     target_compile_options(${module_name} PUBLIC
             -O0        # no optimization
@@ -463,6 +463,5 @@ if (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
             NAME ${module_name}_coverage
             EXECUTABLE ctest -C ${CMAKE_BUILD_TYPE}
             EXCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/*" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas"
-            DEPENDENCIES ${module_name} ${module_name}_coverage
     )
 endif (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
