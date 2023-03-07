@@ -26,9 +26,9 @@ namespace lrc = librapid;
 		REQUIRE(storage2[8] == 9);                                                                 \
 		REQUIRE(storage2[9] == 10);                                                                \
                                                                                                    \
-		lrc::Storage<ScalarType> storage3(100, 1);                                                  \
+		lrc::Storage<ScalarType> storage3(100, 1);                                                 \
                                                                                                    \
-		REQUIRE(storage3.size() == 100);                                                            \
+		REQUIRE(storage3.size() == 100);                                                           \
 		REQUIRE(storage3[0] == 1);                                                                 \
 		REQUIRE(storage3[1] == 1);                                                                 \
 		REQUIRE(storage3[98] == 1);                                                                \
@@ -55,11 +55,11 @@ namespace lrc = librapid;
                                                                                                    \
 		storage4 = storage3;                                                                       \
                                                                                                    \
-		REQUIRE(storage4.size() == 20);                                                            \
+		REQUIRE(storage4.size() == 100);                                                           \
 		REQUIRE(storage4[0] == 1);                                                                 \
 		REQUIRE(storage4[1] == 1);                                                                 \
-		REQUIRE(storage4[18] == 1);                                                                \
-		REQUIRE(storage4[19] == 1);                                                                \
+		REQUIRE(storage4[98] == 1);                                                                \
+		REQUIRE(storage4[99] == 1);                                                                \
                                                                                                    \
 		SECTION("Const Iterator") {                                                                \
 			ScalarType i = 1;                                                                      \
