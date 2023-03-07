@@ -318,6 +318,14 @@ jobs:
           CC:  gcc # ../llvm/bin/clang
           CXX: g++ # ../llvm/bin/clang++
 
+      - name: Run Tests
+        run: |
+          cd build
+          ctest -C Debug --output-on-failure
+
+      - name: Upload Coverage Reports
+        uses: codecov/codecov-action@v3
+
   trigger-docs:
     name: Trigger Documentation Build
     needs: [ run-benchmarks, quodona, build-docs ]
