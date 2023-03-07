@@ -516,7 +516,7 @@ namespace librapid {
 	template<typename T, typename A>
 	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize) {
 		if (newSize == size()) return;
-		LIBRAPID_ASSERT(!m_independent, "Dependent storage cannot be resized");
+		LIBRAPID_ASSERT(m_independent, "Dependent storage cannot be resized");
 
 		SizeType oldSize = size();
 		Pointer oldBegin = m_begin;
