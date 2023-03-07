@@ -310,8 +310,8 @@ jobs:
           cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=on -DLIBRAPID_USE_MULTIPREC=on
           cmake --build . --parallel
         env:
-          CC: ./llvm/clang
-          CXX: ./llvm/clang++
+          CC: ../llvm/clang
+          CXX: ../llvm/clang++
 
   trigger-docs:
     name: Trigger Documentation Build
