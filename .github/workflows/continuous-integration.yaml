@@ -133,8 +133,8 @@ jobs:
       # Tests must pass in both debug and release mode
       - name: Compile (Debug)
         run: |
-          mkdir build
-          cd build
+          mkdir buildDebug
+          cd buildDebug
           cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
           cmake --build . --config Debug
         env:
@@ -143,13 +143,13 @@ jobs:
 
       - name: Run Tests (Debug)
         run: |
-          cd build
+          cd buildDebug
           ctest -C Debug --output-on-failure
 
       - name: Compile (Release)
         run: |
-          mkdir build
-          cd build
+          mkdir buildRelease
+          cd buildRelease
           cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
           cmake --build . --config Release
         env:
@@ -158,7 +158,7 @@ jobs:
 
       - name: Run Tests (Release)
         run: |
-          cd build
+          cd buildRelease
           ctest -C Release --output-on-failure
 
   quodona:
