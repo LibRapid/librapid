@@ -30,7 +30,7 @@ namespace librapid {
 
 			/// Copy an ArrayView object (not const)
 			/// \param array The array to copy
-			ArrayView(ArrayType &array);
+			explicit ArrayView(T &array);
 
 			/// Copy an ArrayView object (const)
 			/// \param other The array to copy
