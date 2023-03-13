@@ -10,5 +10,6 @@
 #include "genericVector.hpp"
 // #include "simdVector.hpp"
 #include "complex.hpp"
+#include "utilityFunctions.hpp"
 
 #endif // LIBRAPID_MATH
