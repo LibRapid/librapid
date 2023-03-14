@@ -47,8 +47,39 @@ very costly operation.
 
 :::{warning}
 Be very careful not to reference invalid memory. This is, unfortunately, an unavoidable side effect of returning
-lazy-objects. See :Caution: <project:../caution/caution> for more information.
+lazy-objects. See [Caution](../caution) for more information.
 :::
 
 Note that, sometimes, it is faster to evaluate intermediate results than to use the combined operation. To do this,
 you can call ``eval()`` on the result of any operation to generate an Array object directly from it.
+
+## Linear Algebra
+
+Linear algebra methods in LibRapid also return temporary objects, meaning they are not evaluated fully until they are
+needed. One implication of this is that expressions involving ***more than one operation*** will be evaluated
+***very slowly***.
+
+:::{danger}
+Be careful when calling `eval` on the result of a linear algebra operation. Sometimes, LibRapid will be able to combine
+multiple operations into a single function call, which can lead to much better performance. Check the documentation
+for that specific function to see what further optimisations it supports.
+:::
+
+### Solution
+
+To get around this issue, it'll often be quicker to simply evaluate (`myExpression.eval()`) the result of any linear
+algebra operations inside the larger expression.
+
+```cpp
+auto slowExpression = a + b * c.dot(d);
+auto fastExpression = a + b * c.dot(d).eval();
+```
+
+### Explanation
+
+Since `c.dot(d)` is a lazy object, the lazy evaluator will calculate each element of the resulting array independently
+as and when it is required by the rest of the expression. This means it is not possible to make use of the extremely
+fast BLAS and LAPACK functions.
+
+By forcing the result to be evaluated independently of the rest of the expression, LibRapid can call `gemm`, for
+example, making the program significantly faster.
