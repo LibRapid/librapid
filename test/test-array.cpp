@@ -568,6 +568,8 @@ namespace lrc = librapid;
 	TEST_COMPARISONS_ARRAY_SCALAR(SCALAR, DEVICE);                                                 \
 	TEST_COMPARISONS_SCALAR_ARRAY(SCALAR, DEVICE);
 
+#ifndef defined(LIBRAPID_WITH_COVERAGE)
+
 TEST_CASE("Test Array -- int8_t CPU", "[array-lib]") {
 	TEST_CONSTRUCTORS(int8_t, lrc::device::CPU);
 	TEST_INDEXING(int8_t, lrc::device::CPU);
@@ -593,43 +595,30 @@ TEST_CASE("Test Array -- uint16_t CPU", "[array-lib]") {
 }
 
 TEST_CASE("Test Array -- int32_t CPU", "[array-lib]") { TEST_ALL(int32_t, lrc::device::CPU); }
-
 TEST_CASE("Test Array -- uint32_t CPU", "[array-lib]") { TEST_ALL(uint32_t, lrc::device::CPU); }
-
 TEST_CASE("Test Array -- int64_t CPU", "[array-lib]") { TEST_ALL(int64_t, lrc::device::CPU); }
-
 TEST_CASE("Test Array -- uint64_t CPU", "[array-lib]") { TEST_ALL(uint64_t, lrc::device::CPU); }
-
 TEST_CASE("Test Array -- float CPU", "[array-lib]") { TEST_ALL(float, lrc::device::CPU); }
-
 TEST_CASE("Test Array -- double CPU", "[array-lib]") { TEST_ALL(double, lrc::device::CPU); }
 
-#if defined(LIBRAPID_USE_MULTIPREC)
-
+#	if defined(LIBRAPID_USE_MULTIPREC)
 TEST_CASE("Test Array -- lrc::mpfr CPU", "[array-lib]") { TEST_ALL(lrc::mpfr, lrc::device::CPU); }
+#	endif // LIBRAPID_USE_MULTIPREC
 
-#endif // LIBRAPID_USE_MULTIPREC
-
-#if defined(LIBRAPID_HAS_CUDA)
+#	if defined(LIBRAPID_HAS_CUDA)
 
 TEST_CASE("Test Array -- int8_t GPU", "[array-lib]") { TEST_ALL(int8_t, lrc::device::GPU); }
-
 TEST_CASE("Test Array -- uint8_t GPU", "[array-lib]") { TEST_ALL(uint8_t, lrc::device::GPU); }
-
 TEST_CASE("Test Array -- int16_t GPU", "[array-lib]") { TEST_ALL(int16_t, lrc::device::GPU); }
-
 TEST_CASE("Test Array -- uint16_t GPU", "[array-lib]") { TEST_ALL(uint16_t, lrc::device::GPU); }
-
 TEST_CASE("Test Array -- int32_t GPU", "[array-lib]") { TEST_ALL(int32_t, lrc::device::GPU); }
-
 TEST_CASE("Test Array -- uint32_t GPU", "[array-lib]") { TEST_ALL(uint32_t, lrc::device::GPU); }
-
 TEST_CASE("Test Array -- int64_t GPU", "[array-lib]") { TEST_ALL(int64_t, lrc::device::GPU); }
-
 TEST_CASE("Test Array -- uint64_t GPU", "[array-lib]") { TEST_ALL(uint64_t, lrc::device::GPU); }
-
 TEST_CASE("Test Array -- float GPU", "[array-lib]") { TEST_ALL(float, lrc::device::GPU); }
-
 TEST_CASE("Test Array -- double GPU", "[array-lib]") { TEST_ALL(double, lrc::device::GPU); }
 
-#endif // LIBRAPID_HAS_CUDA
+#	endif // LIBRAPID_HAS_CUDA
+#else
+
+#endif // !LIBRAPID_WITH_COVERAGE

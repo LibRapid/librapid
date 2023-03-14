@@ -101,6 +101,9 @@ namespace librapid {
 		/// \param vec The vector to fill with
 		LIBRAPID_ALWAYS_INLINE explicit CudaStorage(const std::vector<Scalar> &vec);
 
+		template<typename ShapeType>
+		static ShapeType defaultShape();
+
 		template<typename V>
 		static CudaStorage fromData(const std::initializer_list<V> &vec);
 
@@ -297,6 +300,12 @@ namespace librapid {
 									 cudaMemcpyDeviceToDevice,
 									 global::cudaStream));
 		return *this;
+	}
+
+	template<typename T>
+	template<typename ShapeType>
+	ShapeType CudaStorage<T>::defaultShape() {
+		return ShapeType({0});
 	}
 
 	template<typename T>

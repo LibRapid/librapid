@@ -104,6 +104,9 @@ namespace librapid {
 		/// Free a Storage object
 		~Storage();
 
+		template<typename ShapeType>
+		static ShapeType defaultShape();
+
 		/// Resize a Storage object to \p size elements. Existing elements
 		/// are preserved.
 		/// \param size New size of the Storage object
@@ -415,7 +418,7 @@ namespace librapid {
 	template<typename T, typename A>
 	Storage<T, A> &Storage<T, A>::operator=(const Storage &other) {
 		if (this != &other) {
-			LIBRAPID_ASSERT(!m_independent || size() == other.size(),
+			LIBRAPID_ASSERT(m_independent || size() == other.size(),
 							"Mismatched storage sizes. Cannot assign storage with {} elements to "
 							"dependent storage with {} elements",
 							other.size(),
@@ -490,6 +493,12 @@ namespace librapid {
 	}
 
 	template<typename T, typename A>
+	template<typename ShapeType>
+	auto Storage<T, A>::defaultShape() -> ShapeType {
+		return ShapeType({0});
+	}
+
+	template<typename T, typename A>
 	auto Storage<T, A>::size() const noexcept -> SizeType {
 		return static_cast<SizeType>(std::distance(m_begin, m_end));
 	}
@@ -507,7 +516,7 @@ namespace librapid {
 	template<typename T, typename A>
 	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize) {
 		if (newSize == size()) return;
-		LIBRAPID_ASSERT(!m_independent, "Dependent storage cannot be resized");
+		LIBRAPID_ASSERT(m_independent, "Dependent storage cannot be resized");
 
 		SizeType oldSize = size();
 		Pointer oldBegin = m_begin;
@@ -529,7 +538,7 @@ namespace librapid {
 	template<typename T, typename A>
 	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize, int) {
 		if (size() == newSize) return;
-		LIBRAPID_ASSERT(!m_independent, "Dependent storage cannot be resized");
+		LIBRAPID_ASSERT(m_independent, "Dependent storage cannot be resized");
 
 		SizeType oldSize = size();
 		Pointer oldBegin = m_begin;

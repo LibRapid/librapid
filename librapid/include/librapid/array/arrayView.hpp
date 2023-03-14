@@ -5,10 +5,10 @@ namespace librapid {
 	namespace typetraits {
 		template<typename T>
 		struct TypeInfo<array::ArrayView<T>> {
-			detail::LibRapidType type				 = detail::LibRapidType::ArrayView;
-			using Scalar							 = typename TypeInfo<T>::Scalar;
-			using Device							 = typename TypeInfo<T>::Device;
-			static constexpr bool allowVectorisation = false;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayView;
+			using Scalar							   = typename TypeInfo<std::decay_t<T>>::Scalar;
+			using Device							   = typename TypeInfo<std::decay_t<T>>::Device;
+			static constexpr bool allowVectorisation   = false;
 		};
 	} // namespace typetraits
 
@@ -30,7 +30,7 @@ namespace librapid {
 
 			/// Copy an ArrayView object (not const)
 			/// \param array The array to copy
-			ArrayView(ArrayType &array);
+			explicit ArrayView(T &array);
 
 			/// Copy an ArrayView object (const)
 			/// \param other The array to copy
@@ -249,6 +249,7 @@ namespace librapid {
 			return res;
 		}
 	} // namespace array
+
 } // namespace librapid
 
 // Support FMT printing
