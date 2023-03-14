@@ -1,0 +1,8 @@
+#ifndef LIBRAPID_ARRAY_TRANSPOSE_HPP
+#define LIBRAPID_ARRAY_TRANSPOSE_HPP
+
+namespace librapid {
+	
+}
+
+#endif // LIBRAPID_ARRAY_TRANSPOSE_HPP

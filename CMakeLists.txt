@@ -53,15 +53,15 @@ ENDMACRO()
 
 # Attempt to locate the required packages
 include(FetchContent)
-if (${LIBRAPID_USE_CUDA})
+if (LIBRAPID_USE_CUDA)
     find_package(CUDAToolkit QUIET)
 endif ()
 
-if (${LIBRAPID_USE_BLAS})
+if (LIBRAPID_USE_BLAS)
     find_package(BLAS QUIET)
 endif ()
 
-if (${LIBRAPID_USE_OMP})
+if (LIBRAPID_USE_OMP)
     find_package(OpenMP QUIET)
 endif ()
 
@@ -137,7 +137,7 @@ if (MSVC)
 endif ()
 
 # See if OpenMP should be linked against
-if (${LIBRAPID_USE_OMP})
+if (LIBRAPID_USE_OMP)
     if (${OpenMP_FOUND})
         message(STATUS "[ LIBRAPID ] Linking against OpenMP")
 
@@ -152,7 +152,7 @@ if (${LIBRAPID_USE_OMP})
     endif ()
 endif ()
 
-if (${LIBRAPID_GET_BLAS})
+if (LIBRAPID_GET_BLAS)
     message(STATUS "[ LIBRAPID ] Downloading OpenBLAS Build...")
 
     if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/buildopenblas-src")
@@ -180,7 +180,7 @@ if (${LIBRAPID_GET_BLAS})
 endif ()
 
 # See if BLAS should be linked against
-if (${LIBRAPID_USE_BLAS})
+if (LIBRAPID_USE_BLAS)
     if (${BLAS_FOUND})
         message(STATUS "[ LIBRAPID ] BLAS located was ${BLAS_LIBRARIES}")
 
@@ -294,7 +294,7 @@ if (${LIBRAPID_USE_BLAS})
 endif ()
 
 # Check if CUDA should be used
-if (${LIBRAPID_USE_CUDA})
+if (LIBRAPID_USE_CUDA)
     if (${CUDAToolkit_FOUND})
         message(STATUS "[ LIBRAPID ] Using CUDA ${CUDAToolkit_VERSION}")
 
@@ -442,3 +442,26 @@ endif ()
 #     message(STATUS "[ LIBRAPID ] Enabling code coverage for ${module_name}")
 #     add_coverage(${module_name})
 # endif()
+
+if (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    message(STATUS "[ LIBRAPID ] Enabling code coverage") # Requires gcovr -- sudo apt install gcovr
+    include(CodeCoverage)
+    append_coverage_compiler_flags_to_target(${module_name})
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_WITH_COVERAGE)
+    target_compile_options(${module_name} PUBLIC
+            -O0        # no optimization
+            -g         # generate debug info
+            --coverage # sets all required flags
+            )
+
+    set(COVERAGE_EXCLUDES
+            "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/*"
+            "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas"
+            "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas")
+
+    setup_target_for_coverage_gcovr_html(
+            NAME ${module_name}_coverage
+            EXECUTABLE ctest -C ${CMAKE_BUILD_TYPE}
+            EXCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/*" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas"
+    )
+endif (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")

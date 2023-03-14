@@ -14,5 +14,6 @@
 #include "arrayView.hpp"
 #include "arrayViewString.hpp"
 #include "arrayFromData.hpp"
+#include "transpose.hpp"
 
 #endif // LIBRAPID_ARRAY
