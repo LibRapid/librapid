@@ -611,9 +611,9 @@ namespace librapid {
 			if (::librapid::isNaN(otherReal) || ::librapid::isNaN(otherImag)) { // Set result to NaN
 				m_val[RE] = typetraits::TypeInfo<T>::quietNaN();
 				m_val[IM] = m_val[RE];
-			} else if ((otherImag < 0 ? -otherImag
-									  : +otherImag) < // |other.imag()| < |other.real()|
-					   (otherReal < 0 ? -otherReal : +otherReal)) {
+			} else if ((otherImag < 0 ? T(-otherImag)
+									  : T(+otherImag)) < // |other.imag()| < |other.real()|
+					   (otherReal < 0 ? T(-otherReal) : T(+otherReal))) {
 				T wr = otherImag / otherReal;
 				T wd = otherReal + wr * otherImag;
 
