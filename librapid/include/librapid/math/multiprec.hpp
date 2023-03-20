@@ -248,13 +248,28 @@ namespace librapid {
 
 	/// Hyperbolic arccotangent of a multiprecision floating point value: \f$ coth^{-1}(x)
 	/// \f$ \param val The value to take the hyperbolic arccotangent of \return The hyperbolic
-	/// arccotangent of the value
+	/// \return arccotangent of the value
 	mpfr acoth(const mpfr &val);
 
 	/// Absolute value of a multiprecision floating point value: \f$ |x| \f$
 	/// \param val The value to take the absolute value of
-	/// \return The absolute value of the value
+	/// \return Absolute value
 	mpfr abs(const mpfr &val);
+
+	/// Absolute value of a multiprecision integer value: \f$ |x| \f$
+	/// \param val The value to take the absolute value of
+	/// \return Absolute value
+	mpz abs(const mpz &val);
+
+	/// Absolute value of a multiprecision rational value: \f$ |x| \f$
+	/// \param val The value to take the absolute value of
+	/// \return Absolute value
+	mpq abs(const mpq &val);
+
+	/// Absolute value of a multiprecision floating point value: \f$ |x| \f$
+	/// \param val The value to take the absolute value of
+	/// \return Absolute value
+	mpf abs(const mpf &val);
 
 	/// Square root of a multiprecision floating point value: \f$ \sqrt{x} \f$
 	/// \param val The value to take the square root of
