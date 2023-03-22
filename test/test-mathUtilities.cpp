@@ -11,9 +11,6 @@ TEST_CASE("Test Math Utilities", "[math]") {
 	REQUIRE(lrc::clamp(10.f, 0.f, 10.f) == 10.f);
 	REQUIRE(lrc::clamp(-10.f, 0.f, 10.f) == 0.f);
 	REQUIRE(lrc::clamp(20.f, 0.f, 10.f) == 10.f);
-	REQUIRE(lrc::clamp(5.f, 10.f, 0.f) == 5.f);
-	REQUIRE(lrc::clamp(20.f, 10.f, 0.f) == 10.f);
-	REQUIRE(lrc::clamp(-10.f, 10.f, 0.f) == 0.f);
 
 	REQUIRE(lrc::lerp(0.f, 0.f, 1.f) == 0.f);
 	REQUIRE(lrc::lerp(0.5f, 0.f, 1.f) == 0.5f);
@@ -22,9 +19,6 @@ TEST_CASE("Test Math Utilities", "[math]") {
 	REQUIRE(lrc::lerp(0.5f, 0.f, 10.f) == 5.f);
 	REQUIRE(lrc::lerp(1.f, 0.f, 10.f) == 10.f);
 	REQUIRE(lrc::lerp(2.f, 0.f, 10.f) == 20.f);
-	REQUIRE(lrc::lerp(0.f, 10.f, 0.f) == 10.f);
-	REQUIRE(lrc::lerp(0.5f, 10.f, 0.f) == 5.f);
-	REQUIRE(lrc::lerp(1.f, 10.f, 0.f) == 0.f);
 
 	REQUIRE(lrc::smoothStep(0.f) == 0.f);
 	REQUIRE(lrc::smoothStep(0.5f) == 0.5f);

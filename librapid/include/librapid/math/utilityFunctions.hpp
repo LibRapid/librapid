@@ -24,7 +24,7 @@ namespace librapid {
 				 typetraits::TypeInfo<Upper>::type == detail::LibRapidType::Scalar,
 			   int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE X clamp(X x, Lower lowerLimit, Upper upperLimit) {
-		if (lowerLimit > upperLimit) return clamp(x, upperLimit, lowerLimit);
+		LIBRAPID_ASSERT(lowerLimit < upperLimit, "Lower limit must be below upper limit");
 		if (x < lowerLimit) return static_cast<X>(lowerLimit);
 		if (x > upperLimit) return static_cast<X>(upperLimit);
 		return x;
