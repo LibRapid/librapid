@@ -7,6 +7,9 @@ namespace librapid {
 	/// \f$ C(x, m, M) = \left\{ \begin{align*} x & \quad m \le x \le M \\ m & \quad x < m \\ M &
 	/// \quad x > M \end{align*}\right. \f$
 	///
+	/// If M < m, the values are swapped to make the function valid.
+	/// For example, `clamp(5, 10, 0)` still returns `5`.
+	///
 	/// \tparam X Type of \p x
 	/// \tparam Lower Type of \p lowerLimit
 	/// \tparam Upper Type of \p upperLimit
@@ -21,6 +24,7 @@ namespace librapid {
 				 typetraits::TypeInfo<Upper>::type == detail::LibRapidType::Scalar,
 			   int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE X clamp(X x, Lower lowerLimit, Upper upperLimit) {
+		LIBRAPID_ASSERT(lowerLimit < upperLimit, "Lower limit must be below upper limit");
 		if (x < lowerLimit) return static_cast<X>(lowerLimit);
 		if (x > upperLimit) return static_cast<X>(upperLimit);
 		return x;
