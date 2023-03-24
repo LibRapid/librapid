@@ -115,7 +115,7 @@ namespace librapid {
 			/// it. Depending on your use case, this may result in more performant code, but the new
 			/// Array will not reference the original data in the ArrayView.
 			/// \return A new Array instance
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayType eval() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto eval() const;
 
 			/// Cast an ArrayView to a std::string, aligning items down the columns. A format
 			/// string can also be specified, which will be used to format the items to strings
