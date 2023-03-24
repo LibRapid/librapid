@@ -58,7 +58,10 @@ namespace librapid {
 		/// \tparam T The type of the array.
 		template<typename T>
 		class ArrayView;
-	}
+
+		template<typename T>
+		class Transpose;
+	} // namespace array
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_TYPE_DEF_HPP
