@@ -12,6 +12,36 @@ namespace librapid {
 		};
 	} // namespace typetraits
 
+	namespace detail {
+		template<typename Scalar>
+		LIBRAPID_ALWAYS_INLINE void transposeImpl(Scalar *__restrict out, Scalar *__restrict in,
+												  int64_t rows, int64_t cols, int64_t blockSize) {
+			if (rows * cols < global::multithreadThreshold) {
+				for (int64_t i = 0; i < rows; i += blockSize) {
+					for (int64_t j = 0; j < cols; j += blockSize) {
+						for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+							for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
+								out[col * rows + row] = in[row * cols + col];
+							}
+						}
+					}
+				}
+			} else {
+#pragma omp parallel for shared(rows, cols, blockSize, in, out) default(none)                      \
+  num_threads((int)global::numThreads)
+				for (int64_t i = 0; i < rows; i += blockSize) {
+					for (int64_t j = 0; j < cols; j += blockSize) {
+						for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+							for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
+								out[col * rows + row] = in[row * cols + col];
+							}
+						}
+					}
+				}
+			}
+		}
+	} // namespace detail
+
 	namespace array {
 		template<typename T>
 		class Transpose {
@@ -23,6 +53,11 @@ namespace librapid {
 			using ConstReference = const BaseType &;
 			using ShapeType		 = typename BaseType::ShapeType;
 			using Device		 = typename typetraits::TypeInfo<BaseType>::Device;
+
+			static constexpr bool allowVectorisation =
+			  typetraits::TypeInfo<Scalar>::allowVectorisation;
+			static constexpr bool isArray = typetraits::IsArrayContainer<BaseType>::value;
+			static constexpr bool isHost  = std::is_same_v<Device, device::CPU>;
 
 			/// Default constructor should never be used
 			Transpose() = delete;
@@ -63,6 +98,9 @@ namespace librapid {
 			/// \return Scalar type at the given index
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalar(int64_t index) const;
 
+			template<typename Container>
+			LIBRAPID_ALWAYS_INLINE void applyTo(Container &out) const;
+
 			/// Evaluate the Transpose object and return the result. Depending on your use case,
 			/// calling this function mid-expression might result in better performance, but you
 			/// should always test the available options before making a decision.
@@ -77,19 +115,54 @@ namespace librapid {
 
 		private:
 			ArrayType &m_array;
-			ShapeType m_shape;
+			ShapeType m_inputShape;
+			ShapeType m_outputShape;
 			ShapeType m_axes;
 		};
 
 		template<typename T>
 		Transpose<T>::Transpose(T &array, const ShapeType &axes) :
-				m_array(array), m_shape(array.shape()), m_axes(axes) {
-			LIBRAPID_ASSERT(m_shape.size() == m_axes.size(),
+				m_array(array), m_inputShape(array.shape()), m_axes(axes) {
+			LIBRAPID_ASSERT(m_inputShape.ndim() == m_axes.ndim(),
 							"Shape and axes must have the same number of dimensions");
 
-			for (int64_t i = 0; i < m_shape.size(); i++) { m_shape[i] = array.shape()[m_axes[i]];}
+			m_outputShape = m_inputShape;
+			for (int64_t i = 0; i < m_inputShape.ndim(); i++) {
+				m_outputShape[i] = m_inputShape[m_axes[i]];
+			}
+		}
 
+		template<typename T>
+		auto Transpose<T>::shape() const -> ShapeType {
+			return m_outputShape;
+		}
 
+		template<typename T>
+		template<typename Container>
+		void Transpose<T>::applyTo(Container &out) const {
+			LIBRAPID_ASSERT(out.shape() == m_outputShape, "Transpose assignment shape mismatch");
+
+			if constexpr (isArray && isHost && allowVectorisation) {
+				auto *outPtr	  = out.storage().begin();
+				auto *inPtr		  = m_array.storage().begin();
+				int64_t blockSize = global::cacheLineSize / sizeof(Scalar);
+
+				if (m_inputShape.ndim() == 2) {
+					detail::transposeImpl(
+					  outPtr, inPtr, m_inputShape[0], m_inputShape[1], blockSize);
+				} else {
+					LIBRAPID_NOT_IMPLEMENTED
+				}
+			} else {
+				LIBRAPID_NOT_IMPLEMENTED
+			}
+		}
+
+		template<typename T>
+		auto Transpose<T>::eval() const {
+			ArrayType res(m_outputShape);
+			applyTo(res);
+			return res;
 		}
 	}; // namespace array
 } // namespace librapid

@@ -11,17 +11,15 @@ namespace librapid {
 			static constexpr bool allowVectorisation   = TypeInfo<Scalar>::packetWidth > 1;
 		};
 
-		namespace typetraits {
-			/// Evaluates as true if the input type is an ArrayContainer instance
-			/// \tparam T Input type
-			template<typename T>
-			struct IsArrayContainer : std::false_type {};
+		/// Evaluates as true if the input type is an ArrayContainer instance
+		/// \tparam T Input type
+		template<typename T>
+		struct IsArrayContainer : std::false_type {};
 
-			template<typename SizeType, size_t dims, typename StorageScalar>
-			struct IsArrayContainer<array::ArrayContainer<Shape<SizeType, dims>, StorageScalar>>
-					: std::true_type {};
-		} // namespace typetraits
-	}	  // namespace typetraits
+		template<typename SizeType, size_t dims, typename StorageScalar>
+		struct IsArrayContainer<array::ArrayContainer<Shape<SizeType, dims>, StorageScalar>>
+				: std::true_type {};
+	} // namespace typetraits
 
 	namespace array {
 		template<typename ShapeType_, typename StorageType_>
@@ -100,6 +98,10 @@ namespace librapid {
 			template<typename desc, typename Functor_, typename... Args>
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &
 			operator=(const detail::Function<desc, Functor_, Args...> &function);
+
+			template<typename TransposeType>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &
+			operator=(const Transpose<TransposeType> &transpose);
 
 			/// Allow ArrayContainer objects to be initialized with a comma separated list of
 			/// values. This makes use of the CommaInitializer class
@@ -249,6 +251,16 @@ namespace librapid {
 			else
 #endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
 				detail::assign(*this, function);
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename TransposeType>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator=(
+		  const Transpose<TransposeType> &transpose) -> ArrayContainer & {
+			m_shape = transpose.shape();
+			m_storage.resize(m_shape.size(), 0);
+			transpose.applyTo(*this);
 			return *this;
 		}
 

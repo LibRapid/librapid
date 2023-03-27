@@ -21,9 +21,9 @@
 
 namespace librapid {
 	namespace detail {
-		/// An enum class representing different types within LibRapid. Intended maily for
+		/// An enum class representing different types within LibRapid. Intended mainly for
 		/// internal use
-		enum class LibRapidType { Scalar, ArrayContainer, ArrayFunction, ArrayView };
+		enum class LibRapidType { Scalar, ArrayContainer, ArrayFunction, ArrayView, Transpose };
 
 		constexpr bool sameType(LibRapidType type1, LibRapidType type2) { return type1 == type2; }
 
