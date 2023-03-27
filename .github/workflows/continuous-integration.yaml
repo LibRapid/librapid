@@ -240,6 +240,10 @@ jobs:
           cd docs
           pip install -r requirements.txt
 
+      - name: Force install Sphinx Build
+        run: |
+          sudo apt-get install python3-sphinx
+
       - name: Configure Files
         run: |
           touch .is_local
@@ -314,8 +318,6 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=on -DLIBRAPID_USE_MULTIPREC=on
           cmake --build . --parallel
-
-        # --target librapid_coverage
 
         env:
           CC: gcc # ../llvm/bin/clang
