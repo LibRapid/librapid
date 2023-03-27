@@ -13,33 +13,41 @@ namespace librapid {
 	} // namespace typetraits
 
 	namespace detail {
+#define TRANSPOSE_IMPL_KERNEL(KERN_)                                                               \
+	for (int64_t i = 0; i < rows; i += blockSize) {                                                \
+		for (int64_t j = 0; j < cols; j += blockSize) {                                            \
+			for (int64_t row = i; row < i + blockSize && row < rows; ++row) {                      \
+				for (int64_t col = j; col < j + blockSize && col < cols; ++col) { KERN_; }         \
+		}}                                                                                         \
+	}                                                                                              \
+	do {                                                                                           \
+	} while (false)
+
 		template<typename Scalar>
 		LIBRAPID_ALWAYS_INLINE void transposeImpl(Scalar *__restrict out, Scalar *__restrict in,
 												  int64_t rows, int64_t cols, int64_t blockSize) {
 			if (rows * cols < global::multithreadThreshold) {
-				for (int64_t i = 0; i < rows; i += blockSize) {
-					for (int64_t j = 0; j < cols; j += blockSize) {
-						for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-							for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-								out[col * rows + row] = in[row * cols + col];
-							}
-						}
-					}
-				}
+				TRANSPOSE_IMPL_KERNEL(out[col * rows + row] = in[row * cols + col]);
 			} else {
 #pragma omp parallel for shared(rows, cols, blockSize, in, out) default(none)                      \
   num_threads((int)global::numThreads)
-				for (int64_t i = 0; i < rows; i += blockSize) {
-					for (int64_t j = 0; j < cols; j += blockSize) {
-						for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-							for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-								out[col * rows + row] = in[row * cols + col];
-							}
-						}
-					}
-				}
+				TRANSPOSE_IMPL_KERNEL(out[col * rows + row] = in[row * cols + col]);
 			}
 		}
+
+		template<typename Scalar>
+		LIBRAPID_ALWAYS_INLINE void transposeInplaceImpl(Scalar *__restrict data, int64_t rows,
+														 int64_t cols, int64_t blockSize) {
+			if (rows * cols < global::multithreadThreshold) {
+				TRANSPOSE_IMPL_KERNEL(std::swap(data[col * rows + row], data[row * cols + col]););
+			} else {
+#pragma omp parallel for shared(rows, cols, blockSize, data) default(none)                      \
+  num_threads((int)global::numThreads)
+				TRANSPOSE_IMPL_KERNEL(std::swap(data[col * rows + row], data[row * cols + col]););
+			}
+		}
+
+#undef TRANSPOSE_IMPL_KERNEL
 	} // namespace detail
 
 	namespace array {
@@ -141,15 +149,21 @@ namespace librapid {
 		template<typename Container>
 		void Transpose<T>::applyTo(Container &out) const {
 			LIBRAPID_ASSERT(out.shape() == m_outputShape, "Transpose assignment shape mismatch");
+			bool inplace = &out == &m_array;
 
 			if constexpr (isArray && isHost && allowVectorisation) {
-				auto *outPtr	  = out.storage().begin();
-				auto *inPtr		  = m_array.storage().begin();
-				int64_t blockSize = global::cacheLineSize / sizeof(Scalar);
+				auto *__restrict outPtr = out.storage().begin();
+				auto *__restrict inPtr	= m_array.storage().begin();
+				int64_t blockSize		= global::cacheLineSize / sizeof(Scalar);
 
 				if (m_inputShape.ndim() == 2) {
-					detail::transposeImpl(
-					  outPtr, inPtr, m_inputShape[0], m_inputShape[1], blockSize);
+					if (inplace) {
+						detail::transposeInplaceImpl(
+						  outPtr, m_inputShape[0], m_inputShape[1], blockSize);
+					} else {
+						detail::transposeImpl(
+						  outPtr, inPtr, m_inputShape[0], m_inputShape[1], blockSize);
+					}
 				} else {
 					LIBRAPID_NOT_IMPLEMENTED
 				}
