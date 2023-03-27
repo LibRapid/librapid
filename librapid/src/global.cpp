@@ -5,6 +5,7 @@ namespace librapid::global {
 	int64_t multithreadThreshold	 = 5000;
 	int64_t gemmMultithreadThreshold = 100;
 	int64_t numThreads				 = 8;
+	int64_t cacheLineSize			 = 64;
 
 #if defined(LIBRAPID_HAS_CUDA)
 	cudaStream_t cudaStream;

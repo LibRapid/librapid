@@ -11,6 +11,7 @@ namespace librapid::detail {
 #endif // LIBRAPID_WINDOWS
 
 			preMainRun = true;
+			global::cacheLineSize = cacheLineSize();
 		}
 	}
 } // namespace librapid::detail

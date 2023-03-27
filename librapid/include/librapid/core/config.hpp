@@ -223,6 +223,8 @@
 		} while (false)
 #endif // LIBRAPID_ASSERT
 
+#define LIBRAPID_NOT_IMPLEMENTED LIBRAPID_ASSERT(false, "Not implemented");
+
 // Compiler-specific attributes
 #if defined(LIBRAPID_MSVC)
 #	include "msvcConfig.hpp"
