@@ -41,13 +41,105 @@ namespace librapid {
 			if (rows * cols < global::multithreadThreshold) {
 				TRANSPOSE_IMPL_KERNEL(std::swap(data[col * rows + row], data[row * cols + col]););
 			} else {
-#pragma omp parallel for shared(rows, cols, blockSize, data) default(none)                      \
+#pragma omp parallel for shared(rows, cols, blockSize, data) default(none)                         \
   num_threads((int)global::numThreads)
 				TRANSPOSE_IMPL_KERNEL(std::swap(data[col * rows + row], data[row * cols + col]););
 			}
 		}
 
 #undef TRANSPOSE_IMPL_KERNEL
+
+		LIBRAPID_ALWAYS_INLINE void transposeFloat8x8Kernel(float *__restrict out,
+															float *__restrict in, int64_t cols) {
+			__m256 r0, r1, r2, r3, r4, r5, r6, r7;
+			__m256 t0, t1, t2, t3, t4, t5, t6, t7;
+
+#define SHUFFLE_IMPL(LEFT_, RIGHT_)                                                                \
+	_mm256_insertf128_ps(_mm256_castps128_ps256(_mm_loadu_ps(&LEFT_)), _mm_loadu_ps(&RIGHT_), 1)
+
+			r0 = SHUFFLE_IMPL(in[0 * cols + 0], in[4 * cols + 0]);
+			r1 = SHUFFLE_IMPL(in[1 * cols + 0], in[5 * cols + 0]);
+			r2 = SHUFFLE_IMPL(in[2 * cols + 0], in[6 * cols + 0]);
+			r3 = SHUFFLE_IMPL(in[3 * cols + 0], in[7 * cols + 0]);
+			r4 = SHUFFLE_IMPL(in[0 * cols + 4], in[4 * cols + 4]);
+			r5 = SHUFFLE_IMPL(in[1 * cols + 4], in[5 * cols + 4]);
+			r6 = SHUFFLE_IMPL(in[2 * cols + 4], in[6 * cols + 4]);
+			r7 = SHUFFLE_IMPL(in[3 * cols + 4], in[7 * cols + 4]);
+
+#undef SHUFFLE_IMPL
+
+			t0 = _mm256_unpacklo_ps(r0, r1);
+			t1 = _mm256_unpackhi_ps(r0, r1);
+			t2 = _mm256_unpacklo_ps(r2, r3);
+			t3 = _mm256_unpackhi_ps(r2, r3);
+			t4 = _mm256_unpacklo_ps(r4, r5);
+			t5 = _mm256_unpackhi_ps(r4, r5);
+			t6 = _mm256_unpacklo_ps(r6, r7);
+			t7 = _mm256_unpackhi_ps(r6, r7);
+
+			__m256 v;
+
+			v  = _mm256_shuffle_ps(t0, t2, 0x4E);
+			r0 = _mm256_blend_ps(t0, v, 0xCC);
+			r1 = _mm256_blend_ps(t2, v, 0x33);
+
+			v  = _mm256_shuffle_ps(t1, t3, 0x4E);
+			r2 = _mm256_blend_ps(t1, v, 0xCC);
+			r3 = _mm256_blend_ps(t3, v, 0x33);
+
+			v  = _mm256_shuffle_ps(t4, t6, 0x4E);
+			r4 = _mm256_blend_ps(t4, v, 0xCC);
+			r5 = _mm256_blend_ps(t6, v, 0x33);
+
+			v  = _mm256_shuffle_ps(t5, t7, 0x4E);
+			r6 = _mm256_blend_ps(t5, v, 0xCC);
+			r7 = _mm256_blend_ps(t7, v, 0x33);
+
+			_mm256_store_ps(&out[0 * cols], r0);
+			_mm256_store_ps(&out[1 * cols], r1);
+			_mm256_store_ps(&out[2 * cols], r2);
+			_mm256_store_ps(&out[3 * cols], r3);
+			_mm256_store_ps(&out[4 * cols], r4);
+			_mm256_store_ps(&out[5 * cols], r5);
+			_mm256_store_ps(&out[6 * cols], r6);
+			_mm256_store_ps(&out[7 * cols], r7);
+		}
+
+		template<>
+		LIBRAPID_ALWAYS_INLINE void transposeImpl(float *__restrict out, float *__restrict in,
+												  int64_t rows, int64_t cols, int64_t) {
+			if (rows * cols < global::multithreadThreshold) {
+				for (int64_t i = 0; i < rows; i += 8) {
+					for (int64_t j = 0; j < cols; j += 8) {
+						if (i + 8 <= rows && j + 8 <= cols) {
+							transposeFloat8x8Kernel(&out[j * rows + i], &in[i * cols + j], rows);
+						} else {
+							for (int64_t row = i; row < i + 8 && row < rows; ++row) {
+								for (int64_t col = j; col < j + 8 && col < cols; ++col) {
+									out[col * rows + row] = in[row * cols + col];
+								}
+							}
+						}
+					}
+				}
+			} else {
+#pragma omp parallel for shared(rows, cols, in, out) default(none)                                 \
+  num_threads((int)global::numThreads)
+				for (int64_t i = 0; i < rows; i += 8) {
+					for (int64_t j = 0; j < cols; j += 8) {
+						if (i + 8 <= rows && j + 8 <= cols) {
+							transposeFloat8x8Kernel(&out[j * rows + i], &in[i * cols + j], rows);
+						} else {
+							for (int64_t row = i; row < i + 8 && row < rows; ++row) {
+								for (int64_t col = j; col < j + 8 && col < cols; ++col) {
+									out[col * rows + row] = in[row * cols + col];
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	} // namespace detail
 
 	namespace array {
@@ -148,8 +240,8 @@ namespace librapid {
 		template<typename T>
 		template<typename Container>
 		void Transpose<T>::applyTo(Container &out) const {
+			bool inplace = ((void *)&out) == ((void *)&m_array);
 			LIBRAPID_ASSERT(out.shape() == m_outputShape, "Transpose assignment shape mismatch");
-			bool inplace = &out == &m_array;
 
 			if constexpr (isArray && isHost && allowVectorisation) {
 				auto *__restrict outPtr = out.storage().begin();
@@ -178,7 +270,30 @@ namespace librapid {
 			applyTo(res);
 			return res;
 		}
+
+		template<typename T>
+		std::string Transpose<T>::str(const std::string &format) const {
+			// TODO: Optimise this for larger matrices to avoid unnecessary evaluation?
+			return eval().str(format);
+		}
 	}; // namespace array
+
+	template<typename T, typename ShapeType = Shape<size_t, 32>>
+	auto transpose(T &&array, const ShapeType &axes = ShapeType()) {
+		// If axes is empty, transpose the array in reverse order
+		if (axes.ndim() == 0) {
+			ShapeType tmp = ShapeType::zeros(array.ndim());
+			for (int64_t i = 0; i < array.ndim(); i++) { tmp[i] = array.ndim() - i - 1; }
+			return array::Transpose(array, tmp);
+		}
+
+		return array::Transpose(array, axes);
+	}
 } // namespace librapid
+
+// Support FMT printing
+#ifdef FMT_API
+LIBRAPID_SIMPLE_IO_IMPL(typename T, librapid::array::Transpose<T>)
+#endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_TRANSPOSE_HPP
