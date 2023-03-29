@@ -7,6 +7,10 @@
  */
 
 namespace librapid {
+	namespace typetraits {
+		LIBRAPID_DEFINE_AS_TYPE(typename T COMMA size_t N, Shape<T COMMA N>);
+	}
+
 	template<typename T = size_t, size_t N = 32>
 	class Shape {
 	public:
