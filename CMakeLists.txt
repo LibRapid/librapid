@@ -36,6 +36,7 @@ option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
 option(LIBRAPID_USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_FAST_MATH "Use potentially less accurate operations to increase performance" OFF)
+option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" ON)
 
 # Include any required modules
 include(identifyBLAS)
@@ -402,6 +403,17 @@ if (LIBRAPID_FAST_MATH)
         target_compile_options(${module_name} PUBLIC /fp:fast)
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
         target_compile_options(${module_name} PUBLIC -ffast-math)
+    endif ()
+endif ()
+
+if (LIBRAPID_NATIVE_ARCH)
+    # Detect compiler
+    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(${module_name} PUBLIC -march=native)
+    elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+        # MSVC: /arch:AVX2 will use the highest available SIMD instruction set
+        # If you need a different SIMD instruction set, replace AVX2 with your desired set
+        target_compile_options(${module_name} PUBLIC /arch:AVX2)
     endif ()
 endif ()
 
