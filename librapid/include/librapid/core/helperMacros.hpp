@@ -35,8 +35,18 @@
                                                                                                    \
 	template<TEMPLATE_>                                                                            \
 	std::ostream &operator<<(std::ostream &os, const TYPE_ &object) {                              \
-		os << object.str();                                                               \
+		os << object.str();                                                                        \
 		return os;                                                                                 \
 	}
+
+namespace librapid::typetraits {
+	template<typename T>
+	struct IsLibRapidType : std::false_type {};
+} // namespace librapid
+
+// Define a type as being part of librapid -- this should be contained in the typetraits namespace
+#define LIBRAPID_DEFINE_AS_TYPE(TEMPLATE_, TYPE_)                                                  \
+	template<TEMPLATE_>                                                                            \
+	struct IsLibRapidType<TYPE_> : std::true_type {}
 
 #endif // LIBRAPID_CORE_HELPER_MACROS

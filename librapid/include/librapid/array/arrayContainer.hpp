@@ -19,6 +19,10 @@ namespace librapid {
 		template<typename SizeType, size_t dims, typename StorageScalar>
 		struct IsArrayContainer<array::ArrayContainer<Shape<SizeType, dims>, StorageScalar>>
 				: std::true_type {};
+
+		LIBRAPID_DEFINE_AS_TYPE(
+		  typename SizeType COMMA size_t dims COMMA typename StorageScalar,
+		  array::ArrayContainer<Shape<SizeType COMMA dims> COMMA StorageScalar>);
 	} // namespace typetraits
 
 	namespace array {

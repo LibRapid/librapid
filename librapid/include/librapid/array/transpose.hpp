@@ -10,6 +10,8 @@ namespace librapid {
 			using Device							   = typename TypeInfo<std::decay_t<T>>::Device;
 			static constexpr bool allowVectorisation   = false;
 		};
+
+		LIBRAPID_DEFINE_AS_TYPE(typename T, array::Transpose<T>);
 	} // namespace typetraits
 
 	namespace kernels {
