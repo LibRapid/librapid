@@ -12,61 +12,29 @@ namespace librapid {
 		};
 	} // namespace typetraits
 
-	namespace detail {
-#define TRANSPOSE_IMPL_KERNEL(KERN_)                                                               \
-	for (int64_t i = 0; i < rows; i += blockSize) {                                                \
-		for (int64_t j = 0; j < cols; j += blockSize) {                                            \
-			for (int64_t row = i; row < i + blockSize && row < rows; ++row) {                      \
-				for (int64_t col = j; col < j + blockSize && col < cols; ++col) { KERN_; }         \
-		}}                                                                                         \
-	}                                                                                              \
-	do {                                                                                           \
-	} while (false)
+	namespace kernels {
+#if LIBRAPID_ARCH >= AVX2
+#	define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 8
+#	define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 4
 
-		template<typename Scalar>
-		LIBRAPID_ALWAYS_INLINE void transposeImpl(Scalar *__restrict out, Scalar *__restrict in,
-												  int64_t rows, int64_t cols, int64_t blockSize) {
-			if (rows * cols < global::multithreadThreshold) {
-				TRANSPOSE_IMPL_KERNEL(out[col * rows + row] = in[row * cols + col]);
-			} else {
-#pragma omp parallel for shared(rows, cols, blockSize, in, out) default(none)                      \
-  num_threads((int)global::numThreads)
-				TRANSPOSE_IMPL_KERNEL(out[col * rows + row] = in[row * cols + col]);
-			}
-		}
-
-		template<typename Scalar>
-		LIBRAPID_ALWAYS_INLINE void transposeInplaceImpl(Scalar *__restrict data, int64_t rows,
-														 int64_t cols, int64_t blockSize) {
-			if (rows * cols < global::multithreadThreshold) {
-				TRANSPOSE_IMPL_KERNEL(std::swap(data[col * rows + row], data[row * cols + col]););
-			} else {
-#pragma omp parallel for shared(rows, cols, blockSize, data) default(none)                         \
-  num_threads((int)global::numThreads)
-				TRANSPOSE_IMPL_KERNEL(std::swap(data[col * rows + row], data[row * cols + col]););
-			}
-		}
-
-#undef TRANSPOSE_IMPL_KERNEL
-
-		LIBRAPID_ALWAYS_INLINE void transposeFloat8x8Kernel(float *__restrict out,
-															float *__restrict in, int64_t cols) {
+		LIBRAPID_ALWAYS_INLINE void transposeFloatKernel(float *__restrict out,
+														 float *__restrict in, int64_t cols) {
 			__m256 r0, r1, r2, r3, r4, r5, r6, r7;
 			__m256 t0, t1, t2, t3, t4, t5, t6, t7;
 
-#define SHUFFLE_IMPL(LEFT_, RIGHT_)                                                                \
-	_mm256_insertf128_ps(_mm256_castps128_ps256(_mm_loadu_ps(&LEFT_)), _mm_loadu_ps(&RIGHT_), 1)
+#	define LOAD256_IMPL(LEFT_, RIGHT_)                                                            \
+		_mm256_insertf128_ps(_mm256_castps128_ps256(_mm_loadu_ps(&LEFT_)), _mm_loadu_ps(&RIGHT_), 1)
 
-			r0 = SHUFFLE_IMPL(in[0 * cols + 0], in[4 * cols + 0]);
-			r1 = SHUFFLE_IMPL(in[1 * cols + 0], in[5 * cols + 0]);
-			r2 = SHUFFLE_IMPL(in[2 * cols + 0], in[6 * cols + 0]);
-			r3 = SHUFFLE_IMPL(in[3 * cols + 0], in[7 * cols + 0]);
-			r4 = SHUFFLE_IMPL(in[0 * cols + 4], in[4 * cols + 4]);
-			r5 = SHUFFLE_IMPL(in[1 * cols + 4], in[5 * cols + 4]);
-			r6 = SHUFFLE_IMPL(in[2 * cols + 4], in[6 * cols + 4]);
-			r7 = SHUFFLE_IMPL(in[3 * cols + 4], in[7 * cols + 4]);
+			r0 = LOAD256_IMPL(in[0 * cols + 0], in[4 * cols + 0]);
+			r1 = LOAD256_IMPL(in[1 * cols + 0], in[5 * cols + 0]);
+			r2 = LOAD256_IMPL(in[2 * cols + 0], in[6 * cols + 0]);
+			r3 = LOAD256_IMPL(in[3 * cols + 0], in[7 * cols + 0]);
+			r4 = LOAD256_IMPL(in[0 * cols + 4], in[4 * cols + 4]);
+			r5 = LOAD256_IMPL(in[1 * cols + 4], in[5 * cols + 4]);
+			r6 = LOAD256_IMPL(in[2 * cols + 4], in[6 * cols + 4]);
+			r7 = LOAD256_IMPL(in[3 * cols + 4], in[7 * cols + 4]);
 
-#undef SHUFFLE_IMPL
+#	undef LOAD256_IMPL
 
 			t0 = _mm256_unpacklo_ps(r0, r1);
 			t1 = _mm256_unpackhi_ps(r0, r1);
@@ -105,17 +73,146 @@ namespace librapid {
 			_mm256_store_ps(&out[7 * cols], r7);
 		}
 
+		LIBRAPID_ALWAYS_INLINE void transposeDoubleKernel(double *__restrict out,
+														  double *__restrict in, int64_t cols) {
+			__m256d r0, r1, r2, r3;
+			__m256d t0, t1, t2, t3;
+
+#	define LOAD256_IMPL(LEFT_, RIGHT_)                                                            \
+		_mm256_insertf128_pd(_mm256_castpd128_pd256(_mm_loadu_pd(&LEFT_)), _mm_loadu_pd(&RIGHT_), 1)
+
+			r0 = LOAD256_IMPL(in[0 * cols + 0], in[2 * cols + 0]);
+			r1 = LOAD256_IMPL(in[1 * cols + 0], in[3 * cols + 0]);
+			r2 = LOAD256_IMPL(in[0 * cols + 2], in[2 * cols + 2]);
+			r3 = LOAD256_IMPL(in[1 * cols + 2], in[3 * cols + 2]);
+
+#	undef LOAD256_IMPL
+
+			t0 = _mm256_unpacklo_pd(r0, r1);
+			t1 = _mm256_unpackhi_pd(r0, r1);
+			t2 = _mm256_unpacklo_pd(r2, r3);
+			t3 = _mm256_unpackhi_pd(r2, r3);
+
+			__m256d v;
+
+			v  = _mm256_shuffle_pd(t0, t2, 0x0);
+			r0 = _mm256_blend_pd(t0, v, 0xC);
+			r1 = _mm256_blend_pd(t2, v, 0x3);
+
+			v  = _mm256_shuffle_pd(t1, t3, 0x0);
+			r2 = _mm256_blend_pd(t1, v, 0xC);
+			r3 = _mm256_blend_pd(t3, v, 0x3);
+
+			_mm256_store_pd(&out[0 * cols], r0);
+			_mm256_store_pd(&out[1 * cols], r1);
+			_mm256_store_pd(&out[2 * cols], r2);
+			_mm256_store_pd(&out[3 * cols], r3);
+		}
+#elif LIBRAPID_ARCH >= SSE2
+
+#	define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 2
+#	define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 4
+
+		LIBRAPID_ALWAYS_INLINE void transposeFloatKernel(float *__restrict out,
+														 float *__restrict in, int64_t cols) {
+			__m128 tmp3, tmp2, tmp1, tmp0;
+
+			tmp0 = _mm_shuffle_ps(_mm_load_ps(in + 0 * cols), _mm_load_ps(in + 1 * cols), 0x44);
+			tmp2 = _mm_shuffle_ps(_mm_load_ps(in + 0 * cols), _mm_load_ps(in + 1 * cols), 0xEE);
+			tmp1 = _mm_shuffle_ps(_mm_load_ps(in + 2 * cols), _mm_load_ps(in + 3 * cols), 0x44);
+			tmp3 = _mm_shuffle_ps(_mm_load_ps(in + 2 * cols), _mm_load_ps(in + 3 * cols), 0xEE);
+
+			_mm_store_ps(out + 0 * cols, _mm_shuffle_ps(tmp0, tmp1, 0x88));
+			_mm_store_ps(out + 1 * cols, _mm_shuffle_ps(tmp0, tmp1, 0xDD));
+			_mm_store_ps(out + 2 * cols, _mm_shuffle_ps(tmp2, tmp3, 0x88));
+			_mm_store_ps(out + 3 * cols, _mm_shuffle_ps(tmp2, tmp3, 0xDD));
+		}
+
+		LIBRAPID_ALWAYS_INLINE void transposeDoubleKernel(double *__restrict out,
+														  double *__restrict in, int64_t cols) {
+			__m128d tmp1, tmp0;
+
+			tmp0 = _mm_shuffle_pd(_mm_load_pd(in + 0 * cols), _mm_load_pd(in + 1 * cols), 0x0);
+			tmp1 = _mm_shuffle_pd(_mm_load_pd(in + 2 * cols), _mm_load_pd(in + 3 * cols), 0x0);
+
+			_mm_store_pd(out + 0 * cols, _mm_shuffle_pd(tmp0, tmp1, 0x0));
+			_mm_store_pd(out + 1 * cols, _mm_shuffle_pd(tmp0, tmp1, 0xF));
+		}
+
+#endif // LIBRAPID_MSVC
+	}  // namespace kernels
+
+	namespace detail {
+		template<typename Scalar>
+		LIBRAPID_ALWAYS_INLINE void transposeImpl(Scalar *__restrict out, Scalar *__restrict in,
+												  int64_t rows, int64_t cols, int64_t blockSize) {
+			if (rows * cols < global::multithreadThreshold) {
+				for (int64_t i = 0; i < rows; i += blockSize) {
+					for (int64_t j = 0; j < cols; j += blockSize) {
+						for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+							for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
+								out[col * rows + row] = in[row * cols + col];
+							}
+						}
+					}
+				}
+			} else {
+#pragma omp parallel for shared(rows, cols, blockSize, in, out) default(none)                      \
+  num_threads((int)global::numThreads)
+				for (int64_t i = 0; i < rows; i += blockSize) {
+					for (int64_t j = 0; j < cols; j += blockSize) {
+						for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+							for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
+								out[col * rows + row] = in[row * cols + col];
+							}
+						}
+					}
+				}
+			}
+		}
+
+		template<typename Scalar>
+		LIBRAPID_ALWAYS_INLINE void transposeInplaceImpl(Scalar *__restrict data, int64_t rows,
+														 int64_t cols, int64_t blockSize) {
+			if (rows * cols < global::multithreadThreshold) {
+				for (int64_t i = 0; i < rows; i += blockSize) {
+					for (int64_t j = 0; j < cols; j += blockSize) {
+						for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+							for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
+								std::swap(data[col * rows + row], data[row * cols + col]);
+							}
+						}
+					}
+				}
+			} else {
+#pragma omp parallel for shared(rows, cols, blockSize, data) default(none)                         \
+  num_threads((int)global::numThreads)
+				for (int64_t i = 0; i < rows; i += blockSize) {
+					for (int64_t j = 0; j < cols; j += blockSize) {
+						for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+							for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
+								std::swap(data[col * rows + row], data[row * cols + col]);
+							}
+						}
+					}
+				}
+			}
+		}
+
+#if LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE > 0
 		template<>
 		LIBRAPID_ALWAYS_INLINE void transposeImpl(float *__restrict out, float *__restrict in,
 												  int64_t rows, int64_t cols, int64_t) {
+			constexpr int64_t blockSize = LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE;
 			if (rows * cols < global::multithreadThreshold) {
-				for (int64_t i = 0; i < rows; i += 8) {
-					for (int64_t j = 0; j < cols; j += 8) {
-						if (i + 8 <= rows && j + 8 <= cols) {
-							transposeFloat8x8Kernel(&out[j * rows + i], &in[i * cols + j], rows);
+				for (int64_t i = 0; i < rows; i += blockSize) {
+					for (int64_t j = 0; j < cols; j += blockSize) {
+						if (i + blockSize <= rows && j + blockSize <= cols) {
+							kernels::transposeFloatKernel(
+							  &out[j * rows + i], &in[i * cols + j], rows);
 						} else {
-							for (int64_t row = i; row < i + 8 && row < rows; ++row) {
-								for (int64_t col = j; col < j + 8 && col < cols; ++col) {
+							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
 									out[col * rows + row] = in[row * cols + col];
 								}
 							}
@@ -123,15 +220,16 @@ namespace librapid {
 					}
 				}
 			} else {
-#pragma omp parallel for shared(rows, cols, in, out) default(none)                                 \
-  num_threads((int)global::numThreads)
-				for (int64_t i = 0; i < rows; i += 8) {
-					for (int64_t j = 0; j < cols; j += 8) {
-						if (i + 8 <= rows && j + 8 <= cols) {
-							transposeFloat8x8Kernel(&out[j * rows + i], &in[i * cols + j], rows);
+#	pragma omp parallel for shared(rows, cols, in, out) default(none)                             \
+	  num_threads((int)global::numThreads)
+				for (int64_t i = 0; i < rows; i += blockSize) {
+					for (int64_t j = 0; j < cols; j += blockSize) {
+						if (i + blockSize <= rows && j + blockSize <= cols) {
+							kernels::transposeFloatKernel(
+							  &out[j * rows + i], &in[i * cols + j], rows);
 						} else {
-							for (int64_t row = i; row < i + 8 && row < rows; ++row) {
-								for (int64_t col = j; col < j + 8 && col < cols; ++col) {
+							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
 									out[col * rows + row] = in[row * cols + col];
 								}
 							}
@@ -140,7 +238,49 @@ namespace librapid {
 				}
 			}
 		}
-	} // namespace detail
+#endif // LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE > 0
+
+#if LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE > 0
+		template<>
+		LIBRAPID_ALWAYS_INLINE void transposeImpl(double *__restrict out, double *__restrict in,
+												  int64_t rows, int64_t cols, int64_t) {
+			constexpr int64_t blockSize = LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE;
+			if (rows * cols < global::multithreadThreshold) {
+				for (int64_t i = 0; i < rows; i += blockSize) {
+					for (int64_t j = 0; j < cols; j += blockSize) {
+						if (i + blockSize <= rows && j + blockSize <= cols) {
+							kernels::transposeDoubleKernel(
+							  &out[j * rows + i], &in[i * cols + j], rows);
+						} else {
+							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
+									out[col * rows + row] = in[row * cols + col];
+								}
+							}
+						}
+					}
+				}
+			} else {
+#	pragma omp parallel for shared(rows, cols, in, out) default(none)                             \
+	  num_threads((int)global::numThreads)
+				for (int64_t i = 0; i < rows; i += blockSize) {
+					for (int64_t j = 0; j < cols; j += blockSize) {
+						if (i + blockSize <= rows && j + blockSize <= cols) {
+							kernels::transposeDoubleKernel(
+							  &out[j * rows + i], &in[i * cols + j], rows);
+						} else {
+							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
+									out[col * rows + row] = in[row * cols + col];
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+#endif // LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE > 0
+	}  // namespace detail
 
 	namespace array {
 		template<typename T>
