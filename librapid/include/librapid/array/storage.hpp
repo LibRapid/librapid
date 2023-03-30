@@ -318,7 +318,15 @@ namespace librapid {
 			using Traits	= std::allocator_traits<A>;
 			using Pointer	= typename Traits::pointer;
 			using ValueType = typename Traits::value_type;
-			Pointer ptr		= alloc.allocate(size);
+
+			// Force aligned memory
+#if defined(LIBRAPID_MSVC)
+			auto ptr = static_cast<Pointer>(
+			  _aligned_malloc(size * sizeof(ValueType), global::memoryAlignment));
+#else
+			auto ptr = static_cast<Pointer>(
+			  std::aligned_alloc(global::memoryAlignment, size * sizeof(ValueType)));
+#endif
 
 			// If the type cannot be trivially constructed, we need to
 			// initialize each value
@@ -328,52 +336,8 @@ namespace librapid {
 				}
 			}
 
-			fmt::print("Alignment mod 16: {}\n", (size_t)ptr % 16);
-			fmt::print("Alignment mod 32: {}\n", (size_t)ptr % 32);
-			fmt::print("Alignment mod 64: {}\n", (size_t)ptr % 64);
-			std::cout << std::endl;
-
 			return ptr;
-
-			//			using Traits  = std::allocator_traits<A>;
-			//			using Pointer = typename Traits::pointer;
-			//			using ValueType = typename Traits::value_type;
-			//
-			//			size_t requestSize = size * sizeof(ValueType) + global::memoryAlignment;
-			//			auto *buffer = new char[requestSize];
-			//
-			//			LIBRAPID_ASSERT(buffer, "Allocation failed");
-			//
-			//			size_t remainder			= ((size_t)buffer) %
-			// global::memoryAlignment; 			size_t offset				= global::memoryAlignment
-			// - remainder; 			char *ret					= buffer + (unsigned
-			// char)offset;
-			//			*(unsigned char *)(ret - 1) = offset;
-			//
-			//			LIBRAPID_ASSERT(((size_t)ret) % global::memoryAlignment == 0,
-			//							"Memory alignment failed");
-			//
-			//			return (Pointer)ret;
 		}
-
-		// template<typename A>
-		// typename std::allocator_traits<A>::pointer
-		// safeAllocate(A &alloc, typename std::allocator_traits<A>::size_type size) {
-		// 	using Traits	= std::allocator_traits<A>;
-		// 	using Pointer	= typename Traits::pointer;
-		// 	using ValueType = typename Traits::value_type;
-		// 	Pointer ptr		= alloc.allocate(size);
-
-		// 	// If the type cannot be trivially constructed, we need to
-		// 	// initialize each value
-		// 	if (!typetraits::TriviallyDefaultConstructible<ValueType>::value) {
-		// 		for (Pointer p = ptr; p != ptr + size; ++p) {
-		// 			Traits::construct(alloc, p, ValueType());
-		// 		}
-		// 	}
-
-		// 	return ptr;
-		// }
 
 		/// Safely deallocate memory for \p size elements, using an std::allocator \p alloc. If the
 		/// object cannot be trivially destroyed, the destructor will be called on each element of
@@ -394,13 +358,12 @@ namespace librapid {
 			if (!typetraits::TriviallyDefaultConstructible<ValueType>::value) {
 				for (Pointer p = ptr; p != ptr + size; ++p) { Traits::destroy(alloc, p); }
 			}
-			Traits::deallocate(alloc, ptr, size);
 
-			// using Traits  = std::allocator_traits<A>;
-			// using Pointer = typename Traits::pointer;
-
-			// int offset = *(((char *)ptr) - 1);
-			// delete[] (((char *)ptr) - offset);
+#if defined(LIBRAPID_MSVC)
+			_aligned_free(ptr);
+#else
+			std::free(ptr);
+#endif
 		}
 	} // namespace detail
 

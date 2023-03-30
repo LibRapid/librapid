@@ -303,20 +303,27 @@ namespace librapid {
 		};
 	} // namespace typetraits
 
-	namespace array {
-#define IS_ARRAY_OP_ARRAY                                                                          \
-	(typetraits::TypeInfo<std::decay_t<LHS>>::type != ::librapid::detail::LibRapidType::Scalar) && \
-	  (typetraits::TypeInfo<std::decay_t<RHS>>::type !=                                            \
-	   ::librapid::detail::LibRapidType::Scalar) &&                                                \
-	  typetraits::IsLibRapidType<std::decay_t<LHS>>::value                                         \
-		&&typetraits::IsLibRapidType<std::decay_t<RHS>>::value
+	namespace detail {
+		template<typename LHS, typename RHS>
+		constexpr bool isArrayOpArray() {
+			return (typetraits::TypeInfo<std::decay_t<LHS>>::type != LibRapidType::Scalar) &&
+				   (typetraits::TypeInfo<std::decay_t<RHS>>::type != LibRapidType::Scalar) &&
+				   typetraits::IsLibRapidType<std::decay_t<LHS>>::value &&
+				   typetraits::IsLibRapidType<std::decay_t<RHS>>::value;
+		}
 
-#define IS_ARRAY_OP_WITH_SCALAR                                                                    \
-	(typetraits::IsLibRapidType<std::decay_t<LHS>>::value &&                                       \
-	 typetraits::TypeInfo<std::decay_t<RHS>>::type == ::librapid::detail::LibRapidType::Scalar) || \
-	  (typetraits::TypeInfo<std::decay_t<LHS>>::type ==                                            \
-		 ::librapid::detail::LibRapidType::Scalar &&                                               \
-	   typetraits::IsLibRapidType<std::decay_t<RHS>>::value)
+		template<typename LHS, typename RHS>
+		constexpr bool isArrayOpWithScalar() {
+			return (typetraits::IsLibRapidType<std::decay_t<LHS>>::value &&
+					typetraits::TypeInfo<std::decay_t<RHS>>::type == LibRapidType::Scalar) ||
+				   (typetraits::TypeInfo<std::decay_t<LHS>>::type == LibRapidType::Scalar &&
+					typetraits::IsLibRapidType<std::decay_t<RHS>>::value);
+		}
+	} // namespace detail
+
+	namespace array {
+#define IS_ARRAY_OP_ARRAY		detail::isArrayOpArray<LHS, RHS>()
+#define IS_ARRAY_OP_WITH_SCALAR detail::isArrayOpWithScalar<LHS, RHS>()
 
 		/// \brief Element-wise array addition
 		///
@@ -508,12 +515,7 @@ namespace librapid {
 															   std::forward<RHS>(rhs));
 		}
 
-		template<class LHS, class RHS,
-				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
-											::librapid::detail::LibRapidType::Scalar) ^
-											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
-											  ::librapid::detail::LibRapidType::Scalar),
-										   int> = 0>
+		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<=(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::LessThanEqual, LHS, RHS> {
@@ -544,12 +546,7 @@ namespace librapid {
 																  std::forward<RHS>(rhs));
 		}
 
-		template<class LHS, class RHS,
-				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
-											::librapid::detail::LibRapidType::Scalar) ^
-											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
-											  ::librapid::detail::LibRapidType::Scalar),
-										   int> = 0>
+		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>=(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::GreaterThanEqual, LHS, RHS> {
@@ -570,29 +567,24 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		// template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		// LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
-		//   LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
-		// 											  detail::ElementWiseEqual, LHS, RHS> {
-		// 	LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
-		// 	return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
-		// 								detail::ElementWiseEqual>(std::forward<LHS>(lhs),
-		// 														  std::forward<RHS>(rhs));
-		// }
+		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
+		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
+													  detail::ElementWiseEqual, LHS, RHS> {
+			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
+										detail::ElementWiseEqual>(std::forward<LHS>(lhs),
+																  std::forward<RHS>(rhs));
+		}
 
-		// template<class LHS, class RHS,
-		// 		 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
-		// 									::librapid::detail::LibRapidType::Scalar) ^
-		// 									 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
-		// 									  ::librapid::detail::LibRapidType::Scalar),
-		// 								   int> = 0>
-		// LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
-		//   LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
-		// 											  detail::ElementWiseEqual, LHS, RHS> {
-		// 	return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
-		// 								detail::ElementWiseEqual>(std::forward<LHS>(lhs),
-		// 														  std::forward<RHS>(rhs));
-		// }
+		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
+		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
+													  detail::ElementWiseEqual, LHS, RHS> {
+			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
+										detail::ElementWiseEqual>(std::forward<LHS>(lhs),
+																  std::forward<RHS>(rhs));
+		}
 
 		/// \brief Element-wise array comparison, checking whether a != b for all a, b in
 		/// input arrays
@@ -616,12 +608,7 @@ namespace librapid {
 																	 std::forward<RHS>(rhs));
 		}
 
-		template<class LHS, class RHS,
-				 typename std::enable_if_t<(typetraits::TypeInfo<std::decay_t<LHS>>::type ==
-											::librapid::detail::LibRapidType::Scalar) ^
-											 (typetraits::TypeInfo<std::decay_t<RHS>>::type ==
-											  ::librapid::detail::LibRapidType::Scalar),
-										   int> = 0>
+		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(LHS &&lhs, RHS &&rhs)
 		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
 													  detail::ElementWiseNotEqual, LHS, RHS> {
