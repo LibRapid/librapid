@@ -284,7 +284,7 @@ namespace librapid {
 
 	private:
 		// Scalar m_data[Size];
-		std::array<Scalar, Size> m_data;
+		alignas(64) std::array<Scalar, Size> m_data;
 	};
 
 	// Trait implementations
@@ -380,7 +380,8 @@ namespace librapid {
 	Storage<T, A>::Storage(SizeType size, ConstReference value, const Allocator &alloc) :
 			m_allocator(alloc), m_begin(detail::safeAllocate(m_allocator, size)),
 			m_end(m_begin + size), m_independent(true) {
-		std::fill(m_begin, m_end, value);
+		// std::fill(m_begin, m_end, value);
+		for (auto it = m_begin; it != m_end; ++it) { *it = value; }
 	}
 
 	template<typename T, typename A>
@@ -638,7 +639,8 @@ namespace librapid {
 
 	template<typename T, size_t... D>
 	FixedStorage<T, D...>::FixedStorage(const Scalar &value) {
-		std::fill(begin(), end(), value);
+		// std::fill(begin(), end(), value);
+		for (auto it = begin(); it != end(); ++it) { *it = value; }
 	}
 
 	template<typename T, size_t... D>
