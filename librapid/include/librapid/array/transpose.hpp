@@ -16,8 +16,8 @@ namespace librapid {
 
 	namespace kernels {
 #if !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= AVX2
-#	define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 8
 #	define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 4
+#	define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 8
 
 		LIBRAPID_ALWAYS_INLINE void transposeFloatKernel(float *__restrict out,
 														 float *__restrict in, int64_t cols) {
@@ -132,13 +132,19 @@ namespace librapid {
 
 		LIBRAPID_ALWAYS_INLINE void transposeDoubleKernel(double *__restrict out,
 														  double *__restrict in, int64_t cols) {
-			__m128d tmp1, tmp0;
+			__m128d tmp0, tmp1;
 
-			tmp0 = _mm_shuffle_pd(_mm_load_pd(in + 0 * cols), _mm_load_pd(in + 1 * cols), 0x0);
-			tmp1 = _mm_shuffle_pd(_mm_load_pd(in + 2 * cols), _mm_load_pd(in + 3 * cols), 0x0);
+			// Load the values from input matrix
+			tmp0 = _mm_load_pd(in + 0 * cols);
+			tmp1 = _mm_load_pd(in + 1 * cols);
 
-			_mm_store_pd(out + 0 * cols, _mm_shuffle_pd(tmp0, tmp1, 0x0));
-			_mm_store_pd(out + 1 * cols, _mm_shuffle_pd(tmp0, tmp1, 0xF));
+			// Transpose the 2x2 matrix
+			__m128d tmp0Unpck = _mm_unpacklo_pd(tmp0, tmp1);
+			__m128d tmp1Unpck = _mm_unpackhi_pd(tmp0, tmp1);
+
+			// Store the transposed values in the output matrix
+			_mm_store_pd(out + 0 * cols, tmp0Unpck);
+			_mm_store_pd(out + 1 * cols, tmp1Unpck);
 		}
 
 #endif // LIBRAPID_MSVC

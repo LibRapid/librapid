@@ -56,5 +56,7 @@ ENDIF ()
 
 IF (${FIND_AVX_10} OR ${FIND_AVX_20})
     SET(AVX_FOUND TRUE)
-    MESSAGE(STATUS "Find CPU supports ${AVX_FLAGS}.")
+    MESSAGE(STATUS "[ LIBRAPID ] CPU supports ${AVX_FLAGS}")
+ELSE ()
+    MESSAGE(STATUS "[ LIBRAPID ] CPU does not support AVX or AVX2")
 ENDIF ()
