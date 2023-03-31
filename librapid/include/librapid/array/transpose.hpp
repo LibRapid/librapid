@@ -15,6 +15,7 @@ namespace librapid {
 	} // namespace typetraits
 
 	namespace kernels {
+#if defined(LIBRAPID_NATIVE_ARCH)
 #if !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= AVX2
 #	define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 4
 #	define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 8
@@ -148,6 +149,7 @@ namespace librapid {
 		}
 
 #endif // LIBRAPID_MSVC
+#endif // LIBRAPID_NATIVE_ARCH
 	}  // namespace kernels
 
 	namespace detail {

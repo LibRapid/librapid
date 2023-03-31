@@ -283,11 +283,11 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstReverseIterator crend() const noexcept;
 
 	private:
-#if defined(LIBRAPID_APPLE)
-		// No memory alignment on Apple platforms
-		std::array<Scalar, Size> m_data;
-#else
+#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
 		alignas(64) std::array<Scalar, Size> m_data;
+#else
+		// No memory alignment on Apple platforms or if it is disabled
+		std::array<Scalar, Size> m_data;
 #endif
 	};
 
@@ -323,16 +323,21 @@ namespace librapid {
 			using Pointer	= typename Traits::pointer;
 			using ValueType = typename Traits::value_type;
 
+#if defined(LIBRAPID_NATIVE_ARCH)
 			// Force aligned memory
-#if defined(LIBRAPID_APPLE)
+#	if defined(LIBRAPID_APPLE)
 			// No memory allignment. It breaks everything for some reason
 			auto ptr = new ValueType[size];
-#elif defined(LIBRAPID_MSVC)
+#	elif defined(LIBRAPID_MSVC)
 			auto ptr = static_cast<Pointer>(
 			  _aligned_malloc(size * sizeof(ValueType), global::memoryAlignment));
-#else
+#	else
 			auto ptr = static_cast<Pointer>(
 			  std::aligned_alloc(global::memoryAlignment, size * sizeof(ValueType)));
+#	endif
+#else
+			// No memory alignment
+			auto ptr = Traits::allocate(alloc, size);
 #endif
 
 			// If the type cannot be trivially constructed, we need to
@@ -366,12 +371,10 @@ namespace librapid {
 				for (Pointer p = ptr; p != ptr + size; ++p) { Traits::destroy(alloc, p); }
 			}
 
-#if defined(LIBRAPID_APPLE)
-			delete[] ptr;
-#elif defined(LIBRAPID_MSVC)
+#if defined(LIBRAPID_NATIVE_ARCH) && defined(LIBRAPID_MSVC)
 			_aligned_free(ptr);
 #else
-			std::free(ptr);
+			Traits::deallocate(alloc, ptr, size);
 #endif
 		}
 	} // namespace detail
