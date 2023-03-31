@@ -36,7 +36,7 @@ option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
 option(LIBRAPID_USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_FAST_MATH "Use potentially less accurate operations to increase performance" OFF)
-option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" ON)
+option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" OFF)
 
 # Include any required modules
 include(identifyBLAS)
