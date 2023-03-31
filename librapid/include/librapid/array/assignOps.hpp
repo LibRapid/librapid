@@ -35,9 +35,6 @@ namespace librapid::detail {
 		// Ensure the function can actually be assigned to the array container
 		static_assert(typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
 					  "Function return type must be the same as the array container's scalar type");
-
-		fmt::print("LHS: {}\n", lhs.shape());
-		fmt::print("RHS: {}\n", function.shape());
 		LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
 
 		if constexpr (allowVectorisation) {

@@ -407,14 +407,8 @@ if (LIBRAPID_FAST_MATH)
 endif ()
 
 if (LIBRAPID_NATIVE_ARCH)
-    # Detect compiler
-    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-        target_compile_options(${module_name} PUBLIC -march=native)
-    elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-        # MSVC: /arch:AVX2 will use the highest available SIMD instruction set
-        # If you need a different SIMD instruction set, replace AVX2 with your desired set
-        target_compile_options(${module_name} PUBLIC /arch:AVX2)
-    endif ()
+    include(ArchDetect)
+    target_compile_options(${module_name} PUBLIC ${AVX_FLAGS})
 endif ()
 
 target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include")
