@@ -171,17 +171,20 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize);
 
 		Allocator m_allocator;
-		Pointer m_begin	   = nullptr; // It is more efficient to store pointers to the start
-		Pointer m_end	   = nullptr; // and end of the data block than to store the size
-		bool m_independent = true;	  // If true, m_begin will be freed on destruct
-	};
 
-	namespace detail {
-		template<typename Scalar, size_t Dimensions>
-		struct FixedStorageContainer {
-			Scalar data[Dimensions];
-		};
-	} // namespace detail
+		// Pointer m_begin	   = nullptr; // It is more efficient to store pointers to the start
+		// Pointer m_end	   = nullptr; // and end of the data block than to store the size
+
+#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
+		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Pointer m_begin = nullptr;
+		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Pointer m_end	= nullptr;
+#else
+		Pointer m_begin = nullptr;
+		Pointer m_end	= nullptr;
+#endif
+
+		bool m_independent = true; // If true, m_begin will be freed on destruct
+	};
 
 	template<typename Scalar_, size_t... Size_>
 	class FixedStorage {
@@ -284,7 +287,7 @@ namespace librapid {
 
 	private:
 #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-		alignas(64) std::array<Scalar, Size> m_data;
+		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Scalar, Size> m_data;
 #else
 		// No memory alignment on Apple platforms or if it is disabled
 		std::array<Scalar, Size> m_data;
@@ -327,7 +330,7 @@ namespace librapid {
 			// Force aligned memory
 #	if defined(LIBRAPID_APPLE)
 			// No memory allignment. It breaks everything for some reason
-			auto ptr = new ValueType[size];
+			auto ptr = Traits::allocate(alloc, size);
 #	elif defined(LIBRAPID_MSVC)
 			auto ptr = static_cast<Pointer>(
 			  _aligned_malloc(size * sizeof(ValueType), global::memoryAlignment));
@@ -676,7 +679,6 @@ namespace librapid {
 	template<typename T, size_t... D>
 	FixedStorage<T, D...>::FixedStorage(const std::vector<Scalar> &vec) {
 		LIBRAPID_ASSERT(vec.size() == size(), "Initializer list size does not match storage size");
-		m_data = new detail::FixedStorageContainer<Scalar, Size>;
 		if (typetraits::TriviallyDefaultConstructible<T>::value) {
 			// Use a slightly faster memcpy if the type is trivially default constructible
 			std::uninitialized_copy(vec.begin(), vec.end(), begin());

@@ -46,7 +46,7 @@
 #	define LIBRAPID_HP_UX	 // HP-UX
 #	define LIBRAPID_OS_NAME "hp-ux"
 #elif defined(_AIX)
-#	define LIBRAPID_AIX	 // IBM AIX
+#	define LIBRAPID_AIX					  // IBM AIX
 #	define LIBRAPID_OS_NAME "aix"
 #elif defined(__APPLE__) && defined(__MACH__) // Apple OSX and iOS (Darwin)
 #	define LIBRAPID_APPLE
@@ -163,53 +163,64 @@
 // Instruction set detection
 #if defined(__AVX512VL__) && defined(__AVX512BW__) && defined(__AVX512DQ__)
 #	define LIBRAPID_AVX512
-#	define LIBRAPID_ARCH	   AVX512_2
-#	define LIBRAPID_ARCH_NAME "AVX512"
+#	define LIBRAPID_ARCH			   AVX512_2
+#	define LIBRAPID_ARCH_NAME		   "AVX512"
+#	define LIBRAPID_DEFAULT_MEM_ALIGN 64
 #elif defined(__AVX512F__) || defined(__AVX512__)
 #	define LIBRAPID_AVX512
 #	define LIBRAPID_ARCH	   AVX512
 #	define LIBRAPID_ARCH_NAME "AVX512"
 #elif defined(__AVX2__)
 #	define LIBRAPID_AVX2
-#	define LIBRAPID_ARCH	   AVX2
-#	define LIBRAPID_ARCH_NAME "AVX2"
+#	define LIBRAPID_ARCH			   AVX2
+#	define LIBRAPID_ARCH_NAME		   "AVX2"
+#	define LIBRAPID_DEFAULT_MEM_ALIGN 32
 #elif defined(__AVX__)
 #	define LIBRAPID_AVX
-#	define LIBRAPID_ARCH	   AVX
-#	define LIBRAPID_ARCH_NAME "AVX"
+#	define LIBRAPID_ARCH			   AVX
+#	define LIBRAPID_ARCH_NAME		   "AVX"
+#	define LIBRAPID_DEFAULT_MEM_ALIGN 32
 #elif defined(__SSE4_2__)
 #	define LIBRAPID_SSE42
-#	define LIBRAPID_ARCH	   SSE4_2
-#	define LIBRAPID_ARCH_NAME "SSE4.2"
+#	define LIBRAPID_ARCH			   SSE4_2
+#	define LIBRAPID_ARCH_NAME		   "SSE4.2"
+#	define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #elif defined(__SSE4_1__)
 #	define LIBRAPID_SSE41
-#	define LIBRAPID_ARCH	   SSE4_1
-#	define LIBRAPID_ARCH_NAME "SSE4.1"
+#	define LIBRAPID_ARCH			   SSE4_1
+#	define LIBRAPID_ARCH_NAME		   "SSE4.1"
+#	define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #elif defined(__SSSE3__)
 #	define LIBRAPID_SSSE3
-#	define LIBRAPID_ARCH	   SSSE3
-#	define LIBRAPID_ARCH_NAME "SSSE3"
+#	define LIBRAPID_ARCH			   SSSE3
+#	define LIBRAPID_ARCH_NAME		   "SSSE3"
+#	define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #elif defined(__SSE3__)
 #	define LIBRAPID_SSE3
-#	define LIBRAPID_ARCH	   SSE3
-#	define LIBRAPID_ARCH_NAME "SSE3"
+#	define LIBRAPID_ARCH			   SSE3
+#	define LIBRAPID_ARCH_NAME		   "SSE3"
+#	define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #elif defined(__SSE2__) || defined(__x86_64__)
 #	define LIBRAPID_SSE2
-#	define LIBRAPID_ARCH	   SSE2
-#	define LIBRAPID_ARCH_NAME "SSE2"
+#	define LIBRAPID_ARCH			   SSE2
+#	define LIBRAPID_ARCH_NAME		   "SSE2"
+#	define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #elif defined(__SSE__)
 #	define LIBRAPID_SSE
-#	define LIBRAPID_ARCH	   SSE
-#	define LIBRAPID_ARCH_NAME "SSE"
+#	define LIBRAPID_ARCH			   SSE
+#	define LIBRAPID_ARCH_NAME		   "SSE"
+#	define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #elif defined(_M_IX86_FP) // Defined in MS compiler. 1: SSE, 2: SSE2
 #	if _M_IX86_FP == 1
 #		define LIBRAPID_SSE
-#		define LIBRAPID_ARCH	   SSE
-#		define LIBRAPID_ARCH_NAME "SSE"
+#		define LIBRAPID_ARCH			   SSE
+#		define LIBRAPID_ARCH_NAME		   "SSE"
+#		define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #	elif _M_IX86_FP == 2
 #		define LIBRAPID_SSE2
-#		define LIBRAPID_ARCH	   SSE2
-#		define LIBRAPID_ARCH_NAME "SSE2"
+#		define LIBRAPID_ARCH			   SSE2
+#		define LIBRAPID_ARCH_NAME		   "SSE2"
+#		define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #	endif // _M_IX86_FP
 #else
 #	define LIBRAPID_ARCH	   0
