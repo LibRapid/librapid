@@ -6,6 +6,7 @@
 #include "constants.hpp"
 #include "fastMath.hpp"
 #include "coreMath.hpp"
+#include "random.hpp"
 #include "multiprec.hpp"
 #include "genericVector.hpp"
 // #include "simdVector.hpp"
