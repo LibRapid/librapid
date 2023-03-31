@@ -283,8 +283,12 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstReverseIterator crend() const noexcept;
 
 	private:
-		// Scalar m_data[Size];
+#if defined(LIBRAPID_APPLE)
+		// No memory alignment on Apple platforms
+		std::array<Scalar, Size> m_data;
+#else
 		alignas(64) std::array<Scalar, Size> m_data;
+#endif
 	};
 
 	// Trait implementations
@@ -320,7 +324,10 @@ namespace librapid {
 			using ValueType = typename Traits::value_type;
 
 			// Force aligned memory
-#if defined(LIBRAPID_MSVC)
+#if defined(LIBRAPID_APPLE)
+			// No memory allignment. It breaks everything for some reason
+			auto ptr = new ValueType[size];
+#elif defined(LIBRAPID_MSVC)
 			auto ptr = static_cast<Pointer>(
 			  _aligned_malloc(size * sizeof(ValueType), global::memoryAlignment));
 #else
@@ -359,7 +366,9 @@ namespace librapid {
 				for (Pointer p = ptr; p != ptr + size; ++p) { Traits::destroy(alloc, p); }
 			}
 
-#if defined(LIBRAPID_MSVC)
+#if defined(LIBRAPID_APPLE)
+			delete[] ptr;
+#elif defined(LIBRAPID_MSVC)
 			_aligned_free(ptr);
 #else
 			std::free(ptr);
