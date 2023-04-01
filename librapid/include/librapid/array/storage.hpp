@@ -196,11 +196,11 @@ namespace librapid {
 		using ConstReference		   = const Scalar &;
 		using SizeType				   = size_t;
 		using DifferenceType		   = ptrdiff_t;
-		using Iterator				   = Pointer;
-		using ConstIterator			   = ConstPointer;
-		using ReverseIterator		   = std::reverse_iterator<Iterator>;
-		using ConstReverseIterator	   = std::reverse_iterator<ConstIterator>;
 		static constexpr SizeType Size = product<Size_...>();
+		using Iterator				   = typename std::array<Scalar, product<Size_...>()>::iterator;
+		using ConstIterator	  = typename std::array<Scalar, product<Size_...>()>::const_iterator;
+		using ReverseIterator = std::reverse_iterator<Iterator>;
+		using ConstReverseIterator = std::reverse_iterator<ConstIterator>;
 
 		/// Default constructor
 		FixedStorage();
