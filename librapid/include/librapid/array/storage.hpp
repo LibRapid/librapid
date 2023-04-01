@@ -21,6 +21,9 @@ namespace librapid {
 			using Scalar						 = Scalar_;
 			using Device						 = device::CPU;
 		};
+
+		LIBRAPID_DEFINE_AS_TYPE(typename Scalar_ COMMA typename Allocator_,
+								Storage<Scalar_ COMMA Allocator_>);
 	} // namespace typetraits
 
 	template<typename Scalar_, typename Allocator_ = std::allocator<Scalar_>>
@@ -168,17 +171,20 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize);
 
 		Allocator m_allocator;
-		Pointer m_begin	   = nullptr; // It is more efficient to store pointers to the start
-		Pointer m_end	   = nullptr; // and end of the data block than to store the size
-		bool m_independent = true;	  // If true, m_begin will be freed on destruct
-	};
 
-	namespace detail {
-		template<typename Scalar, size_t Dimensions>
-		struct FixedStorageContainer {
-			Scalar data[Dimensions];
-		};
-	} // namespace detail
+		// Pointer m_begin	   = nullptr; // It is more efficient to store pointers to the start
+		// Pointer m_end	   = nullptr; // and end of the data block than to store the size
+
+#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
+		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Pointer m_begin = nullptr;
+		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Pointer m_end	= nullptr;
+#else
+		Pointer m_begin = nullptr;
+		Pointer m_end	= nullptr;
+#endif
+
+		bool m_independent = true; // If true, m_begin will be freed on destruct
+	};
 
 	template<typename Scalar_, size_t... Size_>
 	class FixedStorage {
@@ -190,11 +196,11 @@ namespace librapid {
 		using ConstReference		   = const Scalar &;
 		using SizeType				   = size_t;
 		using DifferenceType		   = ptrdiff_t;
-		using Iterator				   = Pointer;
-		using ConstIterator			   = ConstPointer;
-		using ReverseIterator		   = std::reverse_iterator<Iterator>;
-		using ConstReverseIterator	   = std::reverse_iterator<ConstIterator>;
 		static constexpr SizeType Size = product<Size_...>();
+		using Iterator				   = typename std::array<Scalar, product<Size_...>()>::iterator;
+		using ConstIterator	  = typename std::array<Scalar, product<Size_...>()>::const_iterator;
+		using ReverseIterator = std::reverse_iterator<Iterator>;
+		using ConstReverseIterator = std::reverse_iterator<ConstIterator>;
 
 		/// Default constructor
 		FixedStorage();
@@ -280,11 +286,12 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstReverseIterator crend() const noexcept;
 
 	private:
-		// detail::FixedStorageContainer<Scalar, Size> *m_data = nullptr;
-		// Scalar *__restrict m_begin							= nullptr;
-		// Scalar *__restrict m_end							= nullptr;
-
-		Scalar m_data[Size];
+#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
+		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Scalar, Size> m_data;
+#else
+		// No memory alignment on Apple platforms or if it is disabled
+		std::array<Scalar, Size> m_data;
+#endif
 	};
 
 	// Trait implementations
@@ -318,7 +325,23 @@ namespace librapid {
 			using Traits	= std::allocator_traits<A>;
 			using Pointer	= typename Traits::pointer;
 			using ValueType = typename Traits::value_type;
-			Pointer ptr		= alloc.allocate(size);
+
+#if defined(LIBRAPID_NATIVE_ARCH)
+			// Force aligned memory
+#	if defined(LIBRAPID_APPLE)
+			// No memory allignment. It breaks everything for some reason
+			auto ptr = Traits::allocate(alloc, size);
+#	elif defined(LIBRAPID_MSVC)
+			auto ptr = static_cast<Pointer>(
+			  _aligned_malloc(size * sizeof(ValueType), global::memoryAlignment));
+#	else
+			auto ptr = static_cast<Pointer>(
+			  std::aligned_alloc(global::memoryAlignment, size * sizeof(ValueType)));
+#	endif
+#else
+			// No memory alignment
+			auto ptr = Traits::allocate(alloc, size);
+#endif
 
 			// If the type cannot be trivially constructed, we need to
 			// initialize each value
@@ -350,7 +373,12 @@ namespace librapid {
 			if (!typetraits::TriviallyDefaultConstructible<ValueType>::value) {
 				for (Pointer p = ptr; p != ptr + size; ++p) { Traits::destroy(alloc, p); }
 			}
+
+#if defined(LIBRAPID_NATIVE_ARCH) && defined(LIBRAPID_MSVC)
+			_aligned_free(ptr);
+#else
 			Traits::deallocate(alloc, ptr, size);
+#endif
 		}
 	} // namespace detail
 
@@ -367,7 +395,8 @@ namespace librapid {
 	Storage<T, A>::Storage(SizeType size, ConstReference value, const Allocator &alloc) :
 			m_allocator(alloc), m_begin(detail::safeAllocate(m_allocator, size)),
 			m_end(m_begin + size), m_independent(true) {
-		std::fill(m_begin, m_end, value);
+		// std::fill(m_begin, m_end, value);
+		for (auto it = m_begin; it != m_end; ++it) { *it = value; }
 	}
 
 	template<typename T, typename A>
@@ -625,7 +654,7 @@ namespace librapid {
 
 	template<typename T, size_t... D>
 	FixedStorage<T, D...>::FixedStorage(const Scalar &value) {
-		std::fill(begin(), end(), value);
+		for (size_t i = 0; i < Size; ++i) { m_data[i] = value; }
 	}
 
 	template<typename T, size_t... D>
@@ -637,31 +666,20 @@ namespace librapid {
 	template<typename T, size_t... D>
 	FixedStorage<T, D...>::FixedStorage(const std::initializer_list<Scalar> &list) {
 		LIBRAPID_ASSERT(list.size() == size(), "Initializer list size does not match storage size");
-		if (typetraits::TriviallyDefaultConstructible<T>::value) {
-			// Use a slightly faster memcpy if the type is trivially default constructible
-			std::uninitialized_copy(list.begin(), list.end(), begin());
-		} else {
-			// Otherwise, use the standard copy algorithm
-			std::copy(list.begin(), list.end(), begin());
-		}
+		for (size_t i = 0; i < Size; ++i) { m_data[i] = list.begin()[i]; }
 	}
 
 	template<typename T, size_t... D>
 	FixedStorage<T, D...>::FixedStorage(const std::vector<Scalar> &vec) {
 		LIBRAPID_ASSERT(vec.size() == size(), "Initializer list size does not match storage size");
-		m_data = new detail::FixedStorageContainer<Scalar, Size>;
-		if (typetraits::TriviallyDefaultConstructible<T>::value) {
-			// Use a slightly faster memcpy if the type is trivially default constructible
-			std::uninitialized_copy(vec.begin(), vec.end(), begin());
-		} else {
-			// Otherwise, use the standard copy algorithm
-			std::copy(vec.begin(), vec.end(), begin());
-		}
+		for (size_t i = 0; i < Size; ++i) { m_data[i] = vec[i]; }
 	}
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::operator=(const FixedStorage &other) -> FixedStorage & {
-		if (this != &other) std::copy(other.begin(), other.end(), begin());
+		if (this != &other) {
+			for (size_t i = 0; i < Size; ++i) { m_data[i] = other.m_data[i]; }
+		}
 		return *this;
 	}
 
@@ -707,22 +725,22 @@ namespace librapid {
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::begin() noexcept -> Iterator {
-		return &(m_data[0]);
+		return m_data.begin();
 	}
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::end() noexcept -> Iterator {
-		return &(m_data[Size]);
+		return m_data.end();
 	}
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::begin() const noexcept -> ConstIterator {
-		return &(m_data[0]);
+		return m_data.begin();
 	}
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::end() const noexcept -> ConstIterator {
-		return &(m_data[Size]);
+		return m_data.end();
 	}
 
 	template<typename T, size_t... D>

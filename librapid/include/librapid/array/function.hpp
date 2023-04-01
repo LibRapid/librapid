@@ -35,8 +35,7 @@ namespace librapid {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
 			using Scalar							   = decltype(std::declval<Functor_>()(
 				std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
-			using Device =
-			  decltype(commonDevice<Args...>()); // typename DeviceCheckAndExtract<Args...>::Device;
+			using Device							   = decltype(commonDevice<Args...>());
 
 			static constexpr bool allowVectorisation = checkAllowVectorisation<Args...>();
 
@@ -44,6 +43,9 @@ namespace librapid {
 			static constexpr bool supportsLogical	 = TypeInfo<Scalar>::supportsLogical;
 			static constexpr bool supportsBinary	 = TypeInfo<Scalar>::supportsBinary;
 		};
+
+		LIBRAPID_DEFINE_AS_TYPE(typename desc COMMA typename Functor_ COMMA typename... Args,
+								::librapid::detail::Function<desc COMMA Functor_ COMMA Args...>);
 	} // namespace typetraits
 
 	namespace detail {
@@ -219,7 +221,7 @@ namespace librapid {
 
 		template<typename desc, typename Functor, typename... Args>
 		auto Function<desc, Functor, Args...>::eval() const {
-			Array<Scalar, Device> res(shape());
+			auto res = Array<Scalar, Device>(shape());
 			res = *this;
 			return res;
 		}

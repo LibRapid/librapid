@@ -180,19 +180,13 @@ jobs:
   build-docs:
     name: Build Documentation Locally
     needs: [ compile ]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
-      - name: Checkout Code
+      - name: Checkout LibRapid
         uses: actions/checkout@v3
         with:
           submodules: recursive
-          ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
@@ -240,6 +234,10 @@ jobs:
           cd docs
           pip install -r requirements.txt
 
+      - name: Force install Sphinx Build
+        run: |
+          sudo apt-get install python3-sphinx
+
       - name: Configure Files
         run: |
           touch .is_local
@@ -277,16 +275,10 @@ jobs:
     needs: [ compile ]
     runs-on: ubuntu-latest
     steps:
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
-      - name: Checkout Code
+      - name: Checkout LibRapid
         uses: actions/checkout@v3
         with:
           submodules: recursive
-          ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
@@ -314,8 +306,6 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=on -DLIBRAPID_USE_MULTIPREC=on
           cmake --build . --parallel
-
-        # --target librapid_coverage
 
         env:
           CC: gcc # ../llvm/bin/clang

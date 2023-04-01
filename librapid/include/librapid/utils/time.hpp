@@ -3,13 +3,13 @@
 
 namespace librapid {
 	namespace time {
-		constexpr int64_t day		  = int64_t(86400e9);
-		constexpr int64_t hour		  = int64_t(3600e9);
-		constexpr int64_t minute	  = int64_t(60e9);
-		constexpr int64_t second	  = int64_t(1e9);
-		constexpr int64_t millisecond = int64_t(1e6);
-		constexpr int64_t microsecond = int64_t(1e3);
 		constexpr int64_t nanosecond  = int64_t(1);
+		constexpr int64_t microsecond = nanosecond * 1000;
+		constexpr int64_t millisecond = microsecond * 1000;
+		constexpr int64_t second	  = millisecond * 1000;
+		constexpr int64_t minute	  = second * 60;
+		constexpr int64_t hour		  = minute * 60;
+		constexpr int64_t day		  = hour * 24;
 	} // namespace time
 
 	template<int64_t scale = time::second>
