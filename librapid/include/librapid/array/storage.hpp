@@ -287,10 +287,10 @@ namespace librapid {
 
 	private:
 #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Scalar, Size> m_data;
+		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Scalar m_data[Size]; // std::array<Scalar, Size> m_data;
 #else
 		// No memory alignment on Apple platforms or if it is disabled
-		std::array<Scalar, Size> m_data;
+		Scalar m_data[Size]; // std::array<Scalar, Size> m_data;
 #endif
 	};
 
@@ -654,8 +654,7 @@ namespace librapid {
 
 	template<typename T, size_t... D>
 	FixedStorage<T, D...>::FixedStorage(const Scalar &value) {
-		// std::fill(begin(), end(), value);
-		for (auto it = begin(); it != end(); ++it) { *it = value; }
+		for (size_t i = 0; i < Size; ++i) { m_data[i] = value; }
 	}
 
 	template<typename T, size_t... D>
@@ -667,30 +666,20 @@ namespace librapid {
 	template<typename T, size_t... D>
 	FixedStorage<T, D...>::FixedStorage(const std::initializer_list<Scalar> &list) {
 		LIBRAPID_ASSERT(list.size() == size(), "Initializer list size does not match storage size");
-		if (typetraits::TriviallyDefaultConstructible<T>::value) {
-			// Use a slightly faster memcpy if the type is trivially default constructible
-			std::uninitialized_copy(list.begin(), list.end(), begin());
-		} else {
-			// Otherwise, use the standard copy algorithm
-			std::copy(list.begin(), list.end(), begin());
-		}
+		for (size_t i = 0; i < Size; ++i) { m_data[i] = list.begin()[i]; }
 	}
 
 	template<typename T, size_t... D>
 	FixedStorage<T, D...>::FixedStorage(const std::vector<Scalar> &vec) {
 		LIBRAPID_ASSERT(vec.size() == size(), "Initializer list size does not match storage size");
-		if (typetraits::TriviallyDefaultConstructible<T>::value) {
-			// Use a slightly faster memcpy if the type is trivially default constructible
-			std::uninitialized_copy(vec.begin(), vec.end(), begin());
-		} else {
-			// Otherwise, use the standard copy algorithm
-			std::copy(vec.begin(), vec.end(), begin());
-		}
+		for (size_t i = 0; i < Size; ++i) { m_data[i] = vec[i]; }
 	}
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::operator=(const FixedStorage &other) -> FixedStorage & {
-		if (this != &other) std::copy(other.begin(), other.end(), begin());
+		if (this != &other) {
+			for (size_t i = 0; i < Size; ++i) { m_data[i] = other.m_data[i]; }
+		}
 		return *this;
 	}
 
