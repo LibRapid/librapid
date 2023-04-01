@@ -287,10 +287,10 @@ namespace librapid {
 
 	private:
 #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Scalar m_data[Size]; // std::array<Scalar, Size> m_data;
+		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Scalar, Size> m_data;
 #else
 		// No memory alignment on Apple platforms or if it is disabled
-		Scalar m_data[Size]; // std::array<Scalar, Size> m_data;
+		std::array<Scalar, Size> m_data;
 #endif
 	};
 
@@ -725,22 +725,22 @@ namespace librapid {
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::begin() noexcept -> Iterator {
-		return &(m_data[0]);
+		return m_data.begin();
 	}
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::end() noexcept -> Iterator {
-		return &(m_data[Size]);
+		return m_data.end();
 	}
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::begin() const noexcept -> ConstIterator {
-		return &(m_data[0]);
+		return m_data.begin();
 	}
 
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::end() const noexcept -> ConstIterator {
-		return &(m_data[Size]);
+		return m_data.end();
 	}
 
 	template<typename T, size_t... D>
