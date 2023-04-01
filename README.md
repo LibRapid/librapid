@@ -10,7 +10,7 @@
 
 ---
 
-[![Compile](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml) \
+[![Continuous Integration](https://github.com/LibRapid/librapid/actions/workflows/continuous-integration.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/continuous-integration.yaml)
 [![Documentation Status](https://readthedocs.org/projects/librapid/badge/?version=latest)](https://librapid.readthedocs.io/en/latest/?badge=latest)
 
 ---

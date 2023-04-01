@@ -10,27 +10,34 @@ namespace librapid {
 			using Device							   = typename TypeInfo<std::decay_t<T>>::Device;
 			static constexpr bool allowVectorisation   = false;
 		};
+
+		LIBRAPID_DEFINE_AS_TYPE(typename T, array::ArrayView<T>);
 	} // namespace typetraits
 
 	namespace array {
 		template<typename T>
 		class ArrayView {
 		public:
-			using ArrayType		 = T;
+			// using ArrayType		 = T;
 			using BaseType		 = typename std::decay_t<T>;
 			using Scalar		 = typename typetraits::TypeInfo<BaseType>::Scalar;
 			using Reference		 = BaseType &;
 			using ConstReference = const BaseType &;
-			using StrideType	 = typename BaseType::StrideType;
-			using ShapeType		 = typename BaseType::ShapeType;
 			using Device		 = typename typetraits::TypeInfo<BaseType>::Device;
+			using ArrayType		 = Array<Scalar, Device>;
+			using StrideType	 = typename ArrayType::StrideType;
+			using ShapeType		 = typename ArrayType::ShapeType;
 
 			/// Default constructor should never be used
 			ArrayView() = delete;
 
-			/// Copy an ArrayView object (not const)
+			/// Copy an ArrayView object
 			/// \param array The array to copy
 			explicit ArrayView(T &array);
+
+			/// Copy an ArrayView object (not const)
+			/// \param array The array to copy
+			explicit ArrayView(T &&array);
 
 			/// Copy an ArrayView object (const)
 			/// \param other The array to copy
@@ -60,7 +67,7 @@ namespace librapid {
 			/// Access a sub-array of this ArrayView.
 			/// \param index The index of the sub-array.
 			/// \return An ArrayView from this
-			ArrayView<ArrayType> operator[](int64_t index) const;
+			ArrayView<T> operator[](int64_t index) const;
 
 			/// Since even scalars are represented as an ArrayView object, it can be difficult to
 			/// operate on them directly. This allows you to extract the scalar value stored by a
@@ -124,14 +131,18 @@ namespace librapid {
 			LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
 
 		private:
-			ArrayType &m_ref;
+			T &m_ref;
 			ShapeType m_shape;
 			StrideType m_stride;
 			int64_t m_offset = 0;
 		};
 
 		template<typename T>
-		ArrayView<T>::ArrayView(ArrayType &array) :
+		ArrayView<T>::ArrayView(T &array) :
+				m_ref(array), m_shape(array.shape()), m_stride(array.shape()) {}
+
+		template<typename T>
+		ArrayView<T>::ArrayView(T &&array) :
 				m_ref(array), m_shape(array.shape()), m_stride(array.shape()) {}
 
 		template<typename T>
@@ -142,13 +153,13 @@ namespace librapid {
 		}
 
 		template<typename T>
-		auto ArrayView<T>::operator[](int64_t index) const -> ArrayView<ArrayType> {
+		auto ArrayView<T>::operator[](int64_t index) const -> ArrayView<T> {
 			LIBRAPID_ASSERT(
 			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
 			  m_shape[0]);
-			ArrayView<ArrayType> view(m_ref);
+			ArrayView<T> view(m_ref);
 			const auto stride = Stride(m_shape);
 			view.setShape(m_shape.subshape(1, ndim()));
 			if (ndim() == 1)

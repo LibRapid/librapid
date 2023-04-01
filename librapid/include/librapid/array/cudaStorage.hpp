@@ -17,6 +17,8 @@ namespace librapid {
 			using Scalar						 = Scalar_;
 			using Device						 = device::GPU;
 		};
+
+		LIBRAPID_DEFINE_AS_TYPE(typename Scalar_, CudaStorage<Scalar_>);
 	} // namespace typetraits
 
 	namespace detail {
