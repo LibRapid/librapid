@@ -134,11 +134,11 @@ map("0.5"_f, "0"_f, "1"_f, "0"_f, "100"_f); //  . . . . . | 50.00000000000000
 
 // ---------------------------------------------------------------------
 
-auto val    = lrc::Array<float>({{1, 2}, {3, 4}});
-auto start1 = lrc::Array<float>({{0, 0}, {0, 0}});
-auto end1   = lrc::Array<float>({{10, 10}, {10, 10}});
-auto start2 = lrc::Array<float>({{0, 0}, {0, 0}});
-auto end2   = lrc::Array<float>({{100, 100}, {100, 100}});
+auto val    = lrc::fromData<float>({{1, 2}, {3, 4}});
+auto start1 = lrc::fromData<float>({{0, 0}, {0, 0}});
+auto end1   = lrc::fromData<float>({{10, 10}, {10, 10}});
+auto start2 = lrc::fromData<float>({{0, 0}, {0, 0}});
+auto end2   = lrc::fromData<float>({{100, 100}, {100, 100}});
 
 fmt::print("{}\n", lrc::map(val, start1, end1, start2, end2));
 // [[10 20]
