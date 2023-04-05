@@ -98,10 +98,6 @@ auto end2   = lrc::fromData<float>({{100, 100}, {100, 100}});
 fmt::print("{}\n", lrc::map(val, start1, end1, start2, end2));
 // [[10 20]
 //  [30 40]]
-
-fmt::print("{}\n", lrc::map(val, start1, end1, start2, end2));
-// [[10 20]
-//  [30 40]]
 ```
 
 Note: LibRapid's built-in `map` function has even more functionality! See
