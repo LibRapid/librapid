@@ -19,7 +19,7 @@
 
 I am currently preparing for my A-Level exams and, as such, my ability to work on LibRapid is severely limited. I will try to work on it as much as
 reasonably possible, but I cannot guarantee that development will be as fast as it has been in the past. Development will continue in short bursts
-when I have time, and I'll be available to answer questions on (Discord)[https://discord.gg/cGxTFTgCAC].
+when I have time, and I'll be available to answer questions on [Discord](https://discord.gg/cGxTFTgCAC).
 
 Any external contributions are greatly appreciated, and I will most likely
 review them within a day or two. If you have any questions, feel free to ask them on the Discord server.
@@ -105,7 +105,7 @@ fmt::print("{}\n", lrc::map(val, start1, end1, start2, end2));
 ```
 
 Note: LibRapid's built-in `map` function has even more functionality! See
-the [documentation](https://docs.hdoc.io/pencilcaseman/LibRapid/f05EED763F184D09D.html) for
+the [documentation](https://librapid.readthedocs.io/en/develop/api/function_namespacelibrapid_1a4d7a85c238d46f4f45a0a76b5159a652.html) for
 details.
 
 This is just one example of how LibRapid's functions can be used to make your code more concise and more efficient, and
