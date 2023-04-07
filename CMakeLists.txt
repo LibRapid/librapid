@@ -38,8 +38,7 @@ option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_FAST_MATH "Use potentially less accurate operations to increase performance" OFF)
 option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" OFF)
 
-# Include any required modules
-include(identifyBLAS)
+option(LIBRAPID_MKL_CONFIG_PATH "Path to the 'MKLConfig.cmake' file" "")
 
 MACRO(SUBDIRLIST result curdir)
     FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
@@ -153,7 +152,24 @@ if (LIBRAPID_USE_OMP)
     endif ()
 endif ()
 
-if (LIBRAPID_GET_BLAS)
+# Include any required modules
+include(identifyBLAS)
+
+# If LIBRAPID_MKL_CONFIG_PATH is set, use that instead of the default
+if (LIBRAPID_MKL_CONFIG_PATH)
+    message(STATUS "[ LIBRAPID ] Using MKLConfig.cmake from ${LIBRAPID_MKL_CONFIG_PATH}")
+    include(${LIBRAPID_MKL_CONFIG_PATH})
+    message(STATUS "[ LIBRAPID ] Linking against MKL")
+    message(STATUS "[ LIBRAPID ] MKL Libraries: ${MKL_LIBRARIES}")
+    message(STATUS "[ LIBRAPID ] MKL Include Directories: ${MKL_INCLUDE}")
+    target_link_libraries(${module_name} PUBLIC MKL::MKL)
+    target_include_directories(${module_name} PUBLIC ${MKL_INCLUDE})
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
+    set(LIBRAPID_HAS_BLAS ON)
+    set_blas_definition("MKL")
+endif ()
+
+if (LIBRAPID_GET_BLAS AND NOT LIBRAPID_HAS_BLAS)
     message(STATUS "[ LIBRAPID ] Downloading OpenBLAS Build...")
 
     if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/buildopenblas-src")
@@ -181,7 +197,7 @@ if (LIBRAPID_GET_BLAS)
 endif ()
 
 # See if BLAS should be linked against
-if (LIBRAPID_USE_BLAS)
+if (LIBRAPID_USE_BLAS AND NOT LIBRAPID_HAS_BLAS)
     if (${BLAS_FOUND})
         message(STATUS "[ LIBRAPID ] BLAS located was ${BLAS_LIBRARIES}")
 
@@ -196,8 +212,9 @@ if (LIBRAPID_USE_BLAS)
         get_filename_component(filepath ${LIBRAPID_BLAS} DIRECTORY)
         get_filename_component(filename ${LIBRAPID_BLAS} NAME)
 
-        # Attempt to identify which BLAS library is being used
-        setBlasDefinition(filename)
+        # Attempt to identify which BLAS library is being used and
+        # set the appropriate compile definition
+        set_blas_definition_from_file(filename)
 
         # Copy include files
         set(inc_path "${filepath}/../include")

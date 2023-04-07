@@ -37,7 +37,6 @@
 #include "cxxblas/cxxblas.h"
 
 namespace cxxblas {
-
 	template<typename IndexType, typename ALPHA, typename MA, typename VX, typename BETA,
 			 typename VY>
 	void gemv_generic(StorageOrder order, Transpose transA, Transpose conjX, IndexType m,

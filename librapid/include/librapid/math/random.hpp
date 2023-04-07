@@ -7,7 +7,8 @@ namespace librapid {
 		// Random floating point value in range [lower, upper)
 
 		static std::uniform_real_distribution<double> distribution(0., 1.);
-		static std::mt19937 generator(seed == (uint64_t)-1 ? (unsigned int)(now() * 10) : seed);
+		static std::mt19937 generator(seed == (uint64_t)-1 ? (unsigned int)(now() * 10)
+														   : (unsigned int)seed);
 		return (T)(lower + (upper - lower) * distribution(generator));
 	}
 

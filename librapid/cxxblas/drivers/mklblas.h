@@ -53,7 +53,7 @@
 
 // MKL includes LAPACK
 #ifndef USE_CXXLAPACK
-#	define USE_CXXLAPACK 1
+// #	define USE_CXXLAPACK 1
 #endif
 // MKL includes FFTW interface (float, double)
 #ifndef HAVE_FFTW
@@ -65,5 +65,14 @@
 #ifndef HAVE_FFTW_DOUBLE
 #	define HAVE_FFTW_DOUBLE 1
 #endif
+
+// Include MKL headers
+#include <mkl.h>
+#include <mkl_spblas.h>
+#include <mkl_service.h>
+#include <mkl_types.h>
+#include <mkl_version.h>
+#include <mkl_vml.h>
+#include <mkl_vsl.h>
 
 #endif // CXXBLAS_DRIVERS_MKLBLAS_H
