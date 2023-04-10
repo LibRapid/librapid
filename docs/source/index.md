@@ -177,4 +177,3 @@ LibRapid is produced under the MIT License, so you are free to use the library
 how you like for personal and commercial purposes, though this is subject to
 some conditions, which can be found in full
 here: [LibRapid License](https://github.com/Pencilcaseman/librapid/blob/master/LICENSE)
-
