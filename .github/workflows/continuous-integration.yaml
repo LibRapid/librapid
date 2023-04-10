@@ -323,6 +323,7 @@ jobs:
     name: Trigger Documentation Build
     needs: [ run-benchmarks, quodona, build-docs ]
     runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
     steps:
       - name: Checkout LibRapid
         uses: actions/checkout@v3
