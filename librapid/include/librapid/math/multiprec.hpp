@@ -248,13 +248,28 @@ namespace librapid {
 
 	/// Hyperbolic arccotangent of a multiprecision floating point value: \f$ coth^{-1}(x)
 	/// \f$ \param val The value to take the hyperbolic arccotangent of \return The hyperbolic
-	/// arccotangent of the value
+	/// \return arccotangent of the value
 	mpfr acoth(const mpfr &val);
 
 	/// Absolute value of a multiprecision floating point value: \f$ |x| \f$
 	/// \param val The value to take the absolute value of
-	/// \return The absolute value of the value
+	/// \return Absolute value
 	mpfr abs(const mpfr &val);
+
+	/// Absolute value of a multiprecision integer value: \f$ |x| \f$
+	/// \param val The value to take the absolute value of
+	/// \return Absolute value
+	mpz abs(const mpz &val);
+
+	/// Absolute value of a multiprecision rational value: \f$ |x| \f$
+	/// \param val The value to take the absolute value of
+	/// \return Absolute value
+	mpq abs(const mpq &val);
+
+	/// Absolute value of a multiprecision floating point value: \f$ |x| \f$
+	/// \param val The value to take the absolute value of
+	/// \return Absolute value
+	mpf abs(const mpf &val);
 
 	/// Square root of a multiprecision floating point value: \f$ \sqrt{x} \f$
 	/// \param val The value to take the square root of
@@ -501,14 +516,16 @@ namespace librapid {
 	namespace typetraits {
 		template<>
 		struct TypeInfo<mpz> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = mpz;
-			using Packet							 = std::false_type;
-			static constexpr int64_t packetWidth	 = 1;
-			static constexpr char name[]			 = "mpz";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = true;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = mpz;
+			using Packet							   = std::false_type;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "mpz";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = true;
+			static constexpr bool allowVectorisation   = false;
 
 #	if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64I;
@@ -529,14 +546,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<mpq> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = mpq;
-			using Packet							 = std::false_type;
-			static constexpr int64_t packetWidth	 = 1;
-			static constexpr char name[]			 = "mpq";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = false;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = mpq;
+			using Packet							   = std::false_type;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "mpq";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = false;
+			static constexpr bool allowVectorisation   = false;
 
 #	if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
@@ -557,14 +576,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<mpf> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = mpf;
-			using Packet							 = std::false_type;
-			static constexpr int64_t packetWidth	 = 1;
-			static constexpr char name[]			 = "mpf";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = false;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = mpf;
+			using Packet							   = std::false_type;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "mpf";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = false;
+			static constexpr bool allowVectorisation   = false;
 
 #	if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
@@ -585,14 +606,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<mpfr> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = mpfr;
-			using Packet							 = std::false_type;
-			static constexpr int64_t packetWidth	 = 1;
-			static constexpr char name[]			 = "mpfr";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = false;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = mpfr;
+			using Packet							   = std::false_type;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "mpfr";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = false;
+			static constexpr bool allowVectorisation   = false;
 
 #	if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;

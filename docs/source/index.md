@@ -28,7 +28,7 @@ See all available CMake options to make the most of LibRapid's features.
 :link: apiReference
 :link-type: doc
 
-View LibRapid's API and its documentation.
+View LibRapid's API and documentation.
 :::
 
 :::{grid-item-card} {octicon}`mortar-board` Tutorials
@@ -38,8 +38,9 @@ View LibRapid's API and its documentation.
 Learn how to use some of LibRapid's features.
 :::
 
-:::{grid-item-card} {octicon}`stopwatch` Benchmarks
-:link: https://github.com/LibRapid/BenchmarksCPP/
+:::{grid-item-card} {octicon}`stopwatch` Performance and Benchmarks
+:link: performance/performance
+:link-type: doc
 
 View LibRapid's benchmark results.
 :::
@@ -59,7 +60,7 @@ View LibRapid's benchmark results.
 Getting Started <gettingStarted>
 CMake Integration <cmakeIntegration>
 Tutorials <tutorials>
-Feature List <featureList>
+API Reference <apiReference>
 Caution <caution>
 ```
 
@@ -133,11 +134,11 @@ map("0.5"_f, "0"_f, "1"_f, "0"_f, "100"_f); //  . . . . . | 50.00000000000000
 
 // ---------------------------------------------------------------------
 
-auto val    = lrc::Array<float>({{1, 2}, {3, 4}});
-auto start1 = lrc::Array<float>({{0, 0}, {0, 0}});
-auto end1   = lrc::Array<float>({{10, 10}, {10, 10}});
-auto start2 = lrc::Array<float>({{0, 0}, {0, 0}});
-auto end2   = lrc::Array<float>({{100, 100}, {100, 100}});
+auto val    = lrc::fromData<float>({{1, 2}, {3, 4}});
+auto start1 = lrc::fromData<float>({{0, 0}, {0, 0}});
+auto end1   = lrc::fromData<float>({{10, 10}, {10, 10}});
+auto start2 = lrc::fromData<float>({{0, 0}, {0, 0}});
+auto end2   = lrc::fromData<float>({{100, 100}, {100, 100}});
 
 fmt::print("{}\n", lrc::map(val, start1, end1, start2, end2));
 // [[10 20]
@@ -176,4 +177,3 @@ LibRapid is produced under the MIT License, so you are free to use the library
 how you like for personal and commercial purposes, though this is subject to
 some conditions, which can be found in full
 here: [LibRapid License](https://github.com/Pencilcaseman/librapid/blob/master/LICENSE)
-

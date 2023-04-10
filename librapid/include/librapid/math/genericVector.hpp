@@ -1,5 +1,5 @@
-#ifndef LIBRAPID_MATH_VECTOR_HPP
-#define LIBRAPID_MATH_VECTOR_HPP
+#ifndef LIBRAPID_MATH_GENERIC_VECTOR_HPP
+#define LIBRAPID_MATH_GENERIC_VECTOR_HPP
 
 namespace librapid {
 	/// The implementation for the Vector class. It is capable of representing
@@ -294,69 +294,6 @@ namespace librapid {
 		/// \return True if the magnitude of this vector is not 0, false otherwise
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE explicit operator bool() const;
 
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 2> xy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 2> yx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 2> xz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 2> zx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 2> yz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 2> zy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> xyz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> xzy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> yxz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> yzx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> zxy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> zyx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> xyw() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> xwy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> yxw() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> ywx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> wxy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> wyx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> xzw() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> xwz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> zxw() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> zwx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> wxz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> wzx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> yzw() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> ywz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> zyw() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> zwy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> wyz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> wzy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> xyzw() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> xywz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> xzyw() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> xzwy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> xwyz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> xwzy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> yxzw() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> yxwz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> yzxw() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> yzwx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> ywxz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> ywzx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> zxyw() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> zxwy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> zyxw() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> zywx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> zwxy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> zwyx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> wxyz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> wxzy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> wyxz() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> wyzx() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> wzxy() const;
-		LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> wzyx() const;
-
-		/// Return the underlying storage type
-		/// \return The underlying storage type
-		LIBRAPID_ALWAYS_INLINE const StorageType &data() const;
-
-		/// Return the underlying storage type
-		/// \return The underlying storage type
-		LIBRAPID_ALWAYS_INLINE StorageType &data();
-
 		/// Access the x component of this vector
 		/// \return The x component of this vector
 		LIBRAPID_ALWAYS_INLINE Scalar x() const;
@@ -373,6 +310,61 @@ namespace librapid {
 		/// \return The w component of this vector
 		LIBRAPID_ALWAYS_INLINE Scalar w() const;
 
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 2> xy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 2> yx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 2> xz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 2> zx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 2> yz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 2> zy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> xyz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> xzy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> yxz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> yzx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> zxy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> zyx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> xyw() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> xwy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> yxw() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> ywx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> wxy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> wyx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> xzw() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> xwz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> zxw() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> zwx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> wxz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> wzx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> yzw() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> ywz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> zyw() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> zwy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> wyz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 3> wzy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> xyzw() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> xywz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> xzyw() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> xzwy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> xwyz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> xwzy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> yxzw() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> yxwz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> yzxw() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> yzwx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> ywxz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> ywzx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> zxyw() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> zxwy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> zyxw() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> zywx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> zwxy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> zwyx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> wxyz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> wxzy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> wyxz() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> wyzx() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> wzxy() const;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, 4> wzyx() const;
+
 		/// Set the x component of this vector
 		/// \param val The new value of the x component
 		LIBRAPID_ALWAYS_INLINE void x(Scalar val);
@@ -388,6 +380,69 @@ namespace librapid {
 		/// Set the w component of this vector
 		/// \param val The new value of the w component
 		LIBRAPID_ALWAYS_INLINE void w(Scalar val);
+
+		LIBRAPID_ALWAYS_INLINE void xy(const GenericVector<Scalar, 2> &v);
+		LIBRAPID_ALWAYS_INLINE void yx(const GenericVector<Scalar, 2> &v);
+		LIBRAPID_ALWAYS_INLINE void xz(const GenericVector<Scalar, 2> &v);
+		LIBRAPID_ALWAYS_INLINE void zx(const GenericVector<Scalar, 2> &v);
+		LIBRAPID_ALWAYS_INLINE void yz(const GenericVector<Scalar, 2> &v);
+		LIBRAPID_ALWAYS_INLINE void zy(const GenericVector<Scalar, 2> &v);
+		LIBRAPID_ALWAYS_INLINE void xyz(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void xzy(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void yxz(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void yzx(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void zxy(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void zyx(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void xyw(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void xwy(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void yxw(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void ywx(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void wxy(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void wyx(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void xzw(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void xwz(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void zxw(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void zwx(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void wxz(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void wzx(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void yzw(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void ywz(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void zyw(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void zwy(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void wyz(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void wzy(const GenericVector<Scalar, 3> &v);
+		LIBRAPID_ALWAYS_INLINE void xyzw(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void xywz(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void xzyw(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void xzwy(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void xwyz(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void xwzy(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void yxzw(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void yxwz(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void yzxw(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void yzwx(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void ywxz(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void ywzx(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void zxyw(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void zxwy(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void zyxw(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void zywx(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void zwxy(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void zwyx(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void wxyz(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void wxzy(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void wyxz(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void wyzx(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void wzxy(const GenericVector<Scalar, 4> &v);
+		LIBRAPID_ALWAYS_INLINE void wzyx(const GenericVector<Scalar, 4> &v);
+
+		/// Return the underlying storage type
+		/// \return The underlying storage type
+		LIBRAPID_ALWAYS_INLINE const StorageType &data() const;
+
+		/// Return the underlying storage type
+		/// \return The underlying storage type
+		LIBRAPID_ALWAYS_INLINE StorageType &data();
 
 		/// Convert a vector into a string representation -- "(x, y, z, w, ...)"
 		/// \param formatString The format string to use for each component
@@ -964,13 +1019,38 @@ namespace librapid {
 		return res;
 	}
 
-	/// Add two Vector objects and return the result
-	/// \tparam Scalar The type of the scalar
-	/// \tparam Dims The number of dimensions
-	/// \tparam StorageType The type of the storage
-	/// \param lhs The left hand side of the addition
-	/// \param rhs The right hand side of the addition
-	/// \return The result of the addition
+	template<typename Scalar, int64_t Dims>
+	auto GenericVector<Scalar, Dims>::x() const -> Scalar {
+		if constexpr (Dims < 1)
+			return 0;
+		else
+			return m_data[0];
+	}
+
+	template<typename Scalar, int64_t Dims>
+	auto GenericVector<Scalar, Dims>::y() const -> Scalar {
+		if constexpr (Dims < 2)
+			return 0;
+		else
+			return m_data[1];
+	}
+
+	template<typename Scalar, int64_t Dims>
+	auto GenericVector<Scalar, Dims>::z() const -> Scalar {
+		if constexpr (Dims < 3)
+			return 0;
+		else
+			return m_data[2];
+	}
+
+	template<typename Scalar, int64_t Dims>
+	auto GenericVector<Scalar, Dims>::w() const -> Scalar {
+		if constexpr (Dims < 4)
+			return 0;
+		else
+			return m_data[3];
+	}
+
 	template<typename Scalar, int64_t Dims>
 	auto GenericVector<Scalar, Dims>::xy() const -> GenericVector<Scalar, 2> {
 		return {x(), y()};
@@ -1242,48 +1322,6 @@ namespace librapid {
 	}
 
 	template<typename Scalar, int64_t Dims>
-	auto GenericVector<Scalar, Dims>::data() const -> const StorageType & {
-		return m_data;
-	}
-
-	template<typename Scalar, int64_t Dims>
-	auto GenericVector<Scalar, Dims>::data() -> StorageType & {
-		return m_data;
-	}
-
-	template<typename Scalar, int64_t Dims>
-	auto GenericVector<Scalar, Dims>::x() const -> Scalar {
-		if constexpr (Dims < 1)
-			return 0;
-		else
-			return m_data[0];
-	}
-
-	template<typename Scalar, int64_t Dims>
-	auto GenericVector<Scalar, Dims>::y() const -> Scalar {
-		if constexpr (Dims < 2)
-			return 0;
-		else
-			return m_data[1];
-	}
-
-	template<typename Scalar, int64_t Dims>
-	auto GenericVector<Scalar, Dims>::z() const -> Scalar {
-		if constexpr (Dims < 3)
-			return 0;
-		else
-			return m_data[2];
-	}
-
-	template<typename Scalar, int64_t Dims>
-	auto GenericVector<Scalar, Dims>::w() const -> Scalar {
-		if constexpr (Dims < 4)
-			return 0;
-		else
-			return m_data[3];
-	}
-
-	template<typename Scalar, int64_t Dims>
 	void GenericVector<Scalar, Dims>::x(Scalar val) {
 		if constexpr (Dims >= 1) m_data[0] = val;
 	}
@@ -1301,6 +1339,414 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims>
 	void GenericVector<Scalar, Dims>::w(Scalar val) {
 		if constexpr (Dims >= 4) m_data[3] = val;
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xy(const GenericVector<Scalar, 2> &v) {
+		x(v.x());
+		y(v.y());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::yx(const GenericVector<Scalar, 2> &v) {
+		y(v.x());
+		x(v.y());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xz(const GenericVector<Scalar, 2> &v) {
+		x(v.x());
+		z(v.y());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zx(const GenericVector<Scalar, 2> &v) {
+		z(v.x());
+		x(v.y());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::yz(const GenericVector<Scalar, 2> &v) {
+		y(v.x());
+		z(v.y());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zy(const GenericVector<Scalar, 2> &v) {
+		z(v.x());
+		y(v.y());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xyz(const GenericVector<Scalar, 3> &v) {
+		x(v.x());
+		y(v.y());
+		z(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xzy(const GenericVector<Scalar, 3> &v) {
+		x(v.x());
+		z(v.y());
+		y(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::yxz(const GenericVector<Scalar, 3> &v) {
+		y(v.x());
+		x(v.y());
+		z(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::yzx(const GenericVector<Scalar, 3> &v) {
+		y(v.x());
+		z(v.y());
+		x(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zxy(const GenericVector<Scalar, 3> &v) {
+		z(v.x());
+		x(v.y());
+		y(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zyx(const GenericVector<Scalar, 3> &v) {
+		z(v.x());
+		y(v.y());
+		x(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xyw(const GenericVector<Scalar, 3> &v) {
+		x(v.x());
+		y(v.y());
+		w(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xwy(const GenericVector<Scalar, 3> &v) {
+		x(v.x());
+		w(v.y());
+		y(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::yxw(const GenericVector<Scalar, 3> &v) {
+		y(v.x());
+		x(v.y());
+		w(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::ywx(const GenericVector<Scalar, 3> &v) {
+		y(v.x());
+		w(v.y());
+		x(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::wxy(const GenericVector<Scalar, 3> &v) {
+		w(v.x());
+		x(v.y());
+		y(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::wyx(const GenericVector<Scalar, 3> &v) {
+		w(v.x());
+		y(v.y());
+		x(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xzw(const GenericVector<Scalar, 3> &v) {
+		x(v.x());
+		z(v.y());
+		w(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xwz(const GenericVector<Scalar, 3> &v) {
+		x(v.x());
+		w(v.y());
+		z(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zxw(const GenericVector<Scalar, 3> &v) {
+		z(v.x());
+		x(v.y());
+		w(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zwx(const GenericVector<Scalar, 3> &v) {
+		z(v.x());
+		w(v.y());
+		x(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::wxz(const GenericVector<Scalar, 3> &v) {
+		w(v.x());
+		x(v.y());
+		z(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::wzx(const GenericVector<Scalar, 3> &v) {
+		w(v.x());
+		z(v.y());
+		x(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::yzw(const GenericVector<Scalar, 3> &v) {
+		y(v.x());
+		z(v.y());
+		w(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::ywz(const GenericVector<Scalar, 3> &v) {
+		y(v.x());
+		w(v.y());
+		z(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zyw(const GenericVector<Scalar, 3> &v) {
+		z(v.x());
+		y(v.y());
+		w(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zwy(const GenericVector<Scalar, 3> &v) {
+		z(v.x());
+		w(v.y());
+		y(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::wyz(const GenericVector<Scalar, 3> &v) {
+		w(v.x());
+		y(v.y());
+		z(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::wzy(const GenericVector<Scalar, 3> &v) {
+		w(v.x());
+		z(v.y());
+		y(v.z());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xyzw(const GenericVector<Scalar, 4> &v) {
+		x(v.x());
+		y(v.y());
+		z(v.z());
+		w(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xywz(const GenericVector<Scalar, 4> &v) {
+		x(v.x());
+		y(v.y());
+		w(v.z());
+		z(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xzyw(const GenericVector<Scalar, 4> &v) {
+		x(v.x());
+		z(v.y());
+		y(v.z());
+		w(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xzwy(const GenericVector<Scalar, 4> &v) {
+		x(v.x());
+		z(v.y());
+		w(v.z());
+		y(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xwyz(const GenericVector<Scalar, 4> &v) {
+		x(v.x());
+		w(v.y());
+		y(v.z());
+		z(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::xwzy(const GenericVector<Scalar, 4> &v) {
+		x(v.x());
+		w(v.y());
+		z(v.z());
+		y(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::yxzw(const GenericVector<Scalar, 4> &v) {
+		y(v.x());
+		x(v.y());
+		z(v.z());
+		w(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::yxwz(const GenericVector<Scalar, 4> &v) {
+		y(v.x());
+		x(v.y());
+		w(v.z());
+		z(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::yzxw(const GenericVector<Scalar, 4> &v) {
+		y(v.x());
+		z(v.y());
+		x(v.z());
+		w(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::yzwx(const GenericVector<Scalar, 4> &v) {
+		y(v.x());
+		z(v.y());
+		w(v.z());
+		x(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::ywxz(const GenericVector<Scalar, 4> &v) {
+		y(v.x());
+		w(v.y());
+		x(v.z());
+		z(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::ywzx(const GenericVector<Scalar, 4> &v) {
+		y(v.x());
+		w(v.y());
+		z(v.z());
+		x(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zxyw(const GenericVector<Scalar, 4> &v) {
+		z(v.x());
+		x(v.y());
+		y(v.z());
+		w(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zxwy(const GenericVector<Scalar, 4> &v) {
+		z(v.x());
+		x(v.y());
+		w(v.z());
+		y(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zyxw(const GenericVector<Scalar, 4> &v) {
+		z(v.x());
+		y(v.y());
+		x(v.z());
+		w(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zywx(const GenericVector<Scalar, 4> &v) {
+		z(v.x());
+		y(v.y());
+		w(v.z());
+		x(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zwxy(const GenericVector<Scalar, 4> &v) {
+		z(v.x());
+		w(v.y());
+		x(v.z());
+		y(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::zwyx(const GenericVector<Scalar, 4> &v) {
+		z(v.x());
+		w(v.y());
+		y(v.z());
+		x(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::wxyz(const GenericVector<Scalar, 4> &v) {
+		w(v.x());
+		x(v.y());
+		y(v.z());
+		z(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::wxzy(const GenericVector<Scalar, 4> &v) {
+		w(v.x());
+		x(v.y());
+		z(v.z());
+		y(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::wyxz(const GenericVector<Scalar, 4> &v) {
+		w(v.x());
+		y(v.y());
+		x(v.z());
+		z(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::wyzx(const GenericVector<Scalar, 4> &v) {
+		w(v.x());
+		y(v.y());
+		z(v.z());
+		x(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::wzxy(const GenericVector<Scalar, 4> &v) {
+		w(v.x());
+		z(v.y());
+		x(v.z());
+		y(v.w());
+	}
+
+	template<typename Scalar, int64_t Dims>
+	void GenericVector<Scalar, Dims>::wzyx(const GenericVector<Scalar, 4> &v) {
+		w(v.x());
+		z(v.y());
+		y(v.z());
+		x(v.w());
+	}
+
+#pragma endregion SwizzleImpl
+
+	template<typename Scalar, int64_t Dims>
+	auto GenericVector<Scalar, Dims>::data() const -> const StorageType & {
+		return m_data;
+	}
+
+	template<typename Scalar, int64_t Dims>
+	auto GenericVector<Scalar, Dims>::data() -> StorageType & {
+		return m_data;
 	}
 
 	template<typename Scalar, int64_t Dims>
@@ -1694,26 +2140,6 @@ namespace librapid {
 		for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::ceil(vec[i]); }
 		return res;
 	}
-
-	/// A simplified interface to the GenericVector class, defaulting to Vc SimdArray storage
-	/// \tparam Scalar The scalar type of the vector
-	/// \tparam Dims The dimensionality of the vector
-	template<typename Scalar, int64_t Dims>
-	using Vec = GenericVector<Scalar, Dims>;
-
-	using Vec2i = Vec<int32_t, 2>;
-	using Vec3i = Vec<int32_t, 3>;
-	using Vec4i = Vec<int32_t, 4>;
-	using Vec2f = Vec<float, 2>;
-	using Vec3f = Vec<float, 3>;
-	using Vec4f = Vec<float, 4>;
-	using Vec2d = Vec<double, 2>;
-	using Vec3d = Vec<double, 3>;
-	using Vec4d = Vec<double, 4>;
-
-	using Vec2 = Vec2d;
-	using Vec3 = Vec3d;
-	using Vec4 = Vec4d;
 
 	template<typename Scalar, int64_t Dims>
 	std::ostream &operator<<(std::ostream &os, const GenericVector<Scalar, Dims> &vec) {

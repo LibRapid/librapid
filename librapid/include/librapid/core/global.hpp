@@ -18,6 +18,12 @@ namespace librapid::global {
 
 	// Number of threads used by LibRapid
 	extern int64_t numThreads;
+
+	// Size of a cache line in bytes
+	extern int64_t cacheLineSize;
+
+	// Memory alignment for LibRapid
+	extern int64_t memoryAlignment;
 } // namespace librapid::global
 
 #endif // LIBRAPID_CORE_GLOBAL_HPP

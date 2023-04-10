@@ -36,9 +36,9 @@ option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
 option(LIBRAPID_USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_FAST_MATH "Use potentially less accurate operations to increase performance" OFF)
+option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" OFF)
 
-# Include any required modules
-include(identifyBLAS)
+option(LIBRAPID_MKL_CONFIG_PATH "Path to the 'MKLConfig.cmake' file" "")
 
 MACRO(SUBDIRLIST result curdir)
     FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
@@ -53,15 +53,15 @@ ENDMACRO()
 
 # Attempt to locate the required packages
 include(FetchContent)
-if (${LIBRAPID_USE_CUDA})
+if (LIBRAPID_USE_CUDA)
     find_package(CUDAToolkit QUIET)
 endif ()
 
-if (${LIBRAPID_USE_BLAS})
+if (LIBRAPID_USE_BLAS)
     find_package(BLAS QUIET)
 endif ()
 
-if (${LIBRAPID_USE_OMP})
+if (LIBRAPID_USE_OMP)
     find_package(OpenMP QUIET)
 endif ()
 
@@ -137,7 +137,7 @@ if (MSVC)
 endif ()
 
 # See if OpenMP should be linked against
-if (${LIBRAPID_USE_OMP})
+if (LIBRAPID_USE_OMP)
     if (${OpenMP_FOUND})
         message(STATUS "[ LIBRAPID ] Linking against OpenMP")
 
@@ -152,7 +152,24 @@ if (${LIBRAPID_USE_OMP})
     endif ()
 endif ()
 
-if (${LIBRAPID_GET_BLAS})
+# Include any required modules
+include(identifyBLAS)
+
+# If LIBRAPID_MKL_CONFIG_PATH is set, use that instead of the default
+if (LIBRAPID_MKL_CONFIG_PATH)
+    message(STATUS "[ LIBRAPID ] Using MKLConfig.cmake from ${LIBRAPID_MKL_CONFIG_PATH}")
+    include(${LIBRAPID_MKL_CONFIG_PATH})
+    message(STATUS "[ LIBRAPID ] Linking against MKL")
+    message(STATUS "[ LIBRAPID ] MKL Libraries: ${MKL_LIBRARIES}")
+    message(STATUS "[ LIBRAPID ] MKL Include Directories: ${MKL_INCLUDE}")
+    target_link_libraries(${module_name} PUBLIC MKL::MKL)
+    target_include_directories(${module_name} PUBLIC ${MKL_INCLUDE})
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
+    set(LIBRAPID_HAS_BLAS ON)
+    set_blas_definition("MKL")
+endif ()
+
+if (LIBRAPID_GET_BLAS AND NOT LIBRAPID_HAS_BLAS)
     message(STATUS "[ LIBRAPID ] Downloading OpenBLAS Build...")
 
     if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/buildopenblas-src")
@@ -180,7 +197,7 @@ if (${LIBRAPID_GET_BLAS})
 endif ()
 
 # See if BLAS should be linked against
-if (${LIBRAPID_USE_BLAS})
+if (LIBRAPID_USE_BLAS AND NOT LIBRAPID_HAS_BLAS)
     if (${BLAS_FOUND})
         message(STATUS "[ LIBRAPID ] BLAS located was ${BLAS_LIBRARIES}")
 
@@ -195,8 +212,9 @@ if (${LIBRAPID_USE_BLAS})
         get_filename_component(filepath ${LIBRAPID_BLAS} DIRECTORY)
         get_filename_component(filename ${LIBRAPID_BLAS} NAME)
 
-        # Attempt to identify which BLAS library is being used
-        setBlasDefinition(filename)
+        # Attempt to identify which BLAS library is being used and
+        # set the appropriate compile definition
+        set_blas_definition_from_file(filename)
 
         # Copy include files
         set(inc_path "${filepath}/../include")
@@ -294,7 +312,7 @@ if (${LIBRAPID_USE_BLAS})
 endif ()
 
 # Check if CUDA should be used
-if (${LIBRAPID_USE_CUDA})
+if (LIBRAPID_USE_CUDA)
     if (${CUDAToolkit_FOUND})
         message(STATUS "[ LIBRAPID ] Using CUDA ${CUDAToolkit_VERSION}")
 
@@ -405,6 +423,26 @@ if (LIBRAPID_FAST_MATH)
     endif ()
 endif ()
 
+if (LIBRAPID_NATIVE_ARCH)
+    #    include(ArchDetect)
+    #
+    #    if (${AVX_FLAGS})
+    #        message(STATUS "[ LIBRAPID ] Native architecture enabled")
+    #        message(STATUS "[ LIBRAPID ] Supported flags: ${AVX_FLAGS}")
+    #        target_compile_definitions(${module_name} PUBLIC LIBRAPID_NATIVE_ARCH)
+    #    else ()
+    #        message(STATUS "[ LIBRAPID ] CPU does not support AVX or AVX2")
+    #    endif ()
+    #    target_compile_options(${module_name} PUBLIC ${AVX_FLAGS})
+
+    message(STATUS "[ LIBRAPID ] Compiling for native architecture")
+    OptimizeForArchitecture()
+    target_compile_options(${module_name} PUBLIC ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_NATIVE_ARCH)
+    message(STATUS "[ LIBRAPID ] Additional Definitions: ${Vc_DEFINITIONS}")
+    message(STATUS "[ LIBRAPID ] Supported flags: ${Vc_ARCHITECTURE_FLAGS}")
+endif ()
+
 target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include")
 
 if (${LIBRAPID_BUILD_TESTS})
@@ -442,3 +480,26 @@ endif ()
 #     message(STATUS "[ LIBRAPID ] Enabling code coverage for ${module_name}")
 #     add_coverage(${module_name})
 # endif()
+
+if (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    message(STATUS "[ LIBRAPID ] Enabling code coverage") # Requires gcovr -- sudo apt install gcovr
+    include(CodeCoverage)
+    append_coverage_compiler_flags_to_target(${module_name})
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_WITH_COVERAGE)
+    target_compile_options(${module_name} PUBLIC
+            -O0        # no optimization
+            -g         # generate debug info
+            --coverage # sets all required flags
+            )
+
+    set(COVERAGE_EXCLUDES
+            "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/*"
+            "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas"
+            "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas")
+
+    setup_target_for_coverage_gcovr_html(
+            NAME ${module_name}_coverage
+            EXECUTABLE ctest -C ${CMAKE_BUILD_TYPE}
+            EXCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/*" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas"
+    )
+endif (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")

@@ -2,6 +2,10 @@
 #define LIBRAPID_ARRAY_STRIDE_TOOLS_HPP
 
 namespace librapid {
+	namespace typetraits {
+		LIBRAPID_DEFINE_AS_TYPE(typename T COMMA size_t N, Stride<T COMMA N>);
+	}
+
 	/// A Stride is a vector of integers that describes the distance between elements in each
 	/// dimension of an ArrayContainer object. This can be used to access elements in a non-trivial
 	/// order, or to access a sub-array of an ArrayContainer object. The Stride class inherits from

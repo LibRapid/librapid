@@ -611,9 +611,9 @@ namespace librapid {
 			if (::librapid::isNaN(otherReal) || ::librapid::isNaN(otherImag)) { // Set result to NaN
 				m_val[RE] = typetraits::TypeInfo<T>::quietNaN();
 				m_val[IM] = m_val[RE];
-			} else if ((otherImag < 0 ? -otherImag
-									  : +otherImag) < // |other.imag()| < |other.real()|
-					   (otherReal < 0 ? -otherReal : +otherReal)) {
+			} else if ((otherImag < 0 ? T(-otherImag)
+									  : T(+otherImag)) < // |other.imag()| < |other.real()|
+					   (otherReal < 0 ? T(-otherReal) : T(+otherReal))) {
 				T wr = otherImag / otherReal;
 				T wd = otherReal + wr * otherImag;
 
@@ -1309,27 +1309,31 @@ namespace librapid {
 		}
 	}
 
-	template<typename T>
-	LIBRAPID_NODISCARD Complex<T> pow(const Complex<T> &left, const T &right) {
+	template<typename T, typename V,
+			 typename std::enable_if_t<
+			   typetraits::TypeInfo<V>::type == detail::LibRapidType::Scalar, int> = 0>
+	LIBRAPID_NODISCARD Complex<T> pow(const Complex<T> &left, const V &right) {
 		if (imag(left) == 0) {
 			if (::librapid::signBit(imag(left))) {
-				return conj(_pow(real(left), right));
+				return conj(_pow(real(left), static_cast<T>(right)));
 			} else {
-				return _pow(real(left), right);
+				return _pow(real(left), static_cast<T>(right));
 			}
 		} else {
-			return exp(right * log(left));
+			return exp(static_cast<T>(right) * log(left));
 		}
 	}
 
-	template<typename T>
-	LIBRAPID_NODISCARD Complex<T> pow(const T &left, const Complex<T> &right) {
+	template<typename T, typename V,
+			 typename std::enable_if_t<
+			   typetraits::TypeInfo<V>::type == detail::LibRapidType::Scalar, int> = 0>
+	LIBRAPID_NODISCARD Complex<T> pow(const V &left, const Complex<T> &right) {
 		if (imag(right) == 0) {
-			return _pow(left, real(right));
+			return _pow(static_cast<V>(left), real(right));
 		} else if (0 < left) {
-			return exp(right * ::librapid::log(left));
+			return exp(right * ::librapid::log(static_cast<V>(left)));
 		} else {
-			return exp(right * log(Complex<T>(left)));
+			return exp(right * log(Complex<T>(static_cast<V>(left))));
 		}
 	}
 

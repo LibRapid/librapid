@@ -15,16 +15,27 @@ namespace librapid {
 		}
 
 		template<typename First, typename... Rest>
-		struct DeviceCheckAndExtract {
-			using Device = typename TypeInfo<std::decay_t<First>>::Device;
-		};
+		constexpr auto commonDevice() {
+			using FirstDevice = typename TypeInfo<std::decay_t<First>>::Device;
+			if constexpr (sizeof...(Rest) == 0) {
+				return FirstDevice {};
+			} else {
+				using RestDevice = decltype(commonDevice<Rest...>());
+				if constexpr (std::is_same_v<FirstDevice, device::GPU> ||
+							  std::is_same_v<RestDevice, device::GPU>) {
+					return device::GPU {};
+				} else {
+					return device::CPU {};
+				}
+			}
+		}
 
 		template<typename desc, typename Functor_, typename... Args>
 		struct TypeInfo<::librapid::detail::Function<desc, Functor_, Args...>> {
-			detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
-			using Scalar			  = decltype(std::declval<Functor_>()(
-			   std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
-			using Device			  = typename DeviceCheckAndExtract<Args...>::Device;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
+			using Scalar							   = decltype(std::declval<Functor_>()(
+				std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
+			using Device							   = decltype(commonDevice<Args...>());
 
 			static constexpr bool allowVectorisation = checkAllowVectorisation<Args...>();
 
@@ -32,20 +43,84 @@ namespace librapid {
 			static constexpr bool supportsLogical	 = TypeInfo<Scalar>::supportsLogical;
 			static constexpr bool supportsBinary	 = TypeInfo<Scalar>::supportsBinary;
 		};
+
+		LIBRAPID_DEFINE_AS_TYPE(typename desc COMMA typename Functor_ COMMA typename... Args,
+								::librapid::detail::Function<desc COMMA Functor_ COMMA Args...>);
 	} // namespace typetraits
 
 	namespace detail {
 		// Descriptor is defined in "forward.hpp"
+
+		template<
+		  typename Packet, typename T,
+		  typename std::enable_if_t<
+			typetraits::TypeInfo<T>::type != ::librapid::detail::LibRapidType::Scalar, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetExtractor(const T &obj,
+																		 size_t index) {
+			static_assert(std::is_same_v<Packet, decltype(obj.packet(index))>,
+						  "Packet types do not match");
+			return obj.packet(index);
+		}
+
+		template<
+		  typename Packet, typename T,
+		  typename std::enable_if_t<
+			typetraits::TypeInfo<T>::type == ::librapid::detail::LibRapidType::Scalar, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetExtractor(const T &obj, size_t) {
+			return Packet(obj);
+		}
+
+		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
+														 ::librapid::detail::LibRapidType::Scalar,
+													   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t index) {
+			return obj.scalar(index);
+		}
+
+		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
+														 ::librapid::detail::LibRapidType::Scalar,
+													   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t) {
+			return obj;
+		}
+
+		template<typename First, typename... Rest>
+		constexpr auto scalarTypesAreSame() {
+			if constexpr (sizeof...(Rest) == 0) {
+				using Scalar = typename typetraits::TypeInfo<std::decay_t<First>>::Scalar;
+				return Scalar {};
+			} else {
+				using RestType = decltype(scalarTypesAreSame<Rest...>());
+				if constexpr (std::is_same_v<
+								typename typetraits::TypeInfo<std::decay_t<First>>::Scalar,
+								RestType>) {
+					return RestType {};
+				} else {
+					return std::false_type {};
+				}
+			}
+		}
+
+		// template<typename First, typename... Rest>
+		// constexpr bool scalarTypesAreSame(const std::tuple<First, Rest...> &tup) {
+		// 	constexpr auto ret = scalarTypesAreSameImpl(tup);
+		// 	return !std::is_same_v<decltype(ret), std::false_type>;
+		// };
 
 		template<typename desc, typename Functor_, typename... Args>
 		class Function {
 		public:
 			using Type		 = Function<desc, Functor_, Args...>;
 			using Functor	 = Functor_;
+			using ShapeType	 = Shape<size_t, 32>;
+			using StrideType = ShapeType;
 			using Scalar	 = typename typetraits::TypeInfo<Type>::Scalar;
 			using Device	 = typename typetraits::TypeInfo<Type>::Device;
 			using Packet	 = typename typetraits::TypeInfo<Scalar>::Packet;
+
 			using Descriptor = desc;
+			static constexpr bool argsAreSameType =
+			  !std::is_same_v<decltype(scalarTypesAreSame<Args...>()), std::false_type>;
 
 			Function() = default;
 
@@ -83,6 +158,8 @@ namespace librapid {
 			/// Return an evaluated Array object
 			/// \return
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto eval() const;
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index) const;
 
 			/// Evaluates the function at the given index, returning a Packet result.
 			/// \param index The index to evaluate at.
@@ -128,7 +205,8 @@ namespace librapid {
 
 		template<typename desc, typename Functor, typename... Args>
 		auto Function<desc, Functor, Args...>::shape() const {
-			return std::get<0>(m_args).shape();
+			// return std::get<0>(m_args).shape();
+			return typetraits::TypeInfo<Functor>::getShape(m_args);
 		}
 
 		template<typename desc, typename Functor, typename... Args>
@@ -137,8 +215,13 @@ namespace librapid {
 		}
 
 		template<typename desc, typename Functor, typename... Args>
+		auto Function<desc, Functor, Args...>::operator[](int64_t index) const {
+			return array::ArrayView(*this)[index];
+		}
+
+		template<typename desc, typename Functor, typename... Args>
 		auto Function<desc, Functor, Args...>::eval() const {
-			Array<Scalar, Device> res(shape());
+			auto res = Array<Scalar, Device>(shape());
 			res = *this;
 			return res;
 		}
@@ -151,10 +234,10 @@ namespace librapid {
 
 		template<typename desc, typename Functor, typename... Args>
 		template<size_t... I>
-		typename Function<desc, Functor, Args...>::Packet
-		Function<desc, Functor, Args...>::packetImpl(std::index_sequence<I...>,
-													 size_t index) const {
-			return m_functor.packet((std::get<I>(m_args).packet(index))...);
+		auto Function<desc, Functor, Args...>::packetImpl(std::index_sequence<I...>,
+														  size_t index) const -> Packet {
+			// return m_functor.packet((std::get<I>(m_args).packet(index))...);
+			return m_functor.packet(packetExtractor<Packet>(std::get<I>(m_args), index)...);
 		}
 
 		template<typename desc, typename Functor, typename... Args>
@@ -166,7 +249,8 @@ namespace librapid {
 		template<size_t... I>
 		auto Function<desc, Functor, Args...>::scalarImpl(std::index_sequence<I...>,
 														  size_t index) const -> Scalar {
-			return m_functor((std::get<I>(m_args).scalar(index))...);
+			// return m_functor((std::get<I>(m_args).scalar(index))...);
+			return m_functor(scalarExtractor(std::get<I>(m_args), index)...);
 		}
 
 		template<typename desc, typename Functor, typename... Args>

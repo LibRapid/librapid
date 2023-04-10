@@ -26,13 +26,13 @@ namespace lrc = librapid;
 		REQUIRE(storage2[8] == 9);                                                                 \
 		REQUIRE(storage2[9] == 10);                                                                \
                                                                                                    \
-		lrc::Storage<ScalarType> storage3(20, 1);                                                  \
+		lrc::Storage<ScalarType> storage3(100, 1);                                                 \
                                                                                                    \
-		REQUIRE(storage3.size() == 20);                                                            \
+		REQUIRE(storage3.size() == 100);                                                           \
 		REQUIRE(storage3[0] == 1);                                                                 \
 		REQUIRE(storage3[1] == 1);                                                                 \
-		REQUIRE(storage3[18] == 1);                                                                \
-		REQUIRE(storage3[19] == 1);                                                                \
+		REQUIRE(storage3[98] == 1);                                                                \
+		REQUIRE(storage3[99] == 1);                                                                \
                                                                                                    \
 		auto storage4 = lrc::Storage<ScalarType>(storage2);                                        \
                                                                                                    \
@@ -55,11 +55,11 @@ namespace lrc = librapid;
                                                                                                    \
 		storage4 = storage3;                                                                       \
                                                                                                    \
-		REQUIRE(storage4.size() == 20);                                                            \
+		REQUIRE(storage4.size() == 100);                                                           \
 		REQUIRE(storage4[0] == 1);                                                                 \
 		REQUIRE(storage4[1] == 1);                                                                 \
-		REQUIRE(storage4[18] == 1);                                                                \
-		REQUIRE(storage4[19] == 1);                                                                \
+		REQUIRE(storage4[98] == 1);                                                                \
+		REQUIRE(storage4[99] == 1);                                                                \
                                                                                                    \
 		SECTION("Const Iterator") {                                                                \
 			ScalarType i = 1;                                                                      \
@@ -77,24 +77,26 @@ namespace lrc = librapid;
 			}                                                                                      \
 		}                                                                                          \
                                                                                                    \
-		storage4.resize(5);                                                                        \
-		REQUIRE(storage4.size() == 5);                                                             \
-		REQUIRE(storage4[0] == 1);                                                                 \
-		REQUIRE(storage4[1] == 1);                                                                 \
-		REQUIRE(storage4[2] == 1);                                                                 \
-		REQUIRE(storage4[3] == 1);                                                                 \
-		REQUIRE(storage4[4] == 1);                                                                 \
+		lrc::Storage<ScalarType> storage6(20, 123);                                                \
+		REQUIRE(storage6.size() == 20);                                                            \
+		storage6.resize(5);                                                                        \
+		REQUIRE(storage6.size() == 5);                                                             \
+		REQUIRE(storage6[0] == 123);                                                               \
+		REQUIRE(storage6[1] == 123);                                                               \
+		REQUIRE(storage6[2] == 123);                                                               \
+		REQUIRE(storage6[3] == 123);                                                               \
+		REQUIRE(storage6[4] == 123);                                                               \
                                                                                                    \
-		storage4.resize(10);                                                                       \
-		REQUIRE(storage4.size() == 10);                                                            \
-		REQUIRE(storage4[0] == 1);                                                                 \
-		REQUIRE(storage4[1] == 1);                                                                 \
-		REQUIRE(storage4[2] == 1);                                                                 \
-		REQUIRE(storage4[3] == 1);                                                                 \
-		REQUIRE(storage4[4] == 1);                                                                 \
+		storage6.resize(10);                                                                       \
+		REQUIRE(storage6.size() == 10);                                                            \
+		REQUIRE(storage6[0] == 123);                                                               \
+		REQUIRE(storage6[1] == 123);                                                               \
+		REQUIRE(storage6[2] == 123);                                                               \
+		REQUIRE(storage6[3] == 123);                                                               \
+		REQUIRE(storage6[4] == 123);                                                               \
                                                                                                    \
-		storage4.resize(100, 0);                                                                   \
-		REQUIRE(storage4.size() == 100);                                                           \
+		storage6.resize(100, 0);                                                                   \
+		REQUIRE(storage6.size() == 100);                                                           \
 	}
 
 #define BENCHMARK_CONSTRUCTORS(TYPE_, FILL_)                                                       \
