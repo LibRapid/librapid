@@ -7,6 +7,10 @@
  */
 
 namespace librapid {
+	namespace typetraits {
+		LIBRAPID_DEFINE_AS_TYPE(typename T COMMA size_t N, Shape<T COMMA N>);
+	}
+
 	template<typename T = size_t, size_t N = 32>
 	class Shape {
 	public:
@@ -330,6 +334,18 @@ namespace librapid {
 					 [](auto, auto, auto... rest) { return std::make_tuple(rest...); }, shapes));
 		}
 	}
+
+	namespace typetraits {
+		template<typename T>
+		struct IsSizeType {
+			using value = std::false_type;
+		};
+
+		template<typename T, size_t N>
+		struct IsSizeType<Shape<T, N>> {
+			using value = std::true_type;
+		};
+	} // namespace typetraits
 } // namespace librapid
 
 // Support FMT printing

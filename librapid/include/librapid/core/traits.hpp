@@ -21,9 +21,11 @@
 
 namespace librapid {
 	namespace detail {
-		/// An enum class representing different types within LibRapid. Intended maily for
+		/// An enum class representing different types within LibRapid. Intended mainly for
 		/// internal use
-		enum class LibRapidType { Scalar, ArrayContainer, ArrayFunction, ArrayView };
+		enum class LibRapidType { Scalar, ArrayContainer, ArrayFunction, ArrayView, Transpose };
+
+		constexpr bool sameType(LibRapidType type1, LibRapidType type2) { return type1 == type2; }
 
 		/*
 		 * Pretty string representations of data types at compile time. This is adapted from
@@ -85,15 +87,16 @@ namespace librapid {
 		/// \tparam T The type to get information about
 		template<typename T>
 		struct TypeInfo {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = T;
-			using Packet							 = std::false_type;
-			static constexpr int64_t packetWidth	 = 1;
-			static constexpr char name[]			 = "[NO DEFINED TYPE]";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = true;
-			static constexpr bool allowVectorisation = false;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = T;
+			using Packet							   = std::false_type;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "[NO DEFINED TYPE]";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = true;
+			static constexpr bool allowVectorisation   = false;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
@@ -113,15 +116,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<bool> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = bool;
-			using Packet							 = std::false_type;
-			static constexpr int64_t packetWidth	 = 1;
-			static constexpr char name[]			 = "char";
-			static constexpr bool supportsArithmetic = false;
-			static constexpr bool supportsLogical	 = false;
-			static constexpr bool supportsBinary	 = true;
-			static constexpr bool allowVectorisation = false;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = bool;
+			using Packet							   = std::false_type;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "char";
+			static constexpr bool supportsArithmetic   = false;
+			static constexpr bool supportsLogical	   = false;
+			static constexpr bool supportsBinary	   = true;
+			static constexpr bool allowVectorisation   = false;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
@@ -133,15 +137,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<char> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = char;
-			using Packet							 = std::false_type;
-			static constexpr int64_t packetWidth	 = 1;
-			static constexpr char name[]			 = "bool";
-			static constexpr bool supportsArithmetic = false;
-			static constexpr bool supportsLogical	 = false;
-			static constexpr bool supportsBinary	 = true;
-			static constexpr bool allowVectorisation = true;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = char;
+			using Packet							   = std::false_type;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "bool";
+			static constexpr bool supportsArithmetic   = false;
+			static constexpr bool supportsLogical	   = false;
+			static constexpr bool supportsBinary	   = true;
+			static constexpr bool allowVectorisation   = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
@@ -162,15 +167,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<int8_t> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = int8_t;
-			using Packet							 = Vc::Vector<int8_t>;
-			static constexpr int64_t packetWidth	 = Packet::size();
-			static constexpr char name[]			 = "int8_t";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = true;
-			static constexpr bool allowVectorisation = true;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = int8_t;
+			using Packet							   = Vc::Vector<int8_t>;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr char name[]			   = "int8_t";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = true;
+			static constexpr bool allowVectorisation   = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
@@ -191,15 +197,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<uint8_t> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = uint8_t;
-			using Packet							 = Vc::Vector<uint8_t>;
-			static constexpr int64_t packetWidth	 = Packet::size();
-			static constexpr char name[]			 = "uint8_t";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = true;
-			static constexpr bool allowVectorisation = true;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = uint8_t;
+			using Packet							   = Vc::Vector<uint8_t>;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr char name[]			   = "uint8_t";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = true;
+			static constexpr bool allowVectorisation   = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8U;
@@ -220,15 +227,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<int16_t> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = int16_t;
-			using Packet							 = Vc::Vector<int16_t>;
-			static constexpr int64_t packetWidth	 = Packet::size();
-			static constexpr char name[]			 = "int16_t";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = true;
-			static constexpr bool allowVectorisation = true;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = int16_t;
+			using Packet							   = Vc::Vector<int16_t>;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr char name[]			   = "int16_t";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = true;
+			static constexpr bool allowVectorisation   = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_16I;
@@ -249,15 +257,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<uint16_t> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = uint16_t;
-			using Packet							 = Vc::Vector<uint16_t>;
-			static constexpr int64_t packetWidth	 = Packet::size();
-			static constexpr char name[]			 = "uint16_t";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = true;
-			static constexpr bool allowVectorisation = true;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = uint16_t;
+			using Packet							   = Vc::Vector<uint16_t>;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr char name[]			   = "uint16_t";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = true;
+			static constexpr bool allowVectorisation   = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_16U;
@@ -278,15 +287,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<int32_t> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = int32_t;
-			using Packet							 = Vc::Vector<int32_t>;
-			static constexpr int64_t packetWidth	 = Packet::size();
-			static constexpr char name[]			 = "int32_t";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = true;
-			static constexpr bool allowVectorisation = true;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = int32_t;
+			using Packet							   = Vc::Vector<int32_t>;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr char name[]			   = "int32_t";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = true;
+			static constexpr bool allowVectorisation   = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32I;
@@ -307,15 +317,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<uint32_t> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = uint32_t;
-			using Packet							 = Vc::Vector<uint32_t>;
-			static constexpr int64_t packetWidth	 = Packet::size();
-			static constexpr char name[]			 = "uint32_t";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = true;
-			static constexpr bool allowVectorisation = true;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = uint32_t;
+			using Packet							   = Vc::Vector<uint32_t>;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr char name[]			   = "uint32_t";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = true;
+			static constexpr bool allowVectorisation   = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32U;
@@ -336,15 +347,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<int64_t> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = int64_t;
-			using Packet							 = std::false_type;
-			static constexpr int64_t packetWidth	 = 1;
-			static constexpr char name[]			 = "int64_t";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = true;
-			static constexpr bool allowVectorisation = false;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = int64_t;
+			using Packet							   = std::false_type;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "int64_t";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = true;
+			static constexpr bool allowVectorisation   = false;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64I;
@@ -365,15 +377,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<uint64_t> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = uint64_t;
-			using Packet							 = std::false_type;
-			static constexpr int64_t packetWidth	 = 1;
-			static constexpr char name[]			 = "uint64_t";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = true;
-			static constexpr bool allowVectorisation = false;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = uint64_t;
+			using Packet							   = std::false_type;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "uint64_t";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = true;
+			static constexpr bool allowVectorisation   = false;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64U;
@@ -394,15 +407,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<float> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = float;
-			using Packet							 = Vc::Vector<float>;
-			static constexpr int64_t packetWidth	 = Packet::size();
-			static constexpr char name[]			 = "float";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = false;
-			static constexpr bool allowVectorisation = true;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = float;
+			using Packet							   = Vc::Vector<float>;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr char name[]			   = "float";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = false;
+			static constexpr bool allowVectorisation   = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32F;
@@ -423,15 +437,16 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<double> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = double;
-			using Packet							 = Vc::Vector<double>;
-			static constexpr int64_t packetWidth	 = Packet::size();
-			static constexpr char name[]			 = "double";
-			static constexpr bool supportsArithmetic = true;
-			static constexpr bool supportsLogical	 = true;
-			static constexpr bool supportsBinary	 = false;
-			static constexpr bool allowVectorisation = true;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = double;
+			using Packet							   = Vc::Vector<double>;
+			using Device							   = device::CPU;
+			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr char name[]			   = "double";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = false;
+			static constexpr bool allowVectorisation   = true;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;

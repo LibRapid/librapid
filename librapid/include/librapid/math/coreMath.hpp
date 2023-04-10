@@ -336,16 +336,16 @@ namespace librapid {
 	/// Return the angle formed by a given y and x offset. This is often more useful than using
 	/// atan, since it gives more usable outputs. Note that, for integer values, this function
 	/// will cast the input values to a floating point type before calculating the angle.
-	/// \tparam T1
-	/// \tparam T2
-	/// \param dy
-	/// \param dx
-	/// \return
+	/// \tparam TY Data type of the y offset
+	/// \tparam TX Data type of the x offset
+	/// \param dy Y offset
+	/// \param dx X offset
+	/// \return Angle formed by the given offsets
 	template<
-	  typename T1, typename T2,
-	  typename std::enable_if_t<std::is_fundamental_v<T1> && std::is_fundamental_v<T2>, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto atan2(T1 dy, T2 dx) {
-		if constexpr (std::is_integral_v<T1> || std::is_integral_v<T2>) {
+	  typename TY, typename TX,
+	  typename std::enable_if_t<std::is_fundamental_v<TY> && std::is_fundamental_v<TX>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto atan2(TY dy, TX dx) {
+		if constexpr (std::is_integral_v<TY> || std::is_integral_v<TX>) {
 			return std::atan2(static_cast<double>(dy), static_cast<double>(dx));
 		} else {
 			return std::atan2(dy, dx);

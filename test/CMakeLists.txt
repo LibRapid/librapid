@@ -4,7 +4,7 @@ function(make_test name)
 
     message(STATUS "[ LIBRAPID ] Adding test ${name}")
     add_test(NAME ${name}
-            COMMAND test-${name} -s -r compact --skip-benchmarks)
+            COMMAND test-${name} -s --skip-benchmarks)
 endfunction()
 
 make_test(storage)
@@ -13,3 +13,4 @@ make_test(sizetype)
 make_test(multiprecision)
 make_test(vector)
 make_test(array)
+make_test(mathUtilities)

@@ -10,10 +10,21 @@
 
 ---
 
-[![Compile](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/compile.yaml) \
+[![Continuous Integration](https://github.com/LibRapid/librapid/actions/workflows/continuous-integration.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/continuous-integration.yaml)
 [![Documentation Status](https://readthedocs.org/projects/librapid/badge/?version=latest)](https://librapid.readthedocs.io/en/latest/?badge=latest)
 
 ---
+
+# An Important Note
+
+I am currently preparing for my A-Level exams and, as such, my ability to work on LibRapid is severely limited. I will try to work on it as much as
+reasonably possible, but I cannot guarantee that development will be as fast as it has been in the past. Development will continue in short bursts
+when I have time, and I'll be available to answer questions on (Discord)[https://discord.gg/cGxTFTgCAC].
+
+Any external contributions are greatly appreciated, and I will most likely
+review them within a day or two. If you have any questions, feel free to ask them on the Discord server.
+
+Thank you for your understanding.
 
 # What is LibRapid?
 
@@ -78,17 +89,15 @@ map("0.5"_f, "0"_f, "1"_f, "0"_f, "100"_f); //  . . . . . | 50.00000000000000
 
 // ---------------------------------------------------------------------
 
-auto val    = lrc::Array<float>(lrc::Shape({2, 2}));
-auto start1 = lrc::Array<float>(lrc::Shape({2, 2}));
-auto end1   = lrc::Array<float>(lrc::Shape({2, 2}));
-auto start2 = lrc::Array<float>(lrc::Shape({2, 2}));
-auto end2   = lrc::Array<float>(lrc::Shape({2, 2}));
+auto val    = lrc::fromData<float>({{1, 2}, {3, 4}});
+auto start1 = lrc::fromData<float>({{0, 0}, {0, 0}});
+auto end1   = lrc::fromData<float>({{10, 10}, {10, 10}});
+auto start2 = lrc::fromData<float>({{0, 0}, {0, 0}});
+auto end2   = lrc::fromData<float>({{100, 100}, {100, 100}});
 
-val    << 1, 2, 3, 4;
-start1 << 0, 0, 0, 0;
-end1   << 10, 10, 10, 10;
-start2 << 0, 0, 0, 0;
-end2   << 100, 100, 100, 100;
+fmt::print("{}\n", lrc::map(val, start1, end1, start2, end2));
+// [[10 20]
+//  [30 40]]
 
 fmt::print("{}\n", lrc::map(val, start1, end1, start2, end2));
 // [[10 20]

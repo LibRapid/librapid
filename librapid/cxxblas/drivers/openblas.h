@@ -80,4 +80,6 @@ int openblas_get_parallel(void);
 /* OpenBLAS is compiled using OpenMP threading model */
 #define OPENBLAS_OPENMP 2
 
+#include "cblas.h"
+
 #endif // CXXBLAS_DRIVERS_OPENBLAS_H

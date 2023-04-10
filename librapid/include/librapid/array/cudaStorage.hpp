@@ -17,6 +17,8 @@ namespace librapid {
 			using Scalar						 = Scalar_;
 			using Device						 = device::GPU;
 		};
+
+		LIBRAPID_DEFINE_AS_TYPE(typename Scalar_, CudaStorage<Scalar_>);
 	} // namespace typetraits
 
 	namespace detail {
@@ -100,6 +102,9 @@ namespace librapid {
 		/// Create a CudaStorage object from an std::vector of values
 		/// \param vec The vector to fill with
 		LIBRAPID_ALWAYS_INLINE explicit CudaStorage(const std::vector<Scalar> &vec);
+
+		template<typename ShapeType>
+		static ShapeType defaultShape();
 
 		template<typename V>
 		static CudaStorage fromData(const std::initializer_list<V> &vec);
@@ -297,6 +302,12 @@ namespace librapid {
 									 cudaMemcpyDeviceToDevice,
 									 global::cudaStream));
 		return *this;
+	}
+
+	template<typename T>
+	template<typename ShapeType>
+	ShapeType CudaStorage<T>::defaultShape() {
+		return ShapeType({0});
 	}
 
 	template<typename T>
