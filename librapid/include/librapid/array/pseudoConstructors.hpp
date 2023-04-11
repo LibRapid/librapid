@@ -61,7 +61,7 @@ namespace librapid {
 	/// \param stop
 	/// \param step
 	/// \return
-	template<typename T, typename Scalar = T, typename Device = device::CPU>
+	template<typename T, typename Scalar = double, typename Device = device::CPU>
 	Array<Scalar, Device> arange(T start, T stop, T step) {
 		LIBRAPID_ASSERT(step != 0, "Step size cannot be zero");
 		LIBRAPID_ASSERT((stop - start) / step > 0, "Step size is invalid for the specified range");
@@ -74,7 +74,7 @@ namespace librapid {
 		return result;
 	}
 
-	template<typename T, typename Scalar = T, typename Device = device::CPU>
+	template<typename Scalar = double, typename Device = device::CPU, typename T>
 	Array<Scalar, Device> arange(T start, T stop) {
 		LIBRAPID_ASSERT((stop - start) > 0, "Step size is invalid for the specified range");
 
@@ -86,7 +86,7 @@ namespace librapid {
 		return result;
 	}
 
-	template<typename T, typename Scalar = T, typename Device = device::CPU>
+	template<typename Scalar = double, typename Device = device::CPU, typename T>
 	Array<Scalar, Device> arange(T stop) {
 		Shape shape = {(int64_t)(stop)};
 		Array<Scalar, Device> result(shape);
@@ -96,7 +96,7 @@ namespace librapid {
 		return result;
 	}
 
-	template<typename T, typename Scalar = T, typename Device = device::CPU>
+	template<typename Scalar = double, typename Device = device::CPU, typename T>
 	Array<Scalar, Device> linspace(T start, T stop, int64_t num) {
 		LIBRAPID_ASSERT(num > 0, "Number of samples must be greater than zero");
 

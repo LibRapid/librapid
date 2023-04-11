@@ -122,7 +122,7 @@ namespace librapid {
 			double tmpEnd = m_end;
 			if (tmpEnd < 0) tmpEnd = now<time::nanosecond>();
 			return fmt::format(
-			  "[ TIMER ] {} -- Elapsed: {} | Average: {}",
+			  "{} -- Elapsed: {} | Average: {}",
 			  m_name,
 			  formatTime<time::nanosecond>(tmpEnd - m_start, format),
 			  formatTime<time::nanosecond>((tmpEnd - m_start) / (double)m_iters, format));
