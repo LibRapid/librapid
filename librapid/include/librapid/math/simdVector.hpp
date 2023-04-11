@@ -2118,7 +2118,7 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const SIMDVector<Scalar, Dims> &a,
 														   const SIMDVector<Scalar, Dims> &b,
-														   Scalar tolerance = -1) {
+														   double tolerance = -1) {
 		if (tolerance < 0) {
 			if constexpr (std::is_same_v<Scalar, double>) {
 				tolerance = 1e-12;
