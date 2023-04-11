@@ -284,9 +284,13 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector
 		cross(const GenericVector &other) const;
 
-		/// Project this vector onto another vector
-		/// \param other The vector to project onto
-		/// \return The projection of this vector onto the other vector
+		/// \brief Project vector \p other onto this vector and return the result
+		///
+		/// Perform vector projection using the formula:
+		/// \f$ \operatorname{proj}_a(\vec{b})=\frac{\vec{b} \cdot \vec{a}}{|\vec{a}|^2} \cdot \vec{a} \f$
+		///
+		/// \param other The vector to project
+		/// \return The projection of \p other onto this vector
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GenericVector
 		proj(const GenericVector &other) const;
 
@@ -821,7 +825,7 @@ namespace librapid {
 
 	template<typename Scalar, int64_t Dims>
 	auto GenericVector<Scalar, Dims>::proj(const GenericVector &other) const -> GenericVector {
-		return other * (dot(other) / other.mag2());
+		return other * (other.dot(*this) / other.mag2());
 	}
 
 	template<typename Scalar, int64_t Dims>
@@ -2094,7 +2098,9 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims>
 	LIBRAPID_ALWAYS_INLINE GenericVector<Scalar, Dims>
 	cbrt(const GenericVector<Scalar, Dims> &vec) {
-		return pow(vec, Scalar(1.0) / Scalar(3.0));
+		GenericVector<Scalar, Dims> res;
+		for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::cbrt(vec[i]); }
+		return res;
 	}
 
 	/// Calculate the absolute value of each element of a vector and return the result
@@ -2139,6 +2145,29 @@ namespace librapid {
 		Type res;
 		for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::ceil(vec[i]); }
 		return res;
+	}
+
+	/// \brief Returns true if the two vectors are within the given tolerance of each other
+	///
+	/// This function is only defined for vectors of the same dimensionality and scalar type, and
+	/// returns true if the magnitude of the difference between the two vectors is less than the
+	/// given tolerance.
+	///
+	/// This function is useful for comparing floating point vectors for equality, since floating
+	/// point rounding errors can cause seemingly identical vectors to be slightly different.
+	///
+	/// \tparam Scalar The scalar type of the vectors
+	/// \tparam Dims Number of dimensions of the vectors
+	/// \param a The first vector
+	/// \param b The second vector
+	/// \param tolerance Tolerance
+	/// \return True if the vectors are within the given tolerance of each other
+	template<typename Scalar, int64_t Dims>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const GenericVector<Scalar, Dims> &a,
+														   const GenericVector<Scalar, Dims> &b,
+														   Scalar tolerance = -1) {
+		if (tolerance < 0) { tolerance = typetraits::TypeInfo<Scalar>::epsilon(); }
+		return (a - b).mag2() <= tolerance * tolerance;
 	}
 
 	template<typename Scalar, int64_t Dims>
