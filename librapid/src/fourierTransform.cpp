@@ -4,18 +4,8 @@ namespace librapid::fft {
 	namespace detail {
 		namespace cpu {
 			void rfft(Complex<double> *output, double *input, size_t n) {
-				// unsigned int mode = FFTW_PRESERVE_INPUT;
-				// if (n < 1000)
-				// 	mode |= FFTW_ESTIMATE;
-				// else if (n < 10000)
-				// 	mode |= FFTW_MEASURE;
-				// else if (n < 100000)
-				// 	mode |= FFTW_PATIENT;
-				// else
-				// 	mode |= FFTW_EXHAUSTIVE;
-
 				unsigned int mode = FFTW_ESTIMATE;
-
+				fftw_plan_with_nthreads((int)global::numThreads);
 				fftw_plan plan = fftw_plan_dft_r2c_1d(
 				  (int)n, input, reinterpret_cast<fftw_complex *>(output), mode);
 				fftw_execute(plan);
