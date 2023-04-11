@@ -2166,7 +2166,7 @@ namespace librapid {
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const GenericVector<Scalar, Dims> &a,
 														   const GenericVector<Scalar, Dims> &b,
 														   Scalar tolerance = -1) {
-		if (tolerance < 0) { tolerance = typetraits::TypeInfo<Scalar>::epsilon(); }
+		if (tolerance < 0) { tolerance = typetraits::TypeInfo<Scalar>::epsilon() * 4; }
 		return (a - b).mag2() <= tolerance * tolerance;
 	}
 
