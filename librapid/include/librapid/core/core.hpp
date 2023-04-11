@@ -13,7 +13,10 @@
 #include "forward.hpp"
 
 // BLAS
-#include "cxxblas/cxxblas.h"
-#include "cxxblas/cxxblas.tcc"
+#include "../cxxblas/cxxblas.h"
+#include "../cxxblas/cxxblas.tcc"
+
+// Fourier Transform
+#include "../fftw/api/fftw3.h"
 
 #endif // LIBRAPID_CORE
