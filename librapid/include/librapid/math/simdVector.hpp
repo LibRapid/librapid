@@ -2119,7 +2119,17 @@ namespace librapid {
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const SIMDVector<Scalar, Dims> &a,
 														   const SIMDVector<Scalar, Dims> &b,
 														   Scalar tolerance = -1) {
-		if (tolerance < 0) { tolerance = typetraits::TypeInfo<Scalar>::epsilon() * 4; }
+		if (tolerance < 0) {
+			if constexpr (std::is_same_v<Scalar, double>) {
+				tolerance = 1e-12;
+			} else if constexpr (std::is_same_v<Scalar, float>) {
+				tolerance = 1e-6f;
+			} else if constexpr (std::is_floating_point_v<Scalar>)) {
+				tolerance = 1e-4;
+			}
+			else { tolerance = 0; }
+		};
+
 		return (a - b).mag2() <= tolerance;
 	}
 

@@ -15,6 +15,7 @@
 #	include <cuda.h>
 #	include <curand.h>
 #	include <curand_kernel.h>
+#	include <cufft.h>
 
 #	ifdef _MSC_VER
 #		pragma warning(pop)
