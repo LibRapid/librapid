@@ -2171,13 +2171,14 @@ namespace librapid {
 				tolerance = 1e-12;
 			} else if constexpr (std::is_same_v<Scalar, float>) {
 				tolerance = 1e-6f;
-			} else if constexpr (std::is_floating_point_v<Scalar>)) {
-					tolerance = 1e-4;
-				}
-			else { tolerance = 0; }
+			} else if constexpr (std::is_floating_point_v<Scalar>) {
+				tolerance = 1e-4;
+			} else {
+				tolerance = 0;
+			}
 		};
 
-		return (a - b).mag2() <= tolerance * tolerance;
+		return (a - b).mag2() <= tolerance;
 	}
 
 	template<typename Scalar, int64_t Dims>
