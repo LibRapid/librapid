@@ -331,6 +331,11 @@ if (LIBRAPID_USE_CUDA)
         target_link_directories(${module_name} PUBLIC
                 ${CUDA_LIBRARIES}
                 ${CUDA_CUBLAS_LIBRARIES}
+                ${CUDA_CUFFT_LIBRARIES}
+                ${CUDA_CUFFTW_LIBRARIES}
+                ${CUDA_CURAND_LIBRARIES}
+                ${CUDA_CUSOLVER_LIBRARIES}
+                ${CUDA_CUSPARSE_LIBRARIES}
                 )
 
         target_link_libraries(${module_name} PUBLIC
