@@ -58,7 +58,7 @@ namespace librapid {
 	/// \return Absolute value of the input value
 	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
 	constexpr T abs(T val) {
-		return std::abs(val);
+		return (val < T(0)) ? -val : val;
 	}
 
 	/// \brief Returns true if the two values are within the given tolerance of each other
