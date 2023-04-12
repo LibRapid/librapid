@@ -13,7 +13,8 @@ sys.path.insert(0, os.path.abspath("../.."))
 exclude_dirs = [
     "librapid/vendor",
     "librapid/blas",
-    "librapid/cxxblas"
+    "librapid/cxxblas",
+    "librapid/fftw"
 ]
 
 file_match = regex.compile(".*\..*")
