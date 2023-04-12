@@ -2,6 +2,8 @@
 
 namespace librapid::fft {
 	namespace detail {
+		static bool cuFFTInitialized = false;
+
 		namespace cpu {
 			void rfft(Complex<double> *output, double *input, size_t n) {
 				unsigned int mode = FFTW_ESTIMATE;
@@ -22,18 +24,17 @@ namespace librapid::fft {
 			void rfft(Complex<double> *output, double *input, size_t n) {
 				cufftHandle plan;
 				cufftPlan1d(&plan, (int)n, CUFFT_D2Z, 1);
-				cudaStreamSynchronize(global::cudaStream);
+				cufftSetStream(plan, global::cudaStream);
 				cufftExecD2Z(plan, input, reinterpret_cast<cufftDoubleComplex *>(output));
-				cudaStreamSynchronize(global::cudaStream);
 				cufftDestroy(plan);
 			}
 
 			void rfft(Complex<float> *output, float *input, size_t n) {
 				cufftHandle plan;
 				cufftPlan1d(&plan, (int)n, CUFFT_R2C, 1);
+				cufftSetStream(plan, global::cudaStream);
 				cudaStreamSynchronize(global::cudaStream);
 				cufftExecR2C(plan, input, reinterpret_cast<cufftComplex *>(output));
-				cudaStreamSynchronize(global::cudaStream);
 				cufftDestroy(plan);
 			}
 		}

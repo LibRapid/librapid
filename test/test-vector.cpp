@@ -5,6 +5,8 @@
 
 namespace lrc = librapid;
 
+// Use a high tolerance to ensure no floating point rounding errors cause tests to fail.
+// If the results are within this tolerance, they are likely correct.
 constexpr double tolerance = 1e-3;
 #define VEC_TYPE lrc::GenericVector
 #define SCALAR	 double
@@ -241,100 +243,123 @@ constexpr double tolerance = 1e-3;
                                                                                                    \
 		VEC_TYPE<SCALAR, 4> testE(SCALAR(0.1), SCALAR(0.2), SCALAR(0.3), SCALAR(0.4));             \
 		REQUIRE(                                                                                   \
-		  lrc::isClose(lrc::sin(testE),                                                            \
-					   VEC_TYPE<SCALAR, 4>(                                                        \
-						 sin(SCALAR(0.1)), sin(SCALAR(0.2)), sin(SCALAR(0.3)), sin(SCALAR(0.4))),  \
-					   tolerance));                                                                \
+		  lrc::isClose(lrc::sin(testE),                                                      \
+							 VEC_TYPE<SCALAR, 4>(lrc::sin(SCALAR(0.1)),                            \
+												 lrc::sin(SCALAR(0.2)),                            \
+												 lrc::sin(SCALAR(0.3)),                            \
+												 lrc::sin(SCALAR(0.4))),                           \
+							 tolerance));                                                                \
 		REQUIRE(                                                                                   \
-		  lrc::isClose(lrc::cos(testE),                                                            \
-					   VEC_TYPE<SCALAR, 4>(                                                        \
-						 cos(SCALAR(0.1)), cos(SCALAR(0.2)), cos(SCALAR(0.3)), cos(SCALAR(0.4))),  \
-					   tolerance));                                                                \
+		  lrc::isClose(lrc::cos(testE),                                                      \
+							 VEC_TYPE<SCALAR, 4>(lrc::cos(SCALAR(0.1)),                            \
+												 cos(SCALAR(0.2)),                                 \
+												 lrc::cos(SCALAR(0.3)),                            \
+												 lrc::cos(SCALAR(0.4))),                           \
+							 tolerance));                                                                \
 		REQUIRE(                                                                                   \
-		  lrc::isClose(lrc::tan(testE),                                                            \
-					   VEC_TYPE<SCALAR, 4>(                                                        \
-						 tan(SCALAR(0.1)), tan(SCALAR(0.2)), tan(SCALAR(0.3)), tan(SCALAR(0.4))),  \
-					   tolerance));                                                                \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::asin(testE),                                                                        \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			asin(SCALAR(0.1)), asin(SCALAR(0.2)), asin(SCALAR(0.3)), asin(SCALAR(0.4))),           \
-		  tolerance));                                                                             \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::acos(testE),                                                                        \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			acos(SCALAR(0.1)), acos(SCALAR(0.2)), acos(SCALAR(0.3)), acos(SCALAR(0.4))),           \
-		  tolerance));                                                                             \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::atan(testE),                                                                        \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			atan(SCALAR(0.1)), atan(SCALAR(0.2)), atan(SCALAR(0.3)), atan(SCALAR(0.4))),           \
-		  tolerance));                                                                             \
+		  lrc::isClose(lrc::tan(testE),                                                      \
+							 VEC_TYPE<SCALAR, 4>(lrc::tan(SCALAR(0.1)),                            \
+												 lrc::tan(SCALAR(0.2)),                            \
+												 lrc::tan(SCALAR(0.3)),                            \
+												 lrc::tan(SCALAR(0.4))),                           \
+							 tolerance));                                                                \
+		REQUIRE(lrc::isClose(lrc::asin(testE),                                                     \
+							 VEC_TYPE<SCALAR, 4>(lrc::asin(SCALAR(0.1)),                           \
+												 lrc::asin(SCALAR(0.2)),                           \
+												 lrc::asin(SCALAR(0.3)),                           \
+												 lrc::asin(SCALAR(0.4))),                          \
+							 tolerance));                                                                             \
+		REQUIRE(lrc::isClose(lrc::acos(testE),                                                     \
+							 VEC_TYPE<SCALAR, 4>(lrc::acos(SCALAR(0.1)),                           \
+												 lrc::acos(SCALAR(0.2)),                           \
+												 lrc::acos(SCALAR(0.3)),                           \
+												 lrc::acos(SCALAR(0.4))),                          \
+							 tolerance));                                                          \
+		REQUIRE(lrc::isClose(lrc::atan(testE),                                                     \
+							 VEC_TYPE<SCALAR, 4>(lrc::atan(SCALAR(0.1)),                           \
+												 lrc::atan(SCALAR(0.2)),                           \
+												 lrc::atan(SCALAR(0.3)),                           \
+												 lrc::atan(SCALAR(0.4))),                          \
+							 tolerance));                                                          \
 		REQUIRE(lrc::isClose(lrc::atan2(testE, testE),                                             \
-							 VEC_TYPE<SCALAR, 4>(atan2(SCALAR(0.1), SCALAR(0.1)),                  \
-												 atan2(SCALAR(0.2), SCALAR(0.2)),                  \
-												 atan2(SCALAR(0.3), SCALAR(0.3)),                  \
-												 atan2(SCALAR(0.4), SCALAR(0.4)))));               \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::sinh(testE),                                                                        \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			sinh(SCALAR(0.1)), sinh(SCALAR(0.2)), sinh(SCALAR(0.3)), sinh(SCALAR(0.4))),           \
-		  tolerance));                                                                             \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::cosh(testE),                                                                        \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			cosh(SCALAR(0.1)), cosh(SCALAR(0.2)), cosh(SCALAR(0.3)), cosh(SCALAR(0.4))),           \
-		  tolerance));                                                                             \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::tanh(testE),                                                                        \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			tanh(SCALAR(0.1)), tanh(SCALAR(0.2)), tanh(SCALAR(0.3)), tanh(SCALAR(0.4))),           \
-		  tolerance));                                                                             \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::asinh(testE),                                                                       \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			asinh(SCALAR(0.1)), asinh(SCALAR(0.2)), asinh(SCALAR(0.3)), asinh(SCALAR(0.4))),       \
-		  tolerance));                                                                             \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::acosh(testE),                                                                       \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			acosh(SCALAR(0.1)), acosh(SCALAR(0.2)), acosh(SCALAR(0.3)), acosh(SCALAR(0.4))),       \
-		  tolerance));                                                                             \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::atanh(testE),                                                                       \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			atanh(SCALAR(0.1)), atanh(SCALAR(0.2)), atanh(SCALAR(0.3)), atanh(SCALAR(0.4))),       \
-		  tolerance));                                                                             \
+							 VEC_TYPE<SCALAR, 4>(lrc::atan2(SCALAR(0.1), SCALAR(0.1)),             \
+												 lrc::atan2(SCALAR(0.2), SCALAR(0.2)),             \
+												 lrc::atan2(SCALAR(0.3), SCALAR(0.3)),             \
+												 lrc::atan2(SCALAR(0.4), SCALAR(0.4)))));          \
+		REQUIRE(lrc::isClose(lrc::sinh(testE),                                                     \
+							 VEC_TYPE<SCALAR, 4>(lrc::sinh(SCALAR(0.1)),                           \
+												 lrc::sinh(SCALAR(0.2)),                           \
+												 lrc::sinh(SCALAR(0.3)),                           \
+												 lrc::sinh(SCALAR(0.4))),                          \
+							 tolerance));                                                          \
+		REQUIRE(lrc::isClose(lrc::cosh(testE),                                                     \
+							 VEC_TYPE<SCALAR, 4>(lrc::cosh(SCALAR(0.1)),                           \
+												 lrc::cosh(SCALAR(0.2)),                           \
+												 lrc::cosh(SCALAR(0.3)),                           \
+												 lrc::cosh(SCALAR(0.4))),                          \
+							 tolerance));                                                          \
+		REQUIRE(lrc::isClose(lrc::tanh(testE),                                                     \
+							 VEC_TYPE<SCALAR, 4>(lrc::tanh(SCALAR(0.1)),                           \
+												 lrc::tanh(SCALAR(0.2)),                           \
+												 lrc::tanh(SCALAR(0.3)),                           \
+												 lrc::tanh(SCALAR(0.4))),                          \
+							 tolerance));                                                                             \
+		REQUIRE(lrc::isClose(lrc::asinh(testE),                                                    \
+							 VEC_TYPE<SCALAR, 4>(lrc::asinh(SCALAR(0.1)),                          \
+												 lrc::asinh(SCALAR(0.2)),                          \
+												 lrc::asinh(SCALAR(0.3)),                          \
+												 lrc::asinh(SCALAR(0.4))),                         \
+							 tolerance));                                                                             \
+		REQUIRE(lrc::isClose(lrc::acosh(testE),                                                    \
+							 VEC_TYPE<SCALAR, 4>(lrc::acosh(SCALAR(0.1)),                          \
+												 lrc::acosh(SCALAR(0.2)),                          \
+												 lrc::acosh(SCALAR(0.3)),                          \
+												 lrc::acosh(SCALAR(0.4))),                         \
+							 tolerance));                                                                             \
+		REQUIRE(lrc::isClose(lrc::atanh(testE),                                                    \
+							 VEC_TYPE<SCALAR, 4>(lrc::atanh(SCALAR(0.1)),                          \
+												 lrc::atanh(SCALAR(0.2)),                          \
+												 lrc::atanh(SCALAR(0.3)),                          \
+												 lrc::atanh(SCALAR(0.4))),                         \
+							 tolerance));                                                                             \
 		REQUIRE(                                                                                   \
-		  lrc::isClose(lrc::exp(testE),                                                            \
-					   VEC_TYPE<SCALAR, 4>(                                                        \
-						 exp(SCALAR(0.1)), exp(SCALAR(0.2)), exp(SCALAR(0.3)), exp(SCALAR(0.4))),  \
-					   tolerance));                                                                \
+		  lrc::isClose(lrc::exp(testE),                                                      \
+							 VEC_TYPE<SCALAR, 4>(lrc::exp(SCALAR(0.1)),                            \
+												 lrc::exp(SCALAR(0.2)),                            \
+												 lrc::exp(SCALAR(0.3)),                            \
+												 lrc::exp(SCALAR(0.4))),                           \
+							 tolerance));                                                                \
 		REQUIRE(                                                                                   \
-		  lrc::isClose(lrc::log(testE),                                                            \
-					   VEC_TYPE<SCALAR, 4>(                                                        \
-						 log(SCALAR(0.1)), log(SCALAR(0.2)), log(SCALAR(0.3)), log(SCALAR(0.4))),  \
-					   tolerance));                                                                \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::log10(testE),                                                                       \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			log10(SCALAR(0.1)), log10(SCALAR(0.2)), log10(SCALAR(0.3)), log10(SCALAR(0.4))),       \
-		  tolerance));                                                                             \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::pow(testE, 2),                                                                      \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			pow(SCALAR(0.1), 2), pow(SCALAR(0.2), 2), pow(SCALAR(0.3), 2), pow(SCALAR(0.4), 2)),   \
-		  tolerance));                                                                             \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::sqrt(testE),                                                                        \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			sqrt(SCALAR(0.1)), sqrt(SCALAR(0.2)), sqrt(SCALAR(0.3)), sqrt(SCALAR(0.4))),           \
-		  tolerance));                                                                             \
-		REQUIRE(lrc::isClose(                                                                      \
-		  lrc::cbrt(testE),                                                                        \
-		  VEC_TYPE<SCALAR, 4>(                                                                     \
-			cbrt(SCALAR(0.1)), cbrt(SCALAR(0.2)), cbrt(SCALAR(0.3)), cbrt(SCALAR(0.4))),           \
-		  tolerance));                                                                             \
+		  lrc::isClose(lrc::log(testE),                                                      \
+							 VEC_TYPE<SCALAR, 4>(lrc::log(SCALAR(0.1)),                            \
+												 lrc::log(SCALAR(0.2)),                            \
+												 lrc::log(SCALAR(0.3)),                            \
+												 lrc::log(SCALAR(0.4))),                           \
+							 tolerance));                                                                \
+		REQUIRE(lrc::isClose(lrc::log10(testE),                                                    \
+							 VEC_TYPE<SCALAR, 4>(lrc::log10(SCALAR(0.1)),                          \
+												 lrc::log10(SCALAR(0.2)),                          \
+												 lrc::log10(SCALAR(0.3)),                          \
+												 lrc::log10(SCALAR(0.4))),                         \
+							 tolerance));                                                                             \
+		REQUIRE(lrc::isClose(lrc::pow(testE, 2),                                                   \
+							 VEC_TYPE<SCALAR, 4>(lrc::pow(SCALAR(0.1), 2),                         \
+												 lrc::pow(SCALAR(0.2), 2),                         \
+												 lrc::pow(SCALAR(0.3), 2),                         \
+												 lrc::pow(SCALAR(0.4), 2)),                        \
+							 tolerance));                                                                             \
+		REQUIRE(lrc::isClose(lrc::sqrt(testE),                                                     \
+							 VEC_TYPE<SCALAR, 4>(lrc::sqrt(SCALAR(0.1)),                           \
+												 lrc::sqrt(SCALAR(0.2)),                           \
+												 lrc::sqrt(SCALAR(0.3)),                           \
+												 lrc::sqrt(SCALAR(0.4))),                          \
+							 tolerance));                                                                             \
+		REQUIRE(lrc::isClose(lrc::cbrt(testE),                                                     \
+							 VEC_TYPE<SCALAR, 4>(lrc::cbrt(SCALAR(0.1)),                           \
+												 lrc::cbrt(SCALAR(0.2)),                           \
+												 lrc::cbrt(SCALAR(0.3)),                           \
+												 lrc::cbrt(SCALAR(0.4))),                          \
+							 tolerance));                                                                             \
 	}                                                                                              \
 	do {                                                                                           \
 	} while (0)

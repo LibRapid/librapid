@@ -59,8 +59,9 @@ View LibRapid's benchmark results.
 
 Getting Started <gettingStarted>
 CMake Integration <cmakeIntegration>
-Tutorials <tutorials>
 API Reference <apiReference>
+Tutorials <tutorials>
+Performance and Benchmarks <performance/performance>
 Caution <caution>
 ```
 
