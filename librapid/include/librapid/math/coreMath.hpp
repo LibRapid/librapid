@@ -58,7 +58,24 @@ namespace librapid {
 	/// \return Absolute value of the input value
 	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
 	constexpr T abs(T val) {
-		return std::abs(val);
+		return (val < T(0)) ? -val : val;
+	}
+
+	/// \brief Returns true if the two values are within the given tolerance of each other
+	///
+	/// This function is often used to compare floating point values for equality, since floating
+	/// point rounding errors can cause exact equality checks to fail.
+	///
+	/// \tparam V Data type of the values to compare
+	/// \tparam T Data type of the tolerance value
+	/// \param val1 First value
+	/// \param val2 Second value
+	/// \param tolerance Tolerance
+	/// \return True if values are close
+	template<typename V, typename T>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const V &val1, const V &val2,
+														   const T &tolerance = 1e-6) {
+		return ::librapid::abs(val1 - val2) < tolerance;
 	}
 
 	/// Map a value from one range to another
@@ -336,16 +353,16 @@ namespace librapid {
 	/// Return the angle formed by a given y and x offset. This is often more useful than using
 	/// atan, since it gives more usable outputs. Note that, for integer values, this function
 	/// will cast the input values to a floating point type before calculating the angle.
-	/// \tparam T1
-	/// \tparam T2
-	/// \param dy
-	/// \param dx
-	/// \return
+	/// \tparam TY Data type of the y offset
+	/// \tparam TX Data type of the x offset
+	/// \param dy Y offset
+	/// \param dx X offset
+	/// \return Angle formed by the given offsets
 	template<
-	  typename T1, typename T2,
-	  typename std::enable_if_t<std::is_fundamental_v<T1> && std::is_fundamental_v<T2>, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto atan2(T1 dy, T2 dx) {
-		if constexpr (std::is_integral_v<T1> || std::is_integral_v<T2>) {
+	  typename TY, typename TX,
+	  typename std::enable_if_t<std::is_fundamental_v<TY> && std::is_fundamental_v<TX>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto atan2(TY dy, TX dx) {
+		if constexpr (std::is_integral_v<TY> || std::is_integral_v<TX>) {
 			return std::atan2(static_cast<double>(dy), static_cast<double>(dx));
 		} else {
 			return std::atan2(dy, dx);

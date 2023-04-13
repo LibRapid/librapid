@@ -45,18 +45,20 @@
 #	include "cxxblas/drivers/openblas.h"
 #elif defined(LIBRAPID_BLAS_VECLIB)
 #	include "cxxblas/drivers/veclib.h"
-#elif defined(LIBRAPID_BLAS_MKLBLAS)
+#elif defined(LIBRAPID_BLAS_MKL)
 #	include "cxxblas/drivers/mklblas.h"
 #elif defined(LIBRAPID_BLAS_REFBLAS)
 #	include "cxxblas/drivers/refblas.h"
 #endif
 
 #ifdef HAVE_CBLAS
-#	include "cxxblas/drivers/cblas.h"
+// This is now included by the driver header files
+// #	include "cxxblas/drivers/cblas.h"
 #endif
 
 #ifdef HAVE_SPARSEBLAS
-#	include "cxxblas/drivers/sparseblas.h"
+// This is now included by the driver header files
+// #	include "cxxblas/drivers/sparseblas.h"
 #endif
 
 #include "cxxblas/typedefs.h"

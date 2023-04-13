@@ -3,8 +3,9 @@
 
 /*
  * A Complex Number implementation, based off of MSVC's std::complex<T> datatype. This type does
- * not conform to the C++ standard, but it *should* support a wider range of primitive types and
- * user-defined types. Furthermore, it integrates much more nicely with the rest of LibRapid
+ * not conform to the C++ standard, but its a wider range of primitive and user-defined types.
+ * Furthermore, it integrates much more nicely with the rest of LibRapid and provides a lot more
+ * functionality.
  *
  * See below for the MSVC implementation :)
  * https://github.com/microsoft/STL/blob/main/stl/inc/complex
@@ -29,17 +30,25 @@ namespace librapid {
 				Scalar val1; // Least significant numeric_limits<Scalar>::precision bits
 			};
 
-			// 1x precision + 1x precision -> 2x precision
-			// the result is exact when:
-			// 1) the result doesn't overflow
-			// 2) either underflow is gradual, or no internal underflow occurs
-			// 3) intermediate precision is either the same as T, or greater than twice the
-			// precision
-			//    of _Ty
-			// 4) parameters and local variables do not retain extra intermediate precision 5)
-			//    rounding mode is rounding to nearest. Violation of condition 3 or 5 could lead to
-			//    relative error on the order of epsilon^2 violation of other conditions could lead
-			//    to worse results
+			/// \brief Summarizes two 1x precision values combined into a 2x precision result
+			///
+			/// This function is exact when:
+			/// 1. The result doesn't overflow
+			/// 2. Either underflow is gradual, or no internal underflow occurs
+			/// 3. Intermediate precision is either the same as T, or greater than twice the
+			/// precision of T
+			/// 4. Parameters and local variables do not retain extra intermediate precision
+			/// 5. Rounding mode is rounding to nearest.
+			///
+			/// Violation of condition 3 or 5 could lead to relative error on the order of
+			/// epsilon^2.
+			///
+			/// Violation of other conditions could lead to worse results
+			///
+			/// \tparam T Template type
+			/// \param x First value
+			/// \param y Second value
+			/// \return Sum of x and y
 			template<typename T>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr Fmp<T> addX2(const T &x,
 																			 const T &y) noexcept {
@@ -51,15 +60,29 @@ namespace librapid {
 				return {sum0, xErr + yErr};
 			}
 
-			// 1x precision + 1x precision -> 2x precision
-			// requires: exponent(x) + countr_zero(significand(x)) >= exponent(y) || x
-			// == 0 the result is exact when: 0) the requirement above is satisfied 1) no internal
-			// overflow occurs 2) either underflow is gradual, or no internal underflow occurs 3)
-			// intermediate precision is either the same as _Ty, or greater than twice the precision
-			// of _Ty 4) parameters and local variables do not retain extra intermediate precision
-			// 5) rounding mode is rounding to nearest violation of condition 3 or 5 could lead to
-			// relative error on the order of epsilon^2 violation of other conditions could lead to
-			// worse results
+			/// \brief Combines two 1x precision values into a 2x precision result with the
+			/// requirement of specific exponent relationship
+			///
+			/// Requires: exponent(x) + countr_zero(significand(x)) >= exponent(y) or x == 0
+			///
+			/// The result is exact when:
+			/// 1. The requirement above is satisfied
+			/// 2. No internal overflow occurs
+			/// 3. Either underflow is gradual, or no internal underflow occurs
+			/// 4. Intermediate precision is either the same as T, or greater than twice the
+			///    precision of T
+			/// 5. Parameters and local variables do not retain extra intermediate precision
+			/// 6. Rounding mode is rounding to nearest
+			///
+			/// Violation of condition 3 or 5 could lead to relative error on the order of
+			/// epsilon^2.
+			///
+			/// Violation of other conditions could lead to worse results
+			///
+			/// \tparam T Template type
+			/// \param x First value
+			/// \param y Second value
+			/// \return Sum of x and y
 			template<typename T>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr Fmp<T>
 			addSmallX2(const T x, const T y) noexcept {
@@ -69,9 +92,14 @@ namespace librapid {
 				return {sum0, yErr};
 			}
 
-			// 1x precision + 2x precision -> 2x precision
-			// requires:
-			// exponent(x) + countr_zero(significand(x)) >= exponent(y.val0) || x == 0
+			/// \brief Combines a 1x precision value with a 2x precision value
+			///
+			/// Requires: exponent(x) + countr_zero(significand(x)) >= exponent(y.val0) or x == 0
+			///
+			/// \tparam T Template type
+			/// \param x First value
+			/// \param y Second value
+			/// \return Sum of x and y
 			template<typename T>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr Fmp<T>
 			addSmallX2(const T &x, const Fmp<T> &y) noexcept {
@@ -79,7 +107,11 @@ namespace librapid {
 				return addSmallX2(sum0.val0, sum0.val1 + y.val1);
 			}
 
-			// 2x precision + 2x precision -> 1x precision
+			/// \brief Combines two 2x precision values into a 1x precision result
+			/// \tparam T Template type
+			/// \param x First value
+			/// \param y Second value
+			/// \return Sum of x and y
 			template<typename T>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr T addX1(const Fmp<T> &x,
 																		const Fmp<T> &y) noexcept {
@@ -87,7 +119,9 @@ namespace librapid {
 				return sum0.val0 + (sum0.val1 + (x.val1 + y.val1));
 			}
 
-			// Round to 26 significant bits. Ties toward zero
+			/// \brief Rounds a 2x precision value to 26 significant bits
+			/// \param x Value to round
+			/// \return Rounded value
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr double
 			highHalf(const double x) noexcept {
 				const auto bits			= bitCast<uint64_t>(x);
@@ -96,11 +130,17 @@ namespace librapid {
 			}
 
 #if defined(USE_X86_X64_INTRINSICS) || defined(USE_ARM64_INTRINSICS) // SIMD method
-			// x * x - prod0
-			// the result is exact when:
-			// 1) prod0 is x^2 faithfully rounded
-			// 2) no internal overflow or underflow occurs
-			// violation of condition 1 could lead to relative error on the order of epsilon
+			/// \brief Calculates the error between x^2 and its faithfully rounded product prod0
+			///
+			/// The result is exact when:
+			/// 1. prod0 is x^2 faithfully rounded
+			/// 2. No internal overflow or underflow occurs
+			///
+			/// Violation of condition 1 could lead to relative error on the order of epsilon.
+			///
+			/// \param x Input value
+			/// \param prod0 Faithfully rounded product of x^2
+			/// \return Error between x^2 and prod0
 			LIBRAPID_NODISCARD
 			LIBRAPID_ALWAYS_INLINE double sqrError(const double x, const double prod0) noexcept {
 #	if defined(USE_X86_X64_INTRINSICS)
@@ -120,31 +160,45 @@ namespace librapid {
 #	endif
 			}
 #else
-			LIBRAPID_NODISCARD // Fallback method
-			  LIBRAPID_ALWAYS_INLINE constexpr double
-			  sqrError(const double x, const double prod0) noexcept {
+			/// \brief Fallback method for sqrError(const double, const double) when SIMD is not
+			/// available.
+			LIBRAPID_NODISCARD
+			LIBRAPID_ALWAYS_INLINE constexpr double sqrError(const double x,
+															 const double prod0) noexcept {
 				const double xHigh = highHalf(x);
 				const double xLow  = x - xHigh;
 				return ((xHigh * xHigh - prod0) + 2.0 * xHigh * xLow) + xLow * xLow;
 			}
 #endif
 
+			/// \brief Type-agnostic version of sqrError(const double, const double)
+			/// \tparam T Template type
+			/// \param x Input value
+			/// \param prod0 Faithfully rounded product of x^2
 			template<typename T>
-			LIBRAPID_NODISCARD // Fallback method
-			  LIBRAPID_ALWAYS_INLINE T
-			  sqrError(const T x, const T prod0) noexcept {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T sqrError(const T x,
+																 const T prod0) noexcept {
 				const T xHigh = static_cast<T>(highHalf(x));
 				const T xLow  = x - xHigh;
 				return ((xHigh * xHigh - prod0) + static_cast<T>(2.0) * xHigh * xLow) + xLow * xLow;
 			}
 
-			// square(1x precision) -> 2x precision
-			// the result is exact when no internal overflow or underflow occurs
+			/// \brief Calculates the square of a 1x precision value and returns a 2x precision
+			/// result
+			///
+			/// The result is exact when no internal overflow or underflow occurs.
+			///
+			/// \param x Input value
+			/// \return 2x precision square of x
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Fmp<double> sqrX2(const double x) noexcept {
 				const double prod0 = x * x;
 				return {prod0, sqrError(x, prod0)};
 			}
 
+			/// \brief Type-agnostic version of sqrX2(const double)
+			/// \tparam T Template type
+			/// \param x Input value
+			/// \return 2x precision square of x
 			template<typename T>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Fmp<T> sqrX2(const T x) noexcept {
 				const T prod0 = x * x;
@@ -200,19 +254,26 @@ namespace librapid {
 			template<typename T>
 			static inline T HypotLegTiny = HypotLegTinyHelper<T>::val;
 
+			/// \brief Calculates $ x^2 + y^2 - 1 $ for $ |x| \geq |y| $ and $ 0.5 \leq
+			/// |x| < 2^{12} $ \tparam T Template type \param x First value \param y Second value
+			/// \return x * x + y * y - 1
 			template<typename T>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T normMinusOne(const T x,
 																	 const T y) noexcept {
-				// requires |x| >= |y| and 0.5 <= |x| < 2^12
-				// returns x * x + y * y - 1
 				const multiprec::Fmp<T> xSqr   = multiprec::sqrX2(x);
 				const multiprec::Fmp<T> ySqr   = multiprec::sqrX2(y);
 				const multiprec::Fmp<T> xSqrM1 = multiprec::addSmallX2(T(-1), xSqr);
 				return multiprec::addX1(xSqrM1, ySqr);
 			}
 
-			// Returns log(1 + x)
-			// May be inaccurate for small inputs
+			/// \brief Calculates $ \log(1 + x) $
+			///
+			/// May be inaccurate for small inputs
+			///
+			/// \tparam safe If true, will check for NaNs and overflow
+			/// \tparam T Template type
+			/// \param x Input value
+			/// \return $ \log(1 + x) $
 			template<bool safe = true, typename T>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T logP1(const T x) {
 				if constexpr (!safe) return ::librapid::log(x + 1.0);
@@ -242,6 +303,13 @@ namespace librapid {
 			}
 
 			// Return log(hypot(x, y))
+
+			/// \brief Calculates $ \log(\sqrt{x^2 + y^2}) $
+			/// \tparam safe If true, will check for NaNs and overflow
+			/// \tparam T Template type
+			/// \param x Horizontal component
+			/// \param y Vertical component
+			/// \return $ \log(\sqrt{x^2 + y^2}) $
 			template<bool safe = true, typename T>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T logHypot(const T x, const T y) noexcept {
 				if constexpr (!safe) return ::librapid::log(::librapid::sqrt(x * x + y * y));
@@ -300,7 +368,13 @@ namespace librapid {
 #endif
 			}
 
-			// Compute exp(*pleft) * right * 2 ^ exponent
+			/// \brief Compute \f$e^{\text{pleft}} \times \text{right} \times 2^{\text{exponent}}$
+			///
+			/// \tparam T Template type
+			/// \param pleft Pointer to the value to be exponentiated
+			/// \param right Multiplier for the exponentiated value
+			/// \param exponent Exponent for the power of 2 multiplication
+			/// \return 1 if the result is NaN or Inf, -1 otherwise
 			template<typename T>
 			short expMul(T *pleft, T right, short exponent) {
 #if defined(LIBRAPID_USE_MULTIPREC)
@@ -316,8 +390,8 @@ namespace librapid {
 					*pleft	  = static_cast<T>(tmp);
 					return ans;
 #else
-				*pleft = ::librapid::exp(*pleft) * right * ::librapid::exp2(exponent);
-				return (::librapid::isNaN(*pleft) || ::librapid::isInf(*pleft)) ? 1 : -1;
+					*pleft = ::librapid::exp(*pleft) * right * ::librapid::exp2(exponent);
+					return (::librapid::isNaN(*pleft) || ::librapid::isInf(*pleft)) ? 1 : -1;
 #endif
 
 #if defined(LIBRAPID_USE_MULTIPREC)
@@ -327,6 +401,14 @@ namespace librapid {
 		} // namespace algorithm
 	}	  // namespace detail
 
+	/// \brief A class representing a complex number of the form \f$a + bi$, where \f$a$ and
+	///        \f$b$ are real numbers
+	///
+	/// This class represents a complex number of the form $a + bi$, where $a$ and
+	/// $b$ are real numbers. The class is templated, allowing the user to specify the type
+	/// of the real and imaginary components. The default type is ``double``.
+	///
+	/// \tparam T The type of the real and imaginary components
 	template<typename T>
 	class Complex {
 	public:
@@ -379,35 +461,35 @@ namespace librapid {
 			return *this;
 		}
 
-		/// \breif Assign to the real component
+		/// \brief Assign to the real component
 		///
 		/// Set the real component of this complex number to \p val
 		///
 		/// \param val The value to assign
 		LIBRAPID_ALWAYS_INLINE void real(const T &val) { m_val[RE] = val; }
 
-		/// \breif Assign to the imaginary component
+		/// \brief Assign to the imaginary component
 		///
 		/// Set the imaginary component of this complex number to \p val
 		///
 		/// \param val The value to assign
 		LIBRAPID_ALWAYS_INLINE void imag(const T &val) { m_val[IM] = val; }
 
-		/// \breif Access the real component
+		/// \brief Access the real component
 		///
 		/// Returns a const reference to the real component of this complex number
 		///
 		/// \return Real component
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const T &real() const { return m_val[RE]; }
 
-		/// \breif Access the imaginary component
+		/// \brief Access the imaginary component
 		///
 		/// Returns a const reference to the imaginary component of this complex number
 		///
 		/// \return Imaginary component
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const T &imag() const { return m_val[IM]; }
 
-		/// \breif Access the real component
+		/// \brief Access the real component
 		///
 		/// Returns a reference to the real component of this complex number. Since this is a
 		/// reference type, it can be assigned to
@@ -415,7 +497,7 @@ namespace librapid {
 		/// \return Real component
 		LIBRAPID_ALWAYS_INLINE T &real() { return m_val[RE]; }
 
-		/// \breif Access the imaginary component
+		/// \brief Access the imaginary component
 		///
 		/// Returns a reference to the imaginary component of this complex number. Since this is a
 		/// reference type, it can be assigned to
@@ -581,18 +663,27 @@ namespace librapid {
 		}
 
 	protected:
+		/// \brief Add a complex number to this one
+		/// \tparam Other Scalar type of the other complex number
+		/// \param other Other complex number
 		template<typename Other>
 		LIBRAPID_ALWAYS_INLINE void _add(const Complex<Other> &other) {
 			m_val[RE] = m_val[RE] + other.real();
 			m_val[IM] = m_val[IM] + other.imag();
 		}
 
+		/// \brief Subtract a complex number from this one
+		/// \tparam Other Scalar type of the other complex number
+		/// \param other Other complex number
 		template<typename Other>
 		LIBRAPID_ALWAYS_INLINE void _sub(const Complex<Other> &other) {
 			m_val[RE] = m_val[RE] - other.real();
 			m_val[IM] = m_val[IM] - other.imag();
 		}
 
+		/// \brief Multiply this complex number by another one
+		/// \tparam Other Scalar type of the other complex number
+		/// \param other Other complex number
 		template<typename Other>
 		LIBRAPID_ALWAYS_INLINE void _mul(const Complex<Other> &other) {
 			T otherReal = static_cast<T>(other.real());
@@ -603,6 +694,9 @@ namespace librapid {
 			m_val[RE] = tmp;
 		}
 
+		/// \brief Divide this complex number by another one
+		/// \tparam Other Scalar type of the other complex number
+		/// \param other Other complex number
 		template<typename Other>
 		LIBRAPID_ALWAYS_INLINE void _div(const Complex<Other> &other) {
 			T otherReal = static_cast<T>(other.real());
@@ -693,6 +787,15 @@ namespace librapid {
 		return tmp;
 	}
 
+	/// \brief Add a scalar to a complex number
+	///
+	/// Add a real number to the real component of a complex number, returning the result
+	///
+	/// \tparam R Type of the real number
+	/// \tparam T Scalar type of the complex number
+	/// \param left LHS scalar
+	/// \param right RHS complex number
+	/// \return Sum of LHS and RHS
 	template<typename R, typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(const R &left,
 															 const Complex<T> &right) {
@@ -701,6 +804,16 @@ namespace librapid {
 		return tmp;
 	}
 
+	/// \brief Subtract a complex number from another complex number
+	///
+	/// Subtract the real and imaginary components of the RHS complex number from the corresponding
+	/// components of the LHS complex number, returning the result
+	///
+	/// \tparam L Scalar type of the LHS complex number
+	/// \tparam R Scalar type of the RHS complex number
+	/// \param left LHS complex number
+	/// \param right RHS complex number
+	/// \return Difference of LHS and RHS
 	template<typename L, typename R>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(const Complex<L> &left,
 															 const Complex<R> &right) {
@@ -710,6 +823,15 @@ namespace librapid {
 		return tmp;
 	}
 
+	/// \brief Subtract a scalar from a complex number
+	///
+	/// Subtract a real number from the real component of a complex number, returning the result
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \tparam R Type of the real number
+	/// \param left LHS complex number
+	/// \param right RHS scalar
+	/// \return Difference of LHS and RHS
 	template<typename T, typename R>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(const Complex<T> &left,
 															 const R &right) {
@@ -718,6 +840,16 @@ namespace librapid {
 		return tmp;
 	}
 
+	/// \brief Subtract a complex number from a scalar
+	///
+	/// Subtract the real and imaginary components of the RHS complex number from a real number,
+	/// returning the result
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \tparam R Type of the real number
+	/// \param left LHS scalar
+	/// \param right RHS complex number
+	/// \return Difference of LHS and RHS
 	template<typename T, typename R>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(const R &left,
 															 const Complex<T> &right) {
@@ -726,6 +858,15 @@ namespace librapid {
 		return tmp;
 	}
 
+	/// \brief Multiply two complex numbers
+	///
+	/// Multiply the LHS and RHS complex numbers, returning the result
+	///
+	/// \tparam L Scalar type of the LHS complex number
+	/// \tparam R Scalar type of the RHS complex number
+	/// \param left LHS complex number
+	/// \param right RHS complex number
+	/// \return Product of LHS and RHS
 	template<typename L, typename R>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(const Complex<L> &left,
 															 const Complex<R> &right) {
@@ -735,6 +876,16 @@ namespace librapid {
 		return tmp;
 	}
 
+	/// \brief Multiply a complex number by a scalar
+	///
+	/// Multiply the real and imaginary components of a complex number by a real number, returning
+	/// the result
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \tparam R Type of the real number
+	/// \param left LHS complex number
+	/// \param right RHS scalar
+	/// \return Product of LHS and RHS
 	template<typename T, typename R>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(const Complex<T> &left,
 															 const R &right) {
@@ -744,6 +895,16 @@ namespace librapid {
 		return tmp;
 	}
 
+	/// \brief Multiply a scalar by a complex number
+	///
+	/// Multiply a real number by the real and imaginary components of a complex number, returning
+	/// the result
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \tparam R Type of the real number
+	/// \param left LHS scalar
+	/// \param right RHS complex number
+	/// \return Product of LHS and RHS
 	template<typename T, typename R>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(const R &left,
 															 const Complex<T> &right) {
@@ -752,6 +913,15 @@ namespace librapid {
 		return tmp;
 	}
 
+	/// \brief Divide two complex numbers
+	///
+	/// Divide the LHS complex number by the RHS complex number, returning the result
+	///
+	/// \tparam L Scalar type of the LHS complex number
+	/// \tparam R Scalar type of the RHS complex number
+	/// \param left LHS complex number
+	/// \param right RHS complex number
+	/// \return Quotient of LHS and RHS
 	template<typename L, typename R>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(const Complex<L> &left,
 															 const Complex<R> &right) {
@@ -761,6 +931,16 @@ namespace librapid {
 		return tmp;
 	}
 
+	/// \brief Divide a complex number by a scalar
+	///
+	/// Divide the real and imaginary components of a complex number by a real number, returning the
+	/// result
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \tparam R Type of the real number
+	/// \param left LHS complex number
+	/// \param right RHS scalar
+	/// \return Quotient of LHS and RHS
 	template<typename T, typename R>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(const Complex<T> &left,
 															 const R &right) {
@@ -770,6 +950,16 @@ namespace librapid {
 		return tmp;
 	}
 
+	/// \brief Divide a scalar by a complex number
+	///
+	/// Divide a real number by the real and imaginary components of a complex number, returning the
+	/// result
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \tparam R Type of the real number
+	/// \param left LHS scalar
+	/// \param right RHS complex number
+	/// \return Quotient of LHS and RHS
 	template<typename T, typename R>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(const R &left,
 															 const Complex<T> &right) {
@@ -778,12 +968,27 @@ namespace librapid {
 		return tmp;
 	}
 
+	/// \brief Equality comparison of two complex numbers
+	/// \tparam L Scalar type of LHS complex number
+	/// \tparam R Scalar type of RHS complex number
+	/// \param left LHS complex number
+	/// \param right RHS complex number
+	/// \return true if equal, false otherwise
 	template<typename L, typename R>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr bool operator==(const Complex<L> &left,
 																		const Complex<R> &right) {
 		return left.real() == right.real() && left.imag() == right.imag();
 	}
 
+	/// \brief Equality comparison of complex number and scalar
+	///
+	/// Compares the real component of the complex number to the scalar, and the imaginary component
+	/// to zero. Returns true if and only if both comparisons are true.
+	///
+	/// \tparam T Scalar type of complex number
+	/// \param left LHS complex number
+	/// \param right RHS scalar
+	/// \return true if equal, false otherwise
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr bool operator==(const Complex<T> &left,
 																		T &right) {
@@ -791,6 +996,16 @@ namespace librapid {
 	}
 
 #if !defined(LIBRAPID_CXX_20)
+
+	/// \brief Equality comparison of scalar and complex number
+	///
+	/// Compares the real component of the complex number to the scalar, and the imaginary component
+	/// to zero. Returns true if and only if both comparisons are true.
+	///
+	/// \tparam T Scalar type of complex number
+	/// \param left LHS scalar
+	/// \param right RHS complex number
+	/// \return true if equal, false otherwise
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr bool operator==(const T &left,
 																		const Complex<T> &right) {
@@ -799,18 +1014,36 @@ namespace librapid {
 #endif
 
 #if !defined(LIBRAPID_CXX_20)
+
+	/// \brief Inequality comparison of two complex numbers
+	/// \tparam T Scalar type of complex number
+	/// \param left LHS complex number
+	/// \param right RHS complex number
+	/// \return true if ***not*** equal, false otherwise
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr bool operator!=(const Complex<T> &left,
 																		const Complex<T> &right) {
 		return !(left == right);
 	}
 
+	/// \brief Inequality comparison of complex number and scalar
+	/// \see operator==(const Complex<T> &, T &)
+	/// \tparam T Scalar type of complex number
+	/// \param left LHS complex number
+	/// \param right RHS scalar
+	/// \return true if ***not*** equal, false otherwise
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr bool operator!=(const Complex<T> &left,
 																		T &right) {
 		return !(left == right);
 	}
 
+	/// \brief Inequality comparison of scalar and complex number
+	/// \see operator==(const T &, const Complex<T> &)
+	/// \tparam T Scalar type of complex number
+	/// \param left LHS scalar
+	/// \param right RHS complex number
+	/// \return true if ***not*** equal, false otherwise
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr bool operator!=(const T &left,
 																		const Complex<T> &right) {
@@ -818,30 +1051,60 @@ namespace librapid {
 	}
 #endif
 
+	/// \brief Return $ \mathrm{Re}(z) $
+	/// \tparam T Scalar type of the complex number
+	/// \param val Complex number
+	/// \return Real component of the complex number
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T real(const Complex<T> &val) {
 		return val.real();
 	}
 
+	/// \brief Return $ \mathrm{Im}(z) $
+	/// \tparam T Scalar type of the complex number
+	/// \param val Complex number
+	/// \return Imaginary component of the complex number
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T imag(const Complex<T> &val) {
 		return val.imag();
 	}
 
+	/// \brief Return $ \sqrt{z} $
+	/// \tparam T Scalar type of the complex number
+	/// \param val Complex number
+	/// \return Square root of the complex number
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T>
 	sqrt(const Complex<T> &val); // Defined later
 
+	/// \brief Return $ \sqrt{\mathrm{Re}(z)^2 + \mathrm{Im}(z)^2} $
+	/// \tparam T Scalar type of the complex number
+	/// \param val Complex number
+	/// \return Absolute value of the complex number
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T abs(const Complex<T> &val) {
 		return ::librapid::hypot(val.real(), val.imag());
 	}
 
+	/// \brief Returns \f$z^{*}$
+	/// \tparam T Scalar type of the complex number
+	/// \param val Complex number
+	/// \return Complex conjugate of the complex number
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> conj(const Complex<T> &val) {
 		return Complex<T>(val.real(), -val.imag());
 	}
 
+	/// \brief Compute the complex arc cosine of a complex number
+	///
+	/// This function computes the complex arc cosine of the input complex number,
+	/// $z = \text{acos}(z)$
+	///
+	/// The algorithm handles NaN and infinity values, and avoids overflow.
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \param other Input complex number
+	/// \return Complex arc cosine of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> acos(const Complex<T> &other) {
 		const T arcBig = T(0.25) * ::librapid::sqrt(typetraits::TypeInfo<T>::max());
@@ -915,6 +1178,17 @@ namespace librapid {
 		return Complex<T>(ux, vx);
 	}
 
+	/// \brief Compute the complex hyperbolic arc cosine of a complex number
+	///
+	///
+	/// This function computes the complex area hyperbolic cosine of the input complex number,
+	/// $ z = \text{acosh}(z) $
+	///
+	/// The algorithm handles NaN and infinity values, and avoids overflow.
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \param other Input complex number
+	/// \return Complex area hyperbolic cosine of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> acosh(const Complex<T> &other) {
 		const T arcBig = T(0.25) * ::librapid::sqrt(typetraits::TypeInfo<T>::max());
@@ -981,6 +1255,16 @@ namespace librapid {
 		return Complex<T>(ux, vx);
 	}
 
+	/// \brief Compute the complex arc hyperbolic sine of a complex number
+	///
+	/// This function computes the complex arc hyperbolic sine of the input complex number,
+	/// $ z = \text{asinh}(z) $
+	///
+	/// The algorithm handles NaN and infinity values, and avoids overflow.
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \param other Input complex number
+	/// \return Complex arc hyperbolic sine of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> asinh(const Complex<T> &other) {
 		const T arcBig = T(0.25) * ::librapid::sqrt(typetraits::TypeInfo<T>::max());
@@ -1048,12 +1332,33 @@ namespace librapid {
 		return Complex<T>(ux, vx);
 	}
 
+	/// \brief Compute the complex arc sine of a complex number
+	///
+	/// This function computes the complex arc sine of the input complex number,
+	/// $ z = \text{asin}(z) $
+	///
+	/// It calculates the complex arc sine by using the complex hyperbolic sine function.
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \param other Input complex number
+	/// \return Complex arc sine of the input complex number
+	/// \see asinh
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> asin(const Complex<T> &other) {
 		Complex<T> asinhVal = asinh(Complex<T>(-imag(other), real(other)));
 		return Complex<T>(imag(asinhVal), -real(asinhVal));
 	}
 
+	/// \brief Compute the complex arc hyperbolic tangent of a complex number
+	///
+	/// This function computes the complex arc hyperbolic tangent of the input complex number,
+	/// $ z = \text{atanh}(z) $
+	///
+	/// This function performs error checking and supports NaNs and Infs.
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \param other Input complex number
+	/// \return Complex arc hyperbolic tangent of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> atanh(const Complex<T> &other) {
 		const T arcBig = T(0.25) * ::librapid::sqrt(typetraits::TypeInfo<T>::max());
@@ -1110,12 +1415,30 @@ namespace librapid {
 		return Complex<T>(ux, vx);
 	}
 
+	/// \brief Compute the complex arc tangent of a complex number
+	///
+	/// This function computes the complex arc tangent of the input complex number,
+	/// $ z = \text{atan}(z) $
+	///
+	/// The algorithm handles NaN and infinity values, and avoids overflow.
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \param other Input complex number
+	/// \return Complex arc tangent of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> atan(const Complex<T> &other) {
 		Complex atanhVal = ::librapid::atanh(Complex<T>(-imag(other), real(other)));
 		return Complex<T>(imag(atanhVal), -real(atanhVal));
 	}
 
+	/// \brief Compute the complex hyperbolic cosine of a complex number
+	///
+	/// This function computes the complex hyperbolic cosine of the input complex number,
+	/// $ z = \text{cosh}(z) $
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \param other Input complex number
+	/// \return Complex hyperbolic cosine of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> cosh(const Complex<T> &other) {
 		return Complex<T>(::librapid::cosh(real(other)) * ::librapid::cos(imag(other)),
@@ -1139,6 +1462,16 @@ namespace librapid {
 		}
 	}
 
+	/// \brief Compute the complex exponential of a complex number
+	///
+	/// This function computes the complex exponential of the input complex number,
+	/// $ z = e^z $
+	///
+	/// The algorithm handles NaN and infinity values.
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \param other Input complex number
+	/// \return Complex exponential of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> exp(const Complex<T> &other) {
 		const T logRho = real(other);
@@ -1166,11 +1499,21 @@ namespace librapid {
 		}
 	}
 
+	/// \brief Compute the complex exponential base 2 of a complex number
+	/// \see exp
+	/// \tparam T Scalar type of the complex number
+	/// \param other Input complex number
+	/// \return Complex exponential base 2 of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> exp2(const Complex<T> &other) {
 		return pow(T(2), other);
 	}
 
+	/// \brief Compute the complex exponential base 10 of a complex number
+	/// \see exp
+	/// \tparam T Scalar type of the complex number
+	/// \param other Input complex number
+	/// \return Complex exponential base 10 of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> exp10(const Complex<T> &other) {
 		return pow(T(10), other);
@@ -1277,6 +1620,10 @@ namespace librapid {
 		return detail::algorithm::logHypot(real(other), imag(other));
 	}
 
+	/// \brief Calculates the natural logarithm of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return Natural logarithm of the complex number
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> log(const Complex<T> &other) {
 		const T logAbs = _logAbs(other);
@@ -1284,14 +1631,30 @@ namespace librapid {
 		return Complex<T>(logAbs, theta);
 	}
 
+	/// \brief Calculates the logarithm of a complex number with a complex base
+	///
+	/// $ \log_{\mathrm{base}}(z) = \log(z) / \log(\mathrm{base}) $
+	/// \tparam T Scalar type
+	/// \tparam B Base type
+	/// \param other Complex number
+	/// \param base Base of the logarithm
+	/// \return Logarithm of the complex number with the given base
+	/// \see log
 	template<typename T, typename B>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> log(const Complex<T> &other,
 															 const Complex<T> &base) {
-		const T logAbs = _logAbs(other);
-		const T theta  = ::librapid::atan2(imag(other), real(other));
-		return Complex<T>(logAbs, theta) / log(base);
+		return log(other) / log(base);
 	}
 
+	/// \brief Calculates the logarithm of a complex number with a real base
+	///
+	/// $ \log_{\mathrm{base}}(z) = \log(z) / \log(\mathrm{base}) $
+	/// \tparam T Scalar type of the complex number
+	/// \tparam B Scalar type of the base
+	/// \param other Complex number
+	/// \param base Base of the logarithm (real)
+	/// \return Logarithm of the complex number with the given base
+	/// \see log
 	template<typename T, typename B>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> log(const Complex<T> &other,
 															 const B &base) {
@@ -1309,6 +1672,12 @@ namespace librapid {
 		}
 	}
 
+	/// \brief Calculate $ \text{left}^{\text{right}} $ for a complex-valued left-hand side
+	/// \tparam T Value type for the left-hand side
+	/// \tparam V Value type for the right-hand side
+	/// \param left Complex base
+	/// \param right Real exponent
+	/// \return $ \text{left}^{\text{right}} $
 	template<typename T, typename V,
 			 typename std::enable_if_t<
 			   typetraits::TypeInfo<V>::type == detail::LibRapidType::Scalar, int> = 0>
@@ -1324,6 +1693,12 @@ namespace librapid {
 		}
 	}
 
+	/// \brief Calculate $ \text{left}^{\text{right}} $ for a complex-valued right-hand side
+	/// \tparam T Value type for the left-hand side
+	/// \tparam V Value type for the right-hand side
+	/// \param left Real base
+	/// \param right Complex exponent
+	/// \return $ \text{left}^{\text{right}} $
 	template<typename T, typename V,
 			 typename std::enable_if_t<
 			   typetraits::TypeInfo<V>::type == detail::LibRapidType::Scalar, int> = 0>
@@ -1337,6 +1712,11 @@ namespace librapid {
 		}
 	}
 
+	/// \brief Calculate $ \text{left}^{\text{right}} $ for complex numbers
+	/// \tparam T Complex number component type
+	/// \param left Complex base
+	/// \param right Complex exponent
+	/// \return $ \text{left}^{\text{right}} $
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> pow(const Complex<T> &left, const Complex<T> &right) {
 		if (imag(right) == 0) {
@@ -1348,18 +1728,10 @@ namespace librapid {
 		}
 	}
 
-	// Return sinh(left) * right
-	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T _sinh(const T left, const T right) {
-		return static_cast<T>(::librapid::sinh(static_cast<double>(left)) *
-							  static_cast<double>(right));
-	}
-
-	template<typename T, typename std::enable_if_t<!std::is_fundamental_v<T>, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T _sinh(const T &left, const T &right) {
-		return ::librapid::sinh(left) * right;
-	}
-
+	/// \brief Calculate the hyperbolic sine of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \sinh(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> sinh(const Complex<T> &other) {
 		return Complex<T>(::librapid::sinh(real(other)) * ::librapid::cos(imag(other)),
@@ -1409,6 +1781,12 @@ namespace librapid {
 		}
 	}
 
+	/// \brief Calculate the hyperbolic tangent of a complex number
+	///
+	/// This function supports propagation of NaNs and Infs.
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \tanh(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> tanh(const Complex<T> &other) {
 		T tv = ::librapid::tan(imag(other));
@@ -1428,12 +1806,23 @@ namespace librapid {
 	}
 
 	// Return the phase angle of a complex value as a real
+
+	/// \brief Return the phase angle of a complex value as a real
+	///
+	/// This function calls $ \text{atan2}(\text{imag}(z), \text{real}(z)) $.
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \arg(z) $
+	/// \see atan2
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T arg(const Complex<T> &other) {
 		return ::librapid::atan2(imag(other), real(other));
 	}
 
-	// Return complex projection
+	/// \brief Project a complex number onto the Riemann sphere
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \text{proj}(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> proj(const Complex<T> &other) {
 		if (::librapid::isInf(real(other)) || ::librapid::isInf(imag(other))) {
@@ -1443,59 +1832,109 @@ namespace librapid {
 		return other;
 	}
 
+	/// \brief Calculate the cosine of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \cos(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> cos(const Complex<T> &other) {
 		return Complex<T>(::librapid::cosh(imag(other)) * ::librapid::cos(real(other)),
 						  -::librapid::sinh(imag(other)) * ::librapid::sin(real(other)));
 	}
 
+	/// \brief Calculate the cosecant of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \csc(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> csc(const Complex<T> &other) {
 		return T(1) / sin(other);
 	}
 
+	/// \brief Calculate the secant of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \sec(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> sec(const Complex<T> &other) {
 		return T(1) / cos(other);
 	}
 
+	/// \brief Calculate the cotangent of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \cot(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> cot(const Complex<T> &other) {
 		return T(1) / tan(other);
 	}
 
+	/// \brief Calculate the arc cosecant of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \operatorname{arccsc}(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> acsc(const Complex<T> &other) {
 		return asin(T(1) / other);
 	}
 
+	/// \brief Calculate the arc secant of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \operatorname{arcsec}(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> asec(const Complex<T> &other) {
 		return acos(T(1) / other);
 	}
 
+	/// \brief Calculate the arc cotangent of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \operatorname{arccot}(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> acot(const Complex<T> &other) {
 		return atan(T(1) / other);
 	}
 
+	/// \brief Calculate the logarithm base 2 of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \log_2(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> log2(const Complex<T> &other) {
 		return log(other) / ::librapid::log(T(2));
 	}
 
+	/// \brief Calculate the logarithm base 10 of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \log_{10}(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> log10(const Complex<T> &other) {
 		return log(other) / ::librapid::log(10);
 	}
 
 	// Return magnitude squared
+
+	/// \brief Calculate the magnitude squared of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ |z|^2 $
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T norm(const Complex<T> &other) {
 		return real(other) * real(other) + imag(other) * imag(other);
 	}
 
-	// Return rho * exp(i * theta);
+	/// \brief Compute the complex number in polar form
+	///
+	/// This function computes the complex number in polar form given by the radius rho
+	/// and angle theta.
+	///
+	/// The function returns NaN, infinity or zero based on the input values of rho.
+	/// \tparam T Scalar type of the complex number
+	/// \param rho Radius of the polar coordinate system
+	/// \param theta Angle of the polar coordinate system
+	/// \return Complex number in polar form.
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> polar(const T &rho, const T &theta) {
 		if (!::librapid::isNaN(rho) && !::librapid::isInf(rho) && rho != T(0)) {
@@ -1510,28 +1949,54 @@ namespace librapid {
 			return polarPositiveNanInfZeroRho(rho, theta);
 	}
 
+	/// \brie Compute the sine of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \sin(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> sin(const Complex<T> &other) {
 		return Complex<T>(::librapid::cosh(imag(other)) * ::librapid::sin(real(other)),
 						  ::librapid::sinh(imag(other)) * ::librapid::cos(real(other)));
 	}
 
+	/// \brief Compute the tangent of a complex number
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ \tan(z) $
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> tan(const Complex<T> &other) {
 		Complex<T> zv(tanh(Complex<T>(-imag(other), real(other))));
 		return Complex<T>(imag(zv), -real(zv));
 	}
 
+	/// \brief Round the real and imaginary parts of a complex number towards $ -\infty $
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ (\lfloor\operatorname{real}(z)\rfloor,\lfloor\operatorname{imag}(z)\rfloor )$
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> floor(const Complex<T> &other) {
 		return Complex<T>(::librapid::floor(real(other)), ::librapid::floor(imag(other)));
 	}
 
+	/// \brief Round the real and imaginary parts of a complex number towards $ +\infty $
+	/// \tparam T Scalar type
+	/// \param other Complex number
+	/// \return $ (\lceil\operatorname{real}(z)\rceil,\lceil\operatorname{imag}(z)\rceil )$
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> ceil(const Complex<T> &other) {
 		return Complex<T>(::librapid::ceil(real(other)), ::librapid::ceil(imag(other)));
 	}
 
+	/// \brief Generate a random complex number between two given complex numbers
+	///
+	/// This function generates a random complex number in the range [min, max], where min
+	/// and max are given as input. The function uses a default seed if none is provided.
+	///
+	/// \tparam T Scalar type of the complex number
+	/// \param min Minimum complex number
+	/// \param max Maximum complex number
+	/// \param seed Seed for the random number generator
+	/// \return Random complex number between min and max
 	template<typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T>
 	random(const Complex<T> &min, const Complex<T> &max, uint64_t seed = -1) {

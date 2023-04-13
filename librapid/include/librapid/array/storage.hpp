@@ -326,26 +326,32 @@ namespace librapid {
 			using Pointer	= typename Traits::pointer;
 			using ValueType = typename Traits::value_type;
 
-#if defined(LIBRAPID_NATIVE_ARCH)
+#if defined(LIBRAPID_BLAS_MKLBLAS)
+			// MKL has its own memory allocation function
+			auto ptr = static_cast<Pointer>(mkl_malloc(size * sizeof(ValueType), 64));
+#else
+#	if defined(LIBRAPID_NATIVE_ARCH)
 			// Force aligned memory
-#	if defined(LIBRAPID_APPLE)
+#		if defined(LIBRAPID_APPLE)
 			// No memory allignment. It breaks everything for some reason
 			auto ptr = Traits::allocate(alloc, size);
-#	elif defined(LIBRAPID_MSVC)
+#		elif defined(LIBRAPID_MSVC)
 			auto ptr = static_cast<Pointer>(
 			  _aligned_malloc(size * sizeof(ValueType), global::memoryAlignment));
-#	else
+#		else
 			auto ptr = static_cast<Pointer>(
 			  std::aligned_alloc(global::memoryAlignment, size * sizeof(ValueType)));
-#	endif
-#else
+#		endif
+#	else
 			// No memory alignment
 			auto ptr = Traits::allocate(alloc, size);
+#	endif
 #endif
 
 			// If the type cannot be trivially constructed, we need to
 			// initialize each value
-			if (!typetraits::TriviallyDefaultConstructible<ValueType>::value) {
+			if constexpr (!typetraits::TriviallyDefaultConstructible<ValueType>::value &&
+						  !std::is_array<ValueType>::value) {
 				for (Pointer p = ptr; p != ptr + size; ++p) {
 					Traits::construct(alloc, p, ValueType());
 				}
@@ -374,10 +380,14 @@ namespace librapid {
 				for (Pointer p = ptr; p != ptr + size; ++p) { Traits::destroy(alloc, p); }
 			}
 
-#if defined(LIBRAPID_NATIVE_ARCH) && defined(LIBRAPID_MSVC)
-			_aligned_free(ptr);
+#if defined(LIBRAPID_BLAS_MKLBLAS)
+			mkl_free(ptr);
 #else
+#	if defined(LIBRAPID_NATIVE_ARCH) && defined(LIBRAPID_MSVC)
+			_aligned_free(ptr);
+#	else
 			Traits::deallocate(alloc, ptr, size);
+#	endif
 #endif
 		}
 	} // namespace detail

@@ -66,7 +66,8 @@ namespace librapid {
 		/// Create a new timer with a given name
 		/// \param name The name of the timer
 		/// \param printOnDestruct Whether to print the time between construction and destruction
-		explicit Timer(std::string name = "Timer", bool printOnDestruct = false);
+		explicit Timer(std::string name = "Timer") :
+				m_name(std::move(name)), m_start(now<time::nanosecond>()), m_end(-1) {}
 
 		Timer(const Timer &)			= default;
 		Timer(Timer &&)					= default;
@@ -74,16 +75,33 @@ namespace librapid {
 		Timer &operator=(Timer &&)		= default;
 
 		/// Timer destructor
-		~Timer();
+		~Timer() {
+			m_end = now<time::nanosecond>();
+			// if (m_printOnDestruct) print();
+		}
+
+		template<size_t scale = time::second>
+		Timer &setTargetTime(double time) {
+			m_iters		 = 0;
+			m_targetTime = time * (double)scale;
+			m_start		 = now<time::nanosecond>();
+			return *this;
+		}
 
 		/// Start the timer
-		void start();
+		void start() {
+			m_start = now<time::nanosecond>();
+			m_end	= -1;
+		}
 
 		/// Stop the timer
-		void stop();
+		void stop() { m_end = now<time::nanosecond>(); }
 
 		/// Reset the timer
-		void reset();
+		void reset() {
+			m_start = now<time::nanosecond>();
+			m_end	= -1;
+		}
 
 		/// Get the elapsed time in a given unit
 		/// \tparam scale The unit to return the time in
@@ -94,15 +112,32 @@ namespace librapid {
 			return (m_end - m_start) / (double)scale;
 		}
 
+		bool isRunning() {
+			++m_iters;
+			return now<time::nanosecond>() - m_start < m_targetTime;
+		}
+
 		/// Print the current elapsed time of the timer
-		void print() const;
+		LIBRAPID_NODISCARD std::string str(const std::string &format = "{:.3f}") const {
+			double tmpEnd = m_end;
+			if (tmpEnd < 0) tmpEnd = now<time::nanosecond>();
+			return fmt::format(
+			  "{} -- Elapsed: {} | Average: {}",
+			  m_name,
+			  formatTime<time::nanosecond>(tmpEnd - m_start, format),
+			  formatTime<time::nanosecond>((tmpEnd - m_start) / (double)m_iters, format));
+		}
 
 	private:
-		std::string m_name;
-		bool m_printOnDestruct;
-		double m_start;
-		double m_end;
+		std::string m_name = "Timer";
+		double m_start	   = 0;
+		double m_end	   = 0;
+
+		size_t m_iters		= 0;
+		double m_targetTime = 0;
 	};
 } // namespace librapid
+
+LIBRAPID_SIMPLE_IO_IMPL_NO_TEMPLATE(librapid::Timer);
 
 #endif // LIBRAPID_UTILS_TIME_HPP

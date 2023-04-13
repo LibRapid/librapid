@@ -6,7 +6,7 @@
 <img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_dark.png#gh-dark-mode-only" width="800">
 </p>
 
-![C++ Version](https://img.shields.io/badge/C++-17/22-purple.svg?style=flat&logo=c%2B%2B) ![License](https://img.shields.io/badge/License-MIT-orange.svg?style=flat) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC)
+![C++ Version](https://img.shields.io/badge/C++-17/20-purple.svg?style=flat&logo=c%2B%2B) ![License](https://img.shields.io/badge/License-MIT-orange.svg?style=flat) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC)
 
 ---
 
