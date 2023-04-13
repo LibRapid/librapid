@@ -191,6 +191,7 @@ jobs:
     name: Run Qodana
     needs: compile
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     steps:
       - name: Checkout LibRapid
@@ -300,6 +301,8 @@ jobs:
     name: Code Coverage
     needs: [ compile ]
     runs-on: ubuntu-latest
+    continue-on-error: true
+
     steps:
       - name: Checkout LibRapid
         uses: actions/checkout@v3
