@@ -66,13 +66,14 @@ namespace librapid {
 	/// This function is often used to compare floating point values for equality, since floating
 	/// point rounding errors can cause exact equality checks to fail.
 	///
-	/// \tparam T Data type
+	/// \tparam V Data type of the values to compare
+	/// \tparam T Data type of the tolerance value
 	/// \param val1 First value
 	/// \param val2 Second value
 	/// \param tolerance Tolerance
 	/// \return True if values are close
-	template<typename T>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const T &val1, const T &val2,
+	template<typename V, typename T>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const V &val1, const V &val2,
 														   const T &tolerance = 1e-6) {
 		return abs(val1 - val2) < tolerance;
 	}
