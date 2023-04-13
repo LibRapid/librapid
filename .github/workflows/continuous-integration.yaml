@@ -10,15 +10,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # If the commit message contains [skip ci], skip the build
-  check-skip-ci:
-    name: Check for [skip ci]
-    if: "contains(github.event.head_commit.message, '[skip ci]')"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Skip CI
-        run: exit 78
-
   compile:
     name: LibRapid on ${{ matrix.os }} with ${{ matrix.cxx }} using C++${{ matrix.cpp }}
     runs-on: ${{ matrix.os }}
