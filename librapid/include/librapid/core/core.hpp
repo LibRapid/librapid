@@ -13,7 +13,13 @@
 #include "forward.hpp"
 
 // BLAS
-#include "cxxblas/cxxblas.h"
-#include "cxxblas/cxxblas.tcc"
+#include "../cxxblas/cxxblas.h"
+#include "../cxxblas/cxxblas.tcc"
+
+// Fourier Transform
+#if !defined(LIBRAPID_HAS_CUDA)
+// If CUDA is enabled, we use cuFFT
+#	include "../fftw/api/fftw3.h"
+#endif // LIBRAPID_HAS_CUDA
 
 #endif // LIBRAPID_CORE

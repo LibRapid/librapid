@@ -350,7 +350,8 @@ namespace librapid {
 
 			// If the type cannot be trivially constructed, we need to
 			// initialize each value
-			if (!typetraits::TriviallyDefaultConstructible<ValueType>::value) {
+			if constexpr (!typetraits::TriviallyDefaultConstructible<ValueType>::value &&
+						  !std::is_array<ValueType>::value) {
 				for (Pointer p = ptr; p != ptr + size; ++p) {
 					Traits::construct(alloc, p, ValueType());
 				}
