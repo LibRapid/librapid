@@ -28,56 +28,15 @@ jobs:
           cd build
           ctest -C Release --output-on-failure
 
-      # Thank you GPT-4 ;)
-      - name: Download Artifacts from "continuous-integration" Workflow
-        id: download_artifacts
-        uses: actions/github-script@v5
-        with:
-          script: |
-            const fs = require("fs");
-            const { owner, repo } = context.repo;
-            const branch = context.ref.replace("refs/heads/", "");
-
-            // Get the latest successful run ID of the continuous_integration workflow
-            const { data: runs } = await github.request("GET /repos/{owner}/{repo}/actions/workflows/continuous_integration/runs", {
-              owner,
-              repo,
-              status: "completed",
-              event: "push",
-              branch,
-              per_page: 1,
-            });
-            const runId = runs.workflow_runs[0].id;
-
-            // Get the artifacts for the run ID
-            const { data: artifacts } = await github.request("GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts", {
-              owner,
-              repo,
-              run_id: runId,
-            });
-
-            // Download and unzip artifacts
-            const artifactDir = "artifacts";
-            fs.mkdirSync(artifactDir, { recursive: true });
-            const artifactPaths = [];
-            for (const artifact of artifacts.artifacts) {
-              const downloadPath = `${artifactDir}/${artifact.name}.zip`;
-              artifactPaths.push(`${artifactDir}/${artifact.name}`);
-              const { data: artifactData } = await github.request("GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip", {
-                owner,
-                repo,
-                artifact_id: artifact.id,
-              }, { responseType: "arraybuffer" });
-              fs.writeFileSync(downloadPath, new Uint8Array(artifactData));
-              await exec("unzip", ["-o", "-d", artifactDir, downloadPath]);
-              fs.unlinkSync(downloadPath);
-            }
-
-            return artifactPaths;
-
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           files: |
-            artifacts/*
+            README.md
+            LICENSE
+            version.txt
+            SECURITY.md
+            CITATION.cff
+            CODE_OF_CONDUCT.md
+            CONTRIBUTING.md
