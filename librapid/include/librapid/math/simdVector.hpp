@@ -92,7 +92,7 @@ namespace librapid {
 		/// Access a specific element of the vector
 		/// \param index The index of the element to access
 		/// \return Reference to the element
-		LIBRAPID_NODISCARD const auto &operator[](int64_t index) const;
+		LIBRAPID_NODISCARD const auto operator[](int64_t index) const;
 
 		/// Access a specific element of the vector
 		/// \param index The index of the element to access
@@ -288,9 +288,14 @@ namespace librapid {
 		/// \return The cross product
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE SIMDVector cross(const SIMDVector &other) const;
 
-		/// Project this vector onto another vector
-		/// \param other The vector to project onto
-		/// \return The projection of this vector onto the other vector
+		/// \brief Project vector \p other onto this vector and return the result
+		///
+		/// Perform vector projection using the formula:
+		/// \f$ \operatorname{proj}_a(\vec{b})=\frac{\vec{b} \cdot \vec{a}}{|\vec{a}|^2} \cdot
+		/// \vec{a} \f$
+		///
+		/// \param other The vector to project
+		/// \return The projection of \p other onto this vector
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE SIMDVector proj(const SIMDVector &other) const;
 
 		/// Cast this vector to a boolean. This is equivalent to calling mag2() != 0
@@ -526,7 +531,7 @@ namespace librapid {
 #endif // GLM_VERSION
 
 	template<typename Scalar, int64_t Dims>
-	const auto &SIMDVector<Scalar, Dims>::operator[](int64_t index) const {
+	const auto SIMDVector<Scalar, Dims>::operator[](int64_t index) const {
 		LIBRAPID_ASSERT(0 <= index && index < Dims,
 						"Index {} out of range for vector with {} dimensions",
 						index,
@@ -838,7 +843,7 @@ namespace librapid {
 
 	template<typename Scalar, int64_t Dims>
 	auto SIMDVector<Scalar, Dims>::proj(const SIMDVector &other) const -> SIMDVector {
-		return other * (dot(other) / other.mag2());
+		return other * (other.dot(*this) / other.mag2());
 	}
 
 	template<typename Scalar, int64_t Dims>
@@ -1842,7 +1847,8 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims>
 	LIBRAPID_ALWAYS_INLINE SIMDVector<Scalar, Dims> acos(const SIMDVector<Scalar, Dims> &vec) {
 		using Type = SIMDVector<Scalar, Dims>;
-		return SIMDVector<Scalar, Dims>(HALFPI - asin(vec));
+		// Vc doesn't have acos
+		return Scalar(HALFPI) - asin(vec);
 	}
 
 	/// Calculate the atan of each element of a vector and return the result
@@ -2062,7 +2068,9 @@ namespace librapid {
 	/// \return The cbrt of each element of the vector
 	template<typename Scalar, int64_t Dims>
 	LIBRAPID_ALWAYS_INLINE SIMDVector<Scalar, Dims> cbrt(const SIMDVector<Scalar, Dims> &vec) {
-		return pow(vec, Scalar(1.0) / Scalar(3.0));
+		SIMDVector<Scalar, Dims> res;
+		for (size_t i = 0; i < Dims; ++i) { res[i] = ::librapid::cbrt(vec[i]); }
+		return res;
 	}
 
 	/// Calculate the absolute value of each element of a vector and return the result
@@ -2096,6 +2104,34 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE SIMDVector<Scalar, Dims> ceil(const SIMDVector<Scalar, Dims> &vec) {
 		using Type = SIMDVector<Scalar, Dims>;
 		return Type(Vc::ceil(vec.data()));
+	}
+
+	/// \brief Returns true if the two vectors are within the given tolerance of each other
+	///
+	/// \tparam Scalar The scalar type of the vectors
+	/// \tparam Dims Number of dimensions of the vectors
+	/// \param a The first vector
+	/// \param b The second vector
+	/// \param tolerance Tolerance
+	/// \return True if the vectors are within the given tolerance of each other
+	/// \see isClose(const GenericVector<Scalar, Dims> &, const GenericVector<Scalar, Dims> &)
+	template<typename Scalar, int64_t Dims>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const SIMDVector<Scalar, Dims> &a,
+														   const SIMDVector<Scalar, Dims> &b,
+														   double tolerance = -1) {
+		if (tolerance < 0) {
+			if constexpr (std::is_same_v<Scalar, double>) {
+				tolerance = 1e-12;
+			} else if constexpr (std::is_same_v<Scalar, float>) {
+				tolerance = 1e-6f;
+			} else if constexpr (std::is_floating_point_v<Scalar>) {
+				tolerance = 1e-4;
+			} else {
+				tolerance = 0;
+			}
+		};
+
+		return (a - b).mag2() <= tolerance;
 	}
 
 	template<typename Scalar, int64_t Dims>

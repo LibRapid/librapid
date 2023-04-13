@@ -1,5 +1,6 @@
 # From https://jugit.fz-juelich.de/mlz/kww/blob/a9694baf275d81d7024feb96609e858f7c88d7e1/cmake/FindMPIR.cmake
 # Thank you!
+# I have modified this slightly from the original -- Toby
 
 # Find mpir with API version ?.?
 #
@@ -36,36 +37,41 @@ find_path(MPIR_INCLUDE_DIR mpir.h
         )
 
 
-set(CMAKE_REQUIRED_INCLUDES ${MPIR_INCLUDE_DIR})
-set(CMAKE_REQUIRED_QUIET False)
+if (${MPIR_INCLUDE_DIR} MATCHES "MPIR_INCLUDE_DIR-NOTFOUND")
+    set(MPIR_FOUND False)
+else ()
+    set(MPIR_FOUND True)
+    set(CMAKE_REQUIRED_INCLUDES ${MPIR_INCLUDE_DIR})
+    set(CMAKE_REQUIRED_QUIET False)
 
-# attempt to find static library first if this is set
-if(MPIR_STATIC_LIBRARY)
-    set(MPIR_STATIC mpir.a)
-    #set(MPIR_STATIC mpir.lib)
-endif()
+    # attempt to find static library first if this is set
+    if (MPIR_STATIC_LIBRARY)
+        set(MPIR_STATIC mpir.a)
+        #set(MPIR_STATIC mpir.lib)
+    endif ()
 
-# find the mpir library
-find_library(MPIR_LIBRARY
-        NAMES
-        #${MPIR_STATIC}
-        mpir
-        PATH_SUFFIXES lib64 lib
-        PATHS
-        ${MPIR_LIBRARY_LOC}
-        "C:/Program Files/mpir/"
-        ~/Library/Frameworks
-        /Library/Frameworks
-        /usr/local
-        /usr
-        /sw
-        /opt/local
-        /opt/csw
-        /opt
-        )
+    # find the mpir library
+    find_library(MPIR_LIBRARY
+            NAMES
+            #${MPIR_STATIC}
+            mpir
+            PATH_SUFFIXES lib64 lib
+            PATHS
+            ${MPIR_LIBRARY_LOC}
+            "C:/Program Files/mpir/"
+            ~/Library/Frameworks
+            /Library/Frameworks
+            /usr/local
+            /usr
+            /sw
+            /opt/local
+            /opt/csw
+            /opt
+            )
 
-message(STATUS
-        "mpir: FOUND=${MPIR_FOUND}, VERSION=${MPIR_VERSION}, LIB=${MPIR_LIBRARY}")
+    message(STATUS
+            "mpir: FOUND=${MPIR_FOUND}, VERSION=${MPIR_VERSION}, LIB=${MPIR_LIBRARY}")
 
-message(STATUS "Found FindMPIR: ${MPIR_LIBRARY}")
-mark_as_advanced(MPIR_INCLUDE_DIR MPIR_LIBRARY)
+    message(STATUS "Found FindMPIR: ${MPIR_LIBRARY}")
+    mark_as_advanced(MPIR_INCLUDE_DIR MPIR_LIBRARY)
+endif ()

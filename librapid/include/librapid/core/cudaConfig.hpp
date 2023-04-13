@@ -15,6 +15,10 @@
 #	include <cuda.h>
 #	include <curand.h>
 #	include <curand_kernel.h>
+#	include <cufft.h>
+#	include <cufftw.h>
+#	include <cuda_runtime.h>
+#	include <device_launch_parameters.h>
 
 #	ifdef _MSC_VER
 #		pragma warning(pop)
@@ -53,7 +57,6 @@ const char *getCublasErrorEnum_(cublasStatus_t error);
 			} while (0)
 #	else
 #		define cudaSafeCall(call) (call)
-
 #		define jitifyCall(call) (call)
 #	endif
 

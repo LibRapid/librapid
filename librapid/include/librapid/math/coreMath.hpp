@@ -58,7 +58,24 @@ namespace librapid {
 	/// \return Absolute value of the input value
 	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
 	constexpr T abs(T val) {
-		return std::abs(val);
+		return (val < T(0)) ? -val : val;
+	}
+
+	/// \brief Returns true if the two values are within the given tolerance of each other
+	///
+	/// This function is often used to compare floating point values for equality, since floating
+	/// point rounding errors can cause exact equality checks to fail.
+	///
+	/// \tparam V Data type of the values to compare
+	/// \tparam T Data type of the tolerance value
+	/// \param val1 First value
+	/// \param val2 Second value
+	/// \param tolerance Tolerance
+	/// \return True if values are close
+	template<typename V, typename T>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const V &val1, const V &val2,
+														   const T &tolerance = 1e-6) {
+		return ::librapid::abs(val1 - val2) < tolerance;
 	}
 
 	/// Map a value from one range to another
