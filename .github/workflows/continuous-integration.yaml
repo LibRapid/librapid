@@ -365,3 +365,14 @@ jobs:
           webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
           webhook_token: ${{ secrets.RTDS_WEBHOOK_TOKEN }}
           commit_ref: ${{ github.ref }}
+
+  create-release:
+    name: Create Release
+    needs: [ run-benchmarks, quodona, build-docs ]
+    if: startsWith(github.ref, 'refs/tags/v')
+    uses: "marvinpinto/action-automatic-releases@latest"
+    with:
+      repo_token: "${{ secrets.GITHUB_TOKEN }}"
+      prerelease: false
+      files: |
+        artifacts/*
