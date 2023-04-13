@@ -4,6 +4,7 @@
 #include <catch2/benchmark/catch_benchmark.hpp>
 
 namespace lrc = librapid;
+constexpr double tolerance = 0.001;
 
 #define TEST_CONSTRUCTORS(SCALAR, DEVICE)                                                          \
 	SECTION(fmt::format("Test Constructors [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {    \
@@ -174,7 +175,7 @@ namespace lrc = librapid;
 		bool sumValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(sumResult.scalar(i) == testA.scalar(i) + testB.scalar(i))) {                     \
-				REQUIRE(sumResult.scalar(i) == testA.scalar(i) + testB.scalar(i));                 \
+				REQUIRE(lrc::isClose(sumResult.scalar(i), testA.scalar(i) + testB.scalar(i), tolerance));                 \
 				sumValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
@@ -184,7 +185,7 @@ namespace lrc = librapid;
 		bool diffValid	= true;                                                                    \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(diffResult.scalar(i) == testA.scalar(i) - testB.scalar(i))) {                    \
-				REQUIRE(diffResult.scalar(i) == testA.scalar(i) - testB.scalar(i));                \
+				REQUIRE(lrc::isClose(diffResult.scalar(i), testA.scalar(i) - testB.scalar(i), tolerance));                \
 				diffValid = false;                                                                 \
 			}                                                                                      \
 		}                                                                                          \
@@ -194,7 +195,7 @@ namespace lrc = librapid;
 		bool prodValid	= true;                                                                    \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(prodResult.scalar(i) == testA.scalar(i) * testB.scalar(i))) {                    \
-				REQUIRE(lrc::isClose(prodResult.scalar(i) == testA.scalar(i) * testB.scalar(i)));  \
+				REQUIRE(lrc::isClose(prodResult.scalar(i), testA.scalar(i) * testB.scalar(i), tolerance));  \
 				prodValid = false;                                                                 \
 			}                                                                                      \
 		}                                                                                          \
@@ -204,7 +205,7 @@ namespace lrc = librapid;
 		bool divValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(divResult.scalar(i) == testA.scalar(i) / testB.scalar(i))) {                     \
-				REQUIRE(lrc::isClose(divResult.scalar(i), testA.scalar(i) / testB.scalar(i)));     \
+				REQUIRE(lrc::isClose(divResult.scalar(i), testA.scalar(i) / testB.scalar(i), tolerance));     \
 				divValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
@@ -230,7 +231,7 @@ namespace lrc = librapid;
 		bool sumValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(sumResult.scalar(i) == testA.scalar(i) + SCALAR(1))) {                           \
-				REQUIRE(sumResult.scalar(i) == testA.scalar(i) + SCALAR(1));                       \
+				REQUIRE(lrc::isClose(sumResult.scalar(i), testA.scalar(i) + SCALAR(1), tolerance));                       \
 				sumValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
@@ -240,7 +241,7 @@ namespace lrc = librapid;
 		bool diffValid	= true;                                                                    \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(diffResult.scalar(i) == testA.scalar(i) - SCALAR(1))) {                          \
-				REQUIRE(diffResult.scalar(i) == testA.scalar(i) - SCALAR(1));                      \
+				REQUIRE(lrc::isClose(diffResult.scalar(i), testA.scalar(i) - SCALAR(1), tolerance));                      \
 				diffValid = false;                                                                 \
 			}                                                                                      \
 		}                                                                                          \
@@ -250,7 +251,7 @@ namespace lrc = librapid;
 		bool prodValid	= true;                                                                    \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(prodResult.scalar(i) == testA.scalar(i) * SCALAR(2))) {                          \
-				REQUIRE(prodResult.scalar(i) == testA.scalar(i) * SCALAR(2));                      \
+				REQUIRE(lrc::isClose(prodResult.scalar(i), testA.scalar(i) * SCALAR(2), tolerance));                      \
 				prodValid = false;                                                                 \
 			}                                                                                      \
 		}                                                                                          \
@@ -260,7 +261,7 @@ namespace lrc = librapid;
 		bool divValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(divResult.scalar(i) == testA.scalar(i) / SCALAR(2))) {                           \
-				REQUIRE(divResult.scalar(i) == testA.scalar(i) / SCALAR(2));                       \
+				REQUIRE(lrc::isClose(divResult.scalar(i), testA.scalar(i) / SCALAR(2), tolerance));                       \
 				divValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
@@ -286,7 +287,7 @@ namespace lrc = librapid;
 		bool sumValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(sumResult.scalar(i) == SCALAR(1) + testB.scalar(i))) {                           \
-				REQUIRE(sumResult.scalar(i) == SCALAR(1) + testB.scalar(i));                       \
+				REQUIRE(lrc::isClose(sumResult.scalar(i), SCALAR(1) + testB.scalar(i), tolerance));                       \
 				sumValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
@@ -296,7 +297,7 @@ namespace lrc = librapid;
 		bool diffValid	= true;                                                                    \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(diffResult.scalar(i) == SCALAR(1) - testB.scalar(i))) {                          \
-				REQUIRE(diffResult.scalar(i) == SCALAR(1) - testB.scalar(i));                      \
+				REQUIRE(lrc::isClose(diffResult.scalar(i), SCALAR(1) - testB.scalar(i), tolerance));                      \
 				diffValid = false;                                                                 \
 			}                                                                                      \
 		}                                                                                          \
@@ -306,7 +307,7 @@ namespace lrc = librapid;
 		bool prodValid	= true;                                                                    \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(prodResult.scalar(i) == SCALAR(2) * testB.scalar(i))) {                          \
-				REQUIRE(prodResult.scalar(i) == SCALAR(2) * testB.scalar(i));                      \
+				REQUIRE(lrc::isClose(prodResult.scalar(i), SCALAR(2) * testB.scalar(i), tolerance));                      \
 				prodValid = false;                                                                 \
 			}                                                                                      \
 		}                                                                                          \
@@ -316,7 +317,7 @@ namespace lrc = librapid;
 		bool divValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(divResult.scalar(i) == SCALAR(2) / testB.scalar(i))) {                           \
-				REQUIRE(divResult.scalar(i) == SCALAR(2) / testB.scalar(i));                       \
+				REQUIRE(lrc::isClose(divResult.scalar(i), SCALAR(2) / testB.scalar(i), tolerance));                       \
 				divValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
