@@ -75,7 +75,7 @@ namespace librapid {
 	template<typename V, typename T>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const V &val1, const V &val2,
 														   const T &tolerance = 1e-6) {
-		return abs(val1 - val2) < tolerance;
+		return ::librapid::abs(val1 - val2) < tolerance;
 	}
 
 	/// Map a value from one range to another
