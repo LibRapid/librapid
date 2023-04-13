@@ -13,7 +13,6 @@ jobs:
   compile:
     name: LibRapid on ${{ matrix.os }} with ${{ matrix.cxx }} using C++${{ matrix.cpp }}
     runs-on: ${{ matrix.os }}
-    needs: check-skip-ci
 
     strategy:
       fail-fast: false
