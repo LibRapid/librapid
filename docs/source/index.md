@@ -59,8 +59,9 @@ View LibRapid's benchmark results.
 
 Getting Started <gettingStarted>
 CMake Integration <cmakeIntegration>
-Tutorials <tutorials>
 API Reference <apiReference>
+Tutorials <tutorials>
+Performance and Benchmarks <performance/performance>
 Caution <caution>
 ```
 
@@ -177,4 +178,3 @@ LibRapid is produced under the MIT License, so you are free to use the library
 how you like for personal and commercial purposes, though this is subject to
 some conditions, which can be found in full
 here: [LibRapid License](https://github.com/Pencilcaseman/librapid/blob/master/LICENSE)
-

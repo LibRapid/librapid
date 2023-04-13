@@ -8,8 +8,7 @@
 #include "coreMath.hpp"
 #include "random.hpp"
 #include "multiprec.hpp"
-#include "genericVector.hpp"
-// #include "simdVector.hpp"
+#include "vector.hpp"
 #include "complex.hpp"
 #include "utilityFunctions.hpp"
 

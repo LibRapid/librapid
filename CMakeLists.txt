@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.18)
 project(librapid)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 cmake_policy(SET CMP0077 NEW)
@@ -38,8 +38,7 @@ option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_FAST_MATH "Use potentially less accurate operations to increase performance" OFF)
 option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" OFF)
 
-# Include any required modules
-include(identifyBLAS)
+option(LIBRAPID_MKL_CONFIG_PATH "Path to the 'MKLConfig.cmake' file" "")
 
 MACRO(SUBDIRLIST result curdir)
     FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
@@ -63,7 +62,7 @@ if (LIBRAPID_USE_BLAS)
 endif ()
 
 if (LIBRAPID_USE_OMP)
-    find_package(OpenMP QUIET)
+    find_package(OpenMP REQUIRED)
 endif ()
 
 set(LIBRAPID_HAS_OMP false)
@@ -153,7 +152,24 @@ if (LIBRAPID_USE_OMP)
     endif ()
 endif ()
 
-if (LIBRAPID_GET_BLAS)
+# Include any required modules
+include(identifyBLAS)
+
+# If LIBRAPID_MKL_CONFIG_PATH is set, use that instead of the default
+if (LIBRAPID_MKL_CONFIG_PATH)
+    message(STATUS "[ LIBRAPID ] Using MKLConfig.cmake from ${LIBRAPID_MKL_CONFIG_PATH}")
+    include(${LIBRAPID_MKL_CONFIG_PATH})
+    message(STATUS "[ LIBRAPID ] Linking against MKL")
+    message(STATUS "[ LIBRAPID ] MKL Libraries: ${MKL_LIBRARIES}")
+    message(STATUS "[ LIBRAPID ] MKL Include Directories: ${MKL_INCLUDE}")
+    target_link_libraries(${module_name} PUBLIC MKL::MKL)
+    target_include_directories(${module_name} PUBLIC ${MKL_INCLUDE})
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
+    set(LIBRAPID_HAS_BLAS ON)
+    set_blas_definition("MKL")
+endif ()
+
+if (LIBRAPID_GET_BLAS AND NOT LIBRAPID_HAS_BLAS)
     message(STATUS "[ LIBRAPID ] Downloading OpenBLAS Build...")
 
     if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/buildopenblas-src")
@@ -181,7 +197,7 @@ if (LIBRAPID_GET_BLAS)
 endif ()
 
 # See if BLAS should be linked against
-if (LIBRAPID_USE_BLAS)
+if (LIBRAPID_USE_BLAS AND NOT LIBRAPID_HAS_BLAS)
     if (${BLAS_FOUND})
         message(STATUS "[ LIBRAPID ] BLAS located was ${BLAS_LIBRARIES}")
 
@@ -196,8 +212,9 @@ if (LIBRAPID_USE_BLAS)
         get_filename_component(filepath ${LIBRAPID_BLAS} DIRECTORY)
         get_filename_component(filename ${LIBRAPID_BLAS} NAME)
 
-        # Attempt to identify which BLAS library is being used
-        setBlasDefinition(filename)
+        # Attempt to identify which BLAS library is being used and
+        # set the appropriate compile definition
+        set_blas_definition_from_file(filename)
 
         # Copy include files
         set(inc_path "${filepath}/../include")
@@ -314,6 +331,11 @@ if (LIBRAPID_USE_CUDA)
         target_link_directories(${module_name} PUBLIC
                 ${CUDA_LIBRARIES}
                 ${CUDA_CUBLAS_LIBRARIES}
+                ${CUDA_CUFFT_LIBRARIES}
+                ${CUDA_CUFFTW_LIBRARIES}
+                ${CUDA_CURAND_LIBRARIES}
+                ${CUDA_CUSOLVER_LIBRARIES}
+                ${CUDA_CUSPARSE_LIBRARIES}
                 )
 
         target_link_libraries(${module_name} PUBLIC
@@ -349,14 +371,13 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/fmt")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
 
-target_link_libraries(${module_name} PUBLIC fmt scn Vc)
-
 target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
+target_link_libraries(${module_name} PUBLIC fmt scn Vc)
 
 if (${LIBRAPID_USE_MULTIPREC})
     # Load MPIR
-    find_package(MPIR)
-    if (NOT LIBRAPID_GET_MULTIPREC AND MPIR_FOUND)
+    find_package(MPIR QUIET)
+    if (NOT LIBRAPID_GET_MULTIPREC AND MPIR_FOUND AND MPIR_INCLUDE_DIR AND MPIR_LIBRARY)
         message(STATUS "[ LIBRAPID ] Found existing MPIR package")
         target_include_directories(${module_name} PUBLIC ${MPIR_INCLUDE_DIR})
         target_link_libraries(${module_name} PUBLIC ${MPIR_LIBRARY})
@@ -406,22 +427,13 @@ if (LIBRAPID_FAST_MATH)
     endif ()
 endif ()
 
+set(LIBRAPID_ARCH_FLAGS)
 if (LIBRAPID_NATIVE_ARCH)
-    #    include(ArchDetect)
-    #
-    #    if (${AVX_FLAGS})
-    #        message(STATUS "[ LIBRAPID ] Native architecture enabled")
-    #        message(STATUS "[ LIBRAPID ] Supported flags: ${AVX_FLAGS}")
-    #        target_compile_definitions(${module_name} PUBLIC LIBRAPID_NATIVE_ARCH)
-    #    else ()
-    #        message(STATUS "[ LIBRAPID ] CPU does not support AVX or AVX2")
-    #    endif ()
-    #    target_compile_options(${module_name} PUBLIC ${AVX_FLAGS})
-
     message(STATUS "[ LIBRAPID ] Compiling for native architecture")
     OptimizeForArchitecture()
     target_compile_options(${module_name} PUBLIC ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_NATIVE_ARCH)
+    set(LIBRAPID_ARCH_FLAGS ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
     message(STATUS "[ LIBRAPID ] Additional Definitions: ${Vc_DEFINITIONS}")
     message(STATUS "[ LIBRAPID ] Supported flags: ${Vc_ARCHITECTURE_FLAGS}")
 endif ()
@@ -486,3 +498,26 @@ if (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
             EXCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/*" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas"
     )
 endif (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+
+# FFTW
+set(BUILD_SHARED_LIBS OFF)
+set(BUILD_TESTS OFF)
+set(ENABLE_OPENMP ${LIBRAPID_USE_OMP})
+set(ENABLE_THREADS ${LIBRAPID_USE_OMP})
+set(ENABLE_FLOAT OFF)
+set(ENABLE_DOUBLE OFF)
+set(ENABLE_LONG_DOUBLE OFF)
+set(ENABLE_QUAD_PRECISION OFF)
+
+set(ENABLE_AVX2 ON)
+set(ENABLE_AVX ON)
+set(ENABLE_SSE2 ON)
+set(ENABLE_SSE ON)
+
+set(DISABLE_FORTRAN ON)
+
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/fftw")
+if (LIBRAPID_USE_OMP)
+    target_link_libraries(${module_name} PUBLIC fftw3_omp)
+endif ()
+# target_link_libraries(${module_name} PUBLIC fftw3)
