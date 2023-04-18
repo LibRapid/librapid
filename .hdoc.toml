@@ -1,0 +1,30 @@
+[project]
+name = "LibRapid"
+version = "v0.6.13"
+num_threads = 0
+
+git_repo_url = "https://github.com/LibRapid/librapid/"
+git_default_branch = "master"
+
+[paths]
+compile_commands = "build/compile_commands.json"
+output_dir = "docs/build/"
+
+[pages]
+homepage = "docs/index.md"
+paths = [
+    "docs/Getting Started.md",
+    "docs/CMake Integration.md",
+    "docs/Using LibRapid with CUDA.md",
+    "docs/Caution.md"
+]
+
+[ignore]
+# Symbols from any of the following path fragments will be ignored
+paths = [
+    "test",
+    "librapid/vendor",
+    "librapid/cxxblas",
+    "librapid/blas",
+    "build/"
+]
