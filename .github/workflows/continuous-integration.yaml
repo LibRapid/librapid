@@ -329,11 +329,12 @@ jobs:
           sudo apt install lcov
           sudo apt install gcovr
 
+      # Note that LIBRAPID_GET_BLAS is off, since the OpenBLAS build is currently not working on GitHub Actions
       - name: Compile and Run
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=on -DLIBRAPID_USE_MULTIPREC=on
+          cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=off -DLIBRAPID_USE_MULTIPREC=on
           cmake --build . --parallel
 
         env:
