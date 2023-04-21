@@ -87,9 +87,6 @@ target_compile_definitions(${module_name} PUBLIC LIBRAPID_MINOR=${LIBRAPID_MINOR
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_PATCH=${LIBRAPID_PATCH})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE="${CMAKE_CURRENT_SOURCE_DIR}/librapid")
 
-target_compile_definitions(${module_name} PUBLIC LIBRAPID_NO_WINDOWS_H=${LIBRAPID_NO_WINDOWS_H})
-target_compile_definitions(${module_name} PUBLIC JITIFY_NO_WINDOWS_H=${LIBRAPID_NO_WINDOWS_H})
-
 # Precompiled Headers
 target_precompile_headers(${module_name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include/librapid/core/librapidPch.hpp")
 
@@ -503,6 +500,46 @@ if (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
             EXCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/*" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas"
     )
 endif (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+
+if (IS_WINDOWS AND LIBRAPID_NO_WINDOWS_H)
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_NO_WINDOWS_H=${LIBRAPID_NO_WINDOWS_H})
+    target_compile_definitions(${module_name} PUBLIC JITIFY_NO_WINDOWS_H=${LIBRAPID_NO_WINDOWS_H})
+
+    target_compile_definitions(${module_name} PUBLIC
+            WIN32_LEAN_AND_MEAN
+            NOGDI
+            NOUSER
+            NOHELP
+            NOMINMAX
+            NOSERVIC
+            NOSOUND
+            NOKANJI
+            NOKERNEL
+            NOVIRTUALKEYBOARD
+            NOIME
+            NOKEYBOARDINFO
+            NOSYSCOMMANDS
+            NOSHOWWINDOW
+            NOCLIPBOARD
+            NOCOLOR
+            NOCOMM
+            NOCTLMGR
+            NODRAWTEXT
+            NOGDICAPMASKS
+            NOICONS
+            NOKEYSTATES
+            NOMB
+            NOOPENFILE
+            NOSCROLL
+            NOSERVICE
+            NOSOUND
+            NOTEXTMETRIC
+            NOWH
+            NOWINOFFSETS
+            NOWINMESSAGES
+        )
+
+endif ()
 
 # FFTW
 set(BUILD_SHARED_LIBS OFF)

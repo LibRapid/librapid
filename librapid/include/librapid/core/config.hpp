@@ -320,16 +320,6 @@
 #	define LIBRAPID_MAX_ARRAY_DIMS 32
 #endif // LIBRAPID_MAX_ARRAY_DIMS
 
-#if defined(LIBRAPID_WINDOWS) && defined(LIBRAPID_NO_WINDOWS_H)
-#	if !defined(NOGDI)
-#		define NOGDI // All GDI defines and routines
-#	endif
-
-#	if !defined(NOUSER)
-#		define NOUSER // All USER defines and routines
-#	endif
-#endif // LIBRAPID_WINDOWS && LIBRAPID_NO_WINDOWS_H
-
 // Code to be run *before* main()
 #include "preMain.hpp"
 
