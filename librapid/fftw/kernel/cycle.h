@@ -186,51 +186,53 @@ INLINE_ELAPSED(__inline__)
 #define TIME_MIN 5000.0   /* unreliable pentium IV cycle counter */
 #endif
 
+#if !defined(LIBRAPID_NO_WINDOWS_H)
 /* Visual C++ -- thanks to Morten Nissov for his help with this */
 #if _MSC_VER >= 1200 && _M_IX86 >= 500 && !defined(HAVE_TICK_COUNTER)
-#include <windows.h>
+#		include <windows.h>
 typedef LARGE_INTEGER ticks;
-#define RDTSC __asm __emit 0fh __asm __emit 031h /* hack for VC++ 5.0 */
+#		define RDTSC __asm __emit 0fh __asm __emit 031h /* hack for VC++ 5.0 */
 
-static __inline ticks getticks(void)
-{
-     ticks retval;
+static __inline ticks getticks(void) {
+	 ticks retval;
 
-     __asm {
+	 __asm {
 	  RDTSC
 	  mov retval.HighPart, edx
 	  mov retval.LowPart, eax
-     }
-     return retval;
+	 }
+	 return retval;
 }
 
-static __inline double elapsed(ticks t1, ticks t0)
-{  
-     return (double)t1.QuadPart - (double)t0.QuadPart;
-}  
+static __inline double elapsed(ticks t1, ticks t0) {
+	 return (double)t1.QuadPart - (double)t0.QuadPart;
+}
 
-#define HAVE_TICK_COUNTER
-#define TIME_MIN 5000.0   /* unreliable pentium IV cycle counter */
-#endif
+#		define HAVE_TICK_COUNTER
+#		define TIME_MIN 5000.0 /* unreliable pentium IV cycle counter */
+#	endif
+#else
+#	warning 'librapid: Windows.h not included, no cycle counter available
+#endif // !defined(LIBRAPID_NO_WINDOWS_H)
 
 /*----------------------------------------------------------------*/
 /*
  * X86-64 cycle counter
  */
-#if (defined(__GNUC__) || defined(__ICC) || defined(__SUNPRO_C)) && defined(__x86_64__)  && !defined(HAVE_TICK_COUNTER)
+#if (defined(__GNUC__) || defined(__ICC) || defined(__SUNPRO_C)) && defined(__x86_64__) &&         \
+  !defined(HAVE_TICK_COUNTER)
 typedef unsigned long long ticks;
 
-static __inline__ ticks getticks(void)
-{
-     unsigned a, d; 
-     __asm__ __volatile__ ("rdtsc" : "=a" (a), "=d" (d)); 
-     return ((ticks)a) | (((ticks)d) << 32); 
+static __inline__ ticks getticks(void) {
+	 unsigned a, d;
+	 __asm__ __volatile__("rdtsc" : "=a"(a), "=d"(d));
+	 return ((ticks)a) | (((ticks)d) << 32);
 }
 
 INLINE_ELAPSED(__inline__)
 
-#define HAVE_TICK_COUNTER
-#define TIME_MIN 5000.0
+#	define HAVE_TICK_COUNTER
+#	define TIME_MIN 5000.0
 #endif
 
 /* PGI compiler, courtesy Cristiano Calonaci, Andrea Tarsi, & Roberto Gori.

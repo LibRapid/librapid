@@ -88,6 +88,7 @@ target_compile_definitions(${module_name} PUBLIC LIBRAPID_PATCH=${LIBRAPID_PATCH
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE="${CMAKE_CURRENT_SOURCE_DIR}/librapid")
 
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_NO_WINDOWS_H=${LIBRAPID_NO_WINDOWS_H})
+target_compile_definitions(${module_name} PUBLIC JITIFY_NO_WINDOWS_H=${LIBRAPID_NO_WINDOWS_H})
 
 # Precompiled Headers
 target_precompile_headers(${module_name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include/librapid/core/librapidPch.hpp")
