@@ -320,12 +320,10 @@
 #	define LIBRAPID_MAX_ARRAY_DIMS 32
 #endif // LIBRAPID_MAX_ARRAY_DIMS
 
-// Configuration Option: LIBRAPID_OPTIMISE_SMALL_ARRAYS
-// Remove the branch required for dynamic parallelization of
-// loops, making the code faster for smaller arrays, but
-// slower for larger ones. To get around this, you can
-// use the "assignParallel" function, which always runs
-// in parallel (assuming you have OpenMP enabled).
+#if defined(LIBRAPID_WINDOWS) && defined(LIBRAPID_NO_WINDOWS_H)
+#	define NOGDI  // All GDI defines and routines
+#	define NOUSER // All USER defines and routines
+#endif			   // LIBRAPID_WINDOWS && LIBRAPID_NO_WINDOWS_H
 
 // Code to be run *before* main()
 #include "preMain.hpp"
