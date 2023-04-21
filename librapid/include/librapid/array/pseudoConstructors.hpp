@@ -90,20 +90,21 @@ namespace librapid {
 	Array<Scalar, Device> arange(T stop) {
 		Shape shape = {(int64_t)(stop)};
 		Array<Scalar, Device> result(shape);
-		for (size_t i = 0; i < shape.size(); i++) {
-			result.storage()[i] = Scalar(i);
-		}
+		for (size_t i = 0; i < shape.size(); i++) { result.storage()[i] = Scalar(i); }
 		return result;
 	}
 
-	template<typename Scalar = double, typename Device = device::CPU, typename T>
-	Array<Scalar, Device> linspace(T start, T stop, int64_t num) {
+	template<typename Scalar = double, typename Device = device::CPU, typename Start, typename Stop>
+	Array<Scalar, Device> linspace(Start start, Stop stop, int64_t num, bool includeEnd = true) {
 		LIBRAPID_ASSERT(num > 0, "Number of samples must be greater than zero");
 
-		Shape shape = {num};
+		auto startCast = static_cast<Scalar>(start);
+		auto stopCast  = static_cast<Scalar>(stop);
+		auto den	   = static_cast<Scalar>(num - includeEnd);
+		Shape shape	   = {num};
 		Array<Scalar, Device> result(shape);
 		for (size_t i = 0; i < shape.size(); i++) {
-			result.storage()[i] = Scalar(start + (stop - start) * i / (num - 1));
+			result.storage()[i] = startCast + (stopCast - startCast) * static_cast<Scalar>(i) / den;
 		}
 		return result;
 	}
