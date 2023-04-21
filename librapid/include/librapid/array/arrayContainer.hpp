@@ -37,6 +37,18 @@ namespace librapid {
 			using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;
 			using Device	  = typename typetraits::TypeInfo<ArrayContainer>::Device;
 
+#if defined(LIBRAPID_HAS_CUDA)
+			using DirectSubscriptType =
+			  typename std::conditional_t<typetraits::IsCudaStorage<StorageType>::value,
+										  const detail::CudaRef<Scalar>, const Scalar &>;
+			using DirectRefSubscriptType =
+			  typename std::conditional_t<typetraits::IsCudaStorage<StorageType>::value,
+										  detail::CudaRef<Scalar>, Scalar &>;
+#else
+			using DirectSubscriptType	 = const Scalar &;
+			using DirectRefSubscriptType = Scalar &;
+#endif
+
 			/// Default constructor
 			ArrayContainer();
 
@@ -129,6 +141,14 @@ namespace librapid {
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index) const;
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index);
+
+			template<typename... Indices>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE DirectSubscriptType
+			operator()(Indices... indices) const;
+
+			template<typename... Indices>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE DirectRefSubscriptType
+			operator()(Indices... indices);
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar get() const;
 
@@ -349,6 +369,50 @@ namespace librapid {
 					return res;
 				}
 			}
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename... Indices>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator()(Indices... indices) const
+		  -> DirectSubscriptType {
+			LIBRAPID_ASSERT(
+			  m_shape.ndim() == sizeof...(Indices),
+			  "ArrayContainer::operator() called with {} indices, but array has {} dimensions",
+			  sizeof...(Indices),
+			  m_shape.ndim());
+
+			int64_t index = 0;
+			for (int64_t i : {indices...}) {
+				LIBRAPID_ASSERT(
+				  i >= 0 && i < static_cast<int64_t>(m_shape[index]),
+				  "Index {} out of bounds in ArrayContainer::operator() with dimension={}",
+				  i,
+				  m_shape[index]);
+				index = index * m_shape[index] + i;
+			}
+			return m_storage[index];
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename... Indices>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator()(Indices... indices)
+		  -> DirectRefSubscriptType {
+			LIBRAPID_ASSERT(
+			  m_shape.ndim() == sizeof...(Indices),
+			  "ArrayContainer::operator() called with {} indices, but array has {} dimensions",
+			  sizeof...(Indices),
+			  m_shape.ndim());
+
+			int64_t index = 0;
+			for (int64_t i : {indices...}) {
+				LIBRAPID_ASSERT(
+				  i >= 0 && i < static_cast<int64_t>(m_shape[index]),
+				  "Index {} out of bounds in ArrayContainer::operator() with dimension={}",
+				  i,
+				  m_shape[index]);
+				index = index * m_shape[index] + i;
+			}
+			return m_storage[index];
 		}
 
 		template<typename ShapeType_, typename StorageType_>

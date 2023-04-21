@@ -34,7 +34,7 @@
 #	include <omp.h>
 #endif // LIBRAPID_HAS_OMP
 
-#if defined(_WIN32) || defined(_WIN64)
+#if (defined(_WIN32) || defined(_WIN64)) && !defined(LIBRAPID_NO_WINDOWS_H)
 #	define WIN32_LEAN_AND_MEAN
 #	include <Windows.h>
 #endif
