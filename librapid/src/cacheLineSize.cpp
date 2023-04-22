@@ -25,7 +25,7 @@ namespace librapid {
 	}
 } // namespace librapid
 
-#elif defined(LIBRAPID_WINDOWS)
+#elif defined(LIBRAPID_WINDOWS) && !defined(LIBRAPID_NO_WINDOWS_H)
 
 namespace librapid {
 	size_t cacheLineSize() {
