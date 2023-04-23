@@ -38,6 +38,8 @@ option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_FAST_MATH "Use potentially less accurate operations to increase performance" OFF)
 option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" OFF)
 
+option(LIBRAPID_NO_WINDOWS_H "Don't include the Windows.h header" OFF)
+
 option(LIBRAPID_MKL_CONFIG_PATH "Path to the 'MKLConfig.cmake' file" "")
 
 MACRO(SUBDIRLIST result curdir)
@@ -498,6 +500,46 @@ if (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
             EXCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/*" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas"
     )
 endif (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+
+if (IS_WINDOWS AND LIBRAPID_NO_WINDOWS_H)
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_NO_WINDOWS_H=${LIBRAPID_NO_WINDOWS_H})
+    target_compile_definitions(${module_name} PUBLIC JITIFY_NO_WINDOWS_H=${LIBRAPID_NO_WINDOWS_H})
+
+    target_compile_definitions(${module_name} PUBLIC
+            WIN32_LEAN_AND_MEAN
+            NOGDI
+            NOUSER
+            NOHELP
+            NOMINMAX
+            NOSERVIC
+            NOSOUND
+            NOKANJI
+            NOKERNEL
+            NOVIRTUALKEYBOARD
+            NOIME
+            NOKEYBOARDINFO
+            NOSYSCOMMANDS
+            NOSHOWWINDOW
+            NOCLIPBOARD
+            NOCOLOR
+            NOCOMM
+            NOCTLMGR
+            NODRAWTEXT
+            NOGDICAPMASKS
+            NOICONS
+            NOKEYSTATES
+            NOMB
+            NOOPENFILE
+            NOSCROLL
+            NOSERVICE
+            NOSOUND
+            NOTEXTMETRIC
+            NOWH
+            NOWINOFFSETS
+            NOWINMESSAGES
+        )
+
+endif ()
 
 # FFTW
 set(BUILD_SHARED_LIBS OFF)
