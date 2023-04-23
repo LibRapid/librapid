@@ -16,17 +16,18 @@ namespace librapid {
 
 	namespace kernels {
 #if defined(LIBRAPID_NATIVE_ARCH)
-#if !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= AVX2
-#	define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 4
-#	define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 8
+#	if !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= AVX2
+#		define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 4
+#		define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 8
 
 		LIBRAPID_ALWAYS_INLINE void transposeFloatKernel(float *__restrict out,
 														 float *__restrict in, int64_t cols) {
 			__m256 r0, r1, r2, r3, r4, r5, r6, r7;
 			__m256 t0, t1, t2, t3, t4, t5, t6, t7;
 
-#	define LOAD256_IMPL(LEFT_, RIGHT_)                                                            \
-		_mm256_insertf128_ps(_mm256_castps128_ps256(_mm_loadu_ps(&LEFT_)), _mm_loadu_ps(&RIGHT_), 1)
+#		define LOAD256_IMPL(LEFT_, RIGHT_)                                                        \
+			_mm256_insertf128_ps(                                                                  \
+			  _mm256_castps128_ps256(_mm_loadu_ps(&LEFT_)), _mm_loadu_ps(&RIGHT_), 1)
 
 			r0 = LOAD256_IMPL(in[0 * cols + 0], in[4 * cols + 0]);
 			r1 = LOAD256_IMPL(in[1 * cols + 0], in[5 * cols + 0]);
@@ -37,7 +38,7 @@ namespace librapid {
 			r6 = LOAD256_IMPL(in[2 * cols + 4], in[6 * cols + 4]);
 			r7 = LOAD256_IMPL(in[3 * cols + 4], in[7 * cols + 4]);
 
-#	undef LOAD256_IMPL
+#		undef LOAD256_IMPL
 
 			t0 = _mm256_unpacklo_ps(r0, r1);
 			t1 = _mm256_unpackhi_ps(r0, r1);
@@ -81,15 +82,16 @@ namespace librapid {
 			__m256d r0, r1, r2, r3;
 			__m256d t0, t1, t2, t3;
 
-#	define LOAD256_IMPL(LEFT_, RIGHT_)                                                            \
-		_mm256_insertf128_pd(_mm256_castpd128_pd256(_mm_loadu_pd(&LEFT_)), _mm_loadu_pd(&RIGHT_), 1)
+#		define LOAD256_IMPL(LEFT_, RIGHT_)                                                        \
+			_mm256_insertf128_pd(                                                                  \
+			  _mm256_castpd128_pd256(_mm_loadu_pd(&LEFT_)), _mm_loadu_pd(&RIGHT_), 1)
 
 			r0 = LOAD256_IMPL(in[0 * cols + 0], in[2 * cols + 0]);
 			r1 = LOAD256_IMPL(in[1 * cols + 0], in[3 * cols + 0]);
 			r2 = LOAD256_IMPL(in[0 * cols + 2], in[2 * cols + 2]);
 			r3 = LOAD256_IMPL(in[1 * cols + 2], in[3 * cols + 2]);
 
-#	undef LOAD256_IMPL
+#		undef LOAD256_IMPL
 
 			t0 = _mm256_unpacklo_pd(r0, r1);
 			t1 = _mm256_unpackhi_pd(r0, r1);
@@ -111,10 +113,10 @@ namespace librapid {
 			_mm256_store_pd(&out[2 * cols], r2);
 			_mm256_store_pd(&out[3 * cols], r3);
 		}
-#elif !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= SSE2
+#	elif !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= SSE2
 
-#	define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 2
-#	define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 4
+#		define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 2
+#		define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 4
 
 		LIBRAPID_ALWAYS_INLINE void transposeFloatKernel(float *__restrict out,
 														 float *__restrict in, int64_t cols) {
@@ -148,9 +150,9 @@ namespace librapid {
 			_mm_store_pd(out + 1 * cols, tmp1Unpck);
 		}
 
-#endif // LIBRAPID_MSVC
-#endif // LIBRAPID_NATIVE_ARCH
-	}  // namespace kernels
+#	endif // LIBRAPID_MSVC
+#endif	   // LIBRAPID_NATIVE_ARCH
+	}	   // namespace kernels
 
 	namespace detail {
 		template<typename Scalar>
@@ -390,7 +392,8 @@ namespace librapid {
 		template<typename T>
 		template<typename Container>
 		void Transpose<T>::applyTo(Container &out) const {
-			bool inplace = ((void *)&out) == ((void *)&m_array);
+			bool inplace = (((void *)&out) == ((void *)&m_array)) ||
+						   ((void *)out.storage().begin() == (void *)m_array.storage().begin());
 			LIBRAPID_ASSERT(out.shape() == m_outputShape, "Transpose assignment shape mismatch");
 
 			if constexpr (isArray && isHost && allowVectorisation) {
