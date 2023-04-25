@@ -303,7 +303,11 @@
 		} while (false)
 #endif // LIBRAPID_ASSERT
 
-#define LIBRAPID_NOT_IMPLEMENTED LIBRAPID_ASSERT(false, "Not implemented");
+#if defined(LIBRAPID_ENABLE_ASSERT) || defined(LIBRAPID_DEBUG)
+#	define LIBRAPID_NOT_IMPLEMENTED LIBRAPID_ASSERT(false, "Not implemented");
+#else
+#	define LIBRAPID_NOT_IMPLEMENTED throw std::runtime_error("Not implemented");
+#endif
 
 // Compiler-specific attributes
 #if defined(LIBRAPID_MSVC)
