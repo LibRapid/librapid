@@ -47,10 +47,25 @@ namespace librapid {
 
 	template<int64_t scale = time::second>
 	std::string formatTime(double time, const std::string &format = "{:.3f}") {
-		double ns					= time * scale;
-		int numUnits				= 8;
-		static std::string prefix[] = {"ns", "µs", "ms", "s", "m", "h", "d", "y"};
-		static double divisor[]		= {1000, 1000, 1000, 60, 60, 24, 365, 1e300};
+		double ns	 = time * scale;
+		int numUnits = 8;
+
+		static std::string prefix[] = {
+			"ns",
+#if defined(LIBRAPID_OS_WINDOWS) && defined(LIBRAPID_NO_WINDOWS_H)
+			"µs",
+#else
+			"us",
+#endif
+			"ms",
+			"s",
+			"m",
+			"h",
+			"d",
+			"y"
+		};
+
+		static double divisor[] = {1000, 1000, 1000, 60, 60, 24, 365, 1e300};
 		for (int i = 0; i < numUnits; ++i) {
 			if (ns < divisor[i]) return std::operator+(fmt::format(format, ns), prefix[i]);
 			ns /= divisor[i];
@@ -110,6 +125,14 @@ namespace librapid {
 		LIBRAPID_NODISCARD double elapsed() const {
 			if (m_end == -1) return (now<time::nanosecond>() - m_start) / (double)scale;
 			return (m_end - m_start) / (double)scale;
+		}
+
+		/// Get the average time in a given unit
+		/// \tparam scale The unit to return the time in
+		/// \return The average time in the given unit
+		template<int64_t scale = time::second>
+		LIBRAPID_NODISCARD double average() const {
+			return elapsed<scale>() / (double)m_iters;
 		}
 
 		bool isRunning() {
