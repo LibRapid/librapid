@@ -155,144 +155,182 @@ namespace librapid {
 	}	   // namespace kernels
 
 	namespace detail {
-		template<typename Scalar>
-		LIBRAPID_ALWAYS_INLINE void transposeImpl(Scalar *__restrict out, Scalar *__restrict in,
-												  int64_t rows, int64_t cols, int64_t blockSize) {
-			if (rows * cols < global::multithreadThreshold) {
-				for (int64_t i = 0; i < rows; i += blockSize) {
-					for (int64_t j = 0; j < cols; j += blockSize) {
-						for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-							for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-								out[col * rows + row] = in[row * cols + col];
+		namespace cpu {
+			template<typename Scalar>
+			LIBRAPID_ALWAYS_INLINE void transposeImpl(Scalar *__restrict out, Scalar *__restrict in,
+													  int64_t rows, int64_t cols,
+													  int64_t blockSize) {
+				if (rows * cols < global::multithreadThreshold) {
+					for (int64_t i = 0; i < rows; i += blockSize) {
+						for (int64_t j = 0; j < cols; j += blockSize) {
+							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
+									out[col * rows + row] = in[row * cols + col];
+								}
 							}
 						}
 					}
-				}
-			} else {
+				} else {
 #pragma omp parallel for shared(rows, cols, blockSize, in, out) default(none)                      \
   num_threads((int)global::numThreads)
-				for (int64_t i = 0; i < rows; i += blockSize) {
-					for (int64_t j = 0; j < cols; j += blockSize) {
-						for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-							for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-								out[col * rows + row] = in[row * cols + col];
+					for (int64_t i = 0; i < rows; i += blockSize) {
+						for (int64_t j = 0; j < cols; j += blockSize) {
+							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
+									out[col * rows + row] = in[row * cols + col];
+								}
 							}
 						}
 					}
 				}
 			}
-		}
 
-		template<typename Scalar>
-		LIBRAPID_ALWAYS_INLINE void transposeInplaceImpl(Scalar *__restrict data, int64_t rows,
-														 int64_t cols, int64_t blockSize) {
-			if (rows * cols < global::multithreadThreshold) {
-				for (int64_t i = 0; i < rows; i += blockSize) {
-					for (int64_t j = 0; j < cols; j += blockSize) {
-						for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-							for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-								std::swap(data[col * rows + row], data[row * cols + col]);
+			template<typename Scalar>
+			LIBRAPID_ALWAYS_INLINE void transposeInplaceImpl(Scalar *__restrict data, int64_t rows,
+															 int64_t cols, int64_t blockSize) {
+				if (rows * cols < global::multithreadThreshold) {
+					for (int64_t i = 0; i < rows; i += blockSize) {
+						for (int64_t j = 0; j < cols; j += blockSize) {
+							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
+									std::swap(data[col * rows + row], data[row * cols + col]);
+								}
 							}
 						}
 					}
-				}
-			} else {
+				} else {
 #pragma omp parallel for shared(rows, cols, blockSize, data) default(none)                         \
   num_threads((int)global::numThreads)
-				for (int64_t i = 0; i < rows; i += blockSize) {
-					for (int64_t j = 0; j < cols; j += blockSize) {
-						for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-							for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-								std::swap(data[col * rows + row], data[row * cols + col]);
+					for (int64_t i = 0; i < rows; i += blockSize) {
+						for (int64_t j = 0; j < cols; j += blockSize) {
+							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
+									std::swap(data[col * rows + row], data[row * cols + col]);
+								}
 							}
 						}
 					}
 				}
 			}
-		}
 
 #if LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE > 0
-		template<>
-		LIBRAPID_ALWAYS_INLINE void transposeImpl(float *__restrict out, float *__restrict in,
-												  int64_t rows, int64_t cols, int64_t) {
-			constexpr int64_t blockSize = LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE;
-			if (rows * cols < global::multithreadThreshold) {
-				for (int64_t i = 0; i < rows; i += blockSize) {
-					for (int64_t j = 0; j < cols; j += blockSize) {
-						if (i + blockSize <= rows && j + blockSize <= cols) {
-							kernels::transposeFloatKernel(
-							  &out[j * rows + i], &in[i * cols + j], rows);
-						} else {
-							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-									out[col * rows + row] = in[row * cols + col];
+			template<>
+			LIBRAPID_ALWAYS_INLINE void transposeImpl(float *__restrict out, float *__restrict in,
+													  int64_t rows, int64_t cols, int64_t) {
+				constexpr int64_t blockSize = LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE;
+				if (rows * cols < global::multithreadThreshold) {
+					for (int64_t i = 0; i < rows; i += blockSize) {
+						for (int64_t j = 0; j < cols; j += blockSize) {
+							if (i + blockSize <= rows && j + blockSize <= cols) {
+								kernels::transposeFloatKernel(
+								  &out[j * rows + i], &in[i * cols + j], rows);
+							} else {
+								for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+									for (int64_t col = j; col < j + blockSize && col < cols;
+										 ++col) {
+										out[col * rows + row] = in[row * cols + col];
+									}
 								}
 							}
 						}
 					}
-				}
-			} else {
+				} else {
 #	pragma omp parallel for shared(rows, cols, in, out) default(none)                             \
 	  num_threads((int)global::numThreads)
-				for (int64_t i = 0; i < rows; i += blockSize) {
-					for (int64_t j = 0; j < cols; j += blockSize) {
-						if (i + blockSize <= rows && j + blockSize <= cols) {
-							kernels::transposeFloatKernel(
-							  &out[j * rows + i], &in[i * cols + j], rows);
-						} else {
-							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-									out[col * rows + row] = in[row * cols + col];
+					for (int64_t i = 0; i < rows; i += blockSize) {
+						for (int64_t j = 0; j < cols; j += blockSize) {
+							if (i + blockSize <= rows && j + blockSize <= cols) {
+								kernels::transposeFloatKernel(
+								  &out[j * rows + i], &in[i * cols + j], rows);
+							} else {
+								for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+									for (int64_t col = j; col < j + blockSize && col < cols;
+										 ++col) {
+										out[col * rows + row] = in[row * cols + col];
+									}
 								}
 							}
 						}
 					}
 				}
 			}
-		}
 #endif // LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE > 0
 
 #if LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE > 0
-		template<>
-		LIBRAPID_ALWAYS_INLINE void transposeImpl(double *__restrict out, double *__restrict in,
-												  int64_t rows, int64_t cols, int64_t) {
-			constexpr int64_t blockSize = LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE;
-			if (rows * cols < global::multithreadThreshold) {
-				for (int64_t i = 0; i < rows; i += blockSize) {
-					for (int64_t j = 0; j < cols; j += blockSize) {
-						if (i + blockSize <= rows && j + blockSize <= cols) {
-							kernels::transposeDoubleKernel(
-							  &out[j * rows + i], &in[i * cols + j], rows);
-						} else {
-							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-									out[col * rows + row] = in[row * cols + col];
+			template<>
+			LIBRAPID_ALWAYS_INLINE void transposeImpl(double *__restrict out, double *__restrict in,
+													  int64_t rows, int64_t cols, int64_t) {
+				constexpr int64_t blockSize = LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE;
+				if (rows * cols < global::multithreadThreshold) {
+					for (int64_t i = 0; i < rows; i += blockSize) {
+						for (int64_t j = 0; j < cols; j += blockSize) {
+							if (i + blockSize <= rows && j + blockSize <= cols) {
+								kernels::transposeDoubleKernel(
+								  &out[j * rows + i], &in[i * cols + j], rows);
+							} else {
+								for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+									for (int64_t col = j; col < j + blockSize && col < cols;
+										 ++col) {
+										out[col * rows + row] = in[row * cols + col];
+									}
 								}
 							}
 						}
 					}
-				}
-			} else {
+				} else {
 #	pragma omp parallel for shared(rows, cols, in, out) default(none)                             \
 	  num_threads((int)global::numThreads)
-				for (int64_t i = 0; i < rows; i += blockSize) {
-					for (int64_t j = 0; j < cols; j += blockSize) {
-						if (i + blockSize <= rows && j + blockSize <= cols) {
-							kernels::transposeDoubleKernel(
-							  &out[j * rows + i], &in[i * cols + j], rows);
-						} else {
-							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-									out[col * rows + row] = in[row * cols + col];
+					for (int64_t i = 0; i < rows; i += blockSize) {
+						for (int64_t j = 0; j < cols; j += blockSize) {
+							if (i + blockSize <= rows && j + blockSize <= cols) {
+								kernels::transposeDoubleKernel(
+								  &out[j * rows + i], &in[i * cols + j], rows);
+							} else {
+								for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
+									for (int64_t col = j; col < j + blockSize && col < cols;
+										 ++col) {
+										out[col * rows + row] = in[row * cols + col];
+									}
 								}
 							}
 						}
 					}
 				}
 			}
-		}
-#endif // LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE > 0
-	}  // namespace detail
+#endif	  // LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE > 0
+		} // namespace cpu
+
+#if defined(LIBRAPID_HAS_CUDA)
+		namespace gpu {
+			template<typename Scalar>
+			LIBRAPID_ALWAYS_INLINE void transposeImpl(Scalar *__restrict out, Scalar *__restrict in,
+													  int64_t rows, int64_t cols,
+													  int64_t blockSize) {
+				LIBRAPID_NOT_IMPLEMENTED
+			}
+
+			template<>
+			LIBRAPID_ALWAYS_INLINE void transposeImpl(float *__restrict out, float *__restrict in,
+													  int64_t rows, int64_t cols, int64_t) {
+				float one  = 1.0f;
+				float zero = 0.0f;
+				cublasSafeCall(cublasSgeam(global::cublasHandle,
+										   CUBLAS_OP_T,
+										   CUBLAS_OP_N,
+										   rows,
+										   cols,
+										   &one,
+										   in,
+										   cols,
+										   &zero,
+										   in,
+										   cols,
+										   out,
+										   rows));
+			}
+		} // namespace gpu
+#endif	  // LIBRAPID_HAS_CUDA
+	}	  // namespace detail
 
 	namespace array {
 		template<typename T>
@@ -393,25 +431,35 @@ namespace librapid {
 		template<typename Container>
 		void Transpose<T>::applyTo(Container &out) const {
 			bool inplace = (((void *)&out) == ((void *)&m_array)) ||
-						   ((void *)out.storage().begin() == (void *)m_array.storage().begin());
+						   (out.storage().begin() == m_array.storage().begin());
 			LIBRAPID_ASSERT(out.shape() == m_outputShape, "Transpose assignment shape mismatch");
 
-			if constexpr (isArray && isHost && allowVectorisation) {
-				auto *__restrict outPtr = out.storage().begin();
-				auto *__restrict inPtr	= m_array.storage().begin();
-				int64_t blockSize		= global::cacheLineSize / sizeof(Scalar);
+			if constexpr (isArray) {
+				if constexpr (isHost) {
+					auto *__restrict outPtr = out.storage().begin();
+					auto *__restrict inPtr	= m_array.storage().begin();
+					int64_t blockSize		= global::cacheLineSize / sizeof(Scalar);
 
-				if (m_inputShape.ndim() == 2) {
-					if (inplace) {
-						detail::transposeInplaceImpl(
-						  outPtr, m_inputShape[0], m_inputShape[1], blockSize);
+					if (m_inputShape.ndim() == 2) {
+						if (inplace) {
+							detail::cpu::transposeInplaceImpl(
+							  outPtr, m_inputShape[0], m_inputShape[1], blockSize);
+						} else {
+							detail::cpu::transposeImpl(
+							  outPtr, inPtr, m_inputShape[0], m_inputShape[1], blockSize);
+						}
 					} else {
-						detail::transposeImpl(
-						  outPtr, inPtr, m_inputShape[0], m_inputShape[1], blockSize);
+						LIBRAPID_NOT_IMPLEMENTED
 					}
-				} else {
-					LIBRAPID_NOT_IMPLEMENTED
 				}
+#if defined(LIBRAPID_HAS_CUDA)
+				else {
+					int64_t blockSize		= global::cacheLineSize / sizeof(Scalar);
+					auto *__restrict outPtr = out.storage().begin().get();
+					auto *__restrict inPtr	= m_array.storage().begin().get();
+					detail::gpu::transposeImpl(outPtr, inPtr, m_inputShape[0], m_inputShape[1], blockSize);
+				}
+#endif // LIBRAPID_HAS_CUDA
 			} else {
 				LIBRAPID_NOT_IMPLEMENTED
 			}
