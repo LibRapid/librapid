@@ -24,6 +24,13 @@ namespace librapid::global {
 
 	// Memory alignment for LibRapid
 	extern int64_t memoryAlignment;
+
+#if defined(LIBRAPID_HAS_CUDA)
+	// LibRapid's CUDA stream -- this removes the need for calling cudaDeviceSynchronize()
+	extern cudaStream_t cudaStream;
+	extern cublasHandle_t cublasHandle;
+	extern jitify::JitCache jitCache;
+#endif // LIBRAPID_HAS_CUDA
 } // namespace librapid::global
 
 #endif // LIBRAPID_CORE_GLOBAL_HPP

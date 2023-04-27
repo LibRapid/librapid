@@ -35,7 +35,7 @@ const char *getCublasErrorEnum_(cublasStatus_t error);
 
 #	if !defined(cublasSafeCall)
 #		define cublasSafeCall(err)                                                                \
-			LIBRRAPID_ASSERT_ALWAYS(                                                               \
+			LIBRAPID_ASSERT_ALWAYS(                                                               \
 			  (err) == CUBLAS_STATUS_SUCCESS, "cuBLAS error: {}", getCublasErrorEnum_(err))
 #	endif
 
@@ -80,17 +80,6 @@ namespace librapid::device {
 } // namespace librapid::device
 
 // This needs to be defined before cudaHeaderLoader.hpp is included
-
-namespace librapid::global {
-#if defined(LIBRAPID_HAS_CUDA)
-
-	// LibRapid's CUDA stream -- this removes the need for calling cudaDeviceSynchronize()
-	extern cudaStream_t cudaStream;
-
-	extern jitify::JitCache jitCache;
-
-#endif // LIBRAPID_HAS_CUDA
-} // namespace librapid::global
 
 #include "../cuda/cudaKernelProcesor.hpp"
 

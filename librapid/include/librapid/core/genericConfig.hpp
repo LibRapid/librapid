@@ -4,6 +4,40 @@
 #define LIBRAPID_INLINE		   inline
 #define LIBRAPID_ALWAYS_INLINE inline
 
+#define LIBRAPID_ASSERT_ALWAYS(cond, msg, ...)                                                     \
+	do {                                                                                           \
+		std::string funcName = FUNCTION;                                                           \
+		if (funcName.length() > 75) funcName = "<Signature too Long>";                             \
+		if (!(cond)) {                                                                             \
+			int maxLen = librapid::detail::internalMax((int)std::ceil(std::log(__LINE__)),         \
+													   (int)strlen(FILENAME),                      \
+													   (int)funcName.length(),                     \
+													   (int)strlen(#cond),                         \
+													   (int)strlen("ASSERTION FAILED"));           \
+			std::string formatted = fmt::format(                                                   \
+			  "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                                           \
+			  "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                                            \
+			  "{4:>{10}}]\n{5}\n",                                                                 \
+			  "ASSERTION FAILED",                                                                  \
+			  FILENAME,                                                                            \
+			  funcName,                                                                            \
+			  __LINE__,                                                                            \
+			  #cond,                                                                               \
+			  fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                                         \
+			  maxLen + 14,                                                                         \
+			  maxLen + 9,                                                                          \
+			  maxLen + 5,                                                                          \
+			  maxLen + 9,                                                                          \
+			  maxLen + 4);                                                                         \
+			if (librapid::global::throwOnAssert) {                                                 \
+				throw std::runtime_error(formatted);                                               \
+			} else {                                                                               \
+				fmt::print(fmt::fg(fmt::color::red), formatted);                                   \
+				psnip_trap();                                                                      \
+			}                                                                                      \
+		}                                                                                          \
+	} while (0)
+
 #if defined(LIBRAPID_ENABLE_ASSERT)
 #	define LIBRAPID_STATUS(msg, ...)                                                              \
 		do {                                                                                       \
@@ -82,12 +116,11 @@
 			if (!(cond)) {                                                                         \
 				std::string funcName = FUNCTION;                                                   \
 				if (funcName.length() > 75) funcName = "<Signature too Long>";                     \
-				\ int maxLen =                                                                     \
-				  librapid::detail::internalMax((int)std::ceil(std::log(__LINE__)) + 6,            \
-												(int)strlen(FILENAME) + 6,                         \
-												(int)funcName.length() + 6,                        \
-												(int)strlen(#cond) + 6,                            \
-												(int)strlen("WARN ASSERTION FAILED"));             \
+				int maxLen = librapid::detail::internalMax((int)std::ceil(std::log(__LINE__)) + 6, \
+														   (int)strlen(FILENAME) + 6,              \
+														   (int)funcName.length() + 6,             \
+														   (int)strlen(#cond) + 6,                 \
+														   (int)strlen("WARN ASSERTION FAILED"));  \
 				fmt::print(fmt::fg(fmt::color::yellow),                                            \
 						   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                              \
 						   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                               \
@@ -107,38 +140,7 @@
 		} while (0)
 
 #	define LIBRAPID_ASSERT(cond, msg, ...)                                                        \
-		do {                                                                                       \
-			std::string funcName = FUNCTION;                                                       \
-			if (funcName.length() > 75) funcName = "<Signature too Long>";                         \
-			if (!(cond)) {                                                                         \
-				int maxLen = librapid::detail::internalMax((int)std::ceil(std::log(__LINE__)),     \
-														   (int)strlen(FILENAME),                  \
-														   (int)funcName.length(),                 \
-														   (int)strlen(#cond),                     \
-														   (int)strlen("ASSERTION FAILED"));       \
-				std::string formatted = fmt::format(                                               \
-				  "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "                                       \
-				  "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "                                        \
-				  "{4:>{10}}]\n{5}\n",                                                             \
-				  "ASSERTION FAILED",                                                              \
-				  FILENAME,                                                                        \
-				  funcName,                                                                        \
-				  __LINE__,                                                                        \
-				  #cond,                                                                           \
-				  fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                                     \
-				  maxLen + 14,                                                                     \
-				  maxLen + 9,                                                                      \
-				  maxLen + 5,                                                                      \
-				  maxLen + 9,                                                                      \
-				  maxLen + 4);                                                                     \
-				if (librapid::global::throwOnAssert) {                                             \
-					throw std::runtime_error(formatted);                                           \
-				} else {                                                                           \
-					fmt::print(fmt::fg(fmt::color::red), formatted);                               \
-					psnip_trap();                                                                  \
-				}                                                                                  \
-			}                                                                                      \
-		} while (0)
+		LIBRAPID_ASSERT_ALWAYS(cond, msg __VA_OPT__(, ) __VA_ARGS__)
 #else
 #	define LIBRAPID_WARN_ONCE(msg, ...)                                                           \
 		do {                                                                                       \

@@ -10,8 +10,13 @@ namespace librapid::detail {
 			system(("chcp " + std::to_string(CP_UTF8)).c_str());
 #endif // LIBRAPID_WINDOWS
 
-			preMainRun = true;
+			preMainRun			  = true;
 			global::cacheLineSize = cacheLineSize();
+
+#if defined(LIBRAPID_HAS_CUDA)
+			cudaStreamCreate(&global::cudaStream);
+			cublasCreate(&global::cublasHandle);
+#endif // LIBRAPID_HAS_CUDA
 		}
 	}
 } // namespace librapid::detail
