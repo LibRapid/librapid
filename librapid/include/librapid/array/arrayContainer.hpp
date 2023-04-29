@@ -128,10 +128,10 @@ namespace librapid {
 			template<typename T>
 			detail::CommaInitializer<ArrayContainer> operator<<(const T &value);
 
-			template<typename ScalarTo = Scalar, typename DeviceTo = Device>
-			LIBRAPID_NODISCARD auto cast() const;
+			// template<typename ScalarTo = Scalar, typename DeviceTo = Device>
+			// LIBRAPID_NODISCARD auto cast() const;
 
-			LIBRAPID_NODISCARD auto copy() const;
+			// LIBRAPID_NODISCARD auto copy() const;
 
 			/// Access a sub-array of this ArrayContainer instance. The sub-array will reference
 			/// the same memory as this ArrayContainer instance.
