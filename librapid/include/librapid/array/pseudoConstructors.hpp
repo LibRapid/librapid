@@ -53,20 +53,23 @@ namespace librapid {
 
 	/// \brief Create a 1-dimensional Array from a range of numbers and a step size
 	///
-	/// Provided with a start value and a stop value,
-	/// \tparam T
-	/// \tparam Scalar
-	/// \tparam Device
-	/// \param start
-	/// \param stop
-	/// \param step
-	/// \return
-	template<typename T, typename Scalar = double, typename Device = device::CPU>
+	/// Provided with a start value and a stop value, create a 1-dimensional Array with
+	/// \f$\lfloor \frac{stop - start}{step} \rfloor \f$ elements, where each element is
+	/// \f$start + i \times step\f$, for \f$i \in [0, \lfloor \frac{stop - start}{step} \rfloor)\f$.
+	///
+	/// \tparam Scalar Scalar type of the Array
+	/// \tparam Device Device for the Array
+	/// \tparam T Scalar type of the start, stop and step values
+	/// \param start First value in the range
+	/// \param stop Second value in the range
+	/// \param step Step size between values in the range
+	/// \return Array
+	template<typename Scalar = double, typename Device = device::CPU, typename T>
 	Array<Scalar, Device> arange(T start, T stop, T step) {
 		LIBRAPID_ASSERT(step != 0, "Step size cannot be zero");
 		LIBRAPID_ASSERT((stop - start) / step > 0, "Step size is invalid for the specified range");
 
-		Shape shape = {(int64_t)((stop - start) / step)};
+		Shape shape = {(int64_t)::librapid::abs((stop - start) / step)};
 		Array<Scalar, Device> result(shape);
 		for (size_t i = 0; i < shape.size(); i++) {
 			result.storage()[i] = Scalar(start + i * step);
@@ -74,21 +77,33 @@ namespace librapid {
 		return result;
 	}
 
+	/// \brief Create a 1-dimensional Array from a range of numbers
+	/// \tparam Scalar Scalar type of the Array
+	/// \tparam Device Device for the Array
+	/// \tparam T Scalar type of the start and stop values
+	/// \param start Lower bound of the range
+	/// \param stop Upper bound of the range
+	/// \return Array
+	/// \see arange(T start, T stop, T step)
 	template<typename Scalar = double, typename Device = device::CPU, typename T>
 	Array<Scalar, Device> arange(T start, T stop) {
 		LIBRAPID_ASSERT((stop - start) > 0, "Step size is invalid for the specified range");
 
-		Shape shape = {(int64_t)((stop - start))};
+		Shape shape = {(int64_t)::librapid::abs(stop - start)};
 		Array<Scalar, Device> result(shape);
-		for (size_t i = 0; i < shape.size(); i++) {
-			result.storage()[i] = Scalar(start + i);
-		}
+		for (size_t i = 0; i < shape.size(); i++) { result.storage()[i] = Scalar(start + i); }
 		return result;
 	}
 
+	/// \brief Create a 1-dimensional Array
+	/// \tparam Scalar
+	/// \tparam Device
+	/// \tparam T
+	/// \param stop
+	/// \return
 	template<typename Scalar = double, typename Device = device::CPU, typename T>
 	Array<Scalar, Device> arange(T stop) {
-		Shape shape = {(int64_t)(stop)};
+		Shape shape = {(int64_t)::librapid::abs(stop)};
 		Array<Scalar, Device> result(shape);
 		for (size_t i = 0; i < shape.size(); i++) { result.storage()[i] = Scalar(i); }
 		return result;

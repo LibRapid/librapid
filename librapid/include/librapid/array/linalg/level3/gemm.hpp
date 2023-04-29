@@ -1,8 +1,8 @@
-//
-// Created by penci on 21/04/2023.
-//
+#ifndef LIBRAPID_ARRAY_LINALG_LEVEL3_GEMM_HPP
+#define LIBRAPID_ARRAY_LINALG_LEVEL3_GEMM_HPP
 
-#ifndef LIBRAPID_DEV_GEMM_HPP
-#define LIBRAPID_DEV_GEMM_HPP
+namespace librapid {
 
-#endif // LIBRAPID_DEV_GEMM_HPP
+}
+
+#endif // LIBRAPID_ARRAY_LINALG_LEVEL3_GEMM_HPP

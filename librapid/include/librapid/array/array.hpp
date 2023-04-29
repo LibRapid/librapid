@@ -17,7 +17,6 @@
 #include "pseudoConstructors.hpp"
 #include "fourierTransform.hpp"
 
-#include "linalg/transpose.hpp"
-#include "linalg/level3/gemm.hpp"
+#include "linalg/linalg.hpp"
 
 #endif // LIBRAPID_ARRAY

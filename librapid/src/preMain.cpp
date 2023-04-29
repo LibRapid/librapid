@@ -16,6 +16,7 @@ namespace librapid::detail {
 #if defined(LIBRAPID_HAS_CUDA)
 			cudaStreamCreate(&global::cudaStream);
 			cublasCreate(&global::cublasHandle);
+			cublasSetStream(global::cublasHandle, global::cudaStream);
 #endif // LIBRAPID_HAS_CUDA
 		}
 	}
