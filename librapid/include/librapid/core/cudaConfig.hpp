@@ -35,7 +35,7 @@ const char *getCublasErrorEnum_(cublasStatus_t error);
 
 #	if !defined(cublasSafeCall)
 #		define cublasSafeCall(err)                                                                \
-			LIBRAPID_ASSERT_ALWAYS(                                                               \
+			LIBRAPID_ASSERT_ALWAYS(                                                                \
 			  (err) == CUBLAS_STATUS_SUCCESS, "cuBLAS error: {}", getCublasErrorEnum_(err))
 #	endif
 
@@ -57,7 +57,7 @@ const char *getCublasErrorEnum_(cublasStatus_t error);
 			} while (0)
 #	else
 #		define cudaSafeCall(call) (call)
-#		define jitifyCall(call) (call)
+#		define jitifyCall(call)   (call)
 #	endif
 
 #	ifdef _MSC_VER
@@ -77,6 +77,12 @@ namespace librapid::device {
 
 	// Signifies that device memory should be used
 	struct GPU {};
+
+#if defined(LIBRAPID_HAS_CUDA)
+	using GPUIfAvailable = GPU;
+#else
+	using GPUIfAvailable = CPU;
+#endif // LIBRAPID_HAS_CUDA
 } // namespace librapid::device
 
 // This needs to be defined before cudaHeaderLoader.hpp is included
