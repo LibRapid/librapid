@@ -128,10 +128,10 @@ namespace librapid {
 			template<typename T>
 			detail::CommaInitializer<ArrayContainer> operator<<(const T &value);
 
-			template<typename ScalarTo = Scalar, typename DeviceTo = Device>
-			LIBRAPID_NODISCARD auto cast() const;
+			// template<typename ScalarTo = Scalar, typename DeviceTo = Device>
+			// LIBRAPID_NODISCARD auto cast() const;
 
-			LIBRAPID_NODISCARD auto copy() const;
+			// LIBRAPID_NODISCARD auto copy() const;
 
 			/// Access a sub-array of this ArrayContainer instance. The sub-array will reference
 			/// the same memory as this ArrayContainer instance.
@@ -404,13 +404,14 @@ namespace librapid {
 			  m_shape.ndim());
 
 			int64_t index = 0;
+			int64_t count = 0;
 			for (int64_t i : {indices...}) {
 				LIBRAPID_ASSERT(
-				  i >= 0 && i < static_cast<int64_t>(m_shape[index]),
+				  i >= 0 && i < static_cast<int64_t>(m_shape[count]),
 				  "Index {} out of bounds in ArrayContainer::operator() with dimension={}",
 				  i,
 				  m_shape[index]);
-				index = index * m_shape[index] + i;
+				index = index * m_shape[count++] + i;
 			}
 			return m_storage[index];
 		}
