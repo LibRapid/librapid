@@ -58,7 +58,7 @@ TEST_CASE("Test Multiprecision", "[multiprecision]") {
 	  "627495673518857527248912279381830119491304781324640566153215447811706812394506641467563306");
 
 	SECTION("Benchmarks") {
-		for (int64_t prec = 16; prec <= 66536; prec <<= 1) {
+		for (int64_t prec = 128; prec <= 1 << 24; prec <<= 1) {
 			lrc::prec2(prec);
 
 			lrc::mpz bigInt(1);
@@ -83,7 +83,7 @@ TEST_CASE("Test Multiprecision", "[multiprecision]") {
 				return bigFloat * bigFloat;
 			};
 
-			BENCHMARK("Pi Calculation") { return lrc::constPi(); };
+			BENCHMARK(fmt::format("Pi Calculation\n[{} bits]", prec)) { return lrc::constPi(); };
 		}
 	}
 }
