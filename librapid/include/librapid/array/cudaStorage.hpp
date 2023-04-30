@@ -44,17 +44,17 @@ namespace librapid {
 #	define CUDA_REF_OPERATOR(OP)                                                                  \
 		template<typename LHS, typename RHS>                                                       \
 		auto operator OP(const CudaRef<LHS> &lhs, const RHS &rhs) {                                \
-			return lhs.get() op rhs;                                                               \
+			return lhs.get() OP rhs;                                                               \
 		}                                                                                          \
                                                                                                    \
 		template<typename LHS, typename RHS>                                                       \
 		auto operator OP(const LHS &lhs, const CudaRef<RHS> &rhs) {                                \
-			return lhs op rhs.get();                                                               \
+			return lhs OP rhs.get();                                                               \
 		}                                                                                          \
                                                                                                    \
 		template<typename LHS, typename RHS>                                                       \
 		auto operator OP(const CudaRef<LHS> &lhs, const CudaRef<RHS> &rhs) {                       \
-			return lhs.get() op rhs.get();                                                         \
+			return lhs.get() OP rhs.get();                                                         \
 		}                                                                                          \
                                                                                                    \
 		template<typename LHS, typename RHS>                                                       \
@@ -70,17 +70,17 @@ namespace librapid {
 #	define CUDA_REF_OPERATOR_NO_ASSIGN(OP)                                                        \
 		template<typename LHS, typename RHS>                                                       \
 		auto operator OP(const CudaRef<LHS> &lhs, const RHS &rhs) {                                \
-			return lhs.get() op rhs;                                                               \
+			return lhs.get() OP rhs;                                                               \
 		}                                                                                          \
                                                                                                    \
 		template<typename LHS, typename RHS>                                                       \
 		auto operator OP(const LHS &lhs, const CudaRef<RHS> &rhs) {                                \
-			return lhs op rhs.get();                                                               \
+			return lhs OP rhs.get();                                                               \
 		}                                                                                          \
                                                                                                    \
 		template<typename LHS, typename RHS>                                                       \
 		auto operator OP(const CudaRef<LHS> &lhs, const CudaRef<RHS> &rhs) {                       \
-			return lhs.get() op rhs.get();                                                         \
+			return lhs.get() OP rhs.get();                                                         \
 		}
 
 		template<typename T>
