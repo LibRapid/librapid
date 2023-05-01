@@ -28,6 +28,7 @@ option(LIBRAPID_CODE_COV "Compile LibRapid C++ with Coverage" OFF)
 option(LIBRAPID_STRICT "Force all warnings into errors (use with caution)" OFF)
 option(LIBRAPID_QUIET "Hide warnings generated WITHIN LibRapid's source" OFF)
 
+option(LIBRAPID_GET_FFTW "Clone and use FFTW -- WARNING: SEE DOCUMENTATION" OFF)
 option(LIBRAPID_GET_BLAS "Download pre-built OpenBLAS binaries and use them" OFF)
 option(LIBRAPID_GET_MULTIPREC "Download generic multiprecision libraries, as opposed to trying to find one on the system" OFF)
 
@@ -177,7 +178,7 @@ if (LIBRAPID_GET_BLAS AND NOT LIBRAPID_HAS_BLAS)
     if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/buildopenblas-src")
         FetchContent_Declare(
                 BuildOpenBLAS
-                GIT_REPOSITORY https://github.com/librapid/BuildOpenBLAS
+                GIT_REPOSITORY https://github.com/LibRapid/BuildOpenBLAS.git
         )
 
         FetchContent_MakeAvailable(BuildOpenBLAS)
@@ -537,7 +538,7 @@ if (IS_WINDOWS AND LIBRAPID_NO_WINDOWS_H)
             NOWH
             NOWINOFFSETS
             NOWINMESSAGES
-        )
+            )
 
 endif ()
 
@@ -558,8 +559,23 @@ set(ENABLE_SSE ON)
 
 set(DISABLE_FORTRAN ON)
 
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/fftw")
-if (LIBRAPID_USE_OMP)
-    target_link_libraries(${module_name} PUBLIC fftw3_omp)
+if (LIBRAPID_GET_FFTW)
+    message(STATUS "[ LIBRAPID ] Building LibRapid with FFTW")
+
+    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/FFTW")
+        FetchContent_Declare(
+                FFTW
+                GIT_REPOSITORY https://github.com/LibRapid/FFTW.git
+        )
+
+        FetchContent_MakeAvailable(FFTW)
+    endif ()
+
+    if (LIBRAPID_USE_OMP)
+        target_link_libraries(${module_name} PUBLIC fftw3_omp)
+    else ()
+        target_link_libraries(${module_name} PUBLIC fftw3)
+    endif ()
+    target_include_directories(${module_name} PUBLIC "${FETCHCONTENT_BASE_DIR}/fftw-src/api")
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_FFTW)
 endif ()
-# target_link_libraries(${module_name} PUBLIC fftw3)
