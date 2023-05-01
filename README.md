@@ -167,7 +167,7 @@ submodules of the library. You don't need to do anything different):
 # Star History
 
 <div align="center">
-  <a href="https://star-history.com/#Librapid/librapid/#date">
+  <a href="https://star-history.com/#LibRapid/librapid&Date">
     <img src="https://api.star-history.com/svg?repos=LibRapid/librapid&type=Date" alt="Star History" width="700">
   </a>
 </div>

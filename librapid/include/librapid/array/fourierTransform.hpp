@@ -49,14 +49,14 @@ namespace librapid::fft {
 				fftw_destroy_plan(plan);
 			}
 
-			// LIBRAPID_INLINE void rfft(Complex<float> *output, float *input, size_t n) {
-			// 	unsigned int mode = FFTW_ESTIMATE;
-			// 	fftwf_plan_with_nthreads((int)global::numThreads);
-			// 	fftwf_plan plan = fftwf_plan_dft_r2c_1d(
-			// 	  (int)n, input, reinterpret_cast<fftwf_complex *>(output), mode);
-			// 	fftwf_execute(plan);
-			// 	fftwf_destroy_plan(plan);
-			// }
+			LIBRAPID_INLINE void rfft(Complex<float> *output, float *input, size_t n) {
+				unsigned int mode = FFTW_ESTIMATE;
+				fftwf_plan_with_nthreads((int)global::numThreads);
+				fftwf_plan plan = fftwf_plan_dft_r2c_1d(
+				  (int)n, input, reinterpret_cast<fftwf_complex *>(output), mode);
+				fftwf_execute(plan);
+				fftwf_destroy_plan(plan);
+			}
 #endif
 		} // namespace cpu
 
