@@ -579,3 +579,5 @@ if (LIBRAPID_GET_FFTW)
     target_include_directories(${module_name} PUBLIC "${FETCHCONTENT_BASE_DIR}/fftw-src/api")
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_FFTW)
 endif ()
+
+target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/pocketfft")

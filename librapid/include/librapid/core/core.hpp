@@ -23,4 +23,13 @@
 #include <fftw3.h>
 #endif // LIBRAPID_HAS_CUDA
 
+#pragma warning(push)
+#pragma warning(disable: 4324)
+#pragma warning(disable: 4458)
+#pragma warning(disable: 4456)
+
+#include <pocketfft_hdronly.h>
+
+#pragma warning(pop)
+
 #endif // LIBRAPID_CORE
