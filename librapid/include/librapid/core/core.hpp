@@ -17,9 +17,10 @@
 #include "../cxxblas/cxxblas.tcc"
 
 // Fourier Transform
-#if !defined(LIBRAPID_HAS_CUDA)
+#if defined(LIBRAPID_HAS_FFTW) && !defined(LIBRAPID_HAS_CUDA)
 // If CUDA is enabled, we use cuFFT
-#	include "../fftw/api/fftw3.h"
+// #	include "../fftw/api/fftw3.h"
+#include <fftw3.h>
 #endif // LIBRAPID_HAS_CUDA
 
 #endif // LIBRAPID_CORE

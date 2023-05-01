@@ -2,6 +2,13 @@
 #define LIBRAPID_ARRAY_LINALG_LEVEL3_GEAM_HPP
 
 namespace librapid::linalg {
+#define GEAM_VALIDATION                                                                            \
+	LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");                            \
+	LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");               \
+	LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");                           \
+	LIBRAPID_ASSERT((void *)&a != (void *)&c, "Input and output arrays must be different");        \
+	LIBRAPID_ASSERT((void *)&b != (void *)&c, "Input and output arrays must be different")
+
 	template<typename StorageScalar, typename ShapeTypeA, typename StorageAllocatorA,
 			 typename ShapeTypeB, typename StorageAllocatorB, typename ShapeTypeC,
 			 typename StorageAllocatorC, typename Scalar>
@@ -10,11 +17,7 @@ namespace librapid::linalg {
 			  const array::ArrayContainer<ShapeTypeB, Storage<StorageScalar, StorageAllocatorB>> &b,
 			  Scalar beta,
 			  array::ArrayContainer<ShapeTypeC, Storage<StorageScalar, StorageAllocatorC>> &c) {
-		LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");
-		LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");
-		LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");
-		LIBRAPID_ASSERT(&a != &c, "Input and output arrays must be different");
-		LIBRAPID_ASSERT(&b != &c, "Input and output arrays must be different");
+		GEAM_VALIDATION;
 
 		c = a * alpha + b * beta;
 	}
@@ -28,11 +31,7 @@ namespace librapid::linalg {
 			  const array::ArrayContainer<ShapeTypeB, Storage<StorageScalar, StorageAllocatorB>> &b,
 			  Scalar beta,
 			  array::ArrayContainer<ShapeTypeC, Storage<StorageScalar, StorageAllocatorC>> &c) {
-		LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");
-		LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");
-		LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");
-		LIBRAPID_ASSERT(&a != &c, "Input and output arrays must be different");
-		LIBRAPID_ASSERT(&b != &c, "Input and output arrays must be different");
+		GEAM_VALIDATION;
 
 		// Eval before returning to avoid slow evaluation
 		// see https://librapid.readthedocs.io/en/latest/performance/performance.html
@@ -51,9 +50,7 @@ namespace librapid::linalg {
 				array::ArrayContainer<ShapeTypeB, Storage<StorageScalar, StorageAllocatorB>>> &b,
 			  Scalar beta,
 			  array::ArrayContainer<ShapeTypeC, Storage<StorageScalar, StorageAllocatorC>> &c) {
-		LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");
-		LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");
-		LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");
+		GEAM_VALIDATION;
 
 		// Eval before returning to avoid slow evaluation
 		// see https://librapid.readthedocs.io/en/latest/performance/performance.html
@@ -73,11 +70,7 @@ namespace librapid::linalg {
 				array::ArrayContainer<ShapeTypeB, Storage<StorageScalar, StorageAllocatorB>>> &b,
 			  Scalar beta,
 			  array::ArrayContainer<ShapeTypeC, Storage<StorageScalar, StorageAllocatorC>> &c) {
-		LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");
-		LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");
-		LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");
-		LIBRAPID_ASSERT(&a != &c, "Input and output arrays must be different");
-		LIBRAPID_ASSERT(&b != &c, "Input and output arrays must be different");
+		GEAM_VALIDATION;
 
 		// Eval before returning to avoid slow evaluation
 		// see https://librapid.readthedocs.io/en/latest/performance/performance.html
@@ -97,11 +90,7 @@ namespace librapid::linalg {
 	void geam(const array::ArrayContainer<ShapeTypeA, CudaStorage<StorageScalar>> &a, Scalar alpha,
 			  const array::ArrayContainer<ShapeTypeB, CudaStorage<StorageScalar>> &b, Scalar beta,
 			  array::ArrayContainer<ShapeTypeC, CudaStorage<StorageScalar>> &c) {
-		LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");
-		LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");
-		LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");
-		LIBRAPID_ASSERT(&a != &c, "Input and output arrays must be different");
-		LIBRAPID_ASSERT(&b != &c, "Input and output arrays must be different");
+		GEAM_VALIDATION;
 
 		c = a * alpha + b * beta;
 	}
@@ -112,11 +101,7 @@ namespace librapid::linalg {
 	geam(const array::Transpose<array::ArrayContainer<ShapeTypeA, CudaStorage<StorageScalar>>> &a,
 		 Scalar alpha, const array::ArrayContainer<ShapeTypeB, CudaStorage<StorageScalar>> &b,
 		 Scalar beta, array::ArrayContainer<ShapeTypeC, CudaStorage<StorageScalar>> &c) {
-		LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");
-		LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");
-		LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");
-		LIBRAPID_ASSERT(&a != &c, "Input and output arrays must be different");
-		LIBRAPID_ASSERT(&b != &c, "Input and output arrays must be different");
+		GEAM_VALIDATION;
 
 		const auto &dataA = a.array();
 
@@ -129,11 +114,7 @@ namespace librapid::linalg {
 	geam(const array::ArrayContainer<ShapeTypeA, CudaStorage<StorageScalar>> &a, Scalar alpha,
 		 const array::Transpose<array::ArrayContainer<ShapeTypeB, CudaStorage<StorageScalar>>> &b,
 		 Scalar beta, array::ArrayContainer<ShapeTypeC, CudaStorage<StorageScalar>> &c) {
-		LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");
-		LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");
-		LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");
-		LIBRAPID_ASSERT(&a != &c, "Input and output arrays must be different");
-		LIBRAPID_ASSERT(&b != &c, "Input and output arrays must be different");
+		GEAM_VALIDATION;
 
 		const auto &dataB = b.array();
 
@@ -147,11 +128,7 @@ namespace librapid::linalg {
 		 Scalar alpha,
 		 const array::Transpose<array::ArrayContainer<ShapeTypeB, CudaStorage<StorageScalar>>> &b,
 		 Scalar beta, array::ArrayContainer<ShapeTypeC, CudaStorage<StorageScalar>> &c) {
-		LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");
-		LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");
-		LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");
-		LIBRAPID_ASSERT(&a != &c, "Input and output arrays must be different");
-		LIBRAPID_ASSERT(&b != &c, "Input and output arrays must be different");
+		GEAM_VALIDATION;
 
 		const auto &dataA = a.array();
 		const auto &dataB = b.array();
@@ -166,11 +143,7 @@ namespace librapid::linalg {
 				  const array::ArrayContainer<ShapeTypeB, CudaStorage<SCALAR>> &b,                 \
 				  Scalar beta,                                                                     \
 				  array::ArrayContainer<ShapeTypeC, CudaStorage<SCALAR>> &c) {                     \
-			LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");                    \
-			LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");       \
-			LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");                   \
-			LIBRAPID_ASSERT(&a != &c, "Input and output arrays must be different");                \
-			LIBRAPID_ASSERT(&b != &c, "Input and output arrays must be different");                \
+			GEAM_VALIDATION;                                                                       \
                                                                                                    \
 			auto *__restrict dataA = a.storage().begin().get();                                    \
 			auto *__restrict dataB = b.storage().begin().get();                                    \
@@ -198,11 +171,7 @@ namespace librapid::linalg {
 		  const array::ArrayContainer<ShapeTypeB, CudaStorage<SCALAR>> &b,                         \
 		  Scalar beta,                                                                             \
 		  array::ArrayContainer<ShapeTypeC, CudaStorage<SCALAR>> &c) {                             \
-			LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");                    \
-			LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");       \
-			LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");                   \
-			LIBRAPID_ASSERT(&a != &c, "Input and output arrays must be different");                \
-			LIBRAPID_ASSERT(&b != &c, "Input and output arrays must be different");                \
+			GEAM_VALIDATION;                                                                       \
                                                                                                    \
 			auto *__restrict dataA = a.array().storage().begin().get();                            \
 			auto *__restrict dataB = b.storage().begin().get();                                    \
@@ -230,11 +199,7 @@ namespace librapid::linalg {
 		  const array::Transpose<array::ArrayContainer<ShapeTypeB, CudaStorage<SCALAR>>> &b,       \
 		  Scalar beta,                                                                             \
 		  array::ArrayContainer<ShapeTypeC, CudaStorage<SCALAR>> &c) {                             \
-			LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");                    \
-			LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");       \
-			LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");                   \
-			LIBRAPID_ASSERT(&a != &c, "Input and output arrays must be different");                \
-			LIBRAPID_ASSERT(&b != &c, "Input and output arrays must be different");                \
+			GEAM_VALIDATION;                                                                       \
                                                                                                    \
 			auto *__restrict dataA = a.storage().begin().get();                                    \
 			auto *__restrict dataB = b.array().storage().begin().get();                            \
@@ -262,11 +227,7 @@ namespace librapid::linalg {
 		  const array::Transpose<array::ArrayContainer<ShapeTypeB, CudaStorage<SCALAR>>> &b,       \
 		  Scalar beta,                                                                             \
 		  array::ArrayContainer<ShapeTypeC, CudaStorage<SCALAR>> &c) {                             \
-			LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");                    \
-			LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");       \
-			LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");                   \
-			LIBRAPID_ASSERT(&a != &c, "Input and output arrays must be different");                \
-			LIBRAPID_ASSERT(&b != &c, "Input and output arrays must be different");                \
+			GEAM_VALIDATION;                                                                       \
                                                                                                    \
 			auto *__restrict dataA = a.array().storage().begin().get();                            \
 			auto *__restrict dataB = b.array().storage().begin().get();                            \
