@@ -516,6 +516,11 @@ namespace librapid {
 		}
 
 		template<typename T>
+		auto Transpose<T>::ndim() const -> int64_t {
+			return m_outputShape.ndim();
+		}
+
+		template<typename T>
 		auto Transpose<T>::array() const -> const ArrayType & {
 			return m_array;
 		}
