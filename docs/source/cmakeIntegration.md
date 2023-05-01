@@ -56,6 +56,20 @@ DEFAULT: OFF
 Disable all warnings from LibRapid. This is useful if you are using LibRapid as a dependency and want a cleaner
 compilation output. Warnings should be minimal in the first place, but this option is provided just in case.
 
+### ``LIBRAPID_GET_FFTW``
+
+```
+DEFAULT: OFF
+```
+
+Add FFTW as a dependency and link it with LibRapid. This is required for FFT support unless CUDA is enabled.
+
+```danger
+FFTW is licensed under the GPL, which is not compatible with LibRapid's MIT license. If you are using LibRapid as a
+dependency in an open source project, you may need to use LibRapid under a GPL license. If you forget, you'll
+***probably*** be fine, but I can't guarantee anything. I'm not a lawyer, so don't take my word for it.
+```
+
 ### ``LIBRAPID_GET_BLAS``
 
 ```
