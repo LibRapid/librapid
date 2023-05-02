@@ -275,22 +275,22 @@ if (LIBRAPID_USE_BLAS AND NOT LIBRAPID_HAS_BLAS)
         if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
             set(bin_path "${filepath}/../bin")
             if (NOT (EXISTS ${bin_path}))
-                message(FATAL_ERROR "Could not locate <bin> folder for BLAS")
+                message(WARNING "Could not locate <bin> folder for BLAS")
+            else ()
+                FILE(GLOB_RECURSE include_files "${bin_path}/*.dll")
+                foreach (file IN LISTS include_files)
+                    message(STATUS "[ LIBRAPID ] Found binary file " ${file})
+                    get_filename_component(filename ${file} NAME)
+                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
+                endforeach ()
+
+                FILE(GLOB_RECURSE bin_files "${CMAKE_CURRENT_SOURCE_DIR}/*.dll")
+                foreach (file IN LISTS bin_files)
+                    message(STATUS "[ LIBRAPID ] Found packaged binary file " ${file})
+                    get_filename_component(filename ${file} NAME)
+                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
+                endforeach ()
             endif ()
-
-            FILE(GLOB_RECURSE include_files "${bin_path}/*.dll")
-            foreach (file IN LISTS include_files)
-                message(STATUS "[ LIBRAPID ] Found binary file " ${file})
-                get_filename_component(filename ${file} NAME)
-                configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
-            endforeach ()
-
-            FILE(GLOB_RECURSE bin_files "${CMAKE_CURRENT_SOURCE_DIR}/*.dll")
-            foreach (file IN LISTS bin_files)
-                message(STATUS "[ LIBRAPID ] Found packaged binary file " ${file})
-                get_filename_component(filename ${file} NAME)
-                configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
-            endforeach ()
         endif ()
 
         # Add the compile definition so LibRapid knows it has BLAS
@@ -542,40 +542,52 @@ if (IS_WINDOWS AND LIBRAPID_NO_WINDOWS_H)
 
 endif ()
 
-# FFTW
-set(BUILD_SHARED_LIBS OFF)
-set(BUILD_TESTS OFF)
-set(ENABLE_OPENMP ${LIBRAPID_USE_OMP})
-set(ENABLE_THREADS ${LIBRAPID_USE_OMP})
-set(ENABLE_FLOAT OFF)
-set(ENABLE_DOUBLE OFF)
-set(ENABLE_LONG_DOUBLE OFF)
-set(ENABLE_QUAD_PRECISION OFF)
-
-set(ENABLE_AVX2 ON)
-set(ENABLE_AVX ON)
-set(ENABLE_SSE2 ON)
-set(ENABLE_SSE ON)
-
-set(DISABLE_FORTRAN ON)
-
 if (LIBRAPID_GET_FFTW)
     message(STATUS "[ LIBRAPID ] Building LibRapid with FFTW")
 
-    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/FFTW")
+    # FFTW
+    set(BUILD_SHARED_LIBS OFF)
+    set(BUILD_TESTS OFF)
+    set(ENABLE_OPENMP ${LIBRAPID_USE_OMP})
+    set(ENABLE_THREADS ${LIBRAPID_USE_OMP})
+    set(ENABLE_FLOAT OFF)
+    set(ENABLE_DOUBLE OFF)
+    set(ENABLE_LONG_DOUBLE OFF)
+    set(ENABLE_QUAD_PRECISION OFF)
+
+    set(ENABLE_AVX2 ON)
+    set(ENABLE_AVX ON)
+    set(ENABLE_SSE2 ON)
+    set(ENABLE_SSE ON)
+
+    set(DISABLE_FORTRAN ON)
+
+    set(ENABLE_DOUBLE ON)
+    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/FFTW_DOUBLE")
         FetchContent_Declare(
-                FFTW
+                FFTW_DOUBLE
                 GIT_REPOSITORY https://github.com/LibRapid/FFTW.git
         )
+        FetchContent_MakeAvailable(FFTW_DOUBLE)
+    endif ()
 
-        FetchContent_MakeAvailable(FFTW)
+    set(ENABLE_DOUBLE OFF)
+    set(ENABLE_FLOAT ON)
+    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/FFTW_FLOAT")
+        FetchContent_Declare(
+                FFTW_FLOAT
+                GIT_REPOSITORY https://github.com/LibRapid/FFTW.git
+        )
+        FetchContent_MakeAvailable(FFTW_FLOAT)
     endif ()
 
     if (LIBRAPID_USE_OMP)
-        target_link_libraries(${module_name} PUBLIC fftw3_omp)
+        target_link_libraries(${module_name} PUBLIC fftw3_omp fftw3f_omp)
     else ()
-        target_link_libraries(${module_name} PUBLIC fftw3)
+        target_link_libraries(${module_name} PUBLIC fftw3 fftw3f)
     endif ()
     target_include_directories(${module_name} PUBLIC "${FETCHCONTENT_BASE_DIR}/fftw-src/api")
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_FFTW)
 endif ()
+
+target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/pocketfft")
