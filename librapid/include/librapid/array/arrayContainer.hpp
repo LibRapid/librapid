@@ -202,13 +202,6 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
-		  const std::initializer_list<T> &data) :
-				m_shape({data.size()}),
-				m_storage(StorageType::fromData(data)) {}
-
-		template<typename ShapeType_, typename StorageType_>
-		template<typename T>
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const std::vector<T> &data) :
 				m_shape({data.size()}), m_storage(StorageType::fromData(data)) {}
 
