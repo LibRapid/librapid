@@ -318,7 +318,33 @@
 #	include "genericConfig.hpp"
 #endif
 
-#include "cudaConfig.hpp"
+#if defined(LIBRAPID_HAS_CUDA)
+#	include "cudaConfig.hpp"
+#endif
+
+#if defined(LIBRAPID_HAS_OPENCL)
+#	include "openclConfig.hpp"
+#endif
+
+namespace librapid::device {
+	// Use the CPU for computation (default)
+	struct CPU {};
+
+	// Use the GPU for computation
+	struct GPU {};
+
+	// Use OpenCL for computation
+	struct OpenCL {};
+
+	// Use the fastest device for computation
+#if defined(LIBRAPID_HAS_CUDA)
+	using Fastest = GPU;
+#elif defined(LIBRAPID_HAS_OPENCL)
+	using Fastest = OpenCL;
+#else
+	using Fastest = CPU;
+#endif
+} // namespace librapid::device
 
 #ifndef LIBRAPID_MAX_ARRAY_DIMS
 #	define LIBRAPID_MAX_ARRAY_DIMS 32

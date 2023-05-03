@@ -71,20 +71,6 @@ const char *getCublasErrorEnum_(cublasStatus_t error);
 
 #endif // LIBRAPID_HAS_CUDA
 
-namespace librapid::device {
-	// Signifies that host memory should be used
-	struct CPU {};
-
-	// Signifies that device memory should be used
-	struct GPU {};
-
-#if defined(LIBRAPID_HAS_CUDA)
-	using GPUIfAvailable = GPU;
-#else
-	using GPUIfAvailable = CPU;
-#endif // LIBRAPID_HAS_CUDA
-} // namespace librapid::device
-
 // This needs to be defined before cudaHeaderLoader.hpp is included
 
 #include "../cuda/cudaKernelProcesor.hpp"

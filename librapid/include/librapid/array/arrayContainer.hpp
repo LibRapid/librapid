@@ -53,6 +53,9 @@ namespace librapid {
 			ArrayContainer();
 
 			template<typename T>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::initializer_list<T> &data);
+
+			template<typename T>
 			explicit LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::vector<T> &data);
 
 			/// Constructs an array container from a shape
@@ -199,6 +202,13 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer() :
 				m_shape(StorageType_::template defaultShape<ShapeType_>()) {}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
+		  const std::initializer_list<T> &data) :
+				m_shape({data.size()}),
+				m_storage(StorageType::fromData(data)) {}
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
