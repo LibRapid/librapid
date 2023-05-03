@@ -2,6 +2,18 @@
 #define LIBRAPID_ARRAY_FROM_DATA_HPP
 
 namespace librapid {
+	/// \brief Create an array from a list of values (possibly multi-dimensional)
+	///
+	/// Create a new array from a potentially nested list of values. It is possible to specify the
+	/// data type of the Array with the \p Scalar template parameter. If no type is specified, the
+	/// type will be inferred from the data. The device on which the Array is created can also be
+	/// specified with the \p Device template parameter. If no device is specified, the Array will
+	/// be created on the CPU.
+	///
+	/// \tparam Scalar The type of the Array
+	/// \tparam Device The device on which the Array is created
+	/// \param data The data from which the Array is created
+	/// \return The created Array
 	template<typename Scalar, typename Device = device::CPU>
 	LIBRAPID_NODISCARD Array<Scalar, Device> fromData(const std::initializer_list<Scalar> &data) {
 		LIBRAPID_ASSERT(data.size() > 0, "Array must have at least one element");

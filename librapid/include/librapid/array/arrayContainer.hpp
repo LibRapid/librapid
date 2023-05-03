@@ -37,11 +37,20 @@ namespace librapid {
 			using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;
 			using Device	  = typename typetraits::TypeInfo<ArrayContainer>::Device;
 
+#if defined(LIBRAPID_HAS_CUDA)
+			using DirectSubscriptType =
+			  typename std::conditional_t<typetraits::IsCudaStorage<StorageType>::value,
+										  const detail::CudaRef<Scalar>, const Scalar &>;
+			using DirectRefSubscriptType =
+			  typename std::conditional_t<typetraits::IsCudaStorage<StorageType>::value,
+										  detail::CudaRef<Scalar>, Scalar &>;
+#else
+			using DirectSubscriptType	 = const Scalar &;
+			using DirectRefSubscriptType = Scalar &;
+#endif
+
 			/// Default constructor
 			ArrayContainer();
-
-			template<typename T>
-			LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::initializer_list<T> &data);
 
 			template<typename T>
 			explicit LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::vector<T> &data);
@@ -116,10 +125,10 @@ namespace librapid {
 			template<typename T>
 			detail::CommaInitializer<ArrayContainer> operator<<(const T &value);
 
-			template<typename ScalarTo = Scalar, typename DeviceTo = Device>
-			LIBRAPID_NODISCARD auto cast() const;
+			// template<typename ScalarTo = Scalar, typename DeviceTo = Device>
+			// LIBRAPID_NODISCARD auto cast() const;
 
-			LIBRAPID_NODISCARD auto copy() const;
+			// LIBRAPID_NODISCARD auto copy() const;
 
 			/// Access a sub-array of this ArrayContainer instance. The sub-array will reference
 			/// the same memory as this ArrayContainer instance.
@@ -129,6 +138,14 @@ namespace librapid {
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index) const;
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index);
+
+			template<typename... Indices>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE DirectSubscriptType
+			operator()(Indices... indices) const;
+
+			template<typename... Indices>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE DirectRefSubscriptType
+			operator()(Indices... indices);
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar get() const;
 
@@ -349,6 +366,51 @@ namespace librapid {
 					return res;
 				}
 			}
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename... Indices>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator()(Indices... indices) const
+		  -> DirectSubscriptType {
+			LIBRAPID_ASSERT(
+			  m_shape.ndim() == sizeof...(Indices),
+			  "ArrayContainer::operator() called with {} indices, but array has {} dimensions",
+			  sizeof...(Indices),
+			  m_shape.ndim());
+
+			int64_t index = 0;
+			for (int64_t i : {indices...}) {
+				LIBRAPID_ASSERT(
+				  i >= 0 && i < static_cast<int64_t>(m_shape[index]),
+				  "Index {} out of bounds in ArrayContainer::operator() with dimension={}",
+				  i,
+				  m_shape[index]);
+				index = index * m_shape[index] + i;
+			}
+			return m_storage[index];
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename... Indices>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator()(Indices... indices)
+		  -> DirectRefSubscriptType {
+			LIBRAPID_ASSERT(
+			  m_shape.ndim() == sizeof...(Indices),
+			  "ArrayContainer::operator() called with {} indices, but array has {} dimensions",
+			  sizeof...(Indices),
+			  m_shape.ndim());
+
+			int64_t index = 0;
+			int64_t count = 0;
+			for (int64_t i : {indices...}) {
+				LIBRAPID_ASSERT(
+				  i >= 0 && i < static_cast<int64_t>(m_shape[count]),
+				  "Index {} out of bounds in ArrayContainer::operator() with dimension={}",
+				  i,
+				  m_shape[index]);
+				index = index * m_shape[count++] + i;
+			}
+			return m_storage[index];
 		}
 
 		template<typename ShapeType_, typename StorageType_>

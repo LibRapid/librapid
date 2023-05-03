@@ -41,22 +41,104 @@ namespace librapid {
 		template<typename T>
 		std::shared_ptr<T> cudaSharedPtrAllocate(size_t size);
 
+#	define CUDA_REF_OPERATOR(OP)                                                                  \
+		template<typename LHS, typename RHS>                                                       \
+		auto operator OP(const CudaRef<LHS> &lhs, const RHS &rhs) {                                \
+			return lhs.get() OP rhs;                                                               \
+		}                                                                                          \
+                                                                                                   \
+		template<typename LHS, typename RHS>                                                       \
+		auto operator OP(const LHS &lhs, const CudaRef<RHS> &rhs) {                                \
+			return lhs OP rhs.get();                                                               \
+		}                                                                                          \
+                                                                                                   \
+		template<typename LHS, typename RHS>                                                       \
+		auto operator OP(const CudaRef<LHS> &lhs, const CudaRef<RHS> &rhs) {                       \
+			return lhs.get() OP rhs.get();                                                         \
+		}                                                                                          \
+                                                                                                   \
+		template<typename LHS, typename RHS>                                                       \
+		auto operator OP##=(CudaRef<LHS> &lhs, const RHS &rhs) {                                   \
+			lhs = lhs.get() OP rhs;                                                                \
+		}                                                                                          \
+                                                                                                   \
+		template<typename LHS, typename RHS>                                                       \
+		auto operator OP##=(CudaRef<LHS> &lhs, const CudaRef<RHS> &rhs) {                          \
+			lhs = lhs.get() OP rhs.get();                                                          \
+		}
+
+#	define CUDA_REF_OPERATOR_NO_ASSIGN(OP)                                                        \
+		template<typename LHS, typename RHS>                                                       \
+		auto operator OP(const CudaRef<LHS> &lhs, const RHS &rhs) {                                \
+			return lhs.get() OP rhs;                                                               \
+		}                                                                                          \
+                                                                                                   \
+		template<typename LHS, typename RHS>                                                       \
+		auto operator OP(const LHS &lhs, const CudaRef<RHS> &rhs) {                                \
+			return lhs OP rhs.get();                                                               \
+		}                                                                                          \
+                                                                                                   \
+		template<typename LHS, typename RHS>                                                       \
+		auto operator OP(const CudaRef<LHS> &lhs, const CudaRef<RHS> &rhs) {                       \
+			return lhs.get() OP rhs.get();                                                         \
+		}
+
 		template<typename T>
 		class CudaRef {
 		public:
 			using PtrType = std::shared_ptr<T>;
 
-			CudaRef(const PtrType &ptr, size_t offset);
+			CudaRef(const PtrType &ptr, size_t offset) : m_ptr(ptr), m_offset(offset) {}
 
-			LIBRAPID_ALWAYS_INLINE CudaRef &operator=(const T &val);
+			LIBRAPID_ALWAYS_INLINE CudaRef &operator=(const T &val) {
+				cudaSafeCall(cudaMemcpyAsync(m_ptr.get() + m_offset,
+											 &val,
+											 sizeof(T),
+											 cudaMemcpyHostToDevice,
+											 global::cudaStream));
+				return *this;
+			}
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T get() const {
+				T tmp;
+				cudaSafeCall(cudaMemcpyAsync(&tmp,
+											 m_ptr.get() + m_offset,
+											 sizeof(T),
+											 cudaMemcpyDeviceToHost,
+											 global::cudaStream));
+				return tmp;
+			}
 
 			template<typename CAST>
-			LIBRAPID_ALWAYS_INLINE operator CAST() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE operator CAST() const {
+				return static_cast<CAST>(get());
+			}
+
+			LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const {
+				return fmt::format(format, get());
+			}
 
 		private:
 			std::shared_ptr<T> m_ptr;
 			size_t m_offset;
 		};
+
+		CUDA_REF_OPERATOR(+)
+		CUDA_REF_OPERATOR(-)
+		CUDA_REF_OPERATOR(*)
+		CUDA_REF_OPERATOR(/)
+		CUDA_REF_OPERATOR(%)
+		CUDA_REF_OPERATOR(^)
+		CUDA_REF_OPERATOR(&)
+		CUDA_REF_OPERATOR(|)
+		CUDA_REF_OPERATOR(<<)
+		CUDA_REF_OPERATOR(>>)
+		CUDA_REF_OPERATOR_NO_ASSIGN(==)
+		CUDA_REF_OPERATOR_NO_ASSIGN(!=)
+		CUDA_REF_OPERATOR_NO_ASSIGN(<)
+		CUDA_REF_OPERATOR_NO_ASSIGN(>)
+		CUDA_REF_OPERATOR_NO_ASSIGN(<=)
+		CUDA_REF_OPERATOR_NO_ASSIGN(>=)
 	} // namespace detail
 
 	template<typename Scalar_>
@@ -239,30 +321,6 @@ namespace librapid {
 		template<typename T>
 		std::shared_ptr<T> cudaSharedPtrAllocate(size_t size) {
 			return std::shared_ptr<T>(cudaSafeAllocate<T>(size), cudaSafeDeallocate<T>);
-		}
-
-		template<typename T>
-		CudaRef<T>::CudaRef(const PtrType &ptr, size_t offset) : m_ptr(ptr), m_offset(offset) {}
-
-		template<typename T>
-		auto CudaRef<T>::operator=(const T &val) -> CudaRef & {
-			cudaSafeCall(cudaMemcpyAsync(
-			  m_ptr.get() + m_offset, &val, sizeof(T), cudaMemcpyHostToDevice, global::cudaStream));
-			return *this;
-		}
-
-		template<typename T>
-		template<typename CAST>
-		CudaRef<T>::operator CAST() const {
-			T tmp;
-			cudaSafeCall(cudaMemcpyAsync(
-			  &tmp, m_ptr.get() + m_offset, sizeof(T), cudaMemcpyDeviceToHost, global::cudaStream));
-			return static_cast<CAST>(tmp);
-		}
-
-		template<typename T, typename RHS>
-		auto operator==(const CudaRef<T> &lhs, const RHS &rhs) {
-			return static_cast<T>(lhs) == rhs;
 		}
 	} // namespace detail
 
@@ -485,6 +543,10 @@ namespace librapid {
 		return m_begin + m_size;
 	}
 } // namespace librapid
+
+#if defined(FMT_API)
+LIBRAPID_SIMPLE_IO_IMPL(typename T, librapid::detail::CudaRef<T>)
+#endif // FM_API
 #else
 // Trait implementations
 namespace librapid::typetraits {

@@ -303,7 +303,11 @@
 		} while (false)
 #endif // LIBRAPID_ASSERT
 
-#define LIBRAPID_NOT_IMPLEMENTED LIBRAPID_ASSERT(false, "Not implemented");
+#if defined(LIBRAPID_ENABLE_ASSERT) || defined(LIBRAPID_DEBUG)
+#	define LIBRAPID_NOT_IMPLEMENTED LIBRAPID_ASSERT(false, "Not implemented");
+#else
+#	define LIBRAPID_NOT_IMPLEMENTED throw std::runtime_error("Not implemented");
+#endif
 
 // Compiler-specific attributes
 #if defined(LIBRAPID_MSVC)
@@ -319,13 +323,6 @@
 #ifndef LIBRAPID_MAX_ARRAY_DIMS
 #	define LIBRAPID_MAX_ARRAY_DIMS 32
 #endif // LIBRAPID_MAX_ARRAY_DIMS
-
-// Configuration Option: LIBRAPID_OPTIMISE_SMALL_ARRAYS
-// Remove the branch required for dynamic parallelization of
-// loops, making the code faster for smaller arrays, but
-// slower for larger ones. To get around this, you can
-// use the "assignParallel" function, which always runs
-// in parallel (assuming you have OpenMP enabled).
 
 // Code to be run *before* main()
 #include "preMain.hpp"

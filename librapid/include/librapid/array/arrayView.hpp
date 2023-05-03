@@ -260,7 +260,6 @@ namespace librapid {
 			return res;
 		}
 	} // namespace array
-
 } // namespace librapid
 
 // Support FMT printing

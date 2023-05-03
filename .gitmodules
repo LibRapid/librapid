@@ -23,5 +23,7 @@
  # Make the documentation pretty
 	path = doxygenThemes
 	url = https://github.com/jothepro/doxygen-awesome-css.git
-
-# Removed
+	
+[submodule "librapid/vendor/pocketfft"]
+	path = librapid/vendor/pocketfft
+	url = https://github.com/mreineck/pocketfft

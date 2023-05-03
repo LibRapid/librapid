@@ -11,7 +11,7 @@ on:
 
 jobs:
   compile:
-    name: LibRapid on ${{ matrix.os }} with ${{ matrix.cxx }} using C++${{ matrix.cpp }}
+    name: Compile on ${{ matrix.os }} with ${{ matrix.cxx }} (BLAS ${{ matrix.blas }}, FFTW ${{ matrix.fftw }}, MPFR ${{ matrix.mpfr }}, C++ ${{ matrix.cpp }})
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -21,7 +21,17 @@ jobs:
           - os: ubuntu-latest
             cc: ../llvm/bin/clang
             cxx: ../llvm/bin/clang++
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 17
+            pretty: "LibRapid_Ubuntu-Latest_Clang++_C++17"
+
+          - os: ubuntu-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
             blas: on
+            fftw: on
             mpfr: on
             cpp: 17
             pretty: "LibRapid_Ubuntu-Latest_Clang++_C++17"
@@ -29,7 +39,8 @@ jobs:
           - os: ubuntu-latest
             cc: gcc-9
             cxx: g++-9
-            blas: on
+            blas: off
+            fftw: off
             mpfr: on
             cpp: 17
             pretty: "LibRapid_Ubuntu-Latest_GCC-9_C++17"
@@ -38,6 +49,25 @@ jobs:
             cc: gcc-9
             cxx: g++-9
             blas: on
+            fftw: on
+            mpfr: on
+            cpp: 17
+            pretty: "LibRapid_Ubuntu-Latest_GCC-9_C++17"
+
+          - os: ubuntu-latest
+            cc: gcc-9
+            cxx: g++-9
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Ubuntu-Latest_GCC-9_C++20"
+
+          - os: ubuntu-latest
+            cc: gcc-9
+            cxx: g++-9
+            blas: on
+            fftw: on
             mpfr: on
             cpp: 20
             pretty: "LibRapid_Ubuntu-Latest_GCC-9_C++20"
@@ -45,7 +75,8 @@ jobs:
           - os: ubuntu-latest
             cc: gcc-10
             cxx: g++-10
-            blas: on
+            blas: off
+            fftw: off
             mpfr: on
             cpp: 17
             pretty: "LibRapid_Ubuntu-Latest_GCC-10_C++17"
@@ -54,6 +85,25 @@ jobs:
             cc: gcc-10
             cxx: g++-10
             blas: on
+            fftw: on
+            mpfr: on
+            cpp: 17
+            pretty: "LibRapid_Ubuntu-Latest_GCC-10_C++17"
+
+          - os: ubuntu-latest
+            cc: gcc-10
+            cxx: g++-10
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Ubuntu-Latest_GCC-10_C++20"
+
+          - os: ubuntu-latest
+            cc: gcc-10
+            cxx: g++-10
+            blas: on
+            fftw: on
             mpfr: on
             cpp: 20
             pretty: "LibRapid_Ubuntu-Latest_GCC-10_C++20"
@@ -61,7 +111,8 @@ jobs:
           - os: ubuntu-latest
             cc: gcc-11
             cxx: g++-11
-            blas: on
+            blas: off
+            fftw: off
             mpfr: on
             cpp: 17
             pretty: "LibRapid_Ubuntu-Latest_GCC-11_C++17"
@@ -70,6 +121,25 @@ jobs:
             cc: gcc-11
             cxx: g++-11
             blas: on
+            fftw: on
+            mpfr: on
+            cpp: 17
+            pretty: "LibRapid_Ubuntu-Latest_GCC-11_C++17"
+
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Ubuntu-Latest_GCC-11_C++20"
+
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            fftw: on
             mpfr: on
             cpp: 20
             pretty: "LibRapid_Ubuntu-Latest_GCC-11_C++20"
@@ -77,7 +147,17 @@ jobs:
           - os: macos-latest
             cc: ../llvm/bin/clang
             cxx: ../llvm/bin/clang++
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 17
+            pretty: "LibRapid_MacOS-Latest_Clang++_C++17"
+
+          - os: macos-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
             blas: on
+            fftw: on
             mpfr: on
             cpp: 17
             pretty: "LibRapid_MacOS-Latest_Clang++_C++17"
@@ -85,7 +165,8 @@ jobs:
           - os: macos-latest
             cc: gcc-11
             cxx: g++-11
-            blas: on
+            blas: off
+            fftw: off
             mpfr: on
             cpp: 17
             pretty: "LibRapid_MacOS-Latest_GCC-11_C++17"
@@ -94,6 +175,25 @@ jobs:
             cc: gcc-11
             cxx: g++-11
             blas: on
+            fftw: on
+            mpfr: on
+            cpp: 17
+            pretty: "LibRapid_MacOS-Latest_GCC-11_C++17"
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_MacOS-Latest_GCC-11_C++20"
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            fftw: on
             mpfr: on
             cpp: 20
             pretty: "LibRapid_MacOS-Latest_GCC-11_C++20"
@@ -101,7 +201,17 @@ jobs:
           - os: windows-latest
             cc: ../llvm/clang
             cxx: ../llvm/clang++
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 17
+            pretty: "LibRapid_Windows-Latest_Clang++_C++17"
+
+          - os: windows-latest
+            cc: ../llvm/clang
+            cxx: ../llvm/clang++
             blas: on
+            fftw: on
             mpfr: on
             cpp: 17
             pretty: "LibRapid_Windows-Latest_Clang++_C++17"
@@ -109,7 +219,17 @@ jobs:
           - os: windows-latest
             cc: ./llvm/clang
             cxx: ./llvm/clang++
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Windows-Latest_Clang++_C++20"
+
+          - os: windows-latest
+            cc: ./llvm/clang
+            cxx: ./llvm/clang++
             blas: on
+            fftw: on
             mpfr: on
             cpp: 20
             pretty: "LibRapid_Windows-Latest_Clang++_C++20"
@@ -117,7 +237,8 @@ jobs:
           - os: windows-latest
             cc: msvc
             cxx: msvc
-            blas: on
+            blas: off
+            fftw: off
             mpfr: on
             cpp: 17
             pretty: "LibRapid_Windows-Latest_MSVC_C++17"
@@ -126,6 +247,25 @@ jobs:
             cc: msvc
             cxx: msvc
             blas: on
+            fftw: on
+            mpfr: on
+            cpp: 17
+            pretty: "LibRapid_Windows-Latest_MSVC_C++17"
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Windows-Latest_MSVC_C++20"
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            blas: on
+            fftw: on
             mpfr: on
             cpp: 20
             pretty: "LibRapid_Windows-Latest_MSVC_C++20"
@@ -274,11 +414,11 @@ jobs:
           cd docs
           make html latexpdf
 
-      - name: Store Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Documentation
-          path: docs/build/**
+      # - name: Store Artifacts
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: Documentation
+      #     path: docs/build/**
 
   run-benchmarks:
     name: Run Benchmarks
@@ -329,16 +469,16 @@ jobs:
           sudo apt install lcov
           sudo apt install gcovr
 
+      # Note that LIBRAPID_GET_BLAS is off, since the OpenBLAS build is currently not working on GitHub Actions
       - name: Compile and Run
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=on -DLIBRAPID_USE_MULTIPREC=on
+          cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=off -DLIBRAPID_USE_MULTIPREC=on
           cmake --build . --parallel
-
         env:
-          CC: gcc # ../llvm/bin/clang
-          CXX: g++ # ../llvm/bin/clang++
+          CC: gcc-11 # ../llvm/bin/clang
+          CXX: g++-11 # ../llvm/bin/clang++
 
       - name: Run Tests
         run: |

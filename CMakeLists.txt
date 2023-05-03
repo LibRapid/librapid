@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.16)
 project(librapid)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 cmake_policy(SET CMP0077 NEW)
@@ -28,6 +28,7 @@ option(LIBRAPID_CODE_COV "Compile LibRapid C++ with Coverage" OFF)
 option(LIBRAPID_STRICT "Force all warnings into errors (use with caution)" OFF)
 option(LIBRAPID_QUIET "Hide warnings generated WITHIN LibRapid's source" OFF)
 
+option(LIBRAPID_GET_FFTW "Clone and use FFTW -- WARNING: SEE DOCUMENTATION" OFF)
 option(LIBRAPID_GET_BLAS "Download pre-built OpenBLAS binaries and use them" OFF)
 option(LIBRAPID_GET_MULTIPREC "Download generic multiprecision libraries, as opposed to trying to find one on the system" OFF)
 
@@ -37,6 +38,8 @@ option(LIBRAPID_USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_FAST_MATH "Use potentially less accurate operations to increase performance" OFF)
 option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" OFF)
+
+option(LIBRAPID_NO_WINDOWS_H "Don't include the Windows.h header" OFF)
 
 option(LIBRAPID_MKL_CONFIG_PATH "Path to the 'MKLConfig.cmake' file" "")
 
@@ -175,7 +178,7 @@ if (LIBRAPID_GET_BLAS AND NOT LIBRAPID_HAS_BLAS)
     if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/buildopenblas-src")
         FetchContent_Declare(
                 BuildOpenBLAS
-                GIT_REPOSITORY https://github.com/librapid/BuildOpenBLAS
+                GIT_REPOSITORY https://github.com/LibRapid/BuildOpenBLAS.git
         )
 
         FetchContent_MakeAvailable(BuildOpenBLAS)
@@ -272,22 +275,22 @@ if (LIBRAPID_USE_BLAS AND NOT LIBRAPID_HAS_BLAS)
         if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
             set(bin_path "${filepath}/../bin")
             if (NOT (EXISTS ${bin_path}))
-                message(FATAL_ERROR "Could not locate <bin> folder for BLAS")
+                message(WARNING "Could not locate <bin> folder for BLAS")
+            else ()
+                FILE(GLOB_RECURSE include_files "${bin_path}/*.dll")
+                foreach (file IN LISTS include_files)
+                    message(STATUS "[ LIBRAPID ] Found binary file " ${file})
+                    get_filename_component(filename ${file} NAME)
+                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
+                endforeach ()
+
+                FILE(GLOB_RECURSE bin_files "${CMAKE_CURRENT_SOURCE_DIR}/*.dll")
+                foreach (file IN LISTS bin_files)
+                    message(STATUS "[ LIBRAPID ] Found packaged binary file " ${file})
+                    get_filename_component(filename ${file} NAME)
+                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
+                endforeach ()
             endif ()
-
-            FILE(GLOB_RECURSE include_files "${bin_path}/*.dll")
-            foreach (file IN LISTS include_files)
-                message(STATUS "[ LIBRAPID ] Found binary file " ${file})
-                get_filename_component(filename ${file} NAME)
-                configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
-            endforeach ()
-
-            FILE(GLOB_RECURSE bin_files "${CMAKE_CURRENT_SOURCE_DIR}/*.dll")
-            foreach (file IN LISTS bin_files)
-                message(STATUS "[ LIBRAPID ] Found packaged binary file " ${file})
-                get_filename_component(filename ${file} NAME)
-                configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
-            endforeach ()
         endif ()
 
         # Add the compile definition so LibRapid knows it has BLAS
@@ -499,25 +502,92 @@ if (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     )
 endif (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 
-# FFTW
-set(BUILD_SHARED_LIBS OFF)
-set(BUILD_TESTS OFF)
-set(ENABLE_OPENMP ${LIBRAPID_USE_OMP})
-set(ENABLE_THREADS ${LIBRAPID_USE_OMP})
-set(ENABLE_FLOAT OFF)
-set(ENABLE_DOUBLE OFF)
-set(ENABLE_LONG_DOUBLE OFF)
-set(ENABLE_QUAD_PRECISION OFF)
+if (IS_WINDOWS AND LIBRAPID_NO_WINDOWS_H)
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_NO_WINDOWS_H=${LIBRAPID_NO_WINDOWS_H})
+    target_compile_definitions(${module_name} PUBLIC JITIFY_NO_WINDOWS_H=${LIBRAPID_NO_WINDOWS_H})
 
-set(ENABLE_AVX2 ON)
-set(ENABLE_AVX ON)
-set(ENABLE_SSE2 ON)
-set(ENABLE_SSE ON)
+    target_compile_definitions(${module_name} PUBLIC
+            WIN32_LEAN_AND_MEAN
+            NOGDI
+            NOUSER
+            NOHELP
+            NOMINMAX
+            NOSERVIC
+            NOSOUND
+            NOKANJI
+            NOKERNEL
+            NOVIRTUALKEYBOARD
+            NOIME
+            NOKEYBOARDINFO
+            NOSYSCOMMANDS
+            NOSHOWWINDOW
+            NOCLIPBOARD
+            NOCOLOR
+            NOCOMM
+            NOCTLMGR
+            NODRAWTEXT
+            NOGDICAPMASKS
+            NOICONS
+            NOKEYSTATES
+            NOMB
+            NOOPENFILE
+            NOSCROLL
+            NOSERVICE
+            NOSOUND
+            NOTEXTMETRIC
+            NOWH
+            NOWINOFFSETS
+            NOWINMESSAGES
+            )
 
-set(DISABLE_FORTRAN ON)
-
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/fftw")
-if (LIBRAPID_USE_OMP)
-    target_link_libraries(${module_name} PUBLIC fftw3_omp)
 endif ()
-# target_link_libraries(${module_name} PUBLIC fftw3)
+
+if (LIBRAPID_GET_FFTW)
+    message(STATUS "[ LIBRAPID ] Building LibRapid with FFTW")
+
+    # FFTW
+    set(BUILD_SHARED_LIBS OFF)
+    set(BUILD_TESTS OFF)
+    set(ENABLE_OPENMP ${LIBRAPID_USE_OMP})
+    set(ENABLE_THREADS ${LIBRAPID_USE_OMP})
+    set(ENABLE_FLOAT OFF)
+    set(ENABLE_DOUBLE OFF)
+    set(ENABLE_LONG_DOUBLE OFF)
+    set(ENABLE_QUAD_PRECISION OFF)
+
+    set(ENABLE_AVX2 ON)
+    set(ENABLE_AVX ON)
+    set(ENABLE_SSE2 ON)
+    set(ENABLE_SSE ON)
+
+    set(DISABLE_FORTRAN ON)
+
+    set(ENABLE_DOUBLE ON)
+    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/FFTW_DOUBLE")
+        FetchContent_Declare(
+                FFTW_DOUBLE
+                GIT_REPOSITORY https://github.com/LibRapid/FFTW.git
+        )
+        FetchContent_MakeAvailable(FFTW_DOUBLE)
+    endif ()
+
+    set(ENABLE_DOUBLE OFF)
+    set(ENABLE_FLOAT ON)
+    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/FFTW_FLOAT")
+        FetchContent_Declare(
+                FFTW_FLOAT
+                GIT_REPOSITORY https://github.com/LibRapid/FFTW.git
+        )
+        FetchContent_MakeAvailable(FFTW_FLOAT)
+    endif ()
+
+    if (LIBRAPID_USE_OMP)
+        target_link_libraries(${module_name} PUBLIC fftw3_omp fftw3f_omp)
+    else ()
+        target_link_libraries(${module_name} PUBLIC fftw3 fftw3f)
+    endif ()
+    target_include_directories(${module_name} PUBLIC "${FETCHCONTENT_BASE_DIR}/fftw-src/api")
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_FFTW)
+endif ()
+
+target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/pocketfft")

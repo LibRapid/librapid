@@ -1,0 +1,8 @@
+#ifndef LIBRAPID_ARRAY_ITERATOR_HPP
+#define LIBRAPID_ARRAY_ITERATOR_HPP
+
+namespace librapid::detail {
+
+}
+
+#endif // LIBRAPID_ARRAY_ITERATOR_HPP

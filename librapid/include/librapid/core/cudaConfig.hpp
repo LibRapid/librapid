@@ -11,8 +11,8 @@
 #	endif
 
 #	define CUDA_NO_HALF // Ensure the cuda_helpers "half" data type is not defined
-#	include <cublas_v2.h>
 #	include <cuda.h>
+#	include <cublas_v2.h>
 #	include <curand.h>
 #	include <curand_kernel.h>
 #	include <cufft.h>
@@ -35,7 +35,7 @@ const char *getCublasErrorEnum_(cublasStatus_t error);
 
 #	if !defined(cublasSafeCall)
 #		define cublasSafeCall(err)                                                                \
-			LIBRRAPID_ASSERT_ALWAYS(                                                               \
+			LIBRAPID_ASSERT_ALWAYS(                                                                \
 			  (err) == CUBLAS_STATUS_SUCCESS, "cuBLAS error: {}", getCublasErrorEnum_(err))
 #	endif
 
@@ -57,7 +57,7 @@ const char *getCublasErrorEnum_(cublasStatus_t error);
 			} while (0)
 #	else
 #		define cudaSafeCall(call) (call)
-#		define jitifyCall(call) (call)
+#		define jitifyCall(call)   (call)
 #	endif
 
 #	ifdef _MSC_VER
@@ -77,20 +77,15 @@ namespace librapid::device {
 
 	// Signifies that device memory should be used
 	struct GPU {};
+
+#if defined(LIBRAPID_HAS_CUDA)
+	using GPUIfAvailable = GPU;
+#else
+	using GPUIfAvailable = CPU;
+#endif // LIBRAPID_HAS_CUDA
 } // namespace librapid::device
 
 // This needs to be defined before cudaHeaderLoader.hpp is included
-
-namespace librapid::global {
-#if defined(LIBRAPID_HAS_CUDA)
-
-	// LibRapid's CUDA stream -- this removes the need for calling cudaDeviceSynchronize()
-	extern cudaStream_t cudaStream;
-
-	extern jitify::JitCache jitCache;
-
-#endif // LIBRAPID_HAS_CUDA
-} // namespace librapid::global
 
 #include "../cuda/cudaKernelProcesor.hpp"
 

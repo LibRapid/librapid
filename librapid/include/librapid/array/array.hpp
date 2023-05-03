@@ -13,9 +13,10 @@
 #include "assignOps.hpp"
 #include "arrayView.hpp"
 #include "arrayViewString.hpp"
-#include "transpose.hpp"
 #include "arrayFromData.hpp"
 #include "pseudoConstructors.hpp"
 #include "fourierTransform.hpp"
+
+#include "linalg/linalg.hpp"
 
 #endif // LIBRAPID_ARRAY
