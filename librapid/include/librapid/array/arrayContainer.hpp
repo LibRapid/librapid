@@ -53,9 +53,6 @@ namespace librapid {
 			ArrayContainer();
 
 			template<typename T>
-			LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::initializer_list<T> &data);
-
-			template<typename T>
 			explicit LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::vector<T> &data);
 
 			/// Constructs an array container from a shape
