@@ -320,10 +320,20 @@
 
 #if defined(LIBRAPID_HAS_CUDA)
 #	include "cudaConfig.hpp"
+#else
+namespace librapid::typetraits {
+	template<typename T>
+	struct IsCudaStorage : std::false_type {};
+} // namespace librapid::typetraits
 #endif
 
 #if defined(LIBRAPID_HAS_OPENCL)
 #	include "openclConfig.hpp"
+#else
+namespace librapid::typetraits {
+	template<typename T>
+	struct IsOpenCLStorage : std::false_type {};
+} // namespace librapid::typetraits
 #endif
 
 namespace librapid::device {
