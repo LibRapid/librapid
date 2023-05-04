@@ -331,7 +331,7 @@ namespace librapid {
 		m_size	= size;
 
 		// Fill the data with "value"
-		runKernel<T, T>("fill", "fillArray", size, size, m_begin, value);
+		detail::impl::cuda::runKernel<T, T>("fill", "fillArray", size, size, m_begin, value);
 	}
 
 	template<typename T>

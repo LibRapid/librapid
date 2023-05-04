@@ -110,34 +110,5 @@ namespace librapid {
 			throw std::runtime_error(errorMsg);
 		}
 	}
-
-#else
-	int64_t openclDeviceCompute(const cl::Device &device) {
-		LIBRAPID_WARN("OpenCL is not available, so compute cannot be determined");
-	}
-
-	void updateOpenCLDevices(bool verbose = false) {
-		LIBRAPID_WARN("OpenCL is not available, so devices cannot be updated");
-	}
-
-	cl::Device findFastestDevice(const std::vector<cl::Device> &devices) {
-		LIBRAPID_WARN("OpenCL is not available, so fastest device cannot be found");
-	}
-
-	void configureOpenCL(bool verbose = false) {
-		LIBRAPID_WARN("OpenCL is not available, so it cannot be configured");
-	}
-
-	void addOpenCLKernelSource(const std::string &source) {
-		LIBRAPID_WARN("OpenCL is not available, so kernel source cannot be added");
-	}
-
-	void addOpenCLKernelFile(const std::string &filename) {
-		LIBRAPID_WARN("OpenCL is not available, so kernel file cannot be added");
-	}
-
-	void compileOpenCLKernels() {
-		LIBRAPID_WARN("OpenCL is not available, so kernels cannot be compiled");
-	}
 #endif // LIBRAPID_HAS_OPENCL
 } // namespace librapid

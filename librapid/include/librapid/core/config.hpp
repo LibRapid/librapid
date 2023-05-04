@@ -350,9 +350,23 @@ namespace librapid::device {
 #if defined(LIBRAPID_HAS_CUDA)
 	using Fastest = GPU;
 #elif defined(LIBRAPID_HAS_OPENCL)
-	using Fastest = OpenCL;
+	using Fastest			= OpenCL;
 #else
 	using Fastest = CPU;
+#endif
+
+	// GPU if available, CPU otherwise
+#if defined(LIBRAPID_HAS_CUDA)
+	using GPUIfAvailable = GPU;
+#else
+	using GPUIfAvailable	= CPU;
+#endif
+
+	// OpenCL if available, CPU otherwise
+#if defined(LIBRAPID_HAS_OPENCL)
+	using OpenCLIfAvailable = OpenCL;
+#else
+	using OpenCLIfAvailable = CPU;
 #endif
 } // namespace librapid::device
 
