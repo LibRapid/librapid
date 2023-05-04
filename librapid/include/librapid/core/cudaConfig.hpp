@@ -69,6 +69,11 @@ const char *getCublasErrorEnum_(cublasStatus_t error);
 
 #else
 
+namespace librapid::typetraits {
+	template<typename T>
+	struct IsCudaStorage : std::false_type {};
+}
+
 #endif // LIBRAPID_HAS_CUDA
 
 // This needs to be defined before cudaHeaderLoader.hpp is included

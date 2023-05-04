@@ -12,5 +12,12 @@
 #include "../OpenCL/openclConfigure.hpp"
 #include "../OpenCL/openclKernelProcessor.hpp"
 
+#else // LIBRAPID_HAS_OPENCL
+
+namespace librapid::typetraits {
+	template<typename T>
+	struct IsOpenCLStorage : std::false_type {};
+}
+
 #endif	   // LIBRAPID_HAS_OPENCL
 #endif	   // LIBRAPID_CORE_OPENCL_CONFIG_HPP
