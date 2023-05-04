@@ -183,8 +183,6 @@ namespace librapid::detail {
 		}
 	}
 
-#if defined(LIBRAPID_HAS_CUDA)
-
 	/*
 	 * Since we cannot (reasonably) generate the kernels at runtime (ease of development,
 	 * performance, etc.), operations such as (a + b) + c cannot be made into a singe kernel.
@@ -202,9 +200,91 @@ namespace librapid::detail {
 	 *    - The recursive case returns the result of calling the templated function with the
 	 *      Expression's left and right children
 	 * 3. Call the templated function with the result of the recursive function
+	 *
+	 * This will be slower than a single kernel call, but it saves us from having to generate one
+	 * each time, improving performance in the long run (hopefully).
 	 */
 
-	namespace impl {
+#if defined(LIBRAPID_HAS_OPENCL)
+
+	namespace impl::opencl {
+		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
+														 ::librapid::detail::LibRapidType::Scalar,
+													   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
+			return obj.storage().data();
+		}
+
+		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
+														 ::librapid::detail::LibRapidType::Scalar,
+													   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
+			return obj;
+		}
+
+		template<typename T>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const auto &
+		openCLTupleEvaluatorImpl(const T &scalar) {
+			return scalar;
+		}
+
+		template<typename ShapeType, typename StorageScalar>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const
+		  array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &
+		  openCLTupleEvaluatorImpl(
+			const array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &container) {
+			return container;
+		}
+
+		template<typename descriptor, typename Functor, typename... Args>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		openCLTupleEvaluatorImpl(const detail::Function<descriptor, Functor, Args...> &function) {
+			array::ArrayContainer<
+			  decltype(function.shape()),
+			  OpenCLStorage<typename detail::Function<descriptor, Functor, Args...>::Scalar>>
+			  result(function.shape());
+			assign(result, function);
+			return result;
+		}
+
+		template<typename descriptor, typename Functor, typename... Args, size_t... I>
+		LIBRAPID_ALWAYS_INLINE void
+		openCLTupleEvaluator(std::index_sequence<I...>, const std::string &kernelBase,
+							 cl::Buffer &dst,
+							 const detail::Function<descriptor, Functor, Args...> &function) {
+			using Scalar = typename detail::Function<descriptor, Functor, Args...>::Scalar;
+			runKernel<Scalar>(
+			  kernelBase,
+			  function.shape().size(),
+			  dst,
+			  dataSourceExtractor(openCLTupleEvaluatorImpl(std::get<I>(function.args())))...);
+		}
+	} // namespace impl::opencl
+
+	template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
+	LIBRAPID_ALWAYS_INLINE void
+	assign(array::ArrayContainer<ShapeType_, OpenCLStorage<StorageScalar>> &lhs,
+		   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
+		// Unfortunately, as we are not generating the kernels at runtime, we can't use
+		// temporary-free evaluation. Instead, we must recursively evaluate each sub-operation
+		// until a final result is computed
+
+		constexpr const char *filename = typetraits::TypeInfo<Functor_>::filename;
+		const char *kernelBase = typetraits::TypeInfo<Functor_>::getKernelName(function.args());
+		using Scalar =
+		  typename array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>::Scalar;
+
+		const auto args			 = function.args();
+		constexpr size_t argSize = std::tuple_size<decltype(args)>::value;
+		impl::opencl::openCLTupleEvaluator(
+		  std::make_index_sequence<argSize>(), kernelBase, lhs.storage().data(), function);
+	}
+
+#endif // LIBRAPID_HAS_CUDA
+
+#if defined(LIBRAPID_HAS_CUDA)
+
+	namespace impl::cuda {
 		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
 														 ::librapid::detail::LibRapidType::Scalar,
 													   int> = 0>
@@ -277,10 +357,9 @@ namespace librapid::detail {
 			  function.shape().size(),
 			  function.shape().size(),
 			  dst,
-			  // cudaTupleEvaluatorImpl(std::get<I>(function.args())).storage().begin()...);
 			  dataSourceExtractor(cudaTupleEvaluatorImpl(std::get<I>(function.args())))...);
 		}
-	} // namespace impl
+	} // namespace impl::cuda
 
 	/// Trivial assignment with CUDA execution
 	/// \tparam ShapeType_ The shape type of the array container
@@ -304,11 +383,11 @@ namespace librapid::detail {
 
 		const auto args			 = function.args();
 		constexpr size_t argSize = std::tuple_size<decltype(args)>::value;
-		impl::cudaTupleEvaluator(std::make_index_sequence<argSize>(),
-								 filename,
-								 kernelName,
-								 lhs.storage().begin().get(),
-								 function);
+		impl::cuda::cudaTupleEvaluator(std::make_index_sequence<argSize>(),
+									   filename,
+									   kernelName,
+									   lhs.storage().begin().get(),
+									   function);
 	}
 
 #endif // LIBRAPID_HAS_CUDA

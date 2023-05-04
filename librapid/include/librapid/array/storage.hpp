@@ -1,8 +1,8 @@
-#ifndef LIBRAPID_ARRAY_DENSE_STORAGE_HPP
-#define LIBRAPID_ARRAY_DENSE_STORAGE_HPP
+#ifndef LIBRAPID_ARRAY_STORAGE_HPP
+#define LIBRAPID_ARRAY_STORAGE_HPP
 
 /*
- * This file defines the DenseStorage class, which contains a contiguous
+ * This file defines the Storage class, which contains a contiguous
  * block of memory of a single data type.
  */
 
@@ -794,4 +794,4 @@ namespace librapid {
 	}
 } // namespace librapid
 
-#endif // LIBRAPID_ARRAY_DENSE_STORAGE_HPP
+#endif // LIBRAPID_ARRAY_STORAGE_HPP

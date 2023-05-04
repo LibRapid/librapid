@@ -18,6 +18,12 @@ namespace librapid {
 			using Device						 = device::GPU;
 		};
 
+		template<typename T>
+		struct IsCudaStorage : std::false_type {};
+
+		template<typename Scalar>
+		struct IsCudaStorage<CudaStorage<Scalar>> : std::true_type {};
+
 		LIBRAPID_DEFINE_AS_TYPE(typename Scalar_, CudaStorage<Scalar_>);
 	} // namespace typetraits
 
@@ -258,18 +264,7 @@ namespace librapid {
 		Pointer m_begin = nullptr; // It is more efficient to store pointers to the start
 		size_t m_size;
 		bool m_independent = true;
-
-		// Pointer m_end	= nullptr; // and end of the data block than to store the size
 	};
-
-	// Trait implementations
-	namespace typetraits {
-		template<typename T>
-		struct IsCudaStorage : std::false_type {};
-
-		template<typename Scalar>
-		struct IsCudaStorage<CudaStorage<Scalar>> : std::true_type {};
-	} // namespace typetraits
 
 	namespace detail {
 		template<typename T>

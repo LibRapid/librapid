@@ -83,6 +83,10 @@ namespace librapid {
 			/// \param other The array container to move.
 			LIBRAPID_ALWAYS_INLINE ArrayContainer(ArrayContainer &&other) noexcept = default;
 
+			template<typename desc, typename Functor_, typename... Args>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &
+			assign(const detail::Function<desc, Functor_, Args...> &function);
+
 			/// Construct an array container from a function object. This will assign the result of
 			/// the function to the array container, evaluating it accordingly.
 			/// \tparam desc The assignment descriptor
@@ -230,6 +234,7 @@ namespace librapid {
 				m_shape(shape),
 				m_storage(shape.size(), value) {
 			static_assert(typetraits::IsStorage<StorageType_>::value ||
+							typetraits::IsOpenCLStorage<StorageType_>::value ||
 							typetraits::IsCudaStorage<StorageType_>::value,
 						  "For a runtime-defined shape, "
 						  "the storage type must be "
@@ -256,32 +261,38 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename desc, typename Functor_, typename... Args>
+		auto ArrayContainer<ShapeType_, StorageType_>::assign(
+		  const detail::Function<desc, Functor_, Args...> &function) -> ArrayContainer & {
+			using FunctionType = detail::Function<desc, Functor_, Args...>;
+			m_storage.resize(function.shape().size(), 0);
+			if constexpr (std::is_same_v<typename FunctionType::Device, device::OpenCL> ||
+						  std::is_same_v<typename FunctionType::Device, device::GPU>) {
+				detail::assign(*this, function);
+			} else {
+#if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
+				if (m_storage.size() > global::multithreadThreshold && global::numThreads > 1)
+					detail::assignParallel(*this, function);
+				else
+#endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
+					detail::assign(*this, function);
+			}
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename desc, typename Functor_, typename... Args>
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
 		  const detail::Function<desc, Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT
 				: m_shape(function.shape()),
 				  m_storage(m_shape.size()) {
-#if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
-			if (m_storage.size() > global::multithreadThreshold && global::numThreads > 1)
-				detail::assignParallel(*this, function);
-			else
-#endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
-				detail::assign(*this, function);
+			assign(function);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename desc, typename Functor_, typename... Args>
 		auto ArrayContainer<ShapeType_, StorageType_>::operator=(
 		  const detail::Function<desc, Functor_, Args...> &function) -> ArrayContainer & {
-			using FunctionType = detail::Function<desc, Functor_, Args...>;
-			m_storage.resize(function.shape().size(), 0);
-#if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
-			if (!std::is_same_v<typename FunctionType::Device, device::GPU> &&
-				m_storage.size() > global::multithreadThreshold && global::numThreads > 1)
-				detail::assignParallel(*this, function);
-			else
-#endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
-				detail::assign(*this, function);
-			return *this;
+			return assign(function);
 		}
 
 		template<typename ShapeType_, typename StorageType_>

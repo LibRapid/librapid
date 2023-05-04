@@ -21,8 +21,11 @@ namespace librapid {
 				return FirstDevice {};
 			} else {
 				using RestDevice = decltype(commonDevice<Rest...>());
-				if constexpr (std::is_same_v<FirstDevice, device::GPU> ||
-							  std::is_same_v<RestDevice, device::GPU>) {
+				if constexpr (std::is_same_v<FirstDevice, device::OpenCL> ||
+							  std::is_same_v<RestDevice, device::OpenCL>) {
+					return device::OpenCL {};
+				} else if constexpr (std::is_same_v<FirstDevice, device::GPU> ||
+									 std::is_same_v<RestDevice, device::GPU>) {
 					return device::GPU {};
 				} else {
 					return device::CPU {};
@@ -222,7 +225,7 @@ namespace librapid {
 		template<typename desc, typename Functor, typename... Args>
 		auto Function<desc, Functor, Args...>::eval() const {
 			auto res = Array<Scalar, Device>(shape());
-			res = *this;
+			res		 = *this;
 			return res;
 		}
 

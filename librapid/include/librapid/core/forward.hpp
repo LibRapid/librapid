@@ -14,6 +14,9 @@ namespace librapid {
 	template<typename Scalar_, size_t... Dimensions>
 	class FixedStorage;
 
+	template<typename Scalar>
+	class OpenCLStorage;
+
 	template<typename Scalar_>
 	class CudaStorage;
 

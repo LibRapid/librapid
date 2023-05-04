@@ -14,6 +14,11 @@ namespace librapid {
 		};
 
 		template<typename Scalar>
+		struct TypeDefStorageEvaluator<Scalar, device::OpenCL> {
+			using Type = OpenCLStorage<Scalar>;
+		};
+
+		template<typename Scalar>
 		struct TypeDefStorageEvaluator<Scalar, device::GPU> {
 			using Type = CudaStorage<Scalar>;
 		};
