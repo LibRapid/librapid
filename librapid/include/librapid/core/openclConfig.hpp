@@ -9,6 +9,8 @@
 #		include <CL/cl.hpp>
 #	endif // LIBRAPID_APPLE
 
+#include <clblast.h>
+
 #include "../OpenCL/openclConfigure.hpp"
 #include "../OpenCL/openclKernelProcessor.hpp"
 

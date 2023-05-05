@@ -1,9 +1,13 @@
 [submodule "librapid/vendor/jitify"] # Jitify module for CUDA JIT compilation
  # Jitify module for CUDA JIT compilation
  # Jitify module for CUDA JIT compilation
+ # Jitify module for CUDA JIT compilation
+ # Jitify module for CUDA JIT compilation
 	path = librapid/vendor/jitify
 	url = https://github.com/Pencilcaseman/jitify.git
 [submodule "librapid/vendor/Vc"] # Vc module for SIMD instructions
+ # Vc module for SIMD instructions
+ # Vc module for SIMD instructions
  # Vc module for SIMD instructions
  # Vc module for SIMD instructions
 	path = librapid/vendor/Vc
@@ -11,14 +15,20 @@
 [submodule "librapid/vendor/fmt"] # {fmt} module for fast formatting and IO
  # {fmt} module for fast formatting and IO
  # {fmt} module for fast formatting and IO
+ # {fmt} module for fast formatting and IO
+ # {fmt} module for fast formatting and IO
 	path = librapid/vendor/fmt
 	url = https://github.com/fmtlib/fmt.git
 [submodule "librapid/vendor/scnlib"] # {scnlib} module for fast reverse formatting and IO
  # {scnlib} module for fast reverse formatting and IO
  # {scnlib} module for fast reverse formatting and IO
+ # {scnlib} module for fast reverse formatting and IO
+ # {scnlib} module for fast reverse formatting and IO
 	path = librapid/vendor/scnlib
 	url = https://github.com/eliaskosunen/scnlib.git
 [submodule "doxygenThemes"] # Make the documentation pretty
+ # Make the documentation pretty
+ # Make the documentation pretty
  # Make the documentation pretty
  # Make the documentation pretty
 	path = doxygenThemes
@@ -27,3 +37,6 @@
 [submodule "librapid/vendor/pocketfft"]
 	path = librapid/vendor/pocketfft
 	url = https://github.com/mreineck/pocketfft
+[submodule "librapid/vendor/CLBlast"]
+	path = librapid/vendor/CLBlast
+	url = https://github.com/CNugteren/CLBlast.git

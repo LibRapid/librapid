@@ -375,11 +375,17 @@ if (LIBRAPID_USE_OPENCL)
         target_include_directories(${module_name} PUBLIC ${OpenCL_INCLUDE_DIRS})
         target_link_libraries(${module_name} PUBLIC ${OpenCL_LIBRARIES})
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_OPENCL)
+
+        # Build static CLBlast library
+        set(BUILD_SHARED_LIBS OFF)
+        add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/CLBlast")
+        target_link_libraries(${module_name} PUBLIC clblast)
+        target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/CLBlast/include")
         set(LIBRAPID_HAS_OPENCL true)
     else ()
         message(WARNING "OpenCL support was requested, but a valid OpenCL installation could not be found")
     endif ()
-endif()
+endif ()
 
 if (${LIBRAPID_OPTIMISE_SMALL_ARRAYS})
     message(STATUS "[ LIBRAPID ] Small array optimisations enabled")
@@ -391,6 +397,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/fmt")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
 
+target_compile_definitions(fmt PUBLIC FMT_HEADER_ONLY)
 target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
 target_link_libraries(${module_name} PUBLIC fmt scn Vc)
 

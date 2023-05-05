@@ -246,14 +246,16 @@ namespace librapid {
 	OpenCLStorage<Scalar>::OpenCLStorage(std::initializer_list<Scalar> list) :
 			m_size(list.size()),
 			m_buffer(global::openCLContext, bufferFlags, m_size * sizeof(Scalar)) {
-		initData(list.begin(), list.end());
+		global::openCLQueue.enqueueWriteBuffer(
+		  m_buffer, CL_TRUE, 0, m_size * sizeof(Scalar), list.begin());
 	}
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(const std::vector<Scalar> &vec) :
 			m_size(vec.size()),
 			m_buffer(global::openCLContext, bufferFlags, m_size * sizeof(Scalar)) {
-		initData(vec.begin(), vec.end());
+		global::openCLQueue.enqueueWriteBuffer(
+		  m_buffer, CL_TRUE, 0, m_size * sizeof(Scalar), vec.data());
 	}
 
 	template<typename Scalar>
