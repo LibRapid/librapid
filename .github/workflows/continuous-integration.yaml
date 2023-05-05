@@ -285,7 +285,7 @@ jobs:
           env: on
 
       - name: Install XCode
-        if: matrix.os == "macos-latest"
+        if: matrix.os == 'macos-latest'
         uses: maxim-lobanov/setup-xcode@v1.5.1
 
       # Tests must pass in both debug and release mode
