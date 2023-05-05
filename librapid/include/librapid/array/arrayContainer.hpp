@@ -328,15 +328,35 @@ namespace librapid {
 			  index,
 			  m_shape[0]);
 
-			if constexpr (std::is_same_v<typename typetraits::TypeInfo<ArrayContainer>::Device,
-										 device::GPU>) {
+			if constexpr (typetraits::IsOpenCLStorage<StorageType_>::value) {
+#if defined(LIBRAPID_HAS_OPENCL)
+				ArrayContainer res;
+				res.m_shape	 = m_shape.subshape(1, ndim());
+				auto subSize = res.shape().size();
+				int64_t storageSize = sizeof(typename StorageType_::Scalar);
+				cl_buffer_region region {index * subSize * storageSize, subSize * storageSize};
+				res.m_storage =
+				  StorageType_(m_storage.data().createSubBuffer(
+								 StorageType_::bufferFlags, CL_BUFFER_CREATE_TYPE_REGION, &region),
+							   subSize,
+							   false);
+				return res;
+#else
+					LIBRAPID_ERROR("OpenCL support not enabled");
+#endif // LIBRAPID_HAS_OPENCL
+			} else if constexpr (typetraits::IsCudaStorage<StorageType_>::value) {
+#if defined(LIBRAPID_HAS_CUDA)
 				ArrayContainer res;
 				res.m_shape	  = m_shape.subshape(1, ndim());
 				auto subSize  = res.shape().size();
 				Scalar *begin = m_storage.begin().get() + index * subSize;
 				res.m_storage = StorageType_(begin, subSize, false);
-
 				return res;
+#else
+					LIBRAPID_ERROR("CUDA support not enabled");
+#endif // LIBRAPID_HAS_CUDA
+			} else if constexpr (typetraits::IsFixedStorage<StorageType_>::value) {
+				return ArrayView(*this)[index];
 			} else {
 				ArrayContainer res;
 				res.m_shape	  = m_shape.subshape(1, ndim());
@@ -344,7 +364,6 @@ namespace librapid {
 				Scalar *begin = m_storage.begin() + index * subSize;
 				Scalar *end	  = begin + subSize;
 				res.m_storage = StorageType_(begin, end, false);
-
 				return res;
 			}
 		}
@@ -358,10 +377,11 @@ namespace librapid {
 			  m_shape[0]);
 
 			if constexpr (typetraits::IsOpenCLStorage<StorageType_>::value) {
+#if defined(LIBRAPID_HAS_OPENCL)
 				ArrayContainer res;
 				res.m_shape	 = m_shape.subshape(1, ndim());
 				auto subSize = res.shape().size();
-				int64_t storageSize = sizeof(StorageType_::Scalar);
+				int64_t storageSize = sizeof(typename StorageType_::Scalar);
 				cl_buffer_region region {index * subSize * storageSize, subSize * storageSize};
 				res.m_storage =
 				  StorageType_(m_storage.data().createSubBuffer(
@@ -369,13 +389,20 @@ namespace librapid {
 							   subSize,
 							   false);
 				return res;
+#else
+				LIBRAPID_ERROR("OpenCL support not enabled");
+#endif // LIBRAPID_HAS_OPENCL
 			} else if constexpr (typetraits::IsCudaStorage<StorageType_>::value) {
+#if defined(LIBRAPID_HAS_CUDA)
 				ArrayContainer res;
 				res.m_shape	  = m_shape.subshape(1, ndim());
 				auto subSize  = res.shape().size();
 				Scalar *begin = m_storage.begin().get() + index * subSize;
 				res.m_storage = StorageType_(begin, subSize, false);
 				return res;
+#else
+				LIBRAPID_ERROR("CUDA support not enabled");
+#endif // LIBRAPID_HAS_CUDA
 			} else if constexpr (typetraits::IsFixedStorage<StorageType_>::value) {
 				return ArrayView(*this)[index];
 			} else {
