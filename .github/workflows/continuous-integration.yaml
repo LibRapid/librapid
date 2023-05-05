@@ -277,7 +277,7 @@ jobs:
           submodules: recursive
 
       - name: Install Clang
-        if: matrix.cc == "../llvm/bin/clang-15" || matrix.cc == "../llvm/clang"
+        if: matrix.cc == '../llvm/bin/clang-15' || matrix.cc == '../llvm/clang'
         uses: KyleMayes/install-llvm-action@v1
         with:
           version: "15.0"
