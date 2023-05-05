@@ -357,28 +357,35 @@ namespace librapid {
 			  index,
 			  m_shape[0]);
 
-			if constexpr (std::is_same_v<typename typetraits::TypeInfo<ArrayContainer>::Device,
-										 device::GPU>) {
+			if constexpr (typetraits::IsOpenCLStorage<StorageType_>::value) {
+				ArrayContainer res;
+				res.m_shape	 = m_shape.subshape(1, ndim());
+				auto subSize = res.shape().size();
+				int64_t storageSize = sizeof(StorageType_::Scalar);
+				cl_buffer_region region {index * subSize * storageSize, subSize * storageSize};
+				res.m_storage =
+				  StorageType_(m_storage.data().createSubBuffer(
+								 StorageType_::bufferFlags, CL_BUFFER_CREATE_TYPE_REGION, &region),
+							   subSize,
+							   false);
+				return res;
+			} else if constexpr (typetraits::IsCudaStorage<StorageType_>::value) {
 				ArrayContainer res;
 				res.m_shape	  = m_shape.subshape(1, ndim());
 				auto subSize  = res.shape().size();
 				Scalar *begin = m_storage.begin().get() + index * subSize;
 				res.m_storage = StorageType_(begin, subSize, false);
-
 				return res;
+			} else if constexpr (typetraits::IsFixedStorage<StorageType_>::value) {
+				return ArrayView(*this)[index];
 			} else {
-				if constexpr (typetraits::IsFixedStorage<StorageType_>::value) {
-					return ArrayView(*this)[index];
-				} else {
-					ArrayContainer res;
-					res.m_shape	  = m_shape.subshape(1, ndim());
-					auto subSize  = res.shape().size();
-					Scalar *begin = m_storage.begin() + index * subSize;
-					Scalar *end	  = begin + subSize;
-					res.m_storage = StorageType_(begin, end, false);
-
-					return res;
-				}
+				ArrayContainer res;
+				res.m_shape	  = m_shape.subshape(1, ndim());
+				auto subSize  = res.shape().size();
+				Scalar *begin = m_storage.begin() + index * subSize;
+				Scalar *end	  = begin + subSize;
+				res.m_storage = StorageType_(begin, end, false);
+				return res;
 			}
 		}
 

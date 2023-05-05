@@ -13,18 +13,16 @@ namespace librapid {
 		std::vector<cl::Platform> platforms;
 		cl::Platform::get(&platforms);
 
-		for (int64_t i = 0; i < platforms.size(); ++i) {
+		for (const auto & platform : platforms) {
 			std::vector<cl::Device> devices;
-			platforms[i].getDevices(CL_DEVICE_TYPE_ALL, &devices);
+			platform.getDevices(CL_DEVICE_TYPE_ALL, &devices);
 			if (!devices.empty()) {
-				if (verbose) fmt::print("Platform: {}\n", platforms[i].getInfo<CL_PLATFORM_NAME>());
+				if (verbose) fmt::print("Platform: {}\n", platform.getInfo<CL_PLATFORM_NAME>());
 
 				for (auto &device : devices) {
-					global::openclDevices.push_back(device);
-
 					if (verbose) {
 						fmt::print("\tDevice [id={}]: {}\n",
-								   global::openclDevices.size() - 1,
+								   global::openclDevices.size(),
 								   device.getInfo<CL_DEVICE_NAME>());
 
 						fmt::print("\t\tCompute: {}\n",
@@ -35,6 +33,8 @@ namespace librapid {
 								   (device.getInfo<CL_DEVICE_GLOBAL_MEM_SIZE>() + (1 << 30)) /
 									 (1 << 30));
 					}
+
+					global::openclDevices.push_back(device);
 				}
 			}
 		}
@@ -56,12 +56,13 @@ namespace librapid {
 
 	void configureOpenCL(bool verbose) {
 		if (verbose) fmt::print("======= OpenCL Configuration =======\n");
-
 		updateOpenCLDevices(verbose);
 
 		if (!verbose) {
+			// If not verbose, select the fastest device by default
 			global::openCLDevice = findFastestDevice(global::openclDevices);
 		} else {
+			// Otherwise, prompt the user to select a device
 			int64_t deviceIndex = -1;
 			while (deviceIndex < 0 || deviceIndex >= global::openclDevices.size()) {
 				std::string prompt =
