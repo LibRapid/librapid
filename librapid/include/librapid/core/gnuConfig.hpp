@@ -87,10 +87,10 @@
 		do {                                                                                       \
 			std::string funcName = FUNCTION;                                                       \
 			if (funcName.length() > 75) funcName = "<Signature too Long>";                         \
-			int maxLen = librapiod::detail::internalMax((int)std::ceil(std::log(__LINE__)) + 6,    \
-														(int)strlen(FILENAME) + 6,                 \
-														(int)funcName.length() + 6,                \
-														(int)strlen("WARN ASSERTION FAILED"));     \
+			int maxLen = librapid::detail::internalMax((int)std::ceil(std::log(__LINE__)) + 6,     \
+													   (int)strlen(FILENAME) + 6,                  \
+													   (int)funcName.length() + 6,                 \
+													   (int)strlen("WARN ASSERTION FAILED"));      \
 			fmt::print(fmt::fg(fmt::color::red),                                                   \
 					   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                                  \
 					   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                        \
