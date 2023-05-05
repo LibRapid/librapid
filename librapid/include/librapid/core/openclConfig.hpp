@@ -4,7 +4,7 @@
 #if defined(LIBRAPID_HAS_OPENCL)
 
 #	if defined(LIBRAPID_APPLE)
-#		include <OpenCL/cl.hpp>
+#		include <OpenCL/opencl.hpp>
 #	else
 #		include <CL/cl.hpp>
 #	endif // LIBRAPID_APPLE
