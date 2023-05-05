@@ -4,7 +4,7 @@
 #if defined(LIBRAPID_HAS_OPENCL)
 
 namespace librapid::detail::impl::opencl {
-	template<int64_t... I, typename... Args>
+	template<size_t... I, typename... Args>
 	void setKernelArgs(cl::Kernel &kernel, const std::tuple<Args...> &args,
 					   std::index_sequence<I...>) {
 		((kernel.setArg(I, std::get<I>(args))), ...);
