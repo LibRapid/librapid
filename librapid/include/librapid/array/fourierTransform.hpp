@@ -83,11 +83,11 @@ namespace librapid::fft {
 	}	  // namespace detail
 
 	template<typename ShapeType, typename StorageScalar, typename StorageAllocator>
-	LIBRAPID_NODISCARD Array<Complex<StorageScalar>, device::CPU>
+	LIBRAPID_NODISCARD Array<Complex<StorageScalar>, backend::CPU>
 	rfft(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &array) {
 		LIBRAPID_ASSERT(array.ndim() == 1, "RFFT only implemented for 1D arrays");
 		int64_t outSize = array.shape()[0] / 2 + 1;
-		Array<Complex<StorageScalar>, device::CPU> res(Shape({outSize}));
+		Array<Complex<StorageScalar>, backend::CPU> res(Shape({outSize}));
 		StorageScalar *input		   = array.storage().begin();
 		Complex<StorageScalar> *output = res.storage().begin();
 		detail::cpu::rfft(output, input, array.shape()[0]);
@@ -96,10 +96,10 @@ namespace librapid::fft {
 
 #if defined(LIBRAPID_HAS_CUDA)
 	template<typename Scalar>
-	LIBRAPID_NODISCARD Array<Complex<Scalar>, device::GPU> rfft(Array<Scalar, device::GPU> &array) {
+	LIBRAPID_NODISCARD Array<Complex<Scalar>, backend::CUDA> rfft(Array<Scalar, backend::CUDA> &array) {
 		LIBRAPID_ASSERT(array.ndim() == 1, "RFFT only implemented for 1D arrays");
 		int64_t outSize = array.shape()[0] / 2 + 1;
-		Array<Complex<Scalar>, device::GPU> res(Shape({outSize}));
+		Array<Complex<Scalar>, backend::CUDA> res(Shape({outSize}));
 		Scalar *input			= array.storage().begin().get();
 		Complex<Scalar> *output = res.storage().begin().get();
 		detail::gpu::rfft(output, input, array.shape()[0]);

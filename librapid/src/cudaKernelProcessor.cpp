@@ -2,7 +2,7 @@
 
 #	include <librapid/librapid.hpp>
 
-namespace librapid::detail::impl::cuda {
+namespace librapid::cuda {
 	std::string loadKernel(const std::string &kernelName) {
 		static std::map<std::string, std::string> mapping;
 
@@ -26,6 +26,6 @@ namespace librapid::detail::impl::cuda {
 		mapping[kernelName] = kernelName + "\n" + buffer.str();
 		return mapping[kernelName];
 	}
-} // namespace librapid::detail::impl::cuda
+} // namespace librapid::cuda
 
 #endif // LIBRAPID_HAS_CUDA

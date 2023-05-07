@@ -3,7 +3,7 @@
 
 #if defined(LIBRAPID_HAS_CUDA)
 
-namespace librapid::detail::impl::cuda {
+namespace librapid::cuda {
 	/// Load a CUDA kernel from a file and return the string representation of it.
 	/// \param relPath File path relative to LibRapid's "cuda/kernels" directory
 	/// \return String representation of the kernel
@@ -54,7 +54,7 @@ namespace librapid::detail::impl::cuda {
 				   Args... arguments) {
 		runKernelString<Templates...>(loadKernel(name), kernelName, elements, arguments...);
 	}
-} // namespace librapid
+} // namespace librapid::cuda
 
 #endif // LIBRAPID_HAS_CUDA
 

@@ -91,18 +91,18 @@
 													   (int)strlen(FILENAME) + 6,                  \
 													   (int)funcName.length() + 6,                 \
 													   (int)strlen("WARN ASSERTION FAILED"));      \
-			fmt::print(fmt::fg(fmt::color::red),                                                   \
-					   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                                  \
-					   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                        \
-					   "ERROR",                                                                    \
-					   FILENAME,                                                                   \
-					   funcName,                                                                   \
-					   __LINE__,                                                                   \
-					   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                                \
-					   maxLen + 5,                                                                 \
-					   maxLen + 0,                                                                 \
-					   maxLen - 4,                                                                 \
-					   maxLen);                                                                    \
+			std::string formatted = fmt::format(fmt::fg(fmt::color::red),                          \
+												"[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "         \
+												"{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",               \
+												"ERROR",                                           \
+												FILENAME,                                          \
+												funcName,                                          \
+												__LINE__,                                          \
+												fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),       \
+												maxLen + 5,                                        \
+												maxLen + 0,                                        \
+												maxLen - 4,                                        \
+												maxLen);                                           \
 			if (librapid::global::throwOnAssert) {                                                 \
 				throw std::runtime_error(formatted);                                               \
 			} else {                                                                               \

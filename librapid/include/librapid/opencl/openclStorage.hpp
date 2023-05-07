@@ -16,7 +16,7 @@ namespace librapid {
 		struct TypeInfo<OpenCLStorage<Scalar_>> {
 			static constexpr bool isLibRapidType = true;
 			using Scalar						 = Scalar_;
-			using Device						 = device::OpenCL;
+			using Backend						 = backend::OpenCL;
 		};
 
 		template<typename T>
@@ -148,7 +148,7 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE OpenCLStorage(SizeType size, Scalar value);
 
 		LIBRAPID_ALWAYS_INLINE OpenCLStorage(const cl::Buffer &buffer, SizeType size,
-											 bool independent);
+											 bool ownsData);
 
 		/// \brief Construct an OpenCLStorage from another instance
 		/// \param other The other instance
@@ -169,6 +169,8 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE OpenCLStorage &operator=(const OpenCLStorage &other);
 
 		LIBRAPID_ALWAYS_INLINE OpenCLStorage &operator=(OpenCLStorage &&other) noexcept;
+
+		void set(const OpenCLStorage &other);
 
 		template<typename ShapeType>
 		static ShapeType defaultShape();
@@ -210,7 +212,7 @@ namespace librapid {
 
 		SizeType m_size;
 		cl::Buffer m_buffer;
-		bool m_independent = true;
+		bool m_ownsData = true;
 	};
 
 	template<typename Scalar>
@@ -224,10 +226,8 @@ namespace librapid {
 	}
 
 	template<typename Scalar>
-	OpenCLStorage<Scalar>::OpenCLStorage(const cl::Buffer &buffer, SizeType size,
-										 bool independent) :
-			m_size(size),
-			m_buffer(buffer), m_independent(independent) {}
+	OpenCLStorage<Scalar>::OpenCLStorage(const cl::Buffer &buffer, SizeType size, bool ownsData) :
+			m_size(size), m_buffer(buffer), m_ownsData(ownsData) {}
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(const OpenCLStorage &other) :
@@ -238,14 +238,15 @@ namespace librapid {
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(OpenCLStorage &&other) noexcept :
-			m_size(other.m_size), m_buffer(std::move(other.m_buffer)) {
+			m_size(other.m_size), m_buffer(std::move(other.m_buffer)),
+			m_ownsData(other.m_ownsData) {
 		other.m_size = 0;
 	}
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(std::initializer_list<Scalar> list) :
 			m_size(list.size()),
-			m_buffer(global::openCLContext, bufferFlags, m_size * sizeof(Scalar)) {
+			m_buffer(global::openCLContext, bufferFlags, list.size() * sizeof(Scalar)) {
 		global::openCLQueue.enqueueWriteBuffer(
 		  m_buffer, CL_TRUE, 0, m_size * sizeof(Scalar), list.begin());
 	}
@@ -261,7 +262,7 @@ namespace librapid {
 	template<typename Scalar>
 	OpenCLStorage<Scalar> &OpenCLStorage<Scalar>::operator=(const OpenCLStorage &other) {
 		if (this != &other) {
-			LIBRAPID_ASSERT(m_independent || m_size == other.m_size,
+			LIBRAPID_ASSERT(m_ownsData || m_size == other.m_size,
 							"Cannot copy into dependent "
 							"OpenCLStorage with different "
 							"size");
@@ -275,7 +276,7 @@ namespace librapid {
 	template<typename Scalar>
 	OpenCLStorage<Scalar> &OpenCLStorage<Scalar>::operator=(OpenCLStorage &&other) noexcept {
 		if (this != &other) {
-			if (m_independent) {
+			if (m_ownsData) {
 				m_buffer	 = std::move(other.m_buffer);
 				m_size		 = other.m_size;
 				other.m_size = 0;
@@ -288,6 +289,13 @@ namespace librapid {
 			}
 		}
 		return *this;
+	}
+
+	template<typename Scalar>
+	void OpenCLStorage<Scalar>::set(const OpenCLStorage &other) {
+		m_buffer   = other.m_buffer;
+		m_size	   = other.m_size;
+		m_ownsData = other.m_ownsData;
 	}
 
 	template<typename Scalar>

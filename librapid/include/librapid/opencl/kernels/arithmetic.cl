@@ -17,15 +17,6 @@
 		dst[gid] = lhs OP rhs[gid];                                                                \
 	}
 
-typedef char int8_t;
-typedef short int16_t;
-typedef int int32_t;
-typedef long int64_t;
-typedef unsigned char uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int uint32_t;
-typedef unsigned long uint64_t;
-
 #define ARITHMETIC_OP_IMPL(NAME, OP)                                                               \
 	ARITHMETIC_KERNEL(NAME, OP, int8_t)                                                            \
 	ARITHMETIC_KERNEL(NAME, OP, int16_t)                                                           \

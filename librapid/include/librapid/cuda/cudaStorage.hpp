@@ -6,7 +6,7 @@
 /*
  * Implement a storage class for CUDA data structures. It will expose
  * the same functions as the `librapid::Storage` class, but the underlying
- * memory buffer will be allocated on the device.
+ * memory buffer will be allocated on the GPU.
  */
 
 namespace librapid {
@@ -15,7 +15,7 @@ namespace librapid {
 		struct TypeInfo<CudaStorage<Scalar_>> {
 			static constexpr bool isLibRapidType = true;
 			using Scalar						 = Scalar_;
-			using Device						 = device::GPU;
+			using Backend						 = backend::CUDA;
 		};
 
 		template<typename T>
@@ -191,6 +191,8 @@ namespace librapid {
 		/// \param vec The vector to fill with
 		LIBRAPID_ALWAYS_INLINE explicit CudaStorage(const std::vector<Scalar> &vec);
 
+		void set(const CudaStorage &other);
+
 		template<typename ShapeType>
 		static ShapeType defaultShape();
 
@@ -263,7 +265,7 @@ namespace librapid {
 
 		Pointer m_begin = nullptr; // It is more efficient to store pointers to the start
 		size_t m_size;
-		bool m_independent = true;
+		bool m_ownsData = true;
 	};
 
 	namespace detail {
@@ -331,7 +333,7 @@ namespace librapid {
 		m_size	= size;
 
 		// Fill the data with "value"
-		detail::impl::cuda::runKernel<T, T>("fill", "fillArray", size, size, m_begin, value);
+		cuda::runKernel<T, T>("fill", "fillArray", size, size, m_begin, value);
 	}
 
 	template<typename T>
@@ -341,15 +343,15 @@ namespace librapid {
 			  std::shared_ptr<Scalar>(begin, [](Scalar *ptr) { detail::cudaSafeDeallocate(ptr); });
 		else
 			m_begin = std::shared_ptr<Scalar>(begin, [](Scalar *ptr) {});
-		m_size		  = size;
-		m_independent = independent;
+		m_size	   = size;
+		m_ownsData = independent;
 	}
 
 	template<typename T>
 	CudaStorage<T>::CudaStorage(const CudaStorage &other) {
-		m_begin		  = detail::cudaSharedPtrAllocate<T>(other.size());
-		m_size		  = other.size();
-		m_independent = other.m_independent;
+		m_begin	   = detail::cudaSharedPtrAllocate<T>(other.size());
+		m_size	   = other.size();
+		m_ownsData = other.m_ownsData;
 		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
 									 other.begin().get(),
 									 sizeof(T) * other.size(),
@@ -359,7 +361,7 @@ namespace librapid {
 
 	template<typename T>
 	CudaStorage<T>::CudaStorage(CudaStorage &&other) noexcept :
-			m_begin(other.m_begin), m_size(other.m_size), m_independent(other.m_independent) {
+			m_begin(other.m_begin), m_size(other.m_size), m_ownsData(other.m_ownsData) {
 		other.m_begin = nullptr;
 		other.m_size  = 0;
 	}
@@ -388,6 +390,13 @@ namespace librapid {
 	}
 
 	template<typename T>
+	void CudaStorage<T>::set(const CudaStorage &other) {
+		m_begin	   = other.m_begin;
+		m_size	   = other.m_size;
+		m_ownsData = other.m_ownsData;
+	}
+
+	template<typename T>
 	template<typename ShapeType>
 	ShapeType CudaStorage<T>::defaultShape() {
 		return ShapeType({0});
@@ -413,7 +422,7 @@ namespace librapid {
 	auto CudaStorage<T>::operator=(const CudaStorage<T> &storage) -> CudaStorage & {
 		if (this != &storage) {
 			LIBRAPID_ASSERT(
-			  !m_independent || size() == storage.size(),
+			  !m_ownsData || size() == storage.size(),
 			  "Mismatched storage sizes. Cannot assign CUDA storage with {} elements to "
 			  "dependent CUDA storage with {} elements",
 			  storage.size(),
@@ -432,15 +441,15 @@ namespace librapid {
 	template<typename T>
 	auto CudaStorage<T>::operator=(CudaStorage &&other) noexcept -> CudaStorage & {
 		if (this != &other) {
-			if (m_independent) {
+			if (m_ownsData) {
 				m_begin		  = other.m_begin;
 				m_size		  = other.m_size;
 				other.m_begin = nullptr;
 				other.m_size  = 0;
-				m_independent = other.m_independent;
+				m_ownsData	  = other.m_ownsData;
 			} else {
 				LIBRAPID_ASSERT(
-				  !m_independent || size() == other.size(),
+				  !m_ownsData || size() == other.size(),
 				  "Mismatched storage sizes. Cannot assign CUDA storage with {} elements to "
 				  "dependent CUDA storage with {} elements",
 				  other.size(),
@@ -459,7 +468,8 @@ namespace librapid {
 
 	template<typename T>
 	CudaStorage<T>::~CudaStorage() {
-		// detail::cudaSafeDeallocate(m_begin);
+		// Data is freed automatically by the shared_ptr. A custom deleter is used to ensure that
+		// nothing happens if the storage is dependent.
 	}
 
 	template<typename T>
@@ -508,7 +518,7 @@ namespace librapid {
 	template<typename T>
 	void CudaStorage<T>::resizeImpl(SizeType newSize, int) {
 		if (newSize == size()) return;
-		LIBRAPID_ASSERT(!m_independent, "Dependent CUDA storage cannot be resized");
+		LIBRAPID_ASSERT(!m_ownsData, "Dependent CUDA storage cannot be resized");
 		m_begin = detail::cudaSharedPtrAllocate<T>(newSize);
 		m_size	= newSize;
 	}
@@ -539,9 +549,9 @@ namespace librapid {
 	}
 } // namespace librapid
 
-#if defined(FMT_API)
+#	if defined(FMT_API)
 LIBRAPID_SIMPLE_IO_IMPL(typename T, librapid::detail::CudaRef<T>)
-#endif // FM_API
+#	endif // FM_API
 #else
 // Trait implementations
 namespace librapid::typetraits {
@@ -549,5 +559,5 @@ namespace librapid::typetraits {
 	template<typename T>
 	struct IsCudaStorage : std::false_type {};
 } // namespace librapid::typetraits
-#endif // LIBRAPID_HAS_CUDA
-#endif // LIBRAPID_ARRAY_CUDA_STORAGE_HPP
+#endif	   // LIBRAPID_HAS_CUDA
+#endif	   // LIBRAPID_ARRAY_CUDA_STORAGE_HPP

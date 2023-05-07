@@ -7,7 +7,7 @@ namespace librapid {
 		struct TypeInfo<array::ArrayContainer<ShapeType_, StorageType_>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayContainer;
 			using Scalar							   = typename TypeInfo<StorageType_>::Scalar;
-			using Device							   = typename TypeInfo<StorageType_>::Device;
+			using Backend							   = typename TypeInfo<StorageType_>::Backend;
 			static constexpr bool allowVectorisation   = TypeInfo<Scalar>::packetWidth > 1;
 		};
 
@@ -35,7 +35,7 @@ namespace librapid {
 			using SizeType	  = typename ShapeType::SizeType;
 			using Scalar	  = typename StorageType::Scalar;
 			using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;
-			using Device	  = typename typetraits::TypeInfo<ArrayContainer>::Device;
+			using Backend	  = typename typetraits::TypeInfo<ArrayContainer>::Backend;
 
 #if defined(LIBRAPID_HAS_CUDA)
 			using DirectSubscriptType =
@@ -132,7 +132,7 @@ namespace librapid {
 			template<typename T>
 			detail::CommaInitializer<ArrayContainer> operator<<(const T &value);
 
-			// template<typename ScalarTo = Scalar, typename DeviceTo = Device>
+			// template<typename ScalarTo = Scalar, typename BackendTo = Backend>
 			// LIBRAPID_NODISCARD auto cast() const;
 
 			// LIBRAPID_NODISCARD auto copy() const;
@@ -265,8 +265,8 @@ namespace librapid {
 		  const detail::Function<desc, Functor_, Args...> &function) -> ArrayContainer & {
 			using FunctionType = detail::Function<desc, Functor_, Args...>;
 			m_storage.resize(function.shape().size(), 0);
-			if constexpr (std::is_same_v<typename FunctionType::Device, device::OpenCL> ||
-						  std::is_same_v<typename FunctionType::Device, device::GPU>) {
+			if constexpr (std::is_same_v<typename FunctionType::Backend, backend::OpenCL> ||
+						  std::is_same_v<typename FunctionType::Backend, backend::CUDA>) {
 				detail::assign(*this, function);
 			} else {
 #if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
@@ -331,56 +331,8 @@ namespace librapid {
 			if constexpr (typetraits::IsOpenCLStorage<StorageType_>::value) {
 #if defined(LIBRAPID_HAS_OPENCL)
 				ArrayContainer res;
-				res.m_shape	 = m_shape.subshape(1, ndim());
-				auto subSize = res.shape().size();
-				int64_t storageSize = sizeof(typename StorageType_::Scalar);
-				cl_buffer_region region {index * subSize * storageSize, subSize * storageSize};
-				res.m_storage =
-				  StorageType_(m_storage.data().createSubBuffer(
-								 StorageType_::bufferFlags, CL_BUFFER_CREATE_TYPE_REGION, &region),
-							   subSize,
-							   false);
-				return res;
-#else
-					LIBRAPID_ERROR("OpenCL support not enabled");
-#endif // LIBRAPID_HAS_OPENCL
-			} else if constexpr (typetraits::IsCudaStorage<StorageType_>::value) {
-#if defined(LIBRAPID_HAS_CUDA)
-				ArrayContainer res;
-				res.m_shape	  = m_shape.subshape(1, ndim());
-				auto subSize  = res.shape().size();
-				Scalar *begin = m_storage.begin().get() + index * subSize;
-				res.m_storage = StorageType_(begin, subSize, false);
-				return res;
-#else
-					LIBRAPID_ERROR("CUDA support not enabled");
-#endif // LIBRAPID_HAS_CUDA
-			} else if constexpr (typetraits::IsFixedStorage<StorageType_>::value) {
-				return ArrayView(*this)[index];
-			} else {
-				ArrayContainer res;
-				res.m_shape	  = m_shape.subshape(1, ndim());
-				auto subSize  = res.shape().size();
-				Scalar *begin = m_storage.begin() + index * subSize;
-				Scalar *end	  = begin + subSize;
-				res.m_storage = StorageType_(begin, end, false);
-				return res;
-			}
-		}
-
-		template<typename ShapeType_, typename StorageType_>
-		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) {
-			LIBRAPID_ASSERT(
-			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
-			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
-			  index,
-			  m_shape[0]);
-
-			if constexpr (typetraits::IsOpenCLStorage<StorageType_>::value) {
-#if defined(LIBRAPID_HAS_OPENCL)
-				ArrayContainer res;
-				res.m_shape	 = m_shape.subshape(1, ndim());
-				auto subSize = res.shape().size();
+				res.m_shape			= m_shape.subshape(1, ndim());
+				auto subSize		= res.shape().size();
 				int64_t storageSize = sizeof(typename StorageType_::Scalar);
 				cl_buffer_region region {index * subSize * storageSize, subSize * storageSize};
 				res.m_storage =
@@ -412,6 +364,54 @@ namespace librapid {
 				Scalar *begin = m_storage.begin() + index * subSize;
 				Scalar *end	  = begin + subSize;
 				res.m_storage = StorageType_(begin, end, false);
+				return res;
+			}
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) {
+			LIBRAPID_ASSERT(
+			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
+			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
+			  index,
+			  m_shape[0]);
+
+			if constexpr (typetraits::IsOpenCLStorage<StorageType_>::value) {
+#if defined(LIBRAPID_HAS_OPENCL)
+				ArrayContainer res;
+				res.m_shape			= m_shape.subshape(1, ndim());
+				auto subSize		= res.shape().size();
+				int64_t storageSize = sizeof(typename StorageType_::Scalar);
+				cl_buffer_region region {index * subSize * storageSize, subSize * storageSize};
+				res.m_storage.set(
+				  StorageType_(m_storage.data().createSubBuffer(
+								 StorageType_::bufferFlags, CL_BUFFER_CREATE_TYPE_REGION, &region),
+							   subSize,
+							   false));
+				return res;
+#else
+				LIBRAPID_ERROR("OpenCL support not enabled");
+#endif // LIBRAPID_HAS_OPENCL
+			} else if constexpr (typetraits::IsCudaStorage<StorageType_>::value) {
+#if defined(LIBRAPID_HAS_CUDA)
+				ArrayContainer res;
+				res.m_shape	  = m_shape.subshape(1, ndim());
+				auto subSize  = res.shape().size();
+				Scalar *begin = m_storage.begin().get() + index * subSize;
+				res.m_storage.set(StorageType_(begin, subSize, false));
+				return res;
+#else
+				LIBRAPID_ERROR("CUDA support not enabled");
+#endif // LIBRAPID_HAS_CUDA
+			} else if constexpr (typetraits::IsFixedStorage<StorageType_>::value) {
+				return ArrayView(*this)[index];
+			} else {
+				ArrayContainer res;
+				res.m_shape	  = m_shape.subshape(1, ndim());
+				auto subSize  = res.shape().size();
+				Scalar *begin = m_storage.begin() + index * subSize;
+				Scalar *end	  = begin + subSize;
+				res.m_storage.set(StorageType_(begin, end, false));
 				return res;
 			}
 		}

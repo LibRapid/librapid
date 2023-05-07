@@ -3,7 +3,7 @@
 
 #if defined(LIBRAPID_HAS_OPENCL)
 
-namespace librapid::detail::impl::opencl {
+namespace librapid::opencl {
 	template<typename Scalar, size_t... I, typename... Args>
 	void setKernelArgs(cl::Kernel &kernel, const std::tuple<Args...> &args,
 					   std::index_sequence<I...>) {
@@ -21,20 +21,8 @@ namespace librapid::detail::impl::opencl {
 		((kernel.setArg(I, caster(std::get<I>(args)))), ...);
 	}
 
-//	template<size_t... I, typename... Args>
-//	void setKernelArgs(const std::tuple<Args...> &args, std::index_sequence<I...>) {
-//		auto func = [](auto x) {
-//			if constexpr (std::is_fundamental_v<std::decay_t<decltype(x)>>) {
-//				fmt::print("{}\n", x);
-//			} else {
-//				fmt::print("{}\n", typeid(x).name());
-//			}
-//		};
-//		((func(std::get<I>(args))), ...);
-//	}
-
 	template<typename Scalar, typename... Args>
-	void runKernel(const std::string &kernelName, int64_t numElements, Args... args) {
+	void runLinearKernel(const std::string &kernelName, int64_t numElements, Args... args) {
 		static_assert(sizeof(Scalar) > 2,
 					  "Scalar type must be larger than 2 bytes. Please create an issue on GitHub "
 					  "if you need support for smaller types.");

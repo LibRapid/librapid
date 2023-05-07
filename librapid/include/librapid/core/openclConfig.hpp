@@ -11,9 +11,6 @@
 
 #include <clblast.h>
 
-#include "../OpenCL/openclConfigure.hpp"
-#include "../OpenCL/openclKernelProcessor.hpp"
-
 #else // LIBRAPID_HAS_OPENCL
 
 namespace librapid::typetraits {

@@ -336,19 +336,19 @@ namespace librapid::typetraits {
 } // namespace librapid::typetraits
 #endif
 
-namespace librapid::device {
+namespace librapid::backend {
 	// Use the CPU for computation (default)
 	struct CPU {};
 
-	// Use the GPU for computation
-	struct GPU {};
+	// Use the GPU via CUDA
+	struct CUDA {};
 
-	// Use OpenCL for computation
+	// Use OpenCL
 	struct OpenCL {};
 
 	// Use the fastest device for computation
 #if defined(LIBRAPID_HAS_CUDA)
-	using Fastest = GPU;
+	using Fastest = CUDA;
 #elif defined(LIBRAPID_HAS_OPENCL)
 	using Fastest			= OpenCL;
 #else
@@ -357,9 +357,9 @@ namespace librapid::device {
 
 	// GPU if available, CPU otherwise
 #if defined(LIBRAPID_HAS_CUDA)
-	using GPUIfAvailable = GPU;
+	using CUDAIfAvailable = CUDA;
 #else
-	using GPUIfAvailable	= CPU;
+	using CUDAIfAvailable	= CPU;
 #endif
 
 	// OpenCL if available, CPU otherwise
@@ -368,7 +368,7 @@ namespace librapid::device {
 #else
 	using OpenCLIfAvailable = CPU;
 #endif
-} // namespace librapid::device
+} // namespace librapid::backend
 
 #ifndef LIBRAPID_MAX_ARRAY_DIMS
 #	define LIBRAPID_MAX_ARRAY_DIMS 32

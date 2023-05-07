@@ -7,7 +7,7 @@ namespace librapid {
 		struct TypeInfo<array::ArrayView<T>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayView;
 			using Scalar							   = typename TypeInfo<std::decay_t<T>>::Scalar;
-			using Device							   = typename TypeInfo<std::decay_t<T>>::Device;
+			using Backend							   = typename TypeInfo<std::decay_t<T>>::Backend;
 			static constexpr bool allowVectorisation   = false;
 		};
 
@@ -23,8 +23,8 @@ namespace librapid {
 			using Scalar		 = typename typetraits::TypeInfo<BaseType>::Scalar;
 			using Reference		 = BaseType &;
 			using ConstReference = const BaseType &;
-			using Device		 = typename typetraits::TypeInfo<BaseType>::Device;
-			using ArrayType		 = Array<Scalar, Device>;
+			using Backend		 = typename typetraits::TypeInfo<BaseType>::Backend;
+			using ArrayType		 = Array<Scalar, Backend>;
 			using StrideType	 = typename ArrayType::StrideType;
 			using ShapeType		 = typename ArrayType::ShapeType;
 

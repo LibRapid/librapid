@@ -15,20 +15,20 @@ namespace librapid {
 		}
 
 		template<typename First, typename... Rest>
-		constexpr auto commonDevice() {
-			using FirstDevice = typename TypeInfo<std::decay_t<First>>::Device;
+		constexpr auto commonBackend() {
+			using FirstBackend = typename TypeInfo<std::decay_t<First>>::Backend;
 			if constexpr (sizeof...(Rest) == 0) {
-				return FirstDevice {};
+				return FirstBackend {};
 			} else {
-				using RestDevice = decltype(commonDevice<Rest...>());
-				if constexpr (std::is_same_v<FirstDevice, device::OpenCL> ||
-							  std::is_same_v<RestDevice, device::OpenCL>) {
-					return device::OpenCL {};
-				} else if constexpr (std::is_same_v<FirstDevice, device::GPU> ||
-									 std::is_same_v<RestDevice, device::GPU>) {
-					return device::GPU {};
+				using RestBackend = decltype(commonBackend<Rest...>());
+				if constexpr (std::is_same_v<FirstBackend, backend::OpenCL> ||
+							  std::is_same_v<RestBackend, backend::OpenCL>) {
+					return backend::OpenCL {};
+				} else if constexpr (std::is_same_v<FirstBackend, backend::CUDA> ||
+									 std::is_same_v<RestBackend, backend::CUDA>) {
+					return backend::CUDA {};
 				} else {
-					return device::CPU {};
+					return backend::CPU {};
 				}
 			}
 		}
@@ -38,7 +38,7 @@ namespace librapid {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
 			using Scalar							   = decltype(std::declval<Functor_>()(
 				std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
-			using Device							   = decltype(commonDevice<Args...>());
+			using Backend							   = decltype(commonBackend<Args...>());
 
 			static constexpr bool allowVectorisation = checkAllowVectorisation<Args...>();
 
@@ -118,7 +118,7 @@ namespace librapid {
 			using ShapeType	 = Shape<size_t, 32>;
 			using StrideType = ShapeType;
 			using Scalar	 = typename typetraits::TypeInfo<Type>::Scalar;
-			using Device	 = typename typetraits::TypeInfo<Type>::Device;
+			using Backend	 = typename typetraits::TypeInfo<Type>::Backend;
 			using Packet	 = typename typetraits::TypeInfo<Scalar>::Packet;
 
 			using Descriptor = desc;
@@ -224,7 +224,7 @@ namespace librapid {
 
 		template<typename desc, typename Functor, typename... Args>
 		auto Function<desc, Functor, Args...>::eval() const {
-			auto res = Array<Scalar, Device>(shape());
+			auto res = Array<Scalar, Backend>(shape());
 			res		 = *this;
 			return res;
 		}

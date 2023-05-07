@@ -69,8 +69,4 @@ const char *getCublasErrorEnum_(cublasStatus_t error);
 
 #endif // LIBRAPID_HAS_CUDA
 
-// This needs to be defined before cudaHeaderLoader.hpp is included
-
-#include "../cuda/cudaKernelProcesor.hpp"
-
 #endif // LIBRAPID_CORE_CUDA_CONFIG_HPP
