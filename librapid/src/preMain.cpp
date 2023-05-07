@@ -13,6 +13,14 @@ namespace librapid::detail {
 			preMainRun			  = true;
 			global::cacheLineSize = cacheLineSize();
 
+			// OpenCL compatible devices are detected after this function is called,
+			// meaning nothing is found here. The user must call configureOpenCL()
+			// manually.
+
+			// #if defined(LIBRAPID_HAS_OPENCL)
+			//			configureOpenCL();
+			// #endif // LIBRAPID_HAS_OPENCL
+
 #if defined(LIBRAPID_HAS_CUDA)
 			cudaStreamCreate(&global::cudaStream);
 			cublasCreate(&global::cublasHandle);

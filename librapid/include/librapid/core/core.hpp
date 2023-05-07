@@ -19,17 +19,25 @@
 // Fourier Transform
 #if defined(LIBRAPID_HAS_FFTW) && !defined(LIBRAPID_HAS_CUDA)
 // If CUDA is enabled, we use cuFFT
-// #	include "../fftw/api/fftw3.h"
-#include <fftw3.h>
+#	include <fftw3.h>
 #endif // LIBRAPID_HAS_CUDA
 
 #pragma warning(push)
-#pragma warning(disable: 4324)
-#pragma warning(disable: 4458)
-#pragma warning(disable: 4456)
+#pragma warning(disable : 4324)
+#pragma warning(disable : 4458)
+#pragma warning(disable : 4456)
 
 #include <pocketfft_hdronly.h>
 
 #pragma warning(pop)
+
+#if defined(LIBRAPID_HAS_OPENCL)
+#	include "../opencl/openclConfigure.hpp"
+#	include "../opencl/openclKernelProcessor.hpp"
+#endif // LIBRAPID_HAS_OPENCL
+
+#if defined(LIBRAPID_HAS_CUDA)
+#	include "../cuda/cudaKernelProcesor.hpp"
+#endif // LIBRAPID_HAS_CUDA
 
 #endif // LIBRAPID_CORE

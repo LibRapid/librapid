@@ -8,6 +8,16 @@ namespace librapid::global {
 	int64_t cacheLineSize			 = 64;
 	int64_t memoryAlignment			 = LIBRAPID_DEFAULT_MEM_ALIGN;
 
+#if defined(LIBRAPID_HAS_OPENCL)
+	std::vector<cl::Device> openclDevices;
+	cl::Context openCLContext;
+	cl::Device openCLDevice;
+	cl::CommandQueue openCLQueue;
+	cl::Program::Sources openCLSources;
+	cl::Program openCLProgram;
+	bool openCLConfigured = false;
+#endif // LIBRAPID_HAS_OPENCL
+
 #if defined(LIBRAPID_HAS_CUDA)
 	cudaStream_t cudaStream;
 	cublasHandle_t cublasHandle;

@@ -25,6 +25,29 @@ namespace librapid::global {
 	// Memory alignment for LibRapid
 	extern int64_t memoryAlignment;
 
+#if defined(LIBRAPID_HAS_OPENCL)
+	// OpenCL device list
+	extern std::vector<cl::Device> openclDevices;
+
+	// OpenCL context
+	extern cl::Context openCLContext;
+
+	// OpenCL device
+	extern cl::Device openCLDevice;
+
+	// OpenCL command queue
+	extern cl::CommandQueue openCLQueue;
+
+	// OpenCL program sources
+	extern cl::Program::Sources openCLSources;
+
+	// OpenCL program
+	extern cl::Program openCLProgram;
+
+	// True if OpenCL has been configured
+	extern bool openCLConfigured;
+#endif // LIBRAPID_HAS_OPENCL
+
 #if defined(LIBRAPID_HAS_CUDA)
 	// LibRapid's CUDA stream -- this removes the need for calling cudaDeviceSynchronize()
 	extern cudaStream_t cudaStream;
