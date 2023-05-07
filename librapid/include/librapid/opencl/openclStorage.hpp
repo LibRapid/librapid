@@ -10,6 +10,11 @@
 
 #if defined(LIBRAPID_HAS_OPENCL)
 
+#	define LIBRAPID_CHECK_OPENCL                                                                  \
+		LIBRAPID_ASSERT(global::openCLConfigured,                                                  \
+						"OpenCL has not been configured. Please call configureOpenCL() before "    \
+						"creating any Arrays with the OpenCL backend.")
+
 namespace librapid {
 	namespace typetraits {
 		template<typename Scalar_>
@@ -87,6 +92,7 @@ namespace librapid {
 				T tmp;
 				global::openCLQueue.enqueueReadBuffer(
 				  m_buffer, CL_TRUE, m_offset * sizeof(T), sizeof(T), &tmp);
+				global::openCLQueue.finish();
 				return tmp;
 			}
 
@@ -217,21 +223,27 @@ namespace librapid {
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(SizeType size) :
-			m_size(size), m_buffer(global::openCLContext, bufferFlags, size * sizeof(Scalar)) {}
+			m_size(size), m_buffer(global::openCLContext, bufferFlags, size * sizeof(Scalar)) {
+		LIBRAPID_CHECK_OPENCL;
+	}
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(SizeType size, Scalar value) :
 			m_size(size), m_buffer(global::openCLContext, bufferFlags, size * sizeof(Scalar)) {
+		LIBRAPID_CHECK_OPENCL;
 		global::openCLQueue.enqueueFillBuffer(m_buffer, value, 0, size * sizeof(Scalar));
 	}
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(const cl::Buffer &buffer, SizeType size, bool ownsData) :
-			m_size(size), m_buffer(buffer), m_ownsData(ownsData) {}
+			m_size(size), m_buffer(buffer), m_ownsData(ownsData) {
+		LIBRAPID_CHECK_OPENCL;
+	}
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(const OpenCLStorage &other) :
 			m_size(other.m_size), m_buffer(other.m_buffer) {
+		LIBRAPID_CHECK_OPENCL;
 		global::openCLQueue.enqueueCopyBuffer(
 		  other.m_buffer, m_buffer, 0, 0, m_size * sizeof(Scalar));
 	}
@@ -240,6 +252,7 @@ namespace librapid {
 	OpenCLStorage<Scalar>::OpenCLStorage(OpenCLStorage &&other) noexcept :
 			m_size(other.m_size), m_buffer(std::move(other.m_buffer)),
 			m_ownsData(other.m_ownsData) {
+		LIBRAPID_CHECK_OPENCL;
 		other.m_size = 0;
 	}
 
@@ -247,6 +260,7 @@ namespace librapid {
 	OpenCLStorage<Scalar>::OpenCLStorage(std::initializer_list<Scalar> list) :
 			m_size(list.size()),
 			m_buffer(global::openCLContext, bufferFlags, list.size() * sizeof(Scalar)) {
+		LIBRAPID_CHECK_OPENCL;
 		global::openCLQueue.enqueueWriteBuffer(
 		  m_buffer, CL_TRUE, 0, m_size * sizeof(Scalar), list.begin());
 	}
@@ -255,12 +269,14 @@ namespace librapid {
 	OpenCLStorage<Scalar>::OpenCLStorage(const std::vector<Scalar> &vec) :
 			m_size(vec.size()),
 			m_buffer(global::openCLContext, bufferFlags, m_size * sizeof(Scalar)) {
+		LIBRAPID_CHECK_OPENCL;
 		global::openCLQueue.enqueueWriteBuffer(
 		  m_buffer, CL_TRUE, 0, m_size * sizeof(Scalar), vec.data());
 	}
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar> &OpenCLStorage<Scalar>::operator=(const OpenCLStorage &other) {
+		LIBRAPID_CHECK_OPENCL;
 		if (this != &other) {
 			LIBRAPID_ASSERT(m_ownsData || m_size == other.m_size,
 							"Cannot copy into dependent "
@@ -275,6 +291,7 @@ namespace librapid {
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar> &OpenCLStorage<Scalar>::operator=(OpenCLStorage &&other) noexcept {
+		LIBRAPID_CHECK_OPENCL;
 		if (this != &other) {
 			if (m_ownsData) {
 				m_buffer	 = std::move(other.m_buffer);
@@ -293,6 +310,7 @@ namespace librapid {
 
 	template<typename Scalar>
 	void OpenCLStorage<Scalar>::set(const OpenCLStorage &other) {
+		LIBRAPID_CHECK_OPENCL;
 		m_buffer   = other.m_buffer;
 		m_size	   = other.m_size;
 		m_ownsData = other.m_ownsData;

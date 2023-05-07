@@ -584,8 +584,6 @@ using CUDA				   = lrc::backend::CUDA;
 	TEST_COMPARISONS_ARRAY_SCALAR(SCALAR, BACKEND);                                                \
 	TEST_COMPARISONS_SCALAR_ARRAY(SCALAR, BACKEND);
 
-#if !defined(LIBRAPID_WITH_COVERAGE)
-
 TEST_CASE("Test Array -- int8_t CPU", "[array-lib]") {
 	TEST_CONSTRUCTORS(int8_t, CPU);
 	TEST_INDEXING(int8_t, CPU);
@@ -617,15 +615,13 @@ TEST_CASE("Test Array -- uint64_t CPU", "[array-lib]") { TEST_ALL(uint64_t, CPU)
 TEST_CASE("Test Array -- float CPU", "[array-lib]") { TEST_ALL(float, CPU); }
 TEST_CASE("Test Array -- double CPU", "[array-lib]") { TEST_ALL(double, CPU); }
 
-#	if defined(LIBRAPID_USE_MULTIPREC)
+#if defined(LIBRAPID_USE_MULTIPREC)
 TEST_CASE("Test Array -- lrc::mpfr CPU", "[array-lib]") { TEST_ALL(lrc::mpfr, CPU); }
-#	endif // LIBRAPID_USE_MULTIPREC
+#endif // LIBRAPID_USE_MULTIPREC
 
-#	if defined(LIBRAPID_HAS_OPENCL)
+#if defined(LIBRAPID_HAS_OPENCL)
 
-TEST_CASE("Configure OpenCL") {
-	lrc::configureOpenCL();
-}
+TEST_CASE("Configure OpenCL") { lrc::configureOpenCL(); }
 
 TEST_CASE("Test Array -- int32_t OpenCL", "[array-lib]") { TEST_ALL(int32_t, OPENCL); }
 TEST_CASE("Test Array -- uint32_t OpenCL", "[array-lib]") { TEST_ALL(uint32_t, OPENCL); }
@@ -634,9 +630,9 @@ TEST_CASE("Test Array -- uint64_t OpenCL", "[array-lib]") { TEST_ALL(uint64_t, O
 TEST_CASE("Test Array -- float OpenCL", "[array-lib]") { TEST_ALL(float, OPENCL); }
 TEST_CASE("Test Array -- double OpenCL", "[array-lib]") { TEST_ALL(double, OPENCL); }
 
-#	endif // LIBRAPID_HAS_OPENCL
+#endif // LIBRAPID_HAS_OPENCL
 
-#	if defined(LIBRAPID_HAS_CUDA)
+#if defined(LIBRAPID_HAS_CUDA)
 
 TEST_CASE("Test Array -- int8_t CUDA", "[array-lib]") { TEST_ALL(int8_t, CUDA); }
 TEST_CASE("Test Array -- uint8_t CUDA", "[array-lib]") { TEST_ALL(uint8_t, CUDA); }
@@ -649,7 +645,4 @@ TEST_CASE("Test Array -- uint64_t CUDA", "[array-lib]") { TEST_ALL(uint64_t, CUD
 TEST_CASE("Test Array -- float CUDA", "[array-lib]") { TEST_ALL(float, CUDA); }
 TEST_CASE("Test Array -- double CUDA", "[array-lib]") { TEST_ALL(double, CUDA); }
 
-#	endif // LIBRAPID_HAS_CUDA
-#else
-
-#endif // !LIBRAPID_WITH_COVERAGE
+#endif // LIBRAPID_HAS_CUDA

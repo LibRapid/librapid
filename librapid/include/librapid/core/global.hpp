@@ -43,6 +43,9 @@ namespace librapid::global {
 
 	// OpenCL program
 	extern cl::Program openCLProgram;
+
+	// True if OpenCL has been configured
+	extern bool openCLConfigured;
 #endif // LIBRAPID_HAS_OPENCL
 
 #if defined(LIBRAPID_HAS_CUDA)

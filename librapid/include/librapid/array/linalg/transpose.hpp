@@ -175,7 +175,10 @@ namespace librapid {
 			LIBRAPID_ALWAYS_INLINE void
 			transposeImpl(Scalar *__restrict out, const Scalar *__restrict in, int64_t rows,
 						  int64_t cols, Alpha alpha, int64_t blockSize) {
-				if (rows * cols < global::multithreadThreshold) {
+#if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
+				if (rows * cols > global::multithreadThreshold) {
+#	pragma omp parallel for shared(rows, cols, blockSize, in, out, alpha) default(none)           \
+	  num_threads((int)global::numThreads)
 					for (int64_t i = 0; i < rows; i += blockSize) {
 						for (int64_t j = 0; j < cols; j += blockSize) {
 							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
@@ -185,47 +188,14 @@ namespace librapid {
 							}
 						}
 					}
-				} else {
-#pragma omp parallel for shared(rows, cols, blockSize, in, out, alpha) default(none)               \
-  num_threads((int)global::numThreads)
+				} else
+#endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
+				{
 					for (int64_t i = 0; i < rows; i += blockSize) {
 						for (int64_t j = 0; j < cols; j += blockSize) {
 							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
 								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
 									out[col * rows + row] = in[row * cols + col] * alpha;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			template<typename Scalar, typename Alpha>
-			LIBRAPID_ALWAYS_INLINE void transposeInplaceImpl(Scalar *__restrict data, int64_t rows,
-															 int64_t cols, Alpha alpha,
-															 int64_t blockSize) {
-				if (rows * cols < global::multithreadThreshold) {
-					for (int64_t i = 0; i < rows; i += blockSize) {
-						for (int64_t j = 0; j < cols; j += blockSize) {
-							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-									std::swap(data[col * rows + row], data[row * cols + col]);
-									data[col * rows + row] *= alpha;
-									data[row * cols + col] *= alpha;
-								}
-							}
-						}
-					}
-				} else {
-#pragma omp parallel for shared(rows, cols, blockSize, data, alpha) default(none)                  \
-  num_threads((int)global::numThreads)
-					for (int64_t i = 0; i < rows; i += blockSize) {
-						for (int64_t j = 0; j < cols; j += blockSize) {
-							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-									std::swap(data[col * rows + row], data[row * cols + col]);
-									data[col * rows + row] *= alpha;
-									data[row * cols + col] *= alpha;
 								}
 							}
 						}
@@ -239,7 +209,11 @@ namespace librapid {
 													  int64_t rows, int64_t cols, Alpha alpha,
 													  int64_t) {
 				constexpr int64_t blockSize = LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE;
-				if (rows * cols < global::multithreadThreshold) {
+
+#	if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
+				if (rows * cols > global::multithreadThreshold) {
+#		pragma omp parallel for shared(rows, cols, in, out, alpha) default(none)                  \
+		  num_threads((int)global::numThreads)
 					for (int64_t i = 0; i < rows; i += blockSize) {
 						for (int64_t j = 0; j < cols; j += blockSize) {
 							if (i + blockSize <= rows && j + blockSize <= cols) {
@@ -255,9 +229,9 @@ namespace librapid {
 							}
 						}
 					}
-				} else {
-#	pragma omp parallel for shared(rows, cols, in, out, alpha) default(none)                      \
-	  num_threads((int)global::numThreads)
+				} else
+#	endif
+				{
 					for (int64_t i = 0; i < rows; i += blockSize) {
 						for (int64_t j = 0; j < cols; j += blockSize) {
 							if (i + blockSize <= rows && j + blockSize <= cols) {
@@ -283,7 +257,11 @@ namespace librapid {
 													  int64_t rows, int64_t cols, Alpha alpha,
 													  int64_t) {
 				constexpr int64_t blockSize = LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE;
-				if (rows * cols < global::multithreadThreshold) {
+
+#	if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
+				if (rows * cols > global::multithreadThreshold) {
+#		pragma omp parallel for shared(rows, cols, in, out, alpha) default(none)                  \
+		  num_threads((int)global::numThreads)
 					for (int64_t i = 0; i < rows; i += blockSize) {
 						for (int64_t j = 0; j < cols; j += blockSize) {
 							if (i + blockSize <= rows && j + blockSize <= cols) {
@@ -299,9 +277,9 @@ namespace librapid {
 							}
 						}
 					}
-				} else {
-#	pragma omp parallel for shared(rows, cols, in, out, alpha) default(none)                      \
-	  num_threads((int)global::numThreads)
+				} else
+#	endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
+				{
 					for (int64_t i = 0; i < rows; i += blockSize) {
 						for (int64_t j = 0; j < cols; j += blockSize) {
 							if (i + blockSize <= rows && j + blockSize <= cols) {

@@ -114,7 +114,39 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 		return fastest;
 	}
 
+	void addOpenCLKernelSource(const std::string &source) {
+		global::openCLSources.emplace_back(source.c_str(), source.size());
+	}
+
+	void addOpenCLKernelFile(const std::string &filename) {
+		std::ifstream file(filename);
+		std::string source((std::istreambuf_iterator<char>(file)),
+						   std::istreambuf_iterator<char>());
+		source += "\n\n\n";
+		char *cstr = new char[source.length() + 1];
+		strcpy(cstr, source.c_str());
+		global::openCLSources.emplace_back(cstr, source.size());
+	}
+
+	void compileOpenCLKernels() {
+		global::openCLProgram = cl::Program(global::openCLContext, global::openCLSources);
+		global::openCLProgram.build({global::openCLDevice});
+		cl_build_status status =
+		  global::openCLProgram.getBuildInfo<CL_PROGRAM_BUILD_STATUS>(global::openCLDevice);
+
+		if (status != CL_BUILD_SUCCESS) {
+			std::string buildLog =
+			  global::openCLProgram.getBuildInfo<CL_PROGRAM_BUILD_LOG>(global::openCLDevice);
+			std::string errorMsg = fmt::format("OpenCL kernel compilation failed:\n{}", buildLog);
+			fmt::print(stderr, "{}\n", errorMsg);
+			std::cout << std::endl;
+			throw std::runtime_error(errorMsg);
+		}
+	}
+
 	void configureOpenCL(bool verbose) {
+		LIBRAPID_ASSERT(!global::openCLConfigured, "OpenCL already configured");
+
 		if (verbose) fmt::print("======= OpenCL Configuration =======\n");
 		updateOpenCLDevices(verbose);
 
@@ -144,36 +176,8 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 
 		// Compile kernels
 		compileOpenCLKernels();
-	}
 
-	void addOpenCLKernelSource(const std::string &source) {
-		global::openCLSources.emplace_back(source.c_str(), source.size());
-	}
-
-	void addOpenCLKernelFile(const std::string &filename) {
-		std::ifstream file(filename);
-		std::string source((std::istreambuf_iterator<char>(file)),
-						   std::istreambuf_iterator<char>());
-		source += "\n\n\n";
-		char *cstr = new char[source.length() + 1];
-		strcpy(cstr, source.c_str());
-		global::openCLSources.emplace_back(cstr, source.size());
-	}
-
-	void compileOpenCLKernels() {
-		global::openCLProgram = cl::Program(global::openCLContext, global::openCLSources);
-		global::openCLProgram.build({global::openCLDevice});
-		cl_build_status status =
-		  global::openCLProgram.getBuildInfo<CL_PROGRAM_BUILD_STATUS>(global::openCLDevice);
-
-		if (status != CL_BUILD_SUCCESS) {
-			std::string buildLog =
-			  global::openCLProgram.getBuildInfo<CL_PROGRAM_BUILD_LOG>(global::openCLDevice);
-			std::string errorMsg = fmt::format("OpenCL kernel compilation failed:\n{}", buildLog);
-			fmt::print(stderr, "{}\n", errorMsg);
-			std::cout << std::endl;
-			throw std::runtime_error(errorMsg);
-		}
+		global::openCLConfigured = true;
 	}
 #endif // LIBRAPID_HAS_OPENCL
 } // namespace librapid

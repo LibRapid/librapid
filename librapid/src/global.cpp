@@ -15,6 +15,7 @@ namespace librapid::global {
 	cl::CommandQueue openCLQueue;
 	cl::Program::Sources openCLSources;
 	cl::Program openCLProgram;
+	bool openCLConfigured = false;
 #endif // LIBRAPID_HAS_OPENCL
 
 #if defined(LIBRAPID_HAS_CUDA)

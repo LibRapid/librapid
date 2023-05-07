@@ -6,10 +6,10 @@ namespace librapid {
 	int64_t openclDeviceCompute(const cl::Device &device);
 	void updateOpenCLDevices(bool verbose = false);
 	cl::Device findFastestDevice(const std::vector<cl::Device> &devices);
-	void configureOpenCL(bool verbose = false);
 	void addOpenCLKernelSource(const std::string &source);
 	void addOpenCLKernelFile(const std::string &filename);
 	void compileOpenCLKernels();
+	void configureOpenCL(bool verbose = false);
 #endif // LIBRAPID_HAS_OPENCL
 } // namespace librapid
 
