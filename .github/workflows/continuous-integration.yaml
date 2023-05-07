@@ -331,28 +331,20 @@ jobs:
       #     path: buildRelease
 
       # Zip debug build before uploading
-      - name: Zip Debug Build
-        run: |
-          cd buildDebug
-          zip -r ../buildDebug.zip .
+      - name: Easy Zip Files
+        uses: vimtor/action-zip@v1.1
+        with:
+          files: |
+            buildDebug
+            buildRelease
+          recursive: true
+          dest: ${{ matrix.pretty }}.zip
 
-      - name: Store Debug Build
+      - name: Store Build Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.pretty }}_Debug
-          path: buildDebug.zip
-
-      # Zip release build before uploading
-      - name: Zip Release Build
-        run: |
-          cd buildRelease
-          zip -r ../buildRelease.zip .
-
-      - name: Store Release Build
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.pretty }}_Release
-          path: buildRelease.zip
+          name: ${{ matrix.pretty }}
+          path: ${{ matrix.pretty }}.zip
 
   quodona:
     name: Run Qodana
