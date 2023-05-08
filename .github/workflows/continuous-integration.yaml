@@ -486,7 +486,7 @@ jobs:
           mkdir build
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=ON -DLIBRAPID_GET_FFTW=on -DLIBRAPID_USE_MULTIPREC=on
-          cmake --build . --parallel
+          cmake --build .
         env:
           CC: gcc-11
           CXX: g++-11

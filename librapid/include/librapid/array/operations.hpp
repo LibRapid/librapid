@@ -34,6 +34,13 @@
 		}                                                                                          \
 	}
 
+#define LIBRAPID_UNARY_KERNEL_GETTER                                                               \
+	template<typename... Args>                                                                     \
+	static constexpr const char *getKernelName(std::tuple<Args...> args) {                         \
+		static_assert(sizeof...(Args) == 1, "Invalid number of arguments for unary operation");    \
+		return kernelName;                                                                         \
+	}
+
 #define LIBRAPID_BINARY_KERNEL_GETTER                                                              \
 	template<typename T1, typename T2>                                                             \
 	static constexpr const char *getKernelNameImpl(std::tuple<T1, T2> args) {                      \
@@ -53,6 +60,14 @@
 	static constexpr const char *getKernelName(std::tuple<Args...> args) {                         \
 		static_assert(sizeof...(Args) == 2, "Invalid number of arguments for binary operation");   \
 		return getKernelNameImpl(args);                                                            \
+	}
+
+#define LIBRAPID_UNARY_SHAPE_EXTRACTOR                                                             \
+	template<typename... Args>                                                                     \
+	LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto getShape(                                \
+	  const std::tuple<Args...> &args) {                                                           \
+		static_assert(sizeof...(Args) == 1, "Invalid number of arguments for unary operation");    \
+		return std::get<0>(args).shape();                                                          \
 	}
 
 #define LIBRAPID_BINARY_SHAPE_EXTRACTOR                                                            \
@@ -93,10 +108,10 @@ namespace librapid {
 			return OperationType(Functor(), std::forward<Args>(args)...);
 		}
 
-		LIBRAPID_BINARY_FUNCTOR(Plus, +);	  // a + b
-		LIBRAPID_BINARY_FUNCTOR(Minus, -);	  // a - b
-		LIBRAPID_BINARY_FUNCTOR(Multiply, *); // a * b
-		LIBRAPID_BINARY_FUNCTOR(Divide, /);	  // a / b
+		LIBRAPID_BINARY_FUNCTOR(Plus, +);							 // a + b
+		LIBRAPID_BINARY_FUNCTOR(Minus, -);							 // a - b
+		LIBRAPID_BINARY_FUNCTOR(Multiply, *);						 // a * b
+		LIBRAPID_BINARY_FUNCTOR(Divide, /);							 // a / b
 
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(LessThan, <);			 // a < b
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(GreaterThan, >);			 // a > b
@@ -104,7 +119,20 @@ namespace librapid {
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(GreaterThanEqual, >=);	 // a >= b
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseEqual, ==);	 // a == b
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseNotEqual, !=); // a != b
-	}																 // namespace detail
+
+		struct Sin {
+			template<typename T>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator()(const T &arg) const {
+				return ::librapid::sin(arg);
+			}
+
+			template<typename Packet>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto packet(const Packet &arg) const {
+				return Vc::sin(arg);
+			}
+		};
+
+	} // namespace detail
 
 	namespace typetraits {
 		/// Merge together two Descriptor types. Two trivial operations will result in
@@ -301,9 +329,26 @@ namespace librapid {
 			LIBRAPID_BINARY_KERNEL_GETTER
 			LIBRAPID_BINARY_SHAPE_EXTRACTOR
 		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Sin> {
+			static constexpr const char *name				 = "sin";
+			static constexpr const char *filename			 = "trigonometry";
+			static constexpr const char *kernelName			 = "sinArrays";
+			static constexpr const char *kernelNameScalarRhs = "NONE";
+			static constexpr const char *kernelNameScalarLhs = "NONE";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
 	} // namespace typetraits
 
 	namespace detail {
+		template<typename VAL>
+		constexpr bool isArrayOp() {
+			return (typetraits::IsArrayContainer<std::decay_t<VAL>>::value ||
+					typetraits::IsLibRapidType<std::decay_t<VAL>>::value);
+		}
+
 		template<typename LHS, typename RHS>
 		constexpr bool isArrayOpArray() {
 			return (typetraits::TypeInfo<std::decay_t<LHS>>::type != LibRapidType::Scalar) &&
@@ -322,6 +367,7 @@ namespace librapid {
 	} // namespace detail
 
 	namespace array {
+#define IS_ARRAY_OP				detail::isArrayOp<VAL>()
 #define IS_ARRAY_OP_ARRAY		detail::isArrayOpArray<LHS, RHS>()
 #define IS_ARRAY_OP_WITH_SCALAR detail::isArrayOpWithScalar<LHS, RHS>()
 
@@ -617,6 +663,13 @@ namespace librapid {
 																	 std::forward<RHS>(rhs));
 		}
 	} // namespace array
+
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sin(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sin, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Sin>(
+		  std::forward<VAL>(val));
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_OPERATIONS_HPP

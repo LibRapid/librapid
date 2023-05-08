@@ -239,7 +239,6 @@ namespace librapid {
 		template<size_t... I>
 		auto Function<desc, Functor, Args...>::packetImpl(std::index_sequence<I...>,
 														  size_t index) const -> Packet {
-			// return m_functor.packet((std::get<I>(m_args).packet(index))...);
 			return m_functor.packet(packetExtractor<Packet>(std::get<I>(m_args), index)...);
 		}
 
