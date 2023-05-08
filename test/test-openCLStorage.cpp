@@ -145,4 +145,13 @@ TEST_CASE("Test OpenCLStorage<T>", "[storage]") {
 	}
 }
 
+#else
+
+TEST_CASE("Default", "[storage]") {
+	LIBRAPID_WARN("OpenCL not available, skipping tests");
+	SECTION("Default") {
+		REQUIRE(true);
+	}
+}
+
 #endif // LIBRAPID_HAS_OPENCL
