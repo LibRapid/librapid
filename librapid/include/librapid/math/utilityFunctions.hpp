@@ -78,6 +78,25 @@ namespace librapid {
 		T tt = clamp((t - lowerEdge) / (upperEdge - lowerEdge), 0.0, 1.0);
 		return tt * tt * tt * (tt * (tt * T(6) - T(15)) + T(10));
 	}
+
+	/// \brief Returns true if the two values are within the given tolerance of each other
+	///
+	/// This function is often used to compare floating point values for equality, since floating
+	/// point rounding errors can cause exact equality checks to fail.
+	///
+	/// \tparam V1 Data type of the first value
+	/// \tparam V2 Data type of the second value
+	/// \tparam T Data type of the tolerance value
+	/// \tparam T Data type of the tolerance value
+	/// \param val1 First value
+	/// \param val2 Second value
+	/// \param tolerance Tolerance
+	/// \return True if values are close
+	template<typename V1, typename V2, typename T>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const V1 &val1, const V2 &val2,
+														   const T &tolerance = 1e-6) {
+		return abs(val1 - val2) < tolerance;
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_MATH_UTLIITY_FUNCTIONS_HPP
