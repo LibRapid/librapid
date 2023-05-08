@@ -349,9 +349,8 @@ namespace librapid {
 
 	template<typename T>
 	CudaStorage<T>::CudaStorage(const CudaStorage &other) {
-		m_begin	   = detail::cudaSharedPtrAllocate<T>(other.size());
-		m_size	   = other.size();
-		m_ownsData = other.m_ownsData;
+		m_begin = detail::cudaSharedPtrAllocate<T>(other.size());
+		m_size	= other.size();
 		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
 									 other.begin().get(),
 									 sizeof(T) * other.size(),
@@ -371,9 +370,9 @@ namespace librapid {
 		m_begin = detail::cudaSharedPtrAllocate<T>(list.size());
 		m_size	= list.size();
 		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
-									 list.begin().get(),
+									 list.begin(),
 									 sizeof(T) * m_size,
-									 cudaMemcpyDeviceToDevice,
+									 cudaMemcpyHostToDevice,
 									 global::cudaStream));
 	}
 
@@ -382,9 +381,9 @@ namespace librapid {
 		m_begin = detail::cudaSharedPtrAllocate<T>(list.size());
 		m_size	= list.size();
 		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
-									 list.begin().get(),
+									 list.begin(),
 									 sizeof(T) * m_size,
-									 cudaMemcpyDeviceToDevice,
+									 cudaMemcpyHostToDevice,
 									 global::cudaStream));
 		return *this;
 	}
@@ -501,24 +500,30 @@ namespace librapid {
 	template<typename T>
 	void CudaStorage<T>::resizeImpl(SizeType newSize) {
 		if (newSize == size()) { return; }
+		LIBRAPID_ASSERT(m_ownsData, "Dependent CUDA storage cannot be resized");
 
 		Pointer oldBegin = m_begin;
 
 		// Reallocate
 		m_begin = detail::cudaSharedPtrAllocate<T>(newSize);
-		m_size	= newSize;
+
+		LIBRAPID_STATUS(
+		  "m_begin: {} | oldBegin: {}", (void *)m_begin.get(), (void *)oldBegin.get());
 
 		// Copy old data
-		cudaSafeCall(cudaMemcpyAsync(
-		  m_begin.get(),
-		  oldBegin.get(),
-		  sizeof(T) * std::min(size(), newSize, cudaMemcpyDeviceToDevice, global::cudaStream)));
+		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
+									 oldBegin.get(),
+									 sizeof(T) * std::min(size(), newSize),
+									 cudaMemcpyDeviceToDevice,
+									 global::cudaStream));
+		
+		m_size	= newSize;
 	}
 
 	template<typename T>
 	void CudaStorage<T>::resizeImpl(SizeType newSize, int) {
 		if (newSize == size()) return;
-		LIBRAPID_ASSERT(!m_ownsData, "Dependent CUDA storage cannot be resized");
+		LIBRAPID_ASSERT(m_ownsData, "Dependent CUDA storage cannot be resized");
 		m_begin = detail::cudaSharedPtrAllocate<T>(newSize);
 		m_size	= newSize;
 	}

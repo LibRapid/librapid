@@ -82,6 +82,19 @@ namespace librapid::fft {
 #endif	  // LIBRAPID_HAS_CUDA
 	}	  // namespace detail
 
+
+	/// \brief Compute the real-valued discrete Fourier transform of a 1D array
+	///
+	/// Given a 1D array of real numbers, compute the discrete Fourier transform of the array. This
+	/// returns an array of length \f$\frac{n}{2} + 1\f$ where \f$n\f$ is the length of the input
+	/// array. The returned array contains the non-redundant half of the resulting transform, since
+	/// the other half can be obtained by taking the complex conjugate of the first half.
+	///
+	/// \tparam ShapeType The shape type of the input array
+	/// \tparam StorageScalar The scalar type of the input array
+	/// \tparam StorageAllocator The allocator type of the input array
+	/// \param array The input array
+	/// \return The discrete Fourier transform of the input array
 	template<typename ShapeType, typename StorageScalar, typename StorageAllocator>
 	LIBRAPID_NODISCARD Array<Complex<StorageScalar>, backend::CPU>
 	rfft(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &array) {

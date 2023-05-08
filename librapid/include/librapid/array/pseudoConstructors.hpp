@@ -12,7 +12,8 @@ namespace librapid {
 	/// \tparam N Maximum number of dimensions of the Shape
 	/// \param shape Shape of the Array
 	/// \return Array filled with zeros
-	template<typename Scalar = double, typename Backend = backend::CPU, typename T = size_t, size_t N = 32>
+	template<typename Scalar = double, typename Backend = backend::CPU, typename T = size_t,
+			 size_t N = 32>
 	Array<Scalar, Backend> zeros(const Shape<T, N> &shape) {
 		return Array<Scalar, Backend>(shape, Scalar(0));
 	}
@@ -27,7 +28,8 @@ namespace librapid {
 	/// \tparam N Maximum number of dimensions of the Shape
 	/// \param shape Shape of the Array
 	/// \return Array filled with ones
-	template<typename Scalar = double, typename Backend = backend::CPU, typename T = size_t, size_t N = 32>
+	template<typename Scalar = double, typename Backend = backend::CPU, typename T = size_t,
+			 size_t N = 32>
 	Array<Scalar, Backend> ones(const Shape<T, N> &shape) {
 		return Array<Scalar, Backend>(shape, Scalar(1));
 	}
@@ -44,7 +46,8 @@ namespace librapid {
 	/// \tparam N Maximum number of dimensions of the Shape
 	/// \param shape Shape of the Array
 	/// \return Array filled with numbers from 0 to N-1
-	template<typename Scalar = int64_t, typename Backend = backend::CPU, typename T = size_t, size_t N = 32>
+	template<typename Scalar = int64_t, typename Backend = backend::CPU, typename T = size_t,
+			 size_t N = 32>
 	Array<Scalar, Backend> ordered(const Shape<T, N> &shape) {
 		Array<Scalar, Backend> result(shape);
 		for (size_t i = 0; i < shape.size(); i++) { result.storage()[i] = Scalar(i); }
@@ -77,14 +80,6 @@ namespace librapid {
 		return result;
 	}
 
-	/// \brief Create a 1-dimensional Array from a range of numbers
-	/// \tparam Scalar Scalar type of the Array
-	/// \tparam Backend Backend for the Array
-	/// \tparam T Scalar type of the start and stop values
-	/// \param start Lower bound of the range
-	/// \param stop Upper bound of the range
-	/// \return Array
-	/// \see arange(T start, T stop, T step)
 	template<typename Scalar = double, typename Backend = backend::CPU, typename T>
 	Array<Scalar, Backend> arange(T start, T stop) {
 		LIBRAPID_ASSERT((stop - start) > 0, "Step size is invalid for the specified range");
@@ -95,12 +90,6 @@ namespace librapid {
 		return result;
 	}
 
-	/// \brief Create a 1-dimensional Array
-	/// \tparam Scalar
-	/// \tparam Backend
-	/// \tparam T
-	/// \param stop
-	/// \return
 	template<typename Scalar = double, typename Backend = backend::CPU, typename T>
 	Array<Scalar, Backend> arange(T stop) {
 		Shape shape = {(int64_t)::librapid::abs(stop)};
@@ -109,7 +98,24 @@ namespace librapid {
 		return result;
 	}
 
-	template<typename Scalar = double, typename Backend = backend::CPU, typename Start, typename Stop>
+	/// \brief Create a 1-dimensional Array with a specified number of elements, evenly spaced
+	/// between two values
+	///
+	/// Create a 1-dimensional Array with a specified number of elements, evenly spaced between
+	/// two values. If \p includeEnd is true, the last element of the Array will be equal to
+	/// \p stop, otherwise it will be equal to \p stop - \f$\frac{stop - start}{num}\f$.
+	///
+	/// \tparam Scalar Scalar type of the Array
+	/// \tparam Backend Backend for the Array
+	/// \tparam Start Scalar type of the start value
+	/// \tparam Stop Scalar type of the stop value
+	/// \param start First value in the range
+	/// \param stop Second value in the range
+	/// \param num Number of elements in the Array
+	/// \param includeEnd Whether or not to include the end value in the Array
+	/// \return Linearly spaced Array
+	template<typename Scalar = double, typename Backend = backend::CPU, typename Start,
+			 typename Stop>
 	Array<Scalar, Backend> linspace(Start start, Stop stop, int64_t num, bool includeEnd = true) {
 		LIBRAPID_ASSERT(num > 0, "Number of samples must be greater than zero");
 
