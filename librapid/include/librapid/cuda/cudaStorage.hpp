@@ -507,16 +507,13 @@ namespace librapid {
 		// Reallocate
 		m_begin = detail::cudaSharedPtrAllocate<T>(newSize);
 
-		LIBRAPID_STATUS(
-		  "m_begin: {} | oldBegin: {}", (void *)m_begin.get(), (void *)oldBegin.get());
-
 		// Copy old data
 		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
 									 oldBegin.get(),
 									 sizeof(T) * std::min(size(), newSize),
 									 cudaMemcpyDeviceToDevice,
 									 global::cudaStream));
-		
+
 		m_size	= newSize;
 	}
 
