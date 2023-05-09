@@ -62,13 +62,15 @@ namespace librapid {
 	///
 	/// \tparam Scalar Scalar type of the Array
 	/// \tparam Backend Backend for the Array
-	/// \tparam T Scalar type of the start, stop and step values
+	/// \tparam Start Scalar type of the start value
+	/// \tparam Stop Scalar type of the stop value
+	/// \tparam Step Scalar type of the step size
 	/// \param start First value in the range
 	/// \param stop Second value in the range
 	/// \param step Step size between values in the range
 	/// \return Array
-	template<typename Scalar = double, typename Backend = backend::CPU, typename T>
-	Array<Scalar, Backend> arange(T start, T stop, T step) {
+	template<typename Scalar = double, typename Backend = backend::CPU, typename Start, typename Stop, typename Step>
+	Array<Scalar, Backend> arange(Start start, Stop stop, Step step) {
 		LIBRAPID_ASSERT(step != 0, "Step size cannot be zero");
 		LIBRAPID_ASSERT((stop - start) / step > 0, "Step size is invalid for the specified range");
 

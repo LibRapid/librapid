@@ -92,7 +92,7 @@ namespace librapid {
 	/// \param val2 Second value
 	/// \param tolerance Tolerance
 	/// \return True if values are close
-	template<typename V1, typename V2, typename T>
+	template<typename V1, typename V2, typename T = double>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const V1 &val1, const V2 &val2,
 														   const T &tolerance = 1e-6) {
 		return ::librapid::abs(val1 - val2) < tolerance;

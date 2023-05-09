@@ -94,6 +94,19 @@
 		return getShapeImpl(args);                                                                 \
 	}
 
+#define LIBRAPID_UNARY_FUNCTOR(NAME, OP)                                                           \
+	struct NAME {                                                                                  \
+		template<typename T>                                                                       \
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator()(const T &arg) const {            \
+			return (T)::librapid::OP(arg);                                                         \
+		}                                                                                          \
+                                                                                                   \
+		template<typename Packet>                                                                  \
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto packet(const Packet &arg) const {           \
+			return ::librapid::OP(arg);                                                            \
+		}                                                                                          \
+	};
+
 namespace librapid {
 	namespace detail {
 		/// Construct a new function object with the given functor type and arguments.
@@ -120,18 +133,15 @@ namespace librapid {
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseEqual, ==);	 // a == b
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseNotEqual, !=); // a != b
 
-		struct Sin {
-			template<typename T>
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator()(const T &arg) const {
-				return ::librapid::sin(arg);
-			}
-
-			template<typename Packet>
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto packet(const Packet &arg) const {
-				return Vc::sin(arg);
-			}
-		};
-
+		LIBRAPID_UNARY_FUNCTOR(Sin, sin);
+		LIBRAPID_UNARY_FUNCTOR(Cos, cos);
+		LIBRAPID_UNARY_FUNCTOR(Tan, tan);
+		LIBRAPID_UNARY_FUNCTOR(Asin, asin);
+		LIBRAPID_UNARY_FUNCTOR(Acos, acos);
+		LIBRAPID_UNARY_FUNCTOR(Atan, atan);
+		LIBRAPID_UNARY_FUNCTOR(Sinh, sinh);
+		LIBRAPID_UNARY_FUNCTOR(Cosh, cosh);
+		LIBRAPID_UNARY_FUNCTOR(Tanh, tanh);
 	} // namespace detail
 
 	namespace typetraits {
@@ -332,11 +342,81 @@ namespace librapid {
 
 		template<>
 		struct TypeInfo<::librapid::detail::Sin> {
-			static constexpr const char *name				 = "sin";
-			static constexpr const char *filename			 = "trigonometry";
-			static constexpr const char *kernelName			 = "sinArrays";
-			static constexpr const char *kernelNameScalarRhs = "NONE";
-			static constexpr const char *kernelNameScalarLhs = "NONE";
+			static constexpr const char *name		= "sin";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "sinArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Cos> {
+			static constexpr const char *name		= "cos";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "cosArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Tan> {
+			static constexpr const char *name		= "tan";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "tanArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Asin> {
+			static constexpr const char *name		= "arcsin";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "asinArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Acos> {
+			static constexpr const char *name		= "arcos";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "acosArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Atan> {
+			static constexpr const char *name		= "arctan";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "atanArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Sinh> {
+			static constexpr const char *name		= "hyperbolic sine";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "sinhArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Cosh> {
+			static constexpr const char *name		= "hyperbolic cosine";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "coshArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Tanh> {
+			static constexpr const char *name		= "hyperbolic tangent";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "tanhArrays";
 			LIBRAPID_UNARY_KERNEL_GETTER
 			LIBRAPID_UNARY_SHAPE_EXTRACTOR
 		};
@@ -664,10 +744,129 @@ namespace librapid {
 		}
 	} // namespace array
 
+	/// \brief Calculate the sine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \sin(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Sine function object
 	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sin(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
 	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sin, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Sin>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the cosine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \cos(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Cosine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cos(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cos, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Cos>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the tangent of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \tan(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Tangent function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tan(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tan, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Tan>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the arcsine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \sin^{-1}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Arcsine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto asin(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Asin, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Asin>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the arccosine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \cos^{-1}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Arccosine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto acos(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Acos, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Acos>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the arctangent of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \tan^{-1}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Arctangent function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto atan(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Atan, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Atan>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the hyperbolic sine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \sinh(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Hyperbolic sine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sinh(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sinh, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Sinh>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the hyperbolic cosine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \cosh(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Hyperbolic cosine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cosh(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cosh, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Cosh>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the hyperbolic tangent of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \tanh(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Hyperbolic tangent function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tanh(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tanh, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Tanh>(
 		  std::forward<VAL>(val));
 	}
 } // namespace librapid
