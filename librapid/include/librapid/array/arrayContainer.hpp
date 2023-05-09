@@ -17,20 +17,24 @@ namespace librapid {
 			using Ref	 = Scalar &;
 		};
 
+#if defined(LIBRAPID_HAS_OPENCL)
 		template<typename T>
 		struct SubscriptType<OpenCLStorage<T>> {
 			using Scalar = T;
 			using Direct = const OpenCLRef<Scalar>;
 			using Ref	 = OpenCLRef<Scalar>;
 		};
+#endif // LIBRAPID_HAS_OPENCL
 
+#if defined(LIBRAPID_HAS_CUDA)
 		template<typename T>
 		struct SubscriptType<CudaStorage<T>> {
 			using Scalar = T;
 			using Direct = const detail::CudaRef<Scalar>;
 			using Ref	 = detail::CudaRef<Scalar>;
 		};
-	} // namespace detail
+#endif // LIBRAPID_HAS_CUDA
+	}  // namespace detail
 
 	namespace typetraits {
 		template<typename ShapeType_, typename StorageType_>
