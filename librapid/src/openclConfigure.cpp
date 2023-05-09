@@ -128,11 +128,31 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 		global::openCLSources.emplace_back(cstr, source.size());
 	}
 
-	void compileOpenCLKernels() {
+	void compileOpenCLKernels(bool verbose) {
+		bool finished = false;
+		std::thread printer;
+
+		if (verbose) {
+			printer = std::thread([&]() {
+				auto format = fmt::fg(fmt::color::green);
+				fmt::print(format, "Compiling OpenCL kernels...");
+				while (!finished) {
+					if (verbose) {
+						fmt::print(format, ".");
+						sleep(0.5);
+					}
+				}
+				fmt::print("\n\n");
+			});
+		}
+
 		global::openCLProgram = cl::Program(global::openCLContext, global::openCLSources);
 		global::openCLProgram.build({global::openCLDevice});
 		cl_build_status status =
 		  global::openCLProgram.getBuildInfo<CL_PROGRAM_BUILD_STATUS>(global::openCLDevice);
+
+		finished = true;
+		if (verbose) printer.join();
 
 		if (status != CL_BUILD_SUCCESS) {
 			std::string buildLog =
@@ -144,14 +164,14 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 		}
 	}
 
-	void configureOpenCL(bool verbose) {
+	void configureOpenCL(bool verbose, bool ask) {
 		LIBRAPID_ASSERT(!global::openCLConfigured, "OpenCL already configured");
 
 		if (verbose) fmt::print("======= OpenCL Configuration =======\n");
 		updateOpenCLDevices(verbose);
 
-		if (!verbose) {
-			// If not verbose, select the fastest device by default
+		if (!ask) {
+			// Select the fastest device by default
 			global::openCLDevice = findFastestDevice(global::openclDevices);
 		} else {
 			// Otherwise, prompt the user to select a device
@@ -165,6 +185,20 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 			global::openCLDevice = global::openclDevices[deviceIndex];
 		}
 
+		if (verbose) {
+			auto format = fmt::emphasis::bold | fmt::fg(fmt::color::gold);
+
+			std::string deviceDetails =
+			  fmt::format("Selected Device: {}", global::openCLDevice.getInfo<CL_DEVICE_NAME>());
+			fmt::print(format,
+					   "\n{:=^{}}\n#  {}  #\n{:=^{}}\n\n",
+					   "",
+					   deviceDetails.length() + 6,
+					   deviceDetails,
+					   "",
+					   deviceDetails.length() + 6);
+		}
+
 		global::openCLContext = cl::Context(global::openCLDevice);
 		global::openCLQueue	  = cl::CommandQueue(global::openCLContext, global::openCLDevice);
 
@@ -176,7 +210,7 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 		addOpenCLKernelFile(basePath + "transpose.cl");
 
 		// Compile kernels
-		compileOpenCLKernels();
+		compileOpenCLKernels(verbose);
 
 		global::openCLConfigured = true;
 	}

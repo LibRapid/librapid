@@ -5,21 +5,21 @@ namespace librapid {
 	namespace detail {
 		template<typename T>
 		struct SubscriptType {
-			using Scalar = typename T;
+			using Scalar = T;
 			using Direct = const Scalar &;
 			using Ref	 = Scalar &;
 		};
 
 		template<typename T>
 		struct SubscriptType<Storage<T>> {
-			using Scalar = typename T;
+			using Scalar = T;
 			using Direct = const Scalar &;
 			using Ref	 = Scalar &;
 		};
 
 		template<typename T>
 		struct SubscriptType<OpenCLStorage<T>> {
-			using Scalar = typename T;
+			using Scalar = T;
 			using Direct = const OpenCLRef<Scalar>;
 			using Ref	 = OpenCLRef<Scalar>;
 		};
