@@ -10,7 +10,7 @@ namespace lrc = librapid;
 #	define REGISTER_CASES(TYPE)                                                                   \
 		SECTION("Type: " STRINGIFY(TYPE)) {                                                        \
 			using ScalarType = TYPE;                                                               \
-			lrc::OpenCLStorage<ScalarType> storage(5);                                               \
+			lrc::OpenCLStorage<ScalarType> storage(5);                                             \
                                                                                                    \
 			REQUIRE(storage.size() == 5);                                                          \
                                                                                                    \
@@ -20,7 +20,7 @@ namespace lrc = librapid;
 			REQUIRE(storage[0] == 1);                                                              \
 			REQUIRE(storage[1] == 10);                                                             \
                                                                                                    \
-			lrc::OpenCLStorage<ScalarType> storage2({1, 2, 3, 4, 5, 6, 7, 8, 9, 10});                \
+			lrc::OpenCLStorage<ScalarType> storage2({1, 2, 3, 4, 5, 6, 7, 8, 9, 10});              \
                                                                                                    \
 			REQUIRE(storage2.size() == 10);                                                        \
 			REQUIRE(storage2[0] == 1);                                                             \
@@ -28,7 +28,7 @@ namespace lrc = librapid;
 			REQUIRE(storage2[8] == 9);                                                             \
 			REQUIRE(storage2[9] == 10);                                                            \
                                                                                                    \
-			lrc::OpenCLStorage<ScalarType> storage3(100, 1);                                         \
+			lrc::OpenCLStorage<ScalarType> storage3(100, 1);                                       \
                                                                                                    \
 			REQUIRE(storage3.size() == 100);                                                       \
 			REQUIRE(storage3[0] == 1);                                                             \
@@ -36,7 +36,7 @@ namespace lrc = librapid;
 			REQUIRE(storage3[98] == 1);                                                            \
 			REQUIRE(storage3[99] == 1);                                                            \
                                                                                                    \
-			auto storage4 = lrc::OpenCLStorage<ScalarType>(storage2);                                \
+			auto storage4 = lrc::OpenCLStorage<ScalarType>(storage2);                              \
                                                                                                    \
 			REQUIRE(storage4.size() == 10);                                                        \
 			REQUIRE(storage4[0] == 1);                                                             \
@@ -44,7 +44,7 @@ namespace lrc = librapid;
 			REQUIRE(storage4[8] == 9);                                                             \
 			REQUIRE(storage4[9] == 10);                                                            \
                                                                                                    \
-			storage4 = lrc::OpenCLStorage<ScalarType>(100);                                          \
+			storage4 = lrc::OpenCLStorage<ScalarType>(100);                                        \
 			REQUIRE(storage4.size() == 100);                                                       \
 			storage4[0]	 = 1;                                                                      \
 			storage4[1]	 = 2;                                                                      \
@@ -63,7 +63,7 @@ namespace lrc = librapid;
 			REQUIRE(storage4[98] == 1);                                                            \
 			REQUIRE(storage4[99] == 1);                                                            \
                                                                                                    \
-			lrc::OpenCLStorage<ScalarType> storage6(20, 123);                                        \
+			lrc::OpenCLStorage<ScalarType> storage6(20, 123);                                      \
 			REQUIRE(storage6.size() == 20);                                                        \
 			storage6.resize(5);                                                                    \
 			REQUIRE(storage6.size() == 5);                                                         \
@@ -86,40 +86,38 @@ namespace lrc = librapid;
 		}
 
 #	define BENCHMARK_CONSTRUCTORS(TYPE_, FILL_)                                                   \
-		BENCHMARK("OpenCLStorage<" STRINGIFY(TYPE_) "> 10") {                                        \
-			lrc::OpenCLStorage<TYPE_> storage(10);                                                   \
+		BENCHMARK("OpenCLStorage<" STRINGIFY(TYPE_) "> 10") {                                      \
+			lrc::OpenCLStorage<TYPE_> storage(10);                                                 \
 			return storage.size();                                                                 \
 		};                                                                                         \
                                                                                                    \
-		BENCHMARK("OpenCLStorage<" STRINGIFY(TYPE_) "> 1000") {                                      \
-			lrc::OpenCLStorage<TYPE_> storage(1000);                                                 \
+		BENCHMARK("OpenCLStorage<" STRINGIFY(TYPE_) "> 1000") {                                    \
+			lrc::OpenCLStorage<TYPE_> storage(1000);                                               \
 			return storage.size();                                                                 \
 		};                                                                                         \
                                                                                                    \
-		BENCHMARK("OpenCLStorage<" STRINGIFY(TYPE_) "> 1000000") {                                   \
-			lrc::OpenCLStorage<TYPE_> storage(1000000);                                              \
+		BENCHMARK("OpenCLStorage<" STRINGIFY(TYPE_) "> 1000000") {                                 \
+			lrc::OpenCLStorage<TYPE_> storage(1000000);                                            \
 			return storage.size();                                                                 \
 		};                                                                                         \
                                                                                                    \
-		BENCHMARK("OpenCLStorage<" STRINGIFY(TYPE_) "> 10 FILLED") {                                 \
-			lrc::OpenCLStorage<TYPE_> storage(10, FILL_);                                            \
+		BENCHMARK("OpenCLStorage<" STRINGIFY(TYPE_) "> 10 FILLED") {                               \
+			lrc::OpenCLStorage<TYPE_> storage(10, FILL_);                                          \
 			return storage.size();                                                                 \
 		};                                                                                         \
                                                                                                    \
-		BENCHMARK("OpenCLStorage<" STRINGIFY(TYPE_) "> 1000 FILLED") {                               \
-			lrc::OpenCLStorage<TYPE_> storage(1000, FILL_);                                          \
+		BENCHMARK("OpenCLStorage<" STRINGIFY(TYPE_) "> 1000 FILLED") {                             \
+			lrc::OpenCLStorage<TYPE_> storage(1000, FILL_);                                        \
 			return storage.size();                                                                 \
 		};                                                                                         \
                                                                                                    \
-		BENCHMARK("OpenCLStorage<" STRINGIFY(TYPE_) "> 1000000 FILLED") {                            \
-			lrc::OpenCLStorage<TYPE_> storage(1000000, FILL_);                                       \
+		BENCHMARK("OpenCLStorage<" STRINGIFY(TYPE_) "> 1000000 FILLED") {                          \
+			lrc::OpenCLStorage<TYPE_> storage(1000000, FILL_);                                     \
 			return storage.size();                                                                 \
 		}
 
 TEST_CASE("Configure OpenCL", "[storage]") {
-	SECTION("Configure OpenCL") {
-		lrc::configureOpenCL();
-	}
+	SECTION("Configure OpenCL") { lrc::configureOpenCL(true); }
 }
 
 TEST_CASE("Test OpenCLStorage<T>", "[storage]") {
@@ -149,9 +147,7 @@ TEST_CASE("Test OpenCLStorage<T>", "[storage]") {
 
 TEST_CASE("Default", "[storage]") {
 	LIBRAPID_WARN("OpenCL not available, skipping tests");
-	SECTION("Default") {
-		REQUIRE(true);
-	}
+	SECTION("Default") { REQUIRE(true); }
 }
 
 #endif // LIBRAPID_HAS_OPENCL

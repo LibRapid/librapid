@@ -38,7 +38,7 @@ TRIG_TEST_IMPL(float, CPU)
 TRIG_TEST_IMPL(double, CPU)
 
 #if defined(LIBRAPID_HAS_OPENCL)
-TEST_CASE("Configure OpenCL") { lrc::configureOpenCL(); }
+TEST_CASE("Configure OpenCL") { lrc::configureOpenCL(true); }
 TRIG_TEST_IMPL(float, OPENCL)
 TRIG_TEST_IMPL(double, OPENCL)
 #endif

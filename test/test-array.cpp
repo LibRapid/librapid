@@ -621,7 +621,7 @@ TEST_CASE("Test Array -- lrc::mpfr CPU", "[array-lib]") { TEST_ALL(lrc::mpfr, CP
 
 #if defined(LIBRAPID_HAS_OPENCL)
 
-TEST_CASE("Configure OpenCL") { lrc::configureOpenCL(); }
+TEST_CASE("Configure OpenCL") { lrc::configureOpenCL(true); }
 
 TEST_CASE("Test Array -- int32_t OpenCL", "[array-lib]") { TEST_ALL(int32_t, OPENCL); }
 TEST_CASE("Test Array -- uint32_t OpenCL", "[array-lib]") { TEST_ALL(uint32_t, OPENCL); }
