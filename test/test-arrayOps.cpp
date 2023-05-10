@@ -15,7 +15,7 @@ using CUDA				   = lrc::backend::CUDA;
 #define TEST_OP(NAME)                                                                              \
 	auto NAME##X = lrc::NAME(x).eval();                                                            \
 	for (int i = 0; i < NAME##X.shape().size(); ++i) {                                             \
-		REQUIRE(lrc::isClose(NAME##X(i), lrc::NAME(x(i)), tolerance));                             \
+		REQUIRE(lrc::isClose(NAME##X(i), lrc::NAME((SCALAR)x(i)), tolerance));                     \
 	}
 
 #define TRIG_TEST_IMPL(SCALAR, BACKEND)                                                            \
@@ -32,6 +32,16 @@ using CUDA				   = lrc::backend::CUDA;
 		TEST_OP(sinh);                                                                             \
 		TEST_OP(cosh);                                                                             \
 		TEST_OP(tanh);                                                                             \
+                                                                                                   \
+		TEST_OP(exp);                                                                              \
+		TEST_OP(log);                                                                              \
+		TEST_OP(log2);                                                                             \
+		TEST_OP(log10);                                                                            \
+		TEST_OP(sqrt);                                                                             \
+		TEST_OP(cbrt);                                                                             \
+		TEST_OP(abs);                                                                              \
+		TEST_OP(floor);                                                                            \
+		TEST_OP(ceil);                                                                             \
 	}
 
 TRIG_TEST_IMPL(float, CPU)

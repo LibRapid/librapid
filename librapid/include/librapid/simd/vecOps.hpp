@@ -105,6 +105,93 @@ namespace librapid {
 			return result;
 		}
 	}
+
+	template<typename T, REQUIRE_VECTOR(T)>
+	T exp(const T &x) {
+		IF_FLOATING(T) { return Vc::exp(x); }
+		else {
+			T result;
+			for (int i = 0; i < x.size(); ++i) { result[i] = exp(x[i]); }
+			return result;
+		}
+	}
+
+	template<typename T, REQUIRE_VECTOR(T)>
+	T log(const T &x) {
+		IF_FLOATING(T) { return Vc::log(x); }
+		else {
+			T result;
+			for (int i = 0; i < x.size(); ++i) { result[i] = log(x[i]); }
+			return result;
+		}
+	}
+
+	template<typename T, REQUIRE_VECTOR(T)>
+	T log2(const T &x) {
+		IF_FLOATING(T) { return Vc::log2(x); }
+		else {
+			T result;
+			for (int i = 0; i < x.size(); ++i) { result[i] = log2(x[i]); }
+			return result;
+		}
+	}
+
+	template<typename T, REQUIRE_VECTOR(T)>
+	T log10(const T &x) {
+		IF_FLOATING(T) { return Vc::log10(x); }
+		else {
+			T result;
+			for (int i = 0; i < x.size(); ++i) { result[i] = log10(x[i]); }
+			return result;
+		}
+	}
+
+	template<typename T, REQUIRE_VECTOR(T)>
+	T sqrt(const T &x) {
+		IF_FLOATING(T) { return Vc::sqrt(x); }
+		else {
+			T result;
+			for (int i = 0; i < x.size(); ++i) { result[i] = sqrt(x[i]); }
+			return result;
+		}
+	}
+
+	template<typename T, REQUIRE_VECTOR(T)>
+	T cbrt(const T &x) {
+		T result;
+		for (int i = 0; i < x.size(); ++i) { result[i] = cbrt(x[i]); }
+		return result;
+	}
+
+	template<typename T, REQUIRE_VECTOR(T)>
+	T abs(const T &x) {
+		IF_FLOATING(T) { return Vc::abs(x); }
+		else {
+			T result;
+			for (int i = 0; i < x.size(); ++i) { result[i] = abs(x[i]); }
+			return result;
+		}
+	}
+
+	template<typename T, REQUIRE_VECTOR(T)>
+	T floor(const T &x) {
+		IF_FLOATING(T) { return Vc::floor(x); }
+		else {
+			T result;
+			for (int i = 0; i < x.size(); ++i) { result[i] = floor(x[i]); }
+			return result;
+		}
+	}
+
+	template<typename T, REQUIRE_VECTOR(T)>
+	T ceil(const T &x) {
+		IF_FLOATING(T) { return Vc::ceil(x); }
+		else {
+			T result;
+			for (int i = 0; i < x.size(); ++i) { result[i] = ceil(x[i]); }
+			return result;
+		}
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_SIMD_TRIGONOMETRY

@@ -15,7 +15,7 @@ make_test(fixedStorage)
 make_test(array)
 make_test(arrayView)
 make_test(pseudoConstructors)
-make_test(arrayTrigonometry)
+make_test(arrayOps)
 
 make_test(multiprecision)
 make_test(vector)

@@ -287,6 +287,11 @@ namespace librapid {
 	/// \return The square root of the value
 	mpfr sqrt(const mpfr &val);
 
+	/// Cube root of a multiprecision floating point value: \f$ \sqrt[3]{x} \f$
+	/// \param val The value to take the cube root of
+	/// \return The cube root of the value
+	mpfr cbrt(const mpfr &val);
+
 	/// Raise a multiprecision floating point value to a power: \f$ x^y \f$
 	/// \param base The value to raise to a power
 	/// \param pow The power to raise the value to
