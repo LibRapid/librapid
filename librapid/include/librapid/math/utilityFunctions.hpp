@@ -79,10 +79,14 @@ namespace librapid {
 		return tt * tt * tt * (tt * (tt * T(6) - T(15)) + T(10));
 	}
 
-	/// \brief Returns true if the two values are within the given tolerance of each other
+	/// \brief Compare the absolute and relative difference between two values, and return true if
+	/// they are close enough to be considered equal.
 	///
-	/// This function is often used to compare floating point values for equality, since floating
-	/// point rounding errors can cause exact equality checks to fail.
+	/// \f$ \left| x-y \right| \leq \max\left( \mathrm{absTol}, \mathrm{relTol} \cdot \max\left(
+	/// \left| x \right|, \left| y \right| \right) \right) \f$
+	///
+	/// This is more precise than using an absolute tolerance alone, since it also takes into
+	/// account the magnitude of the values being compared.
 	///
 	/// \tparam V1 Data type of the first value
 	/// \tparam V2 Data type of the second value
@@ -90,12 +94,16 @@ namespace librapid {
 	/// \tparam T Data type of the tolerance value
 	/// \param val1 First value
 	/// \param val2 Second value
-	/// \param tolerance Tolerance
+	/// \param absTol Absolute tolerance
+	/// \param relTol Relative tolerance
 	/// \return True if values are close
 	template<typename V1, typename V2, typename T = double>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool isClose(const V1 &val1, const V2 &val2,
-														   const T &tolerance = 1e-6) {
-		return ::librapid::abs(val1 - val2) < tolerance;
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool
+	isClose(const V1 &val1, const V2 &val2, const T &absTol = 1e-5, const T &relTol = 1e-5) {
+		// return ::librapid::abs(val1 - val2) < tolerance;
+		return ::librapid::abs(val2 - val1) <=
+			   ::librapid::max(
+				 relTol * ::librapid::max(::librapid::abs(val1), ::librapid::abs(val2)), absTol);
 	}
 } // namespace librapid
 

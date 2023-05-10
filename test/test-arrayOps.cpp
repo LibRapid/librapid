@@ -15,13 +15,14 @@ using CUDA				   = lrc::backend::CUDA;
 #define TEST_OP(NAME)                                                                              \
 	auto NAME##X = lrc::NAME(x).eval();                                                            \
 	for (int i = 0; i < NAME##X.shape().size(); ++i) {                                             \
-		REQUIRE(lrc::isClose(NAME##X(i), lrc::NAME((SCALAR)x(i)), tolerance));                     \
+		REQUIRE(lrc::isClose((SCALAR)NAME##X(i), (SCALAR)lrc::NAME((SCALAR)x(i)), tolerance));     \
 	}
 
 #define TRIG_TEST_IMPL(SCALAR, BACKEND)                                                            \
 	TEST_CASE(fmt::format("Test Trigonometry -- {} {}", STRINGIFY(SCALAR), STRINGIFY(BACKEND)),    \
 			  "[array-lib]") {                                                                     \
-		auto x = lrc::linspace<SCALAR, BACKEND>(0, 1, 100, false);                                 \
+		/* Valid range for all functions */                                                        \
+		auto x = lrc::linspace<SCALAR, BACKEND>(0.1, 0.5, 100, false);                             \
                                                                                                    \
 		TEST_OP(sin);                                                                              \
 		TEST_OP(cos);                                                                              \

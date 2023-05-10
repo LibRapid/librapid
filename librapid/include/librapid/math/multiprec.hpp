@@ -262,10 +262,10 @@ namespace librapid {
 	/// \param val2 The second value
 	/// \param tolerance The tolerance
 	/// \return True if the values are close to each other
-	template<typename T>
-	bool isClose(const mpfr &val1, const mpfr &val2, const T &tolerance = 1e-6) {
-		return ::librapid::abs(val1 - val2) < tolerance;
-	}
+	// template<typename T>
+	// bool isClose(const mpfr &val1, const mpfr &val2, const T &tolerance = 1e-6) {
+	// 	return ::librapid::abs(val1 - val2) < tolerance;
+	// }
 
 	/// Absolute value of a multiprecision integer value: \f$ |x| \f$
 	/// \param val The value to take the absolute value of
