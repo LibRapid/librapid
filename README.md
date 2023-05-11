@@ -1,9 +1,13 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_light.png#gh-light-mode-only" width="800" href="https://librapid.rtfd.io/">
+<a href="https://librapid.readthedocs.io/en/latest/">"
+<img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_light.png#gh-light-mode-only" width="800">
+</a>
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_dark.png#gh-dark-mode-only" width="800" href="https://librapid.rtfd.io/">
+<a href="https://https://librapid.readthedocs.io/en/latest/">
+<img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_dark.png#gh-dark-mode-only" width="800">
+</a>
 </p>
 
 ![C++ Version](https://img.shields.io/badge/C++-17/20-purple.svg?style=flat&logo=c%2B%2B) ![License](https://img.shields.io/badge/License-MIT-orange.svg?style=flat) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC)
@@ -12,6 +16,10 @@
 
 [![Continuous Integration](https://github.com/LibRapid/librapid/actions/workflows/continuous-integration.yaml/badge.svg)](https://github.com/LibRapid/librapid/actions/workflows/continuous-integration.yaml)
 [![Documentation Status](https://readthedocs.org/projects/librapid/badge/?version=latest)](https://librapid.readthedocs.io/en/latest/?badge=latest)
+
+---
+
+[![Documentation](https://img.shields.io/badge/LibRapid%20Documentation-F01F7A?style=for-the-badge&logo=ReadTheDocs&logoColor=white)](https://librapid.readthedocs.io/en/develop/api/function_namespacelibrapid_1a4d7a85c238d46f4f45a0a76b5159a652.html)
 
 ---
 
