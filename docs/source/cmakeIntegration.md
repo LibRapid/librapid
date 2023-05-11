@@ -91,9 +91,9 @@ DEFAULT: ON
 
 Search for CUDA and link LibRapid with it. This is required for GPU support.
 
-```warning
+:::warning
 If this flag is enabled and CUDA is not found installed on the system, the build will continue without CUDA support.
-```
+:::
 
 ```danger
 LibRapid's CUDA support appears to only works on Windows, for some reason. I have no way of testing it on Linux or
@@ -155,10 +155,10 @@ DEFAULT: OFF
 Enabling this flag compiles librapid with the most advanced instruction set available on the system. This can lead to
 significant performance boosts, but may cause the library to be incompatible with older systems.
 
-```warning
+:::warning
 Compiling with this flag may also cause the binaries to be incompatible with other CPU architectures, so be careful
 when distributing your programs.
-```
+:::
 
 ### ``LIBRAPID_NO_WINDOWS_H``
 

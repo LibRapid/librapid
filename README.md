@@ -15,6 +15,10 @@
 
 ---
 
+[![Documentation](https://img.shields.io/badge/LibRapid%20Documentation-F01F7A?style=for-the-badge&logo=ReadTheDocs&logoColor=white)](https://librapid.readthedocs.io/en/develop/api/function_namespacelibrapid_1a4d7a85c238d46f4f45a0a76b5159a652.html)
+
+---
+
 # An Important Note
 
 I am currently preparing for my A-Level exams and, as such, my ability to work on LibRapid is severely limited. I will try to work on it as much as
