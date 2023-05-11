@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://librapid.readthedocs.io/en/latest/">"
+<a href="https://librapid.readthedocs.io/en/latest/">
 <img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_light.png#gh-light-mode-only" width="800">
 </a>
 </p>
