@@ -87,22 +87,22 @@
 		do {                                                                                       \
 			std::string funcName = FUNCTION;                                                       \
 			if (funcName.length() > 75) funcName = "<Signature too Long>";                         \
-			int maxLen = librapiod::detail::internalMax((int)std::ceil(std::log(__LINE__)) + 6,    \
-														(int)strlen(FILENAME) + 6,                 \
-														(int)funcName.length() + 6,                \
-														(int)strlen("WARN ASSERTION FAILED"));     \
-			fmt::print(fmt::fg(fmt::color::red),                                                   \
-					   "[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "                                  \
-					   "{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",                                        \
-					   "ERROR",                                                                    \
-					   FILENAME,                                                                   \
-					   funcName,                                                                   \
-					   __LINE__,                                                                   \
-					   fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),                                \
-					   maxLen + 5,                                                                 \
-					   maxLen + 0,                                                                 \
-					   maxLen - 4,                                                                 \
-					   maxLen);                                                                    \
+			int maxLen = librapid::detail::internalMax((int)std::ceil(std::log(__LINE__)) + 6,     \
+													   (int)strlen(FILENAME) + 6,                  \
+													   (int)funcName.length() + 6,                 \
+													   (int)strlen("WARN ASSERTION FAILED"));      \
+			std::string formatted = fmt::format(fmt::fg(fmt::color::red),                          \
+												"[{0:-^{5}}]\n[File {1:>{6}}]\n[Function "         \
+												"{2:>{7}}]\n[Line {3:>{8}}]\n{4}\n",               \
+												"ERROR",                                           \
+												FILENAME,                                          \
+												funcName,                                          \
+												__LINE__,                                          \
+												fmt::format(msg __VA_OPT__(, ) __VA_ARGS__),       \
+												maxLen + 5,                                        \
+												maxLen + 0,                                        \
+												maxLen - 4,                                        \
+												maxLen);                                           \
 			if (librapid::global::throwOnAssert) {                                                 \
 				throw std::runtime_error(formatted);                                               \
 			} else {                                                                               \

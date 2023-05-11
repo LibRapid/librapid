@@ -14,6 +14,9 @@ namespace librapid {
 	template<typename Scalar_, size_t... Dimensions>
 	class FixedStorage;
 
+	template<typename Scalar>
+	class OpenCLStorage;
+
 	template<typename Scalar_>
 	class CudaStorage;
 
@@ -57,6 +60,14 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void assignParallel(
 		  array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
+
+#if defined(LIBRAPID_HAS_OPENCL)
+		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
+		LIBRAPID_ALWAYS_INLINE void
+		assign(array::ArrayContainer<ShapeType_, OpenCLStorage<StorageScalar>> &lhs,
+			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
+
+#endif // LIBRAPID_HAS_CUDA
 
 #if defined(LIBRAPID_HAS_CUDA)
 		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>

@@ -7,8 +7,8 @@ namespace librapid {
 		struct TypeInfo<array::ArrayView<T>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayView;
 			using Scalar							   = typename TypeInfo<std::decay_t<T>>::Scalar;
-			using Device							   = typename TypeInfo<std::decay_t<T>>::Device;
-			static constexpr bool allowVectorisation   = false;
+			using Backend							 = typename TypeInfo<std::decay_t<T>>::Backend;
+			static constexpr bool allowVectorisation = false;
 		};
 
 		LIBRAPID_DEFINE_AS_TYPE(typename T, array::ArrayView<T>);
@@ -23,8 +23,8 @@ namespace librapid {
 			using Scalar		 = typename typetraits::TypeInfo<BaseType>::Scalar;
 			using Reference		 = BaseType &;
 			using ConstReference = const BaseType &;
-			using Device		 = typename typetraits::TypeInfo<BaseType>::Device;
-			using ArrayType		 = Array<Scalar, Device>;
+			using Backend		 = typename typetraits::TypeInfo<BaseType>::Backend;
+			using ArrayType		 = Array<Scalar, Backend>;
 			using StrideType	 = typename ArrayType::StrideType;
 			using ShapeType		 = typename ArrayType::ShapeType;
 
@@ -37,7 +37,7 @@ namespace librapid {
 
 			/// Copy an ArrayView object (not const)
 			/// \param array The array to copy
-			explicit ArrayView(T &&array);
+			explicit ArrayView(T &&array) = delete;
 
 			/// Copy an ArrayView object (const)
 			/// \param other The array to copy
@@ -55,7 +55,7 @@ namespace librapid {
 			/// Assigns a temporary ArrayView to this ArrayView.
 			/// \param other The ArrayView to move.
 			/// \return A reference to this ArrayView.
-			ArrayView &operator=(ArrayView &&other) noexcept = default;
+			// ArrayView &operator=(ArrayView &&other) noexcept = default;
 
 			/// Assign a scalar value to this ArrayView. This function should only be used to
 			/// assign to a zero-dimensional "scalar" ArrayView, and will throw an error if used
@@ -67,7 +67,9 @@ namespace librapid {
 			/// Access a sub-array of this ArrayView.
 			/// \param index The index of the sub-array.
 			/// \return An ArrayView from this
-			ArrayView<T> operator[](int64_t index) const;
+			const ArrayView<T> operator[](int64_t index) const;
+
+			ArrayView<T> operator[](int64_t index);
 
 			/// Since even scalars are represented as an ArrayView object, it can be difficult to
 			/// operate on them directly. This allows you to extract the scalar value stored by a
@@ -142,10 +144,6 @@ namespace librapid {
 				m_ref(array), m_shape(array.shape()), m_stride(array.shape()) {}
 
 		template<typename T>
-		ArrayView<T>::ArrayView(T &&array) :
-				m_ref(array), m_shape(array.shape()), m_stride(array.shape()) {}
-
-		template<typename T>
 		ArrayView<T> &ArrayView<T>::operator=(const Scalar &scalar) {
 			LIBRAPID_ASSERT(m_shape.ndim() == 0, "Cannot assign to a non-scalar ArrayView.");
 			m_ref.storage()[m_offset] = static_cast<Scalar>(scalar);
@@ -153,7 +151,25 @@ namespace librapid {
 		}
 
 		template<typename T>
-		auto ArrayView<T>::operator[](int64_t index) const -> ArrayView<T> {
+		auto ArrayView<T>::operator[](int64_t index) const -> const ArrayView<T> {
+			LIBRAPID_ASSERT(
+			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
+			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
+			  index,
+			  m_shape[0]);
+			ArrayView<T> view(m_ref);
+			const auto stride = Stride(m_shape);
+			view.setShape(m_shape.subshape(1, ndim()));
+			if (ndim() == 1)
+				view.setStride(Stride({1}));
+			else
+				view.setStride(stride.subshape(1, ndim()));
+			view.setOffset(m_offset + index * stride[0]);
+			return view;
+		}
+
+		template<typename T>
+		auto ArrayView<T>::operator[](int64_t index) -> ArrayView<T> {
 			LIBRAPID_ASSERT(
 			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
@@ -260,7 +276,6 @@ namespace librapid {
 			return res;
 		}
 	} // namespace array
-
 } // namespace librapid
 
 // Support FMT printing

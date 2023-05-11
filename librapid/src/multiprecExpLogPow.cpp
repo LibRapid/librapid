@@ -4,6 +4,7 @@
 
 namespace librapid {
 	mpfr sqrt(const mpfr &val) { return ::mpfr::sqrt(val); }
+	mpfr cbrt(const mpfr &val) { return ::mpfr::cbrt(val); }
 	mpfr pow(const mpfr &base, const mpfr &pow) { return ::mpfr::pow(base, pow); }
 	mpfr exp(const mpfr &val) { return ::mpfr::exp(val); }
 	mpfr exp2(const mpfr &val) { return ::mpfr::exp2(val); }

@@ -9,21 +9,26 @@ namespace librapid {
 		};
 
 		template<typename Scalar>
-		struct TypeDefStorageEvaluator<Scalar, device::CPU> {
+		struct TypeDefStorageEvaluator<Scalar, backend::CPU> {
 			using Type = Storage<Scalar>;
 		};
 
 		template<typename Scalar>
-		struct TypeDefStorageEvaluator<Scalar, device::GPU> {
+		struct TypeDefStorageEvaluator<Scalar, backend::OpenCL> {
+			using Type = OpenCLStorage<Scalar>;
+		};
+
+		template<typename Scalar>
+		struct TypeDefStorageEvaluator<Scalar, backend::CUDA> {
 			using Type = CudaStorage<Scalar>;
 		};
 	} // namespace detail
 
 	/// An easier to use definition than ArrayContainer. In this case, StorageType can be
-	/// `device::CPU`, `device::GPU` or any Storage interface
+	/// `backend::CPU`, `backend::CUDA` or any Storage interface
 	/// \tparam Scalar The scalar type of the array.
 	/// \tparam StorageType The storage type of the array.
-	template<typename Scalar, typename StorageType = device::CPU>
+	template<typename Scalar, typename StorageType = backend::CPU>
 	using Array =
 	  array::ArrayContainer<Shape<size_t, 32>,
 							typename detail::TypeDefStorageEvaluator<Scalar, StorageType>::Type>;

@@ -318,7 +318,57 @@
 #	include "genericConfig.hpp"
 #endif
 
-#include "cudaConfig.hpp"
+#if defined(LIBRAPID_HAS_CUDA)
+#	include "cudaConfig.hpp"
+#else
+namespace librapid::typetraits {
+	template<typename T>
+	struct IsCudaStorage : std::false_type {};
+} // namespace librapid::typetraits
+#endif
+
+#if defined(LIBRAPID_HAS_OPENCL)
+#	include "openclConfig.hpp"
+#else
+namespace librapid::typetraits {
+	template<typename T>
+	struct IsOpenCLStorage : std::false_type {};
+} // namespace librapid::typetraits
+#endif
+
+namespace librapid::backend {
+	// Use the CPU for computation (default)
+	struct CPU {};
+
+	// Use the GPU via CUDA
+	struct CUDA {};
+
+	// Use OpenCL
+	struct OpenCL {};
+
+	// Use the fastest device for computation
+#if defined(LIBRAPID_HAS_CUDA)
+	using Fastest = CUDA;
+#elif defined(LIBRAPID_HAS_OPENCL)
+	using Fastest			= OpenCL;
+#else
+	using Fastest = CPU;
+#endif
+
+	// GPU if available, CPU otherwise
+#if defined(LIBRAPID_HAS_CUDA)
+	using CUDAIfAvailable = CUDA;
+#else
+	using CUDAIfAvailable	= CPU;
+#endif
+
+	// OpenCL if available, CPU otherwise
+#if defined(LIBRAPID_HAS_OPENCL)
+	using OpenCLIfAvailable = OpenCL;
+#else
+	using OpenCLIfAvailable = CPU;
+#endif
+} // namespace librapid::backend
 
 #ifndef LIBRAPID_MAX_ARRAY_DIMS
 #	define LIBRAPID_MAX_ARRAY_DIMS 32

@@ -4,7 +4,8 @@
 namespace librapid::linalg {
 #define GEAM_VALIDATION                                                                            \
 	LIBRAPID_ASSERT(a.shape() == b.shape(), "Input shapes must match");                            \
-	LIBRAPID_ASSERT(a.shape() == c.shape(), "Output shape must match input shapes");               \
+	LIBRAPID_ASSERT(a.shape()[0] == c.shape()[1] && a.shape()[1] == c.shape()[0],                  \
+					"Output shape must match input shapes");                                       \
 	LIBRAPID_ASSERT(a.ndim() == 2, "Input array must be a Matrix (2D)");                           \
 	LIBRAPID_ASSERT((void *)&a != (void *)&c, "Input and output arrays must be different");        \
 	LIBRAPID_ASSERT((void *)&b != (void *)&c, "Input and output arrays must be different")
@@ -82,6 +83,10 @@ namespace librapid::linalg {
 
 		c = transpose((dataA * alpha + dataB * beta).eval());
 	}
+
+#if defined(LIBRAPID_HAS_OPENCL)
+
+#endif // LIBRAPID_HAS_OPENCL
 
 #if defined(LIBRAPID_HAS_CUDA)
 

@@ -3,19 +3,22 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
 
-namespace lrc = librapid;
+namespace lrc			   = librapid;
 constexpr double tolerance = 0.001;
+using CPU				   = lrc::backend::CPU;
+using OPENCL			   = lrc::backend::OpenCL;
+using CUDA				   = lrc::backend::CUDA;
 
-#define TEST_CONSTRUCTORS(SCALAR, DEVICE)                                                          \
-	SECTION(fmt::format("Test Constructors [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {    \
-		lrc::Array<SCALAR, DEVICE> testA;                                                          \
-		REQUIRE(testA.shape() == lrc::Array<SCALAR, DEVICE>::ShapeType {0});                       \
+#define TEST_CONSTRUCTORS(SCALAR, BACKEND)                                                         \
+	SECTION(fmt::format("Test Constructors [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(BACKEND))) {   \
+		lrc::Array<SCALAR, BACKEND> testA;                                                         \
+		REQUIRE(testA.shape() == lrc::Array<SCALAR, BACKEND>::ShapeType {0});                      \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testB(lrc::Array<SCALAR, DEVICE>::ShapeType {3, 4});            \
-		REQUIRE(testB.shape() == lrc::Array<SCALAR, DEVICE>::ShapeType {3, 4});                    \
+		lrc::Array<SCALAR, BACKEND> testB(lrc::Array<SCALAR, BACKEND>::ShapeType {3, 4});          \
+		REQUIRE(testB.shape() == lrc::Array<SCALAR, BACKEND>::ShapeType {3, 4});                   \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testC(lrc::Array<SCALAR, DEVICE>::ShapeType {3, 4}, 5);         \
-		REQUIRE(testC.shape() == lrc::Array<SCALAR, DEVICE>::ShapeType {3, 4});                    \
+		lrc::Array<SCALAR, BACKEND> testC(lrc::Array<SCALAR, BACKEND>::ShapeType {3, 4}, 5);       \
+		REQUIRE(testC.shape() == lrc::Array<SCALAR, BACKEND>::ShapeType {3, 4});                   \
 		REQUIRE(testC.storage()[0] == 5);                                                          \
 		REQUIRE(testC.storage()[1] == 5);                                                          \
 		REQUIRE(testC.storage()[2] == 5);                                                          \
@@ -29,12 +32,12 @@ constexpr double tolerance = 0.001;
 		REQUIRE(testD.storage()[2] == 3);                                                          \
 		REQUIRE(testD.storage()[3] == 3);                                                          \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE>::ShapeType tmpShape({2, 3});                                    \
-		lrc::Array<SCALAR, DEVICE> testE(std::move(tmpShape));                                     \
-		REQUIRE(testE.shape() == lrc::Array<SCALAR, DEVICE>::ShapeType {2, 3});                    \
+		lrc::Array<SCALAR, BACKEND>::ShapeType tmpShape({2, 3});                                   \
+		lrc::Array<SCALAR, BACKEND> testE(std::move(tmpShape));                                    \
+		REQUIRE(testE.shape() == lrc::Array<SCALAR, BACKEND>::ShapeType {2, 3});                   \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testF(testC);                                                   \
-		REQUIRE(testF.shape() == lrc::Array<SCALAR, DEVICE>::ShapeType {3, 4});                    \
+		lrc::Array<SCALAR, BACKEND> testF(testC);                                                  \
+		REQUIRE(testF.shape() == lrc::Array<SCALAR, BACKEND>::ShapeType {3, 4});                   \
 		REQUIRE(testF.storage()[0] == 5);                                                          \
 		REQUIRE(testF.storage()[1] == 5);                                                          \
 		REQUIRE(testF.storage()[2] == 5);                                                          \
@@ -42,7 +45,7 @@ constexpr double tolerance = 0.001;
 		REQUIRE(testF.storage()[10] == 5);                                                         \
 		REQUIRE(testF.storage()[11] == 5);                                                         \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testG(lrc::Array<SCALAR, DEVICE>::ShapeType {3, 4}, 10);        \
+		lrc::Array<SCALAR, BACKEND> testG(lrc::Array<SCALAR, BACKEND>::ShapeType {3, 4}, 10);      \
 		testC = testG;                                                                             \
 		REQUIRE(testC.storage()[0] == 10);                                                         \
 		REQUIRE(testC.storage()[1] == 10);                                                         \
@@ -51,7 +54,7 @@ constexpr double tolerance = 0.001;
 		REQUIRE(testC.storage()[10] == 10);                                                        \
 		REQUIRE(testC.storage()[11] == 10);                                                        \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testH(lrc::Array<SCALAR, DEVICE>::ShapeType {3, 3});            \
+		lrc::Array<SCALAR, BACKEND> testH(lrc::Array<SCALAR, BACKEND>::ShapeType {3, 3});          \
 		testH << 1, 2, 3, 4, 5, 6, 7, 8, 9;                                                        \
 		REQUIRE(testH.storage()[0] == 1);                                                          \
 		REQUIRE(testH.storage()[1] == 2);                                                          \
@@ -65,7 +68,7 @@ constexpr double tolerance = 0.001;
                                                                                                    \
 		/* Due to the way the code works, if this passes for a 3D array, it *must* pass all other  \
 		 * dimensions */                                                                           \
-		auto testI = lrc::fromData<SCALAR, DEVICE>({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}});          \
+		auto testI = lrc::fromData<SCALAR, BACKEND>({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}});         \
 		REQUIRE(testI.str() == fmt::format("[[[{} {}]\n  [{} {}]]\n\n [[{} {}]\n  [{} {}]]]",      \
 										   SCALAR(1),                                              \
 										   SCALAR(2),                                              \
@@ -77,9 +80,9 @@ constexpr double tolerance = 0.001;
 										   SCALAR(8)));                                            \
 	}
 
-#define TEST_INDEXING(SCALAR, DEVICE)                                                              \
-	SECTION(fmt::format("Test Indexing [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {        \
-		lrc::Array<SCALAR, DEVICE> testA(lrc::Array<SCALAR, DEVICE>::ShapeType({5, 3}));           \
+#define TEST_INDEXING(SCALAR, BACKEND)                                                             \
+	SECTION(fmt::format("Test Indexing [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(BACKEND))) {       \
+		lrc::Array<SCALAR, BACKEND> testA(lrc::Array<SCALAR, BACKEND>::ShapeType({5, 3}));         \
 		testA << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15;                                \
 		std::string index0 = fmt::format("[{} {} {}]", SCALAR(1), SCALAR(2), SCALAR(3));           \
 		std::string index1 = fmt::format("[{} {} {}]", SCALAR(4), SCALAR(5), SCALAR(6));           \
@@ -109,16 +112,16 @@ constexpr double tolerance = 0.001;
 		REQUIRE((SCALAR)testA.storage()[4] == SCALAR(456));                                        \
 		REQUIRE((SCALAR)testA.storage()[8] == SCALAR(789));                                        \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testB(lrc::Array<SCALAR, DEVICE>::ShapeType({10}));             \
+		lrc::Array<SCALAR, BACKEND> testB(lrc::Array<SCALAR, BACKEND>::ShapeType({10}));           \
 		testB << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;                                                    \
 		REQUIRE(testB[0].get() == SCALAR(1));                                                      \
 		REQUIRE(testB[9].get() == SCALAR(10));                                                     \
 	}
 
-#define TEST_STRING_FORMATTING(SCALAR, DEVICE)                                                     \
+#define TEST_STRING_FORMATTING(SCALAR, BACKEND)                                                    \
 	SECTION(                                                                                       \
-	  fmt::format("Test String Formatting [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {     \
-		lrc::Array<SCALAR, DEVICE> testA(lrc::Array<SCALAR, DEVICE>::ShapeType({2, 3}));           \
+	  fmt::format("Test String Formatting [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(BACKEND))) {    \
+		lrc::Array<SCALAR, BACKEND> testA(lrc::Array<SCALAR, BACKEND>::ShapeType({2, 3}));         \
 		testA << 1, 2, 3, 4, 5, 6;                                                                 \
                                                                                                    \
 		REQUIRE(testA.str() == fmt::format("[[{} {} {}]\n [{} {} {}]]",                            \
@@ -129,7 +132,7 @@ constexpr double tolerance = 0.001;
 										   SCALAR(5),                                              \
 										   SCALAR(6)));                                            \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testB(lrc::Array<SCALAR, DEVICE>::ShapeType({2, 3}));           \
+		lrc::Array<SCALAR, BACKEND> testB(lrc::Array<SCALAR, BACKEND>::ShapeType({2, 3}));         \
 		testB << 10, 2, 3, 4, 5, 6;                                                                \
                                                                                                    \
 		REQUIRE(testB.str() == fmt::format("[[{} {} {}]\n [ {} {} {}]]",                           \
@@ -140,7 +143,7 @@ constexpr double tolerance = 0.001;
 										   SCALAR(5),                                              \
 										   SCALAR(6)));                                            \
                                                                                                    \
-		lrc::Array<SCALAR, DEVICE> testC(lrc::Array<SCALAR, DEVICE>::ShapeType({2, 2, 2}));        \
+		lrc::Array<SCALAR, BACKEND> testC(lrc::Array<SCALAR, BACKEND>::ShapeType({2, 2, 2}));      \
 		testC << 100, 2, 3, 4, 5, 6, 7, 8;                                                         \
 		REQUIRE(testC.str() ==                                                                     \
 				fmt::format("[[[{} {}]\n  [  {} {}]]\n\n [[  {} {}]\n  [  {} {}]]]",               \
@@ -154,12 +157,12 @@ constexpr double tolerance = 0.001;
 							SCALAR(8)));                                                           \
 	}
 
-#define TEST_ARITHMETIC(SCALAR, DEVICE)                                                            \
+#define TEST_ARITHMETIC(SCALAR, BACKEND)                                                           \
 	SECTION(                                                                                       \
-	  fmt::format("Test Array Operations [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {      \
-		lrc::Array<SCALAR, DEVICE>::ShapeType shape({37, 41});                                     \
-		lrc::Array<SCALAR, DEVICE> testA(shape); /* Prime-dimensioned to force wrapping */         \
-		lrc::Array<SCALAR, DEVICE> testB(shape);                                                   \
+	  fmt::format("Test Array Operations [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(BACKEND))) {     \
+		lrc::Array<SCALAR, BACKEND>::ShapeType shape({37, 41});                                    \
+		lrc::Array<SCALAR, BACKEND> testA(shape); /* Prime-dimensioned to force wrapping */        \
+		lrc::Array<SCALAR, BACKEND> testB(shape);                                                  \
                                                                                                    \
 		for (int64_t i = 0; i < shape[0]; ++i) {                                                   \
 			for (int64_t j = 0; j < shape[1]; ++j) {                                               \
@@ -175,7 +178,8 @@ constexpr double tolerance = 0.001;
 		bool sumValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(sumResult.scalar(i) == testA.scalar(i) + testB.scalar(i))) {                     \
-				REQUIRE(lrc::isClose(sumResult.scalar(i), testA.scalar(i) + testB.scalar(i), tolerance));                 \
+				REQUIRE(lrc::isClose(                                                              \
+				  sumResult.scalar(i), testA.scalar(i) + testB.scalar(i), tolerance));             \
 				sumValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
@@ -185,7 +189,8 @@ constexpr double tolerance = 0.001;
 		bool diffValid	= true;                                                                    \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(diffResult.scalar(i) == testA.scalar(i) - testB.scalar(i))) {                    \
-				REQUIRE(lrc::isClose(diffResult.scalar(i), testA.scalar(i) - testB.scalar(i), tolerance));                \
+				REQUIRE(lrc::isClose(                                                              \
+				  diffResult.scalar(i), testA.scalar(i) - testB.scalar(i), tolerance));            \
 				diffValid = false;                                                                 \
 			}                                                                                      \
 		}                                                                                          \
@@ -195,7 +200,8 @@ constexpr double tolerance = 0.001;
 		bool prodValid	= true;                                                                    \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(prodResult.scalar(i) == testA.scalar(i) * testB.scalar(i))) {                    \
-				REQUIRE(lrc::isClose(prodResult.scalar(i), testA.scalar(i) * testB.scalar(i), tolerance));  \
+				REQUIRE(lrc::isClose(                                                              \
+				  prodResult.scalar(i), testA.scalar(i) * testB.scalar(i), tolerance));            \
 				prodValid = false;                                                                 \
 			}                                                                                      \
 		}                                                                                          \
@@ -205,7 +211,8 @@ constexpr double tolerance = 0.001;
 		bool divValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(divResult.scalar(i) == testA.scalar(i) / testB.scalar(i))) {                     \
-				REQUIRE(lrc::isClose(divResult.scalar(i), testA.scalar(i) / testB.scalar(i), tolerance));     \
+				REQUIRE(lrc::isClose(                                                              \
+				  divResult.scalar(i), testA.scalar(i) / testB.scalar(i), tolerance));             \
 				divValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
@@ -214,11 +221,11 @@ constexpr double tolerance = 0.001;
 	do {                                                                                           \
 	} while (false)
 
-#define TEST_ARITHMETIC_ARRAY_SCALAR(SCALAR, DEVICE)                                               \
+#define TEST_ARITHMETIC_ARRAY_SCALAR(SCALAR, BACKEND)                                              \
 	SECTION(fmt::format(                                                                           \
-	  "Test Array-Scalar Operations [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {           \
-		lrc::Array<SCALAR, DEVICE>::ShapeType shape({37, 41});                                     \
-		lrc::Array<SCALAR, DEVICE> testA(shape); /* Prime-dimensioned to force wrapping */         \
+	  "Test Array-Scalar Operations [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(BACKEND))) {          \
+		lrc::Array<SCALAR, BACKEND>::ShapeType shape({37, 41});                                    \
+		lrc::Array<SCALAR, BACKEND> testA(shape); /* Prime-dimensioned to force wrapping */        \
                                                                                                    \
 		for (int64_t i = 0; i < shape[0]; ++i) {                                                   \
 			for (int64_t j = 0; j < shape[1]; ++j) {                                               \
@@ -231,7 +238,8 @@ constexpr double tolerance = 0.001;
 		bool sumValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(sumResult.scalar(i) == testA.scalar(i) + SCALAR(1))) {                           \
-				REQUIRE(lrc::isClose(sumResult.scalar(i), testA.scalar(i) + SCALAR(1), tolerance));                       \
+				REQUIRE(                                                                           \
+				  lrc::isClose(sumResult.scalar(i), testA.scalar(i) + SCALAR(1), tolerance));      \
 				sumValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
@@ -241,7 +249,8 @@ constexpr double tolerance = 0.001;
 		bool diffValid	= true;                                                                    \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(diffResult.scalar(i) == testA.scalar(i) - SCALAR(1))) {                          \
-				REQUIRE(lrc::isClose(diffResult.scalar(i), testA.scalar(i) - SCALAR(1), tolerance));                      \
+				REQUIRE(                                                                           \
+				  lrc::isClose(diffResult.scalar(i), testA.scalar(i) - SCALAR(1), tolerance));     \
 				diffValid = false;                                                                 \
 			}                                                                                      \
 		}                                                                                          \
@@ -251,7 +260,8 @@ constexpr double tolerance = 0.001;
 		bool prodValid	= true;                                                                    \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(prodResult.scalar(i) == testA.scalar(i) * SCALAR(2))) {                          \
-				REQUIRE(lrc::isClose(prodResult.scalar(i), testA.scalar(i) * SCALAR(2), tolerance));                      \
+				REQUIRE(                                                                           \
+				  lrc::isClose(prodResult.scalar(i), testA.scalar(i) * SCALAR(2), tolerance));     \
 				prodValid = false;                                                                 \
 			}                                                                                      \
 		}                                                                                          \
@@ -261,7 +271,8 @@ constexpr double tolerance = 0.001;
 		bool divValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(divResult.scalar(i) == testA.scalar(i) / SCALAR(2))) {                           \
-				REQUIRE(lrc::isClose(divResult.scalar(i), testA.scalar(i) / SCALAR(2), tolerance));                       \
+				REQUIRE(                                                                           \
+				  lrc::isClose(divResult.scalar(i), testA.scalar(i) / SCALAR(2), tolerance));      \
 				divValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
@@ -270,11 +281,11 @@ constexpr double tolerance = 0.001;
 	do {                                                                                           \
 	} while (false)
 
-#define TEST_ARITHMETIC_SCALAR_ARRAY(SCALAR, DEVICE)                                               \
+#define TEST_ARITHMETIC_SCALAR_ARRAY(SCALAR, BACKEND)                                              \
 	SECTION(fmt::format(                                                                           \
-	  "Test Scalar-Array Operations [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {           \
-		lrc::Array<SCALAR, DEVICE>::ShapeType shape({37, 41});                                     \
-		lrc::Array<SCALAR, DEVICE> testB(shape);                                                   \
+	  "Test Scalar-Array Operations [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(BACKEND))) {          \
+		lrc::Array<SCALAR, BACKEND>::ShapeType shape({37, 41});                                    \
+		lrc::Array<SCALAR, BACKEND> testB(shape);                                                  \
                                                                                                    \
 		for (int64_t i = 0; i < shape[0]; ++i) {                                                   \
 			for (int64_t j = 0; j < shape[1]; ++j) {                                               \
@@ -287,7 +298,8 @@ constexpr double tolerance = 0.001;
 		bool sumValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(sumResult.scalar(i) == SCALAR(1) + testB.scalar(i))) {                           \
-				REQUIRE(lrc::isClose(sumResult.scalar(i), SCALAR(1) + testB.scalar(i), tolerance));                       \
+				REQUIRE(                                                                           \
+				  lrc::isClose(sumResult.scalar(i), SCALAR(1) + testB.scalar(i), tolerance));      \
 				sumValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
@@ -297,7 +309,8 @@ constexpr double tolerance = 0.001;
 		bool diffValid	= true;                                                                    \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(diffResult.scalar(i) == SCALAR(1) - testB.scalar(i))) {                          \
-				REQUIRE(lrc::isClose(diffResult.scalar(i), SCALAR(1) - testB.scalar(i), tolerance));                      \
+				REQUIRE(                                                                           \
+				  lrc::isClose(diffResult.scalar(i), SCALAR(1) - testB.scalar(i), tolerance));     \
 				diffValid = false;                                                                 \
 			}                                                                                      \
 		}                                                                                          \
@@ -307,7 +320,8 @@ constexpr double tolerance = 0.001;
 		bool prodValid	= true;                                                                    \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(prodResult.scalar(i) == SCALAR(2) * testB.scalar(i))) {                          \
-				REQUIRE(lrc::isClose(prodResult.scalar(i), SCALAR(2) * testB.scalar(i), tolerance));                      \
+				REQUIRE(                                                                           \
+				  lrc::isClose(prodResult.scalar(i), SCALAR(2) * testB.scalar(i), tolerance));     \
 				prodValid = false;                                                                 \
 			}                                                                                      \
 		}                                                                                          \
@@ -317,7 +331,8 @@ constexpr double tolerance = 0.001;
 		bool divValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(divResult.scalar(i) == SCALAR(2) / testB.scalar(i))) {                           \
-				REQUIRE(lrc::isClose(divResult.scalar(i), SCALAR(2) / testB.scalar(i), tolerance));                       \
+				REQUIRE(                                                                           \
+				  lrc::isClose(divResult.scalar(i), SCALAR(2) / testB.scalar(i), tolerance));      \
 				divValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
@@ -326,12 +341,12 @@ constexpr double tolerance = 0.001;
 	do {                                                                                           \
 	} while (false)
 
-#define TEST_COMPARISONS(SCALAR, DEVICE)                                                           \
+#define TEST_COMPARISONS(SCALAR, BACKEND)                                                          \
 	SECTION(                                                                                       \
-	  fmt::format("Test Array Comparisons [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {     \
-		lrc::Array<SCALAR, DEVICE>::ShapeType shape({53, 79});                                     \
-		lrc::Array<SCALAR, DEVICE> testA(shape); /* Prime-dimensioned to force wrapping */         \
-		lrc::Array<SCALAR, DEVICE> testB(shape);                                                   \
+	  fmt::format("Test Array Comparisons [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(BACKEND))) {    \
+		lrc::Array<SCALAR, BACKEND>::ShapeType shape({53, 79});                                    \
+		lrc::Array<SCALAR, BACKEND> testA(shape); /* Prime-dimensioned to force wrapping */        \
+		lrc::Array<SCALAR, BACKEND> testB(shape);                                                  \
                                                                                                    \
 		for (int64_t i = 0; i < shape[0]; ++i) {                                                   \
 			for (int64_t j = 0; j < shape[1]; ++j) {                                               \
@@ -406,11 +421,11 @@ constexpr double tolerance = 0.001;
 	do {                                                                                           \
 	} while (false)
 
-#define TEST_COMPARISONS_ARRAY_SCALAR(SCALAR, DEVICE)                                              \
+#define TEST_COMPARISONS_ARRAY_SCALAR(SCALAR, BACKEND)                                             \
 	SECTION(fmt::format(                                                                           \
-	  "Test Array-Scalar Comparisons [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {          \
-		lrc::Array<SCALAR, DEVICE>::ShapeType shape({53, 79});                                     \
-		lrc::Array<SCALAR, DEVICE> testA(shape); /* Prime-dimensioned to force wrapping */         \
+	  "Test Array-Scalar Comparisons [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(BACKEND))) {         \
+		lrc::Array<SCALAR, BACKEND>::ShapeType shape({53, 79});                                    \
+		lrc::Array<SCALAR, BACKEND> testA(shape); /* Prime-dimensioned to force wrapping */        \
                                                                                                    \
 		for (int64_t i = 0; i < shape[0]; ++i) {                                                   \
 			for (int64_t j = 0; j < shape[1]; ++j) {                                               \
@@ -482,11 +497,11 @@ constexpr double tolerance = 0.001;
 	do {                                                                                           \
 	} while (false)
 
-#define TEST_COMPARISONS_SCALAR_ARRAY(SCALAR, DEVICE)                                              \
+#define TEST_COMPARISONS_SCALAR_ARRAY(SCALAR, BACKEND)                                             \
 	SECTION(fmt::format(                                                                           \
-	  "Test Scalar-Array Comparisons [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(DEVICE))) {          \
-		lrc::Array<SCALAR, DEVICE>::ShapeType shape({53, 79});                                     \
-		lrc::Array<SCALAR, DEVICE> testA(shape); /* Prime-dimensioned to force wrapping */         \
+	  "Test Scalar-Array Comparisons [{} | {}]", STRINGIFY(SCALAR), STRINGIFY(BACKEND))) {         \
+		lrc::Array<SCALAR, BACKEND>::ShapeType shape({53, 79});                                    \
+		lrc::Array<SCALAR, BACKEND> testA(shape); /* Prime-dimensioned to force wrapping */        \
                                                                                                    \
 		for (int64_t i = 0; i < shape[0]; ++i) {                                                   \
 			for (int64_t j = 0; j < shape[1]; ++j) {                                               \
@@ -558,68 +573,76 @@ constexpr double tolerance = 0.001;
 	do {                                                                                           \
 	} while (false)
 
-#define TEST_ALL(SCALAR, DEVICE)                                                                   \
-	TEST_CONSTRUCTORS(SCALAR, DEVICE);                                                             \
-	TEST_INDEXING(SCALAR, DEVICE);                                                                 \
-	TEST_STRING_FORMATTING(SCALAR, DEVICE);                                                        \
-	TEST_ARITHMETIC(SCALAR, DEVICE);                                                               \
-	TEST_ARITHMETIC_ARRAY_SCALAR(SCALAR, DEVICE);                                                  \
-	TEST_ARITHMETIC_SCALAR_ARRAY(SCALAR, DEVICE);                                                  \
-	TEST_COMPARISONS(SCALAR, DEVICE);                                                              \
-	TEST_COMPARISONS_ARRAY_SCALAR(SCALAR, DEVICE);                                                 \
-	TEST_COMPARISONS_SCALAR_ARRAY(SCALAR, DEVICE);
-
-#ifndef defined(LIBRAPID_WITH_COVERAGE)
+#define TEST_ALL(SCALAR, BACKEND)                                                                  \
+	TEST_CONSTRUCTORS(SCALAR, BACKEND);                                                            \
+	TEST_INDEXING(SCALAR, BACKEND);                                                                \
+	TEST_STRING_FORMATTING(SCALAR, BACKEND);                                                       \
+	TEST_ARITHMETIC(SCALAR, BACKEND);                                                              \
+	TEST_ARITHMETIC_ARRAY_SCALAR(SCALAR, BACKEND);                                                 \
+	TEST_ARITHMETIC_SCALAR_ARRAY(SCALAR, BACKEND);                                                 \
+	TEST_COMPARISONS(SCALAR, BACKEND);                                                             \
+	TEST_COMPARISONS_ARRAY_SCALAR(SCALAR, BACKEND);                                                \
+	TEST_COMPARISONS_SCALAR_ARRAY(SCALAR, BACKEND);
 
 TEST_CASE("Test Array -- int8_t CPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(int8_t, lrc::device::CPU);
-	TEST_INDEXING(int8_t, lrc::device::CPU);
-	TEST_STRING_FORMATTING(int8_t, lrc::device::CPU);
+	TEST_CONSTRUCTORS(int8_t, CPU);
+	TEST_INDEXING(int8_t, CPU);
+	TEST_STRING_FORMATTING(int8_t, CPU);
 }
 
 TEST_CASE("Test Array -- uint8_t CPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(uint8_t, lrc::device::CPU);
-	TEST_INDEXING(uint8_t, lrc::device::CPU);
-	TEST_STRING_FORMATTING(uint8_t, lrc::device::CPU);
+	TEST_CONSTRUCTORS(uint8_t, CPU);
+	TEST_INDEXING(uint8_t, CPU);
+	TEST_STRING_FORMATTING(uint8_t, CPU);
 }
 
 TEST_CASE("Test Array -- int16_t CPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(int16_t, lrc::device::CPU);
-	TEST_INDEXING(int16_t, lrc::device::CPU);
-	TEST_STRING_FORMATTING(int16_t, lrc::device::CPU);
+	TEST_CONSTRUCTORS(int16_t, CPU);
+	TEST_INDEXING(int16_t, CPU);
+	TEST_STRING_FORMATTING(int16_t, CPU);
 }
 
 TEST_CASE("Test Array -- uint16_t CPU", "[array-lib]") {
-	TEST_CONSTRUCTORS(uint16_t, lrc::device::CPU);
-	TEST_INDEXING(uint16_t, lrc::device::CPU);
-	TEST_STRING_FORMATTING(uint16_t, lrc::device::CPU);
+	TEST_CONSTRUCTORS(uint16_t, CPU);
+	TEST_INDEXING(uint16_t, CPU);
+	TEST_STRING_FORMATTING(uint16_t, CPU);
 }
 
-TEST_CASE("Test Array -- int32_t CPU", "[array-lib]") { TEST_ALL(int32_t, lrc::device::CPU); }
-TEST_CASE("Test Array -- uint32_t CPU", "[array-lib]") { TEST_ALL(uint32_t, lrc::device::CPU); }
-TEST_CASE("Test Array -- int64_t CPU", "[array-lib]") { TEST_ALL(int64_t, lrc::device::CPU); }
-TEST_CASE("Test Array -- uint64_t CPU", "[array-lib]") { TEST_ALL(uint64_t, lrc::device::CPU); }
-TEST_CASE("Test Array -- float CPU", "[array-lib]") { TEST_ALL(float, lrc::device::CPU); }
-TEST_CASE("Test Array -- double CPU", "[array-lib]") { TEST_ALL(double, lrc::device::CPU); }
+TEST_CASE("Test Array -- int32_t CPU", "[array-lib]") { TEST_ALL(int32_t, CPU); }
+TEST_CASE("Test Array -- uint32_t CPU", "[array-lib]") { TEST_ALL(uint32_t, CPU); }
+TEST_CASE("Test Array -- int64_t CPU", "[array-lib]") { TEST_ALL(int64_t, CPU); }
+TEST_CASE("Test Array -- uint64_t CPU", "[array-lib]") { TEST_ALL(uint64_t, CPU); }
+TEST_CASE("Test Array -- float CPU", "[array-lib]") { TEST_ALL(float, CPU); }
+TEST_CASE("Test Array -- double CPU", "[array-lib]") { TEST_ALL(double, CPU); }
 
-#	if defined(LIBRAPID_USE_MULTIPREC)
-TEST_CASE("Test Array -- lrc::mpfr CPU", "[array-lib]") { TEST_ALL(lrc::mpfr, lrc::device::CPU); }
-#	endif // LIBRAPID_USE_MULTIPREC
+#if defined(LIBRAPID_USE_MULTIPREC)
+TEST_CASE("Test Array -- lrc::mpfr CPU", "[array-lib]") { TEST_ALL(lrc::mpfr, CPU); }
+#endif // LIBRAPID_USE_MULTIPREC
 
-#	if defined(LIBRAPID_HAS_CUDA)
+#if defined(LIBRAPID_HAS_OPENCL)
 
-TEST_CASE("Test Array -- int8_t GPU", "[array-lib]") { TEST_ALL(int8_t, lrc::device::GPU); }
-TEST_CASE("Test Array -- uint8_t GPU", "[array-lib]") { TEST_ALL(uint8_t, lrc::device::GPU); }
-TEST_CASE("Test Array -- int16_t GPU", "[array-lib]") { TEST_ALL(int16_t, lrc::device::GPU); }
-TEST_CASE("Test Array -- uint16_t GPU", "[array-lib]") { TEST_ALL(uint16_t, lrc::device::GPU); }
-TEST_CASE("Test Array -- int32_t GPU", "[array-lib]") { TEST_ALL(int32_t, lrc::device::GPU); }
-TEST_CASE("Test Array -- uint32_t GPU", "[array-lib]") { TEST_ALL(uint32_t, lrc::device::GPU); }
-TEST_CASE("Test Array -- int64_t GPU", "[array-lib]") { TEST_ALL(int64_t, lrc::device::GPU); }
-TEST_CASE("Test Array -- uint64_t GPU", "[array-lib]") { TEST_ALL(uint64_t, lrc::device::GPU); }
-TEST_CASE("Test Array -- float GPU", "[array-lib]") { TEST_ALL(float, lrc::device::GPU); }
-TEST_CASE("Test Array -- double GPU", "[array-lib]") { TEST_ALL(double, lrc::device::GPU); }
+TEST_CASE("Configure OpenCL") { lrc::configureOpenCL(true); }
 
-#	endif // LIBRAPID_HAS_CUDA
-#else
+TEST_CASE("Test Array -- int32_t OpenCL", "[array-lib]") { TEST_ALL(int32_t, OPENCL); }
+TEST_CASE("Test Array -- uint32_t OpenCL", "[array-lib]") { TEST_ALL(uint32_t, OPENCL); }
+TEST_CASE("Test Array -- int64_t OpenCL", "[array-lib]") { TEST_ALL(int64_t, OPENCL); }
+TEST_CASE("Test Array -- uint64_t OpenCL", "[array-lib]") { TEST_ALL(uint64_t, OPENCL); }
+TEST_CASE("Test Array -- float OpenCL", "[array-lib]") { TEST_ALL(float, OPENCL); }
+TEST_CASE("Test Array -- double OpenCL", "[array-lib]") { TEST_ALL(double, OPENCL); }
 
-#endif // !LIBRAPID_WITH_COVERAGE
+#endif // LIBRAPID_HAS_OPENCL
+
+#if defined(LIBRAPID_HAS_CUDA)
+
+TEST_CASE("Test Array -- int8_t CUDA", "[array-lib]") { TEST_ALL(int8_t, CUDA); }
+TEST_CASE("Test Array -- uint8_t CUDA", "[array-lib]") { TEST_ALL(uint8_t, CUDA); }
+TEST_CASE("Test Array -- int16_t CUDA", "[array-lib]") { TEST_ALL(int16_t, CUDA); }
+TEST_CASE("Test Array -- uint16_t CUDA", "[array-lib]") { TEST_ALL(uint16_t, CUDA); }
+TEST_CASE("Test Array -- int32_t CUDA", "[array-lib]") { TEST_ALL(int32_t, CUDA); }
+TEST_CASE("Test Array -- uint32_t CUDA", "[array-lib]") { TEST_ALL(uint32_t, CUDA); }
+TEST_CASE("Test Array -- int64_t CUDA", "[array-lib]") { TEST_ALL(int64_t, CUDA); }
+TEST_CASE("Test Array -- uint64_t CUDA", "[array-lib]") { TEST_ALL(uint64_t, CUDA); }
+TEST_CASE("Test Array -- float CUDA", "[array-lib]") { TEST_ALL(float, CUDA); }
+TEST_CASE("Test Array -- double CUDA", "[array-lib]") { TEST_ALL(double, CUDA); }
+
+#endif // LIBRAPID_HAS_CUDA

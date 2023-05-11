@@ -34,6 +34,13 @@
 		}                                                                                          \
 	}
 
+#define LIBRAPID_UNARY_KERNEL_GETTER                                                               \
+	template<typename... Args>                                                                     \
+	static constexpr const char *getKernelName(std::tuple<Args...> args) {                         \
+		static_assert(sizeof...(Args) == 1, "Invalid number of arguments for unary operation");    \
+		return kernelName;                                                                         \
+	}
+
 #define LIBRAPID_BINARY_KERNEL_GETTER                                                              \
 	template<typename T1, typename T2>                                                             \
 	static constexpr const char *getKernelNameImpl(std::tuple<T1, T2> args) {                      \
@@ -53,6 +60,14 @@
 	static constexpr const char *getKernelName(std::tuple<Args...> args) {                         \
 		static_assert(sizeof...(Args) == 2, "Invalid number of arguments for binary operation");   \
 		return getKernelNameImpl(args);                                                            \
+	}
+
+#define LIBRAPID_UNARY_SHAPE_EXTRACTOR                                                             \
+	template<typename... Args>                                                                     \
+	LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto getShape(                                \
+	  const std::tuple<Args...> &args) {                                                           \
+		static_assert(sizeof...(Args) == 1, "Invalid number of arguments for unary operation");    \
+		return std::get<0>(args).shape();                                                          \
 	}
 
 #define LIBRAPID_BINARY_SHAPE_EXTRACTOR                                                            \
@@ -79,6 +94,19 @@
 		return getShapeImpl(args);                                                                 \
 	}
 
+#define LIBRAPID_UNARY_FUNCTOR(NAME, OP)                                                           \
+	struct NAME {                                                                                  \
+		template<typename T>                                                                       \
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator()(const T &arg) const {            \
+			return (T)::librapid::OP(arg);                                                         \
+		}                                                                                          \
+                                                                                                   \
+		template<typename Packet>                                                                  \
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto packet(const Packet &arg) const {           \
+			return ::librapid::OP(arg);                                                            \
+		}                                                                                          \
+	};
+
 namespace librapid {
 	namespace detail {
 		/// Construct a new function object with the given functor type and arguments.
@@ -93,10 +121,10 @@ namespace librapid {
 			return OperationType(Functor(), std::forward<Args>(args)...);
 		}
 
-		LIBRAPID_BINARY_FUNCTOR(Plus, +);	  // a + b
-		LIBRAPID_BINARY_FUNCTOR(Minus, -);	  // a - b
-		LIBRAPID_BINARY_FUNCTOR(Multiply, *); // a * b
-		LIBRAPID_BINARY_FUNCTOR(Divide, /);	  // a / b
+		LIBRAPID_BINARY_FUNCTOR(Plus, +);							 // a + b
+		LIBRAPID_BINARY_FUNCTOR(Minus, -);							 // a - b
+		LIBRAPID_BINARY_FUNCTOR(Multiply, *);						 // a * b
+		LIBRAPID_BINARY_FUNCTOR(Divide, /);							 // a / b
 
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(LessThan, <);			 // a < b
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(GreaterThan, >);			 // a > b
@@ -104,7 +132,27 @@ namespace librapid {
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(GreaterThanEqual, >=);	 // a >= b
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseEqual, ==);	 // a == b
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseNotEqual, !=); // a != b
-	}																 // namespace detail
+
+		LIBRAPID_UNARY_FUNCTOR(Sin, sin);
+		LIBRAPID_UNARY_FUNCTOR(Cos, cos);
+		LIBRAPID_UNARY_FUNCTOR(Tan, tan);
+		LIBRAPID_UNARY_FUNCTOR(Asin, asin);
+		LIBRAPID_UNARY_FUNCTOR(Acos, acos);
+		LIBRAPID_UNARY_FUNCTOR(Atan, atan);
+		LIBRAPID_UNARY_FUNCTOR(Sinh, sinh);
+		LIBRAPID_UNARY_FUNCTOR(Cosh, cosh);
+		LIBRAPID_UNARY_FUNCTOR(Tanh, tanh);
+
+		LIBRAPID_UNARY_FUNCTOR(Exp, exp);
+		LIBRAPID_UNARY_FUNCTOR(Log, log);
+		LIBRAPID_UNARY_FUNCTOR(Log2, log2);
+		LIBRAPID_UNARY_FUNCTOR(Log10, log10);
+		LIBRAPID_UNARY_FUNCTOR(Sqrt, sqrt);
+		LIBRAPID_UNARY_FUNCTOR(Cbrt, cbrt);
+		LIBRAPID_UNARY_FUNCTOR(Abs, abs);
+		LIBRAPID_UNARY_FUNCTOR(Floor, floor);
+		LIBRAPID_UNARY_FUNCTOR(Ceil, ceil);
+	} // namespace detail
 
 	namespace typetraits {
 		/// Merge together two Descriptor types. Two trivial operations will result in
@@ -301,9 +349,177 @@ namespace librapid {
 			LIBRAPID_BINARY_KERNEL_GETTER
 			LIBRAPID_BINARY_SHAPE_EXTRACTOR
 		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Sin> {
+			static constexpr const char *name		= "sin";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "sinArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Cos> {
+			static constexpr const char *name		= "cos";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "cosArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Tan> {
+			static constexpr const char *name		= "tan";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "tanArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Asin> {
+			static constexpr const char *name		= "arcsin";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "asinArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Acos> {
+			static constexpr const char *name		= "arcos";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "acosArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Atan> {
+			static constexpr const char *name		= "arctan";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "atanArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Sinh> {
+			static constexpr const char *name		= "hyperbolic sine";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "sinhArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Cosh> {
+			static constexpr const char *name		= "hyperbolic cosine";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "coshArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Tanh> {
+			static constexpr const char *name		= "hyperbolic tangent";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "tanhArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Exp> {
+			static constexpr const char *name		= "exponent";
+			static constexpr const char *filename	= "expLogPow";
+			static constexpr const char *kernelName = "expArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Log> {
+			static constexpr const char *name		= "logarithm";
+			static constexpr const char *filename	= "expLogPow";
+			static constexpr const char *kernelName = "logArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Log2> {
+			static constexpr const char *name		= "logarithm base 2";
+			static constexpr const char *filename	= "expLogPow";
+			static constexpr const char *kernelName = "log2Arrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Log10> {
+			static constexpr const char *name		= "logarithm base 10";
+			static constexpr const char *filename	= "expLogPow";
+			static constexpr const char *kernelName = "log10Arrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Sqrt> {
+			static constexpr const char *name		= "square root";
+			static constexpr const char *filename	= "expLogPow";
+			static constexpr const char *kernelName = "sqrtArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Cbrt> {
+			static constexpr const char *name		= "cube root";
+			static constexpr const char *filename	= "expLogPow";
+			static constexpr const char *kernelName = "cbrtArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Abs> {
+			static constexpr const char *name		= "absolute value";
+			static constexpr const char *filename	= "abs";
+			static constexpr const char *kernelName = "absArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Floor> {
+			static constexpr const char *name		= "floor";
+			static constexpr const char *filename	= "floorCeilRound";
+			static constexpr const char *kernelName = "floorArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Ceil> {
+			static constexpr const char *name		= "ceiling";
+			static constexpr const char *filename	= "floorCeilRound";
+			static constexpr const char *kernelName = "ceilArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
 	} // namespace typetraits
 
 	namespace detail {
+		template<typename VAL>
+		constexpr bool isArrayOp() {
+			return (typetraits::IsArrayContainer<std::decay_t<VAL>>::value ||
+					typetraits::IsLibRapidType<std::decay_t<VAL>>::value);
+		}
+
 		template<typename LHS, typename RHS>
 		constexpr bool isArrayOpArray() {
 			return (typetraits::TypeInfo<std::decay_t<LHS>>::type != LibRapidType::Scalar) &&
@@ -322,6 +538,7 @@ namespace librapid {
 	} // namespace detail
 
 	namespace array {
+#define IS_ARRAY_OP				detail::isArrayOp<VAL>()
 #define IS_ARRAY_OP_ARRAY		detail::isArrayOpArray<LHS, RHS>()
 #define IS_ARRAY_OP_WITH_SCALAR detail::isArrayOpWithScalar<LHS, RHS>()
 
@@ -617,6 +834,258 @@ namespace librapid {
 																	 std::forward<RHS>(rhs));
 		}
 	} // namespace array
+
+	/// \brief Calculate the sine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \sin(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Sine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sin(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sin, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Sin>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the cosine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \cos(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Cosine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cos(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cos, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Cos>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the tangent of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \tan(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Tangent function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tan(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tan, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Tan>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the arcsine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \sin^{-1}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Arcsine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto asin(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Asin, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Asin>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the arccosine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \cos^{-1}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Arccosine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto acos(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Acos, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Acos>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the arctangent of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \tan^{-1}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Arctangent function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto atan(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Atan, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Atan>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the hyperbolic sine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \sinh(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Hyperbolic sine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sinh(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sinh, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Sinh>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the hyperbolic cosine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \cosh(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Hyperbolic cosine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cosh(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cosh, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Cosh>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the hyperbolic tangent of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \tanh(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Hyperbolic tangent function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tanh(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tanh, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Tanh>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Raise e to the power of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = e^{A_i}\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Exponential function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Exp>(
+		  std::forward<VAL>(val));
+	}
+
+	// \brief Compute the natural logarithm of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \ln(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Natural logarithm function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Log>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Compute the base 10 logarithm of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \log_{10}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Base 10 logarithm function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log10(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log10, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Log10>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Compute the base 2 logarithm of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \log_{2}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Base 2 logarithm function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log2(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log2, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Log2>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Compute the square root of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \sqrt{A_i}\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Square root function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sqrt(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sqrt, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Sqrt>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Compute the cube root of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \sqrt[3]{A_i}\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Cube root function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cbrt(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cbrt, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Cbrt>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Compute the absolute value of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = |A_i|\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Absolute value function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto abs(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Abs, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Abs>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Compute the floor of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \lfloor A_i \rfloor\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Floor function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto floor(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Floor, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Floor>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Compute the ceiling of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \lceil A_i \rceil\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Ceiling function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ceil(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Ceil, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Ceil>(
+		  std::forward<VAL>(val));
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_OPERATIONS_HPP

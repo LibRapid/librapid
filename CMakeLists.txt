@@ -35,6 +35,7 @@ option(LIBRAPID_GET_MULTIPREC "Download generic multiprecision libraries, as opp
 option(LIBRAPID_USE_BLAS "Attempt to use a BLAS library" ON)
 option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
 option(LIBRAPID_USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
+option(LIBRAPID_USE_OPENCL "Search for OpenCL and use it if possible" ON)
 option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_FAST_MATH "Use potentially less accurate operations to increase performance" OFF)
 option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" OFF)
@@ -83,10 +84,12 @@ file(GLOB_RECURSE LIBRAPID_SOURCES
 set(module_name "librapid")
 add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
 
+# clang-format off
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_MAJOR=${LIBRAPID_MAJOR})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_MINOR=${LIBRAPID_MINOR})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_PATCH=${LIBRAPID_PATCH})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE="${CMAKE_CURRENT_SOURCE_DIR}/librapid")
+# clang-format on
 
 # Precompiled Headers
 target_precompile_headers(${module_name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include/librapid/core/librapidPch.hpp")
@@ -364,6 +367,32 @@ if (LIBRAPID_USE_CUDA)
     endif ()
 endif ()
 
+
+if (LIBRAPID_USE_OPENCL AND IS_MACOS)
+    message(WARNING "OpenCL support was requested, but OpenCL is not supported on macOS. Disabling OpenCL support")
+    set(LIBRAPID_USE_OPENCL OFF)
+endif ()
+
+if (LIBRAPID_USE_OPENCL)
+    find_package(OpenCL QUIET)
+
+    if (OpenCL_FOUND)
+        message(STATUS "[ LIBRAPID ] Using OpenCL ${OpenCL_VERSION_STRING}")
+        target_include_directories(${module_name} PUBLIC ${OpenCL_INCLUDE_DIRS})
+        target_link_libraries(${module_name} PUBLIC ${OpenCL_LIBRARIES})
+        target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_OPENCL)
+
+        # Build static CLBlast library
+        set(BUILD_SHARED_LIBS OFF)
+        add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/CLBlast")
+        target_link_libraries(${module_name} PUBLIC clblast)
+        target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/CLBlast/include")
+        set(LIBRAPID_HAS_OPENCL true)
+    else ()
+        message(WARNING "OpenCL support was requested, but a valid OpenCL installation could not be found")
+    endif ()
+endif ()
+
 if (${LIBRAPID_OPTIMISE_SMALL_ARRAYS})
     message(STATUS "[ LIBRAPID ] Small array optimisations enabled")
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_OPTIMISE_SMALL_ARRAYS)
@@ -374,6 +403,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/fmt")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
 
+target_compile_definitions(fmt PUBLIC FMT_HEADER_ONLY)
 target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
 target_link_libraries(${module_name} PUBLIC fmt scn Vc)
 
@@ -563,22 +593,22 @@ if (LIBRAPID_GET_FFTW)
     set(DISABLE_FORTRAN ON)
 
     set(ENABLE_DOUBLE ON)
-    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/FFTW_DOUBLE")
+    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/fftw_double")
         FetchContent_Declare(
-                FFTW_DOUBLE
+                fftw_double
                 GIT_REPOSITORY https://github.com/LibRapid/FFTW.git
         )
-        FetchContent_MakeAvailable(FFTW_DOUBLE)
+        FetchContent_MakeAvailable(fftw_double)
     endif ()
 
     set(ENABLE_DOUBLE OFF)
     set(ENABLE_FLOAT ON)
-    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/FFTW_FLOAT")
+    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/fftw_float")
         FetchContent_Declare(
-                FFTW_FLOAT
+                fftw_float
                 GIT_REPOSITORY https://github.com/LibRapid/FFTW.git
         )
-        FetchContent_MakeAvailable(FFTW_FLOAT)
+        FetchContent_MakeAvailable(fftw_float)
     endif ()
 
     if (LIBRAPID_USE_OMP)
@@ -586,7 +616,7 @@ if (LIBRAPID_GET_FFTW)
     else ()
         target_link_libraries(${module_name} PUBLIC fftw3 fftw3f)
     endif ()
-    target_include_directories(${module_name} PUBLIC "${FETCHCONTENT_BASE_DIR}/fftw-src/api")
+    target_include_directories(${module_name} PUBLIC "${FETCHCONTENT_BASE_DIR}/fftw_float-src/api")
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_FFTW)
 endif ()
 

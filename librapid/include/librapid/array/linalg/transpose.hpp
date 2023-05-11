@@ -7,8 +7,8 @@ namespace librapid {
 		struct TypeInfo<array::Transpose<T>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Transpose;
 			using Scalar							   = typename TypeInfo<std::decay_t<T>>::Scalar;
-			using Device							   = typename TypeInfo<std::decay_t<T>>::Device;
-			static constexpr bool allowVectorisation   = false;
+			using Backend							 = typename TypeInfo<std::decay_t<T>>::Backend;
+			static constexpr bool allowVectorisation = false;
 		};
 
 		LIBRAPID_DEFINE_AS_TYPE(typename T, array::Transpose<T>);
@@ -175,7 +175,10 @@ namespace librapid {
 			LIBRAPID_ALWAYS_INLINE void
 			transposeImpl(Scalar *__restrict out, const Scalar *__restrict in, int64_t rows,
 						  int64_t cols, Alpha alpha, int64_t blockSize) {
-				if (rows * cols < global::multithreadThreshold) {
+#if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
+				if (rows * cols > global::multithreadThreshold) {
+#	pragma omp parallel for shared(rows, cols, blockSize, in, out, alpha) default(none)           \
+	  num_threads((int)global::numThreads)
 					for (int64_t i = 0; i < rows; i += blockSize) {
 						for (int64_t j = 0; j < cols; j += blockSize) {
 							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
@@ -185,47 +188,14 @@ namespace librapid {
 							}
 						}
 					}
-				} else {
-#pragma omp parallel for shared(rows, cols, blockSize, in, out, alpha) default(none)               \
-  num_threads((int)global::numThreads)
+				} else
+#endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
+				{
 					for (int64_t i = 0; i < rows; i += blockSize) {
 						for (int64_t j = 0; j < cols; j += blockSize) {
 							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
 								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
 									out[col * rows + row] = in[row * cols + col] * alpha;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			template<typename Scalar, typename Alpha>
-			LIBRAPID_ALWAYS_INLINE void transposeInplaceImpl(Scalar *__restrict data, int64_t rows,
-															 int64_t cols, Alpha alpha,
-															 int64_t blockSize) {
-				if (rows * cols < global::multithreadThreshold) {
-					for (int64_t i = 0; i < rows; i += blockSize) {
-						for (int64_t j = 0; j < cols; j += blockSize) {
-							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-									std::swap(data[col * rows + row], data[row * cols + col]);
-									data[col * rows + row] *= alpha;
-									data[row * cols + col] *= alpha;
-								}
-							}
-						}
-					}
-				} else {
-#pragma omp parallel for shared(rows, cols, blockSize, data, alpha) default(none)                  \
-  num_threads((int)global::numThreads)
-					for (int64_t i = 0; i < rows; i += blockSize) {
-						for (int64_t j = 0; j < cols; j += blockSize) {
-							for (int64_t row = i; row < i + blockSize && row < rows; ++row) {
-								for (int64_t col = j; col < j + blockSize && col < cols; ++col) {
-									std::swap(data[col * rows + row], data[row * cols + col]);
-									data[col * rows + row] *= alpha;
-									data[row * cols + col] *= alpha;
 								}
 							}
 						}
@@ -239,7 +209,11 @@ namespace librapid {
 													  int64_t rows, int64_t cols, Alpha alpha,
 													  int64_t) {
 				constexpr int64_t blockSize = LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE;
-				if (rows * cols < global::multithreadThreshold) {
+
+#	if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
+				if (rows * cols > global::multithreadThreshold) {
+#		pragma omp parallel for shared(rows, cols, in, out, alpha) default(none)                  \
+		  num_threads((int)global::numThreads)
 					for (int64_t i = 0; i < rows; i += blockSize) {
 						for (int64_t j = 0; j < cols; j += blockSize) {
 							if (i + blockSize <= rows && j + blockSize <= cols) {
@@ -255,9 +229,9 @@ namespace librapid {
 							}
 						}
 					}
-				} else {
-#	pragma omp parallel for shared(rows, cols, in, out, alpha) default(none)                      \
-	  num_threads((int)global::numThreads)
+				} else
+#	endif
+				{
 					for (int64_t i = 0; i < rows; i += blockSize) {
 						for (int64_t j = 0; j < cols; j += blockSize) {
 							if (i + blockSize <= rows && j + blockSize <= cols) {
@@ -283,7 +257,11 @@ namespace librapid {
 													  int64_t rows, int64_t cols, Alpha alpha,
 													  int64_t) {
 				constexpr int64_t blockSize = LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE;
-				if (rows * cols < global::multithreadThreshold) {
+
+#	if !defined(LIBRAPID_OPTIMISE_SMALL_ARRAYS)
+				if (rows * cols > global::multithreadThreshold) {
+#		pragma omp parallel for shared(rows, cols, in, out, alpha) default(none)                  \
+		  num_threads((int)global::numThreads)
 					for (int64_t i = 0; i < rows; i += blockSize) {
 						for (int64_t j = 0; j < cols; j += blockSize) {
 							if (i + blockSize <= rows && j + blockSize <= cols) {
@@ -299,9 +277,9 @@ namespace librapid {
 							}
 						}
 					}
-				} else {
-#	pragma omp parallel for shared(rows, cols, in, out, alpha) default(none)                      \
-	  num_threads((int)global::numThreads)
+				} else
+#	endif // LIBRAPID_OPTIMISE_SMALL_ARRAYS
+				{
 					for (int64_t i = 0; i < rows; i += blockSize) {
 						for (int64_t j = 0; j < cols; j += blockSize) {
 							if (i + blockSize <= rows && j + blockSize <= cols) {
@@ -322,8 +300,35 @@ namespace librapid {
 #endif	  // LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE > 0
 		} // namespace cpu
 
+#if defined(LIBRAPID_HAS_OPENCL)
+
+		namespace opencl {
+			template<typename Scalar, typename Alpha>
+			LIBRAPID_ALWAYS_INLINE void transposeImpl(cl::Buffer &out, const cl::Buffer &in,
+													  int64_t rows, int64_t cols, Alpha alpha,
+													  int64_t) {
+				std::string kernelName =
+				  fmt::format("transpose_{}", typetraits::TypeInfo<Scalar>::name);
+				cl::Kernel kernel(global::openCLProgram, kernelName.c_str());
+				kernel.setArg(0, out);
+				kernel.setArg(1, in);
+				kernel.setArg(2, int(rows));
+				kernel.setArg(3, int(cols));
+				kernel.setArg(4, Scalar(alpha));
+				int TILE_DIM = 16;
+				cl::NDRange global((cols + TILE_DIM - 1) / TILE_DIM * TILE_DIM,
+								   (rows + TILE_DIM - 1) / TILE_DIM * TILE_DIM);
+				cl::NDRange local(TILE_DIM, TILE_DIM);
+				auto ret =
+				  global::openCLQueue.enqueueNDRangeKernel(kernel, cl::NullRange, global, local);
+				LIBRAPID_ASSERT(ret == CL_SUCCESS, "OpenCL kernel failed");
+			}
+		} // namespace opencl
+
+#endif	  // LIBRAPID_HAS_OPENCL
+
 #if defined(LIBRAPID_HAS_CUDA)
-		namespace gpu {
+		namespace cuda {
 			template<typename Scalar, typename Alpha>
 			LIBRAPID_ALWAYS_INLINE void transposeImpl(Scalar *__restrict out, Scalar *__restrict in,
 													  int64_t rows, int64_t cols, Alpha alpha,
@@ -412,7 +417,7 @@ namespace librapid {
 										   reinterpret_cast<cuDoubleComplex *>(out),
 										   rows));
 			}
-		} // namespace gpu
+		} // namespace cuda
 #endif	  // LIBRAPID_HAS_CUDA
 	}	  // namespace detail
 
@@ -426,12 +431,14 @@ namespace librapid {
 			using Reference		 = BaseType &;
 			using ConstReference = const BaseType &;
 			using ShapeType		 = typename BaseType::ShapeType;
-			using Device		 = typename typetraits::TypeInfo<BaseType>::Device;
+			using Backend		 = typename typetraits::TypeInfo<BaseType>::Backend;
 
 			static constexpr bool allowVectorisation =
 			  typetraits::TypeInfo<Scalar>::allowVectorisation;
-			static constexpr bool isArray = typetraits::IsArrayContainer<BaseType>::value;
-			static constexpr bool isHost  = std::is_same_v<Device, device::CPU>;
+			static constexpr bool isArray  = typetraits::IsArrayContainer<BaseType>::value;
+			static constexpr bool isHost   = std::is_same_v<Backend, backend::CPU>;
+			static constexpr bool isOpenCL = std::is_same_v<Backend, backend::OpenCL>;
+			static constexpr bool isCUDA   = std::is_same_v<Backend, backend::CUDA>;
 
 			/// Default constructor should never be used
 			Transpose() = delete;
@@ -533,8 +540,7 @@ namespace librapid {
 		template<typename T>
 		template<typename StorageType>
 		void Transpose<T>::applyTo(ArrayRef<StorageType> &out) const {
-			bool inplace = (((void *)&out) == ((void *)&m_array)) ||
-						   (out.storage().begin() == m_array.storage().begin());
+			bool inplace = ((void *)&out) == ((void *)&m_array);
 			LIBRAPID_ASSERT(!inplace, "Cannot transpose inplace");
 			LIBRAPID_ASSERT(out.shape() == m_outputShape, "Transpose assignment shape mismatch");
 
@@ -552,13 +558,26 @@ namespace librapid {
 						LIBRAPID_NOT_IMPLEMENTED
 					}
 				}
+#if defined(LIBRAPID_HAS_OPENCL)
+				else if constexpr (isOpenCL) {
+					cl::Buffer &outBuffer	   = out.storage().data();
+					const cl::Buffer &inBuffer = m_array.storage().data();
+
+					if (m_inputShape.ndim() == 2) {
+						detail::opencl::transposeImpl<Scalar>(
+						  outBuffer, inBuffer, m_inputShape[0], m_inputShape[1], m_alpha, 0);
+					} else {
+						LIBRAPID_NOT_IMPLEMENTED
+					}
+				}
+#endif // LIBRAPID_HAS_OPENCL
 #if defined(LIBRAPID_HAS_CUDA)
 				else {
 					if (m_inputShape.ndim() == 2) {
 						int64_t blockSize		= global::cacheLineSize / sizeof(Scalar);
 						auto *__restrict outPtr = out.storage().begin().get();
 						auto *__restrict inPtr	= m_array.storage().begin().get();
-						detail::gpu::transposeImpl(
+						detail::cuda::transposeImpl(
 						  outPtr, inPtr, m_inputShape[0], m_inputShape[1], m_alpha, blockSize);
 					} else {
 						LIBRAPID_NOT_IMPLEMENTED

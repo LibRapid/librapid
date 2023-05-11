@@ -82,12 +82,25 @@ namespace librapid::fft {
 #endif	  // LIBRAPID_HAS_CUDA
 	}	  // namespace detail
 
+
+	/// \brief Compute the real-valued discrete Fourier transform of a 1D array
+	///
+	/// Given a 1D array of real numbers, compute the discrete Fourier transform of the array. This
+	/// returns an array of length \f$\frac{n}{2} + 1\f$ where \f$n\f$ is the length of the input
+	/// array. The returned array contains the non-redundant half of the resulting transform, since
+	/// the other half can be obtained by taking the complex conjugate of the first half.
+	///
+	/// \tparam ShapeType The shape type of the input array
+	/// \tparam StorageScalar The scalar type of the input array
+	/// \tparam StorageAllocator The allocator type of the input array
+	/// \param array The input array
+	/// \return The discrete Fourier transform of the input array
 	template<typename ShapeType, typename StorageScalar, typename StorageAllocator>
-	LIBRAPID_NODISCARD Array<Complex<StorageScalar>, device::CPU>
+	LIBRAPID_NODISCARD Array<Complex<StorageScalar>, backend::CPU>
 	rfft(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &array) {
 		LIBRAPID_ASSERT(array.ndim() == 1, "RFFT only implemented for 1D arrays");
 		int64_t outSize = array.shape()[0] / 2 + 1;
-		Array<Complex<StorageScalar>, device::CPU> res(Shape({outSize}));
+		Array<Complex<StorageScalar>, backend::CPU> res(Shape({outSize}));
 		StorageScalar *input		   = array.storage().begin();
 		Complex<StorageScalar> *output = res.storage().begin();
 		detail::cpu::rfft(output, input, array.shape()[0]);
@@ -96,10 +109,10 @@ namespace librapid::fft {
 
 #if defined(LIBRAPID_HAS_CUDA)
 	template<typename Scalar>
-	LIBRAPID_NODISCARD Array<Complex<Scalar>, device::GPU> rfft(Array<Scalar, device::GPU> &array) {
+	LIBRAPID_NODISCARD Array<Complex<Scalar>, backend::CUDA> rfft(Array<Scalar, backend::CUDA> &array) {
 		LIBRAPID_ASSERT(array.ndim() == 1, "RFFT only implemented for 1D arrays");
 		int64_t outSize = array.shape()[0] / 2 + 1;
-		Array<Complex<Scalar>, device::GPU> res(Shape({outSize}));
+		Array<Complex<Scalar>, backend::CUDA> res(Shape({outSize}));
 		Scalar *input			= array.storage().begin().get();
 		Complex<Scalar> *output = res.storage().begin().get();
 		detail::gpu::rfft(output, input, array.shape()[0]);
