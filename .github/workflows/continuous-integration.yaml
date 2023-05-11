@@ -334,9 +334,7 @@ jobs:
       - name: Zip build results before uploading
         uses: vimtor/action-zip@v1.1
         with:
-          files: |
-            buildDebug
-            buildRelease
+          files: ./buildDebug ./buildRelease
           recursive: true
           dest: ${{ matrix.pretty }}.zip
 
