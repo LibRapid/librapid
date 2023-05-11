@@ -1,39 +1,18 @@
-[submodule "librapid/vendor/jitify"] # Jitify module for CUDA JIT compilation
- # Jitify module for CUDA JIT compilation
- # Jitify module for CUDA JIT compilation
- # Jitify module for CUDA JIT compilation
- # Jitify module for CUDA JIT compilation
+[submodule "librapid/vendor/jitify"]
 	path = librapid/vendor/jitify
 	url = https://github.com/Pencilcaseman/jitify.git
-[submodule "librapid/vendor/Vc"] # Vc module for SIMD instructions
- # Vc module for SIMD instructions
- # Vc module for SIMD instructions
- # Vc module for SIMD instructions
- # Vc module for SIMD instructions
+[submodule "librapid/vendor/Vc"]
 	path = librapid/vendor/Vc
 	url = https://github.com/Pencilcaseman/Vc.git
-[submodule "librapid/vendor/fmt"] # {fmt} module for fast formatting and IO
- # {fmt} module for fast formatting and IO
- # {fmt} module for fast formatting and IO
- # {fmt} module for fast formatting and IO
- # {fmt} module for fast formatting and IO
+[submodule "librapid/vendor/fmt"]
 	path = librapid/vendor/fmt
 	url = https://github.com/fmtlib/fmt.git
-[submodule "librapid/vendor/scnlib"] # {scnlib} module for fast reverse formatting and IO
- # {scnlib} module for fast reverse formatting and IO
- # {scnlib} module for fast reverse formatting and IO
- # {scnlib} module for fast reverse formatting and IO
- # {scnlib} module for fast reverse formatting and IO
+[submodule "librapid/vendor/scnlib"]
 	path = librapid/vendor/scnlib
 	url = https://github.com/eliaskosunen/scnlib.git
-[submodule "doxygenThemes"] # Make the documentation pretty
- # Make the documentation pretty
- # Make the documentation pretty
- # Make the documentation pretty
- # Make the documentation pretty
+[submodule "doxygenThemes"]
 	path = doxygenThemes
 	url = https://github.com/jothepro/doxygen-awesome-css.git
-	
 [submodule "librapid/vendor/pocketfft"]
 	path = librapid/vendor/pocketfft
 	url = https://github.com/mreineck/pocketfft

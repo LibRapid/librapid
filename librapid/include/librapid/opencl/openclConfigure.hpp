@@ -8,8 +8,8 @@ namespace librapid {
 	cl::Device findFastestDevice(const std::vector<cl::Device> &devices);
 	void addOpenCLKernelSource(const std::string &source);
 	void addOpenCLKernelFile(const std::string &filename);
-	void compileOpenCLKernels();
-	void configureOpenCL(bool verbose = false);
+	void compileOpenCLKernels(bool verbose = false);
+	void configureOpenCL(bool verbose = false, bool ask = false);
 #endif // LIBRAPID_HAS_OPENCL
 } // namespace librapid
 

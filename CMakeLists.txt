@@ -593,22 +593,22 @@ if (LIBRAPID_GET_FFTW)
     set(DISABLE_FORTRAN ON)
 
     set(ENABLE_DOUBLE ON)
-    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/FFTW_DOUBLE")
+    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/fftw_double")
         FetchContent_Declare(
-                FFTW_DOUBLE
+                fftw_double
                 GIT_REPOSITORY https://github.com/LibRapid/FFTW.git
         )
-        FetchContent_MakeAvailable(FFTW_DOUBLE)
+        FetchContent_MakeAvailable(fftw_double)
     endif ()
 
     set(ENABLE_DOUBLE OFF)
     set(ENABLE_FLOAT ON)
-    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/FFTW_FLOAT")
+    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/fftw_float")
         FetchContent_Declare(
-                FFTW_FLOAT
+                fftw_float
                 GIT_REPOSITORY https://github.com/LibRapid/FFTW.git
         )
-        FetchContent_MakeAvailable(FFTW_FLOAT)
+        FetchContent_MakeAvailable(fftw_float)
     endif ()
 
     if (LIBRAPID_USE_OMP)
@@ -616,7 +616,7 @@ if (LIBRAPID_GET_FFTW)
     else ()
         target_link_libraries(${module_name} PUBLIC fftw3 fftw3f)
     endif ()
-    target_include_directories(${module_name} PUBLIC "${FETCHCONTENT_BASE_DIR}/fftw-src/api")
+    target_include_directories(${module_name} PUBLIC "${FETCHCONTENT_BASE_DIR}/fftw_float-src/api")
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_FFTW)
 endif ()
 

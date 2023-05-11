@@ -331,7 +331,7 @@ jobs:
       #     path: buildRelease
 
       # Zip debug build before uploading
-      - name: Easy Zip Files
+      - name: Zip build results before uploading
         uses: vimtor/action-zip@v1.1
         with:
           files: |
@@ -476,13 +476,6 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Install Clang
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: "15.0"
-          directory: "./llvm"
-          env: on
-
       - name: Install Coverage Tools
         run: |
           sudo apt install lcov
@@ -493,7 +486,7 @@ jobs:
           mkdir build
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=ON -DLIBRAPID_GET_FFTW=on -DLIBRAPID_USE_MULTIPREC=on
-          cmake --build . --parallel
+          cmake --build .
         env:
           CC: gcc-11
           CXX: g++-11

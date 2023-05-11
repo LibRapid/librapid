@@ -9,11 +9,11 @@ constexpr double tolerance = 0.001;
 // #define SCALAR float
 // #define BACKEND lrc::backend::CPU
 
-#define TEST_ARRAY_VIEW(SCALAR, BACKEND)                                                            \
-	TEST_CASE(fmt::format("Test ArrayView -- {} {}", STRINGIFY(SCALAR), STRINGIFY(BACKEND)),        \
+#define TEST_ARRAY_VIEW(SCALAR, BACKEND)                                                           \
+	TEST_CASE(fmt::format("Test ArrayView -- {} {}", STRINGIFY(SCALAR), STRINGIFY(BACKEND)),       \
 			  "[array-lib]") {                                                                     \
 		lrc::Shape shape({7, 11});                                                                 \
-		lrc::Array<SCALAR, BACKEND> testArr(shape);                                                 \
+		lrc::Array<SCALAR, BACKEND> testArr(shape);                                                \
                                                                                                    \
 		for (int64_t i = 0; i < testArr.shape().size(); ++i) { testArr.storage()[i] = i; }         \
                                                                                                    \
@@ -82,9 +82,7 @@ TEST_ARRAY_VIEW(float, lrc::backend::CPU)
 TEST_ARRAY_VIEW(double, lrc::backend::CPU)
 
 #if defined(LIBRAPID_HAS_OPENCL)
-TEST_CASE("Configure OpenCL", "[array-lib]") {
-	lrc::configureOpenCL();
-}
+TEST_CASE("Configure OpenCL", "[array-lib]") { lrc::configureOpenCL(true); }
 
 // TEST_ARRAY_VIEW(int8_t, lrc::backend::OpenCL)
 TEST_ARRAY_VIEW(int16_t, lrc::backend::OpenCL)

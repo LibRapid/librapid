@@ -390,8 +390,8 @@ namespace librapid {
 					*pleft	  = static_cast<T>(tmp);
 					return ans;
 #else
-					*pleft = ::librapid::exp(*pleft) * right * ::librapid::exp2(exponent);
-					return (::librapid::isNaN(*pleft) || ::librapid::isInf(*pleft)) ? 1 : -1;
+				*pleft = ::librapid::exp(*pleft) * right * ::librapid::exp2(exponent);
+				return (::librapid::isNaN(*pleft) || ::librapid::isInf(*pleft)) ? 1 : -1;
 #endif
 
 #if defined(LIBRAPID_USE_MULTIPREC)
@@ -446,6 +446,12 @@ namespace librapid {
 		/// \brief Complex number move constructor
 		/// \param other The complex number to move
 		Complex(Complex<T> &&other) noexcept : m_val {other.real(), other.imag()} {}
+
+		/// \brief Construct a complex number from another complex number with a different type
+		/// \tparam Other Type of the components of the other complex number
+		/// \param other The complex number to copy
+		template<typename Other>
+		Complex(const Complex<Other> &other) : m_val {T(other.real()), T(other.imag())} {}
 
 		/// \brief Construct a complex number from a std::complex
 		/// \param other The std::complex value to copy
@@ -630,7 +636,7 @@ namespace librapid {
 		/// \return Scalar
 		template<typename To>
 		LIBRAPID_ALWAYS_INLINE explicit operator To() const {
-			return typetraits::TypeInfo<T>::template cast<To>(m_val[RE]);
+			return static_cast<To>(m_val[RE]);
 		}
 
 		/// \brief Cast to a complex number with a different scalar type
@@ -642,8 +648,7 @@ namespace librapid {
 		/// \return Complex number
 		template<typename To>
 		LIBRAPID_ALWAYS_INLINE explicit operator Complex<To>() const {
-			return Complex<To>(typetraits::TypeInfo<T>::template cast<To>(m_val[RE]),
-							   typetraits::TypeInfo<T>::template cast<To>(m_val[IM]));
+			return Complex<To>(static_cast<To>(m_val[RE]), static_cast<To>(m_val[IM]));
 		}
 
 		/// \brief Complex number to string
@@ -1133,15 +1138,15 @@ namespace librapid {
 				else
 					ux = T(0.25) * pi; // (-Inf, +/-Inf)
 			} else if (re < 0) {
-				ux = pi; // (-Inf, finite)
+				ux = pi;			   // (-Inf, finite)
 			} else {
-				ux = 0; // (+Inf, finite)
+				ux = 0;				   // (+Inf, finite)
 			}
 			vx = -::librapid::copySign(typetraits::TypeInfo<T>::infinity(), im);
 		} else if (::librapid::isInf(im)) { // finite, Inf)
 			ux = T(0.5) * pi;				// (finite, +/-Inf)
 			vx = -im;
-		} else { // (finite, finite)
+		} else {							// (finite, finite)
 			const Complex<T> wx = sqrt(Complex<T>(1 + re, -im));
 			const Complex<T> zx = sqrt(Complex<T>(1 - re, -im));
 			const T wr			= real(wx);
@@ -1161,7 +1166,7 @@ namespace librapid {
 			} else if (wi < -arcBig) { // Imaginary part of w is large negative
 				alpha = -wi;
 				beta  = wr * (zi / alpha) - zr;
-			} else { // Shouldn't overflow (?)
+			} else {					   // Shouldn't overflow (?)
 				alpha = 0;
 				beta  = wr * zi + wi * zr; // Im(w * z)
 			}
@@ -1218,9 +1223,9 @@ namespace librapid {
 				else
 					vx = T(0.25) * pi; // (+Inf, +/-Inf)
 			} else if (re < 0) {
-				vx = pi; // (-Inf, finite)
+				vx = pi;			   // (-Inf, finite)
 			} else {
-				vx = 0; // (+Inf, finite)
+				vx = 0;				   // (+Inf, finite)
 			}
 			vx = ::librapid::copySign(vx, im);
 		} else { // (finite, finite)
@@ -1238,7 +1243,7 @@ namespace librapid {
 			} else if (arcBig < wi) { // Imaginary parts large
 				alpha = wi;
 				beta  = wr * (zr / alpha) - zi;
-			} else { // Shouldn't overflow (?)
+			} else {					   // Shouldn't overflow (?)
 				alpha = 0;
 				beta  = wr * zr - wi * zi; // Re(w * z)
 			}
@@ -1315,7 +1320,7 @@ namespace librapid {
 			} else if (wi < -arcBig) {
 				alpha = -wi;
 				beta  = -zr - wr * (zi / alpha);
-			} else { // Shouldn't overflow (?)
+			} else {					   // Shouldn't overflow (?)
 				alpha = 0;
 				beta  = wi * zr - wr * zi; // Im(w * conj(z))
 			}
@@ -1448,15 +1453,15 @@ namespace librapid {
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> polarPositiveNanInfZeroRho(const T &rho, const T &theta) {
 		// Rho is +NaN/+Inf/+0
-		if (::librapid::isNaN(theta) || ::librapid::isInf(theta)) { // Theta is NaN/Inf
+		if (::librapid::isNaN(theta) || ::librapid::isInf(theta)) {		  // Theta is NaN/Inf
 			if (::librapid::isInf(rho)) {
-				return Complex<T>(rho, ::librapid::sin(theta)); // (Inf, NaN/Inf)
+				return Complex<T>(rho, ::librapid::sin(theta));			  // (Inf, NaN/Inf)
 			} else {
 				return Complex<T>(rho, ::librapid::copySign(rho, theta)); // (NaN/0, NaN/Inf)
 			}
-		} else if (theta == T(0)) {		   // Theta is zero
-			return Complex<T>(rho, theta); // (NaN/Inf/0, 0)
-		} else {						   // Theta is finite non-zero
+		} else if (theta == T(0)) {										  // Theta is zero
+			return Complex<T>(rho, theta);								  // (NaN/Inf/0, 0)
+		} else { // Theta is finite non-zero
 			// (NaN/Inf/0, finite non-zero)
 			return Complex<T>(rho * ::librapid::cos(theta), rho * ::librapid::sin(theta));
 		}
@@ -1489,7 +1494,7 @@ namespace librapid {
 		// Return polar(exp(re), im)
 		if (::librapid::isInf(logRho)) {
 			if (logRho < 0) {
-				return polarPositiveNanInfZeroRho(T(0), theta); // exp(-Inf) = +0
+				return polarPositiveNanInfZeroRho(T(0), theta);	  // exp(-Inf) = +0
 			} else {
 				return polarPositiveNanInfZeroRho(logRho, theta); // exp(+Inf) = +Inf
 			}
@@ -1528,9 +1533,9 @@ namespace librapid {
 		if (::librapid::isInf(av) || ::librapid::isInf(bv)) {
 			return typetraits::TypeInfo<T>::infinity(); // At least one component is Inf
 		} else if (::librapid::isNaN(av)) {
-			return av; // Real component is NaN
+			return av;									// Real component is NaN
 		} else if (::librapid::isNaN(bv)) {
-			return bv; // Imaginary component is NaN
+			return bv;									// Imaginary component is NaN
 		} else {
 			if (av < bv) std::swap(av, bv);
 			if (av == 0) return av; // |0| = 0
@@ -1743,7 +1748,7 @@ namespace librapid {
 		int64_t otherExp;
 		T rho = _fabs(other, &otherExp); // Get magnitude and scale factor
 
-		if (otherExp == 0) { // Argument is zero, Inf or NaN
+		if (otherExp == 0) {			 // Argument is zero, Inf or NaN
 			if (rho == 0) {
 				return Complex<T>(T(0), imag(other));
 			} else if (::librapid::isInf(rho)) {
@@ -1925,10 +1930,10 @@ namespace librapid {
 		return real(other) * real(other) + imag(other) * imag(other);
 	}
 
-	/// \brief Compute the complex number in polar form
+	/// \brief Return a complex number from polar coordinates
 	///
-	/// This function computes the complex number in polar form given by the radius rho
-	/// and angle theta.
+	/// Given a radius, \p rho, and an angle, \p theta, this function returns the complex number
+	/// \f$ \rho e^{i\theta} \f$.
 	///
 	/// The function returns NaN, infinity or zero based on the input values of rho.
 	/// \tparam T Scalar type of the complex number

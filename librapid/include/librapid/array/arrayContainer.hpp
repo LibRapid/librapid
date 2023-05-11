@@ -2,6 +2,40 @@
 #define LIBRAPID_ARRAY_ARRAY_CONTAINER_HPP
 
 namespace librapid {
+	namespace detail {
+		template<typename T>
+		struct SubscriptType {
+			using Scalar = T;
+			using Direct = const Scalar &;
+			using Ref	 = Scalar &;
+		};
+
+		template<typename T>
+		struct SubscriptType<Storage<T>> {
+			using Scalar = T;
+			using Direct = const Scalar &;
+			using Ref	 = Scalar &;
+		};
+
+#if defined(LIBRAPID_HAS_OPENCL)
+		template<typename T>
+		struct SubscriptType<OpenCLStorage<T>> {
+			using Scalar = T;
+			using Direct = const OpenCLRef<Scalar>;
+			using Ref	 = OpenCLRef<Scalar>;
+		};
+#endif // LIBRAPID_HAS_OPENCL
+
+#if defined(LIBRAPID_HAS_CUDA)
+		template<typename T>
+		struct SubscriptType<CudaStorage<T>> {
+			using Scalar = T;
+			using Direct = const detail::CudaRef<Scalar>;
+			using Ref	 = detail::CudaRef<Scalar>;
+		};
+#endif // LIBRAPID_HAS_CUDA
+	}  // namespace detail
+
 	namespace typetraits {
 		template<typename ShapeType_, typename StorageType_>
 		struct TypeInfo<array::ArrayContainer<ShapeType_, StorageType_>> {
@@ -37,17 +71,8 @@ namespace librapid {
 			using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;
 			using Backend	  = typename typetraits::TypeInfo<ArrayContainer>::Backend;
 
-#if defined(LIBRAPID_HAS_CUDA)
-			using DirectSubscriptType =
-			  typename std::conditional_t<typetraits::IsCudaStorage<StorageType>::value,
-										  const detail::CudaRef<Scalar>, const Scalar &>;
-			using DirectRefSubscriptType =
-			  typename std::conditional_t<typetraits::IsCudaStorage<StorageType>::value,
-										  detail::CudaRef<Scalar>, Scalar &>;
-#else
-			using DirectSubscriptType	 = const Scalar &;
-			using DirectRefSubscriptType = Scalar &;
-#endif
+			using DirectSubscriptType	 = typename detail::SubscriptType<StorageType>::Direct;
+			using DirectRefSubscriptType = typename detail::SubscriptType<StorageType>::Ref;
 
 			/// Default constructor
 			ArrayContainer();
