@@ -58,6 +58,12 @@ namespace librapid {
 		template<typename T, std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
 		SIMDVector(const std::initializer_list<T> &list);
 
+		/// Construct a Vector object from an std::vector
+		/// \tparam T The type of each element of the vector
+		/// \param list The	vector to construct from
+		template<typename T, std::enable_if_t<std::is_convertible_v<T, Scalar>, int> = 0>
+		SIMDVector(const std::vector<T> &list);
+
 		/// Create a Vector from another vector instance
 		/// \param other Vector to copy values from
 		SIMDVector(const SIMDVector &other) = default;
@@ -495,7 +501,21 @@ namespace librapid {
 	template<typename Scalar, int64_t Dims>
 	template<typename T, std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
 	SIMDVector<Scalar, Dims>::SIMDVector(const std::initializer_list<T> &list) {
-		assert(list.size() <= Dims);
+		LIBRAPID_ASSERT(list.size() <= Dims,
+						"Cannot initialize {}-dimensional vector with {} elements",
+						Dims,
+						list.size());
+		int64_t i = 0;
+		for (const Scalar &val : list) { m_data[i++] = val; }
+	}
+
+	template<typename Scalar, int64_t Dims>
+	template<typename T, std::enable_if_t<std::is_convertible_v<T, Scalar>, int>>
+	SIMDVector<Scalar, Dims>::SIMDVector(const std::vector<T> &list) {
+		LIBRAPID_ASSERT(list.size() <= Dims,
+						"Cannot initialize {} dimensional vector with {} elements",
+						Dims,
+						list.size());
 		int64_t i = 0;
 		for (const Scalar &val : list) { m_data[i++] = val; }
 	}
