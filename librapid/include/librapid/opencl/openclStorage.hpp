@@ -297,6 +297,7 @@ namespace librapid {
 				m_buffer	 = std::move(other.m_buffer);
 				m_size		 = other.m_size;
 				other.m_size = 0;
+				m_ownsData	 = other.m_ownsData;
 			} else {
 				LIBRAPID_ASSERT(m_size == other.m_size,
 								"Cannot move into dependent OpenCLStorage "

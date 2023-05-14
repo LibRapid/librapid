@@ -104,12 +104,6 @@ namespace librapid {
 			}
 		}
 
-		// template<typename First, typename... Rest>
-		// constexpr bool scalarTypesAreSame(const std::tuple<First, Rest...> &tup) {
-		// 	constexpr auto ret = scalarTypesAreSameImpl(tup);
-		// 	return !std::is_same_v<decltype(ret), std::false_type>;
-		// };
-
 		template<typename desc, typename Functor_, typename... Args>
 		class Function {
 		public:
@@ -251,7 +245,6 @@ namespace librapid {
 		template<size_t... I>
 		auto Function<desc, Functor, Args...>::scalarImpl(std::index_sequence<I...>,
 														  size_t index) const -> Scalar {
-			// return m_functor((std::get<I>(m_args).scalar(index))...);
 			return m_functor(scalarExtractor(std::get<I>(m_args), index)...);
 		}
 

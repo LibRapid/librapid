@@ -407,13 +407,12 @@ namespace librapid {
 	Storage<T, A>::Storage(SizeType size, ConstReference value, const Allocator &alloc) :
 			m_allocator(alloc), m_begin(detail::safeAllocate(m_allocator, size)),
 			m_end(m_begin + size), m_ownsData(true) {
-		// std::fill(m_begin, m_end, value);
 		for (auto it = m_begin; it != m_end; ++it) { *it = value; }
 	}
 
 	template<typename T, typename A>
 	Storage<T, A>::Storage(const Storage &other, const Allocator &alloc) :
-			m_allocator(alloc), m_begin(nullptr), m_end(nullptr), m_ownsData(other.m_ownsData) {
+			m_allocator(alloc), m_begin(nullptr), m_end(nullptr) {
 		initData(other.begin(), other.end());
 	}
 
@@ -496,7 +495,6 @@ namespace librapid {
 
 				m_allocator = std::allocator_traits<A>::select_on_container_copy_construction(
 				  other.m_allocator);
-				resizeImpl(other.size(), 0);
 				if (typetraits::TriviallyDefaultConstructible<T>::value) {
 					// Use a slightly faster memcpy if the type is trivially default constructible
 					std::uninitialized_copy(other.begin(), other.end(), m_begin);

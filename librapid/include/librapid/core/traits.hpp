@@ -114,6 +114,36 @@ namespace librapid {
 			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
+		template<typename T>
+		struct TypeInfo<T &> : TypeInfo<T> {};
+
+		template<typename T>
+		struct TypeInfo<T &&> : TypeInfo<T> {};
+
+		template<typename T>
+		struct TypeInfo<const T> : TypeInfo<T> {};
+
+		template<typename T>
+		struct TypeInfo<volatile T> : TypeInfo<T> {};
+
+		template<typename T>
+		struct TypeInfo<const volatile T> : TypeInfo<T> {};
+
+		template<typename T>
+		struct TypeInfo<T *> : TypeInfo<T> {};
+
+		template<typename T>
+		struct TypeInfo<const T *> : TypeInfo<T> {};
+
+		template<typename T>
+		struct TypeInfo<volatile T *> : TypeInfo<T> {};
+
+		template<typename T>
+		struct TypeInfo<const volatile T *> : TypeInfo<T> {};
+
+		template<typename T>
+		struct TypeInfo<T[]> : TypeInfo<T> {};
+
 		template<>
 		struct TypeInfo<bool> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;

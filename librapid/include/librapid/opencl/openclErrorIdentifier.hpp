@@ -1,0 +1,8 @@
+#ifndef LIBRAPID_OPENCL_OPENCL_ERROR_IDENTIFIER_HPP
+#define LIBRAPID_OPENCL_OPENCL_ERROR_IDENTIFIER_HPP
+
+namespace librapid::opencl {
+	std::string getOpenCLErrorString(int64_t err);
+}
+
+#endif // LIBRAPID_OPENCL_OPENCL_ERROR_IDENTIFIER_HPP

@@ -98,12 +98,12 @@
 	struct NAME {                                                                                  \
 		template<typename T>                                                                       \
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator()(const T &arg) const {            \
-			return (T)::librapid::OP(arg);                                                         \
+			return (T)OP(arg);                                                                     \
 		}                                                                                          \
                                                                                                    \
 		template<typename Packet>                                                                  \
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto packet(const Packet &arg) const {           \
-			return ::librapid::OP(arg);                                                            \
+			return OP(arg);                                                                        \
 		}                                                                                          \
 	};
 
@@ -133,26 +133,29 @@ namespace librapid {
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseEqual, ==);	 // a == b
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseNotEqual, !=); // a != b
 
-		LIBRAPID_UNARY_FUNCTOR(Sin, sin);
-		LIBRAPID_UNARY_FUNCTOR(Cos, cos);
-		LIBRAPID_UNARY_FUNCTOR(Tan, tan);
-		LIBRAPID_UNARY_FUNCTOR(Asin, asin);
-		LIBRAPID_UNARY_FUNCTOR(Acos, acos);
-		LIBRAPID_UNARY_FUNCTOR(Atan, atan);
-		LIBRAPID_UNARY_FUNCTOR(Sinh, sinh);
-		LIBRAPID_UNARY_FUNCTOR(Cosh, cosh);
-		LIBRAPID_UNARY_FUNCTOR(Tanh, tanh);
+		LIBRAPID_UNARY_FUNCTOR(Neg, -);
 
-		LIBRAPID_UNARY_FUNCTOR(Exp, exp);
-		LIBRAPID_UNARY_FUNCTOR(Log, log);
-		LIBRAPID_UNARY_FUNCTOR(Log2, log2);
-		LIBRAPID_UNARY_FUNCTOR(Log10, log10);
-		LIBRAPID_UNARY_FUNCTOR(Sqrt, sqrt);
-		LIBRAPID_UNARY_FUNCTOR(Cbrt, cbrt);
-		LIBRAPID_UNARY_FUNCTOR(Abs, abs);
-		LIBRAPID_UNARY_FUNCTOR(Floor, floor);
-		LIBRAPID_UNARY_FUNCTOR(Ceil, ceil);
-	} // namespace detail
+		LIBRAPID_UNARY_FUNCTOR(Sin, ::librapid::sin);	  // sin(a)
+		LIBRAPID_UNARY_FUNCTOR(Cos, ::librapid::cos);	  // cos(a)
+		LIBRAPID_UNARY_FUNCTOR(Tan, ::librapid::tan);	  // tan(a)
+		LIBRAPID_UNARY_FUNCTOR(Asin, ::librapid::asin);	  // asin(a)
+		LIBRAPID_UNARY_FUNCTOR(Acos, ::librapid::acos);	  // acos(a)
+		LIBRAPID_UNARY_FUNCTOR(Atan, ::librapid::atan);	  // atan(a)
+		LIBRAPID_UNARY_FUNCTOR(Sinh, ::librapid::sinh);	  // sinh(a)
+		LIBRAPID_UNARY_FUNCTOR(Cosh, ::librapid::cosh);	  // cosh(a)
+		LIBRAPID_UNARY_FUNCTOR(Tanh, ::librapid::tanh);	  // tanh(a)
+
+		LIBRAPID_UNARY_FUNCTOR(Exp, ::librapid::exp);	  // exp(a)
+		LIBRAPID_UNARY_FUNCTOR(Log, ::librapid::log);	  // log(a)
+		LIBRAPID_UNARY_FUNCTOR(Log2, ::librapid::log2);	  // log2(a)
+		LIBRAPID_UNARY_FUNCTOR(Log10, ::librapid::log10); // log10(a)
+		LIBRAPID_UNARY_FUNCTOR(Sqrt, ::librapid::sqrt);	  // sqrt(a)
+		LIBRAPID_UNARY_FUNCTOR(Cbrt, ::librapid::cbrt);	  // cbrt(a)
+		LIBRAPID_UNARY_FUNCTOR(Abs, ::librapid::abs);	  // abs(a)
+		LIBRAPID_UNARY_FUNCTOR(Floor, ::librapid::floor); // floor(a)
+		LIBRAPID_UNARY_FUNCTOR(Ceil, ::librapid::ceil);	  // ceil(a)
+
+	}													  // namespace detail
 
 	namespace typetraits {
 		/// Merge together two Descriptor types. Two trivial operations will result in
@@ -348,6 +351,15 @@ namespace librapid {
 			static constexpr const char *kernelNameScalarLhs = "elementWiseNotEqualArraysScalarLhs";
 			LIBRAPID_BINARY_KERNEL_GETTER
 			LIBRAPID_BINARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Neg> {
+			static constexpr const char *name		= "negate";
+			static constexpr const char *filename	= "negate";
+			static constexpr const char *kernelName = "negateArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
 		};
 
 		template<>
@@ -832,6 +844,18 @@ namespace librapid {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::ElementWiseNotEqual>(std::forward<LHS>(lhs),
 																	 std::forward<RHS>(rhs));
+		}
+
+		/// \brief Negate each element in the array
+		/// \tparam VAL Type to negate
+		/// \param val The input array or function
+		/// \return Negation function object
+		template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		operator-(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
+		  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Neg, VAL> {
+			return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Neg>(
+			  std::forward<VAL>(val));
 		}
 	} // namespace array
 
