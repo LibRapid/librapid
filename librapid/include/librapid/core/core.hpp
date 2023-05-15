@@ -32,6 +32,7 @@
 #pragma warning(pop)
 
 #if defined(LIBRAPID_HAS_OPENCL)
+#	include "../opencl/openclErrorIdentifier.hpp"
 #	include "../opencl/openclConfigure.hpp"
 #	include "../opencl/openclKernelProcessor.hpp"
 #endif // LIBRAPID_HAS_OPENCL

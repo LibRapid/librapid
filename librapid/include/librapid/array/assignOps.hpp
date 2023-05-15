@@ -67,14 +67,17 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void
 		assign(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
+			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
 			using Scalar =
 			  typename array::ArrayContainer<ShapeType_,
 											 FixedStorage<StorageScalar, StorageSize...>>::Scalar;
-			constexpr int64_t packetWidth	  = typetraits::TypeInfo<Scalar>::packetWidth;
-			constexpr int64_t elements		  = ::librapid::product<StorageSize...>();
-			constexpr int64_t vectorSize	  = elements - (elements % packetWidth);
-			constexpr bool allowVectorisation = typetraits::TypeInfo<
-			  detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation;
+			constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
+			constexpr int64_t elements	  = ::librapid::product<StorageSize...>();
+			constexpr int64_t vectorSize  = elements - (elements % packetWidth);
+			constexpr bool allowVectorisation =
+			  typetraits::TypeInfo<
+				detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation &&
+			  Function::argsAreSameType;
 
 			// Ensure the function can actually be assigned to the array container
 			static_assert(
@@ -114,13 +117,16 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void assignParallel(
 		  array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
+			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
 			using Scalar =
 			  typename array::ArrayContainer<ShapeType_,
 											 Storage<StorageScalar, StorageAllocator>>::Scalar;
 			constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
-			constexpr bool allowVectorisation = typetraits::TypeInfo<
-			  detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation;
+			constexpr bool allowVectorisation =
+			  typetraits::TypeInfo<
+				detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation &&
+			  Function::argsAreSameType;
 
 			const int64_t size		 = function.shape().size();
 			const int64_t vectorSize = size - (size % packetWidth);
@@ -162,13 +168,19 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void assignParallel(
 		  array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
+			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
 			using Scalar =
 			  typename array::ArrayContainer<ShapeType_,
 											 FixedStorage<StorageScalar, StorageSize...>>::Scalar;
 			constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
-			constexpr int64_t elements	 = ::librapid::product<StorageSize...>();
-			constexpr int64_t vectorSize = elements - (elements % packetWidth);
+			constexpr bool allowVectorisation =
+			  typetraits::TypeInfo<
+				detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation &&
+			  Function::argsAreSameType;
+
+			constexpr int64_t size		 = ::librapid::product<StorageSize...>();
+			constexpr int64_t vectorSize = size - (size % packetWidth);
 
 			// Ensure the function can actually be assigned to the array container
 			static_assert(
@@ -176,15 +188,23 @@ namespace librapid {
 			  "Function return type must be the same as the array container's scalar type");
 			LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
 
+			if constexpr (allowVectorisation) {
 #pragma omp parallel for shared(vectorSize, lhs, function) default(none)                           \
   num_threads(global::numThreads)
-			for (int64_t index = 0; index < vectorSize; index += packetWidth) {
-				lhs.writePacket(index, function.packet(index));
-			}
+				for (int64_t index = 0; index < vectorSize; index += packetWidth) {
+					lhs.writePacket(index, function.packet(index));
+				}
 
-			// Assign the remaining elements
-			for (int64_t index = vectorSize; index < elements; ++index) {
-				lhs.write(index, function.scalar(index));
+				// Assign the remaining elements
+				for (int64_t index = vectorSize; index < size; ++index) {
+					lhs.write(index, function.scalar(index));
+				}
+			} else {
+#pragma omp parallel for shared(vectorSize, lhs, function, size) default(none)                     \
+  num_threads(global::numThreads)
+				for (int64_t index = vectorSize; index < size; ++index) {
+					lhs.write(index, function.scalar(index));
+				}
 			}
 		}
 	} // namespace detail

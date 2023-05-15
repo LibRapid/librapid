@@ -9,13 +9,13 @@ namespace librapid::opencl {
 					   std::index_sequence<I...>) {
 		constexpr auto caster = [](auto &&x) {
 			using T = std::decay_t<decltype(x)>;
-			 if constexpr (std::is_same_v<T, cl::Buffer>) {
-			 	return x;
-			 } else if constexpr (typetraits::TypeInfo<T>::type == detail::LibRapidType::Scalar) {
-			 	return static_cast<Scalar>(x);
-			 } else {
-			 	return x;
-			 }
+			if constexpr (std::is_same_v<T, cl::Buffer>) {
+				return x;
+			} else if constexpr (typetraits::TypeInfo<T>::type == detail::LibRapidType::Scalar) {
+				return static_cast<Scalar>(x);
+			} else {
+				return x;
+			}
 		};
 
 		((kernel.setArg(I, caster(std::get<I>(args)))), ...);
@@ -35,9 +35,15 @@ namespace librapid::opencl {
 		  kernel, std::make_tuple(args...), std::make_index_sequence<sizeof...(Args)>());
 
 		cl::NDRange range(numElements);
-		global::openCLQueue.enqueueNDRangeKernel(kernel, cl::NullRange, range, cl::NullRange);
+		auto err =
+		  global::openCLQueue.enqueueNDRangeKernel(kernel, cl::NullRange, range, cl::NullRange);
+
+		LIBRAPID_ASSERT(err == CL_SUCCESS,
+						"OpenCL kernel execution failed with error code {}: {}",
+						err,
+						getOpenCLErrorString(err));
 	}
-} // namespace librapid::detail::impl::opencl
+} // namespace librapid::opencl
 
 #endif // LIBRAPID_HAS_OPENCL
 
