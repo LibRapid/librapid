@@ -98,7 +98,7 @@
 	struct NAME {                                                                                  \
 		template<typename T>                                                                       \
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator()(const T &arg) const {            \
-			return (T)OP(arg);                                                                     \
+			return (T)(OP(arg));                                                                     \
 		}                                                                                          \
                                                                                                    \
 		template<typename Packet>                                                                  \
