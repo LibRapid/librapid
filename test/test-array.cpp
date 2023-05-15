@@ -174,15 +174,15 @@ using CUDA				   = lrc::backend::CUDA;
 			}                                                                                      \
 		}                                                                                          \
                                                                                                    \
-		auto negValid = (-testA).eval();                                                           \
+		auto negResult = (-testA).eval();                                                           \
 		bool negValid = true;                                                                      \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
 			if (!(negResult.scalar(i) == -testA.scalar(i))) {                                      \
-				REQUIRE(lrc::isClose(sumResult.scalar(i), -testA.scalar(i), tolerance));           \
-				sumValid = false;                                                                  \
+				REQUIRE(lrc::isClose(negResult.scalar(i), -testA.scalar(i), tolerance));           \
+				negValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
-		REQUIRE(sumValid);                                                                         \
+		REQUIRE(negValid);                                                                         \
                                                                                                    \
 		auto sumResult = (testA + testB).eval();                                                   \
 		bool sumValid  = true;                                                                     \
