@@ -9,4 +9,6 @@
 #include "autodiff/autodiff.hpp"
 #include "core/literals.hpp"
 
+#include "ml/ml.hpp"
+
 #endif // LIBRAPID_HPP

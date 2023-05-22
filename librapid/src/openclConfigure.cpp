@@ -215,6 +215,7 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 		addOpenCLKernelFile(basePath + "trigonometry.cl");
 		addOpenCLKernelFile(basePath + "expLogPow.cl");
 		addOpenCLKernelFile(basePath + "transpose.cl");
+		addOpenCLKernelFile(basePath + "activations.cl");
 
 		// Compile kernels
 		compileOpenCLKernels(verbose);
