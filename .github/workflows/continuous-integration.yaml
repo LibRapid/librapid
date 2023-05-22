@@ -333,15 +333,15 @@ jobs:
       # Zip debug build before uploading
       - name: Zip build results before uploading
         uses: vimtor/action-zip@v1.1
+        continue-on-error: true
         with:
-          files: |
-            buildDebug
-            buildRelease
+          files: ./buildDebug ./buildRelease
           recursive: true
           dest: ${{ matrix.pretty }}.zip
 
       - name: Store Build Artifacts
         uses: actions/upload-artifact@v3
+        continue-on-error: true
         with:
           name: ${{ matrix.pretty }}
           path: ${{ matrix.pretty }}.zip

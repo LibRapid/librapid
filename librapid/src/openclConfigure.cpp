@@ -167,7 +167,10 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 	void configureOpenCL(bool verbose, bool ask) {
 		LIBRAPID_ASSERT(!global::openCLConfigured, "OpenCL already configured");
 
-		if (verbose) fmt::print("======= OpenCL Configuration =======\n");
+		if (verbose) {
+			auto format = fmt::emphasis::bold | fmt::fg(fmt::color::orange);
+			fmt::print(format, "============== OpenCL Configuration ==============\n");
+		}
 		updateOpenCLDevices(verbose);
 
 		if (!ask) {
@@ -205,12 +208,14 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 		// Add kernel files
 		auto basePath = fmt::format("{}/include/librapid/OpenCL/kernels/", LIBRAPID_SOURCE);
 		addOpenCLKernelFile(basePath + "core.cl");
+		addOpenCLKernelFile(basePath + "negate.cl");
 		addOpenCLKernelFile(basePath + "arithmetic.cl");
 		addOpenCLKernelFile(basePath + "abs.cl");
 		addOpenCLKernelFile(basePath + "floorCeilRound.cl");
 		addOpenCLKernelFile(basePath + "trigonometry.cl");
 		addOpenCLKernelFile(basePath + "expLogPow.cl");
 		addOpenCLKernelFile(basePath + "transpose.cl");
+		addOpenCLKernelFile(basePath + "activations.cl");
 
 		// Compile kernels
 		compileOpenCLKernels(verbose);
