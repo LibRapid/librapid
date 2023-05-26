@@ -21,89 +21,163 @@ namespace librapid::ml {
 	// 17.	[ ] ThresholdedReLU
 	// 18.	[ ] Softmin
 
+	/// \brief Sigmoid activation function
+	///
+	/// A class that implements the Sigmoid activation function.
+	///
+	/// \f$\sigma(x) = \frac{1}{1 + e^{-x}}\f$
+	///
+	/// \f$\sigma'(x) = x(1 - x)\f$
+	///
 	class Sigmoid {
 	public:
 		Sigmoid() = default;
 
-		template<typename ShapeType, typename StorageType>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		apply(const array::ArrayContainer<ShapeType, StorageType> &src) const {
-			using Continer = typename std::decay_t<decltype(src)>;
-			using Scalar   = typename typetraits::TypeInfo<Continer>::Scalar;
-			using Backend  = typename typetraits::TypeInfo<Continer>::Backend;
-
-			Array<Scalar, Backend> result(src.shape());
-			apply(result, src);
-			return result;
+		/// Applies the Sigmoid activation function to the input array and returns the result.
+		///
+		/// @tparam ShapeType The type of the shape of the input array.
+		/// @tparam StorageType The type of the storage of the input array.
+		/// @param src The input array to apply the activation function to.
+		/// @return A new array with the result of applying the Sigmoid activation function to the
+		/// input array.
+		template<typename T>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto forward(const T &src) const {
+			auto ret = emptyLike(src);
+			forward(ret, src);
+			return ret;
 		}
 
-		template<typename descriptor, typename Functor, typename... Args>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		apply(const detail::Function<descriptor, Functor, Args...> &src) const {
-			using Function = detail::Function<descriptor, Functor, Args...>;
-			using Scalar   = typename typetraits::TypeInfo<Function>::Scalar;
-			using Backend  = typename typetraits::TypeInfo<Function>::Backend;
+		template<typename T>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto backward(const T &src) const {
+			auto ret = emptyLike(src);
+			backward(ret, src);
+			return ret;
+		}
 
-			Array<Scalar, Backend> result(src.shape());
-			apply(result, src);
-			return result;
+		template<typename T>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator()(const T &src) const {
+			return forward(src);
+		}
+
+		/// Applies the Sigmoid activation function to the input array and stores the result in the
+		/// output array.
+		///
+		/// @tparam ShapeType The type of the shape of the input and output arrays.
+		/// @tparam StorageScalar The type of the scalar values stored in the input and output
+		/// arrays.
+		/// @tparam StorageAllocator The type of the allocator used to allocate memory for the input
+		/// and output arrays.
+		/// @param dst The output array to store the result of applying the Sigmoid activation
+		/// function to the input array.
+		/// @param src The input array to apply the activation function to.
+		template<typename ShapeType, typename StorageScalar, typename StorageAllocator>
+		LIBRAPID_ALWAYS_INLINE void
+		forward(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &dst,
+				const array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>>
+				  &src) const {
+			dst = StorageScalar(1) / (StorageScalar(1) + exp(-src));
 		}
 
 		template<typename ShapeType, typename StorageScalar, typename StorageAllocator>
 		LIBRAPID_ALWAYS_INLINE void
-		apply(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &dst,
-			  const array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &src)
-		  const {
+		backward(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &dst,
+				 const array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>>
+				   &src) const {
+			dst = src * (StorageScalar(1) - src);
+		}
+
+		template<typename ShapeType, typename StorageScalar, size_t... Dims>
+		LIBRAPID_ALWAYS_INLINE void forward(
+		  array::ArrayContainer<ShapeType, FixedStorage<StorageScalar, Dims...>> &dst,
+		  const array::ArrayContainer<ShapeType, FixedStorage<StorageScalar, Dims...>> &src) const {
 			dst = StorageScalar(1) / (StorageScalar(1) + exp(-src));
 		}
 
-		template<typename ShapeType, typename StorageScalar, typename StorageAllocator,
-				 typename descriptor, typename Functor, typename... Args>
-		LIBRAPID_ALWAYS_INLINE void
-		apply(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &dst,
-			  const detail::Function<descriptor, Functor, Args...> &src) const {
-			dst = StorageScalar(1) / (StorageScalar(1) + exp(-src));
+		template<typename ShapeType, typename StorageScalar, size_t... Dims>
+		LIBRAPID_ALWAYS_INLINE void backward(
+		  array::ArrayContainer<ShapeType, FixedStorage<StorageScalar, Dims...>> &dst,
+		  const array::ArrayContainer<ShapeType, FixedStorage<StorageScalar, Dims...>> &src) const {
+			dst = src * (StorageScalar(1) - src);
 		}
 
 #if defined(LIBRAPID_HAS_OPENCL)
-		template<typename ShapeType, typename StorageScalar, typename descriptor, typename Functor,
-				 typename... Args>
+		template<typename ShapeType, typename StorageScalar>
 		LIBRAPID_ALWAYS_INLINE void
-		apply(array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &dst,
-			  const detail::Function<descriptor, Functor, Args...> &src) const {
-			apply(dst, src.eval());
+		forward(array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &dst,
+				const array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &src) const {
+			opencl::runLinearKernel<StorageScalar>("sigmoidActivationForward",
+												   src.shape().size(),
+												   dst.storage().data(),
+												   src.storage().data());
 		}
 
 		template<typename ShapeType, typename StorageScalar>
 		LIBRAPID_ALWAYS_INLINE void
-		apply(array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &dst,
-			  const array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &src) const {
-			opencl::runLinearKernel<StorageScalar>(
-			  "sigmoidActivation", src.shape().size(), dst.storage().data(), src.storage().data());
+		backward(array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &dst,
+				 const array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &src) const {
+			opencl::runLinearKernel<StorageScalar>("sigmoidActivationBackward",
+												   src.shape().size(),
+												   dst.storage().data(),
+												   src.storage().data());
 		}
 #endif // LIBRAPID_HAS_OPENCL
 
 #if defined(LIBRAPID_HAS_CUDA)
-		template<typename ShapeType, typename StorageScalar, typename descriptor, typename Functor,
-				 typename... Args>
+		template<typename ShapeType, typename StorageScalar>
 		LIBRAPID_ALWAYS_INLINE void
-		apply(array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &dst,
-			  const detail::Function<descriptor, Functor, Args...> &src) const {
-			apply(dst, src.eval());
+		forward(array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &dst,
+				const array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &src) const {
+			cuda::runKernel<StorageScalar, StorageScalar>("activations",
+														  "sigmoidActivationForward",
+														  dst.shape().size(),
+														  src.shape().size(),
+														  dst.storage().begin().get(),
+														  src.storage().begin().get());
 		}
 
 		template<typename ShapeType, typename StorageScalar>
 		LIBRAPID_ALWAYS_INLINE void
-		apply(array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &dst,
-			  const array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &src) const {
+		backward(array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &dst,
+				 const array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &src) const {
 			cuda::runKernel<StorageScalar, StorageScalar>("activations",
-														  "sigmoidActivation",
+														  "sigmoidActivationBackward",
 														  dst.shape().size(),
 														  src.shape().size(),
 														  dst.storage().begin().get(),
 														  src.storage().begin().get());
 		}
 #endif // LIBRAPID_HAS_CUDA
+
+		template<typename ShapeType, typename StorageScalar, typename StorageAllocator,
+				 typename descriptor, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE void
+		forward(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &dst,
+				const detail::Function<descriptor, Functor, Args...> &src) const {
+			using Type	  = detail::Function<descriptor, Functor, Args...>;
+			using Backend = typename typetraits::TypeInfo<Type>::Backend;
+			if constexpr (std::is_same_v<Backend, backend::CPU>) {
+				dst = StorageScalar(1) / (StorageScalar(1) + exp(-src));
+			} else {
+				// In the case where a non-standard Backend is used, it's often faster to
+				// evaluate the result and then apply a kernel directly, since it involves
+				// fewer copies, which are the main cause of performance drops.
+				forward(dst, src.eval());
+			}
+		}
+
+		template<typename ShapeType, typename StorageScalar, typename StorageAllocator,
+				 typename descriptor, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE void
+		backward(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &dst,
+				 const detail::Function<descriptor, Functor, Args...> &src) const {
+			using Type	  = detail::Function<descriptor, Functor, Args...>;
+			using Backend = typename typetraits::TypeInfo<Type>::Backend;
+			if constexpr (std::is_same_v<Backend, backend::CPU>) {
+				dst = src * (StorageScalar(1) - src);
+			} else {
+				backward(dst, src.eval());
+			}
+		}
 	};
 } // namespace librapid::ml
 

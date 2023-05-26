@@ -385,7 +385,6 @@ namespace librapid {
 									 sizeof(T) * m_size,
 									 cudaMemcpyHostToDevice,
 									 global::cudaStream));
-		return *this;
 	}
 
 	template<typename T>

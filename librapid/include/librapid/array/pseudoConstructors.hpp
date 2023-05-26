@@ -2,6 +2,18 @@
 #define LIBRAPID_ARRAY_PSEUDO_CONSTRUCTORS_HPP
 
 namespace librapid {
+	/// \brief Create a new array with the same type and shape as the input array, but without
+	///        initializing any of the data
+	/// \tparam T Input array type
+	/// \param other Input array
+	/// \return New array
+	template<typename T>
+	auto emptyLike(const T &other) {
+		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Backend = typename typetraits::TypeInfo<T>::Backend;
+		return Array<Scalar, Backend>(other.shape());
+	}
+
 	/// \brief Create an Array filled with zeros
 	///
 	/// Create an array with a specified shape, scalar type and Backend, and fill it with zeros.
@@ -18,6 +30,18 @@ namespace librapid {
 		return Array<Scalar, Backend>(shape, Scalar(0));
 	}
 
+	/// \brief Create an Array filled with zeros, with the same type and shape as the input array
+	///
+	/// \tparam T Input array type
+	/// \param other Input array
+	/// \return New array
+	template<typename T>
+	auto zerosLike(const T &other) {
+		using Scalar  = typename typetraits::TypeInfo<T>::Scalar;
+		using Backend = typename typetraits::TypeInfo<T>::Backend;
+		return zeros<Scalar, Backend>(other.shape());
+	}
+
 	/// \brief Create an Array filled with ones
 	///
 	/// Create an array with a specified shape, scalar type and Backend, and fill it with ones.
@@ -32,6 +56,18 @@ namespace librapid {
 			 size_t N = 32>
 	Array<Scalar, Backend> ones(const Shape<T, N> &shape) {
 		return Array<Scalar, Backend>(shape, Scalar(1));
+	}
+
+	/// \brief Create an Array filled with ones, with the same type and shape as the input array
+	///
+	/// \tparam T Input array type
+	/// \param other Input array
+	/// \return New array
+	template<typename T>
+	auto onesLike(const T &other) {
+		using Scalar  = typename typetraits::TypeInfo<T>::Scalar;
+		using Backend = typename typetraits::TypeInfo<T>::Backend;
+		return ones<Scalar, Backend>(other.shape());
 	}
 
 	/// \brief Create an Array filled, in order, with the numbers 0 to N-1
@@ -69,7 +105,8 @@ namespace librapid {
 	/// \param stop Second value in the range
 	/// \param step Step size between values in the range
 	/// \return Array
-	template<typename Scalar = double, typename Backend = backend::CPU, typename Start, typename Stop, typename Step>
+	template<typename Scalar = double, typename Backend = backend::CPU, typename Start,
+			 typename Stop, typename Step>
 	Array<Scalar, Backend> arange(Start start, Stop stop, Step step) {
 		LIBRAPID_ASSERT(step != 0, "Step size cannot be zero");
 		LIBRAPID_ASSERT((stop - start) / step > 0, "Step size is invalid for the specified range");

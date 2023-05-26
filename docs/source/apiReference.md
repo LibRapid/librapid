@@ -16,6 +16,13 @@ can't find it, please open an issue on the [LibRapid GitHub repository](https://
 Multidimensional arrays, matrices, linear algebra and more.
 :::
 
+:::{grid-item-card} {octicon}`server` Machine Learning
+:link: ml/ml
+:link-type: doc
+
+Machine learning in LibRapid.
+:::
+
 :::{grid-item-card} {octicon}`columns` Vectors
 :link: vector/vector
 :link-type: doc
@@ -44,7 +51,7 @@ General mathematical operations that work on most data types.
 Arbitrary-precision integers, floating points and rationals.
 :::
 
-:::{grid-item-card} {octicon}`alert` Utilities
+:::{grid-item-card} {octicon}`tools` Utilities
 :link: utility/utility
 :link-type: doc
 
