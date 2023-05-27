@@ -363,6 +363,25 @@ namespace librapid {
 			return result;
 		}
 
+		template<typename T>
+		struct CudaVectorHelper {
+			static constexpr auto tester() {
+				using ScalarType = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
+				constexpr bool allowVectorisation =
+				  typetraits::TypeInfo<T>::allowVectorisation;
+
+				if constexpr (std::is_same_v<ScalarType, float> && allowVectorisation) {
+					return jitify::float4 {};
+				} else if constexpr (std::is_same_v<ScalarType, double> && allowVectorisation) {
+					return jitify::double2 {};
+				} else {
+					return ScalarType {};
+				}
+			}
+
+			using Scalar = decltype(tester());
+		};
+
 		/// Helper for evaluating a tuple
 		/// \tparam descriptor The descriptor of the Function
 		/// \tparam Functor The function type of the Function
@@ -380,6 +399,7 @@ namespace librapid {
 						   const std::string &kernelName, Pointer *dst,
 						   const detail::Function<descriptor, Functor, Args...> &function) {
 			runKernel<Pointer, typename typetraits::TypeInfo<std::decay_t<Args>>::Scalar...>(
+			// runKernel<Pointer, typename CudaVectorHelper<Args>::Scalar...>(
 			  filename,
 			  kernelName,
 			  function.shape().size(),

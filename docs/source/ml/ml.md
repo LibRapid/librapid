@@ -4,7 +4,7 @@
 :margin: 4 4 0 0
 :gutter: 1
 
-:::{grid-item-card} {fontawesome}`function` Activation Functions
+:::{grid-item-card} {octicons}`git-merge-queue` Activation Functions
 :link: activationFunctions
 :link-type: doc
 

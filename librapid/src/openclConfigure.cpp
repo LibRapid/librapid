@@ -3,7 +3,14 @@
 namespace librapid {
 #if defined(LIBRAPID_HAS_OPENCL)
 
-	bool testOpenCLDevice(const cl::Device &device) {
+	struct OpenCLTestResult {
+		bool pass;
+		int64_t err;
+		std::string errStr;
+		std::string buildLog;
+	};
+
+	OpenCLTestResult testOpenCLDevice(const cl::Device &device) {
 		try {
 			cl::Context context(device);
 			cl::CommandQueue queue(context, device);
@@ -21,10 +28,24 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 			cl::Program program(context, sources);
 			err = program.build();
 
+			// if (err != CL_SUCCESS) {
+			// 	auto format = fmt::fg(fmt::color::red) | fmt::emphasis::bold;
+			// 	fmt::print(format,
+			// 			   "Error compiling test program: {}\n",
+			// 			   program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device));
+			// 	fmt::print(format, "Error Code [{}]: {}\n", err, opencl::getOpenCLErrorString(err));
+			// 	return false;
+			// }
+
 			// Check the build status
 			cl_build_status buildStatus = program.getBuildInfo<CL_PROGRAM_BUILD_STATUS>(device);
 
-			if (buildStatus != CL_BUILD_SUCCESS) { return false; }
+			if (buildStatus != CL_BUILD_SUCCESS) {
+				return {false,
+						err,
+						opencl::getOpenCLErrorString(err),
+						program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device)};
+			}
 
 			std::vector<float> srcA = {1, 2, 3, 4, 5};
 			std::vector<float> srcB = {5, 4, 3, 2, 1};
@@ -46,8 +67,16 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 			queue.enqueueNDRangeKernel(kernel, cl::NullRange, global_size, cl::NullRange);
 			queue.enqueueReadBuffer(bufC, CL_TRUE, 0, numElements * sizeof(float), dst.data());
 
-			return dst == std::vector<float>({6, 6, 6, 6, 6});
-		} catch (const std::exception &e) { return false; }
+			bool pass = dst == std::vector<float>({6, 6, 6, 6, 6});
+			return {pass, 0, "UNKNOWN_ERROR", ""};
+		} catch (const std::exception &e) {
+			return {
+			  false,
+			  -1,
+			  e.what(),
+			  "UNKNOWN_ERROR",
+			};
+		}
 	}
 
 	int64_t openclDeviceCompute(const cl::Device &device) {
@@ -64,35 +93,52 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 			std::vector<cl::Device> devices;
 			platform.getDevices(CL_DEVICE_TYPE_ALL, &devices);
 			if (!devices.empty()) {
-				if (verbose) fmt::print("Platform: {}\n", platform.getInfo<CL_PLATFORM_NAME>());
+				if (verbose) {
+					fmt::print("Platform: {}\n", platform.getInfo<CL_PLATFORM_NAME>());
+
+					fmt::print(fmt::fg(fmt::color::gray),
+							   "  Vendor : {}\n  Version: {}\n",
+							   platform.getInfo<CL_PLATFORM_VENDOR>(),
+							   platform.getInfo<CL_PLATFORM_VERSION>());
+				}
 
 				for (auto &device : devices) {
 					// Test the device to check it works
-					if (!testOpenCLDevice(device) && verbose) {
-						fmt::print(fmt::fg(fmt::color::red),
-								   "\tDevice FAILED: {}\n",
-								   device.getInfo<CL_DEVICE_NAME>());
-						continue;
-					}
+					auto [pass, err, errStr, buildLog] = testOpenCLDevice(device);
+
+					fmt::text_style format;
+					if (pass)
+						format = fmt::emphasis::bold | fmt::fg(fmt::color::green);
+					else
+						format = fmt::emphasis::bold | fmt::fg(fmt::color::red);
 
 					if (verbose) {
-						auto format = fmt::emphasis::bold | fmt::fg(fmt::color::green);
 						fmt::print(format,
-								   "\tDevice [id={}]: {}\n",
+								   "\tDevice [id={}]: {}{}\n",
 								   global::openclDevices.size(),
-								   device.getInfo<CL_DEVICE_NAME>());
+								   device.getInfo<CL_DEVICE_NAME>(),
+								   pass ? "" : " [ FAILED ]");
 
-						fmt::print(format,
-								   "\t\tCompute Units: {}\n",
-								   device.getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>());
-						fmt::print(format,
-								   "\t\tClock:         {}MHz\n",
-								   device.getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>());
-						fmt::print(format,
-								   "\t\tMemory:        {}GB\n",
-								   (device.getInfo<CL_DEVICE_GLOBAL_MEM_SIZE>() + (1 << 30)) /
-									 (1 << 30));
+						auto computeUnits = device.getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>();
+						auto clocFreq	  = device.getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>();
+						auto memory =
+						  (device.getInfo<CL_DEVICE_GLOBAL_MEM_SIZE>() + (1 << 30)) / (1 << 30);
+						auto version = device.getInfo<CL_DEVICE_VERSION>();
+						auto profile = device.getInfo<CL_DEVICE_PROFILE>();
+						fmt::print(format, "\t\tCompute Units: {}\n", computeUnits);
+						fmt::print(format, "\t\tClock:         {}MHz\n", clocFreq);
+						fmt::print(format, "\t\tMemory:        {}GB\n", memory);
+						fmt::print(format, "\t\tVersion:       {}\n", version);
+						fmt::print(format, "\t\tProfile:       {}\n", profile);
+
+						if (!pass) {
+							fmt::print(format, "\t\tError:         {}\n", errStr);
+							fmt::print(format, "\t\tBuild Log:     ");
+							fmt::print(fmt::fg(fmt::color::gray), "{}\n", buildLog);
+						}
 					}
+
+					if (!pass) continue;
 
 					global::openclDevices.push_back(device);
 				}
@@ -134,14 +180,19 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 
 		if (verbose) {
 			printer = std::thread([&]() {
-				auto format = fmt::fg(fmt::color::green);
-				fmt::print(format, "Compiling OpenCL kernels...");
+				int64_t dots   = 0;
+				auto fmtInProg = fmt::fg(fmt::color::orange) | fmt::emphasis::italic;
+				auto fmtDone   = fmt::fg(fmt::color::green) | fmt::emphasis::bold;
+				fmt::print(fmtInProg, "Compiling OpenCL kernels...");
 				while (!finished) {
 					if (verbose) {
-						fmt::print(format, ".");
+						fmt::print(fmtInProg, ".");
 						sleep(0.5);
+						++dots;
 					}
 				}
+				std::string padding(dots + 10, ' ');
+				fmt::print(fmtDone, "\rOpenCL Kernels Compiled{}", padding);
 				fmt::print("\n\n");
 			});
 		}

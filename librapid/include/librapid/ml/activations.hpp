@@ -2,24 +2,40 @@
 #define LIBRAPID_ML_ACTIVATIONS
 
 namespace librapid::ml {
-	// 1.	[X] Sigmoid
-	// 2.	[ ] Tanh
-	// 3.	[ ] ReLU
-	// 4.	[ ] LeakyReLU
-	// 5.	[ ] Softmax
-	// 6.	[ ] Softplus
-	// 7.	[ ] ELU
-	// 8.	[ ] SELU
-	// 9.	[ ] Swish
-	// 10.	[ ] Mish
-	// 11.	[ ] HardSigmoid
-	// 12.	[ ] LogSigmoid
-	// 13.	[ ] Softsign
-	// 14.	[ ] Exponential
-	// 15.	[ ] GELU
-	// 16.	[ ] LogSoftmax
-	// 17.	[ ] ThresholdedReLU
-	// 18.	[ ] Softmin
+	// 1.	[X] Sigmoid . . . . . . f(x) = 1 / (1 + e^-x)
+	//								f'(x) = x(1 - x)
+	// 2.	[ ] Tanh . . . . . . .  f(x) = tanh(x)
+	//								f'(x) = 1 - x^2
+	// 3.	[ ] ReLU . . . . . . .  f(x) = max(0, x)
+	//								f'(x) = 1 if x > 0 else 0
+	// 4.	[ ] LeakyReLU . . . . . f(x) = max(0.01x, x)
+	//								f'(x) = 1 if x > 0 else 0.01
+	// 5.	[ ] Softmax . . . . . . https://github.com/tiny-dnn/
+	//								tiny-dnn/blob/master/tiny_dnn/activations/softmax_layer.h
+	// 6.	[ ] Softplus . . . . .  f(x) = ln(1 + e^x)
+	//								f'(x) = 1 / (1 + e^-x)
+	// 7.	[ ] ELU . . . . . . . . f(x) = x if x > 0 else a(e^x - 1)
+	//								f'(x) = 1 if x > 0 else a(e^x)
+	// 8.	[ ] SELU . . . . . . .  f(x) = lambda * a * (e^x - 1) if x <= 0 else lambda * x
+	//								f'(x) =  lambda * a * e^x if x <= 0 else lambda
+	//								α ≈ 1.67326 and λ ≈ 1.0507
+	// 9.	[ ] Swish . . . . . . . f(x) = x / (1 + e^-x)
+	//								f'(x) = x(1 + e^-x + xe^-x) / (1 + e^-x)^2
+	// 10.	[ ] Mish . . . . . . .  f(x) = x * tanh(ln(1 + e^x))
+	//								f'(x) = (e^x * (4 * x + 4 + 4 * e^x + e^(2 * x))) / (2 * e^x + e^(2 * x) +
+	//2)^2
+	// 11.	[ ] HardSigmoid . . . . f(x) = max(0, min(1, x * 0.2 + 0.5))
+	//								f'(x) = 0.2 if 0 < x < 1 else 0
+	// 12.	[ ] LogSigmoid . . . .  f(x) = ln(1 / (1 + e^-x))
+	//								f'(x) = 1 / (1 + e^x)
+	// 13.	[ ] Softsign . . . . .  f(x) = x / (1 + |x|)
+	//								f'(x) = 1 / (1 + |x|)^2
+	// 14.	[ ] Exponential . . . . f(x) = e^x
+	//								f'(x) = e^x
+	// 15.	[ ] GELU . . . . . . .  f(x) = x * (1 + erf(x / sqrt(2))) / 2
+	//								f'(x) = (erf(x / sqrt(2)) + x * e^(-x^2 / 2) / sqrt(2 * pi)) / 2
+	// 18.	[ ] Softmin . . . . . . f(x) = e^x / sum(e^x)
+	//								f'(x) = f(x)(1 - f(x))
 
 	/// \brief Sigmoid activation function
 	///
