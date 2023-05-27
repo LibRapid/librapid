@@ -21,3 +21,5 @@ make_test(multiprecision)
 make_test(vector)
 make_test(complex)
 make_test(mathUtilities)
+
+make_test(sigmoid)

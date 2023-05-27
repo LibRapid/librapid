@@ -660,15 +660,9 @@ struct fmt::formatter<mpz_class> {
 
 	template<typename ParseContext>
 	constexpr auto parse(ParseContext &ctx) {
-		auto begin = ctx.begin(), end = ctx.end();
-		if (begin == end) return begin;
-		using handler_type = detail::dynamic_specs_handler<ParseContext>;
-		auto type		   = detail::type_constant<mpz_class, char>::value;
-		auto checker	   = detail::specs_checker<handler_type>(handler_type(specs_, ctx), type);
-		auto it			   = detail::parse_format_specs(begin, end, checker);
-		auto eh			   = ctx.error_handler();
-		detail::parse_float_type_spec(specs_, eh);
-		return it;
+		auto type = ::fmt::detail::type_constant<int64_t, char>::value;
+		auto end  = ::fmt::detail::parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx, type);
+		return end;
 	}
 
 	template<typename FormatContext>
@@ -691,15 +685,9 @@ struct fmt::formatter<mpf_class> {
 
 	template<typename ParseContext>
 	constexpr auto parse(ParseContext &ctx) {
-		auto begin = ctx.begin(), end = ctx.end();
-		if (begin == end) return begin;
-		using handler_type = detail::dynamic_specs_handler<ParseContext>;
-		auto type		   = detail::type_constant<mpf_class, char>::value;
-		auto checker	   = detail::specs_checker<handler_type>(handler_type(specs_, ctx), type);
-		auto it			   = detail::parse_format_specs(begin, end, checker);
-		auto eh			   = ctx.error_handler();
-		detail::parse_float_type_spec(specs_, eh);
-		return it;
+		auto type = ::fmt::detail::type_constant<double, char>::value;
+		auto end  = ::fmt::detail::parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx, type);
+		return end;
 	}
 
 	template<typename FormatContext>
@@ -724,15 +712,9 @@ struct fmt::formatter<__gmp_expr<Type, Expression>> {
 
 	template<typename ParseContext>
 	constexpr auto parse(ParseContext &ctx) {
-		auto begin = ctx.begin(), end = ctx.end();
-		if (begin == end) return begin;
-		using handler_type = detail::dynamic_specs_handler<ParseContext>;
-		auto type		   = detail::type_constant<mpf_class, char>::value;
-		auto checker	   = detail::specs_checker<handler_type>(handler_type(specs_, ctx), type);
-		auto it			   = detail::parse_format_specs(begin, end, checker);
-		auto eh			   = ctx.error_handler();
-		detail::parse_float_type_spec(specs_, eh);
-		return it;
+		auto type = ::fmt::detail::type_constant<double, char>::value;
+		auto end  = ::fmt::detail::parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx, type);
+		return end;
 	}
 
 	template<typename FormatContext>
@@ -757,15 +739,9 @@ struct fmt::formatter<mpq_class> {
 
 	template<typename ParseContext>
 	constexpr auto parse(ParseContext &ctx) {
-		auto begin = ctx.begin(), end = ctx.end();
-		if (begin == end) return begin;
-		using handler_type = detail::dynamic_specs_handler<ParseContext>;
-		auto type		   = detail::type_constant<mpq_class, char>::value;
-		auto checker	   = detail::specs_checker<handler_type>(handler_type(specs_, ctx), type);
-		auto it			   = detail::parse_format_specs(begin, end, checker);
-		auto eh			   = ctx.error_handler();
-		detail::parse_float_type_spec(specs_, eh);
-		return it;
+		auto type = ::fmt::detail::type_constant<double, char>::value;
+		auto end  = ::fmt::detail::parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx, type);
+		return end;
 	}
 
 	template<typename FormatContext>
@@ -790,15 +766,9 @@ struct fmt::formatter<librapid::mpfr> {
 
 	template<typename ParseContext>
 	constexpr auto parse(ParseContext &ctx) {
-		auto begin = ctx.begin(), end = ctx.end();
-		if (begin == end) return begin;
-		using handler_type = detail::dynamic_specs_handler<ParseContext>;
-		auto type		   = detail::type_constant<mpq_class, char>::value;
-		auto checker	   = detail::specs_checker<handler_type>(handler_type(specs_, ctx), type);
-		auto it			   = detail::parse_format_specs(begin, end, checker);
-		auto eh			   = ctx.error_handler();
-		detail::parse_float_type_spec(specs_, eh);
-		return it;
+		auto type = ::fmt::detail::type_constant<double, char>::value;
+		auto end  = ::fmt::detail::parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx, type);
+		return end;
 	}
 
 	template<typename FormatContext>
