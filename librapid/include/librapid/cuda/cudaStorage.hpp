@@ -274,6 +274,8 @@ namespace librapid {
 			static_assert(typetraits::TriviallyDefaultConstructible<T>::value,
 						  "Data type must be trivially constructable for use with CUDA");
 			T *result;
+			// Round size up to nearest multiple of 32
+			size = (size + size_t(31)) & ~size_t(31);
 			cudaSafeCall(cudaMallocAsync(&result, sizeof(T) * size, global::cudaStream));
 			return result;
 		}

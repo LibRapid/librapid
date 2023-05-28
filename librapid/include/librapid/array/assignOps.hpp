@@ -34,9 +34,9 @@ namespace librapid {
 			const int64_t vectorSize = size - (size % packetWidth);
 
 			// Ensure the function can actually be assigned to the array container
-			static_assert(
-			  typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
-			  "Function return type must be the same as the array container's scalar type");
+			// static_assert(
+			//   typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
+			//   "Function return type must be the same as the array container's scalar type");
 			LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
 
 			if constexpr (allowVectorisation) {
@@ -132,9 +132,9 @@ namespace librapid {
 			const int64_t vectorSize = size - (size % packetWidth);
 
 			// Ensure the function can actually be assigned to the array container
-			static_assert(
-			  typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
-			  "Function return type must be the same as the array container's scalar type");
+			// static_assert(
+			//   typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
+			//   "Function return type must be the same as the array container's scalar type");
 			LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
 
 			if constexpr (allowVectorisation) {
@@ -151,7 +151,7 @@ namespace librapid {
 			} else {
 #pragma omp parallel for shared(vectorSize, lhs, function, size) default(none)                     \
   num_threads(global::numThreads)
-				for (int64_t index = vectorSize; index < size; ++index) {
+				for (int64_t index = 0; index < size; ++index) {
 					lhs.write(index, function.scalar(index));
 				}
 			}
@@ -327,10 +327,10 @@ namespace librapid {
 			return obj;
 		}
 
-		template<typename T>
+		template<typename Scalar, typename T>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const auto &
 		cudaTupleEvaluatorImpl(const T &scalar) {
-			return scalar;
+			return (Scalar)scalar;
 		}
 
 		/// Helper for "evaluating" an array::ArrayContainer
@@ -338,7 +338,7 @@ namespace librapid {
 		/// \tparam StorageScalar The scalar type of the array::ArrayContainer's storage object
 		/// \param container The array::ArrayContainer to evaluate
 		/// \return The array::ArrayContainer itself
-		template<typename ShapeType, typename StorageScalar>
+		template<typename Scalar, typename ShapeType, typename StorageScalar>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const
 		  array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &
 		  cudaTupleEvaluatorImpl(
@@ -352,7 +352,7 @@ namespace librapid {
 		/// \tparam Args The argument types of the expression
 		/// \param function The expression to evaluate
 		/// \return The result of evaluating the expression
-		template<typename descriptor, typename Functor, typename... Args>
+		template<typename Scalar, typename descriptor, typename Functor, typename... Args>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		cudaTupleEvaluatorImpl(const detail::Function<descriptor, Functor, Args...> &function) {
 			array::ArrayContainer<
@@ -367,8 +367,7 @@ namespace librapid {
 		struct CudaVectorHelper {
 			static constexpr auto tester() {
 				using ScalarType = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
-				constexpr bool allowVectorisation =
-				  typetraits::TypeInfo<T>::allowVectorisation;
+				constexpr bool allowVectorisation = typetraits::TypeInfo<T>::allowVectorisation;
 
 				if constexpr (std::is_same_v<ScalarType, float> && allowVectorisation) {
 					return jitify::float4 {};
@@ -376,6 +375,37 @@ namespace librapid {
 					return jitify::double2 {};
 				} else {
 					return ScalarType {};
+				}
+			}
+
+			using Scalar = decltype(tester());
+		};
+
+		template<bool OpAllowsVectorisation, typename Dst, typename Src, bool isRet = false>
+		struct CudaVectoriseIfPossible {
+			static constexpr auto tester() {
+				using DstScalar = typename typetraits::TypeInfo<std::decay_t<Dst>>::Scalar;
+				using DstType	= typename CudaVectorHelper<std::decay_t<Dst>>::Scalar;
+				using SrcType	= typename CudaVectorHelper<std::decay_t<Src>>::Scalar;
+				constexpr int64_t dstPacketWidth  = typetraits::TypeInfo<DstType>::cudaPacketWidth;
+				constexpr int64_t srcPacketWidth  = typetraits::TypeInfo<SrcType>::cudaPacketWidth;
+				constexpr bool allowVectorisation = typetraits::TypeInfo<Dst>::allowVectorisation &&
+													typetraits::TypeInfo<Src>::allowVectorisation;
+
+				if constexpr (typetraits::TypeInfo<Src>::type == detail::LibRapidType::Scalar) {
+					return DstScalar {};
+				} else if constexpr (OpAllowsVectorisation && allowVectorisation &&
+									 std::is_same_v<DstType, SrcType> &&
+									 dstPacketWidth == srcPacketWidth) {
+					return DstType {};
+				} else {
+					if constexpr (isRet) {
+						using ScalarType = typename typetraits::TypeInfo<Dst>::Scalar;
+						return ScalarType {};
+					} else {
+						using ScalarType = typename typetraits::TypeInfo<Src>::Scalar;
+						return ScalarType {};
+					}
 				}
 			}
 
@@ -398,14 +428,26 @@ namespace librapid {
 		cudaTupleEvaluator(std::index_sequence<I...>, const std::string &filename,
 						   const std::string &kernelName, Pointer *dst,
 						   const detail::Function<descriptor, Functor, Args...> &function) {
-			runKernel<Pointer, typename typetraits::TypeInfo<std::decay_t<Args>>::Scalar...>(
-			// runKernel<Pointer, typename CudaVectorHelper<Args>::Scalar...>(
+			using Function					  = detail::Function<descriptor, Functor, Args...>;
+			constexpr bool allowVectorisation = typetraits::TypeInfo<Function>::allowVectorisation;
+			constexpr int64_t cudaPacketWidth = typetraits::TypeInfo<
+			  typename CudaVectoriseIfPossible<allowVectorisation, Pointer, Function>::Scalar>::
+			  cudaPacketWidth;
+			using Scalar = typename typetraits::TypeInfo<Pointer>::Scalar;
+
+			// fmt::print("Allow vectorisation: {}\n", allowVectorisation);
+			// fmt::print("Scalar: {}\n", typeid(Scalar).name());
+
+			// runKernel<Pointer, typename typetraits::TypeInfo<std::decay_t<Args>>::Scalar...>(
+			runKernel<
+			  Pointer,
+			  typename CudaVectoriseIfPossible<allowVectorisation, Pointer, Args>::Scalar...>(
 			  filename,
 			  kernelName,
-			  function.shape().size(),
-			  function.shape().size(),
+			  (function.shape().size() + (cudaPacketWidth - 1)) / cudaPacketWidth, // Round up
+			  (function.shape().size() + (cudaPacketWidth - 1)) / cudaPacketWidth,
 			  dst,
-			  dataSourceExtractor(cudaTupleEvaluatorImpl(std::get<I>(function.args())))...);
+			  dataSourceExtractor(cudaTupleEvaluatorImpl<Scalar>(std::get<I>(function.args())))...);
 		}
 	} // namespace cuda
 
@@ -425,18 +467,26 @@ namespace librapid {
 			// temporary-free evaluation. Instead, we must recursively evaluate each sub-operation
 			// until a final result is computed
 
+			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
+			constexpr bool allowVectorisation = typetraits::TypeInfo<Function>::allowVectorisation;
+
 			constexpr const char *filename = typetraits::TypeInfo<Functor_>::filename;
 			const char *kernelName = typetraits::TypeInfo<Functor_>::getKernelName(function.args());
-			using Scalar =
-			  typename array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>::Scalar;
+
+			using Scalar = typename ::librapid::cuda::CudaVectoriseIfPossible<
+			  allowVectorisation,
+			  array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>,
+			  Function,
+			  true>::Scalar;
 
 			const auto args			 = function.args();
 			constexpr size_t argSize = std::tuple_size<decltype(args)>::value;
-			::librapid::cuda::cudaTupleEvaluator(std::make_index_sequence<argSize>(),
-												 filename,
-												 kernelName,
-												 lhs.storage().begin().get(),
-												 function);
+			::librapid::cuda::cudaTupleEvaluator(
+			  std::make_index_sequence<argSize>(),
+			  filename,
+			  kernelName,
+			  reinterpret_cast<Scalar *>(lhs.storage().begin().get()),
+			  function);
 		}
 	}  // namespace detail
 #endif // LIBRAPID_HAS_CUDA
