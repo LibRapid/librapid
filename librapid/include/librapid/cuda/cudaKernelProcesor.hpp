@@ -73,8 +73,6 @@ namespace librapid::cuda {
 			(printer(arguments, fmt::emphasis::bold | fmt::fg(fmt::color::dark_orange)), ...);
 			(printer(typeid(Templates).name(), fmt::emphasis::bold | fmt::fg(fmt::color::plum)), ...);
 
-			// fmt::print("Information: {} {}\n", sizeof...(Templates), sizeof...(Args));
-
 			throw;
 		}
 #	endif // LIBRAPID_DEBUG

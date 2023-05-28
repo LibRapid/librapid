@@ -160,6 +160,20 @@ Compiling with this flag may also cause the binaries to be incompatible with oth
 when distributing your programs.
 :::
 
+### ``LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH`` and ``LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH``
+
+```
+DEFAULT: 4
+```
+
+Set the default vector width for SIMD CUDA kernels. This must be in the range $[1, 4]$. Higher values will lead to
+better performance in most cases, but can increase register pressure which may lead to lower performance than expected.
+For optimal performance, you should try changing this value to suit your specific use case.
+
+:::warning
+This setting requires CUDA support to be enabled.
+:::
+
 ### ``LIBRAPID_NO_WINDOWS_H``
 
 ```

@@ -40,6 +40,9 @@ option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_FAST_MATH "Use potentially less accurate operations to increase performance" OFF)
 option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" OFF)
 
+option(LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH "Preferred vector width for vectorised kernels" 2)
+option(LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH "Preferred vector width for vectorised kernels" 4)
+
 option(LIBRAPID_NO_WINDOWS_H "Don't include the Windows.h header" OFF)
 
 option(LIBRAPID_MKL_CONFIG_PATH "Path to the 'MKLConfig.cmake' file" "")
@@ -469,6 +472,30 @@ if (LIBRAPID_NATIVE_ARCH)
     set(LIBRAPID_ARCH_FLAGS ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
     message(STATUS "[ LIBRAPID ] Additional Definitions: ${Vc_DEFINITIONS}")
     message(STATUS "[ LIBRAPID ] Supported flags: ${Vc_ARCHITECTURE_FLAGS}")
+endif ()
+
+# Add defines for CUDA vector widths
+if (LIBRAPID_HAS_CUDA)
+    # Ensure vector widths are in range [1, 4]
+
+    if (LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH GREATER 4)
+        message(WARNING "LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH is greater than 4, setting to 4")
+        set(LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH 4)
+    elseif (LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH LESS 1)
+        message(WARNING "LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH is less than 1, setting to 1")
+        set(LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH 1)
+    endif ()
+
+    if (LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH GREATER 4)
+        message(WARNING "LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH is greater than 4, setting to 4")
+        set(LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH 4)
+    elseif (LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH LESS 1)
+        message(WARNING "LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH is less than 1, setting to 1")
+        set(LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH 1)
+    endif ()
+
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH=${LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH})
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH=${LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH})
 endif ()
 
 target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid" "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include")

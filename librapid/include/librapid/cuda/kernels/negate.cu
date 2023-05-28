@@ -16,7 +16,6 @@ __global__ void negateArrays(size_t elements, float2 *dst, float2 *data) {
 	}
 }
 
-
 template<>
 __global__ void negateArrays(size_t elements, float3 *dst, float3 *data) {
 	const size_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;

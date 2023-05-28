@@ -307,13 +307,21 @@ def gen():
 
             for dims in range(MIN_DIMS, MAX_DIMS + 1):
                 if func["opType"] == "binary":
-                    op = func["op"]
-                    block = f"""IOF({type["name"]}{dims},{func["name"]})(CO {type["name"]}{dims} &a,CO {type["name"]}{dims} &b){{M{type["name"]}{dims}({",".join([f"a.{var}{op}b.{var}" for var in "xyzw"[:dims]])});}}
-IOF({type["name"]}{dims},{func["name"]})(CO {type["name"]}{dims} &a,CO {type["cname"]} &b){{M{type["name"]}{dims}({",".join([f"a.{var} {op} b" for var in "xyzw"[:dims]])});}}
-IOF({type["name"]}{dims},{func["name"]})(CO {type["cname"]} &a,CO {type["name"]}{dims} &b){{M{type["name"]}{dims}({",".join([f"a {op} b.{var}" for var in "xyzw"[:dims]])});}}
+                    if func["inplace"]:
+                        op = func["op"]
+                        block = f"""IOF({type["name"]}{dims},{func["name"]})({type["name"]}{dims} &a,CO {type["name"]}{dims} &b){{M{type["name"]}{dims}N({",".join([f"a.{var}{op}b.{var}" for var in "xyzw"[:dims]])});}}
+IOF({type["name"]}{dims},{func["name"]})({type["name"]}{dims} &a,CO {type["cname"]} &b){{M{type["name"]}{dims}N({",".join([f"a.{var} {op} b" for var in "xyzw"[:dims]])});}}
 """
 
-                    ret += block
+                        ret += block
+                    else:
+                        op = func["op"]
+                        block = f"""IOF({type["name"]}{dims},{func["name"]})(CO {type["name"]}{dims} &a,CO {type["name"]}{dims} &b){{M{type["name"]}{dims}({",".join([f"a.{var}{op}b.{var}" for var in "xyzw"[:dims]])});}}
+IOF({type["name"]}{dims},{func["name"]})(CO {type["name"]}{dims} &a,CO {type["cname"]} &b){{M{type["name"]}{dims}({",".join([f"a.{var}{op}b" for var in "xyzw"[:dims]])});}}
+IOF({type["name"]}{dims},{func["name"]})(CO {type["cname"]} &a,CO {type["name"]}{dims} &b){{M{type["name"]}{dims}({",".join([f"a{op}b.{var}" for var in "xyzw"[:dims]])});}}
+"""
+
+                        ret += block
                 elif func["opType"] == "unary":
                     op = func["op"]
                     block = f"""inline {type["name"]}{dims} {func["name"]}(CO {type["name"]}{dims} &a){{M{type["name"]}{dims}({",".join([f"{op}(a.{var})" for var in "xyzw"[:dims]])});}}"""

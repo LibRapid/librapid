@@ -327,10 +327,9 @@ namespace librapid {
 			return obj;
 		}
 
-		template<typename Scalar, typename T>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const auto &
-		cudaTupleEvaluatorImpl(const T &scalar) {
-			return (Scalar)scalar;
+		template<typename T>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cudaTupleEvaluatorImpl(const T &scalar) {
+			return scalar;
 		}
 
 		/// Helper for "evaluating" an array::ArrayContainer
@@ -338,7 +337,7 @@ namespace librapid {
 		/// \tparam StorageScalar The scalar type of the array::ArrayContainer's storage object
 		/// \param container The array::ArrayContainer to evaluate
 		/// \return The array::ArrayContainer itself
-		template<typename Scalar, typename ShapeType, typename StorageScalar>
+		template<typename ShapeType, typename StorageScalar>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const
 		  array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &
 		  cudaTupleEvaluatorImpl(
@@ -352,7 +351,7 @@ namespace librapid {
 		/// \tparam Args The argument types of the expression
 		/// \param function The expression to evaluate
 		/// \return The result of evaluating the expression
-		template<typename Scalar, typename descriptor, typename Functor, typename... Args>
+		template<typename descriptor, typename Functor, typename... Args>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		cudaTupleEvaluatorImpl(const detail::Function<descriptor, Functor, Args...> &function) {
 			array::ArrayContainer<
@@ -363,16 +362,32 @@ namespace librapid {
 			return result;
 		}
 
+#define CONCAT_IMPL(x, y) x##y
+#define CONCAT(x, y) CONCAT_IMPL(x, y)
+
+#if LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH > 1
+#	define CUDA_FLOAT_VECTOR_TYPE CONCAT(jitify::float, LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH)
+#else
+#	define CUDA_FLOAT_VECTOR_TYPE float
+#endif
+
+#if LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH > 1
+#	define CUDA_DOUBLE_VECTOR_TYPE CONCAT(jitify::double, LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH)
+#else
+#	define CUDA_DOUBLE_VECTOR_TYPE double
+#endif
+
+
 		template<typename T>
-		struct CudaVectorHelper {
+		struct CudaVectorExtractor {
 			static constexpr auto tester() {
 				using ScalarType = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
 				constexpr bool allowVectorisation = typetraits::TypeInfo<T>::allowVectorisation;
 
 				if constexpr (std::is_same_v<ScalarType, float> && allowVectorisation) {
-					return jitify::float4 {};
+					return CUDA_FLOAT_VECTOR_TYPE {};
 				} else if constexpr (std::is_same_v<ScalarType, double> && allowVectorisation) {
-					return jitify::double2 {};
+					return CUDA_DOUBLE_VECTOR_TYPE {};
 				} else {
 					return ScalarType {};
 				}
@@ -385,8 +400,8 @@ namespace librapid {
 		struct CudaVectoriseIfPossible {
 			static constexpr auto tester() {
 				using DstScalar = typename typetraits::TypeInfo<std::decay_t<Dst>>::Scalar;
-				using DstType	= typename CudaVectorHelper<std::decay_t<Dst>>::Scalar;
-				using SrcType	= typename CudaVectorHelper<std::decay_t<Src>>::Scalar;
+				using DstType	= typename CudaVectorExtractor<std::decay_t<Dst>>::Scalar;
+				using SrcType	= typename CudaVectorExtractor<std::decay_t<Src>>::Scalar;
 				constexpr int64_t dstPacketWidth  = typetraits::TypeInfo<DstType>::cudaPacketWidth;
 				constexpr int64_t srcPacketWidth  = typetraits::TypeInfo<SrcType>::cudaPacketWidth;
 				constexpr bool allowVectorisation = typetraits::TypeInfo<Dst>::allowVectorisation &&
@@ -412,6 +427,47 @@ namespace librapid {
 			using Scalar = decltype(tester());
 		};
 
+		template<typename... Args>
+		struct CudaCanVectorise {
+		public:
+			template<typename First, typename... Rest>
+			static constexpr auto extractFirst() {
+				return First {};
+			}
+
+			static constexpr bool supportsVectorisation =
+			  (typetraits::TypeInfo<Args>::allowVectorisation && ...);
+			using First = decltype(extractFirst<Args...>());
+			static constexpr bool dtypesAreSame =
+			  (std::is_same_v<typename typetraits::TypeInfo<First>::Scalar,
+							  typename typetraits::TypeInfo<Args>::Scalar> &&
+			   ...);
+			static constexpr bool dtypeSupportsVectorisation =
+			  ((typetraits::TypeInfo<typename CudaVectorExtractor<
+				  typename typetraits::TypeInfo<Args>::Scalar>::Scalar>::cudaPacketWidth > 1) &&
+			   ...);
+
+		public:
+			static constexpr bool value =
+			  supportsVectorisation && dtypesAreSame && dtypeSupportsVectorisation;
+		};
+
+		template<typename... Args>
+		struct CudaVectorHelper {
+			static constexpr bool canVectorise = CudaCanVectorise<Args...>::value;
+
+			template<typename T>
+			static constexpr auto extractor() {
+				using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
+				if constexpr (canVectorise) {
+					using Type = typename CudaVectorExtractor<Scalar>::Scalar;
+					return Type {};
+				} else {
+					return Scalar {};
+				}
+			}
+		};
+
 		/// Helper for evaluating a tuple
 		/// \tparam descriptor The descriptor of the Function
 		/// \tparam Functor The function type of the Function
@@ -429,25 +485,31 @@ namespace librapid {
 						   const std::string &kernelName, Pointer *dst,
 						   const detail::Function<descriptor, Functor, Args...> &function) {
 			using Function					  = detail::Function<descriptor, Functor, Args...>;
-			constexpr bool allowVectorisation = typetraits::TypeInfo<Function>::allowVectorisation;
-			constexpr int64_t cudaPacketWidth = typetraits::TypeInfo<
-			  typename CudaVectoriseIfPossible<allowVectorisation, Pointer, Function>::Scalar>::
-			  cudaPacketWidth;
-			using Scalar = typename typetraits::TypeInfo<Pointer>::Scalar;
+			using Scalar					  = typename typetraits::TypeInfo<Pointer>::Scalar;
+			constexpr int64_t cudaPacketWidth = typetraits::TypeInfo<Scalar>::cudaPacketWidth;
 
 			// fmt::print("Allow vectorisation: {}\n", allowVectorisation);
 			// fmt::print("Scalar: {}\n", typeid(Scalar).name());
 
 			// runKernel<Pointer, typename typetraits::TypeInfo<std::decay_t<Args>>::Scalar...>(
-			runKernel<
-			  Pointer,
-			  typename CudaVectoriseIfPossible<allowVectorisation, Pointer, Args>::Scalar...>(
+			// runKernel<
+			//   Pointer,
+			//   typename CudaVectoriseIfPossible<allowVectorisation, Pointer, Args>::Scalar...>(
+			//   filename,
+			//   kernelName,
+			//   (function.shape().size() + (cudaPacketWidth - 1)) / cudaPacketWidth, // Round up
+			//   (function.shape().size() + (cudaPacketWidth - 1)) / cudaPacketWidth,
+			//   dst,
+			//   dataSourceExtractor(cudaTupleEvaluatorImpl<Scalar>(std::get<I>(function.args())))...);
+
+			runKernel<Pointer,
+					  decltype(CudaVectorHelper<Scalar, Function>::template extractor<Args>())...>(
 			  filename,
 			  kernelName,
 			  (function.shape().size() + (cudaPacketWidth - 1)) / cudaPacketWidth, // Round up
 			  (function.shape().size() + (cudaPacketWidth - 1)) / cudaPacketWidth,
 			  dst,
-			  dataSourceExtractor(cudaTupleEvaluatorImpl<Scalar>(std::get<I>(function.args())))...);
+			  dataSourceExtractor(cudaTupleEvaluatorImpl(std::get<I>(function.args())))...);
 		}
 	} // namespace cuda
 
@@ -468,16 +530,13 @@ namespace librapid {
 			// until a final result is computed
 
 			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
-			constexpr bool allowVectorisation = typetraits::TypeInfo<Function>::allowVectorisation;
-
 			constexpr const char *filename = typetraits::TypeInfo<Functor_>::filename;
 			const char *kernelName = typetraits::TypeInfo<Functor_>::getKernelName(function.args());
 
-			using Scalar = typename ::librapid::cuda::CudaVectoriseIfPossible<
-			  allowVectorisation,
-			  array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>,
-			  Function,
-			  true>::Scalar;
+			using DstType = array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>;
+			using Scalar =
+			  decltype(::librapid::cuda::CudaVectorHelper<DstType,
+														  Function>::template extractor<DstType>());
 
 			const auto args			 = function.args();
 			constexpr size_t argSize = std::tuple_size<decltype(args)>::value;
