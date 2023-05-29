@@ -362,21 +362,20 @@ namespace librapid {
 			return result;
 		}
 
-#define CONCAT_IMPL(x, y) x##y
-#define CONCAT(x, y) CONCAT_IMPL(x, y)
+#	define CONCAT_IMPL(x, y) x##y
+#	define CONCAT(x, y)	  CONCAT_IMPL(x, y)
 
-#if LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH > 1
-#	define CUDA_FLOAT_VECTOR_TYPE CONCAT(jitify::float, LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH)
-#else
-#	define CUDA_FLOAT_VECTOR_TYPE float
-#endif
+#	if LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH > 1
+#		define CUDA_FLOAT_VECTOR_TYPE CONCAT(jitify::float, LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH)
+#	else
+#		define CUDA_FLOAT_VECTOR_TYPE float
+#	endif
 
-#if LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH > 1
-#	define CUDA_DOUBLE_VECTOR_TYPE CONCAT(jitify::double, LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH)
-#else
-#	define CUDA_DOUBLE_VECTOR_TYPE double
-#endif
-
+#	if LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH > 1
+#		define CUDA_DOUBLE_VECTOR_TYPE CONCAT(jitify::double, LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH)
+#	else
+#		define CUDA_DOUBLE_VECTOR_TYPE double
+#	endif
 
 		template<typename T>
 		struct CudaVectorExtractor {
@@ -486,7 +485,9 @@ namespace librapid {
 						   const detail::Function<descriptor, Functor, Args...> &function) {
 			using Function					  = detail::Function<descriptor, Functor, Args...>;
 			using Scalar					  = typename typetraits::TypeInfo<Pointer>::Scalar;
-			constexpr int64_t cudaPacketWidth = typetraits::TypeInfo<Scalar>::cudaPacketWidth;
+			using Helper					  = CudaVectorHelper<Scalar, Function>;
+			using PacketType				  = decltype(Helper::template extractor<Scalar>());
+			constexpr int64_t cudaPacketWidth = typetraits::TypeInfo<PacketType>::cudaPacketWidth;
 
 			// fmt::print("Allow vectorisation: {}\n", allowVectorisation);
 			// fmt::print("Scalar: {}\n", typeid(Scalar).name());
