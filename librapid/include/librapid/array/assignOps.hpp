@@ -317,18 +317,19 @@ namespace librapid {
 														 ::librapid::detail::LibRapidType::Scalar,
 													   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
-			return obj.storage().begin();
+			return obj.storage().begin().get();
 		}
 
 		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
 														 ::librapid::detail::LibRapidType::Scalar,
 													   int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const auto &dataSourceExtractor(const T &obj) {
 			return obj;
 		}
 
 		template<typename T>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cudaTupleEvaluatorImpl(const T &scalar) {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const auto &
+		cudaTupleEvaluatorImpl(const T &scalar) {
 			return scalar;
 		}
 
@@ -380,37 +381,6 @@ namespace librapid {
 			using Scalar = decltype(tester());
 		};
 
-		template<bool OpAllowsVectorisation, typename Dst, typename Src, bool isRet = false>
-		struct CudaVectoriseIfPossible {
-			static constexpr auto tester() {
-				using DstScalar = typename typetraits::TypeInfo<std::decay_t<Dst>>::Scalar;
-				using DstType	= typename CudaVectorExtractor<std::decay_t<Dst>>::Scalar;
-				using SrcType	= typename CudaVectorExtractor<std::decay_t<Src>>::Scalar;
-				constexpr int64_t dstPacketWidth  = typetraits::TypeInfo<DstType>::cudaPacketWidth;
-				constexpr int64_t srcPacketWidth  = typetraits::TypeInfo<SrcType>::cudaPacketWidth;
-				constexpr bool allowVectorisation = typetraits::TypeInfo<Dst>::allowVectorisation &&
-													typetraits::TypeInfo<Src>::allowVectorisation;
-
-				if constexpr (typetraits::TypeInfo<Src>::type == detail::LibRapidType::Scalar) {
-					return DstScalar {};
-				} else if constexpr (OpAllowsVectorisation && allowVectorisation &&
-									 std::is_same_v<DstType, SrcType> &&
-									 dstPacketWidth == srcPacketWidth) {
-					return DstType {};
-				} else {
-					if constexpr (isRet) {
-						using ScalarType = typename typetraits::TypeInfo<Dst>::Scalar;
-						return ScalarType {};
-					} else {
-						using ScalarType = typename typetraits::TypeInfo<Src>::Scalar;
-						return ScalarType {};
-					}
-				}
-			}
-
-			using Scalar = decltype(tester());
-		};
-
 		template<typename... Args>
 		struct CudaCanVectorise {
 		public:
@@ -420,15 +390,15 @@ namespace librapid {
 			}
 
 			static constexpr bool supportsVectorisation =
-			  (typetraits::TypeInfo<Args>::allowVectorisation && ...);
+			  (typetraits::TypeInfo<std::decay_t<Args>>::allowVectorisation && ...);
 			using First = decltype(extractFirst<Args...>());
 			static constexpr bool dtypesAreSame =
-			  (std::is_same_v<typename typetraits::TypeInfo<First>::Scalar,
-							  typename typetraits::TypeInfo<Args>::Scalar> &&
+			  (std::is_same_v<typename typetraits::TypeInfo<std::decay_t<Args>>::Scalar,
+							  typename typetraits::TypeInfo<std::decay_t<Args>>::Scalar> &&
 			   ...);
 			static constexpr bool dtypeSupportsVectorisation =
-			  ((typetraits::TypeInfo<typename CudaVectorExtractor<
-				  typename typetraits::TypeInfo<Args>::Scalar>::Scalar>::cudaPacketWidth > 1) &&
+			  ((typetraits::TypeInfo<typename CudaVectorExtractor<typename typetraits::TypeInfo<
+				  std::decay_t<Args>>::Scalar>::Scalar>::cudaPacketWidth > 1) &&
 			   ...);
 
 		public:
@@ -443,7 +413,10 @@ namespace librapid {
 			template<typename T>
 			static constexpr auto extractor() {
 				using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
-				if constexpr (canVectorise) {
+				if constexpr (typetraits::TypeInfo<std::decay_t<T>>::type ==
+							  ::librapid::detail::LibRapidType::Scalar) {
+					return Scalar {};
+				} else if constexpr (canVectorise) {
 					using Type = typename CudaVectorExtractor<Scalar>::Scalar;
 					return Type {};
 				} else {
@@ -468,10 +441,14 @@ namespace librapid {
 		cudaTupleEvaluator(std::index_sequence<I...>, const std::string &filename,
 						   const std::string &kernelName, Pointer *dst,
 						   const detail::Function<descriptor, Functor, Args...> &function) {
+			// I'm not convinced the logic here is infallible, but it does seem to work.
+			// It is possible that you could use the Pointer type directly to extract the
+			// packet width, but I'm not sure if that would work for all cases.
+
 			using Function					  = detail::Function<descriptor, Functor, Args...>;
 			using Scalar					  = typename typetraits::TypeInfo<Pointer>::Scalar;
-			using Helper					  = CudaVectorHelper<Scalar, Function>;
-			using PacketType				  = decltype(Helper::template extractor<Scalar>());
+			using Helper					  = CudaVectorHelper<Pointer, Function>;
+			using PacketType				  = decltype(Helper::template extractor<Function>());
 			constexpr int64_t cudaPacketWidth = typetraits::TypeInfo<PacketType>::cudaPacketWidth;
 
 			runKernel<Pointer,

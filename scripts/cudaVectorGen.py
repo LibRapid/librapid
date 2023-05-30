@@ -262,6 +262,20 @@ FUNCS = [
         "requireFloating": True
     },
     {
+        "name": "log2",
+        "op": "log2",
+        "opType": "unary",
+        "inplace": False,
+        "requireFloating": True
+    },
+    {
+        "name": "log10",
+        "op": "log10",
+        "opType": "unary",
+        "inplace": False,
+        "requireFloating": True
+    },
+    {
         "name": "sqrt",
         "op": "sqrt",
         "opType": "unary",

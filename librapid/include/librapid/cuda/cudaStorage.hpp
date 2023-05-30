@@ -299,20 +299,20 @@ namespace librapid {
 		}
 
 		template<typename T>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE void cudaSafeDeallocate(T *__restrict data) {
+		LIBRAPID_ALWAYS_INLINE void cudaSafeDeallocate(T *__restrict data) {
 			static_assert(typetraits::TriviallyDefaultConstructible<T>::value,
 						  "Data type must be trivially constructable for use with CUDA");
 			cudaSafeCall(cudaFreeAsync(data, global::cudaStream));
 		}
 
 		template<>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE void
+		LIBRAPID_ALWAYS_INLINE void
 		cudaSafeDeallocate<Complex<float>>(Complex<float> *__restrict data) {
 			cudaSafeCall(cudaFreeAsync(data, global::cudaStream));
 		}
 
 		template<>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE void
+		LIBRAPID_ALWAYS_INLINE void
 		cudaSafeDeallocate<Complex<double>>(Complex<double> *__restrict data) {
 			cudaSafeCall(cudaFreeAsync(data, global::cudaStream));
 		}

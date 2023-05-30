@@ -174,11 +174,11 @@ using CUDA				   = lrc::backend::CUDA;
 			}                                                                                      \
 		}                                                                                          \
                                                                                                    \
-		auto negResult = (-testA).eval();                                                           \
-		bool negValid = true;                                                                      \
+		auto negResult = (-testA).eval();                                                          \
+		bool negValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
-			if (!(negResult.scalar(i) == -(testA.scalar(i)))) {                                      \
-				REQUIRE(lrc::isClose(negResult.scalar(i), -(testA.scalar(i)), tolerance));           \
+			if (!(negResult.scalar(i) == -(testA.scalar(i)))) {                                    \
+				REQUIRE(lrc::isClose(negResult.scalar(i), -(testA.scalar(i)), tolerance));         \
 				negValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \

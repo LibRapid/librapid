@@ -64,11 +64,11 @@ DEFAULT: OFF
 
 Add FFTW as a dependency and link it with LibRapid. This is required for FFT support unless CUDA is enabled.
 
-```danger
+:::{danger}
 FFTW is licensed under the GPL, which is not compatible with LibRapid's MIT license. If you are using LibRapid as a
 dependency in an open source project, you may need to use LibRapid under a GPL license. If you forget, you'll
 ***probably*** be fine, but I can't guarantee anything. I'm not a lawyer, so don't take my word for it.
-```
+:::
 
 ### ``LIBRAPID_GET_BLAS``
 
@@ -79,9 +79,9 @@ DEFAULT: OFF
 Download a precompiled OpenBLAS build for your platform, and link it with LibRapid. This is useful if you don't
 (or can't) have BLAS installed on your system.
 
-```warning
+:::{warning}
 Always prefer to use your system's BLAS installation if possible.
-```
+:::
 
 ### ``LIBRAPID_USE_CUDA``
 
@@ -95,11 +95,11 @@ Search for CUDA and link LibRapid with it. This is required for GPU support.
 If this flag is enabled and CUDA is not found installed on the system, the build will continue without CUDA support.
 :::
 
-```danger
+:::{danger}
 LibRapid's CUDA support appears to only works on Windows, for some reason. I have no way of testing it on Linux or
 MacOS, so I can't guarantee that it will work. If you have experience in this area, please feel free to contact me and
-we can work together to get it working. 
-```
+we can work together to get it working.
+:::
 
 ### ``LIBRAPID_USE_OMP``
 
@@ -110,9 +110,9 @@ DEFAULT: ON
 If OpenMP is found on the system, link LibRapid with it. This is required for multi-threading support and can
 significantly improve performance.
 
-```warning
+:::{warning}
 If this flag is enabled and OpenMP is not found installed on the system, the build will continue without OpenMP support.
-```
+:::
 
 ### ``LIBRAPID_USE_MULTIPREC``
 
@@ -123,9 +123,9 @@ DEFAULT: OFF
 If MPIR and MPFR are found on the system, LibRapid will automatically link with them. If not, LibRapid will build
 custom, modified versions of these libraries. This is required for arbitrary precision support.
 
-```warning
+:::{warning}
 This can lead to longer build times and larger binaries.
-```
+:::
 
 ### ``LIBRAPID_OPTIMISE_SMALL_ARRAYS``
 
@@ -183,10 +183,10 @@ DEFAULT: OFF
 Prevent the inclusion of ``windows.h`` in LibRapid's headers. Sometimes the macros and functions defined in this header
 can cause conflicts with other libraries, so this option is provided to prevent this.
 
-```danger
+:::{danger}
 It is not possible to fully remove ``windows.h`` when compiling with CUDA support on Windows, but many of the modules
 are still disabled. There is a possiblity that conflicts will still arise, but I am yet to encounter any.
-```
+:::
 
 ### ``LIBRAPID_MKL_CONFIG_PATH``
 

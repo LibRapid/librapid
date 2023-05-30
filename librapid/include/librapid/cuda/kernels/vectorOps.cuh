@@ -29,41 +29,41 @@
 #define IOF(R, O) inline R operator O
 
 IOF(F2,+)(CO F2 &a,CO F2 &b){MF2(a.x+b.x,a.y+b.y);}
-IOF(F2,+)(CO F2 &a,CO FL &b){MF2(a.x + b,a.y + b);}
-IOF(F2,+)(CO FL &a,CO F2 &b){MF2(a + b.x,a + b.y);}
+IOF(F2,+)(CO F2 &a,CO FL &b){MF2(a.x+b,a.y+b);}
+IOF(F2,+)(CO FL &a,CO F2 &b){MF2(a+b.x,a+b.y);}
 IOF(F3,+)(CO F3 &a,CO F3 &b){MF3(a.x+b.x,a.y+b.y,a.z+b.z);}
-IOF(F3,+)(CO F3 &a,CO FL &b){MF3(a.x + b,a.y + b,a.z + b);}
-IOF(F3,+)(CO FL &a,CO F3 &b){MF3(a + b.x,a + b.y,a + b.z);}
+IOF(F3,+)(CO F3 &a,CO FL &b){MF3(a.x+b,a.y+b,a.z+b);}
+IOF(F3,+)(CO FL &a,CO F3 &b){MF3(a+b.x,a+b.y,a+b.z);}
 IOF(F4,+)(CO F4 &a,CO F4 &b){MF4(a.x+b.x,a.y+b.y,a.z+b.z,a.w+b.w);}
-IOF(F4,+)(CO F4 &a,CO FL &b){MF4(a.x + b,a.y + b,a.z + b,a.w + b);}
-IOF(F4,+)(CO FL &a,CO F4 &b){MF4(a + b.x,a + b.y,a + b.z,a + b.w);}
+IOF(F4,+)(CO F4 &a,CO FL &b){MF4(a.x+b,a.y+b,a.z+b,a.w+b);}
+IOF(F4,+)(CO FL &a,CO F4 &b){MF4(a+b.x,a+b.y,a+b.z,a+b.w);}
 IOF(F2,-)(CO F2 &a,CO F2 &b){MF2(a.x-b.x,a.y-b.y);}
-IOF(F2,-)(CO F2 &a,CO FL &b){MF2(a.x - b,a.y - b);}
-IOF(F2,-)(CO FL &a,CO F2 &b){MF2(a - b.x,a - b.y);}
+IOF(F2,-)(CO F2 &a,CO FL &b){MF2(a.x-b,a.y-b);}
+IOF(F2,-)(CO FL &a,CO F2 &b){MF2(a-b.x,a-b.y);}
 IOF(F3,-)(CO F3 &a,CO F3 &b){MF3(a.x-b.x,a.y-b.y,a.z-b.z);}
-IOF(F3,-)(CO F3 &a,CO FL &b){MF3(a.x - b,a.y - b,a.z - b);}
-IOF(F3,-)(CO FL &a,CO F3 &b){MF3(a - b.x,a - b.y,a - b.z);}
+IOF(F3,-)(CO F3 &a,CO FL &b){MF3(a.x-b,a.y-b,a.z-b);}
+IOF(F3,-)(CO FL &a,CO F3 &b){MF3(a-b.x,a-b.y,a-b.z);}
 IOF(F4,-)(CO F4 &a,CO F4 &b){MF4(a.x-b.x,a.y-b.y,a.z-b.z,a.w-b.w);}
-IOF(F4,-)(CO F4 &a,CO FL &b){MF4(a.x - b,a.y - b,a.z - b,a.w - b);}
-IOF(F4,-)(CO FL &a,CO F4 &b){MF4(a - b.x,a - b.y,a - b.z,a - b.w);}
+IOF(F4,-)(CO F4 &a,CO FL &b){MF4(a.x-b,a.y-b,a.z-b,a.w-b);}
+IOF(F4,-)(CO FL &a,CO F4 &b){MF4(a-b.x,a-b.y,a-b.z,a-b.w);}
 IOF(F2,*)(CO F2 &a,CO F2 &b){MF2(a.x*b.x,a.y*b.y);}
-IOF(F2,*)(CO F2 &a,CO FL &b){MF2(a.x * b,a.y * b);}
-IOF(F2,*)(CO FL &a,CO F2 &b){MF2(a * b.x,a * b.y);}
+IOF(F2,*)(CO F2 &a,CO FL &b){MF2(a.x*b,a.y*b);}
+IOF(F2,*)(CO FL &a,CO F2 &b){MF2(a*b.x,a*b.y);}
 IOF(F3,*)(CO F3 &a,CO F3 &b){MF3(a.x*b.x,a.y*b.y,a.z*b.z);}
-IOF(F3,*)(CO F3 &a,CO FL &b){MF3(a.x * b,a.y * b,a.z * b);}
-IOF(F3,*)(CO FL &a,CO F3 &b){MF3(a * b.x,a * b.y,a * b.z);}
+IOF(F3,*)(CO F3 &a,CO FL &b){MF3(a.x*b,a.y*b,a.z*b);}
+IOF(F3,*)(CO FL &a,CO F3 &b){MF3(a*b.x,a*b.y,a*b.z);}
 IOF(F4,*)(CO F4 &a,CO F4 &b){MF4(a.x*b.x,a.y*b.y,a.z*b.z,a.w*b.w);}
-IOF(F4,*)(CO F4 &a,CO FL &b){MF4(a.x * b,a.y * b,a.z * b,a.w * b);}
-IOF(F4,*)(CO FL &a,CO F4 &b){MF4(a * b.x,a * b.y,a * b.z,a * b.w);}
+IOF(F4,*)(CO F4 &a,CO FL &b){MF4(a.x*b,a.y*b,a.z*b,a.w*b);}
+IOF(F4,*)(CO FL &a,CO F4 &b){MF4(a*b.x,a*b.y,a*b.z,a*b.w);}
 IOF(F2,/)(CO F2 &a,CO F2 &b){MF2(a.x/b.x,a.y/b.y);}
-IOF(F2,/)(CO F2 &a,CO FL &b){MF2(a.x / b,a.y / b);}
-IOF(F2,/)(CO FL &a,CO F2 &b){MF2(a / b.x,a / b.y);}
+IOF(F2,/)(CO F2 &a,CO FL &b){MF2(a.x/b,a.y/b);}
+IOF(F2,/)(CO FL &a,CO F2 &b){MF2(a/b.x,a/b.y);}
 IOF(F3,/)(CO F3 &a,CO F3 &b){MF3(a.x/b.x,a.y/b.y,a.z/b.z);}
-IOF(F3,/)(CO F3 &a,CO FL &b){MF3(a.x / b,a.y / b,a.z / b);}
-IOF(F3,/)(CO FL &a,CO F3 &b){MF3(a / b.x,a / b.y,a / b.z);}
+IOF(F3,/)(CO F3 &a,CO FL &b){MF3(a.x/b,a.y/b,a.z/b);}
+IOF(F3,/)(CO FL &a,CO F3 &b){MF3(a/b.x,a/b.y,a/b.z);}
 IOF(F4,/)(CO F4 &a,CO F4 &b){MF4(a.x/b.x,a.y/b.y,a.z/b.z,a.w/b.w);}
-IOF(F4,/)(CO F4 &a,CO FL &b){MF4(a.x / b,a.y / b,a.z / b,a.w / b);}
-IOF(F4,/)(CO FL &a,CO F4 &b){MF4(a / b.x,a / b.y,a / b.z,a / b.w);}
+IOF(F4,/)(CO F4 &a,CO FL &b){MF4(a.x/b,a.y/b,a.z/b,a.w/b);}
+IOF(F4,/)(CO FL &a,CO F4 &b){MF4(a/b.x,a/b.y,a/b.z,a/b.w);}
 IOF(F2,+=)(F2 &a,CO F2 &b){MF2N(a.x+b.x,a.y+b.y);}
 IOF(F2,+=)(F2 &a,CO FL &b){MF2N(a.x + b,a.y + b);}
 IOF(F3,+=)(F3 &a,CO F3 &b){MF3N(a.x+b.x,a.y+b.y,a.z+b.z);}
@@ -89,59 +89,59 @@ IOF(F3,/=)(F3 &a,CO FL &b){MF3N(a.x / b,a.y / b,a.z / b);}
 IOF(F4,/=)(F4 &a,CO F4 &b){MF4N(a.x/b.x,a.y/b.y,a.z/b.z,a.w/b.w);}
 IOF(F4,/=)(F4 &a,CO FL &b){MF4N(a.x / b,a.y / b,a.z / b,a.w / b);}
 IOF(F2,>)(CO F2 &a,CO F2 &b){MF2(a.x>b.x,a.y>b.y);}
-IOF(F2,>)(CO F2 &a,CO FL &b){MF2(a.x > b,a.y > b);}
-IOF(F2,>)(CO FL &a,CO F2 &b){MF2(a > b.x,a > b.y);}
+IOF(F2,>)(CO F2 &a,CO FL &b){MF2(a.x>b,a.y>b);}
+IOF(F2,>)(CO FL &a,CO F2 &b){MF2(a>b.x,a>b.y);}
 IOF(F3,>)(CO F3 &a,CO F3 &b){MF3(a.x>b.x,a.y>b.y,a.z>b.z);}
-IOF(F3,>)(CO F3 &a,CO FL &b){MF3(a.x > b,a.y > b,a.z > b);}
-IOF(F3,>)(CO FL &a,CO F3 &b){MF3(a > b.x,a > b.y,a > b.z);}
+IOF(F3,>)(CO F3 &a,CO FL &b){MF3(a.x>b,a.y>b,a.z>b);}
+IOF(F3,>)(CO FL &a,CO F3 &b){MF3(a>b.x,a>b.y,a>b.z);}
 IOF(F4,>)(CO F4 &a,CO F4 &b){MF4(a.x>b.x,a.y>b.y,a.z>b.z,a.w>b.w);}
-IOF(F4,>)(CO F4 &a,CO FL &b){MF4(a.x > b,a.y > b,a.z > b,a.w > b);}
-IOF(F4,>)(CO FL &a,CO F4 &b){MF4(a > b.x,a > b.y,a > b.z,a > b.w);}
+IOF(F4,>)(CO F4 &a,CO FL &b){MF4(a.x>b,a.y>b,a.z>b,a.w>b);}
+IOF(F4,>)(CO FL &a,CO F4 &b){MF4(a>b.x,a>b.y,a>b.z,a>b.w);}
 IOF(F2,<)(CO F2 &a,CO F2 &b){MF2(a.x<b.x,a.y<b.y);}
-IOF(F2,<)(CO F2 &a,CO FL &b){MF2(a.x < b,a.y < b);}
-IOF(F2,<)(CO FL &a,CO F2 &b){MF2(a < b.x,a < b.y);}
+IOF(F2,<)(CO F2 &a,CO FL &b){MF2(a.x<b,a.y<b);}
+IOF(F2,<)(CO FL &a,CO F2 &b){MF2(a<b.x,a<b.y);}
 IOF(F3,<)(CO F3 &a,CO F3 &b){MF3(a.x<b.x,a.y<b.y,a.z<b.z);}
-IOF(F3,<)(CO F3 &a,CO FL &b){MF3(a.x < b,a.y < b,a.z < b);}
-IOF(F3,<)(CO FL &a,CO F3 &b){MF3(a < b.x,a < b.y,a < b.z);}
+IOF(F3,<)(CO F3 &a,CO FL &b){MF3(a.x<b,a.y<b,a.z<b);}
+IOF(F3,<)(CO FL &a,CO F3 &b){MF3(a<b.x,a<b.y,a<b.z);}
 IOF(F4,<)(CO F4 &a,CO F4 &b){MF4(a.x<b.x,a.y<b.y,a.z<b.z,a.w<b.w);}
-IOF(F4,<)(CO F4 &a,CO FL &b){MF4(a.x < b,a.y < b,a.z < b,a.w < b);}
-IOF(F4,<)(CO FL &a,CO F4 &b){MF4(a < b.x,a < b.y,a < b.z,a < b.w);}
+IOF(F4,<)(CO F4 &a,CO FL &b){MF4(a.x<b,a.y<b,a.z<b,a.w<b);}
+IOF(F4,<)(CO FL &a,CO F4 &b){MF4(a<b.x,a<b.y,a<b.z,a<b.w);}
 IOF(F2,>=)(CO F2 &a,CO F2 &b){MF2(a.x>=b.x,a.y>=b.y);}
-IOF(F2,>=)(CO F2 &a,CO FL &b){MF2(a.x >= b,a.y >= b);}
-IOF(F2,>=)(CO FL &a,CO F2 &b){MF2(a >= b.x,a >= b.y);}
+IOF(F2,>=)(CO F2 &a,CO FL &b){MF2(a.x>=b,a.y>=b);}
+IOF(F2,>=)(CO FL &a,CO F2 &b){MF2(a>=b.x,a>=b.y);}
 IOF(F3,>=)(CO F3 &a,CO F3 &b){MF3(a.x>=b.x,a.y>=b.y,a.z>=b.z);}
-IOF(F3,>=)(CO F3 &a,CO FL &b){MF3(a.x >= b,a.y >= b,a.z >= b);}
-IOF(F3,>=)(CO FL &a,CO F3 &b){MF3(a >= b.x,a >= b.y,a >= b.z);}
+IOF(F3,>=)(CO F3 &a,CO FL &b){MF3(a.x>=b,a.y>=b,a.z>=b);}
+IOF(F3,>=)(CO FL &a,CO F3 &b){MF3(a>=b.x,a>=b.y,a>=b.z);}
 IOF(F4,>=)(CO F4 &a,CO F4 &b){MF4(a.x>=b.x,a.y>=b.y,a.z>=b.z,a.w>=b.w);}
-IOF(F4,>=)(CO F4 &a,CO FL &b){MF4(a.x >= b,a.y >= b,a.z >= b,a.w >= b);}
-IOF(F4,>=)(CO FL &a,CO F4 &b){MF4(a >= b.x,a >= b.y,a >= b.z,a >= b.w);}
+IOF(F4,>=)(CO F4 &a,CO FL &b){MF4(a.x>=b,a.y>=b,a.z>=b,a.w>=b);}
+IOF(F4,>=)(CO FL &a,CO F4 &b){MF4(a>=b.x,a>=b.y,a>=b.z,a>=b.w);}
 IOF(F2,<=)(CO F2 &a,CO F2 &b){MF2(a.x<=b.x,a.y<=b.y);}
-IOF(F2,<=)(CO F2 &a,CO FL &b){MF2(a.x <= b,a.y <= b);}
-IOF(F2,<=)(CO FL &a,CO F2 &b){MF2(a <= b.x,a <= b.y);}
+IOF(F2,<=)(CO F2 &a,CO FL &b){MF2(a.x<=b,a.y<=b);}
+IOF(F2,<=)(CO FL &a,CO F2 &b){MF2(a<=b.x,a<=b.y);}
 IOF(F3,<=)(CO F3 &a,CO F3 &b){MF3(a.x<=b.x,a.y<=b.y,a.z<=b.z);}
-IOF(F3,<=)(CO F3 &a,CO FL &b){MF3(a.x <= b,a.y <= b,a.z <= b);}
-IOF(F3,<=)(CO FL &a,CO F3 &b){MF3(a <= b.x,a <= b.y,a <= b.z);}
+IOF(F3,<=)(CO F3 &a,CO FL &b){MF3(a.x<=b,a.y<=b,a.z<=b);}
+IOF(F3,<=)(CO FL &a,CO F3 &b){MF3(a<=b.x,a<=b.y,a<=b.z);}
 IOF(F4,<=)(CO F4 &a,CO F4 &b){MF4(a.x<=b.x,a.y<=b.y,a.z<=b.z,a.w<=b.w);}
-IOF(F4,<=)(CO F4 &a,CO FL &b){MF4(a.x <= b,a.y <= b,a.z <= b,a.w <= b);}
-IOF(F4,<=)(CO FL &a,CO F4 &b){MF4(a <= b.x,a <= b.y,a <= b.z,a <= b.w);}
+IOF(F4,<=)(CO F4 &a,CO FL &b){MF4(a.x<=b,a.y<=b,a.z<=b,a.w<=b);}
+IOF(F4,<=)(CO FL &a,CO F4 &b){MF4(a<=b.x,a<=b.y,a<=b.z,a<=b.w);}
 IOF(F2,==)(CO F2 &a,CO F2 &b){MF2(a.x==b.x,a.y==b.y);}
-IOF(F2,==)(CO F2 &a,CO FL &b){MF2(a.x == b,a.y == b);}
-IOF(F2,==)(CO FL &a,CO F2 &b){MF2(a == b.x,a == b.y);}
+IOF(F2,==)(CO F2 &a,CO FL &b){MF2(a.x==b,a.y==b);}
+IOF(F2,==)(CO FL &a,CO F2 &b){MF2(a==b.x,a==b.y);}
 IOF(F3,==)(CO F3 &a,CO F3 &b){MF3(a.x==b.x,a.y==b.y,a.z==b.z);}
-IOF(F3,==)(CO F3 &a,CO FL &b){MF3(a.x == b,a.y == b,a.z == b);}
-IOF(F3,==)(CO FL &a,CO F3 &b){MF3(a == b.x,a == b.y,a == b.z);}
+IOF(F3,==)(CO F3 &a,CO FL &b){MF3(a.x==b,a.y==b,a.z==b);}
+IOF(F3,==)(CO FL &a,CO F3 &b){MF3(a==b.x,a==b.y,a==b.z);}
 IOF(F4,==)(CO F4 &a,CO F4 &b){MF4(a.x==b.x,a.y==b.y,a.z==b.z,a.w==b.w);}
-IOF(F4,==)(CO F4 &a,CO FL &b){MF4(a.x == b,a.y == b,a.z == b,a.w == b);}
-IOF(F4,==)(CO FL &a,CO F4 &b){MF4(a == b.x,a == b.y,a == b.z,a == b.w);}
+IOF(F4,==)(CO F4 &a,CO FL &b){MF4(a.x==b,a.y==b,a.z==b,a.w==b);}
+IOF(F4,==)(CO FL &a,CO F4 &b){MF4(a==b.x,a==b.y,a==b.z,a==b.w);}
 IOF(F2,!=)(CO F2 &a,CO F2 &b){MF2(a.x!=b.x,a.y!=b.y);}
-IOF(F2,!=)(CO F2 &a,CO FL &b){MF2(a.x != b,a.y != b);}
-IOF(F2,!=)(CO FL &a,CO F2 &b){MF2(a != b.x,a != b.y);}
+IOF(F2,!=)(CO F2 &a,CO FL &b){MF2(a.x!=b,a.y!=b);}
+IOF(F2,!=)(CO FL &a,CO F2 &b){MF2(a!=b.x,a!=b.y);}
 IOF(F3,!=)(CO F3 &a,CO F3 &b){MF3(a.x!=b.x,a.y!=b.y,a.z!=b.z);}
-IOF(F3,!=)(CO F3 &a,CO FL &b){MF3(a.x != b,a.y != b,a.z != b);}
-IOF(F3,!=)(CO FL &a,CO F3 &b){MF3(a != b.x,a != b.y,a != b.z);}
+IOF(F3,!=)(CO F3 &a,CO FL &b){MF3(a.x!=b,a.y!=b,a.z!=b);}
+IOF(F3,!=)(CO FL &a,CO F3 &b){MF3(a!=b.x,a!=b.y,a!=b.z);}
 IOF(F4,!=)(CO F4 &a,CO F4 &b){MF4(a.x!=b.x,a.y!=b.y,a.z!=b.z,a.w!=b.w);}
-IOF(F4,!=)(CO F4 &a,CO FL &b){MF4(a.x != b,a.y != b,a.z != b,a.w != b);}
-IOF(F4,!=)(CO FL &a,CO F4 &b){MF4(a != b.x,a != b.y,a != b.z,a != b.w);}
+IOF(F4,!=)(CO F4 &a,CO FL &b){MF4(a.x!=b,a.y!=b,a.z!=b,a.w!=b);}
+IOF(F4,!=)(CO FL &a,CO F4 &b){MF4(a!=b.x,a!=b.y,a!=b.z,a!=b.w);}
 inline F2 sin(CO F2 &a){MF2(sin(a.x),sin(a.y));}
 inline F3 sin(CO F3 &a){MF3(sin(a.x),sin(a.y),sin(a.z));}
 inline F4 sin(CO F4 &a){MF4(sin(a.x),sin(a.y),sin(a.z),sin(a.w));}
@@ -184,6 +184,12 @@ inline F4 exp(CO F4 &a){MF4(exp(a.x),exp(a.y),exp(a.z),exp(a.w));}
 inline F2 log(CO F2 &a){MF2(log(a.x),log(a.y));}
 inline F3 log(CO F3 &a){MF3(log(a.x),log(a.y),log(a.z));}
 inline F4 log(CO F4 &a){MF4(log(a.x),log(a.y),log(a.z),log(a.w));}
+inline F2 log2(CO F2 &a){MF2(log2(a.x),log2(a.y));}
+inline F3 log2(CO F3 &a){MF3(log2(a.x),log2(a.y),log2(a.z));}
+inline F4 log2(CO F4 &a){MF4(log2(a.x),log2(a.y),log2(a.z),log2(a.w));}
+inline F2 log10(CO F2 &a){MF2(log10(a.x),log10(a.y));}
+inline F3 log10(CO F3 &a){MF3(log10(a.x),log10(a.y),log10(a.z));}
+inline F4 log10(CO F4 &a){MF4(log10(a.x),log10(a.y),log10(a.z),log10(a.w));}
 inline F2 sqrt(CO F2 &a){MF2(sqrt(a.x),sqrt(a.y));}
 inline F3 sqrt(CO F3 &a){MF3(sqrt(a.x),sqrt(a.y),sqrt(a.z));}
 inline F4 sqrt(CO F4 &a){MF4(sqrt(a.x),sqrt(a.y),sqrt(a.z),sqrt(a.w));}
@@ -200,41 +206,41 @@ inline F2 floor(CO F2 &a){MF2(floor(a.x),floor(a.y));}
 inline F3 floor(CO F3 &a){MF3(floor(a.x),floor(a.y),floor(a.z));}
 inline F4 floor(CO F4 &a){MF4(floor(a.x),floor(a.y),floor(a.z),floor(a.w));}
 IOF(D2,+)(CO D2 &a,CO D2 &b){MD2(a.x+b.x,a.y+b.y);}
-IOF(D2,+)(CO D2 &a,CO DL &b){MD2(a.x + b,a.y + b);}
-IOF(D2,+)(CO DL &a,CO D2 &b){MD2(a + b.x,a + b.y);}
+IOF(D2,+)(CO D2 &a,CO DL &b){MD2(a.x+b,a.y+b);}
+IOF(D2,+)(CO DL &a,CO D2 &b){MD2(a+b.x,a+b.y);}
 IOF(D3,+)(CO D3 &a,CO D3 &b){MD3(a.x+b.x,a.y+b.y,a.z+b.z);}
-IOF(D3,+)(CO D3 &a,CO DL &b){MD3(a.x + b,a.y + b,a.z + b);}
-IOF(D3,+)(CO DL &a,CO D3 &b){MD3(a + b.x,a + b.y,a + b.z);}
+IOF(D3,+)(CO D3 &a,CO DL &b){MD3(a.x+b,a.y+b,a.z+b);}
+IOF(D3,+)(CO DL &a,CO D3 &b){MD3(a+b.x,a+b.y,a+b.z);}
 IOF(D4,+)(CO D4 &a,CO D4 &b){MD4(a.x+b.x,a.y+b.y,a.z+b.z,a.w+b.w);}
-IOF(D4,+)(CO D4 &a,CO DL &b){MD4(a.x + b,a.y + b,a.z + b,a.w + b);}
-IOF(D4,+)(CO DL &a,CO D4 &b){MD4(a + b.x,a + b.y,a + b.z,a + b.w);}
+IOF(D4,+)(CO D4 &a,CO DL &b){MD4(a.x+b,a.y+b,a.z+b,a.w+b);}
+IOF(D4,+)(CO DL &a,CO D4 &b){MD4(a+b.x,a+b.y,a+b.z,a+b.w);}
 IOF(D2,-)(CO D2 &a,CO D2 &b){MD2(a.x-b.x,a.y-b.y);}
-IOF(D2,-)(CO D2 &a,CO DL &b){MD2(a.x - b,a.y - b);}
-IOF(D2,-)(CO DL &a,CO D2 &b){MD2(a - b.x,a - b.y);}
+IOF(D2,-)(CO D2 &a,CO DL &b){MD2(a.x-b,a.y-b);}
+IOF(D2,-)(CO DL &a,CO D2 &b){MD2(a-b.x,a-b.y);}
 IOF(D3,-)(CO D3 &a,CO D3 &b){MD3(a.x-b.x,a.y-b.y,a.z-b.z);}
-IOF(D3,-)(CO D3 &a,CO DL &b){MD3(a.x - b,a.y - b,a.z - b);}
-IOF(D3,-)(CO DL &a,CO D3 &b){MD3(a - b.x,a - b.y,a - b.z);}
+IOF(D3,-)(CO D3 &a,CO DL &b){MD3(a.x-b,a.y-b,a.z-b);}
+IOF(D3,-)(CO DL &a,CO D3 &b){MD3(a-b.x,a-b.y,a-b.z);}
 IOF(D4,-)(CO D4 &a,CO D4 &b){MD4(a.x-b.x,a.y-b.y,a.z-b.z,a.w-b.w);}
-IOF(D4,-)(CO D4 &a,CO DL &b){MD4(a.x - b,a.y - b,a.z - b,a.w - b);}
-IOF(D4,-)(CO DL &a,CO D4 &b){MD4(a - b.x,a - b.y,a - b.z,a - b.w);}
+IOF(D4,-)(CO D4 &a,CO DL &b){MD4(a.x-b,a.y-b,a.z-b,a.w-b);}
+IOF(D4,-)(CO DL &a,CO D4 &b){MD4(a-b.x,a-b.y,a-b.z,a-b.w);}
 IOF(D2,*)(CO D2 &a,CO D2 &b){MD2(a.x*b.x,a.y*b.y);}
-IOF(D2,*)(CO D2 &a,CO DL &b){MD2(a.x * b,a.y * b);}
-IOF(D2,*)(CO DL &a,CO D2 &b){MD2(a * b.x,a * b.y);}
+IOF(D2,*)(CO D2 &a,CO DL &b){MD2(a.x*b,a.y*b);}
+IOF(D2,*)(CO DL &a,CO D2 &b){MD2(a*b.x,a*b.y);}
 IOF(D3,*)(CO D3 &a,CO D3 &b){MD3(a.x*b.x,a.y*b.y,a.z*b.z);}
-IOF(D3,*)(CO D3 &a,CO DL &b){MD3(a.x * b,a.y * b,a.z * b);}
-IOF(D3,*)(CO DL &a,CO D3 &b){MD3(a * b.x,a * b.y,a * b.z);}
+IOF(D3,*)(CO D3 &a,CO DL &b){MD3(a.x*b,a.y*b,a.z*b);}
+IOF(D3,*)(CO DL &a,CO D3 &b){MD3(a*b.x,a*b.y,a*b.z);}
 IOF(D4,*)(CO D4 &a,CO D4 &b){MD4(a.x*b.x,a.y*b.y,a.z*b.z,a.w*b.w);}
-IOF(D4,*)(CO D4 &a,CO DL &b){MD4(a.x * b,a.y * b,a.z * b,a.w * b);}
-IOF(D4,*)(CO DL &a,CO D4 &b){MD4(a * b.x,a * b.y,a * b.z,a * b.w);}
+IOF(D4,*)(CO D4 &a,CO DL &b){MD4(a.x*b,a.y*b,a.z*b,a.w*b);}
+IOF(D4,*)(CO DL &a,CO D4 &b){MD4(a*b.x,a*b.y,a*b.z,a*b.w);}
 IOF(D2,/)(CO D2 &a,CO D2 &b){MD2(a.x/b.x,a.y/b.y);}
-IOF(D2,/)(CO D2 &a,CO DL &b){MD2(a.x / b,a.y / b);}
-IOF(D2,/)(CO DL &a,CO D2 &b){MD2(a / b.x,a / b.y);}
+IOF(D2,/)(CO D2 &a,CO DL &b){MD2(a.x/b,a.y/b);}
+IOF(D2,/)(CO DL &a,CO D2 &b){MD2(a/b.x,a/b.y);}
 IOF(D3,/)(CO D3 &a,CO D3 &b){MD3(a.x/b.x,a.y/b.y,a.z/b.z);}
-IOF(D3,/)(CO D3 &a,CO DL &b){MD3(a.x / b,a.y / b,a.z / b);}
-IOF(D3,/)(CO DL &a,CO D3 &b){MD3(a / b.x,a / b.y,a / b.z);}
+IOF(D3,/)(CO D3 &a,CO DL &b){MD3(a.x/b,a.y/b,a.z/b);}
+IOF(D3,/)(CO DL &a,CO D3 &b){MD3(a/b.x,a/b.y,a/b.z);}
 IOF(D4,/)(CO D4 &a,CO D4 &b){MD4(a.x/b.x,a.y/b.y,a.z/b.z,a.w/b.w);}
-IOF(D4,/)(CO D4 &a,CO DL &b){MD4(a.x / b,a.y / b,a.z / b,a.w / b);}
-IOF(D4,/)(CO DL &a,CO D4 &b){MD4(a / b.x,a / b.y,a / b.z,a / b.w);}
+IOF(D4,/)(CO D4 &a,CO DL &b){MD4(a.x/b,a.y/b,a.z/b,a.w/b);}
+IOF(D4,/)(CO DL &a,CO D4 &b){MD4(a/b.x,a/b.y,a/b.z,a/b.w);}
 IOF(D2,+=)(D2 &a,CO D2 &b){MD2N(a.x+b.x,a.y+b.y);}
 IOF(D2,+=)(D2 &a,CO DL &b){MD2N(a.x + b,a.y + b);}
 IOF(D3,+=)(D3 &a,CO D3 &b){MD3N(a.x+b.x,a.y+b.y,a.z+b.z);}
@@ -260,59 +266,59 @@ IOF(D3,/=)(D3 &a,CO DL &b){MD3N(a.x / b,a.y / b,a.z / b);}
 IOF(D4,/=)(D4 &a,CO D4 &b){MD4N(a.x/b.x,a.y/b.y,a.z/b.z,a.w/b.w);}
 IOF(D4,/=)(D4 &a,CO DL &b){MD4N(a.x / b,a.y / b,a.z / b,a.w / b);}
 IOF(D2,>)(CO D2 &a,CO D2 &b){MD2(a.x>b.x,a.y>b.y);}
-IOF(D2,>)(CO D2 &a,CO DL &b){MD2(a.x > b,a.y > b);}
-IOF(D2,>)(CO DL &a,CO D2 &b){MD2(a > b.x,a > b.y);}
+IOF(D2,>)(CO D2 &a,CO DL &b){MD2(a.x>b,a.y>b);}
+IOF(D2,>)(CO DL &a,CO D2 &b){MD2(a>b.x,a>b.y);}
 IOF(D3,>)(CO D3 &a,CO D3 &b){MD3(a.x>b.x,a.y>b.y,a.z>b.z);}
-IOF(D3,>)(CO D3 &a,CO DL &b){MD3(a.x > b,a.y > b,a.z > b);}
-IOF(D3,>)(CO DL &a,CO D3 &b){MD3(a > b.x,a > b.y,a > b.z);}
+IOF(D3,>)(CO D3 &a,CO DL &b){MD3(a.x>b,a.y>b,a.z>b);}
+IOF(D3,>)(CO DL &a,CO D3 &b){MD3(a>b.x,a>b.y,a>b.z);}
 IOF(D4,>)(CO D4 &a,CO D4 &b){MD4(a.x>b.x,a.y>b.y,a.z>b.z,a.w>b.w);}
-IOF(D4,>)(CO D4 &a,CO DL &b){MD4(a.x > b,a.y > b,a.z > b,a.w > b);}
-IOF(D4,>)(CO DL &a,CO D4 &b){MD4(a > b.x,a > b.y,a > b.z,a > b.w);}
+IOF(D4,>)(CO D4 &a,CO DL &b){MD4(a.x>b,a.y>b,a.z>b,a.w>b);}
+IOF(D4,>)(CO DL &a,CO D4 &b){MD4(a>b.x,a>b.y,a>b.z,a>b.w);}
 IOF(D2,<)(CO D2 &a,CO D2 &b){MD2(a.x<b.x,a.y<b.y);}
-IOF(D2,<)(CO D2 &a,CO DL &b){MD2(a.x < b,a.y < b);}
-IOF(D2,<)(CO DL &a,CO D2 &b){MD2(a < b.x,a < b.y);}
+IOF(D2,<)(CO D2 &a,CO DL &b){MD2(a.x<b,a.y<b);}
+IOF(D2,<)(CO DL &a,CO D2 &b){MD2(a<b.x,a<b.y);}
 IOF(D3,<)(CO D3 &a,CO D3 &b){MD3(a.x<b.x,a.y<b.y,a.z<b.z);}
-IOF(D3,<)(CO D3 &a,CO DL &b){MD3(a.x < b,a.y < b,a.z < b);}
-IOF(D3,<)(CO DL &a,CO D3 &b){MD3(a < b.x,a < b.y,a < b.z);}
+IOF(D3,<)(CO D3 &a,CO DL &b){MD3(a.x<b,a.y<b,a.z<b);}
+IOF(D3,<)(CO DL &a,CO D3 &b){MD3(a<b.x,a<b.y,a<b.z);}
 IOF(D4,<)(CO D4 &a,CO D4 &b){MD4(a.x<b.x,a.y<b.y,a.z<b.z,a.w<b.w);}
-IOF(D4,<)(CO D4 &a,CO DL &b){MD4(a.x < b,a.y < b,a.z < b,a.w < b);}
-IOF(D4,<)(CO DL &a,CO D4 &b){MD4(a < b.x,a < b.y,a < b.z,a < b.w);}
+IOF(D4,<)(CO D4 &a,CO DL &b){MD4(a.x<b,a.y<b,a.z<b,a.w<b);}
+IOF(D4,<)(CO DL &a,CO D4 &b){MD4(a<b.x,a<b.y,a<b.z,a<b.w);}
 IOF(D2,>=)(CO D2 &a,CO D2 &b){MD2(a.x>=b.x,a.y>=b.y);}
-IOF(D2,>=)(CO D2 &a,CO DL &b){MD2(a.x >= b,a.y >= b);}
-IOF(D2,>=)(CO DL &a,CO D2 &b){MD2(a >= b.x,a >= b.y);}
+IOF(D2,>=)(CO D2 &a,CO DL &b){MD2(a.x>=b,a.y>=b);}
+IOF(D2,>=)(CO DL &a,CO D2 &b){MD2(a>=b.x,a>=b.y);}
 IOF(D3,>=)(CO D3 &a,CO D3 &b){MD3(a.x>=b.x,a.y>=b.y,a.z>=b.z);}
-IOF(D3,>=)(CO D3 &a,CO DL &b){MD3(a.x >= b,a.y >= b,a.z >= b);}
-IOF(D3,>=)(CO DL &a,CO D3 &b){MD3(a >= b.x,a >= b.y,a >= b.z);}
+IOF(D3,>=)(CO D3 &a,CO DL &b){MD3(a.x>=b,a.y>=b,a.z>=b);}
+IOF(D3,>=)(CO DL &a,CO D3 &b){MD3(a>=b.x,a>=b.y,a>=b.z);}
 IOF(D4,>=)(CO D4 &a,CO D4 &b){MD4(a.x>=b.x,a.y>=b.y,a.z>=b.z,a.w>=b.w);}
-IOF(D4,>=)(CO D4 &a,CO DL &b){MD4(a.x >= b,a.y >= b,a.z >= b,a.w >= b);}
-IOF(D4,>=)(CO DL &a,CO D4 &b){MD4(a >= b.x,a >= b.y,a >= b.z,a >= b.w);}
+IOF(D4,>=)(CO D4 &a,CO DL &b){MD4(a.x>=b,a.y>=b,a.z>=b,a.w>=b);}
+IOF(D4,>=)(CO DL &a,CO D4 &b){MD4(a>=b.x,a>=b.y,a>=b.z,a>=b.w);}
 IOF(D2,<=)(CO D2 &a,CO D2 &b){MD2(a.x<=b.x,a.y<=b.y);}
-IOF(D2,<=)(CO D2 &a,CO DL &b){MD2(a.x <= b,a.y <= b);}
-IOF(D2,<=)(CO DL &a,CO D2 &b){MD2(a <= b.x,a <= b.y);}
+IOF(D2,<=)(CO D2 &a,CO DL &b){MD2(a.x<=b,a.y<=b);}
+IOF(D2,<=)(CO DL &a,CO D2 &b){MD2(a<=b.x,a<=b.y);}
 IOF(D3,<=)(CO D3 &a,CO D3 &b){MD3(a.x<=b.x,a.y<=b.y,a.z<=b.z);}
-IOF(D3,<=)(CO D3 &a,CO DL &b){MD3(a.x <= b,a.y <= b,a.z <= b);}
-IOF(D3,<=)(CO DL &a,CO D3 &b){MD3(a <= b.x,a <= b.y,a <= b.z);}
+IOF(D3,<=)(CO D3 &a,CO DL &b){MD3(a.x<=b,a.y<=b,a.z<=b);}
+IOF(D3,<=)(CO DL &a,CO D3 &b){MD3(a<=b.x,a<=b.y,a<=b.z);}
 IOF(D4,<=)(CO D4 &a,CO D4 &b){MD4(a.x<=b.x,a.y<=b.y,a.z<=b.z,a.w<=b.w);}
-IOF(D4,<=)(CO D4 &a,CO DL &b){MD4(a.x <= b,a.y <= b,a.z <= b,a.w <= b);}
-IOF(D4,<=)(CO DL &a,CO D4 &b){MD4(a <= b.x,a <= b.y,a <= b.z,a <= b.w);}
+IOF(D4,<=)(CO D4 &a,CO DL &b){MD4(a.x<=b,a.y<=b,a.z<=b,a.w<=b);}
+IOF(D4,<=)(CO DL &a,CO D4 &b){MD4(a<=b.x,a<=b.y,a<=b.z,a<=b.w);}
 IOF(D2,==)(CO D2 &a,CO D2 &b){MD2(a.x==b.x,a.y==b.y);}
-IOF(D2,==)(CO D2 &a,CO DL &b){MD2(a.x == b,a.y == b);}
-IOF(D2,==)(CO DL &a,CO D2 &b){MD2(a == b.x,a == b.y);}
+IOF(D2,==)(CO D2 &a,CO DL &b){MD2(a.x==b,a.y==b);}
+IOF(D2,==)(CO DL &a,CO D2 &b){MD2(a==b.x,a==b.y);}
 IOF(D3,==)(CO D3 &a,CO D3 &b){MD3(a.x==b.x,a.y==b.y,a.z==b.z);}
-IOF(D3,==)(CO D3 &a,CO DL &b){MD3(a.x == b,a.y == b,a.z == b);}
-IOF(D3,==)(CO DL &a,CO D3 &b){MD3(a == b.x,a == b.y,a == b.z);}
+IOF(D3,==)(CO D3 &a,CO DL &b){MD3(a.x==b,a.y==b,a.z==b);}
+IOF(D3,==)(CO DL &a,CO D3 &b){MD3(a==b.x,a==b.y,a==b.z);}
 IOF(D4,==)(CO D4 &a,CO D4 &b){MD4(a.x==b.x,a.y==b.y,a.z==b.z,a.w==b.w);}
-IOF(D4,==)(CO D4 &a,CO DL &b){MD4(a.x == b,a.y == b,a.z == b,a.w == b);}
-IOF(D4,==)(CO DL &a,CO D4 &b){MD4(a == b.x,a == b.y,a == b.z,a == b.w);}
+IOF(D4,==)(CO D4 &a,CO DL &b){MD4(a.x==b,a.y==b,a.z==b,a.w==b);}
+IOF(D4,==)(CO DL &a,CO D4 &b){MD4(a==b.x,a==b.y,a==b.z,a==b.w);}
 IOF(D2,!=)(CO D2 &a,CO D2 &b){MD2(a.x!=b.x,a.y!=b.y);}
-IOF(D2,!=)(CO D2 &a,CO DL &b){MD2(a.x != b,a.y != b);}
-IOF(D2,!=)(CO DL &a,CO D2 &b){MD2(a != b.x,a != b.y);}
+IOF(D2,!=)(CO D2 &a,CO DL &b){MD2(a.x!=b,a.y!=b);}
+IOF(D2,!=)(CO DL &a,CO D2 &b){MD2(a!=b.x,a!=b.y);}
 IOF(D3,!=)(CO D3 &a,CO D3 &b){MD3(a.x!=b.x,a.y!=b.y,a.z!=b.z);}
-IOF(D3,!=)(CO D3 &a,CO DL &b){MD3(a.x != b,a.y != b,a.z != b);}
-IOF(D3,!=)(CO DL &a,CO D3 &b){MD3(a != b.x,a != b.y,a != b.z);}
+IOF(D3,!=)(CO D3 &a,CO DL &b){MD3(a.x!=b,a.y!=b,a.z!=b);}
+IOF(D3,!=)(CO DL &a,CO D3 &b){MD3(a!=b.x,a!=b.y,a!=b.z);}
 IOF(D4,!=)(CO D4 &a,CO D4 &b){MD4(a.x!=b.x,a.y!=b.y,a.z!=b.z,a.w!=b.w);}
-IOF(D4,!=)(CO D4 &a,CO DL &b){MD4(a.x != b,a.y != b,a.z != b,a.w != b);}
-IOF(D4,!=)(CO DL &a,CO D4 &b){MD4(a != b.x,a != b.y,a != b.z,a != b.w);}
+IOF(D4,!=)(CO D4 &a,CO DL &b){MD4(a.x!=b,a.y!=b,a.z!=b,a.w!=b);}
+IOF(D4,!=)(CO DL &a,CO D4 &b){MD4(a!=b.x,a!=b.y,a!=b.z,a!=b.w);}
 inline D2 sin(CO D2 &a){MD2(sin(a.x),sin(a.y));}
 inline D3 sin(CO D3 &a){MD3(sin(a.x),sin(a.y),sin(a.z));}
 inline D4 sin(CO D4 &a){MD4(sin(a.x),sin(a.y),sin(a.z),sin(a.w));}
@@ -355,6 +361,12 @@ inline D4 exp(CO D4 &a){MD4(exp(a.x),exp(a.y),exp(a.z),exp(a.w));}
 inline D2 log(CO D2 &a){MD2(log(a.x),log(a.y));}
 inline D3 log(CO D3 &a){MD3(log(a.x),log(a.y),log(a.z));}
 inline D4 log(CO D4 &a){MD4(log(a.x),log(a.y),log(a.z),log(a.w));}
+inline D2 log2(CO D2 &a){MD2(log2(a.x),log2(a.y));}
+inline D3 log2(CO D3 &a){MD3(log2(a.x),log2(a.y),log2(a.z));}
+inline D4 log2(CO D4 &a){MD4(log2(a.x),log2(a.y),log2(a.z),log2(a.w));}
+inline D2 log10(CO D2 &a){MD2(log10(a.x),log10(a.y));}
+inline D3 log10(CO D3 &a){MD3(log10(a.x),log10(a.y),log10(a.z));}
+inline D4 log10(CO D4 &a){MD4(log10(a.x),log10(a.y),log10(a.z),log10(a.w));}
 inline D2 sqrt(CO D2 &a){MD2(sqrt(a.x),sqrt(a.y));}
 inline D3 sqrt(CO D3 &a){MD3(sqrt(a.x),sqrt(a.y),sqrt(a.z));}
 inline D4 sqrt(CO D4 &a){MD4(sqrt(a.x),sqrt(a.y),sqrt(a.z),sqrt(a.w));}
