@@ -139,7 +139,7 @@ namespace librapid {
 
 			if constexpr (allowVectorisation) {
 #pragma omp parallel for shared(vectorSize, lhs, function) default(none)                           \
-  num_threads(global::numThreads)
+  num_threads(int(global::numThreads))
 				for (int64_t index = 0; index < vectorSize; index += packetWidth) {
 					lhs.writePacket(index, function.packet(index));
 				}
@@ -150,7 +150,7 @@ namespace librapid {
 				}
 			} else {
 #pragma omp parallel for shared(vectorSize, lhs, function, size) default(none)                     \
-  num_threads(global::numThreads)
+  num_threads(int(global::numThreads))
 				for (int64_t index = 0; index < size; ++index) {
 					lhs.write(index, function.scalar(index));
 				}
@@ -190,7 +190,7 @@ namespace librapid {
 
 			if constexpr (allowVectorisation) {
 #pragma omp parallel for shared(vectorSize, lhs, function) default(none)                           \
-  num_threads(global::numThreads)
+  num_threads(int(global::numThreads))
 				for (int64_t index = 0; index < vectorSize; index += packetWidth) {
 					lhs.writePacket(index, function.packet(index));
 				}
@@ -201,7 +201,7 @@ namespace librapid {
 				}
 			} else {
 #pragma omp parallel for shared(vectorSize, lhs, function, size) default(none)                     \
-  num_threads(global::numThreads)
+  num_threads(int(global::numThreads))
 				for (int64_t index = vectorSize; index < size; ++index) {
 					lhs.write(index, function.scalar(index));
 				}
@@ -362,21 +362,6 @@ namespace librapid {
 			return result;
 		}
 
-#	define CONCAT_IMPL(x, y) x##y
-#	define CONCAT(x, y)	  CONCAT_IMPL(x, y)
-
-#	if LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH > 1
-#		define CUDA_FLOAT_VECTOR_TYPE CONCAT(jitify::float, LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH)
-#	else
-#		define CUDA_FLOAT_VECTOR_TYPE float
-#	endif
-
-#	if LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH > 1
-#		define CUDA_DOUBLE_VECTOR_TYPE CONCAT(jitify::double, LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH)
-#	else
-#		define CUDA_DOUBLE_VECTOR_TYPE double
-#	endif
-
 		template<typename T>
 		struct CudaVectorExtractor {
 			static constexpr auto tester() {
@@ -488,20 +473,6 @@ namespace librapid {
 			using Helper					  = CudaVectorHelper<Scalar, Function>;
 			using PacketType				  = decltype(Helper::template extractor<Scalar>());
 			constexpr int64_t cudaPacketWidth = typetraits::TypeInfo<PacketType>::cudaPacketWidth;
-
-			// fmt::print("Allow vectorisation: {}\n", allowVectorisation);
-			// fmt::print("Scalar: {}\n", typeid(Scalar).name());
-
-			// runKernel<Pointer, typename typetraits::TypeInfo<std::decay_t<Args>>::Scalar...>(
-			// runKernel<
-			//   Pointer,
-			//   typename CudaVectoriseIfPossible<allowVectorisation, Pointer, Args>::Scalar...>(
-			//   filename,
-			//   kernelName,
-			//   (function.shape().size() + (cudaPacketWidth - 1)) / cudaPacketWidth, // Round up
-			//   (function.shape().size() + (cudaPacketWidth - 1)) / cudaPacketWidth,
-			//   dst,
-			//   dataSourceExtractor(cudaTupleEvaluatorImpl<Scalar>(std::get<I>(function.args())))...);
 
 			runKernel<Pointer,
 					  decltype(CudaVectorHelper<Scalar, Function>::template extractor<Args>())...>(

@@ -162,7 +162,7 @@ namespace librapid {
 
 		/// \brief Move-construct an OpenCLStorage from another instance
 		/// \param other The other instance
-		LIBRAPID_ALWAYS_INLINE OpenCLStorage(OpenCLStorage &&other) noexcept;
+		LIBRAPID_ALWAYS_INLINE OpenCLStorage(OpenCLStorage &&other) LIBRAPID_RELEASE_NOEXCEPT;
 
 		/// \brief Initialize an OpenCLStorage instance from an initializer-list
 		/// \param list Values to populate with
@@ -174,7 +174,7 @@ namespace librapid {
 
 		LIBRAPID_ALWAYS_INLINE OpenCLStorage &operator=(const OpenCLStorage &other);
 
-		LIBRAPID_ALWAYS_INLINE OpenCLStorage &operator=(OpenCLStorage &&other) noexcept;
+		LIBRAPID_ALWAYS_INLINE OpenCLStorage &operator=(OpenCLStorage &&other) LIBRAPID_RELEASE_NOEXCEPT;
 
 		void set(const OpenCLStorage &other);
 
@@ -249,9 +249,10 @@ namespace librapid {
 	}
 
 	template<typename Scalar>
-	OpenCLStorage<Scalar>::OpenCLStorage(OpenCLStorage &&other) noexcept :
-			m_size(other.m_size), m_buffer(std::move(other.m_buffer)),
-			m_ownsData(other.m_ownsData) {
+	OpenCLStorage<Scalar>::OpenCLStorage(OpenCLStorage &&other) LIBRAPID_RELEASE_NOEXCEPT
+			: m_size(other.m_size),
+			  m_buffer(std::move(other.m_buffer)),
+			  m_ownsData(other.m_ownsData) {
 		LIBRAPID_CHECK_OPENCL;
 		other.m_size = 0;
 	}
@@ -290,7 +291,8 @@ namespace librapid {
 	}
 
 	template<typename Scalar>
-	OpenCLStorage<Scalar> &OpenCLStorage<Scalar>::operator=(OpenCLStorage &&other) noexcept {
+	OpenCLStorage<Scalar> &
+	OpenCLStorage<Scalar>::operator=(OpenCLStorage &&other) LIBRAPID_RELEASE_NOEXCEPT {
 		LIBRAPID_CHECK_OPENCL;
 		if (this != &other) {
 			if (m_ownsData) {

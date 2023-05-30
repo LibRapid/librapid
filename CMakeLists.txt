@@ -648,3 +648,7 @@ if (LIBRAPID_GET_FFTW)
 endif ()
 
 target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/pocketfft")
+
+include("warnings")
+
+auto_disable_warnings(${module_name})

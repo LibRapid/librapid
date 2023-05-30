@@ -11,19 +11,19 @@ namespace librapid::global {
 	extern bool throwOnAssert;
 
 	/// Arrays with more elements than this will run with multithreaded implementations
-	extern int64_t multithreadThreshold;
+	extern size_t multithreadThreshold;
 
 	// Number of columns required for a matrix to be parallelized in GEMM
-	extern int64_t gemmMultithreadThreshold;
+	extern size_t gemmMultithreadThreshold;
 
 	// Number of threads used by LibRapid
-	extern int64_t numThreads;
+	extern size_t numThreads;
 
 	// Size of a cache line in bytes
-	extern int64_t cacheLineSize;
+	extern size_t cacheLineSize;
 
 	// Memory alignment for LibRapid
-	extern int64_t memoryAlignment;
+	extern size_t memoryAlignment;
 
 #if defined(LIBRAPID_HAS_OPENCL)
 	// OpenCL device list
