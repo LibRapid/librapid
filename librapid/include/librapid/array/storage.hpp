@@ -136,6 +136,8 @@ namespace librapid {
 		/// \return Reference to the element at index \p index
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Reference operator[](SizeType index);
 
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Pointer data() const noexcept;
+
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator begin() noexcept;
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator end() noexcept;
 
@@ -240,7 +242,7 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE FixedStorage &operator=(FixedStorage &&other) noexcept;
 
 		/// Free a FixedStorage object
-		~FixedStorage();
+		~FixedStorage() = default;
 
 		template<typename ShapeType>
 		static ShapeType defaultShape();
@@ -268,6 +270,8 @@ namespace librapid {
 		/// \param index Index of the element to access
 		/// \return Reference to the element at index \p index
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Reference operator[](SizeType index);
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Pointer data() const noexcept;
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator begin() noexcept;
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator end() noexcept;
@@ -337,7 +341,7 @@ namespace librapid {
 #		if defined(LIBRAPID_APPLE)
 			// No memory allignment. It breaks everything for some reason
 			auto ptr = Traits::allocate(alloc, size);
-#		elif defined(LIBRAPID_MSVC)
+#		elif defined(LIBRAPID_MSVC) || defined(LIBRAPID_MINGW)
 			auto ptr = static_cast<Pointer>(
 			  _aligned_malloc(size * sizeof(ValueType), global::memoryAlignment));
 #		else
@@ -611,6 +615,11 @@ namespace librapid {
 	}
 
 	template<typename T, typename A>
+	auto Storage<T, A>::data() const noexcept -> Pointer {
+		return m_begin;
+	}
+
+	template<typename T, typename A>
 	auto Storage<T, A>::begin() noexcept -> Iterator {
 		return m_begin;
 	}
@@ -708,8 +717,7 @@ namespace librapid {
 	auto FixedStorage<T, D...>::operator=(FixedStorage &&other) noexcept
 	  -> FixedStorage & = default;
 
-	template<typename T, size_t... D>
-	FixedStorage<T, D...>::~FixedStorage() = default;
+
 
 	template<typename T, size_t... D>
 	template<typename ShapeType>
@@ -742,6 +750,11 @@ namespace librapid {
 	auto FixedStorage<T, D...>::operator[](SizeType index) -> Reference {
 		LIBRAPID_ASSERT(index < size(), "Index out of bounds");
 		return m_data[index];
+	}
+
+	template<typename T, size_t... D>
+	auto FixedStorage<T, D...>::data() const noexcept -> Pointer {
+		return const_cast<Pointer>(m_data.data());
 	}
 
 	template<typename T, size_t... D>

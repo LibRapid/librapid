@@ -516,3 +516,12 @@ jobs:
           webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
           webhook_token: ${{ secrets.RTDS_WEBHOOK_TOKEN }}
           commit_ref: ${{ github.ref }}
+
+  success:
+    name: Success
+    needs: [ trigger-docs ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Success
+        run: |
+          echo "Success!"

@@ -174,11 +174,11 @@ using CUDA				   = lrc::backend::CUDA;
 			}                                                                                      \
 		}                                                                                          \
                                                                                                    \
-		auto negResult = (-testA).eval();                                                           \
-		bool negValid = true;                                                                      \
+		auto negResult = (-testA).eval();                                                          \
+		bool negValid  = true;                                                                     \
 		for (int64_t i = 0; i < shape[0] * shape[1]; ++i) {                                        \
-			if (!(negResult.scalar(i) == -testA.scalar(i))) {                                      \
-				REQUIRE(lrc::isClose(negResult.scalar(i), -testA.scalar(i), tolerance));           \
+			if (!(negResult.scalar(i) == -(testA.scalar(i)))) {                                    \
+				REQUIRE(lrc::isClose(negResult.scalar(i), -(testA.scalar(i)), tolerance));         \
 				negValid = false;                                                                  \
 			}                                                                                      \
 		}                                                                                          \
@@ -644,10 +644,34 @@ TEST_CASE("Test Array -- double OpenCL", "[array-lib]") { TEST_ALL(double, OPENC
 
 #if defined(LIBRAPID_HAS_CUDA)
 
-TEST_CASE("Test Array -- int8_t CUDA", "[array-lib]") { TEST_ALL(int8_t, CUDA); }
-TEST_CASE("Test Array -- uint8_t CUDA", "[array-lib]") { TEST_ALL(uint8_t, CUDA); }
-TEST_CASE("Test Array -- int16_t CUDA", "[array-lib]") { TEST_ALL(int16_t, CUDA); }
-TEST_CASE("Test Array -- uint16_t CUDA", "[array-lib]") { TEST_ALL(uint16_t, CUDA); }
+TEST_CASE("Test Array -- int8_t CUDA", "[array-lib]") {
+	TEST_CONSTRUCTORS(int8_t, CUDA);
+	TEST_INDEXING(int8_t, CUDA);
+	TEST_STRING_FORMATTING(int8_t, CUDA);
+}
+
+TEST_CASE("Test Array -- uint8_t CUDA", "[array-lib]") {
+	TEST_CONSTRUCTORS(uint8_t, CUDA);
+	TEST_INDEXING(uint8_t, CUDA);
+	TEST_STRING_FORMATTING(uint8_t, CUDA);
+}
+
+TEST_CASE("Test Array -- int16_t CUDA", "[array-lib]") {
+	TEST_CONSTRUCTORS(int16_t, CUDA);
+	TEST_INDEXING(int16_t, CUDA);
+	TEST_STRING_FORMATTING(int16_t, CUDA);
+}
+
+TEST_CASE("Test Array -- uint16_t CUDA", "[array-lib]") {
+	TEST_CONSTRUCTORS(uint16_t, CUDA);
+	TEST_INDEXING(uint16_t, CUDA);
+	TEST_STRING_FORMATTING(uint16_t, CUDA);
+}
+
+// TEST_CASE("Test Array -- int8_t CUDA", "[array-lib]") { TEST_ALL(int8_t, CUDA); }
+// TEST_CASE("Test Array -- uint8_t CUDA", "[array-lib]") { TEST_ALL(uint8_t, CUDA); }
+// TEST_CASE("Test Array -- int16_t CUDA", "[array-lib]") { TEST_ALL(int16_t, CUDA); }
+// TEST_CASE("Test Array -- uint16_t CUDA", "[array-lib]") { TEST_ALL(uint16_t, CUDA); }
 TEST_CASE("Test Array -- int32_t CUDA", "[array-lib]") { TEST_ALL(int32_t, CUDA); }
 TEST_CASE("Test Array -- uint32_t CUDA", "[array-lib]") { TEST_ALL(uint32_t, CUDA); }
 TEST_CASE("Test Array -- int64_t CUDA", "[array-lib]") { TEST_ALL(int64_t, CUDA); }

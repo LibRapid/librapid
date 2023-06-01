@@ -100,6 +100,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+			static constexpr int64_t cudaPacketWidth = 1;
 #endif
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
@@ -180,6 +181,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
+			static constexpr int64_t cudaPacketWidth = 1;
 #endif
 
 			static constexpr bool canAlign	= true;
@@ -210,6 +212,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8I;
+			static constexpr int64_t cudaPacketWidth = 1;
 #endif
 
 			static constexpr bool canAlign	= true;
@@ -240,6 +243,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_8U;
+			static constexpr int64_t cudaPacketWidth = 1;
 #endif
 
 			static constexpr bool canAlign	= true;
@@ -270,6 +274,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_16I;
+			static constexpr int64_t cudaPacketWidth = 1;
 #endif
 
 			static constexpr bool canAlign	= true;
@@ -300,6 +305,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_16U;
+			static constexpr int64_t cudaPacketWidth = 1;
 #endif
 
 			static constexpr bool canAlign	= true;
@@ -330,6 +336,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32I;
+			static constexpr int64_t cudaPacketWidth = 1;
 #endif
 
 			static constexpr bool canAlign	= true;
@@ -360,6 +367,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32U;
+			static constexpr int64_t cudaPacketWidth = 1;
 #endif
 
 			static constexpr bool canAlign	= true;
@@ -390,6 +398,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64I;
+			static constexpr int64_t cudaPacketWidth = 1;
 #endif
 
 			static constexpr bool canAlign	= true;
@@ -420,6 +429,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64U;
+			static constexpr int64_t cudaPacketWidth = 1;
 #endif
 
 			static constexpr bool canAlign	= true;
@@ -450,6 +460,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32F;
+			static constexpr int64_t cudaPacketWidth = 1;
 #endif
 
 			static constexpr bool canAlign	= true;
@@ -480,6 +491,7 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+			static constexpr int64_t cudaPacketWidth = 1;
 #endif
 
 			static constexpr bool canAlign	= true;
@@ -494,6 +506,194 @@ namespace librapid {
 			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
 			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
+
+#if defined(LIBRAPID_HAS_CUDA)
+		template<>
+		struct TypeInfo<jitify::float2> {
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = float;
+			using Packet							   = std::false_type;
+			using Backend							   = backend::CUDA;
+			static constexpr int64_t packetWidth	   = 4;
+			static constexpr char name[]			   = "float2";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = false;
+			static constexpr bool allowVectorisation   = true;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32F;
+			static constexpr int64_t cudaPacketWidth = 1;
+#	endif
+
+			static constexpr bool canAlign	= true;
+			static constexpr bool canMemcpy = true;
+
+			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+
+		template<>
+		struct TypeInfo<jitify::float3> {
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = float;
+			using Packet							   = std::false_type;
+			using Backend							   = backend::CUDA;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "float3";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = false;
+			static constexpr bool allowVectorisation   = true;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32F;
+			static constexpr int64_t cudaPacketWidth = 3;
+#	endif
+
+			static constexpr bool canAlign	= true;
+			static constexpr bool canMemcpy = true;
+
+			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+
+		template<>
+		struct TypeInfo<jitify::float4> {
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = float;
+			using Packet							   = std::false_type;
+			using Backend							   = backend::CUDA;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "float4";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = false;
+			static constexpr bool allowVectorisation   = true;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_32F;
+			static constexpr int64_t cudaPacketWidth = 4;
+#	endif
+
+			static constexpr bool canAlign	= true;
+			static constexpr bool canMemcpy = true;
+
+			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+
+		template<>
+		struct TypeInfo<jitify::double2> {
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = double;
+			using Packet							   = std::false_type;
+			using Backend							   = backend::CUDA;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "double2";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = false;
+			static constexpr bool allowVectorisation   = true;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+			static constexpr int64_t cudaPacketWidth = 2;
+#	endif
+
+			static constexpr bool canAlign	= true;
+			static constexpr bool canMemcpy = true;
+
+			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+
+		template<>
+		struct TypeInfo<jitify::double3> {
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = double;
+			using Packet							   = std::false_type;
+			using Backend							   = backend::CUDA;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "double3";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = false;
+			static constexpr bool allowVectorisation   = true;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+			static constexpr int64_t cudaPacketWidth = 3;
+#	endif
+
+			static constexpr bool canAlign	= true;
+			static constexpr bool canMemcpy = true;
+
+			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+
+		template<>
+		struct TypeInfo<jitify::double4> {
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = double;
+			using Packet							   = std::false_type;
+			using Backend							   = backend::CUDA;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "double4";
+			static constexpr bool supportsArithmetic   = true;
+			static constexpr bool supportsLogical	   = true;
+			static constexpr bool supportsBinary	   = false;
+			static constexpr bool allowVectorisation   = true;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
+			static constexpr int64_t cudaPacketWidth = 4;
+#	endif
+
+			static constexpr bool canAlign	= true;
+			static constexpr bool canMemcpy = true;
+
+			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+#endif
 	} // namespace typetraits
 } // namespace librapid
 
