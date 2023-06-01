@@ -170,7 +170,7 @@ Set the default vector width for SIMD CUDA kernels. This must be in the range $[
 better performance in most cases, but can increase register pressure which may lead to lower performance than expected.
 For optimal performance, you should try changing this value to suit your specific use case.
 
-:::warning
+:::{warning}
 This setting requires CUDA support to be enabled.
 :::
 
