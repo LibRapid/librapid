@@ -17,6 +17,13 @@ namespace librapid {
 			using Ref	 = Scalar &;
 		};
 
+		template<typename T, size_t... Dims>
+		struct SubscriptType<FixedStorage<T, Dims...>> {
+			using Scalar = T;
+			using Direct = const Scalar &;
+			using Ref	 = Scalar &;
+		};
+
 #if defined(LIBRAPID_HAS_OPENCL)
 		template<typename T>
 		struct SubscriptType<OpenCLStorage<T>> {
@@ -518,7 +525,7 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		auto ArrayContainer<ShapeType_, StorageType_>::packet(size_t index) const -> Packet {
 			Packet res;
-			res.load(m_storage.begin() + index);
+			res.load(m_storage.data() + index);
 			return res;
 		}
 
@@ -530,7 +537,7 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		void ArrayContainer<ShapeType_, StorageType_>::writePacket(size_t index,
 																   const Packet &value) {
-			value.store(m_storage.begin() + index);
+			value.store(m_storage.data() + index);
 		}
 
 		template<typename ShapeType_, typename StorageType_>

@@ -2,11 +2,11 @@
 
 namespace librapid::global {
 	bool throwOnAssert				 = false;
-	int64_t multithreadThreshold	 = 5000;
-	int64_t gemmMultithreadThreshold = 100;
-	int64_t numThreads				 = 8;
-	int64_t cacheLineSize			 = 64;
-	int64_t memoryAlignment			 = LIBRAPID_DEFAULT_MEM_ALIGN;
+	size_t multithreadThreshold	 = 5000;
+	size_t gemmMultithreadThreshold = 100;
+	size_t numThreads				 = 8;
+	size_t cacheLineSize			 = 64;
+	size_t memoryAlignment			 = LIBRAPID_DEFAULT_MEM_ALIGN;
 
 #if defined(LIBRAPID_HAS_OPENCL)
 	std::vector<cl::Device> openclDevices;

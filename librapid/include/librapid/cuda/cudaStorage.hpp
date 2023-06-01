@@ -274,6 +274,8 @@ namespace librapid {
 			static_assert(typetraits::TriviallyDefaultConstructible<T>::value,
 						  "Data type must be trivially constructable for use with CUDA");
 			T *result;
+			// Round size up to nearest multiple of 32
+			size = (size + size_t(31)) & ~size_t(31);
 			cudaSafeCall(cudaMallocAsync(&result, sizeof(T) * size, global::cudaStream));
 			return result;
 		}
@@ -297,20 +299,20 @@ namespace librapid {
 		}
 
 		template<typename T>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE void cudaSafeDeallocate(T *__restrict data) {
+		LIBRAPID_ALWAYS_INLINE void cudaSafeDeallocate(T *__restrict data) {
 			static_assert(typetraits::TriviallyDefaultConstructible<T>::value,
 						  "Data type must be trivially constructable for use with CUDA");
 			cudaSafeCall(cudaFreeAsync(data, global::cudaStream));
 		}
 
 		template<>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE void
+		LIBRAPID_ALWAYS_INLINE void
 		cudaSafeDeallocate<Complex<float>>(Complex<float> *__restrict data) {
 			cudaSafeCall(cudaFreeAsync(data, global::cudaStream));
 		}
 
 		template<>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE void
+		LIBRAPID_ALWAYS_INLINE void
 		cudaSafeDeallocate<Complex<double>>(Complex<double> *__restrict data) {
 			cudaSafeCall(cudaFreeAsync(data, global::cudaStream));
 		}
@@ -385,7 +387,6 @@ namespace librapid {
 									 sizeof(T) * m_size,
 									 cudaMemcpyHostToDevice,
 									 global::cudaStream));
-		return *this;
 	}
 
 	template<typename T>

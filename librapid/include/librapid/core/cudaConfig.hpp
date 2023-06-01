@@ -67,6 +67,21 @@ const char *getCublasErrorEnum_(cublasStatus_t error);
 #	include "../cuda/helper_cuda.h"
 #	include "../cuda/helper_functions.h"
 
+#	define CONCAT_IMPL(x, y) x##y
+#	define CONCAT(x, y)	  CONCAT_IMPL(x, y)
+
+#	if LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH > 1
+#		define CUDA_FLOAT_VECTOR_TYPE CONCAT(jitify::float, LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH)
+#	else
+#		define CUDA_FLOAT_VECTOR_TYPE float
+#	endif
+
+#	if LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH > 1
+#		define CUDA_DOUBLE_VECTOR_TYPE CONCAT(jitify::double, LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH)
+#	else
+#		define CUDA_DOUBLE_VECTOR_TYPE double
+#	endif
+
 #endif // LIBRAPID_HAS_CUDA
 
 #endif // LIBRAPID_CORE_CUDA_CONFIG_HPP

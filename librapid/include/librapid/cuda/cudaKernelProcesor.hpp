@@ -7,7 +7,7 @@ namespace librapid::cuda {
 	/// Load a CUDA kernel from a file and return the string representation of it.
 	/// \param relPath File path relative to LibRapid's "cuda/kernels" directory
 	/// \return String representation of the kernel
-	std::string loadKernel(const std::string &relPath);
+	const std::string &loadKernel(const std::string &relPath);
 
 	/// Run a kernel string on the GPU with the specified arguments
 	/// \tparam Templates Instantiation types passed to Jitify
@@ -36,10 +36,46 @@ namespace librapid::cuda {
 		dim3 grid(blocksPerGrid);
 		dim3 block(threadsPerBlock);
 
-		jitifyCall(program.kernel(kernelName)
-					 .instantiate(jitify::reflection::Type<Templates>()...)
-					 .configure(grid, block, 0, global::cudaStream)
-					 .launch(arguments...));
+#	if defined(LIBRAPID_DEBUG)
+		try {
+#	endif // LIBRAPID_DEBUG
+
+			jitifyCall(program.kernel(kernelName)
+						 .instantiate(jitify::reflection::Type<Templates>()...)
+						 .configure(grid, block, 0, global::cudaStream)
+						 .launch(arguments...));
+
+#	if defined(LIBRAPID_DEBUG)
+		} catch (const std::exception &e) {
+			auto format = fmt::emphasis::bold | fmt::fg(fmt::color::red);
+			fmt::print(format, "Error            : {}\n", e.what());
+			fmt::print(format, "Kernel name      : {}\n", kernelName);
+			fmt::print(format, "Elements         : {}\n", elements);
+			fmt::print(format, "Threads per block: {}\n", threadsPerBlock);
+			fmt::print(format, "Blocks per grid  : {}\n", blocksPerGrid);
+			fmt::print(format, "Arguments        : {}\n", sizeof...(Args));
+
+			// Print all arguments
+			auto printer = [](auto x, auto format) {
+				fmt::print(fmt::fg(fmt::color::purple), "\nArgument:\n");
+
+				// True if x can be printed with fmt
+				constexpr bool isPrintable = fmt::is_formattable<decltype(x)>::value;
+
+				if constexpr (isPrintable) {
+					fmt::print(format, "\tValue: {}\n", x);
+				} else {
+					fmt::print(format, "\tValue: [ CANNOT PRINT ]\n");
+				}
+				fmt::print(format, "\tType : {}\n", typeid(x).name());
+			};
+
+			(printer(arguments, fmt::emphasis::bold | fmt::fg(fmt::color::dark_orange)), ...);
+			(printer(typeid(Templates).name(), fmt::emphasis::bold | fmt::fg(fmt::color::plum)), ...);
+
+			throw;
+		}
+#	endif // LIBRAPID_DEBUG
 	}
 
 	/// Run a kernel from a filename and kernel name with the specified arguments

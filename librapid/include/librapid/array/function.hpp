@@ -9,8 +9,10 @@ namespace librapid {
 			if constexpr (sizeof...(T) == 0) {
 				return TypeInfo<std::decay_t<First>>::allowVectorisation;
 			} else {
+				using T1 = typename TypeInfo<std::decay_t<First>>::Scalar;
 				return TypeInfo<std::decay_t<First>>::allowVectorisation &&
-					   checkAllowVectorisation<T...>();
+					   checkAllowVectorisation<T...>() &&
+					   (std::is_same_v<T1, typename TypeInfo<std::decay_t<T>>::Scalar> && ...);
 			}
 		}
 

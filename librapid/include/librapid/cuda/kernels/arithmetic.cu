@@ -10,7 +10,9 @@ __global__ void addArrays(size_t elements, Destination *dst, LHS *lhs, RHS *rhs)
 template<typename Destination, typename LHS, typename RHS>
 __global__ void addArraysScalarRhs(size_t elements, Destination *dst, LHS *lhs, RHS rhs) {
 	const size_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
-	if (kernelIndex < elements) { dst[kernelIndex] = lhs[kernelIndex] + rhs; }
+	if (kernelIndex < elements) { dst[kernelIndex] = lhs[kernelIndex] + rhs;
+	// printf("%d + %d = %d\n", lhs[kernelIndex], rhs, dst[kernelIndex]);
+	}
 }
 
 template<typename Destination, typename LHS, typename RHS>
