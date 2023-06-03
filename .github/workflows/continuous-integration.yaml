@@ -346,22 +346,22 @@ jobs:
           name: ${{ matrix.pretty }}
           path: ${{ matrix.pretty }}.zip
 
-  # quodona:
-  #   name: Run Qodana
-  #   needs: compile
-  #   runs-on: ubuntu-latest
-  #   continue-on-error: true
+  quodona:
+    name: Run Qodana
+    needs: compile
+    runs-on: ubuntu-latest
+    continue-on-error: true
 
-  #   steps:
-  #     - name: Checkout LibRapid
-  #       uses: actions/checkout@v3
-  #       with:
-  #         submodules: recursive
+    steps:
+      - name: Checkout LibRapid
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
-  #     - name: Qodana Scan
-  #       uses: JetBrains/qodana-action@main
-  #       env:
-  #         QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+      # - name: Qodana Scan
+      #   uses: JetBrains/qodana-action@main
+      #   env:
+      #     QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
 
   build-docs:
     name: Build Documentation Locally
