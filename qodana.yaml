@@ -2,3 +2,7 @@ version: "1.0"
 linter: jetbrains/qodana-js:2022.3-eap
 include:
   - name: CheckDependencyLicenses
+exclude:
+  - name: All
+    paths:
+      - librapid
