@@ -100,7 +100,6 @@ namespace librapid {
 	template<typename V1, typename V2, typename T = double>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool
 	isClose(const V1 &val1, const V2 &val2, const T &absTol = 1e-5, const T &relTol = 1e-5) {
-		// return ::librapid::abs(val1 - val2) < tolerance;
 		return ::librapid::abs(val2 - val1) <=
 			   ::librapid::max(
 				 relTol * ::librapid::max(::librapid::abs(val1), ::librapid::abs(val2)), absTol);

@@ -1,6 +1,9 @@
+include("warnings")
+
 function(make_test name)
     add_executable(test-${name} test-${name}.cpp)
     target_link_libraries(test-${name} PRIVATE librapid)
+    disable_all_warnings(test-${name}) # Disable warnings for tests since they test unrealistic scenarios
 
     message(STATUS "[ LIBRAPID ] Adding test ${name}")
     add_test(NAME ${name}
@@ -21,3 +24,5 @@ make_test(multiprecision)
 make_test(vector)
 make_test(complex)
 make_test(mathUtilities)
+
+make_test(sigmoid)

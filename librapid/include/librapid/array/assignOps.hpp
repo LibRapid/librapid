@@ -34,9 +34,9 @@ namespace librapid {
 			const int64_t vectorSize = size - (size % packetWidth);
 
 			// Ensure the function can actually be assigned to the array container
-			static_assert(
-			  typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
-			  "Function return type must be the same as the array container's scalar type");
+			// static_assert(
+			//   typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
+			//   "Function return type must be the same as the array container's scalar type");
 			LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
 
 			if constexpr (allowVectorisation) {
@@ -132,14 +132,14 @@ namespace librapid {
 			const int64_t vectorSize = size - (size % packetWidth);
 
 			// Ensure the function can actually be assigned to the array container
-			static_assert(
-			  typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
-			  "Function return type must be the same as the array container's scalar type");
+			// static_assert(
+			//   typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
+			//   "Function return type must be the same as the array container's scalar type");
 			LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
 
 			if constexpr (allowVectorisation) {
 #pragma omp parallel for shared(vectorSize, lhs, function) default(none)                           \
-  num_threads(global::numThreads)
+  num_threads(int(global::numThreads))
 				for (int64_t index = 0; index < vectorSize; index += packetWidth) {
 					lhs.writePacket(index, function.packet(index));
 				}
@@ -150,8 +150,8 @@ namespace librapid {
 				}
 			} else {
 #pragma omp parallel for shared(vectorSize, lhs, function, size) default(none)                     \
-  num_threads(global::numThreads)
-				for (int64_t index = vectorSize; index < size; ++index) {
+  num_threads(int(global::numThreads))
+				for (int64_t index = 0; index < size; ++index) {
 					lhs.write(index, function.scalar(index));
 				}
 			}
@@ -190,7 +190,7 @@ namespace librapid {
 
 			if constexpr (allowVectorisation) {
 #pragma omp parallel for shared(vectorSize, lhs, function) default(none)                           \
-  num_threads(global::numThreads)
+  num_threads(int(global::numThreads))
 				for (int64_t index = 0; index < vectorSize; index += packetWidth) {
 					lhs.writePacket(index, function.packet(index));
 				}
@@ -201,7 +201,7 @@ namespace librapid {
 				}
 			} else {
 #pragma omp parallel for shared(vectorSize, lhs, function, size) default(none)                     \
-  num_threads(global::numThreads)
+  num_threads(int(global::numThreads))
 				for (int64_t index = vectorSize; index < size; ++index) {
 					lhs.write(index, function.scalar(index));
 				}
@@ -317,13 +317,13 @@ namespace librapid {
 														 ::librapid::detail::LibRapidType::Scalar,
 													   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
-			return obj.storage().begin();
+			return obj.storage().begin().get();
 		}
 
 		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
 														 ::librapid::detail::LibRapidType::Scalar,
 													   int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const auto &dataSourceExtractor(const T &obj) {
 			return obj;
 		}
 
@@ -363,6 +363,68 @@ namespace librapid {
 			return result;
 		}
 
+		template<typename T>
+		struct CudaVectorExtractor {
+			static constexpr auto tester() {
+				using ScalarType = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
+				constexpr bool allowVectorisation = typetraits::TypeInfo<T>::allowVectorisation;
+
+				if constexpr (std::is_same_v<ScalarType, float> && allowVectorisation) {
+					return CUDA_FLOAT_VECTOR_TYPE {};
+				} else if constexpr (std::is_same_v<ScalarType, double> && allowVectorisation) {
+					return CUDA_DOUBLE_VECTOR_TYPE {};
+				} else {
+					return ScalarType {};
+				}
+			}
+
+			using Scalar = decltype(tester());
+		};
+
+		template<typename... Args>
+		struct CudaCanVectorise {
+		public:
+			template<typename First, typename... Rest>
+			static constexpr auto extractFirst() {
+				return First {};
+			}
+
+			static constexpr bool supportsVectorisation =
+			  (typetraits::TypeInfo<std::decay_t<Args>>::allowVectorisation && ...);
+			using First = decltype(extractFirst<Args...>());
+			static constexpr bool dtypesAreSame =
+			  (std::is_same_v<typename typetraits::TypeInfo<std::decay_t<Args>>::Scalar,
+							  typename typetraits::TypeInfo<std::decay_t<Args>>::Scalar> &&
+			   ...);
+			static constexpr bool dtypeSupportsVectorisation =
+			  ((typetraits::TypeInfo<typename CudaVectorExtractor<typename typetraits::TypeInfo<
+				  std::decay_t<Args>>::Scalar>::Scalar>::cudaPacketWidth > 1) &&
+			   ...);
+
+		public:
+			static constexpr bool value =
+			  supportsVectorisation && dtypesAreSame && dtypeSupportsVectorisation;
+		};
+
+		template<typename... Args>
+		struct CudaVectorHelper {
+			static constexpr bool canVectorise = CudaCanVectorise<Args...>::value;
+
+			template<typename T>
+			static constexpr auto extractor() {
+				using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
+				if constexpr (typetraits::TypeInfo<std::decay_t<T>>::type ==
+							  ::librapid::detail::LibRapidType::Scalar) {
+					return Scalar {};
+				} else if constexpr (canVectorise) {
+					using Type = typename CudaVectorExtractor<Scalar>::Scalar;
+					return Type {};
+				} else {
+					return Scalar {};
+				}
+			}
+		};
+
 		/// Helper for evaluating a tuple
 		/// \tparam descriptor The descriptor of the Function
 		/// \tparam Functor The function type of the Function
@@ -379,11 +441,22 @@ namespace librapid {
 		cudaTupleEvaluator(std::index_sequence<I...>, const std::string &filename,
 						   const std::string &kernelName, Pointer *dst,
 						   const detail::Function<descriptor, Functor, Args...> &function) {
-			runKernel<Pointer, typename typetraits::TypeInfo<std::decay_t<Args>>::Scalar...>(
+			// I'm not convinced the logic here is infallible, but it does seem to work.
+			// It is possible that you could use the Pointer type directly to extract the
+			// packet width, but I'm not sure if that would work for all cases.
+
+			using Function					  = detail::Function<descriptor, Functor, Args...>;
+			using Scalar					  = typename typetraits::TypeInfo<Pointer>::Scalar;
+			using Helper					  = CudaVectorHelper<Pointer, Function>;
+			using PacketType				  = decltype(Helper::template extractor<Function>());
+			constexpr int64_t cudaPacketWidth = typetraits::TypeInfo<PacketType>::cudaPacketWidth;
+
+			runKernel<Pointer,
+					  decltype(CudaVectorHelper<Scalar, Function>::template extractor<Args>())...>(
 			  filename,
 			  kernelName,
-			  function.shape().size(),
-			  function.shape().size(),
+			  (function.shape().size() + (cudaPacketWidth - 1)) / cudaPacketWidth, // Round up
+			  (function.shape().size() + (cudaPacketWidth - 1)) / cudaPacketWidth,
 			  dst,
 			  dataSourceExtractor(cudaTupleEvaluatorImpl(std::get<I>(function.args())))...);
 		}
@@ -405,18 +478,23 @@ namespace librapid {
 			// temporary-free evaluation. Instead, we must recursively evaluate each sub-operation
 			// until a final result is computed
 
+			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
 			constexpr const char *filename = typetraits::TypeInfo<Functor_>::filename;
 			const char *kernelName = typetraits::TypeInfo<Functor_>::getKernelName(function.args());
+
+			using DstType = array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>;
 			using Scalar =
-			  typename array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>>::Scalar;
+			  decltype(::librapid::cuda::CudaVectorHelper<DstType,
+														  Function>::template extractor<DstType>());
 
 			const auto args			 = function.args();
 			constexpr size_t argSize = std::tuple_size<decltype(args)>::value;
-			::librapid::cuda::cudaTupleEvaluator(std::make_index_sequence<argSize>(),
-												 filename,
-												 kernelName,
-												 lhs.storage().begin().get(),
-												 function);
+			::librapid::cuda::cudaTupleEvaluator(
+			  std::make_index_sequence<argSize>(),
+			  filename,
+			  kernelName,
+			  reinterpret_cast<Scalar *>(lhs.storage().begin().get()),
+			  function);
 		}
 	}  // namespace detail
 #endif // LIBRAPID_HAS_CUDA
