@@ -48,8 +48,21 @@ namespace librapid {
 		struct TypeInfo<array::ArrayContainer<ShapeType_, StorageType_>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayContainer;
 			using Scalar							   = typename TypeInfo<StorageType_>::Scalar;
+			using Packet							   = std::false_type;
 			using Backend							   = typename TypeInfo<StorageType_>::Backend;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr bool supportsArithmetic   = TypeInfo<Scalar>::supportsArithmetic;
+			static constexpr bool supportsLogical	   = TypeInfo<Scalar>::supportsLogical;
+			static constexpr bool supportsBinary	   = TypeInfo<Scalar>::supportsBinary;
 			static constexpr bool allowVectorisation   = TypeInfo<Scalar>::packetWidth > 1;
+
+#if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = TypeInfo<Scalar>::CudaType;
+			static constexpr int64_t cudaPacketWidth = 1;
+#endif // LIBRAPID_HAS_CUDA
+
+			static constexpr bool canAlign	   = false;
+			static constexpr int64_t canMemcpy = false;
 		};
 
 		/// Evaluates as true if the input type is an ArrayContainer instance

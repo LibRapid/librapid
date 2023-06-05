@@ -412,6 +412,8 @@ namespace librapid {
 	template<typename T>
 	class Complex {
 	public:
+		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+
 		/// \brief Default constructor
 		///
 		/// Create a new complex number. Both the real and imaginary components are set to zero
@@ -457,6 +459,8 @@ namespace librapid {
 		/// \param other The std::complex value to copy
 		explicit Complex(const std::complex<T> &other) : m_val {other.real(), other.imag()} {}
 
+		static constexpr size_t size() { return typetraits::TypeInfo<Complex>::packetWidth; }
+
 		/// \brief Complex number assignment operator
 		/// \param other The value to assign
 		/// \return *this
@@ -465,6 +469,20 @@ namespace librapid {
 			m_val[RE] = other.real();
 			m_val[IM] = other.imag();
 			return *this;
+		}
+
+		template<typename P>
+		LIBRAPID_ALWAYS_INLINE void store(P *ptr) const {
+			auto casted = reinterpret_cast<Scalar *>(ptr);
+			auto ret	= Vc::interleave(m_val[RE], m_val[IM]);
+			ret.first.store(casted);
+			ret.second.store(casted + size());
+		}
+
+		template<typename P>
+		LIBRAPID_ALWAYS_INLINE void load(const P *ptr) {
+			auto casted = reinterpret_cast<const Scalar *>(ptr);
+			Vc::deinterleave(&m_val[RE], &m_val[IM], casted, Vc::Aligned);
 		}
 
 		/// \brief Assign to the real component
@@ -2012,10 +2030,13 @@ namespace librapid {
 	namespace typetraits {
 		template<typename T>
 		struct TypeInfo<Complex<T>> {
-			detail::LibRapidType type				 = detail::LibRapidType::Scalar;
-			using Scalar							 = Complex<T>;
-			using Packet							 = std::false_type;
-			static constexpr int64_t packetWidth	 = 1;
+			detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar			  = Complex<T>;
+			using Packet =
+			  typename std::conditional_t<(TypeInfo<T>::packetWidth > 1),
+										  Complex<typename TypeInfo<T>::Packet>, std::false_type>;
+			static constexpr int64_t packetWidth =
+			  TypeInfo<typename TypeInfo<T>::Scalar>::packetWidth;
 			static constexpr char name[]			 = "Complex";
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
