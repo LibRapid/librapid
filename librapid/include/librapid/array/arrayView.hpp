@@ -27,6 +27,7 @@ namespace librapid {
 			using ArrayType		 = Array<Scalar, Backend>;
 			using StrideType	 = typename ArrayType::StrideType;
 			using ShapeType		 = typename ArrayType::ShapeType;
+			using Iterator		 = detail::ArrayIterator<ArrayView>;
 
 			/// Default constructor should never be used
 			ArrayView() = delete;
@@ -64,6 +65,9 @@ namespace librapid {
 			/// \return A reference to this
 			ArrayView &operator=(const Scalar &scalar);
 
+			template<typename RefType>
+			ArrayView &operator=(const ArrayRef<RefType> &other);
+
 			/// Access a sub-array of this ArrayView.
 			/// \param index The index of the sub-array.
 			/// \return An ArrayView from this
@@ -83,7 +87,7 @@ namespace librapid {
 			/// \tparam CAST Type to cast to
 			/// \return The scalar represented by the ArrayView object
 			template<typename CAST>
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE operator CAST() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE explicit operator CAST() const;
 
 			/// Access the underlying shape of this ArrayView
 			/// \return Shape object
@@ -126,6 +130,9 @@ namespace librapid {
 			/// \return A new Array instance
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayType eval() const;
 
+			LIBRAPID_NODISCARD Iterator begin() const;
+			LIBRAPID_NODISCARD Iterator end() const;
+
 			/// Cast an ArrayView to a std::string, aligning items down the columns. A format
 			/// string can also be specified, which will be used to format the items to strings
 			/// \param format The format string
@@ -148,6 +155,32 @@ namespace librapid {
 			LIBRAPID_ASSERT(m_shape.ndim() == 0, "Cannot assign to a non-scalar ArrayView.");
 			m_ref.storage()[m_offset] = static_cast<Scalar>(scalar);
 			return *this;
+		}
+
+		template<typename T>
+		template<typename RefType>
+		ArrayView<T> &ArrayView<T>::operator=(const ArrayRef<RefType> &other) {
+			LIBRAPID_ASSERT(m_shape.operator==(other.shape()), "Cannot assign to a non-scalar ArrayView.");
+
+			ShapeType coord = ShapeType::zeros(m_shape.ndim());
+			int64_t d = 0, p = 0;
+			int64_t idim = 0, adim = 0;
+			const int64_t ndim = m_shape.ndim();
+
+			do {
+				m_ref.storage()[p + m_offset] = other.scalar(d++);
+
+				for (idim = 0; idim < ndim; ++idim) {
+					adim = ndim - idim - 1;
+					if (++coord[adim] == m_shape[adim]) {
+						coord[adim] = 0;
+						p			= p - (m_shape[adim] - 1) * m_stride[adim];
+					} else {
+						p = p + m_stride[adim];
+						break;
+					}
+				}
+			} while (idim < ndim);
 		}
 
 		template<typename T>
@@ -274,6 +307,16 @@ namespace librapid {
 			} while (idim < ndim);
 
 			return res;
+		}
+
+		template<typename T>
+		auto ArrayView<T>::begin() const -> Iterator {
+			return Iterator(*this, 0);
+		}
+
+		template<typename T>
+		auto ArrayView<T>::end() const -> Iterator {
+			return Iterator(*this, m_shape[0]);
 		}
 	} // namespace array
 } // namespace librapid

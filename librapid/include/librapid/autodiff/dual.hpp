@@ -1,18 +1,29 @@
 #ifndef LIBRAPID_AUTODIFF_DUAL
 #define LIBRAPID_AUTODIFF_DUAL
 
-#define REQUIRE_SCALAR(TYPE) typename std::enable_if_t<std::is_scalar_v<TYPE>, int> = 0
+#if defined(LIBRAPID_IN_JITIFY)
+#	define REQUIRE_SCALAR(TYPE) typename AD_ARG_ = void
+#else
+#	define REQUIRE_SCALAR(TYPE) typename std::enable_if_t<std::is_scalar_v<TYPE>, int> = 0
+#endif // LIBRAPID_IN_JITIFY
 
+#if !defined(LIBRAPID_IN_JITIFY)
 namespace librapid {
+#endif
+
 	template<typename T>
 	class Dual {
 	public:
 		T value;
 		T derivative;
 
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+#if defined(LIBRAPID_IN_JITIFY)
+		using Scalar = T;
+#else
+	using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+#endif
 
-		Dual() : value(T()), derivative(T()) {}
+		Dual() = default;
 		explicit Dual(T value) : value(value), derivative(T()) {}
 		Dual(T value, T derivative) : value(value), derivative(derivative) {}
 
@@ -100,99 +111,96 @@ namespace librapid {
 			return *this;
 		}
 
+#if !defined(LIBRAPID_IN_JITIFY)
 		std::string str(const std::string &format = "{}") const {
 			return fmt::format(
 			  "Dual({}, {})", fmt::format(format, value), fmt::format(format, derivative));
 		}
+#endif // !defined(LIBRAPID_IN_JITIFY)
 	};
 
 	template<typename T, typename V>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(const Dual<T> &lhs,
-															 const Dual<V> &rhs) {
-		using Ret = decltype(lhs.value + rhs.value);
-		return Dual<Ret>(lhs.value + rhs.value, lhs.derivative + rhs.derivative);
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() + V())>
+	operator+(const Dual<T> &lhs, const Dual<V> &rhs) {
+		return {lhs.value + rhs.value, lhs.derivative + rhs.derivative};
 	}
 
 	template<typename T, typename V, REQUIRE_SCALAR(V)>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(const Dual<T> &lhs, const V &rhs) {
-		using Ret = decltype(lhs.value + rhs);
-		return Dual<Ret>(lhs.value + rhs, lhs.derivative);
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() + V())>
+	operator+(const Dual<T> &lhs, const V &rhs) {
+		return {lhs.value + rhs, lhs.derivative};
 	}
 
 	template<typename T, typename V, REQUIRE_SCALAR(V)>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(const V &lhs, const Dual<T> &rhs) {
-		using Ret = decltype(lhs + rhs.value);
-		return Dual<Ret>(lhs + rhs.value, rhs.derivative);
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() + V())>
+	operator+(const V &lhs, const Dual<T> &rhs) {
+		return {lhs + rhs.value, rhs.derivative};
 	}
 
 	template<typename T, typename V>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(const Dual<T> &lhs,
-															 const Dual<V> &rhs) {
-		using Ret = decltype(lhs.value - rhs.value);
-		return Dual<Ret>(lhs.value - rhs.value, lhs.derivative - rhs.derivative);
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() - V())>
+	operator-(const Dual<T> &lhs, const Dual<V> &rhs) {
+		return {lhs.value - rhs.value, lhs.derivative - rhs.derivative};
 	}
 
 	template<typename T, typename V, REQUIRE_SCALAR(V)>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(const Dual<T> &lhs, const V &rhs) {
-		using Ret = decltype(lhs.value - rhs);
-		return Dual<Ret>(lhs.value - rhs, lhs.derivative);
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() - V())>
+	operator-(const Dual<T> &lhs, const V &rhs) {
+		return {lhs.value - rhs, lhs.derivative};
 	}
 
 	template<typename T, typename V, REQUIRE_SCALAR(V)>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(const V &lhs, const Dual<T> &rhs) {
-		using Ret = decltype(lhs - rhs.value);
-		return Dual<Ret>(lhs - rhs.value, -rhs.derivative);
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() - V())>
+	operator-(const V &lhs, const Dual<T> &rhs) {
+		return {lhs - rhs.value, -rhs.derivative};
 	}
 
 	template<typename T, typename V>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(const Dual<T> &lhs,
-															 const Dual<V> &rhs) {
-		using Ret = decltype(lhs.value * rhs.value);
-		return Dual<Ret>(lhs.value * rhs.value,
-						 lhs.derivative * rhs.value + lhs.value * rhs.derivative);
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() * V())>
+	operator*(const Dual<T> &lhs, const Dual<V> &rhs) {
+		return {lhs.value * rhs.value, lhs.derivative * rhs.value + lhs.value * rhs.derivative};
 	}
 
 	template<typename T, typename V, REQUIRE_SCALAR(V)>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(const Dual<T> &lhs, const V &rhs) {
-		using Ret = decltype(lhs.value * rhs);
-		return Dual<Ret>(lhs.value * rhs, lhs.derivative * rhs);
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() * V())>
+	operator*(const Dual<T> &lhs, const V &rhs) {
+		return {lhs.value * rhs, lhs.derivative * rhs};
 	}
 
 	template<typename T, typename V, REQUIRE_SCALAR(V)>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(const V &lhs, const Dual<T> &rhs) {
-		using Ret = decltype(lhs * rhs.value);
-		return Dual<Ret>(lhs * rhs.value, lhs * rhs.derivative);
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() * V())>
+	operator*(const V &lhs, const Dual<T> &rhs) {
+		return {lhs * rhs.value, lhs * rhs.derivative};
 	}
 
 	template<typename T, typename V>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(const Dual<T> &lhs,
-															 const Dual<V> &rhs) {
-		using Ret = decltype(lhs.value / rhs.value);
-		return Dual<Ret>(
-		  (lhs.value * rhs.value - lhs.derivative * rhs.derivative) / (rhs.value * rhs.value),
-		  (lhs.derivative * rhs.value - lhs.value * rhs.derivative) / (rhs.value * rhs.value));
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() / V())>
+	operator/(const Dual<T> &lhs, const Dual<V> &rhs) {
+		return {lhs.value / rhs.value,
+				(lhs.derivative * rhs.value - lhs.value * rhs.derivative) /
+				  (rhs.value * rhs.value)};
 	}
 
 	template<typename T, typename V, REQUIRE_SCALAR(V)>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(const Dual<T> &lhs, const V &rhs) {
-		using Ret = decltype(lhs.value / rhs);
-		return Dual<Ret>(lhs.value / rhs, lhs.derivative / rhs);
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() / V())>
+	operator/(const Dual<T> &lhs, const V &rhs) {
+		return {lhs.value / rhs, lhs.derivative / rhs};
 	}
 
 	template<typename T, typename V, REQUIRE_SCALAR(V)>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(const V &lhs, const Dual<T> &rhs) {
-		using Ret = decltype(lhs / rhs.value);
-		return Dual<Ret>(lhs / rhs.value, -lhs * rhs.derivative / (rhs.value * rhs.value));
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() / V())>
+	operator/(const V &lhs, const Dual<T> &rhs) {
+		return {lhs / rhs.value, -lhs * rhs.derivative / (rhs.value * rhs.value)};
 	}
 
 	template<typename T>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(const Dual<T> &rhs) {
-		return Dual<T>(-rhs.value, -rhs.derivative);
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(-T())> operator-(const Dual<T> &lhs) {
+		return {-lhs.value, -lhs.derivative};
 	}
 
 	template<typename T>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(const Dual<T> &rhs) {
-		return Dual<T>(rhs.value, rhs.derivative);
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T())> operator+(const Dual<T> &lhs) {
+		return {lhs.value, lhs.derivative};
 	}
 
 	template<typename T>
@@ -349,27 +357,28 @@ namespace librapid {
 			(y.derivative * ::librapid::log(x.value) + y.value * x.derivative / x.value));
 	}
 
+#if !defined(LIBRAPID_IN_JITIFY)
 	namespace typetraits {
 		template<typename T>
 		struct TypeInfo<Dual<T>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Dual;
 			using Scalar							   = T;
-			using Packet =
-			  typename std::conditional_t<(TypeInfo<T>::packetWidth > 1),
-										  Dual<typename TypeInfo<T>::Packet>, std::false_type>;
-			using Backend = backend::CPU;
+			using Packet = Dual<typename TypeInfo<T>::Packet>;
 			static constexpr int64_t packetWidth =
 			  TypeInfo<typename TypeInfo<T>::Scalar>::packetWidth;
-			static constexpr char name[]			 = "Dual";
+			using Backend = backend::CPU;
+
+			static constexpr char name[] = "Dual_T";
+
 			static constexpr bool supportsArithmetic = TypeInfo<T>::supportsArithmetic;
 			static constexpr bool supportsLogical	 = TypeInfo<T>::supportsLogical;
 			static constexpr bool supportsBinary	 = TypeInfo<T>::supportsBinary;
 			static constexpr bool allowVectorisation = TypeInfo<T>::allowVectorisation;
 
-#if defined(LIBRAPID_HAS_CUDA)
+#	if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = TypeInfo<T>::CudaType;
 			static constexpr int64_t cudaPacketWidth = 1;
-#endif // LIBRAPID_HAS_CUDA
+#	endif // LIBRAPID_HAS_CUDA
 
 			static constexpr bool canAlign	   = TypeInfo<T>::canAlign;
 			static constexpr int64_t canMemcpy = TypeInfo<T>::canMemcpy;
@@ -383,13 +392,57 @@ namespace librapid {
 			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
 			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
-	} // namespace typetraits
-} // namespace librapid
 
-namespace std {
-	// template<typename T>
-	// class tuple_size<::librapid::Dual<T>> : public std::integral_constant<std::size_t, 2> {};
-}
+		template<>
+		struct TypeInfo<Dual<float>> {
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Dual;
+			using Scalar							   = float;
+			using Packet = Dual<typename TypeInfo<float>::Packet>;
+			static constexpr int64_t packetWidth =
+			  TypeInfo<typename TypeInfo<float>::Scalar>::packetWidth;
+			using Backend = backend::CPU;
+
+			static constexpr char name[] = "Dual_float";
+
+			static constexpr bool supportsArithmetic = TypeInfo<float>::supportsArithmetic;
+			static constexpr bool supportsLogical	 = TypeInfo<float>::supportsLogical;
+			static constexpr bool supportsBinary	 = TypeInfo<float>::supportsBinary;
+			static constexpr bool allowVectorisation = TypeInfo<float>::allowVectorisation;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = TypeInfo<float>::CudaType;
+			static constexpr int64_t cudaPacketWidth = 1;
+#	endif // LIBRAPID_HAS_CUDA
+
+			static constexpr bool canAlign	   = TypeInfo<float>::canAlign;
+			static constexpr int64_t canMemcpy = TypeInfo<float>::canMemcpy;
+
+			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+	}  // namespace typetraits
+#endif // !LIBRAPID_IN_JITIFY
+
+#if !defined(LIBRAPID_IN_JITIFY)
+} // namespace librapid
+#endif
+
+#if defined(LIBRAPID_HAS_CUDA)
+namespace jitify::reflection::detail {
+	template<typename T>
+	struct type_reflection<::librapid::Dual<T>> {
+		inline static std::string name() {
+			return fmt::format("Dual<{}>", type_reflection<T>::name());
+		}
+	};
+} // namespace jitify::reflection::detail
+#endif // LIBRAPID_HAS_CUDA
 
 #ifdef FMT_API
 LIBRAPID_SIMPLE_IO_IMPL(typename T, librapid::Dual<T>)

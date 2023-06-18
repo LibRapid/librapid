@@ -389,6 +389,15 @@ namespace librapid {
 				return First {};
 			}
 
+			template<typename T>
+			static constexpr bool edgeCases() {
+				if constexpr (typetraits::TypeInfo<T>::type == detail::LibRapidType::Dual) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+
 			static constexpr bool supportsVectorisation =
 			  (typetraits::TypeInfo<std::decay_t<Args>>::allowVectorisation && ...);
 			using First = decltype(extractFirst<Args...>());
@@ -400,10 +409,12 @@ namespace librapid {
 			  ((typetraits::TypeInfo<typename CudaVectorExtractor<typename typetraits::TypeInfo<
 				  std::decay_t<Args>>::Scalar>::Scalar>::cudaPacketWidth > 1) &&
 			   ...);
+			static constexpr bool fitsEdgeCases =
+			  (edgeCases<typename typetraits::TypeInfo<std::decay_t<Args>>::Scalar>() && ...);
 
 		public:
 			static constexpr bool value =
-			  supportsVectorisation && dtypesAreSame && dtypeSupportsVectorisation;
+			  supportsVectorisation && dtypesAreSame && dtypeSupportsVectorisation && fitsEdgeCases;
 		};
 
 		template<typename... Args>

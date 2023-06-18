@@ -28,8 +28,6 @@ namespace librapid::opencl {
 					  "if you need support for smaller types.");
 
 		std::string kernelNameFull = kernelName + "_" + typetraits::TypeInfo<Scalar>::name;
-		// fmt::print("Running OpenCL kernel: {}\n", kernelNameFull);
-
 		cl::Kernel kernel(global::openCLProgram, kernelNameFull.c_str());
 		setKernelArgs<Scalar>(
 		  kernel, std::make_tuple(args...), std::make_index_sequence<sizeof...(Args)>());

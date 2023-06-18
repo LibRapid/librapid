@@ -90,6 +90,7 @@ namespace librapid {
 			using Scalar	  = typename StorageType::Scalar;
 			using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;
 			using Backend	  = typename typetraits::TypeInfo<ArrayContainer>::Backend;
+			using Iterator	  = detail::ArrayIterator<ArrayView<ArrayContainer>>;
 
 			using DirectSubscriptType	 = typename detail::SubscriptType<StorageType>::Direct;
 			using DirectRefSubscriptType = typename detail::SubscriptType<StorageType>::Ref;
@@ -237,6 +238,22 @@ namespace librapid {
 			/// \param index The index to write the scalar to
 			/// \param value The value to write to the array's storage
 			LIBRAPID_ALWAYS_INLINE void write(size_t index, const Scalar &value);
+
+			/// \brief Return an iterator to the beginning of the array container
+			/// \return Iterator
+			LIBRAPID_INLINE Iterator begin() const noexcept;
+
+			/// \brief Return an iterator to the end of the array container
+			/// \return Iterator
+			LIBRAPID_INLINE Iterator end() const noexcept;
+
+			/// \brief Return an iterator to the beginning of the array container
+			/// \return Iterator
+			LIBRAPID_INLINE Iterator begin();
+
+			/// \brief Return an iterator to the end of the array container
+			/// \return Iterator
+			LIBRAPID_INLINE Iterator end();
 
 			/// Return a string representation of the array container
 			/// \format The format to use for the string representation
@@ -556,6 +573,26 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		void ArrayContainer<ShapeType_, StorageType_>::write(size_t index, const Scalar &value) {
 			m_storage[index] = value;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::begin() const noexcept -> Iterator {
+			return Iterator(ArrayView(*this), 0);
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::end() const noexcept -> Iterator {
+			return Iterator(ArrayView(*this), m_shape[0]);
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::begin() -> Iterator {
+			return Iterator(ArrayView(*this), 0);
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::end() -> Iterator {
+			return Iterator(ArrayView(*this), m_shape[0]);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
