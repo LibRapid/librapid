@@ -68,6 +68,10 @@
 		return os;                                                                                 \
 	}
 
+#define LIBRAPID_SIMPLE_IO_NORANGE(TEMPLATE, TYPE)                                                 \
+	template<TEMPLATE, typename Char>                                                                             \
+	struct fmt::is_range<TYPE, Char> : std::false_type {};
+
 namespace librapid::typetraits {
 	template<typename T>
 	struct IsLibRapidType : std::false_type {};

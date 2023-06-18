@@ -640,6 +640,8 @@ namespace librapid {
 #ifdef FMT_API
 LIBRAPID_SIMPLE_IO_IMPL(typename ShapeType_ COMMA typename StorageType_,
 						librapid::array::ArrayContainer<ShapeType_ COMMA StorageType_>)
+LIBRAPID_SIMPLE_IO_NORANGE(typename ShapeType_ COMMA typename StorageType_,
+						   librapid::array::ArrayContainer<ShapeType_ COMMA StorageType_>)
 #endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_ARRAY_CONTAINER_HPP
