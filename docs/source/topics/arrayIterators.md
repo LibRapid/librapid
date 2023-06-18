@@ -31,6 +31,9 @@ of the `ArrayView` class. Since this is ***not a direct C++ reference*** many ID
 and will suggest removing it. **Do not remove it!** The `ArrayView` is still referencing the original array and your
 data will still be updated correctly :)
 
+Keep in mind that this issue only comes up when you're using the non-const iterator, which is when you're assigning to
+the iterator.
+
 I am currently looking into ways to fix this issue, but it is proving to be quite difficult...
 :::
 
@@ -129,6 +132,7 @@ For example, if you have a 3D array with shape `{2, 3, 4}`, the elements will be
 (1, 2, 0)
 (1, 2, 1)
 ```
+
 :::
 
 ## Benchmarks
@@ -138,7 +142,7 @@ These benchmarks were performed on a Ryzen 9 3950x CPU with 64GB of RAM using a 
 
 ### MSVC
 
-```
+```none
 Iterator Timer [     ITERATOR     ] -- Elapsed: 1.25978m | Average: 25.19570s
 Iterator Timer [ FOR LOOP INDEXED ] -- Elapsed: 1.06851m | Average: 10.68511s
 Iterator Timer [ FOR LOOP DIRECT  ] -- Elapsed: 1.03243m | Average: 2.13607s
@@ -147,11 +151,11 @@ Iterator Timer [     STORAGE      ] -- Elapsed: 1.00972m | Average: 712.74672ms
 
 ### GCC (WSL2)
 
-```
-Iterator Timer [     ITERATOR     ] -- Elapsed: 1.25978m | Average: 25.19570s
-Iterator Timer [ FOR LOOP INDEXED ] -- Elapsed: 1.06851m | Average: 10.68511s
-Iterator Timer [ FOR LOOP DIRECT  ] -- Elapsed: 1.03243m | Average: 2.13607s
-Iterator Timer [     STORAGE      ] -- Elapsed: 1.00972m | Average: 712.74672ms
+```none
+Iterator Timer [     ITERATOR     ] -- Elapsed: 1.30497m | Average: 26.09936s
+Iterator Timer [ FOR LOOP INDEXED ] -- Elapsed: 1.00171m | Average: 12.02046s
+Iterator Timer [ FOR LOOP DIRECT  ] -- Elapsed: 1.00257m | Average: 222.79388ms
+Iterator Timer [     STORAGE      ] -- Elapsed: 1.00265m | Average: 268.56730ms
 ```
 
 ### Code
