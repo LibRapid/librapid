@@ -275,6 +275,8 @@ namespace librapid {
 #ifdef FMT_API
 LIBRAPID_SIMPLE_IO_IMPL(typename desc COMMA typename Functor COMMA typename... Args,
 						librapid::detail::Function<desc COMMA Functor COMMA Args...>)
+LIBRAPID_SIMPLE_IO_NORANGE(typename desc COMMA typename Functor COMMA typename... Args,
+						   librapid::detail::Function<desc COMMA Functor COMMA Args...>)
 #endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_FUNCTION_HPP

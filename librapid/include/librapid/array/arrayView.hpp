@@ -324,6 +324,7 @@ namespace librapid {
 // Support FMT printing
 #ifdef FMT_API
 LIBRAPID_SIMPLE_IO_IMPL(typename T, librapid::array::ArrayView<T>)
+LIBRAPID_SIMPLE_IO_NORANGE(typename T, librapid::array::ArrayView<T>)
 #endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_ARRAY_VIEW_HPP
