@@ -71,7 +71,8 @@ namespace librapid::cuda {
 			};
 
 			(printer(arguments, fmt::emphasis::bold | fmt::fg(fmt::color::dark_orange)), ...);
-			(printer(typeid(Templates).name(), fmt::emphasis::bold | fmt::fg(fmt::color::plum)), ...);
+			(printer(typeid(Templates).name(), fmt::emphasis::bold | fmt::fg(fmt::color::plum)),
+			 ...);
 
 			throw;
 		}

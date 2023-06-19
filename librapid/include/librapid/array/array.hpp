@@ -15,6 +15,7 @@
 
 #include "arrayTypeDef.hpp"
 #include "commaInitializer.hpp"
+#include "arrayIterator.hpp"
 #include "arrayContainer.hpp"
 #include "operations.hpp"
 #include "function.hpp"

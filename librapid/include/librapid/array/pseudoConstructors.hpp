@@ -2,6 +2,33 @@
 #define LIBRAPID_ARRAY_PSEUDO_CONSTRUCTORS_HPP
 
 namespace librapid {
+	/// \brief Force the input to be evaluated to an Array
+	///
+	/// When given a scalar or Array type, this function will return the input unchanged. When given
+	/// a Function, it will evaluate the function and return the result. This is useful for functions
+	/// which require an Array instance as input and cannot function with function types.
+	///
+	/// Note that the input is not copied or moved, so the returned Array will be a reference to the
+	/// input.
+	///
+	/// \tparam T Input type
+	/// \param other Input
+	/// \return Evaluated input
+	template<typename T>
+	auto evaluated(const T &other) {
+		return other;
+	}
+
+	template<typename ShapeType, typename StorageType>
+	auto evaluated(const array::ArrayContainer<ShapeType, StorageType> &other) {
+		return other;
+	}
+
+	template<typename descriptor, typename Functor, typename... Args>
+	auto evaluated(const detail::Function<descriptor, Functor, Args...> &other) {
+		return other.eval();
+	}
+
 	/// \brief Create a new array with the same type and shape as the input array, but without
 	///        initializing any of the data
 	/// \tparam T Input array type
@@ -9,7 +36,7 @@ namespace librapid {
 	/// \return New array
 	template<typename T>
 	auto emptyLike(const T &other) {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar  = typename typetraits::TypeInfo<T>::Scalar;
 		using Backend = typename typetraits::TypeInfo<T>::Backend;
 		return Array<Scalar, Backend>(other.shape());
 	}

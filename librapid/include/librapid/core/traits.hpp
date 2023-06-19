@@ -23,7 +23,15 @@ namespace librapid {
 	namespace detail {
 		/// An enum class representing different types within LibRapid. Intended mainly for
 		/// internal use
-		enum class LibRapidType { Scalar, ArrayContainer, ArrayFunction, ArrayView, Transpose };
+		enum class LibRapidType {
+			Scalar,
+			Dual,
+			Vector,
+			ArrayContainer,
+			ArrayFunction,
+			ArrayView,
+			Transpose
+		};
 
 		constexpr bool sameType(LibRapidType type1, LibRapidType type2) { return type1 == type2; }
 
@@ -493,6 +501,37 @@ namespace librapid {
 			static constexpr cudaDataType_t CudaType = cudaDataType_t::CUDA_R_64F;
 			static constexpr int64_t cudaPacketWidth = 1;
 #endif
+
+			static constexpr bool canAlign	= true;
+			static constexpr bool canMemcpy = true;
+
+			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
+
+		template<typename T, typename Abi>
+		struct TypeInfo<Vc::Vector<T, Abi>> {
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
+			using Scalar							   = T;
+			using Packet							   = std::false_type;
+			using Backend							   = backend::CPU;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr char name[]			   = "Vector";
+			static constexpr bool supportsArithmetic   = TypeInfo<Scalar>::supportsArithmetic;
+			static constexpr bool supportsLogical	   = TypeInfo<Scalar>::supportsLogical;
+			static constexpr bool supportsBinary	   = TypeInfo<Scalar>::supportsBinary;
+			static constexpr bool allowVectorisation   = TypeInfo<Scalar>::allowVectorisation;
+
+#	if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = TypeInfo<Scalar>::CudaType;
+			static constexpr int64_t cudaPacketWidth = TypeInfo<Scalar>::cudaPacketWidth;
+#	endif
 
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;

@@ -48,8 +48,21 @@ namespace librapid {
 		struct TypeInfo<array::ArrayContainer<ShapeType_, StorageType_>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayContainer;
 			using Scalar							   = typename TypeInfo<StorageType_>::Scalar;
+			using Packet							   = std::false_type;
 			using Backend							   = typename TypeInfo<StorageType_>::Backend;
+			static constexpr int64_t packetWidth	   = 1;
+			static constexpr bool supportsArithmetic   = TypeInfo<Scalar>::supportsArithmetic;
+			static constexpr bool supportsLogical	   = TypeInfo<Scalar>::supportsLogical;
+			static constexpr bool supportsBinary	   = TypeInfo<Scalar>::supportsBinary;
 			static constexpr bool allowVectorisation   = TypeInfo<Scalar>::packetWidth > 1;
+
+#if defined(LIBRAPID_HAS_CUDA)
+			static constexpr cudaDataType_t CudaType = TypeInfo<Scalar>::CudaType;
+			static constexpr int64_t cudaPacketWidth = 1;
+#endif // LIBRAPID_HAS_CUDA
+
+			static constexpr bool canAlign	   = false;
+			static constexpr int64_t canMemcpy = false;
 		};
 
 		/// Evaluates as true if the input type is an ArrayContainer instance
@@ -77,6 +90,7 @@ namespace librapid {
 			using Scalar	  = typename StorageType::Scalar;
 			using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;
 			using Backend	  = typename typetraits::TypeInfo<ArrayContainer>::Backend;
+			using Iterator	  = detail::ArrayIterator<ArrayView<ArrayContainer>>;
 
 			using DirectSubscriptType	 = typename detail::SubscriptType<StorageType>::Direct;
 			using DirectRefSubscriptType = typename detail::SubscriptType<StorageType>::Ref;
@@ -224,6 +238,22 @@ namespace librapid {
 			/// \param index The index to write the scalar to
 			/// \param value The value to write to the array's storage
 			LIBRAPID_ALWAYS_INLINE void write(size_t index, const Scalar &value);
+
+			/// \brief Return an iterator to the beginning of the array container
+			/// \return Iterator
+			LIBRAPID_INLINE Iterator begin() const noexcept;
+
+			/// \brief Return an iterator to the end of the array container
+			/// \return Iterator
+			LIBRAPID_INLINE Iterator end() const noexcept;
+
+			/// \brief Return an iterator to the beginning of the array container
+			/// \return Iterator
+			LIBRAPID_INLINE Iterator begin();
+
+			/// \brief Return an iterator to the end of the array container
+			/// \return Iterator
+			LIBRAPID_INLINE Iterator end();
 
 			/// Return a string representation of the array container
 			/// \format The format to use for the string representation
@@ -546,6 +576,26 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::begin() const noexcept -> Iterator {
+			return Iterator(ArrayView(*this), 0);
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::end() const noexcept -> Iterator {
+			return Iterator(ArrayView(*this), m_shape[0]);
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::begin() -> Iterator {
+			return Iterator(ArrayView(*this), 0);
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::end() -> Iterator {
+			return Iterator(ArrayView(*this), m_shape[0]);
+		}
+
+		template<typename ShapeType_, typename StorageType_>
 		std::string ArrayContainer<ShapeType_, StorageType_>::str(const std::string &format) const {
 			return ArrayView(*this).str(format);
 		}
@@ -590,6 +640,8 @@ namespace librapid {
 #ifdef FMT_API
 LIBRAPID_SIMPLE_IO_IMPL(typename ShapeType_ COMMA typename StorageType_,
 						librapid::array::ArrayContainer<ShapeType_ COMMA StorageType_>)
+LIBRAPID_SIMPLE_IO_NORANGE(typename ShapeType_ COMMA typename StorageType_,
+						   librapid::array::ArrayContainer<ShapeType_ COMMA StorageType_>)
 #endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_ARRAY_CONTAINER_HPP
