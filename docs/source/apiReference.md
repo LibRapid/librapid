@@ -63,6 +63,7 @@ Utility functions and classes to support development.
 :hidden:
 :maxdepth: 3
 
+Usage Examples <topics/topics>
 Arrays, Matrices and Linear Algebra <array/array>
 Vectors <vector/vector>
 Complex Numbers <complex/complex>

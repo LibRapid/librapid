@@ -12,21 +12,24 @@ namespace librapid::cuda {
 
 		std::string helperPath = fmt::format("{}/kernelHelper.cuh", basePath);
 		std::string vectorOpsPath = fmt::format("{}/vectorOps.cuh", basePath);
+		std::string dualPath = fmt::format("{}/include/librapid/autodiff/dual.hpp", LIBRAPID_SOURCE);
 		std::string kernelPath = fmt::format("{}/{}.cu", basePath, kernelName);
 		std::fstream helper(helperPath);
 		std::fstream vectorOps(vectorOpsPath);
+		std::fstream dual(dualPath);
 		std::fstream kernel(kernelPath);
 		LIBRAPID_ASSERT(helper.is_open(), "Failed to load CUDA helper functions");
 		LIBRAPID_ASSERT(vectorOps.is_open(), "Failed to load CUDA vectorOps helper functions");
+		LIBRAPID_ASSERT(dual.is_open(), "Failed to load dual number library");
 		LIBRAPID_ASSERT(kernel.is_open(), "Failed to load CUDA kernel '{}.cu'", kernelName);
 		std::stringstream buffer;
 		buffer << helper.rdbuf();
 		buffer << "\n\n";
 		buffer << vectorOps.rdbuf();
 		buffer << "\n\n";
+		buffer << dual.rdbuf();
+		buffer << "\n\n";
 		buffer << kernel.rdbuf();
-		helper.close();
-		kernel.close();
 
 		mapping[kernelName] = kernelName + "\n" + buffer.str();
 		return mapping[kernelName];

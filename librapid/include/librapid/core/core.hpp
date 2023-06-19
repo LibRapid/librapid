@@ -22,14 +22,18 @@
 #	include <fftw3.h>
 #endif // LIBRAPID_HAS_CUDA
 
+#if defined(LIBRAPID_MSVC)
 #pragma warning(push)
 #pragma warning(disable : 4324)
 #pragma warning(disable : 4458)
 #pragma warning(disable : 4456)
+#endif // LIBRAPID_MSVC
 
 #include <pocketfft_hdronly.h>
 
+#if defined(LIBRAPID_MSVC)
 #pragma warning(pop)
+#endif // LIBRAPID_MSVC
 
 #if defined(LIBRAPID_HAS_OPENCL)
 #	include "../opencl/openclErrorIdentifier.hpp"

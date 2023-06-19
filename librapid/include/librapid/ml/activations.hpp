@@ -22,8 +22,10 @@ namespace librapid::ml {
 	// 9.	[ ] Swish . . . . . . . f(x) = x / (1 + e^-x)
 	//								f'(x) = x(1 + e^-x + xe^-x) / (1 + e^-x)^2
 	// 10.	[ ] Mish . . . . . . .  f(x) = x * tanh(ln(1 + e^x))
-	//								f'(x) = (e^x * (4 * x + 4 + 4 * e^x + e^(2 * x))) / (2 * e^x + e^(2 * x) +
-	//2)^2
+	//								f'(x) = (e^x * (4 * x + 4 + 4 * e^x + e^(2 * x))) / (2 * e^x +
+	// e^(2
+	//* x)
+	//+ 2)^2
 	// 11.	[ ] HardSigmoid . . . . f(x) = max(0, min(1, x * 0.2 + 0.5))
 	//								f'(x) = 0.2 if 0 < x < 1 else 0
 	// 12.	[ ] LogSigmoid . . . .  f(x) = ln(1 / (1 + e^-x))
@@ -116,69 +118,12 @@ namespace librapid::ml {
 			dst = src * (StorageScalar(1) - src);
 		}
 
-#if defined(LIBRAPID_HAS_OPENCL)
-		template<typename ShapeType, typename StorageScalar>
-		LIBRAPID_ALWAYS_INLINE void
-		forward(array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &dst,
-				const array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &src) const {
-			opencl::runLinearKernel<StorageScalar>("sigmoidActivationForward",
-												   src.shape().size(),
-												   dst.storage().data(),
-												   src.storage().data());
-		}
-
-		template<typename ShapeType, typename StorageScalar>
-		LIBRAPID_ALWAYS_INLINE void
-		backward(array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &dst,
-				 const array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &src) const {
-			opencl::runLinearKernel<StorageScalar>("sigmoidActivationBackward",
-												   src.shape().size(),
-												   dst.storage().data(),
-												   src.storage().data());
-		}
-#endif // LIBRAPID_HAS_OPENCL
-
-#if defined(LIBRAPID_HAS_CUDA)
-		template<typename ShapeType, typename StorageScalar>
-		LIBRAPID_ALWAYS_INLINE void
-		forward(array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &dst,
-				const array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &src) const {
-			cuda::runKernel<StorageScalar, StorageScalar>("activations",
-														  "sigmoidActivationForward",
-														  dst.shape().size(),
-														  src.shape().size(),
-														  dst.storage().begin().get(),
-														  src.storage().begin().get());
-		}
-
-		template<typename ShapeType, typename StorageScalar>
-		LIBRAPID_ALWAYS_INLINE void
-		backward(array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &dst,
-				 const array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &src) const {
-			cuda::runKernel<StorageScalar, StorageScalar>("activations",
-														  "sigmoidActivationBackward",
-														  dst.shape().size(),
-														  src.shape().size(),
-														  dst.storage().begin().get(),
-														  src.storage().begin().get());
-		}
-#endif // LIBRAPID_HAS_CUDA
-
 		template<typename ShapeType, typename StorageScalar, typename StorageAllocator,
 				 typename descriptor, typename Functor, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
 		forward(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &dst,
 				const detail::Function<descriptor, Functor, Args...> &src) const {
-			using Type	  = detail::Function<descriptor, Functor, Args...>;
-			using Backend = typename typetraits::TypeInfo<Type>::Backend;
-			if constexpr (std::is_same_v<Backend, backend::CPU>) {
-				dst = StorageScalar(1) / (StorageScalar(1) + exp(-src));
-			} else {
-				// In the case where a non-standard Backend is used, it's often faster to
-				// evaluate the result and then apply a kernel directly, since it involves
-				// fewer copies, which are the main cause of performance drops.
-				forward(dst, src.eval());
-			}
+			dst = StorageScalar(1) / (StorageScalar(1) + exp(-src));
 		}
 
 		template<typename ShapeType, typename StorageScalar, typename StorageAllocator,
@@ -186,14 +131,72 @@ namespace librapid::ml {
 		LIBRAPID_ALWAYS_INLINE void
 		backward(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &dst,
 				 const detail::Function<descriptor, Functor, Args...> &src) const {
-			using Type	  = detail::Function<descriptor, Functor, Args...>;
-			using Backend = typename typetraits::TypeInfo<Type>::Backend;
-			if constexpr (std::is_same_v<Backend, backend::CPU>) {
-				dst = src * (StorageScalar(1) - src);
-			} else {
-				backward(dst, src.eval());
-			}
+			dst = src * (StorageScalar(1) - src);
 		}
+
+#if defined(LIBRAPID_HAS_OPENCL)
+		template<
+		  typename ShapeType, typename StorageScalar, typename Src,
+		  typename std::enable_if_t<
+			std::is_same_v<typename typetraits::TypeInfo<Src>::Backend, backend::OpenCL>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE void
+		forward(array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &dst,
+				const Src &src) const {
+			auto temp = evaluated(src);
+			opencl::runLinearKernel<StorageScalar>("sigmoidActivationForward",
+												   src.shape().size(),
+												   dst.storage().data(),
+												   src.storage().data());
+		}
+
+		template<
+		  typename ShapeType, typename StorageScalar, typename Src,
+		  typename std::enable_if_t<
+			std::is_same_v<typename typetraits::TypeInfo<Src>::Backend, backend::OpenCL>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE void
+		backward(array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &dst,
+				 const Src &src) const {
+			auto temp = evaluated(src);
+			opencl::runLinearKernel<StorageScalar>("sigmoidActivationBackward",
+												   temp.shape().size(),
+												   dst.storage().data(),
+												   temp.storage().data());
+		}
+#endif // LIBRAPID_HAS_OPENCL
+
+#if defined(LIBRAPID_HAS_CUDA)
+		template<
+		  typename ShapeType, typename StorageScalar, typename Src,
+		  typename std::enable_if_t<
+			std::is_same_v<typename typetraits::TypeInfo<Src>::Backend, backend::CUDA>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE void
+		forward(array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &dst,
+				const Src &src) const {
+			auto temp = evaluated(src);
+			cuda::runKernel<StorageScalar, StorageScalar>("activations",
+														  "sigmoidActivationForward",
+														  dst.shape().size(),
+														  temp.shape().size(),
+														  dst.storage().begin().get(),
+														  temp.storage().begin().get());
+		}
+
+		template<
+		  typename ShapeType, typename StorageScalar, typename Src,
+		  typename std::enable_if_t<
+			std::is_same_v<typename typetraits::TypeInfo<Src>::Backend, backend::CUDA>, int> = 0>
+		LIBRAPID_ALWAYS_INLINE void
+		backward(array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &dst,
+				 const Src &src) const {
+			auto temp = evaluated(src);
+			cuda::runKernel<StorageScalar, StorageScalar>("activations",
+														  "sigmoidActivationBackward",
+														  dst.shape().size(),
+														  temp.shape().size(),
+														  dst.storage().begin().get(),
+														  temp.storage().begin().get());
+		}
+#endif // LIBRAPID_HAS_CUDA
 	};
 } // namespace librapid::ml
 

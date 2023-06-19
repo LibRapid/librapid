@@ -116,6 +116,7 @@ namespace librapid {
 			using Scalar	 = typename typetraits::TypeInfo<Type>::Scalar;
 			using Backend	 = typename typetraits::TypeInfo<Type>::Backend;
 			using Packet	 = typename typetraits::TypeInfo<Scalar>::Packet;
+			using Iterator	 = detail::ArrayIterator<Function>;
 
 			using Descriptor = desc;
 			static constexpr bool argsAreSameType =
@@ -169,6 +170,9 @@ namespace librapid {
 			/// \param index The index to evaluate at.
 			/// \return The result of the function (scalar).
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar scalar(size_t index) const;
+
+			Iterator begin() const;
+			Iterator end() const;
 
 			/// Return a string representation of the Function
 			/// \param format The format to use.
@@ -251,6 +255,16 @@ namespace librapid {
 		}
 
 		template<typename desc, typename Functor, typename... Args>
+		auto Function<desc, Functor, Args...>::begin() const -> Iterator {
+			return Iterator(*this, 0);
+		}
+
+		template<typename desc, typename Functor, typename... Args>
+		auto Function<desc, Functor, Args...>::end() const -> Iterator {
+			return Iterator(*this, shape()[0]);
+		}
+
+		template<typename desc, typename Functor, typename... Args>
 		std::string Function<desc, Functor, Args...>::str(const std::string &format) const {
 			return eval().str(format);
 		}
@@ -261,6 +275,8 @@ namespace librapid {
 #ifdef FMT_API
 LIBRAPID_SIMPLE_IO_IMPL(typename desc COMMA typename Functor COMMA typename... Args,
 						librapid::detail::Function<desc COMMA Functor COMMA Args...>)
+LIBRAPID_SIMPLE_IO_NORANGE(typename desc COMMA typename Functor COMMA typename... Args,
+						   librapid::detail::Function<desc COMMA Functor COMMA Args...>)
 #endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_FUNCTION_HPP

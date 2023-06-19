@@ -71,6 +71,7 @@
 #include <Vc/Vc>
 #include <Vc/algorithm>
 #include <Vc/cpuid.h>
+#include <Vc/common/simdize.h>
 
 #if defined(_MSC_VER)
 #	pragma warning(pop)

@@ -1,6 +1,6 @@
 #ifndef LIBRAPID_AUTODIFF
 #define LIBRAPID_AUTODIFF
 
-#include "arrayAutodiff.hpp"
+#include "dual.hpp"
 
 #endif // LIBRAPID_AUTODIFF

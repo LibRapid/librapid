@@ -199,7 +199,7 @@ namespace librapid {
 		/// This method of resizing is faster and more efficient than the version which preserves
 		/// the original data, but of course, this has the drawback that data will be lost.
 		/// \param size Number of elements
-		LIBRAPID_ALWAYS_INLINE void resize(SizeType newSize, Scalar value);
+		LIBRAPID_ALWAYS_INLINE void resize(SizeType newSize, SizeType value);
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE SizeType size() const;
 
@@ -351,7 +351,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar>
-	void OpenCLStorage<Scalar>::resize(SizeType newSize, Scalar value) {
+	void OpenCLStorage<Scalar>::resize(SizeType newSize, SizeType value) {
 		resizeImpl(newSize, 0);
 	}
 
