@@ -137,10 +137,11 @@ For example, if you have a 3D array with shape `{2, 3, 4}`, the elements will be
 
 ## Benchmarks
 
-These benchmarks were performed on a Ryzen 9 3950x CPU with 64GB of RAM using a 2D array of `float` values with shape
-`{25000, 25000}`. The code used is included below.
+These benchmarks were performed on a Ryzen 9 3950x CPU with 64GB of RAM. The code used is included below.
 
-### MSVC
+### $25000 \times 25000$ array of `float`s
+
+#### MSVC
 
 ```none
 Iterator Timer [     ITERATOR     ] -- Elapsed: 1.25978m | Average: 25.19570s
@@ -149,13 +150,53 @@ Iterator Timer [ FOR LOOP DIRECT  ] -- Elapsed: 1.03243m | Average: 2.13607s
 Iterator Timer [     STORAGE      ] -- Elapsed: 1.00972m | Average: 712.74672ms
 ```
 
-### GCC (WSL2)
+#### GCC (WSL2)
 
 ```none
 Iterator Timer [     ITERATOR     ] -- Elapsed: 1.30497m | Average: 26.09936s
 Iterator Timer [ FOR LOOP INDEXED ] -- Elapsed: 1.00171m | Average: 12.02046s
 Iterator Timer [ FOR LOOP DIRECT  ] -- Elapsed: 1.00257m | Average: 222.79388ms
 Iterator Timer [     STORAGE      ] -- Elapsed: 1.00265m | Average: 268.56730ms
+```
+
+### $1000 \times 1000$ array of `float`s
+
+#### MSVC
+
+```none
+Iterator Timer [     ITERATOR     ] -- Elapsed: 20.03113s | Average: 60.51699ms
+Iterator Timer [ FOR LOOP INDEXED ] -- Elapsed: 20.01374s | Average: 20.56911ms
+Iterator Timer [ FOR LOOP DIRECT  ] -- Elapsed: 20.00305s | Average: 3.65019ms
+Iterator Timer [     STORAGE      ] -- Elapsed: 20.00049s | Average: 1.45257ms
+```
+
+#### GCC (WSL2)
+
+```none
+Iterator Timer [     ITERATOR     ] -- Elapsed: 20.03222s | Average: 75.30909ms
+Iterator Timer [ FOR LOOP INDEXED ] -- Elapsed: 20.00276s | Average: 23.67190ms
+Iterator Timer [ FOR LOOP DIRECT  ] -- Elapsed: 20.00003s | Average: 62.70073us
+Iterator Timer [     STORAGE      ] -- Elapsed: 20.00014s | Average: 242.00937us
+```
+
+### $100 \times 100$ array of `float`s
+
+#### MSVC
+
+```none
+Iterator Timer [     ITERATOR     ] -- Elapsed: 10.00005s | Average: 594.18031us
+Iterator Timer [ FOR LOOP INDEXED ] -- Elapsed: 10.00007s | Average: 210.48345us
+Iterator Timer [ FOR LOOP DIRECT  ] -- Elapsed: 10.00003s | Average: 14.38816us
+Iterator Timer [     STORAGE      ] -- Elapsed: 10.00001s | Average: 14.94997us
+```
+
+#### GCC (WSL2)
+
+```none
+Iterator Timer [     ITERATOR     ] -- Elapsed: 10.00055s | Average: 621.22918us
+Iterator Timer [ FOR LOOP INDEXED ] -- Elapsed: 10.00001s | Average: 235.57702us
+Iterator Timer [ FOR LOOP DIRECT  ] -- Elapsed: 10.00000s | Average: 650.03031ns
+Iterator Timer [     STORAGE      ] -- Elapsed: 10.00000s | Average: 2.44980us
 ```
 
 ### Code
