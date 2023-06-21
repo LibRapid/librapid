@@ -38,31 +38,46 @@ namespace librapid {
 		class Function;
 
 		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
-				 typename Functor_, typename... Args>
+				 typename Functor_, typename... Args,
+				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
+											 descriptor::Trivial, Functor_, Args...>>::value,
+										   int> = 0>
 		LIBRAPID_ALWAYS_INLINE void
 		assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 		template<typename ShapeType_, typename StorageScalar, size_t... StorageSize,
-				 typename Functor_, typename... Args>
+				 typename Functor_, typename... Args,
+				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
+											 descriptor::Trivial, Functor_, Args...>>::value,
+										   int> = 0>
 		LIBRAPID_ALWAYS_INLINE void
 		assign(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
-				 typename Functor_, typename... Args>
+				 typename Functor_, typename... Args,
+				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
+											 descriptor::Trivial, Functor_, Args...>>::value,
+										   int> = 0>
 		LIBRAPID_ALWAYS_INLINE void assignParallel(
 		  array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 		template<typename ShapeType_, typename StorageScalar, size_t... StorageSize,
-				 typename Functor_, typename... Args>
+				 typename Functor_, typename... Args,
+				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
+											 descriptor::Trivial, Functor_, Args...>>::value,
+										   int> = 0>
 		LIBRAPID_ALWAYS_INLINE void assignParallel(
 		  array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 #if defined(LIBRAPID_HAS_OPENCL)
-		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
+		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args,
+				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
+											 descriptor::Trivial, Functor_, Args...>>::value,
+										   int> = 0>
 		LIBRAPID_ALWAYS_INLINE void
 		assign(array::ArrayContainer<ShapeType_, OpenCLStorage<StorageScalar>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
@@ -70,7 +85,10 @@ namespace librapid {
 #endif // LIBRAPID_HAS_CUDA
 
 #if defined(LIBRAPID_HAS_CUDA)
-		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
+		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args,
+				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
+											 descriptor::Trivial, Functor_, Args...>>::value,
+										   int> = 0>
 		LIBRAPID_ALWAYS_INLINE void
 		assign(array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);

@@ -16,7 +16,10 @@ namespace librapid {
 		/// \param lhs The array container to assign to
 		/// \param function The function to assign
 		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
-				 typename Functor_, typename... Args>
+				 typename Functor_, typename... Args,
+				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
+											 descriptor::Trivial, Functor_, Args...>>::value,
+										   int>>
 		LIBRAPID_ALWAYS_INLINE void
 		assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
@@ -63,7 +66,10 @@ namespace librapid {
 		/// \tparam Functor_ The function type
 		/// \tparam Args The argument types of the function
 		template<typename ShapeType_, typename StorageScalar, size_t... StorageSize,
-				 typename Functor_, typename... Args>
+				 typename Functor_, typename... Args,
+				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
+											 descriptor::Trivial, Functor_, Args...>>::value,
+										   int>>
 		LIBRAPID_ALWAYS_INLINE void
 		assign(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
@@ -113,7 +119,10 @@ namespace librapid {
 		/// \see assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>>
 		/// &lhs, const detail::Function<descriptor::Trivial, Functor_, Args...> &function)
 		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
-				 typename Functor_, typename... Args>
+				 typename Functor_, typename... Args,
+				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
+											 descriptor::Trivial, Functor_, Args...>>::value,
+										   int>>
 		LIBRAPID_ALWAYS_INLINE void assignParallel(
 		  array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
 		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
@@ -164,7 +173,10 @@ namespace librapid {
 		/// \tparam Functor_ The function type
 		/// \tparam Args The argument types of the function
 		template<typename ShapeType_, typename StorageScalar, size_t... StorageSize,
-				 typename Functor_, typename... Args>
+				 typename Functor_, typename... Args,
+				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
+											 descriptor::Trivial, Functor_, Args...>>::value,
+										   int>>
 		LIBRAPID_ALWAYS_INLINE void assignParallel(
 		  array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
@@ -234,16 +246,16 @@ namespace librapid {
 #if defined(LIBRAPID_HAS_OPENCL)
 
 	namespace opencl {
-		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
-														 ::librapid::detail::LibRapidType::Scalar,
-													   int> = 0>
+		template<typename T,
+				 typename std::enable_if_t<
+				   typetraits::TypeInfo<T>::type != ::librapid::detail::LibRapidType::Scalar, int>>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
 			return obj.storage().data();
 		}
 
-		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
-														 ::librapid::detail::LibRapidType::Scalar,
-													   int> = 0>
+		template<typename T,
+				 typename std::enable_if_t<
+				   typetraits::TypeInfo<T>::type == ::librapid::detail::LibRapidType::Scalar, int>>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
 			return obj;
 		}
@@ -288,7 +300,10 @@ namespace librapid {
 	} // namespace opencl
 
 	namespace detail {
-		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
+		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args,
+				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
+											 descriptor::Trivial, Functor_, Args...>>::value,
+										   int>>
 		LIBRAPID_ALWAYS_INLINE void
 		assign(array::ArrayContainer<ShapeType_, OpenCLStorage<StorageScalar>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
@@ -313,16 +328,16 @@ namespace librapid {
 #if defined(LIBRAPID_HAS_CUDA)
 
 	namespace cuda {
-		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
-														 ::librapid::detail::LibRapidType::Scalar,
-													   int> = 0>
+		template<typename T,
+				 typename std::enable_if_t<
+				   typetraits::TypeInfo<T>::type != ::librapid::detail::LibRapidType::Scalar, int>>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
 			return obj.storage().begin().get();
 		}
 
-		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
-														 ::librapid::detail::LibRapidType::Scalar,
-													   int> = 0>
+		template<typename T,
+				 typename std::enable_if_t<
+				   typetraits::TypeInfo<T>::type == ::librapid::detail::LibRapidType::Scalar, int>>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const auto &dataSourceExtractor(const T &obj) {
 			return obj;
 		}
@@ -481,7 +496,10 @@ namespace librapid {
 		/// \tparam Args The argument types of the function
 		/// \param lhs The array container to assign to
 		/// \param function The function to assign
-		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
+		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args,
+				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
+											 descriptor::Trivial, Functor_, Args...>>::value,
+										   int>>
 		LIBRAPID_ALWAYS_INLINE void
 		assign(array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {

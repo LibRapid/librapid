@@ -90,6 +90,9 @@ namespace librapid {
 			return std::string_view {value.data(), value.size()};
 		}
 
+		template<typename T>
+		struct HasCustomEval : std::false_type {};
+
 		/// Provides compile-time information about a data type, allowing for easier function
 		/// switching and compile-time evaluation
 		/// \tparam T The type to get information about
