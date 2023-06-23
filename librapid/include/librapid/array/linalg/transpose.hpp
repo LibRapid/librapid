@@ -671,7 +671,6 @@ namespace librapid {
 		assign(array::ArrayContainer<ShapeType, DestinationStorageType> &destination,
 			   const Function<Descriptor, detail::Multiply, ScalarType,
 							  array::Transpose<TransposeType>> &function) {
-			fmt::print(fmt::fg(fmt::color::red) | fmt::emphasis::bold, "DEBUG POINT\n");
 			auto axes	= std::get<1>(function.args()).axes();
 			auto alpha	= std::get<1>(function.args()).alpha();
 			destination = array::Transpose(
