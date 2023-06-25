@@ -8,30 +8,71 @@ set(CMAKE_CXX_STANDARD 17) # LibRapid should compile with C++17 and beyond
 
 add_executable(MyProject main.cpp)
 
+# ==========================================================================================
+# ============================ LibRapid Configuration Options ==============================
+# ==========================================================================================
+
+set(LIBRAPID_OPTIMISE_SMALL_ARRAYS ON)  # Optimise performance for smaller arrays
+                                        # (~500x500) at the cost of lower performance
+                                        # for larger matrices (1000x1000 +). In practice
+                                        # this enables multithreaded array operations.
+                                        # The multithreading overhead makes array operations
+                                        # significantly slower for small arrays, but also
+                                        # significantly faster for large arrays.
+
 set(LIBRAPID_BUILD_EXAMPLES ON) # Compile the examples
+
 set(LIBRAPID_BUILD_TESTS ON) # Compile the testing suite
 
+set(LIBRAPID_CODE_COV OFF) # Enable code coverage (not sure this works...)
+
 set(LIBRAPID_STRICT OFF) # Enable all warnings and treat them as errors
+
 set(LIBRAPID_QUIET OFF) # Silence all warnings
 
 set(LIBRAPID_USE_BLAS ON) # Attempt to use a BLAS library -- if not found,
                           # LibRapid falls back to less optimized routines
+
+set(LIBRAPID_USE_OPENCL ON) # Attempt to enable OpenCL support -- if not found,
+                            # LibRapid falls back to CPU routines
+
 set(LIBRAPID_USE_CUDA ON) # Attempt to enable CUDA support
+
 set(LIBRAPID_USE_OMP ON) # Attempt to enable OpenMP
+
 set(LIBRAPID_USE_MULTIPREC ON) # Enable the multiprecision library (longer
                                # compile times and larger executables)
 
-set(LIBRAPID_OPTIMISE_SMALL_ARRAYS ON) # Optimise performance for smaller arrays
-                                       # (~500x500) at the cost of lower performance
-                                       # for larger matrices (1000x1000 +). In practice
-                                       # this enables multithreaded array operations.
-                                       # The multithreading overhead makes array operations
-                                       # significantly slower for small arrays, but also
-                                       # significantly faster for large arrays.
+set(LIBRAPID_FAST_MATH OFF) # Enable fast math, which may result in slightly
+                            # less accurate results but should be a bit faster
+                            # (depends on the compiler)
+
+set(LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH 4) # Set the CUDA vector width (4 is the default).
+                                        # This value must be between 1 and 4 inclusive.
+                                        # This value is ignored if CUDA is not enabled.
+                                        # If this is set to 1, CUDA kernels will run
+                                        # without vectorization, which will likely be a
+                                        # lot slower but should work on older GPUs.
+
+set(LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH 4) # Same thing, but for double precision :)
+
+set(LIBRAPID_GET_FFTW OFF) # Clone a modified version of FFTW and use it for fourier
+                           # transforms. Please read the documentation for more information,
+                           # as this may change the license requirements for your project.
 
 set(LIBRAPID_GET_BLAS OFF) # Clone a pre-built version of OpenBLAS and use it
 
+set(LIBRAPID_GET_MULTIPREC OFF) # Clone custom versions of MPFR and MPIR and use them for
+                                # multiprecision support.
+
+set(LIBRAPID_NO_WINDOWS_H OFF) # Disable the use of windows.h within LibRapid as far as
+                               # reasonably possible. The header often causes
+                               # conflicts with other libraries, so if LibRapid
+                               # is breaking your build, try enabling this option.
+
 add_subdirectory(librapid) # This makes the assumption that LibRapid is located in the same
                            # directory as this file. Change this line to suit your setup.
+
+# ==========================================================================================
 
 target_link_libraries(MyProject PUBLIC librapid)

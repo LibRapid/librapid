@@ -363,6 +363,19 @@ namespace librapid {
 							  array::Transpose(rightMat.array(), axes2, beta).eval();
 			}
 		}
+
+		template<typename ShapeType, typename DestinationStorageType, typename Descriptor1,
+				 typename Descriptor2, typename Descriptor3, typename TransposeType1,
+				 typename TransposeType2, typename ScalarType1, typename ScalarType2>
+		LIBRAPID_ALWAYS_INLINE void assignParallel(
+		  array::ArrayContainer<ShapeType, DestinationStorageType> &destination,
+		  const Function<
+			Descriptor1, detail::Plus,
+			Function<Descriptor2, detail::Multiply, array::Transpose<TransposeType1>, ScalarType1>,
+			Function<Descriptor3, detail::Multiply, array::Transpose<TransposeType2>, ScalarType2>>
+			&function) {
+			assign(destination, function);
+		}
 	} // namespace detail
 } // namespace librapid
 

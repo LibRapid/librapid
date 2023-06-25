@@ -664,6 +664,16 @@ namespace librapid {
 			  std::get<0>(function.args()).array(), axes, alpha * std::get<1>(function.args()));
 		}
 
+		template<typename ShapeType, typename DestinationStorageType, typename Descriptor,
+				 typename TransposeType, typename ScalarType>
+		LIBRAPID_ALWAYS_INLINE void
+		assignParallel(array::ArrayContainer<ShapeType, DestinationStorageType> &destination,
+					   const Function<Descriptor, detail::Multiply, array::Transpose<TransposeType>,
+									  ScalarType> &function) {
+			// The assign function runs in parallel if possible by default, so just call that
+			assign(destination, function);
+		}
+
 		// a * bT
 		template<typename ShapeType, typename DestinationStorageType, typename ScalarType,
 				 typename Descriptor, typename TransposeType>
@@ -675,6 +685,15 @@ namespace librapid {
 			auto alpha	= std::get<1>(function.args()).alpha();
 			destination = array::Transpose(
 			  std::get<1>(function.args()).array(), axes, alpha * std::get<0>(function.args()));
+		}
+
+		template<typename ShapeType, typename DestinationStorageType, typename ScalarType,
+				 typename Descriptor, typename TransposeType>
+		LIBRAPID_ALWAYS_INLINE void
+		assignParallel(array::ArrayContainer<ShapeType, DestinationStorageType> &destination,
+					   const Function<Descriptor, detail::Multiply, ScalarType,
+									  array::Transpose<TransposeType>> &function) {
+			assign(destination, function);
 		}
 	} // namespace detail
 } // namespace librapid
