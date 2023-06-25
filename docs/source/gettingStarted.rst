@@ -4,7 +4,14 @@ Getting Started
 Installation
 -------------
 
-To use LibRapid in your CMake project, first clone the project: ``git clone --recursive https://github.com/LibRapid/libRapid.git``
+To use LibRapid in your CMake project, first clone the project:
+
+``git clone --recursive https://github.com/LibRapid/libRapid.git``
+
+```{warning}
+Make sure to use the ``--recursive`` flag when cloning the repository. This will ensure that all submodules are
+cloned as well!
+```
 
 Next, add the following to your ``CMakeLists.txt``
 
