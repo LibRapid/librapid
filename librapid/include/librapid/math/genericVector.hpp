@@ -293,7 +293,7 @@ namespace librapid {
 		/// \brief Project vector \p other onto this vector and return the result
 		///
 		/// Perform vector projection using the formula:
-		/// \f$ \operatorname{proj}_a(\vec{b})=\frac{\vec{b} \cdot \vec{a}}{|\vec{a}|^2} \cdot
+		/// \f$ \operatorname{proj}_a(\vec{b})=rac{\vec{b} \cdot \vec{a}}{|\vec{a}|^2} \cdot
 		/// \vec{a} \f$
 		///
 		/// \param other The vector to project
@@ -323,7 +323,7 @@ namespace librapid {
 
 		/// \brief Vector swizzle
 		///
-		/// Create a new vector with \f$ m \$ dimensions, where \f$ m \leq n \$, where \f$ n \$ is
+		/// Create a new vector with \f$ m \\f$ dimensions, where \f$ m \leq n \\f$, where \f$ n \\f$ is
 		/// the dimension of this vector. The new vector is created by selecting the elements of
 		/// this vector at the indices specified by \p Indices.
 		///

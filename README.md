@@ -19,17 +19,6 @@
 
 ---
 
-# An Important Note
-
-I am currently preparing for my A-Level exams and, as such, my ability to work on LibRapid is severely limited. I will try to work on it as much as
-reasonably possible, but I cannot guarantee that development will be as fast as it has been in the past. Development will continue in short bursts
-when I have time, and I'll be available to answer questions on [Discord](https://discord.gg/cGxTFTgCAC).
-
-Any external contributions are greatly appreciated, and I will most likely
-review them within a day or two. If you have any questions, feel free to ask them on the Discord server.
-
-Thank you for your understanding.
-
 # What is LibRapid?
 
 LibRapid is a high performance Array library, supporting a wide range of optimised calculations which can be performed

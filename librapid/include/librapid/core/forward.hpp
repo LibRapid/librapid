@@ -1,6 +1,8 @@
 #ifndef LIBRAPID_CORE_FORWARD_HPP
 #define LIBRAPID_CORE_FORWARD_HPP
 
+#ifndef LIBRAPID_DOXYGEN
+
 namespace librapid {
 	template<typename T, size_t N>
 	class Shape;
@@ -73,7 +75,7 @@ namespace librapid {
 		  array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
-#if defined(LIBRAPID_HAS_OPENCL)
+#	if defined(LIBRAPID_HAS_OPENCL)
 		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args,
 				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
 											 descriptor::Trivial, Functor_, Args...>>::value,
@@ -82,9 +84,9 @@ namespace librapid {
 		assign(array::ArrayContainer<ShapeType_, OpenCLStorage<StorageScalar>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
-#endif // LIBRAPID_HAS_CUDA
+#	endif // LIBRAPID_HAS_CUDA
 
-#if defined(LIBRAPID_HAS_CUDA)
+#	if defined(LIBRAPID_HAS_CUDA)
 		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args,
 				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
 											 descriptor::Trivial, Functor_, Args...>>::value,
@@ -93,8 +95,10 @@ namespace librapid {
 		assign(array::ArrayContainer<ShapeType_, CudaStorage<StorageScalar>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
-#endif // LIBRAPID_HAS_CUDA
-	}  // namespace detail
+#	endif // LIBRAPID_HAS_CUDA
+	}	   // namespace detail
 } // namespace librapid
+
+#endif // LIBRAPID_DOXYGEN
 
 #endif // LIBRAPID_CORE_FORWARD_HPP
