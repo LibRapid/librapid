@@ -246,3 +246,21 @@ favicons = [
 rst_prolog = """
 .. include:: <s5defs.txt>
 """
+
+# Set LaTeX preamble to allow for deeper nesting of itemize environments
+latex_elements = {
+    "preamble": r"""
+\usepackage{enumitem}
+\setlistdepth{9}
+\setlist[itemize,1]{label=\textbullet}
+\setlist[itemize,2]{label=--}
+\setlist[itemize,3]{label=*}
+\setlist[itemize,4]{label=-}
+\setlist[itemize,5]{label=$\circ$}
+\setlist[itemize,6]{label=$\bullet$}
+\setlist[itemize,7]{label=$\diamond$}
+\setlist[itemize,8]{label=$\ast$}
+\setlist[itemize,9]{label=$\cdot$}
+\renewlist{itemize}{itemize}{9}
+  """
+}

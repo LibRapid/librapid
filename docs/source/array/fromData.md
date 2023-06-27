@@ -1,4 +1,4 @@
 # Array From Data
 
-```{doxygenfile} librapid/include/librapid/array/fromData.hpp
+```{doxygenfile} librapid/include/librapid/array/arrayFromData.hpp
 ```
