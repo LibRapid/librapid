@@ -331,20 +331,20 @@ jobs:
       #     path: buildRelease
 
       # Zip debug build before uploading
-      - name: Zip build results before uploading
-        uses: vimtor/action-zip@v1.1
-        continue-on-error: true
-        with:
-          files: ./buildDebug ./buildRelease
-          recursive: true
-          dest: ${{ matrix.pretty }}.zip
+      # - name: Zip build results before uploading
+      #   uses: vimtor/action-zip@v1.1
+      #   continue-on-error: true
+      #   with:
+      #     files: ./buildDebug ./buildRelease
+      #     recursive: true
+      #     dest: ${{ matrix.pretty }}.zip
 
-      - name: Store Build Artifacts
-        uses: actions/upload-artifact@v3
-        continue-on-error: true
-        with:
-          name: ${{ matrix.pretty }}
-          path: ${{ matrix.pretty }}.zip
+      # - name: Store Build Artifacts
+      #   uses: actions/upload-artifact@v3
+      #   continue-on-error: true
+      #   with:
+      #     name: ${{ matrix.pretty }}
+      #     path: ${{ matrix.pretty }}.zip
 
   quodona:
     name: Run Qodana
@@ -428,16 +428,21 @@ jobs:
         run: |
           touch .is_local
 
-      - name: Build Documentation
+      - name: Build HTML Documentation
         run: |
           cd docs
-          make html latexpdf
+          make html
 
-      # - name: Store Artifacts
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: Documentation
-      #     path: docs/build/**
+      - name: Build PDf Documentation
+        run: |
+          cd docs
+          make latexpdf
+
+      - name: Store Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Documentation
+          path: docs/build/**
 
   run-benchmarks:
     name: Run Benchmarks
