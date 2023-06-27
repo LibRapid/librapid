@@ -1972,7 +1972,7 @@ namespace librapid {
 			return polarPositiveNanInfZeroRho(rho, theta);
 	}
 
-	/// \brie Compute the sine of a complex number
+	/// \brief Compute the sine of a complex number
 	/// \tparam T Scalar type
 	/// \param other Complex number
 	/// \return \f$ \sin(z) \f$
