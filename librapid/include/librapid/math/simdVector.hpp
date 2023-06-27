@@ -324,6 +324,18 @@ namespace librapid {
 		/// \return The w component of this vector
 		LIBRAPID_ALWAYS_INLINE Scalar w() const;
 
+		/// \brief Vector swizzle
+		///
+		/// Create a new vector with \f$ m \$ dimensions, where \f$ m \leq n \$, where \f$ n \$ is
+		/// the dimension of this vector. The new vector is created by selecting the elements of
+		/// this vector at the indices specified by \p Indices.
+		///
+		/// \tparam Indices The indices to select
+		/// \return A new vector with the selected elements
+		template<size_t... Indices>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE SIMDVector<Scalar, sizeof...(Indices)>
+		swizzle() const;
+
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE SIMDVector<Scalar, 2> xy() const;
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE SIMDVector<Scalar, 2> yx() const;
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE SIMDVector<Scalar, 2> xz() const;
@@ -1083,6 +1095,13 @@ namespace librapid {
 			return 0;
 		else
 			return m_data[3];
+	}
+
+	template<typename Scalar, int64_t Dims>
+	template<size_t... Indices>
+	auto SIMDVector<Scalar, Dims>::swizzle() const -> SIMDVector<Scalar, sizeof...(Indices)> {
+		static_assert(sizeof...(Indices) <= Dims, "Too many indices for swizzle");
+		return {m_data[Indices]...};
 	}
 
 	template<typename Scalar, int64_t Dims>

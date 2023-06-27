@@ -185,6 +185,11 @@ constexpr double tolerance = 1e-3;
 		REQUIRE((bool)VEC_TYPE<SCALAR, 4>(0, 0, 0, 0) == false);                                   \
                                                                                                    \
 		VEC_TYPE<SCALAR, 4> testC(1, 2, 3, 4);                                                     \
+                                                                                                   \
+		REQUIRE(testC.swizzle<0, 0, 0>() == VEC_TYPE<SCALAR, 3>(1, 1, 1));                         \
+		REQUIRE(testC.swizzle<3, 2>() == VEC_TYPE<SCALAR, 3>(4, 3));                               \
+		REQUIRE(testC.swizzle<0, 1, 2, 3>() == VEC_TYPE<SCALAR, 4>(1, 2, 3, 4));                   \
+                                                                                                   \
 		REQUIRE(testC.xy() == VEC_TYPE<SCALAR, 2>(1, 2));                                          \
 		REQUIRE(testC.yx() == VEC_TYPE<SCALAR, 2>(2, 1));                                          \
 		REQUIRE(testC.xz() == VEC_TYPE<SCALAR, 2>(1, 3));                                          \
