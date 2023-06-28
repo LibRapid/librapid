@@ -326,8 +326,8 @@ namespace librapid {
 
 		/// \brief Vector swizzle
 		///
-		/// Create a new vector with \f$ m \\f$ dimensions, where \f$ m \leq n \\f$, where \f$ n \\f$ is
-		/// the dimension of this vector. The new vector is created by selecting the elements of
+		/// Create a new vector with \f$ m \f$ dimensions, where \f$ m \leq n \f$, where \f$ n \f$
+		/// is the dimension of this vector. The new vector is created by selecting the elements of
 		/// this vector at the indices specified by \p Indices.
 		///
 		/// \tparam Indices The indices to select

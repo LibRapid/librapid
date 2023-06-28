@@ -434,6 +434,7 @@ jobs:
           make html
 
       - name: Build PDf Documentation
+        # continue-on-error: true
         run: |
           cd docs
           make latexpdf

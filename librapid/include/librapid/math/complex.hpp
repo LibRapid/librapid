@@ -254,8 +254,9 @@ namespace librapid {
 			template<typename T>
 			static inline T HypotLegTiny = HypotLegTinyHelper<T>::val;
 
-			/// \brief Calculates \f$ x^2 + y^2 - 1 \f$ for \f$ |x| \geq |y| \f$ and \f$ 0.5 \leq
-			/// |x| < 2^{12} \f$ \tparam T Template type \param x First value \param y Second value
+			/// \brief Calculates \f$ x^2 + y^2 - 1 \f$ for
+			/// \f$ |x| \geq |y| \f$ and \f$ 0.5 \leq |x| < 2^{12} \f$
+			/// \tparam T Template type \param x First value \param y Second value
 			/// \return x * x + y * y - 1
 			template<typename T>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T normMinusOne(const T x,
