@@ -153,7 +153,7 @@ namespace librapid {
 	/// \see tan(const mpfr &)
 	mpfr atan(const mpfr &val);
 
-	/// Atan2 of a multiprecision floating point value: \f$ \tan^{-1}\left(\frac{y}{x}\right) \f$
+	/// Atan2 of a multiprecision floating point value: \f$ \tan^{-1}\left(rac{y}{x}\right) \f$
 	/// \param dy The y value
 	/// \param dx The x value
 	/// \return The atan2 of the value

@@ -479,6 +479,16 @@ namespace librapid {
 			/// \return Scalar type at the given index
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalar(int64_t index) const;
 
+			/// \brief Return the axes of the Transpose object
+			/// \return `ShapeType` containing the axes
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ShapeType &axes() const;
+
+			/// \brief Return the alpha value of the Transpose object
+			/// \return Alpha scaling factor
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const Scalar &alpha() const;
+
+			/// \brief Return the untransposed array object
+			/// \return Array object
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ArrayType &array() const;
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayType &array();
 
@@ -512,7 +522,7 @@ namespace librapid {
 							"Shape and axes must have the same number of dimensions");
 
 			m_outputShape = m_inputShape;
-			for (int64_t i = 0; i < m_inputShape.ndim(); i++) {
+			for (size_t i = 0; i < m_inputShape.ndim(); i++) {
 				m_outputShape[i] = m_inputShape[m_axes[i]];
 			}
 		}
@@ -525,6 +535,16 @@ namespace librapid {
 		template<typename T>
 		auto Transpose<T>::ndim() const -> int64_t {
 			return m_outputShape.ndim();
+		}
+
+		template<typename T>
+		auto Transpose<T>::axes() const -> const ShapeType & {
+			return m_axes;
+		}
+
+		template<typename T>
+		auto Transpose<T>::alpha() const -> const Scalar & {
+			return m_alpha;
 		}
 
 		template<typename T>
@@ -609,17 +629,79 @@ namespace librapid {
 		// If axes is empty, transpose the array in reverse order
 		if (axes.ndim() == 0) {
 			ShapeType tmp = ShapeType::zeros(array.ndim());
-			for (int64_t i = 0; i < array.ndim(); i++) { tmp[i] = array.ndim() - i - 1; }
+			for (size_t i = 0; i < array.ndim(); i++) { tmp[i] = array.ndim() - i - 1; }
 			return array::Transpose(array, tmp);
 		}
 
 		return array::Transpose(array, axes);
 	}
+
+	namespace typetraits {
+		template<typename Descriptor, typename TransposeType, typename ScalarType>
+		struct HasCustomEval<detail::Function<Descriptor, detail::Multiply,
+											  array::Transpose<TransposeType>, ScalarType>>
+				: std::true_type {};
+
+		template<typename Descriptor, typename ScalarType, typename TransposeType>
+		struct HasCustomEval<detail::Function<Descriptor, detail::Multiply, ScalarType,
+											  array::Transpose<TransposeType>>> : std::true_type {};
+	}; // namespace typetraits
+
+	namespace detail {
+		// If assigning an operation of the form aT * b, where a is a matrix and b is a scalar,
+		// we can replace this with Transpose(a, b) to get better performance
+
+		// aT * b
+		template<typename ShapeType, typename DestinationStorageType, typename Descriptor,
+				 typename TransposeType, typename ScalarType>
+		LIBRAPID_ALWAYS_INLINE void
+		assign(array::ArrayContainer<ShapeType, DestinationStorageType> &destination,
+			   const Function<Descriptor, detail::Multiply, array::Transpose<TransposeType>,
+							  ScalarType> &function) {
+			auto axes	= std::get<0>(function.args()).axes();
+			auto alpha	= std::get<0>(function.args()).alpha();
+			destination = array::Transpose(
+			  std::get<0>(function.args()).array(), axes, alpha * std::get<1>(function.args()));
+		}
+
+		template<typename ShapeType, typename DestinationStorageType, typename Descriptor,
+				 typename TransposeType, typename ScalarType>
+		LIBRAPID_ALWAYS_INLINE void
+		assignParallel(array::ArrayContainer<ShapeType, DestinationStorageType> &destination,
+					   const Function<Descriptor, detail::Multiply, array::Transpose<TransposeType>,
+									  ScalarType> &function) {
+			// The assign function runs in parallel if possible by default, so just call that
+			assign(destination, function);
+		}
+
+		// a * bT
+		template<typename ShapeType, typename DestinationStorageType, typename ScalarType,
+				 typename Descriptor, typename TransposeType>
+		LIBRAPID_ALWAYS_INLINE void
+		assign(array::ArrayContainer<ShapeType, DestinationStorageType> &destination,
+			   const Function<Descriptor, detail::Multiply, ScalarType,
+							  array::Transpose<TransposeType>> &function) {
+			auto axes	= std::get<1>(function.args()).axes();
+			auto alpha	= std::get<1>(function.args()).alpha();
+			destination = array::Transpose(
+			  std::get<1>(function.args()).array(), axes, alpha * std::get<0>(function.args()));
+		}
+
+		template<typename ShapeType, typename DestinationStorageType, typename ScalarType,
+				 typename Descriptor, typename TransposeType>
+		LIBRAPID_ALWAYS_INLINE void
+		assignParallel(array::ArrayContainer<ShapeType, DestinationStorageType> &destination,
+					   const Function<Descriptor, detail::Multiply, ScalarType,
+									  array::Transpose<TransposeType>> &function) {
+			assign(destination, function);
+		}
+	} // namespace detail
 } // namespace librapid
 
 // Support FMT printing
 #ifdef FMT_API
 LIBRAPID_SIMPLE_IO_IMPL(typename T, librapid::array::Transpose<T>)
+LIBRAPID_SIMPLE_IO_NORANGE(typename T, librapid::array::Transpose<T>)
 #endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_TRANSPOSE_HPP

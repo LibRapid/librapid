@@ -1,7 +1,4 @@
 # Complex Number Listing
 
-```{doxygenclass} librapid::Complex
-    :members:
-    :protected-members:
-    :undoc-members:
+```{doxygenfile} librapid/include/librapid/math/complex.hpp
 ```
