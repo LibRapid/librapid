@@ -40,9 +40,19 @@ if args.version and any([args.major, args.minor, args.patch]):
     print("[ ERROR ] -v and -M options cannot be used together")
     sys.exit(1)
 
-newMajorVersion = args.major if args.major else currentMajorVersion
-newMinorVersion = args.minor if args.minor else currentMinorVersion
-newPatchVersion = args.patch if args.patch else str(int(currentPatchVersion) + 1)
+if args.version:
+    # Validate version number
+    if not regex.match("[0-9]+\.[0-9]+\.[0-9]+", args.version):
+        print("[ ERROR ] Invalid version number")
+        sys.exit(1)
+    newMajorVersion = args.version.split(".")[0]
+    newMinorVersion = args.version.split(".")[1]
+    newPatchVersion = args.version.split(".")[2]
+else:
+    newMajorVersion = args.major if args.major else currentMajorVersion
+    newMinorVersion = args.minor if args.minor else currentMinorVersion
+    newPatchVersion = args.patch if args.patch else str(int(currentPatchVersion) + 1)
+    
 print(f"New Version: v{newMajorVersion}.{newMinorVersion}.{newPatchVersion}\n\n")
 
 # Write to version.txt
@@ -77,13 +87,13 @@ with open("../CITATION.cff", "w") as citationFile:
     citationFile.write(template)
     print("Written to CITATION.cff")
 
-# Write to .hdoc.toml
-with open("tmp/hdocTemplate.toml", "r") as templateFile:
-    template = templateFile.read()
-    print("Loaded .hdoc.toml template")
-
-with open("../.hdoc.toml", "w") as hdocFile:
-    versionString = f"v{newMajorVersion}.{newMinorVersion}.{newPatchVersion}"
-    template = template.replace("$${{ INSERT_VERSION_NUMBER_HERE }}$$", versionString)
-    hdocFile.write(template)
-    print("Written to .hdoc.toml")
+# # Write to .hdoc.toml
+# with open("tmp/hdocTemplate.toml", "r") as templateFile:
+#     template = templateFile.read()
+#     print("Loaded .hdoc.toml template")
+# 
+# with open("../.hdoc.toml", "w") as hdocFile:
+#     versionString = f"v{newMajorVersion}.{newMinorVersion}.{newPatchVersion}"
+#     template = template.replace("$${{ INSERT_VERSION_NUMBER_HERE }}$$", versionString)
+#     hdocFile.write(template)
+#     print("Written to .hdoc.toml")
