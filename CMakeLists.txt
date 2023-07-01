@@ -652,3 +652,6 @@ target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/li
 include("warnings")
 
 auto_disable_warnings(${module_name})
+
+# Disable shared libraries
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
