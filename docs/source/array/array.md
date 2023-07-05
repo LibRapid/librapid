@@ -4,6 +4,7 @@ The main feature of LibRapid is its high-performance array library. It provides 
 highly efficient operations on arrays and matrices in C++.
 
 ```{toctree}
+Linear Algebra <linalg/linalg.md>
 Array Listing <arrayListing.md>
 From Data <fromData.md>
 Pseudoconstructors <pseudoconstructors.md>

@@ -81,7 +81,7 @@ namespace librapid {
 		/// Create a new timer with a given name
 		/// \param name The name of the timer
 		/// \param printOnDestruct Whether to print the time between construction and destruction
-		explicit Timer(std::string name = "Timer") :
+		explicit Timer(std::string name = "") :
 				m_name(std::move(name)), m_start(now<time::nanosecond>()), m_end(-1) {}
 
 		Timer(const Timer &)			= default;
@@ -92,7 +92,6 @@ namespace librapid {
 		/// Timer destructor
 		~Timer() {
 			m_end = now<time::nanosecond>();
-			// if (m_printOnDestruct) print();
 		}
 
 		template<size_t scale = time::second>
@@ -145,8 +144,8 @@ namespace librapid {
 			double tmpEnd = m_end;
 			if (tmpEnd < 0) tmpEnd = now<time::nanosecond>();
 			return fmt::format(
-			  "{} -- Elapsed: {} | Average: {}",
-			  m_name,
+			  "{}Elapsed: {} | Average: {}",
+			  (m_name.empty() ? "" : m_name + ": "),
 			  formatTime<time::nanosecond>(tmpEnd - m_start, format),
 			  formatTime<time::nanosecond>((tmpEnd - m_start) / (double)m_iters, format));
 		}

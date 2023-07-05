@@ -1,11 +1,10 @@
 #ifndef LIBRAPID_ARRAY_LINALG_LEVEL3_GEMM_HPP
 #define LIBRAPID_ARRAY_LINALG_LEVEL3_GEMM_HPP
 
-namespace librapid { namespace linalg {
-	template<typename Backend, typename Int, typename A, typename Alpha, typename B, typename Beta,
-			 typename C>
+namespace librapid::linalg {
+	template<typename Int, typename Alpha, typename A, typename Beta, typename B, typename C>
 	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, A *a, Int lda, Beta beta,
-			  B *b, Int ldb, C *c, Int ldc, backend::CPU) {
+			  B *b, Int ldb, C *c, Int ldc, backend::CPU backend = backend::CPU()) {
 		cxxblas::gemm(cxxblas::StorageOrder::RowMajor,
 					  (transA ? cxxblas::Transpose::Trans : cxxblas::Transpose::NoTrans),
 					  (transB ? cxxblas::Transpose::Trans : cxxblas::Transpose::NoTrans),
@@ -24,7 +23,7 @@ namespace librapid { namespace linalg {
 
 #if defined(LIBRAPID_HAS_OPENCL)
 
-	template<typename Backend, typename Int, typename Alpha, typename Beta>
+	template<typename Int, typename Alpha, typename Beta>
 	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, cl::Buffer a, Int lda,
 			  Beta beta, cl::Buffer b, Int ldb, cl::Buffer c, Int ldc, backend::OpenCL) {
 		auto status = clblast::Gemm(clblast::Layout::kRowMajor,
@@ -53,7 +52,8 @@ namespace librapid { namespace linalg {
 
 #if defined(LIBRAPID_HAS_CUDA)
 
-	template<typename Backend, typename Int, typename Alpha, typename Beta>
+	/*
+	template<typename Int, typename Alpha, typename Beta>
 	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, std::shared_ptr<float> a,
 			  Int lda, Beta beta, std::shared_ptr<float> b, Int ldb, std::shared_ptr<float> c,
 			  Int ldc, backend::CUDA) {
@@ -73,7 +73,7 @@ namespace librapid { namespace linalg {
 								   ldc));
 	}
 
-	template<typename Backend, typename Int, typename Alpha, typename Beta>
+	template<typename Int, typename Alpha, typename Beta>
 	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, std::shared_ptr<double> a,
 			  Int lda, Beta beta, std::shared_ptr<double> b, Int ldb, std::shared_ptr<double> c,
 			  Int ldc, backend::CUDA) {
@@ -92,144 +92,265 @@ namespace librapid { namespace linalg {
 								   c.get(),
 								   ldc));
 	}
+	 */
 
-#endif // LIBRAPID_HAS_CUDA
-
-	template<typename A, typename B,
-			 typename Alpha = typename typetraits::TypeInfo<std::decay_t<A>>::Scalar,
-			 typename Beta	= typename typetraits::TypeInfo<std::decay_t<B>>::Scalar>
-	class Gemm {
-	public:
-		using ScalarA	= typename typetraits::TypeInfo<std::decay_t<A>>::Scalar;
-		using ScalarB	= typename typetraits::TypeInfo<std::decay_t<B>>::Scalar;
-		using ShapeType = typename std::decay_t<A>::ShapeType;
-		using Backend	= typename typetraits::TypeInfo<std::decay_t<A>>::Backend;
-		using BackendB	= typename typetraits::TypeInfo<std::decay_t<B>>::Backend;
-
-		static_assert(std::is_same_v<Backend, BackendB>, "Backend of A and B must match");
-
-		Gemm() = delete;
-
-		Gemm(const Gemm &) = default;
-
-		Gemm(Gemm &&) = default;
-
-		Gemm(bool transA, bool transB, A &a, Alpha alpha, B &b, Beta beta);
-
-		Gemm &operator=(const Gemm &) = default;
-
-		Gemm &operator=(Gemm &&) = default;
-
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ShapeType shape() const;
-
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ScalarA alpha() const;
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ScalarB beta() const;
-
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool transA() const;
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool transB() const;
-
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const A &a() const;
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const B &b() const;
-
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE A &a();
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE B &b();
-
-		template<typename StorageType>
-		void applyTo(ArrayRef<StorageType> &out) const;
-
-	private:
-		bool m_transA;
-		bool m_transB;
-		A &&m_a;
-		ScalarA m_alpha;
-		B &&m_b;
-		ScalarB m_beta;
+	struct CuBLASGemmComputeType {
+		cublasComputeType_t computeType;
+		cublasDataType_t scaleType;
 	};
 
-	template<typename A, typename B, typename Alpha, typename Beta>
-	Gemm<A, B, Alpha, Beta>::Gemm(bool transA, bool transB, A &a, Alpha alpha, B &b, Beta beta) :
-			m_transA(transA), m_transB(transB), m_a(std::forward<A>(a)),
-			m_alpha(static_cast<ScalarA>(alpha)), m_b(std::forward<B>(b)),
-			m_beta(static_cast<ScalarB>(beta)) {
-		LIBRAPID_ASSERT(m_a.ndim() == 2, "First argument to gemm must be a matrix");
-		LIBRAPID_ASSERT(m_b.ndim() == 2, "Second argument to gemm must be a matrix");
-		LIBRAPID_ASSERT(m_a.shape()[1 - int(transA)] == m_b.shape()[int(transB)],
-						"Inner dimensions of matrices must match");
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE CuBLASGemmComputeType
+	cublasGemmComputeType(cublasDataType_t a, cublasDataType_t b, cublasDataType_t c) {
+#	if defined(LIBRAPID_FAST_MATH)
+		constexpr auto selector = [](CuBLASGemmComputeType fast, CuBLASGemmComputeType) {
+			return fast;
+		};
+#	else
+		constexpr auto selector = [](CuBLASGemmComputeType, CuBLASGemmComputeType precise) {
+			return precise;
+		};
+#	endif
+
+		LIBRAPID_ASSERT(a == b, "Types of A and B must be the same");
+		LIBRAPID_ASSERT(a == c, "Output type must be the same as input types");
+
+		switch (::librapid::min(a, b, c)) {
+			case CUDA_R_16F:
+			case CUDA_C_16F: // 16-bit -> 16-bit
+				return selector({CUBLAS_COMPUTE_16F, CUDA_R_16F}, {CUBLAS_COMPUTE_32F, CUDA_R_32F});
+			case CUDA_R_32F:
+			case CUDA_C_32F: // 32-bit -> [ fast: 16-bit, precise: 32-bit ]
+				return selector({CUBLAS_COMPUTE_32F_FAST_TF32, CUDA_R_32F},
+								{CUBLAS_COMPUTE_32F, CUDA_R_32F});
+			case CUDA_R_64F:
+			case CUDA_C_64F: // 64-bit -> 64-bit
+				return selector({CUBLAS_COMPUTE_64F, CUDA_R_64F}, {CUBLAS_COMPUTE_64F, CUDA_R_64F});
+			case CUDA_R_32I:
+			case CUDA_C_32I:  // 32-bit -> 32-bit
+				return selector({CUBLAS_COMPUTE_32I, CUDA_R_32I}, {CUBLAS_COMPUTE_32I, CUDA_R_32I});
+			case CUDA_R_16BF: // <-- Invalid input types
+			case CUDA_C_16BF:
+			case CUDA_R_4I:
+			case CUDA_C_4I:
+			case CUDA_R_4U:
+			case CUDA_C_4U:
+			case CUDA_R_8I:
+			case CUDA_C_8I:
+			case CUDA_R_8U:
+			case CUDA_C_8U:
+			case CUDA_R_16I:
+			case CUDA_C_16I:
+			case CUDA_R_16U:
+			case CUDA_C_16U:
+			case CUDA_R_32U:
+			case CUDA_C_32U:
+			case CUDA_R_64I:
+			case CUDA_C_64I:
+			case CUDA_R_64U:
+			case CUDA_C_64U:
+			case CUDA_R_8F_E4M3:
+			case CUDA_R_8F_E5M2: // Fallthrough
+			{
+				LIBRAPID_ASSERT(false, "Invalid input types to CuBLAS gemm");
+				return {CUBLAS_COMPUTE_32F_FAST_TF32, CUDA_R_32F};
+			}
+		}
 	}
 
-	template<typename A, typename B, typename Alpha, typename Beta>
-	auto Gemm<A, B, Alpha, Beta>::shape() const -> ShapeType {
-		return {m_a.shape()[int(m_transA)], m_b.shape()[int(!m_transB)]};
+	//	template<typename Int, typename Alpha, typename A, typename Beta, typename B, typename C>
+	//	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, std::shared_ptr<A> a,
+	//			  Int lda, Beta beta, std::shared_ptr<B> b, Int ldb, std::shared_ptr<C> c, Int ldc,
+	//			  backend::CUDA) {
+	//		cublasLtMatmulDesc_t operationDescriptor = nullptr;
+	//		cublasLtMatrixLayout_t descriptorA = nullptr, descriptorB = nullptr, descriptorC =
+	// nullptr; 		cublasLtMatmulPreference_t preference = NULL;
+	//
+	//		constexpr size_t maxHeuristicResults								 = 32;
+	//		int returnedResults													 = 0;
+	//		cublasLtMatmulHeuristicResult_t heuristicResult[maxHeuristicResults] = {};
+	//
+	//		size_t workspaceSize = 1024 * 1024 * 1024;
+	//
+	//		cublasOperation_t cublasTransA = transA ? CUBLAS_OP_T : CUBLAS_OP_N;
+	//		cublasOperation_t cublasTransB = transB ? CUBLAS_OP_T : CUBLAS_OP_N;
+	//		cublasOperation_t cublasTransC = CUBLAS_OP_N;
+	//
+	//		cudaDataType_t cudaTypeA = CUDA_R_32F; // typetraits::TypeInfo<A>::CudaType;
+	//		cudaDataType_t cudaTypeB = CUDA_R_32F; // typetraits::TypeInfo<B>::CudaType;
+	//		cudaDataType_t cudaTypeC = CUDA_R_32F; // typetraits::TypeInfo<C>::CudaType;
+	//
+	//		// Create operation descriptors
+	//		cublasSafeCall(cublasLtMatmulDescCreate(
+	//		  &operationDescriptor, cublasGemmComputeType(cudaTypeA, cudaTypeB, cudaTypeC),
+	// cudaTypeC)); 		cublasSafeCall(cublasLtMatmulDescSetAttribute( operationDescriptor,
+	// CUBLASLT_MATMUL_DESC_TRANSA, &cublasTransA, sizeof(cublasTransA)));
+	//		cublasSafeCall(cublasLtMatmulDescSetAttribute(
+	//		  operationDescriptor, CUBLASLT_MATMUL_DESC_TRANSB, &cublasTransB,
+	// sizeof(cublasTransB))); 		cublasSafeCall(cublasLtMatmulDescSetAttribute(
+	// operationDescriptor, CUBLASLT_MATMUL_DESC_TRANSC, &cublasTransC, sizeof(cublasTransC)));
+	//
+	//		// Create matrix layouts
+	//		cublasSafeCall(cublasLtMatrixLayoutCreate(&descriptorA, cudaTypeA, m, k, lda));
+	//		cublasSafeCall(cublasLtMatrixLayoutCreate(&descriptorB, cudaTypeB, k, n, ldb));
+	//		cublasSafeCall(cublasLtMatrixLayoutCreate(&descriptorC, cudaTypeC, m, n, ldc));
+	//
+	//		// Set layout attributes
+	//		const cublasLtOrder_t rowOrder = CUBLASLT_ORDER_ROW;
+	//
+	//		cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
+	//		  descriptorA, CUBLASLT_MATRIX_LAYOUT_ORDER, &rowOrder, sizeof(rowOrder)));
+	//		cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
+	//		  descriptorB, CUBLASLT_MATRIX_LAYOUT_ORDER, &rowOrder, sizeof(rowOrder)));
+	//		cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
+	//		  descriptorC, CUBLASLT_MATRIX_LAYOUT_ORDER, &rowOrder, sizeof(rowOrder)));
+	//
+	//		// Create preference handle
+	//		cublasSafeCall(cublasLtMatmulPreferenceCreate(&preference));
+	//		cublasSafeCall(
+	//		  cublasLtMatmulPreferenceSetAttribute(preference,
+	//											   CUBLASLT_MATMUL_PREF_MAX_WORKSPACE_BYTES,
+	//											   &workspaceSize,
+	//											   sizeof(workspaceSize)));
+	//
+	//		// Set the size of the heuristic cache
+	//		// cublasSafeCall(cublasLtHeuristicsCacheSetCapacity(1 << 20));
+	//
+	//		// Find the best algorithm to use for the given problem
+	//		cublasSafeCall(cublasLtMatmulAlgoGetHeuristic(global::cublasLtHandle,
+	//													  operationDescriptor,
+	//													  descriptorA,
+	//													  descriptorB,
+	//													  descriptorC,
+	//													  descriptorC,
+	//													  preference,
+	//													  maxHeuristicResults,
+	//													  &heuristicResult[0],
+	//													  &returnedResults));
+	//
+	//		LIBRAPID_ASSERT(returnedResults != 0, "Invalid matrices for GEMM. No algorithm found.");
+	//
+	//		cublasSafeCall(cublasLtMatmul(global::cublasLtHandle,
+	//									  operationDescriptor,
+	//									  &alpha,
+	//									  a.get(),
+	//									  descriptorA,
+	//									  b.get(),
+	//									  descriptorB,
+	//									  &beta,
+	//									  c.get(),
+	//									  descriptorC,
+	//									  c.get(),
+	//									  descriptorC,
+	//									  &heuristicResult[0].algo,
+	//									  nullptr,
+	//									  0,
+	//									  global::cudaStream));
+	//
+	//		cublasSafeCall(cublasLtMatmulPreferenceDestroy(preference));
+	//		cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorA));
+	//		cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorB));
+	//		cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorC));
+	//		cublasSafeCall(cublasLtMatmulDescDestroy(operationDescriptor));
+	//	}
+
+	template<typename Int, typename Alpha, typename A, typename Beta, typename B, typename C>
+	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, std::shared_ptr<A> a,
+			  Int lda, Beta beta, std::shared_ptr<B> b, Int ldb, std::shared_ptr<C> c, Int ldc,
+			  backend::CUDA) {
+		cublasLtMatmulDesc_t operationDescriptor = nullptr;
+		cublasLtMatrixLayout_t descriptorA = nullptr, descriptorB = nullptr, descriptorC = nullptr;
+		cublasLtMatmulPreference_t preference = NULL;
+
+		constexpr int maxHeuristicResults									  = 32;
+		int returnedResults													  = 0;
+		cublasLtMatmulHeuristicResult_t heuristicResults[maxHeuristicResults] = {};
+
+		cublasOperation_t cublasTransA = transA ? CUBLAS_OP_T : CUBLAS_OP_N;
+		cublasOperation_t cublasTransB = transB ? CUBLAS_OP_T : CUBLAS_OP_N;
+
+		cudaDataType_t cudaTypeA = typetraits::TypeInfo<A>::CudaType;
+		cudaDataType_t cudaTypeB = typetraits::TypeInfo<B>::CudaType;
+		cudaDataType_t cudaTypeC = typetraits::TypeInfo<C>::CudaType;
+
+		// Create operation descriptors
+		auto [computeType, scaleType] = cublasGemmComputeType(cudaTypeA, cudaTypeB, cudaTypeC);
+		cublasSafeCall(cublasLtMatmulDescCreate(&operationDescriptor, computeType, scaleType));
+		cublasSafeCall(cublasLtMatmulDescSetAttribute(
+		  operationDescriptor, CUBLASLT_MATMUL_DESC_TRANSA, &cublasTransA, sizeof(cublasTransA)));
+		cublasSafeCall(cublasLtMatmulDescSetAttribute(
+		  operationDescriptor, CUBLASLT_MATMUL_DESC_TRANSB, &cublasTransB, sizeof(cublasTransB)));
+
+		// Create matrix descriptors
+		cublasSafeCall(cublasLtMatrixLayoutCreate(
+		  &descriptorA, cudaTypeA, !transA ? m : k, !transA ? k : m, lda));
+		cublasSafeCall(cublasLtMatrixLayoutCreate(
+		  &descriptorB, cudaTypeB, !transB ? k : n, !transB ? n : k, ldb));
+		cublasSafeCall(cublasLtMatrixLayoutCreate(&descriptorC, cudaTypeC, m, n, ldc));
+
+		// Set layout attributes
+		const cublasLtOrder_t order = CUBLASLT_ORDER_ROW;
+		cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
+		  descriptorA, CUBLASLT_MATRIX_LAYOUT_ORDER, &order, sizeof(order)));
+		cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
+		  descriptorB, CUBLASLT_MATRIX_LAYOUT_ORDER, &order, sizeof(order)));
+		cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
+		  descriptorC, CUBLASLT_MATRIX_LAYOUT_ORDER, &order, sizeof(order)));
+
+		// Create preference handle
+		cublasSafeCall(cublasLtMatmulPreferenceCreate(&preference));
+		cublasSafeCall(
+		  cublasLtMatmulPreferenceSetAttribute(preference,
+											   CUBLASLT_MATMUL_PREF_MAX_WORKSPACE_BYTES,
+											   &global::cublasLtWorkspaceSize,
+											   sizeof(global::cublasLtWorkspaceSize)));
+
+		// Find the best algorithm to use for the given problem
+		cublasSafeCall(cublasLtMatmulAlgoGetHeuristic(global::cublasLtHandle,
+													  operationDescriptor,
+													  descriptorA,
+													  descriptorB,
+													  descriptorC,
+													  descriptorC,
+													  preference,
+													  maxHeuristicResults,
+													  &heuristicResults[0],
+													  &returnedResults));
+
+		LIBRAPID_ASSERT(returnedResults != 0, "Invalid matrices for GEMM. No algorithm found.");
+
+		size_t i = 0;
+		for (; i < returnedResults; ++i) {
+			if (heuristicResults[i].state == CUBLAS_STATUS_SUCCESS) {
+				cublasSafeCall(cublasLtMatmul(global::cublasLtHandle,
+											  operationDescriptor,
+											  &alpha,
+											  a.get(),
+											  descriptorA,
+											  b.get(),
+											  descriptorB,
+											  &beta,
+											  c.get(),
+											  descriptorC,
+											  c.get(),
+											  descriptorC,
+											  &heuristicResults[i].algo,
+											  global::cublasLtWorkspace,
+											  global::cublasLtWorkspaceSize,
+											  global::cudaStream));
+				break;
+			}
+		}
+
+		LIBRAPID_ASSERT(i != returnedResults, "Invalid matrices for GEMM. No algorithm found.");
+
+		cublasSafeCall(cublasLtMatmulPreferenceDestroy(preference));
+		cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorA));
+		cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorB));
+		cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorC));
+		cublasSafeCall(cublasLtMatmulDescDestroy(operationDescriptor));
 	}
 
-	template<typename A, typename B, typename Alpha, typename Beta>
-	auto Gemm<A, B, Alpha, Beta>::alpha() const -> ScalarA {
-		return m_alpha;
-	}
-
-	template<typename A, typename B, typename Alpha, typename Beta>
-	auto Gemm<A, B, Alpha, Beta>::beta() const -> ScalarB {
-		return m_beta;
-	}
-
-	template<typename A, typename B, typename Alpha, typename Beta>
-	auto Gemm<A, B, Alpha, Beta>::transA() const -> bool {
-		return m_transA;
-	}
-
-	template<typename A, typename B, typename Alpha, typename Beta>
-	auto Gemm<A, B, Alpha, Beta>::transB() const -> bool {
-		return m_transB;
-	}
-
-	template<typename A, typename B, typename Alpha, typename Beta>
-	auto Gemm<A, B, Alpha, Beta>::a() const -> const A & {
-		return m_a;
-	}
-
-	template<typename A, typename B, typename Alpha, typename Beta>
-	auto Gemm<A, B, Alpha, Beta>::b() const -> const B & {
-		return m_b;
-	}
-
-	template<typename A, typename B, typename Alpha, typename Beta>
-	auto Gemm<A, B, Alpha, Beta>::a() -> A & {
-		return m_a;
-	}
-
-	template<typename A, typename B, typename Alpha, typename Beta>
-	auto Gemm<A, B, Alpha, Beta>::b() -> B & {
-		return m_b;
-	}
-
-	template<typename A, typename B, typename Alpha, typename Beta>
-	template<typename StorageType>
-	void Gemm<A, B, Alpha, Beta>::applyTo(ArrayRef<StorageType> &out) const {
-		LIBRAPID_ASSERT(out.shape() == shape(), "Output shape must match shape of gemm operation");
-
-		auto m = int64_t(m_a.shape()[m_transA]);
-		auto n = int64_t(m_b.shape()[1 - m_transB]);
-		auto k = int64_t(m_a.shape()[1 - m_transA]);
-
-		auto lda = int64_t(m_a.shape()[1]);
-		auto ldb = int64_t(m_b.shape()[1]);
-		auto ldc = int64_t(out.shape()[1]);
-
-		gemm<Backend>(m_transA,
-					  m_transB,
-					  m,
-					  n,
-					  k,
-					  m_alpha,
-					  m_a.storage().data(),
-					  lda,
-					  m_beta,
-					  m_b.storage().data(),
-					  ldb,
-					  out.storage().data(),
-					  ldc,
-					  Backend());
-	}
-}}	   // namespace librapid::linalg
+#endif // LIBRAPID_HAS_CUDA
+} // namespace librapid::linalg
 
 #endif // LIBRAPID_ARRAY_LINALG_LEVEL3_GEMM_HPP

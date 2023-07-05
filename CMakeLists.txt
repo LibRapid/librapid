@@ -352,6 +352,8 @@ if (LIBRAPID_USE_CUDA)
                 CUDA::cuda_driver
                 CUDA::nvrtc
                 CUDA::cublas
+                CUDA::cublasLt
+                # CUDA::cublasXt
                 CUDA::cufft
                 CUDA::cufftw
                 CUDA::curand
@@ -461,6 +463,8 @@ if (LIBRAPID_FAST_MATH)
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
         target_compile_options(${module_name} PUBLIC -ffast-math)
     endif ()
+
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_FAST_MATH)
 endif ()
 
 set(LIBRAPID_ARCH_FLAGS)
