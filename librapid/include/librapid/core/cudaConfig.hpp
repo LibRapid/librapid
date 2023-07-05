@@ -11,8 +11,11 @@
 #	endif
 
 #	define CUDA_NO_HALF // Ensure the cuda_helpers "half" data type is not defined
+
 #	include <cuda.h>
 #	include <cublas_v2.h>
+#	include <cublasLt.h>
+#	include <cublasXt.h>
 #	include <curand.h>
 #	include <curand_kernel.h>
 #	include <cufft.h>

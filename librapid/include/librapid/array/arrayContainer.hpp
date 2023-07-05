@@ -624,7 +624,7 @@ namespace librapid {
 
 		template<typename First, typename... Types>
 		struct ContainsArrayType {
-			static constexpr auto evaluator = []() {
+			static constexpr auto evaluator() {
 				if constexpr (sizeof...(Types) == 0)
 					return IsArrayType<First>::val;
 				else

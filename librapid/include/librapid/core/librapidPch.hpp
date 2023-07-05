@@ -29,6 +29,7 @@
 #include <memory>
 #include <random>
 #include <utility>
+#include <bitset>
 
 #if defined(LIBRAPID_HAS_OMP)
 #	include <omp.h>

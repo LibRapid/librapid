@@ -237,6 +237,10 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE detail::CudaRef<Scalar>
 		operator[](SizeType index);
 
+		/// Return the underlying pointer to the data
+		/// \return The underlying pointer to the data
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Pointer data() const noexcept;
+
 		/// Returns the pointer to the first element of the CudaStorage object
 		/// \return Pointer to the first element of the CudaStorage object
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Pointer begin() const noexcept;
@@ -539,6 +543,11 @@ namespace librapid {
 	template<typename T>
 	auto CudaStorage<T>::operator[](SizeType index) -> detail::CudaRef<Scalar> {
 		return {m_begin, index};
+	}
+
+	template<typename T>
+	auto CudaStorage<T>::data() const noexcept -> Pointer {
+		return m_begin;
 	}
 
 	template<typename T>

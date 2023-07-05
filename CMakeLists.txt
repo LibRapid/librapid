@@ -352,6 +352,8 @@ if (LIBRAPID_USE_CUDA)
                 CUDA::cuda_driver
                 CUDA::nvrtc
                 CUDA::cublas
+                CUDA::cublasLt
+                # CUDA::cublasXt
                 CUDA::cufft
                 CUDA::cufftw
                 CUDA::curand
@@ -461,6 +463,8 @@ if (LIBRAPID_FAST_MATH)
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
         target_compile_options(${module_name} PUBLIC -ffast-math)
     endif ()
+
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_FAST_MATH)
 endif ()
 
 set(LIBRAPID_ARCH_FLAGS)
@@ -652,3 +656,6 @@ target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/li
 include("warnings")
 
 auto_disable_warnings(${module_name})
+
+# Disable shared libraries
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
