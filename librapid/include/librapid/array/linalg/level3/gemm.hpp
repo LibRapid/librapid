@@ -163,31 +163,9 @@ namespace librapid::linalg {
 			case CUDA_C_64F: // 64-bit -> 64-bit
 				return selector({CUBLAS_COMPUTE_64F, CUDA_R_64F}, {CUBLAS_COMPUTE_64F, CUDA_R_64F});
 			case CUDA_R_32I:
-			case CUDA_C_32I:  // 32-bit -> 32-bit
+			case CUDA_C_32I: // 32-bit -> 32-bit
 				return selector({CUBLAS_COMPUTE_32I, CUDA_R_32I}, {CUBLAS_COMPUTE_32I, CUDA_R_32I});
-			case CUDA_R_16BF: // <-- Invalid input types
-			case CUDA_C_16BF:
-			case CUDA_R_4I:
-			case CUDA_C_4I:
-			case CUDA_R_4U:
-			case CUDA_C_4U:
-			case CUDA_R_8I:
-			case CUDA_C_8I:
-			case CUDA_R_8U:
-			case CUDA_C_8U:
-			case CUDA_R_16I:
-			case CUDA_C_16I:
-			case CUDA_R_16U:
-			case CUDA_C_16U:
-			case CUDA_R_32U:
-			case CUDA_C_32U:
-			case CUDA_R_64I:
-			case CUDA_C_64I:
-			case CUDA_R_64U:
-			case CUDA_C_64U:
-			case CUDA_R_8F_E4M3:
-			case CUDA_R_8F_E5M2: // Fallthrough
-			{
+			default: {
 				LIBRAPID_ASSERT(false, "Invalid input types to CuBLAS gemm");
 				return {CUBLAS_COMPUTE_32F_FAST_TF32, CUDA_R_32F};
 			}
