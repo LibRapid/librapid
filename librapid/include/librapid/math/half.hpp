@@ -494,10 +494,10 @@ namespace librapid {
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE static half fromBits(uint16_t bits) noexcept;
 
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE operator float() const noexcept;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE explicit operator float() const noexcept;
 
 		template<typename T>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE operator T() const noexcept;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE explicit operator T() const noexcept;
 
 		LIBRAPID_ALWAYS_INLINE half &operator+=(const half &rhs) noexcept;
 		LIBRAPID_ALWAYS_INLINE half &operator-=(const half &rhs) noexcept;
@@ -637,27 +637,6 @@ namespace librapid {
 		return fmt::format(format, static_cast<float>(*this));
 	}
 
-	//	inline half half::infinity			   = half::fromBits(static_cast<uint16_t>(0x7c00));
-	//	inline half half::max				   = half::fromBits(static_cast<uint16_t>(0x7bff));
-	//	inline half half::maxSubnormal		   = half::fromBits(static_cast<uint16_t>(0x3ff));
-	//	inline half half::min				   = half::fromBits(static_cast<uint16_t>(0xfbff));
-	//	inline half half::minPositive		   = half::fromBits(static_cast<uint16_t>(0x400));
-	//	inline half half::minPositiveSubnormal = half::fromBits(static_cast<uint16_t>(0x1));
-	//	inline half half::nan				   = half::fromBits(static_cast<uint16_t>(0x7e00));
-	//	inline half half::negativeInfinity	   = half::fromBits(static_cast<uint16_t>(0xfc00));
-	//	inline half half::epsilon			   = half::fromBits(static_cast<uint16_t>(0x1400));
-	//
-	//	inline half half::one		   = half::fromBits(static_cast<uint16_t>(0x3c00));
-	//	inline half half::negativeOne  = half::fromBits(static_cast<uint16_t>(0x4000));
-	//	inline half half::two		   = half::fromBits(static_cast<uint16_t>(0x4000));
-	//	inline half half::negativeTwo  = half::fromBits(static_cast<uint16_t>(0xc000));
-	//	inline half half::half_		   = half::fromBits(static_cast<uint16_t>(0x3800));
-	//	inline half half::negativeHalf = half::fromBits(static_cast<uint16_t>(0x3b00));
-	//	inline half half::zero		   = half::fromBits(static_cast<uint16_t>(0x0));
-	//	inline half half::negativeZero = half::fromBits(static_cast<uint16_t>(0x8000));
-	//	inline half half::e			   = half::fromBits(static_cast<uint16_t>(0x4170));
-	//	inline half half::pi		   = half::fromBits(static_cast<uint16_t>(0x4248));
-
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE half operator+(const half &lhs,
 															 const half &rhs) noexcept {
 		half tmp(lhs);
@@ -752,15 +731,6 @@ namespace librapid {
 
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
-
-			// LIMIT_IMPL(min) { return half::min; }
-			// LIMIT_IMPL(max) { return half::max; }
-			// LIMIT_IMPL(epsilon) { return half::epsilon; }
-			// LIMIT_IMPL(roundError) { return half::epsilon * static_cast<half>(0.5); }
-			// LIMIT_IMPL(denormMin) { return half::minPositiveSubnormal; }
-			// LIMIT_IMPL(infinity) { return half::infinity; }
-			// LIMIT_IMPL(quietNaN) { return half::nan; }
-			// LIMIT_IMPL(signalingNaN) { return half::nan; }
 
 			LIMIT_IMPL(infinity) { return half::fromBits(static_cast<uint16_t>(0x7c00)); }
 			LIMIT_IMPL(max) { return half::fromBits(static_cast<uint16_t>(0x7bff)); }

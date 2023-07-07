@@ -26,26 +26,63 @@ namespace librapid::linalg {
 	template<typename Int, typename Alpha, typename Beta>
 	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, cl::Buffer a, Int lda,
 			  Beta beta, cl::Buffer b, Int ldb, cl::Buffer c, Int ldc, backend::OpenCL) {
-		auto status = clblast::Gemm(clblast::Layout::kRowMajor,
-									(transA ? clblast::Transpose::kYes : clblast::Transpose::kNo),
-									(transB ? clblast::Transpose::kYes : clblast::Transpose::kNo),
-									m,
-									n,
-									k,
-									alpha,
-									a(),
-									0,
-									lda,
-									b(),
-									0,
-									ldb,
-									beta,
-									c(),
-									0,
-									ldc,
-									&global::openCLQueue());
+		using GemmScalar = decltype(alpha * beta);
 
-		LIBRAPID_ASSERT(status == clblast::StatusCode::kSuccess, "clblast::Gemm failed");
+		if constexpr (typetraits::IsBlasType<GemmScalar>::value) {
+			auto status = clblast::Gemm<GemmScalar>(
+			  clblast::Layout::kRowMajor,
+			  (transA ? clblast::Transpose::kYes : clblast::Transpose::kNo),
+			  (transB ? clblast::Transpose::kYes : clblast::Transpose::kNo),
+			  m,
+			  n,
+			  k,
+			  alpha,
+			  a(),
+			  0,
+			  lda,
+			  b(),
+			  0,
+			  ldb,
+			  beta,
+			  c(),
+			  0,
+			  ldc,
+			  &global::openCLQueue());
+
+			LIBRAPID_ASSERT(status == clblast::StatusCode::kSuccess,
+							"clblast::Gemm failed: {}",
+							opencl::getCLBlastErrorString(status));
+		} else {
+			std::string kernelNameFull =
+			  std::string("gemm_") + typetraits::TypeInfo<GemmScalar>::name;
+			cl::Kernel kernel(global::openCLProgram, kernelNameFull.c_str());
+			kernel.setArg(0, (int)transA);
+			kernel.setArg(1, (int)transB);
+			kernel.setArg(2, (int32_t)m);
+			kernel.setArg(3, (int32_t)n);
+			kernel.setArg(4, (int32_t)k);
+			kernel.setArg(5, (GemmScalar)alpha);
+			kernel.setArg(6, a);
+			kernel.setArg(7, (int32_t)lda);
+			kernel.setArg(8, (GemmScalar)beta);
+			kernel.setArg(9, b);
+			kernel.setArg(10, (int32_t)ldb);
+			kernel.setArg(11, c);
+			kernel.setArg(12, (int32_t)ldc);
+
+			size_t TS = 32; // Must be the same as in the kernel (line 1 of gemm.cu)
+
+			cl::NDRange globalWorkSize =
+			  cl::NDRange(((n - 1) / TS + 1) * TS, ((m - 1) / TS + 1) * TS);
+			cl::NDRange localWorkSize = cl::NDRange(TS, TS);
+
+			auto status = global::openCLQueue.enqueueNDRangeKernel(
+			  kernel, cl::NullRange, globalWorkSize, localWorkSize);
+
+			LIBRAPID_ASSERT(status == CL_SUCCESS,
+							"cl::CommandQueue::enqueueNDRangeKernel GEMM call failed: {}",
+							opencl::getOpenCLErrorString(status));
+		}
 	}
 
 #endif // LIBRAPID_HAS_OPENCL
@@ -157,197 +194,129 @@ namespace librapid::linalg {
 		}
 	}
 
-	//	template<typename Int, typename Alpha, typename A, typename Beta, typename B, typename C>
-	//	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, std::shared_ptr<A> a,
-	//			  Int lda, Beta beta, std::shared_ptr<B> b, Int ldb, std::shared_ptr<C> c, Int ldc,
-	//			  backend::CUDA) {
-	//		cublasLtMatmulDesc_t operationDescriptor = nullptr;
-	//		cublasLtMatrixLayout_t descriptorA = nullptr, descriptorB = nullptr, descriptorC =
-	// nullptr; 		cublasLtMatmulPreference_t preference = NULL;
-	//
-	//		constexpr size_t maxHeuristicResults								 = 32;
-	//		int returnedResults													 = 0;
-	//		cublasLtMatmulHeuristicResult_t heuristicResult[maxHeuristicResults] = {};
-	//
-	//		size_t workspaceSize = 1024 * 1024 * 1024;
-	//
-	//		cublasOperation_t cublasTransA = transA ? CUBLAS_OP_T : CUBLAS_OP_N;
-	//		cublasOperation_t cublasTransB = transB ? CUBLAS_OP_T : CUBLAS_OP_N;
-	//		cublasOperation_t cublasTransC = CUBLAS_OP_N;
-	//
-	//		cudaDataType_t cudaTypeA = CUDA_R_32F; // typetraits::TypeInfo<A>::CudaType;
-	//		cudaDataType_t cudaTypeB = CUDA_R_32F; // typetraits::TypeInfo<B>::CudaType;
-	//		cudaDataType_t cudaTypeC = CUDA_R_32F; // typetraits::TypeInfo<C>::CudaType;
-	//
-	//		// Create operation descriptors
-	//		cublasSafeCall(cublasLtMatmulDescCreate(
-	//		  &operationDescriptor, cublasGemmComputeType(cudaTypeA, cudaTypeB, cudaTypeC),
-	// cudaTypeC)); 		cublasSafeCall(cublasLtMatmulDescSetAttribute( operationDescriptor,
-	// CUBLASLT_MATMUL_DESC_TRANSA, &cublasTransA, sizeof(cublasTransA)));
-	//		cublasSafeCall(cublasLtMatmulDescSetAttribute(
-	//		  operationDescriptor, CUBLASLT_MATMUL_DESC_TRANSB, &cublasTransB,
-	// sizeof(cublasTransB))); 		cublasSafeCall(cublasLtMatmulDescSetAttribute(
-	// operationDescriptor, CUBLASLT_MATMUL_DESC_TRANSC, &cublasTransC, sizeof(cublasTransC)));
-	//
-	//		// Create matrix layouts
-	//		cublasSafeCall(cublasLtMatrixLayoutCreate(&descriptorA, cudaTypeA, m, k, lda));
-	//		cublasSafeCall(cublasLtMatrixLayoutCreate(&descriptorB, cudaTypeB, k, n, ldb));
-	//		cublasSafeCall(cublasLtMatrixLayoutCreate(&descriptorC, cudaTypeC, m, n, ldc));
-	//
-	//		// Set layout attributes
-	//		const cublasLtOrder_t rowOrder = CUBLASLT_ORDER_ROW;
-	//
-	//		cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
-	//		  descriptorA, CUBLASLT_MATRIX_LAYOUT_ORDER, &rowOrder, sizeof(rowOrder)));
-	//		cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
-	//		  descriptorB, CUBLASLT_MATRIX_LAYOUT_ORDER, &rowOrder, sizeof(rowOrder)));
-	//		cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
-	//		  descriptorC, CUBLASLT_MATRIX_LAYOUT_ORDER, &rowOrder, sizeof(rowOrder)));
-	//
-	//		// Create preference handle
-	//		cublasSafeCall(cublasLtMatmulPreferenceCreate(&preference));
-	//		cublasSafeCall(
-	//		  cublasLtMatmulPreferenceSetAttribute(preference,
-	//											   CUBLASLT_MATMUL_PREF_MAX_WORKSPACE_BYTES,
-	//											   &workspaceSize,
-	//											   sizeof(workspaceSize)));
-	//
-	//		// Set the size of the heuristic cache
-	//		// cublasSafeCall(cublasLtHeuristicsCacheSetCapacity(1 << 20));
-	//
-	//		// Find the best algorithm to use for the given problem
-	//		cublasSafeCall(cublasLtMatmulAlgoGetHeuristic(global::cublasLtHandle,
-	//													  operationDescriptor,
-	//													  descriptorA,
-	//													  descriptorB,
-	//													  descriptorC,
-	//													  descriptorC,
-	//													  preference,
-	//													  maxHeuristicResults,
-	//													  &heuristicResult[0],
-	//													  &returnedResults));
-	//
-	//		LIBRAPID_ASSERT(returnedResults != 0, "Invalid matrices for GEMM. No algorithm found.");
-	//
-	//		cublasSafeCall(cublasLtMatmul(global::cublasLtHandle,
-	//									  operationDescriptor,
-	//									  &alpha,
-	//									  a.get(),
-	//									  descriptorA,
-	//									  b.get(),
-	//									  descriptorB,
-	//									  &beta,
-	//									  c.get(),
-	//									  descriptorC,
-	//									  c.get(),
-	//									  descriptorC,
-	//									  &heuristicResult[0].algo,
-	//									  nullptr,
-	//									  0,
-	//									  global::cudaStream));
-	//
-	//		cublasSafeCall(cublasLtMatmulPreferenceDestroy(preference));
-	//		cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorA));
-	//		cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorB));
-	//		cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorC));
-	//		cublasSafeCall(cublasLtMatmulDescDestroy(operationDescriptor));
-	//	}
-
 	template<typename Int, typename Alpha, typename A, typename Beta, typename B, typename C>
 	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, std::shared_ptr<A> a,
 			  Int lda, Beta beta, std::shared_ptr<B> b, Int ldb, std::shared_ptr<C> c, Int ldc,
 			  backend::CUDA) {
-		cublasLtMatmulDesc_t operationDescriptor = nullptr;
-		cublasLtMatrixLayout_t descriptorA = nullptr, descriptorB = nullptr, descriptorC = nullptr;
-		cublasLtMatmulPreference_t preference = NULL;
+		if constexpr (typetraits::IsBlasType<A>::value && typetraits::IsBlasType<B>::value &&
+					  typetraits::IsBlasType<C>::value) {
+			cublasLtMatmulDesc_t operationDescriptor = nullptr;
+			cublasLtMatrixLayout_t descriptorA = nullptr, descriptorB = nullptr,
+								   descriptorC	  = nullptr;
+			cublasLtMatmulPreference_t preference = NULL;
 
-		constexpr int maxHeuristicResults									  = 32;
-		int returnedResults													  = 0;
-		cublasLtMatmulHeuristicResult_t heuristicResults[maxHeuristicResults] = {};
+			constexpr int maxHeuristicResults									  = 32;
+			int returnedResults													  = 0;
+			cublasLtMatmulHeuristicResult_t heuristicResults[maxHeuristicResults] = {};
 
-		cublasOperation_t cublasTransA = transA ? CUBLAS_OP_T : CUBLAS_OP_N;
-		cublasOperation_t cublasTransB = transB ? CUBLAS_OP_T : CUBLAS_OP_N;
+			cublasOperation_t cublasTransA = transA ? CUBLAS_OP_T : CUBLAS_OP_N;
+			cublasOperation_t cublasTransB = transB ? CUBLAS_OP_T : CUBLAS_OP_N;
 
-		cudaDataType_t cudaTypeA = typetraits::TypeInfo<A>::CudaType;
-		cudaDataType_t cudaTypeB = typetraits::TypeInfo<B>::CudaType;
-		cudaDataType_t cudaTypeC = typetraits::TypeInfo<C>::CudaType;
+			cudaDataType_t cudaTypeA = typetraits::TypeInfo<A>::CudaType;
+			cudaDataType_t cudaTypeB = typetraits::TypeInfo<B>::CudaType;
+			cudaDataType_t cudaTypeC = typetraits::TypeInfo<C>::CudaType;
 
-		// Create operation descriptors
-		auto [computeType, scaleType] = cublasGemmComputeType(cudaTypeA, cudaTypeB, cudaTypeC);
-		cublasSafeCall(cublasLtMatmulDescCreate(&operationDescriptor, computeType, scaleType));
-		cublasSafeCall(cublasLtMatmulDescSetAttribute(
-		  operationDescriptor, CUBLASLT_MATMUL_DESC_TRANSA, &cublasTransA, sizeof(cublasTransA)));
-		cublasSafeCall(cublasLtMatmulDescSetAttribute(
-		  operationDescriptor, CUBLASLT_MATMUL_DESC_TRANSB, &cublasTransB, sizeof(cublasTransB)));
+			// Create operation descriptors
+			auto [computeType, scaleType] = cublasGemmComputeType(cudaTypeA, cudaTypeB, cudaTypeC);
+			cublasSafeCall(cublasLtMatmulDescCreate(&operationDescriptor, computeType, scaleType));
+			cublasSafeCall(cublasLtMatmulDescSetAttribute(operationDescriptor,
+														  CUBLASLT_MATMUL_DESC_TRANSA,
+														  &cublasTransA,
+														  sizeof(cublasTransA)));
+			cublasSafeCall(cublasLtMatmulDescSetAttribute(operationDescriptor,
+														  CUBLASLT_MATMUL_DESC_TRANSB,
+														  &cublasTransB,
+														  sizeof(cublasTransB)));
 
-		// Create matrix descriptors
-		cublasSafeCall(cublasLtMatrixLayoutCreate(
-		  &descriptorA, cudaTypeA, !transA ? m : k, !transA ? k : m, lda));
-		cublasSafeCall(cublasLtMatrixLayoutCreate(
-		  &descriptorB, cudaTypeB, !transB ? k : n, !transB ? n : k, ldb));
-		cublasSafeCall(cublasLtMatrixLayoutCreate(&descriptorC, cudaTypeC, m, n, ldc));
+			// Create matrix descriptors
+			cublasSafeCall(cublasLtMatrixLayoutCreate(
+			  &descriptorA, cudaTypeA, !transA ? m : k, !transA ? k : m, lda));
+			cublasSafeCall(cublasLtMatrixLayoutCreate(
+			  &descriptorB, cudaTypeB, !transB ? k : n, !transB ? n : k, ldb));
+			cublasSafeCall(cublasLtMatrixLayoutCreate(&descriptorC, cudaTypeC, m, n, ldc));
 
-		// Set layout attributes
-		const cublasLtOrder_t order = CUBLASLT_ORDER_ROW;
-		cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
-		  descriptorA, CUBLASLT_MATRIX_LAYOUT_ORDER, &order, sizeof(order)));
-		cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
-		  descriptorB, CUBLASLT_MATRIX_LAYOUT_ORDER, &order, sizeof(order)));
-		cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
-		  descriptorC, CUBLASLT_MATRIX_LAYOUT_ORDER, &order, sizeof(order)));
+			// Set layout attributes
+			const cublasLtOrder_t order = CUBLASLT_ORDER_ROW;
+			cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
+			  descriptorA, CUBLASLT_MATRIX_LAYOUT_ORDER, &order, sizeof(order)));
+			cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
+			  descriptorB, CUBLASLT_MATRIX_LAYOUT_ORDER, &order, sizeof(order)));
+			cublasSafeCall(cublasLtMatrixLayoutSetAttribute(
+			  descriptorC, CUBLASLT_MATRIX_LAYOUT_ORDER, &order, sizeof(order)));
 
-		// Create preference handle
-		cublasSafeCall(cublasLtMatmulPreferenceCreate(&preference));
-		cublasSafeCall(
-		  cublasLtMatmulPreferenceSetAttribute(preference,
-											   CUBLASLT_MATMUL_PREF_MAX_WORKSPACE_BYTES,
-											   &global::cublasLtWorkspaceSize,
-											   sizeof(global::cublasLtWorkspaceSize)));
+			// Create preference handle
+			cublasSafeCall(cublasLtMatmulPreferenceCreate(&preference));
+			cublasSafeCall(
+			  cublasLtMatmulPreferenceSetAttribute(preference,
+												   CUBLASLT_MATMUL_PREF_MAX_WORKSPACE_BYTES,
+												   &global::cublasLtWorkspaceSize,
+												   sizeof(global::cublasLtWorkspaceSize)));
 
-		// Find the best algorithm to use for the given problem
-		cublasSafeCall(cublasLtMatmulAlgoGetHeuristic(global::cublasLtHandle,
-													  operationDescriptor,
-													  descriptorA,
-													  descriptorB,
-													  descriptorC,
-													  descriptorC,
-													  preference,
-													  maxHeuristicResults,
-													  &heuristicResults[0],
-													  &returnedResults));
+			// Find the best algorithm to use for the given problem
+			cublasSafeCall(cublasLtMatmulAlgoGetHeuristic(global::cublasLtHandle,
+														  operationDescriptor,
+														  descriptorA,
+														  descriptorB,
+														  descriptorC,
+														  descriptorC,
+														  preference,
+														  maxHeuristicResults,
+														  &heuristicResults[0],
+														  &returnedResults));
 
-		LIBRAPID_ASSERT(returnedResults != 0, "Invalid matrices for GEMM. No algorithm found.");
+			LIBRAPID_ASSERT(returnedResults != 0, "Invalid matrices for GEMM. No algorithm found.");
 
-		size_t i = 0;
-		for (; i < returnedResults; ++i) {
-			if (heuristicResults[i].state == CUBLAS_STATUS_SUCCESS) {
-				cublasSafeCall(cublasLtMatmul(global::cublasLtHandle,
-											  operationDescriptor,
-											  &alpha,
-											  a.get(),
-											  descriptorA,
-											  b.get(),
-											  descriptorB,
-											  &beta,
-											  c.get(),
-											  descriptorC,
-											  c.get(),
-											  descriptorC,
-											  &heuristicResults[i].algo,
-											  global::cublasLtWorkspace,
-											  global::cublasLtWorkspaceSize,
-											  global::cudaStream));
-				break;
+			size_t i = 0;
+			for (; i < returnedResults; ++i) {
+				if (heuristicResults[i].state == CUBLAS_STATUS_SUCCESS) {
+					cublasSafeCall(cublasLtMatmul(global::cublasLtHandle,
+												  operationDescriptor,
+												  &alpha,
+												  a.get(),
+												  descriptorA,
+												  b.get(),
+												  descriptorB,
+												  &beta,
+												  c.get(),
+												  descriptorC,
+												  c.get(),
+												  descriptorC,
+												  &heuristicResults[i].algo,
+												  global::cublasLtWorkspace,
+												  global::cublasLtWorkspaceSize,
+												  global::cudaStream));
+					break;
+				}
 			}
+
+			LIBRAPID_ASSERT(i != returnedResults, "Invalid matrices for GEMM. No algorithm found.");
+
+			cublasSafeCall(cublasLtMatmulPreferenceDestroy(preference));
+			cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorA));
+			cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorB));
+			cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorC));
+			cublasSafeCall(cublasLtMatmulDescDestroy(operationDescriptor));
+		} else {
+			jitify::Program program = global::jitCache.program(cuda::loadKernel(
+			  fmt::format("{}/include/librapid/array/linalg/level3/gemm", LIBRAPID_SOURCE), false));
+
+			size_t TS = 32;
+
+			dim3 threadsPerBlock(TS, TS);
+			dim3 numBlocks((n + TS - 1) / TS, (m + TS - 1) / TS);
+
+			jitifyCall(
+			  program.kernel("gemm")
+				.instantiate(jitify::reflection::Type<Int>(),
+							 jitify::reflection::Type<Alpha>(),
+							 jitify::reflection::Type<A>(),
+							 jitify::reflection::Type<Beta>(),
+							 jitify::reflection::Type<B>(),
+							 jitify::reflection::Type<C>())
+				.configure(numBlocks, threadsPerBlock, 0, global::cudaStream)
+				.launch(
+				  transA, transB, m, n, k, alpha, a.get(), lda, beta, b.get(), ldb, c.get(), ldc));
 		}
-
-		LIBRAPID_ASSERT(i != returnedResults, "Invalid matrices for GEMM. No algorithm found.");
-
-		cublasSafeCall(cublasLtMatmulPreferenceDestroy(preference));
-		cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorA));
-		cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorB));
-		cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorC));
-		cublasSafeCall(cublasLtMatmulDescDestroy(operationDescriptor));
 	}
 
 #endif // LIBRAPID_HAS_CUDA
