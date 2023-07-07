@@ -1,10 +1,7 @@
 #include <librapid/librapid.hpp>
 
 namespace librapid::opencl {
-#if !defined(LIBRAPID_HAS_OPENCL)
-	std::string getOpenCLErrorString(int64_t err) { return "OpenCL is not enabled"; }
-	std::string getCLBlastErrorString(clblast::StatusCode err) { return "OpenCL is not enabled"; }
-#else
+#if defined(LIBRAPID_HAS_OPENCL)
 	std::string getOpenCLErrorString(int64_t error) {
 		static const char *strings[] = {									  // Error Codes
 										"CL_SUCCESS",						  //   0
