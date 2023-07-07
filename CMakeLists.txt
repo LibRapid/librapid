@@ -91,7 +91,7 @@ add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_MAJOR=${LIBRAPID_MAJOR})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_MINOR=${LIBRAPID_MINOR})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_PATCH=${LIBRAPID_PATCH})
-target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE="${CMAKE_CURRENT_SOURCE_DIR}/librapid")
+target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE= "${CMAKE_CURRENT_SOURCE_DIR}/librapid")
 # clang-format on
 
 # Precompiled Headers
@@ -109,6 +109,10 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 endif ()
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(IS_WINDOWS ON)
+endif ()
+
+if (MINGW)
+    message(FATAL_ERROR "LibRapid does not compile with MinGW. Please use MSVC or Clang instead.")
 endif ()
 
 if (LIBRAPID_STRICT AND LIBRAPID_QUIET)
@@ -405,8 +409,15 @@ endif ()
 
 # Add dependencies
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/fmt")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
+
+if (NOT MINGW)
+    # scnlib does not support MinGW, since it does not implement std::from_chars, which is required by the library
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
+else ()
+    message(WARNING "[ LIBRAPID ] scnlib cannot be built by MinGW, so it will not be enabled")
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_MINGW)
+endif ()
 
 target_compile_definitions(fmt PUBLIC FMT_HEADER_ONLY)
 target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
