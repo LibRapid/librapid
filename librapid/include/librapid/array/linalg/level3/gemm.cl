@@ -9,9 +9,9 @@
 							  const TYPE alpha,                                                    \
 							  __global TYPE *A,                                                    \
 							  const int32_t lda,                                                   \
-							  const TYPE beta,                                                     \
 							  __global const TYPE *B,                                              \
 							  const int32_t ldb,                                                   \
+							  const TYPE beta,                                                     \
 							  __global TYPE *C,                                                    \
 							  const int32_t ldc) {                                                 \
 		const int32_t inx = get_global_id(0);                                                      \

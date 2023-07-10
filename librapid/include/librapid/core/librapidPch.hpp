@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <bitset>
 #include <cfloat>
 #include <chrono>
 #include <cmath>
@@ -29,7 +30,6 @@
 #include <memory>
 #include <random>
 #include <utility>
-#include <bitset>
 
 #if defined(LIBRAPID_HAS_OMP)
 #	include <omp.h>

@@ -89,48 +89,6 @@ namespace librapid::linalg {
 
 #if defined(LIBRAPID_HAS_CUDA)
 
-	/*
-	template<typename Int, typename Alpha, typename Beta>
-	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, std::shared_ptr<float> a,
-			  Int lda, Beta beta, std::shared_ptr<float> b, Int ldb, std::shared_ptr<float> c,
-			  Int ldc, backend::CUDA) {
-		cublasSafeCall(cublasSgemm(global::cublasHandle,
-								   (transA ? CUBLAS_OP_N : CUBLAS_OP_T),
-								   (transB ? CUBLAS_OP_N : CUBLAS_OP_T),
-								   n,
-								   m,
-								   k,
-								   &alpha,
-								   b.get(),
-								   ldb,
-								   a.get(),
-								   lda,
-								   &beta,
-								   c.get(),
-								   ldc));
-	}
-
-	template<typename Int, typename Alpha, typename Beta>
-	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, std::shared_ptr<double> a,
-			  Int lda, Beta beta, std::shared_ptr<double> b, Int ldb, std::shared_ptr<double> c,
-			  Int ldc, backend::CUDA) {
-		cublasSafeCall(cublasDgemm(global::cublasHandle,
-								   (transA ? CUBLAS_OP_N : CUBLAS_OP_T),
-								   (transB ? CUBLAS_OP_N : CUBLAS_OP_T),
-								   n,
-								   m,
-								   k,
-								   &alpha,
-								   b.get(),
-								   ldb,
-								   a.get(),
-								   lda,
-								   &beta,
-								   c.get(),
-								   ldc));
-	}
-	 */
-
 	struct CuBLASGemmComputeType {
 		cublasComputeType_t computeType;
 		cublasDataType_t scaleType;
@@ -173,9 +131,8 @@ namespace librapid::linalg {
 	}
 
 	template<typename Int, typename Alpha, typename A, typename Beta, typename B, typename C>
-	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, std::shared_ptr<A> a,
-			  Int lda, Beta beta, std::shared_ptr<B> b, Int ldb, std::shared_ptr<C> c, Int ldc,
-			  backend::CUDA) {
+	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, A *a, Int lda, Beta beta,
+			  B *b, Int ldb, C *c, Int ldc, backend::CUDA) {
 		if constexpr (typetraits::IsBlasType<A>::value && typetraits::IsBlasType<B>::value &&
 					  typetraits::IsBlasType<C>::value) {
 			cublasLtMatmulDesc_t operationDescriptor = nullptr;
@@ -250,14 +207,14 @@ namespace librapid::linalg {
 					cublasSafeCall(cublasLtMatmul(global::cublasLtHandle,
 												  operationDescriptor,
 												  &alpha,
-												  a.get(),
+												  a,
 												  descriptorA,
-												  b.get(),
+												  b,
 												  descriptorB,
 												  &beta,
-												  c.get(),
+												  c,
 												  descriptorC,
-												  c.get(),
+												  c,
 												  descriptorC,
 												  &heuristicResults[i].algo,
 												  global::cublasLtWorkspace,
@@ -283,17 +240,15 @@ namespace librapid::linalg {
 			dim3 threadsPerBlock(TS, TS);
 			dim3 numBlocks((n + TS - 1) / TS, (m + TS - 1) / TS);
 
-			jitifyCall(
-			  program.kernel("gemm")
-				.instantiate(jitify::reflection::Type<Int>(),
-							 jitify::reflection::Type<Alpha>(),
-							 jitify::reflection::Type<A>(),
-							 jitify::reflection::Type<Beta>(),
-							 jitify::reflection::Type<B>(),
-							 jitify::reflection::Type<C>())
-				.configure(numBlocks, threadsPerBlock, 0, global::cudaStream)
-				.launch(
-				  transA, transB, m, n, k, alpha, a.get(), lda, beta, b.get(), ldb, c.get(), ldc));
+			jitifyCall(program.kernel("gemm")
+						 .instantiate(jitify::reflection::Type<Int>(),
+									  jitify::reflection::Type<Alpha>(),
+									  jitify::reflection::Type<A>(),
+									  jitify::reflection::Type<Beta>(),
+									  jitify::reflection::Type<B>(),
+									  jitify::reflection::Type<C>())
+						 .configure(numBlocks, threadsPerBlock, 0, global::cudaStream)
+						 .launch(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc));
 		}
 	}
 

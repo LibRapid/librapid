@@ -1,9 +1,9 @@
 #define TS 32 // Tile size
 
-template<typename Int, typename Alpha, typename TypeA, typename Beta, typename TypeB,
+template<typename Int, typename Alpha, typename TypeA, typename TypeB, typename Beta,
 		 typename TypeC>
 __global__ void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, TypeA *a, Int lda,
-					 Beta beta, TypeB *b, Int ldb, TypeC *c, Int ldc) {
+					 TypeB *b, Int ldb, Beta beta, TypeC *c, Int ldc) {
 	const Int inx = blockIdx.x * blockDim.x + threadIdx.x;
 	const Int iny = blockIdx.y * blockDim.y + threadIdx.y;
 	const Int ibx = threadIdx.x;

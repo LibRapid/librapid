@@ -221,6 +221,8 @@ namespace cxxblas {
 		}
 	}
 
+#if defined(LIBRAPID_HAS_OMP)
+
 	template<typename IndexType, typename ALPHA, typename MA, typename MB, typename BETA,
 			 typename MC>
 	void gemm_generic_parallel(StorageOrder order, Transpose transA, Transpose transB, IndexType m,
@@ -455,6 +457,8 @@ namespace cxxblas {
 			}
 		}
 	}
+
+#endif // LIBRAPID_HAS_OMP
 
 	template<typename IndexType, typename ALPHA, typename MA, typename MB, typename BETA,
 			 typename MC>
