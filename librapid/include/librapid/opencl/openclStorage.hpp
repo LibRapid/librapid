@@ -174,9 +174,12 @@ namespace librapid {
 
 		LIBRAPID_ALWAYS_INLINE OpenCLStorage &operator=(const OpenCLStorage &other);
 
-		LIBRAPID_ALWAYS_INLINE OpenCLStorage &operator=(OpenCLStorage &&other) LIBRAPID_RELEASE_NOEXCEPT;
+		LIBRAPID_ALWAYS_INLINE OpenCLStorage &
+		operator=(OpenCLStorage &&other) LIBRAPID_RELEASE_NOEXCEPT;
 
 		void set(const OpenCLStorage &other);
+
+		OpenCLStorage copy() const;
 
 		template<typename ShapeType>
 		static ShapeType defaultShape();
@@ -240,12 +243,18 @@ namespace librapid {
 		LIBRAPID_CHECK_OPENCL;
 	}
 
+	//	template<typename Scalar>
+	//	OpenCLStorage<Scalar>::OpenCLStorage(const OpenCLStorage &other) :
+	//			m_size(other.m_size), m_buffer(other.m_buffer) {
+	//		LIBRAPID_CHECK_OPENCL;
+	//		global::openCLQueue.enqueueCopyBuffer(
+	//		  other.m_buffer, m_buffer, 0, 0, m_size * sizeof(Scalar));
+	//	}
+
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(const OpenCLStorage &other) :
-			m_size(other.m_size), m_buffer(other.m_buffer) {
+			m_size(other.m_size), m_buffer(other.m_buffer), m_ownsData(false) {
 		LIBRAPID_CHECK_OPENCL;
-		global::openCLQueue.enqueueCopyBuffer(
-		  other.m_buffer, m_buffer, 0, 0, m_size * sizeof(Scalar));
 	}
 
 	template<typename Scalar>
@@ -275,17 +284,28 @@ namespace librapid {
 		  m_buffer, CL_TRUE, 0, m_size * sizeof(Scalar), vec.data());
 	}
 
+	//	template<typename Scalar>
+	//	OpenCLStorage<Scalar> &OpenCLStorage<Scalar>::operator=(const OpenCLStorage &other) {
+	//		LIBRAPID_CHECK_OPENCL;
+	//		if (this != &other) {
+	//			LIBRAPID_ASSERT(m_ownsData || m_size == other.m_size,
+	//							"Cannot copy into dependent "
+	//							"OpenCLStorage with different "
+	//							"size");
+	//			resizeImpl(other.m_size, 0);
+	//			global::openCLQueue.enqueueCopyBuffer(
+	//			  other.m_buffer, m_buffer, 0, 0, m_size * sizeof(Scalar));
+	//		}
+	//		return *this;
+	//	}
+
 	template<typename Scalar>
 	OpenCLStorage<Scalar> &OpenCLStorage<Scalar>::operator=(const OpenCLStorage &other) {
 		LIBRAPID_CHECK_OPENCL;
 		if (this != &other) {
-			LIBRAPID_ASSERT(m_ownsData || m_size == other.m_size,
-							"Cannot copy into dependent "
-							"OpenCLStorage with different "
-							"size");
-			resizeImpl(other.m_size, 0);
-			global::openCLQueue.enqueueCopyBuffer(
-			  other.m_buffer, m_buffer, 0, 0, m_size * sizeof(Scalar));
+			m_buffer   = other.m_buffer;
+			m_size	   = other.m_size;
+			m_ownsData = false;
 		}
 		return *this;
 	}
@@ -316,7 +336,16 @@ namespace librapid {
 		LIBRAPID_CHECK_OPENCL;
 		m_buffer   = other.m_buffer;
 		m_size	   = other.m_size;
-		m_ownsData = other.m_ownsData;
+		m_ownsData = false;
+	}
+
+	template<typename Scalar>
+	auto OpenCLStorage<Scalar>::copy() const -> OpenCLStorage {
+		LIBRAPID_CHECK_OPENCL;
+		OpenCLStorage<Scalar> result(m_size);
+		global::openCLQueue.enqueueCopyBuffer(
+		  m_buffer, result.m_buffer, 0, 0, m_size * sizeof(Scalar));
+		return result;
 	}
 
 	template<typename Scalar>

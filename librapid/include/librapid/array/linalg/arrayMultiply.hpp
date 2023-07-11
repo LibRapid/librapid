@@ -28,8 +28,7 @@ namespace librapid {
 		};
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
-				 typename StorageTypeB, typename Alpha = typename StorageTypeA::Scalar,
-				 typename Beta = typename StorageTypeB::Scalar>
+				 typename StorageTypeB, typename Alpha, typename Beta>
 		class ArrayMultiply {
 		public:
 			using TypeA		= array::ArrayContainer<ShapeTypeA, StorageTypeA>;
@@ -53,9 +52,15 @@ namespace librapid {
 			ArrayMultiply(bool transA, bool transB, const TypeA &a, Alpha alpha, const TypeB &b,
 						  Beta beta);
 
+			ArrayMultiply(bool transA, bool transB, TypeA &&a, Alpha alpha, TypeB &&b, Beta beta);
+
 			ArrayMultiply(const TypeA &a, const TypeB &b);
 
+			ArrayMultiply(TypeA &&a, TypeB &&b);
+
 			ArrayMultiply(bool transA, bool transB, const TypeA &a, const TypeB &b);
+
+			ArrayMultiply(bool transA, bool transB, TypeA &&a, TypeB &&b);
 
 			ArrayMultiply &operator=(const ArrayMultiply &) = default;
 
@@ -89,9 +94,9 @@ namespace librapid {
 		private:
 			bool m_transA;
 			bool m_transB;
-			const TypeA &m_a;
+			TypeA m_a;
 			ScalarA m_alpha;
-			const TypeB &m_b;
+			TypeB m_b;
 			ScalarB m_beta;
 		};
 
@@ -107,9 +112,26 @@ namespace librapid {
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
 		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
+					  Beta>::ArrayMultiply(bool transA, bool transB, TypeA &&a, Alpha alpha,
+										   TypeB &&b, Beta beta) :
+				m_transA(transA),
+				m_transB(transB), m_a(std::forward<TypeA>(a)), m_alpha(static_cast<ScalarA>(alpha)),
+				m_b(std::forward<TypeB>(b)), m_beta(static_cast<ScalarB>(beta)) {}
+
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
 					  Beta>::ArrayMultiply(const TypeA &a, const TypeB &b) :
 				m_transA(false),
 				m_transB(false), m_a(a), m_alpha(1), m_b(b), m_beta(0) {}
+
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
+					  Beta>::ArrayMultiply(TypeA &&a, TypeB &&b) :
+				m_transA(false),
+				m_transB(false), m_a(std::forward<TypeA>(a)), m_alpha(1),
+				m_b(std::forward<TypeB>(b)), m_beta(0) {}
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
@@ -118,6 +140,14 @@ namespace librapid {
 										   const TypeB &b) :
 				m_transA(transA),
 				m_transB(transB), m_a(a), m_alpha(1), m_b(b), m_beta(0) {}
+
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
+					  Beta>::ArrayMultiply(bool transA, bool transB, TypeA &&a, TypeB &&b) :
+				m_transA(transA),
+				m_transB(transB), m_a(std::forward<TypeA>(a)), m_alpha(1),
+				m_b(std::forward<TypeB>(b)), m_beta(0) {}
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
@@ -412,15 +442,15 @@ namespace librapid {
 		struct IsTransposeType<array::Transpose<T>> : std::true_type {};
 
 		template<typename T, typename std::enable_if_t<!IsTransposeType<T>::value, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto transposeExtractor(const T &val) {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto transposeExtractor(T &&val) {
 			using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
-			return std::make_tuple(false, Scalar(1), val);
+			return std::make_tuple(false, Scalar(1), std::forward<T>(val));
 		}
 
 		template<typename T, typename std::enable_if_t<IsTransposeType<T>::value, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto transposeExtractor(const T &val) {
-			using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
-			return std::make_tuple(true, val.alpha(), val.array());
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto transposeExtractor(T &&val) {
+			using Type = decltype(val.array());
+			return std::make_tuple(true, val.alpha(), std::forward<Type>(val.array()));
 		}
 
 		template<typename T>
@@ -431,40 +461,45 @@ namespace librapid {
 				: std::true_type {};
 
 		template<typename T, typename std::enable_if_t<!IsMultiplyType<T>::value, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto multiplyExtractor(const T &val) {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto multiplyExtractor(T &&val) {
 			using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
-			return std::make_tuple(Scalar(1), val);
+			return std::make_tuple(Scalar(1), std::forward<T>(val));
 		}
 
 		template<typename Descriptor, typename Arr, typename Scalar,
 				 typename std::enable_if_t<
 				   typetraits::TypeInfo<Scalar>::type == detail::LibRapidType::Scalar, int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		multiplyExtractor(const detail::Function<Descriptor, detail::Multiply, Arr, Scalar> &val) {
-			return std::make_tuple(std::get<1>(val.args()), std::get<0>(val.args()));
+		multiplyExtractor(detail::Function<Descriptor, detail::Multiply, Arr, Scalar> &&val) {
+			using Type = decltype(std::get<0>(val.args()));
+			return std::make_tuple(std::get<1>(val.args()),
+								   std::forward<Type>(std::get<0>(val.args())));
 		}
 
 		template<typename Descriptor, typename Arr, typename Scalar,
 				 typename std::enable_if_t<
 				   typetraits::TypeInfo<Scalar>::type == detail::LibRapidType::Scalar, int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		multiplyExtractor(const detail::Function<Descriptor, detail::Multiply, Scalar, Arr> &val) {
-			return std::make_tuple(std::get<0>(val.args()), std::get<1>(val.args()));
+		multiplyExtractor(detail::Function<Descriptor, detail::Multiply, Scalar, Arr> &&val) {
+			using Type = decltype(std::get<1>(val.args()));
+			return std::make_tuple(std::get<0>(val.args()),
+								   std::forward<Type>(std::get<1>(val.args())));
 		}
 
 		template<typename T>
-		auto dotHelper(const T &val) {
+		auto dotHelper(T &&val) {
 			if constexpr (IsTransposeType<T>::value) {
-				auto [transpose, alpha, array]	  = transposeExtractor(val);
-				auto [transpose2, alpha2, array2] = dotHelper(array);
-				return std::make_tuple(transpose ^ transpose2, alpha * alpha2, array2);
+				auto [transpose, alpha, array]	  = transposeExtractor(std::forward<T>(val));
+				auto [transpose2, alpha2, array2] = dotHelper(std::forward<T>(array));
+				return std::make_tuple(
+				  transpose ^ transpose2, alpha * alpha2, std::forward<T>(array2));
 			} else if constexpr (IsMultiplyType<T>::value) {
-				auto [alpha, array]				 = multiplyExtractor(val);
-				auto [transpose, alpha2, array2] = dotHelper(array);
-				return std::make_tuple(transpose, alpha * alpha2, array2);
+				auto [alpha, array]				 = multiplyExtractor(std::forward<T>(val));
+				auto [transpose, alpha2, array2] = dotHelper(std::forward<T>(array));
+				return std::make_tuple(transpose, alpha * alpha2, std::forward<T>(array2));
 			} else {
 				using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
-				return std::make_tuple(false, Scalar(1), val);
+				return std::make_tuple(false, Scalar(1), std::forward<T>(val));
 			}
 		}
 	} // namespace detail
@@ -489,10 +524,22 @@ namespace librapid {
 	/// \param b The right input array.
 	/// \return The dot product of the two input arrays.
 	template<typename First, typename Second>
-	auto dot(const First &a, const Second &b) {
+	auto dot(First &&a, Second &&b) {
+		using ScalarA  = typename typetraits::TypeInfo<std::decay_t<First>>::Scalar;
+		using ScalarB  = typename typetraits::TypeInfo<std::decay_t<Second>>::Scalar;
+		using BackendA = typename typetraits::TypeInfo<std::decay_t<First>>::Backend;
+		using BackendB = typename typetraits::TypeInfo<std::decay_t<Second>>::Backend;
+		using ArrayA   = Array<ScalarA, BackendA>;
+		using ArrayB   = Array<ScalarB, BackendB>;
+
 		auto [transA, alpha, arrA] = detail::dotHelper(a);
 		auto [transB, beta, arrB]  = detail::dotHelper(b);
-		return linalg::ArrayMultiply(transA, transB, arrA, alpha * beta, arrB, 0).eval();
+		return linalg::ArrayMultiply(transA,
+									 transB,
+									 std::forward<ArrayA>(arrA),
+									 alpha * beta,
+									 std::forward<ArrayB>(arrB),
+									 0); // .eval();
 	}
 } // namespace librapid
 

@@ -191,8 +191,6 @@ namespace librapid {
 		/// \param vec The vector to fill with
 		LIBRAPID_ALWAYS_INLINE explicit CudaStorage(const std::vector<Scalar> &vec);
 
-		void set(const CudaStorage &other);
-
 		template<typename ShapeType>
 		static ShapeType defaultShape();
 
@@ -214,6 +212,14 @@ namespace librapid {
 
 		/// Free a CudaStorage object
 		~CudaStorage();
+
+		/// \brief Set this CudaStorage object to reference the same data as \p other
+		/// \param other CudaStorage object to reference
+		void set(const CudaStorage &other);
+
+		/// \brief Create a deep copy of this CudaStorage object
+		/// \return Deep copy of this CudaStorage object
+		CudaStorage copy() const;
 
 		/// Resize a CudaStorage object to \p size elements. Existing elements are preserved where
 		/// possible.
@@ -353,15 +359,22 @@ namespace librapid {
 		m_ownsData = independent;
 	}
 
+	//	template<typename T>
+	//	CudaStorage<T>::CudaStorage(const CudaStorage &other) {
+	//		m_begin = detail::cudaSharedPtrAllocate<T>(other.size());
+	//		m_size	= other.size();
+	//		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
+	//									 other.begin().get(),
+	//									 sizeof(T) * other.size(),
+	//									 cudaMemcpyDeviceToDevice,
+	//									 global::cudaStream));
+	//	}
+
 	template<typename T>
 	CudaStorage<T>::CudaStorage(const CudaStorage &other) {
-		m_begin = detail::cudaSharedPtrAllocate<T>(other.size());
-		m_size	= other.size();
-		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
-									 other.begin().get(),
-									 sizeof(T) * other.size(),
-									 cudaMemcpyDeviceToDevice,
-									 global::cudaStream));
+		m_begin	   = other.m_begin;
+		m_size	   = other.m_size;
+		m_ownsData = false;
 	}
 
 	template<typename T>
@@ -394,13 +407,6 @@ namespace librapid {
 	}
 
 	template<typename T>
-	void CudaStorage<T>::set(const CudaStorage &other) {
-		m_begin	   = other.m_begin;
-		m_size	   = other.m_size;
-		m_ownsData = other.m_ownsData;
-	}
-
-	template<typename T>
 	template<typename ShapeType>
 	ShapeType CudaStorage<T>::defaultShape() {
 		return ShapeType({0});
@@ -422,22 +428,32 @@ namespace librapid {
 		return ret;
 	}
 
+	//	template<typename T>
+	//	auto CudaStorage<T>::operator=(const CudaStorage<T> &storage) -> CudaStorage & {
+	//		if (this != &storage) {
+	//			LIBRAPID_ASSERT(
+	//			  !m_ownsData || size() == storage.size(),
+	//			  "Mismatched storage sizes. Cannot assign CUDA storage with {} elements to "
+	//			  "dependent CUDA storage with {} elements",
+	//			  storage.size(),
+	//			  size());
+	//
+	//			resizeImpl(storage.size(), 0); // Different sizes are handled here
+	//			cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
+	//										 storage.begin().get(),
+	//										 sizeof(T) * m_size,
+	//										 cudaMemcpyDeviceToDevice,
+	//										 global::cudaStream));
+	//		}
+	//		return *this;
+	//	}
+
 	template<typename T>
 	auto CudaStorage<T>::operator=(const CudaStorage<T> &storage) -> CudaStorage & {
 		if (this != &storage) {
-			LIBRAPID_ASSERT(
-			  !m_ownsData || size() == storage.size(),
-			  "Mismatched storage sizes. Cannot assign CUDA storage with {} elements to "
-			  "dependent CUDA storage with {} elements",
-			  storage.size(),
-			  size());
-
-			resizeImpl(storage.size(), 0); // Different sizes are handled here
-			cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
-										 storage.begin().get(),
-										 sizeof(T) * m_size,
-										 cudaMemcpyDeviceToDevice,
-										 global::cudaStream));
+			m_begin	   = storage.m_begin;
+			m_size	   = storage.m_size;
+			m_ownsData = false;
 		}
 		return *this;
 	}
@@ -474,6 +490,26 @@ namespace librapid {
 	CudaStorage<T>::~CudaStorage() {
 		// Data is freed automatically by the shared_ptr. A custom deleter is used to ensure that
 		// nothing happens if the storage is dependent.
+	}
+
+	template<typename T>
+	void CudaStorage<T>::set(const CudaStorage &other) {
+		m_begin	   = other.m_begin;
+		m_size	   = other.m_size;
+		m_ownsData = false;
+	}
+
+	template<typename T>
+	auto CudaStorage<T>::copy() const -> CudaStorage {
+		CudaStorage ret;
+
+		cudaSafeCall(cudaMemcpyAsync(ret.begin().get(),
+									 m_begin.get(),
+									 sizeof(T) * m_size,
+									 cudaMemcpyDeviceToDevice,
+									 global::cudaStream));
+
+		return ret;
 	}
 
 	template<typename T>
@@ -519,7 +555,7 @@ namespace librapid {
 									 cudaMemcpyDeviceToDevice,
 									 global::cudaStream));
 
-		m_size	= newSize;
+		m_size = newSize;
 	}
 
 	template<typename T>
@@ -571,5 +607,5 @@ namespace librapid::typetraits {
 	template<typename T>
 	struct IsCudaStorage : std::false_type {};
 } // namespace librapid::typetraits
-#endif	   // LIBRAPID_HAS_CUDA
-#endif	   // LIBRAPID_ARRAY_CUDA_STORAGE_HPP
+#endif // LIBRAPID_HAS_CUDA
+#endif // LIBRAPID_ARRAY_CUDA_STORAGE_HPP

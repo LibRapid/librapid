@@ -63,7 +63,8 @@ namespace librapid {
 									   const Allocator &alloc = Allocator());
 
 		/// Create a Storage object from another Storage object. Additionally
-		/// a custom allocator can be used.
+		/// a custom allocator can be used. The data is NOT copied -- it is referenced
+		/// by the new Storage object. For a deep copy, use the copy() method.
 		/// \param other Storage object to copy
 		/// \param alloc Allocator to use
 		LIBRAPID_ALWAYS_INLINE Storage(const Storage &other, const Allocator &alloc = Allocator());
@@ -107,7 +108,13 @@ namespace librapid {
 		/// Free a Storage object
 		~Storage();
 
+		/// \brief Set this storage object to reference the same data as \p other
+		/// \param other Storage object to reference
 		void set(const Storage &other);
+
+		/// \brief Create a deep copy of this Storage object
+		/// \return Deep copy of this Storage object
+		Storage copy() const;
 
 		template<typename ShapeType>
 		static ShapeType defaultShape();
@@ -260,6 +267,10 @@ namespace librapid {
 		/// Return the number of elements in the FixedStorage object
 		/// \return Number of elements in the FixedStorage object
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE SizeType size() const noexcept;
+
+		/// \brief Create a copy of the FixedStorage object
+		/// \return Copy of the FixedStorage object
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE FixedStorage copy() const;
 
 		/// Const access to the element at index \p index
 		/// \param index Index of the element to access
@@ -414,11 +425,15 @@ namespace librapid {
 		for (auto it = m_begin; it != m_end; ++it) { *it = value; }
 	}
 
+	// template<typename T, typename A>
+	// Storage<T, A>::Storage(const Storage &other, const Allocator &alloc) :
+	// 		m_allocator(alloc), m_begin(nullptr), m_end(nullptr) {
+	// 	initData(other.begin(), other.end());
+	// }
+
 	template<typename T, typename A>
 	Storage<T, A>::Storage(const Storage &other, const Allocator &alloc) :
-			m_allocator(alloc), m_begin(nullptr), m_end(nullptr) {
-		initData(other.begin(), other.end());
-	}
+			m_allocator(alloc), m_begin(other.m_begin), m_end(other.m_end), m_ownsData(false) {}
 
 	template<typename T, typename A>
 	Storage<T, A>::Storage(Storage &&other) noexcept :
@@ -458,25 +473,33 @@ namespace librapid {
 		return ret;
 	}
 
+	//	template<typename T, typename A>
+	//	Storage<T, A> &Storage<T, A>::operator=(const Storage &other) {
+	//		if (this != &other) {
+	//			LIBRAPID_ASSERT(m_ownsData || size() == other.size(),
+	//							"Mismatched storage sizes. Cannot assign storage with {} elements to
+	//" 							"dependent storage with {} elements", 							other.size(), 							size());
+	//
+	//			m_allocator =
+	//			  std::allocator_traits<A>::select_on_container_copy_construction(other.m_allocator);
+	//			resizeImpl(other.size(), 0); // Different sizes are handled here
+	//			if (typetraits::TriviallyDefaultConstructible<T>::value) {
+	//				// Use a slightly faster memcpy if the type is trivially default constructible
+	//				std::uninitialized_copy(other.begin(), other.end(), m_begin);
+	//			} else {
+	//				// Otherwise, use the standard copy algorithm
+	//				std::copy(other.begin(), other.end(), m_begin);
+	//			}
+	//		}
+	//		return *this;
+	//	}
+
 	template<typename T, typename A>
 	Storage<T, A> &Storage<T, A>::operator=(const Storage &other) {
 		if (this != &other) {
-			LIBRAPID_ASSERT(m_ownsData || size() == other.size(),
-							"Mismatched storage sizes. Cannot assign storage with {} elements to "
-							"dependent storage with {} elements",
-							other.size(),
-							size());
-
-			m_allocator =
-			  std::allocator_traits<A>::select_on_container_copy_construction(other.m_allocator);
-			resizeImpl(other.size(), 0); // Different sizes are handled here
-			if (typetraits::TriviallyDefaultConstructible<T>::value) {
-				// Use a slightly faster memcpy if the type is trivially default constructible
-				std::uninitialized_copy(other.begin(), other.end(), m_begin);
-			} else {
-				// Otherwise, use the standard copy algorithm
-				std::copy(other.begin(), other.end(), m_begin);
-			}
+			m_begin	   = other.m_begin;
+			m_end	   = other.m_end;
+			m_ownsData = false;
 		}
 		return *this;
 	}
@@ -544,6 +567,13 @@ namespace librapid {
 		m_begin		= other.m_begin;
 		m_end		= other.m_end;
 		m_ownsData	= other.m_ownsData;
+	}
+
+	template<typename T, typename A>
+	auto Storage<T, A>::copy() const -> Storage {
+		Storage ret;
+		ret.initData(m_begin, m_end);
+		return ret;
 	}
 
 	template<typename T, typename A>
@@ -717,8 +747,6 @@ namespace librapid {
 	auto FixedStorage<T, D...>::operator=(FixedStorage &&other) noexcept
 	  -> FixedStorage & = default;
 
-
-
 	template<typename T, size_t... D>
 	template<typename ShapeType>
 	auto FixedStorage<T, D...>::defaultShape() -> ShapeType {
@@ -738,6 +766,11 @@ namespace librapid {
 	template<typename T, size_t... D>
 	auto FixedStorage<T, D...>::size() const noexcept -> SizeType {
 		return Size;
+	}
+
+	template<typename T, size_t... D>
+	auto FixedStorage<T, D...>::copy() const -> FixedStorage {
+		return FixedStorage<T, D...>();
 	}
 
 	template<typename T, size_t... D>

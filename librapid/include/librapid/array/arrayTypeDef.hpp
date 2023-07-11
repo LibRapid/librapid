@@ -67,6 +67,13 @@ namespace librapid {
 		template<typename T>
 		class Transpose;
 	} // namespace array
+
+	namespace linalg {
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha = typename StorageTypeA::Scalar,
+				 typename Beta = typename StorageTypeB::Scalar>
+		class ArrayMultiply;
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_TYPE_DEF_HPP

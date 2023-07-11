@@ -129,6 +129,15 @@ namespace librapid {
 			/// \param other The array container to move.
 			LIBRAPID_ALWAYS_INLINE ArrayContainer(ArrayContainer &&other) noexcept = default;
 
+			template<typename TransposeType>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer(const Transpose<TransposeType> &trans);
+
+			template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+					 typename StorageTypeB, typename Alpha, typename Beta>
+			LIBRAPID_ALWAYS_INLINE
+			ArrayContainer(const linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB,
+													   StorageTypeB, Alpha, Beta> &multiply);
+
 			template<typename desc, typename Functor_, typename... Args>
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &
 			assign(const detail::Function<desc, Functor_, Args...> &function);
@@ -169,6 +178,12 @@ namespace librapid {
 			template<typename TransposeType>
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &
 			operator=(const Transpose<TransposeType> &transpose);
+
+			template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+					 typename StorageTypeB, typename Alpha, typename Beta>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &
+			operator=(const linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB,
+												  StorageTypeB, Alpha, Beta> &multiply);
 
 			/// Allow ArrayContainer objects to be initialized with a comma separated list of
 			/// values. This makes use of the CommaInitializer class
@@ -322,6 +337,22 @@ namespace librapid {
 				m_shape(std::forward<ShapeType_>(shape)), m_storage(m_shape.size()) {}
 
 		template<typename ShapeType_, typename StorageType_>
+		template<typename TransposeType>
+		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
+		  const array::Transpose<TransposeType> &trans) {
+			*this = trans;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
+		  const linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
+									  Beta> &multiply) {
+			*this = multiply;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
 		template<typename desc, typename Functor_, typename... Args>
 		auto ArrayContainer<ShapeType_, StorageType_>::assign(
 		  const detail::Function<desc, Functor_, Args...> &function) -> ArrayContainer & {
@@ -364,6 +395,18 @@ namespace librapid {
 			m_shape = transpose.shape();
 			m_storage.resize(m_shape.size(), 0);
 			transpose.applyTo(*this);
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator=(
+		  const linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
+									  Beta> &arrayMultiply) -> ArrayContainer & {
+			m_shape = arrayMultiply.shape();
+			m_storage.resize(m_shape.size(), 0);
+			arrayMultiply.applyTo(*this);
 			return *this;
 		}
 
