@@ -8,10 +8,14 @@ namespace librapid {
 			return ptr;
 		}
 
+#if defined(LIBRAPID_HAS_OPENCL)
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto arrayPointerExtractor(cl::Buffer ptr) {
 			return ptr;
 		}
+#endif // LIBRAPID_HAS_OPENCL
 
+		// Intended for use with CUDA, but since it's just a shared pointer we don't have to
+		// include guard it
 		template<typename T>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		arrayPointerExtractor(std::shared_ptr<T> ptr) {
