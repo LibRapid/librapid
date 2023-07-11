@@ -32,8 +32,7 @@ namespace librapid {
 
 	/// \brief Linearly interpolate between two values
 	///
-	/// \f$ \mathrm{lerp}(t, L, U) = L+t\left( U-L \right) \f$. The result is clamped to the
-	/// specified range.
+	/// \f$ \mathrm{lerp}(t, L, U) = L+t\left( U-L \right) \f$
 	///
 	/// \tparam T Type of \p t
 	/// \tparam Lower Type of \p lower
@@ -68,7 +67,7 @@ namespace librapid {
 #else
 			const auto x = std::fma(t, upper - lower, lower);
 #endif
-			return (t > T {1}) == (upper > lower) ? max(upper, x) : min(lower, x);
+			return (t > T {1}) == (upper > lower) ? max(upper, x) : min(upper, x);
 		}
 	}
 
