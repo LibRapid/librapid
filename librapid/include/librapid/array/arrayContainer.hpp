@@ -121,8 +121,13 @@ namespace librapid {
 			/// \param shape The shape of the array container
 			LIBRAPID_ALWAYS_INLINE explicit ArrayContainer(ShapeType &&shape);
 
-			/// Construct an array container from another array container.
-			/// \param other The array container to copy.
+			/// \brief Reference an existing array container
+			///
+			/// This constructor does not copy the data, but instead references the data of the
+			/// input array container. This means that the input array container must outlive the
+			/// constructed array container. Please use ``ArrayContainer::copy()`` if you want to
+			/// copy the data.
+			/// \param other The array container to reference
 			LIBRAPID_ALWAYS_INLINE ArrayContainer(const ArrayContainer &other) = default;
 
 			/// Construct an array container from a temporary array container.
@@ -152,9 +157,14 @@ namespace librapid {
 			LIBRAPID_ALWAYS_INLINE ArrayContainer(
 			  const detail::Function<desc, Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT;
 
-			/// Assign an array container to this array container.
-			/// \param other The array container to copy.
-			/// \return A reference to this array container.
+			/// \brief Reference an existing array container
+			///
+			/// This assignment operator does not copy the data, but instead references the data of
+			/// the input array container. This means that the input array container must outlive
+			/// the constructed array container. Please use ``ArrayContainer::copy()`` if you want
+			/// to copy the data.
+			///
+			/// \param other The array container to reference
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator=(const ArrayContainer &other) = default;
 
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator=(const Scalar &value);
@@ -196,7 +206,7 @@ namespace librapid {
 			// template<typename ScalarTo = Scalar, typename BackendTo = Backend>
 			// LIBRAPID_NODISCARD auto cast() const;
 
-			// LIBRAPID_NODISCARD auto copy() const;
+			LIBRAPID_NODISCARD ArrayContainer copy() const;
 
 			/// Access a sub-array of this ArrayContainer instance. The sub-array will reference
 			/// the same memory as this ArrayContainer instance.
@@ -423,6 +433,13 @@ namespace librapid {
 		auto ArrayContainer<ShapeType_, StorageType_>::operator<<(const T &value)
 		  -> detail::CommaInitializer<ArrayContainer> {
 			return detail::CommaInitializer<ArrayContainer>(*this, static_cast<Scalar>(value));
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		auto ArrayContainer<ShapeType_, StorageType_>::copy() const -> ArrayContainer {
+			ArrayContainer res(m_shape);
+			res.m_storage = m_storage.copy();
+			return res;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
