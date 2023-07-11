@@ -718,7 +718,7 @@ namespace librapid {
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CPU;
 			static constexpr int64_t packetWidth	   = 1;
-			static constexpr char name[]			   = "__half";
+			static constexpr char name[]			   = "half";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
 			static constexpr bool supportsBinary	   = false;

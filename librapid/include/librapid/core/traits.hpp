@@ -103,7 +103,7 @@ namespace librapid {
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CPU;
 			static constexpr int64_t packetWidth	   = 1;
-			static constexpr char name[]			   = "[NO DEFINED TYPE]";
+			static constexpr char name[]			   = "[ NO DEFINED TYPE ]";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
 			static constexpr bool supportsBinary	   = true;
@@ -531,10 +531,10 @@ namespace librapid {
 			static constexpr bool supportsBinary	   = TypeInfo<Scalar>::supportsBinary;
 			static constexpr bool allowVectorisation   = TypeInfo<Scalar>::allowVectorisation;
 
-#	if defined(LIBRAPID_HAS_CUDA)
+#if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = TypeInfo<Scalar>::CudaType;
 			static constexpr int64_t cudaPacketWidth = TypeInfo<Scalar>::cudaPacketWidth;
-#	endif
+#endif
 
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
@@ -736,7 +736,29 @@ namespace librapid {
 			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 #endif
-	} // namespace typetraits
+
+		template<>
+		struct TypeInfo<backend::CPU> {
+			static constexpr char name[] = "CPU";
+			using Backend = backend::CPU;
+		};
+
+#if defined(LIBRAPID_HAS_OPENCL)
+		template<>
+		struct TypeInfo<backend::OpenCL> {
+			static constexpr char name[] = "OpenCL";
+			using Backend = backend::OpenCL;
+		};
+#endif
+
+#if defined(LIBRAPID_HAS_CUDA)
+		template<>
+		struct TypeInfo<backend::CUDA> {
+			static constexpr char name[] = "CUDA";
+			using Backend = backend::CUDA;
+		};
+#endif
+	}; // namespace typetraits
 } // namespace librapid
 
 #endif // LIBRAPID_CORE_TRAITS_HPP

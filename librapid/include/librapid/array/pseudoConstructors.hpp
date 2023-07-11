@@ -5,8 +5,8 @@ namespace librapid {
 	/// \brief Force the input to be evaluated to an Array
 	///
 	/// When given a scalar or Array type, this function will return the input unchanged. When given
-	/// a Function, it will evaluate the function and return the result. This is useful for functions
-	/// which require an Array instance as input and cannot function with function types.
+	/// a Function, it will evaluate the function and return the result. This is useful for
+	/// functions which require an Array instance as input and cannot function with function types.
 	///
 	/// Note that the input is not copied or moved, so the returned Array will be a reference to the
 	/// input.
@@ -193,6 +193,26 @@ namespace librapid {
 		for (size_t i = 0; i < shape.size(); i++) {
 			result.storage()[i] = startCast + (stopCast - startCast) * static_cast<Scalar>(i) / den;
 		}
+		return result;
+	}
+
+	template<typename Scalar = double, typename Backend = backend::CPU, typename Start,
+			 typename Stop>
+	Array<Scalar, Backend> logspace(Start start, Stop stop, int64_t num, bool includeEnd = true) {
+		LIBRAPID_ASSERT(num > 0, "Number of samples must be greater than zero");
+
+		auto logLower = ::librapid::log(static_cast<Scalar>(start));
+		auto logUpper = ::librapid::log(static_cast<Scalar>(stop));
+
+		Shape shape = {num};
+		Array<Scalar, Backend> result(shape);
+
+		for (size_t i = 0; i < shape.size(); i++) {
+			result.storage()[i] =
+			  ::librapid::exp(logLower + (logUpper - logLower) * static_cast<Scalar>(i) /
+										   static_cast<Scalar>(num - includeEnd));
+		}
+
 		return result;
 	}
 } // namespace librapid

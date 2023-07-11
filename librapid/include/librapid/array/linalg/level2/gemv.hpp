@@ -81,6 +81,7 @@ namespace librapid::linalg {
 
 #if defined(LIBRAPID_HAS_CUDA)
 
+	/*
 	template<typename Int, typename Alpha, typename Beta>
 	void gemv(bool trans, Int m, Int n, Alpha alpha, float *a, Int lda, float *x, Int incX,
 			  Beta beta, float *y, Int incY, backend::CUDA) {
@@ -181,6 +182,19 @@ namespace librapid::linalg {
 								  jitify::reflection::Type<Y>())
 					 .configure(grid, block, 0, global::cudaStream)
 					 .launch(trans, m, n, alpha, a, lda, x, incX, beta, y, incY));
+	}
+	 */
+
+	// With CUDA, it's actually faster to use cuBLAS LT MatMul than to use cuBLAS GEMV, so
+	// we can just pass the call through to the gemm function instead. Additionally, this works with
+	// half precision types as well, so we don't need to implement a separate gemv function for
+	// those.
+
+	template<typename Int, typename Alpha, typename A, typename X, typename Beta, typename Y>
+	void gemv(bool trans, Int m, Int n, Alpha alpha, A *a, Int lda, X *x, Int incX, Beta beta, Y *y,
+			  Int incY, backend::CUDA) {
+		gemm(
+		  trans, false, m, int64_t(1), n, alpha, a, lda, x, incX, beta, y, incY, backend::CUDA());
 	}
 
 #endif // LIBRAPID_HAS_CUDA

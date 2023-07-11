@@ -2,9 +2,9 @@
 #define LIBRAPID_ARRAY_LINALG_LEVEL3_GEMM_HPP
 
 namespace librapid::linalg {
-	template<typename Int, typename Alpha, typename A, typename Beta, typename B, typename C>
-	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, A *a, Int lda, Beta beta,
-			  B *b, Int ldb, C *c, Int ldc, backend::CPU backend = backend::CPU()) {
+	template<typename Int, typename Alpha, typename A, typename B, typename Beta, typename C>
+	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, A *a, Int lda, B *b,
+			  Int ldb, Beta beta, C *c, Int ldc, backend::CPU backend = backend::CPU()) {
 		cxxblas::gemm(cxxblas::StorageOrder::RowMajor,
 					  (transA ? cxxblas::Transpose::Trans : cxxblas::Transpose::NoTrans),
 					  (transB ? cxxblas::Transpose::Trans : cxxblas::Transpose::NoTrans),
@@ -25,7 +25,7 @@ namespace librapid::linalg {
 
 	template<typename Int, typename Alpha, typename Beta>
 	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, cl::Buffer a, Int lda,
-			  Beta beta, cl::Buffer b, Int ldb, cl::Buffer c, Int ldc, backend::OpenCL) {
+			  cl::Buffer b, Int ldb, Beta beta, cl::Buffer c, Int ldc, backend::OpenCL) {
 		using GemmScalar = decltype(alpha * beta);
 
 		if constexpr (typetraits::IsBlasType<GemmScalar>::value) {
@@ -64,9 +64,9 @@ namespace librapid::linalg {
 			kernel.setArg(5, (GemmScalar)alpha);
 			kernel.setArg(6, a);
 			kernel.setArg(7, (int32_t)lda);
-			kernel.setArg(8, (GemmScalar)beta);
-			kernel.setArg(9, b);
-			kernel.setArg(10, (int32_t)ldb);
+			kernel.setArg(8, b);
+			kernel.setArg(9, (int32_t)ldb);
+			kernel.setArg(10, (GemmScalar)beta);
 			kernel.setArg(11, c);
 			kernel.setArg(12, (int32_t)ldc);
 
@@ -130,9 +130,9 @@ namespace librapid::linalg {
 		}
 	}
 
-	template<typename Int, typename Alpha, typename A, typename Beta, typename B, typename C>
-	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, A *a, Int lda, Beta beta,
-			  B *b, Int ldb, C *c, Int ldc, backend::CUDA) {
+	template<typename Int, typename Alpha, typename A, typename B, typename Beta, typename C>
+	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, A *a, Int lda, B *b,
+			  Int ldb, Beta beta, C *c, Int ldc, backend::CUDA) {
 		if constexpr (typetraits::IsBlasType<A>::value && typetraits::IsBlasType<B>::value &&
 					  typetraits::IsBlasType<C>::value) {
 			cublasLtMatmulDesc_t operationDescriptor = nullptr;

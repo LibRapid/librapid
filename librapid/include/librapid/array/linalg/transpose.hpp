@@ -619,7 +619,6 @@ namespace librapid {
 
 		template<typename T>
 		std::string Transpose<T>::str(const std::string &format) const {
-			// TODO: Optimise this for larger matrices to avoid unnecessary evaluation?
 			return eval().str(format);
 		}
 	}; // namespace array

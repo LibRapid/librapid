@@ -36,9 +36,11 @@ namespace librapid {
 			using TypeB		= array::ArrayContainer<ShapeTypeB, StorageTypeB>;
 			using ScalarA	= typename StorageTypeA::Scalar;
 			using ScalarB	= typename StorageTypeB::Scalar;
+			using Scalar	= decltype(std::declval<ScalarA>() * std::declval<ScalarB>());
 			using ShapeType = ShapeTypeA;
-			using Backend	= typename typetraits::TypeInfo<TypeA>::Backend;
+			using BackendA	= typename typetraits::TypeInfo<TypeA>::Backend;
 			using BackendB	= typename typetraits::TypeInfo<TypeB>::Backend;
+			using Backend	= decltype(typetraits::commonBackend<BackendA, BackendB>());
 
 			static_assert(std::is_same_v<Backend, BackendB>, "Backend of A and B must match");
 
@@ -51,6 +53,10 @@ namespace librapid {
 			ArrayMultiply(bool transA, bool transB, const TypeA &a, Alpha alpha, const TypeB &b,
 						  Beta beta);
 
+			ArrayMultiply(const TypeA &a, const TypeB &b);
+
+			ArrayMultiply(bool transA, bool transB, const TypeA &a, const TypeB &b);
+
 			ArrayMultiply &operator=(const ArrayMultiply &) = default;
 
 			ArrayMultiply &operator=(ArrayMultiply &&) noexcept = default;
@@ -58,6 +64,10 @@ namespace librapid {
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE MatmulClass matmulClass() const;
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ShapeType shape() const;
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE int64_t ndim() const;
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto eval() const;
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ScalarA alpha() const;
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ScalarB beta() const;
@@ -72,14 +82,16 @@ namespace librapid {
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE TypeB &b();
 
 			template<typename StorageType>
-			void applyTo(ArrayRef<StorageType> &out) const;
+			void applyTo(array::ArrayContainer<ShapeType, StorageType> &out) const;
+
+			LIBRAPID_NODISCARD std::string str(const std::string &format) const;
 
 		private:
 			bool m_transA;
 			bool m_transB;
-			TypeA m_a;
+			const TypeA &m_a;
 			ScalarA m_alpha;
-			TypeB m_b;
+			const TypeB &m_b;
 			ScalarB m_beta;
 		};
 
@@ -91,6 +103,21 @@ namespace librapid {
 				m_transA(transA),
 				m_transB(transB), m_a(a), m_alpha(static_cast<ScalarA>(alpha)), m_b(b),
 				m_beta(static_cast<ScalarB>(beta)) {}
+
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
+					  Beta>::ArrayMultiply(const TypeA &a, const TypeB &b) :
+				m_transA(false),
+				m_transB(false), m_a(a), m_alpha(1), m_b(b), m_beta(0) {}
+
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
+					  Beta>::ArrayMultiply(bool transA, bool transB, const TypeA &a,
+										   const TypeB &b) :
+				m_transA(transA),
+				m_transB(transB), m_a(a), m_alpha(1), m_b(b), m_beta(0) {}
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
@@ -122,28 +149,28 @@ namespace librapid {
 
 				return MatmulClass::GEMV;
 			} else if (shapeA.ndim() == 2 && shapeB.ndim() == 2) {
-				// Check for GEMV variations
-				// 1. A is a matrix, B is a 1xn vector
-				// 2. A is a matrix, B is a nx1 vector
+				// // Check for GEMV variations
+				// // 1. A is a matrix, B is a 1xn vector
+				// // 2. A is a matrix, B is a nx1 vector
 
-				if (shapeB[0] == 1) { // Case 1
-					LIBRAPID_ASSERT(
-					  shapeA[int(!m_transA)] == shapeB[1],
-					  "Columns of {} must match columns of B. Expected: {} -- Got: {}",
-					  (m_transA ? "A" : "A^T"),
-					  shapeA[int(!m_transA)],
-					  shapeB[1]);
+				// if (shapeB[0] == 1) { // Case 1
+				// 	LIBRAPID_ASSERT(
+				// 	  shapeA[int(!m_transA)] == shapeB[1],
+				// 	  "Columns of {} must match columns of B. Expected: {} -- Got: {}",
+				// 	  (m_transA ? "A" : "A^T"),
+				// 	  shapeA[int(!m_transA)],
+				// 	  shapeB[1]);
 
-					return MatmulClass::GEMV;
-				} else if (shapeB[1] == 1) { // Case 2
-					LIBRAPID_ASSERT(shapeA[int(!m_transA)] == shapeB[0],
-									"Columns of {} must match rows of B. Expected: {} -- Got: {}",
-									(m_transA ? "A" : "A^T"),
-									shapeA[int(!m_transA)],
-									shapeB[0]);
+				// 	return MatmulClass::GEMV;
+				// } else if (shapeB[1] == 1) { // Case 2
+				// 	LIBRAPID_ASSERT(shapeA[int(!m_transA)] == shapeB[0],
+				// 					"Columns of {} must match rows of B. Expected: {} -- Got: {}",
+				// 					(m_transA ? "A" : "A^T"),
+				// 					shapeA[int(!m_transA)],
+				// 					shapeB[0]);
 
-					return MatmulClass::GEMV;
-				}
+				// 	return MatmulClass::GEMV;
+				// }
 
 				LIBRAPID_ASSERT(m_a.shape()[int(!m_transA)] == m_b.shape()[int(m_transB)],
 								"Inner dimensions of matrices must match. Expected: {} -- Got: {}",
@@ -185,6 +212,23 @@ namespace librapid {
 					return {1};
 				}
 			}
+		}
+
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		auto
+		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::ndim() const
+		  -> int64_t {
+			return shape().ndim();
+		}
+
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		auto ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::eval()
+		  const {
+			Array<Scalar, Backend> result(shape());
+			applyTo(result);
+			return result;
 		}
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
@@ -253,7 +297,7 @@ namespace librapid {
 		template<typename StorageType>
 		void
 		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::applyTo(
-		  ArrayRef<StorageType> &out) const {
+		  array::ArrayContainer<ShapeType, StorageType> &out) const {
 			LIBRAPID_ASSERT(out.shape() == shape(),
 							"Shape of output array must match shape of array multiply operation. "
 							"Expected: {} -- Got: {}",
@@ -273,11 +317,12 @@ namespace librapid {
 					auto m = int64_t(m_a.shape()[m_transA]);
 					auto n = int64_t(m_a.shape()[1 - m_transA]);
 
-					auto lda = int64_t(m_a.shape()[1]);
+					auto lda  = int64_t(m_a.shape()[1]);
 					auto incB = int64_t(1);
 					auto incC = int64_t(1);
 
 					gemv(m_transA, m, n, m_alpha, a, lda, b, incB, m_beta, c, incC, Backend());
+
 					break;
 				}
 				case MatmulClass::GEMM: {
@@ -297,19 +342,170 @@ namespace librapid {
 						 m_alpha,
 						 a,
 						 lda,
-						 m_beta,
 						 b,
 						 ldb,
+						 m_beta,
 						 c,
 						 ldc,
 						 Backend());
+
+					break;
 				}
 				default: {
 					LIBRAPID_NOT_IMPLEMENTED;
 				}
 			}
 		}
+
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		std::string
+		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::str(
+		  const std::string &format) const {
+			return eval().str(format);
+		}
 	} // namespace linalg
+
+	//	/// \brief Computes the dot product of two arrays.
+	//	///
+	//	/// This function calculates the dot product of two arrays.
+	//	///
+	//	/// If the input arrays are 1-dimensional vectors, this function computes the vector-dot
+	//	/// product \f$ \mathbf{a} \cdot \mathbf{b} = a_1b_1 + a_2b_2 + \ldots + a_nb_n \f$.
+	//	/// Note that the return value will be a 1x1 array (i.e. a scalar) since we cannot return a
+	//	/// scalar directly.
+	//	///
+	//	/// If the left input is a 2-dimensional matrix and the right input is a 1-dimensional
+	// vector,
+	//	/// this function computes the matrix-vector product \f$ y_i = \sum_{j=1}^{n} a_{ij} x_j \f$
+	//	/// for \f$ i = 1, \ldots, m \f$.
+	//	///
+	//	/// If both inputs are 2-dimensional matrices, this function computes the matrix-matrix
+	// product
+	//	/// \f$ c_{ij} = \sum_{k=1}^{n} a_{ik} b_{kj} \f$ for \f$ i = 1, \ldots, m \f$ and \f$ j =
+	// 1,
+	//	/// \ldots, p \f$. \tparam StorageTypeA The storage type of the left input array. \tparam
+	//	/// StorageTypeB The storage type of the right input array. \param a The left input array.
+	//	/// \param b The right input array.
+	//	/// \return The dot product of the two input arrays.
+	//	template<typename StorageTypeA, typename StorageTypeB>
+	//	auto dot(const ArrayRef<StorageTypeA> &a, const ArrayRef<StorageTypeB> &b) {
+	//		return linalg::ArrayMultiply(a, b);
+	//	}
+
+	namespace detail {
+		template<typename ShapeType, typename DestinationStorageType, typename ShapeTypeA,
+				 typename StorageTypeA, typename ShapeTypeB, typename StorageTypeB,
+				 typename Alpha = typename StorageTypeA::Scalar,
+				 typename Beta	= typename StorageTypeB::Scalar>
+		LIBRAPID_ALWAYS_INLINE void
+		assign(array::ArrayContainer<ShapeType, DestinationStorageType> &destination,
+			   const linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB,
+										   Alpha, Beta> &op) {
+			op.applyTo(destination);
+		}
+
+		template<typename T>
+		struct IsTransposeType : std::false_type {};
+
+		template<typename T>
+		struct IsTransposeType<array::Transpose<T>> : std::true_type {};
+
+		template<typename T, typename std::enable_if_t<!IsTransposeType<T>::value, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto transposeExtractor(const T &val) {
+			using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
+			return std::make_tuple(false, Scalar(1), val);
+		}
+
+		template<typename T, typename std::enable_if_t<IsTransposeType<T>::value, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto transposeExtractor(const T &val) {
+			using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
+			return std::make_tuple(true, val.alpha(), val.array());
+		}
+
+		template<typename T>
+		struct IsMultiplyType : std::false_type {};
+
+		template<typename Descriptor, typename Arr, typename Scalar>
+		struct IsMultiplyType<detail::Function<Descriptor, detail::Multiply, Arr, Scalar>>
+				: std::true_type {};
+
+		template<typename T, typename std::enable_if_t<!IsMultiplyType<T>::value, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto multiplyExtractor(const T &val) {
+			using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
+			return std::make_tuple(Scalar(1), val);
+		}
+
+		template<typename Descriptor, typename Arr, typename Scalar,
+				 typename std::enable_if_t<
+				   typetraits::TypeInfo<Scalar>::type == detail::LibRapidType::Scalar, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		multiplyExtractor(const detail::Function<Descriptor, detail::Multiply, Arr, Scalar> &val) {
+			return std::make_tuple(std::get<1>(val.args()), std::get<0>(val.args()));
+		}
+
+		template<typename Descriptor, typename Arr, typename Scalar,
+				 typename std::enable_if_t<
+				   typetraits::TypeInfo<Scalar>::type == detail::LibRapidType::Scalar, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		multiplyExtractor(const detail::Function<Descriptor, detail::Multiply, Scalar, Arr> &val) {
+			return std::make_tuple(std::get<0>(val.args()), std::get<1>(val.args()));
+		}
+
+		template<typename T>
+		auto dotHelper(const T &val) {
+			if constexpr (IsTransposeType<T>::value) {
+				auto [transpose, alpha, array]	  = transposeExtractor(val);
+				auto [transpose2, alpha2, array2] = dotHelper(array);
+				return std::make_tuple(transpose ^ transpose2, alpha * alpha2, array2);
+			} else if constexpr (IsMultiplyType<T>::value) {
+				auto [alpha, array]				 = multiplyExtractor(val);
+				auto [transpose, alpha2, array2] = dotHelper(array);
+				return std::make_tuple(transpose, alpha * alpha2, array2);
+			} else {
+				using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
+				return std::make_tuple(false, Scalar(1), val);
+			}
+		}
+	} // namespace detail
+
+	/// \brief Computes the dot product of two arrays.
+	///
+	/// This function calculates the dot product of two arrays.
+	///
+	/// If the input arrays are 1-dimensional vectors, this function computes the vector-dot
+	/// product \f$ \mathbf{a} \cdot \mathbf{b} = a_1b_1 + a_2b_2 + \ldots + a_nb_n \f$.
+	/// Note that the return value will be a 1x1 array (i.e. a scalar) since we cannot return a
+	/// scalar directly.
+	///
+	/// If the left input is a 2-dimensional matrix and the right input is a 1-dimensional vector,
+	/// this function computes the matrix-vector product \f$ y_i = \sum_{j=1}^{n} a_{ij} x_j \f$
+	/// for \f$ i = 1, \ldots, m \f$.
+	///
+	/// If both inputs are 2-dimensional matrices, this function computes the matrix-matrix product
+	/// \f$ c_{ij} = \sum_{k=1}^{n} a_{ik} b_{kj} \f$ for \f$ i = 1, \ldots, m \f$ and \f$ j = 1,
+	/// \ldots, p \f$. \tparam StorageTypeA The storage type of the left input array. \tparam
+	/// StorageTypeB The storage type of the right input array. \param a The left input array.
+	/// \param b The right input array.
+	/// \return The dot product of the two input arrays.
+	template<typename First, typename Second>
+	auto dot(const First &a, const Second &b) {
+		auto [transA, alpha, arrA] = detail::dotHelper(a);
+		auto [transB, beta, arrB]  = detail::dotHelper(b);
+		return linalg::ArrayMultiply(transA, transB, arrA, alpha * beta, arrB, 0).eval();
+	}
 } // namespace librapid
+
+LIBRAPID_SIMPLE_IO_IMPL(
+  typename ShapeTypeA COMMA typename StorageTypeA COMMA typename ShapeTypeB COMMA
+  typename StorageTypeB COMMA typename Alpha COMMA typename Beta,
+  librapid::linalg::ArrayMultiply<
+	ShapeTypeA COMMA StorageTypeA COMMA ShapeTypeB COMMA StorageTypeB COMMA Alpha COMMA Beta>)
+
+LIBRAPID_SIMPLE_IO_NORANGE(
+  typename ShapeTypeA COMMA typename StorageTypeA COMMA typename ShapeTypeB COMMA
+  typename StorageTypeB COMMA typename Alpha COMMA typename Beta,
+  librapid::linalg::ArrayMultiply<
+	ShapeTypeA COMMA StorageTypeA COMMA ShapeTypeB COMMA StorageTypeB COMMA Alpha COMMA Beta>)
 
 #endif // LIBRAPID_ARRAY_LINALG_ARRAY_MULTIPLY_HPP
