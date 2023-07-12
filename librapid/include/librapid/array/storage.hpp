@@ -478,7 +478,8 @@ namespace librapid {
 	//		if (this != &other) {
 	//			LIBRAPID_ASSERT(m_ownsData || size() == other.size(),
 	//							"Mismatched storage sizes. Cannot assign storage with {} elements to
-	//" 							"dependent storage with {} elements", 							other.size(), 							size());
+	//" 							"dependent storage with {} elements", 							other.size(),
+	//size());
 	//
 	//			m_allocator =
 	//			  std::allocator_traits<A>::select_on_container_copy_construction(other.m_allocator);
@@ -549,8 +550,8 @@ namespace librapid {
 		m_begin	  = detail::safeAllocate(m_allocator, size);
 		m_end	  = m_begin + size;
 
-		if (typetraits::TypeInfo<T>::canMemcpy) {
-			if (typetraits::TriviallyDefaultConstructible<T>::value) {
+		if constexpr (typetraits::TypeInfo<T>::canMemcpy) {
+			if constexpr (typetraits::TriviallyDefaultConstructible<T>::value) {
 				// Use a slightly faster memcpy if the type is trivially default constructible
 				std::uninitialized_copy(begin, end, m_begin);
 			} else {
