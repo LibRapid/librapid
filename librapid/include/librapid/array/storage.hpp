@@ -548,12 +548,20 @@ namespace librapid {
 		auto size = static_cast<SizeType>(std::distance(begin, end));
 		m_begin	  = detail::safeAllocate(m_allocator, size);
 		m_end	  = m_begin + size;
-		if (typetraits::TriviallyDefaultConstructible<T>::value) {
-			// Use a slightly faster memcpy if the type is trivially default constructible
-			std::uninitialized_copy(begin, end, m_begin);
+
+		if (typetraits::TypeInfo<T>::canMemcpy) {
+			if (typetraits::TriviallyDefaultConstructible<T>::value) {
+				// Use a slightly faster memcpy if the type is trivially default constructible
+				std::uninitialized_copy(begin, end, m_begin);
+			} else {
+				// Otherwise, use the standard copy algorithm
+				std::copy(begin, end, m_begin);
+			}
 		} else {
-			// Otherwise, use the standard copy algorithm
-			std::copy(begin, end, m_begin);
+			// Since we can't memcpy, we have to copy each element individually
+			for (auto it = begin; it != end; ++it) {
+				new (m_begin + std::distance(begin, it)) T(*it);
+			}
 		}
 	}
 
