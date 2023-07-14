@@ -8,5 +8,10 @@
 #define LIBRAPID_IN_JITIFY
 
 #include <cstdint>
+#include <cuda_fp16.h>
+
+namespace librapid {
+	using half = __half;
+}
 
 #endif // LIBRAPID_CUDA_KERNEL_HELPER
