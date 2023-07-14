@@ -615,7 +615,7 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		auto ArrayContainer<ShapeType_, StorageType_>::packet(size_t index) const -> Packet {
 			Packet res;
-			res.load(m_storage.data() + index);
+			res.load(m_storage.begin() + index);
 			return res;
 		}
 
@@ -627,7 +627,7 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		void ArrayContainer<ShapeType_, StorageType_>::writePacket(size_t index,
 																   const Packet &value) {
-			value.store(m_storage.data() + index);
+			value.store(m_storage.begin() + index);
 		}
 
 		template<typename ShapeType_, typename StorageType_>

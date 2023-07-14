@@ -8,8 +8,8 @@
 
 namespace librapid {
 	namespace typetraits {
-		template<typename Scalar_, typename Allocator_>
-		struct TypeInfo<Storage<Scalar_, Allocator_>> {
+		template<typename Scalar_>
+		struct TypeInfo<Storage<Scalar_>> {
 			static constexpr bool isLibRapidType = true;
 			using Scalar						 = Scalar_;
 			using Backend						 = backend::CPU;
@@ -22,52 +22,46 @@ namespace librapid {
 			using Backend						 = backend::CPU;
 		};
 
-		LIBRAPID_DEFINE_AS_TYPE(typename Scalar_ COMMA typename Allocator_,
-								Storage<Scalar_ COMMA Allocator_>);
+		LIBRAPID_DEFINE_AS_TYPE(typename Scalar, Storage<Scalar>);
 	} // namespace typetraits
 
-	template<typename Scalar_, typename Allocator_ = std::allocator<Scalar_>>
+	template<typename Scalar_>
 	class Storage {
 	public:
-		using Allocator			   = Allocator_;
 		using Scalar			   = Scalar_;
-		using Pointer			   = typename std::allocator_traits<Allocator>::pointer;
-		using ConstPointer		   = typename std::allocator_traits<Allocator>::const_pointer;
+		using RawPointer		   = Scalar *;
+		using ConstRawPointer	   = const Scalar *;
+		using Pointer			   = std::shared_ptr<Scalar>;
+		using ConstPointer		   = std::shared_ptr<const Scalar>;
 		using Reference			   = Scalar &;
 		using ConstReference	   = const Scalar &;
-		using SizeType			   = typename std::allocator_traits<Allocator>::size_type;
-		using DifferenceType	   = typename std::allocator_traits<Allocator>::difference_type;
-		using Iterator			   = Pointer;
-		using ConstIterator		   = ConstPointer;
+		using SizeType			   = size_t;
+		using DifferenceType	   = ptrdiff_t;
+		using Iterator			   = RawPointer;
+		using ConstIterator		   = ConstRawPointer;
 		using ReverseIterator	   = std::reverse_iterator<Iterator>;
 		using ConstReverseIterator = std::reverse_iterator<ConstIterator>;
 
 		/// Default constructor
 		Storage() = default;
 
-		/// Create a Storage object with \p size elements and,
-		/// optionally, a custom allocator.
+		/// Create a Storage object with \p size elements
 		/// \param size Number of elements to allocate
-		/// \param alloc Allocator to use
-		LIBRAPID_ALWAYS_INLINE explicit Storage(SizeType size,
-												const Allocator &alloc = Allocator());
+		LIBRAPID_ALWAYS_INLINE explicit Storage(SizeType size);
 
 		LIBRAPID_ALWAYS_INLINE explicit Storage(Scalar *begin, Scalar *end, bool ownsData);
 
 		/// Create a Storage object with \p size elements, each initialized
-		/// to \p value. Optionally, a custom allocator can be used.
+		/// to \p value.
 		/// \param size Number of elements to allocate
 		/// \param value Value to initialize each element to
-		/// \param alloc Allocator to use
-		LIBRAPID_ALWAYS_INLINE Storage(SizeType size, ConstReference value,
-									   const Allocator &alloc = Allocator());
+		LIBRAPID_ALWAYS_INLINE Storage(SizeType size, ConstReference value);
 
 		/// Create a Storage object from another Storage object. Additionally
-		/// a custom allocator can be used. The data is NOT copied -- it is referenced
-		/// by the new Storage object. For a deep copy, use the copy() method.
+		/// a custom allocator can be used. The data is **NOT** copied -- it is referenced
+		/// by the new Storage object. For a deep copy, use the ``copy()`` method.
 		/// \param other Storage object to copy
-		/// \param alloc Allocator to use
-		LIBRAPID_ALWAYS_INLINE Storage(const Storage &other, const Allocator &alloc = Allocator());
+		LIBRAPID_ALWAYS_INLINE Storage(const Storage &other);
 
 		/// Move a Storage object into this object.
 		/// \param other Storage object to move
@@ -78,16 +72,13 @@ namespace librapid {
 		/// \param list Initializer list to copy
 		/// \param alloc Allocator to use
 		template<typename V>
-		LIBRAPID_ALWAYS_INLINE Storage(const std::initializer_list<V> &list,
-									   const Allocator &alloc = Allocator());
+		LIBRAPID_ALWAYS_INLINE Storage(const std::initializer_list<V> &list);
 
 		/// Create a Storage object from a std::vector
 		/// \tparam V Type of the elements in the vector
 		/// \param vec Vector to copy
-		/// \param alloc Allocator to use
 		template<typename V>
-		LIBRAPID_ALWAYS_INLINE explicit Storage(const std::vector<V> &vec,
-												const Allocator &alloc = Allocator());
+		LIBRAPID_ALWAYS_INLINE explicit Storage(const std::vector<V> &vec);
 
 		template<typename V>
 		static Storage fromData(const std::initializer_list<V> &vec);
@@ -145,8 +136,8 @@ namespace librapid {
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Pointer data() const noexcept;
 
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator begin() noexcept;
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator end() noexcept;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE RawPointer begin() noexcept;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE RawPointer end() noexcept;
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstIterator begin() const noexcept;
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstIterator end() const noexcept;
@@ -171,6 +162,9 @@ namespace librapid {
 		template<typename P>
 		LIBRAPID_ALWAYS_INLINE void initData(P begin, P end);
 
+		template<typename P>
+		LIBRAPID_ALWAYS_INLINE void initData(P begin, SizeType size);
+
 		/// Resize the Storage Object to \p newSize elements, retaining existing
 		/// data.
 		/// \param newSize New size of the Storage object
@@ -181,20 +175,13 @@ namespace librapid {
 		/// \param newSize New size of the Storage object
 		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize);
 
-		Allocator m_allocator;
-
-		// Pointer m_begin	   = nullptr; // It is more efficient to store pointers to the start
-		// Pointer m_end	   = nullptr; // and end of the data block than to store the size
-
 #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
 		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Pointer m_begin = nullptr;
-		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Pointer m_end	= nullptr;
 #else
-		Pointer m_begin = nullptr;
-		Pointer m_end	= nullptr;
+		Pointer m_begin = nullptr; // Pointer to the beginning of the data
 #endif
-
-		bool m_ownsData = true; // If true, m_begin will be freed on destruct
+		SizeType m_size = 0;	// Number of elements in the Storage object
+		bool m_ownsData = true; // Whether this Storage object owns the data it points to
 	};
 
 	template<typename Scalar_, size_t... Size_>
@@ -316,8 +303,8 @@ namespace librapid {
 		template<typename T>
 		struct IsStorage : std::false_type {};
 
-		template<typename Scalar, typename Allocator>
-		struct IsStorage<Storage<Scalar, Allocator>> : std::true_type {};
+		template<typename Scalar>
+		struct IsStorage<Storage<Scalar>> : std::true_type {};
 
 		template<typename T>
 		struct IsFixedStorage : std::false_type {};
@@ -327,6 +314,30 @@ namespace librapid {
 	} // namespace typetraits
 
 	namespace detail {
+		/// Safely deallocate memory for \p size elements, using an std::allocator \p alloc. If the
+		/// object cannot be trivially destroyed, the destructor will be called on each element of
+		/// the data, ensuring that it is safe to free the allocated memory.
+		/// \tparam A The allocator type
+		/// \param alloc The allocator object
+		/// \param ptr The pointer to free
+		/// \param size The number of elements of type \p in the memory block
+		template<typename T>
+		void safeDeallocate(T *ptr, size_t size) {
+			if constexpr (!std::is_trivially_destructible_v<T>) {
+				for (size_t i = 0; i < size; ++i) { ptr[i].~T(); }
+			}
+
+#if defined(LIBRAPID_BLAS_MKLBLAS)
+			mkl_free(ptr);
+#else
+#	if defined(LIBRAPID_NATIVE_ARCH) && defined(LIBRAPID_MSVC)
+			_aligned_free(ptr);
+#	else
+			free(ptr);
+#	endif
+#endif
+		}
+
 		/// Safely allocate memory for \p size elements using the allocator \p alloc. If the data
 		/// can be trivially default constructed, then the constructor is not called and no data
 		/// is initialized. Otherwise, the correct default constructor will be called for each
@@ -336,182 +347,167 @@ namespace librapid {
 		/// \param size Number of elements to allocate
 		/// \return Pointer to the first element
 		/// \see safeDeallocate
-		template<typename A>
-		typename std::allocator_traits<A>::pointer
-		safeAllocate(A &alloc, typename std::allocator_traits<A>::size_type size) {
-			using Traits	= std::allocator_traits<A>;
-			using Pointer	= typename Traits::pointer;
-			using ValueType = typename Traits::value_type;
+		template<typename T>
+		std::shared_ptr<T> safeAllocate(size_t size) {
+			using RawPointer = T *;
+			using Pointer	 = std::shared_ptr<T>;
 
 #if defined(LIBRAPID_BLAS_MKLBLAS)
 			// MKL has its own memory allocation function
-			auto ptr = static_cast<Pointer>(mkl_malloc(size * sizeof(ValueType), 64));
+			auto ptr = static_cast<RawPointer>(mkl_malloc(size * sizeof(T), 64));
 #else
 #	if defined(LIBRAPID_NATIVE_ARCH)
 			// Force aligned memory
 #		if defined(LIBRAPID_APPLE)
 			// No memory allignment. It breaks everything for some reason
-			auto ptr = Traits::allocate(alloc, size);
+			auto ptr = static_cast<RawPointer>(std::malloc(size * sizeof(T)));
 #		elif defined(LIBRAPID_MSVC) || defined(LIBRAPID_MINGW)
-			auto ptr = static_cast<Pointer>(
-			  _aligned_malloc(size * sizeof(ValueType), global::memoryAlignment));
+			auto ptr =
+			  static_cast<RawPointer>(_aligned_malloc(size * sizeof(T), global::memoryAlignment));
 #		else
-			auto ptr = static_cast<Pointer>(
-			  std::aligned_alloc(global::memoryAlignment, size * sizeof(ValueType)));
+			auto ptr = static_cast<RawPointer>(
+			  std::aligned_alloc(global::memoryAlignment, size * sizeof(T)));
 #		endif
 #	else
 			// No memory alignment
-			auto ptr = Traits::allocate(alloc, size);
+			auto ptr = static_cast<RawPointer>(std::malloc(size * sizeof(T)));
 #	endif
 #endif
 
 			// If the type cannot be trivially constructed, we need to
 			// initialize each value
-			if constexpr (!typetraits::TriviallyDefaultConstructible<ValueType>::value &&
-						  !std::is_array<ValueType>::value) {
-				for (Pointer p = ptr; p != ptr + size; ++p) {
-					Traits::construct(alloc, p, ValueType());
-				}
+			if constexpr (!typetraits::TriviallyDefaultConstructible<T>::value &&
+						  !std::is_array<T>::value) {
+				for (RawPointer p = ptr; p != ptr + size; ++p) { new (p) T(); }
 			}
 
-			return ptr;
+			return Pointer(ptr, [size](RawPointer ptr) { safeDeallocate(ptr, size); });
 		}
 
-		/// Safely deallocate memory for \p size elements, using an std::allocator \p alloc. If the
-		/// object cannot be trivially destroyed, the destructor will be called on each element of
-		/// the data, ensuring that it is safe to free the allocated memory.
-		/// \tparam A The allocator type
-		/// \param alloc The allocator object
-		/// \param ptr The pointer to free
-		/// \param size The number of elements of type \p in the memory block
-		template<typename A>
-		void safeDeallocate(A &alloc, typename std::allocator_traits<A>::pointer ptr,
-							typename std::allocator_traits<A>::size_type size) {
-			using Traits	= std::allocator_traits<A>;
-			using Pointer	= typename Traits::pointer;
-			using ValueType = typename Traits::value_type;
+		/// Safely copy a pointer to a shared pointer. If \p ownsData is true, then the shared
+		/// pointer will be initialized with a custom deleter that will call safeDeallocate on the
+		/// pointer. Otherwise, the shared pointer will be initialized with a no-op deleter.
+		/// \tparam T Type of the pointer
+		/// \param ptr Raw pointer to copy
+		/// \param ownsData Whether the shared pointer should own the data
+		/// \return Shared pointer to the data
+		template<typename T>
+		std::shared_ptr<T> safePointerCopy(T *ptr, size_t size, bool ownsData) {
+			using RawPointer = T *;
+			using Pointer	 = std::shared_ptr<T>;
 
-			// If the type cannot be trivially destructed, we need to
-			// destroy each value
-			if (!typetraits::TriviallyDefaultConstructible<ValueType>::value) {
-				for (Pointer p = ptr; p != ptr + size; ++p) { Traits::destroy(alloc, p); }
+			if (ownsData) {
+				return Pointer(ptr, [size](RawPointer ptr) { safeDeallocate(ptr, size); });
+			} else {
+				return Pointer(ptr, [](RawPointer) {});
 			}
+		}
 
-#if defined(LIBRAPID_BLAS_MKLBLAS)
-			mkl_free(ptr);
-#else
-#	if defined(LIBRAPID_NATIVE_ARCH) && defined(LIBRAPID_MSVC)
-			_aligned_free(ptr);
-#	else
-			Traits::deallocate(alloc, ptr, size);
-#	endif
-#endif
+		template<typename T>
+		std::shared_ptr<T> safePointerCopy(const std::shared_ptr<T> &ptr, size_t size,
+										   bool ownsData = true) {
+			using RawPointer = T *;
+			using Pointer	 = std::shared_ptr<T>;
+
+			if (ownsData) {
+				return Pointer(ptr.get(), [size](RawPointer ptr) { safeDeallocate(ptr, size); });
+			} else {
+				return Pointer(ptr.get(), [](RawPointer) {});
+			}
 		}
 	} // namespace detail
 
-	template<typename T, typename A>
-	Storage<T, A>::Storage(SizeType size, const Allocator &alloc) :
-			m_allocator(alloc), m_begin(detail::safeAllocate(m_allocator, size)),
-			m_end(m_begin + size), m_ownsData(true) {}
+	template<typename T>
+	Storage<T>::Storage(SizeType size) :
+			m_begin(detail::safeAllocate<T>(size)), m_size(size), m_ownsData(true) {}
 
-	template<typename T, typename A>
-	Storage<T, A>::Storage(Scalar *begin, Scalar *end, bool ownsData) :
-			m_allocator(Allocator()), m_begin(begin), m_end(end), m_ownsData(ownsData) {}
+	template<typename T>
+	Storage<T>::Storage(Scalar *begin, Scalar *end, bool ownsData) :
+			m_begin(detail::safePointerCopy(begin, std::distance(begin, end), ownsData)),
+			m_size(std::distance(begin, end)), m_ownsData(ownsData) {}
 
-	template<typename T, typename A>
-	Storage<T, A>::Storage(SizeType size, ConstReference value, const Allocator &alloc) :
-			m_allocator(alloc), m_begin(detail::safeAllocate(m_allocator, size)),
-			m_end(m_begin + size), m_ownsData(true) {
-		for (auto it = m_begin; it != m_end; ++it) { *it = value; }
+	template<typename T>
+	Storage<T>::Storage(SizeType size, ConstReference value) :
+			m_begin(detail::safeAllocate<T>(size)), m_size(size), m_ownsData(true) {
+		for (SizeType i = 0; i < size; ++i) { m_begin.get()[i] = value; }
 	}
 
-	// template<typename T, typename A>
-	// Storage<T, A>::Storage(const Storage &other, const Allocator &alloc) :
-	// 		m_allocator(alloc), m_begin(nullptr), m_end(nullptr) {
-	// 	initData(other.begin(), other.end());
-	// }
+	template<typename T>
+	Storage<T>::Storage(const Storage &other) :
+			m_begin(other.m_begin), m_size(other.m_size), m_ownsData(other.m_ownsData) {}
 
-	template<typename T, typename A>
-	Storage<T, A>::Storage(const Storage &other, const Allocator &alloc) :
-			m_allocator(alloc), m_begin(other.m_begin), m_end(other.m_end), m_ownsData(false) {}
-
-	template<typename T, typename A>
-	Storage<T, A>::Storage(Storage &&other) noexcept :
-			m_allocator(std::move(other.m_allocator)), m_begin(other.m_begin), m_end(other.m_end),
-			m_ownsData(other.m_ownsData) {
-		other.m_begin = nullptr;
-		other.m_end	  = nullptr;
+	template<typename T>
+	Storage<T>::Storage(Storage &&other) noexcept :
+			m_begin(std::move(other.m_begin)), m_size(std::move(other.m_size)),
+			m_ownsData(std::move(other.m_ownsData)) {
+		other.m_begin	 = nullptr;
+		other.m_size	 = 0;
+		other.m_ownsData = false;
 	}
 
-	template<typename T, typename A>
+	template<typename T>
 	template<typename V>
-	Storage<T, A>::Storage(const std::initializer_list<V> &list, const Allocator &alloc) :
-			m_allocator(alloc), m_begin(nullptr), m_end(nullptr), m_ownsData(true) {
+	Storage<T>::Storage(const std::initializer_list<V> &list) :
+			m_begin(nullptr), m_size(0), m_ownsData(true) {
 		initData(list.begin(), list.end());
 	}
 
-	template<typename T, typename A>
+	template<typename T>
 	template<typename V>
-	Storage<T, A>::Storage(const std::vector<V> &vector, const Allocator &alloc) :
-			m_allocator(alloc), m_begin(nullptr), m_end(nullptr), m_ownsData(true) {
+	Storage<T>::Storage(const std::vector<V> &vector) :
+			m_begin(nullptr), m_size(0), m_ownsData(true) {
 		initData(vector.begin(), vector.end());
 	}
 
-	template<typename T, typename A>
+	template<typename T>
 	template<typename V>
-	auto Storage<T, A>::fromData(const std::initializer_list<V> &list) -> Storage {
-		Storage ret;
-		ret.initData(list.begin(), list.end());
-		return ret;
+	auto Storage<T>::fromData(const std::initializer_list<V> &list) -> Storage {
+		return Storage(list);
 	}
 
-	template<typename T, typename A>
+	template<typename T>
 	template<typename V>
-	auto Storage<T, A>::fromData(const std::vector<V> &vec) -> Storage {
-		Storage ret;
-		ret.initData(vec.begin(), vec.end());
-		return ret;
+	auto Storage<T>::fromData(const std::vector<V> &vec) -> Storage {
+		return Storage(vec);
 	}
 
-	//	template<typename T, typename A>
-	//	Storage<T, A> &Storage<T, A>::operator=(const Storage &other) {
-	//		if (this != &other) {
-	//			LIBRAPID_ASSERT(m_ownsData || size() == other.size(),
-	//							"Mismatched storage sizes. Cannot assign storage with {} elements to
-	//" 							"dependent storage with {} elements", 							other.size(),
-	//size());
-	//
-	//			m_allocator =
-	//			  std::allocator_traits<A>::select_on_container_copy_construction(other.m_allocator);
-	//			resizeImpl(other.size(), 0); // Different sizes are handled here
-	//			if (typetraits::TriviallyDefaultConstructible<T>::value) {
-	//				// Use a slightly faster memcpy if the type is trivially default constructible
-	//				std::uninitialized_copy(other.begin(), other.end(), m_begin);
-	//			} else {
-	//				// Otherwise, use the standard copy algorithm
-	//				std::copy(other.begin(), other.end(), m_begin);
-	//			}
-	//		}
-	//		return *this;
-	//	}
-
-	template<typename T, typename A>
-	Storage<T, A> &Storage<T, A>::operator=(const Storage &other) {
+	template<typename T>
+	Storage<T> &Storage<T>::operator=(const Storage &other) {
 		if (this != &other) {
-			m_begin	   = other.m_begin;
-			m_end	   = other.m_end;
-			m_ownsData = false;
+			if (m_ownsData) {
+				// If we own the data already, we can just copy the pointer since we know it won't
+				// affect anything else. The shared pointer deals with the reference counting, so
+				// we don't need to worry about other arrays that might be using the same data.
+				m_begin = other.m_begin;
+				m_size	= other.m_size;
+			} else {
+				LIBRAPID_ASSERT(m_size == other.m_size,
+								"Cannot copy storage with {} elements to dependent storage with "
+								"{} elements",
+								other.m_size,
+								m_size);
+
+				// If we don't own the data, the size must be the same since it is being used
+				// elsewhere, and we can't change it
+
+				if (typetraits::TriviallyDefaultConstructible<T>::value) {
+					// Use a slightly faster memcpy if the type is trivially default constructible
+					std::uninitialized_copy(other.begin(), other.end(), m_begin.get());
+				} else {
+					// Otherwise, use the standard copy algorithm
+					std::copy(other.begin(), other.end(), m_begin.get());
+				}
+			}
 		}
 		return *this;
 	}
 
-	template<typename T, typename A>
-	Storage<T, A> &Storage<T, A>::operator=(Storage &&other) LIBRAPID_RELEASE_NOEXCEPT {
+	template<typename T>
+	Storage<T> &Storage<T>::operator=(Storage &&other) LIBRAPID_RELEASE_NOEXCEPT {
 		if (this != &other) {
 			if (m_ownsData) {
-				m_allocator = std::move(other.m_allocator);
 				std::swap(m_begin, other.m_begin);
-				std::swap(m_end, other.m_end);
+				std::swap(m_size, other.m_size);
 				m_ownsData = other.m_ownsData;
 			} else {
 				LIBRAPID_ASSERT(
@@ -521,200 +517,200 @@ namespace librapid {
 				  other.size(),
 				  size());
 
-				m_allocator = std::allocator_traits<A>::select_on_container_copy_construction(
-				  other.m_allocator);
 				if (typetraits::TriviallyDefaultConstructible<T>::value) {
 					// Use a slightly faster memcpy if the type is trivially default constructible
-					std::uninitialized_copy(other.begin(), other.end(), m_begin);
+					std::uninitialized_copy(other.begin(), other.end(), m_begin.get());
 				} else {
 					// Otherwise, use the standard copy algorithm
-					std::copy(other.begin(), other.end(), m_begin);
+					std::copy(other.begin(), other.end(), m_begin.get());
 				}
 			}
 		}
 		return *this;
 	}
 
-	template<typename T, typename A>
-	Storage<T, A>::~Storage() {
-		if (!m_ownsData) return;
-		detail::safeDeallocate(m_allocator, m_begin, size());
-		m_begin = nullptr;
-		m_end	= nullptr;
+	template<typename T>
+	Storage<T>::~Storage() {
+		// All deallocation is handled by the shared pointer, which has a custom deleter which
+		// depends on whether the data is owned by the storage object or not. If it is owned, the
+		// data is deallocated, otherwise it is left alone.
 	}
 
-	template<typename T, typename A>
+	template<typename T>
 	template<typename P>
-	void Storage<T, A>::initData(P begin, P end) {
-		auto size = static_cast<SizeType>(std::distance(begin, end));
-		m_begin	  = detail::safeAllocate(m_allocator, size);
-		m_end	  = m_begin + size;
+	void Storage<T>::initData(P begin, P end) {
+		m_size	= static_cast<SizeType>(std::distance(begin, end));
+		m_begin = detail::safeAllocate<T>(m_size);
 
 		if constexpr (typetraits::TypeInfo<T>::canMemcpy) {
 			if constexpr (typetraits::TriviallyDefaultConstructible<T>::value) {
 				// Use a slightly faster memcpy if the type is trivially default constructible
-				std::uninitialized_copy(begin, end, m_begin);
+				std::uninitialized_copy(begin, end, m_begin.get());
 			} else {
 				// Otherwise, use the standard copy algorithm
-				std::copy(begin, end, m_begin);
+				std::copy(begin, end, m_begin.get());
 			}
 		} else {
 			// Since we can't memcpy, we have to copy each element individually
-			for (auto it = begin; it != end; ++it) {
-				new (m_begin + std::distance(begin, it)) T(*it);
-			}
+			for (SizeType i = 0; i < m_size; ++i) { m_begin.get()[i] = begin[i]; }
 		}
 	}
 
-	template<typename T, typename A>
-	void Storage<T, A>::set(const Storage<T, A> &other) {
-		// Destroy first
-		if (m_ownsData) { detail::safeDeallocate(m_allocator, m_begin, size()); }
-
-		// Then copy
-		m_allocator = other.m_allocator;
-		m_begin		= other.m_begin;
-		m_end		= other.m_end;
-		m_ownsData	= other.m_ownsData;
+	template<typename T>
+	template<typename P>
+	void Storage<T>::initData(P begin, SizeType size) {
+		initData(begin, begin + size);
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::copy() const -> Storage {
+	template<typename T>
+	void Storage<T>::set(const Storage<T> &other) {
+		// We can simply copy the shared pointers across
+		m_begin	   = other.m_begin;
+		m_size	   = other.m_size;
+		m_ownsData = other.m_ownsData;
+	}
+
+	template<typename T>
+	auto Storage<T>::copy() const -> Storage {
 		Storage ret;
-		ret.initData(m_begin, m_end);
+		ret.initData(m_begin.get(), m_size);
 		return ret;
 	}
 
-	template<typename T, typename A>
+	template<typename T>
 	template<typename ShapeType>
-	auto Storage<T, A>::defaultShape() -> ShapeType {
+	auto Storage<T>::defaultShape() -> ShapeType {
 		return ShapeType({0});
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::size() const noexcept -> SizeType {
-		return static_cast<SizeType>(std::distance(m_begin, m_end));
+	template<typename T>
+	auto Storage<T>::size() const noexcept -> SizeType {
+		return m_size;
 	}
 
-	template<typename T, typename A>
-	void Storage<T, A>::resize(SizeType newSize) {
+	template<typename T>
+	void Storage<T>::resize(SizeType newSize) {
 		resizeImpl(newSize);
 	}
 
-	template<typename T, typename A>
-	void Storage<T, A>::resize(SizeType newSize, int) {
+	template<typename T>
+	void Storage<T>::resize(SizeType newSize, int) {
 		resizeImpl(newSize, 0);
 	}
 
-	template<typename T, typename A>
-	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize) {
+	template<typename T>
+	LIBRAPID_ALWAYS_INLINE void Storage<T>::resizeImpl(SizeType newSize) {
+		// Resize and retain data
+
 		if (newSize == size()) return;
 		LIBRAPID_ASSERT(m_ownsData, "Dependent storage cannot be resized");
 
-		SizeType oldSize = size();
+		// Copy the existing data to a new location
 		Pointer oldBegin = m_begin;
-		// Reallocate
-		m_begin = detail::safeAllocate(m_allocator, newSize);
-		m_end	= m_begin + newSize;
+		SizeType oldSize = m_size;
 
+		// Allocate a new block of memory
+		m_begin = detail::safeAllocate<T>(newSize);
+		m_size	= newSize;
+
+		// Copy the data across
 		if constexpr (typetraits::TriviallyDefaultConstructible<T>::value) {
 			// Use a slightly faster memcpy if the type is trivially default constructible
-			std::uninitialized_copy(oldBegin, oldBegin + std::min(oldSize, newSize), m_begin);
+			std::uninitialized_copy(
+			  oldBegin.get(), oldBegin.get() + ::librapid::min(oldSize, newSize), m_begin.get());
 		} else {
 			// Otherwise, use the standard copy algorithm
-			std::copy(oldBegin, oldBegin + std::min(oldSize, newSize), m_begin);
+			std::copy(
+			  oldBegin.get(), oldBegin.get() + ::librapid::min(oldSize, newSize), m_begin.get());
 		}
-
-		detail::safeDeallocate(m_allocator, oldBegin, oldSize);
 	}
 
-	template<typename T, typename A>
-	LIBRAPID_ALWAYS_INLINE void Storage<T, A>::resizeImpl(SizeType newSize, int) {
+	template<typename T>
+	LIBRAPID_ALWAYS_INLINE void Storage<T>::resizeImpl(SizeType newSize, int) {
+		// Resize and discard data
+
 		if (size() == newSize) return;
 		LIBRAPID_ASSERT(m_ownsData, "Dependent storage cannot be resized");
 
-		SizeType oldSize = size();
-		Pointer oldBegin = m_begin;
-		// Reallocate
-		m_begin = detail::safeAllocate(m_allocator, newSize);
-		m_end	= m_begin + newSize;
-		detail::safeDeallocate(m_allocator, oldBegin, oldSize);
+		// Allocate a new block of memory
+		m_begin = detail::safeAllocate<T>(newSize);
+		m_size	= newSize;
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::operator[](Storage<T, A>::SizeType index) const -> ConstReference {
+	template<typename T>
+	auto Storage<T>::operator[](Storage<T>::SizeType index) const -> ConstReference {
 		LIBRAPID_ASSERT(index < size(), "Index {} out of bounds for size {}", index, size());
-		return m_begin[index];
+		return m_begin.get()[index];
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::operator[](Storage<T, A>::SizeType index) -> Reference {
+	template<typename T>
+	auto Storage<T>::operator[](Storage<T>::SizeType index) -> Reference {
 		LIBRAPID_ASSERT(index < size(), "Index {} out of bounds for size {}", index, size());
-		return m_begin[index];
+		return m_begin.get()[index];
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::data() const noexcept -> Pointer {
+	template<typename T>
+	auto Storage<T>::data() const noexcept -> Pointer {
 		return m_begin;
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::begin() noexcept -> Iterator {
-		return m_begin;
+	template<typename T>
+	auto Storage<T>::begin() noexcept -> RawPointer {
+		return m_begin.get();
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::end() noexcept -> Iterator {
-		return m_end;
+	template<typename T>
+	auto Storage<T>::end() noexcept -> RawPointer {
+		return m_begin.get() + m_size;
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::begin() const noexcept -> ConstIterator {
-		return m_begin;
+	template<typename T>
+	auto Storage<T>::begin() const noexcept -> ConstIterator {
+		return m_begin.get();
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::end() const noexcept -> ConstIterator {
-		return m_end;
+	template<typename T>
+	auto Storage<T>::end() const noexcept -> ConstIterator {
+		return m_begin.get() + m_size;
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::cbegin() const noexcept -> ConstIterator {
+	template<typename T>
+	auto Storage<T>::cbegin() const noexcept -> ConstIterator {
 		return begin();
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::cend() const noexcept -> ConstIterator {
+	template<typename T>
+	auto Storage<T>::cend() const noexcept -> ConstIterator {
 		return end();
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::rbegin() noexcept -> ReverseIterator {
-		return ReverseIterator(m_end);
+	template<typename T>
+	auto Storage<T>::rbegin() noexcept -> ReverseIterator {
+		return ReverseIterator(m_begin.get() + m_size);
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::rend() noexcept -> ReverseIterator {
-		return ReverseIterator(m_begin);
+	template<typename T>
+	auto Storage<T>::rend() noexcept -> ReverseIterator {
+		return ReverseIterator(m_begin.get());
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::rbegin() const noexcept -> ConstReverseIterator {
-		return ConstReverseIterator(m_end);
+	template<typename T>
+	auto Storage<T>::rbegin() const noexcept -> ConstReverseIterator {
+		return ConstReverseIterator(m_begin.get() + m_size);
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::rend() const noexcept -> ConstReverseIterator {
-		return ConstReverseIterator(m_begin);
+	template<typename T>
+	auto Storage<T>::rend() const noexcept -> ConstReverseIterator {
+		return ConstReverseIterator(m_begin.get());
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::crbegin() const noexcept -> ConstReverseIterator {
+	template<typename T>
+	auto Storage<T>::crbegin() const noexcept -> ConstReverseIterator {
 		return rbegin();
 	}
 
-	template<typename T, typename A>
-	auto Storage<T, A>::crend() const noexcept -> ConstReverseIterator {
+	template<typename T>
+	auto Storage<T>::crend() const noexcept -> ConstReverseIterator {
 		return rend();
 	}
 

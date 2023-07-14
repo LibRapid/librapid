@@ -83,23 +83,21 @@ namespace librapid::ml {
 		/// @tparam ShapeType The type of the shape of the input and output arrays.
 		/// @tparam StorageScalar The type of the scalar values stored in the input and output
 		/// arrays.
-		/// @tparam StorageAllocator The type of the allocator used to allocate memory for the input
-		/// and output arrays.
 		/// @param dst The output array to store the result of applying the Sigmoid activation
 		/// function to the input array.
 		/// @param src The input array to apply the activation function to.
-		template<typename ShapeType, typename StorageScalar, typename StorageAllocator>
+		template<typename ShapeType, typename StorageScalar>
 		LIBRAPID_ALWAYS_INLINE void
-		forward(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &dst,
-				const array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>>
+		forward(array::ArrayContainer<ShapeType, Storage<StorageScalar>> &dst,
+				const array::ArrayContainer<ShapeType, Storage<StorageScalar>>
 				  &src) const {
 			dst = StorageScalar(1) / (StorageScalar(1) + exp(-src));
 		}
 
-		template<typename ShapeType, typename StorageScalar, typename StorageAllocator>
+		template<typename ShapeType, typename StorageScalar>
 		LIBRAPID_ALWAYS_INLINE void
-		backward(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &dst,
-				 const array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>>
+		backward(array::ArrayContainer<ShapeType, Storage<StorageScalar>> &dst,
+				 const array::ArrayContainer<ShapeType, Storage<StorageScalar>>
 				   &src) const {
 			dst = src * (StorageScalar(1) - src);
 		}
@@ -118,18 +116,18 @@ namespace librapid::ml {
 			dst = src * (StorageScalar(1) - src);
 		}
 
-		template<typename ShapeType, typename StorageScalar, typename StorageAllocator,
+		template<typename ShapeType, typename StorageScalar,
 				 typename descriptor, typename Functor, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
-		forward(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &dst,
+		forward(array::ArrayContainer<ShapeType, Storage<StorageScalar>> &dst,
 				const detail::Function<descriptor, Functor, Args...> &src) const {
 			dst = StorageScalar(1) / (StorageScalar(1) + exp(-src));
 		}
 
-		template<typename ShapeType, typename StorageScalar, typename StorageAllocator,
+		template<typename ShapeType, typename StorageScalar,
 				 typename descriptor, typename Functor, typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
-		backward(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &dst,
+		backward(array::ArrayContainer<ShapeType, Storage<StorageScalar>> &dst,
 				 const detail::Function<descriptor, Functor, Args...> &src) const {
 			dst = src * (StorageScalar(1) - src);
 		}

@@ -226,7 +226,8 @@ namespace librapid {
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(SizeType size) :
-			m_size(size), m_buffer(global::openCLContext, bufferFlags, size * sizeof(Scalar)) {
+			m_size(size), m_buffer(global::openCLContext, bufferFlags, size * sizeof(Scalar)),
+			m_ownsData(true) {
 		LIBRAPID_CHECK_OPENCL;
 	}
 
@@ -243,33 +244,27 @@ namespace librapid {
 		LIBRAPID_CHECK_OPENCL;
 	}
 
-	//	template<typename Scalar>
-	//	OpenCLStorage<Scalar>::OpenCLStorage(const OpenCLStorage &other) :
-	//			m_size(other.m_size), m_buffer(other.m_buffer) {
-	//		LIBRAPID_CHECK_OPENCL;
-	//		global::openCLQueue.enqueueCopyBuffer(
-	//		  other.m_buffer, m_buffer, 0, 0, m_size * sizeof(Scalar));
-	//	}
-
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(const OpenCLStorage &other) :
-			m_size(other.m_size), m_buffer(other.m_buffer), m_ownsData(false) {
+			m_size(other.m_size), m_buffer(other.m_buffer), m_ownsData(true) {
 		LIBRAPID_CHECK_OPENCL;
 	}
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(OpenCLStorage &&other) LIBRAPID_RELEASE_NOEXCEPT
-			: m_size(other.m_size),
+			: m_size(std::move(other.m_size)),
 			  m_buffer(std::move(other.m_buffer)),
 			  m_ownsData(other.m_ownsData) {
 		LIBRAPID_CHECK_OPENCL;
-		other.m_size = 0;
+		other.m_size	 = 0;
+		other.m_ownsData = false;
 	}
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(std::initializer_list<Scalar> list) :
 			m_size(list.size()),
-			m_buffer(global::openCLContext, bufferFlags, list.size() * sizeof(Scalar)) {
+			m_buffer(global::openCLContext, bufferFlags, list.size() * sizeof(Scalar)),
+			m_ownsData(true) {
 		LIBRAPID_CHECK_OPENCL;
 		global::openCLQueue.enqueueWriteBuffer(
 		  m_buffer, CL_TRUE, 0, m_size * sizeof(Scalar), list.begin());
@@ -278,34 +273,30 @@ namespace librapid {
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(const std::vector<Scalar> &vec) :
 			m_size(vec.size()),
-			m_buffer(global::openCLContext, bufferFlags, m_size * sizeof(Scalar)) {
+			m_buffer(global::openCLContext, bufferFlags, m_size * sizeof(Scalar)),
+			m_ownsData(true) {
 		LIBRAPID_CHECK_OPENCL;
 		global::openCLQueue.enqueueWriteBuffer(
 		  m_buffer, CL_TRUE, 0, m_size * sizeof(Scalar), vec.data());
 	}
 
-	//	template<typename Scalar>
-	//	OpenCLStorage<Scalar> &OpenCLStorage<Scalar>::operator=(const OpenCLStorage &other) {
-	//		LIBRAPID_CHECK_OPENCL;
-	//		if (this != &other) {
-	//			LIBRAPID_ASSERT(m_ownsData || m_size == other.m_size,
-	//							"Cannot copy into dependent "
-	//							"OpenCLStorage with different "
-	//							"size");
-	//			resizeImpl(other.m_size, 0);
-	//			global::openCLQueue.enqueueCopyBuffer(
-	//			  other.m_buffer, m_buffer, 0, 0, m_size * sizeof(Scalar));
-	//		}
-	//		return *this;
-	//	}
-
 	template<typename Scalar>
 	OpenCLStorage<Scalar> &OpenCLStorage<Scalar>::operator=(const OpenCLStorage &other) {
 		LIBRAPID_CHECK_OPENCL;
 		if (this != &other) {
-			m_buffer   = other.m_buffer;
-			m_size	   = other.m_size;
-			m_ownsData = false;
+			if (m_ownsData) {
+				m_buffer = other.m_buffer;
+				m_size	 = other.m_size;
+			} else {
+				LIBRAPID_ASSERT(m_size == other.m_size,
+								"Cannot copy storage with {} elements to dependent storage with "
+								"{} elements",
+								other.m_size,
+								m_size);
+
+				global::openCLQueue.enqueueCopyBuffer(
+				  other.m_buffer, m_buffer, 0, 0, m_size * sizeof(Scalar));
+			}
 		}
 		return *this;
 	}
@@ -316,10 +307,9 @@ namespace librapid {
 		LIBRAPID_CHECK_OPENCL;
 		if (this != &other) {
 			if (m_ownsData) {
-				m_buffer	 = std::move(other.m_buffer);
-				m_size		 = other.m_size;
-				other.m_size = 0;
-				m_ownsData	 = other.m_ownsData;
+				std::swap(m_buffer, other.m_buffer);
+				std::swap(m_size, other.m_size);
+				std::swap(m_ownsData, other.m_ownsData);
 			} else {
 				LIBRAPID_ASSERT(m_size == other.m_size,
 								"Cannot move into dependent OpenCLStorage "
@@ -336,7 +326,7 @@ namespace librapid {
 		LIBRAPID_CHECK_OPENCL;
 		m_buffer   = other.m_buffer;
 		m_size	   = other.m_size;
-		m_ownsData = false;
+		m_ownsData = other.m_ownsData;
 	}
 
 	template<typename Scalar>

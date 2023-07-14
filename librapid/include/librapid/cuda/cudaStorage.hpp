@@ -273,7 +273,7 @@ namespace librapid {
 		/// \param newSize New size of the Storage object
 		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize);
 
-		Pointer m_begin = nullptr; // It is more efficient to store pointers to the start
+		Pointer m_begin = nullptr;
 		size_t m_size;
 		bool m_ownsData = true;
 	};
@@ -290,40 +290,10 @@ namespace librapid {
 			return result;
 		}
 
-		template<>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE
-		  Complex<float> *__restrict cudaSafeAllocate<Complex<float>>(size_t size) {
-			Complex<float> *result;
-			cudaSafeCall(
-			  cudaMallocAsync(&result, sizeof(Complex<float>) * size, global::cudaStream));
-			return result;
-		}
-
-		template<>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE
-		  Complex<double> *__restrict cudaSafeAllocate<Complex<double>>(size_t size) {
-			Complex<double> *result;
-			cudaSafeCall(
-			  cudaMallocAsync(&result, sizeof(Complex<double>) * size, global::cudaStream));
-			return result;
-		}
-
 		template<typename T>
 		LIBRAPID_ALWAYS_INLINE void cudaSafeDeallocate(T *__restrict data) {
-			static_assert(typetraits::TriviallyDefaultConstructible<T>::value,
+			static_assert(std::is_trivially_destructible_v<T>,
 						  "Data type must be trivially constructable for use with CUDA");
-			cudaSafeCall(cudaFreeAsync(data, global::cudaStream));
-		}
-
-		template<>
-		LIBRAPID_ALWAYS_INLINE void
-		cudaSafeDeallocate<Complex<float>>(Complex<float> *__restrict data) {
-			cudaSafeCall(cudaFreeAsync(data, global::cudaStream));
-		}
-
-		template<>
-		LIBRAPID_ALWAYS_INLINE void
-		cudaSafeDeallocate<Complex<double>>(Complex<double> *__restrict data) {
 			cudaSafeCall(cudaFreeAsync(data, global::cudaStream));
 		}
 
@@ -331,63 +301,64 @@ namespace librapid {
 		std::shared_ptr<T> cudaSharedPtrAllocate(size_t size) {
 			return std::shared_ptr<T>(cudaSafeAllocate<T>(size), cudaSafeDeallocate<T>);
 		}
+
+		template<typename T>
+		std::shared_ptr<T> safePointerCopyCuda(T *ptr, bool ownsData = true) {
+			using RawPointer = T *;
+			using Pointer	 = std::shared_ptr<T>;
+
+			if (ownsData) {
+				return Pointer(ptr, cudaSafeDeallocate<T>);
+			} else {
+				return Pointer(ptr, [](RawPointer) {});
+			}
+		}
+
+		template<typename T>
+		std::shared_ptr<T> safePointerCopyCuda(std::shared_ptr<T> ptr, bool ownsData = true) {
+			using RawPointer = T *;
+			using Pointer	 = std::shared_ptr<T>;
+
+			if (ownsData) {
+				return Pointer(ptr.get(), cudaSafeDeallocate<T>);
+			} else {
+				return Pointer(ptr.get(), [](RawPointer) {});
+			}
+		}
 	} // namespace detail
 
 	template<typename T>
-	CudaStorage<T>::CudaStorage(SizeType size) {
-		m_begin = detail::cudaSharedPtrAllocate<T>(size);
-		m_size	= size;
-	}
+	CudaStorage<T>::CudaStorage(SizeType size) :
+			m_size(size), m_begin(detail::cudaSharedPtrAllocate<T>(size)), m_ownsData(true) {}
 
 	template<typename T>
-	CudaStorage<T>::CudaStorage(SizeType size, ConstReference value) {
-		m_begin = detail::cudaSharedPtrAllocate<T>(size);
-		m_size	= size;
-
+	CudaStorage<T>::CudaStorage(SizeType size, ConstReference value) :
+			m_size(size), m_begin(detail::cudaSharedPtrAllocate<T>(size)), m_ownsData(true) {
 		// Fill the data with "value"
 		cuda::runKernel<T, T>("fill", "fillArray", size, size, m_begin, value);
 	}
 
 	template<typename T>
-	CudaStorage<T>::CudaStorage(Scalar *begin, SizeType size, bool independent) {
-		if (independent)
-			m_begin =
-			  std::shared_ptr<Scalar>(begin, [](Scalar *ptr) { detail::cudaSafeDeallocate(ptr); });
-		else
-			m_begin = std::shared_ptr<Scalar>(begin, [](Scalar *ptr) {});
-		m_size	   = size;
-		m_ownsData = independent;
-	}
-
-	//	template<typename T>
-	//	CudaStorage<T>::CudaStorage(const CudaStorage &other) {
-	//		m_begin = detail::cudaSharedPtrAllocate<T>(other.size());
-	//		m_size	= other.size();
-	//		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
-	//									 other.begin().get(),
-	//									 sizeof(T) * other.size(),
-	//									 cudaMemcpyDeviceToDevice,
-	//									 global::cudaStream));
-	//	}
+	CudaStorage<T>::CudaStorage(Scalar *begin, SizeType size, bool ownsData) :
+			m_size(size), m_begin(detail::safePointerCopyCuda(begin, ownsData)),
+			m_ownsData(ownsData) {}
 
 	template<typename T>
-	CudaStorage<T>::CudaStorage(const CudaStorage &other) {
-		m_begin	   = other.m_begin;
-		m_size	   = other.m_size;
-		m_ownsData = false;
-	}
+	CudaStorage<T>::CudaStorage(const CudaStorage &other) :
+			m_size(other.m_size), m_begin(other.m_begin), m_ownsData(other.m_ownsData) {}
 
 	template<typename T>
 	CudaStorage<T>::CudaStorage(CudaStorage &&other) noexcept :
 			m_begin(other.m_begin), m_size(other.m_size), m_ownsData(other.m_ownsData) {
-		other.m_begin = nullptr;
-		other.m_size  = 0;
+		other.m_begin	 = nullptr;
+		other.m_size	 = 0;
+		other.m_ownsData = false;
 	}
 
 	template<typename T>
-	CudaStorage<T>::CudaStorage(const std::initializer_list<T> &list) {
-		m_begin = detail::cudaSharedPtrAllocate<T>(list.size());
-		m_size	= list.size();
+	CudaStorage<T>::CudaStorage(const std::initializer_list<T> &list) :
+			m_size(list.size()), m_begin(detail::cudaSharedPtrAllocate<T>(list.size())),
+			m_ownsData(true) {
 		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
 									 list.begin(),
 									 sizeof(T) * m_size,
@@ -396,9 +367,9 @@ namespace librapid {
 	}
 
 	template<typename T>
-	CudaStorage<T>::CudaStorage(const std::vector<T> &list) {
-		m_begin = detail::cudaSharedPtrAllocate<T>(list.size());
-		m_size	= list.size();
+	CudaStorage<T>::CudaStorage(const std::vector<T> &list) :
+			m_size(list.size()), m_begin(detail::cudaSharedPtrAllocate<T>(list.size())),
+			m_ownsData(true) {
 		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
 									 list.begin(),
 									 sizeof(T) * m_size,
@@ -428,32 +399,28 @@ namespace librapid {
 		return ret;
 	}
 
-	//	template<typename T>
-	//	auto CudaStorage<T>::operator=(const CudaStorage<T> &storage) -> CudaStorage & {
-	//		if (this != &storage) {
-	//			LIBRAPID_ASSERT(
-	//			  !m_ownsData || size() == storage.size(),
-	//			  "Mismatched storage sizes. Cannot assign CUDA storage with {} elements to "
-	//			  "dependent CUDA storage with {} elements",
-	//			  storage.size(),
-	//			  size());
-	//
-	//			resizeImpl(storage.size(), 0); // Different sizes are handled here
-	//			cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
-	//										 storage.begin().get(),
-	//										 sizeof(T) * m_size,
-	//										 cudaMemcpyDeviceToDevice,
-	//										 global::cudaStream));
-	//		}
-	//		return *this;
-	//	}
-
 	template<typename T>
-	auto CudaStorage<T>::operator=(const CudaStorage<T> &storage) -> CudaStorage & {
-		if (this != &storage) {
-			m_begin	   = storage.m_begin;
-			m_size	   = storage.m_size;
-			m_ownsData = false;
+	auto CudaStorage<T>::operator=(const CudaStorage<T> &other) -> CudaStorage & {
+		if (this != &other) {
+			if (m_ownsData) {
+				// If we own the data already, we can just copy the pointer since we know it won't
+				// affect anything else. The shared pointer deals with the reference counting, so
+				// we don't need to worry about other arrays that might be using the same data.
+				m_begin = other.m_begin;
+				m_size	= other.m_size;
+			} else {
+				LIBRAPID_ASSERT(m_size == other.m_size,
+								"Cannot copy storage with {} elements to dependent storage with "
+								"{} elements",
+								other.m_size,
+								m_size);
+
+				cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
+											 other.begin().get(),
+											 sizeof(T) * m_size,
+											 cudaMemcpyDeviceToDevice,
+											 global::cudaStream));
+			}
 		}
 		return *this;
 	}
@@ -462,20 +429,17 @@ namespace librapid {
 	auto CudaStorage<T>::operator=(CudaStorage &&other) noexcept -> CudaStorage & {
 		if (this != &other) {
 			if (m_ownsData) {
-				m_begin		  = other.m_begin;
-				m_size		  = other.m_size;
-				other.m_begin = nullptr;
-				other.m_size  = 0;
-				m_ownsData	  = other.m_ownsData;
+				std::swap(m_begin, other.m_begin);
+				std::swap(m_size, other.m_size);
+				std::swap(m_ownsData, other.m_ownsData);
 			} else {
 				LIBRAPID_ASSERT(
-				  !m_ownsData || size() == other.size(),
+				  size() == other.size(),
 				  "Mismatched storage sizes. Cannot assign CUDA storage with {} elements to "
 				  "dependent CUDA storage with {} elements",
 				  other.size(),
 				  size());
 
-				resizeImpl(other.size(), 0); // Different sizes are handled here
 				cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
 											 other.begin().get(),
 											 sizeof(T) * m_size,
@@ -496,12 +460,12 @@ namespace librapid {
 	void CudaStorage<T>::set(const CudaStorage &other) {
 		m_begin	   = other.m_begin;
 		m_size	   = other.m_size;
-		m_ownsData = false;
+		m_ownsData = other.m_ownsData;
 	}
 
 	template<typename T>
 	auto CudaStorage<T>::copy() const -> CudaStorage {
-		CudaStorage ret;
+		CudaStorage ret(m_size);
 
 		cudaSafeCall(cudaMemcpyAsync(ret.begin().get(),
 									 m_begin.get(),
@@ -544,14 +508,16 @@ namespace librapid {
 		LIBRAPID_ASSERT(m_ownsData, "Dependent CUDA storage cannot be resized");
 
 		Pointer oldBegin = m_begin;
+		SizeType oldSize = m_size;
 
 		// Reallocate
 		m_begin = detail::cudaSharedPtrAllocate<T>(newSize);
+		m_size	= newSize;
 
 		// Copy old data
 		cudaSafeCall(cudaMemcpyAsync(m_begin.get(),
 									 oldBegin.get(),
-									 sizeof(T) * std::min(size(), newSize),
+									 sizeof(T) * std::min(oldSize, newSize),
 									 cudaMemcpyDeviceToDevice,
 									 global::cudaStream));
 
