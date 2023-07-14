@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <bitset>
 #include <cfloat>
 #include <chrono>
 #include <cmath>
@@ -29,7 +30,6 @@
 #include <memory>
 #include <random>
 #include <utility>
-#include <bitset>
 
 #if defined(LIBRAPID_HAS_OMP)
 #	include <omp.h>
@@ -56,9 +56,11 @@
 #include <fmt/printf.h>
 #include <fmt/xchar.h>
 
+#if !defined(LIBRAPID_MINGW) // MinGW does not implement std::from_chars which is required by scnlib
 // scnlib
-#include <scn/scn.h>
-#include <scn/tuple_return/tuple_return.h>
+#	include <scn/scn.h>
+#	include <scn/tuple_return/tuple_return.h>
+#endif // !LIBRAPID_MINGW
 
 // Vc -- SIMD instructions
 #if defined(_MSC_VER)

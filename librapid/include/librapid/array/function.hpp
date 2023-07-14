@@ -23,12 +23,12 @@ namespace librapid {
 				return FirstBackend {};
 			} else {
 				using RestBackend = decltype(commonBackend<Rest...>());
-				if constexpr (std::is_same_v<FirstBackend, backend::OpenCL> ||
-							  std::is_same_v<RestBackend, backend::OpenCL>) {
-					return backend::OpenCL {};
-				} else if constexpr (std::is_same_v<FirstBackend, backend::CUDA> ||
-									 std::is_same_v<RestBackend, backend::CUDA>) {
-					return backend::CUDA {};
+				if constexpr (std::is_same_v<FirstBackend, backend::OpenCLIfAvailable> ||
+							  std::is_same_v<RestBackend, backend::OpenCLIfAvailable>) {
+					return backend::OpenCLIfAvailable {};
+				} else if constexpr (std::is_same_v<FirstBackend, backend::CUDAIfAvailable> ||
+									 std::is_same_v<RestBackend, backend::CUDAIfAvailable>) {
+					return backend::CUDAIfAvailable {};
 				} else {
 					return backend::CPU {};
 				}

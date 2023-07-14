@@ -68,7 +68,7 @@ namespace librapid {
 		LIBRAPID_ASSERT(data.size() > 0, "Cannot create a zero-sized array");                      \
 		auto *tmp	  = new Array<Scalar, Backend>[data.size()];                                   \
 		int64_t index = 0;                                                                         \
-		for (const auto &item : data) tmp[index++] = fromData<Scalar, Backend>(item);              \
+		for (const auto &item : data) tmp[index++] = fromData<Scalar, Backend>(item).copy();       \
 		auto zeroShape = tmp[0].shape();                                                           \
 		for (int64_t i = 0; i < data.size(); ++i)                                                  \
 			LIBRAPID_ASSERT(tmp[i].shape() == zeroShape, "Arrays must have consistent shapes");    \
@@ -78,7 +78,7 @@ namespace librapid {
 		for (size_t i = 0; i < zeroShape.ndim(); ++i) { newShape[i + 1] = zeroShape[i]; }          \
 		auto res = Array<Scalar, Backend>(newShape);                                               \
 		index	 = 0;                                                                              \
-		for (int64_t i = 0; i < data.size(); ++i) res[i] = tmp[i];                                 \
+		for (int64_t i = 0; i < data.size(); ++i) res[i] = tmp[i].copy();                          \
 		delete[] tmp;                                                                              \
 		return res;                                                                                \
 	}

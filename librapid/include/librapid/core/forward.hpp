@@ -10,7 +10,7 @@ namespace librapid {
 	template<typename T, size_t N>
 	class Stride;
 
-	template<typename Scalar_, typename Allocator_>
+	template<typename Scalar_>
 	class Storage;
 
 	template<typename Scalar_, size_t... Dimensions>
@@ -39,13 +39,13 @@ namespace librapid {
 		template<typename desc, typename Functor_, typename... Args>
 		class Function;
 
-		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
+		template<typename ShapeType_, typename StorageScalar,
 				 typename Functor_, typename... Args,
 				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
 											 descriptor::Trivial, Functor_, Args...>>::value,
 										   int> = 0>
 		LIBRAPID_ALWAYS_INLINE void
-		assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
+		assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 		template<typename ShapeType_, typename StorageScalar, size_t... StorageSize,
@@ -57,13 +57,13 @@ namespace librapid {
 		assign(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
-		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
+		template<typename ShapeType_, typename StorageScalar,
 				 typename Functor_, typename... Args,
 				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
 											 descriptor::Trivial, Functor_, Args...>>::value,
 										   int> = 0>
 		LIBRAPID_ALWAYS_INLINE void assignParallel(
-		  array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
+		  array::ArrayContainer<ShapeType_, Storage<StorageScalar>> &lhs,
 		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function);
 
 		template<typename ShapeType_, typename StorageScalar, size_t... StorageSize,

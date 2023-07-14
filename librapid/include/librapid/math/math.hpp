@@ -11,5 +11,6 @@
 #include "vector.hpp"
 #include "complex.hpp"
 #include "utilityFunctions.hpp"
+#include "round.hpp"
 
 #endif // LIBRAPID_MATH

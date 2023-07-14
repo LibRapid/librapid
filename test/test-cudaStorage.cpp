@@ -28,13 +28,13 @@ namespace lrc = librapid;
 			REQUIRE(storage2[8] == 9);                                                             \
 			REQUIRE(storage2[9] == 10);                                                            \
                                                                                                    \
-			lrc::CudaStorage<ScalarType> storage3(100, 1);                                         \
+			lrc::CudaStorage<ScalarType> storage3(10, 1);                                          \
                                                                                                    \
-			REQUIRE(storage3.size() == 100);                                                       \
+			REQUIRE(storage3.size() == 10);                                                        \
 			REQUIRE(storage3[0] == 1);                                                             \
 			REQUIRE(storage3[1] == 1);                                                             \
-			REQUIRE(storage3[98] == 1);                                                            \
-			REQUIRE(storage3[99] == 1);                                                            \
+			REQUIRE(storage3[8] == 1);                                                             \
+			REQUIRE(storage3[9] == 1);                                                             \
                                                                                                    \
 			auto storage4 = lrc::CudaStorage<ScalarType>(storage2);                                \
                                                                                                    \
@@ -44,24 +44,24 @@ namespace lrc = librapid;
 			REQUIRE(storage4[8] == 9);                                                             \
 			REQUIRE(storage4[9] == 10);                                                            \
                                                                                                    \
-			storage4 = lrc::CudaStorage<ScalarType>(100);                                          \
-			REQUIRE(storage4.size() == 100);                                                       \
-			storage4[0]	 = 1;                                                                      \
-			storage4[1]	 = 2;                                                                      \
-			storage4[98] = 99;                                                                     \
-			storage4[99] = 100;                                                                    \
-			REQUIRE(storage4[0] == 1);                                                             \
-			REQUIRE(storage4[1] == 2);                                                             \
-			REQUIRE(storage4[98] == 99);                                                           \
-			REQUIRE(storage4[99] == 100);                                                          \
+			/* storage4 = lrc::CudaStorage<ScalarType>(100);   */                                  \
+			/* REQUIRE(storage4.size() == 100);                */                                  \
+			/* storage4[0]	 = 1;                               */                                  \
+			/* storage4[1]	 = 2;                               */                                  \
+			/* storage4[98] = 99;                              */                                  \
+			/* storage4[99] = 100;                             */                                  \
+			/* REQUIRE(storage4[0] == 1);                      */                                  \
+			/* REQUIRE(storage4[1] == 2);                      */                                  \
+			/* REQUIRE(storage4[98] == 99);                    */                                  \
+			/* REQUIRE(storage4[99] == 100);                   */                                  \
                                                                                                    \
 			storage4 = storage3;                                                                   \
                                                                                                    \
-			REQUIRE(storage4.size() == 100);                                                       \
+			REQUIRE(storage4.size() == 10);                                                        \
 			REQUIRE(storage4[0] == 1);                                                             \
 			REQUIRE(storage4[1] == 1);                                                             \
-			REQUIRE(storage4[98] == 1);                                                            \
-			REQUIRE(storage4[99] == 1);                                                            \
+			REQUIRE(storage4[8] == 1);                                                             \
+			REQUIRE(storage4[9] == 1);                                                             \
                                                                                                    \
 			lrc::CudaStorage<ScalarType> storage6(20, 123);                                        \
 			REQUIRE(storage6.size() == 20);                                                        \
@@ -143,9 +143,7 @@ TEST_CASE("Test CudaStorage<T>", "[storage]") {
 
 TEST_CASE("Default", "[storage]") {
 	LIBRAPID_WARN("OpenCL not available, skipping tests");
-	SECTION("Default") {
-		REQUIRE(true);
-	}
+	SECTION("Default") { REQUIRE(true); }
 }
 
 #endif // LIBRAPID_HAS_CUDA

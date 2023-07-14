@@ -435,11 +435,6 @@ namespace librapid {
 			return std::atanh(val);
 		}
 	}
-
-	template<typename T>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto lerp(T a, T b, T t) {
-		return a + t * (b - a);
-	}
 } // namespace librapid
 
 #endif // LIBRAPID_MATH_CORE_MATH_HPP

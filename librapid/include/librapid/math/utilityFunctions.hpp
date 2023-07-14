@@ -45,9 +45,58 @@ namespace librapid {
 			 typename std::enable_if_t<
 			   typetraits::TypeInfo<T>::type == detail::LibRapidType::Scalar &&
 				 typetraits::TypeInfo<Lower>::type == detail::LibRapidType::Scalar &&
-				 typetraits::TypeInfo<Upper>::type == detail::LibRapidType::Scalar,
+				 typetraits::TypeInfo<Upper>::type == detail::LibRapidType::Scalar &&
+				 std::is_floating_point_v<T> && std::is_floating_point_v<Lower> &&
+				 std::is_floating_point_v<Upper>,
 			   int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T lerp(T t, Lower lower, Upper upper) {
+		if (isNaN(t) || isNaN(lower) || isNaN(upper))
+			return std::numeric_limits<T>::quiet_NaN();
+		else if ((t <= T {0} && upper >= T {0}) || (lower >= T {0} && upper <= T {0}))
+		// ab <= 0 but product could overflow.
+#ifndef FMA
+			return t * upper + (T {1} - t) * lower;
+#else
+			return std::fma(t, upper, (_Float {1} - t) * upper);
+#endif
+		else if (t == T {1})
+			return upper;
+		else { // monotonic near t == 1.
+#ifndef FMA
+			const auto x = lower + t * (upper - lower);
+#else
+			const auto x = std::fma(t, upper - lower, lower);
+#endif
+			return (t > T {1}) == (upper > lower) ? max(upper, x) : min(upper, x);
+		}
+	}
+
+	/// \brief Linearly interpolate between two values
+	///
+	/// \f$ \mathrm{lerp}(t, L, U) = L+t\left( U-L \right) \f$. The result is clamped to the
+	/// specified range.
+	///
+	/// \tparam T Type of \p t
+	/// \tparam Lower Type of \p lower
+	/// \tparam Upper Type of \p upper
+	/// \param t Interpolation Percentage
+	/// \param lower Lower bound (L)
+	/// \param upper Upper bound (U)
+	/// \return
+	template<typename T, typename Lower, typename Upper,
+			 typename std::enable_if_t<
+			   typetraits::TypeInfo<T>::type == detail::LibRapidType::Scalar &&
+				   typetraits::TypeInfo<Lower>::type == detail::LibRapidType::Scalar &&
+				   typetraits::TypeInfo<Upper>::type == detail::LibRapidType::Scalar &&
+				   !std::is_floating_point_v<T> ||
+				 !std::is_floating_point_v<Lower> || !std::is_floating_point_v<Upper>,
+			   int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T lerp(T t, Lower lower, Upper upper) {
+		if (isNaN(t) || isNaN(lower) || isNaN(upper)) return std::numeric_limits<T>::quiet_NaN();
+
+		if (t < T {0}) return lower;
+		if (t > T {1}) return upper;
+
 		return static_cast<T>(lower) + (static_cast<T>(upper) - static_cast<T>(lower)) * t;
 	}
 

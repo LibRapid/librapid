@@ -1,10 +1,13 @@
 #include <librapid/librapid.hpp>
 
+#include <stdlib.h> // setenv
+
 namespace librapid {
 	namespace global {
 		bool throwOnAssert				= false;
 		size_t multithreadThreshold		= 5000;
 		size_t gemmMultithreadThreshold = 100;
+		size_t gemvMultithreadThreshold = 100;
 		size_t numThreads				= 8;
 		size_t cacheLineSize			= 64;
 		size_t memoryAlignment			= LIBRAPID_DEFAULT_MEM_ALIGN;
@@ -29,6 +32,21 @@ namespace librapid {
 #endif // LIBRAPID_HAS_CUDA
 	}  // namespace global
 
+#if defined(_WIN32)
+#define SETENV(name, value) _putenv_s(name, value)
+#else
+#define SETENV(name, value) setenv(name, value, 1)
+#endif
+
+	void setOpenBLASThreadsEnv(int num_threads) {
+		char num_threads_str[20];
+		sprintf(num_threads_str, "%d", num_threads);
+
+		SETENV("OPENBLAS_NUM_THREADS", num_threads_str);
+		SETENV("GOTO_NUM_THREADS", num_threads_str);
+		SETENV("OMP_NUM_THREADS", num_threads_str);
+	}
+
 	void setNumThreads(size_t numThreads) {
 		global::numThreads = numThreads;
 
@@ -37,6 +55,9 @@ namespace librapid {
 		openblas_set_num_threads(numThreads);
 		omp_set_num_threads(numThreads);
 		goto_set_num_threads(numThreads);
+
+		setOpenBLASThreadsEnv(numThreads);
+
 #endif	// LIBRAPID_BLAS_OPENBLAS
 
 		// MKL threading

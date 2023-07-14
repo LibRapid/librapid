@@ -17,6 +17,9 @@ namespace librapid {
 		// Number of columns required for a matrix to be parallelized in GEMM
 		extern size_t gemmMultithreadThreshold;
 
+		// Number of columns required for a matrix to be parallelized in GEMV
+		extern size_t gemvMultithreadThreshold;
+
 		// Number of threads used by LibRapid
 		extern size_t numThreads;
 

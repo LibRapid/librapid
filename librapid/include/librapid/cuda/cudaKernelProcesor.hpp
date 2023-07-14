@@ -7,7 +7,7 @@ namespace librapid::cuda {
 	/// Load a CUDA kernel from a file and return the string representation of it.
 	/// \param relPath File path relative to LibRapid's "cuda/kernels" directory
 	/// \return String representation of the kernel
-	const std::string &loadKernel(const std::string &relPath);
+	const std::string &loadKernel(const std::string &path, bool relative = true);
 
 	/// Run a kernel string on the GPU with the specified arguments
 	/// \tparam Templates Instantiation types passed to Jitify

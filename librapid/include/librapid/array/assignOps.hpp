@@ -10,23 +10,22 @@ namespace librapid {
 		/// loop over contiguous data.
 		/// \tparam ShapeType_ The shape type of the array container
 		/// \tparam StorageScalar The scalar type of the storage object
-		/// \tparam StorageAllocator The Allocator of the Storage object
 		/// \tparam Functor_ The function type
 		/// \tparam Args The argument types of the function
 		/// \param lhs The array container to assign to
 		/// \param function The function to assign
-		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
+		template<typename ShapeType_, typename StorageScalar,
 				 typename Functor_, typename... Args,
 				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
 											 descriptor::Trivial, Functor_, Args...>>::value,
 										   int>>
 		LIBRAPID_ALWAYS_INLINE void
-		assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
+		assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
 			using Scalar =
 			  typename array::ArrayContainer<ShapeType_,
-											 Storage<StorageScalar, StorageAllocator>>::Scalar;
+											 Storage<StorageScalar>>::Scalar;
 			constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 			constexpr bool allowVectorisation =
 			  typetraits::TypeInfo<
@@ -111,25 +110,24 @@ namespace librapid {
 		/// Trivial assignment with parallel execution
 		/// \tparam ShapeType_ The shape type of the array container
 		/// \tparam StorageScalar The scalar type of the storage object
-		/// \tparam StorageAllocator The Allocator of the Storage object
 		/// \tparam Functor_ The function type
 		/// \tparam Args The argument types of the function
 		/// \param lhs The array container to assign to
 		/// \param function The function to assign
-		/// \see assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>>
+		/// \see assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar>>
 		/// &lhs, const detail::Function<descriptor::Trivial, Functor_, Args...> &function)
-		template<typename ShapeType_, typename StorageScalar, typename StorageAllocator,
+		template<typename ShapeType_, typename StorageScalar,
 				 typename Functor_, typename... Args,
 				 typename std::enable_if_t<!typetraits::HasCustomEval<detail::Function<
 											 descriptor::Trivial, Functor_, Args...>>::value,
 										   int>>
 		LIBRAPID_ALWAYS_INLINE void assignParallel(
-		  array::ArrayContainer<ShapeType_, Storage<StorageScalar, StorageAllocator>> &lhs,
+		  array::ArrayContainer<ShapeType_, Storage<StorageScalar>> &lhs,
 		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
 			using Scalar =
 			  typename array::ArrayContainer<ShapeType_,
-											 Storage<StorageScalar, StorageAllocator>>::Scalar;
+											 Storage<StorageScalar>>::Scalar;
 			constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
 			constexpr bool allowVectorisation =
