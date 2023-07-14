@@ -670,6 +670,7 @@ namespace librapid {
 		auto ArrayContainer<ShapeType_, StorageType_>::operator+=(const T &value)
 		  -> ArrayContainer & {
 			*this = *this + value;
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
@@ -677,6 +678,7 @@ namespace librapid {
 		auto ArrayContainer<ShapeType_, StorageType_>::operator-=(const T &value)
 		  -> ArrayContainer & {
 			*this = *this - value;
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
@@ -684,6 +686,7 @@ namespace librapid {
 		auto ArrayContainer<ShapeType_, StorageType_>::operator*=(const T &value)
 		  -> ArrayContainer & {
 			*this = *this * value;
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
@@ -691,6 +694,7 @@ namespace librapid {
 		auto ArrayContainer<ShapeType_, StorageType_>::operator/=(const T &value)
 		  -> ArrayContainer & {
 			*this = *this / value;
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
@@ -698,6 +702,7 @@ namespace librapid {
 		auto ArrayContainer<ShapeType_, StorageType_>::operator%=(const T &value)
 		  -> ArrayContainer & {
 			*this = *this % value;
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
@@ -705,6 +710,7 @@ namespace librapid {
 		auto ArrayContainer<ShapeType_, StorageType_>::operator&=(const T &value)
 		  -> ArrayContainer & {
 			*this = *this & value;
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
@@ -712,6 +718,7 @@ namespace librapid {
 		auto ArrayContainer<ShapeType_, StorageType_>::operator|=(const T &value)
 		  -> ArrayContainer & {
 			*this = *this | value;
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
@@ -719,6 +726,7 @@ namespace librapid {
 		auto ArrayContainer<ShapeType_, StorageType_>::operator^=(const T &value)
 		  -> ArrayContainer & {
 			*this = *this ^ value;
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
@@ -726,6 +734,7 @@ namespace librapid {
 		auto ArrayContainer<ShapeType_, StorageType_>::operator<<=(const T &value)
 		  -> ArrayContainer & {
 			*this = *this << value;
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
@@ -733,6 +742,7 @@ namespace librapid {
 		auto ArrayContainer<ShapeType_, StorageType_>::operator>>=(const T &value)
 		  -> ArrayContainer & {
 			*this = *this >> value;
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
