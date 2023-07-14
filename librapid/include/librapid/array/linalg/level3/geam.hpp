@@ -10,6 +10,21 @@ namespace librapid {
 	LIBRAPID_ASSERT((void *)&a != (void *)&c, "Input and output arrays must be different");        \
 	LIBRAPID_ASSERT((void *)&b != (void *)&c, "Input and output arrays must be different")
 
+		/// \brief General matrix-matrix addition.
+		///
+		/// Computes \f$ \mathbf{C} = \alpha \mathrm{op}_A(\mathbf{A}) + \beta \mathrm{op}_B(\mathbf{B}) \f$,
+		/// for matrices \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ and scalars \f$ \alpha \f$ and \f$ \beta \f$.
+		/// \tparam StorageScalar Storage type of the input and output arrays.
+		/// \tparam ShapeTypeA Shape type of the first input array.
+		/// \tparam ShapeTypeB Shape type of the second input array.
+		/// \tparam ShapeTypeC Shape type of the output array.
+		/// \tparam Alpha Scalar type of the \f$ \alpha \f$ parameter.
+		/// \tparam Beta Scalar type of the \f$ \beta \f$ parameter.
+		/// \param a First input array.
+		/// \param alpha Scalar \f$ \alpha \f$.
+		/// \param b Second input array.
+		/// \param beta Scalar \f$ \beta \f$.
+		/// \param c Output array.
 		template<typename StorageScalar, typename ShapeTypeA, typename ShapeTypeB,
 				 typename ShapeTypeC, typename Alpha, typename Beta>
 		void geam(const array::ArrayContainer<ShapeTypeA, Storage<StorageScalar>> &a, Alpha alpha,

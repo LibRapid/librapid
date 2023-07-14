@@ -2,11 +2,34 @@
 #define LIBRAPID_ARRAY_LINALG_LEVEL2_GEMV_HPP
 
 namespace librapid::linalg {
-	// trans, m, n, alpha, a, lda, x, incx, beta, y, incy
-
+	/// \brief General matrix-vector multiplication.
+	///
+	/// Computes \f$ y = \alpha \mathrm{op}(\mathbf{A}) \mathbf{x} + \beta \mathbf{y} \f$ for
+	/// matrix \f$ \mathbf{A} \f$ and vectors \f$ \mathbf{x} \f$ and \f$ \mathbf{y} \f$
+	/// \tparam Int Integer type
+	/// \tparam Alpha Alpha scaling factor
+	/// \tparam A Matrix type
+	/// \tparam X First vector type
+	/// \tparam Beta Beta scaling factor
+	/// \tparam Y Second vector type
+	/// \param trans If true, \f$ \mathrm{op}(\mathbf{A}) = \mathbf{A}^T \f$, otherwise \f$ \mathrm{op}(\mathbf{A}) = \mathbf{A} \f$
+	/// \param m Number of rows in \f$ \mathbf{A} \f$
+	/// \param n Number of columns in \f$ \mathbf{A} \f$
+	/// \param alpha Scaling factor for \f$ \mathrm{op}(\mathbf{A}) \mathbf{x} \f$
+	/// \param a Pointer to matrix \f$ \mathbf{A} \f$
+	/// \param lda Leading dimension of \f$ \mathbf{A} \f$
+	/// \param x Pointer to vector \f$ \mathbf{x} \f$
+	/// \param incX Increment of \f$ \mathbf{x} \f$
+	/// \param beta Scaling factor for \f$ \mathbf{y} \f$
+	/// \param y Pointer to vector \f$ \mathbf{y} \f$
+	/// \param incY Increment of \f$ \mathbf{y} \f$
+	/// \param backend Backend to use for computation
 	template<typename Int, typename Alpha, typename A, typename X, typename Beta, typename Y>
 	void gemv(bool trans, Int m, Int n, Alpha alpha, A *a, Int lda, X *x, Int incX, Beta beta, Y *y,
 			  Int incY, backend::CPU backend = backend::CPU()) {
+		// On the CPU, cxxblas provides a generic implementation for all types along with BLAS
+		// implementations where available
+
 		cxxblas::gemv(cxxblas::StorageOrder::RowMajor,
 					  (trans ? cxxblas::Transpose::Trans : cxxblas::Transpose::NoTrans),
 					  static_cast<int32_t>(m),
@@ -26,9 +49,12 @@ namespace librapid::linalg {
 	template<typename Int, typename Alpha, typename Beta>
 	void gemv(bool trans, Int m, Int n, Alpha alpha, cl::Buffer a, Int lda, cl::Buffer x, Int incX,
 			  Beta beta, cl::Buffer y, Int incY, backend::OpenCL) {
+		// We have no other type information, so this is the best we can do without introducing
+		// another template parameter
 		using GemvScalar = decltype(alpha * beta);
 
 		if constexpr (typetraits::IsBlasType<GemvScalar>::value) {
+			// clblast only provides a BLAS implementation for supported types
 			auto status =
 			  clblast::Gemv(clblast::Layout::kRowMajor,
 							(trans ? clblast::Transpose::kYes : clblast::Transpose::kNo),
@@ -51,6 +77,10 @@ namespace librapid::linalg {
 							"clblast::Gemv failed: {}",
 							opencl::getCLBlastErrorString(status));
 		} else {
+			// We have no BLAS implementation for this type, so we need to use our own kernel.
+			// Luckily, this is almost as fast as the clblast implementation, so we don't lose
+			// much performance.
+
 			std::string kernelNameFull =
 			  std::string("gemv_") + typetraits::TypeInfo<GemvScalar>::name;
 			cl::Kernel kernel(global::openCLProgram, kernelNameFull.c_str());
@@ -185,14 +215,15 @@ namespace librapid::linalg {
 	}
 	 */
 
-	// With CUDA, it's actually faster to use cuBLAS LT MatMul than to use cuBLAS GEMV, so
-	// we can just pass the call through to the gemm function instead. Additionally, this works with
-	// half precision types as well, so we don't need to implement a separate gemv function for
-	// those.
-
 	template<typename Int, typename Alpha, typename A, typename X, typename Beta, typename Y>
 	void gemv(bool trans, Int m, Int n, Alpha alpha, A *a, Int lda, X *x, Int incX, Beta beta, Y *y,
 			  Int incY, backend::CUDA) {
+		// With CUDA, it's actually faster to use cuBLAS LT MatMul than to use cuBLAS GEMV, so
+		// we can just pass the call through to the gemm function instead. Additionally, this works with
+		// half precision types as well, so we don't need to implement a separate gemv function for
+		// those. This is likely because cuBLAS LT MatMul is optimized for small matrix sizes, which
+		// is what we're dealing with here.
+
 		gemm(
 		  trans, false, m, int64_t(1), n, alpha, a, lda, x, incX, beta, y, incY, backend::CUDA());
 	}

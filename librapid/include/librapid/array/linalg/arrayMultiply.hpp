@@ -3,6 +3,10 @@
 
 namespace librapid {
 	namespace detail {
+		/// Extract the pointer from a given array type
+		/// \tparam T
+		/// \param ptr
+		/// \return
 		template<typename T>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto arrayPointerExtractor(T *ptr) {
 			return ptr;
@@ -14,8 +18,6 @@ namespace librapid {
 		}
 #endif // LIBRAPID_HAS_OPENCL
 
-		// Intended for use with CUDA, but since it's just a shared pointer we don't have to
-		// include guard it
 		template<typename T>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		arrayPointerExtractor(std::shared_ptr<T> ptr) {
@@ -31,6 +33,13 @@ namespace librapid {
 			OUTER, // Outer product
 		};
 
+		/// Class to represent an array multiplication (vector-vector, matrix-vector, matrix-matrix)
+		/// \tparam ShapeTypeA Shape of the first array
+		/// \tparam StorageTypeA Storage type of the first array
+		/// \tparam ShapeTypeB Shape of the second array
+		/// \tparam StorageTypeB Storage type of the second array
+		/// \tparam Alpha Type of \f$ \alpha \f$ scaling factor
+		/// \tparam Beta Type of \f$ \beta \f$ scaling factor
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
 		class ArrayMultiply {
@@ -47,61 +56,146 @@ namespace librapid {
 
 			static_assert(std::is_same_v<Backend, BackendB>, "Backend of A and B must match");
 
+			/// Default constructor (deleted)
 			ArrayMultiply() = delete;
 
+			/// Copy constructor
 			ArrayMultiply(const ArrayMultiply &) = default;
 
+			/// Move constructor
 			ArrayMultiply(ArrayMultiply &&) noexcept = default;
 
+			/// \brief Full set of parameters for an array multiplication
+			/// \param transA Determines \f$ \mathrm{OP}_A \f$ (true: transpose, false: no
+			/// transpose) \param transB Determines \f$ \mathrm{OP}_B \f$ (true: transpose, false:
+			/// no transpose) \param a First array \param alpha Scaling factor \f$ \alpha \f$ \param
+			/// b Second array \param beta Scaling factor \f$ \beta \f$
 			ArrayMultiply(bool transA, bool transB, const TypeA &a, Alpha alpha, const TypeB &b,
 						  Beta beta);
 
+			/// \brief Full set of parameters, but with move semantics
+			/// \param transA
+			/// \param transB
+			/// \param a
+			/// \param alpha
+			/// \param b
+			/// \param beta
 			ArrayMultiply(bool transA, bool transB, TypeA &&a, Alpha alpha, TypeB &&b, Beta beta);
 
+			/// \brief Array multiplication with \f$ \alpha = 1 \f$ and \f$ \beta = 0 \f$
+			/// \param a
+			/// \param b
 			ArrayMultiply(const TypeA &a, const TypeB &b);
 
+			/// \brief Array multiplication with \f$ \alpha = 1 \f$ and \f$ \beta = 0 \f$, but with
+			/// move semantics
+			/// \param a
+			/// \param b
 			ArrayMultiply(TypeA &&a, TypeB &&b);
 
+			/// \brief Array multiplication with \f$ \alpha = 1 \f$ and \f$ \beta = 0 \f$ and
+			/// transpose options
+			/// \param transA
+			/// \param transB
+			/// \param a
+			/// \param b
 			ArrayMultiply(bool transA, bool transB, const TypeA &a, const TypeB &b);
 
+			/// \brief Array multiplication with \f$ \alpha = 1 \f$ and \f$ \beta = 0 \f$ and
+			/// transpose options, but with move semantics
+			/// \param transA
+			/// \param transB
+			/// \param a
+			/// \param b
 			ArrayMultiply(bool transA, bool transB, TypeA &&a, TypeB &&b);
 
+			/// \brief Copy assignment operator
+			/// \return Reference to this
 			ArrayMultiply &operator=(const ArrayMultiply &) = default;
 
+			/// \brief Move assignment operator
+			/// \return Reference to this
 			ArrayMultiply &operator=(ArrayMultiply &&) noexcept = default;
 
+			/// \brief Determine the class of the array multiplication
+			///
+			/// The class of the array multiplication is determined by the shapes of the arrays.
+			/// There are three supported cases:
+			/// - Vector-vector dot product (both arrays are 1-dimensional vectors)
+			/// - Matrix-vector product (first array is a 2-dimensional matrix, second array is a
+			/// 1-dimensional vector)
+			/// - Matrix-matrix product (both arrays are 2-dimensional matrices)
+			/// \return Class of the array multiplication
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE MatmulClass matmulClass() const;
 
+			/// \brief Determine the shape of the result
+			/// \return Shape of the result
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ShapeType shape() const;
 
+			/// \brief Determine the number of dimensions of the result
+			/// \return Number of dimensions of the result
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE int64_t ndim() const;
 
+			/// \brief Force evaluation of the array multiplication, returning an Array object
+			/// \return Array object containing the result
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto eval() const;
 
+			/// \brief Get the scaling factor \f$ \alpha \f$
+			/// \return \f$ \alpha \f$
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ScalarA alpha() const;
+
+			/// \brief Get the scaling factor \f$ \beta \f$
+			/// \return \f$ \beta \f$
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ScalarB beta() const;
 
+			/// \brief Determine \f$ \mathrm{OP}_A \f$
+			/// \return True: \f$ \mathrm{OP}_A(\mathbf{A}) = \mathbf{A}^T \f$, false: \f$
+			/// \mathrm{OP}_A(\mathbf{A}) = \mathbf{A} \f$
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool transA() const;
+
+			/// \brief Determine \f$ \mathrm{OP}_B \f$
+			/// \return True: \f$ \mathrm{OP}_B(\mathbf{B}) = \mathbf{B}^T \f$, false: \f$
+			/// \mathrm{OP}_B(\mathbf{B}) = \mathbf{B} \f$
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE bool transB() const;
 
+			/// \brief Get the first array
+			/// \return First array
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const TypeA &a() const;
+
+			/// \brief Get the second array
+			/// \return Second array
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const TypeB &b() const;
 
+			/// \brief Get the first array
+			/// \return First array
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE TypeA &a();
+
+			/// \brief Get the second array
+			/// \return Second array
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE TypeB &b();
 
+			/// \brief Apply the array multiplication to an array container
+			///
+			/// Apply this operation to the provided Array, assuming that the Array has the correct
+			/// shape. If the Array does not have the correct shape, an error is thrown.
+			///
+			/// \tparam StorageType Storage type of the array container
+			/// \param out Array container to store the result in
 			template<typename StorageType>
 			void applyTo(array::ArrayContainer<ShapeType, StorageType> &out) const;
 
+			/// \brief String representation of the array multiplication
+			/// \param format Format string for each element
+			/// \return String representation of the array multiplication
 			LIBRAPID_NODISCARD std::string str(const std::string &format) const;
 
 		private:
-			bool m_transA;
-			bool m_transB;
-			TypeA m_a;
-			ScalarA m_alpha;
-			TypeB m_b;
-			ScalarB m_beta;
+			bool m_transA;	 // Transpose state of A
+			bool m_transB;	 // Transpose state of B
+			TypeA m_a;		 // First array
+			ScalarA m_alpha; // Scaling factor for A
+			TypeB m_b;		 // Second array
+			ScalarB m_beta;	 // Scaling factor for B
 		};
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
@@ -239,7 +333,7 @@ namespace librapid {
 					}
 				}
 				case MatmulClass::GEMM: {
-					return {m_a.shape()[int(m_transA)], m_b.shape()[int(!m_transB)]};
+					return {shapeA[int(m_transA)], shapeB[int(!m_transB)]};
 				}
 				case MatmulClass::OUTER: {
 					LIBRAPID_NOT_IMPLEMENTED;
@@ -346,6 +440,7 @@ namespace librapid {
 
 			switch (matmulClass) {
 				case MatmulClass::DOT: {
+					LIBRAPID_NOT_IMPLEMENTED;
 				}
 				case MatmulClass::GEMV: {
 					auto m = int64_t(m_a.shape()[m_transA]);
@@ -439,12 +534,19 @@ namespace librapid {
 			op.applyTo(destination);
 		}
 
+		/// Evaluates to true if the type is a transpose type.
+		/// \tparam T
 		template<typename T>
 		struct IsTransposeType : std::false_type {};
 
 		template<typename T>
 		struct IsTransposeType<array::Transpose<T>> : std::true_type {};
 
+		/// Returns a tuple of the form (transpose, raw array) where transpose is true if the array
+		/// is transposed and false otherwise, and raw array is the raw array data.
+		/// \tparam T
+		/// \param val
+		/// \return
 		template<typename T, typename std::enable_if_t<!IsTransposeType<T>::value, int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto transposeExtractor(T &&val) {
 			using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
@@ -457,6 +559,8 @@ namespace librapid {
 			return std::make_tuple(true, val.alpha(), std::forward<Type>(val.array()));
 		}
 
+		/// Evaluates to true if the type is a multiply type.
+		/// \tparam T
 		template<typename T>
 		struct IsMultiplyType : std::false_type {};
 
@@ -464,6 +568,11 @@ namespace librapid {
 		struct IsMultiplyType<detail::Function<Descriptor, detail::Multiply, Arr, Scalar>>
 				: std::true_type {};
 
+		/// Returns a tuple of the form (scalar, raw array) where scalar is the multiplication
+		/// factor and raw array is the raw array data.
+		/// \tparam T
+		/// \param val
+		/// \return
 		template<typename T, typename std::enable_if_t<!IsMultiplyType<T>::value, int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto multiplyExtractor(T &&val) {
 			using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
@@ -490,6 +599,12 @@ namespace librapid {
 								   std::forward<Type>(std::get<1>(val.args())));
 		}
 
+		/// Return a tuple of the form (transpose, scalar, raw array) depending on the input type.
+		/// All scalar values are extracted and combined, and successive transpose operations are
+		/// combined.
+		/// \tparam T
+		/// \param val
+		/// \return
 		template<typename T>
 		auto dotHelper(T &&val) {
 			if constexpr (IsTransposeType<T>::value) {

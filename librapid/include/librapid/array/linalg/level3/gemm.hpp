@@ -2,6 +2,31 @@
 #define LIBRAPID_ARRAY_LINALG_LEVEL3_GEMM_HPP
 
 namespace librapid::linalg {
+	/// \brief General matrix-matrix multiplication
+	///
+	/// Computes \f$ \mathbf{C} = \alpha \mathrm{OP}_A(\mathbf{A}) \mathrm{OP}_B(\mathbf{B}) + \beta \mathbf{C} \f$
+	/// for matrices \f$ \mathbf{A} \f$, \f$ \mathbf{B} \f$ and \f$ \mathbf{C} \f$. \f$ \mathrm{OP}_A \f$ and \f$ \mathrm{OP}_B \f$ are
+	/// either the identity or the transpose operation.
+	/// \tparam Int Integer type for matrix dimensions
+	/// \tparam Alpha Type of \f$ \alpha \f$
+	/// \tparam A Type of \f$ \mathbf{A} \f$
+	/// \tparam B Type of \f$ \mathbf{B} \f$
+	/// \tparam Beta Type of \f$ \beta \f$
+	/// \tparam C Type of \f$ \mathbf{C} \f$
+	/// \param transA Whether to transpose \f$ \mathbf{A} \f$ (determines \f$ \mathrm{OP}_A \f$)
+	/// \param transB Whether to transpose \f$ \mathbf{B} \f$ (determines \f$ \mathrm{OP}_B \f$)
+	/// \param m Rows of \f$ \mathbf{A} \f$ and \f$ \mathbf{C} \f$
+	/// \param n Columns of \f$ \mathbf{B} \f$ and \f$ \mathbf{C} \f$
+	/// \param k Columns of \f$ \mathbf{A} \f$ and rows of \f$ \mathbf{B} \f$
+	/// \param alpha Scalar \f$ \alpha \f$
+	/// \param a Pointer to \f$ \mathbf{A} \f$
+	/// \param lda Leading dimension of \f$ \mathbf{A} \f$
+	/// \param b Pointer to \f$ \mathbf{B} \f$
+	/// \param ldb Leading dimension of \f$ \mathbf{B} \f$
+	/// \param beta Scalar \f$ \beta \f$
+	/// \param c Pointer to \f$ \mathbf{C} \f$
+	/// \param ldc Leading dimension of \f$ \mathbf{C} \f$
+	/// \param backend Backend to use for computation
 	template<typename Int, typename Alpha, typename A, typename B, typename Beta, typename C>
 	void gemm(bool transA, bool transB, Int m, Int n, Int k, Alpha alpha, A *a, Int lda, B *b,
 			  Int ldb, Beta beta, C *c, Int ldc, backend::CPU backend = backend::CPU()) {
@@ -96,6 +121,7 @@ namespace librapid::linalg {
 
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE CuBLASGemmComputeType
 	cublasGemmComputeType(cublasDataType_t a, cublasDataType_t b, cublasDataType_t c) {
+		// A simple lambda to select the correct compute type from the two options
 #	if defined(LIBRAPID_FAST_MATH)
 		constexpr auto selector = [](CuBLASGemmComputeType fast, CuBLASGemmComputeType) {
 			return fast;
@@ -109,6 +135,8 @@ namespace librapid::linalg {
 		LIBRAPID_ASSERT(a == b, "Types of A and B must be the same");
 		LIBRAPID_ASSERT(a == c, "Output type must be the same as input types");
 
+		// If provided with different types, work off of the "minimum" type (i.e. the lowest
+		// precision)
 		switch (::librapid::min(a, b, c)) {
 			case CUDA_R_16F:
 			case CUDA_C_16F: // 16-bit -> 16-bit
@@ -135,11 +163,14 @@ namespace librapid::linalg {
 			  Int ldb, Beta beta, C *c, Int ldc, backend::CUDA) {
 		if constexpr (typetraits::IsBlasType<A>::value && typetraits::IsBlasType<B>::value &&
 					  typetraits::IsBlasType<C>::value) {
+			// Using the cuBLAS LT API
+
 			cublasLtMatmulDesc_t operationDescriptor = nullptr;
 			cublasLtMatrixLayout_t descriptorA = nullptr, descriptorB = nullptr,
 								   descriptorC	  = nullptr;
 			cublasLtMatmulPreference_t preference = NULL;
 
+			// Configure the maximum number of algorithms to try
 			constexpr int maxHeuristicResults									  = 32;
 			int returnedResults													  = 0;
 			cublasLtMatmulHeuristicResult_t heuristicResults[maxHeuristicResults] = {};
@@ -147,6 +178,7 @@ namespace librapid::linalg {
 			cublasOperation_t cublasTransA = transA ? CUBLAS_OP_T : CUBLAS_OP_N;
 			cublasOperation_t cublasTransB = transB ? CUBLAS_OP_T : CUBLAS_OP_N;
 
+			// Get the CUDA types for the input and output matrices
 			cudaDataType_t cudaTypeA = typetraits::TypeInfo<A>::CudaType;
 			cudaDataType_t cudaTypeB = typetraits::TypeInfo<B>::CudaType;
 			cudaDataType_t cudaTypeC = typetraits::TypeInfo<C>::CudaType;
@@ -201,6 +233,7 @@ namespace librapid::linalg {
 
 			LIBRAPID_ASSERT(returnedResults != 0, "Invalid matrices for GEMM. No algorithm found.");
 
+			// Execute the first valid algorithm
 			size_t i = 0;
 			for (; i < returnedResults; ++i) {
 				if (heuristicResults[i].state == CUBLAS_STATUS_SUCCESS) {
@@ -226,12 +259,15 @@ namespace librapid::linalg {
 
 			LIBRAPID_ASSERT(i != returnedResults, "Invalid matrices for GEMM. No algorithm found.");
 
+			// Cleanup
 			cublasSafeCall(cublasLtMatmulPreferenceDestroy(preference));
 			cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorA));
 			cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorB));
 			cublasSafeCall(cublasLtMatrixLayoutDestroy(descriptorC));
 			cublasSafeCall(cublasLtMatmulDescDestroy(operationDescriptor));
 		} else {
+			// If the provided types are not supported by cuBLAS, use the custom fallback kernel
+
 			jitify::Program program = global::jitCache.program(cuda::loadKernel(
 			  fmt::format("{}/include/librapid/array/linalg/level3/gemm", LIBRAPID_SOURCE), false));
 
