@@ -82,7 +82,7 @@ file(GLOB_RECURSE LIBRAPID_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas/*.h" # Header files
         "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas/*.tcc" # Template files
         "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas/*.cxx" # Source files
-        )
+)
 
 set(module_name "librapid")
 add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
@@ -91,7 +91,9 @@ add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_MAJOR=${LIBRAPID_MAJOR})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_MINOR=${LIBRAPID_MINOR})
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_PATCH=${LIBRAPID_PATCH})
-target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE="${CMAKE_CURRENT_SOURCE_DIR}/librapid")
+
+set(LIBRAPID_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/librapid")
+target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE="${LIBRAPID_SOURCE_DIR}")
 # clang-format on
 
 # Precompiled Headers
@@ -109,6 +111,13 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 endif ()
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(IS_WINDOWS ON)
+
+    # Disable shared libraries, since they just cause problems on Windows
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
+endif ()
+
+if (MINGW)
+    message(FATAL_ERROR "LibRapid does not compile with MinGW. Please use MSVC or Clang instead.")
 endif ()
 
 if (LIBRAPID_STRICT AND LIBRAPID_QUIET)
@@ -181,14 +190,12 @@ endif ()
 if (LIBRAPID_GET_BLAS AND NOT LIBRAPID_HAS_BLAS)
     message(STATUS "[ LIBRAPID ] Downloading OpenBLAS Build...")
 
-    if (NOT EXISTS "${FETCHCONTENT_BASE_DIR}/buildopenblas-src")
-        FetchContent_Declare(
-                BuildOpenBLAS
-                GIT_REPOSITORY https://github.com/LibRapid/BuildOpenBLAS.git
-        )
+    FetchContent_Declare(
+            BuildOpenBLAS
+            GIT_REPOSITORY https://github.com/LibRapid/BuildOpenBLAS.git
+    )
 
-        FetchContent_MakeAvailable(BuildOpenBLAS)
-    endif ()
+    FetchContent_MakeAvailable(BuildOpenBLAS)
 
     set(BLAS_FOUND TRUE)
     set(LIBRAPID_USE_BLAS TRUE)
@@ -262,14 +269,17 @@ if (LIBRAPID_USE_BLAS AND NOT LIBRAPID_HAS_BLAS)
                     get_filename_component(inc_file ${file} NAME)
                     configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${inc_file}" COPYONLY)
                 endforeach ()
-            else ()
-                FILE(GLOB_RECURSE include_files "${inc_path}/*.*")
-                foreach (file IN LISTS include_files)
-                    message(STATUS "[ LIBRAPID ] Found include file " ${file})
-                    get_filename_component(inc_file ${file} NAME)
-                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${inc_file}" COPYONLY)
-                endforeach ()
             endif ()
+            # else ()
+
+            FILE(GLOB_RECURSE include_files "${inc_path}/*.*")
+            foreach (file IN LISTS include_files)
+                message(STATUS "[ LIBRAPID ] Found include file " ${file})
+                get_filename_component(inc_file ${file} NAME)
+                configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${inc_file}" COPYONLY)
+            endforeach ()
+
+            # endif ()
 
             # Copy library files
             get_filename_component(lib_name ${LIBRAPID_BLAS} NAME)
@@ -304,11 +314,11 @@ if (LIBRAPID_USE_BLAS AND NOT LIBRAPID_HAS_BLAS)
             # Link the required library
             target_link_libraries(${module_name} PUBLIC
                     "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${lib_name}"
-                    )
+            )
 
             target_include_directories(${module_name} PUBLIC
                     "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas"
-                    )
+            )
 
             target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
             set(LIBRAPID_HAS_BLAS true)
@@ -335,7 +345,7 @@ if (LIBRAPID_USE_CUDA)
         target_include_directories(${module_name} PUBLIC
                 ${CUDAToolkit_INCLUDE_DIRS}
                 "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cudahelpers"
-                )
+        )
 
         target_link_directories(${module_name} PUBLIC
                 ${CUDA_LIBRARIES}
@@ -345,20 +355,22 @@ if (LIBRAPID_USE_CUDA)
                 ${CUDA_CURAND_LIBRARIES}
                 ${CUDA_CUSOLVER_LIBRARIES}
                 ${CUDA_CUSPARSE_LIBRARIES}
-                )
+        )
 
         target_link_libraries(${module_name} PUBLIC
                 CUDA::cudart
                 CUDA::cuda_driver
                 CUDA::nvrtc
                 CUDA::cublas
+                CUDA::cublasLt
+                # CUDA::cublasXt
                 CUDA::cufft
                 CUDA::cufftw
                 CUDA::curand
                 CUDA::cusolver
                 CUDA::cusparse
                 Dbghelp
-                )
+        )
 
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_CUDA)
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_CUDA_STREAM)
@@ -403,8 +415,15 @@ endif ()
 
 # Add dependencies
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/fmt")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
+
+if (NOT MINGW)
+    # scnlib does not support MinGW, since it does not implement std::from_chars, which is required by the library
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
+else ()
+    message(WARNING "[ LIBRAPID ] scnlib cannot be built by MinGW, so it will not be enabled")
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_MINGW)
+endif ()
 
 target_compile_definitions(fmt PUBLIC FMT_HEADER_ONLY)
 target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
@@ -461,6 +480,8 @@ if (LIBRAPID_FAST_MATH)
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
         target_compile_options(${module_name} PUBLIC -ffast-math)
     endif ()
+
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_FAST_MATH)
 endif ()
 
 set(LIBRAPID_ARCH_FLAGS)
@@ -545,7 +566,7 @@ if (LIBRAPID_CODE_COV AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
             -O0        # no optimization
             -g         # generate debug info
             --coverage # sets all required flags
-            )
+    )
 
     set(COVERAGE_EXCLUDES
             "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/*"
@@ -595,7 +616,7 @@ if (IS_WINDOWS AND LIBRAPID_NO_WINDOWS_H)
             NOWH
             NOWINOFFSETS
             NOWINMESSAGES
-            )
+    )
 
 endif ()
 

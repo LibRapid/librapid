@@ -92,12 +92,11 @@ namespace librapid::fft {
 	///
 	/// \tparam ShapeType The shape type of the input array
 	/// \tparam StorageScalar The scalar type of the input array
-	/// \tparam StorageAllocator The allocator type of the input array
 	/// \param array The input array
 	/// \return The discrete Fourier transform of the input array
-	template<typename ShapeType, typename StorageScalar, typename StorageAllocator>
+	template<typename ShapeType, typename StorageScalar>
 	LIBRAPID_NODISCARD Array<Complex<StorageScalar>, backend::CPU>
-	rfft(array::ArrayContainer<ShapeType, Storage<StorageScalar, StorageAllocator>> &array) {
+	rfft(array::ArrayContainer<ShapeType, Storage<StorageScalar>> &array) {
 		LIBRAPID_ASSERT(array.ndim() == 1, "RFFT only implemented for 1D arrays");
 		int64_t outSize = array.shape()[0] / 2 + 1;
 		Array<Complex<StorageScalar>, backend::CPU> res(Shape({outSize}));

@@ -10,30 +10,37 @@ namespace librapid {
 	LIBRAPID_ASSERT((void *)&a != (void *)&c, "Input and output arrays must be different");        \
 	LIBRAPID_ASSERT((void *)&b != (void *)&c, "Input and output arrays must be different")
 
-		template<typename StorageScalar, typename ShapeTypeA, typename StorageAllocatorA,
-				 typename ShapeTypeB, typename StorageAllocatorB, typename ShapeTypeC,
-				 typename StorageAllocatorC, typename Alpha, typename Beta>
-		void
-		geam(const array::ArrayContainer<ShapeTypeA, Storage<StorageScalar, StorageAllocatorA>> &a,
-			 Alpha alpha,
-			 const array::ArrayContainer<ShapeTypeB, Storage<StorageScalar, StorageAllocatorB>> &b,
-			 Beta beta,
-			 array::ArrayContainer<ShapeTypeC, Storage<StorageScalar, StorageAllocatorC>> &c) {
+		/// \brief General matrix-matrix addition.
+		///
+		/// Computes \f$ \mathbf{C} = \alpha \mathrm{op}_A(\mathbf{A}) + \beta \mathrm{op}_B(\mathbf{B}) \f$,
+		/// for matrices \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ and scalars \f$ \alpha \f$ and \f$ \beta \f$.
+		/// \tparam StorageScalar Storage type of the input and output arrays.
+		/// \tparam ShapeTypeA Shape type of the first input array.
+		/// \tparam ShapeTypeB Shape type of the second input array.
+		/// \tparam ShapeTypeC Shape type of the output array.
+		/// \tparam Alpha Scalar type of the \f$ \alpha \f$ parameter.
+		/// \tparam Beta Scalar type of the \f$ \beta \f$ parameter.
+		/// \param a First input array.
+		/// \param alpha Scalar \f$ \alpha \f$.
+		/// \param b Second input array.
+		/// \param beta Scalar \f$ \beta \f$.
+		/// \param c Output array.
+		template<typename StorageScalar, typename ShapeTypeA, typename ShapeTypeB,
+				 typename ShapeTypeC, typename Alpha, typename Beta>
+		void geam(const array::ArrayContainer<ShapeTypeA, Storage<StorageScalar>> &a, Alpha alpha,
+				  const array::ArrayContainer<ShapeTypeB, Storage<StorageScalar>> &b, Beta beta,
+				  array::ArrayContainer<ShapeTypeC, Storage<StorageScalar>> &c) {
 			GEAM_VALIDATION;
 
 			c = a * static_cast<StorageScalar>(alpha) + b * static_cast<StorageScalar>(beta);
 		}
 
-		template<typename StorageScalar, typename ShapeTypeA, typename StorageAllocatorA,
-				 typename ShapeTypeB, typename StorageAllocatorB, typename ShapeTypeC,
-				 typename StorageAllocatorC, typename Alpha, typename Beta>
+		template<typename StorageScalar, typename ShapeTypeA, typename ShapeTypeB,
+				 typename ShapeTypeC, typename Alpha, typename Beta>
 		void
-		geam(const array::Transpose<
-			   array::ArrayContainer<ShapeTypeA, Storage<StorageScalar, StorageAllocatorA>>> &a,
-			 Alpha alpha,
-			 const array::ArrayContainer<ShapeTypeB, Storage<StorageScalar, StorageAllocatorB>> &b,
-			 Beta beta,
-			 array::ArrayContainer<ShapeTypeC, Storage<StorageScalar, StorageAllocatorC>> &c) {
+		geam(const array::Transpose<array::ArrayContainer<ShapeTypeA, Storage<StorageScalar>>> &a,
+			 Alpha alpha, const array::ArrayContainer<ShapeTypeB, Storage<StorageScalar>> &b,
+			 Beta beta, array::ArrayContainer<ShapeTypeC, Storage<StorageScalar>> &c) {
 			GEAM_VALIDATION;
 
 			// Eval before returning to avoid slow evaluation
@@ -45,16 +52,12 @@ namespace librapid {
 				b * static_cast<StorageScalar>(beta);
 		}
 
-		template<typename StorageScalar, typename ShapeTypeA, typename StorageAllocatorA,
-				 typename ShapeTypeB, typename StorageAllocatorB, typename ShapeTypeC,
-				 typename StorageAllocatorC, typename Alpha, typename Beta>
+		template<typename StorageScalar, typename ShapeTypeA, typename ShapeTypeB,
+				 typename ShapeTypeC, typename Alpha, typename Beta>
 		void
-		geam(const array::ArrayContainer<ShapeTypeA, Storage<StorageScalar, StorageAllocatorA>> &a,
-			 Alpha alpha,
-			 const array::Transpose<
-			   array::ArrayContainer<ShapeTypeB, Storage<StorageScalar, StorageAllocatorB>>> &b,
-			 Beta beta,
-			 array::ArrayContainer<ShapeTypeC, Storage<StorageScalar, StorageAllocatorC>> &c) {
+		geam(const array::ArrayContainer<ShapeTypeA, Storage<StorageScalar>> &a, Alpha alpha,
+			 const array::Transpose<array::ArrayContainer<ShapeTypeB, Storage<StorageScalar>>> &b,
+			 Beta beta, array::ArrayContainer<ShapeTypeC, Storage<StorageScalar>> &c) {
 			GEAM_VALIDATION;
 
 			// Eval before returning to avoid slow evaluation
@@ -66,17 +69,13 @@ namespace librapid {
 				array::Transpose(dataB, {1, 0}, static_cast<StorageScalar>(beta)).eval();
 		}
 
-		template<typename StorageScalar, typename ShapeTypeA, typename StorageAllocatorA,
-				 typename ShapeTypeB, typename StorageAllocatorB, typename ShapeTypeC,
-				 typename StorageAllocatorC, typename Alpha, typename Beta>
+		template<typename StorageScalar, typename ShapeTypeA, typename ShapeTypeB,
+				 typename ShapeTypeC, typename Alpha, typename Beta>
 		void
-		geam(const array::Transpose<
-			   array::ArrayContainer<ShapeTypeA, Storage<StorageScalar, StorageAllocatorA>>> &a,
+		geam(const array::Transpose<array::ArrayContainer<ShapeTypeA, Storage<StorageScalar>>> &a,
 			 Alpha alpha,
-			 const array::Transpose<
-			   array::ArrayContainer<ShapeTypeB, Storage<StorageScalar, StorageAllocatorB>>> &b,
-			 Beta beta,
-			 array::ArrayContainer<ShapeTypeC, Storage<StorageScalar, StorageAllocatorC>> &c) {
+			 const array::Transpose<array::ArrayContainer<ShapeTypeB, Storage<StorageScalar>>> &b,
+			 Beta beta, array::ArrayContainer<ShapeTypeC, Storage<StorageScalar>> &c) {
 			GEAM_VALIDATION;
 
 			// Eval before returning to avoid slow evaluation

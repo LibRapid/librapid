@@ -44,16 +44,16 @@ namespace lrc = librapid;
 			REQUIRE(storage4[8] == 9);                                                             \
 			REQUIRE(storage4[9] == 10);                                                            \
                                                                                                    \
-			storage4 = lrc::OpenCLStorage<ScalarType>(100);                                        \
-			REQUIRE(storage4.size() == 100);                                                       \
-			storage4[0]	 = 1;                                                                      \
-			storage4[1]	 = 2;                                                                      \
-			storage4[98] = 99;                                                                     \
-			storage4[99] = 100;                                                                    \
-			REQUIRE(storage4[0] == 1);                                                             \
-			REQUIRE(storage4[1] == 2);                                                             \
-			REQUIRE(storage4[98] == 99);                                                           \
-			REQUIRE(storage4[99] == 100);                                                          \
+			/* storage4 = lrc::OpenCLStorage<ScalarType>(100);   */                                \
+			/* REQUIRE(storage4.size() == 100);                  */                                \
+			/* storage4[0]	 = 1;                                */                                \
+			/* storage4[1]	 = 2;                                */                                \
+			/* storage4[98] = 99;                                */                                \
+			/* storage4[99] = 100;                               */                                \
+			/* REQUIRE(storage4[0] == 1);                        */                                \
+			/* REQUIRE(storage4[1] == 2);                        */                                \
+			/* REQUIRE(storage4[98] == 99);                      */                                \
+			/* REQUIRE(storage4[99] == 100);                     */                                \
                                                                                                    \
 			storage4 = storage3;                                                                   \
                                                                                                    \

@@ -83,6 +83,30 @@ namespace cxxblas {
 		typedef void isBlasCompatibleInteger;
 	};
 
+	// There is no point preventing the use of 64-bit integers with BLAS, since they'll
+	// be converted to 32-bit integers anyway.
+	template<>
+	struct If<long long> {
+		typedef void isBlasCompatibleInteger;
+	};
+
+	// We also want to allow unsigned types
+
+	template<>
+	struct If<unsigned int> {
+		typedef void isBlasCompatibleInteger;
+	};
+
+	template<>
+	struct If<unsigned long> {
+		typedef void isBlasCompatibleInteger;
+	};
+
+	template<>
+	struct If<unsigned long long> {
+		typedef void isBlasCompatibleInteger;
+	};
+
 	//------------------------------------------------------------------------------
 	template<typename ENUM>
 	typename RestrictTo<IsSame<ENUM, Transpose>::value, char>::Type getF77BlasChar(ENUM trans);
@@ -129,7 +153,7 @@ namespace cxxblas {
 		template<typename ENUM>
 		typename RestrictTo<IsSame<ENUM, Diag>::value, CBLAS_DIAG>::Type getCblasType(ENUM diag);
 
-	} // namespace CBLAS
+	}  // namespace CBLAS
 
 #endif // HAVE_CBLAS
 

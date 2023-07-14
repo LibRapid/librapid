@@ -267,6 +267,10 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 		addOpenCLKernelFile(basePath + "trigonometry.cl");
 		addOpenCLKernelFile(basePath + "expLogPow.cl");
 		addOpenCLKernelFile(basePath + "transpose.cl");
+		addOpenCLKernelFile(
+		  fmt::format("{}/include/librapid/array/linalg/level3/gemm.cl", LIBRAPID_SOURCE));
+		addOpenCLKernelFile(
+		  fmt::format("{}/include/librapid/array/linalg/level2/gemv.cl", LIBRAPID_SOURCE));
 		addOpenCLKernelFile(basePath + "activations.cl");
 
 		// Compile kernels

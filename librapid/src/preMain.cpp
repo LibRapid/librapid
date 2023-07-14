@@ -22,9 +22,17 @@ namespace librapid::detail {
 			// #endif // LIBRAPID_HAS_OPENCL
 
 #if defined(LIBRAPID_HAS_CUDA)
-			cudaStreamCreate(&global::cudaStream);
-			cublasCreate(&global::cublasHandle);
-			cublasSetStream(global::cublasHandle, global::cudaStream);
+			cudaSafeCall(cudaStreamCreate(&global::cudaStream));
+			cublasSafeCall(cublasCreate(&global::cublasHandle));
+			cublasSafeCall(cublasSetStream(global::cublasHandle, global::cudaStream));
+
+			cudaSafeCall(cudaMallocAsync(
+			  &global::cublasLtWorkspace, global::cublasLtWorkspaceSize, global::cudaStream));
+
+			cublasSafeCall(cublasLtCreate(&global::cublasLtHandle));
+			cublasSafeCall(cublasSetWorkspace(
+			  global::cublasHandle, global::cublasLtWorkspace, global::cublasLtWorkspaceSize));
+			// Stream is specified in the function calls
 #endif // LIBRAPID_HAS_CUDA
 		}
 	}
