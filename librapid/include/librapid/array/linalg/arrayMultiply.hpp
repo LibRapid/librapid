@@ -270,7 +270,7 @@ namespace librapid {
 
 				return MatmulClass::GEMV;
 			} else if (shapeA.ndim() == 2 && shapeB.ndim() == 1) {
-				LIBRAPID_ASSERT(shapeA[int(m_transA)] == shapeB[0],
+				LIBRAPID_ASSERT(shapeA[int(!m_transA)] == shapeB[0],
 								"Rows of OP(A) must match elements of B. Expected: {} -- Got: {}",
 								shapeA[int(m_transA)],
 								shapeB[0]);
@@ -326,11 +326,7 @@ namespace librapid {
 					return {1};
 				}
 				case MatmulClass::GEMV: {
-					if (shapeA.ndim() == 1) {
-						return {shapeA[0]};
-					} else {
-						return {shapeA[int(!m_transA)]};
-					}
+					return {shapeA[int(m_transA)]};
 				}
 				case MatmulClass::GEMM: {
 					return {shapeA[int(m_transA)], shapeB[int(!m_transB)]};
