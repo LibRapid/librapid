@@ -102,8 +102,8 @@ namespace librapid {
 			// reseed is controlled by the random module, so we don't need to worry about it here
 		}
 
-		cuda::runKernel<StorageScalar, Lower, Upper>("fill",
-						"fillRandom",
+		cuda::runKernel<StorageScalar, StorageScalar, StorageScalar>("fill",
+						std::is_same_v<StorageScalar, half> ? "fillRandomHalf" : "fillRandom",
 						elements,
 						dst.storage().data().get(),
 						elements,

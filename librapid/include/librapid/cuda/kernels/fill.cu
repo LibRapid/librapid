@@ -154,6 +154,14 @@ __global__ void fillArray(size_t elements, Destination *dst, Source value) {
 	if (kernelIndex < elements) { dst[kernelIndex] = value; }
 }
 
+void print_binary_16bit(int number) {
+    int i;
+    for (i = 15; i >= 0; i--) {
+        printf((number & (1 << i)) ? "1" : "0");
+    }
+	printf("\n");
+}
+
 template<typename T, typename Lower, typename Upper>
 __global__ void fillRandom(T *data, int64_t elements, Lower lower, Upper upper, int64_t *seeds,
 						   int64_t numSeeds) {
@@ -164,6 +172,24 @@ __global__ void fillRandom(T *data, int64_t elements, Lower lower, Upper upper, 
 
 	for (int64_t i = gid; i < elements; i += blockDim.x * gridDim.x) {
 		data[i] = (T)(mt19937_double(state) * (upper - lower) + lower);
+	}
+
+	// Change the seed for the next thread
+	seeds[seedIndex] = mt19937_ulong(state);
+}
+
+template<typename T, typename Lower, typename Upper>
+__global__ void fillRandomHalf(T *data, int64_t elements, Lower lower, Upper upper, int64_t *seeds,
+						   int64_t numSeeds) {
+	int64_t gid		  = blockDim.x * blockIdx.x + threadIdx.x;
+	int64_t seedIndex = gid % numSeeds;
+	mt19937_state state;
+	mt19937_seed(&state, seeds[seedIndex]);
+
+	for (int64_t i = gid; i < elements; i += blockDim.x * gridDim.x) {
+		float lowerF = (float)lower;
+		float upperF = (float)upper;
+		data[i] = (T)(mt19937_float(state) * (upperF - lowerF) + lowerF);
 	}
 
 	// Change the seed for the next thread
