@@ -430,7 +430,6 @@ namespace librapid {
 							"Expected: {} -- Got: {}",
 							shape(),
 							out.shape());
-
 			MatmulClass matmulClass = this->matmulClass();
 
 			auto a = detail::arrayPointerExtractor(m_a.storage().data());
@@ -449,7 +448,18 @@ namespace librapid {
 					auto incB = int64_t(1);
 					auto incC = int64_t(1);
 
-					gemv(m_transA, m, n, m_alpha, a, lda, b, incB, m_beta, c, incC, Backend());
+					gemv(m_transA,
+						 m,
+						 n,
+						 static_cast<Scalar>(m_alpha),
+						 a,
+						 lda,
+						 b,
+						 incB,
+						 static_cast<Scalar>(m_beta),
+						 c,
+						 incC,
+						 Backend());
 
 					break;
 				}
@@ -467,12 +477,12 @@ namespace librapid {
 						 m,
 						 n,
 						 k,
-						 m_alpha,
+						 static_cast<Scalar>(m_alpha),
 						 a,
 						 lda,
 						 b,
 						 ldb,
-						 m_beta,
+						 static_cast<Scalar>(m_beta),
 						 c,
 						 ldc,
 						 Backend());

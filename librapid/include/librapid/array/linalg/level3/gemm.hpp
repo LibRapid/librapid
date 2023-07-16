@@ -142,17 +142,20 @@ namespace librapid::linalg {
 		switch (::librapid::min(a, b, c)) {
 			case CUDA_R_16F:
 			case CUDA_C_16F: // 16-bit -> 16-bit
-				return selector({CUBLAS_COMPUTE_16F, CUDA_R_16F}, {CUBLAS_COMPUTE_32F, CUDA_R_32F});
+				return selector({CUBLAS_COMPUTE_16F, CUDA_R_16F},
+								{CUBLAS_COMPUTE_16F_PEDANTIC, CUDA_R_16F});
 			case CUDA_R_32F:
 			case CUDA_C_32F: // 32-bit -> [ fast: 16-bit, precise: 32-bit ]
 				return selector({CUBLAS_COMPUTE_32F_FAST_TF32, CUDA_R_32F},
-								{CUBLAS_COMPUTE_32F, CUDA_R_32F});
+								{CUBLAS_COMPUTE_32F_PEDANTIC, CUDA_R_32F});
 			case CUDA_R_64F:
 			case CUDA_C_64F: // 64-bit -> 64-bit
-				return selector({CUBLAS_COMPUTE_64F, CUDA_R_64F}, {CUBLAS_COMPUTE_64F, CUDA_R_64F});
+				return selector({CUBLAS_COMPUTE_64F, CUDA_R_64F},
+								{CUBLAS_COMPUTE_64F_PEDANTIC, CUDA_R_64F});
 			case CUDA_R_32I:
 			case CUDA_C_32I: // 32-bit -> 32-bit
-				return selector({CUBLAS_COMPUTE_32I, CUDA_R_32I}, {CUBLAS_COMPUTE_32I, CUDA_R_32I});
+				return selector({CUBLAS_COMPUTE_32I, CUDA_R_32I},
+								{CUBLAS_COMPUTE_32I_PEDANTIC, CUDA_R_32I});
 			default: {
 				LIBRAPID_ASSERT(false, "Invalid input types to CuBLAS gemm");
 				return {CUBLAS_COMPUTE_32F_FAST_TF32, CUDA_R_32F};
