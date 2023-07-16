@@ -336,6 +336,9 @@ namespace librapid {
 					return {1};
 				}
 			}
+
+			LIBRAPID_NOT_IMPLEMENTED;
+			return {1};
 		}
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,

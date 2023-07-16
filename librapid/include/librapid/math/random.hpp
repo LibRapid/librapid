@@ -3,19 +3,23 @@
 
 namespace librapid {
 	template<typename T = double>
-	LIBRAPID_NODISCARD LIBRAPID_INLINE T random(T lower = 0, T upper = 1, uint64_t seed = -1) {
+	LIBRAPID_NODISCARD LIBRAPID_INLINE T random(T lower = 0, T upper = 1) {
 		// Random floating point value in range [lower, upper)
 
 		static std::uniform_real_distribution<double> distribution(0., 1.);
-		static std::mt19937 generator(seed == (uint64_t)-1 ? (unsigned int)(now() * 10)
-														   : (unsigned int)seed);
+		static std::mt19937 generator(global::randomSeed);
+
+		if (global::reseed) {
+			generator.seed(global::randomSeed);
+			global::reseed = false;
+		}
+
 		return (T)(lower + (upper - lower) * distribution(generator));
 	}
 
-	LIBRAPID_NODISCARD LIBRAPID_INLINE int64_t randint(int64_t lower, int64_t upper,
-													   uint64_t seed = -1) {
+	LIBRAPID_NODISCARD LIBRAPID_INLINE int64_t randint(int64_t lower, int64_t upper) {
 		// Random integral value in range [lower, upper]
-		return (int64_t)random((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1, seed);
+		return (int64_t)random((double)(lower - (lower < 0 ? 1 : 0)), (double)upper + 1);
 	}
 
 	LIBRAPID_NODISCARD LIBRAPID_INLINE double trueRandomEntropy() {
@@ -40,6 +44,7 @@ namespace librapid {
 	 * Adapted from
 	 * https://docs.oracle.com/javase/6/docs/api/java/util/Random.html#nextGaussian()
 	 */
+	template<typename T = double>
 	LIBRAPID_NODISCARD LIBRAPID_INLINE double randomGaussian() {
 		static double nextGaussian;
 		static bool hasNextGaussian = false;
@@ -63,7 +68,7 @@ namespace librapid {
 			res				  = v1 * multiplier;
 		}
 
-		return res;
+		return static_cast<T>(res);
 	}
 } // namespace librapid
 

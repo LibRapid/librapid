@@ -23,6 +23,12 @@ namespace librapid {
 		// Number of threads used by LibRapid
 		extern size_t numThreads;
 
+		// Random seed used by LibRapid (when changed, the random number generator is reseeded)
+		extern size_t randomSeed;
+
+		// Should the random number generator be reseeded?
+		extern bool reseed;
+
 		// Size of a cache line in bytes
 		extern size_t cacheLineSize;
 
@@ -74,6 +80,9 @@ namespace librapid {
 
 	void setNumThreads(size_t numThreads);
 	size_t getNumThreads();
+
+	void setSeed(size_t seed);
+	size_t getSeed();
 } // namespace librapid
 
 #endif // LIBRAPID_CORE_GLOBAL_HPP

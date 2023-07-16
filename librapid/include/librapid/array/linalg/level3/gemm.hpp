@@ -4,8 +4,10 @@
 namespace librapid::linalg {
 	/// \brief General matrix-matrix multiplication
 	///
-	/// Computes \f$ \mathbf{C} = \alpha \mathrm{OP}_A(\mathbf{A}) \mathrm{OP}_B(\mathbf{B}) + \beta \mathbf{C} \f$
-	/// for matrices \f$ \mathbf{A} \f$, \f$ \mathbf{B} \f$ and \f$ \mathbf{C} \f$. \f$ \mathrm{OP}_A \f$ and \f$ \mathrm{OP}_B \f$ are
+	/// Computes \f$ \mathbf{C} = \alpha \mathrm{OP}_A(\mathbf{A}) \mathrm{OP}_B(\mathbf{B}) +
+	/// \beta \mathbf{C} \f$
+	/// for matrices \f$ \mathbf{A} \f$, \f$ \mathbf{B} \f$ and \f$ \mathbf{C} \f$.
+	/// \f$ \mathrm{OP}_A \f$ and \f$ \mathrm{OP}_B \f$ are
 	/// either the identity or the transpose operation.
 	/// \tparam Int Integer type for matrix dimensions
 	/// \tparam Alpha Type of \f$ \alpha \f$
@@ -268,8 +270,12 @@ namespace librapid::linalg {
 		} else {
 			// If the provided types are not supported by cuBLAS, use the custom fallback kernel
 
-			jitify::Program program = global::jitCache.program(cuda::loadKernel(
-			  fmt::format("{}/include/librapid/array/linalg/level3/gemm", LIBRAPID_SOURCE), false));
+			jitify::Program program = global::jitCache.program(
+			  cuda::loadKernel(
+				fmt::format("{}/include/librapid/array/linalg/level3/gemm", LIBRAPID_SOURCE),
+				false),
+			  {},
+			  {fmt::format("-I{}", CUDA_INCLUDE_DIRS)});
 
 			size_t TS = 32;
 

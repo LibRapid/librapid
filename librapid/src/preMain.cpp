@@ -34,6 +34,9 @@ namespace librapid::detail {
 			  global::cublasHandle, global::cublasLtWorkspace, global::cublasLtWorkspaceSize));
 			// Stream is specified in the function calls
 #endif // LIBRAPID_HAS_CUDA
+
+			// Set the random seed to an initial value
+			global::randomSeed = now<time::nanosecond>();
 		}
 	}
 } // namespace librapid::detail

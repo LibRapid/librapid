@@ -9,6 +9,8 @@ namespace librapid {
 		size_t gemmMultithreadThreshold = 100;
 		size_t gemvMultithreadThreshold = 100;
 		size_t numThreads				= 8;
+		size_t randomSeed				= 0; // Set in PreMain
+		bool reseed						= false;
 		size_t cacheLineSize			= 64;
 		size_t memoryAlignment			= LIBRAPID_DEFAULT_MEM_ALIGN;
 
@@ -33,9 +35,9 @@ namespace librapid {
 	}  // namespace global
 
 #if defined(_WIN32)
-#define SETENV(name, value) _putenv_s(name, value)
+#	define SETENV(name, value) _putenv_s(name, value)
 #else
-#define SETENV(name, value) setenv(name, value, 1)
+#	define SETENV(name, value) setenv(name, value, 1)
 #endif
 
 	void setOpenBLASThreadsEnv(int num_threads) {
@@ -58,7 +60,7 @@ namespace librapid {
 
 		setOpenBLASThreadsEnv(numThreads);
 
-#endif	// LIBRAPID_BLAS_OPENBLAS
+#endif // LIBRAPID_BLAS_OPENBLAS
 
 		// MKL threading
 #if defined(LIBRAPID_BLAS_MKL)
@@ -67,4 +69,11 @@ namespace librapid {
 	}
 
 	size_t getNumThreads() { return global::numThreads; }
+
+	void setSeed(size_t seed) {
+		global::randomSeed = seed;
+		global::reseed	   = true;
+	}
+
+	size_t getSeed() { return global::randomSeed; }
 } // namespace librapid
