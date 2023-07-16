@@ -40,8 +40,8 @@ set(LIBRAPID_USE_CUDA ON) # Attempt to enable CUDA support
 
 set(LIBRAPID_USE_OMP ON) # Attempt to enable OpenMP
 
-set(LIBRAPID_USE_MULTIPREC ON) # Enable the multiprecision library (longer
-                               # compile times and larger executables)
+set(LIBRAPID_USE_MULTIPREC OFF) # Enable the multiprecision library (longer
+                                # compile times and larger executables)
 
 set(LIBRAPID_FAST_MATH OFF) # Enable fast math, which may result in slightly
                             # less accurate results but should be a bit faster

@@ -13,6 +13,11 @@ add_subdirectory(librapid)
 target_link_libraries(yourTarget PUBLIC librapid)
 ```
 
+:::{tip}
+For a template `CMakelists.txt` file, see the `examples`
+directory: [examples/CMakeLists.txt](https://github.com/LibRapid/librapid/blob/master/examples/templateCMakeLists.txt)
+:::
+
 ## CMake Options
 
 ### ``LIBRAPID_BUILD_EXAMPLES``
