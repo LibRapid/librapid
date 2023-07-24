@@ -64,7 +64,7 @@ namespace librapid {
 
 		// MKL threading
 #if defined(LIBRAPID_BLAS_MKL)
-		mkl_set_num_threads(numThreads);
+		mkl_set_num_threads((int) numThreads);
 #endif // LIBRAPID_BLAS_MKL
 	}
 

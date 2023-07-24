@@ -15,12 +15,9 @@
 #	define LIBRAPID_GCC_SUPPRESS(WARNING_)
 #endif
 
-#define LIBRAPID_SUPPRESS(WARNING_)                                                                \
-	LIBRAPID_MSVC_SUPPRESS(WARNING_)                                                               \
-	LIBRAPID_GCC_SUPPRESS(WARNING_)
-
 LIBRAPID_MSVC_SUPPRESS(4996) // Disable warnings about unsafe classes
 LIBRAPID_MSVC_SUPPRESS(4723) // Disable zero division errors
 LIBRAPID_MSVC_SUPPRESS(5245) // unreferenced function with internal linkage has been removed
+LIBRAPID_MSVC_SUPPRESS(4146) // unary minus operator applied to unsigned type, result still unsigned
 
 #endif // LIBRAPID_WARNING_SUPPRESS

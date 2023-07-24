@@ -36,7 +36,7 @@ namespace librapid::detail {
 #endif // LIBRAPID_HAS_CUDA
 
 			// Set the random seed to an initial value
-			global::randomSeed = now<time::nanosecond>();
+			global::randomSeed = (size_t) now<time::nanosecond>();
 		}
 	}
 } // namespace librapid::detail

@@ -172,7 +172,7 @@ namespace librapid {
 			const uint32_t is_e_overflow_msb		= (h_e_mask_value - f_e_half_bias);
 			const uint32_t is_h_inf_msb				= (is_e_overflow_msb | is_f_inf_msb);
 			const uint32_t is_f_nsnan_msb			= (f_snan - f_snan_mask);
-			const uint32_t is_m_norm_overflow_msb	= (-f_m_rounded_overflow);
+			const uint32_t is_m_norm_overflow_msb	= (-((int32_t)f_m_rounded_overflow));
 			const uint32_t is_f_snan_msb			= (~is_f_nsnan_msb);
 			const uint32_t h_em_overflow_result =
 			  uint32Sels(is_m_norm_overflow_msb, h_e_norm_overflow, h_em_norm);
@@ -221,7 +221,7 @@ namespace librapid {
 			const uint32_t f_em_denorm			= (f_e_denorm | f_m_denorm);
 			const uint32_t f_em_nan				= (f_e_mask | f_m);
 			const uint32_t is_e_eqz_msb			= (h_e - 1);
-			const uint32_t is_m_nez_msb			= (-h_m);
+			const uint32_t is_m_nez_msb			= (-((int32_t)h_m));
 			const uint32_t is_e_flagged_msb		= (h_e_mask_minus_one - h_e);
 			const uint32_t is_zero_msb			= (is_e_eqz_msb & ~is_m_nez_msb);
 			const uint32_t is_inf_msb			= (is_e_flagged_msb & ~is_m_nez_msb);
@@ -394,20 +394,21 @@ namespace librapid {
 			const uint32_t c_e_amount_biased	   = (a_e_amount + b_e_amount);
 			const uint32_t c_e_amount_unbiased	   = (c_e_amount_biased - h_e_bias);
 			const uint32_t is_c_e_unbiased_underflow = (((std::int32_t)c_e_amount_unbiased) >> 31);
-			const uint32_t c_e_underflow_half_sa	 = (-c_e_amount_unbiased);
+			const uint32_t c_e_underflow_half_sa	 = (-((int32_t)c_e_amount_unbiased));
 			const uint32_t c_e_underflow_sa			 = (c_e_underflow_half_sa << one);
 			const uint32_t c_m_underflow			 = (c_m_normal >> c_e_underflow_sa);
 			const uint32_t c_e_underflow_added = (c_e_amount_unbiased & ~is_c_e_unbiased_underflow);
 			const uint32_t c_m_underflow_added =
 			  uint32Selb(is_c_e_unbiased_underflow, c_m_underflow, c_m_normal);
 			const uint32_t is_mul_overflow_test		 = (c_e_underflow_added & m_round_overflow_bit);
-			const uint32_t is_mul_overflow_msb		 = (-is_mul_overflow_test);
+			const uint32_t is_mul_overflow_msb		 = (-((int32_t)is_mul_overflow_test));
 			const uint32_t c_e_norm_radix_corrected	 = (c_e_underflow_added + 1);
 			const uint32_t c_m_norm_radix_corrected	 = (c_m_underflow_added >> one);
 			const uint32_t c_m_norm_hidden_bit		 = (c_m_norm_radix_corrected & m_hidden_bit);
 			const uint32_t is_c_m_norm_no_hidden_msb = (c_m_norm_hidden_bit - 1);
-			const uint32_t c_m_norm_lo	   = (c_m_norm_radix_corrected >> h_m_bit_half_count);
-			const uint32_t c_m_norm_lo_nlz = uint16Cntlz(c_m_norm_lo);
+			const uint32_t c_m_norm_lo = (c_m_norm_radix_corrected >> h_m_bit_half_count);
+			const uint32_t c_m_norm_lo_nlz =
+			  static_cast<uint32_t>(uint16Cntlz((uint16_t)c_m_norm_lo));
 			const uint32_t is_c_m_hidden_nunderflow_msb =
 			  (c_m_norm_lo_nlz - c_e_norm_radix_corrected);
 			const uint32_t is_c_m_hidden_underflow_msb = (~is_c_m_hidden_nunderflow_msb);
@@ -428,7 +429,7 @@ namespace librapid {
 			const uint32_t c_m_norm_round_amount  = (c_m_normalized & h_m_mask);
 			const uint32_t c_m_norm_rounded		  = (c_m_normalized + c_m_norm_round_amount);
 			const uint32_t is_round_overflow_test = (c_e_normalized & m_round_overflow_bit);
-			const uint32_t is_round_overflow_msb  = (-is_round_overflow_test);
+			const uint32_t is_round_overflow_msb  = (-((int32_t)is_round_overflow_test));
 			const uint32_t c_m_norm_inplace		  = (c_m_norm_rounded >> h_m_bit_count);
 			const uint32_t c_m					  = (c_m_norm_inplace & h_m_mask);
 			const uint32_t c_e_norm_inplace		  = (c_e_normalized << h_e_pos);

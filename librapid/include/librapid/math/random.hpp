@@ -7,10 +7,10 @@ namespace librapid {
 		// Random floating point value in range [lower, upper)
 
 		static std::uniform_real_distribution<double> distribution(0., 1.);
-		static std::mt19937 generator(global::randomSeed);
+		static std::mt19937 generator((uint32_t) global::randomSeed);
 
 		if (global::reseed) {
-			generator.seed(global::randomSeed);
+			generator.seed((uint32_t) global::randomSeed);
 			global::reseed = false;
 		}
 
