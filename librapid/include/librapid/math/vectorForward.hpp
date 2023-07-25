@@ -16,7 +16,7 @@ namespace librapid {
 		};
 
 		template<typename Storage0, typename Storage1>
-		auto vectorStorageTypeMerger(const Storage0 &, const Storage1 &) {
+		auto vectorStorageTypeMerger() {
 			using Scalar0 = typename typetraits::TypeInfo<Storage0>::Scalar;
 			using Scalar1 = typename typetraits::TypeInfo<Storage1>::Scalar;
 			static constexpr uint64_t packetWidth0 = typetraits::TypeInfo<Scalar0>::packetWidth;
@@ -32,7 +32,7 @@ namespace librapid {
 		using VectorStorage = typename VectorStorageType<T, N>::type;
 
 		template<typename Storage0, typename Storage1>
-		using VectorStorageMerger = decltype(vectorStorageTypeMerger(Storage0 {}, Storage1 {}));
+		using VectorStorageMerger = decltype(vectorStorageTypeMerger<Storage0, Storage1>());
 
 		template<typename Derived>
 		class VectorBase {

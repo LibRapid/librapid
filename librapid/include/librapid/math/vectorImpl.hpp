@@ -39,7 +39,6 @@ namespace librapid {
 			using IndexTypeConst			 = typename StorageType::IndexTypeConst;
 			using IndexType					 = typename StorageType::IndexType;
 			using GetType					 = typename StorageType::GetType;
-			using StorageType				 = vectorDetail::VectorStorage<Scalar, NumDims>;
 		};
 
 		template<typename LHS, typename RHS, typename Op>
@@ -52,11 +51,47 @@ namespace librapid {
 			using StorageType				 = typename vectorDetail::VectorStorageMerger<LHS, RHS>;
 			static constexpr uint64_t dims	 = StorageType::dims;
 			static constexpr uint64_t length = StorageType::length;
-			using GetType					 = typename StorageType::GetType;
+			using GetType					 = typename std::decay_t<typename StorageType::GetType>;
 		};
 	} // namespace typetraits
 
 	namespace vectorDetail {
+		template<typename T, uint64_t N, typename... Args, uint64_t... Indices>
+		void vectorStorageAssigner(std::index_sequence<Indices...>, GenericVectorStorage<T, N> &dst,
+								   const Args &...args) {
+			((dst[Indices] = args), ...);
+		}
+
+		template<typename T, uint64_t N, typename... Args, uint64_t... Indices>
+		void vectorStorageAssigner(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
+								   const Args &...args) {
+			((dst[Indices] = args), ...);
+		}
+
+		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
+		void vectorStorageAssigner(std::index_sequence<Indices...>, GenericVectorStorage<T, N> &dst,
+								   const GenericVectorStorage<T2, N2> &src) {
+			((dst[Indices] = src[Indices]), ...);
+		}
+
+		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
+		void vectorStorageAssigner(std::index_sequence<Indices...>, GenericVectorStorage<T, N> &dst,
+								   const SimdVectorStorage<T2, N2> &src) {
+			((dst[Indices] = src[Indices]), ...);
+		}
+
+		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
+		void vectorStorageAssigner(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
+								   const GenericVectorStorage<T2, N2> &src) {
+			((dst[Indices] = src[Indices]), ...);
+		}
+
+		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
+		void vectorStorageAssigner(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
+								   const SimdVectorStorage<T2, N2> &src) {
+			((dst[Indices] = src[Indices]), ...);
+		}
+
 		template<typename ScalarType, uint64_t NumDims>
 		struct GenericVectorStorage {
 			using Scalar					 = ScalarType;
@@ -67,7 +102,15 @@ namespace librapid {
 			  typename typetraits::TypeInfo<GenericVectorStorage>::IndexTypeConst;
 			using GetType = typename typetraits::TypeInfo<GenericVectorStorage>::GetType;
 
-			Scalar data[length] {};
+			// Scalar data[length] {};
+			// std::array<Scalar, length> data {};
+
+#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
+			alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Scalar, length> data {};
+#else
+			// No memory alignment on Apple platforms or if it is disabled
+			std::array<Scalar, length> data{};
+#endif
 
 			template<typename... Args>
 			GenericVectorStorage(Args... args) : data {args...} {}
@@ -130,7 +173,15 @@ namespace librapid {
 			static_assert(typetraits::TypeInfo<Scalar>::packetWidth > 1,
 						  "SimdVectorStorage can only be used with SIMD types");
 
-			Packet data[length] {};
+			// Packet data[length] {};
+			// std::array<Packet, length> data {};
+
+#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
+			alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Packet, length> data{};
+#else
+			// No memory alignment on Apple platforms or if it is disabled
+			std::array<Packet, length> data{};
+#endif
 
 			template<typename... Args>
 			explicit SimdVectorStorage(Args... args) {
@@ -161,81 +212,46 @@ namespace librapid {
 			}
 		};
 
-		template<typename T, uint64_t N, typename... Args, uint64_t... Indices>
-		void vectorStorageAssigner(std::index_sequence<Indices...>, GenericVectorStorage<T, N> &dst,
-								   const Args &...args) {
-			((dst[Indices] = args), ...);
-		}
-
-		template<typename T, uint64_t N, typename... Args, uint64_t... Indices>
-		void vectorStorageAssigner(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
-								   const Args &...args) {
-			((dst[Indices] = args), ...);
-		}
-
-		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
-		void vectorStorageAssigner(std::index_sequence<Indices...>, GenericVectorStorage<T, N> &dst,
-								   const GenericVectorStorage<T2, N2> &src) {
-			((dst[Indices] = src[Indices]), ...);
-		}
-
-		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
-		void vectorStorageAssigner(std::index_sequence<Indices...>, GenericVectorStorage<T, N> &dst,
-								   const SimdVectorStorage<T2, N2> &src) {
-			((dst[Indices] = src[Indices]), ...);
-		}
-
-		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
-		void vectorStorageAssigner(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
-								   const GenericVectorStorage<T2, N2> &src) {
-			((dst[Indices] = src[Indices]), ...);
-		}
-
-		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
-		void vectorStorageAssigner(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
-								   const SimdVectorStorage<T2, N2> &src) {
-			((dst[Indices] = src[Indices]), ...);
-		}
-
 		template<typename T>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto
 		scalarSubscriptHelper(const T &val, uint64_t index) {
 			return val;
 		}
 
 		template<typename ScalarType, uint64_t NumDims>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto
 		scalarSubscriptHelper(const Vector<ScalarType, NumDims> &val, uint64_t index) {
 			return val[index];
 		}
 
 		template<typename LHS, typename RHS, typename Op>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto
 		scalarSubscriptHelper(const BinaryVecOp<LHS, RHS, Op> &val, uint64_t index) {
 			return val[index];
 		}
 
 		template<typename T>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarGetHelper(const T &val,
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto scalarGetHelper(const T &val,
 																				 uint64_t index) {
 			return val;
 		}
 
 		template<typename ScalarType, uint64_t NumDims>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		scalarGetHelper(const Vector<ScalarType, NumDims> &val, uint64_t index) {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto constexpr scalarGetHelper(
+		  const Vector<ScalarType, NumDims> &val, uint64_t index) {
 			return val._get(index);
 		}
 
 		template<typename ScalarType, uint64_t NumDims>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		scalarGetHelper(Vector<ScalarType, NumDims> &val, uint64_t index) {
+		LIBRAPID_NODISCARD
+		  LIBRAPID_ALWAYS_INLINE auto constexpr scalarGetHelper(Vector<ScalarType, NumDims> &val,
+																uint64_t index) {
 			return val._get(index);
 		}
 
 		template<typename LHS, typename RHS, typename Op>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		scalarGetHelper(const BinaryVecOp<LHS, RHS, Op> &val, uint64_t index) {
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto constexpr scalarGetHelper(
+		  const BinaryVecOp<LHS, RHS, Op> &val, uint64_t index) {
 			return val._get(index);
 		}
 
@@ -448,28 +464,28 @@ namespace librapid {
 		}
 
 		template<typename T>
-		auto scalarExtractor(const T &val) {
+		constexpr auto scalarExtractor(const T &val) {
 			return val;
 		}
 
 		template<typename T, typename U>
-		auto scalarExtractor(const Vc_1::Detail::ElementReference<T, U> &val) {
+		constexpr auto scalarExtractor(const Vc_1::Detail::ElementReference<T, U> &val) {
 			using Scalar = typename Vc_1::Detail::ElementReference<T, U>::value_type;
 			return static_cast<Scalar>(val);
 		}
 
 		template<typename NewScalar, uint64_t NewDims, typename T>
-		auto scalarVectorCaster(const T &val) {
-			return val;
+		constexpr auto scalarVectorCaster(const T &val) {
+			return static_cast<NewScalar>(val);
 		}
 
 		template<typename NewScalar, uint64_t NewDims, typename ScalarType, uint64_t NumDims>
-		auto scalarVectorCaster(const Vector<ScalarType, NumDims> &val) {
+		constexpr auto scalarVectorCaster(const Vector<ScalarType, NumDims> &val) {
 			return val.template cast<NewScalar, NewDims>();
 		}
 
 		template<typename NewScalar, uint64_t NewDims, typename LHS, typename RHS, typename Op>
-		auto scalarVectorCaster(const BinaryVecOp<LHS, RHS, Op> &val) {
+		constexpr auto scalarVectorCaster(const BinaryVecOp<LHS, RHS, Op> &val) {
 			return val.template cast<NewScalar, NewDims>();
 		}
 
