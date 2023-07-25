@@ -3,6 +3,8 @@
 
 // #include "genericVector.hpp"
 // #include "simdVector.hpp"
+
+#include "vectorForward.hpp"
 #include "vectorImpl.hpp"
 
 namespace librapid {
