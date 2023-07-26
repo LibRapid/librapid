@@ -282,7 +282,7 @@ namespace librapid {
 
 		template<typename LHS, typename RHS, typename Op>
 		struct VectorScalarDimensionExtractor<BinaryVecOp<LHS, RHS, Op>> {
-			static constexpr uint64_t value = BinaryVecOp<LHS, RHS, Op>::length;
+			static constexpr uint64_t value = BinaryVecOp<LHS, RHS, Op>::dims;
 		};
 	} // namespace vectorDetail
 
