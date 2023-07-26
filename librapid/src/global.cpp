@@ -54,17 +54,17 @@ namespace librapid {
 
 		// OpenBLAS threading
 #if defined(LIBRAPID_BLAS_OPENBLAS)
-		openblas_set_num_threads(numThreads);
-		omp_set_num_threads(numThreads);
-		goto_set_num_threads(numThreads);
+		openblas_set_num_threads((int)numThreads);
+		omp_set_num_threads((int)numThreads);
+		goto_set_num_threads((int)numThreads);
 
-		setOpenBLASThreadsEnv(numThreads);
+		setOpenBLASThreadsEnv((int)numThreads);
 
 #endif // LIBRAPID_BLAS_OPENBLAS
 
 		// MKL threading
 #if defined(LIBRAPID_BLAS_MKL)
-		mkl_set_num_threads((int) numThreads);
+		mkl_set_num_threads((int)numThreads);
 #endif // LIBRAPID_BLAS_MKL
 	}
 

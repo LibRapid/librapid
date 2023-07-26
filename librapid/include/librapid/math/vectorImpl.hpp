@@ -5,10 +5,11 @@ namespace librapid {
 	namespace typetraits {
 		template<typename T, uint64_t N>
 		struct TypeInfo<vectorDetail::GenericVectorStorage<T, N>> {
-			using Scalar		 = T;
-			using IndexType		 = T &;
-			using IndexTypeConst = const T &;
-			using GetType		 = const T &;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
+			using Scalar							   = T;
+			using IndexType							   = T &;
+			using IndexTypeConst					   = const T &;
+			using GetType							   = const T &;
 
 			using StorageType = vectorDetail::GenericVectorStorage<T, N>;
 
@@ -17,8 +18,9 @@ namespace librapid {
 
 		template<typename T, uint64_t N>
 		struct TypeInfo<vectorDetail::SimdVectorStorage<T, N>> {
-			using Scalar		 = T;
-			using Packet		 = typename TypeInfo<T>::Packet;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
+			using Scalar							   = T;
+			using Packet							   = typename TypeInfo<T>::Packet;
 			using IndexType		 = typename std::decay_t<decltype(std::declval<Packet>()[0])>;
 			using IndexTypeConst = typename std::decay_t<decltype(std::declval<const Packet>()[0])>;
 			using GetType		 = const Packet &;
@@ -32,8 +34,9 @@ namespace librapid {
 
 		template<typename ScalarType, uint64_t NumDims>
 		struct TypeInfo<Vector<ScalarType, NumDims>> {
-			using Scalar					 = ScalarType;
-			static constexpr uint64_t dims	 = NumDims;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
+			using Scalar							   = ScalarType;
+			static constexpr uint64_t dims			   = NumDims;
 			using StorageType				 = vectorDetail::VectorStorage<Scalar, NumDims>;
 			static constexpr uint64_t length = StorageType::length;
 			using IndexTypeConst			 = typename StorageType::IndexTypeConst;
@@ -43,12 +46,25 @@ namespace librapid {
 
 		template<typename LHS, typename RHS, typename Op>
 		struct TypeInfo<vectorDetail::BinaryVecOp<LHS, RHS, Op>> {
-			using ScalarLHS = typename typetraits::TypeInfo<LHS>::Scalar;
-			using ScalarRHS = typename typetraits::TypeInfo<RHS>::Scalar;
-			using Scalar	= decltype(Op()(std::declval<ScalarLHS>(), std::declval<ScalarRHS>()));
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
+			using ScalarLHS							   = typename typetraits::TypeInfo<LHS>::Scalar;
+			using ScalarRHS							   = typename typetraits::TypeInfo<RHS>::Scalar;
+			using Scalar = decltype(Op()(std::declval<ScalarLHS>(), std::declval<ScalarRHS>()));
 			using IndexTypeConst			 = Scalar;
 			using IndexType					 = Scalar;
 			using StorageType				 = typename vectorDetail::VectorStorageMerger<LHS, RHS>;
+			static constexpr uint64_t dims	 = StorageType::dims;
+			static constexpr uint64_t length = StorageType::length;
+			using GetType					 = typename std::decay_t<typename StorageType::GetType>;
+		};
+
+		template<typename Val, typename Op>
+		struct TypeInfo<vectorDetail::UnaryVecOp<Val, Op>> {
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
+			using Scalar							   = typename typetraits::TypeInfo<Val>::Scalar;
+			using IndexTypeConst					   = Scalar;
+			using IndexType							   = Scalar;
+			using StorageType = typename vectorDetail::VectorStorage<Scalar, Val::dims>;
 			static constexpr uint64_t dims	 = StorageType::dims;
 			static constexpr uint64_t length = StorageType::length;
 			using GetType					 = typename std::decay_t<typename StorageType::GetType>;
@@ -109,7 +125,7 @@ namespace librapid {
 			alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Scalar, length> data {};
 #else
 			// No memory alignment on Apple platforms or if it is disabled
-			std::array<Scalar, length> data{};
+			std::array<Scalar, length> data {};
 #endif
 
 			template<typename... Args>
@@ -142,18 +158,34 @@ namespace librapid {
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexTypeConst
 			operator[](int64_t index) const {
+				LIBRAPID_ASSERT(index >= 0 && index < dims,
+								"Index {} out of bounds for Vector of length {}",
+								index,
+								length);
 				return data[index];
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType operator[](int64_t index) {
+				LIBRAPID_ASSERT(index >= 0 && index < dims,
+								"Index {} out of bounds for Vector of length {}",
+								index,
+								length);
 				return data[index];
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const Scalar &_get(uint64_t index) const {
+				LIBRAPID_ASSERT(index >= 0 && index < dims,
+								"Index {} out of bounds for Vector of length {}",
+								index,
+								length);
 				return data[index];
 			}
 
 			LIBRAPID_ALWAYS_INLINE void _set(uint64_t index, const Scalar &value) {
+				LIBRAPID_ASSERT(index >= 0 && index < dims,
+								"Index {} out of bounds for Vector of length {}",
+								index,
+								length);
 				data[index] = value;
 			}
 		};
@@ -177,10 +209,10 @@ namespace librapid {
 			// std::array<Packet, length> data {};
 
 #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-			alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Packet, length> data{};
+			alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Packet, length> data {};
 #else
 			// No memory alignment on Apple platforms or if it is disabled
-			std::array<Packet, length> data{};
+			std::array<Packet, length> data {};
 #endif
 
 			template<typename... Args>
@@ -192,22 +224,38 @@ namespace librapid {
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexTypeConst
 			operator[](int64_t index) const {
+				LIBRAPID_ASSERT(index >= 0 && index < dims,
+								"Index {} out of bounds for Vector of length {}",
+								index,
+								length);
 				const int64_t packetIndex  = index / packetWidth;
 				const int64_t elementIndex = index % packetWidth;
 				return data[packetIndex][elementIndex];
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType operator[](int64_t index) {
+				LIBRAPID_ASSERT(index >= 0 && index < dims,
+								"Index {} out of bounds for Vector of length {}",
+								index,
+								length);
 				const int64_t packetIndex  = index / packetWidth;
 				const int64_t elementIndex = index % packetWidth;
 				return data[packetIndex][elementIndex];
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const Packet &_get(uint64_t index) const {
+				LIBRAPID_ASSERT(index >= 0 && index < dims,
+								"Index {} out of bounds for Vector of length {}",
+								index,
+								length);
 				return data[index];
 			}
 
 			LIBRAPID_ALWAYS_INLINE void _set(uint64_t index, const Packet &value) {
+				LIBRAPID_ASSERT(index >= 0 && index < dims,
+								"Index {} out of bounds for Vector of length {}",
+								index,
+								length);
 				data[index] = value;
 			}
 		};
@@ -227,6 +275,12 @@ namespace librapid {
 		template<typename LHS, typename RHS, typename Op>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto
 		scalarSubscriptHelper(const BinaryVecOp<LHS, RHS, Op> &val, uint64_t index) {
+			return val[index];
+		}
+
+		template<typename Val, typename Op>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto
+		scalarSubscriptHelper(const UnaryVecOp<Val, Op> &val, uint64_t index) {
 			return val[index];
 		}
 
@@ -255,6 +309,12 @@ namespace librapid {
 			return val._get(index);
 		}
 
+		template<typename Val, typename Op>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto constexpr scalarGetHelper(
+		  const UnaryVecOp<Val, Op> &val, uint64_t index) {
+			return val._get(index);
+		}
+
 		template<typename T>
 		struct VectorScalarStorageExtractor {
 			using type = std::false_type;
@@ -270,6 +330,11 @@ namespace librapid {
 			using type = typename typetraits::TypeInfo<BinaryVecOp<LHS, RHS, Op>>::StorageType;
 		};
 
+		template<typename Val, typename Op>
+		struct VectorScalarStorageExtractor<UnaryVecOp<Val, Op>> {
+			using type = typename typetraits::TypeInfo<UnaryVecOp<Val, Op>>::StorageType;
+		};
+
 		template<typename T>
 		struct VectorScalarDimensionExtractor {
 			static constexpr uint64_t value = 0;
@@ -283,6 +348,11 @@ namespace librapid {
 		template<typename LHS, typename RHS, typename Op>
 		struct VectorScalarDimensionExtractor<BinaryVecOp<LHS, RHS, Op>> {
 			static constexpr uint64_t value = BinaryVecOp<LHS, RHS, Op>::dims;
+		};
+
+		template<typename Val, typename Op>
+		struct VectorScalarDimensionExtractor<UnaryVecOp<Val, Op>> {
+			static constexpr uint64_t value = UnaryVecOp<Val, Op>::dims;
 		};
 	} // namespace vectorDetail
 
@@ -314,11 +384,28 @@ namespace librapid {
 			vectorDetail::assign(*this, other);
 		}
 
+		template<typename Val, typename Op>
+		explicit Vector(const vectorDetail::UnaryVecOp<Val, Op> &other) {
+			vectorDetail::assign(*this, other);
+		}
+
 		auto operator=(const Vector &other) -> Vector	  & = default;
 		auto operator=(Vector &&other) noexcept -> Vector & = default;
 
+		template<typename OtherScalar, uint64_t OtherDims>
+		auto operator=(const Vector<OtherScalar, OtherDims> &other) -> Vector & {
+			*this = other.template cast<Scalar, dims>();
+			return *this;
+		}
+
 		template<typename LHS, typename RHS, typename Op>
 		auto operator=(const vectorDetail::BinaryVecOp<LHS, RHS, Op> &other) -> Vector & {
+			vectorDetail::assign(*this, other);
+			return *this;
+		}
+
+		template<typename Val, typename Op>
+		auto operator=(const vectorDetail::UnaryVecOp<Val, Op> &other) -> Vector & {
 			vectorDetail::assign(*this, other);
 			return *this;
 		}
@@ -379,13 +466,9 @@ namespace librapid {
 	namespace vectorDetail {
 		template<typename LHS, typename RHS, typename Op>
 		struct BinaryVecOp : public VectorBase<BinaryVecOp<LHS, RHS, Op>> {
-			using Scalar = typename typetraits::TypeInfo<BinaryVecOp>::Scalar;
-			// using StorageLHS				 = typename typetraits::TypeInfo<LHS>::StorageType;
-			// using StorageRHS				 = typename typetraits::TypeInfo<RHS>::StorageType;
-
-			using StorageLHS = typename VectorScalarStorageExtractor<LHS>::type;
-			using StorageRHS = typename VectorScalarStorageExtractor<RHS>::type;
-
+			using Scalar					 = typename typetraits::TypeInfo<BinaryVecOp>::Scalar;
+			using StorageLHS				 = typename VectorScalarStorageExtractor<LHS>::type;
+			using StorageRHS				 = typename VectorScalarStorageExtractor<RHS>::type;
 			using StorageType				 = VectorStorageMerger<StorageLHS, StorageRHS>;
 			static constexpr uint64_t dims	 = StorageType::dims;
 			static constexpr uint64_t length = StorageType::length;
@@ -424,12 +507,10 @@ namespace librapid {
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType
 			operator[](int64_t index) const override {
-				// return op(left[index], right[index]);
 				return op(scalarSubscriptHelper(left, index), scalarSubscriptHelper(right, index));
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType operator[](int64_t index) override {
-				// return op(left[index], right[index]);
 				return op(scalarSubscriptHelper(left, index), scalarSubscriptHelper(right, index));
 			}
 
@@ -438,8 +519,62 @@ namespace librapid {
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GetType _get(uint64_t index) const override {
-				// return op(left._get(index), right._get(index));
 				return op(scalarGetHelper(left, index), scalarGetHelper(right, index));
+			}
+		};
+
+		template<typename Val, typename Op>
+		struct UnaryVecOp : public VectorBase<UnaryVecOp<Val, Op>> {
+			using Scalar					 = typename typetraits::TypeInfo<UnaryVecOp>::Scalar;
+			using StorageType				 = typename VectorScalarStorageExtractor<Val>::type;
+			static constexpr uint64_t dims	 = StorageType::dims;
+			static constexpr uint64_t length = StorageType::length;
+			using IndexTypeConst = typename typetraits::TypeInfo<UnaryVecOp>::IndexTypeConst;
+			using IndexType		 = typename typetraits::TypeInfo<UnaryVecOp>::IndexType;
+			using GetType		 = typename typetraits::TypeInfo<UnaryVecOp>::GetType;
+
+			Val val;
+			Op op;
+
+			UnaryVecOp()					   = default;
+			UnaryVecOp(const UnaryVecOp &)	   = default;
+			UnaryVecOp(UnaryVecOp &&) noexcept = default;
+
+			UnaryVecOp(const Val &value, const Op &op) : val(value), op(op) {}
+
+			auto operator=(const UnaryVecOp &) -> UnaryVecOp	 & = default;
+			auto operator=(UnaryVecOp &&) noexcept -> UnaryVecOp & = default;
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Vector<Scalar, dims> eval() const {
+				Vector<Scalar, dims> result(*this);
+				return result;
+			}
+
+			template<typename NewScalar, uint64_t NewDims>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cast() const {
+				return eval().template cast<NewScalar, NewDims>();
+			}
+
+			template<typename NewScalar, uint64_t NewDims>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE operator Vector<NewScalar, NewDims>() const {
+				return cast<NewScalar, NewDims>();
+			}
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType
+			operator[](int64_t index) const override {
+				return op(scalarSubscriptHelper(val, index));
+			}
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType operator[](int64_t index) override {
+				return op(scalarSubscriptHelper(val, index));
+			}
+
+			LIBRAPID_NODISCARD std::string str(const std::string &format) const override {
+				return eval().str(format);
+			}
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GetType _get(uint64_t index) const override {
+				return op(scalarGetHelper(val, index));
 			}
 		};
 
@@ -454,13 +589,40 @@ namespace librapid {
 			 ...);
 		}
 
+		template<typename Scalar, uint64_t N, typename Val, typename Op, uint64_t... Indices>
+		LIBRAPID_ALWAYS_INLINE void assignImpl(Vector<Scalar, N> &dst,
+											   const UnaryVecOp<Val, Op> &src,
+											   std::index_sequence<Indices...>) {
+			((dst._set(Indices, src.op(scalarGetHelper(src.val, Indices)))), ...);
+		}
+
 		template<typename Scalar, uint64_t N, typename LHS, typename RHS, typename Op>
 		LIBRAPID_ALWAYS_INLINE void assign(Vector<Scalar, N> &dst,
 										   const BinaryVecOp<LHS, RHS, Op> &src) {
-			constexpr uint64_t lengthDst = Vector<Scalar, N>::length;
-			constexpr uint64_t lengthSrc = BinaryVecOp<LHS, RHS, Op>::length;
-			constexpr uint64_t minLength = (lengthDst < lengthSrc) ? lengthDst : lengthSrc;
-			assignImpl(dst, src, std::make_index_sequence<minLength>());
+			using ScalarDst = typename typetraits::TypeInfo<Vector<Scalar, N>>::Scalar;
+			using ScalarSrc = typename typetraits::TypeInfo<BinaryVecOp<LHS, RHS, Op>>::Scalar;
+			if constexpr (std::is_same_v<ScalarDst, ScalarSrc>) {
+				constexpr uint64_t lengthDst = Vector<Scalar, N>::length;
+				constexpr uint64_t lengthSrc = BinaryVecOp<LHS, RHS, Op>::length;
+				constexpr uint64_t minLength = (lengthDst < lengthSrc) ? lengthDst : lengthSrc;
+				assignImpl(dst, src, std::make_index_sequence<minLength>());
+			} else {
+				dst = src.template cast<Scalar, N>();
+			}
+		}
+
+		template<typename Scalar, uint64_t N, typename Val, typename Op>
+		LIBRAPID_ALWAYS_INLINE void assign(Vector<Scalar, N> &dst, const UnaryVecOp<Val, Op> &src) {
+			using ScalarDst = typename typetraits::TypeInfo<Vector<Scalar, N>>::Scalar;
+			using ScalarSrc = typename typetraits::TypeInfo<UnaryVecOp<Val, Op>>::Scalar;
+			if constexpr (std::is_same_v<ScalarDst, ScalarSrc>) {
+				constexpr uint64_t lengthDst = Vector<Scalar, N>::length;
+				constexpr uint64_t lengthSrc = UnaryVecOp<Val, Op>::length;
+				constexpr uint64_t minLength = (lengthDst < lengthSrc) ? lengthDst : lengthSrc;
+				assignImpl(dst, src, std::make_index_sequence<minLength>());
+			} else {
+				dst = src.template cast<Scalar, N>();
+			}
 		}
 
 		template<typename T>
@@ -489,16 +651,28 @@ namespace librapid {
 			return val.template cast<NewScalar, NewDims>();
 		}
 
+		template<typename NewScalar, uint64_t NewDims, typename Val, typename Op>
+		constexpr auto scalarVectorCaster(const UnaryVecOp<Val, Op> &val) {
+			return val.template cast<NewScalar, NewDims>();
+		}
+
 #define VECTOR_BINARY_OP(NAME_, OP_)                                                               \
 	struct NAME_ {                                                                                 \
 		template<typename A, typename B>                                                           \
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator()(const A &a, const B &b) const {  \
+			using namespace ::librapid::vectorDetail;                                              \
 			return scalarExtractor(a) OP_ scalarExtractor(b);                                      \
 		}                                                                                          \
 	};                                                                                             \
                                                                                                    \
-	template<typename LHS, typename RHS>                                                           \
+	template<                                                                                      \
+	  typename LHS,                                                                                \
+	  typename RHS,                                                                                \
+	  typename std::enable_if_t<typetraits::TypeInfo<LHS>::type == detail::LibRapidType::Vector || \
+								  typetraits::TypeInfo<RHS>::type == detail::LibRapidType::Vector, \
+								int> = 0>                                                          \
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator OP_(const LHS &lhs, const RHS &rhs) {  \
+		using namespace ::librapid::vectorDetail;                                                  \
 		using ScalarLeft  = typename typetraits::TypeInfo<LHS>::Scalar;                            \
 		using ScalarRight = typename typetraits::TypeInfo<RHS>::Scalar;                            \
 		using Op		  = NAME_;                                                                 \
@@ -514,6 +688,22 @@ namespace librapid {
 								scalarVectorCaster<Scalar, maxDims>(rhs),                          \
 								Op {}};                                                            \
 		}                                                                                          \
+	}
+
+#define VECTOR_UNARY_OP(NAME_, OP_NAME_, OP_)                                                      \
+	struct NAME_ {                                                                                 \
+		template<typename Val>                                                                     \
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator()(const Val &val) const {          \
+			using namespace ::librapid::vectorDetail;                                              \
+			return OP_(scalarExtractor(val));                                                      \
+		}                                                                                          \
+	};                                                                                             \
+                                                                                                   \
+	template<typename Val>                                                                         \
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto OP_NAME_(const Val &val) {                      \
+		using namespace ::librapid::vectorDetail;                                                  \
+		using Op = NAME_;                                                                          \
+		return ::librapid::vectorDetail::UnaryVecOp<Val, Op> {val, Op {}};                         \
 	}
 
 		VECTOR_BINARY_OP(Add, +);
@@ -534,12 +724,67 @@ namespace librapid {
 		VECTOR_BINARY_OP(GreaterThanEqual, >=);
 		VECTOR_BINARY_OP(Equal, ==);
 		VECTOR_BINARY_OP(NotEqual, !=);
+
+		VECTOR_UNARY_OP(Not, operator!, !);
+		VECTOR_UNARY_OP(BitNot, operator~, ~);
+		VECTOR_UNARY_OP(Negate, operator-, -);
+		VECTOR_UNARY_OP(Plus, operator+, +);
+
+#define VECTOR_FUNC_STRUCT_DEF(NAME_)                                                              \
+	struct Vector_##NAME_ {                                                                        \
+		template<typename Val>                                                                     \
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator()(const Val &val) const {          \
+			return ::librapid::NAME_(scalarExtractor(val));                                        \
+		}                                                                                          \
+	}
+
+		VECTOR_FUNC_STRUCT_DEF(sin);
+		VECTOR_FUNC_STRUCT_DEF(cos);
+		VECTOR_FUNC_STRUCT_DEF(tan);
+		VECTOR_FUNC_STRUCT_DEF(asin);
+		VECTOR_FUNC_STRUCT_DEF(acos);
+		VECTOR_FUNC_STRUCT_DEF(atan);
+		VECTOR_FUNC_STRUCT_DEF(sinh);
+		VECTOR_FUNC_STRUCT_DEF(cosh);
+		VECTOR_FUNC_STRUCT_DEF(tanh);
+		VECTOR_FUNC_STRUCT_DEF(asinh);
+		VECTOR_FUNC_STRUCT_DEF(acosh);
+		VECTOR_FUNC_STRUCT_DEF(atanh);
+		VECTOR_FUNC_STRUCT_DEF(exp);
+		VECTOR_FUNC_STRUCT_DEF(exp2);
+		VECTOR_FUNC_STRUCT_DEF(exp10);
+		VECTOR_FUNC_STRUCT_DEF(log);
+		VECTOR_FUNC_STRUCT_DEF(log2);
+		VECTOR_FUNC_STRUCT_DEF(log10);
+		VECTOR_FUNC_STRUCT_DEF(sqrt);
+		VECTOR_FUNC_STRUCT_DEF(cbrt);
 	} // namespace vectorDetail
+
+#define VECTOR_FUNC_IMPL_DEF(NAME_)                                                                \
+	template<typename ScalarType, uint64_t NumDims>                                                \
+	auto NAME_(const Vector<ScalarType, NumDims> &vec) {                                           \
+		return vectorDetail::UnaryVecOp {vec, vectorDetail::Vector_##NAME_ {}};                    \
+	}                                                                                              \
+                                                                                                   \
+	template<typename LHS, typename RHS, typename Op>                                              \
+	auto NAME_(const vectorDetail::BinaryVecOp<LHS, RHS, Op> &vec) {                               \
+		return vectorDetail::UnaryVecOp {vec, vectorDetail::Vector_##NAME_ {}};                    \
+	}                                                                                              \
+                                                                                                   \
+	template<typename Val, typename Op>                                                            \
+	auto NAME_(const vectorDetail::UnaryVecOp<Val, Op> &vec) {                                     \
+		return vectorDetail::UnaryVecOp {vec, vectorDetail::Vector_##NAME_ {}};                    \
+	}
+
+	VECTOR_FUNC_IMPL_DEF(sin);
+	VECTOR_FUNC_IMPL_DEF(cos);
 } // namespace librapid
 
 LIBRAPID_SIMPLE_IO_IMPL(typename Derived, librapid::vectorDetail::VectorBase<Derived>);
 LIBRAPID_SIMPLE_IO_IMPL(typename T COMMA uint64_t N, librapid::Vector<T COMMA N>);
 LIBRAPID_SIMPLE_IO_IMPL(typename LHS COMMA typename RHS COMMA typename Op,
 						librapid::vectorDetail::BinaryVecOp<LHS COMMA RHS COMMA Op>);
+LIBRAPID_SIMPLE_IO_IMPL(typename Val COMMA typename Op,
+						librapid::vectorDetail::UnaryVecOp<Val COMMA Op>);
 
 #endif // LIBRAPID_MATH_VECTOR_HPP

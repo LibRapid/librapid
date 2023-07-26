@@ -60,6 +60,24 @@ namespace librapid {
 				return derived()[index];
 			}
 
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexTypeConst x() const {
+				return derived()[0];
+			}
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexTypeConst y() const {
+				return derived()[1];
+			}
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexTypeConst z() const {
+				return derived()[2];
+			}
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexTypeConst w() const {
+				return derived()[3];
+			}
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType x() { return derived()[0]; }
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType y() { return derived()[1]; }
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType z() { return derived()[2]; }
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType w() { return derived()[3]; }
+
 			LIBRAPID_NODISCARD virtual std::string str(const std::string &format) const {
 				return derived().str(format);
 			}
@@ -77,15 +95,26 @@ namespace librapid {
 		template<typename LHS, typename RHS, typename Op>
 		struct BinaryVecOp;
 
+		template<typename Val, typename Op>
+		struct UnaryVecOp;
+
 		template<typename Scalar, uint64_t N, typename LHS, typename RHS, typename Op,
 				 uint64_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void assignImpl(Vector<Scalar, N> &dst,
 											   const BinaryVecOp<LHS, RHS, Op> &src,
 											   std::index_sequence<Indices...>);
 
+		template<typename Scalar, uint64_t N, typename Val, typename Op, uint64_t... Indices>
+		LIBRAPID_ALWAYS_INLINE void assignImpl(Vector<Scalar, N> &dst,
+											   const UnaryVecOp<Val, Op> &src,
+											   std::index_sequence<Indices...>);
+
 		template<typename Scalar, uint64_t N, typename LHS, typename RHS, typename Op>
 		LIBRAPID_ALWAYS_INLINE void assign(Vector<Scalar, N> &dst,
 										   const BinaryVecOp<LHS, RHS, Op> &src);
+
+		template<typename Scalar, uint64_t N, typename Val, typename Op>
+		LIBRAPID_ALWAYS_INLINE void assign(Vector<Scalar, N> &dst, const UnaryVecOp<Val, Op> &src);
 	} // namespace vectorDetail
 
 	template<typename ScalarType, uint64_t NumDims>
