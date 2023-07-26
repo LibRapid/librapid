@@ -310,8 +310,9 @@ namespace librapid {
 		}
 
 		template<typename Val, typename Op>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto constexpr scalarGetHelper(
-		  const UnaryVecOp<Val, Op> &val, uint64_t index) {
+		LIBRAPID_NODISCARD
+		  LIBRAPID_ALWAYS_INLINE auto constexpr scalarGetHelper(const UnaryVecOp<Val, Op> &val,
+																uint64_t index) {
 			return val._get(index);
 		}
 
@@ -373,6 +374,12 @@ namespace librapid {
 
 		template<typename... Args>
 		explicit Vector(Args... args) : m_data {args...} {}
+
+		template<typename T>
+		Vector(const std::initializer_list<T> &args) : m_data(args) {}
+
+		template<typename T>
+		explicit Vector(const std::vector<T> &args) : m_data(args) {}
 
 		template<typename OtherScalar, uint64_t OtherDims>
 		explicit Vector(const Vector<OtherScalar, OtherDims> &other) {
