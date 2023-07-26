@@ -215,6 +215,12 @@ namespace librapid {
 
 		return result;
 	}
+
+	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType, typename Lower, typename Upper>
+	Array<Scalar, Backend> random(const ShapeType &shape, Lower lower, Upper upper) {
+		Array<Scalar, Backend> result(shape);
+
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_PSEUDO_CONSTRUCTORS_HPP

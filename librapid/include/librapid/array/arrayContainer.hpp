@@ -264,6 +264,36 @@ namespace librapid {
 			/// \param value The value to write to the array's storage
 			LIBRAPID_ALWAYS_INLINE void write(size_t index, const Scalar &value);
 
+			template<typename T>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator+=(const T &other);
+
+			template<typename T>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator-=(const T &other);
+
+			template<typename T>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator*=(const T &other);
+
+			template<typename T>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator/=(const T &other);
+
+			template<typename T>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator%=(const T &other);
+
+			template<typename T>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator&=(const T &other);
+
+			template<typename T>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator|=(const T &other);
+
+			template<typename T>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator^=(const T &other);
+
+			template<typename T>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator<<=(const T &other);
+
+			template<typename T>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator>>=(const T &other);
+
 			/// \brief Return an iterator to the beginning of the array container
 			/// \return Iterator
 			LIBRAPID_INLINE Iterator begin() const noexcept;
@@ -633,6 +663,86 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		void ArrayContainer<ShapeType_, StorageType_>::write(size_t index, const Scalar &value) {
 			m_storage[index] = value;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator+=(const T &value)
+		  -> ArrayContainer & {
+			*this = *this + value;
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator-=(const T &value)
+		  -> ArrayContainer & {
+			*this = *this - value;
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator*=(const T &value)
+		  -> ArrayContainer & {
+			*this = *this * value;
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator/=(const T &value)
+		  -> ArrayContainer & {
+			*this = *this / value;
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator%=(const T &value)
+		  -> ArrayContainer & {
+			*this = *this % value;
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator&=(const T &value)
+		  -> ArrayContainer & {
+			*this = *this & value;
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator|=(const T &value)
+		  -> ArrayContainer & {
+			*this = *this | value;
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator^=(const T &value)
+		  -> ArrayContainer & {
+			*this = *this ^ value;
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator<<=(const T &value)
+		  -> ArrayContainer & {
+			*this = *this << value;
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename T>
+		auto ArrayContainer<ShapeType_, StorageType_>::operator>>=(const T &value)
+		  -> ArrayContainer & {
+			*this = *this >> value;
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>

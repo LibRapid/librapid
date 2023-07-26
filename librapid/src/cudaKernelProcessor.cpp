@@ -35,6 +35,10 @@ namespace librapid::cuda {
 		mapping[path] = path + "\n" + buffer.str();
 		return mapping[path];
 	}
+
+	jitify::Program generateCudaProgram(const std::string &kernel) {
+		return global::jitCache.program(kernel, {}, {fmt::format("-I{}", CUDA_INCLUDE_DIRS)});
+	}
 } // namespace librapid::cuda
 
 #endif // LIBRAPID_HAS_CUDA

@@ -260,6 +260,7 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 		auto basePath = fmt::format("{}/include/librapid/OpenCL/kernels/", LIBRAPID_SOURCE);
 		addOpenCLKernelFile(basePath + "core.cl");
 		addOpenCLKernelFile(basePath + "dual.cl");
+		addOpenCLKernelFile(basePath + "fill.cl");
 		addOpenCLKernelFile(basePath + "negate.cl");
 		addOpenCLKernelFile(basePath + "arithmetic.cl");
 		addOpenCLKernelFile(basePath + "abs.cl");

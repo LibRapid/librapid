@@ -4,8 +4,10 @@
 namespace librapid::linalg {
 	/// \brief General matrix-matrix multiplication
 	///
-	/// Computes \f$ \mathbf{C} = \alpha \mathrm{OP}_A(\mathbf{A}) \mathrm{OP}_B(\mathbf{B}) + \beta \mathbf{C} \f$
-	/// for matrices \f$ \mathbf{A} \f$, \f$ \mathbf{B} \f$ and \f$ \mathbf{C} \f$. \f$ \mathrm{OP}_A \f$ and \f$ \mathrm{OP}_B \f$ are
+	/// Computes \f$ \mathbf{C} = \alpha \mathrm{OP}_A(\mathbf{A}) \mathrm{OP}_B(\mathbf{B}) +
+	/// \beta \mathbf{C} \f$
+	/// for matrices \f$ \mathbf{A} \f$, \f$ \mathbf{B} \f$ and \f$ \mathbf{C} \f$.
+	/// \f$ \mathrm{OP}_A \f$ and \f$ \mathrm{OP}_B \f$ are
 	/// either the identity or the transpose operation.
 	/// \tparam Int Integer type for matrix dimensions
 	/// \tparam Alpha Type of \f$ \alpha \f$
@@ -140,17 +142,20 @@ namespace librapid::linalg {
 		switch (::librapid::min(a, b, c)) {
 			case CUDA_R_16F:
 			case CUDA_C_16F: // 16-bit -> 16-bit
-				return selector({CUBLAS_COMPUTE_16F, CUDA_R_16F}, {CUBLAS_COMPUTE_32F, CUDA_R_32F});
+				return selector({CUBLAS_COMPUTE_16F, CUDA_R_16F},
+								{CUBLAS_COMPUTE_16F_PEDANTIC, CUDA_R_16F});
 			case CUDA_R_32F:
 			case CUDA_C_32F: // 32-bit -> [ fast: 16-bit, precise: 32-bit ]
 				return selector({CUBLAS_COMPUTE_32F_FAST_TF32, CUDA_R_32F},
-								{CUBLAS_COMPUTE_32F, CUDA_R_32F});
+								{CUBLAS_COMPUTE_32F_PEDANTIC, CUDA_R_32F});
 			case CUDA_R_64F:
 			case CUDA_C_64F: // 64-bit -> 64-bit
-				return selector({CUBLAS_COMPUTE_64F, CUDA_R_64F}, {CUBLAS_COMPUTE_64F, CUDA_R_64F});
+				return selector({CUBLAS_COMPUTE_64F, CUDA_R_64F},
+								{CUBLAS_COMPUTE_64F_PEDANTIC, CUDA_R_64F});
 			case CUDA_R_32I:
 			case CUDA_C_32I: // 32-bit -> 32-bit
-				return selector({CUBLAS_COMPUTE_32I, CUDA_R_32I}, {CUBLAS_COMPUTE_32I, CUDA_R_32I});
+				return selector({CUBLAS_COMPUTE_32I, CUDA_R_32I},
+								{CUBLAS_COMPUTE_32I_PEDANTIC, CUDA_R_32I});
 			default: {
 				LIBRAPID_ASSERT(false, "Invalid input types to CuBLAS gemm");
 				return {CUBLAS_COMPUTE_32F_FAST_TF32, CUDA_R_32F};
@@ -268,8 +273,12 @@ namespace librapid::linalg {
 		} else {
 			// If the provided types are not supported by cuBLAS, use the custom fallback kernel
 
-			jitify::Program program = global::jitCache.program(cuda::loadKernel(
-			  fmt::format("{}/include/librapid/array/linalg/level3/gemm", LIBRAPID_SOURCE), false));
+			jitify::Program program = global::jitCache.program(
+			  cuda::loadKernel(
+				fmt::format("{}/include/librapid/array/linalg/level3/gemm", LIBRAPID_SOURCE),
+				false),
+			  {},
+			  {fmt::format("-I{}", CUDA_INCLUDE_DIRS)});
 
 			size_t TS = 32;
 

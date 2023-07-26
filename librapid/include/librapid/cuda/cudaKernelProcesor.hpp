@@ -9,6 +9,8 @@ namespace librapid::cuda {
 	/// \return String representation of the kernel
 	const std::string &loadKernel(const std::string &path, bool relative = true);
 
+	jitify::Program generateCudaProgram(const std::string &kernel);
+
 	/// Run a kernel string on the GPU with the specified arguments
 	/// \tparam Templates Instantiation types passed to Jitify
 	/// \tparam Args Argument types passed to Jitify
@@ -19,8 +21,7 @@ namespace librapid::cuda {
 	template<typename... Templates, typename... Args>
 	void runKernelString(const std::string &kernel, const std::string &kernelName, size_t elements,
 						 Args... arguments) {
-		jitify::Program program = global::jitCache.program(kernel);
-
+		jitify::Program program = generateCudaProgram(kernel);
 		unsigned int threadsPerBlock, blocksPerGrid;
 
 		// Use 1 to 512 threads per block
