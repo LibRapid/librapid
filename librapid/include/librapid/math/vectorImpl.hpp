@@ -232,7 +232,7 @@ namespace librapid {
 					this->operator[](i) = *(other.begin() + i);
 				}
 			}
-			
+
 			template<typename T>
 			SimdVectorStorage(const std::vector<T> &other) {
 				LIBRAPID_ASSERT(other.size() <= dims,
@@ -463,6 +463,23 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE operator Vector<NewScalar, NewDims>() const {
 			return cast<NewScalar, NewDims>();
 		}
+
+#define LIBRAPID_VECTOR_INPLACE_OP(OP_)                                                            \
+	template<typename Other>                                                                       \
+	LIBRAPID_ALWAYS_INLINE Vector &operator OP_##=(const Other &other) {                          \
+		return *this = *this OP_ other;                                                            \
+	}
+
+		LIBRAPID_VECTOR_INPLACE_OP(+)
+		LIBRAPID_VECTOR_INPLACE_OP(-)
+		LIBRAPID_VECTOR_INPLACE_OP(*)
+		LIBRAPID_VECTOR_INPLACE_OP(/)
+		LIBRAPID_VECTOR_INPLACE_OP(%)
+		LIBRAPID_VECTOR_INPLACE_OP(&)
+		LIBRAPID_VECTOR_INPLACE_OP(|)
+		LIBRAPID_VECTOR_INPLACE_OP(^)
+		LIBRAPID_VECTOR_INPLACE_OP(<<)
+		LIBRAPID_VECTOR_INPLACE_OP(>>)
 
 		LIBRAPID_NODISCARD std::string str(const std::string &format) const override {
 			std::string ret = "(";
