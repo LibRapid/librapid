@@ -143,7 +143,9 @@ namespace librapid {
 								other.size(),
 								dims);
 				const uint64_t minDims = (other.size() < dims) ? other.size() : dims;
-				for (uint64_t i = 0; i < minDims; ++i) { data[i] = *(other.begin() + i); }
+				for (uint64_t i = 0; i < minDims; ++i) {
+					this->operator[](i) = *(other.begin() + i);
+				}
 			}
 
 			template<typename T>
@@ -153,7 +155,7 @@ namespace librapid {
 								other.size(),
 								dims);
 				const uint64_t minDims = (other.size() < dims) ? other.size() : dims;
-				for (uint64_t i = 0; i < minDims; ++i) { data[i] = other[i]; }
+				for (uint64_t i = 0; i < minDims; ++i) { this->operator[](i) = other[i]; }
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexTypeConst
@@ -205,9 +207,6 @@ namespace librapid {
 			static_assert(typetraits::TypeInfo<Scalar>::packetWidth > 1,
 						  "SimdVectorStorage can only be used with SIMD types");
 
-			// Packet data[length] {};
-			// std::array<Packet, length> data {};
-
 #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
 			alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Packet, length> data {};
 #else
@@ -220,6 +219,28 @@ namespace librapid {
 				constexpr uint64_t minLength = (sizeof...(Args) < dims) ? sizeof...(Args) : dims;
 				vectorDetail::vectorStorageAssigner(
 				  std::make_index_sequence<minLength>(), *this, args...);
+			}
+
+			template<typename T>
+			SimdVectorStorage(const std::initializer_list<T> &other) {
+				LIBRAPID_ASSERT(other.size() <= dims,
+								"Initializer list for Vector is too long ({} > {})",
+								other.size(),
+								dims);
+				const uint64_t minDims = (other.size() < dims) ? other.size() : dims;
+				for (uint64_t i = 0; i < minDims; ++i) {
+					this->operator[](i) = *(other.begin() + i);
+				}
+			}
+
+			template<typename T>
+			SimdVectorStorage(const std::vector<T> &other) {
+				LIBRAPID_ASSERT(other.size() <= dims,
+								"Initializer list for Vector is too long ({} > {})",
+								other.size(),
+								dims);
+				const uint64_t minDims = (other.size() < dims) ? other.size() : dims;
+				for (uint64_t i = 0; i < minDims; ++i) { this->operator[](i) = other[i]; }
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexTypeConst
@@ -310,8 +331,9 @@ namespace librapid {
 		}
 
 		template<typename Val, typename Op>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto constexpr scalarGetHelper(
-		  const UnaryVecOp<Val, Op> &val, uint64_t index) {
+		LIBRAPID_NODISCARD
+		  LIBRAPID_ALWAYS_INLINE auto constexpr scalarGetHelper(const UnaryVecOp<Val, Op> &val,
+																uint64_t index) {
 			return val._get(index);
 		}
 
@@ -374,6 +396,12 @@ namespace librapid {
 		template<typename... Args>
 		explicit Vector(Args... args) : m_data {args...} {}
 
+		template<typename T>
+		Vector(const std::initializer_list<T> &args) : m_data(args) {}
+
+		template<typename T>
+		explicit Vector(const std::vector<T> &args) : m_data(args) {}
+
 		template<typename OtherScalar, uint64_t OtherDims>
 		explicit Vector(const Vector<OtherScalar, OtherDims> &other) {
 			*this = other.template cast<Scalar, dims>();
@@ -435,6 +463,23 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE operator Vector<NewScalar, NewDims>() const {
 			return cast<NewScalar, NewDims>();
 		}
+
+#define LIBRAPID_VECTOR_INPLACE_OP(OP_)                                                            \
+	template<typename Other>                                                                       \
+	LIBRAPID_ALWAYS_INLINE Vector &operator OP_##=(const Other &other) {                          \
+		return *this = *this OP_ other;                                                            \
+	}
+
+		LIBRAPID_VECTOR_INPLACE_OP(+)
+		LIBRAPID_VECTOR_INPLACE_OP(-)
+		LIBRAPID_VECTOR_INPLACE_OP(*)
+		LIBRAPID_VECTOR_INPLACE_OP(/)
+		LIBRAPID_VECTOR_INPLACE_OP(%)
+		LIBRAPID_VECTOR_INPLACE_OP(&)
+		LIBRAPID_VECTOR_INPLACE_OP(|)
+		LIBRAPID_VECTOR_INPLACE_OP(^)
+		LIBRAPID_VECTOR_INPLACE_OP(<<)
+		LIBRAPID_VECTOR_INPLACE_OP(>>)
 
 		LIBRAPID_NODISCARD std::string str(const std::string &format) const override {
 			std::string ret = "(";

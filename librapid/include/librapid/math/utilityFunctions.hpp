@@ -22,11 +22,12 @@ namespace librapid {
 			   typetraits::TypeInfo<X>::type == detail::LibRapidType::Scalar &&
 				 typetraits::TypeInfo<Lower>::type == detail::LibRapidType::Scalar &&
 				 typetraits::TypeInfo<Upper>::type == detail::LibRapidType::Scalar,
-			   int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE X clamp(X x, Lower lowerLimit, Upper upperLimit) {
+			   int>		 = 0,
+			 typename ST = typetraits::ScalarReturnType<X>>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ST clamp(X x, Lower lowerLimit, Upper upperLimit) {
 		LIBRAPID_ASSERT(lowerLimit < upperLimit, "Lower limit must be below upper limit");
-		if (x < lowerLimit) return static_cast<X>(lowerLimit);
-		if (x > upperLimit) return static_cast<X>(upperLimit);
+		if (x < lowerLimit) return static_cast<ST>(lowerLimit);
+		if (x > upperLimit) return static_cast<ST>(upperLimit);
 		return x;
 	}
 
@@ -48,18 +49,19 @@ namespace librapid {
 				 typetraits::TypeInfo<Upper>::type == detail::LibRapidType::Scalar &&
 				 std::is_floating_point_v<T> && std::is_floating_point_v<Lower> &&
 				 std::is_floating_point_v<Upper>,
-			   int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T lerp(T t, Lower lower, Upper upper) {
+			   int>		 = 0,
+			 typename ST = typetraits::ScalarReturnType<T>>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ST lerp(T t, Lower lower, Upper upper) {
 		if (isNaN(t) || isNaN(lower) || isNaN(upper))
 			return std::numeric_limits<T>::quiet_NaN();
-		else if ((t <= T {0} && upper >= T {0}) || (lower >= T {0} && upper <= T {0}))
+		else if ((t <= ST {0} && upper >= Upper {0}) || (lower >= Lower {0} && upper <= Upper {0}))
 		// ab <= 0 but product could overflow.
 #ifndef FMA
-			return t * upper + (T {1} - t) * lower;
+			return t * upper + (ST {1} - t) * lower;
 #else
 			return std::fma(t, upper, (_Float {1} - t) * upper);
 #endif
-		else if (t == T {1})
+		else if (t == ST {1})
 			return upper;
 		else { // monotonic near t == 1.
 #ifndef FMA
@@ -67,7 +69,7 @@ namespace librapid {
 #else
 			const auto x = std::fma(t, upper - lower, lower);
 #endif
-			return (t > T {1}) == (upper > lower) ? max(upper, x) : min(upper, x);
+			return (t > ST {1}) == (upper > lower) ? max(upper, x) : min(upper, x);
 		}
 	}
 
@@ -90,14 +92,11 @@ namespace librapid {
 				   typetraits::TypeInfo<Upper>::type == detail::LibRapidType::Scalar &&
 				   !std::is_floating_point_v<T> ||
 				 !std::is_floating_point_v<Lower> || !std::is_floating_point_v<Upper>,
-			   int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T lerp(T t, Lower lower, Upper upper) {
-		if (isNaN(t) || isNaN(lower) || isNaN(upper)) return std::numeric_limits<T>::quiet_NaN();
-
-		if (t < T {0}) return lower;
-		if (t > T {1}) return upper;
-
-		return static_cast<T>(lower) + (static_cast<T>(upper) - static_cast<T>(lower)) * t;
+			   int>		 = 0,
+			 typename ST = typetraits::ScalarReturnType<T>>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ST lerp(T t, Lower lower, Upper upper) {
+		if (isNaN(t) || isNaN(lower) || isNaN(upper)) return std::numeric_limits<ST>::quiet_NaN();
+		return static_cast<ST>(lower) + (static_cast<ST>(upper) - static_cast<ST>(lower)) * t;
 	}
 
 	/// \brief Smoothly interpolate between two values
@@ -121,11 +120,12 @@ namespace librapid {
 			   typetraits::TypeInfo<T>::type == detail::LibRapidType::Scalar &&
 				 typetraits::TypeInfo<Lower>::type == detail::LibRapidType::Scalar &&
 				 typetraits::TypeInfo<Upper>::type == detail::LibRapidType::Scalar,
-			   int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T smoothStep(T t, Lower lowerEdge = 0,
-														   Upper upperEdge = 1) {
-		T tt = clamp((t - lowerEdge) / (upperEdge - lowerEdge), 0.0, 1.0);
-		return tt * tt * tt * (tt * (tt * T(6) - T(15)) + T(10));
+			   int>		 = 0,
+			 typename ST = typetraits::ScalarReturnType<T>>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ST smoothStep(T t, Lower lowerEdge = 0,
+															Upper upperEdge = 1) {
+		ST tt = clamp((t - lowerEdge) / (upperEdge - lowerEdge), 0.0, 1.0);
+		return tt * tt * tt * (tt * (tt * T(6) - ST(15)) + ST(10));
 	}
 
 	/// \brief Compare the absolute and relative difference between two values, and return true if
