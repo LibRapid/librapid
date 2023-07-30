@@ -26,7 +26,7 @@ pseudo-random number generator, ACM Transactions on Modeling and Computer Simula
 State of MT19937 RNG.
 */
 typedef struct {
-	uint32_t mt[MT19937_N]; /* the array for the state vector  */
+	uint mt[MT19937_N]; /* the array for the state vector  */
 	int mti;
 } mt19937_state;
 
@@ -36,9 +36,9 @@ Generates a random 32-bit unsigned integer using MT19937 RNG.
 @param state State of the RNG to use.
 */
 #define mt19937_uint(state) _mt19937_uint(&state)
-uint32_t _mt19937_uint(mt19937_state *state) {
-	uint32_t y;
-	uint32_t mag01[2] = {0x0, MT19937_MATRIX_A};
+uint _mt19937_uint(mt19937_state *state) {
+	uint y;
+	uint mag01[2] = {0x0, MT19937_MATRIX_A};
 	/* mag01[x] = x * MT19937_MATRIX_A  for x=0,1 */
 
 	if (state->mti < MT19937_N - MT19937_M) {
@@ -73,9 +73,9 @@ This is alternative implementation of MT19937 RNG, that generates 32 values in s
 @param state State of the RNG to use.
 */
 #define mt19937_loop_uint(state) _mt19937_loop_uint(&state)
-uint32_t _mt19937_loop_uint(mt19937_state *state) {
-	uint32_t y;
-	uint32_t mag01[2] = {0x0, MT19937_MATRIX_A};
+uint _mt19937_loop_uint(mt19937_state *state) {
+	uint y;
+	uint mag01[2] = {0x0, MT19937_MATRIX_A};
 	/* mag01[x] = x * MT19937_MATRIX_A  for x=0,1 */
 
 	if (state->mti >= MT19937_N) {
@@ -113,9 +113,9 @@ Seeds MT19937 RNG.
 @param seed Value used for seeding. Should be randomly generated for each instance of generator
 (thread).
 */
-void mt19937_seed(mt19937_state *state, uint32_t s) {
+void mt19937_seed(mt19937_state *state, uint s) {
 	state->mt[0] = s;
-	uint32_t mti;
+	uint mti;
 	for (mti = 1; mti < MT19937_N; mti++) {
 		state->mt[mti] = 1812433253 * (state->mt[mti - 1] ^ (state->mt[mti - 1] >> 30)) + mti;
 
@@ -132,7 +132,7 @@ Generates a random 64-bit unsigned integer using MT19937 RNG.
 
 @param state State of the RNG to use.
 */
-#define mt19937_ulong(state) ((((uint64_t)mt19937_uint(state)) << 32) | mt19937_uint(state))
+#define mt19937_ulong(state) ((((ulong)mt19937_uint(state)) << 32) | mt19937_uint(state))
 
 /**
 Generates a random float using MT19937 RNG.
@@ -148,50 +148,40 @@ Generates a random double using MT19937 RNG.
 */
 #define mt19937_double(state) (mt19937_ulong(state) * MT19937_DOUBLE_MULTI)
 
-template<typename Destination, typename Source>
-__global__ void fillArray(size_t elements, Destination *dst, Source value) {
-	const size_t kernelIndex = blockDim.x * blockIdx.x + threadIdx.x;
-	if (kernelIndex < elements) { dst[kernelIndex] = value; }
-}
+/**
+Generates a random double using MT19937 RNG. Generated using only 32 random bits.
 
-void print_binary_16bit(int number) {
-    int i;
-    for (i = 15; i >= 0; i--) {
-        printf((number & (1 << i)) ? "1" : "0");
-    }
-	printf("\n");
-}
+@param state State of the RNG to use.
+*/
+#define mt19937_double2(state) (mt19937_uint(state) * MT19937_DOUBLE2_MULTI)
 
-template<typename T, typename Lower, typename Upper>
-__global__ void fillRandom(T *data, int64_t elements, Lower lower, Upper upper, int64_t *seeds,
-						   int64_t numSeeds) {
-	int64_t gid		  = blockDim.x * blockIdx.x + threadIdx.x;
-	int64_t seedIndex = gid % numSeeds;
-	mt19937_state state;
-	mt19937_seed(&state, seeds[seedIndex]);
-
-	for (int64_t i = gid; i < elements; i += blockDim.x * gridDim.x) {
-		data[i] = (T)(mt19937_double(state) * (upper - lower) + lower);
+#define RANDOM_IMPL(TYPE)                                                                          \
+	__kernel void fillRandom_##TYPE(__global TYPE *data,                                           \
+									int64_t elements,                                              \
+									TYPE lower,                                                    \
+									TYPE upper,                                                    \
+									__global int64_t *seeds,                                       \
+									int64_t numSeeds) {                                            \
+		int64_t gid		  = get_global_id(0);                                                      \
+		int64_t seedIndex = gid % numSeeds;                                                        \
+		mt19937_state state;                                                                       \
+		mt19937_seed(&state, seeds[seedIndex]);                                                    \
+                                                                                                   \
+		for (int64_t i = gid; i < elements; i += get_global_size(0)) {                             \
+			data[i] = (TYPE)(mt19937_double(state) * (upper - lower) + lower);                     \
+		}                                                                                          \
+                                                                                                   \
+		/* Change the seed for the next iteration */                                               \
+		seeds[seedIndex] = mt19937_ulong(state);                                                   \
 	}
 
-	// Change the seed for the next thread
-	seeds[seedIndex] = mt19937_ulong(state);
-}
-
-template<typename T, typename Lower, typename Upper>
-__global__ void fillRandomHalf(T *data, int64_t elements, Lower lower, Upper upper, int64_t *seeds,
-						   int64_t numSeeds) {
-	int64_t gid		  = blockDim.x * blockIdx.x + threadIdx.x;
-	int64_t seedIndex = gid % numSeeds;
-	mt19937_state state;
-	mt19937_seed(&state, seeds[seedIndex]);
-
-	for (int64_t i = gid; i < elements; i += blockDim.x * gridDim.x) {
-		float lowerF = (float)lower;
-		float upperF = (float)upper;
-		data[i] = (T)(mt19937_float(state) * (upperF - lowerF) + lowerF);
-	}
-
-	// Change the seed for the next thread
-	seeds[seedIndex] = mt19937_ulong(state);
-}
+RANDOM_IMPL(int8_t)
+RANDOM_IMPL(uint8_t)
+RANDOM_IMPL(int16_t)
+RANDOM_IMPL(uint16_t)
+RANDOM_IMPL(int32_t)
+RANDOM_IMPL(uint32_t)
+RANDOM_IMPL(int64_t)
+RANDOM_IMPL(uint64_t)
+RANDOM_IMPL(float)
+RANDOM_IMPL(double)

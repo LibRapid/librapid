@@ -171,8 +171,8 @@ namespace librapid {
 			/// \return The result of the function (scalar).
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar scalar(size_t index) const;
 
-			Iterator begin() const;
-			Iterator end() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator begin() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator end() const;
 
 			/// Return a string representation of the Function
 			/// \param format The format to use.
@@ -208,7 +208,6 @@ namespace librapid {
 
 		template<typename desc, typename Functor, typename... Args>
 		auto Function<desc, Functor, Args...>::shape() const {
-			// return std::get<0>(m_args).shape();
 			return typetraits::TypeInfo<Functor>::getShape(m_args);
 		}
 

@@ -4,12 +4,12 @@
 #if defined(LIBRAPID_HAS_OPENCL)
 
 namespace librapid::opencl {
-	template<typename Scalar, size_t... I, typename... Args>
+	template<typename Scalar, bool noCast = false, size_t... I, typename... Args>
 	void setKernelArgs(cl::Kernel &kernel, const std::tuple<Args...> &args,
 					   std::index_sequence<I...>) {
 		constexpr auto caster = [](auto &&x) {
 			using T = std::decay_t<decltype(x)>;
-			if constexpr (std::is_same_v<T, cl::Buffer>) {
+			if constexpr (noCast || std::is_same_v<T, cl::Buffer>) {
 				return x;
 			} else if constexpr (typetraits::TypeInfo<T>::type == detail::LibRapidType::Scalar) {
 				return static_cast<Scalar>(x);
@@ -21,7 +21,7 @@ namespace librapid::opencl {
 		((kernel.setArg(I, caster(std::get<I>(args)))), ...);
 	}
 
-	template<typename Scalar, typename... Args>
+	template<typename Scalar, bool noCast = false, typename... Args>
 	void runLinearKernel(const std::string &kernelName, int64_t numElements, Args... args) {
 		static_assert(sizeof(Scalar) > 2,
 					  "Scalar type must be larger than 2 bytes. Please create an issue on GitHub "
@@ -29,7 +29,7 @@ namespace librapid::opencl {
 
 		std::string kernelNameFull = kernelName + "_" + typetraits::TypeInfo<Scalar>::name;
 		cl::Kernel kernel(global::openCLProgram, kernelNameFull.c_str());
-		setKernelArgs<Scalar>(
+		setKernelArgs<Scalar, noCast>(
 		  kernel, std::make_tuple(args...), std::make_index_sequence<sizeof...(Args)>());
 
 		cl::NDRange range(numElements);

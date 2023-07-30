@@ -270,7 +270,7 @@ namespace librapid {
 
 				return MatmulClass::GEMV;
 			} else if (shapeA.ndim() == 2 && shapeB.ndim() == 1) {
-				LIBRAPID_ASSERT(shapeA[int(m_transA)] == shapeB[0],
+				LIBRAPID_ASSERT(shapeA[int(!m_transA)] == shapeB[0],
 								"Rows of OP(A) must match elements of B. Expected: {} -- Got: {}",
 								shapeA[int(m_transA)],
 								shapeB[0]);
@@ -326,11 +326,7 @@ namespace librapid {
 					return {1};
 				}
 				case MatmulClass::GEMV: {
-					if (shapeA.ndim() == 1) {
-						return {shapeA[0]};
-					} else {
-						return {shapeA[int(!m_transA)]};
-					}
+					return {shapeA[int(m_transA)]};
 				}
 				case MatmulClass::GEMM: {
 					return {shapeA[int(m_transA)], shapeB[int(!m_transB)]};
@@ -340,6 +336,9 @@ namespace librapid {
 					return {1};
 				}
 			}
+
+			LIBRAPID_NOT_IMPLEMENTED;
+			return {1};
 		}
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
@@ -431,7 +430,6 @@ namespace librapid {
 							"Expected: {} -- Got: {}",
 							shape(),
 							out.shape());
-
 			MatmulClass matmulClass = this->matmulClass();
 
 			auto a = detail::arrayPointerExtractor(m_a.storage().data());
@@ -450,7 +448,18 @@ namespace librapid {
 					auto incB = int64_t(1);
 					auto incC = int64_t(1);
 
-					gemv(m_transA, m, n, m_alpha, a, lda, b, incB, m_beta, c, incC, Backend());
+					gemv(m_transA,
+						 m,
+						 n,
+						 static_cast<Scalar>(m_alpha),
+						 a,
+						 lda,
+						 b,
+						 incB,
+						 static_cast<Scalar>(m_beta),
+						 c,
+						 incC,
+						 Backend());
 
 					break;
 				}
@@ -468,12 +477,12 @@ namespace librapid {
 						 m,
 						 n,
 						 k,
-						 m_alpha,
+						 static_cast<Scalar>(m_alpha),
 						 a,
 						 lda,
 						 b,
 						 ldb,
-						 m_beta,
+						 static_cast<Scalar>(m_beta),
 						 c,
 						 ldc,
 						 Backend());

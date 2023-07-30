@@ -23,6 +23,7 @@
 #include "arrayView.hpp"
 #include "arrayViewString.hpp"
 #include "arrayFromData.hpp"
+#include "fill.hpp"
 #include "pseudoConstructors.hpp"
 #include "fourierTransform.hpp"
 

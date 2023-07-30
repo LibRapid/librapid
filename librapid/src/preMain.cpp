@@ -5,7 +5,7 @@ namespace librapid::detail {
 
 	PreMain::PreMain() {
 		if (!preMainRun) {
-#if defined(LIBRAPID_WINDOWS) && !defined(LIBRAPID_NO_WINDOWS_H)
+#if defined(LIBRAPID_WINDOWS) // && !defined(LIBRAPID_NO_WINDOWS_H)
 			// Force the terminal to accept ANSI characters
 			system(("chcp " + std::to_string(CP_UTF8)).c_str());
 #endif // LIBRAPID_WINDOWS
@@ -34,6 +34,9 @@ namespace librapid::detail {
 			  global::cublasHandle, global::cublasLtWorkspace, global::cublasLtWorkspaceSize));
 			// Stream is specified in the function calls
 #endif // LIBRAPID_HAS_CUDA
+
+			// Set the random seed to an initial value
+			global::randomSeed = (size_t) now<time::nanosecond>();
 		}
 	}
 } // namespace librapid::detail

@@ -5,6 +5,9 @@ namespace lrc = librapid;
 int main() {
 	fmt::print("LibRapid Example -- Vector 1\n");
 
+	// I'm rewriting the entire vectory library, so this code currently does not work.
+	// I'll have a new example up soon <3
+	/*
 	// Create a 3 dimensional vector
 	lrc::Vec3d myVector(2, 3, 4);
 	lrc::Vec3d myOtherVector(10, 5, 8);
@@ -38,6 +41,7 @@ int main() {
 	lrc::Vec3d start2(0, 0, 0);
 	lrc::Vec3d end2(100, 100, 100);
 	fmt::print("Mapping: {}\n", lrc::map(value, start1, end1, start2, end2));
+	 */
 
 	return 0;
 }

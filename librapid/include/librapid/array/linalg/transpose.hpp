@@ -325,7 +325,7 @@ namespace librapid {
 			}
 		} // namespace opencl
 
-#endif	  // LIBRAPID_HAS_OPENCL
+#endif // LIBRAPID_HAS_OPENCL
 
 #if defined(LIBRAPID_HAS_CUDA)
 		namespace cuda {
@@ -344,14 +344,14 @@ namespace librapid {
 				cublasSafeCall(cublasSgeam(global::cublasHandle,
 										   CUBLAS_OP_T,
 										   CUBLAS_OP_N,
-										   rows,
-										   cols,
+										   (int)rows,
+										   (int)cols,
 										   &alpha,
 										   in,
-										   cols,
+										   (int)cols,
 										   &zero,
 										   in,
-										   cols,
+										   (int)cols,
 										   out,
 										   rows));
 			}
