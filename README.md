@@ -19,86 +19,57 @@
 
 ---
 
+(As a student, it's difficult to spend a lot of time on this project. If you like what I'm doing, a
+small [donation](https://github.com/sponsors/Pencilcaseman) would mean a lot to me!)
+
+[![Simple Demo](https://github.com/LibRapid/librapid)](https://raw.githubusercontent.com/LibRapid/librapid_extras/master/images/librapidSimpleDemo.png)
+
 # What is LibRapid?
 
-LibRapid is a high performance Array library, supporting a wide range of optimised calculations which can be performed
-on the CPU or GPU (via CUDA). All calculations are vectorised with SIMD instructions and are run on multiple threads (if
-necessary) to make them as fast as possible on any given machine.
+LibRapid is an extremely fast, highly-optimised and easy-to-use C++ library for mathematics, linear algebra and more,
+with an extremely powerful multidimensional array class at it's core. Every part of LibRapid is designed to provide the
+best possible performance without making the sacrifices that other libraries often do.
+
+Everything in LibRapid is templated, meaning it'll just work with almost any datatype you throw at it. In addition,
+LibRapid is engineered with compute-power in mind, meaning it's easy to make the most out of the hardware you have.
+All array operations are vectorised with SIMD instructions, parallelised via OpenMP and can even be run on external
+devices via CUDA and OpenCL. LibRapid also supports a range of BLAS libraries to make linear algebra operations even
+faster.
+
+[![Simple Demo](https://github.com/LibRapid/librapid)](https://raw.githubusercontent.com/LibRapid/librapid_extras/master/images/simpleGpuArray.png)
+
+What's more, LibRapid provides lazy evaluation of expressions, allowing us to perform optimisations at compile-time to
+further improve performance. For example, `dot(3 * a, 2 * transpose(b))` will be compiled into a single `GEMM` call,
+with `alpha=6`, `beta=0`, `transA=false` and `transB=true`.
 
 ## Why use LibRapid?
 
-LibRapid aims to provide a cohesive ecosystem of functions that interoperate with each other, allowing for faster
-development ***and*** faster code execution.
+If you need the best possible performance and an intuitive interface that doesn't sacrifice functionality, LibRapid is
+for you. You can fine-tune LibRapid's performance via the CMake configuration and change the device used for a
+computation by changing a single template parameter (e.g. `librapid::backend::CUDA` for CUDA compute).
 
-For example, LibRapid implements a wide range of mathematical functions which can operate on primitive types,
-multi-precision types, vectors, and arrays. Due to the way these functions are implemented, a single function call can
-be used to operate on all of these types, reducing code duplication.
+Additionally, LibRapid provides highly-optimised vectors, complex numbers, multiprecision arithmetic (via custom forks
+of MPIR and MPFR) and a huge range of mathematical functions that operate on all of these types. LibRapid also provides
+a range of linear algebra functions, machine learning activation functions, and more.
 
-### A small example
+### When to use LibRapid
 
-To prove the point made above, let's take a look at a simple example. Here, we have a function that maps a value from
-one range to another:
+- When you need the best possible performance
+- When you want to write one program that can run on multiple devices
+- When you want to use a single library for all of your mathematical needs
+- When you want a simple interface to develop with
 
-```cpp
-// Standard "double" implementation
-double map(double val, double start1, double stop1, double start2, double stop2) {
-    return start2 + (stop2 - start2) * ((val - start1) / (stop1 - start1));
-}
+### When not to use LibRapid
 
-// map(0.5, 0, 1, 0, 10) = 5
-// map(10, 0, 100, 0, 1) = 0.1
-// map(5, 0, 10, 0, 100) = 50
-```
-
-This function will accept integers, floats and doubles, but nothing else can be used, limiting its functionality.
-
-Of course, this could be templated to accept other types, but if you passed a `std::vector<double>` to this function,
-for example, you'd have to create an edge case to support it. **This is where LibRapid comes in.**
-
-Look at the function below:
-
-```cpp
-// An extremely versatile mapping function (used within LibRapid!)
-template<typename V, typename B1, typename E1, typename B2, typename E2>
-V map(V val, B1 start1, E1 stop1, B2 start2, E2 stop2) {
-    return start2 + (stop2 - start2) * ((val - start1) / (stop1 - start1));
-}
-```
-
-This may look excessively complicated with that many template parameters, but you don't actually need all of those! This
-just gives the greatest flexibility. This function can be called with ***almost any LibRapid type!***.
-
-```cpp
-map(0.5, 0, 1, 0, 100); //  . . . . . . . . . . . . . . . | 50
-map(lrc::Vec2d(0.2, 0.8), 0, 1, 0, 100); // . . . . . . . | (20, 80)
-map(0.5, 0, 1, 0, lrc::Vec2d(100, 200)); // . . . . . . . | (50, 100)
-map(lrc::Vec2d(-1, -2), 1, 0, lrc::Vec2d(100, 300)); // . | (75, 250)
-
-// ---------------------------------------------------------------------
-
-using namespace lrc::literals; // To use "_f" suffix (also requires multiprecision to be enabled)
-// "0.5"_f in this case creates a multiprecision float :)
-map("0.5"_f, "0"_f, "1"_f, "0"_f, "100"_f); //  . . . . . | 50.00000000000000
-
-// ---------------------------------------------------------------------
-
-auto val    = lrc::fromData<float>({{1, 2}, {3, 4}});
-auto start1 = lrc::fromData<float>({{0, 0}, {0, 0}});
-auto end1   = lrc::fromData<float>({{10, 10}, {10, 10}});
-auto start2 = lrc::fromData<float>({{0, 0}, {0, 0}});
-auto end2   = lrc::fromData<float>({{100, 100}, {100, 100}});
-
-fmt::print("{}\n", lrc::map(val, start1, end1, start2, end2));
-// [[10 20]
-//  [30 40]]
-```
-
-Note: LibRapid's built-in `map` function has even more functionality! See
-the [documentation](https://librapid.readthedocs.io/en/develop/api/function_namespacelibrapid_1a4d7a85c238d46f4f45a0a76b5159a652.html) for
-details.
-
-This is just one example of how LibRapid's functions can be used to make your code more concise and more efficient, and
-hopefully it's clear to see how powerful this could be when working with more complex functions and types.
+- When you need a rigorously tested and documented library
+  - LibRapid is still in early development, so it's not yet ready for production use. That said, we still have a wide
+    range of tests which are run on every push to the repository, and we're working on improving the documentation.
+- When you need a well-established library.
+  - LibRapid hasn't been around for long, and we've got a very small community.
+- When you need a wider range of functionality.
+  - While LibRapid implements a lot of functions, there are some features which are not yet present in the library. If
+    you need these features, you may want to look elsewhere. If you would still like to use LibRapid, feel free to
+    [open an issue](https://github.com/LibRapid/librapid/issues/new/choose) and I'll do my best to implement it.
 
 # Documentation
 
@@ -116,12 +87,14 @@ The documentation is rebuilt every time a change is made to the source code, mea
 
 # Current Development Stage
 
-At the current point in time, LibRapid C++ is under rapid development by
+At the current point in time, LibRapid C++ is being developed solely by
 me ([pencilcaseman](https://github.com/Pencilcaseman)).
 
-I am currently doing my A-Levels and do not have time to work on the library as much as I would like, so if you or
-someone you know might be willing to support the development of the library, feel free to create a pull request or chat
-to us on [Discord](https://discord.com/invite/cGxTFTgCAC). Any help is greatly appreciated!
+I'm currently a student in my first year of university, so time and money are both tight. I'm working on LibRapid in my
+spare time, and I'm not able to spend as much time on it as I'd like to.
+
+If you like the library and would like to support its development, feel free to create issues or pull requests, or reach
+out to me via [Discord](https://discord.com/invite/cGxTFTgCAC) and we can chat about new features. Any support is massively appreciated.
 
 ## [Roadmap](https://github.com/orgs/LibRapid/projects/5/views/1)
 
@@ -131,31 +104,33 @@ I'll have the time to implement everything as soon as I'd like... (I'll try my b
 
 If you have any feature requests or suggestions, feel free to create an issue describing it. I'll try to get it working
 as soon as possible. If you really need something implemented quickly, a small donation would be appreciated, and would
-allow me to bump it to the top of my list of features.
+allow me to bump it to the top of my to-do list.
 
-# Future Plans
+# Dependencies
 
-My goal for LibRapid is to make it faster and easier to use than existing libraries, such as Eigen and XTensor. I plan
-to develop an extensive testing and benchmarking suite alongside the code base, to ensure that everything is running as
-fast as possible.
+LibRapid has a few dependencies to improve functionality and performance. Some of these are optional, and can
+be configured with a CMake option. The following is a list of the external dependencies and their purpose (these are all
+submodules of the library -- you don't need to install anything manually):
 
-My main goal for the future is to implement as many features as possible, while maintaining the high performance
-LibRapid requires.
+###### Submodules
 
-# External Dependencies
+- [fmt](https://github.com/fmtlib/fmt) - Advanced string formatting
+- [doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css) - A theme for the Doxygen docs
+- [CLBlast](https://github.com/CNugteren/CLBlast) - An OpenCL BLAS library
+- [Vc](https://github.com/VcDevel/Vc) - SIMD primitives for C++
+- [Jitify](https://github.com/Pencilcaseman/jitify.git) - A CUDA JIT compiler
+- [pocketfft](https://github.com/mreineck/pocketfft) - A fast, lightweight FFT library
+- [scnlib](https://github.com/eliaskosunen/scnlib.git) - Advanced string parsing
 
-LibRapid has a few external dependencies to improve functionality and performance. Some of these are optional, and can
-be included with a CMake option. The following is a list of the external dependencies and their purpose (these are all
-submodules of the library. You don't need to do anything different):
+###### External
 
-- Required
-    - [fmt](https://github.com/fmtlib/fmt) - Advanced string formatting
-    - [scnlib](https://github.com/eliaskosunen/scnlib) - Advanced string parsing
-    - [Vc](https://github.com/VcDevel/Vc) - SIMD library
-- Optional
-    - [OpenMP](https://www.openmp.org/) - Multi-threading library
-    - [CUDA](https://developer.nvidia.com/cuda-zone) - GPU computing library
-    - [mpfr](https://github.com/Pencilcaseman/mpfr) - Arbitrary precision numbers (integer, real, rational)
+- [OpenMP](https://www.openmp.org/) - Multi-threading library
+- [CUDA](https://developer.nvidia.com/cuda-zone) - GPU computing library
+- [OpenCL](https://www.khronos.org/opencl/) - Multi-device computing library
+- [OpenBLAS](https://www.openblas.net/) - Highly optimised BLAS library
+- [MPIR](https://github.com/wbhart/mpir) - Arbitrary precision integer arithmetic
+- [MPFR](https://www.mpfr.org/) - Arbitrary precision real arithmetic
+- [FFTW](http://www.fftw.org/) - Fast(est) Fourier Transform library
 
 # Star History
 
