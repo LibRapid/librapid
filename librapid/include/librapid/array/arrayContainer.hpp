@@ -104,6 +104,30 @@ namespace librapid {
 			template<typename T>
 			explicit LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::vector<T> &data);
 
+			// clang-format off
+#define SINIT(SUB_TYPE) std::initializer_list<SUB_TYPE>
+#define SVEC(SUB_TYPE)	std::vector<SUB_TYPE>
+
+#define ARRAY_FROM_DATA_DEF(TYPE_INIT, TYPE_VEC)                                                   \
+	LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto fromData(const TYPE_INIT &data)          \
+	  -> ArrayContainer;                                                                           \
+	LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto fromData(const TYPE_VEC &data)           \
+	  -> ArrayContainer
+
+			ARRAY_FROM_DATA_DEF(SINIT(Scalar), SVEC(Scalar));
+			ARRAY_FROM_DATA_DEF(SINIT(SINIT(Scalar)), SVEC(SVEC(Scalar)));
+			ARRAY_FROM_DATA_DEF(SINIT(SINIT(SINIT(Scalar))), SVEC(SVEC(SVEC(Scalar))));
+			ARRAY_FROM_DATA_DEF(SINIT(SINIT(SINIT(SINIT(Scalar)))), SVEC(SVEC(SVEC(SVEC(Scalar)))));
+			ARRAY_FROM_DATA_DEF(SINIT(SINIT(SINIT(SINIT(SINIT(Scalar))))), SVEC(SVEC(SVEC(SVEC(SVEC(Scalar))))));
+			ARRAY_FROM_DATA_DEF(SINIT(SINIT(SINIT(SINIT(SINIT(SINIT(Scalar)))))), SVEC(SVEC(SVEC(SVEC(SVEC(SVEC(Scalar)))))));
+			ARRAY_FROM_DATA_DEF(SINIT(SINIT(SINIT(SINIT(SINIT(SINIT(SINIT(Scalar))))))), SVEC(SVEC(SVEC(SVEC(SVEC(SVEC(SVEC(Scalar))))))));
+			ARRAY_FROM_DATA_DEF(SINIT(SINIT(SINIT(SINIT(SINIT(SINIT(SINIT(SINIT(Scalar)))))))), SVEC(SVEC(SVEC(SVEC(SVEC(SVEC(SVEC(SVEC(Scalar)))))))));
+
+#undef SINIT
+#undef SVEC
+
+			// clang-format on
+
 			/// Constructs an array container from a shape
 			/// \param shape The shape of the array container
 			LIBRAPID_ALWAYS_INLINE explicit ArrayContainer(const ShapeType &shape);

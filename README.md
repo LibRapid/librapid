@@ -22,7 +22,7 @@
 (As a student, it's difficult to spend a lot of time on this project. If you like what I'm doing, a
 small [donation](https://github.com/sponsors/Pencilcaseman) would mean a lot to me!)
 
-[![Simple Demo](https://github.com/LibRapid/librapid)](https://raw.githubusercontent.com/LibRapid/librapid_extras/master/images/librapidSimpleDemo.png)
+![Simple Demo](https://raw.githubusercontent.com/LibRapid/librapid_extras/master/images/librapidSimpleDemo.png)
 
 # What is LibRapid?
 
@@ -36,7 +36,7 @@ All array operations are vectorised with SIMD instructions, parallelised via Ope
 devices via CUDA and OpenCL. LibRapid also supports a range of BLAS libraries to make linear algebra operations even
 faster.
 
-[![Simple Demo](https://github.com/LibRapid/librapid)](https://raw.githubusercontent.com/LibRapid/librapid_extras/master/images/simpleGpuArray.png)
+![GPU Array](https://raw.githubusercontent.com/LibRapid/librapid_extras/master/images/simpleGpuArray.png)
 
 What's more, LibRapid provides lazy evaluation of expressions, allowing us to perform optimisations at compile-time to
 further improve performance. For example, `dot(3 * a, 2 * transpose(b))` will be compiled into a single `GEMM` call,
