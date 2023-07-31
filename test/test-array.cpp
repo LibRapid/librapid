@@ -66,9 +66,9 @@ using CUDA				   = lrc::backend::CUDA;
 		REQUIRE(testH.storage()[7] == 8);                                                          \
 		REQUIRE(testH.storage()[8] == 9);                                                          \
                                                                                                    \
-		/* Due to the way the code works, if this passes for a 3D array, it *must* pass all other  \
-		 * dimensions */                                                                           \
-		auto testI = lrc::fromData<SCALAR, BACKEND>({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}});         \
+		/* Due to the way the code works, if this passes for a 3D array, it *must* pass for all    \
+		 * other dimensions */                                                                     \
+		auto testI = lrc::Array<SCALAR, BACKEND>::fromData({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}});  \
 		REQUIRE(testI.str() == fmt::format("[[[{} {}]\n  [{} {}]]\n\n [[{} {}]\n  [{} {}]]]",      \
 										   SCALAR(1),                                              \
 										   SCALAR(2),                                              \
