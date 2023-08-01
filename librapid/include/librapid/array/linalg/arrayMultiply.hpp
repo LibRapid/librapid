@@ -671,6 +671,19 @@ namespace librapid {
 									 std::forward<ArrayB>(arrB),
 									 0); // .eval();
 	}
+
+	namespace typetraits {
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		struct TypeInfo<linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB,
+											  Alpha, Beta>> {
+			detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
+			using Type = linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB,
+											  Alpha, Beta>;
+			using Scalar = typename Type::Scalar;
+			using Backend = typename Type::Backend;
+		};
+	}
 } // namespace librapid
 
 LIBRAPID_SIMPLE_IO_IMPL(

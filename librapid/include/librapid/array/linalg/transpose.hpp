@@ -5,7 +5,7 @@ namespace librapid {
 	namespace typetraits {
 		template<typename T>
 		struct TypeInfo<array::Transpose<T>> {
-			static constexpr detail::LibRapidType type = detail::LibRapidType::Transpose;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
 			using Scalar							   = typename TypeInfo<std::decay_t<T>>::Scalar;
 			using Backend							 = typename TypeInfo<std::decay_t<T>>::Backend;
 			static constexpr bool allowVectorisation = false;
