@@ -88,6 +88,37 @@ Download a precompiled OpenBLAS build for your platform, and link it with LibRap
 Always prefer to use your system's BLAS installation if possible.
 :::
 
+### ``LIBRAPID_USE_OMP``
+
+```
+DEFAULT: ON
+```
+
+If OpenMP is found on the system, link LibRapid with it. This is required for multi-threading support and can
+significantly improve performance.
+
+:::{warning}
+If this flag is enabled and OpenMP is not found installed on the system, the build will continue without OpenMP support.
+:::
+
+### ``LIBRAPID_USE_OPENCL``
+
+```
+DEFAULT: ON
+```
+
+Search for OpenCL and link LibRapid with it. This is required for OpenCL support.
+
+:::warning
+If this flag is enabled and OpenCL is not found installed on the system, the build will continue without OpenCL support.
+:::
+
+:::{danger}
+If you are using OpenCL as a backend in your code, you must call ``librapid::configureOpenCL()`` before using any
+OpenCL arrays. This function will initialise the OpenCL context and queue, compile the OpenCL kernels and configure the
+OpenCL device for optimal performance. See the documentation for this function for more information.
+:::
+
 ### ``LIBRAPID_USE_CUDA``
 
 ```
@@ -104,19 +135,6 @@ If this flag is enabled and CUDA is not found installed on the system, the build
 LibRapid's CUDA support appears to only works on Windows, for some reason. I have no way of testing it on Linux or
 MacOS, so I can't guarantee that it will work. If you have experience in this area, please feel free to contact me and
 we can work together to get it working.
-:::
-
-### ``LIBRAPID_USE_OMP``
-
-```
-DEFAULT: ON
-```
-
-If OpenMP is found on the system, link LibRapid with it. This is required for multi-threading support and can
-significantly improve performance.
-
-:::{warning}
-If this flag is enabled and OpenMP is not found installed on the system, the build will continue without OpenMP support.
 :::
 
 ### ``LIBRAPID_USE_MULTIPREC``

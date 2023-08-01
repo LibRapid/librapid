@@ -80,9 +80,17 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 	}
 
 	int64_t openclDeviceCompute(const cl::Device &device) {
-		cl_uint aComputeUnits = device.getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>();
-		cl_uint aClockFreq	  = device.getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>();
-		return static_cast<int64_t>(aComputeUnits * aClockFreq);
+		cl_uint computeUnits	   = device.getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>();
+		cl_uint clockFreq		   = device.getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>();
+		cl_ulong globalMemSize	   = device.getInfo<CL_DEVICE_GLOBAL_MEM_SIZE>();
+		cl_device_type deviceType = device.getInfo<CL_DEVICE_TYPE>();
+		std::string vendorName	   = device.getInfo<CL_DEVICE_VENDOR>();
+
+		int64_t typeScore = (deviceType == CL_DEVICE_TYPE_GPU) ? 1000000 : 0;
+		int64_t cudaScore = (vendorName.find("NVIDIA") != std::string::npos) ? 1000000 : 0;
+		int64_t memScore = globalMemSize / (1024 * 1024);
+
+		return static_cast<int64_t>(computeUnits * clockFreq) + typeScore + cudaScore + memScore;
 	}
 
 	void updateOpenCLDevices(bool verbose) {
@@ -130,6 +138,7 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
 						fmt::print(format, "\t\tMemory:        {}GB\n", memory);
 						fmt::print(format, "\t\tVersion:       {}\n", version);
 						fmt::print(format, "\t\tProfile:       {}\n", profile);
+						fmt::print(format, "\t\tCompute Score: {}\n", openclDeviceCompute(device));
 
 						if (!pass) {
 							fmt::print(format, "\t\tError:         {}\n", errStr);
