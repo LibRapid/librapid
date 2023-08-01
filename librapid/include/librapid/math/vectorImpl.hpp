@@ -955,6 +955,11 @@ namespace librapid {
 
 		return Vector<Scalar, 3> {y1 * z2 - z1 * y2, z1 * x2 - x1 * z2, x1 * y2 - y1 * x2};
 	}
+
+	template<typename T, typename std::enable_if_t<IsVectorType<T>::value, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto norm(const T &val) {
+		return val / mag(val);
+	}
 } // namespace librapid
 
 LIBRAPID_SIMPLE_IO_IMPL(typename Derived, librapid::vectorDetail::VectorBase<Derived>);
