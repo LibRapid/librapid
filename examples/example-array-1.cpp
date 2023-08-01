@@ -2,7 +2,7 @@
 
 namespace lrc = librapid;
 
-int main() {
+auto main() -> int {
 	fmt::print("LibRapid Example -- Array 1\n");
 
 	// Create a vector with 10 elements

@@ -175,6 +175,18 @@ namespace librapid {
 				return data[index];
 			}
 
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar sum() const {
+				Scalar sum = Scalar(0);
+				for (uint64_t i = 0; i < dims; ++i) { sum += data[i]; }
+				return sum;
+			}
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar sum2() const {
+				Scalar sum = Scalar(0);
+				for (uint64_t i = 0; i < dims; ++i) { sum += data[i] * data[i]; }
+				return sum;
+			}
+
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const Scalar &_get(uint64_t index) const {
 				LIBRAPID_ASSERT(index >= 0 && index < dims,
 								"Index {} out of bounds for Vector of length {}",
@@ -262,6 +274,18 @@ namespace librapid {
 				const int64_t packetIndex  = index / packetWidth;
 				const int64_t elementIndex = index % packetWidth;
 				return data[packetIndex][elementIndex];
+			}
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sum() const -> Scalar {
+				Packet sum = Packet(0);
+				for (uint64_t i = 0; i < length; ++i) { sum += data[i]; }
+				return sum.sum();
+			}
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sum2() const -> Scalar {
+				Packet sum = Packet(0);
+				for (uint64_t i = 0; i < length; ++i) { sum += data[i] * data[i]; }
+				return sum.sum();
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const Packet &_get(uint64_t index) const {
@@ -417,6 +441,40 @@ namespace librapid {
 			vectorDetail::assign(*this, other);
 		}
 
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE static auto zero() -> Vector { return Vector(); }
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE static auto one() -> Vector {
+			Vector ret;
+			for (uint64_t i = 0; i < dims; ++i) { ret[i] = Scalar(1); }
+			return ret;
+		}
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE static auto full(Scalar val) -> Vector {
+			Vector ret;
+			for (uint64_t i = 0; i < dims; ++i) { ret[i] = val; }
+			return ret;
+		}
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE static auto random(Scalar lower = -1,
+																	 Scalar upper = 1) {
+			Vector ret;
+			for (uint64_t i = 0; i < dims; ++i) {
+				ret[i] = ::librapid::random<Scalar>(lower, upper);
+			}
+			return ret;
+		}
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE static auto fromPolar(Scalar r, Scalar theta) {
+			return Vector(::librapid::cos(theta) * r, ::librapid::sin(theta) * r);
+		}
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE static auto fromPolar(Scalar r, Scalar theta,
+																		Scalar phi) {
+			return Vector(::librapid::cos(theta) * ::librapid::cos(phi) * r,
+						  ::librapid::sin(theta) * ::librapid::cos(phi) * r,
+						  ::librapid::sin(phi) * r);
+		}
+
 		auto operator=(const Vector &other) -> Vector	  & = default;
 		auto operator=(Vector &&other) noexcept -> Vector & = default;
 
@@ -466,7 +524,7 @@ namespace librapid {
 
 #define LIBRAPID_VECTOR_INPLACE_OP(OP_)                                                            \
 	template<typename Other>                                                                       \
-	LIBRAPID_ALWAYS_INLINE Vector &operator OP_##=(const Other &other) {                          \
+	LIBRAPID_ALWAYS_INLINE Vector &operator OP_##=(const Other &other) {                           \
 		return *this = *this OP_ other;                                                            \
 	}
 
@@ -823,6 +881,71 @@ namespace librapid {
 
 	VECTOR_FUNC_IMPL_DEF(sin);
 	VECTOR_FUNC_IMPL_DEF(cos);
+	VECTOR_FUNC_IMPL_DEF(tan);
+	VECTOR_FUNC_IMPL_DEF(asin);
+	VECTOR_FUNC_IMPL_DEF(acos);
+	VECTOR_FUNC_IMPL_DEF(atan);
+	VECTOR_FUNC_IMPL_DEF(sinh);
+	VECTOR_FUNC_IMPL_DEF(cosh);
+	VECTOR_FUNC_IMPL_DEF(tanh);
+	VECTOR_FUNC_IMPL_DEF(asinh);
+	VECTOR_FUNC_IMPL_DEF(acosh);
+	VECTOR_FUNC_IMPL_DEF(atanh);
+	VECTOR_FUNC_IMPL_DEF(exp);
+	VECTOR_FUNC_IMPL_DEF(exp2);
+	VECTOR_FUNC_IMPL_DEF(exp10);
+	VECTOR_FUNC_IMPL_DEF(log);
+	VECTOR_FUNC_IMPL_DEF(log2);
+	VECTOR_FUNC_IMPL_DEF(log10);
+	VECTOR_FUNC_IMPL_DEF(sqrt);
+	VECTOR_FUNC_IMPL_DEF(cbrt);
+
+	template<typename T>
+	using IsVectorType =
+	  std::integral_constant<bool, typetraits::TypeInfo<T>::type == detail::LibRapidType::Vector>;
+
+	template<typename T, typename std::enable_if_t<IsVectorType<T>::value, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto mag2(const T &val) {
+		return val.eval().storage().sum2();
+	}
+
+	template<typename T, typename std::enable_if_t<IsVectorType<T>::value, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto mag(const T &val) {
+		return ::librapid::sqrt(mag2(val));
+	}
+
+	template<typename T, typename std::enable_if_t<IsVectorType<T>::value, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sum(const T &val) {
+		return val.eval().storage().sum();
+	}
+
+	template<
+	  typename First, typename Second,
+	  typename std::enable_if_t<IsVectorType<First>::value && IsVectorType<Second>::value, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dot(const First &first, const Second &second) {
+		return (first * second).eval().storage().sum();
+	}
+
+	template<
+	  typename First, typename Second,
+	  typename std::enable_if_t<IsVectorType<First>::value && IsVectorType<Second>::value, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cross(const First &first, const Second &second) {
+		LIBRAPID_ASSERT(typetraits::TypeInfo<First>::dims == 3 &&
+						  typetraits::TypeInfo<Second>::dims == 3,
+						"Cross product is only defined for 3D vectors");
+		using ScalarFirst  = typename typetraits::TypeInfo<First>::Scalar;
+		using ScalarSecond = typename typetraits::TypeInfo<Second>::Scalar;
+		using Scalar	   = decltype(std::declval<ScalarFirst>() * std::declval<ScalarSecond>());
+
+		Scalar x1 = first[0];
+		Scalar y1 = first[1];
+		Scalar z1 = first[2];
+		Scalar x2 = second[0];
+		Scalar y2 = second[1];
+		Scalar z2 = second[2];
+
+		return Vector<Scalar, 3> {y1 * z2 - z1 * y2, z1 * x2 - x1 * z2, x1 * y2 - y1 * x2};
+	}
 } // namespace librapid
 
 LIBRAPID_SIMPLE_IO_IMPL(typename Derived, librapid::vectorDetail::VectorBase<Derived>);

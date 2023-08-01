@@ -37,6 +37,7 @@ namespace librapid {
 		template<typename Derived>
 		class VectorBase {
 		public:
+			using Scalar		 = typename typetraits::TypeInfo<Derived>::Scalar;
 			using IndexType		 = typename typetraits::TypeInfo<Derived>::IndexType;
 			using IndexTypeConst = typename typetraits::TypeInfo<Derived>::IndexTypeConst;
 			using GetType		 = typename typetraits::TypeInfo<Derived>::GetType;

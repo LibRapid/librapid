@@ -9,5 +9,6 @@ function(make_example name)
 endfunction()
 
 make_example(array-1)
+make_example(array-2)
 make_example(vector-1)
 make_example(complex-1)
