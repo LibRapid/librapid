@@ -455,11 +455,20 @@ namespace librapid {
 			return ret;
 		}
 
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE static auto random(Scalar lower = -1,
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE static auto random(Scalar lower = 0,
 																	 Scalar upper = 1) {
 			Vector ret;
 			for (uint64_t i = 0; i < dims; ++i) {
 				ret[i] = ::librapid::random<Scalar>(lower, upper);
+			}
+			return ret;
+		}
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE static auto
+		random(const Vector &lower = Vector::zero(), const Vector &upper = Vector::one()) {
+			Vector ret;
+			for (uint64_t i = 0; i < dims; ++i) {
+				ret[i] = ::librapid::random<Scalar>(lower[i], upper[i]);
 			}
 			return ret;
 		}
