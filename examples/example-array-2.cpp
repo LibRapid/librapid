@@ -9,9 +9,12 @@ auto main() -> int {
 	 * 3. Print the results
 	 */
 
-	auto firstMatrix = lrc::Array<float>::fromData({{1, 2, 3}, {4, 5, 6}});
-	auto secondMatrix = lrc::Array<float>::fromData({{1}, {2}, {3}});
-	auto firstResult = lrc::dot(firstMatrix, secondMatrix);
+	std::vector<std::vector<float>> firstData  = {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}};
+	std::vector<std::vector<float>> secondData = {{1.0f}, {2.0f}, {3.0f}};
+
+	auto firstMatrix  = lrc::Array<float>::fromData(firstData);
+	auto secondMatrix = lrc::Array<float>::fromData(secondData);
+	auto firstResult  = lrc::dot(firstMatrix, secondMatrix);
 	fmt::print("Left:\n{}\n", firstMatrix);
 	fmt::print("Right:\n{}\n", secondMatrix);
 	fmt::print("Result:\n{}\n", firstResult);
@@ -22,7 +25,7 @@ auto main() -> int {
 	 * 6. Print the results
 	 */
 
-	auto thirdMatrix = lrc::random<float>(lrc::Shape({4, 3}), -1, 1);
+	auto thirdMatrix  = lrc::random<float>(lrc::Shape({4, 3}), -1, 1);
 	auto secondResult = lrc::dot(thirdMatrix, lrc::transpose(firstMatrix));
 	fmt::print("Left:\n{:.2f}\n", thirdMatrix); // Format values to 2 decimal places
 	fmt::print("Right:\n{}\n", lrc::transpose(firstMatrix));
