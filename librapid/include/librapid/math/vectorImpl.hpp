@@ -6,7 +6,7 @@
 namespace librapid {
 	namespace typetraits {
 		template<typename T>
-		struct IsVector : std::false_type;
+		struct IsVector : std::false_type {};
 
 		template<typename T, uint64_t N>
 		struct IsVector<vectorDetail::GenericVectorStorage<T, N>> : std::true_type {};
@@ -19,7 +19,7 @@ namespace librapid {
 
 		template<typename LHS, typename RHS, typename Op>
 		struct IsVector<vectorDetail::BinaryVecOp<LHS, RHS, Op>> : std::true_type {};
-		
+
 		template<typename VAL, typename Op>
 		struct IsVector<vectorDetail::UnaryVecOp<VAL, Op>> : std::true_type {};
 
