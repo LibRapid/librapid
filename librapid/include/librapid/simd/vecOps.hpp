@@ -6,15 +6,18 @@ namespace librapid {
 		template<typename T>
 		struct IsVector : std::false_type {};
 
-		template<typename T>
-		struct IsVector<Vc::Vector<T>> : std::true_type {};
+		// template<typename T>
+		// struct IsVector<Vc::Vector<T>> : std::true_type {};
+
+		template<typename T, typename U>
+		struct IsVector<Vc_1::Vector<T, U>> : std::true_type {};
 	} // namespace typetraits
 
 #define REQUIRE_VECTOR(TYPE) typename std::enable_if_t<typetraits::IsVector<TYPE>::value, int> = 0
 #define IF_FLOATING(TYPE)	 if constexpr (std::is_floating_point_v<typename TYPE::value_type>)
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T sin(const T &x) {
+	auto sin(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::sin(x); }
 		else {
 			T result;
@@ -24,7 +27,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T cos(const T &x) {
+	auto cos(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::cos(x); }
 		else {
 			T result;
@@ -34,7 +37,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T tan(const T &x) {
+	auto tan(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::sin(x) / Vc::cos(x); }
 		else {
 			T result;
@@ -44,7 +47,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T asin(const T &x) {
+	auto asin(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::asin(x); }
 		else {
 			T result;
@@ -54,7 +57,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T acos(const T &x) {
+	auto acos(const T &x) -> T {
 		IF_FLOATING(T) {
 			static const auto asin1 = Vc::asin(T(1));
 			return asin1 - Vc::asin(x);
@@ -67,7 +70,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T atan(const T &x) {
+	auto atan(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::atan(x); }
 		else {
 			T result;
@@ -77,7 +80,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T sinh(const T &x) {
+	auto sinh(const T &x) -> T {
 		IF_FLOATING(T) { return (Vc::exp(x) - Vc::exp(-x)) * T(0.5); }
 		else {
 			T result;
@@ -87,7 +90,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T cosh(const T &x) {
+	auto cosh(const T &x) -> T {
 		IF_FLOATING(T) { return (Vc::exp(x) + Vc::exp(-x)) * T(0.5); }
 		else {
 			T result;
@@ -97,7 +100,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T tanh(const T &x) {
+	auto tanh(const T &x) -> T {
 		IF_FLOATING(T) { return (Vc::exp(2 * x) - 1) / (Vc::exp(2 * x) + 1); }
 		else {
 			T result;
@@ -107,7 +110,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T exp(const T &x) {
+	auto exp(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::exp(x); }
 		else {
 			T result;
@@ -117,7 +120,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T log(const T &x) {
+	auto log(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::log(x); }
 		else {
 			T result;
@@ -127,7 +130,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T log2(const T &x) {
+	auto log2(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::log2(x); }
 		else {
 			T result;
@@ -137,7 +140,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T log10(const T &x) {
+	auto log10(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::log10(x); }
 		else {
 			T result;
@@ -147,7 +150,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T sqrt(const T &x) {
+	auto sqrt(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::sqrt(x); }
 		else {
 			T result;
@@ -157,14 +160,14 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T cbrt(const T &x) {
+	auto cbrt(const T &x) -> T {
 		T result;
 		for (int i = 0; i < x.size(); ++i) { result[i] = cbrt(x[i]); }
 		return result;
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T abs(const T &x) {
+	auto abs(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::abs(x); }
 		else {
 			T result;
@@ -174,7 +177,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T floor(const T &x) {
+	auto floor(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::floor(x); }
 		else {
 			T result;
@@ -184,7 +187,7 @@ namespace librapid {
 	}
 
 	template<typename T, REQUIRE_VECTOR(T)>
-	T ceil(const T &x) {
+	auto ceil(const T &x) -> T {
 		IF_FLOATING(T) { return Vc::ceil(x); }
 		else {
 			T result;
