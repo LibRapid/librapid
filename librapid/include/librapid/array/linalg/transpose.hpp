@@ -5,7 +5,7 @@ namespace librapid {
 	namespace typetraits {
 		template<typename T>
 		struct TypeInfo<array::Transpose<T>> {
-			static constexpr detail::LibRapidType type = detail::LibRapidType::Transpose;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
 			using Scalar							   = typename TypeInfo<std::decay_t<T>>::Scalar;
 			using Backend							 = typename TypeInfo<std::decay_t<T>>::Backend;
 			static constexpr bool allowVectorisation = false;
@@ -446,7 +446,7 @@ namespace librapid {
 			/// Create a Transpose object from an array/operation
 			/// \param array The array to copy
 			/// \param axes The transposition axes
-			Transpose(T &array, const ShapeType &axes, Scalar alpha = Scalar(1.0));
+			Transpose(const T &array, const ShapeType &axes, Scalar alpha = Scalar(1.0));
 
 			/// Copy a Transpose object
 			Transpose(const Transpose &other) = default;
@@ -508,7 +508,7 @@ namespace librapid {
 			LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
 
 		private:
-			ArrayType &m_array;
+			ArrayType m_array;
 			ShapeType m_inputShape;
 			ShapeType m_outputShape;
 			ShapeType m_axes;
@@ -516,7 +516,7 @@ namespace librapid {
 		};
 
 		template<typename T>
-		Transpose<T>::Transpose(T &array, const ShapeType &axes, Scalar alpha) :
+		Transpose<T>::Transpose(const T &array, const ShapeType &axes, Scalar alpha) :
 				m_array(array), m_inputShape(array.shape()), m_axes(axes), m_alpha(alpha) {
 			LIBRAPID_ASSERT(m_inputShape.ndim() == m_axes.ndim(),
 							"Shape and axes must have the same number of dimensions");
@@ -623,16 +623,37 @@ namespace librapid {
 		}
 	}; // namespace array
 
-	template<typename T, typename ShapeType = Shape<size_t, 32>>
+	template<typename T, typename ShapeType = Shape<size_t, 32>,
+			 typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
+									   detail::LibRapidType::ArrayContainer, int> = 0>
 	auto transpose(T &&array, const ShapeType &axes = ShapeType()) {
 		// If axes is empty, transpose the array in reverse order
+		ShapeType newAxes = axes;
 		if (axes.ndim() == 0) {
-			ShapeType tmp = ShapeType::zeros(array.ndim());
-			for (size_t i = 0; i < array.ndim(); i++) { tmp[i] = array.ndim() - i - 1; }
-			return array::Transpose(array, tmp);
+			newAxes = ShapeType::zeros(array.ndim());
+			for (size_t i = 0; i < array.ndim(); i++) {
+				newAxes[i] = array.ndim() - i - 1;
+			}
 		}
 
-		return array::Transpose(array, axes);
+		return array::Transpose(array, newAxes);
+	}
+
+	template<typename T, typename ShapeType = Shape<size_t, 32>,
+			 typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
+									   detail::LibRapidType::ArrayContainer, int> = 0>
+	auto transpose(const T &function, const ShapeType &axes = ShapeType()) {
+		// If axes is empty, transpose the array in reverse order
+		auto array = function.eval();
+		ShapeType newAxes = axes;
+		if (axes.ndim() == 0) {
+			newAxes = ShapeType::zeros(array.ndim());
+			for (size_t i = 0; i < array.ndim(); i++) {
+				newAxes[i] = array.ndim() - i - 1;
+			}
+		}
+
+		return array::Transpose(array, newAxes);
 	}
 
 	namespace typetraits {

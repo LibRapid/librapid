@@ -33,9 +33,9 @@ option(LIBRAPID_GET_BLAS "Download pre-built OpenBLAS binaries and use them" OFF
 option(LIBRAPID_GET_MULTIPREC "Download generic multiprecision libraries, as opposed to trying to find one on the system" OFF)
 
 option(LIBRAPID_USE_BLAS "Attempt to use a BLAS library" ON)
-option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
 option(LIBRAPID_USE_OMP "Attempt to use OpenMP to allow multithreading" ON)
 option(LIBRAPID_USE_OPENCL "Search for OpenCL and use it if possible" ON)
+option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
 option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_FAST_MATH "Use potentially less accurate operations to increase performance" OFF)
 option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" OFF)

@@ -74,6 +74,12 @@ namespace librapid {
 				 typename Beta = typename StorageTypeB::Scalar>
 		class ArrayMultiply;
 	}
+
+	template<typename T>
+	using IsArrayType = std::integral_constant<
+	  bool, (typetraits::TypeInfo<T>::type == detail::LibRapidType::ArrayContainer) ||
+			  (typetraits::TypeInfo<T>::type == detail::LibRapidType::ArrayView) ||
+			  (typetraits::TypeInfo<T>::type == detail::LibRapidType::ArrayFunction)>;
 } // namespace librapid
 
 #endif // LIBRAPID_ARRAY_TYPE_DEF_HPP
