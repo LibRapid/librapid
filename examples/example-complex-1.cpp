@@ -2,7 +2,7 @@
 
 namespace lrc = librapid;
 
-int main() {
+auto main() -> int {
 	fmt::print("LibRapid Example -- Complex 1\n");
 
 	fmt::print("sqrt(-1) = {}\n", lrc::sqrt(lrc::Complex(-1)));

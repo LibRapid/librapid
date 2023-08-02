@@ -66,10 +66,29 @@ using CUDA				   = lrc::backend::CUDA;
 		REQUIRE(testH.storage()[7] == 8);                                                          \
 		REQUIRE(testH.storage()[8] == 9);                                                          \
                                                                                                    \
+		/* It is necessary to define the type of the data, otherwise bad things happen for the     \
+		 * MPFR type */                                                                            \
+		using InitList =                                                                           \
+		  std::initializer_list<std::initializer_list<std::initializer_list<SCALAR>>>;             \
+		using Vec = std::vector<std::vector<std::vector<SCALAR>>>;                                 \
+                                                                                                   \
 		/* Due to the way the code works, if this passes for a 3D array, it *must* pass for all    \
 		 * other dimensions */                                                                     \
-		auto testI = lrc::Array<SCALAR, BACKEND>::fromData({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}});  \
+		auto testI =                                                                               \
+		  lrc::Array<SCALAR, BACKEND>::fromData(InitList({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}));   \
 		REQUIRE(testI.str() == fmt::format("[[[{} {}]\n  [{} {}]]\n\n [[{} {}]\n  [{} {}]]]",      \
+										   SCALAR(1),                                              \
+										   SCALAR(2),                                              \
+										   SCALAR(3),                                              \
+										   SCALAR(4),                                              \
+										   SCALAR(5),                                              \
+										   SCALAR(6),                                              \
+										   SCALAR(7),                                              \
+										   SCALAR(8)));                                            \
+                                                                                                   \
+		auto testJ =                                                                               \
+		  lrc::Array<SCALAR, BACKEND>::fromData(Vec({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}));        \
+		REQUIRE(testJ.str() == fmt::format("[[[{} {}]\n  [{} {}]]\n\n [[{} {}]\n  [{} {}]]]",      \
 										   SCALAR(1),                                              \
 										   SCALAR(2),                                              \
 										   SCALAR(3),                                              \

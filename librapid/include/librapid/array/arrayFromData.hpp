@@ -63,23 +63,43 @@ namespace librapid {
 		return res;
 	}
 
+	//#define HIGHER_DIMENSIONAL_FROM_DATA(TYPE)                                                         \
+//	template<typename Scalar, typename Backend>                                                    \
+//	auto array::ArrayContainer<Scalar, Backend>::fromData(const TYPE &data) -> ArrayContainer {    \
+//		LIBRAPID_ASSERT(data.size() > 0, "Cannot create a zero-sized array");                      \
+//		auto *tmp	  = new ArrayContainer[data.size()];                                           \
+//		int64_t index = 0;                                                                         \
+//		for (const auto &item : data) tmp[index++] = fromData(item);                               \
+//		auto zeroShape = tmp[0].shape();                                                           \
+//		for (int64_t i = 0; i < data.size(); ++i)                                                  \
+//			LIBRAPID_ASSERT(tmp[i].shape().operator==(zeroShape),                                  \
+//							"Arrays must have consistent shapes");                                 \
+//		auto newShape = ShapeType::zeros(zeroShape.ndim() + 1);                                    \
+//		newShape[0]	  = data.size();                                                               \
+//		for (size_t i = 0; i < zeroShape.ndim(); ++i) { newShape[i + 1] = zeroShape[i]; }          \
+//		auto res = Array<Scalar, Backend>(newShape);                                               \
+//		index	 = 0;                                                                              \
+//		for (int64_t i = 0; i < data.size(); ++i) res[i] = std::move(tmp[i]);                      \
+//		delete[] tmp;                                                                              \
+//		return res;                                                                                \
+//	}
+
 #define HIGHER_DIMENSIONAL_FROM_DATA(TYPE)                                                         \
 	template<typename Scalar, typename Backend>                                                    \
 	auto array::ArrayContainer<Scalar, Backend>::fromData(const TYPE &data) -> ArrayContainer {    \
 		LIBRAPID_ASSERT(data.size() > 0, "Cannot create a zero-sized array");                      \
-		auto *tmp	  = new ArrayContainer[data.size()];                                           \
+		std::vector<ArrayContainer> tmp(data.size());                                              \
 		int64_t index = 0;                                                                         \
-		for (const auto &item : data) tmp[index++] = ArrayContainer(item);                         \
+		for (const auto &item : data) tmp[index++] = fromData(item);                               \
 		auto zeroShape = tmp[0].shape();                                                           \
 		for (int64_t i = 0; i < data.size(); ++i)                                                  \
-			LIBRAPID_ASSERT(tmp[i].shape() == zeroShape, "Arrays must have consistent shapes");    \
+			LIBRAPID_ASSERT(tmp[i].shape().operator==(zeroShape),                                  \
+							"Arrays must have consistent shapes");                                 \
 		auto newShape = ShapeType::zeros(zeroShape.ndim() + 1);                                    \
 		newShape[0]	  = data.size();                                                               \
 		for (size_t i = 0; i < zeroShape.ndim(); ++i) { newShape[i + 1] = zeroShape[i]; }          \
 		auto res = Array<Scalar, Backend>(newShape);                                               \
-		index	 = 0;                                                                              \
-		for (int64_t i = 0; i < data.size(); ++i) res[i] = std::move(tmp[i]);                      \
-		delete[] tmp;                                                                              \
+		for (int64_t i = 0; i < data.size(); ++i) res[i] = tmp[i];                                 \
 		return res;                                                                                \
 	}
 

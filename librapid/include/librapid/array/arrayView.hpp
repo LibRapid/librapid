@@ -160,7 +160,8 @@ namespace librapid {
 		template<typename T>
 		template<typename RefType>
 		ArrayView<T> &ArrayView<T>::operator=(const ArrayRef<RefType> &other) {
-			LIBRAPID_ASSERT(m_shape.operator==(other.shape()), "Cannot assign to a non-scalar ArrayView.");
+			LIBRAPID_ASSERT(m_shape.operator==(other.shape()),
+							"Cannot assign to a non-scalar ArrayView.");
 
 			ShapeType coord = ShapeType::zeros(m_shape.ndim());
 			int64_t d = 0, p = 0;

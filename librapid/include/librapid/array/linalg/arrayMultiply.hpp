@@ -651,7 +651,9 @@ namespace librapid {
 	/// StorageTypeB The storage type of the right input array. \param a The left input array.
 	/// \param b The right input array.
 	/// \return The dot product of the two input arrays.
-	template<typename First, typename Second>
+	template<
+	  typename First, typename Second,
+	  typename std::enable_if_t<IsArrayType<First>::value && IsArrayType<Second>::value, int> = 0>
 	auto dot(First &&a, Second &&b) {
 		using ScalarA  = typename typetraits::TypeInfo<std::decay_t<First>>::Scalar;
 		using ScalarB  = typename typetraits::TypeInfo<std::decay_t<Second>>::Scalar;
@@ -668,6 +670,19 @@ namespace librapid {
 									 alpha * beta,
 									 std::forward<ArrayB>(arrB),
 									 0); // .eval();
+	}
+
+	namespace typetraits {
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		struct TypeInfo<linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB,
+											  Alpha, Beta>> {
+			detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
+			using Type = linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB,
+											  Alpha, Beta>;
+			using Scalar = typename Type::Scalar;
+			using Backend = typename Type::Backend;
+		};
 	}
 } // namespace librapid
 

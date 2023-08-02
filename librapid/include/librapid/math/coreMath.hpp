@@ -76,14 +76,16 @@ namespace librapid {
 	template<typename V, typename B1, typename E1, typename B2, typename E2>
 	LIBRAPID_INLINE auto map(const V &val, const B1 &start1, const E1 &stop1, const B2 &start2,
 							 const E2 &stop2) {
-		if constexpr (detail::ContainsArrayType<V, B1, E1, B2, E2>::val) {
-			return start2 + (val - start1) * (stop2 - start2) / (stop1 - start1);
-		} else {
-			using T = decltype((val - start1) * (stop2 - start2) / (stop1 - start1) + start2);
-			return static_cast<T>(start2) + (static_cast<T>(stop2) - static_cast<T>(start2)) *
-											  ((static_cast<T>(val) - static_cast<T>(start1)) /
-											   (static_cast<T>(stop1) - static_cast<T>(start1)));
-		}
+		return start2 + (val - start1) * (stop2 - start2) / (stop1 - start1);
+
+		// if constexpr (detail::ContainsArrayType<V, B1, E1, B2, E2>::val) {
+		// 	return start2 + (val - start1) * (stop2 - start2) / (stop1 - start1);
+		// } else {
+		// 	using T = decltype((val - start1) * (stop2 - start2) / (stop1 - start1) + start2);
+		// 	return static_cast<T>(start2) + (static_cast<T>(stop2) - static_cast<T>(start2)) *
+		// 									  ((static_cast<T>(val) - static_cast<T>(start1)) /
+		// 									   (static_cast<T>(stop1) - static_cast<T>(start1)));
+		// }
 	}
 
 	template<typename T1, typename T2>

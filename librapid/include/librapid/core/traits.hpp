@@ -30,7 +30,6 @@ namespace librapid {
 			ArrayContainer,
 			ArrayFunction,
 			ArrayView,
-			Transpose
 		};
 
 		constexpr bool sameType(LibRapidType type1, LibRapidType type2) { return type1 == type2; }

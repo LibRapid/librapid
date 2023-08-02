@@ -4,191 +4,212 @@
 namespace librapid {
 	namespace typetraits {
 		template<typename T>
-		struct IsVector : std::false_type {};
+		struct IsSIMD : std::false_type {};
 
-		template<typename T>
-		struct IsVector<Vc::Vector<T>> : std::true_type {};
+		// template<typename T>
+		// struct IsSIMD<Vc::Vector<T>> : std::true_type {};
+
+		template<typename T, typename U>
+		struct IsSIMD<Vc_1::Vector<T, U>> : std::true_type {};
 	} // namespace typetraits
 
-#define REQUIRE_VECTOR(TYPE) typename std::enable_if_t<typetraits::IsVector<TYPE>::value, int> = 0
-#define IF_FLOATING(TYPE)	 if constexpr (std::is_floating_point_v<typename TYPE::value_type>)
+#define REQUIRE_SIMD(TYPE) typename std::enable_if_t<typetraits::IsSIMD<TYPE>::value, int> = 0
+#define IF_FLOATING(TYPE)  if constexpr (std::is_floating_point_v<typename TYPE::value_type>)
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T sin(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto sin(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::sin(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = sin(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = sin(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T cos(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto cos(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::cos(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = cos(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = cos(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T tan(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto tan(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::sin(x) / Vc::cos(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = tan(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = tan(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T asin(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto asin(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::asin(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = asin(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = asin(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T acos(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto acos(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) {
 			static const auto asin1 = Vc::asin(T(1));
 			return asin1 - Vc::asin(x);
 		}
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = acos(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = acos(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T atan(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto atan(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::atan(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = atan(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = atan(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T sinh(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto sinh(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return (Vc::exp(x) - Vc::exp(-x)) * T(0.5); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = sinh(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = sinh(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T cosh(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto cosh(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return (Vc::exp(x) + Vc::exp(-x)) * T(0.5); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = cosh(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = cosh(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T tanh(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto tanh(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return (Vc::exp(2 * x) - 1) / (Vc::exp(2 * x) + 1); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = tanh(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = tanh(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T exp(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto exp(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::exp(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = exp(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = exp(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T log(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto log(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::log(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = log(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = log(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T log2(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto log2(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::log2(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = log2(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = log2(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T log10(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto log10(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::log10(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = log10(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = log10(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T sqrt(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto sqrt(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::sqrt(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = sqrt(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = sqrt(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T cbrt(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto cbrt(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		T result;
-		for (int i = 0; i < x.size(); ++i) { result[i] = cbrt(x[i]); }
+		for (int i = 0; i < x.size(); ++i) { result[i] = cbrt(static_cast<Scalar>(x[i])); }
 		return result;
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T abs(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto abs(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::abs(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = abs(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = abs(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T floor(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto floor(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::floor(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = floor(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = floor(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
 
-	template<typename T, REQUIRE_VECTOR(T)>
-	T ceil(const T &x) {
+	template<typename T, REQUIRE_SIMD(T)>
+	auto ceil(const T &x) -> T {
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::ceil(x); }
 		else {
 			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = ceil(x[i]); }
+			for (int i = 0; i < x.size(); ++i) { result[i] = ceil(static_cast<Scalar>(x[i])); }
 			return result;
 		}
 	}
