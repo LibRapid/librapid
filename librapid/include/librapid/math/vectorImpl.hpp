@@ -1,6 +1,8 @@
 #ifndef LIBRAPID_MATH_VECTOR_HPP
 #define LIBRAPID_MATH_VECTOR_HPP
 
+#include "../simd/simd.hpp" // Required for SIMD operations
+
 namespace librapid {
 	namespace typetraits {
 		template<typename T, uint64_t N>
