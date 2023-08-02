@@ -50,8 +50,9 @@ namespace librapid {
 			/// \param y Second value
 			/// \return Sum of x and y
 			template<typename T>
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr Fmp<T> addX2(const T &x,
-																			 const T &y) noexcept {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto addX2(const T &x,
+																		   const T &y) noexcept
+			  -> Fmp<T> {
 				const T sum0 = x + y;
 				const T yMod = sum0 - x;
 				const T xMod = sum0 - yMod;
@@ -84,8 +85,9 @@ namespace librapid {
 			/// \param y Second value
 			/// \return Sum of x and y
 			template<typename T>
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr Fmp<T>
-			addSmallX2(const T x, const T y) noexcept {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto addSmallX2(const T x,
+																				const T y) noexcept
+			  -> Fmp<T> {
 				const T sum0 = x + y;
 				const T yMod = sum0 - x;
 				const T yErr = y - yMod;
@@ -101,8 +103,8 @@ namespace librapid {
 			/// \param y Second value
 			/// \return Sum of x and y
 			template<typename T>
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr Fmp<T>
-			addSmallX2(const T &x, const Fmp<T> &y) noexcept {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto
+			addSmallX2(const T &x, const Fmp<T> &y) noexcept -> Fmp<T> {
 				const Fmp<T> sum0 = addSmallX2(x, y.val0);
 				return addSmallX2(sum0.val0, sum0.val1 + y.val1);
 			}
@@ -113,8 +115,9 @@ namespace librapid {
 			/// \param y Second value
 			/// \return Sum of x and y
 			template<typename T>
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr T addX1(const Fmp<T> &x,
-																		const Fmp<T> &y) noexcept {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto addX1(const Fmp<T> &x,
+																		   const Fmp<T> &y) noexcept
+			  -> T {
 				const Fmp<T> sum0 = addX2(x.val0, y.val0);
 				return sum0.val0 + (sum0.val1 + (x.val1 + y.val1));
 			}
@@ -122,8 +125,8 @@ namespace librapid {
 			/// \brief Rounds a 2x precision value to 26 significant bits
 			/// \param x Value to round
 			/// \return Rounded value
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr double
-			highHalf(const double x) noexcept {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto
+			highHalf(const double x) noexcept -> double {
 				const auto bits			= bitCast<uint64_t>(x);
 				const auto highHalfBits = (bits + 0x3ff'ffffULL) & 0xffff'ffff'f800'0000ULL;
 				return bitCast<double>(highHalfBits);
@@ -142,7 +145,8 @@ namespace librapid {
 			/// \param prod0 Faithfully rounded product of x^2
 			/// \return Error between x^2 and prod0
 			LIBRAPID_NODISCARD
-			LIBRAPID_ALWAYS_INLINE double sqrError(const double x, const double prod0) noexcept {
+			LIBRAPID_ALWAYS_INLINE auto sqrError(const double x, const double prod0) noexcept
+			  -> double {
 #	if defined(USE_X86_X64_INTRINSICS)
 				const __m128d xVec		= _mm_set_sd(x);
 				const __m128d prodVec	= _mm_set_sd(prod0);
@@ -176,8 +180,8 @@ namespace librapid {
 			/// \param x Input value
 			/// \param prod0 Faithfully rounded product of x^2
 			template<typename T>
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T sqrError(const T x,
-																 const T prod0) noexcept {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sqrError(const T x,
+																	const T prod0) noexcept -> T {
 				const T xHigh = static_cast<T>(highHalf(x));
 				const T xLow  = x - xHigh;
 				return ((xHigh * xHigh - prod0) + static_cast<T>(2.0) * xHigh * xLow) + xLow * xLow;
@@ -190,7 +194,8 @@ namespace librapid {
 			///
 			/// \param x Input value
 			/// \return 2x precision square of x
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Fmp<double> sqrX2(const double x) noexcept {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sqrX2(const double x) noexcept
+			  -> Fmp<double> {
 				const double prod0 = x * x;
 				return {prod0, sqrError(x, prod0)};
 			}
@@ -200,7 +205,7 @@ namespace librapid {
 			/// \param x Input value
 			/// \return 2x precision square of x
 			template<typename T>
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Fmp<T> sqrX2(const T x) noexcept {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sqrX2(const T x) noexcept -> Fmp<T> {
 				const T prod0 = x * x;
 				return {prod0, static_cast<T>(sqrError(x, prod0))};
 			}
@@ -259,8 +264,8 @@ namespace librapid {
 			/// \tparam T Template type \param x First value \param y Second value
 			/// \return x * x + y * y - 1
 			template<typename T>
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T normMinusOne(const T x,
-																	 const T y) noexcept {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto normMinusOne(const T x,
+																		const T y) noexcept -> T {
 				const multiprec::Fmp<T> xSqr   = multiprec::sqrX2(x);
 				const multiprec::Fmp<T> ySqr   = multiprec::sqrX2(y);
 				const multiprec::Fmp<T> xSqrM1 = multiprec::addSmallX2(T(-1), xSqr);
@@ -276,7 +281,7 @@ namespace librapid {
 			/// \param x Input value
 			/// \return \f$ \log(1 + x) \f$
 			template<bool safe = true, typename T>
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T logP1(const T x) {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto logP1(const T x) -> T {
 				if constexpr (!safe) return ::librapid::log(x + 1.0);
 #if defined(LIBRAPID_USE_MULTIPREC)
 				// No point doing anything shown below if we're using multiprec
@@ -312,7 +317,8 @@ namespace librapid {
 			/// \param y Vertical component
 			/// \return \f$ \log(\sqrt{x^2 + y^2}) \f$
 			template<bool safe = true, typename T>
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T logHypot(const T x, const T y) noexcept {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto logHypot(const T x, const T y) noexcept
+			  -> T {
 				if constexpr (!safe) return ::librapid::log(::librapid::sqrt(x * x + y * y));
 #if defined(LIBRAPID_USE_MULTIPREC)
 				// No point doing anything shown below if we're using multiprec
@@ -377,7 +383,7 @@ namespace librapid {
 			/// \param exponent Exponent for the power of 2 multiplication
 			/// \return 1 if the result is NaN or Inf, -1 otherwise
 			template<typename T>
-			short expMul(T *pleft, T right, short exponent) {
+			auto expMul(T *pleft, T right, short exponent) -> short {
 #if defined(LIBRAPID_USE_MULTIPREC)
 				if constexpr (std::is_same_v<T, mpfr>) {
 					*pleft = ::mpfr::exp(*pleft) * right * ::mpfr::exp2(exponent);
@@ -460,12 +466,14 @@ namespace librapid {
 		/// \param other The std::complex value to copy
 		explicit Complex(const std::complex<T> &other) : m_val {other.real(), other.imag()} {}
 
-		static constexpr size_t size() { return typetraits::TypeInfo<Complex>::packetWidth; }
+		static constexpr auto size() -> size_t {
+			return typetraits::TypeInfo<Complex>::packetWidth;
+		}
 
 		/// \brief Complex number assignment operator
 		/// \param other The value to assign
 		/// \return *this
-		Complex<T> &operator=(const Complex<T> &other) {
+		auto operator=(const Complex<T> &other) -> Complex<T> & {
 			if (this == &other) return *this;
 			m_val[RE] = other.real();
 			m_val[IM] = other.imag();
@@ -505,14 +513,18 @@ namespace librapid {
 		/// Returns a const reference to the real component of this complex number
 		///
 		/// \return Real component
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const T &real() const { return m_val[RE]; }
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto real() const -> const T & {
+			return m_val[RE];
+		}
 
 		/// \brief Access the imaginary component
 		///
 		/// Returns a const reference to the imaginary component of this complex number
 		///
 		/// \return Imaginary component
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const T &imag() const { return m_val[IM]; }
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto imag() const -> const T & {
+			return m_val[IM];
+		}
 
 		/// \brief Access the real component
 		///
@@ -520,7 +532,7 @@ namespace librapid {
 		/// reference type, it can be assigned to
 		///
 		/// \return Real component
-		LIBRAPID_ALWAYS_INLINE T &real() { return m_val[RE]; }
+		LIBRAPID_ALWAYS_INLINE auto real() -> T & { return m_val[RE]; }
 
 		/// \brief Access the imaginary component
 		///
@@ -528,7 +540,7 @@ namespace librapid {
 		/// reference type, it can be assigned to
 		///
 		/// \return imaginary component
-		LIBRAPID_ALWAYS_INLINE T &imag() { return m_val[IM]; }
+		LIBRAPID_ALWAYS_INLINE auto imag() -> T & { return m_val[IM]; }
 
 		/// \brief Complex number assigment operator
 		///
@@ -537,7 +549,7 @@ namespace librapid {
 		///
 		/// \param other
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE Complex &operator=(const T &other) {
+		LIBRAPID_ALWAYS_INLINE auto operator=(const T &other) -> Complex & {
 			m_val[RE] = other;
 			m_val[IM] = 0;
 			return *this;
@@ -551,7 +563,7 @@ namespace librapid {
 		/// \param other Complex number to assign
 		/// \return *this
 		template<typename Other>
-		LIBRAPID_ALWAYS_INLINE Complex &operator=(const Complex<Other> &other) {
+		LIBRAPID_ALWAYS_INLINE auto operator=(const Complex<Other> &other) -> Complex & {
 			m_val[RE] = static_cast<T>(other.real());
 			m_val[IM] = static_cast<T>(other.real());
 			return *this;
@@ -563,7 +575,7 @@ namespace librapid {
 		///
 		/// \param other Scalar value to add
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE Complex &operator+=(const T &other) {
+		LIBRAPID_ALWAYS_INLINE auto operator+=(const T &other) -> Complex & {
 			m_val[RE] = m_val[RE] + other;
 			return *this;
 		}
@@ -574,7 +586,7 @@ namespace librapid {
 		///
 		/// \param other Scalar value to subtract
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE Complex &operator-=(const T &other) {
+		LIBRAPID_ALWAYS_INLINE auto operator-=(const T &other) -> Complex & {
 			m_val[RE] = m_val[RE] - other;
 			return *this;
 		}
@@ -585,7 +597,7 @@ namespace librapid {
 		///
 		/// \param other Scalar value to multiply by
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE Complex &operator*=(const T &other) {
+		LIBRAPID_ALWAYS_INLINE auto operator*=(const T &other) -> Complex & {
 			m_val[RE] = m_val[RE] * other;
 			m_val[IM] = m_val[IM] * other;
 			return *this;
@@ -597,7 +609,7 @@ namespace librapid {
 		///
 		/// \param other Scalar value to divide by
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE Complex &operator/=(const T &other) {
+		LIBRAPID_ALWAYS_INLINE auto operator/=(const T &other) -> Complex & {
 			m_val[RE] = m_val[RE] / other;
 			m_val[IM] = m_val[IM] / other;
 			return *this;
@@ -609,7 +621,7 @@ namespace librapid {
 		///
 		/// \param other Complex number to add
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE Complex &operator+=(const Complex &other) {
+		LIBRAPID_ALWAYS_INLINE auto operator+=(const Complex &other) -> Complex & {
 			this->_add(other);
 			return *this;
 		}
@@ -620,7 +632,7 @@ namespace librapid {
 		///
 		/// \param other Complex number to subtract
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE Complex &operator-=(const Complex &other) {
+		LIBRAPID_ALWAYS_INLINE auto operator-=(const Complex &other) -> Complex & {
 			this->_sub(other);
 			return *this;
 		}
@@ -631,7 +643,7 @@ namespace librapid {
 		///
 		/// \param other Complex number to multiply by
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE Complex &operator*=(const Complex &other) {
+		LIBRAPID_ALWAYS_INLINE auto operator*=(const Complex &other) -> Complex & {
 			this->_mul(other);
 			return *this;
 		}
@@ -642,7 +654,7 @@ namespace librapid {
 		///
 		/// \param other Complex number to divide by
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE Complex &operator/=(const Complex &other) {
+		LIBRAPID_ALWAYS_INLINE auto operator/=(const Complex &other) -> Complex & {
 			this->_div(other);
 			return *this;
 		}
@@ -677,7 +689,7 @@ namespace librapid {
 		///
 		/// \param format Format string
 		/// \return std::string
-		LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const {
+		LIBRAPID_NODISCARD auto str(const std::string &format = "{}") const -> std::string {
 			if (!::librapid::signBit(m_val[IM]))
 				return "(" + fmt::format(format, m_val[RE]) + "+" + fmt::format(format, m_val[IM]) +
 					   "j)";
@@ -772,8 +784,9 @@ namespace librapid {
 	/// \param other Complex number to negate
 	/// \return Negated complex number
 	template<typename T>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(const Complex<T> &other) {
-		return Complex<T>(-other.real(), -other.imag());
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(const Complex<T> &other)
+	  -> Complex<T> {
+		return {-other.real(), -other.imag()};
 	}
 
 	/// \brief Add two complex numbers

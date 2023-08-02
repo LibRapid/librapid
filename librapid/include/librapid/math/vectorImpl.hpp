@@ -5,6 +5,10 @@
 
 namespace librapid {
 	namespace typetraits {
+		template<typename T>
+		using IsVector =
+		  std::integral_constant<bool, TypeInfo<T>::type == detail::LibRapidType::Vector>;
+
 		template<typename T, uint64_t N>
 		struct TypeInfo<vectorDetail::GenericVectorStorage<T, N>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
@@ -779,12 +783,11 @@ namespace librapid {
 		}                                                                                          \
 	};                                                                                             \
                                                                                                    \
-	template<                                                                                      \
-	  typename LHS,                                                                                \
-	  typename RHS,                                                                                \
-	  typename std::enable_if_t<typetraits::TypeInfo<LHS>::type == detail::LibRapidType::Vector || \
-								  typetraits::TypeInfo<RHS>::type == detail::LibRapidType::Vector, \
-								int> = 0>                                                          \
+	template<typename LHS,                                                                         \
+			 typename RHS,                                                                         \
+			 typename std::enable_if_t<typetraits::IsVector<LHS>::value ||                         \
+										 typetraits::IsVector<RHS>::value,                         \
+									   int> = 0>                                                   \
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator OP_(const LHS &lhs, const RHS &rhs) {  \
 		using namespace ::librapid::vectorDetail;                                                  \
 		using ScalarLeft  = typename typetraits::TypeInfo<LHS>::Scalar;                            \
@@ -911,35 +914,31 @@ namespace librapid {
 	VECTOR_FUNC_IMPL_DEF(sqrt)
 	VECTOR_FUNC_IMPL_DEF(cbrt)
 
-	template<typename T>
-	using IsVectorType =
-	  std::integral_constant<bool, typetraits::TypeInfo<T>::type == detail::LibRapidType::Vector>;
-
-	template<typename T, typename std::enable_if_t<IsVectorType<T>::value, int> = 0>
+	template<typename T, typename std::enable_if_t<typetraits::IsVector<T>::value, int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto mag2(const T &val) {
 		return val.eval().storage().sum2();
 	}
 
-	template<typename T, typename std::enable_if_t<IsVectorType<T>::value, int> = 0>
+	template<typename T, typename std::enable_if_t<typetraits::IsVector<T>::value, int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto mag(const T &val) {
 		return ::librapid::sqrt(mag2(val));
 	}
 
-	template<typename T, typename std::enable_if_t<IsVectorType<T>::value, int> = 0>
+	template<typename T, typename std::enable_if_t<typetraits::IsVector<T>::value, int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sum(const T &val) {
 		return val.eval().storage().sum();
 	}
 
-	template<
-	  typename First, typename Second,
-	  typename std::enable_if_t<IsVectorType<First>::value && IsVectorType<Second>::value, int> = 0>
+	template<typename First, typename Second,
+			 typename std::enable_if_t<
+			   typetraits::IsVector<First>::value && typetraits::IsVector<Second>::value, int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dot(const First &first, const Second &second) {
 		return (first * second).eval().storage().sum();
 	}
 
-	template<
-	  typename First, typename Second,
-	  typename std::enable_if_t<IsVectorType<First>::value && IsVectorType<Second>::value, int> = 0>
+	template<typename First, typename Second,
+			 typename std::enable_if_t<
+			   typetraits::IsVector<First>::value && typetraits::IsVector<Second>::value, int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cross(const First &first, const Second &second) {
 		LIBRAPID_ASSERT(typetraits::TypeInfo<First>::dims == 3 &&
 						  typetraits::TypeInfo<Second>::dims == 3,
@@ -958,7 +957,7 @@ namespace librapid {
 		return Vector<Scalar, 3> {y1 * z2 - z1 * y2, z1 * x2 - x1 * z2, x1 * y2 - y1 * x2};
 	}
 
-	template<typename T, typename std::enable_if_t<IsVectorType<T>::value, int> = 0>
+	template<typename T, typename std::enable_if_t<typetraits::IsVector<T>::value, int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto norm(const T &val) {
 		return val / mag(val);
 	}
