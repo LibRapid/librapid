@@ -18,7 +18,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto sin(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::sin(x); }
 		else {
 			T result;
@@ -29,7 +29,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto cos(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::cos(x); }
 		else {
 			T result;
@@ -40,7 +40,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto tan(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::sin(x) / Vc::cos(x); }
 		else {
 			T result;
@@ -51,7 +51,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto asin(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::asin(x); }
 		else {
 			T result;
@@ -62,7 +62,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto acos(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) {
 			static const auto asin1 = Vc::asin(T(1));
 			return asin1 - Vc::asin(x);
@@ -76,7 +76,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto atan(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::atan(x); }
 		else {
 			T result;
@@ -87,7 +87,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto sinh(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return (Vc::exp(x) - Vc::exp(-x)) * T(0.5); }
 		else {
 			T result;
@@ -98,7 +98,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto cosh(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return (Vc::exp(x) + Vc::exp(-x)) * T(0.5); }
 		else {
 			T result;
@@ -109,7 +109,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto tanh(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return (Vc::exp(2 * x) - 1) / (Vc::exp(2 * x) + 1); }
 		else {
 			T result;
@@ -120,7 +120,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto exp(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::exp(x); }
 		else {
 			T result;
@@ -131,7 +131,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto log(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::log(x); }
 		else {
 			T result;
@@ -142,7 +142,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto log2(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::log2(x); }
 		else {
 			T result;
@@ -153,7 +153,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto log10(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::log10(x); }
 		else {
 			T result;
@@ -164,7 +164,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto sqrt(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::sqrt(x); }
 		else {
 			T result;
@@ -175,7 +175,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto cbrt(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		T result;
 		for (int i = 0; i < x.size(); ++i) { result[i] = cbrt(static_cast<Scalar>(x[i])); }
 		return result;
@@ -183,7 +183,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto abs(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::abs(x); }
 		else {
 			T result;
@@ -194,7 +194,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto floor(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::floor(x); }
 		else {
 			T result;
@@ -205,7 +205,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_VECTOR(T)>
 	auto ceil(const T &x) -> T {
-		using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+		using Scalar = typename T::value_type;
 		IF_FLOATING(T) { return Vc::ceil(x); }
 		else {
 			T result;
