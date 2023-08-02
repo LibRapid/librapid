@@ -6,8 +6,22 @@
 namespace librapid {
 	namespace typetraits {
 		template<typename T>
-		using IsVector =
-		  std::integral_constant<bool, TypeInfo<T>::type == detail::LibRapidType::Vector>;
+		struct IsVector : std::false_type;
+
+		template<typename T, uint64_t N>
+		struct IsVector<vectorDetail::GenericVectorStorage<T, N>> : std::true_type {};
+
+		template<typename T, uint64_t N>
+		struct IsVector<vectorDetail::SimdVectorStorage<T, N>> : std::true_type {};
+
+		template<typename T, uint64_t N>
+		struct IsVector<Vector<T, N>> : std::true_type {};
+
+		template<typename LHS, typename RHS, typename Op>
+		struct IsVector<vectorDetail::BinaryVecOp<LHS, RHS, Op>> : std::true_type {};
+		
+		template<typename VAL, typename Op>
+		struct IsVector<vectorDetail::UnaryVecOp<VAL, Op>> : std::true_type {};
 
 		template<typename T, uint64_t N>
 		struct TypeInfo<vectorDetail::GenericVectorStorage<T, N>> {
@@ -809,14 +823,15 @@ namespace librapid {
 
 #define VECTOR_UNARY_OP(NAME_, OP_NAME_, OP_)                                                      \
 	struct NAME_ {                                                                                 \
-		template<typename Val>                                                                     \
+		template<typename Val,                                                                     \
+				 typename std::enable_if_t<typetraits::IsVector<Val>::value, int> = 0>             \
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator()(const Val &val) const {          \
 			using namespace ::librapid::vectorDetail;                                              \
 			return OP_(scalarExtractor(val));                                                      \
 		}                                                                                          \
 	};                                                                                             \
                                                                                                    \
-	template<typename Val>                                                                         \
+	template<typename Val, typename std::enable_if_t<typetraits::IsVector<Val>::value, int> = 0>   \
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto OP_NAME_(const Val &val) {                      \
 		using namespace ::librapid::vectorDetail;                                                  \
 		using Op = NAME_;                                                                          \
