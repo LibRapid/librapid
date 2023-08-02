@@ -1157,15 +1157,15 @@ namespace librapid {
 				else
 					ux = T(0.25) * pi; // (-Inf, +/-Inf)
 			} else if (re < 0) {
-				ux = pi;			   // (-Inf, finite)
+				ux = pi; // (-Inf, finite)
 			} else {
-				ux = 0;				   // (+Inf, finite)
+				ux = 0; // (+Inf, finite)
 			}
 			vx = -::librapid::copySign(typetraits::TypeInfo<T>::infinity(), im);
 		} else if (::librapid::isInf(im)) { // finite, Inf)
 			ux = T(0.5) * pi;				// (finite, +/-Inf)
 			vx = -im;
-		} else {							// (finite, finite)
+		} else { // (finite, finite)
 			const Complex<T> wx = sqrt(Complex<T>(1 + re, -im));
 			const Complex<T> zx = sqrt(Complex<T>(1 - re, -im));
 			const T wr			= real(wx);
@@ -1185,7 +1185,7 @@ namespace librapid {
 			} else if (wi < -arcBig) { // Imaginary part of w is large negative
 				alpha = -wi;
 				beta  = wr * (zi / alpha) - zr;
-			} else {					   // Shouldn't overflow (?)
+			} else { // Shouldn't overflow (?)
 				alpha = 0;
 				beta  = wr * zi + wi * zr; // Im(w * z)
 			}
@@ -1242,9 +1242,9 @@ namespace librapid {
 				else
 					vx = T(0.25) * pi; // (+Inf, +/-Inf)
 			} else if (re < 0) {
-				vx = pi;			   // (-Inf, finite)
+				vx = pi; // (-Inf, finite)
 			} else {
-				vx = 0;				   // (+Inf, finite)
+				vx = 0; // (+Inf, finite)
 			}
 			vx = ::librapid::copySign(vx, im);
 		} else { // (finite, finite)
@@ -1262,7 +1262,7 @@ namespace librapid {
 			} else if (arcBig < wi) { // Imaginary parts large
 				alpha = wi;
 				beta  = wr * (zr / alpha) - zi;
-			} else {					   // Shouldn't overflow (?)
+			} else { // Shouldn't overflow (?)
 				alpha = 0;
 				beta  = wr * zr - wi * zi; // Re(w * z)
 			}
@@ -1339,7 +1339,7 @@ namespace librapid {
 			} else if (wi < -arcBig) {
 				alpha = -wi;
 				beta  = -zr - wr * (zi / alpha);
-			} else {					   // Shouldn't overflow (?)
+			} else { // Shouldn't overflow (?)
 				alpha = 0;
 				beta  = wi * zr - wr * zi; // Im(w * conj(z))
 			}
@@ -1472,15 +1472,15 @@ namespace librapid {
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> polarPositiveNanInfZeroRho(const T &rho, const T &theta) {
 		// Rho is +NaN/+Inf/+0
-		if (::librapid::isNaN(theta) || ::librapid::isInf(theta)) {		  // Theta is NaN/Inf
+		if (::librapid::isNaN(theta) || ::librapid::isInf(theta)) { // Theta is NaN/Inf
 			if (::librapid::isInf(rho)) {
-				return Complex<T>(rho, ::librapid::sin(theta));			  // (Inf, NaN/Inf)
+				return Complex<T>(rho, ::librapid::sin(theta)); // (Inf, NaN/Inf)
 			} else {
 				return Complex<T>(rho, ::librapid::copySign(rho, theta)); // (NaN/0, NaN/Inf)
 			}
-		} else if (theta == T(0)) {										  // Theta is zero
-			return Complex<T>(rho, theta);								  // (NaN/Inf/0, 0)
-		} else { // Theta is finite non-zero
+		} else if (theta == T(0)) {		   // Theta is zero
+			return Complex<T>(rho, theta); // (NaN/Inf/0, 0)
+		} else {						   // Theta is finite non-zero
 			// (NaN/Inf/0, finite non-zero)
 			return Complex<T>(rho * ::librapid::cos(theta), rho * ::librapid::sin(theta));
 		}
@@ -1513,7 +1513,7 @@ namespace librapid {
 		// Return polar(exp(re), im)
 		if (::librapid::isInf(logRho)) {
 			if (logRho < 0) {
-				return polarPositiveNanInfZeroRho(T(0), theta);	  // exp(-Inf) = +0
+				return polarPositiveNanInfZeroRho(T(0), theta); // exp(-Inf) = +0
 			} else {
 				return polarPositiveNanInfZeroRho(logRho, theta); // exp(+Inf) = +Inf
 			}
@@ -1552,9 +1552,9 @@ namespace librapid {
 		if (::librapid::isInf(av) || ::librapid::isInf(bv)) {
 			return typetraits::TypeInfo<T>::infinity(); // At least one component is Inf
 		} else if (::librapid::isNaN(av)) {
-			return av;									// Real component is NaN
+			return av; // Real component is NaN
 		} else if (::librapid::isNaN(bv)) {
-			return bv;									// Imaginary component is NaN
+			return bv; // Imaginary component is NaN
 		} else {
 			if (av < bv) std::swap(av, bv);
 			if (av == 0) return av; // |0| = 0
@@ -1767,7 +1767,7 @@ namespace librapid {
 		int64_t otherExp;
 		T rho = _fabs(other, &otherExp); // Get magnitude and scale factor
 
-		if (otherExp == 0) {			 // Argument is zero, Inf or NaN
+		if (otherExp == 0) { // Argument is zero, Inf or NaN
 			if (rho == 0) {
 				return Complex<T>(T(0), imag(other));
 			} else if (::librapid::isInf(rho)) {
@@ -2022,8 +2022,9 @@ namespace librapid {
 	/// \param seed Seed for the random number generator
 	/// \return Random complex number between min and max
 	template<typename T>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T>
-	random(const Complex<T> &min, const Complex<T> &max, uint64_t seed = -1) {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto random(const Complex<T> &min,
+														  const Complex<T> &max, uint64_t seed = -1)
+	  -> Complex<T> {
 		return Complex<T>(::librapid::random(real(min), real(max), seed),
 						  ::librapid::random(imag(min), imag(max), seed));
 	}
@@ -2031,8 +2032,8 @@ namespace librapid {
 	namespace typetraits {
 		template<typename T>
 		struct TypeInfo<Complex<T>> {
-			detail::LibRapidType type = detail::LibRapidType::Scalar;
-			using Scalar			  = Complex<T>;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			using Scalar							   = Complex<T>;
 			using Packet =
 			  typename std::conditional_t<(TypeInfo<T>::packetWidth > 1),
 										  Complex<typename TypeInfo<T>::Packet>, std::false_type>;
