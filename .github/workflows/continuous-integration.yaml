@@ -382,12 +382,20 @@ jobs:
         with:
           python-version: "3.9"
 
+      - name: Install Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "15.0"
+          directory: "./llvm"
+          env: on
+
       - name: Build Doxygen
         id: build_doxygen
         continue-on-error: true
         run: |
           git clone --recursive https://github.com/doxygen/doxygen.git
           cd doxygen
+          git checkout Release_1_9_7
           mkdir build
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
