@@ -9,7 +9,7 @@ regex
 
 myst-parser
 sphinx-design
-sphinx-favicon
+sphinx-favicon==1.0.1
 sphinx-autobuild
 sphinx-copybutton
 linkify-it-py
