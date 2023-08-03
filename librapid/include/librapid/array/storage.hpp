@@ -103,6 +103,15 @@ namespace librapid {
 		/// \param other Storage object to reference
 		void set(const Storage &other);
 
+		/// \brief Return a Storage object on the host with the same data as this Storage object
+		/// (mainly for use with CUDA or OpenCL)
+		/// \return
+		Storage toHostStorage() const;
+
+		/// \brief Same as `toHostStorage()` but does not necessarily copy the data
+		/// \return Storage object on the host
+		Storage toHostStorageUnsafe() const;
+
 		/// \brief Create a deep copy of this Storage object
 		/// \return Deep copy of this Storage object
 		Storage copy() const;
@@ -568,6 +577,16 @@ namespace librapid {
 		m_begin	   = other.m_begin;
 		m_size	   = other.m_size;
 		m_ownsData = other.m_ownsData;
+	}
+
+	template<typename T>
+	auto Storage<T>::toHostStorage() const -> Storage {
+		return copy();
+	}
+
+	template<typename T>
+	auto Storage<T>::toHostStorageUnsafe() const -> Storage {
+		return copy();
 	}
 
 	template<typename T>
