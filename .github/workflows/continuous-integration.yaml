@@ -382,6 +382,13 @@ jobs:
         with:
           python-version: "3.9"
 
+      - name: Install Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "15.0"
+          directory: "./llvm"
+          env: on
+
       - name: Build Doxygen
         id: build_doxygen
         continue-on-error: true

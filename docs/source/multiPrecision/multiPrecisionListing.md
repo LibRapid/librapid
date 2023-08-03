@@ -1,7 +1,5 @@
 # Multi-Precision Listing
 
----
-
 ```{doxygenclass} librapid::mpz
     :members:
     :protected-members:
