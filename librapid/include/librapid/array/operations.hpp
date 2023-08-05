@@ -27,10 +27,7 @@
 		template<typename Packet>                                                                  \
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto packet(const Packet &lhs,                   \
 															  const Packet &rhs) const {           \
-			auto mask = lhs OP_ rhs;                                                               \
-			Packet res(1);                                                                         \
-			res.setZero(!mask);                                                                    \
-			return res;                                                                            \
+			return Packet(lhs OP_ rhs);                                                            \
 		}                                                                                          \
 	}
 

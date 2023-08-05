@@ -184,11 +184,11 @@ namespace librapid {
 		/// \param newSize New size of the Storage object
 		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize);
 
-//#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-//		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Pointer m_begin = nullptr;
-//#else
-//		Pointer m_begin = nullptr; // Pointer to the beginning of the data
-//#endif
+		// #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
+		//		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Pointer m_begin = nullptr;
+		// #else
+		//		Pointer m_begin = nullptr; // Pointer to the beginning of the data
+		// #endif
 
 		Pointer m_begin = nullptr;
 
@@ -368,21 +368,16 @@ namespace librapid {
 			// MKL has its own memory allocation function
 			auto ptr = static_cast<RawPointer>(mkl_malloc(size * sizeof(T), 64));
 #else
-#	if defined(LIBRAPID_NATIVE_ARCH)
 			// Force aligned memory
-#		if defined(LIBRAPID_APPLE)
+#	if defined(LIBRAPID_APPLE)
 			// No memory allignment. It breaks everything for some reason
 			auto ptr = static_cast<RawPointer>(std::malloc(size * sizeof(T)));
-#		elif defined(LIBRAPID_MSVC) || defined(LIBRAPID_MINGW)
+#	elif defined(LIBRAPID_MSVC) || defined(LIBRAPID_MINGW)
 			auto ptr =
 			  static_cast<RawPointer>(_aligned_malloc(size * sizeof(T), global::memoryAlignment));
-#		else
+#	else
 			auto ptr = static_cast<RawPointer>(
 			  std::aligned_alloc(global::memoryAlignment, size * sizeof(T)));
-#		endif
-#	else
-			// No memory alignment
-			auto ptr = static_cast<RawPointer>(std::malloc(size * sizeof(T)));
 #	endif
 #endif
 

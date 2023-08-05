@@ -41,8 +41,8 @@ namespace librapid {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
 			using Scalar							   = T;
 			using Packet							   = typename TypeInfo<T>::Packet;
-			using IndexType		 = typename std::decay_t<decltype(std::declval<Packet>()[0])>;
-			using IndexTypeConst = typename std::decay_t<decltype(std::declval<const Packet>()[0])>;
+			using IndexType		 = Scalar &;
+			using IndexTypeConst = const Scalar &;
 			using GetType		 = const Packet &;
 
 			using StorageType = vectorDetail::SimdVectorStorage<T, N>;
@@ -279,7 +279,7 @@ namespace librapid {
 								length);
 				const int64_t packetIndex  = index / packetWidth;
 				const int64_t elementIndex = index % packetWidth;
-				return data[packetIndex][elementIndex];
+				return data[packetIndex].get(elementIndex);
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType operator[](int64_t index) {
@@ -287,9 +287,7 @@ namespace librapid {
 								"Index {} out of bounds for Vector of length {}",
 								index,
 								length);
-				const int64_t packetIndex  = index / packetWidth;
-				const int64_t elementIndex = index % packetWidth;
-				return data[packetIndex][elementIndex];
+				static_assert(false, "Not implemented");
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sum() const -> Scalar {

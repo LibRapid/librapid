@@ -675,15 +675,22 @@ namespace librapid {
 	namespace typetraits {
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
-		struct TypeInfo<linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB,
-											  Alpha, Beta>> {
+		struct TypeInfo<
+		  linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>> {
 			detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
-			using Type = linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB,
-											  Alpha, Beta>;
+			using Type	 = linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB,
+												 Alpha, Beta>;
 			using Scalar = typename Type::Scalar;
-			using Backend = typename Type::Backend;
+			using Backend							 = typename Type::Backend;
+			static constexpr bool allowVectorisation = false;
 		};
-	}
+
+		LIBRAPID_DEFINE_AS_TYPE(typename ShapeTypeA COMMA typename StorageTypeA COMMA
+								typename ShapeTypeB COMMA typename StorageTypeB COMMA
+								typename Alpha COMMA typename Beta,
+								linalg::ArrayMultiply<ShapeTypeA COMMA StorageTypeA COMMA ShapeTypeB
+														COMMA StorageTypeB COMMA Alpha COMMA Beta>);
+	} // namespace typetraits
 } // namespace librapid
 
 LIBRAPID_SIMPLE_IO_IMPL(

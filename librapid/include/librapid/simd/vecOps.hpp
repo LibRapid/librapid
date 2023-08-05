@@ -1,18 +1,13 @@
 #ifndef LIBRAPID_SIMD_TRIGONOMETRY
 #define LIBRAPID_SIMD_TRIGONOMETRY
 
-#if 0
-
 namespace librapid {
 	namespace typetraits {
 		template<typename T>
 		struct IsSIMD : std::false_type {};
 
-		// template<typename T>
-		// struct IsSIMD<Vc::Vector<T>> : std::true_type {};
-
 		template<typename T, typename U>
-		struct IsSIMD<Vc_1::Vector<T, U>> : std::true_type {};
+		struct IsSIMD<xsimd::batch<T, U>> : std::true_type {};
 	} // namespace typetraits
 
 #define REQUIRE_SIMD(TYPE) typename std::enable_if_t<typetraits::IsSIMD<TYPE>::value, int> = 0
@@ -20,41 +15,47 @@ namespace librapid {
 
 	template<typename T, REQUIRE_SIMD(T)>
 	auto sin(const T &x) -> T {
-		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::sin(x); }
-		else {
-			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = sin(static_cast<Scalar>(x[i])); }
-			return result;
-		}
+//		using Scalar = typename T::value_type;
+//		IF_FLOATING(T) { return xsimd::sin(x); }
+//		else {
+//			T result;
+//			for (int i = 0; i < x.size(); ++i) { result[i] = sin(static_cast<Scalar>(x[i])); }
+//			return result;
+//		}
+
+		return xsimd::sin(x);
 	}
 
 	template<typename T, REQUIRE_SIMD(T)>
 	auto cos(const T &x) -> T {
-		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::cos(x); }
-		else {
-			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = cos(static_cast<Scalar>(x[i])); }
-			return result;
-		}
+//		using Scalar = typename T::value_type;
+//		IF_FLOATING(T) { return xsimd::cos(x); }
+//		else {
+//			T result;
+//			for (int i = 0; i < x.size(); ++i) { result[i] = cos(static_cast<Scalar>(x[i])); }
+//			return result;
+//		}
+
+		return xsimd::cos(x);
 	}
 
 	template<typename T, REQUIRE_SIMD(T)>
 	auto tan(const T &x) -> T {
-		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::sin(x) / Vc::cos(x); }
-		else {
-			T result;
-			for (int i = 0; i < x.size(); ++i) { result[i] = tan(static_cast<Scalar>(x[i])); }
-			return result;
-		}
+//		using Scalar = typename T::value_type;
+//		IF_FLOATING(T) { return xsimd::sin(x) / xsimd::cos(x); }
+//		else {
+//			T result;
+//			for (int i = 0; i < x.size(); ++i) { result[i] = tan(static_cast<Scalar>(x[i])); }
+//			return result;
+//		}
+
+		return xsimd::tan(x);
 	}
 
 	template<typename T, REQUIRE_SIMD(T)>
 	auto asin(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::asin(x); }
+		IF_FLOATING(T) { return xsimd::asin(x); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = asin(static_cast<Scalar>(x[i])); }
@@ -66,8 +67,8 @@ namespace librapid {
 	auto acos(const T &x) -> T {
 		using Scalar = typename T::value_type;
 		IF_FLOATING(T) {
-			static const auto asin1 = Vc::asin(T(1));
-			return asin1 - Vc::asin(x);
+			static const auto asin1 = xsimd::asin(T(1));
+			return asin1 - xsimd::asin(x);
 		}
 		else {
 			T result;
@@ -79,7 +80,7 @@ namespace librapid {
 	template<typename T, REQUIRE_SIMD(T)>
 	auto atan(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::atan(x); }
+		IF_FLOATING(T) { return xsimd::atan(x); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = atan(static_cast<Scalar>(x[i])); }
@@ -90,7 +91,7 @@ namespace librapid {
 	template<typename T, REQUIRE_SIMD(T)>
 	auto sinh(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return (Vc::exp(x) - Vc::exp(-x)) * T(0.5); }
+		IF_FLOATING(T) { return (xsimd::exp(x) - xsimd::exp(-x)) * T(0.5); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = sinh(static_cast<Scalar>(x[i])); }
@@ -101,7 +102,7 @@ namespace librapid {
 	template<typename T, REQUIRE_SIMD(T)>
 	auto cosh(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return (Vc::exp(x) + Vc::exp(-x)) * T(0.5); }
+		IF_FLOATING(T) { return (xsimd::exp(x) + xsimd::exp(-x)) * T(0.5); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = cosh(static_cast<Scalar>(x[i])); }
@@ -112,7 +113,7 @@ namespace librapid {
 	template<typename T, REQUIRE_SIMD(T)>
 	auto tanh(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return (Vc::exp(2 * x) - 1) / (Vc::exp(2 * x) + 1); }
+		IF_FLOATING(T) { return (xsimd::exp(2 * x) - 1) / (xsimd::exp(2 * x) + 1); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = tanh(static_cast<Scalar>(x[i])); }
@@ -123,7 +124,7 @@ namespace librapid {
 	template<typename T, REQUIRE_SIMD(T)>
 	auto exp(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::exp(x); }
+		IF_FLOATING(T) { return xsimd::exp(x); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = exp(static_cast<Scalar>(x[i])); }
@@ -134,7 +135,7 @@ namespace librapid {
 	template<typename T, REQUIRE_SIMD(T)>
 	auto log(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::log(x); }
+		IF_FLOATING(T) { return xsimd::log(x); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = log(static_cast<Scalar>(x[i])); }
@@ -145,7 +146,7 @@ namespace librapid {
 	template<typename T, REQUIRE_SIMD(T)>
 	auto log2(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::log2(x); }
+		IF_FLOATING(T) { return xsimd::log2(x); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = log2(static_cast<Scalar>(x[i])); }
@@ -156,7 +157,7 @@ namespace librapid {
 	template<typename T, REQUIRE_SIMD(T)>
 	auto log10(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::log10(x); }
+		IF_FLOATING(T) { return xsimd::log10(x); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = log10(static_cast<Scalar>(x[i])); }
@@ -167,7 +168,7 @@ namespace librapid {
 	template<typename T, REQUIRE_SIMD(T)>
 	auto sqrt(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::sqrt(x); }
+		IF_FLOATING(T) { return xsimd::sqrt(x); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = sqrt(static_cast<Scalar>(x[i])); }
@@ -177,16 +178,18 @@ namespace librapid {
 
 	template<typename T, REQUIRE_SIMD(T)>
 	auto cbrt(const T &x) -> T {
-		using Scalar = typename T::value_type;
-		T result;
-		for (int i = 0; i < x.size(); ++i) { result[i] = cbrt(static_cast<Scalar>(x[i])); }
-		return result;
+		// using Scalar = typename T::value_type;
+		// T result;
+		// for (int i = 0; i < x.size(); ++i) { result[i] = cbrt(static_cast<Scalar>(x[i])); }
+		// return result;
+
+		return xsimd::cbrt(x);
 	}
 
 	template<typename T, REQUIRE_SIMD(T)>
 	auto abs(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::abs(x); }
+		IF_FLOATING(T) { return xsimd::abs(x); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = abs(static_cast<Scalar>(x[i])); }
@@ -197,7 +200,7 @@ namespace librapid {
 	template<typename T, REQUIRE_SIMD(T)>
 	auto floor(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::floor(x); }
+		IF_FLOATING(T) { return xsimd::floor(x); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = floor(static_cast<Scalar>(x[i])); }
@@ -208,7 +211,7 @@ namespace librapid {
 	template<typename T, REQUIRE_SIMD(T)>
 	auto ceil(const T &x) -> T {
 		using Scalar = typename T::value_type;
-		IF_FLOATING(T) { return Vc::ceil(x); }
+		IF_FLOATING(T) { return xsimd::ceil(x); }
 		else {
 			T result;
 			for (int i = 0; i < x.size(); ++i) { result[i] = ceil(static_cast<Scalar>(x[i])); }
@@ -216,7 +219,5 @@ namespace librapid {
 		}
 	}
 } // namespace librapid
-
-#endif
 
 #endif // LIBRAPID_SIMD_TRIGONOMETRY

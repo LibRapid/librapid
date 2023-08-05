@@ -484,6 +484,7 @@ if (LIBRAPID_NATIVE_ARCH)
 
     include(ArchDetect2)
     target_compile_options(${module_name} PUBLIC ${LIBRAPID_ARCH_FLAGS})
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_NATIVE_ARCH)
 
 #    OptimizeForArchitecture()
 #    target_compile_options(${module_name} PUBLIC ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
