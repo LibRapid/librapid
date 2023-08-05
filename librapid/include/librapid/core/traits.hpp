@@ -211,9 +211,9 @@ namespace librapid {
 		struct TypeInfo<int8_t> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = int8_t;
-			using Packet							   = Vc::Vector<int8_t>;
+			using Packet							   = xsimd::batch<int8_t>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "int8_t";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -242,9 +242,9 @@ namespace librapid {
 		struct TypeInfo<uint8_t> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = uint8_t;
-			using Packet							   = Vc::Vector<uint8_t>;
+			using Packet							   = xsimd::batch<uint8_t>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "uint8_t";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -273,9 +273,9 @@ namespace librapid {
 		struct TypeInfo<int16_t> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = int16_t;
-			using Packet							   = Vc::Vector<int16_t>;
+			using Packet							   = xsimd::batch<int16_t>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "int16_t";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -304,9 +304,9 @@ namespace librapid {
 		struct TypeInfo<uint16_t> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = uint16_t;
-			using Packet							   = Vc::Vector<uint16_t>;
+			using Packet							   = xsimd::batch<uint16_t>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "uint16_t";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -335,9 +335,9 @@ namespace librapid {
 		struct TypeInfo<int32_t> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = int32_t;
-			using Packet							   = Vc::Vector<int32_t>;
+			using Packet							   = xsimd::batch<int32_t>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "int32_t";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -366,9 +366,9 @@ namespace librapid {
 		struct TypeInfo<uint32_t> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = uint32_t;
-			using Packet							   = Vc::Vector<uint32_t>;
+			using Packet							   = xsimd::batch<uint32_t>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "uint32_t";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -459,9 +459,9 @@ namespace librapid {
 		struct TypeInfo<float> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = float;
-			using Packet							   = Vc::Vector<float>;
+			using Packet							   = xsimd::batch<float>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "float";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -490,9 +490,9 @@ namespace librapid {
 		struct TypeInfo<double> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = double;
-			using Packet							   = Vc::Vector<double>;
+			using Packet							   = xsimd::batch<double>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "double";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -518,7 +518,7 @@ namespace librapid {
 		};
 
 		template<typename T, typename Abi>
-		struct TypeInfo<Vc::Vector<T, Abi>> {
+		struct TypeInfo<xsimd::batch<T, Abi>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
 			using Scalar							   = T;
 			using Packet							   = std::false_type;
@@ -735,32 +735,6 @@ namespace librapid {
 			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 #endif
-
-		template<typename VectorType, typename InstructionSet>
-		struct TypeInfo<Vc_1::Detail::ElementReference<VectorType, InstructionSet>> {
-			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
-			using Scalar							   = typename VectorType::EntryType;
-			using Packet							   = std::false_type;
-			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = 1;
-			static constexpr char name[]			   = "Vc::ElementReference";
-			static constexpr bool supportsArithmetic   = true;
-			static constexpr bool supportsLogical	   = false;
-			static constexpr bool supportsBinary	   = false;
-			static constexpr bool allowVectorisation   = false;
-
-			static constexpr bool canAlign	= true;
-			static constexpr bool canMemcpy = false;
-
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
-		};
 
 		template<>
 		struct TypeInfo<backend::CPU> {

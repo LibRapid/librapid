@@ -756,11 +756,11 @@ namespace librapid {
 			return val;
 		}
 
-		template<typename T, typename U>
-		constexpr auto scalarExtractor(const Vc_1::Detail::ElementReference<T, U> &val) {
-			using Scalar = typename Vc_1::Detail::ElementReference<T, U>::value_type;
-			return static_cast<Scalar>(val);
-		}
+		// template<typename T, typename U>
+		// constexpr auto scalarExtractor(const Vc_1::Detail::ElementReference<T, U> &val) {
+		// 	using Scalar = typename Vc_1::Detail::ElementReference<T, U>::value_type;
+		// 	return static_cast<Scalar>(val);
+		// }
 
 		template<typename NewScalar, size_t NewDims, typename T>
 		constexpr auto scalarVectorCaster(const T &val) {

@@ -1,6 +1,8 @@
 #ifndef LIBRAPID_SIMD_TRIGONOMETRY
 #define LIBRAPID_SIMD_TRIGONOMETRY
 
+#if 0
+
 namespace librapid {
 	namespace typetraits {
 		template<typename T>
@@ -214,5 +216,7 @@ namespace librapid {
 		}
 	}
 } // namespace librapid
+
+#endif
 
 #endif // LIBRAPID_SIMD_TRIGONOMETRY

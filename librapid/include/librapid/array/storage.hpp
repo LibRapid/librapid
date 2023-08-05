@@ -184,11 +184,14 @@ namespace librapid {
 		/// \param newSize New size of the Storage object
 		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize);
 
-#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Pointer m_begin = nullptr;
-#else
-		Pointer m_begin = nullptr; // Pointer to the beginning of the data
-#endif
+//#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
+//		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Pointer m_begin = nullptr;
+//#else
+//		Pointer m_begin = nullptr; // Pointer to the beginning of the data
+//#endif
+
+		Pointer m_begin = nullptr;
+
 		SizeType m_size = 0;	// Number of elements in the Storage object
 		bool m_ownsData = true; // Whether this Storage object owns the data it points to
 	};

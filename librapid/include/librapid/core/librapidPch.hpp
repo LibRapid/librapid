@@ -71,10 +71,12 @@
 #	pragma warning(disable : 4127) // conditional expression is constant
 #endif
 
-#include <Vc/Vc>
-#include <Vc/algorithm>
-#include <Vc/cpuid.h>
-#include <Vc/common/simdize.h>
+// #include <Vc/Vc>
+// #include <Vc/algorithm>
+// #include <Vc/cpuid.h>
+// #include <Vc/common/simdize.h>
+
+#include <xsimd/xsimd.hpp>
 
 #if defined(_MSC_VER)
 #	pragma warning(pop)

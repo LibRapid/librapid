@@ -415,19 +415,14 @@ endif ()
 
 # Add dependencies
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/fmt")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
-
-if (NOT MINGW)
-    # scnlib does not support MinGW, since it does not implement std::from_chars, which is required by the library
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
-else ()
-    message(WARNING "[ LIBRAPID ] scnlib cannot be built by MinGW, so it will not be enabled")
-    target_compile_definitions(${module_name} PUBLIC LIBRAPID_MINGW)
-endif ()
+# add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/xsimd")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
 
 target_compile_definitions(fmt PUBLIC FMT_HEADER_ONLY)
-target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
-target_link_libraries(${module_name} PUBLIC fmt scn Vc)
+# target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
+# target_link_libraries(${module_name} PUBLIC fmt scn Vc xsimd)
+target_link_libraries(${module_name} PUBLIC fmt scn xsimd)
 
 if (${LIBRAPID_USE_MULTIPREC})
     # Load MPIR
@@ -484,15 +479,18 @@ if (LIBRAPID_FAST_MATH)
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_FAST_MATH)
 endif ()
 
-set(LIBRAPID_ARCH_FLAGS)
 if (LIBRAPID_NATIVE_ARCH)
     message(STATUS "[ LIBRAPID ] Compiling for native architecture")
-    OptimizeForArchitecture()
-    target_compile_options(${module_name} PUBLIC ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
-    target_compile_definitions(${module_name} PUBLIC LIBRAPID_NATIVE_ARCH)
-    set(LIBRAPID_ARCH_FLAGS ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
-    message(STATUS "[ LIBRAPID ] Additional Definitions: ${Vc_DEFINITIONS}")
-    message(STATUS "[ LIBRAPID ] Supported flags: ${Vc_ARCHITECTURE_FLAGS}")
+
+    include(ArchDetect2)
+    target_compile_options(${module_name} PUBLIC ${LIBRAPID_ARCH_FLAGS})
+
+#    OptimizeForArchitecture()
+#    target_compile_options(${module_name} PUBLIC ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
+#    target_compile_definitions(${module_name} PUBLIC LIBRAPID_NATIVE_ARCH)
+#    set(LIBRAPID_ARCH_FLAGS ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
+#    message(STATUS "[ LIBRAPID ] Additional Definitions: ${Vc_DEFINITIONS}")
+#    message(STATUS "[ LIBRAPID ] Supported flags: ${Vc_ARCHITECTURE_FLAGS}")
 endif ()
 
 # Add defines for CUDA vector widths

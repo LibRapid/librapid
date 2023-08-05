@@ -668,9 +668,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		auto ArrayContainer<ShapeType_, StorageType_>::packet(size_t index) const -> Packet {
-			Packet res;
-			res.load(m_storage.begin() + index);
-			return res;
+			return xsimd::load_aligned(m_storage.begin() + index);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
@@ -681,7 +679,7 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		void ArrayContainer<ShapeType_, StorageType_>::writePacket(size_t index,
 																   const Packet &value) {
-			value.store(m_storage.begin() + index);
+			value.store_aligned(m_storage.begin() + index);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
