@@ -23,6 +23,9 @@ namespace librapid {
 	using Scalar = typename typetraits::TypeInfo<T>::Scalar;
 #endif
 
+		using Packet						  = typename typetraits::TypeInfo<T>::Packet;
+		static constexpr uint64_t packetWidth = typetraits::TypeInfo<T>::packetWidth;
+
 		Dual() = default;
 		explicit Dual(T value) : value(value), derivative(T()) {}
 		Dual(T value, T derivative) : value(value), derivative(derivative) {}
@@ -52,16 +55,37 @@ namespace librapid {
 
 		template<typename P>
 		LIBRAPID_ALWAYS_INLINE void store(P *ptr) const {
-			auto casted = reinterpret_cast<Scalar *>(ptr);
-			auto ret	= Vc::interleave(value, derivative);
-			ret.first.store(casted);
-			ret.second.store(casted + size());
+			// Load the data into batches.
+			auto casted = reinterpret_cast<const Scalar *>(ptr);
+
+			// Compute interleaved values.
+			std::array<Scalar, 2 * packetWidth> interleaved;
+			for (std::size_t i = 0; i < packetWidth; ++i) {
+				interleaved[2 * i]	   = value.get(i);
+				interleaved[2 * i + 1] = derivative.get(i);
+			}
+
+			// Store the interleaved values back to memory.
+			std::copy(interleaved.begin(), interleaved.end(), casted);
 		}
 
 		template<typename P>
 		LIBRAPID_ALWAYS_INLINE void load(const P *ptr) {
+			//			auto casted = reinterpret_cast<const Scalar *>(ptr);
+			//			Vc::deinterleave(&value, &derivative, casted, Vc::Aligned);
+
+			// Load the data into batches.
 			auto casted = reinterpret_cast<const Scalar *>(ptr);
-			Vc::deinterleave(&value, &derivative, casted, Vc::Aligned);
+
+			// Compute interleaved values.
+			std::array<Scalar, 2 * packetWidth> interleaved;
+			std::copy(casted, casted + 2 * packetWidth, interleaved.begin());
+
+			// Store the interleaved values back to memory.
+			for (std::size_t i = 0; i < packetWidth; ++i) {
+				value.set(i, interleaved[2 * i]);
+				derivative.set(i, interleaved[2 * i + 1]);
+			}
 		}
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual operator+=(const Dual &other) {
@@ -363,7 +387,7 @@ namespace librapid {
 		struct TypeInfo<Dual<T>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Dual;
 			using Scalar							   = T;
-			using Packet = Dual<typename TypeInfo<T>::Packet>;
+			using Packet							   = Dual<typename TypeInfo<T>::Packet>;
 			static constexpr int64_t packetWidth =
 			  TypeInfo<typename TypeInfo<T>::Scalar>::packetWidth;
 			using Backend = backend::CPU;
@@ -397,7 +421,7 @@ namespace librapid {
 		struct TypeInfo<Dual<float>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Dual;
 			using Scalar							   = float;
-			using Packet = Dual<typename TypeInfo<float>::Packet>;
+			using Packet							   = Dual<typename TypeInfo<float>::Packet>;
 			static constexpr int64_t packetWidth =
 			  TypeInfo<typename TypeInfo<float>::Scalar>::packetWidth;
 			using Backend = backend::CPU;
