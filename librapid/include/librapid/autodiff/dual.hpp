@@ -18,13 +18,14 @@ namespace librapid {
 		T derivative;
 
 #if defined(LIBRAPID_IN_JITIFY)
-		using Scalar = T;
+		using Scalar						  = T;
+		using Packet						  = T;
+		static constexpr uint64_t packetWidth = 1;
 #else
-	using Scalar = typename typetraits::TypeInfo<T>::Scalar;
+	using Scalar						  = typename typetraits::TypeInfo<T>::Scalar;
+	using Packet						  = typename typetraits::TypeInfo<T>::Packet;
+	static constexpr uint64_t packetWidth = typetraits::TypeInfo<T>::packetWidth;
 #endif
-
-		using Packet						  = typename typetraits::TypeInfo<T>::Packet;
-		static constexpr uint64_t packetWidth = typetraits::TypeInfo<T>::packetWidth;
 
 		Dual() = default;
 		explicit Dual(T value) : value(value), derivative(T()) {}
@@ -53,40 +54,40 @@ namespace librapid {
 
 		static constexpr size_t size() { return typetraits::TypeInfo<Dual>::packetWidth; }
 
-		template<typename P>
-		LIBRAPID_ALWAYS_INLINE void store(P *ptr) const {
-			// Load the data into batches.
-			auto casted = reinterpret_cast<const Scalar *>(ptr);
+		//		template<typename P>
+		//		LIBRAPID_ALWAYS_INLINE void store(P *ptr) const {
+		//			// Load the data into batches.
+		//			auto casted = reinterpret_cast<const Scalar *>(ptr);
+		//
+		//			// Compute interleaved values.
+		//			std::array<Scalar, 2 * packetWidth> interleaved;
+		//			for (std::size_t i = 0; i < packetWidth; ++i) {
+		//				interleaved[2 * i]	   = value.get(i);
+		//				interleaved[2 * i + 1] = derivative.get(i);
+		//			}
+		//
+		//			// Store the interleaved values back to memory.
+		//			std::copy(interleaved.begin(), interleaved.end(), casted);
+		//		}
 
-			// Compute interleaved values.
-			std::array<Scalar, 2 * packetWidth> interleaved;
-			for (std::size_t i = 0; i < packetWidth; ++i) {
-				interleaved[2 * i]	   = value.get(i);
-				interleaved[2 * i + 1] = derivative.get(i);
-			}
-
-			// Store the interleaved values back to memory.
-			std::copy(interleaved.begin(), interleaved.end(), casted);
-		}
-
-		template<typename P>
-		LIBRAPID_ALWAYS_INLINE void load(const P *ptr) {
-			//			auto casted = reinterpret_cast<const Scalar *>(ptr);
-			//			Vc::deinterleave(&value, &derivative, casted, Vc::Aligned);
-
-			// Load the data into batches.
-			auto casted = reinterpret_cast<const Scalar *>(ptr);
-
-			// Compute interleaved values.
-			std::array<Scalar, 2 * packetWidth> interleaved;
-			std::copy(casted, casted + 2 * packetWidth, interleaved.begin());
-
-			// Store the interleaved values back to memory.
-			for (std::size_t i = 0; i < packetWidth; ++i) {
-				value.set(i, interleaved[2 * i]);
-				derivative.set(i, interleaved[2 * i + 1]);
-			}
-		}
+		//		template<typename P>
+		//		LIBRAPID_ALWAYS_INLINE void load(const P *ptr) {
+		//			//			auto casted = reinterpret_cast<const Scalar *>(ptr);
+		//			//			Vc::deinterleave(&value, &derivative, casted, Vc::Aligned);
+		//
+		//			// Load the data into batches.
+		//			auto casted = reinterpret_cast<const Scalar *>(ptr);
+		//
+		//			// Compute interleaved values.
+		//			std::array<Scalar, 2 * packetWidth> interleaved;
+		//			std::copy(casted, casted + 2 * packetWidth, interleaved.begin());
+		//
+		//			// Store the interleaved values back to memory.
+		//			for (std::size_t i = 0; i < packetWidth; ++i) {
+		//				value.set(i, interleaved[2 * i]);
+		//				derivative.set(i, interleaved[2 * i + 1]);
+		//			}
+		//		}
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual operator+=(const Dual &other) {
 			value += other.value;
@@ -387,9 +388,9 @@ namespace librapid {
 		struct TypeInfo<Dual<T>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Dual;
 			using Scalar							   = T;
-			using Packet							   = Dual<typename TypeInfo<T>::Packet>;
+			using Packet = std::false_type; // Dual<typename TypeInfo<T>::Packet>;
 			static constexpr int64_t packetWidth =
-			  TypeInfo<typename TypeInfo<T>::Scalar>::packetWidth;
+			  0; // TypeInfo<typename TypeInfo<T>::Scalar>::packetWidth;
 			using Backend = backend::CPU;
 
 			static constexpr char name[] = "Dual_T";
@@ -397,7 +398,7 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = TypeInfo<T>::supportsArithmetic;
 			static constexpr bool supportsLogical	 = TypeInfo<T>::supportsLogical;
 			static constexpr bool supportsBinary	 = TypeInfo<T>::supportsBinary;
-			static constexpr bool allowVectorisation = TypeInfo<T>::allowVectorisation;
+			static constexpr bool allowVectorisation = false; // TypeInfo<T>::allowVectorisation;
 
 #	if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = TypeInfo<T>::CudaType;
@@ -421,9 +422,9 @@ namespace librapid {
 		struct TypeInfo<Dual<float>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Dual;
 			using Scalar							   = float;
-			using Packet							   = Dual<typename TypeInfo<float>::Packet>;
+			using Packet = std::false_type; // Dual<typename TypeInfo<float>::Packet>;
 			static constexpr int64_t packetWidth =
-			  TypeInfo<typename TypeInfo<float>::Scalar>::packetWidth;
+			  0; // TypeInfo<typename TypeInfo<float>::Scalar>::packetWidth;
 			using Backend = backend::CPU;
 
 			static constexpr char name[] = "Dual_float";
@@ -431,7 +432,8 @@ namespace librapid {
 			static constexpr bool supportsArithmetic = TypeInfo<float>::supportsArithmetic;
 			static constexpr bool supportsLogical	 = TypeInfo<float>::supportsLogical;
 			static constexpr bool supportsBinary	 = TypeInfo<float>::supportsBinary;
-			static constexpr bool allowVectorisation = TypeInfo<float>::allowVectorisation;
+			static constexpr bool allowVectorisation =
+			  false; // TypeInfo<float>::allowVectorisation;
 
 #	if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = TypeInfo<float>::CudaType;

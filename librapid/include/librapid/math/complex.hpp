@@ -480,19 +480,19 @@ namespace librapid {
 			return *this;
 		}
 
-		template<typename P>
-		LIBRAPID_ALWAYS_INLINE void store(P *ptr) const {
-			auto casted = reinterpret_cast<Scalar *>(ptr);
-			auto ret	= Vc::interleave(m_val[RE], m_val[IM]);
-			ret.first.store(casted);
-			ret.second.store(casted + size());
-		}
+		// template<typename P>
+		// LIBRAPID_ALWAYS_INLINE void store(P *ptr) const {
+		// 	auto casted = reinterpret_cast<Scalar *>(ptr);
+		// 	auto ret	= Vc::interleave(m_val[RE], m_val[IM]);
+		// 	ret.first.store(casted);
+		// 	ret.second.store(casted + size());
+		// }
 
-		template<typename P>
-		LIBRAPID_ALWAYS_INLINE void load(const P *ptr) {
-			auto casted = reinterpret_cast<const Scalar *>(ptr);
-			Vc::deinterleave(&m_val[RE], &m_val[IM], casted, Vc::Aligned);
-		}
+		// template<typename P>
+		// LIBRAPID_ALWAYS_INLINE void load(const P *ptr) {
+		// 	auto casted = reinterpret_cast<const Scalar *>(ptr);
+		// 	Vc::deinterleave(&m_val[RE], &m_val[IM], casted, Vc::Aligned);
+		// }
 
 		/// \brief Assign to the real component
 		///
@@ -2047,11 +2047,11 @@ namespace librapid {
 		struct TypeInfo<Complex<T>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = Complex<T>;
-			using Packet =
-			  typename std::conditional_t<(TypeInfo<T>::packetWidth > 1),
-										  Complex<typename TypeInfo<T>::Packet>, std::false_type>;
+			using Packet = std::false_type;
+			  // typename std::conditional_t<(TypeInfo<T>::packetWidth > 1),
+			  // 							  Complex<typename TypeInfo<T>::Packet>, std::false_type>;
 			static constexpr int64_t packetWidth =
-			  TypeInfo<typename TypeInfo<T>::Scalar>::packetWidth;
+			  0; // TypeInfo<typename TypeInfo<T>::Scalar>::packetWidth;
 			static constexpr char name[]			 = "Complex";
 			static constexpr bool supportsArithmetic = true;
 			static constexpr bool supportsLogical	 = true;
