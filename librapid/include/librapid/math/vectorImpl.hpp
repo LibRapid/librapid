@@ -287,7 +287,9 @@ namespace librapid {
 								"Index {} out of bounds for Vector of length {}",
 								index,
 								length);
-				static_assert(false, "Not implemented");
+				const int64_t packetIndex  = index / packetWidth;
+				const int64_t elementIndex = index % packetWidth;
+				return data[packetIndex][elementIndex];
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sum() const -> Scalar {
