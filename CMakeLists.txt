@@ -47,6 +47,13 @@ option(LIBRAPID_NO_WINDOWS_H "Don't include the Windows.h header" OFF)
 
 option(LIBRAPID_MKL_CONFIG_PATH "Path to the 'MKLConfig.cmake' file" "")
 
+
+# Native arch does not work on MacOS
+if (IS_MACOS AND LIBRAPID_NATIVE_ARCH)
+    message(WARNING "[ LIBRAPID ] Native architecture optimisation is not currently supported on MacOS")
+    set(LIBRAPID_NATIVE_ARCH OFF)
+endif ()
+
 MACRO(SUBDIRLIST result curdir)
     FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
     SET(dirlist "")
@@ -486,12 +493,12 @@ if (LIBRAPID_NATIVE_ARCH)
     target_compile_options(${module_name} PUBLIC ${LIBRAPID_ARCH_FLAGS})
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_NATIVE_ARCH)
 
-#    OptimizeForArchitecture()
-#    target_compile_options(${module_name} PUBLIC ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
-#    target_compile_definitions(${module_name} PUBLIC LIBRAPID_NATIVE_ARCH)
-#    set(LIBRAPID_ARCH_FLAGS ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
-#    message(STATUS "[ LIBRAPID ] Additional Definitions: ${Vc_DEFINITIONS}")
-#    message(STATUS "[ LIBRAPID ] Supported flags: ${Vc_ARCHITECTURE_FLAGS}")
+    #    OptimizeForArchitecture()
+    #    target_compile_options(${module_name} PUBLIC ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
+    #    target_compile_definitions(${module_name} PUBLIC LIBRAPID_NATIVE_ARCH)
+    #    set(LIBRAPID_ARCH_FLAGS ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
+    #    message(STATUS "[ LIBRAPID ] Additional Definitions: ${Vc_DEFINITIONS}")
+    #    message(STATUS "[ LIBRAPID ] Supported flags: ${Vc_ARCHITECTURE_FLAGS}")
 endif ()
 
 # Add defines for CUDA vector widths
