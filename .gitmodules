@@ -16,6 +16,3 @@
 [submodule "librapid/vendor/CLBlast"]
 	path = librapid/vendor/CLBlast
 	url = https://github.com/CNugteren/CLBlast.git
-[submodule "librapid/vendor/xsimd"]
-	path = librapid/vendor/xsimd
-	url = https://github.com/xtensor-stack/xsimd.git
