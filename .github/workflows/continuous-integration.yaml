@@ -298,6 +298,11 @@ jobs:
           CC: ${{ matrix.cc }}
           CXX: ${{ matrix.cxx }}
 
+      - name: Run example-array-1 (Debug)
+        run: |
+          cd buildDebug
+          ./examples/example-array-1
+
       - name: Run Tests (Debug)
         run: |
           cd buildDebug
