@@ -48,7 +48,7 @@ namespace librapid {
 
 	template<typename T, REQUIRE_SIMD(T)>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sinh(const T &x) {
-		return xsimd::asinh(x);
+		return xsimd::sinh(x);
 	}
 
 	template<typename T, REQUIRE_SIMD(T)>

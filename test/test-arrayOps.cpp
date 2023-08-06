@@ -9,10 +9,10 @@ using CPU				   = lrc::backend::CPU;
 using OPENCL			   = lrc::backend::OpenCL;
 using CUDA				   = lrc::backend::CUDA;
 
-#define SCALAR	float
-#define BACKEND CPU
+// #define SCALAR	float
+// #define BACKEND CPU
 
-#define TEST_OP(NAME)                                                                              \
+#define TEST_OP(NAME, SCALAR)                                                                      \
 	auto NAME##X = lrc::NAME(x).eval();                                                            \
 	for (int i = 0; i < NAME##X.shape().size(); ++i) {                                             \
 		REQUIRE(lrc::isClose((SCALAR)NAME##X(i), (SCALAR)lrc::NAME((SCALAR)x(i)), tolerance));     \
@@ -24,25 +24,25 @@ using CUDA				   = lrc::backend::CUDA;
 		/* Valid range for all functions */                                                        \
 		auto x = lrc::linspace<SCALAR, BACKEND>(0.1, 0.5, 100, false);                             \
                                                                                                    \
-		TEST_OP(sin);                                                                              \
-		TEST_OP(cos);                                                                              \
-		TEST_OP(tan);                                                                              \
-		TEST_OP(asin);                                                                             \
-		TEST_OP(acos);                                                                             \
-		TEST_OP(atan);                                                                             \
-		TEST_OP(sinh);                                                                             \
-		TEST_OP(cosh);                                                                             \
-		TEST_OP(tanh);                                                                             \
+		TEST_OP(sin, SCALAR);                                                                      \
+		TEST_OP(cos, SCALAR);                                                                      \
+		TEST_OP(tan, SCALAR);                                                                      \
+		TEST_OP(asin, SCALAR);                                                                     \
+		TEST_OP(acos, SCALAR);                                                                     \
+		TEST_OP(atan, SCALAR);                                                                     \
+		TEST_OP(sinh, SCALAR);                                                                     \
+		TEST_OP(cosh, SCALAR);                                                                     \
+		TEST_OP(tanh, SCALAR);                                                                     \
                                                                                                    \
-		TEST_OP(exp);                                                                              \
-		TEST_OP(log);                                                                              \
-		TEST_OP(log2);                                                                             \
-		TEST_OP(log10);                                                                            \
-		TEST_OP(sqrt);                                                                             \
-		TEST_OP(cbrt);                                                                             \
-		TEST_OP(abs);                                                                              \
-		TEST_OP(floor);                                                                            \
-		TEST_OP(ceil);                                                                             \
+		TEST_OP(exp, SCALAR);                                                                      \
+		TEST_OP(log, SCALAR);                                                                      \
+		TEST_OP(log2, SCALAR);                                                                     \
+		TEST_OP(log10, SCALAR);                                                                    \
+		TEST_OP(sqrt, SCALAR);                                                                     \
+		TEST_OP(cbrt, SCALAR);                                                                     \
+		TEST_OP(abs, SCALAR);                                                                      \
+		TEST_OP(floor, SCALAR);                                                                    \
+		TEST_OP(ceil, SCALAR);                                                                     \
 	}
 
 TRIG_TEST_IMPL(float, CPU)
