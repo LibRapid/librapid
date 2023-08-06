@@ -124,12 +124,6 @@ if (LIBRAPID_STRICT AND LIBRAPID_QUIET)
     message(FATAL_ERROR "LIBRAPID_STRICT and LIBRAPID_QUIET cannot be enabled at the same time")
 endif ()
 
-# Native arch does not work on MacOS
-if (IS_MACOS AND LIBRAPID_NATIVE_ARCH)
-    message(WARNING "[ LIBRAPID ] Native architecture optimisation is not currently supported on MacOS")
-    set(LIBRAPID_NATIVE_ARCH OFF)
-endif ()
-
 if (LIBRAPID_STRICT)
     # Enable all warnings and treat them as errors
     if (MSVC)
