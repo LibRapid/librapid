@@ -226,6 +226,7 @@
 #else
 #	define LIBRAPID_ARCH	   0
 #	define LIBRAPID_ARCH_NAME "None"
+#   define LIBRAPID_DEFAULT_MEM_ALIGN 32
 #endif // Instruction set detection
 
 // Check for 32bit vs 64bit

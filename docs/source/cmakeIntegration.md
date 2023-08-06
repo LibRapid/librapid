@@ -172,7 +172,7 @@ but may cause some functions to return slightly incorrect results due to lower p
 ### ``LIBRAPID_NATIVE_ARCH``
 
 ```
-DEFAULT: OFF
+DEFAULT: ON
 ```
 
 Enabling this flag compiles librapid with the most advanced instruction set available on the system. This can lead to

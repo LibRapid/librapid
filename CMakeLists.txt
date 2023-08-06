@@ -38,7 +38,7 @@ option(LIBRAPID_USE_OPENCL "Search for OpenCL and use it if possible" ON)
 option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
 option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_FAST_MATH "Use potentially less accurate operations to increase performance" OFF)
-option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" OFF)
+option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" ON)
 
 option(LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH "Preferred vector width for vectorised kernels" 2)
 option(LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH "Preferred vector width for vectorised kernels" 4)
