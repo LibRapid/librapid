@@ -124,6 +124,12 @@ if (LIBRAPID_STRICT AND LIBRAPID_QUIET)
     message(FATAL_ERROR "LIBRAPID_STRICT and LIBRAPID_QUIET cannot be enabled at the same time")
 endif ()
 
+# SIMD instructions do not currently work on MacOS
+if (IS_MACOS AND LIBRAPID_NATIVE_ARCH)
+    message(WARNING "SIMD instructions are not currently supported on MacOS. Disabling LIBRAPID_NATIVE_ARCH")
+    set(LIBRAPID_NATIVE_ARCH OFF)
+endif ()
+
 if (LIBRAPID_STRICT)
     # Enable all warnings and treat them as errors
     if (MSVC)
