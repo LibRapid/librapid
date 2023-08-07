@@ -668,7 +668,12 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		auto ArrayContainer<ShapeType_, StorageType_>::packet(size_t index) const -> Packet {
-#if defined(LIBRAPID_NATIVE_ARCH)
+#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_OSX)
+			// On MacOS (and other platforms??) we cannot use aligned loads in arrays due to one
+			// annoying edge case. Normally, all SIMD loads will be aligned to a 64-byte boundary.
+			// Say, however, this array is a sub-array of a larger array. If the outer dimension
+			// of the larger array does not result in a 64-byte alignment, the data of *this* array
+			// will not be correctly aligned, hence causing a segfault.
 			return xsimd::load_aligned(m_storage.begin() + index);
 #else
 			return xsimd::load_unaligned(m_storage.begin() + index);

@@ -28,19 +28,21 @@ namespace librapid {
 	template<typename Scalar_>
 	class Storage {
 	public:
-		using Scalar			   = Scalar_;
-		using RawPointer		   = Scalar *;
-		using ConstRawPointer	   = const Scalar *;
-		using Pointer			   = std::shared_ptr<Scalar>;
-		using ConstPointer		   = std::shared_ptr<const Scalar>;
-		using Reference			   = Scalar &;
-		using ConstReference	   = const Scalar &;
-		using SizeType			   = size_t;
-		using DifferenceType	   = ptrdiff_t;
-		using Iterator			   = RawPointer;
-		using ConstIterator		   = ConstRawPointer;
-		using ReverseIterator	   = std::reverse_iterator<Iterator>;
-		using ConstReverseIterator = std::reverse_iterator<ConstIterator>;
+		using Scalar						  = Scalar_;
+		using Packet						  = typename typetraits::TypeInfo<Scalar>::Packet;
+		static constexpr uint64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
+		using RawPointer					  = Scalar *;
+		using ConstRawPointer				  = const Scalar *;
+		using Pointer						  = std::shared_ptr<Scalar>;
+		using ConstPointer					  = std::shared_ptr<const Scalar>;
+		using Reference						  = Scalar &;
+		using ConstReference				  = const Scalar &;
+		using SizeType						  = size_t;
+		using DifferenceType				  = ptrdiff_t;
+		using Iterator						  = RawPointer;
+		using ConstIterator					  = ConstRawPointer;
+		using ReverseIterator				  = std::reverse_iterator<Iterator>;
+		using ConstReverseIterator			  = std::reverse_iterator<ConstIterator>;
 
 		/// Default constructor
 		Storage() = default;
