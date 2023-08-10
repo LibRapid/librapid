@@ -2,7 +2,11 @@ cmake_minimum_required(VERSION 3.16)
 project(librapid)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 cmake_policy(SET CMP0077 NEW)
-set(CMAKE_CXX_STANDARD 17)
+
+# LibRapid requires C++20 or later
+if (CMAKE_CXX_STANDARD LESS 20)
+    message(FATAL_ERROR "LibRapid requires C++20 or later")
+endif ()
 
 # Extract version information
 file(READ "version.txt" ver)

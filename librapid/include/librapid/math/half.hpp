@@ -635,7 +635,9 @@ namespace librapid {
 	}
 
 	std::string half::str(const std::string &format) const {
-		return fmt::format(format, static_cast<float>(*this));
+		// return fmt::vformat(format, fmt::make_wformat_args(detail::halfToFloat(m_value.m_bits)));
+
+		return std::vformat(format, std::make_format_args(detail::halfToFloat(m_value.m_bits)));
 	}
 
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE half operator+(const half &lhs,

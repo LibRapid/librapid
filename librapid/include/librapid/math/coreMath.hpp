@@ -209,6 +209,22 @@ namespace librapid {
 		}
 	}
 
+	// Return 10 raised to a given power. Note that, for integer values, this function
+	/// will cast the input value to a floating point type before calculating the exponential.
+	/// \tparam T Data type
+	/// \param val Input value
+	/// \return 10 raised to the input value
+	template<typename T, typename std::enable_if_t<std::is_fundamental_v<T>, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto exp10(T val) {
+		// C++ standard does not implement exp10
+
+		if constexpr (std::is_integral_v<T>) {
+			return std::pow(10.0, static_cast<double>(val));
+		} else {
+			return std::pow(10.0, val);
+		}
+	}
+
 	/// Return the natural logarithm of a given value. Note that, for integer values, this function
 	/// will cast the input value to a floating point type before calculating the logarithm.
 	/// \tparam T Data type

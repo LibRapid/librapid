@@ -843,8 +843,40 @@ namespace librapid {
 
 // Support FMT printing
 #ifdef FMT_API
-LIBRAPID_SIMPLE_IO_IMPL(typename ShapeType_ COMMA typename StorageType_,
-						librapid::array::ArrayContainer<ShapeType_ COMMA StorageType_>)
+// LIBRAPID_SIMPLE_IO_IMPL(typename ShapeType_ COMMA typename StorageType_,
+// 						librapid::array::ArrayContainer<ShapeType_ COMMA StorageType_>)
+
+template<typename ShapeType_, typename StorageType_>
+struct fmt::formatter<librapid::array::ArrayContainer<ShapeType_, StorageType_>> {
+	char formatStr[32] = {'{', ':'};
+	constexpr auto parse(format_parse_context &ctx) -> format_parse_context::iterator {
+		auto it		   = ctx.begin();
+		uint64_t index = 0;
+		for (; it != ctx.end(); ++it) {
+			if (*it == '}') break;
+			formatStr[index++] += *it;
+		}
+		formatStr[index] = '}';
+		return it;
+	}
+
+	template<typename FormatContext>
+	auto format(const librapid::array::ArrayContainer<ShapeType_, StorageType_> &object,
+				FormatContext &ctx) {
+		try {
+			// return fmt::format_to(ctx.out(), object.str(formatStr));
+			return fmt::format_to(ctx.out(), "Hello, World");
+		} catch (std::exception &e) { return fmt::format_to(ctx.out(), e.what()); }
+	}
+};
+
+template<typename ShapeType_, typename StorageType_>
+std::ostream &operator<<(std::ostream &os,
+						 const librapid::array::ArrayContainer<ShapeType_, StorageType_> &object) {
+	os << object.str();
+	return os;
+}
+
 LIBRAPID_SIMPLE_IO_NORANGE(typename ShapeType_ COMMA typename StorageType_,
 						   librapid::array::ArrayContainer<ShapeType_ COMMA StorageType_>)
 #endif // FMT_API
