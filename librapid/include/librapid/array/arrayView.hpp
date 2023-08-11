@@ -15,11 +15,11 @@ namespace librapid {
 	} // namespace typetraits
 
 	namespace array {
-		template<typename T>
+		template<typename ArrayViewType>
 		class ArrayView {
 		public:
 			// using ArrayType		 = T;
-			using BaseType		 = typename std::decay_t<T>;
+			using BaseType		 = typename std::decay_t<ArrayViewType>;
 			using Scalar		 = typename typetraits::TypeInfo<BaseType>::Scalar;
 			using Reference		 = BaseType &;
 			using ConstReference = const BaseType &;
@@ -34,11 +34,11 @@ namespace librapid {
 
 			/// Copy an ArrayView object
 			/// \param array The array to copy
-			explicit ArrayView(T &array);
+			explicit ArrayView(ArrayViewType &array);
 
 			/// Copy an ArrayView object (not const)
 			/// \param array The array to copy
-			explicit ArrayView(T &&array) = delete;
+			explicit ArrayView(ArrayViewType &&array) = delete;
 
 			/// Copy an ArrayView object (const)
 			/// \param other The array to copy
@@ -71,9 +71,9 @@ namespace librapid {
 			/// Access a sub-array of this ArrayView.
 			/// \param index The index of the sub-array.
 			/// \return An ArrayView from this
-			const ArrayView<T> operator[](int64_t index) const;
+			const ArrayView<ArrayViewType> operator[](int64_t index) const;
 
-			ArrayView<T> operator[](int64_t index);
+			ArrayView<ArrayViewType> operator[](int64_t index);
 
 			/// Since even scalars are represented as an ArrayView object, it can be difficult to
 			/// operate on them directly. This allows you to extract the scalar value stored by a
@@ -139,15 +139,19 @@ namespace librapid {
 			/// \return A std::string representation of this ArrayView
 			LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
 
+			template<typename T, typename Char, typename Ctx>
+			void fmtStr(const fmt::formatter<T, Char> &format, char bracket, char separator,
+						Ctx &ctx) const;
+
 		private:
-			T &m_ref;
+			ArrayViewType &m_ref;
 			ShapeType m_shape;
 			StrideType m_stride;
 			int64_t m_offset = 0;
 		};
 
-		template<typename T>
-		ArrayView<T>::ArrayView(T &array) :
+		template<typename ArrayViewType>
+		ArrayView<ArrayViewType>::ArrayView(ArrayViewType &array) :
 				m_ref(array), m_shape(array.shape()), m_stride(array.shape()) {}
 
 		template<typename T>
@@ -324,7 +328,8 @@ namespace librapid {
 
 // Support FMT printing
 #ifdef FMT_API
-LIBRAPID_SIMPLE_IO_IMPL(typename T, librapid::array::ArrayView<T>)
+// LIBRAPID_SIMPLE_IO_IMPL(typename T, librapid::array::ArrayView<T>)
+
 LIBRAPID_SIMPLE_IO_NORANGE(typename T, librapid::array::ArrayView<T>)
 #endif // FMT_API
 

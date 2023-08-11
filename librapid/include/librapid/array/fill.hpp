@@ -19,11 +19,13 @@ namespace librapid {
 		if (parallel) {
 #pragma omp parallel for
 			for (int64_t i = 0; i < shape.size(); ++i) {
-				data[i] = random<StorageScalar>(lower, upper);
+				data[i] = random<StorageScalar>(static_cast<StorageScalar>(lower),
+												static_cast<StorageScalar>(upper));
 			}
 		} else {
 			for (int64_t i = 0; i < shape.size(); ++i) {
-				data[i] = random<StorageScalar>(lower, upper);
+				data[i] = random<StorageScalar>(static_cast<StorageScalar>(lower),
+												static_cast<StorageScalar>(upper));
 			}
 		}
 	}
@@ -102,15 +104,16 @@ namespace librapid {
 			// reseed is controlled by the random module, so we don't need to worry about it here
 		}
 
-		cuda::runKernel<StorageScalar, StorageScalar, StorageScalar>("fill",
-						std::is_same_v<StorageScalar, half> ? "fillRandomHalf" : "fillRandom",
-						elements,
-						dst.storage().data().get(),
-						elements,
-						static_cast<StorageScalar>(lower),
-						static_cast<StorageScalar>(upper),
-						seeds.storage().data().get(),
-						numSeeds);
+		cuda::runKernel<StorageScalar, StorageScalar, StorageScalar>(
+		  "fill",
+		  std::is_same_v<StorageScalar, half> ? "fillRandomHalf" : "fillRandom",
+		  elements,
+		  dst.storage().data().get(),
+		  elements,
+		  static_cast<StorageScalar>(lower),
+		  static_cast<StorageScalar>(upper),
+		  seeds.storage().data().get(),
+		  numSeeds);
 	}
 
 	template<typename ShapeType, typename Lower, typename Upper>

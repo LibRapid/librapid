@@ -339,6 +339,10 @@ namespace librapid {
 			/// \return A string representation of the array container
 			LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
 
+			template<typename T, typename Char, typename Ctx>
+			void fmtStr(const fmt::formatter<T, Char> &format, char bracket, char separator,
+						Ctx &ctx) const;
+
 		private:
 			ShapeType m_shape;	   // The shape type of the array
 			StorageType m_storage; // The storage container of the array
@@ -804,6 +808,14 @@ namespace librapid {
 		std::string ArrayContainer<ShapeType_, StorageType_>::str(const std::string &format) const {
 			return ArrayView(*this).str(format);
 		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename T, typename Char, typename Ctx>
+		void ArrayContainer<ShapeType_, StorageType_>::fmtStr(const fmt::formatter<T, Char> &format,
+															  char bracket, char separator,
+															  Ctx &ctx) const {
+			ArrayView(*this).fmtStr(format, bracket, separator, ctx);
+		}
 	} // namespace array
 
 	namespace detail {
@@ -843,37 +855,63 @@ namespace librapid {
 
 // Support FMT printing
 #ifdef FMT_API
-// LIBRAPID_SIMPLE_IO_IMPL(typename ShapeType_ COMMA typename StorageType_,
-// 						librapid::array::ArrayContainer<ShapeType_ COMMA StorageType_>)
-
 template<typename ShapeType_, typename StorageType_>
 struct fmt::formatter<librapid::array::ArrayContainer<ShapeType_, StorageType_>> {
-	char formatStr[32] = {'{', ':'};
-	constexpr auto parse(format_parse_context &ctx) -> format_parse_context::iterator {
-		auto it		   = ctx.begin();
-		uint64_t index = 0;
-		for (; it != ctx.end(); ++it) {
-			if (*it == '}') break;
-			formatStr[index++] += *it;
+	using Type		= librapid::array::ArrayContainer<ShapeType_, StorageType_>;
+	using Scalar	= typename librapid::typetraits::TypeInfo<Type>::Scalar;
+	using Formatter = fmt::formatter<Scalar>;
+	Formatter m_formatter;
+	char m_bracket;
+	char m_separator;
+
+	template<typename ParseContext>
+	FMT_CONSTEXPR auto parse(ParseContext &ctx) -> const char * {
+		// Custom format options:
+		//  - 'r' for round brackets
+		//  - 's' for square brackets
+		//  - 'c' for curly brackets
+		//  - 'a' for angle brackets
+		//  - 'p' for pipe brackets
+		//  - "-," for comma separator
+		//  - "-;" for semicolon separator
+		//  - "-:" for colon separator
+		//  - "-|" for pipe separator
+		//  - "-_" for underscore separator
+
+		auto it = ctx.begin(), end = ctx.end();
+		if (it != end && (*it == 'r' || *it == 's' || *it == 'c' || *it == 'a' || *it == 'p')) {
+			m_bracket = *it++;
+		} else {
+			m_bracket = 's';
 		}
-		formatStr[index] = '}';
-		return it;
+
+		if (it != end && *it == '-') {
+			++it;
+			if (it != end) {
+				m_separator = *it++;
+			} else {
+				m_separator = ',';
+			}
+		} else {
+			m_separator = ' ';
+		}
+
+		ctx.advance_to(it);
+
+		return m_formatter.parse(ctx);
 	}
 
 	template<typename FormatContext>
-	auto format(const librapid::array::ArrayContainer<ShapeType_, StorageType_> &object,
-				FormatContext &ctx) {
-		try {
-			// return fmt::format_to(ctx.out(), object.str(formatStr));
-			return fmt::format_to(ctx.out(), "Hello, World");
-		} catch (std::exception &e) { return fmt::format_to(ctx.out(), e.what()); }
+	FMT_CONSTEXPR auto format(const Type &val, FormatContext &ctx) const -> decltype(ctx.out()) {
+		val.fmtStr(m_formatter, m_bracket, m_separator, ctx);
+		return ctx.out();
 	}
 };
 
 template<typename ShapeType_, typename StorageType_>
 std::ostream &operator<<(std::ostream &os,
 						 const librapid::array::ArrayContainer<ShapeType_, StorageType_> &object) {
-	os << object.str();
+	os << "NOT IMPLEMENTED!"; // object.str();
 	return os;
 }
 

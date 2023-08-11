@@ -216,8 +216,9 @@ namespace librapid {
 		return result;
 	}
 
-	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType, typename Lower, typename Upper>
-	Array<Scalar, Backend> random(const ShapeType &shape, Lower lower, Upper upper) {
+	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType,
+			 typename Lower = double, typename Upper = double>
+	Array<Scalar, Backend> random(const ShapeType &shape, Lower lower = 0, Upper upper = 1) {
 		Array<Scalar, Backend> result(shape);
 		fillRandom(result, lower, upper);
 		return result;
