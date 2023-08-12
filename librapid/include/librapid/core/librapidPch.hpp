@@ -32,12 +32,12 @@
 #include <utility>
 
 #if defined(LIBRAPID_HAS_OMP)
-#	include <omp.h>
+#    include <omp.h>
 #endif // LIBRAPID_HAS_OMP
 
 #if (defined(_WIN32) || defined(_WIN64)) && !defined(LIBRAPID_NO_WINDOWS_H)
-#	define WIN32_LEAN_AND_MEAN
-#	include <Windows.h>
+#    define WIN32_LEAN_AND_MEAN
+#    include <Windows.h>
 #endif
 
 // Remove a few macros
@@ -59,17 +59,17 @@
 
 #if !defined(LIBRAPID_MINGW) // MinGW does not implement std::from_chars which is required by scnlib
 // scnlib
-#	include <scn/scn.h>
-#	include <scn/tuple_return/tuple_return.h>
+#    include <scn/scn.h>
+#    include <scn/tuple_return/tuple_return.h>
 #endif // !LIBRAPID_MINGW
 
 // Vc -- SIMD instructions
 #if defined(_MSC_VER)
 // For Vc, we need to disable the following warnings
-#	pragma warning(push)
-#	pragma warning(disable : 4244) // conversion from 'int' to 'float', possible loss of data
-#	pragma warning(disable : 4324) // structure was padded due to alignment specifier
-#	pragma warning(disable : 4127) // conditional expression is constant
+#    pragma warning(push)
+#    pragma warning(disable : 4244) // conversion from 'int' to 'float', possible loss of data
+#    pragma warning(disable : 4324) // structure was padded due to alignment specifier
+#    pragma warning(disable : 4127) // conditional expression is constant
 #endif
 
 // #include <Vc/Vc>
@@ -80,13 +80,13 @@
 #include <xsimd/xsimd.hpp>
 
 #if defined(_MSC_VER)
-#	pragma warning(pop)
+#    pragma warning(pop)
 #endif
 
 // MPFR (modified) -- arbitrary precision floating point numbers
 #if defined(LIBRAPID_USE_MULTIPREC)
-#	include <mpirxx.h>
-#	include <mpreal.h>
+#    include <mpirxx.h>
+#    include <mpreal.h>
 #endif // LIBRAPID_USE_MULTIPREC
 
 #endif // LIBRAPID_CORE_LIBRAPID_PCH_HPP

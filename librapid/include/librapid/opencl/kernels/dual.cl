@@ -2,10 +2,10 @@
 #define LIBRAPID_OPENCL_DUAL
 
 #define DUAL_DEF(TYPE)                                                                             \
-	struct Dual_##TYPE {                                                                           \
-		TYPE value;                                                                                \
-		TYPE derivative;                                                                           \
-	};
+    struct Dual_##TYPE {                                                                           \
+        TYPE value;                                                                                \
+        TYPE derivative;                                                                           \
+    };
 
 DUAL_DEF(int8_t);
 DUAL_DEF(int16_t);
