@@ -8,10 +8,10 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     set(CMAKE_CXX_STANDARD 23)
 endif ()
 
-# LibRapid requires C++20 or later
-if (CMAKE_CXX_STANDARD LESS 20)
-    message(FATAL_ERROR "LibRapid requires C++20 or later")
-endif ()
+# LibRapid requires C++17 or later
+#if (CMAKE_CXX_STANDARD LESS 17)
+#    message(FATAL_ERROR "LibRapid requires C++17 or later")
+#endif ()
 
 # Extract version information
 file(READ "version.txt" ver)
