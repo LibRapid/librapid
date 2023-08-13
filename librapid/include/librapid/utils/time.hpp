@@ -45,8 +45,15 @@ namespace librapid {
         while (now<time::nanosecond>() - start < time - sleepOffset) {}
     }
 
+    namespace detail {
+        struct FormattedTime {
+            double time;
+            std::string unit;
+        };
+    } // namespace detail
+
     template<int64_t scale = time::second>
-    std::string formatTime(double time, const std::string &format = "{:.3f}") {
+    detail::FormattedTime formatTime(double time, const std::string &format = "{:.3f}") {
         double ns    = time * scale;
         int numUnits = 8;
 
@@ -68,10 +75,10 @@ namespace librapid {
         static double divisor[] = {1000, 1000, 1000, 60, 60, 24, 365, 1e300};
         for (int i = 0; i < numUnits; ++i) {
             // if (ns < divisor[i]) return std::operator+(fmt::format(format, ns), prefix[i]);
-            if (ns < divisor[i]) return fmt::vformat(format, fmt::make_format_args(ns)) + prefix[i];
+            if (ns < divisor[i]) return {ns, prefix[i]};
             ns /= divisor[i];
         }
-        return fmt::format("{}ns", time * ns);
+        return {ns, prefix[numUnits - 1]};
     }
 
     /// A timer class that can be used to measure a multitude of things.
@@ -148,10 +155,14 @@ namespace librapid {
             //   (m_name.empty() ? "" : m_name + ": "),
             //   formatTime<time::nanosecond>(tmpEnd - m_start, format),
             //   formatTime<time::nanosecond>((tmpEnd - m_start) / (double)m_iters, format));
-            fmt::format_to(ctx.out(), "{}Elapsed: ", m_name.empty() ? "" : m_name + ": ");
-            formatter.format(tmpEnd - m_start, ctx);
-            fmt::format_to(ctx.out(), " | Average: ");
-            formatter.format((tmpEnd - m_start) / (double)m_iters, ctx);
+
+            auto [elapsed, elapsedUnit] = formatTime<time::nanosecond>(tmpEnd - m_start);
+            auto [average, averageUnit] = formatTime<time::nanosecond>((tmpEnd - m_start) / (double)m_iters);
+            fmt::format_to(ctx.out(), "{}Elapsed: ", m_name);
+            formatter.format(elapsed, ctx);
+            fmt::format_to(ctx.out(), "{} | Average: ", elapsedUnit);
+            formatter.format(average, ctx);
+            fmt::format_to(ctx.out(), "{}", averageUnit);
         }
 
     private:
