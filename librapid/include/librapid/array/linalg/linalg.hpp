@@ -23,10 +23,11 @@ namespace librapid::typetraits {
 
 #include "transpose.hpp"
 
+#include "level3/gemm.hpp" // Included before gemv, since gemm is used in some gemv implementations
+
 #include "level2/gemv.hpp"
 
 #include "level3/geam.hpp"
-#include "level3/gemm.hpp"
 
 #include "arrayMultiply.hpp"
 

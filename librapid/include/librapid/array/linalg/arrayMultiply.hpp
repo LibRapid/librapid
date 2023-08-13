@@ -184,10 +184,9 @@ namespace librapid {
             template<typename StorageType>
             void applyTo(array::ArrayContainer<ShapeType, StorageType> &out) const;
 
-            /// \brief String representation of the array multiplication
-            /// \param format Format string for each element
-            /// \return String representation of the array multiplication
-            LIBRAPID_NODISCARD std::string str(const std::string &format) const;
+            template<typename T, typename Char, typename Ctx>
+            void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
+                     Ctx &ctx) const;
 
         private:
             bool m_transA;   // Transpose state of A
@@ -497,10 +496,10 @@ namespace librapid {
 
         template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
                  typename StorageTypeB, typename Alpha, typename Beta>
-        std::string
-        ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::str(
-          const std::string &format) const {
-            return eval().str(format);
+        template<typename T, typename Char, typename Ctx>
+        void ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::str(
+          const fmt::formatter<T, Char> &format, char bracket, char separator, Ctx &ctx) const {
+            eval().str(format, bracket, separator, ctx);
         }
     } // namespace linalg
 
@@ -693,11 +692,10 @@ namespace librapid {
     } // namespace typetraits
 } // namespace librapid
 
-LIBRAPID_SIMPLE_IO_IMPL(
-  typename ShapeTypeA COMMA typename StorageTypeA COMMA typename ShapeTypeB COMMA
-  typename StorageTypeB COMMA typename Alpha COMMA typename Beta,
-  librapid::linalg::ArrayMultiply<
-    ShapeTypeA COMMA StorageTypeA COMMA ShapeTypeB COMMA StorageTypeB COMMA Alpha COMMA Beta>)
+ARRAY_TYPE_FMT_IML(typename ShapeTypeA COMMA typename StorageTypeA COMMA typename ShapeTypeB COMMA
+                   typename StorageTypeB COMMA typename Alpha COMMA typename Beta,
+                   librapid::linalg::ArrayMultiply<ShapeTypeA COMMA StorageTypeA COMMA ShapeTypeB
+                                                     COMMA StorageTypeB COMMA Alpha COMMA Beta>)
 
 LIBRAPID_SIMPLE_IO_NORANGE(
   typename ShapeTypeA COMMA typename StorageTypeA COMMA typename ShapeTypeB COMMA

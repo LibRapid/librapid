@@ -14,9 +14,6 @@ namespace librapid {
     template<typename T>
     class Dual {
     public:
-        T value;
-        T derivative;
-
 #if defined(LIBRAPID_IN_JITIFY)
         using Scalar                          = T;
         using Packet                          = T;
@@ -27,9 +24,12 @@ namespace librapid {
     static constexpr uint64_t packetWidth = typetraits::TypeInfo<T>::packetWidth;
 #endif
 
+        Scalar value;
+        Scalar derivative;
+
         Dual() = default;
-        explicit Dual(T value) : value(value), derivative(T()) {}
-        Dual(T value, T derivative) : value(value), derivative(derivative) {}
+        explicit Dual(Scalar value) : value(value), derivative(Scalar()) {}
+        Dual(Scalar value, Scalar derivative) : value(value), derivative(derivative) {}
 
         template<typename U>
         explicit Dual(const Dual<U> &other) : value(other.value), derivative(other.derivative) {}
@@ -39,107 +39,76 @@ namespace librapid {
                 value(std::move(other.value)), derivative(std::move(other.derivative)) {}
 
         template<typename U>
-        Dual &operator=(const Dual<U> &other) {
+        auto operator=(const Dual<U> &other) -> Dual & {
             value      = other.value;
             derivative = other.derivative;
             return *this;
         }
 
         template<typename U>
-        Dual &operator=(Dual<U> &&other) {
+        auto operator=(Dual<U> &&other) -> Dual & {
             value      = std::move(other.value);
             derivative = std::move(other.derivative);
             return *this;
         }
 
-        static constexpr size_t size() { return typetraits::TypeInfo<Dual>::packetWidth; }
+        static constexpr auto size() -> size_t { return typetraits::TypeInfo<Dual>::packetWidth; }
 
-        //		template<typename P>
-        //		LIBRAPID_ALWAYS_INLINE void store(P *ptr) const {
-        //			// Load the data into batches.
-        //			auto casted = reinterpret_cast<const Scalar *>(ptr);
-        //
-        //			// Compute interleaved values.
-        //			std::array<Scalar, 2 * packetWidth> interleaved;
-        //			for (std::size_t i = 0; i < packetWidth; ++i) {
-        //				interleaved[2 * i]	   = value.get(i);
-        //				interleaved[2 * i + 1] = derivative.get(i);
-        //			}
-        //
-        //			// Store the interleaved values back to memory.
-        //			std::copy(interleaved.begin(), interleaved.end(), casted);
-        //		}
-
-        //		template<typename P>
-        //		LIBRAPID_ALWAYS_INLINE void load(const P *ptr) {
-        //			//			auto casted = reinterpret_cast<const Scalar *>(ptr);
-        //			//			Vc::deinterleave(&value, &derivative, casted, Vc::Aligned);
-        //
-        //			// Load the data into batches.
-        //			auto casted = reinterpret_cast<const Scalar *>(ptr);
-        //
-        //			// Compute interleaved values.
-        //			std::array<Scalar, 2 * packetWidth> interleaved;
-        //			std::copy(casted, casted + 2 * packetWidth, interleaved.begin());
-        //
-        //			// Store the interleaved values back to memory.
-        //			for (std::size_t i = 0; i < packetWidth; ++i) {
-        //				value.set(i, interleaved[2 * i]);
-        //				derivative.set(i, interleaved[2 * i + 1]);
-        //			}
-        //		}
-
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual operator+=(const Dual &other) {
+        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+=(const Dual &other) -> Dual & {
             value += other.value;
             derivative += other.derivative;
             return *this;
         }
 
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual operator-=(const Dual &other) {
+        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-=(const Dual &other) -> Dual & {
             value -= other.value;
             derivative -= other.derivative;
             return *this;
         }
 
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual operator*=(const Dual &other) {
+        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*=(const Dual &other) -> Dual & {
             value *= other.value;
             derivative = derivative * other.value + value * other.derivative;
             return *this;
         }
 
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual operator/=(const Dual &other) {
+        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/=(const Dual &other) -> Dual & {
             value /= other.value;
             derivative =
               (derivative * other.value - value * other.derivative) / (other.value * other.value);
             return *this;
         }
 
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual operator+=(const T &other) {
+        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+=(const T &other) -> Dual & {
             value += other;
             return *this;
         }
 
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual operator-=(const T &other) {
+        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-=(const T &other) -> Dual & {
             value -= other;
             return *this;
         }
 
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual operator*=(const T &other) {
+        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*=(const T &other) -> Dual & {
             value *= other;
             derivative *= other;
             return *this;
         }
 
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual operator/=(const T &other) {
+        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/=(const T &other) -> Dual & {
             value /= other;
             derivative /= other;
             return *this;
         }
 
 #if !defined(LIBRAPID_IN_JITIFY)
-        std::string str(const std::string &format = "{}") const {
-            return fmt::format(
-              "Dual({}, {})", fmt::format(format, value), fmt::format(format, derivative));
+        template<typename T, typename Char, typename Ctx>
+        void str(const fmt::formatter<T, Char> &format, Ctx &ctx) const {
+            fmt::format_to(ctx.out(), "Dual(");
+            format.format(value, ctx);
+            fmt::format_to(ctx.out(), ", ");
+            format.format(derivative, ctx);
+            fmt::format_to(ctx.out(), ")");
         }
 #endif // !defined(LIBRAPID_IN_JITIFY)
     };
@@ -471,7 +440,28 @@ namespace jitify::reflection::detail {
 #endif // LIBRAPID_HAS_CUDA
 
 #ifdef FMT_API
-LIBRAPID_SIMPLE_IO_IMPL(typename T, librapid::Dual<T>)
+
+template<typename T, typename Char>
+struct fmt::formatter<librapid::Dual<T>, Char> {
+private:
+    using Type   = librapid::Dual<T>;
+    using Scalar = typename Type::Scalar;
+    using Base   = fmt::formatter<Scalar, Char>;
+    Base m_base;
+
+public:
+    template<typename ParseContext>
+    FMT_CONSTEXPR auto parse(ParseContext &ctx) -> const char * {
+        return m_base.parse(ctx);
+    }
+
+    template<typename FormatContext>
+    FMT_CONSTEXPR auto format(const Type &val, FormatContext &ctx) const -> decltype(ctx.out()) {
+        val.str(m_base, ctx);
+        return ctx.out();
+    }
+};
+
 #endif // FMT_API
 
 #endif // LIBRAPID_AUTODIFF_DUAL

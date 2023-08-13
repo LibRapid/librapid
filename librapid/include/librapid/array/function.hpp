@@ -174,10 +174,9 @@ namespace librapid {
             LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator begin() const;
             LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator end() const;
 
-            /// Return a string representation of the Function
-            /// \param format The format to use.
-            /// \return A string representation of the Function
-            LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
+            template<typename T, typename Char, typename Ctx>
+            void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
+                     Ctx &ctx) const;
 
         private:
             /// Implementation detail -- evaluates the function at the given index,
@@ -264,17 +263,18 @@ namespace librapid {
         }
 
         template<typename desc, typename Functor, typename... Args>
-        std::string Function<desc, Functor, Args...>::str(const std::string &format) const {
-            return eval().str(format);
+        template<typename T, typename Char, typename Ctx>
+        void Function<desc, Functor, Args...>::str(const fmt::formatter<T, Char> &format,
+                                                   char bracket, char separator, Ctx &ctx) const {
+            array::ArrayView(*this).str(format, bracket, separator, ctx);
         }
     } // namespace detail
 } // namespace librapid
 
 // Support FMT printing
 #ifdef FMT_API
-LIBRAPID_SIMPLE_IO_IMPL(typename desc COMMA typename Functor COMMA typename... Args,
-                        librapid::detail::Function<desc COMMA Functor COMMA Args...>)
-
+ARRAY_TYPE_FMT_IML(typename desc COMMA typename Functor COMMA typename... Args,
+                   librapid::detail::Function<desc COMMA Functor COMMA Args...>)
 LIBRAPID_SIMPLE_IO_NORANGE(typename desc COMMA typename Functor COMMA typename... Args,
                            librapid::detail::Function<desc COMMA Functor COMMA Args...>)
 #endif // FMT_API

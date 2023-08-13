@@ -682,20 +682,20 @@ namespace librapid {
             return Complex<To>(static_cast<To>(m_val[RE]), static_cast<To>(m_val[IM]));
         }
 
-        /// \brief Complex number to string
-        ///
-        /// Create a std::string representation of a complex number, formatting each component with
-        /// the format string
-        ///
-        /// \param format Format string
-        /// \return std::string
-        LIBRAPID_NODISCARD auto str(const std::string &format = "{}") const -> std::string {
-            if (!::librapid::signBit(m_val[IM]))
-                return "(" + fmt::format(format, m_val[RE]) + "+" + fmt::format(format, m_val[IM]) +
-                       "j)";
-            else
-                return "(" + fmt::format(format, m_val[RE]) + "-" +
-                       fmt::format(format, -m_val[IM]) + "j)";
+        template<typename T_, typename Char, typename Ctx>
+        void str(const fmt::formatter<T_, Char> &format, Ctx &ctx) const {
+            // Complex numbers are printed as (a +- bi)
+
+            fmt::format_to(ctx.out(), "(");
+            format.format(m_val[RE], ctx);
+            if (m_val[IM] < 0) {
+                fmt::format_to(ctx.out(), "-");
+                format.format(-m_val[IM], ctx);
+            } else {
+                fmt::format_to(ctx.out(), "+");
+                format.format(m_val[IM], ctx);
+            }
+            fmt::format_to(ctx.out(), "i)");
         }
 
     protected:
@@ -2079,7 +2079,26 @@ namespace librapid {
 
 // Support FMT printing
 #ifdef FMT_API
-LIBRAPID_SIMPLE_IO_IMPL(typename Scalar, librapid::Complex<Scalar>)
+template<typename T, typename Char>
+struct fmt::formatter<librapid::Complex<T>, Char> {
+private:
+    using Type   = librapid::Complex<T>;
+    using Scalar = typename Type::Scalar;
+    using Base   = fmt::formatter<Scalar, Char>;
+    Base m_base;
+
+public:
+    template<typename ParseContext>
+    FMT_CONSTEXPR auto parse(ParseContext &ctx) -> const char * {
+        return m_base.parse(ctx);
+    }
+
+    template<typename FormatContext>
+    FMT_CONSTEXPR auto format(const Type &val, FormatContext &ctx) const -> decltype(ctx.out()) {
+        val.str(m_base, ctx);
+        return ctx.out();
+    }
+};
 #endif // FMT_API
 
 #ifdef USE_X86_X64_INTRINSICS

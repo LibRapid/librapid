@@ -101,8 +101,9 @@ namespace librapid {
                 return static_cast<CAST>(get());
             }
 
-            LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const {
-                return fmt::format(format, get());
+            template<typename T_, typename Char, typename Ctx>
+            void str(const fmt::formatter<T_, Char> &format, Ctx &ctx) {
+                format.format(get(), ctx);
             }
 
         private:
@@ -424,6 +425,26 @@ namespace librapid {
         return m_buffer;
     }
 } // namespace librapid
+
+template<typename T, typename Char>
+struct fmt::formatter<librapid::detail::OpenCLRef<T>, Char> {
+private:
+    using Base = fmt::formatter<T, Char>;
+    Base m_base;
+
+public:
+    template<typename ParseContext>
+    FMT_CONSTEXPR auto parse(ParseContext &ctx) -> const char * {
+        return m_base.parse(ctx);
+    }
+
+    template<typename FormatContext>
+    FMT_CONSTEXPR auto format(const librapid::detail::OpenCLRef<T> &val, FormatContext &ctx) const
+      -> decltype(ctx.out()) {
+        val.str(m_base, ctx);
+        return ctx.out();
+    }
+};
 
 #endif // LIBRAPID_HAS_OPENCL
 

@@ -139,14 +139,19 @@ namespace librapid {
         }
 
         /// Print the current elapsed time of the timer
-        LIBRAPID_NODISCARD std::string str(const std::string &format = "{:.3f}") const {
+        template<typename T, typename Char, typename Ctx>
+        void str(const fmt::formatter<T, Char> &formatter, Ctx &ctx) const {
             double tmpEnd = m_end;
             if (tmpEnd < 0) tmpEnd = now<time::nanosecond>();
-            return fmt::format(
-              "{}Elapsed: {} | Average: {}",
-              (m_name.empty() ? "" : m_name + ": "),
-              formatTime<time::nanosecond>(tmpEnd - m_start, format),
-              formatTime<time::nanosecond>((tmpEnd - m_start) / (double)m_iters, format));
+            // return fmt::format(
+            //   "{}Elapsed: {} | Average: {}",
+            //   (m_name.empty() ? "" : m_name + ": "),
+            //   formatTime<time::nanosecond>(tmpEnd - m_start, format),
+            //   formatTime<time::nanosecond>((tmpEnd - m_start) / (double)m_iters, format));
+            fmt::format_to(ctx.out(), "{}Elapsed: ", m_name.empty() ? "" : m_name + ": ");
+            formatter.format(tmpEnd - m_start, ctx);
+            fmt::format_to(ctx.out(), " | Average: ");
+            formatter.format((tmpEnd - m_start) / (double)m_iters, ctx);
         }
 
     private:
@@ -159,6 +164,23 @@ namespace librapid {
     };
 } // namespace librapid
 
-LIBRAPID_SIMPLE_IO_IMPL_NO_TEMPLATE(librapid::Timer);
+template<typename Char>
+struct fmt::formatter<librapid::Timer, Char> {
+public:
+    using Base = fmt::formatter<double, Char>;
+    Base m_base;
+
+    template<typename ParseContext>
+    FMT_CONSTEXPR auto parse(ParseContext &ctx) -> const char * {
+        return m_base.parse(ctx);
+    }
+
+    template<typename FormatContext>
+    FMT_CONSTEXPR auto format(const librapid::Timer &val, FormatContext &ctx) const
+      -> decltype(ctx.out()) {
+        val.str(m_base, ctx);
+        return ctx.out();
+    }
+};
 
 #endif // LIBRAPID_UTILS_TIME_HPP

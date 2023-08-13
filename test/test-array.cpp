@@ -76,27 +76,29 @@ using CUDA                 = lrc::backend::CUDA;
          * other dimensions */                                                                     \
         auto testI =                                                                               \
           lrc::Array<SCALAR, BACKEND>::fromData(InitList({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}));   \
-        REQUIRE(testI.str() == fmt::format("[[[{} {}]\n  [{} {}]]\n\n [[{} {}]\n  [{} {}]]]",      \
-                                           SCALAR(1),                                              \
-                                           SCALAR(2),                                              \
-                                           SCALAR(3),                                              \
-                                           SCALAR(4),                                              \
-                                           SCALAR(5),                                              \
-                                           SCALAR(6),                                              \
-                                           SCALAR(7),                                              \
-                                           SCALAR(8)));                                            \
+        REQUIRE(fmt::format("{}", testI) ==                                                        \
+                fmt::format("[[[{} {}]\n  [{} {}]]\n\n [[{} {}]\n  [{} {}]]]",                     \
+                            SCALAR(1),                                                             \
+                            SCALAR(2),                                                             \
+                            SCALAR(3),                                                             \
+                            SCALAR(4),                                                             \
+                            SCALAR(5),                                                             \
+                            SCALAR(6),                                                             \
+                            SCALAR(7),                                                             \
+                            SCALAR(8)));                                                           \
                                                                                                    \
         auto testJ =                                                                               \
           lrc::Array<SCALAR, BACKEND>::fromData(Vec({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}));        \
-        REQUIRE(testJ.str() == fmt::format("[[[{} {}]\n  [{} {}]]\n\n [[{} {}]\n  [{} {}]]]",      \
-                                           SCALAR(1),                                              \
-                                           SCALAR(2),                                              \
-                                           SCALAR(3),                                              \
-                                           SCALAR(4),                                              \
-                                           SCALAR(5),                                              \
-                                           SCALAR(6),                                              \
-                                           SCALAR(7),                                              \
-                                           SCALAR(8)));                                            \
+        REQUIRE(fmt::format("{}", testJ) ==                                                        \
+                fmt::format("[[[{} {}]\n  [{} {}]]\n\n [[{} {}]\n  [{} {}]]]",                     \
+                            SCALAR(1),                                                             \
+                            SCALAR(2),                                                             \
+                            SCALAR(3),                                                             \
+                            SCALAR(4),                                                             \
+                            SCALAR(5),                                                             \
+                            SCALAR(6),                                                             \
+                            SCALAR(7),                                                             \
+                            SCALAR(8)));                                                           \
     }
 
 #define TEST_INDEXING(SCALAR, BACKEND)                                                             \
@@ -108,14 +110,14 @@ using CUDA                 = lrc::backend::CUDA;
         std::string index2 = fmt::format("[{} {} {}]", SCALAR(7), SCALAR(8), SCALAR(9));           \
         std::string index3 = fmt::format("[{} {} {}]", SCALAR(10), SCALAR(11), SCALAR(12));        \
         std::string index4 = fmt::format("[{} {} {}]", SCALAR(13), SCALAR(14), SCALAR(15));        \
-        REQUIRE(testA[0].str() == index0);                                                         \
-        REQUIRE(testA[1].str() == index1);                                                         \
-        REQUIRE(testA[2].str() == index2);                                                         \
-        REQUIRE(testA[3].str() == index3);                                                         \
-        REQUIRE(testA[4].str() == index4);                                                         \
-        REQUIRE(testA[0][0].str() == fmt::format("{}", SCALAR(1)));                                \
-        REQUIRE(testA[1][1].str() == fmt::format("{}", SCALAR(5)));                                \
-        REQUIRE(testA[2][2].str() == fmt::format("{}", SCALAR(9)));                                \
+        REQUIRE(fmt::format("{}", testA[0]) == index0);                                            \
+        REQUIRE(fmt::format("{}", testA[1]) == index1);                                            \
+        REQUIRE(fmt::format("{}", testA[2]) == index2);                                            \
+        REQUIRE(fmt::format("{}", testA[3]) == index3);                                            \
+        REQUIRE(fmt::format("{}", testA[4]) == index4);                                            \
+        REQUIRE(fmt::format("{}", testA[0][0]) == fmt::format("{}", SCALAR(1)));                   \
+        REQUIRE(fmt::format("{}", testA[1][1]) == fmt::format("{}", SCALAR(5)));                   \
+        REQUIRE(fmt::format("{}", testA[2][2]) == fmt::format("{}", SCALAR(9)));                   \
                                                                                                    \
         testA[1][2] = 123;                                                                         \
                                                                                                    \
@@ -143,29 +145,29 @@ using CUDA                 = lrc::backend::CUDA;
         lrc::Array<SCALAR, BACKEND> testA(lrc::Array<SCALAR, BACKEND>::ShapeType({2, 3}));         \
         testA << 1, 2, 3, 4, 5, 6;                                                                 \
                                                                                                    \
-        REQUIRE(testA.str() == fmt::format("[[{} {} {}]\n [{} {} {}]]",                            \
-                                           SCALAR(1),                                              \
-                                           SCALAR(2),                                              \
-                                           SCALAR(3),                                              \
-                                           SCALAR(4),                                              \
-                                           SCALAR(5),                                              \
-                                           SCALAR(6)));                                            \
+        REQUIRE(fmt::format("{}", testA) == fmt::format("[[{} {} {}]\n [{} {} {}]]",               \
+                                                        SCALAR(1),                                 \
+                                                        SCALAR(2),                                 \
+                                                        SCALAR(3),                                 \
+                                                        SCALAR(4),                                 \
+                                                        SCALAR(5),                                 \
+                                                        SCALAR(6)));                               \
                                                                                                    \
         lrc::Array<SCALAR, BACKEND> testB(lrc::Array<SCALAR, BACKEND>::ShapeType({2, 3}));         \
         testB << 10, 2, 3, 4, 5, 6;                                                                \
                                                                                                    \
-        REQUIRE(testB.str() == fmt::format("[[{} {} {}]\n [ {} {} {}]]",                           \
-                                           SCALAR(10),                                             \
-                                           SCALAR(2),                                              \
-                                           SCALAR(3),                                              \
-                                           SCALAR(4),                                              \
-                                           SCALAR(5),                                              \
-                                           SCALAR(6)));                                            \
+        REQUIRE(fmt::format("{}", testB) == fmt::format("[[{} {} {}]\n [{} {} {}]]",               \
+                                                        SCALAR(10),                                \
+                                                        SCALAR(2),                                 \
+                                                        SCALAR(3),                                 \
+                                                        SCALAR(4),                                 \
+                                                        SCALAR(5),                                 \
+                                                        SCALAR(6)));                               \
                                                                                                    \
         lrc::Array<SCALAR, BACKEND> testC(lrc::Array<SCALAR, BACKEND>::ShapeType({2, 2, 2}));      \
         testC << 100, 2, 3, 4, 5, 6, 7, 8;                                                         \
-        REQUIRE(testC.str() ==                                                                     \
-                fmt::format("[[[{} {}]\n  [  {} {}]]\n\n [[  {} {}]\n  [  {} {}]]]",               \
+        REQUIRE(fmt::format("{}", testC) ==                                                        \
+                fmt::format("[[[{} {}]\n  [{} {}]]\n\n [[{} {}]\n  [{} {}]]]",                     \
                             SCALAR(100),                                                           \
                             SCALAR(2),                                                             \
                             SCALAR(3),                                                             \

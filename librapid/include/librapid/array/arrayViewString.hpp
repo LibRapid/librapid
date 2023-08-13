@@ -59,7 +59,11 @@ namespace librapid {
                     if (i > 0) fmt::format_to(ctx.out(), "{}", std::string(indent + 1, ' '));
                     arrayViewToString(view[i], formatter, bracket, separator, indent + 1, ctx);
                     if (i != view.shape()[0] - 1) {
-                        fmt::format_to(ctx.out(), "{}\n", separator);
+                        if (separator == ' ') {
+                            fmt::format_to(ctx.out(), "\n");
+                        } else {
+                            fmt::format_to(ctx.out(), "{}\n", separator);
+                        }
                         if (view.ndim() > 2) { fmt::format_to(ctx.out(), "\n"); }
                     }
                 }

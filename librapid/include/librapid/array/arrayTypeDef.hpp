@@ -93,17 +93,17 @@ namespace librapid {
                                                                                                    \
         template<typename ParseContext>                                                            \
         FMT_CONSTEXPR auto parse(ParseContext &ctx) -> const char * {                              \
-            /* Custom format options:				*/                                                        \
-            /*  - "~r" for round brackets			*/                                                     \
-            /*  - "~s" for square brackets			*/                                                    \
-            /*  - "~c" for curly brackets			*/                                                     \
-            /*  - "~a" for angle brackets			*/                                                     \
-            /*  - "~p" for pipe brackets			*/                                                      \
-            /*  - "-," for comma separator			*/                                                    \
-            /*  - "-;" for semicolon separator		*/                                                 \
-            /*  - "-:" for colon separator			*/                                                    \
-            /*  - "-|" for pipe separator			*/                                                     \
-            /*  - "-_" for underscore separator		*/                                                \
+            /* Custom format options:               */                                             \
+            /*  - "~r" for round brackets           */                                             \
+            /*  - "~s" for square brackets          */                                             \
+            /*  - "~c" for curly brackets           */                                             \
+            /*  - "~a" for angle brackets           */                                             \
+            /*  - "~p" for pipe brackets            */                                             \
+            /*  - "-," for comma separator          */                                             \
+            /*  - "-;" for semicolon separator      */                                             \
+            /*  - "-:" for colon separator          */                                             \
+            /*  - "-|" for pipe separator           */                                             \
+            /*  - "-_" for underscore separator     */                                             \
                                                                                                    \
             auto it = ctx.begin(), end = ctx.end();                                                \
             if (it != end && *it == '~') {                                                         \

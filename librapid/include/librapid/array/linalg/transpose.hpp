@@ -422,11 +422,11 @@ namespace librapid {
     }     // namespace detail
 
     namespace array {
-        template<typename T>
+        template<typename TransposeType>
         class Transpose {
         public:
-            using ArrayType      = T;
-            using BaseType       = typename std::decay_t<T>;
+            using ArrayType      = TransposeType;
+            using BaseType       = typename std::decay_t<TransposeType>;
             using Scalar         = typename typetraits::TypeInfo<BaseType>::Scalar;
             using Reference      = BaseType &;
             using ConstReference = const BaseType &;
@@ -446,7 +446,7 @@ namespace librapid {
             /// Create a Transpose object from an array/operation
             /// \param array The array to copy
             /// \param axes The transposition axes
-            Transpose(const T &array, const ShapeType &axes, Scalar alpha = Scalar(1.0));
+            Transpose(const TransposeType &array, const ShapeType &axes, Scalar alpha = Scalar(1.0));
 
             /// Copy a Transpose object
             Transpose(const Transpose &other) = default;
@@ -457,7 +457,7 @@ namespace librapid {
             /// Assign another Transpose object to this one
             /// \param other The Transpose to assign
             /// \return *this;
-            Transpose &operator=(const Transpose &other) = default;
+            auto operator=(const Transpose &other) -> Transpose & = default;
 
             /// Access sub-array of this Transpose object
             /// \param index Array index
@@ -505,7 +505,9 @@ namespace librapid {
             /// the given format string
             /// \param format Format string
             /// \return Stringified object
-            LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
+            template<typename T, typename Char, typename Ctx>
+            LIBRAPID_ALWAYS_INLINE void str(const fmt::formatter<T, Char> &format, char bracket,
+                                            char separator, Ctx &ctx) const;
 
         private:
             ArrayType m_array;
@@ -535,6 +537,12 @@ namespace librapid {
         template<typename T>
         auto Transpose<T>::ndim() const -> int64_t {
             return m_outputShape.ndim();
+        }
+
+        template<typename T>
+        auto Transpose<T>::scalar(int64_t index) const -> auto {
+            // TODO: This is a heinously inefficient way of doing this. Fix it.
+            return eval().scalar(index);
         }
 
         template<typename T>
@@ -617,9 +625,11 @@ namespace librapid {
             return res;
         }
 
-        template<typename T>
-        std::string Transpose<T>::str(const std::string &format) const {
-            return eval().str(format);
+        template<typename TransposeType>
+        template<typename T, typename Char, typename Ctx>
+        void Transpose<TransposeType>::str(const fmt::formatter<T, Char> &format, char bracket, char separator,
+                 Ctx &ctx) const {
+            eval().str(format, bracket, separator, ctx);
         }
     }; // namespace array
 
@@ -716,7 +726,7 @@ namespace librapid {
 
 // Support FMT printing
 #ifdef FMT_API
-LIBRAPID_SIMPLE_IO_IMPL(typename T, librapid::array::Transpose<T>)
+ARRAY_TYPE_FMT_IML(typename T, librapid::array::Transpose<T>)
 LIBRAPID_SIMPLE_IO_NORANGE(typename T, librapid::array::Transpose<T>)
 #endif // FMT_API
 

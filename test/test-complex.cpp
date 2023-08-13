@@ -99,10 +99,10 @@ static double tolerance = 1e-5;
             REQUIRE(lrc::Complex<int>(z1) == lrc::Complex<int>(1, 2));                             \
             REQUIRE(lrc::Complex<int>(z2) == lrc::Complex<int>(3, 4));                             \
                                                                                                    \
-            REQUIRE(z1.str() == fmt::format("({}+{}j)", z1.real(), z1.imag()));                    \
-            REQUIRE(z2.str() == fmt::format("({}+{}j)", z2.real(), z2.imag()));                    \
-            REQUIRE((-z1).str() == fmt::format("(-{}-{}j)", z1.real(), z1.imag()));                \
-            REQUIRE((-z2).str() == fmt::format("(-{}-{}j)", z2.real(), z2.imag()));                \
+            REQUIRE(fmt::format("{}", z1) == fmt::format("({}+{}i)", z1.real(), z1.imag()));       \
+            REQUIRE(fmt::format("{}", z2) == fmt::format("({}+{}i)", z2.real(), z2.imag()));       \
+            REQUIRE(fmt::format("{}", (-z1)) == fmt::format("(-{}-{}i)", z1.real(), z1.imag()));   \
+            REQUIRE(fmt::format("{}", (-z2)) == fmt::format("(-{}-{}i)", z2.real(), z2.imag()));   \
         }                                                                                          \
                                                                                                    \
         SECTION("Out-of-Place Arithmetic") {                                                       \

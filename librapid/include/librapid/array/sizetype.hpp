@@ -135,9 +135,9 @@ namespace librapid {
         /// \return Number of elements
         LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T size() const;
 
-        /// Convert a Shape object into a string representation
-        /// \return A string representation of the Shape object
-        LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
+        template<typename T, typename Char, typename Ctx>
+        void str(const fmt::formatter<T, Char> &format,
+                 Ctx &ctx) const;
 
     protected:
         T m_dims;
@@ -290,14 +290,16 @@ namespace librapid {
         return res;
     }
 
-    template<typename T, size_t N>
-    std::string Shape<T, N>::str(const std::string &format) const {
-        std::string result("(");
+    template<typename T_, size_t N>
+    template<typename T, typename Char, typename Ctx>
+    void Shape<T_, N>::str(const fmt::formatter<T, Char> &format,
+             Ctx &ctx) const {
+        fmt::format_to(ctx.out(), "Shape(");
         for (size_t i = 0; i < m_dims; ++i) {
-            result += fmt::format(format, m_data[i]);
-            if (i < m_dims - 1) result += std::string(", ");
+            format.format(m_data[i], ctx);
+            if (i != m_dims - 1) fmt::format_to(ctx.out(), ", ");
         }
-        return std::operator+(result, std::string(")"));
+        fmt::format_to(ctx.out(), ")");
     }
 
     /// Returns true if all inputs have the same shape
@@ -350,7 +352,25 @@ namespace librapid {
 
 // Support FMT printing
 #ifdef FMT_API
-LIBRAPID_SIMPLE_IO_IMPL(typename T COMMA size_t N, librapid::Shape<T COMMA N>)
+template<typename T, size_t N>
+struct fmt::formatter<librapid::Shape<T, N>> {
+private:
+    using Base = fmt::formatter<T, char>;
+    Base m_base;
+
+public:
+    template<typename ParseContext>
+    FMT_CONSTEXPR auto parse(ParseContext &ctx) -> const char * {
+        return m_base.parse(ctx);
+    }
+
+    template<typename FormatContext>
+    FMT_CONSTEXPR auto format(const librapid::Shape<T, N> &val, FormatContext &ctx) const
+      -> decltype(ctx.out()) {
+        val.str(m_base, ctx);
+        return ctx.out();
+    }
+};
 #endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_SIZETYPE_HPP

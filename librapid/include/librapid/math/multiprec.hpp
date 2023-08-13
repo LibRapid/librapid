@@ -654,136 +654,117 @@ namespace librapid {
 
 // Provide {fmt} printing capabilities
 #    ifdef FMT_API
-template<>
-struct fmt::formatter<mpz_class> {
-    detail::dynamic_format_specs<char> specs_;
+template<typename Char>
+struct fmt::formatter<librapid::mpz, Char> {
+    detail::dynamic_format_specs<Char> specs_;
 
     template<typename ParseContext>
     constexpr auto parse(ParseContext &ctx) {
-        auto type = ::fmt::detail::type_constant<int64_t, char>::value;
+        auto type = ::fmt::detail::type_constant<int64_t, Char>::value;
         auto end  = ::fmt::detail::parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx, type);
         return end;
     }
 
     template<typename FormatContext>
-    inline auto format(const mpz_class &num, FormatContext &ctx) {
-        try {
-            std::stringstream ss;
-            ss << std::fixed;
-            ss.precision(specs_.precision < 0 ? 10 : specs_.precision);
-            ss << num;
-            return fmt::format_to(ctx.out(), ss.str());
-        } catch (std::exception &e) {
-            return fmt::format_to(ctx.out(), fmt::format("Format Error: {}", e.what()));
-        }
+    inline auto format(const librapid::mpz &num, FormatContext &ctx) const {
+        std::stringstream ss;
+        ss << std::fixed;
+        ss.precision(specs_.precision < 0 ? 10 : specs_.precision);
+        ss << num;
+        return fmt::format_to(ctx.out(), "{}", ss.str());
     }
 };
 
-template<>
-struct fmt::formatter<mpf_class> {
-    detail::dynamic_format_specs<char> specs_;
+template<typename Char>
+struct fmt::formatter<librapid::mpf, Char> {
+    detail::dynamic_format_specs<Char> specs_;
 
     template<typename ParseContext>
     constexpr auto parse(ParseContext &ctx) {
-        auto type = ::fmt::detail::type_constant<double, char>::value;
+        auto type = ::fmt::detail::type_constant<double, Char>::value;
         auto end  = ::fmt::detail::parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx, type);
         return end;
     }
 
     template<typename FormatContext>
-    inline auto format(const mpf_class &num, FormatContext &ctx) {
-        try {
-            if (specs_.precision < 1) return fmt::format_to(ctx.out(), librapid::str(num));
+    inline auto format(const librapid::mpf &num, FormatContext &ctx) const {
+        if (specs_.precision < 1) return fmt::format_to(ctx.out(), "{}", librapid::str(num));
 
-            std::stringstream ss;
-            ss << std::fixed;
-            ss.precision(specs_.precision);
-            ss << num;
-            return fmt::format_to(ctx.out(), ss.str());
-        } catch (std::exception &e) {
-            return fmt::format_to(ctx.out(), fmt::format("Format Error: {}", e.what()));
-        }
+        std::stringstream ss;
+        ss << std::fixed;
+        ss.precision(specs_.precision);
+        ss << num;
+        return fmt::format_to(ctx.out(), "{}", ss.str());
     }
 };
 
-template<typename Type, typename Expression>
-struct fmt::formatter<__gmp_expr<Type, Expression>> {
-    detail::dynamic_format_specs<char> specs_;
+template<typename Type, typename Expression, typename Char>
+struct fmt::formatter<__gmp_expr<Type, Expression>, Char> {
+    detail::dynamic_format_specs<Char> specs_;
 
     template<typename ParseContext>
     constexpr auto parse(ParseContext &ctx) {
-        auto type = ::fmt::detail::type_constant<double, char>::value;
+        auto type = ::fmt::detail::type_constant<double, Char>::value;
         auto end  = ::fmt::detail::parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx, type);
         return end;
     }
 
     template<typename FormatContext>
-    inline auto format(const __gmp_expr<Type, Expression> &num, FormatContext &ctx) {
-        try {
-            if (specs_.precision < 1) return fmt::format_to(ctx.out(), librapid::str(num));
+    inline auto format(const __gmp_expr<Type, Expression> &num, FormatContext &ctx) const {
+        if (specs_.precision < 1)
+            return fmt::format_to(ctx.out(), "{}", librapid::str(librapid::mpf(num)));
 
-            std::stringstream ss;
-            ss << std::fixed;
-            ss.precision(specs_.precision);
-            ss << num;
-            return fmt::format_to(ctx.out(), ss.str());
-        } catch (std::exception &e) {
-            return fmt::format_to(ctx.out(), fmt::format("Format Error: {}", e.what()));
-        }
+        std::stringstream ss;
+        ss << std::fixed;
+        ss.precision(specs_.precision);
+        ss << librapid::mpf(num);
+        return fmt::format_to(ctx.out(), "{}", ss.str());
     }
 };
 
-template<>
-struct fmt::formatter<mpq_class> {
-    detail::dynamic_format_specs<char> specs_;
+template<typename Char>
+struct fmt::formatter<librapid::mpq, Char> {
+    detail::dynamic_format_specs<Char> specs_;
 
     template<typename ParseContext>
-    constexpr auto parse(ParseContext &ctx) {
-        auto type = ::fmt::detail::type_constant<double, char>::value;
-        auto end  = ::fmt::detail::parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx, type);
+    FMT_CONSTEXPR auto parse(ParseContext &ctx) {
+        auto type = detail::type_constant<double, Char>::value;
+        auto end  = detail::parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx, type);
         return end;
     }
 
     template<typename FormatContext>
-    inline auto format(const mpq_class &num, FormatContext &ctx) {
-        try {
-            if (specs_.precision < 1) return fmt::format_to(ctx.out(), librapid::str(num));
+    auto format(const librapid::mpq &num, FormatContext &ctx) const {
+        if (specs_.precision < 1) return fmt::format_to(ctx.out(), "{}", librapid::str(num));
 
-            std::stringstream ss;
-            ss << std::fixed;
-            ss.precision(specs_.precision);
-            ss << num;
-            return fmt::format_to(ctx.out(), ss.str());
-        } catch (std::exception &e) {
-            return fmt::format_to(ctx.out(), fmt::format("Format Error: {}", e.what()));
-        }
+        std::stringstream ss;
+        ss << std::fixed;
+        ss.precision(specs_.precision);
+        ss << librapid::mpf(num);
+        return fmt::format_to(ctx.out(), "{}", ss.str());
     }
 };
 
-template<>
-struct fmt::formatter<librapid::mpfr> {
-    detail::dynamic_format_specs<char> specs_;
+template<typename Char>
+struct fmt::formatter<librapid::mpfr, Char> {
+    detail::dynamic_format_specs<Char> specs_;
 
     template<typename ParseContext>
-    constexpr auto parse(ParseContext &ctx) {
-        auto type = ::fmt::detail::type_constant<double, char>::value;
-        auto end  = ::fmt::detail::parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx, type);
+    FMT_CONSTEXPR auto parse(ParseContext &ctx) {
+        auto type = detail::type_constant<double, Char>::value;
+        auto end  = detail::parse_format_specs(ctx.begin(), ctx.end(), specs_, ctx, type);
         return end;
     }
 
     template<typename FormatContext>
-    inline auto format(const librapid::mpfr &num, FormatContext &ctx) {
-        try {
-            if (specs_.precision < 1) return fmt::format_to(ctx.out(), librapid::str(num));
+    auto format(const librapid::mpfr &num, FormatContext &ctx) const {
+        if (specs_.precision < 1) return fmt::format_to(ctx.out(), "{}", librapid::str(num));
 
-            std::stringstream ss;
-            ss << std::fixed;
-            ss.precision(specs_.precision);
-            ss << num;
-            return fmt::format_to(ctx.out(), ss.str());
-        } catch (std::exception &e) {
-            return fmt::format_to(ctx.out(), fmt::format("Format Error: {}", e.what()));
-        }
+        std::stringstream ss;
+        ss << std::fixed;
+        ss.precision(specs_.precision);
+        ss << num;
+        return fmt::format_to(ctx.out(), "{}", ss.str());
     }
 };
 #    endif // FMT_API

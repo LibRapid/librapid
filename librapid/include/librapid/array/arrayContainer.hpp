@@ -845,61 +845,8 @@ namespace librapid {
 
 // Support FMT printing
 #ifdef FMT_API
-template<typename ShapeType_, typename StorageType_>
-struct fmt::formatter<librapid::array::ArrayContainer<ShapeType_, StorageType_>> {
-    using Type      = librapid::array::ArrayContainer<ShapeType_, StorageType_>;
-    using Scalar    = typename librapid::typetraits::TypeInfo<Type>::Scalar;
-    using Formatter = fmt::formatter<Scalar>;
-    Formatter m_formatter;
-    char m_bracket   = 's';
-    char m_separator = ' ';
-
-    template<typename ParseContext>
-    FMT_CONSTEXPR auto parse(ParseContext &ctx) -> const char * {
-        // Custom format options:
-        //  - "~r" for round brackets
-        //  - "~s" for square brackets
-        //  - "~c" for curly brackets
-        //  - "~a" for angle brackets
-        //  - "~p" for pipe brackets
-        //  - "-," for comma separator
-        //  - "-;" for semicolon separator
-        //  - "-:" for colon separator
-        //  - "-|" for pipe separator
-        //  - "-_" for underscore separator
-
-        auto it = ctx.begin(), end = ctx.end();
-        if (it != end && *it == '~') {
-            ++it;
-            if (it != end && (*it == 'r' || *it == 's' || *it == 'c' || *it == 'a' || *it == 'p')) {
-                m_bracket = *it++;
-            }
-        }
-
-        if (it != end && *it == '-') {
-            ++it;
-            if (it != end) { m_separator = *it++; }
-        }
-
-        ctx.advance_to(it);
-
-        return m_formatter.parse(ctx);
-    }
-
-    template<typename FormatContext>
-    FMT_CONSTEXPR auto format(const Type &val, FormatContext &ctx) const -> decltype(ctx.out()) {
-        val.str(m_formatter, m_bracket, m_separator, ctx);
-        return ctx.out();
-    }
-};
-
-template<typename ShapeType_, typename StorageType_>
-auto operator<<(std::ostream &os,
-                const librapid::array::ArrayContainer<ShapeType_, StorageType_> &object)
-  -> std::ostream & {
-    os << fmt::format("{}", object);
-    return os;
-}
+ARRAY_TYPE_FMT_IML(typename ShapeType_ COMMA typename StorageType_,
+                   librapid::array::ArrayContainer<ShapeType_ COMMA StorageType_>)
 
 LIBRAPID_SIMPLE_IO_NORANGE(typename ShapeType_ COMMA typename StorageType_,
                            librapid::array::ArrayContainer<ShapeType_ COMMA StorageType_>)
