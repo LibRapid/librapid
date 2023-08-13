@@ -1,7 +1,7 @@
 #ifndef LIBRAPID_CUDA_KERNEL_HELPER
 #define LIBRAPID_CUDA_KERNEL_HELPER
 
-#define LIBRAPID_INLINE inline
+#define LIBRAPID_INLINE        inline
 #define LIBRAPID_ALWAYS_INLINE inline
 #define LIBRAPID_NODISCARD
 
@@ -12,7 +12,7 @@
 #include <cuda_fp16.h>
 
 namespace librapid {
-	using half = __half;
+    using half = __half;
 }
 
 template<typename T>

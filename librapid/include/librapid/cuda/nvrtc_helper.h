@@ -38,169 +38,169 @@
 #include <string>
 
 #define NVRTC_SAFE_CALL(Name, x)                                                                   \
-	do {                                                                                           \
-		nvrtcResult result = x;                                                                    \
-		if (result != NVRTC_SUCCESS) {                                                             \
-			std::cerr << "\nerror: " << Name << " failed with error "                              \
-					  << nvrtcGetErrorString(result);                                              \
-			exit(1);                                                                               \
-		}                                                                                          \
-	} while (0)
+    do {                                                                                           \
+        nvrtcResult result = x;                                                                    \
+        if (result != NVRTC_SUCCESS) {                                                             \
+            std::cerr << "\nerror: " << Name << " failed with error "                              \
+                      << nvrtcGetErrorString(result);                                              \
+            exit(1);                                                                               \
+        }                                                                                          \
+    } while (0)
 
 void compileFileToCUBIN(char *filename, int argc, char **argv, char **cubinResult,
-						size_t *cubinResultSize, int requiresCGheaders) {
-	std::ifstream inputFile(filename, std::ios::in | std::ios::binary | std::ios::ate);
+                        size_t *cubinResultSize, int requiresCGheaders) {
+    std::ifstream inputFile(filename, std::ios::in | std::ios::binary | std::ios::ate);
 
-	if (!inputFile.is_open()) {
-		std::cerr << "\nerror: unable to open " << filename << " for reading!\n";
-		exit(1);
-	}
+    if (!inputFile.is_open()) {
+        std::cerr << "\nerror: unable to open " << filename << " for reading!\n";
+        exit(1);
+    }
 
-	std::streampos pos = inputFile.tellg();
-	size_t inputSize   = (size_t)pos;
-	char *memBlock	   = new char[inputSize + 1];
+    std::streampos pos = inputFile.tellg();
+    size_t inputSize   = (size_t)pos;
+    char *memBlock     = new char[inputSize + 1];
 
-	inputFile.seekg(0, std::ios::beg);
-	inputFile.read(memBlock, inputSize);
-	inputFile.close();
-	memBlock[inputSize] = '\x0';
+    inputFile.seekg(0, std::ios::beg);
+    inputFile.read(memBlock, inputSize);
+    inputFile.close();
+    memBlock[inputSize] = '\x0';
 
-	int numCompileOptions = 0;
+    int numCompileOptions = 0;
 
-	char *compileParams[2];
+    char *compileParams[2];
 
-	int major = 0, minor = 0;
-	char deviceName[256];
+    int major = 0, minor = 0;
+    char deviceName[256];
 
-	// Picks the best CUDA device available
-	CUdevice cuDevice = findCudaDeviceDRV(argc, (const char **)argv);
+    // Picks the best CUDA device available
+    CUdevice cuDevice = findCudaDeviceDRV(argc, (const char **)argv);
 
-	// get compute capabilities and the devicename
-	checkCudaErrors(
-	  cuDeviceGetAttribute(&major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
-	checkCudaErrors(
-	  cuDeviceGetAttribute(&minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
+    // get compute capabilities and the devicename
+    checkCudaErrors(
+      cuDeviceGetAttribute(&major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
+    checkCudaErrors(
+      cuDeviceGetAttribute(&minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
 
-	{
-		// Compile cubin for the GPU arch on which are going to run cuda kernel.
-		std::string compileOptions;
-		compileOptions = "--gpu-architecture=sm_";
+    {
+        // Compile cubin for the GPU arch on which are going to run cuda kernel.
+        std::string compileOptions;
+        compileOptions = "--gpu-architecture=sm_";
 
-		compileParams[numCompileOptions] =
-		  reinterpret_cast<char *>(malloc(sizeof(char) * (compileOptions.length() + 10)));
+        compileParams[numCompileOptions] =
+          reinterpret_cast<char *>(malloc(sizeof(char) * (compileOptions.length() + 10)));
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-		sprintf_s(compileParams[numCompileOptions],
-				  sizeof(char) * (compileOptions.length() + 10),
-				  "%s%d%d",
-				  compileOptions.c_str(),
-				  major,
-				  minor);
+        sprintf_s(compileParams[numCompileOptions],
+                  sizeof(char) * (compileOptions.length() + 10),
+                  "%s%d%d",
+                  compileOptions.c_str(),
+                  major,
+                  minor);
 #else
-		snprintf(compileParams[numCompileOptions],
-				 compileOptions.size() + 10,
-				 "%s%d%d",
-				 compileOptions.c_str(),
-				 major,
-				 minor);
+        snprintf(compileParams[numCompileOptions],
+                 compileOptions.size() + 10,
+                 "%s%d%d",
+                 compileOptions.c_str(),
+                 major,
+                 minor);
 #endif
-	}
+    }
 
-	numCompileOptions++;
+    numCompileOptions++;
 
-	if (requiresCGheaders) {
-		std::string compileOptions;
-		char HeaderNames[256];
+    if (requiresCGheaders) {
+        std::string compileOptions;
+        char HeaderNames[256];
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-		sprintf_s(HeaderNames, sizeof(HeaderNames), "%s", "cooperative_groups.h");
+        sprintf_s(HeaderNames, sizeof(HeaderNames), "%s", "cooperative_groups.h");
 #else
-		snprintf(HeaderNames, sizeof(HeaderNames), "%s", "cooperative_groups.h");
+        snprintf(HeaderNames, sizeof(HeaderNames), "%s", "cooperative_groups.h");
 #endif
 
-		compileOptions = "--include-path=";
+        compileOptions = "--include-path=";
 
-		std::string path = sdkFindFilePath(HeaderNames, argv[0]);
-		if (!path.empty()) {
-			std::size_t found = path.find(HeaderNames);
-			path.erase(found);
-		} else {
-			printf(
-			  "\nCooperativeGroups headers not found, please install it in %s "
-			  "sample directory..\n Exiting..\n",
-			  argv[0]);
-		}
-		compileOptions += path.c_str();
-		compileParams[numCompileOptions] =
-		  reinterpret_cast<char *>(malloc(sizeof(char) * (compileOptions.length() + 1)));
+        std::string path = sdkFindFilePath(HeaderNames, argv[0]);
+        if (!path.empty()) {
+            std::size_t found = path.find(HeaderNames);
+            path.erase(found);
+        } else {
+            printf(
+              "\nCooperativeGroups headers not found, please install it in %s "
+              "sample directory..\n Exiting..\n",
+              argv[0]);
+        }
+        compileOptions += path.c_str();
+        compileParams[numCompileOptions] =
+          reinterpret_cast<char *>(malloc(sizeof(char) * (compileOptions.length() + 1)));
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-		sprintf_s(compileParams[numCompileOptions],
-				  sizeof(char) * (compileOptions.length() + 1),
-				  "%s",
-				  compileOptions.c_str());
+        sprintf_s(compileParams[numCompileOptions],
+                  sizeof(char) * (compileOptions.length() + 1),
+                  "%s",
+                  compileOptions.c_str());
 #else
-		snprintf(
-		  compileParams[numCompileOptions], compileOptions.size(), "%s", compileOptions.c_str());
+        snprintf(
+          compileParams[numCompileOptions], compileOptions.size(), "%s", compileOptions.c_str());
 #endif
-		numCompileOptions++;
-	}
+        numCompileOptions++;
+    }
 
-	// compile
-	nvrtcProgram prog;
-	NVRTC_SAFE_CALL("nvrtcCreateProgram",
-					nvrtcCreateProgram(&prog, memBlock, filename, 0, NULL, NULL));
+    // compile
+    nvrtcProgram prog;
+    NVRTC_SAFE_CALL("nvrtcCreateProgram",
+                    nvrtcCreateProgram(&prog, memBlock, filename, 0, NULL, NULL));
 
-	nvrtcResult res = nvrtcCompileProgram(prog, numCompileOptions, compileParams);
+    nvrtcResult res = nvrtcCompileProgram(prog, numCompileOptions, compileParams);
 
-	// dump log
-	size_t logSize;
-	NVRTC_SAFE_CALL("nvrtcGetProgramLogSize", nvrtcGetProgramLogSize(prog, &logSize));
-	char *log = reinterpret_cast<char *>(malloc(sizeof(char) * logSize + 1));
-	NVRTC_SAFE_CALL("nvrtcGetProgramLog", nvrtcGetProgramLog(prog, log));
-	log[logSize] = '\x0';
+    // dump log
+    size_t logSize;
+    NVRTC_SAFE_CALL("nvrtcGetProgramLogSize", nvrtcGetProgramLogSize(prog, &logSize));
+    char *log = reinterpret_cast<char *>(malloc(sizeof(char) * logSize + 1));
+    NVRTC_SAFE_CALL("nvrtcGetProgramLog", nvrtcGetProgramLog(prog, log));
+    log[logSize] = '\x0';
 
-	if (strlen(log) >= 2) {
-		std::cerr << "\n compilation log ---\n";
-		std::cerr << log;
-		std::cerr << "\n end log ---\n";
-	}
+    if (strlen(log) >= 2) {
+        std::cerr << "\n compilation log ---\n";
+        std::cerr << log;
+        std::cerr << "\n end log ---\n";
+    }
 
-	free(log);
+    free(log);
 
-	NVRTC_SAFE_CALL("nvrtcCompileProgram", res);
+    NVRTC_SAFE_CALL("nvrtcCompileProgram", res);
 
-	size_t codeSize;
-	NVRTC_SAFE_CALL("nvrtcGetCUBINSize", nvrtcGetCUBINSize(prog, &codeSize));
-	char *code = new char[codeSize];
-	NVRTC_SAFE_CALL("nvrtcGetCUBIN", nvrtcGetCUBIN(prog, code));
-	*cubinResult	 = code;
-	*cubinResultSize = codeSize;
+    size_t codeSize;
+    NVRTC_SAFE_CALL("nvrtcGetCUBINSize", nvrtcGetCUBINSize(prog, &codeSize));
+    char *code = new char[codeSize];
+    NVRTC_SAFE_CALL("nvrtcGetCUBIN", nvrtcGetCUBIN(prog, code));
+    *cubinResult     = code;
+    *cubinResultSize = codeSize;
 
-	for (int i = 0; i < numCompileOptions; i++) { free(compileParams[i]); }
+    for (int i = 0; i < numCompileOptions; i++) { free(compileParams[i]); }
 }
 
 CUmodule loadCUBIN(char *cubin, int argc, char **argv) {
-	CUmodule module;
-	CUcontext context;
-	int major = 0, minor = 0;
-	char deviceName[256];
+    CUmodule module;
+    CUcontext context;
+    int major = 0, minor = 0;
+    char deviceName[256];
 
-	// Picks the best CUDA device available
-	CUdevice cuDevice = findCudaDeviceDRV(argc, (const char **)argv);
+    // Picks the best CUDA device available
+    CUdevice cuDevice = findCudaDeviceDRV(argc, (const char **)argv);
 
-	// get compute capabilities and the devicename
-	checkCudaErrors(
-	  cuDeviceGetAttribute(&major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
-	checkCudaErrors(
-	  cuDeviceGetAttribute(&minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
-	checkCudaErrors(cuDeviceGetName(deviceName, 256, cuDevice));
-	printf("> GPU Device has SM %d.%d compute capability\n", major, minor);
+    // get compute capabilities and the devicename
+    checkCudaErrors(
+      cuDeviceGetAttribute(&major, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, cuDevice));
+    checkCudaErrors(
+      cuDeviceGetAttribute(&minor, CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR, cuDevice));
+    checkCudaErrors(cuDeviceGetName(deviceName, 256, cuDevice));
+    printf("> GPU Device has SM %d.%d compute capability\n", major, minor);
 
-	checkCudaErrors(cuInit(0));
-	checkCudaErrors(cuCtxCreate(&context, 0, cuDevice));
+    checkCudaErrors(cuInit(0));
+    checkCudaErrors(cuCtxCreate(&context, 0, cuDevice));
 
-	checkCudaErrors(cuModuleLoadData(&module, cubin));
-	free(cubin);
+    checkCudaErrors(cuModuleLoadData(&module, cubin));
+    free(cubin);
 
-	return module;
+    return module;
 }
 
 #endif // COMMON_NVRTC_HELPER_H_

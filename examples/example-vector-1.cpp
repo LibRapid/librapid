@@ -5,6 +5,7 @@ namespace lrc = librapid;
 auto main() -> int {
 	fmt::print("LibRapid Example -- Vector 1\n");
 
+#if 0 // Currently broken -- switching SIMD backend
 	// Create a 3 dimensional vector
 	lrc::Vec3d myVector(2, 3, 4);
 	lrc::Vec3d myOtherVector(10, 5, 8);
@@ -52,6 +53,7 @@ auto main() -> int {
 	fmt::print("One vector: {}\n", one);
 	fmt::print("Full vector: {}\n", full);
 	fmt::print("Random vector: {:.3f}\n", random);
+#endif
 
 	return 0;
 }

@@ -1,9 +1,6 @@
 [submodule "librapid/vendor/jitify"]
 	path = librapid/vendor/jitify
 	url = https://github.com/Pencilcaseman/jitify.git
-[submodule "librapid/vendor/Vc"]
-	path = librapid/vendor/Vc
-	url = https://github.com/Pencilcaseman/Vc.git
 [submodule "librapid/vendor/fmt"]
 	path = librapid/vendor/fmt
 	url = https://github.com/fmtlib/fmt.git
@@ -19,3 +16,6 @@
 [submodule "librapid/vendor/CLBlast"]
 	path = librapid/vendor/CLBlast
 	url = https://github.com/CNugteren/CLBlast.git
+[submodule "librapid/vendor/xsimd"]
+	path = librapid/vendor/xsimd
+	url = https://github.com/LibRapid/xsimd.git

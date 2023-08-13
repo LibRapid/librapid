@@ -9,8 +9,6 @@ namespace lrc = librapid;
 // If the results are within this tolerance, they are likely correct.
 constexpr double tolerance = 1e-3;
 #define VEC_TYPE lrc::GenericVector
-#define SCALAR	 double
+#define SCALAR   double
 
-TEST_CASE("Temporary") {
-	REQUIRE(1 == 1);
-}
+TEST_CASE("Temporary") { REQUIRE(1 == 1); }
