@@ -289,9 +289,9 @@ namespace librapid {
         return res;
     }
 
-    template<typename T_, size_t N>
-    template<typename T, typename Char, typename Ctx>
-    void Shape<T_, N>::str(const fmt::formatter<T_, Char> &format, Ctx &ctx) const {
+    template<typename T, size_t N>
+    template<typename T_, typename Char, typename Ctx>
+    void Shape<T, N>::str(const fmt::formatter<T_, Char> &format, Ctx &ctx) const {
         fmt::format_to(ctx.out(), "Shape(");
         for (size_t i = 0; i < m_dims; ++i) {
             format.format(m_data[i], ctx);
