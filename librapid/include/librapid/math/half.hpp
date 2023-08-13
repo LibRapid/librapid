@@ -516,8 +516,8 @@ namespace librapid {
         LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE detail::float16_t data() const noexcept;
         LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE detail::float16_t &data() noexcept;
 
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE std::string
-        str(const std::string &format = "{}") const;
+        template<typename T, typename Char, typename Ctx>
+        void str(const fmt::formatter<T, Char> &formatter, Ctx &ctx) const;
 
         //		static half infinity;
         //		static half max;
@@ -634,10 +634,9 @@ namespace librapid {
         return m_value;
     }
 
-    std::string half::str(const std::string &format) const {
-        // return fmt::vformat(format, fmt::make_wformat_args(detail::halfToFloat(m_value.m_bits)));
-
-        return std::vformat(format, std::make_format_args(detail::halfToFloat(m_value.m_bits)));
+    template<typename T, typename Char, typename Ctx>
+    void half::str(const fmt::formatter<T, Char> &formatter, Ctx &ctx) const {
+        formatter.format(static_cast<float>(*this), ctx);
     }
 
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE half operator+(const half &lhs,
@@ -759,6 +758,22 @@ namespace librapid {
     } // namespace typetraits
 } // namespace librapid
 
-LIBRAPID_SIMPLE_IO_IMPL_NO_TEMPLATE(librapid::half);
+template<typename Char>
+struct fmt::formatter<librapid::half, Char> {
+public:
+    using Base = fmt::formatter<float, Char>;
+    Base m_base;
+
+    template<typename ParseContext>
+    FMT_CONSTEXPR auto parse(ParseContext &ctx) -> const char * {
+        return m_base.parse(ctx);
+    }
+
+    template<typename FormatContext>
+    FMT_CONSTEXPR auto format(const librapid::half &h, FormatContext &ctx) -> decltype(ctx.out()) {
+        h.str(m_base, ctx);
+        return ctx.out();
+    }
+};
 
 #endif // LIBRAPID_MATH_HALF_HPP
