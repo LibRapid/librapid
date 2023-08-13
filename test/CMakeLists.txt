@@ -1,5 +1,7 @@
 include("warnings")
 
+set(CMAKE_CXX_STANDARD 23)
+
 function(make_test name)
     add_executable(test-${name} test-${name}.cpp)
     target_link_libraries(test-${name} PRIVATE librapid)
