@@ -5,11 +5,6 @@ function(make_test name)
     target_link_libraries(test-${name} PRIVATE librapid)
     disable_all_warnings(test-${name}) # Disable warnings for tests since they test unrealistic scenarios
 
-    target_compile_features(test-${name} PUBLIC cxx_std_23)
-    set_target_properties(test-${name} PROPERTIES CXX_STANDARD 23)
-    target_compile_options(librapid PUBLIC cxx_std_23)
-    set_target_properties(librapid PROPERTIES CXX_STANDARD 23)
-
     message(STATUS "[ LIBRAPID ] Adding test ${name}")
     add_test(NAME ${name}
             COMMAND test-${name} -s --skip-benchmarks)

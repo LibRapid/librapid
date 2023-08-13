@@ -3,6 +3,11 @@ project(librapid)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 cmake_policy(SET CMP0077 NEW)
 
+if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    message(STATUS "[ LIBRAPID ] LibRapid is a top-level project. Using C++23")
+    set(CMAKE_CXX_STANDARD 23)
+endif ()
+
 # LibRapid requires C++20 or later
 if (CMAKE_CXX_STANDARD LESS 20)
     message(FATAL_ERROR "LibRapid requires C++20 or later")
