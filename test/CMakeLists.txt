@@ -1,15 +1,12 @@
 include("warnings")
 
-# set(CMAKE_CXX_STANDARD 23)
-
 function(make_test name)
     add_executable(test-${name} test-${name}.cpp)
-
-    # Set C++ standard to 23
-    target_compile_features(test-${name} PRIVATE cxx_std_23)
-
     target_link_libraries(test-${name} PRIVATE librapid)
     disable_all_warnings(test-${name}) # Disable warnings for tests since they test unrealistic scenarios
+
+    target_compile_features(test-${name} PRIVATE cxx_std_23)
+    target_compile_options(librapid PUBLIC cxx_std_23)
 
     message(STATUS "[ LIBRAPID ] Adding test ${name}")
     add_test(NAME ${name}
