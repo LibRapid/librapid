@@ -102,8 +102,8 @@ namespace librapid {
         }
 
 #if !defined(LIBRAPID_IN_JITIFY)
-        template<typename T, typename Char, typename Ctx>
-        void str(const fmt::formatter<T, Char> &format, Ctx &ctx) const {
+        template<typename T_, typename Char, typename Ctx>
+        void str(const fmt::formatter<T_, Char> &format, Ctx &ctx) const {
             fmt::format_to(ctx.out(), "Dual(");
             format.format(value, ctx);
             fmt::format_to(ctx.out(), ", ");
