@@ -97,9 +97,6 @@ namespace librapid {
         Timer &operator=(const Timer &) = default;
         Timer &operator=(Timer &&)      = default;
 
-        /// Timer destructor
-        ~Timer() { m_end = now<time::nanosecond>(); }
-
         template<size_t scale = time::second>
         Timer &setTargetTime(double time) {
             m_iters      = 0;
@@ -157,7 +154,8 @@ namespace librapid {
             //   formatTime<time::nanosecond>((tmpEnd - m_start) / (double)m_iters, format));
 
             auto [elapsed, elapsedUnit] = formatTime<time::nanosecond>(tmpEnd - m_start);
-            auto [average, averageUnit] = formatTime<time::nanosecond>((tmpEnd - m_start) / (double)m_iters);
+            auto [average, averageUnit] =
+              formatTime<time::nanosecond>((tmpEnd - m_start) / (double)m_iters);
             fmt::format_to(ctx.out(), "{}Elapsed: ", m_name);
             formatter.format(elapsed, ctx);
             fmt::format_to(ctx.out(), "{} | Average: ", elapsedUnit);
