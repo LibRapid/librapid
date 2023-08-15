@@ -430,14 +430,10 @@ endif ()
 
 # Add dependencies
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/fmt")
-# add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/xsimd")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
 
 target_compile_definitions(fmt PUBLIC FMT_HEADER_ONLY)
-# target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
-# target_link_libraries(${module_name} PUBLIC fmt scn Vc xsimd)
-target_link_libraries(${module_name} PUBLIC fmt scn xsimd)
+target_link_libraries(${module_name} PUBLIC fmt xsimd)
 
 if (${LIBRAPID_USE_MULTIPREC})
     # Load MPIR
