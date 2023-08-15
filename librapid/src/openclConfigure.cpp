@@ -240,9 +240,7 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
             // Otherwise, prompt the user to select a device
             int64_t deviceIndex = -1;
             while (deviceIndex < 0 || deviceIndex >= int64_t(global::openclDevices.size())) {
-                std::string prompt =
-                  fmt::format("Select OpenCL device [0-{}]: ", global::openclDevices.size() - 1);
-                fmt::print(prompt);
+                fmt::print("Select OpenCL device [0-{}]: ", global::openclDevices.size() - 1);
                 std::cout << std::flush;
                 std::cin >> deviceIndex;
             }
