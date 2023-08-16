@@ -61,7 +61,7 @@
 
 #define LIBRAPID_UNARY_SHAPE_EXTRACTOR                                                             \
     template<typename... Args>                                                                     \
-    LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto &getShape(                                \
+    LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto getShape(                                \
       const std::tuple<Args...> &args) {                                                           \
         static_assert(sizeof...(Args) == 1, "Invalid number of arguments for unary operation");    \
         return std::get<0>(args).shape();                                                          \
@@ -69,7 +69,7 @@
 
 #define LIBRAPID_BINARY_SHAPE_EXTRACTOR                                                            \
     template<typename First, typename Second>                                                      \
-    LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto &getShapeImpl(                            \
+    LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto getShapeImpl(                            \
       const std::tuple<First, Second> &tup) {                                                      \
         if constexpr (TypeInfo<std::decay_t<First>>::type != detail::LibRapidType::Scalar &&       \
                       TypeInfo<std::decay_t<Second>>::type != detail::LibRapidType::Scalar) {      \
