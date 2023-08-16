@@ -586,7 +586,8 @@ namespace librapid {
                 auto subSize  = res.shape().size();
                 Scalar *begin = m_storage.begin() + index * subSize;
                 Scalar *end   = begin + subSize;
-                res.m_storage.set(StorageType_(begin, end, false));
+                // res.m_storage.set(StorageType_(begin, end, false));
+                res.m_storage = StorageType_(begin, end); // TODO: Replace with optimised array view
                 return res;
             }
         }

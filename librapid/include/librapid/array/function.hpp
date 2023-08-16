@@ -127,7 +127,7 @@ namespace librapid {
             /// Constructs a Function from a functor and arguments.
             /// \param functor The functor to use.
             /// \param args The arguments to use.
-            LIBRAPID_ALWAYS_INLINE explicit Function(const Functor &functor, const Args &...args);
+            LIBRAPID_ALWAYS_INLINE explicit Function(Functor &&functor, Args &&...args);
 
             /// Constructs a Function from another function.
             /// \param other The Function to copy.
@@ -202,8 +202,8 @@ namespace librapid {
         };
 
         template<typename desc, typename Functor, typename... Args>
-        Function<desc, Functor, Args...>::Function(const Functor &functor, const Args &...args) :
-                m_functor(functor), m_args(args...) {}
+        Function<desc, Functor, Args...>::Function(Functor &&functor, Args &&...args) :
+                m_functor(std::forward<Functor>(functor)), m_args(std::forward<Args>(args)...) {}
 
         template<typename desc, typename Functor, typename... Args>
         auto Function<desc, Functor, Args...>::shape() const {
@@ -228,8 +228,7 @@ namespace librapid {
         }
 
         template<typename desc, typename Functor, typename... Args>
-        typename Function<desc, Functor, Args...>::Packet
-        Function<desc, Functor, Args...>::packet(size_t index) const {
+        auto Function<desc, Functor, Args...>::packet(size_t index) const -> Packet {
             return packetImpl(std::make_index_sequence<sizeof...(Args)>(), index);
         }
 

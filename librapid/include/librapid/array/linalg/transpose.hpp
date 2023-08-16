@@ -446,7 +446,8 @@ namespace librapid {
             /// Create a Transpose object from an array/operation
             /// \param array The array to copy
             /// \param axes The transposition axes
-            Transpose(const TransposeType &array, const ShapeType &axes, Scalar alpha = Scalar(1.0));
+            Transpose(ArrayType &&array, const ShapeType &axes,
+                      Scalar alpha = Scalar(1.0));
 
             /// Copy a Transpose object
             Transpose(const Transpose &other) = default;
@@ -517,15 +518,15 @@ namespace librapid {
             Scalar m_alpha;
         };
 
-        template<typename T>
-        Transpose<T>::Transpose(const T &array, const ShapeType &axes, Scalar alpha) :
+        template<typename TransposeType>
+        Transpose<TransposeType>::Transpose(ArrayType &&array, const ShapeType &axes, Scalar alpha) :
                 m_array(array), m_inputShape(array.shape()), m_axes(axes), m_alpha(alpha) {
             LIBRAPID_ASSERT(m_inputShape.ndim() == m_axes.ndim(),
                             "Shape and axes must have the same number of dimensions");
 
             m_outputShape = m_inputShape;
             for (size_t i = 0; i < m_inputShape.ndim(); i++) {
-                m_outputShape[i] = m_inputShape[m_axes[i]];
+                m_outputShape.setAt(i, m_inputShape[m_axes[i]]);
             }
         }
 
@@ -619,7 +620,7 @@ namespace librapid {
 
         template<typename T>
         auto Transpose<T>::eval() const {
-            using NonConstArrayType = std::remove_const_t<ArrayType>;
+            using NonConstArrayType = std::remove_const_t<BaseType>;
             NonConstArrayType res(m_outputShape);
             applyTo(res);
             return res;
@@ -627,24 +628,24 @@ namespace librapid {
 
         template<typename TransposeType>
         template<typename T, typename Char, typename Ctx>
-        void Transpose<TransposeType>::str(const fmt::formatter<T, Char> &format, char bracket, char separator,
-                 Ctx &ctx) const {
+        void Transpose<TransposeType>::str(const fmt::formatter<T, Char> &format, char bracket,
+                                           char separator, Ctx &ctx) const {
             eval().str(format, bracket, separator, ctx);
         }
     }; // namespace array
 
     template<typename T, typename ShapeType = Shape<size_t, 32>,
              typename std::enable_if_t<
-               typetraits::TypeInfo<T>::type == detail::LibRapidType::ArrayContainer, int> = 0>
+               typetraits::TypeInfo<std::decay_t<T>>::type == detail::LibRapidType::ArrayContainer, int> = 0>
     auto transpose(T &&array, const ShapeType &axes = ShapeType()) {
         // If axes is empty, transpose the array in reverse order
         ShapeType newAxes = axes;
         if (axes.ndim() == 0) {
             newAxes = ShapeType::zeros(array.ndim());
-            for (size_t i = 0; i < array.ndim(); i++) { newAxes[i] = array.ndim() - i - 1; }
+            for (size_t i = 0; i < array.ndim(); i++) { newAxes.setAt(i, array.ndim() - i - 1); }
         }
 
-        return array::Transpose(array, newAxes);
+        return array::Transpose<T>(std::forward<T>(array), newAxes, 1);
     }
 
     template<typename T, typename ShapeType = Shape<size_t, 32>,

@@ -84,6 +84,9 @@ namespace librapid {
 //		return res;                                                                                \
 //	}
 
+    // TODO: This recalculates the size of the shape at every iteration. Create a new function
+    //       to allow this to be done on request
+
 #define HIGHER_DIMENSIONAL_FROM_DATA(TYPE)                                                         \
     template<typename Scalar, typename Backend>                                                    \
     auto array::ArrayContainer<Scalar, Backend>::fromData(const TYPE &data) -> ArrayContainer {    \
@@ -96,8 +99,8 @@ namespace librapid {
             LIBRAPID_ASSERT(tmp[i].shape().operator==(zeroShape),                                  \
                             "Arrays must have consistent shapes");                                 \
         auto newShape = ShapeType::zeros(zeroShape.ndim() + 1);                                    \
-        newShape[0]   = data.size();                                                               \
-        for (size_t i = 0; i < zeroShape.ndim(); ++i) { newShape[i + 1] = zeroShape[i]; }          \
+        newShape.setAt(0, data.size());                                                            \
+        for (size_t i = 0; i < zeroShape.ndim(); ++i) { newShape.setAt(i + 1, zeroShape[i]); }     \
         auto res = Array<Scalar, Backend>(newShape);                                               \
         for (int64_t i = 0; i < data.size(); ++i) res[i] = tmp[i];                                 \
         return res;                                                                                \
