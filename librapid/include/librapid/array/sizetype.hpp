@@ -11,7 +11,7 @@ namespace librapid {
         LIBRAPID_DEFINE_AS_TYPE(typename T COMMA size_t N, Shape<T COMMA N>);
     }
 
-    template<typename T = size_t, size_t N = LIBRAPID_MAX_ARRAY_DIMS>
+    template<typename T = size_t, size_t N = 32>
     class Shape {
     public:
         using SizeType                        = T;
@@ -108,11 +108,8 @@ namespace librapid {
         /// \tparam Index Typename of the index
         /// \param index Index to access
         /// \return A reference to the value at the index
-        // template<typename Index>
-        // LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T &operator[](Index index);
-
         template<typename Index>
-        LIBRAPID_ALWAYS_INLINE void setAt(Index index, T value);
+        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T &operator[](Index index);
 
         /// Compare two Shape objects, returning true if and only if they are identical
         /// \param other Shape object to compare
@@ -142,11 +139,8 @@ namespace librapid {
         void str(const fmt::formatter<T_, Char> &format, Ctx &ctx) const;
 
     protected:
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T calculateSize() const;
-
         T m_dims;
         std::array<T, N> m_data;
-        int64_t m_size;
     };
 
     namespace detail {
@@ -158,8 +152,7 @@ namespace librapid {
 
     template<typename T, size_t N>
     template<typename Scalar, size_t... Dimensions>
-    Shape<T, N>::Shape(const FixedStorage<Scalar, Dimensions...> &) :
-            m_data({Dimensions...}), m_size(calculateSize()) {}
+    Shape<T, N>::Shape(const FixedStorage<Scalar, Dimensions...> &) : m_data({Dimensions...}) {}
 
     template<typename T, size_t N>
     template<typename V, typename typetraits::EnableIf<typetraits::CanCast<V, T>::value>>
@@ -169,7 +162,6 @@ namespace librapid {
                         N,
                         vals.size());
         for (size_t i = 0; i < vals.size(); ++i) { m_data[i] = *(vals.begin() + i); }
-        m_size = calculateSize();
     }
 
     template<typename T, size_t N>
@@ -180,7 +172,6 @@ namespace librapid {
                         N,
                         vals.size());
         for (size_t i = 0; i < vals.size(); ++i) { m_data[i] = vals[i]; }
-        m_size = calculateSize();
     }
 
     template<typename T, size_t N>
@@ -191,7 +182,6 @@ namespace librapid {
                         N,
                         other.ndim());
         for (size_t i = 0; i < m_dims; ++i) { m_data[i] = other[i]; }
-        m_size = other.size();
     }
 
     template<typename T, size_t N>
@@ -202,7 +192,6 @@ namespace librapid {
                         N,
                         other.ndim());
         for (size_t i = 0; i < m_dims; ++i) { m_data[i] = other[i]; }
-        m_size = other.size();
     }
 
     template<typename T, size_t N>
@@ -214,7 +203,6 @@ namespace librapid {
                         vals.size());
         m_dims = vals.size();
         for (int64_t i = 0; i < vals.size(); ++i) { m_data[i] = *(vals.begin() + i); }
-        m_size = calculateSize();
         return *this;
     }
 
@@ -227,7 +215,6 @@ namespace librapid {
                         vals.size());
         m_dims = vals.size();
         for (int64_t i = 0; i < vals.size(); ++i) { m_data[i] = vals[i]; }
-        m_size = calculateSize();
         return *this;
     }
 
@@ -236,7 +223,6 @@ namespace librapid {
         Shape res;
         res.m_dims = dims;
         for (size_t i = 0; i < dims; ++i) res.m_data[i] = 0;
-        res.m_size = 0;
         return res;
     }
 
@@ -245,7 +231,6 @@ namespace librapid {
         Shape res;
         res.m_dims = dims;
         for (size_t i = 0; i < dims; ++i) res.m_data[i] = 1;
-        res.m_size = 1;
         return res;
     }
 
@@ -257,21 +242,12 @@ namespace librapid {
         return m_data[index];
     }
 
-    // template<typename T, size_t N>
-    // template<typename Index>
-    // LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T &Shape<T, N>::operator[](Index index) {
-    //     LIBRAPID_ASSERT(static_cast<T>(index) < m_dims, "Index out of bounds");
-    //     LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
-    //     return m_data[index];
-    // }
-
     template<typename T, size_t N>
     template<typename Index>
-    void Shape<T, N>::setAt(Index index, T value) {
+    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T &Shape<T, N>::operator[](Index index) {
         LIBRAPID_ASSERT(static_cast<T>(index) < m_dims, "Index out of bounds");
         LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
-        m_data[index] = value;
-        m_size        = calculateSize();
+        return m_data[index];
     }
 
     template<typename T, size_t N>
@@ -303,17 +279,11 @@ namespace librapid {
         Shape res;
         res.m_dims = end - start;
         for (size_t i = 0; i < res.m_dims; ++i) res.m_data[i] = m_data[i + start];
-        res.m_size = res.calculateSize();
         return res;
     }
 
     template<typename T, size_t N>
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T Shape<T, N>::size() const {
-        return m_size;
-    }
-
-    template<typename T, size_t N>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE T Shape<T, N>::calculateSize() const {
         T res = 1;
         for (size_t i = 0; i < m_dims; ++i) res *= m_data[i];
         return res;

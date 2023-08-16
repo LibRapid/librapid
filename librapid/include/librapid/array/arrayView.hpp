@@ -275,11 +275,11 @@ namespace librapid {
         auto ArrayView<T>::scalar(int64_t index) const -> auto {
             if (ndim() == 0) return m_ref.scalar(m_offset);
 
-            ShapeType tmp = ShapeType::zeros(ndim());
-            tmp.setAt(ndim() - 1, index % m_shape[ndim() - 1]);
+            ShapeType tmp   = ShapeType::zeros(ndim());
+            tmp[ndim() - 1] = index % m_shape[ndim() - 1];
             for (int64_t i = ndim() - 2; i >= 0; --i) {
                 index /= m_shape[i + 1];
-                tmp.setAt(i, index % m_shape[i]);
+                tmp[i] = index % m_shape[i];
             }
             int64_t offset = 0;
             for (int64_t i = 0; i < ndim(); ++i) { offset += tmp[i] * m_stride[i]; }
