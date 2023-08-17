@@ -187,7 +187,7 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize);
 
 #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) Pointer m_begin = nullptr;
+		alignas(LIBRAPID_MEM_ALIGN) Pointer m_begin = nullptr;
 #else
 		Pointer m_begin = nullptr; // Pointer to the beginning of the data
 #endif
@@ -303,7 +303,7 @@ namespace librapid {
 
 	private:
 #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-		alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Scalar, Size> m_data;
+		alignas(LIBRAPID_MEM_ALIGN) std::array<Scalar, Size> m_data;
 #else
 		// No memory alignment on Apple platforms or if it is disabled
 		std::array<Scalar, Size> m_data;
@@ -335,18 +335,21 @@ namespace librapid {
 		/// \param size The number of elements of type \p in the memory block
 		template<typename T>
 		void safeDeallocate(T *ptr, size_t size) {
+			auto ptr_ = LIBRAPID_ASSUME_ALIGNED(ptr);
+			LIBRAPID_ASSUME(ptr_ != nullptr);
+			LIBRAPID_ASSUME(size > 0);
 			if constexpr (!std::is_trivially_destructible_v<T>) {
-				for (size_t i = 0; i < size; ++i) { ptr[i].~T(); }
+				for (size_t i = 0; i < size; ++i) { ptr_[i].~T(); }
 			}
 
 #if defined(LIBRAPID_BLAS_MKLBLAS)
-			mkl_free(ptr);
+			mkl_free(ptr_);
 #elif defined(LIBRAPID_APPLE)
-			free(ptr);
+			free(ptr_);
 #elif defined(LIBRAPID_NATIVE_ARCH) && defined(LIBRAPID_MSVC)
-			_aligned_free(ptr);
+			_aligned_free(ptr_);
 #else
-			free(ptr);
+			free(ptr_);
 #endif
 		}
 
@@ -370,15 +373,15 @@ namespace librapid {
 #elif defined(LIBRAPID_APPLE)
 			// Use posix_memalign
 			void *_ptr;
-			auto err = posix_memalign(&_ptr, global::memoryAlignment, size * sizeof(T));
+			auto err = posix_memalign(&_ptr, LIBRAPID_MEM_ALIGN, size * sizeof(T));
 			LIBRAPID_ASSERT(err == 0, "posix_memalign failed with error code {}", err);
 			auto ptr = static_cast<RawPointer>(_ptr);
 #elif defined(LIBRAPID_MSVC) || defined(LIBRAPID_MINGW)
 			auto ptr =
-			  static_cast<RawPointer>(_aligned_malloc(size * sizeof(T), global::memoryAlignment));
+			  static_cast<RawPointer>(_aligned_malloc(size * sizeof(T), LIBRAPID_MEM_ALIGN));
 #else
-			auto ptr = static_cast<RawPointer>(
-			  std::aligned_alloc(global::memoryAlignment, size * sizeof(T)));
+			auto ptr =
+			  static_cast<RawPointer>(std::aligned_alloc(LIBRAPID_MEM_ALIGN, size * sizeof(T)));
 #endif
 
 			LIBRAPID_ASSERT(
@@ -386,9 +389,13 @@ namespace librapid {
 
 			// If the type cannot be trivially constructed, we need to
 			// initialize each value
+
+			auto ptr_ = LIBRAPID_ASSUME_ALIGNED(ptr);
+			LIBRAPID_ASSUME(ptr_ != nullptr);
+			LIBRAPID_ASSUME(size > 0);
 			if constexpr (!typetraits::TriviallyDefaultConstructible<T>::value &&
 						  !std::is_array<T>::value) {
-				for (RawPointer p = ptr; p != ptr + size; ++p) { new (p) T(); }
+				for (RawPointer p = ptr_; p != ptr_ + size; ++p) { new (p) T(); }
 			}
 
 			return Pointer(ptr, [size](RawPointer ptr) { safeDeallocate(ptr, size); });
@@ -552,17 +559,19 @@ namespace librapid {
 		m_size	= static_cast<SizeType>(std::distance(begin, end));
 		m_begin = detail::safeAllocate<T>(m_size);
 
+		auto thisBegin	= LIBRAPID_ASSUME_ALIGNED(m_begin.get());
+		auto otherBegin = LIBRAPID_ASSUME_ALIGNED(begin);
 		if constexpr (typetraits::TypeInfo<T>::canMemcpy) {
 			if constexpr (typetraits::TriviallyDefaultConstructible<T>::value) {
 				// Use a slightly faster memcpy if the type is trivially default constructible
-				std::uninitialized_copy(begin, end, m_begin.get());
+				std::uninitialized_copy(otherBegin, end, thisBegin);
 			} else {
 				// Otherwise, use the standard copy algorithm
 				std::copy(begin, end, m_begin.get());
 			}
 		} else {
 			// Since we can't memcpy, we have to copy each element individually
-			for (SizeType i = 0; i < m_size; ++i) { m_begin.get()[i] = begin[i]; }
+			for (SizeType i = 0; i < m_size; ++i) { thisBegin[i] = otherBegin[i]; }
 		}
 	}
 
@@ -633,15 +642,17 @@ namespace librapid {
 		m_begin = detail::safeAllocate<T>(newSize);
 		m_size	= newSize;
 
+		auto oldBeginAligned = LIBRAPID_ASSUME_ALIGNED(oldBegin);
+		auto beginAligned	 = LIBRAPID_ASSUME_ALIGNED(m_begin.get());
 		// Copy the data across
 		if constexpr (typetraits::TriviallyDefaultConstructible<T>::value) {
 			// Use a slightly faster memcpy if the type is trivially default constructible
 			std::uninitialized_copy(
-			  oldBegin.get(), oldBegin.get() + ::librapid::min(oldSize, newSize), m_begin.get());
+			  oldBeginAligned, oldBeginAligned + ::librapid::min(oldSize, newSize), beginAligned);
 		} else {
 			// Otherwise, use the standard copy algorithm
 			std::copy(
-			  oldBegin.get(), oldBegin.get() + ::librapid::min(oldSize, newSize), m_begin.get());
+			  oldBeginAligned, oldBeginAligned + ::librapid::min(oldSize, newSize), beginAligned);
 		}
 	}
 

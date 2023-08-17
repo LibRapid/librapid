@@ -12,7 +12,6 @@ namespace librapid {
         size_t randomSeed               = 0; // Set in PreMain
         bool reseed                     = false;
         size_t cacheLineSize            = 64;
-        size_t memoryAlignment          = LIBRAPID_DEFAULT_MEM_ALIGN;
 
 #if defined(LIBRAPID_HAS_OPENCL)
         std::vector<cl::Device> openclDevices;

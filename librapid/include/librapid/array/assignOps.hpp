@@ -134,6 +134,8 @@ namespace librapid {
             const int64_t size       = function.shape().size();
             const int64_t vectorSize = size - (size % packetWidth);
 
+			LIBRAPID_ASSUME(vectorSize % packetWidth == 0);
+
             // Ensure the function can actually be assigned to the array container
             // static_assert(
             //   typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
