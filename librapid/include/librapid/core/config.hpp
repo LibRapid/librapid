@@ -148,85 +148,85 @@
 #endif
 
 // Instruction sets
-#define AVX512_2 10
-#define AVX512   9
-#define AVX2     8
-#define AVX      7
-#define SSE4_2   6
-#define SSE4_1   5
-#define SSSE3    4
-#define SSE3     3
-#define SSE2     2
-#define SSE      1
-#define NOARCH   0
+#define ARCH_AVX512_2 10
+#define ARCH_AVX512   9
+#define ARCH_AVX2     8
+#define ARCH_AVX      7
+#define ARCH_SSE4_2   6
+#define ARCH_SSE4_1   5
+#define ARCH_SSSE3    4
+#define ARCH_SSE3     3
+#define ARCH_SSE2     2
+#define ARCH_SSE      1
+#define ARCH_NONE     0
 
 // Instruction set detection
 #if defined(__AVX512VL__) && defined(__AVX512BW__) && defined(__AVX512DQ__)
 #    define LIBRAPID_AVX512
-#    define LIBRAPID_ARCH              AVX512_2
+#    define LIBRAPID_ARCH              ARCH_AVX512_2
 #    define LIBRAPID_ARCH_NAME         "AVX512"
-#    define LIBRAPID_DEFAULT_MEM_ALIGN 256
+#    define LIBRAPID_DEFAULT_MEM_ALIGN 64
 #elif defined(__AVX512F__) || defined(__AVX512__)
 #    define LIBRAPID_AVX512
-#    define LIBRAPID_ARCH              AVX512
+#    define LIBRAPID_ARCH              ARCH_AVX512
 #    define LIBRAPID_ARCH_NAME         "AVX512"
-#    define LIBRAPID_DEFAULT_MEM_ALIGN 256
+#    define LIBRAPID_DEFAULT_MEM_ALIGN 64
 #elif defined(__AVX2__)
 #    define LIBRAPID_AVX2
-#    define LIBRAPID_ARCH              AVX2
+#    define LIBRAPID_ARCH              ARCH_AVX2
 #    define LIBRAPID_ARCH_NAME         "AVX2"
-#    define LIBRAPID_DEFAULT_MEM_ALIGN 128
+#    define LIBRAPID_DEFAULT_MEM_ALIGN 32
 #elif defined(__AVX__)
 #    define LIBRAPID_AVX
-#    define LIBRAPID_ARCH              AVX
+#    define LIBRAPID_ARCH              ARCH_AVX
 #    define LIBRAPID_ARCH_NAME         "AVX"
-#    define LIBRAPID_DEFAULT_MEM_ALIGN 128
+#    define LIBRAPID_DEFAULT_MEM_ALIGN 32
 #elif defined(__SSE4_2__)
 #    define LIBRAPID_SSE42
-#    define LIBRAPID_ARCH              SSE4_2
+#    define LIBRAPID_ARCH              ARCH_SSE4_2
 #    define LIBRAPID_ARCH_NAME         "SSE4.2"
-#    define LIBRAPID_DEFAULT_MEM_ALIGN 64
+#    define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #elif defined(__SSE4_1__)
 #    define LIBRAPID_SSE41
-#    define LIBRAPID_ARCH              SSE4_1
+#    define LIBRAPID_ARCH              ARCH_SSE4_1
 #    define LIBRAPID_ARCH_NAME         "SSE4.1"
-#    define LIBRAPID_DEFAULT_MEM_ALIGN 64
+#    define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #elif defined(__SSSE3__)
 #    define LIBRAPID_SSSE3
-#    define LIBRAPID_ARCH              SSSE3
+#    define LIBRAPID_ARCH              ARCH_SSSE3
 #    define LIBRAPID_ARCH_NAME         "SSSE3"
-#    define LIBRAPID_DEFAULT_MEM_ALIGN 64
+#    define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #elif defined(__SSE3__)
 #    define LIBRAPID_SSE3
-#    define LIBRAPID_ARCH              SSE3
+#    define LIBRAPID_ARCH              ARCH_SSE3
 #    define LIBRAPID_ARCH_NAME         "SSE3"
-#    define LIBRAPID_DEFAULT_MEM_ALIGN 64
+#    define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #elif defined(__SSE2__) || defined(__x86_64__)
 #    define LIBRAPID_SSE2
-#    define LIBRAPID_ARCH              SSE2
+#    define LIBRAPID_ARCH              ARCH_SSE2
 #    define LIBRAPID_ARCH_NAME         "SSE2"
-#    define LIBRAPID_DEFAULT_MEM_ALIGN 64
+#    define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #elif defined(__SSE__)
 #    define LIBRAPID_SSE
-#    define LIBRAPID_ARCH              SSE
+#    define LIBRAPID_ARCH              ARCH_SSE
 #    define LIBRAPID_ARCH_NAME         "SSE"
-#    define LIBRAPID_DEFAULT_MEM_ALIGN 64
+#    define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #elif defined(_M_IX86_FP) // Defined in MS compiler. 1: SSE, 2: SSE2
 #    if _M_IX86_FP == 1
 #        define LIBRAPID_SSE
-#        define LIBRAPID_ARCH              SSE
+#        define LIBRAPID_ARCH              ARCH_SSE
 #        define LIBRAPID_ARCH_NAME         "SSE"
-#        define LIBRAPID_DEFAULT_MEM_ALIGN 64
+#        define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #    elif _M_IX86_FP == 2
 #        define LIBRAPID_SSE2
-#        define LIBRAPID_ARCH              SSE2
+#        define LIBRAPID_ARCH              ARCH_SSE2
 #        define LIBRAPID_ARCH_NAME         "SSE2"
-#        define LIBRAPID_DEFAULT_MEM_ALIGN 64
+#        define LIBRAPID_DEFAULT_MEM_ALIGN 16
 #    endif // _M_IX86_FP
 #else
-#    define LIBRAPID_ARCH              0
+#    define LIBRAPID_ARCH              ARCH_NONE
 #    define LIBRAPID_ARCH_NAME         "None"
-#    define LIBRAPID_DEFAULT_MEM_ALIGN 32
+#    define LIBRAPID_DEFAULT_MEM_ALIGN 1
 #endif // Instruction set detection
 
 // Check for 32bit vs 64bit

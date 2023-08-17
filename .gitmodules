@@ -4,9 +4,6 @@
 [submodule "librapid/vendor/fmt"]
 	path = librapid/vendor/fmt
 	url = https://github.com/fmtlib/fmt.git
-[submodule "librapid/vendor/scnlib"]
-	path = librapid/vendor/scnlib
-	url = https://github.com/eliaskosunen/scnlib.git
 [submodule "doxygenThemes"]
 	path = doxygenThemes
 	url = https://github.com/jothepro/doxygen-awesome-css.git

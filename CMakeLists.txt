@@ -8,10 +8,10 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     set(CMAKE_CXX_STANDARD 23)
 endif ()
 
-# LibRapid requires C++20 or later
-if (CMAKE_CXX_STANDARD LESS 20)
-    message(FATAL_ERROR "LibRapid requires C++20 or later")
-endif ()
+# LibRapid requires C++17 or later
+#if (CMAKE_CXX_STANDARD LESS 17)
+#    message(FATAL_ERROR "LibRapid requires C++17 or later")
+#endif ()
 
 # Extract version information
 file(READ "version.txt" ver)
@@ -430,14 +430,10 @@ endif ()
 
 # Add dependencies
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/fmt")
-# add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/xsimd")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
 
 target_compile_definitions(fmt PUBLIC FMT_HEADER_ONLY)
-# target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
-# target_link_libraries(${module_name} PUBLIC fmt scn Vc xsimd)
-target_link_libraries(${module_name} PUBLIC fmt scn xsimd)
+target_link_libraries(${module_name} PUBLIC fmt xsimd)
 
 if (${LIBRAPID_USE_MULTIPREC})
     # Load MPIR

@@ -57,31 +57,7 @@
 #include <fmt/printf.h>
 #include <fmt/xchar.h>
 
-#if !defined(LIBRAPID_MINGW) // MinGW does not implement std::from_chars which is required by scnlib
-// scnlib
-#    include <scn/scn.h>
-#    include <scn/tuple_return/tuple_return.h>
-#endif // !LIBRAPID_MINGW
-
-// Vc -- SIMD instructions
-#if defined(_MSC_VER)
-// For Vc, we need to disable the following warnings
-#    pragma warning(push)
-#    pragma warning(disable : 4244) // conversion from 'int' to 'float', possible loss of data
-#    pragma warning(disable : 4324) // structure was padded due to alignment specifier
-#    pragma warning(disable : 4127) // conditional expression is constant
-#endif
-
-// #include <Vc/Vc>
-// #include <Vc/algorithm>
-// #include <Vc/cpuid.h>
-// #include <Vc/common/simdize.h>
-
 #include <xsimd/xsimd.hpp>
-
-#if defined(_MSC_VER)
-#    pragma warning(pop)
-#endif
 
 // MPFR (modified) -- arbitrary precision floating point numbers
 #if defined(LIBRAPID_USE_MULTIPREC)
