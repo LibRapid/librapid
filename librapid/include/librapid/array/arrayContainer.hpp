@@ -426,7 +426,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename desc, typename Functor_, typename... Args>
-		auto ArrayContainer<ShapeType_, StorageType_>::assign(
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::assign(
 		  const detail::Function<desc, Functor_, Args...> &function) -> ArrayContainer & {
 			using FunctionType = detail::Function<desc, Functor_, Args...>;
 			m_storage.resize(function.size(), 0);
@@ -446,7 +446,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename desc, typename Functor_, typename... Args>
-		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
+		LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
 		  const detail::Function<desc, Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT
 				: m_shape(function.shape()),
 				  m_size(function.size()),
@@ -456,14 +456,14 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename desc, typename Functor_, typename... Args>
-		auto ArrayContainer<ShapeType_, StorageType_>::operator=(
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::operator=(
 		  const detail::Function<desc, Functor_, Args...> &function) -> ArrayContainer & {
 			return assign(function);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename TransposeType>
-		auto ArrayContainer<ShapeType_, StorageType_>::operator=(
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::operator=(
 		  const Transpose<TransposeType> &transpose) -> ArrayContainer & {
 			m_shape = transpose.shape();
 			m_size	= transpose.size();
@@ -475,7 +475,7 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
-		auto ArrayContainer<ShapeType_, StorageType_>::operator=(
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::operator=(
 		  const linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
 									  Beta> &arrayMultiply) -> ArrayContainer & {
 			m_shape = arrayMultiply.shape();
@@ -486,7 +486,8 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		auto ArrayContainer<ShapeType_, StorageType_>::operator=(const Scalar &value)
+		LIBRAPID_ALWAYS_INLINE auto
+		ArrayContainer<ShapeType_, StorageType_>::operator=(const Scalar &value)
 		  -> ArrayContainer & {
 			LIBRAPID_ASSERT(m_shape.ndim() == 0, "Cannot assign a scalar to an array");
 			m_storage[0] = value;
@@ -495,20 +496,23 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		auto ArrayContainer<ShapeType_, StorageType_>::operator<<(const T &value)
+		LIBRAPID_ALWAYS_INLINE auto
+		ArrayContainer<ShapeType_, StorageType_>::operator<<(const T &value)
 		  -> detail::CommaInitializer<ArrayContainer> {
 			return detail::CommaInitializer<ArrayContainer>(*this, static_cast<Scalar>(value));
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		auto ArrayContainer<ShapeType_, StorageType_>::copy() const -> ArrayContainer {
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::copy() const
+		  -> ArrayContainer {
 			ArrayContainer res(m_shape);
 			res.m_storage = m_storage.copy();
 			return res;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		auto ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const {
+		LIBRAPID_ALWAYS_INLINE auto
+		ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const {
 			LIBRAPID_ASSERT(
 			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
