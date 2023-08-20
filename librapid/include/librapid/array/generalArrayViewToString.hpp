@@ -4,7 +4,7 @@
 namespace librapid {
     namespace detail {
         template<typename ArrayViewType, typename T, typename Char, typename Ctx>
-        void arrayViewToString(const array::ArrayView<ArrayViewType> &view,
+        void generalArrayViewToString(const array::GeneralArrayView<ArrayViewType> &view,
                                const fmt::formatter<T, Char> &formatter, char bracket,
                                char separator, int64_t indent, Ctx &ctx) {
             char bracketCharOpen, bracketCharClose;
@@ -57,7 +57,8 @@ namespace librapid {
                 fmt::format_to(ctx.out(), "{}", bracketCharOpen);
                 for (int64_t i = 0; i < static_cast<int64_t>(view.shape()[0]); i++) {
                     if (i > 0) fmt::format_to(ctx.out(), "{}", std::string(indent + 1, ' '));
-                    arrayViewToString(view[i], formatter, bracket, separator, indent + 1, ctx);
+					generalArrayViewToString(
+					  view[i], formatter, bracket, separator, indent + 1, ctx);
                     if (i != view.shape()[0] - 1) {
                         if (separator == ' ') {
                             fmt::format_to(ctx.out(), "\n");
@@ -75,9 +76,9 @@ namespace librapid {
     namespace array {
         template<typename ArrayViewType>
         template<typename T, typename Char, typename Ctx>
-        void ArrayView<ArrayViewType>::str(const fmt::formatter<T, Char> &format, char bracket,
+        void GeneralArrayView<ArrayViewType>::str(const fmt::formatter<T, Char> &format, char bracket,
                                            char separator, Ctx &ctx) const {
-            detail::arrayViewToString(*this, format, bracket, separator, 0, ctx);
+			detail::generalArrayViewToString(*this, format, bracket, separator, 0, ctx);
         }
     } // namespace array
 } // namespace librapid

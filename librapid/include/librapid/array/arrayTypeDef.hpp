@@ -62,7 +62,7 @@ namespace librapid {
         /// An intermediate type to represent a slice or view of an array.
         /// \tparam T The type of the array.
         template<typename T>
-        class ArrayView;
+        class GeneralArrayView;
 
         template<typename T>
         class Transpose;
@@ -78,7 +78,7 @@ namespace librapid {
     template<typename T>
     using IsArrayType = std::integral_constant<
       bool, (typetraits::TypeInfo<T>::type == detail::LibRapidType::ArrayContainer) ||
-              (typetraits::TypeInfo<T>::type == detail::LibRapidType::ArrayView) ||
+              (typetraits::TypeInfo<T>::type == detail::LibRapidType::GeneralArrayView) ||
               (typetraits::TypeInfo<T>::type == detail::LibRapidType::ArrayFunction)>;
 
 #define ARRAY_TYPE_FMT_IML(TEMPLATE_, TYPE_)                                                       \

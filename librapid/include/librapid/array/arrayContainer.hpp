@@ -90,7 +90,7 @@ namespace librapid {
             using Scalar      = typename StorageType::Scalar;
             using Packet      = typename typetraits::TypeInfo<Scalar>::Packet;
             using Backend     = typename typetraits::TypeInfo<ArrayContainer>::Backend;
-            using Iterator    = detail::ArrayIterator<ArrayView<ArrayContainer>>;
+            using Iterator    = detail::ArrayIterator<GeneralArrayView<ArrayContainer>>;
 
             using DirectSubscriptType    = typename detail::SubscriptType<StorageType>::Direct;
             using DirectRefSubscriptType = typename detail::SubscriptType<StorageType>::Ref;
@@ -531,7 +531,7 @@ namespace librapid {
                 LIBRAPID_ERROR("CUDA support not enabled");
 #endif // LIBRAPID_HAS_CUDA
             } else if constexpr (typetraits::IsFixedStorage<StorageType_>::value) {
-                return ArrayView(*this)[index];
+                return GeneralArrayView(*this)[index];
             } else {
                 ArrayContainer res;
                 res.m_shape   = m_shape.subshape(1, ndim());
@@ -579,7 +579,7 @@ namespace librapid {
                 LIBRAPID_ERROR("CUDA support not enabled");
 #endif // LIBRAPID_HAS_CUDA
             } else if constexpr (typetraits::IsFixedStorage<StorageType_>::value) {
-                return ArrayView(*this)[index];
+                return GeneralArrayView(*this)[index];
             } else {
                 ArrayContainer res;
                 res.m_shape   = m_shape.subshape(1, ndim());
@@ -781,22 +781,22 @@ namespace librapid {
 
         template<typename ShapeType_, typename StorageType_>
         auto ArrayContainer<ShapeType_, StorageType_>::begin() const noexcept -> Iterator {
-            return Iterator(ArrayView(*this), 0);
+            return Iterator(GeneralArrayView(*this), 0);
         }
 
         template<typename ShapeType_, typename StorageType_>
         auto ArrayContainer<ShapeType_, StorageType_>::end() const noexcept -> Iterator {
-            return Iterator(ArrayView(*this), m_shape[0]);
+            return Iterator(GeneralArrayView(*this), m_shape[0]);
         }
 
         template<typename ShapeType_, typename StorageType_>
         auto ArrayContainer<ShapeType_, StorageType_>::begin() -> Iterator {
-            return Iterator(ArrayView(*this), 0);
+            return Iterator(GeneralArrayView(*this), 0);
         }
 
         template<typename ShapeType_, typename StorageType_>
         auto ArrayContainer<ShapeType_, StorageType_>::end() -> Iterator {
-            return Iterator(ArrayView(*this), m_shape[0]);
+            return Iterator(GeneralArrayView(*this), m_shape[0]);
         }
 
         template<typename ShapeType_, typename StorageType_>
@@ -804,7 +804,7 @@ namespace librapid {
         void ArrayContainer<ShapeType_, StorageType_>::str(const fmt::formatter<T, Char> &format,
                                                            char bracket, char separator,
                                                            Ctx &ctx) const {
-            ArrayView(*this).str(format, bracket, separator, ctx);
+			GeneralArrayView(*this).str(format, bracket, separator, ctx);
         }
     } // namespace array
 
@@ -825,7 +825,7 @@ namespace librapid {
         };
 
         template<typename T>
-        struct IsArrayType<array::ArrayView<T>> {
+        struct IsArrayType<array::GeneralArrayView<T>> {
             static constexpr bool val = true;
         };
 

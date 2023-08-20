@@ -29,7 +29,7 @@ namespace librapid {
             Vector,
             ArrayContainer,
             ArrayFunction,
-            ArrayView,
+			GeneralArrayView,
         };
 
         constexpr bool sameType(LibRapidType type1, LibRapidType type2) { return type1 == type2; }
