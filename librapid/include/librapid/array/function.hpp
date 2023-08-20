@@ -40,7 +40,9 @@ namespace librapid {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
 			using Scalar							   = decltype(std::declval<Functor_>()(
 				std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
+			using Packet							   = typename TypeInfo<Scalar>::Packet;
 			using Backend							   = decltype(commonBackend<Args...>());
+			using ShapeType = detail::ShapeTypeHelper<typename TypeInfo<Args>::ShapeType...>::Type;
 
 			static constexpr bool allowVectorisation = checkAllowVectorisation<Args...>();
 
@@ -109,10 +111,9 @@ namespace librapid {
 		template<typename desc, typename Functor_, typename... Args>
 		class Function {
 		public:
-			using Type	  = Function<desc, Functor_, Args...>;
-			using Functor = Functor_;
-			using ShapeType =
-			  detail::ShapeTypeHelper<typename typetraits::TypeInfo<Args>::ShapeType...>::Type;
+			using Type		 = Function<desc, Functor_, Args...>;
+			using Functor	 = Functor_;
+			using ShapeType	 = typename typetraits::TypeInfo<Type>::ShapeType;
 			using StrideType = ShapeType;
 			using Scalar	 = typename typetraits::TypeInfo<Type>::Scalar;
 			using Backend	 = typename typetraits::TypeInfo<Type>::Backend;
