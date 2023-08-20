@@ -18,13 +18,13 @@ namespace librapid::detail {
         /// \param dst The Array object to initialize.
         /// \param val The first value to initialize the Array object with.
         template<typename T>
-        explicit CommaInitializer(ArrT &dst, const T &val) : m_array(dst) {
+        explicit LIBRAPID_ALWAYS_INLINE CommaInitializer(ArrT &dst, const T &val) : m_array(dst) {
             next(static_cast<Scalar>(val));
         }
 
         /// Initialize the next element of the Array object.
         template<typename T>
-        CommaInitializer &operator,(const T &val) {
+		LIBRAPID_ALWAYS_INLINE CommaInitializer &operator,(const T &val) {
             next(static_cast<Scalar>(val));
             return *this;
         }
@@ -32,7 +32,7 @@ namespace librapid::detail {
     private:
         /// Initialize the current element of the Array and increment the index.
         /// \param other The value to initialize the current element with.
-        void next(const Scalar &other) {
+		LIBRAPID_ALWAYS_INLINE void next(const Scalar &other) {
             m_array.storage()[m_index] = other;
             ++m_index;
         }
