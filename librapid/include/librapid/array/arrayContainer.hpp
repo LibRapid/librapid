@@ -50,6 +50,7 @@ namespace librapid {
 			using Scalar							   = typename TypeInfo<StorageType_>::Scalar;
 			using Packet							   = std::false_type;
 			using Backend							   = typename TypeInfo<StorageType_>::Backend;
+			using ShapeType							   = ShapeType_;
 			static constexpr int64_t packetWidth	   = 1;
 			static constexpr bool supportsArithmetic   = TypeInfo<Scalar>::supportsArithmetic;
 			static constexpr bool supportsLogical	   = TypeInfo<Scalar>::supportsLogical;

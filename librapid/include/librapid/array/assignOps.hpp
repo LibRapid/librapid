@@ -124,15 +124,15 @@ namespace librapid {
             using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
             using Scalar =
               typename array::ArrayContainer<ShapeType_, Storage<StorageScalar>>::Scalar;
-            constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
+            constexpr size_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
             constexpr bool allowVectorisation =
               typetraits::TypeInfo<
                 detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation &&
               Function::argsAreSameType;
 
-            const int64_t size       = function.shape().size();
-            const int64_t vectorSize = size - (size % packetWidth);
+            const size_t size       = function.shape().size();
+            const size_t vectorSize = size - (size % packetWidth);
 
 			LIBRAPID_ASSUME(vectorSize % packetWidth == 0);
 

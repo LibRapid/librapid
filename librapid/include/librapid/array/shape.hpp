@@ -10,7 +10,7 @@ namespace librapid {
 	namespace typetraits {
 		LIBRAPID_DEFINE_AS_TYPE(size_t N, Shape<N>);
 		LIBRAPID_DEFINE_AS_TYPE_NO_TEMPLATE(MatrixShape);
-	}
+	} // namespace typetraits
 
 	template<size_t N = LIBRAPID_MAX_ARRAY_DIMS>
 	class Shape {
@@ -492,10 +492,10 @@ namespace librapid {
 	/// \param shapes Remaining (optional) inputs
 	/// \return True if all inputs have the same shape, false otherwise
 	template<typename First, typename Second, typename... Rest,
-			 std::enable_if_t<typetraits::IsSizeType<First>::value &&
-								typetraits::IsSizeType<Second>::value &&
-								(typetraits::IsSizeType<Rest>::value && ...),
-							  int> = 0>
+			 typename std::enable_if_t<typetraits::IsSizeType<First>::value &&
+										 typetraits::IsSizeType<Second>::value &&
+										 (typetraits::IsSizeType<Rest>::value && ...),
+									   int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_INLINE bool shapesMatch(const First &first, const Second &second,
 														const Rest &...shapes) {
 		if constexpr (sizeof...(Rest) == 0) {
@@ -507,10 +507,10 @@ namespace librapid {
 
 	/// \sa shapesMatch
 	template<typename First, typename Second, typename... Rest,
-			 std::enable_if_t<typetraits::IsSizeType<First>::value &&
-								typetraits::IsSizeType<Second>::value &&
-								(typetraits::IsSizeType<Rest>::value && ...),
-							  int> = 0>
+			 typename std::enable_if_t<typetraits::IsSizeType<First>::value &&
+										 typetraits::IsSizeType<Second>::value &&
+										 (typetraits::IsSizeType<Rest>::value && ...),
+									   int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_INLINE bool
 	shapesMatch(const std::tuple<First, Second, Rest...> &shapes) {
 		if constexpr (sizeof...(Rest) == 0) {
@@ -521,6 +521,44 @@ namespace librapid {
 					 [](auto, auto, auto... rest) { return std::make_tuple(rest...); }, shapes));
 		}
 	}
+
+	namespace detail {
+		template<typename First, typename Second>
+		struct ShapeTypeHelperImpl {
+			using Type = std::false_type;
+		};
+
+		template<size_t N, size_t M>
+		struct ShapeTypeHelperImpl<Shape<N>, Shape<M>> {
+			using Type = Shape<(N > M ? N : M)>;
+		};
+
+		template<size_t N>
+		struct ShapeTypeHelperImpl<Shape<N>, MatrixShape> {
+			using Type = Shape<N>;
+		};
+
+		template<size_t N>
+		struct ShapeTypeHelperImpl<MatrixShape, Shape<N>> {
+			using Type = Shape<N>;
+		};
+
+		template<>
+		struct ShapeTypeHelperImpl<MatrixShape, MatrixShape> {
+			using Type = MatrixShape;
+		};
+
+		template<typename First, typename Second, typename... Rest>
+		struct ShapeTypeHelper {
+			using FirstResult = typename ShapeTypeHelperImpl<First, Second>::Type;
+			using Type		  = typename ShapeTypeHelper<FirstResult, Rest...>::Type;
+		};
+
+		template<typename First, typename Second>
+		struct ShapeTypeHelper<First, Second> {
+			using Type = typename ShapeTypeHelperImpl<First, Second>::Type;
+		};
+	} // namespace detail
 } // namespace librapid
 
 // Support FMT printing
