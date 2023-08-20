@@ -48,6 +48,14 @@ namespace librapid {
 	template<typename StorageType>
 	using ArrayRef = array::ArrayContainer<Shape<LIBRAPID_MAX_ARRAY_DIMS>, StorageType>;
 
+	template<typename Scalar, typename Backend = backend::CPU>
+	using Matrix =
+	  array::ArrayContainer<MatrixShape,
+							typename detail::TypeDefStorageEvaluator<Scalar, Backend>::Type>;
+
+	template<typename Scalar, size_t... Dimensions>
+	using MatrixF = array::ArrayContainer<MatrixShape, FixedStorage<Scalar, Dimensions...>>;
+
 	/// A reference type for Array Function objects. Use this to accept Function objects as
 	/// parameters since the compiler cannot determine the templates for the typedef by default.
 	/// Additionally, this can be used to store references to Function objects.

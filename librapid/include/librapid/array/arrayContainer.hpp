@@ -76,6 +76,9 @@ namespace librapid {
 
 		LIBRAPID_DEFINE_AS_TYPE(size_t dims COMMA typename StorageScalar,
 								array::ArrayContainer<Shape<dims> COMMA StorageScalar>);
+
+		LIBRAPID_DEFINE_AS_TYPE(typename StorageScalar,
+								array::ArrayContainer<MatrixShape COMMA StorageScalar>);
 	} // namespace typetraits
 
 	namespace array {

@@ -7,6 +7,8 @@ namespace librapid {
     template<size_t N>
     class Shape;
 
+	class MatrixShape;
+
     template<size_t N>
     class Stride;
 
