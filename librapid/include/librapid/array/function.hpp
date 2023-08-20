@@ -149,9 +149,11 @@ namespace librapid {
 			/// \return A reference to this Function.
 			LIBRAPID_ALWAYS_INLINE Function &operator=(Function &&other) noexcept = default;
 
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const -> size_t;
+
 			/// Return the shape of the Function's result
 			/// \return The shape of the Function's result
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto shape() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto shape() const -> const ShapeType &;
 
 			/// Return the arguments in the Function
 			/// \return The arguments in the Function
@@ -201,15 +203,23 @@ namespace librapid {
 
 			Functor m_functor;
 			std::tuple<Args...> m_args;
+			ShapeType m_shape;
+			size_t m_size = 0;
 		};
 
 		template<typename desc, typename Functor, typename... Args>
 		Function<desc, Functor, Args...>::Function(Functor &&functor, Args &&...args) :
-				m_functor(std::forward<Functor>(functor)), m_args(std::forward<Args>(args)...) {}
+				m_functor(std::forward<Functor>(functor)), m_args(std::forward<Args>(args)...),
+				m_shape(typetraits::TypeInfo<Functor>::getShape(m_args)), m_size(m_shape.size()) {}
 
 		template<typename desc, typename Functor, typename... Args>
-		auto Function<desc, Functor, Args...>::shape() const {
-			return typetraits::TypeInfo<Functor>::getShape(m_args);
+		auto Function<desc, Functor, Args...>::shape() const -> const ShapeType & {
+			return m_shape;
+		}
+
+		template<typename desc, typename Functor, typename... Args>
+		auto Function<desc, Functor, Args...>::size() const -> size_t {
+			return m_size;
 		}
 
 		template<typename desc, typename Functor, typename... Args>

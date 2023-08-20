@@ -131,7 +131,7 @@ namespace librapid {
                 detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation &&
               Function::argsAreSameType;
 
-            const size_t size       = function.shape().size();
+            const size_t size       = function.size();
             const size_t vectorSize = size - (size % packetWidth);
 
 			LIBRAPID_ASSUME(vectorSize % packetWidth == 0);
