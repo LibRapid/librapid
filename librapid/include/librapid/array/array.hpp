@@ -1,7 +1,7 @@
 #ifndef LIBRAPID_ARRAY
 #define LIBRAPID_ARRAY
 
-#include "sizetype.hpp"
+#include "shape.hpp"
 #include "strideTools.hpp"
 #include "storage.hpp"
 

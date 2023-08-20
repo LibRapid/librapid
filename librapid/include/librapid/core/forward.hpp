@@ -4,10 +4,10 @@
 #ifndef LIBRAPID_DOXYGEN
 
 namespace librapid {
-    template<typename T, size_t N>
+    template<size_t N>
     class Shape;
 
-    template<typename T, size_t N>
+    template<size_t N>
     class Stride;
 
     template<typename Scalar_>

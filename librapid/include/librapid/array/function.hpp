@@ -111,7 +111,7 @@ namespace librapid {
         public:
             using Type       = Function<desc, Functor_, Args...>;
             using Functor    = Functor_;
-            using ShapeType  = Shape<size_t, 32>;
+            using ShapeType  = Shape<LIBRAPID_MAX_ARRAY_DIMS>;
             using StrideType = ShapeType;
             using Scalar     = typename typetraits::TypeInfo<Type>::Scalar;
             using Backend    = typename typetraits::TypeInfo<Type>::Backend;
