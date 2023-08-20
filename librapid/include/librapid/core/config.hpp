@@ -461,7 +461,7 @@ namespace librapid::backend {
 } // namespace librapid::backend
 
 #ifndef LIBRAPID_MAX_ARRAY_DIMS
-#	define LIBRAPID_MAX_ARRAY_DIMS 32
+#	define LIBRAPID_MAX_ARRAY_DIMS 16
 #endif // LIBRAPID_MAX_ARRAY_DIMS
 
 // Code to be run *before* main()
