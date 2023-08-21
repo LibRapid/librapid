@@ -8,15 +8,14 @@
 
 namespace librapid {
 	namespace typetraits {
-		LIBRAPID_DEFINE_AS_TYPE(size_t N, Shape<N>);
+		LIBRAPID_DEFINE_AS_TYPE_NO_TEMPLATE(Shape);
 		LIBRAPID_DEFINE_AS_TYPE_NO_TEMPLATE(MatrixShape);
 	} // namespace typetraits
 
-	template<size_t N = LIBRAPID_MAX_ARRAY_DIMS>
 	class Shape {
 	public:
 		using SizeType						  = uint32_t;
-		static constexpr size_t MaxDimensions = N;
+		static constexpr size_t MaxDimensions = LIBRAPID_MAX_ARRAY_DIMS;
 
 		/// Default constructor
 		LIBRAPID_ALWAYS_INLINE Shape() = default;
@@ -49,20 +48,13 @@ namespace librapid {
 		/// \param other Temporary Shape object to copy
 		LIBRAPID_ALWAYS_INLINE Shape(Shape &&other) noexcept = default;
 
-		/// Create a Shape object from one with a different type and number of dimensions.
-		/// \tparam V Scalar type of the values
-		/// \tparam Dim	Number of dimensions
-		/// \param other Shape object to copy
-		template<size_t Dim>
-		LIBRAPID_ALWAYS_INLINE Shape(const Shape<Dim> &other);
-
 		/// Create a Shape object from one with a different type and number of dimensions, moving it
 		/// instead of copying it.
 		/// \tparam V Scalar type of the values
 		/// \tparam Dim Number of dimensions
 		/// \param other Temporary Shape object to move
 		template<size_t Dim>
-		LIBRAPID_ALWAYS_INLINE Shape(Shape<Dim> &&other) noexcept;
+		LIBRAPID_ALWAYS_INLINE Shape(Shape &&other) noexcept;
 
 		/// Assign a Shape object to this object
 		/// \tparam V Scalar type of the Shape
@@ -143,7 +135,7 @@ namespace librapid {
 
 	protected:
 		int m_dims;
-		std::array<SizeType, N> m_data;
+		std::array<SizeType, MaxDimensions> m_data;
 	};
 
 	class MatrixShape {
@@ -178,8 +170,10 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE MatrixShape &operator=(MatrixShape &&other) noexcept = default;
 
 		static LIBRAPID_ALWAYS_INLINE auto zeros() -> MatrixShape;
-
 		static LIBRAPID_ALWAYS_INLINE auto ones() -> MatrixShape;
+
+		static LIBRAPID_ALWAYS_INLINE auto zeros(size_t) -> MatrixShape;
+		static LIBRAPID_ALWAYS_INLINE auto ones(size_t) -> MatrixShape;
 
 		template<typename Index>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](Index index) const
@@ -193,7 +187,7 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto ndim() const -> int;
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(size_t start, size_t end) const
-		  -> Shape<LIBRAPID_MAX_ARRAY_DIMS>;
+		  -> Shape;
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const -> size_t;
 
@@ -207,101 +201,56 @@ namespace librapid {
 
 	namespace detail {
 		template<typename T, size_t... Dims>
-		Shape<LIBRAPID_MAX_ARRAY_DIMS> shapeFromFixedStorage(const FixedStorage<T, Dims...> &) {
-			return Shape<LIBRAPID_MAX_ARRAY_DIMS>({Dims...});
+		Shape shapeFromFixedStorage(const FixedStorage<T, Dims...> &) {
+			return Shape({Dims...});
 		}
 	} // namespace detail
 
-	template<size_t N>
 	template<typename Scalar, size_t... Dimensions>
-	LIBRAPID_ALWAYS_INLINE Shape<N>::Shape(const FixedStorage<Scalar, Dimensions...> &) :
+	LIBRAPID_ALWAYS_INLINE Shape::Shape(const FixedStorage<Scalar, Dimensions...> &) :
 			m_data({Dimensions...}) {}
 
-	template<size_t N>
 	template<typename V>
-	LIBRAPID_ALWAYS_INLINE Shape<N>::Shape(const std::initializer_list<V> &vals) :
+	LIBRAPID_ALWAYS_INLINE Shape::Shape(const std::initializer_list<V> &vals) :
 			m_dims(vals.size()) {
-		LIBRAPID_ASSERT(vals.size() <= N,
-						"Shape object is limited to {} dimensions. Cannot initialize with {}",
-						N,
-						vals.size());
 		for (size_t i = 0; i < vals.size(); ++i) { m_data[i] = *(vals.begin() + i); }
 	}
 
-	template<size_t N>
 	template<typename V>
-	LIBRAPID_ALWAYS_INLINE Shape<N>::Shape(const std::vector<V> &vals) : m_dims(vals.size()) {
-		LIBRAPID_ASSERT(vals.size() <= N,
-						"Shape object is limited to {} dimensions. Cannot initialize with {}",
-						N,
-						vals.size());
+	LIBRAPID_ALWAYS_INLINE Shape::Shape(const std::vector<V> &vals) : m_dims(vals.size()) {
 		for (size_t i = 0; i < vals.size(); ++i) { m_data[i] = vals[i]; }
 	}
 
-	template<size_t N>
-	template<size_t Dim>
-	LIBRAPID_ALWAYS_INLINE Shape<N>::Shape(const Shape<Dim> &other) : m_dims(other.ndim()) {
-		LIBRAPID_ASSERT(other.ndim() <= N,
-						"Shape object is limited to {} dimensions. Cannot initialize with {}",
-						N,
-						other.ndim());
-		for (size_t i = 0; i < m_dims; ++i) { m_data[i] = other[i]; }
-	}
-
-	template<size_t N>
-	template<size_t Dim>
-	LIBRAPID_ALWAYS_INLINE Shape<N>::Shape(Shape<Dim> &&other) noexcept : m_dims(other.ndim()) {
-		LIBRAPID_ASSERT(other.ndim() <= N,
-						"Shape object is limited to {} dimensions. Cannot initialize with {}",
-						N,
-						other.ndim());
-		for (size_t i = 0; i < m_dims; ++i) { m_data[i] = other[i]; }
-	}
-
-	template<size_t N>
 	template<typename V>
-	LIBRAPID_ALWAYS_INLINE auto Shape<N>::operator=(const std::initializer_list<V> &vals)
-	  -> Shape & {
-		LIBRAPID_ASSERT(vals.size() <= N,
-						"Shape object is limited to {} dimensions. Cannot initialize with {}",
-						N,
-						vals.size());
+	LIBRAPID_ALWAYS_INLINE auto Shape::operator=(const std::initializer_list<V> &vals) -> Shape & {
 		m_dims = vals.size();
 		for (int64_t i = 0; i < vals.size(); ++i) { m_data[i] = *(vals.begin() + i); }
 		return *this;
 	}
 
-	template<size_t N>
 	template<typename V>
-	LIBRAPID_ALWAYS_INLINE auto Shape<N>::operator=(const std::vector<V> &vals) -> Shape & {
-		LIBRAPID_ASSERT(vals.size() <= N,
-						"Shape object is limited to {} dimensions. Cannot initialize with {}",
-						N,
-						vals.size());
+	LIBRAPID_ALWAYS_INLINE auto Shape::operator=(const std::vector<V> &vals) -> Shape & {
 		m_dims = vals.size();
 		for (int64_t i = 0; i < vals.size(); ++i) { m_data[i] = vals[i]; }
 		return *this;
 	}
 
-	template<size_t N>
-	LIBRAPID_ALWAYS_INLINE auto Shape<N>::zeros(size_t dims) -> Shape {
+	LIBRAPID_ALWAYS_INLINE auto Shape::zeros(size_t dims) -> Shape {
 		Shape res;
 		res.m_dims = dims;
 		for (size_t i = 0; i < dims; ++i) res.m_data[i] = 0;
 		return res;
 	}
 
-	template<size_t N>
-	LIBRAPID_ALWAYS_INLINE auto Shape<N>::ones(size_t dims) -> Shape {
+	LIBRAPID_ALWAYS_INLINE auto Shape::ones(size_t dims) -> Shape {
 		Shape res;
 		res.m_dims = dims;
 		for (size_t i = 0; i < dims; ++i) res.m_data[i] = 1;
 		return res;
 	}
 
-	template<size_t N>
 	template<typename Index>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto Shape<N>::operator[](Index index) const
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto Shape::operator[](Index index) const
 	  -> const SizeType & {
 		static_assert(std::is_integral_v<Index>, "Index must be an integral type");
 		LIBRAPID_ASSERT(index < m_dims, "Index out of bounds");
@@ -309,17 +258,15 @@ namespace librapid {
 		return m_data[index];
 	}
 
-	template<size_t N>
 	template<typename Index>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto Shape<N>::operator[](Index index) -> SizeType & {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto Shape::operator[](Index index) -> SizeType & {
 		static_assert(std::is_integral_v<Index>, "Index must be an integral type");
 		LIBRAPID_ASSERT(index < m_dims, "Index out of bounds");
 		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
 		return m_data[index];
 	}
 
-	template<size_t N>
-	LIBRAPID_ALWAYS_INLINE auto Shape<N>::operator==(const Shape &other) const -> bool {
+	LIBRAPID_ALWAYS_INLINE auto Shape::operator==(const Shape &other) const -> bool {
 		if (m_dims != other.m_dims) return false;
 		for (size_t i = 0; i < m_dims; ++i) {
 			if (m_data[i] != other.m_data[i]) return false;
@@ -327,18 +274,13 @@ namespace librapid {
 		return true;
 	}
 
-	template<size_t N>
-	LIBRAPID_ALWAYS_INLINE auto Shape<N>::operator!=(const Shape &other) const -> bool {
+	LIBRAPID_ALWAYS_INLINE auto Shape::operator!=(const Shape &other) const -> bool {
 		return !(*this == other);
 	}
 
-	template<size_t N>
-	LIBRAPID_NODISCARD auto Shape<N>::ndim() const -> int {
-		return m_dims;
-	}
+	LIBRAPID_NODISCARD auto Shape::ndim() const -> int { return m_dims; }
 
-	template<size_t N>
-	LIBRAPID_NODISCARD auto Shape<N>::subshape(size_t start, size_t end) const -> Shape {
+	LIBRAPID_NODISCARD auto Shape::subshape(size_t start, size_t end) const -> Shape {
 		LIBRAPID_ASSERT(start <= end, "Start index must be less than end index");
 		LIBRAPID_ASSERT(end <= m_dims,
 						"End index must be less than or equal to the number of dimensions");
@@ -350,17 +292,14 @@ namespace librapid {
 		return res;
 	}
 
-	template<size_t N>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto Shape<N>::size() const -> size_t {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto Shape::size() const -> size_t {
 		size_t res = 1;
 		for (size_t i = 0; i < m_dims; ++i) res *= m_data[i];
 		return res;
 	}
 
-	template<size_t N>
 	template<typename T_, typename Char, typename Ctx>
-	LIBRAPID_ALWAYS_INLINE void Shape<N>::str(const fmt::formatter<T_, Char> &format,
-											  Ctx &ctx) const {
+	LIBRAPID_ALWAYS_INLINE void Shape::str(const fmt::formatter<T_, Char> &format, Ctx &ctx) const {
 		fmt::format_to(ctx.out(), "Shape(");
 		for (size_t i = 0; i < m_dims; ++i) {
 			format.format(m_data[i], ctx);
@@ -406,8 +345,15 @@ namespace librapid {
 	}
 
 	LIBRAPID_ALWAYS_INLINE auto MatrixShape::zeros() -> MatrixShape { return MatrixShape({0, 0}); }
-
 	LIBRAPID_ALWAYS_INLINE auto MatrixShape::ones() -> MatrixShape { return MatrixShape({1, 1}); }
+
+	LIBRAPID_ALWAYS_INLINE auto MatrixShape::zeros(size_t) -> MatrixShape {
+		return MatrixShape({0, 0});
+	}
+
+	LIBRAPID_ALWAYS_INLINE auto MatrixShape::ones(size_t) -> MatrixShape {
+		return MatrixShape({1, 1});
+	}
 
 	template<typename Index>
 	LIBRAPID_ALWAYS_INLINE auto MatrixShape::operator[](Index index) const -> const SizeType & {
@@ -429,14 +375,13 @@ namespace librapid {
 
 	LIBRAPID_ALWAYS_INLINE constexpr auto MatrixShape::ndim() const -> int { return 2; }
 
-	LIBRAPID_ALWAYS_INLINE auto MatrixShape::subshape(size_t start, size_t end) const
-	  -> Shape<LIBRAPID_MAX_ARRAY_DIMS> {
+	LIBRAPID_ALWAYS_INLINE auto MatrixShape::subshape(size_t start, size_t end) const -> Shape {
 		LIBRAPID_ASSERT(start <= end, "Start index must be less than end index");
 		LIBRAPID_ASSERT(end <= 2,
 						"End index must be less than or equal to the number of dimensions");
 		LIBRAPID_ASSERT(start >= 0, "Start index must be greater than or equal to 0");
 
-		Shape<LIBRAPID_MAX_ARRAY_DIMS> res;
+		Shape res;
 		res[0] = m_rows;
 		res[1] = m_cols;
 		return res.subshape(start, end);
@@ -454,27 +399,23 @@ namespace librapid {
 		fmt::format_to(ctx.out(), ")");
 	}
 
-	template<size_t N>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(const Shape<N> &lhs,
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(const Shape &lhs,
 															  const MatrixShape &rhs) -> bool {
 		return lhs.ndim() == 2 && lhs[0] == rhs[0] && lhs[1] == rhs[1];
 	}
 
-	template<size_t N>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(const MatrixShape &lhs,
-															  const Shape<N> &rhs) -> bool {
+															  const Shape &rhs) -> bool {
 		return rhs == lhs;
 	}
 
-	template<size_t N>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(const Shape<N> &lhs,
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(const Shape &lhs,
 															  const MatrixShape &rhs) -> bool {
 		return !(lhs == rhs);
 	}
 
-	template<size_t N>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(const MatrixShape &lhs,
-															  const Shape<N> &rhs) -> bool {
+															  const Shape &rhs) -> bool {
 		return !(lhs == rhs);
 	}
 
@@ -482,8 +423,8 @@ namespace librapid {
 		template<typename T>
 		struct IsSizeType : std::false_type {};
 
-		template<size_t N>
-		struct IsSizeType<Shape<N>> : std::true_type {};
+		template<>
+		struct IsSizeType<Shape> : std::true_type {};
 
 		template<>
 		struct IsSizeType<MatrixShape> : std::true_type {};
@@ -537,19 +478,19 @@ namespace librapid {
 			using Type = std::false_type;
 		};
 
-		template<size_t N, size_t M>
-		struct ShapeTypeHelperImpl<Shape<N>, Shape<M>> {
-			using Type = Shape<(N > M ? N : M)>;
+		template<>
+		struct ShapeTypeHelperImpl<Shape, Shape> {
+			using Type = Shape;
 		};
 
-		template<size_t N>
-		struct ShapeTypeHelperImpl<Shape<N>, MatrixShape> {
-			using Type = Shape<N>;
+		template<>
+		struct ShapeTypeHelperImpl<Shape, MatrixShape> {
+			using Type = Shape;
 		};
 
-		template<size_t N>
-		struct ShapeTypeHelperImpl<MatrixShape, Shape<N>> {
-			using Type = Shape<N>;
+		template<>
+		struct ShapeTypeHelperImpl<MatrixShape, Shape> {
+			using Type = Shape;
 		};
 
 		template<>
@@ -572,11 +513,12 @@ namespace librapid {
 
 // Support FMT printing
 #ifdef FMT_API
-template<size_t N>
-struct fmt::formatter<librapid::Shape<N>> {
+
+template<>
+struct fmt::formatter<librapid::Shape> {
 private:
-	using Type	   = librapid::Shape<N>;
-	using SizeType = librapid::Shape<N>::SizeType;
+	using Type	   = librapid::Shape;
+	using SizeType = librapid::Shape::SizeType;
 	using Base	   = fmt::formatter<SizeType, char>;
 	Base m_base;
 

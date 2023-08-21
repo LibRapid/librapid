@@ -71,12 +71,11 @@ namespace librapid {
 		template<typename T>
 		struct IsArrayContainer : std::false_type {};
 
-		template<size_t dims, typename StorageScalar>
-		struct IsArrayContainer<array::ArrayContainer<Shape<dims>, StorageScalar>>
-				: std::true_type {};
+		template<typename StorageScalar>
+		struct IsArrayContainer<array::ArrayContainer<Shape, StorageScalar>> : std::true_type {};
 
-		LIBRAPID_DEFINE_AS_TYPE(size_t dims COMMA typename StorageScalar,
-								array::ArrayContainer<Shape<dims> COMMA StorageScalar>);
+		LIBRAPID_DEFINE_AS_TYPE(typename StorageScalar,
+								array::ArrayContainer<Shape COMMA StorageScalar>);
 
 		LIBRAPID_DEFINE_AS_TYPE(typename StorageScalar,
 								array::ArrayContainer<MatrixShape COMMA StorageScalar>);
@@ -88,7 +87,7 @@ namespace librapid {
 		public:
 			using StorageType = StorageType_;
 			using ShapeType	  = ShapeType_;
-			using StrideType  = Stride<32>;
+			using StrideType  = Stride;
 			using SizeType	  = typename ShapeType::SizeType;
 			using Scalar	  = typename StorageType::Scalar;
 			using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;
@@ -582,11 +581,11 @@ namespace librapid {
 				auto subSize		= res.shape().size();
 				int64_t storageSize = sizeof(typename StorageType_::Scalar);
 				cl_buffer_region region {index * subSize * storageSize, subSize * storageSize};
-				res.m_storage.set(
+				res.m_storage =
 				  StorageType_(m_storage.data().createSubBuffer(
 								 StorageType_::bufferFlags, CL_BUFFER_CREATE_TYPE_REGION, &region),
 							   subSize,
-							   false));
+							   false);
 				return res;
 #else
 				LIBRAPID_ERROR("OpenCL support not enabled");
@@ -597,7 +596,7 @@ namespace librapid {
 				res.m_shape	  = m_shape.subshape(1, ndim());
 				auto subSize  = res.shape().size();
 				Scalar *begin = m_storage.begin().get() + index * subSize;
-				res.m_storage.set(StorageType_(begin, subSize, false));
+				res.m_storage = StorageType_(begin, subSize, false);
 				return res;
 #else
 				LIBRAPID_ERROR("CUDA support not enabled");
@@ -610,7 +609,7 @@ namespace librapid {
 				auto subSize  = res.shape().size();
 				Scalar *begin = m_storage.begin() + index * subSize;
 				Scalar *end	  = begin + subSize;
-				res.m_storage.set(StorageType_(begin, end, false));
+				res.m_storage = StorageType_(begin, end, false);
 				return res;
 			}
 		}
@@ -845,7 +844,7 @@ namespace librapid {
 		template<typename T, typename Char, typename Ctx>
 		LIBRAPID_ALWAYS_INLINE void ArrayContainer<ShapeType_, StorageType_>::str(
 		  const fmt::formatter<T, Char> &format, char bracket, char separator, Ctx &ctx) const {
-			GeneralArrayView(*this).str(format, bracket, separator, ctx);
+			createGeneralArrayView(*this).str(format, bracket, separator, ctx);
 		}
 	} // namespace array
 

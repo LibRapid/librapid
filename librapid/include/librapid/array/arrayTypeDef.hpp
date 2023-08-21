@@ -28,9 +28,10 @@ namespace librapid {
 	/// `backend::CPU`, `backend::CUDA` or any Storage interface
 	/// \tparam Scalar The scalar type of the array.
 	/// \tparam StorageType The storage type of the array.
-	template<typename Scalar, typename StorageType = backend::CPU>
+	template<typename Scalar, typename StorageType = backend::CPU, typename ShapeType = Shape,
+			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
 	using Array =
-	  array::ArrayContainer<Shape<LIBRAPID_MAX_ARRAY_DIMS>,
+	  array::ArrayContainer<Shape,
 							typename detail::TypeDefStorageEvaluator<Scalar, StorageType>::Type>;
 
 	/// A definition for fixed-size array objects.
@@ -38,15 +39,14 @@ namespace librapid {
 	/// \tparam Dimensions The dimensions of the array.
 	/// \see Array
 	template<typename Scalar, size_t... Dimensions>
-	using ArrayF =
-	  array::ArrayContainer<Shape<LIBRAPID_MAX_ARRAY_DIMS>, FixedStorage<Scalar, Dimensions...>>;
+	using ArrayF = array::ArrayContainer<Shape, FixedStorage<Scalar, Dimensions...>>;
 
 	/// A reference type for Array objects. Use this to accept Array objects as parameters since
 	/// the compiler cannot determine the templates tingle for the Array typedef. For more
 	/// granularity, you can also accept a raw ArrayContainer object. \tparam StorageType The
 	/// storage type of the array. \see Array \see ArrayF \see Function \see FunctionRef
 	template<typename StorageType>
-	using ArrayRef = array::ArrayContainer<Shape<LIBRAPID_MAX_ARRAY_DIMS>, StorageType>;
+	using ArrayRef = array::ArrayContainer<Shape, StorageType>;
 
 	template<typename Scalar, typename Backend = backend::CPU>
 	using Matrix =

@@ -634,9 +634,11 @@ namespace librapid {
 		}
 	}; // namespace array
 
-	template<typename T, typename ShapeType = Shape<size_t, 32>,
-			 typename std::enable_if_t<
-			   typetraits::TypeInfo<T>::type == detail::LibRapidType::ArrayContainer, int> = 0>
+	template<typename T, typename ShapeType = MatrixShape,
+			 typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
+										   detail::LibRapidType::ArrayContainer &&
+										 typetraits::IsSizeType<ShapeType>::value,
+									   int> = 0>
 	auto transpose(T &&array, const ShapeType &axes = ShapeType()) {
 		// If axes is empty, transpose the array in reverse order
 		ShapeType newAxes = axes;
@@ -648,9 +650,11 @@ namespace librapid {
 		return array::Transpose(array, newAxes);
 	}
 
-	template<typename T, typename ShapeType = Shape<size_t, 32>,
-			 typename std::enable_if_t<
-			   typetraits::TypeInfo<T>::type != detail::LibRapidType::ArrayContainer, int> = 0>
+	template<typename T, typename ShapeType = MatrixShape,
+			 typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
+										   detail::LibRapidType::ArrayContainer &&
+										 typetraits::IsSizeType<ShapeType>::value,
+									   int> = 0>
 	auto transpose(const T &function, const ShapeType &axes = ShapeType()) {
 		// If axes is empty, transpose the array in reverse order
 		auto array		  = function.eval();
