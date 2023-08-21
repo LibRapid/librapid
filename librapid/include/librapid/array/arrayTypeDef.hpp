@@ -28,8 +28,7 @@ namespace librapid {
 	/// `backend::CPU`, `backend::CUDA` or any Storage interface
 	/// \tparam Scalar The scalar type of the array.
 	/// \tparam StorageType The storage type of the array.
-	template<typename Scalar, typename StorageType = backend::CPU, typename ShapeType = Shape,
-			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
+	template<typename Scalar, typename StorageType = backend::CPU>
 	using Array =
 	  array::ArrayContainer<Shape,
 							typename detail::TypeDefStorageEvaluator<Scalar, StorageType>::Type>;
@@ -45,8 +44,8 @@ namespace librapid {
 	/// the compiler cannot determine the templates tingle for the Array typedef. For more
 	/// granularity, you can also accept a raw ArrayContainer object. \tparam StorageType The
 	/// storage type of the array. \see Array \see ArrayF \see Function \see FunctionRef
-	template<typename StorageType>
-	using ArrayRef = array::ArrayContainer<Shape, StorageType>;
+	template<typename ShapeType, typename StorageType>
+	using ArrayRef = array::ArrayContainer<ShapeType, StorageType>;
 
 	template<typename Scalar, typename Backend = backend::CPU>
 	using Matrix =
@@ -55,6 +54,14 @@ namespace librapid {
 
 	template<typename Scalar, size_t... Dimensions>
 	using MatrixF = array::ArrayContainer<MatrixShape, FixedStorage<Scalar, Dimensions...>>;
+
+	template<typename Scalar, typename Backend = backend::CPU>
+	using Array1D =
+	  array::ArrayContainer<VectorShape,
+							typename detail::TypeDefStorageEvaluator<Scalar, Backend>::Type>;
+
+	template<typename Scalar, size_t... Dimensions>
+	using Array1DF = array::ArrayContainer<VectorShape, FixedStorage<Scalar, Dimensions...>>;
 
 	/// A reference type for Array Function objects. Use this to accept Function objects as
 	/// parameters since the compiler cannot determine the templates for the typedef by default.
@@ -70,7 +77,7 @@ namespace librapid {
 	namespace array {
 		/// An intermediate type to represent a slice or view of an array.
 		/// \tparam T The type of the array.
-		template<typename T>
+		template<typename T, typename ShapeType_>
 		class GeneralArrayView;
 
 		template<typename T>

@@ -6,6 +6,7 @@
 namespace librapid {
     class Shape;
 	class MatrixShape;
+	class VectorShape;
     class Stride;
 
     template<typename Scalar_>

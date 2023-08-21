@@ -10,6 +10,7 @@ namespace librapid {
 	namespace typetraits {
 		LIBRAPID_DEFINE_AS_TYPE_NO_TEMPLATE(Shape);
 		LIBRAPID_DEFINE_AS_TYPE_NO_TEMPLATE(MatrixShape);
+		LIBRAPID_DEFINE_AS_TYPE_NO_TEMPLATE(VectorShape);
 	} // namespace typetraits
 
 	class Shape {
@@ -43,6 +44,9 @@ namespace librapid {
 		/// Create a copy of a Shape object
 		/// \param other Shape object to copy
 		LIBRAPID_ALWAYS_INLINE Shape(const Shape &other) = default;
+
+		LIBRAPID_ALWAYS_INLINE Shape(const MatrixShape &other);
+		LIBRAPID_ALWAYS_INLINE Shape(const VectorShape &other);
 
 		/// Create a Shape from an RValue
 		/// \param other Temporary Shape object to copy
@@ -140,8 +144,7 @@ namespace librapid {
 
 	class MatrixShape {
 	public:
-		using SizeType						  = uint32_t;
-		static constexpr size_t MaxDimensions = 2;
+		using SizeType = uint32_t;
 
 		LIBRAPID_ALWAYS_INLINE MatrixShape() = default;
 
@@ -154,6 +157,7 @@ namespace librapid {
 		template<typename V>
 		LIBRAPID_ALWAYS_INLINE explicit MatrixShape(const std::vector<V> &vals);
 
+		LIBRAPID_ALWAYS_INLINE MatrixShape(const Shape &other);
 		LIBRAPID_ALWAYS_INLINE MatrixShape(const MatrixShape &other) = default;
 
 		LIBRAPID_ALWAYS_INLINE MatrixShape(MatrixShape &&other) noexcept = default;
@@ -199,6 +203,66 @@ namespace librapid {
 		SizeType m_cols;
 	};
 
+	class VectorShape {
+	public:
+		using SizeType = uint32_t;
+
+		LIBRAPID_ALWAYS_INLINE VectorShape() = default;
+
+		template<typename Scalar, size_t Elements>
+		LIBRAPID_ALWAYS_INLINE explicit VectorShape(const FixedStorage<Scalar, Elements> &fixed);
+
+		template<typename V>
+		LIBRAPID_ALWAYS_INLINE VectorShape(const std::initializer_list<V> &vals);
+
+		template<typename V>
+		LIBRAPID_ALWAYS_INLINE explicit VectorShape(const std::vector<V> &vals);
+
+		LIBRAPID_ALWAYS_INLINE VectorShape(const Shape &other);
+		LIBRAPID_ALWAYS_INLINE VectorShape(const VectorShape &other) = default;
+
+		LIBRAPID_ALWAYS_INLINE VectorShape(VectorShape &&other) noexcept = default;
+
+		template<typename V>
+		LIBRAPID_ALWAYS_INLINE auto operator=(const std::initializer_list<V> &vals)
+		  -> VectorShape &;
+
+		template<typename V>
+		LIBRAPID_ALWAYS_INLINE auto operator=(const std::vector<V> &vals) -> VectorShape &;
+
+		LIBRAPID_ALWAYS_INLINE VectorShape &operator=(const VectorShape &other) = default;
+
+		LIBRAPID_ALWAYS_INLINE VectorShape &operator=(VectorShape &&other) noexcept = default;
+
+		static LIBRAPID_ALWAYS_INLINE auto zeros() -> VectorShape;
+		static LIBRAPID_ALWAYS_INLINE auto ones() -> VectorShape;
+
+		static LIBRAPID_ALWAYS_INLINE auto zeros(size_t) -> VectorShape;
+		static LIBRAPID_ALWAYS_INLINE auto ones(size_t) -> VectorShape;
+
+		template<typename Index>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](Index index) const
+		  -> const SizeType &;
+
+		template<typename Index>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](Index index) -> SizeType &;
+
+		LIBRAPID_ALWAYS_INLINE auto operator<=>(const VectorShape &other) const = default;
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto ndim() const -> int;
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(size_t start, size_t end) const
+		  -> Shape;
+
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const -> size_t;
+
+		template<typename T_, typename Char, typename Ctx>
+		void str(const fmt::formatter<T_, Char> &format, Ctx &ctx) const;
+
+	private:
+		SizeType m_elements;
+	};
+
 	namespace detail {
 		template<typename T, size_t... Dims>
 		Shape shapeFromFixedStorage(const FixedStorage<T, Dims...> &) {
@@ -208,7 +272,7 @@ namespace librapid {
 
 	template<typename Scalar, size_t... Dimensions>
 	LIBRAPID_ALWAYS_INLINE Shape::Shape(const FixedStorage<Scalar, Dimensions...> &) :
-			m_data({Dimensions...}) {}
+			m_dims(sizeof...(Dimensions)), m_data({Dimensions...}) {}
 
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE Shape::Shape(const std::initializer_list<V> &vals) :
@@ -219,6 +283,17 @@ namespace librapid {
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE Shape::Shape(const std::vector<V> &vals) : m_dims(vals.size()) {
 		for (size_t i = 0; i < vals.size(); ++i) { m_data[i] = vals[i]; }
+	}
+
+	LIBRAPID_ALWAYS_INLINE Shape::Shape(const MatrixShape &other) {
+		m_dims	  = 2;
+		m_data[0] = other[0];
+		m_data[1] = other[1];
+	}
+
+	LIBRAPID_ALWAYS_INLINE Shape::Shape(const VectorShape &other) {
+		m_dims	  = 1;
+		m_data[0] = other[0];
 	}
 
 	template<typename V>
@@ -326,6 +401,14 @@ namespace librapid {
 		m_cols = vals[1];
 	}
 
+	LIBRAPID_ALWAYS_INLINE MatrixShape::MatrixShape(const Shape &other) {
+		LIBRAPID_ASSERT(other.ndim() == 2,
+						"MatrixShape must be initialized with 2 dimension, but received {}",
+						other.ndim());
+		m_rows = other[0];
+		m_cols = other[1];
+	}
+
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE auto MatrixShape::operator=(const std::initializer_list<V> &vals)
 	  -> MatrixShape & {
@@ -381,9 +464,9 @@ namespace librapid {
 						"End index must be less than or equal to the number of dimensions");
 		LIBRAPID_ASSERT(start >= 0, "Start index must be greater than or equal to 0");
 
-		Shape res;
-		res[0] = m_rows;
-		res[1] = m_cols;
+		Shape res = Shape::zeros(2);
+		res[0]	  = m_rows;
+		res[1]	  = m_cols;
 		return res.subshape(start, end);
 	}
 
@@ -396,6 +479,95 @@ namespace librapid {
 		format.format(m_rows, ctx);
 		fmt::format_to(ctx.out(), ", ");
 		format.format(m_cols, ctx);
+		fmt::format_to(ctx.out(), ")");
+	}
+
+	template<typename Scalar, size_t Elements>
+	LIBRAPID_ALWAYS_INLINE VectorShape::VectorShape(const FixedStorage<Scalar, Elements> &) :
+			m_elements(Elements) {}
+
+	template<typename V>
+	LIBRAPID_ALWAYS_INLINE VectorShape::VectorShape(const std::initializer_list<V> &vals) {
+		LIBRAPID_ASSERT(vals.size() == 1, "MatrixShape must be initialized with 1 value");
+		m_elements = *(vals.begin());
+	}
+
+	template<typename V>
+	LIBRAPID_ALWAYS_INLINE VectorShape::VectorShape(const std::vector<V> &vals) {
+		LIBRAPID_ASSERT(vals.size() == 1, "MatrixShape must be initialized with 1 value");
+		m_elements = vals[0];
+	}
+
+	LIBRAPID_ALWAYS_INLINE VectorShape::VectorShape(const Shape &other) {
+		LIBRAPID_ASSERT(other.ndim() == 1,
+						"VectorShape must be initialized with 1 dimension, but received {}",
+						other.ndim());
+		m_elements = other[0];
+	}
+
+	template<typename V>
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::operator=(const std::initializer_list<V> &vals)
+	  -> VectorShape & {
+		LIBRAPID_ASSERT(vals.size() == 1, "MatrixShape must be initialized with 1 value");
+		m_elements = *(vals.begin());
+		return *this;
+	}
+
+	template<typename V>
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::operator=(const std::vector<V> &vals)
+	  -> VectorShape & {
+		LIBRAPID_ASSERT(vals.size() == 1, "MatrixShape must be initialized with 1 value");
+		m_elements = vals[0];
+		return *this;
+	}
+
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::zeros() -> VectorShape { return VectorShape({0}); }
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::ones() -> VectorShape { return VectorShape({1}); }
+
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::zeros(size_t) -> VectorShape {
+		return VectorShape({0});
+	}
+
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::ones(size_t) -> VectorShape {
+		return VectorShape({1});
+	}
+
+	template<typename Index>
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::operator[](Index index) const -> const SizeType & {
+		static_assert(std::is_integral_v<Index>, "Index must be an integral type");
+		LIBRAPID_ASSERT(index < 1, "Index out of bounds");
+		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
+
+		return m_elements;
+	}
+
+	template<typename Index>
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::operator[](Index index) -> SizeType & {
+		static_assert(std::is_integral_v<Index>, "Index must be an integral type");
+		LIBRAPID_ASSERT(index < 1, "Index out of bounds");
+		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
+
+		return m_elements;
+	}
+
+	LIBRAPID_ALWAYS_INLINE constexpr auto VectorShape::ndim() const -> int { return 1; }
+
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::subshape(size_t start, size_t end) const -> Shape {
+		LIBRAPID_ASSERT(start <= end, "Start index must be less than end index");
+		LIBRAPID_ASSERT(end <= 1,
+						"End index must be less than or equal to the number of dimensions");
+		LIBRAPID_ASSERT(start >= 0, "Start index must be greater than or equal to 0");
+
+		return Shape::zeros(1);
+	}
+
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::size() const -> size_t { return m_elements; }
+
+	template<typename T_, typename Char, typename Ctx>
+	LIBRAPID_ALWAYS_INLINE void VectorShape::str(const fmt::formatter<T_, Char> &format,
+												 Ctx &ctx) const {
+		fmt::format_to(ctx.out(), "VectorShape(");
+		format.format(m_elements, ctx);
 		fmt::format_to(ctx.out(), ")");
 	}
 
@@ -416,6 +588,48 @@ namespace librapid {
 
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(const MatrixShape &lhs,
 															  const Shape &rhs) -> bool {
+		return !(lhs == rhs);
+	}
+
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(const Shape &lhs,
+															  const VectorShape &rhs) -> bool {
+		return lhs.ndim() == 1 && lhs[0] == rhs[0];
+	}
+
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(const VectorShape &lhs,
+															  const Shape &rhs) -> bool {
+		return rhs == lhs;
+	}
+
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(const Shape &lhs,
+															  const VectorShape &rhs) -> bool {
+		return !(lhs == rhs);
+	}
+
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(const VectorShape &lhs,
+															  const Shape &rhs) -> bool {
+		return !(lhs == rhs);
+	}
+
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(const MatrixShape &lhs,
+															  const VectorShape &rhs) -> bool {
+		// A vector cannot have the same shape as a matrix since it has a different number of
+		// dimensions by definition
+		return false;
+	}
+
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(const VectorShape &lhs,
+															  const MatrixShape &rhs) -> bool {
+		return false;
+	}
+
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(const MatrixShape &lhs,
+															  const VectorShape &rhs) -> bool {
+		return !(lhs == rhs);
+	}
+
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(const VectorShape &lhs,
+															  const MatrixShape &rhs) -> bool {
 		return !(lhs == rhs);
 	}
 
@@ -507,6 +721,21 @@ namespace librapid {
 		template<typename First, typename Second>
 		struct ShapeTypeHelper<First, Second> {
 			using Type = typename ShapeTypeHelperImpl<First, Second>::Type;
+		};
+
+		template<typename T>
+		struct SubscriptShapeType {
+			using Type = Shape;
+		};
+
+		template<>
+		struct SubscriptShapeType<MatrixShape> {
+			using Type = VectorShape;
+		};
+
+		template<>
+		struct SubscriptShapeType<VectorShape> {
+			using Type = Shape;
 		};
 	} // namespace detail
 } // namespace librapid

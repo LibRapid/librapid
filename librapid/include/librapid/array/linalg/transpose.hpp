@@ -493,8 +493,9 @@ namespace librapid {
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ArrayType &array() const;
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayType &array();
 
-			template<typename StorageType>
-			LIBRAPID_ALWAYS_INLINE void applyTo(ArrayRef<StorageType> &out) const;
+			template<typename ShapeType_, typename StorageType_>
+			LIBRAPID_ALWAYS_INLINE void
+			applyTo(ArrayContainer<ShapeType_, StorageType_> &out) const;
 
 			/// Evaluate the Transpose object and return the result. Depending on your use case,
 			/// calling this function mid-expression might result in better performance, but you
@@ -567,8 +568,8 @@ namespace librapid {
 		}
 
 		template<typename T>
-		template<typename StorageType>
-		void Transpose<T>::applyTo(ArrayRef<StorageType> &out) const {
+		template<typename ShapeType_, typename StorageType_>
+		void Transpose<T>::applyTo(ArrayContainer<ShapeType_, StorageType_> &out) const {
 			bool inplace = ((void *)&out) == ((void *)&m_array);
 			LIBRAPID_ASSERT(!inplace, "Cannot transpose inplace");
 			LIBRAPID_ASSERT(out.shape() == m_outputShape, "Transpose assignment shape mismatch");

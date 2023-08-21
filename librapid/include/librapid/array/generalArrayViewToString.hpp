@@ -3,10 +3,12 @@
 
 namespace librapid {
 	namespace detail {
-		template<typename ArrayViewType, typename T, typename Char, typename Ctx>
-		void generalArrayViewToString(const array::GeneralArrayView<ArrayViewType> &view,
-									  const fmt::formatter<T, Char> &formatter, char bracket,
-									  char separator, int64_t indent, Ctx &ctx) {
+		template<typename ArrayViewType, typename ArrayViewShapeType, typename T, typename Char,
+				 typename Ctx>
+		void generalArrayViewToString(
+		  const array::GeneralArrayView<ArrayViewType, ArrayViewShapeType> &view,
+		  const fmt::formatter<T, Char> &formatter, char bracket, char separator, int64_t indent,
+		  Ctx &ctx) {
 			char bracketCharOpen, bracketCharClose;
 
 			switch (bracket) {
@@ -74,10 +76,10 @@ namespace librapid {
 	} // namespace detail
 
 	namespace array {
-		template<typename ArrayViewType>
+		template<typename ArrayViewType, typename ArrayViewShapeType>
 		template<typename T, typename Char, typename Ctx>
-		void GeneralArrayView<ArrayViewType>::str(const fmt::formatter<T, Char> &format,
-												  char bracket, char separator, Ctx &ctx) const {
+		void GeneralArrayView<ArrayViewType, ArrayViewShapeType>::str(
+		  const fmt::formatter<T, Char> &format, char bracket, char separator, Ctx &ctx) const {
 			detail::generalArrayViewToString(*this, format, bracket, separator, 0, ctx);
 		}
 	} // namespace array

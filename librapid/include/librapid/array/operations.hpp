@@ -186,8 +186,8 @@ namespace librapid {
 
 		/// Extracts the Descriptor type of an ArrayView object
 		/// \tparam T The Array type of the ArrayView
-		template<typename T>
-		struct DescriptorExtractor<array::GeneralArrayView<T>> {
+		template<typename T, typename S>
+		struct DescriptorExtractor<array::GeneralArrayView<T, S>> {
 			using Type = ::librapid::detail::descriptor::Trivial;
 		};
 
