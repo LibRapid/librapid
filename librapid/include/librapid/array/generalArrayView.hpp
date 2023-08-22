@@ -217,7 +217,7 @@ namespace librapid {
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
 			  m_shape[0]);
-			auto view = createGeneralArrayView<Shape>(m_ref);
+			auto view		  = createGeneralArrayView<Shape>(m_ref);
 			const auto stride = Stride(m_shape);
 			view.setShape(m_shape.subshape(1, ndim()));
 			if (ndim() == 1)
@@ -236,7 +236,7 @@ namespace librapid {
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
 			  m_shape[0]);
-			auto view = createGeneralArrayView<Shape>(m_ref);
+			auto view		  = createGeneralArrayView<Shape>(m_ref);
 			const auto stride = Stride(m_shape);
 			view.setShape(m_shape.subshape(1, ndim()));
 			if (ndim() == 1)
