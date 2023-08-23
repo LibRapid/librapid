@@ -35,9 +35,9 @@ namespace librapid {
 			using Reference		 = BaseType &;
 			using ConstReference = const BaseType &;
 			using Backend		 = typename typetraits::TypeInfo<BaseType>::Backend;
-			using StrideType	 = typename BaseType::StrideType;
+			using StrideType	 = Stride;
 			using ShapeType		 = ArrayViewShapeType;
-			using StorageType	 = typename BaseType::StorageType;
+			using StorageType	 = typename typetraits::TypeInfo<BaseType>::StorageType;
 			// using ArrayType		 = Array<Scalar, Backend>;
 			using ArrayType = array::ArrayContainer<ShapeType, StorageType>;
 			using Iterator	= detail::ArrayIterator<GeneralArrayView>;
@@ -207,6 +207,8 @@ namespace librapid {
 					}
 				}
 			} while (idim < ndim);
+
+			return *this;
 		}
 
 		template<typename ArrayViewType, typename ArrayViewShapeType>

@@ -611,15 +611,15 @@ namespace librapid {
 		return !(lhs == rhs);
 	}
 
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(const MatrixShape &lhs,
-															  const VectorShape &rhs) -> bool {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(const MatrixShape &,
+															  const VectorShape &) -> bool {
 		// A vector cannot have the same shape as a matrix since it has a different number of
 		// dimensions by definition
 		return false;
 	}
 
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(const VectorShape &lhs,
-															  const MatrixShape &rhs) -> bool {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(const VectorShape &,
+															  const MatrixShape &) -> bool {
 		return false;
 	}
 
@@ -708,8 +708,63 @@ namespace librapid {
 		};
 
 		template<>
+		struct ShapeTypeHelperImpl<Shape, VectorShape> {
+			using Type = Shape;
+		};
+
+		template<>
+		struct ShapeTypeHelperImpl<VectorShape, Shape> {
+			using Type = Shape;
+		};
+
+		template<>
 		struct ShapeTypeHelperImpl<MatrixShape, MatrixShape> {
 			using Type = MatrixShape;
+		};
+
+		template<>
+		struct ShapeTypeHelperImpl<MatrixShape, VectorShape> {
+			using Type = Shape;
+		};
+
+		template<>
+		struct ShapeTypeHelperImpl<VectorShape, MatrixShape> {
+			using Type = Shape;
+		};
+
+		template<>
+		struct ShapeTypeHelperImpl<VectorShape, VectorShape> {
+			using Type = VectorShape;
+		};
+
+		template<>
+		struct ShapeTypeHelperImpl<Shape, std::false_type> {
+			using Type = Shape;
+		};
+
+		template<>
+		struct ShapeTypeHelperImpl<std::false_type, Shape> {
+			using Type = Shape;
+		};
+
+		template<>
+		struct ShapeTypeHelperImpl<MatrixShape, std::false_type> {
+			using Type = MatrixShape;
+		};
+
+		template<>
+		struct ShapeTypeHelperImpl<std::false_type, MatrixShape> {
+			using Type = MatrixShape;
+		};
+
+		template<>
+		struct ShapeTypeHelperImpl<VectorShape, std::false_type> {
+			using Type = VectorShape;
+		};
+
+		template<>
+		struct ShapeTypeHelperImpl<std::false_type, VectorShape> {
+			using Type = VectorShape;
 		};
 
 		template<typename First, typename Second, typename... Rest>

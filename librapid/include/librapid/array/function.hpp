@@ -44,6 +44,9 @@ namespace librapid {
 			using Backend							   = decltype(commonBackend<Args...>());
 			using ShapeType = detail::ShapeTypeHelper<typename TypeInfo<Args>::ShapeType...>::Type;
 
+			using ArrayType	  = Array<Scalar, Backend>;
+			using StorageType = typename TypeInfo<ArrayType>::StorageType;
+
 			static constexpr bool allowVectorisation = checkAllowVectorisation<Args...>();
 
 			static constexpr bool supportsArithmetic = TypeInfo<Scalar>::supportsArithmetic;
@@ -286,7 +289,7 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void
 		Function<desc, Functor, Args...>::str(const fmt::formatter<T, Char> &format, char bracket,
 											  char separator, Ctx &ctx) const {
-			array::GeneralArrayView(*this).str(format, bracket, separator, ctx);
+			createGeneralArrayView(*this).str(format, bracket, separator, ctx);
 		}
 	} // namespace detail
 } // namespace librapid
