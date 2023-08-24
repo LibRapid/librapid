@@ -389,41 +389,81 @@ namespace librapid {
 
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE MatrixShape::MatrixShape(const std::initializer_list<V> &vals) {
-		LIBRAPID_ASSERT(vals.size() == 2, "MatrixShape must be initialized with 2 values");
-		m_rows = *(vals.begin());
-		m_cols = *(vals.begin() + 1);
+		LIBRAPID_ASSERT(vals.size() <= 2, "MatrixShape must be initialized with 2 values");
+		if (vals.size() == 2) {
+			m_rows = *(vals.begin());
+			m_cols = *(vals.begin() + 1);
+		} else if (vals.size() == 1) {
+			m_rows = *(vals.begin());
+			m_cols = 1;
+		} else {
+			m_rows = 0;
+			m_cols = 0;
+		}
 	}
 
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE MatrixShape::MatrixShape(const std::vector<V> &vals) {
-		LIBRAPID_ASSERT(vals.size() == 2, "MatrixShape must be initialized with 2 values");
-		m_rows = vals[0];
-		m_cols = vals[1];
+		LIBRAPID_ASSERT(vals.size() <= 2, "MatrixShape must be initialized with 2 values");
+		if (vals.size() == 2) {
+			m_rows = vals[0];
+			m_cols = vals[1];
+		} else if (vals.size() == 1) {
+			m_rows = vals[0];
+			m_cols = 1;
+		} else {
+			m_rows = 0;
+			m_cols = 0;
+		}
 	}
 
 	LIBRAPID_ALWAYS_INLINE MatrixShape::MatrixShape(const Shape &other) {
-		LIBRAPID_ASSERT(other.ndim() == 2,
+		LIBRAPID_ASSERT(other.ndim() <= 2,
 						"MatrixShape must be initialized with 2 dimension, but received {}",
 						other.ndim());
-		m_rows = other[0];
-		m_cols = other[1];
+		if (other.ndim() == 2) {
+			m_rows = other[0];
+			m_cols = other[1];
+		} else if (other.ndim() == 1) {
+			m_rows = other[0];
+			m_cols = 1;
+		} else {
+			m_rows = 0;
+			m_cols = 0;
+		}
 	}
 
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE auto MatrixShape::operator=(const std::initializer_list<V> &vals)
 	  -> MatrixShape & {
-		LIBRAPID_ASSERT(vals.size() == 2, "MatrixShape must be initialized with 2 values");
-		m_rows = *(vals.begin());
-		m_cols = *(vals.begin() + 1);
+		LIBRAPID_ASSERT(vals.size() <= 2, "MatrixShape must be initialized with 2 values");
+		if (vals.size() == 2) {
+			m_rows = *(vals.begin());
+			m_cols = *(vals.begin() + 1);
+		} else if (vals.size() == 1) {
+			m_rows = *(vals.begin());
+			m_cols = 1;
+		} else {
+			m_rows = 0;
+			m_cols = 0;
+		}
 		return *this;
 	}
 
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE auto MatrixShape::operator=(const std::vector<V> &vals)
 	  -> MatrixShape & {
-		LIBRAPID_ASSERT(vals.size() == 2, "MatrixShape must be initialized with 2 values");
-		m_rows = vals[0];
-		m_cols = vals[1];
+		LIBRAPID_ASSERT(vals.size() <= 2, "MatrixShape must be initialized with 2 values");
+		if (vals.size() == 2) {
+			m_rows = vals[0];
+			m_cols = vals[1];
+		} else if (vals.size() == 1) {
+			m_rows = vals[0];
+			m_cols = 1;
+		} else {
+			m_rows = 0;
+			m_cols = 0;
+		}
 		return *this;
 	}
 

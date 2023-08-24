@@ -612,17 +612,27 @@ namespace librapid {
 	  typename First, typename Second,
 	  typename std::enable_if_t<IsArrayType<First>::value && IsArrayType<Second>::value, int> = 0>
 	auto dot(First &&a, Second &&b) {
-		using ScalarA  = typename typetraits::TypeInfo<std::decay_t<First>>::Scalar;
-		using ScalarB  = typename typetraits::TypeInfo<std::decay_t<Second>>::Scalar;
-		using BackendA = typename typetraits::TypeInfo<std::decay_t<First>>::Backend;
-		using BackendB = typename typetraits::TypeInfo<std::decay_t<Second>>::Backend;
-		using ArrayA   = Array<ScalarA, BackendA>;
-		using ArrayB   = Array<ScalarB, BackendB>;
+		using ScalarA	   = typename typetraits::TypeInfo<std::decay_t<First>>::Scalar;
+		using ScalarB	   = typename typetraits::TypeInfo<std::decay_t<Second>>::Scalar;
+		using BackendA	   = typename typetraits::TypeInfo<std::decay_t<First>>::Backend;
+		using BackendB	   = typename typetraits::TypeInfo<std::decay_t<Second>>::Backend;
+		using ArrayA	   = Array<ScalarA, BackendA>;
+		using ArrayB	   = Array<ScalarB, BackendB>;
+		using ShapeTypeA   = typename typetraits::TypeInfo<std::decay_t<First>>::ShapeType;
+		using ShapeTypeB   = typename typetraits::TypeInfo<std::decay_t<Second>>::ShapeType;
+		using StorageTypeA = typename typetraits::TypeInfo<std::decay_t<First>>::StorageType;
+		using StorageTypeB = typename typetraits::TypeInfo<std::decay_t<Second>>::StorageType;
 
 		auto [transA, alpha, arrA] = detail::dotHelper(std::forward<First>(a));
 		auto [transB, beta, arrB]  = detail::dotHelper(std::forward<Second>(b));
-		return linalg::ArrayMultiply(
-		  transA, transB, std::forward<ArrayA>(arrA), alpha * beta, std::forward<ArrayB>(arrB), 0);
+		return linalg::
+		  ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, ScalarA, ScalarB>(
+			transA,
+			transB,
+			std::forward<ArrayA>(arrA),
+			alpha * beta,
+			std::forward<ArrayB>(arrB),
+			0);
 	}
 
 	namespace typetraits {

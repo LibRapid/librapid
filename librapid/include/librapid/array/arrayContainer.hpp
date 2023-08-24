@@ -72,8 +72,8 @@ namespace librapid {
 		template<typename T>
 		struct IsArrayContainer : std::false_type {};
 
-		template<typename StorageScalar>
-		struct IsArrayContainer<array::ArrayContainer<Shape, StorageScalar>> : std::true_type {};
+		template<typename ShapeType, typename StorageScalar>
+		struct IsArrayContainer<array::ArrayContainer<ShapeType, StorageScalar>> : std::true_type {};
 
 		LIBRAPID_DEFINE_AS_TYPE(typename StorageScalar,
 								array::ArrayContainer<Shape COMMA StorageScalar>);
