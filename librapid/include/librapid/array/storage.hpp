@@ -371,7 +371,7 @@ namespace librapid {
 			auto ptr = static_cast<Pointer>(_aligned_malloc(size * sizeof(T), LIBRAPID_MEM_ALIGN));
 #else
 			auto ptr =
-			  static_cast<RawPointer>(std::aligned_alloc(LIBRAPID_MEM_ALIGN, size * sizeof(T)));
+			  static_cast<Pointer>(std::aligned_alloc(LIBRAPID_MEM_ALIGN, size * sizeof(T)));
 #endif
 
 			LIBRAPID_ASSERT(
