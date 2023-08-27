@@ -42,7 +42,8 @@ namespace librapid {
 				std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
 			using Packet							   = typename TypeInfo<Scalar>::Packet;
 			using Backend							   = decltype(commonBackend<Args...>());
-			using ShapeType = detail::ShapeTypeHelper<typename TypeInfo<Args>::ShapeType...>::Type;
+			using ShapeType =
+			  typename detail::ShapeTypeHelper<typename TypeInfo<Args>::ShapeType...>::Type;
 
 			using ArrayType	  = Array<Scalar, Backend>;
 			using StorageType = typename TypeInfo<ArrayType>::StorageType;
