@@ -63,9 +63,7 @@ namespace librapid {
 			for (size_t i = 0; i < data.size(); ++i) {
 				LIBRAPID_ASSERT(data[i].size() == newShape[1],
 								"Arrays must have consistent shapes");
-				for (size_t j = 0; j < data[i].size(); ++j) {
-					res(i, j) = data[i][j];
-				}
+				for (size_t j = 0; j < data[i].size(); ++j) { res(i, j) = data[i][j]; }
 			}
 			return res;
 		} else {
@@ -90,7 +88,7 @@ namespace librapid {
 		LIBRAPID_ASSERT(data.size() > 0, "Cannot create a zero-sized array");                      \
 		std::vector<ArrayContainer> tmp(data.size());                                              \
 		int64_t index = 0;                                                                         \
-		for (const auto &item : data) tmp[index++] = fromData(item);                               \
+		for (const auto &item : data) tmp[index++] = std::move(fromData(item));                    \
 		auto zeroShape = tmp[0].shape();                                                           \
 		for (int64_t i = 0; i < data.size(); ++i)                                                  \
 			LIBRAPID_ASSERT(tmp[i].shape().operator==(zeroShape),                                  \

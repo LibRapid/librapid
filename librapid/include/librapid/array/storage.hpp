@@ -228,12 +228,12 @@ namespace librapid {
 		/// Assignment operator for a FixedStorage object
 		/// \param other FixedStorage object to copy
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE FixedStorage &operator=(const FixedStorage &other);
+		LIBRAPID_ALWAYS_INLINE FixedStorage &operator=(const FixedStorage &other) noexcept;
 
 		/// Move assignment operator for a FixedStorage object
 		/// \param other FixedStorage object to move
 		/// \return *this
-		LIBRAPID_ALWAYS_INLINE FixedStorage &operator=(FixedStorage &&other) noexcept;
+		LIBRAPID_ALWAYS_INLINE FixedStorage &operator=(FixedStorage &&other) noexcept = default;
 
 		/// Free a FixedStorage object
 		~FixedStorage() = default;
@@ -323,6 +323,8 @@ namespace librapid {
 		/// \param size The number of elements of type \p in the memory block
 		template<typename T>
 		void safeDeallocate(T *ptr, size_t size) {
+			if (!ptr) return;
+
 			auto ptr_ = LIBRAPID_ASSUME_ALIGNED(ptr);
 			LIBRAPID_ASSUME(ptr_ != nullptr);
 			LIBRAPID_ASSUME(size > 0);
@@ -471,11 +473,12 @@ namespace librapid {
 	template<typename T>
 	auto Storage<T>::operator=(const Storage &other) -> Storage & {
 		if (this != &other) {
+			size_t oldSize = m_size;
+			m_size		   = other.m_size;
 			if (other.m_size == m_size) LIBRAPID_UNLIKELY {
 					if (m_ownsData) LIBRAPID_LIKELY {
 							// Reallocate
-							detail::safeDeallocate(m_begin, m_size);
-							m_size	= other.m_size;
+							detail::safeDeallocate(m_begin, oldSize);
 							m_begin = detail::safeAllocate<Scalar>(m_size);
 						}
 					else
@@ -493,9 +496,13 @@ namespace librapid {
 	template<typename T>
 	Storage<T> &Storage<T>::operator=(Storage &&other) noexcept {
 		if (this != &other) {
-			std::swap(m_begin, other.m_begin);
-			std::swap(m_size, other.m_size);
-			std::swap(m_ownsData, other.m_ownsData);
+			m_begin	   = std::move(other.m_begin);
+			m_size	   = std::move(other.m_size);
+			m_ownsData = std::move(other.m_ownsData);
+
+			other.m_begin	 = nullptr;
+			other.m_size	 = 0;
+			other.m_ownsData = false;
 		}
 		return *this;
 	}
@@ -572,11 +579,11 @@ namespace librapid {
 		m_begin = LIBRAPID_ASSUME_ALIGNED(detail::safeAllocate<T>(newSize));
 		m_size	= newSize;
 
-		// Free the old block of memory
-		detail::safeDeallocate(oldBegin, oldSize);
-
 		// Copy the data
 		detail::fastCopy(m_begin, oldBegin, std::min(oldSize, newSize));
+
+		// Free the old block of memory
+		detail::safeDeallocate(oldBegin, oldSize);
 	}
 
 	template<typename T>
@@ -701,16 +708,16 @@ namespace librapid {
 	}
 
 	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::operator=(const FixedStorage &other) -> FixedStorage & {
+	auto FixedStorage<T, D...>::operator=(const FixedStorage &other) noexcept -> FixedStorage & {
 		if (this != &other) {
 			for (size_t i = 0; i < Size; ++i) { m_data[i] = other.m_data[i]; }
 		}
 		return *this;
 	}
 
-	template<typename T, size_t... D>
-	auto FixedStorage<T, D...>::operator=(FixedStorage &&other) noexcept
-	  -> FixedStorage & = default;
+	// template<typename T, size_t... D>
+	// auto FixedStorage<T, D...>::operator=(FixedStorage &&other) noexcept
+	//   -> FixedStorage & = default;
 
 	template<typename T, size_t... D>
 	template<typename ShapeType>

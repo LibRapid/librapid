@@ -466,7 +466,7 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const Scalar &value) :
 				m_shape(detail::shapeFromFixedStorage(m_storage)),
-				m_size(m_shape.size()), m_storage(m_size) {
+				m_size(m_shape.size()), m_storage(value) {
 			static_assert(typetraits::IsFixedStorage<StorageType_>::value,
 						  "For a compile-time-defined shape, "
 						  "the storage type must be "

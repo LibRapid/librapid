@@ -87,12 +87,12 @@ namespace librapid {
 		/// Return a Shape object with \p dims dimensions, all initialized to zero.
 		/// \param dims Number of dimensions
 		/// \return New Shape object
-		LIBRAPID_ALWAYS_INLINE static auto zeros(size_t dims) -> Shape;
+		LIBRAPID_ALWAYS_INLINE static auto zeros(int dims) -> Shape;
 
 		/// Return a Shape object with \p dims dimensions, all initialized to one.
 		/// \param dims Number of dimensions
 		/// \return New Shape object
-		LIBRAPID_ALWAYS_INLINE static auto ones(size_t dims) -> Shape;
+		LIBRAPID_ALWAYS_INLINE static auto ones(int dims) -> Shape;
 
 		/// Access an element of the Shape object
 		/// \tparam Index Typename of the index
@@ -127,8 +127,7 @@ namespace librapid {
 		/// \param start Starting index
 		/// \param end Ending index
 		/// \return Subshape
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(size_t start, size_t end) const
-		  -> Shape;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(int start, int end) const -> Shape;
 
 		/// Return the number of elements the Shape object represents
 		/// \return Number of elements
@@ -144,7 +143,8 @@ namespace librapid {
 
 	class MatrixShape {
 	public:
-		using SizeType = uint32_t;
+		using SizeType						  = uint32_t;
+		static constexpr size_t MaxDimensions = 2;
 
 		LIBRAPID_ALWAYS_INLINE MatrixShape() = default;
 
@@ -190,8 +190,7 @@ namespace librapid {
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto ndim() const -> int;
 
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(size_t start, size_t end) const
-		  -> Shape;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(int start, int end) const -> Shape;
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const -> size_t;
 
@@ -205,7 +204,8 @@ namespace librapid {
 
 	class VectorShape {
 	public:
-		using SizeType = uint32_t;
+		using SizeType						  = uint32_t;
+		static constexpr size_t MaxDimensions = 1;
 
 		LIBRAPID_ALWAYS_INLINE VectorShape() = default;
 
@@ -251,8 +251,7 @@ namespace librapid {
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto ndim() const -> int;
 
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(size_t start, size_t end) const
-		  -> Shape;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(int start, int end) const -> Shape;
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const -> size_t;
 
@@ -310,14 +309,14 @@ namespace librapid {
 		return *this;
 	}
 
-	LIBRAPID_ALWAYS_INLINE auto Shape::zeros(size_t dims) -> Shape {
+	LIBRAPID_ALWAYS_INLINE auto Shape::zeros(int dims) -> Shape {
 		Shape res;
 		res.m_dims = dims;
 		for (size_t i = 0; i < dims; ++i) res.m_data[i] = 0;
 		return res;
 	}
 
-	LIBRAPID_ALWAYS_INLINE auto Shape::ones(size_t dims) -> Shape {
+	LIBRAPID_ALWAYS_INLINE auto Shape::ones(int dims) -> Shape {
 		Shape res;
 		res.m_dims = dims;
 		for (size_t i = 0; i < dims; ++i) res.m_data[i] = 1;
@@ -355,7 +354,7 @@ namespace librapid {
 
 	LIBRAPID_NODISCARD auto Shape::ndim() const -> int { return m_dims; }
 
-	LIBRAPID_NODISCARD auto Shape::subshape(size_t start, size_t end) const -> Shape {
+	LIBRAPID_NODISCARD auto Shape::subshape(int start, int end) const -> Shape {
 		LIBRAPID_ASSERT(start <= end, "Start index must be less than end index");
 		LIBRAPID_ASSERT(end <= m_dims,
 						"End index must be less than or equal to the number of dimensions");
@@ -498,7 +497,7 @@ namespace librapid {
 
 	LIBRAPID_ALWAYS_INLINE constexpr auto MatrixShape::ndim() const -> int { return 2; }
 
-	LIBRAPID_ALWAYS_INLINE auto MatrixShape::subshape(size_t start, size_t end) const -> Shape {
+	LIBRAPID_ALWAYS_INLINE auto MatrixShape::subshape(int start, int end) const -> Shape {
 		LIBRAPID_ASSERT(start <= end, "Start index must be less than end index");
 		LIBRAPID_ASSERT(end <= 2,
 						"End index must be less than or equal to the number of dimensions");
@@ -592,7 +591,7 @@ namespace librapid {
 
 	LIBRAPID_ALWAYS_INLINE constexpr auto VectorShape::ndim() const -> int { return 1; }
 
-	LIBRAPID_ALWAYS_INLINE auto VectorShape::subshape(size_t start, size_t end) const -> Shape {
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::subshape(int start, int end) const -> Shape {
 		LIBRAPID_ASSERT(start <= end, "Start index must be less than end index");
 		LIBRAPID_ASSERT(end <= 1,
 						"End index must be less than or equal to the number of dimensions");

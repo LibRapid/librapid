@@ -38,10 +38,9 @@ namespace librapid {
 			using Reference		 = BaseType &;
 			using ConstReference = const BaseType &;
 			using Backend		 = typename typetraits::TypeInfo<BaseType>::Backend;
-			using StrideType	 = Stride;
 			using ShapeType		 = ArrayViewShapeType;
+			using StrideType	 = Stride<ShapeType>;
 			using StorageType	 = typename typetraits::TypeInfo<BaseType>::StorageType;
-			// using ArrayType		 = Array<Scalar, Backend>;
 			using ArrayType = array::ArrayContainer<ShapeType, StorageType>;
 			using Iterator	= detail::ArrayIterator<GeneralArrayView>;
 
@@ -226,9 +225,9 @@ namespace librapid {
 			const auto stride = Stride(m_shape);
 			view.setShape(m_shape.subshape(1, ndim()));
 			if (ndim() == 1)
-				view.setStride(Stride({1}));
+				view.setStride(Stride<Shape>({1}));
 			else
-				view.setStride(stride.subshape(1, ndim()));
+				view.setStride(stride.substride(1, ndim()));
 			view.setOffset(m_offset + index * stride[0]);
 			return view;
 		}
@@ -245,9 +244,9 @@ namespace librapid {
 			const auto stride = Stride(m_shape);
 			view.setShape(m_shape.subshape(1, ndim()));
 			if (ndim() == 1)
-				view.setStride(Stride({1}));
+				view.setStride(Stride<Shape>({1}));
 			else
-				view.setStride(stride.subshape(1, ndim()));
+				view.setStride(stride.substride(1, ndim()));
 			view.setOffset(m_offset + index * stride[0]);
 			return view;
 		}
