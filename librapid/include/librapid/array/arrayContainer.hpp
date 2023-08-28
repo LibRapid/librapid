@@ -88,7 +88,7 @@ namespace librapid {
 		public:
 			using StorageType = StorageType_;
 			using ShapeType	  = ShapeType_;
-			using StrideType  = Stride;
+			using StrideType  = Stride<ShapeType>;
 			using SizeType	  = typename ShapeType::SizeType;
 			using Scalar	  = typename StorageType::Scalar;
 			using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;

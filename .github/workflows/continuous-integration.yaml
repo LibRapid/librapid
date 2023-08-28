@@ -248,14 +248,13 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Clang (if needed)
+      - name: Install Clang
         if: matrix.clangVer != null
         uses: KyleMayes/install-llvm-action@v1
         with:
           version: ${{ matrix.clangVer }}
           directory: "./llvm"
           env: on
-
 
       - name: Install XCode
         if: matrix.os == 'macos-latest'
