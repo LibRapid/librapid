@@ -39,15 +39,6 @@ jobs:
             pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
 
           - os: ubuntu-latest
-            cc: gcc-9
-            cxx: g++-9
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 23
-            pretty: "LibRapid_Ubuntu_Clang_C++23_BLAS_FFTW_MPFR"
-
-          - os: ubuntu-latest
             cc: gcc-10
             cxx: g++-10
             blas: off
@@ -257,12 +248,14 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Clang
+      - name: Install Clang (if needed)
+        if: matrix.clangVer != null
         uses: KyleMayes/install-llvm-action@v1
         with:
           version: ${{ matrix.clangVer }}
           directory: "./llvm"
           env: on
+
 
       - name: Install XCode
         if: matrix.os == 'macos-latest'
