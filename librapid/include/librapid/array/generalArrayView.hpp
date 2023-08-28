@@ -7,7 +7,10 @@ namespace librapid {
 		struct TypeInfo<array::GeneralArrayView<T, S>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::GeneralArrayView;
 			using Scalar							   = typename TypeInfo<std::decay_t<T>>::Scalar;
-			using Backend							 = typename TypeInfo<std::decay_t<T>>::Backend;
+			using Backend		= typename TypeInfo<std::decay_t<T>>::Backend;
+			using ArrayViewType = std::decay_t<T>;
+			using ShapeType		= typename TypeInfo<ArrayViewType>::ShapeType;
+			using StorageType	= typename TypeInfo<ArrayViewType>::StorageType;
 			static constexpr bool allowVectorisation = false;
 		};
 
@@ -21,7 +24,7 @@ namespace librapid {
 	}
 
 	template<typename ShapeType, typename T>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto createGeneralArrayView(T &&array) {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto createGeneralArrayViewShapeModifier(T &&array) {
 		return array::GeneralArrayView<T, ShapeType>(std::forward<T>(array));
 	}
 
@@ -219,7 +222,7 @@ namespace librapid {
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
 			  m_shape[0]);
-			auto view		  = createGeneralArrayView<Shape>(m_ref);
+			auto view		  = createGeneralArrayViewShapeModifier<Shape>(m_ref);
 			const auto stride = Stride(m_shape);
 			view.setShape(m_shape.subshape(1, ndim()));
 			if (ndim() == 1)
@@ -238,7 +241,7 @@ namespace librapid {
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
 			  m_shape[0]);
-			auto view		  = createGeneralArrayView<Shape>(m_ref);
+			auto view		  = createGeneralArrayViewShapeModifier<Shape>(m_ref);
 			const auto stride = Stride(m_shape);
 			view.setShape(m_shape.subshape(1, ndim()));
 			if (ndim() == 1)

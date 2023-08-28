@@ -807,15 +807,23 @@ namespace librapid {
 			using Type = VectorShape;
 		};
 
-		template<typename First, typename Second, typename... Rest>
-		struct ShapeTypeHelper {
-			using FirstResult = typename ShapeTypeHelperImpl<First, Second>::Type;
-			using Type		  = typename ShapeTypeHelper<FirstResult, Rest...>::Type;
+		template<typename... Args>
+		struct ShapeTypeHelper;
+
+		template<typename First>
+		struct ShapeTypeHelper<First> {
+			using Type = First;
 		};
 
 		template<typename First, typename Second>
 		struct ShapeTypeHelper<First, Second> {
 			using Type = typename ShapeTypeHelperImpl<First, Second>::Type;
+		};
+
+		template<typename First, typename Second, typename... Rest>
+		struct ShapeTypeHelper<First, Second, Rest...> {
+			using FirstResult = typename ShapeTypeHelperImpl<First, Second>::Type;
+			using Type		  = typename ShapeTypeHelper<FirstResult, Rest...>::Type;
 		};
 
 		template<typename T>

@@ -274,7 +274,7 @@ namespace librapid {
         LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
         openCLTupleEvaluatorImpl(const detail::Function<descriptor, Functor, Args...> &function) {
             array::ArrayContainer<
-              decltype(function.shape()),
+              typename std::decay_t<decltype(function.shape())>,
               OpenCLStorage<typename detail::Function<descriptor, Functor, Args...>::Scalar>>
               result(function.shape());
             assign(result, function);
@@ -367,7 +367,7 @@ namespace librapid {
         LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
         cudaTupleEvaluatorImpl(const detail::Function<descriptor, Functor, Args...> &function) {
             array::ArrayContainer<
-              decltype(function.shape()),
+              typename std::decay_t<decltype(function.shape())>,
               CudaStorage<typename detail::Function<descriptor, Functor, Args...>::Scalar>>
               result(function.shape());
             assign(result, function);

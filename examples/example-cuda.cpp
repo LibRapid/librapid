@@ -31,7 +31,7 @@ auto main() -> int {
 	fmt::print("Vector: \n{}\n", vector);
 	fmt::print("Matrix dot Vector^T:\n{}\n", lrc::dot(cudaArray, lrc::transpose(vector)));
 #else
-	fmt::print("OpenCL not enabled in this build of librapid\n");
+	fmt::print("CUDA not enabled in this build of librapid\n");
 	fmt::print("Check the documentation for more information on enabling OpenCL\n");
 	fmt::print("https://librapid.readthedocs.io/en/latest/cmakeIntegration.html#librapid-use-cuda\n");
 #endif // LIBRAPID_HAS_CUDA

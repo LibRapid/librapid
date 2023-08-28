@@ -155,6 +155,8 @@ namespace librapid {
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const -> size_t;
 
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ndim() const -> size_t;
+
 			/// Return the shape of the Function's result
 			/// \return The shape of the Function's result
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto shape() const -> const ShapeType &;
@@ -230,6 +232,11 @@ namespace librapid {
 		}
 
 		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::ndim() const -> size_t {
+			return m_shape.ndim();
+		}
+
+		template<typename desc, typename Functor, typename... Args>
 		LIBRAPID_ALWAYS_INLINE auto &Function<desc, Functor, Args...>::args() const {
 			return m_args;
 		}
@@ -237,7 +244,7 @@ namespace librapid {
 		template<typename desc, typename Functor, typename... Args>
 		LIBRAPID_ALWAYS_INLINE auto
 		Function<desc, Functor, Args...>::operator[](int64_t index) const {
-			return array::GeneralArrayView(*this)[index];
+			return createGeneralArrayView(*this)[index];
 		}
 
 		template<typename desc, typename Functor, typename... Args>

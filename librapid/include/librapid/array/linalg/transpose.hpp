@@ -7,7 +7,9 @@ namespace librapid {
 		struct TypeInfo<array::Transpose<T>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
 			using Scalar							   = typename TypeInfo<std::decay_t<T>>::Scalar;
-			using Backend							 = typename TypeInfo<std::decay_t<T>>::Backend;
+			using Backend	  = typename TypeInfo<std::decay_t<T>>::Backend;
+			using ShapeType	  = typename TypeInfo<std::decay_t<T>>::ShapeType;
+			using StorageType = typename TypeInfo<std::decay_t<T>>::StorageType;
 			static constexpr bool allowVectorisation = false;
 		};
 

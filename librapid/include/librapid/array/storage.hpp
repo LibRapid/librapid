@@ -148,8 +148,8 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Pointer begin() noexcept;
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Pointer end() noexcept;
 
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstIterator begin() const noexcept;
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstIterator end() const noexcept;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstPointer begin() const noexcept;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstPointer end() const noexcept;
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstIterator cbegin() const noexcept;
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ConstIterator cend() const noexcept;
@@ -391,17 +391,22 @@ namespace librapid {
 			return ptr_;
 		}
 
-		template<typename T>
-		void fastCopy(T *__restrict dst, const T *__restrict src, size_t size) {
+		template<typename T, typename V>
+		void fastCopy(T *__restrict dst, const V *__restrict src, size_t size) {
 			LIBRAPID_ASSUME(size > 0);
 			LIBRAPID_ASSUME(dst != nullptr);
 			LIBRAPID_ASSUME(src != nullptr);
 
-			if (typetraits::TriviallyDefaultConstructible<T>::value) {
-				// Use a slightly faster memcpy if the type is trivially default constructible
-				std::uninitialized_copy(src, src + size, dst);
+			if constexpr (std::is_same_v<T, V>) {
+				if constexpr (typetraits::TriviallyDefaultConstructible<T>::value) {
+					// Use a slightly faster memcpy if the type is trivially default constructible
+					std::uninitialized_copy(src, src + size, dst);
+				} else {
+					// Otherwise, use the standard copy algorithm
+					std::copy(src, src + size, dst);
+				}
 			} else {
-				// Otherwise, use the standard copy algorithm
+				// Cannot use memcpy if the types are different
 				std::copy(src, src + size, dst);
 			}
 		}
@@ -441,14 +446,14 @@ namespace librapid {
 	template<typename V>
 	Storage<T>::Storage(const std::initializer_list<V> &list) :
 			m_begin(nullptr), m_size(0), m_ownsData(true) {
-		initData(list.begin(), list.end());
+		initData(static_cast<const V *>(list.begin()), static_cast<const V *>(list.end()));
 	}
 
 	template<typename T>
 	template<typename V>
 	Storage<T>::Storage(const std::vector<V> &vector) :
 			m_begin(nullptr), m_size(0), m_ownsData(true) {
-		initData(vector.begin(), vector.end());
+		initData(static_cast<const V *>(vector.data()), vector.size());
 	}
 
 	template<typename T>
@@ -620,12 +625,12 @@ namespace librapid {
 	}
 
 	template<typename T>
-	auto Storage<T>::begin() const noexcept -> ConstIterator {
+	auto Storage<T>::begin() const noexcept -> ConstPointer {
 		return m_begin;
 	}
 
 	template<typename T>
-	auto Storage<T>::end() const noexcept -> ConstIterator {
+	auto Storage<T>::end() const noexcept -> ConstPointer {
 		return m_begin + m_size;
 	}
 
