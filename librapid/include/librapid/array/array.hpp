@@ -1,7 +1,7 @@
 #ifndef LIBRAPID_ARRAY
 #define LIBRAPID_ARRAY
 
-#include "sizetype.hpp"
+#include "shape.hpp"
 #include "strideTools.hpp"
 #include "storage.hpp"
 
@@ -20,8 +20,8 @@
 #include "operations.hpp"
 #include "function.hpp"
 #include "assignOps.hpp"
-#include "arrayView.hpp"
-#include "arrayViewString.hpp"
+#include "generalArrayView.hpp"
+#include "generalArrayViewToString.hpp"
 #include "arrayFromData.hpp"
 #include "fill.hpp"
 #include "pseudoConstructors.hpp"

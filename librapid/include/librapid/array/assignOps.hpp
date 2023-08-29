@@ -124,15 +124,17 @@ namespace librapid {
             using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
             using Scalar =
               typename array::ArrayContainer<ShapeType_, Storage<StorageScalar>>::Scalar;
-            constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
+            constexpr size_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
             constexpr bool allowVectorisation =
               typetraits::TypeInfo<
                 detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation &&
               Function::argsAreSameType;
 
-            const int64_t size       = function.shape().size();
-            const int64_t vectorSize = size - (size % packetWidth);
+            const size_t size       = function.size();
+            const size_t vectorSize = size - (size % packetWidth);
+
+			LIBRAPID_ASSUME(vectorSize % packetWidth == 0);
 
             // Ensure the function can actually be assigned to the array container
             // static_assert(
@@ -272,7 +274,7 @@ namespace librapid {
         LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
         openCLTupleEvaluatorImpl(const detail::Function<descriptor, Functor, Args...> &function) {
             array::ArrayContainer<
-              decltype(function.shape()),
+              typename std::decay_t<decltype(function.shape())>,
               OpenCLStorage<typename detail::Function<descriptor, Functor, Args...>::Scalar>>
               result(function.shape());
             assign(result, function);
@@ -365,7 +367,7 @@ namespace librapid {
         LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
         cudaTupleEvaluatorImpl(const detail::Function<descriptor, Functor, Args...> &function) {
             array::ArrayContainer<
-              decltype(function.shape()),
+              typename std::decay_t<decltype(function.shape())>,
               CudaStorage<typename detail::Function<descriptor, Functor, Args...>::Scalar>>
               result(function.shape());
             assign(result, function);

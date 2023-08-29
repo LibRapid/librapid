@@ -142,7 +142,7 @@ namespace librapid {
 			// std::array<Scalar, length> data {};
 
 #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-			alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Scalar, length> data {};
+			alignas(LIBRAPID_MEM_ALIGN) std::array<Scalar, length> data {};
 #else
 			// No memory alignment on Apple platforms or if it is disabled
 			std::array<Scalar, length> data {};
@@ -238,7 +238,7 @@ namespace librapid {
 						  "SimdVectorStorage can only be used with SIMD types");
 
 #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-			alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Packet, length> data {};
+			alignas(LIBRAPID_MEM_ALIGN) std::array<Packet, length> data {};
 #else
 			// No memory alignment on Apple platforms or if it is disabled
 			std::array<Packet, length> data {};

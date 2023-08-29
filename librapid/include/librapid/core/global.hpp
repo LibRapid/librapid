@@ -32,9 +32,6 @@ namespace librapid {
         // Size of a cache line in bytes
         extern size_t cacheLineSize;
 
-        // Memory alignment for LibRapid
-        extern size_t memoryAlignment;
-
 #if defined(LIBRAPID_HAS_OPENCL)
         // OpenCL device list
         extern std::vector<cl::Device> openclDevices;

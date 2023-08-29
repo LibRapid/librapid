@@ -21,42 +21,7 @@ jobs:
           - os: ubuntu-latest
             cc: ../llvm/bin/clang
             cxx: ../llvm/bin/clang++
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 17
-            pretty: "LibRapid_Ubuntu_Clang_C++17_MPFR"
-
-          - os: ubuntu-latest
-            cc: ../llvm/bin/clang
-            cxx: ../llvm/bin/clang++
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 17
-            pretty: "LibRapid_Ubuntu_Clang_C++17_BLAS_FFTW_MPFR"
-
-          - os: ubuntu-latest
-            cc: gcc-9
-            cxx: g++-9
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 17
-            pretty: "LibRapid_Ubuntu_Clang_C++17_MPFR"
-
-          - os: ubuntu-latest
-            cc: gcc-9
-            cxx: g++-9
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 17
-            pretty: "LibRapid_Ubuntu_Clang_C++17_BLAS_FFTW_MPFR"
-
-          - os: ubuntu-latest
-            cc: gcc-9
-            cxx: g++-9
+            clangVer: "15.0"
             blas: off
             fftw: off
             mpfr: on
@@ -64,31 +29,14 @@ jobs:
             pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
 
           - os: ubuntu-latest
-            cc: gcc-9
-            cxx: g++-9
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            clangVer: "15.0"
             blas: on
             fftw: on
             mpfr: on
             cpp: 20
             pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
-
-          - os: ubuntu-latest
-            cc: gcc-10
-            cxx: g++-10
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 17
-            pretty: "LibRapid_Ubuntu_Clang_C++17_MPFR"
-
-          - os: ubuntu-latest
-            cc: gcc-10
-            cxx: g++-10
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 17
-            pretty: "LibRapid_Ubuntu_Clang_C++17_BLAS_FFTW_MPFR"
 
           - os: ubuntu-latest
             cc: gcc-10
@@ -109,22 +57,22 @@ jobs:
             pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
 
           - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-10
+            cxx: g++-10
             blas: off
             fftw: off
             mpfr: on
-            cpp: 17
-            pretty: "LibRapid_Ubuntu_Clang_C++17_MPFR"
+            cpp: 23
+            pretty: "LibRapid_Ubuntu_Clang_C++23_MPFR"
 
           - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-10
+            cxx: g++-10
             blas: on
             fftw: on
             mpfr: on
-            cpp: 17
-            pretty: "LibRapid_Ubuntu_Clang_C++17_BLAS_FFTW_MPFR"
+            cpp: 23
+            pretty: "LibRapid_Ubuntu_Clang_C++23_BLAS_FFTW_MPFR"
 
           - os: ubuntu-latest
             cc: gcc-11
@@ -144,41 +92,43 @@ jobs:
             cpp: 20
             pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
 
-          - os: macos-latest
-            cc: ../llvm/bin/clang
-            cxx: ../llvm/bin/clang++
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 17
-            pretty: "LibRapid_MacOS_Clang++_C++17_MPFR"
-
-          - os: macos-latest
-            cc: ../llvm/bin/clang
-            cxx: ../llvm/bin/clang++
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 17
-            pretty: "LibRapid_MacOS_Clang++_C++17_BLAS_FFTW_MPFR"
-
-          - os: macos-latest
+          - os: ubuntu-latest
             cc: gcc-11
             cxx: g++-11
             blas: off
             fftw: off
             mpfr: on
-            cpp: 17
-            pretty: "LibRapid_MacOS_GCC-11_C++17_MPFR"
+            cpp: 23
+            pretty: "LibRapid_Ubuntu_Clang_C++23_MPFR"
 
-          - os: macos-latest
+          - os: ubuntu-latest
             cc: gcc-11
             cxx: g++-11
             blas: on
             fftw: on
             mpfr: on
-            cpp: 17
-            pretty: "LibRapid_MacOS_GCC-11_C++17_BLAS_FFTW_MPFR"
+            cpp: 23
+            pretty: "LibRapid_Ubuntu_Clang_C++23_BLAS_FFTW_MPFR"
+
+          - os: macos-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            clangVer: "15.0"
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_MacOS_Clang++_C++20_MPFR"
+
+          - os: macos-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            clangVer: "15.0"
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_MacOS_Clang++_C++20_BLAS_FFTW_MPFR"
 
           - os: macos-latest
             cc: gcc-11
@@ -198,27 +148,28 @@ jobs:
             cpp: 20
             pretty: "LibRapid_MacOS_GCC-11_C++20_BLAS_FFTW_MPFR"
 
-          - os: windows-latest
-            cc: ../llvm/clang
-            cxx: ../llvm/clang++
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
             blas: off
             fftw: off
             mpfr: on
-            cpp: 17
-            pretty: "LibRapid_Windows_Clang_C++17_MPFR"
+            cpp: 23
+            pretty: "LibRapid_MacOS_GCC-11_C++23_MPFR"
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_MacOS_GCC-11_C++23_BLAS_FFTW_MPFR"
 
           - os: windows-latest
             cc: ../llvm/clang
             cxx: ../llvm/clang++
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 17
-            pretty: "LibRapid_Windows_Clang_C++17_BLAS_FFTW_MPFR"
-
-          - os: windows-latest
-            cc: ./llvm/clang
-            cxx: ./llvm/clang++
+            clangVer: "15.0"
             blas: off
             fftw: off
             mpfr: on
@@ -226,8 +177,9 @@ jobs:
             pretty: "LibRapid_Windows_Clang_C++20_MPFR"
 
           - os: windows-latest
-            cc: ./llvm/clang
-            cxx: ./llvm/clang++
+            cc: ../llvm/clang
+            cxx: ../llvm/clang++
+            clangVer: "15.0"
             blas: on
             fftw: on
             mpfr: on
@@ -235,22 +187,24 @@ jobs:
             pretty: "LibRapid_Windows_Clang_C++20_BLAS_FFTW_MPFR"
 
           - os: windows-latest
-            cc: msvc
-            cxx: msvc
+            cc: ./llvm/clang
+            cxx: ./llvm/clang++
+            clangVer: "15.0"
             blas: off
             fftw: off
             mpfr: on
-            cpp: 17
-            pretty: "LibRapid_Windows-Latest_MSVC_C++17"
+            cpp: 23
+            pretty: "LibRapid_Windows_Clang_C++23_MPFR"
 
           - os: windows-latest
-            cc: msvc
-            cxx: msvc
+            cc: ./llvm/clang
+            cxx: ./llvm/clang++
+            clangVer: "15.0"
             blas: on
             fftw: on
             mpfr: on
-            cpp: 17
-            pretty: "LibRapid_Windows-Latest_MSVC_C++17"
+            cpp: 23
+            pretty: "LibRapid_Windows_Clang_C++23_BLAS_FFTW_MPFR"
 
           - os: windows-latest
             cc: msvc
@@ -269,6 +223,24 @@ jobs:
             mpfr: on
             cpp: 20
             pretty: "LibRapid_Windows-Latest_MSVC_C++20"
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_Windows-Latest_MSVC_C++23"
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_Windows-Latest_MSVC_C++23"
 
     steps:
       - name: Checkout LibRapid
@@ -277,9 +249,10 @@ jobs:
           submodules: recursive
 
       - name: Install Clang
+        if: matrix.clangVer != null
         uses: KyleMayes/install-llvm-action@v1
         with:
-          version: "15.0"
+          version: ${{ matrix.clangVer }}
           directory: "./llvm"
           env: on
 
@@ -317,34 +290,6 @@ jobs:
         run: |
           cd buildRelease
           ctest -C Release --output-on-failure
-
-      # - name: Store Debug Build
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: ${{ matrix.pretty }}_Debug
-      #     path: buildDebug
-
-      # - name: Store Release Build
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: ${{ matrix.pretty }}_Release
-      #     path: buildRelease
-
-      # Zip debug build before uploading
-      # - name: Zip build results before uploading
-      #   uses: vimtor/action-zip@v1.1
-      #   continue-on-error: true
-      #   with:
-      #     files: ./buildDebug ./buildRelease
-      #     recursive: true
-      #     dest: ${{ matrix.pretty }}.zip
-
-      # - name: Store Build Artifacts
-      #   uses: actions/upload-artifact@v3
-      #   continue-on-error: true
-      #   with:
-      #     name: ${{ matrix.pretty }}
-      #     path: ${{ matrix.pretty }}.zip
 
   quodona:
     name: Run Qodana

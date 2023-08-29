@@ -27,8 +27,8 @@ for (const auto &val : a) {
 
 :::{warning}
 Due to the way LibRapid works internally, the iterator type returned by `Array::begin()` and `Array::end()` makes use
-of the `ArrayView` class. Since this is ***not a direct C++ reference*** many IDEs will claim that the value is unused
-and will suggest removing it. **Do not remove it!** The `ArrayView` is still referencing the original array and your
+of the `GeneralArrayView` class. Since this is ***not a direct C++ reference*** many IDEs will claim that the value is unused
+and will suggest removing it. **Do not remove it!** The `GeneralArrayView` is still referencing the original array and your
 data will still be updated correctly :)
 
 Keep in mind that this issue only comes up when you're using the non-const iterator, which is when you're assigning to
@@ -65,7 +65,7 @@ for (auto i = 0; i < a.shape()[0]; i++) {
 This approach is the fastest safe way to iterate over an array. Again, using a `for` loop to iterate over each axis of
 the array, but this time using the `operator()` method to access the elements.
 
-This method is ***much faster*** than using the `operator[]` method because no temporary `ArrayView` objects are
+This method is ***much faster*** than using the `operator[]` method because no temporary `GeneralArrayView` objects are
 created.
 
 ```cpp
@@ -93,7 +93,7 @@ dangerous, and you should ***only use it if you know what you are doing***.
 
 :::{danger}
 This method only works on `ArrayContainer` instances (Array types which own their own data). If you try to use this
-approach on any other datatype, such as an `ArrayView` or `Function`, your code will not compile because these types
+approach on any other datatype, such as an `GeneralArrayView` or `Function`, your code will not compile because these types
 do not store their own data and hence do not have a `storage()` method.
 
 Note also that this does not give any information about the shape of the array, so you must be careful to ensure that

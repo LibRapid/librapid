@@ -2,281 +2,310 @@
 #define LIBRAPID_ARRAY_FUNCTION_HPP
 
 namespace librapid {
-    namespace typetraits {
-        // Extract allowVectorisation from the input types
-        template<typename First, typename... T>
-        constexpr bool checkAllowVectorisation() {
-            if constexpr (sizeof...(T) == 0) {
-                return TypeInfo<std::decay_t<First>>::allowVectorisation;
-            } else {
-                using T1 = typename TypeInfo<std::decay_t<First>>::Scalar;
-                return TypeInfo<std::decay_t<First>>::allowVectorisation &&
-                       checkAllowVectorisation<T...>() &&
-                       (std::is_same_v<T1, typename TypeInfo<std::decay_t<T>>::Scalar> && ...);
-            }
-        }
+	namespace typetraits {
+		// Extract allowVectorisation from the input types
+		template<typename First, typename... T>
+		constexpr bool checkAllowVectorisation() {
+			if constexpr (sizeof...(T) == 0) {
+				return TypeInfo<std::decay_t<First>>::allowVectorisation;
+			} else {
+				using T1 = typename TypeInfo<std::decay_t<First>>::Scalar;
+				return TypeInfo<std::decay_t<First>>::allowVectorisation &&
+					   checkAllowVectorisation<T...>() &&
+					   (std::is_same_v<T1, typename TypeInfo<std::decay_t<T>>::Scalar> && ...);
+			}
+		}
 
-        template<typename First, typename... Rest>
-        constexpr auto commonBackend() {
-            using FirstBackend = typename TypeInfo<std::decay_t<First>>::Backend;
-            if constexpr (sizeof...(Rest) == 0) {
-                return FirstBackend {};
-            } else {
-                using RestBackend = decltype(commonBackend<Rest...>());
-                if constexpr (std::is_same_v<FirstBackend, backend::OpenCLIfAvailable> ||
-                              std::is_same_v<RestBackend, backend::OpenCLIfAvailable>) {
-                    return backend::OpenCLIfAvailable {};
-                } else if constexpr (std::is_same_v<FirstBackend, backend::CUDAIfAvailable> ||
-                                     std::is_same_v<RestBackend, backend::CUDAIfAvailable>) {
-                    return backend::CUDAIfAvailable {};
-                } else {
-                    return backend::CPU {};
-                }
-            }
-        }
+		template<typename First, typename... Rest>
+		constexpr auto commonBackend() {
+			using FirstBackend = typename TypeInfo<std::decay_t<First>>::Backend;
+			if constexpr (sizeof...(Rest) == 0) {
+				return FirstBackend {};
+			} else {
+				using RestBackend = decltype(commonBackend<Rest...>());
+				if constexpr (std::is_same_v<FirstBackend, backend::OpenCLIfAvailable> ||
+							  std::is_same_v<RestBackend, backend::OpenCLIfAvailable>) {
+					return backend::OpenCLIfAvailable {};
+				} else if constexpr (std::is_same_v<FirstBackend, backend::CUDAIfAvailable> ||
+									 std::is_same_v<RestBackend, backend::CUDAIfAvailable>) {
+					return backend::CUDAIfAvailable {};
+				} else {
+					return backend::CPU {};
+				}
+			}
+		}
 
-        template<typename desc, typename Functor_, typename... Args>
-        struct TypeInfo<::librapid::detail::Function<desc, Functor_, Args...>> {
-            static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
-            using Scalar                               = decltype(std::declval<Functor_>()(
-              std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
-            using Backend                              = decltype(commonBackend<Args...>());
+		template<typename desc, typename Functor_, typename... Args>
+		struct TypeInfo<::librapid::detail::Function<desc, Functor_, Args...>> {
+			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
+			using Scalar							   = decltype(std::declval<Functor_>()(
+				std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
+			using Packet							   = typename TypeInfo<Scalar>::Packet;
+			using Backend							   = decltype(commonBackend<Args...>());
+			using ShapeType =
+			  typename detail::ShapeTypeHelper<typename TypeInfo<Args>::ShapeType...>::Type;
 
-            static constexpr bool allowVectorisation = checkAllowVectorisation<Args...>();
+			using ArrayType	  = Array<Scalar, Backend>;
+			using StorageType = typename TypeInfo<ArrayType>::StorageType;
 
-            static constexpr bool supportsArithmetic = TypeInfo<Scalar>::supportsArithmetic;
-            static constexpr bool supportsLogical    = TypeInfo<Scalar>::supportsLogical;
-            static constexpr bool supportsBinary     = TypeInfo<Scalar>::supportsBinary;
-        };
+			static constexpr bool allowVectorisation = checkAllowVectorisation<Args...>();
 
-        LIBRAPID_DEFINE_AS_TYPE(typename desc COMMA typename Functor_ COMMA typename... Args,
-                                ::librapid::detail::Function<desc COMMA Functor_ COMMA Args...>);
-    } // namespace typetraits
+			static constexpr bool supportsArithmetic = TypeInfo<Scalar>::supportsArithmetic;
+			static constexpr bool supportsLogical	 = TypeInfo<Scalar>::supportsLogical;
+			static constexpr bool supportsBinary	 = TypeInfo<Scalar>::supportsBinary;
+		};
 
-    namespace detail {
-        // Descriptor is defined in "forward.hpp"
+		LIBRAPID_DEFINE_AS_TYPE(typename desc COMMA typename Functor_ COMMA typename... Args,
+								::librapid::detail::Function<desc COMMA Functor_ COMMA Args...>);
+	} // namespace typetraits
 
-        template<
-          typename Packet, typename T,
-          typename std::enable_if_t<
-            typetraits::TypeInfo<T>::type != ::librapid::detail::LibRapidType::Scalar, int> = 0>
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetExtractor(const T &obj,
-                                                                         size_t index) {
-            static_assert(std::is_same_v<Packet, decltype(obj.packet(index))>,
-                          "Packet types do not match");
-            return obj.packet(index);
-        }
+	namespace detail {
+		// Descriptor is defined in "forward.hpp"
 
-        template<
-          typename Packet, typename T,
-          typename std::enable_if_t<
-            typetraits::TypeInfo<T>::type == ::librapid::detail::LibRapidType::Scalar, int> = 0>
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetExtractor(const T &obj, size_t) {
-            return Packet(obj);
-        }
+		template<
+		  typename Packet, typename T,
+		  typename std::enable_if_t<
+			typetraits::TypeInfo<T>::type != ::librapid::detail::LibRapidType::Scalar, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetExtractor(const T &obj,
+																		 size_t index) {
+			static_assert(std::is_same_v<Packet, decltype(obj.packet(index))>,
+						  "Packet types do not match");
+			return obj.packet(index);
+		}
 
-        template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
-                                                         ::librapid::detail::LibRapidType::Scalar,
-                                                       int> = 0>
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t index) {
-            return obj.scalar(index);
-        }
+		template<
+		  typename Packet, typename T,
+		  typename std::enable_if_t<
+			typetraits::TypeInfo<T>::type == ::librapid::detail::LibRapidType::Scalar, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetExtractor(const T &obj, size_t) {
+			return Packet(obj);
+		}
 
-        template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
-                                                         ::librapid::detail::LibRapidType::Scalar,
-                                                       int> = 0>
-        LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t) {
-            return obj;
-        }
+		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
+														 ::librapid::detail::LibRapidType::Scalar,
+													   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t index) {
+			return obj.scalar(index);
+		}
 
-        template<typename First, typename... Rest>
-        constexpr auto scalarTypesAreSame() {
-            if constexpr (sizeof...(Rest) == 0) {
-                using Scalar = typename typetraits::TypeInfo<std::decay_t<First>>::Scalar;
-                return Scalar {};
-            } else {
-                using RestType = decltype(scalarTypesAreSame<Rest...>());
-                if constexpr (std::is_same_v<
-                                typename typetraits::TypeInfo<std::decay_t<First>>::Scalar,
-                                RestType>) {
-                    return RestType {};
-                } else {
-                    return std::false_type {};
-                }
-            }
-        }
+		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
+														 ::librapid::detail::LibRapidType::Scalar,
+													   int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t) {
+			return obj;
+		}
 
-        template<typename desc, typename Functor_, typename... Args>
-        class Function {
-        public:
-            using Type       = Function<desc, Functor_, Args...>;
-            using Functor    = Functor_;
-            using ShapeType  = Shape<size_t, 32>;
-            using StrideType = ShapeType;
-            using Scalar     = typename typetraits::TypeInfo<Type>::Scalar;
-            using Backend    = typename typetraits::TypeInfo<Type>::Backend;
-            using Packet     = typename typetraits::TypeInfo<Scalar>::Packet;
-            using Iterator   = detail::ArrayIterator<Function>;
+		template<typename First, typename... Rest>
+		constexpr auto scalarTypesAreSame() {
+			if constexpr (sizeof...(Rest) == 0) {
+				using Scalar = typename typetraits::TypeInfo<std::decay_t<First>>::Scalar;
+				return Scalar {};
+			} else {
+				using RestType = decltype(scalarTypesAreSame<Rest...>());
+				if constexpr (std::is_same_v<
+								typename typetraits::TypeInfo<std::decay_t<First>>::Scalar,
+								RestType>) {
+					return RestType {};
+				} else {
+					return std::false_type {};
+				}
+			}
+		}
 
-            using Descriptor = desc;
-            static constexpr bool argsAreSameType =
-              !std::is_same_v<decltype(scalarTypesAreSame<Args...>()), std::false_type>;
+		template<typename desc, typename Functor_, typename... Args>
+		class Function {
+		public:
+			using Type		 = Function<desc, Functor_, Args...>;
+			using Functor	 = Functor_;
+			using ShapeType	 = typename typetraits::TypeInfo<Type>::ShapeType;
+			using StrideType = ShapeType;
+			using Scalar	 = typename typetraits::TypeInfo<Type>::Scalar;
+			using Backend	 = typename typetraits::TypeInfo<Type>::Backend;
+			using Packet	 = typename typetraits::TypeInfo<Scalar>::Packet;
+			using Iterator	 = detail::ArrayIterator<Function>;
 
-            Function() = default;
+			using Descriptor = desc;
+			static constexpr bool argsAreSameType =
+			  !std::is_same_v<decltype(scalarTypesAreSame<Args...>()), std::false_type>;
 
-            /// Constructs a Function from a functor and arguments.
-            /// \param functor The functor to use.
-            /// \param args The arguments to use.
-            LIBRAPID_ALWAYS_INLINE explicit Function(const Functor &functor, const Args &...args);
+			Function() = default;
 
-            /// Constructs a Function from another function.
-            /// \param other The Function to copy.
-            LIBRAPID_ALWAYS_INLINE Function(const Function &other) = default;
+			/// Constructs a Function from a functor and arguments.
+			/// \param functor The functor to use.
+			/// \param args The arguments to use.
+			LIBRAPID_ALWAYS_INLINE explicit Function(Functor &&functor, Args &&...args);
 
-            /// Construct a Function from a temporary function.
-            /// \param other The Function to move.
-            LIBRAPID_ALWAYS_INLINE Function(Function &&other) noexcept = default;
+			/// Constructs a Function from another function.
+			/// \param other The Function to copy.
+			LIBRAPID_ALWAYS_INLINE Function(const Function &other) = default;
 
-            /// Assigns a Function to this function.
-            /// \param other The Function to copy.
-            /// \return A reference to this Function.
-            LIBRAPID_ALWAYS_INLINE Function &operator=(const Function &other) = default;
+			/// Construct a Function from a temporary function.
+			/// \param other The Function to move.
+			LIBRAPID_ALWAYS_INLINE Function(Function &&other) noexcept = default;
 
-            /// Assigns a temporary Function to this Function.
-            /// \param other The Function to move.
-            /// \return A reference to this Function.
-            LIBRAPID_ALWAYS_INLINE Function &operator=(Function &&other) noexcept = default;
+			/// Assigns a Function to this function.
+			/// \param other The Function to copy.
+			/// \return A reference to this Function.
+			LIBRAPID_ALWAYS_INLINE Function &operator=(const Function &other) = default;
 
-            /// Return the shape of the Function's result
-            /// \return The shape of the Function's result
-            LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto shape() const;
+			/// Assigns a temporary Function to this Function.
+			/// \param other The Function to move.
+			/// \return A reference to this Function.
+			LIBRAPID_ALWAYS_INLINE Function &operator=(Function &&other) noexcept = default;
 
-            /// Return the arguments in the Function
-            /// \return The arguments in the Function
-            LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto &args() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const -> size_t;
 
-            /// Return an evaluated Array object
-            /// \return
-            LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto eval() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ndim() const -> size_t;
 
-            LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index) const;
+			/// Return the shape of the Function's result
+			/// \return The shape of the Function's result
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto shape() const -> const ShapeType &;
 
-            /// Evaluates the function at the given index, returning a Packet result.
-            /// \param index The index to evaluate at.
-            /// \return The result of the function (vectorized).
-            LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packet(size_t index) const;
+			/// Return the arguments in the Function
+			/// \return The arguments in the Function
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto &args() const;
 
-            /// Evaluates the function at the given index, returning a Scalar result.
-            /// \param index The index to evaluate at.
-            /// \return The result of the function (scalar).
-            LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar scalar(size_t index) const;
+			/// Return an evaluated Array object
+			/// \return
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto eval() const;
 
-            LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator begin() const;
-            LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator end() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index) const;
 
-            template<typename T, typename Char, typename Ctx>
-            void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
-                     Ctx &ctx) const;
+			/// Evaluates the function at the given index, returning a Packet result.
+			/// \param index The index to evaluate at.
+			/// \return The result of the function (vectorized).
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packet(size_t index) const;
 
-        private:
-            /// Implementation detail -- evaluates the function at the given index,
-            /// returning a Packet result.
-            /// \tparam I The index sequence.
-            /// \param index The index to evaluate at.
-            /// \return The result of the function (vectorized).
-            template<size_t... I>
-            LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetImpl(std::index_sequence<I...>,
-                                                                        size_t index) const;
+			/// Evaluates the function at the given index, returning a Scalar result.
+			/// \param index The index to evaluate at.
+			/// \return The result of the function (scalar).
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar scalar(size_t index) const;
 
-            /// Implementation detail -- evaluates the function at the given index,
-            /// returning a Scalar result.
-            /// \tparam I The index sequence.
-            /// \param index The index to evaluate at.
-            /// \return The result of the function (scalar).
-            template<size_t... I>
-            LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar scalarImpl(std::index_sequence<I...>,
-                                                                        size_t index) const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator begin() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator end() const;
 
-            Functor m_functor;
-            std::tuple<Args...> m_args;
-        };
+			template<typename T, typename Char, typename Ctx>
+			void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
+					 Ctx &ctx) const;
 
-        template<typename desc, typename Functor, typename... Args>
-        Function<desc, Functor, Args...>::Function(const Functor &functor, const Args &...args) :
-                m_functor(functor), m_args(args...) {}
+		private:
+			/// Implementation detail -- evaluates the function at the given index,
+			/// returning a Packet result.
+			/// \tparam I The index sequence.
+			/// \param index The index to evaluate at.
+			/// \return The result of the function (vectorized).
+			template<size_t... I>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetImpl(std::index_sequence<I...>,
+																		size_t index) const;
 
-        template<typename desc, typename Functor, typename... Args>
-        auto Function<desc, Functor, Args...>::shape() const {
-            return typetraits::TypeInfo<Functor>::getShape(m_args);
-        }
+			/// Implementation detail -- evaluates the function at the given index,
+			/// returning a Scalar result.
+			/// \tparam I The index sequence.
+			/// \param index The index to evaluate at.
+			/// \return The result of the function (scalar).
+			template<size_t... I>
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Scalar scalarImpl(std::index_sequence<I...>,
+																		size_t index) const;
 
-        template<typename desc, typename Functor, typename... Args>
-        auto &Function<desc, Functor, Args...>::args() const {
-            return m_args;
-        }
+			Functor m_functor;
+			std::tuple<Args...> m_args;
+			ShapeType m_shape;
+			size_t m_size = 0;
+		};
 
-        template<typename desc, typename Functor, typename... Args>
-        auto Function<desc, Functor, Args...>::operator[](int64_t index) const {
-            return array::ArrayView(*this)[index];
-        }
+		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE Function<desc, Functor, Args...>::Function(Functor &&functor,
+																		  Args &&...args) :
+				m_functor(std::forward<Functor>(functor)),
+				m_args(std::forward<Args>(args)...),
+				m_shape(typetraits::TypeInfo<Functor>::getShape(m_args)), m_size(m_shape.size()) {}
 
-        template<typename desc, typename Functor, typename... Args>
-        auto Function<desc, Functor, Args...>::eval() const {
-            auto res = Array<Scalar, Backend>(shape());
-            res      = *this;
-            return res;
-        }
+		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::shape() const
+		  -> const ShapeType & {
+			return m_shape;
+		}
 
-        template<typename desc, typename Functor, typename... Args>
-        typename Function<desc, Functor, Args...>::Packet
-        Function<desc, Functor, Args...>::packet(size_t index) const {
-            return packetImpl(std::make_index_sequence<sizeof...(Args)>(), index);
-        }
+		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::size() const -> size_t {
+			return m_size;
+		}
 
-        template<typename desc, typename Functor, typename... Args>
-        template<size_t... I>
-        auto Function<desc, Functor, Args...>::packetImpl(std::index_sequence<I...>,
-                                                          size_t index) const -> Packet {
-            return m_functor.packet(packetExtractor<Packet>(std::get<I>(m_args), index)...);
-        }
+		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::ndim() const -> size_t {
+			return m_shape.ndim();
+		}
 
-        template<typename desc, typename Functor, typename... Args>
-        auto Function<desc, Functor, Args...>::scalar(size_t index) const -> Scalar {
-            return scalarImpl(std::make_index_sequence<sizeof...(Args)>(), index);
-        }
+		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE auto &Function<desc, Functor, Args...>::args() const {
+			return m_args;
+		}
 
-        template<typename desc, typename Functor, typename... Args>
-        template<size_t... I>
-        auto Function<desc, Functor, Args...>::scalarImpl(std::index_sequence<I...>,
-                                                          size_t index) const -> Scalar {
-            return m_functor(scalarExtractor(std::get<I>(m_args), index)...);
-        }
+		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE auto
+		Function<desc, Functor, Args...>::operator[](int64_t index) const {
+			return createGeneralArrayView(*this)[index];
+		}
 
-        template<typename desc, typename Functor, typename... Args>
-        auto Function<desc, Functor, Args...>::begin() const -> Iterator {
-            return Iterator(*this, 0);
-        }
+		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::eval() const {
+			auto res = Array<Scalar, Backend>(shape());
+			res		 = *this;
+			return res;
+		}
 
-        template<typename desc, typename Functor, typename... Args>
-        auto Function<desc, Functor, Args...>::end() const -> Iterator {
-            return Iterator(*this, shape()[0]);
-        }
+		template<typename desc, typename Functor, typename... Args>
+		typename Function<desc, Functor, Args...>::Packet LIBRAPID_ALWAYS_INLINE
+		Function<desc, Functor, Args...>::packet(size_t index) const {
+			return packetImpl(std::make_index_sequence<sizeof...(Args)>(), index);
+		}
 
-        template<typename desc, typename Functor, typename... Args>
-        template<typename T, typename Char, typename Ctx>
-        void Function<desc, Functor, Args...>::str(const fmt::formatter<T, Char> &format,
-                                                   char bracket, char separator, Ctx &ctx) const {
-            array::ArrayView(*this).str(format, bracket, separator, ctx);
-        }
-    } // namespace detail
+		template<typename desc, typename Functor, typename... Args>
+		template<size_t... I>
+		LIBRAPID_ALWAYS_INLINE auto
+		Function<desc, Functor, Args...>::packetImpl(std::index_sequence<I...>, size_t index) const
+		  -> Packet {
+			return m_functor.packet(packetExtractor<Packet>(std::get<I>(m_args), index)...);
+		}
+
+		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::scalar(size_t index) const
+		  -> Scalar {
+			return scalarImpl(std::make_index_sequence<sizeof...(Args)>(), index);
+		}
+
+		template<typename desc, typename Functor, typename... Args>
+		template<size_t... I>
+		LIBRAPID_ALWAYS_INLINE auto
+		Function<desc, Functor, Args...>::scalarImpl(std::index_sequence<I...>, size_t index) const
+		  -> Scalar {
+			return m_functor(scalarExtractor(std::get<I>(m_args), index)...);
+		}
+
+		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::begin() const -> Iterator {
+			return Iterator(*this, 0);
+		}
+
+		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::end() const -> Iterator {
+			return Iterator(*this, shape()[0]);
+		}
+
+		template<typename desc, typename Functor, typename... Args>
+		template<typename T, typename Char, typename Ctx>
+		LIBRAPID_ALWAYS_INLINE void
+		Function<desc, Functor, Args...>::str(const fmt::formatter<T, Char> &format, char bracket,
+											  char separator, Ctx &ctx) const {
+			createGeneralArrayView(*this).str(format, bracket, separator, ctx);
+		}
+	} // namespace detail
 } // namespace librapid
 
 // Support FMT printing
-#ifdef FMT_API
 ARRAY_TYPE_FMT_IML(typename desc COMMA typename Functor COMMA typename... Args,
-                   librapid::detail::Function<desc COMMA Functor COMMA Args...>)
+				   librapid::detail::Function<desc COMMA Functor COMMA Args...>)
 LIBRAPID_SIMPLE_IO_NORANGE(typename desc COMMA typename Functor COMMA typename... Args,
-                           librapid::detail::Function<desc COMMA Functor COMMA Args...>)
-#endif // FMT_API
+						   librapid::detail::Function<desc COMMA Functor COMMA Args...>)
 
 #endif // LIBRAPID_ARRAY_FUNCTION_HPP

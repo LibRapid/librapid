@@ -53,6 +53,14 @@ function(check_simd_capability FLAG_GNU FLAG_MSVC NAME TEST_SOURCE VAR)
     endif ()
 endfunction()
 
+check_simd_capability("-mmmx" "" "MMX" "
+#include <mmintrin.h>
+int main() {
+    __m64 a = _mm_set_pi32(-1, 2);
+    __m64 result = _mm_abs_pi32(a);
+    return 0;
+}" SIMD_MMX)
+
 # Check SSE2 (not a valid flag for MSVC)
 check_simd_capability("-msse2" "" "SSE2" "
 #include <emmintrin.h>
@@ -98,6 +106,16 @@ int main() {
     __m128i result = _mm_abs_epi32(a);
     return 0;
 }" SIMD_SSE4_2)
+
+check_simd_capability("-mfma" "/arch:FMA" "FMA3" "
+#include <immintrin.h>
+int main() {
+    __m256 a = _mm256_set_ps(-1.0f, 2.0f, -3.0f, 4.0f, -1.0f, 2.0f, -3.0f, 4.0f);
+    __m256 b = _mm256_set_ps(1.0f, 2.0f, 3.0f, 4.0f, 1.0f, 2.0f, 3.0f, 4.0f);
+    __m256 c = _mm256_set_ps(1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    __m256 result = _mm256_fmadd_ps(a, b, c);
+    return 0;
+}" SIMD_FMA3)
 
 # Check AVX
 check_simd_capability("-mavx" "/arch:AVX" "AVX" "
@@ -171,6 +189,15 @@ int main() {
     return 0;
 }" SIMD_AVX512PF)
 
+check_simd_capability("-march=armv6" "" "ARMv6" "
+#include <arm_neon.h>
+int main() {
+    int32x2_t a = vdup_n_s32(1);
+    int32x2_t b = vdup_n_s32(2);
+    int32x2_t result = vadd_s32(a, b);
+    return 0;
+}" SIMD_ARMv6)
+
 # ARM
 check_simd_capability("-march=armv7-a" "" "ARMv7" "
 #include <arm_neon.h>
@@ -238,6 +265,6 @@ int main() {
 
 if (LIBRAPID_ARCH_FOUND)
     message(STATUS "[ LIBRAPID ] Architecture Flags: ${LIBRAPID_ARCH_FLAGS}")
-else()
+else ()
     message(STATUS "[ LIBRAPID ] Architecture Flags Not Found")
-endif()
+endif ()
