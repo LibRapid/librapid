@@ -399,15 +399,166 @@ jobs:
           path: docs/build/**
 
   run-benchmarks:
-    name: Run Benchmarks
+    name: Run Benchmarks on ${{ matrix.os }} with ${{ matrix.cxx }}
     needs: [ compile ]
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            clangVer: "15.0"
+            smallArrays: ON
+            pretty: "LibRapid_Ubuntu_Clang_OptimiseSmallArrays"
+
+          - os: ubuntu-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            clangVer: "15.0"
+            smallArrays: OFF
+            pretty: "LibRapid_Ubuntu_Clang"
+
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+            smallArrays: ON
+            pretty: "LibRapid_Ubuntu_GCC_OptimiseSmallArrays"
+
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+            smallArrays: OFF
+            pretty: "LibRapid_Ubuntu_GCC"
+
+          - os: macos-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            clangVer: "15.0"
+            smallArrays: ON
+            pretty: "LibRapid_MacOS_Clang_OptimiseSmallArrays"
+
+          - os: macos-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            clangVer: "15.0"
+            smallArrays: OFF
+            pretty: "LibRapid_MacOS_Clang"
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+            smallArrays: ON
+            pretty: "LibRapid_MacOS_GCC_OptimiseSmallArrays"
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+            smallArrays: OFF
+            pretty: "LibRapid_MacOS_GCC"
+
+          - os: windows-latest
+            cc: ../llvm/clang
+            cxx: ../llvm/clang++
+            clangVer: "15.0"
+            smallArrays: ON
+            pretty: "LibRapid_Windows_Clang_OptimiseSmallArrays"
+
+          - os: windows-latest
+            cc: ../llvm/clang
+            cxx: ../llvm/clang++
+            clangVer: "15.0"
+            smallArrays: OFF
+            pretty: "LibRapid_Windows_Clang"
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            smallArrays: ON
+            pretty: "LibRapid_Windows_MSVC_OptimiseSmallArrays"
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            smallArrays: OFF
+            pretty: "LibRapid_Windows_MSVC"
+
     steps:
-      - name: Create a Test File
+      - name: Install Clang
+        if: matrix.clangVer != null
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: ${{ matrix.clangVer }}
+          directory: "./llvm"
+          env: on
+
+      - name: Install XCode
+        if: matrix.os == 'macos-latest'
+        uses: maxim-lobanov/setup-xcode@v1.5.1
+
+      - name: Create Output Directory
         run: |
           mkdir BENCH_RESULTS
-          touch BENCH_RESULTS/hello.txt
-          echo "Hello, World!" > BENCH_RESULTS/hello.txt
+
+      - name: Clone Benchmark Repository
+        run: |
+          git clone https://github.com/LibRapid/BenchmarksCPP.git --recursive
+
+      - name: Update LibRapid Submodule
+        run: |
+          cd BenchmarksCPP
+          cd vendor/LibRapid
+          git checkout ${{ github.sha }}
+          git submodule update --init --recursive
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install Requirements
+        run: |
+          cd BenchmarksCPP
+          pip install -r requirements.txt
+
+      - name: Compile Benchmarks
+        run: |
+          cd BenchmarksCPP
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DUSING_GITHUB_ACTIONS=ON -DLIBRAPID_OPTIMISE_SMALL_ARRAYS=${{ matrix.smallArrays }}
+          cmake --build . --config Release
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+
+      # On Windows, the generated executable is in "build/Release"
+      - name: Run Benchmarks
+        if: matrix.os == "windows-latest"
+        run: |
+          cd BenchmarksCPP/build/Release
+          ./BenchmarksCPP.exe
+
+        # On Unix systems, the generated executable is in "build"
+      - name: Run Benchmarks
+        if: matrix.os != "windows-latest"
+        run: |
+          cd BenchmarksCPP/build
+          ./BenchmarksCPP
+
+      - name: Generate Benchmark Graphs
+        if: matrix.os == "windows-latest"
+        run: |
+          cd BenchmarksCPP/scripts
+          python dataProcessor.py --directory ../build/Release --output ../BENCH_RESULTS/${{ matrix.pretty }}.csv --relative Eigen --verbose
+
+      - name: Generate Benchmark Graphs
+        if: matrix.os != "windows-latest"
+        run: |
+          cd BenchmarksCPP/scripts
+          python dataProcessor.py --directory ../build --output ../BENCH_RESULTS/${{ matrix.pretty }}.csv --relative Eigen --verbose
 
       - name: Upload Benchmark Results
         uses: actions/upload-artifact@v3
