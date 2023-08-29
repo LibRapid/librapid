@@ -536,26 +536,26 @@ jobs:
 
       # On Windows, the generated executable is in "build/Release"
       - name: Run Benchmarks
-        if: matrix.os == "windows-latest"
+        if: matrix.os == 'windows-latest'
         run: |
           cd BenchmarksCPP/build/Release
           ./BenchmarksCPP.exe
 
         # On Unix systems, the generated executable is in "build"
       - name: Run Benchmarks
-        if: matrix.os != "windows-latest"
+        if: matrix.os != 'windows-latest'
         run: |
           cd BenchmarksCPP/build
           ./BenchmarksCPP
 
       - name: Generate Benchmark Graphs
-        if: matrix.os == "windows-latest"
+        if: matrix.os == 'windows-latest'
         run: |
           cd BenchmarksCPP/scripts
           python dataProcessor.py --directory ../build/Release --output ../BENCH_RESULTS/${{ matrix.pretty }}.csv --relative Eigen --verbose
 
       - name: Generate Benchmark Graphs
-        if: matrix.os != "windows-latest"
+        if: matrix.os != 'windows-latest'
         run: |
           cd BenchmarksCPP/scripts
           python dataProcessor.py --directory ../build --output ../BENCH_RESULTS/${{ matrix.pretty }}.csv --relative Eigen --verbose
