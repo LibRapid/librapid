@@ -509,7 +509,7 @@ jobs:
       - name: Update LibRapid Submodule
         run: |
           cd BenchmarksCPP
-          cd vendor/LibRapid
+          cd vendor/librapid
           git checkout ${{ github.sha }}
           git submodule update --init --recursive
 
