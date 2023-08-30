@@ -27,8 +27,6 @@
 #include "pseudoConstructors.hpp"
 #include "fourierTransform.hpp"
 
-#include "customKernels.hpp"
-
 #include "linalg/linalg.hpp"
 
 #endif // LIBRAPID_ARRAY
