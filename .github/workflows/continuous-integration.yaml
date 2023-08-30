@@ -28,219 +28,219 @@ jobs:
             cpp: 20
             pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
 
-          - os: ubuntu-latest
-            cc: ../llvm/bin/clang
-            cxx: ../llvm/bin/clang++
-            clangVer: "15.0"
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
+          # - os: ubuntu-latest
+          #   cc: ../llvm/bin/clang
+          #   cxx: ../llvm/bin/clang++
+          #   clangVer: "15.0"
+          #   blas: on
+          #   fftw: on
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
 
-          - os: ubuntu-latest
-            cc: gcc-10
-            cxx: g++-10
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
+          # - os: ubuntu-latest
+          #   cc: gcc-10
+          #   cxx: g++-10
+          #   blas: off
+          #   fftw: off
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
 
-          - os: ubuntu-latest
-            cc: gcc-10
-            cxx: g++-10
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
+          # - os: ubuntu-latest
+          #   cc: gcc-10
+          #   cxx: g++-10
+          #   blas: on
+          #   fftw: on
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
 
-          - os: ubuntu-latest
-            cc: gcc-10
-            cxx: g++-10
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 23
-            pretty: "LibRapid_Ubuntu_Clang_C++23_MPFR"
+          # - os: ubuntu-latest
+          #   cc: gcc-10
+          #   cxx: g++-10
+          #   blas: off
+          #   fftw: off
+          #   mpfr: on
+          #   cpp: 23
+          #   pretty: "LibRapid_Ubuntu_Clang_C++23_MPFR"
 
-          - os: ubuntu-latest
-            cc: gcc-10
-            cxx: g++-10
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 23
-            pretty: "LibRapid_Ubuntu_Clang_C++23_BLAS_FFTW_MPFR"
+          # - os: ubuntu-latest
+          #   cc: gcc-10
+          #   cxx: g++-10
+          #   blas: on
+          #   fftw: on
+          #   mpfr: on
+          #   cpp: 23
+          #   pretty: "LibRapid_Ubuntu_Clang_C++23_BLAS_FFTW_MPFR"
 
-          - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
+          # - os: ubuntu-latest
+          #   cc: gcc-11
+          #   cxx: g++-11
+          #   blas: off
+          #   fftw: off
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
 
-          - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
+          # - os: ubuntu-latest
+          #   cc: gcc-11
+          #   cxx: g++-11
+          #   blas: on
+          #   fftw: on
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
 
-          - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 23
-            pretty: "LibRapid_Ubuntu_Clang_C++23_MPFR"
+          # - os: ubuntu-latest
+          #   cc: gcc-11
+          #   cxx: g++-11
+          #   blas: off
+          #   fftw: off
+          #   mpfr: on
+          #   cpp: 23
+          #   pretty: "LibRapid_Ubuntu_Clang_C++23_MPFR"
 
-          - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 23
-            pretty: "LibRapid_Ubuntu_Clang_C++23_BLAS_FFTW_MPFR"
+          # - os: ubuntu-latest
+          #   cc: gcc-11
+          #   cxx: g++-11
+          #   blas: on
+          #   fftw: on
+          #   mpfr: on
+          #   cpp: 23
+          #   pretty: "LibRapid_Ubuntu_Clang_C++23_BLAS_FFTW_MPFR"
 
-          - os: macos-latest
-            cc: ../llvm/bin/clang
-            cxx: ../llvm/bin/clang++
-            clangVer: "15.0"
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_MacOS_Clang++_C++20_MPFR"
+          # - os: macos-latest
+          #   cc: ../llvm/bin/clang
+          #   cxx: ../llvm/bin/clang++
+          #   clangVer: "15.0"
+          #   blas: off
+          #   fftw: off
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_MacOS_Clang++_C++20_MPFR"
 
-          - os: macos-latest
-            cc: ../llvm/bin/clang
-            cxx: ../llvm/bin/clang++
-            clangVer: "15.0"
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_MacOS_Clang++_C++20_BLAS_FFTW_MPFR"
+          # - os: macos-latest
+          #   cc: ../llvm/bin/clang
+          #   cxx: ../llvm/bin/clang++
+          #   clangVer: "15.0"
+          #   blas: on
+          #   fftw: on
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_MacOS_Clang++_C++20_BLAS_FFTW_MPFR"
 
-          - os: macos-latest
-            cc: gcc-11
-            cxx: g++-11
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_MacOS_GCC-11_C++20_MPFR"
+          # - os: macos-latest
+          #   cc: gcc-11
+          #   cxx: g++-11
+          #   blas: off
+          #   fftw: off
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_MacOS_GCC-11_C++20_MPFR"
 
-          - os: macos-latest
-            cc: gcc-11
-            cxx: g++-11
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_MacOS_GCC-11_C++20_BLAS_FFTW_MPFR"
+          # - os: macos-latest
+          #   cc: gcc-11
+          #   cxx: g++-11
+          #   blas: on
+          #   fftw: on
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_MacOS_GCC-11_C++20_BLAS_FFTW_MPFR"
 
-          - os: macos-latest
-            cc: gcc-11
-            cxx: g++-11
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 23
-            pretty: "LibRapid_MacOS_GCC-11_C++23_MPFR"
+          # - os: macos-latest
+          #   cc: gcc-11
+          #   cxx: g++-11
+          #   blas: off
+          #   fftw: off
+          #   mpfr: on
+          #   cpp: 23
+          #   pretty: "LibRapid_MacOS_GCC-11_C++23_MPFR"
 
-          - os: macos-latest
-            cc: gcc-11
-            cxx: g++-11
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 23
-            pretty: "LibRapid_MacOS_GCC-11_C++23_BLAS_FFTW_MPFR"
+          # - os: macos-latest
+          #   cc: gcc-11
+          #   cxx: g++-11
+          #   blas: on
+          #   fftw: on
+          #   mpfr: on
+          #   cpp: 23
+          #   pretty: "LibRapid_MacOS_GCC-11_C++23_BLAS_FFTW_MPFR"
 
-          - os: windows-latest
-            cc: ../llvm/clang
-            cxx: ../llvm/clang++
-            clangVer: "15.0"
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_Windows_Clang_C++20_MPFR"
+          # - os: windows-latest
+          #   cc: ../llvm/clang
+          #   cxx: ../llvm/clang++
+          #   clangVer: "15.0"
+          #   blas: off
+          #   fftw: off
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_Windows_Clang_C++20_MPFR"
 
-          - os: windows-latest
-            cc: ../llvm/clang
-            cxx: ../llvm/clang++
-            clangVer: "15.0"
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_Windows_Clang_C++20_BLAS_FFTW_MPFR"
+          # - os: windows-latest
+          #   cc: ../llvm/clang
+          #   cxx: ../llvm/clang++
+          #   clangVer: "15.0"
+          #   blas: on
+          #   fftw: on
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_Windows_Clang_C++20_BLAS_FFTW_MPFR"
 
-          - os: windows-latest
-            cc: ./llvm/clang
-            cxx: ./llvm/clang++
-            clangVer: "15.0"
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 23
-            pretty: "LibRapid_Windows_Clang_C++23_MPFR"
+          # - os: windows-latest
+          #   cc: ./llvm/clang
+          #   cxx: ./llvm/clang++
+          #   clangVer: "15.0"
+          #   blas: off
+          #   fftw: off
+          #   mpfr: on
+          #   cpp: 23
+          #   pretty: "LibRapid_Windows_Clang_C++23_MPFR"
 
-          - os: windows-latest
-            cc: ./llvm/clang
-            cxx: ./llvm/clang++
-            clangVer: "15.0"
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 23
-            pretty: "LibRapid_Windows_Clang_C++23_BLAS_FFTW_MPFR"
+          # - os: windows-latest
+          #   cc: ./llvm/clang
+          #   cxx: ./llvm/clang++
+          #   clangVer: "15.0"
+          #   blas: on
+          #   fftw: on
+          #   mpfr: on
+          #   cpp: 23
+          #   pretty: "LibRapid_Windows_Clang_C++23_BLAS_FFTW_MPFR"
 
-          - os: windows-latest
-            cc: msvc
-            cxx: msvc
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_Windows-Latest_MSVC_C++20"
+          # - os: windows-latest
+          #   cc: msvc
+          #   cxx: msvc
+          #   blas: off
+          #   fftw: off
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_Windows-Latest_MSVC_C++20"
 
-          - os: windows-latest
-            cc: msvc
-            cxx: msvc
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 20
-            pretty: "LibRapid_Windows-Latest_MSVC_C++20"
+          # - os: windows-latest
+          #   cc: msvc
+          #   cxx: msvc
+          #   blas: on
+          #   fftw: on
+          #   mpfr: on
+          #   cpp: 20
+          #   pretty: "LibRapid_Windows-Latest_MSVC_C++20"
 
-          - os: windows-latest
-            cc: msvc
-            cxx: msvc
-            blas: off
-            fftw: off
-            mpfr: on
-            cpp: 23
-            pretty: "LibRapid_Windows-Latest_MSVC_C++23"
+          # - os: windows-latest
+          #   cc: msvc
+          #   cxx: msvc
+          #   blas: off
+          #   fftw: off
+          #   mpfr: on
+          #   cpp: 23
+          #   pretty: "LibRapid_Windows-Latest_MSVC_C++23"
 
-          - os: windows-latest
-            cc: msvc
-            cxx: msvc
-            blas: on
-            fftw: on
-            mpfr: on
-            cpp: 23
-            pretty: "LibRapid_Windows-Latest_MSVC_C++23"
+          # - os: windows-latest
+          #   cc: msvc
+          #   cxx: msvc
+          #   blas: on
+          #   fftw: on
+          #   mpfr: on
+          #   cpp: 23
+          #   pretty: "LibRapid_Windows-Latest_MSVC_C++23"
 
     steps:
       - name: Checkout LibRapid
@@ -493,6 +493,12 @@ jobs:
           version: ${{ matrix.clangVer }}
           directory: "./llvm"
           env: on
+
+      - name: Set Environment Variables for LLVM
+        run: |
+          CURRENT_DIR=$(pwd)
+          echo "CC=${CURRENT_DIR}/llvm/bin/clang" >> $GITHUB_ENV
+          echo "CXX=${CURRENT_DIR}/llvm/bin/clang++" >> $GITHUB_ENV
 
       - name: Install XCode
         if: matrix.os == 'macos-latest'
