@@ -489,6 +489,7 @@ jobs:
           cd BenchmarksCPP
           cd vendor/librapid
           git checkout ${{ github.sha }}
+          git pull
           git submodule update --init --recursive
 
       - name: Install Python
