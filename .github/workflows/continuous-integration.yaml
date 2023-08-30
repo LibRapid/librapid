@@ -542,7 +542,7 @@ jobs:
       - name: Upload Intermediate Benchmark Results
         uses: actions/upload-artifact@v3
         with:
-          name: BenchmarkResult_${{ matrix.pretty }}
+          name: ${{ matrix.pretty }}
           path: ${{ matrix.pretty }}
 
   upload-benchmarks:
@@ -559,7 +559,6 @@ jobs:
       - name: Download Intermediate Benchmark Results
         uses: actions/download-artifact@v2
         with:
-          name: BenchmarkResult_*
           path: BECHMARK_RESULTS
 
       - name: Upload Benchmark Results
