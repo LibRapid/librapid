@@ -10,290 +10,290 @@ on:
   workflow_dispatch:
 
 jobs:
-#  compile:
-#    name: Compile on ${{ matrix.os }} with ${{ matrix.cxx }} (BLAS ${{ matrix.blas }}, FFTW ${{ matrix.fftw }}, MPFR ${{ matrix.mpfr }}, C++ ${{ matrix.cpp }})
-#    runs-on: ${{ matrix.os }}
-#
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        include:
-#          - os: ubuntu-latest
-#            cc: ../llvm/bin/clang
-#            cxx: ../llvm/bin/clang++
-#            clangVer: "15.0"
-#            blas: off
-#            fftw: off
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
-#
-#          - os: ubuntu-latest
-#            cc: ../llvm/bin/clang
-#            cxx: ../llvm/bin/clang++
-#            clangVer: "15.0"
-#            blas: on
-#            fftw: on
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
-#
-#          - os: ubuntu-latest
-#            cc: gcc-10
-#            cxx: g++-10
-#            blas: off
-#            fftw: off
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
-#
-#          - os: ubuntu-latest
-#            cc: gcc-10
-#            cxx: g++-10
-#            blas: on
-#            fftw: on
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
-#
-#          - os: ubuntu-latest
-#            cc: gcc-10
-#            cxx: g++-10
-#            blas: off
-#            fftw: off
-#            mpfr: on
-#            cpp: 23
-#            pretty: "LibRapid_Ubuntu_Clang_C++23_MPFR"
-#
-#          - os: ubuntu-latest
-#            cc: gcc-10
-#            cxx: g++-10
-#            blas: on
-#            fftw: on
-#            mpfr: on
-#            cpp: 23
-#            pretty: "LibRapid_Ubuntu_Clang_C++23_BLAS_FFTW_MPFR"
-#
-#          - os: ubuntu-latest
-#            cc: gcc-11
-#            cxx: g++-11
-#            blas: off
-#            fftw: off
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
-#
-#          - os: ubuntu-latest
-#            cc: gcc-11
-#            cxx: g++-11
-#            blas: on
-#            fftw: on
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
-#
-#          - os: ubuntu-latest
-#            cc: gcc-11
-#            cxx: g++-11
-#            blas: off
-#            fftw: off
-#            mpfr: on
-#            cpp: 23
-#            pretty: "LibRapid_Ubuntu_Clang_C++23_MPFR"
-#
-#          - os: ubuntu-latest
-#            cc: gcc-11
-#            cxx: g++-11
-#            blas: on
-#            fftw: on
-#            mpfr: on
-#            cpp: 23
-#            pretty: "LibRapid_Ubuntu_Clang_C++23_BLAS_FFTW_MPFR"
-#
-#          - os: macos-latest
-#            cc: ../llvm/bin/clang
-#            cxx: ../llvm/bin/clang++
-#            clangVer: "15.0"
-#            blas: off
-#            fftw: off
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_MacOS_Clang++_C++20_MPFR"
-#
-#          - os: macos-latest
-#            cc: ../llvm/bin/clang
-#            cxx: ../llvm/bin/clang++
-#            clangVer: "15.0"
-#            blas: on
-#            fftw: on
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_MacOS_Clang++_C++20_BLAS_FFTW_MPFR"
-#
-#          - os: macos-latest
-#            cc: gcc-11
-#            cxx: g++-11
-#            blas: off
-#            fftw: off
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_MacOS_GCC-11_C++20_MPFR"
-#
-#          - os: macos-latest
-#            cc: gcc-11
-#            cxx: g++-11
-#            blas: on
-#            fftw: on
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_MacOS_GCC-11_C++20_BLAS_FFTW_MPFR"
-#
-#          - os: macos-latest
-#            cc: gcc-11
-#            cxx: g++-11
-#            blas: off
-#            fftw: off
-#            mpfr: on
-#            cpp: 23
-#            pretty: "LibRapid_MacOS_GCC-11_C++23_MPFR"
-#
-#          - os: macos-latest
-#            cc: gcc-11
-#            cxx: g++-11
-#            blas: on
-#            fftw: on
-#            mpfr: on
-#            cpp: 23
-#            pretty: "LibRapid_MacOS_GCC-11_C++23_BLAS_FFTW_MPFR"
-#
-#          - os: windows-latest
-#            cc: ../llvm/clang
-#            cxx: ../llvm/clang++
-#            clangVer: "15.0"
-#            blas: off
-#            fftw: off
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_Windows_Clang_C++20_MPFR"
-#
-#          - os: windows-latest
-#            cc: ../llvm/clang
-#            cxx: ../llvm/clang++
-#            clangVer: "15.0"
-#            blas: on
-#            fftw: on
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_Windows_Clang_C++20_BLAS_FFTW_MPFR"
-#
-#          - os: windows-latest
-#            cc: ./llvm/clang
-#            cxx: ./llvm/clang++
-#            clangVer: "15.0"
-#            blas: off
-#            fftw: off
-#            mpfr: on
-#            cpp: 23
-#            pretty: "LibRapid_Windows_Clang_C++23_MPFR"
-#
-#          - os: windows-latest
-#            cc: ./llvm/clang
-#            cxx: ./llvm/clang++
-#            clangVer: "15.0"
-#            blas: on
-#            fftw: on
-#            mpfr: on
-#            cpp: 23
-#            pretty: "LibRapid_Windows_Clang_C++23_BLAS_FFTW_MPFR"
-#
-#          - os: windows-latest
-#            cc: msvc
-#            cxx: msvc
-#            blas: off
-#            fftw: off
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_Windows-Latest_MSVC_C++20"
-#
-#          - os: windows-latest
-#            cc: msvc
-#            cxx: msvc
-#            blas: on
-#            fftw: on
-#            mpfr: on
-#            cpp: 20
-#            pretty: "LibRapid_Windows-Latest_MSVC_C++20"
-#
-#          - os: windows-latest
-#            cc: msvc
-#            cxx: msvc
-#            blas: off
-#            fftw: off
-#            mpfr: on
-#            cpp: 23
-#            pretty: "LibRapid_Windows-Latest_MSVC_C++23"
-#
-#          - os: windows-latest
-#            cc: msvc
-#            cxx: msvc
-#            blas: on
-#            fftw: on
-#            mpfr: on
-#            cpp: 23
-#            pretty: "LibRapid_Windows-Latest_MSVC_C++23"
-#
-#    steps:
-#      - name: Checkout LibRapid
-#        uses: actions/checkout@v3
-#        with:
-#          submodules: recursive
-#
-#      - name: Install Clang
-#        if: matrix.clangVer != null
-#        uses: KyleMayes/install-llvm-action@v1
-#        with:
-#          version: ${{ matrix.clangVer }}
-#          directory: "./llvm"
-#          env: on
-#
-#      - name: Install XCode
-#        if: matrix.os == 'macos-latest'
-#        uses: maxim-lobanov/setup-xcode@v1.5.1
-#
-#      # Tests must pass in both debug and release mode
-#      - name: Compile (Debug)
-#        run: |
-#          mkdir buildDebug
-#          cd buildDebug
-#          cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
-#          cmake --build . --config Debug
-#        env:
-#          CC: ${{ matrix.cc }}
-#          CXX: ${{ matrix.cxx }}
-#
-#      - name: Run Tests (Debug)
-#        run: |
-#          cd buildDebug
-#          ctest -C Debug --output-on-failure
-#
-#      - name: Compile (Release)
-#        run: |
-#          mkdir buildRelease
-#          cd buildRelease
-#          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
-#          cmake --build . --config Release
-#        env:
-#          CC: ${{ matrix.cc }}
-#          CXX: ${{ matrix.cxx }}
-#
-#      - name: Run Tests (Release)
-#        run: |
-#          cd buildRelease
-#          ctest -C Release --output-on-failure
+  compile:
+    name: Compile on ${{ matrix.os }} with ${{ matrix.cxx }} (BLAS ${{ matrix.blas }}, FFTW ${{ matrix.fftw }}, MPFR ${{ matrix.mpfr }}, C++ ${{ matrix.cpp }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            clangVer: "15.0"
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
+
+          - os: ubuntu-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            clangVer: "15.0"
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
+
+          - os: ubuntu-latest
+            cc: gcc-10
+            cxx: g++-10
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
+
+          - os: ubuntu-latest
+            cc: gcc-10
+            cxx: g++-10
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
+
+          - os: ubuntu-latest
+            cc: gcc-10
+            cxx: g++-10
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_Ubuntu_Clang_C++23_MPFR"
+
+          - os: ubuntu-latest
+            cc: gcc-10
+            cxx: g++-10
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_Ubuntu_Clang_C++23_BLAS_FFTW_MPFR"
+
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
+
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
+
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_Ubuntu_Clang_C++23_MPFR"
+
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_Ubuntu_Clang_C++23_BLAS_FFTW_MPFR"
+
+          - os: macos-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            clangVer: "15.0"
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_MacOS_Clang++_C++20_MPFR"
+
+          - os: macos-latest
+            cc: ../llvm/bin/clang
+            cxx: ../llvm/bin/clang++
+            clangVer: "15.0"
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_MacOS_Clang++_C++20_BLAS_FFTW_MPFR"
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_MacOS_GCC-11_C++20_MPFR"
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_MacOS_GCC-11_C++20_BLAS_FFTW_MPFR"
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_MacOS_GCC-11_C++23_MPFR"
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_MacOS_GCC-11_C++23_BLAS_FFTW_MPFR"
+
+          - os: windows-latest
+            cc: ../llvm/clang
+            cxx: ../llvm/clang++
+            clangVer: "15.0"
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Windows_Clang_C++20_MPFR"
+
+          - os: windows-latest
+            cc: ../llvm/clang
+            cxx: ../llvm/clang++
+            clangVer: "15.0"
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Windows_Clang_C++20_BLAS_FFTW_MPFR"
+
+          - os: windows-latest
+            cc: ./llvm/clang
+            cxx: ./llvm/clang++
+            clangVer: "15.0"
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_Windows_Clang_C++23_MPFR"
+
+          - os: windows-latest
+            cc: ./llvm/clang
+            cxx: ./llvm/clang++
+            clangVer: "15.0"
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_Windows_Clang_C++23_BLAS_FFTW_MPFR"
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Windows-Latest_MSVC_C++20"
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 20
+            pretty: "LibRapid_Windows-Latest_MSVC_C++20"
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            blas: off
+            fftw: off
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_Windows-Latest_MSVC_C++23"
+
+          - os: windows-latest
+            cc: msvc
+            cxx: msvc
+            blas: on
+            fftw: on
+            mpfr: on
+            cpp: 23
+            pretty: "LibRapid_Windows-Latest_MSVC_C++23"
+
+    steps:
+      - name: Checkout LibRapid
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install Clang
+        if: matrix.clangVer != null
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: ${{ matrix.clangVer }}
+          directory: "./llvm"
+          env: on
+
+      - name: Install XCode
+        if: matrix.os == 'macos-latest'
+        uses: maxim-lobanov/setup-xcode@v1.5.1
+
+      # Tests must pass in both debug and release mode
+      - name: Compile (Debug)
+        run: |
+          mkdir buildDebug
+          cd buildDebug
+          cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
+          cmake --build . --config Debug
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+
+      - name: Run Tests (Debug)
+        run: |
+          cd buildDebug
+          ctest -C Debug --output-on-failure
+
+      - name: Compile (Release)
+        run: |
+          mkdir buildRelease
+          cd buildRelease
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
+          cmake --build . --config Release
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+
+      - name: Run Tests (Release)
+        run: |
+          cd buildRelease
+          ctest -C Release --output-on-failure
 
   quodona:
     name: Run Qodana
-    # needs: compile
+    needs: compile
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -310,7 +310,7 @@ jobs:
 
   build-docs:
     name: Build Documentation Locally
-    # needs: [ compile ]
+    seeds: compile
     runs-on: ubuntu-latest
 
     steps:
@@ -400,7 +400,7 @@ jobs:
 
   run-benchmarks:
     name: Run Benchmarks on ${{ matrix.os }} with ${{ matrix.cxx }}
-    # needs: [ compile ]
+    needs: compile
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -564,7 +564,7 @@ jobs:
 
   upload-benchmarks:
     name: Upload Benchmark Results
-    needs: [ run-benchmarks ]
+    needs: run-benchmarks
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     steps:
@@ -587,7 +587,7 @@ jobs:
 
   code-coverage:
     name: Code Coverage
-    needs: [ upload-benchmarks ]
+    needs: upload-benchmarks
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -648,7 +648,7 @@ jobs:
 
   success:
     name: Success
-    needs: [ trigger-docs ]
+    needs: trigger-docs
     runs-on: ubuntu-latest
     steps:
       - name: Print Success
