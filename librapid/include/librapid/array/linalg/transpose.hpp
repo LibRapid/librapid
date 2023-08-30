@@ -18,7 +18,7 @@ namespace librapid {
 
 	namespace kernels {
 #if defined(LIBRAPID_NATIVE_ARCH)
-#	if !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= AVX2
+#	if !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= ARCH_AVX2
 #		define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 4
 #		define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 8
 
@@ -123,7 +123,7 @@ namespace librapid {
 			_mm256_store_pd(&out[2 * cols], _mm256_mul_pd(r2, alphaVec));
 			_mm256_store_pd(&out[3 * cols], _mm256_mul_pd(r3, alphaVec));
 		}
-#	elif !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= SSE2
+#	elif !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= ARCH_SSE
 
 #		define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 2
 #		define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 4
@@ -169,7 +169,17 @@ namespace librapid {
 
 #	endif // LIBRAPID_MSVC
 #endif	   // LIBRAPID_NATIVE_ARCH
-	}	   // namespace kernels
+
+		// Ensure the kernel size is always defined, even if the above code doesn't define it
+#ifndef LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE
+#	define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 0
+#endif // LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE
+
+#ifndef LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE
+#	define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 0
+#endif // LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE
+
+	} // namespace kernels
 
 	namespace detail {
 		namespace cpu {
