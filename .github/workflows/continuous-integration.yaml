@@ -380,23 +380,6 @@ jobs:
           name: Documentation
           path: docs/build/**
 
-  quodona:
-    name: Run Qodana
-    needs: compile
-    runs-on: ubuntu-latest
-    continue-on-error: true
-
-    steps:
-      - name: Checkout LibRapid
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      # - name: Qodana Scan
-      #   uses: JetBrains/qodana-action@main
-      #   env:
-      #     QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-
   run-benchmarks:
     name: Run Benchmarks on ${{ matrix.os }} with ${{ matrix.cxx }}
     needs: [ compile, build-docs ]
@@ -584,9 +567,26 @@ jobs:
           name: LibRapid_Benchmark_SHA_${{ github.sha }}
           path: BECHMARK_RESULTS
 
+  quodona:
+    name: Run Qodana
+    needs: [ compile, upload-benchmarks ]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - name: Checkout LibRapid
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      # - name: Qodana Scan
+      #   uses: JetBrains/qodana-action@main
+      #   env:
+      #     QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+
   code-coverage:
     name: Code Coverage
-    needs: upload-benchmarks
+    needs: [ compile, upload-benchmarks ]
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -629,7 +629,7 @@ jobs:
 
   trigger-docs:
     name: Trigger Documentation Build
-    needs: [ compile, upload-benchmarks, quodona, build-docs ]
+    needs: [ compile, build-docs, quodona, code-coverage ]
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     steps:
