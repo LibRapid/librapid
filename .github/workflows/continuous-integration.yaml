@@ -499,6 +499,7 @@ jobs:
 
       - name: Install Requirements
         run: |
+          pip install --upgrade pip
           cd BenchmarksCPP
           pip install -r requirements.txt
 
@@ -556,6 +557,11 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
       - name: Download Intermediate Benchmark Results
         uses: actions/download-artifact@v2
         with:
@@ -564,7 +570,10 @@ jobs:
       - name: Auto-Generate Benchmark Documentation
         run: |
           git clone https://github.com/LibRapid/BenchmarksCPP.git
-          cd BenchmarksCPP/scripts
+          cd BenchmarksCPP
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          cd scripts
           python docGenerator.py --input ../../BECHMARK_RESULTS_TMP --output ../../BECHMARK_RESULTS
 
       - name: Upload Benchmark Results
