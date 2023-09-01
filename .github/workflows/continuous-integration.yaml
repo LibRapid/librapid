@@ -550,7 +550,6 @@ jobs:
     name: Upload Benchmark Results
     needs: run-benchmarks
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
     steps:
       - name: Checkout LibRapid
         uses: actions/checkout@v3
@@ -565,11 +564,11 @@ jobs:
       - name: Download Intermediate Benchmark Results
         uses: actions/download-artifact@v2
         with:
-          path: BECHMARK_RESULTS_TMP
+          path: IntermediateBenchmarkResults
 
-      - name: Tree Benchmark Results
+      - name: Tree IntermediateBenchmarkResults
         run: |
-          cd BECHMARK_RESULTS_TMP
+          cd IntermediateBenchmarkResults
           tree
 
       - name: Auto-Generate Benchmark Documentation
@@ -579,24 +578,24 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
           cd scripts
-          python docGenerator.py --input ../../BECHMARK_RESULTS_TMP --output ../../BECHMARK_RESULTS
+          python docGenerator.py --input ../../IntermediateBenchmarkResults --output ../../BenchmarkDocumentation
 
-      - name: Tree Benchmark Results
+      - name: Tree BenchmarkDocumentation
         run: |
-          cd BECHMARK_RESULTS
+          cd BenchmarkDocumentation
           tree
 
-      - name: Upload Benchmark Results
+      - name: Upload Intermediate Benchmark Results
         uses: actions/upload-artifact@v3
         with:
-          name: Benchmark Results
-          path: BECHMARK_RESULTS_TMP
+          name: IntermediateBenchmarkResults
+          path: IntermediateBenchmarkResults
 
       - name: Upload Benchmark Documentation
         uses: actions/upload-artifact@v3
         with:
           name: LibRapid_Benchmark_SHA_${{ github.sha }}
-          path: BECHMARK_RESULTS
+          path: BenchmarkDocumentation
 
   quodona:
     name: Run Qodana
