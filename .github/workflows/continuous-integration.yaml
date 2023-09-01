@@ -567,6 +567,11 @@ jobs:
         with:
           path: BECHMARK_RESULTS_TMP
 
+      - name: Tree Benchmark Results
+        run: |
+          cd BECHMARK_RESULTS_TMP
+          tree
+
       - name: Auto-Generate Benchmark Documentation
         run: |
           git clone https://github.com/LibRapid/BenchmarksCPP.git
@@ -575,6 +580,11 @@ jobs:
           pip install -r requirements.txt
           cd scripts
           python docGenerator.py --input ../../BECHMARK_RESULTS_TMP --output ../../BECHMARK_RESULTS
+
+      - name: Tree Benchmark Results
+        run: |
+          cd BECHMARK_RESULTS
+          tree
 
       - name: Upload Benchmark Results
         uses: actions/upload-artifact@v3
