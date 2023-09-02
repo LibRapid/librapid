@@ -570,6 +570,12 @@ jobs:
         run: |
           cd IntermediateBenchmarkResults
           tree
+          
+      - name: Upload Intermediate Benchmark Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: IntermediateBenchmarkResults
+          path: IntermediateBenchmarkResults
 
       - name: Auto-Generate Benchmark Documentation
         run: |
@@ -584,12 +590,6 @@ jobs:
         run: |
           cd BenchmarkDocumentation
           tree
-
-      - name: Upload Intermediate Benchmark Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: IntermediateBenchmarkResults
-          path: IntermediateBenchmarkResults
 
       - name: Upload Benchmark Documentation
         uses: actions/upload-artifact@v3
