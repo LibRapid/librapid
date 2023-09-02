@@ -99,7 +99,7 @@ myst_enable_extensions = [
 if os.environ.get("GITHUB_TOKEN") is not None:
     extensions.append("rtds_action")
     rtds_action_github_repo = "LibRapid/librapid"
-    rtds_action_path = "."
+    rtds_action_path = "BenchmarkResults"
     rtds_action_artifact_prefix = "LibRapid_Benchmark_SHA_"
     rtds_action_github_token = os.environ["GITHUB_TOKEN"]
     rtds_action_error_if_missing = True
