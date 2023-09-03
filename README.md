@@ -19,9 +19,6 @@
 
 ---
 
-(As a student, it's difficult to spend a lot of time on this project. If you like what I'm doing, a
-small [donation](https://github.com/sponsors/Pencilcaseman) would mean a lot to me!)
-
 ![Simple Demo](https://raw.githubusercontent.com/LibRapid/librapid_extras/master/images/librapidSimpleDemo.png)
 
 # What is LibRapid?
