@@ -18,7 +18,7 @@ namespace librapid {
 
 	namespace kernels {
 #if defined(LIBRAPID_NATIVE_ARCH)
-#	if !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= AVX2
+#	if !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= ARCH_AVX2
 #		define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 4
 #		define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 8
 
@@ -73,14 +73,15 @@ namespace librapid {
 
 			__m256 alphaVec = _mm256_set1_ps(alpha);
 
-			_mm256_store_ps(&out[0 * cols], _mm256_mul_ps(r0, alphaVec));
-			_mm256_store_ps(&out[1 * cols], _mm256_mul_ps(r1, alphaVec));
-			_mm256_store_ps(&out[2 * cols], _mm256_mul_ps(r2, alphaVec));
-			_mm256_store_ps(&out[3 * cols], _mm256_mul_ps(r3, alphaVec));
-			_mm256_store_ps(&out[4 * cols], _mm256_mul_ps(r4, alphaVec));
-			_mm256_store_ps(&out[5 * cols], _mm256_mul_ps(r5, alphaVec));
-			_mm256_store_ps(&out[6 * cols], _mm256_mul_ps(r6, alphaVec));
-			_mm256_store_ps(&out[7 * cols], _mm256_mul_ps(r7, alphaVec));
+			// Must store unaligned, since the indices are not guaranteed to be aligned
+			_mm256_storeu_ps(&out[0 * cols], _mm256_mul_ps(r0, alphaVec));
+			_mm256_storeu_ps(&out[1 * cols], _mm256_mul_ps(r1, alphaVec));
+			_mm256_storeu_ps(&out[2 * cols], _mm256_mul_ps(r2, alphaVec));
+			_mm256_storeu_ps(&out[3 * cols], _mm256_mul_ps(r3, alphaVec));
+			_mm256_storeu_ps(&out[4 * cols], _mm256_mul_ps(r4, alphaVec));
+			_mm256_storeu_ps(&out[5 * cols], _mm256_mul_ps(r5, alphaVec));
+			_mm256_storeu_ps(&out[6 * cols], _mm256_mul_ps(r6, alphaVec));
+			_mm256_storeu_ps(&out[7 * cols], _mm256_mul_ps(r7, alphaVec));
 		}
 
 		template<typename Alpha>
@@ -123,7 +124,7 @@ namespace librapid {
 			_mm256_store_pd(&out[2 * cols], _mm256_mul_pd(r2, alphaVec));
 			_mm256_store_pd(&out[3 * cols], _mm256_mul_pd(r3, alphaVec));
 		}
-#	elif !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= SSE2
+#	elif !defined(LIBRAPID_APPLE) && LIBRAPID_ARCH >= ARCH_SSE
 
 #		define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 2
 #		define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 4
@@ -134,17 +135,17 @@ namespace librapid {
 														 int64_t cols) {
 			__m128 tmp3, tmp2, tmp1, tmp0;
 
-			tmp0 = _mm_shuffle_ps(_mm_load_ps(in + 0 * cols), _mm_load_ps(in + 1 * cols), 0x44);
-			tmp2 = _mm_shuffle_ps(_mm_load_ps(in + 0 * cols), _mm_load_ps(in + 1 * cols), 0xEE);
-			tmp1 = _mm_shuffle_ps(_mm_load_ps(in + 2 * cols), _mm_load_ps(in + 3 * cols), 0x44);
-			tmp3 = _mm_shuffle_ps(_mm_load_ps(in + 2 * cols), _mm_load_ps(in + 3 * cols), 0xEE);
+			tmp0 = _mm_shuffle_ps(_mm_loadu_ps(in + 0 * cols), _mm_loadu_ps(in + 1 * cols), 0x44);
+			tmp2 = _mm_shuffle_ps(_mm_loadu_ps(in + 0 * cols), _mm_loadu_ps(in + 1 * cols), 0xEE);
+			tmp1 = _mm_shuffle_ps(_mm_loadu_ps(in + 2 * cols), _mm_loadu_ps(in + 3 * cols), 0x44);
+			tmp3 = _mm_shuffle_ps(_mm_loadu_ps(in + 2 * cols), _mm_loadu_ps(in + 3 * cols), 0xEE);
 
 			__m128 alphaVec = _mm_set1_ps(alpha);
 
-			_mm_store_ps(out + 0 * cols, _mm_mul_ps(_mm_shuffle_ps(tmp0, tmp1, 0x88), alphaVec));
-			_mm_store_ps(out + 1 * cols, _mm_mul_ps(_mm_shuffle_ps(tmp0, tmp1, 0xDD), alphaVec));
-			_mm_store_ps(out + 2 * cols, _mm_mul_ps(_mm_shuffle_ps(tmp2, tmp3, 0x88), alphaVec));
-			_mm_store_ps(out + 3 * cols, _mm_mul_ps(_mm_shuffle_ps(tmp2, tmp3, 0xDD), alphaVec));
+			_mm_storeu_ps(out + 0 * cols, _mm_mul_ps(_mm_shuffle_ps(tmp0, tmp1, 0x88), alphaVec));
+			_mm_storeu_ps(out + 1 * cols, _mm_mul_ps(_mm_shuffle_ps(tmp0, tmp1, 0xDD), alphaVec));
+			_mm_storeu_ps(out + 2 * cols, _mm_mul_ps(_mm_shuffle_ps(tmp2, tmp3, 0x88), alphaVec));
+			_mm_storeu_ps(out + 3 * cols, _mm_mul_ps(_mm_shuffle_ps(tmp2, tmp3, 0xDD), alphaVec));
 		}
 
 		template<typename Alpha>
@@ -154,8 +155,8 @@ namespace librapid {
 			__m128d tmp0, tmp1;
 
 			// Load the values from input matrix
-			tmp0 = _mm_load_pd(in + 0 * cols);
-			tmp1 = _mm_load_pd(in + 1 * cols);
+			tmp0 = _mm_loadu_pd(in + 0 * cols);
+			tmp1 = _mm_loadu_pd(in + 1 * cols);
 
 			// Transpose the 2x2 matrix
 			__m128d tmp0Unpck = _mm_unpacklo_pd(tmp0, tmp1);
@@ -163,13 +164,23 @@ namespace librapid {
 
 			// Store the transposed values in the output matrix
 			__m128d alphaVec = _mm_set1_pd(alpha);
-			_mm_store_pd(out + 0 * cols, _mm_mul_pd(tmp0Unpck, alphaVec));
-			_mm_store_pd(out + 1 * cols, _mm_mul_pd(tmp1Unpck, alphaVec));
+			_mm_storeu_pd(out + 0 * cols, _mm_mul_pd(tmp0Unpck, alphaVec));
+			_mm_storeu_pd(out + 1 * cols, _mm_mul_pd(tmp1Unpck, alphaVec));
 		}
 
 #	endif // LIBRAPID_MSVC
 #endif	   // LIBRAPID_NATIVE_ARCH
-	}	   // namespace kernels
+
+		// Ensure the kernel size is always defined, even if the above code doesn't define it
+#ifndef LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE
+#	define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 0
+#endif // LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE
+
+#ifndef LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE
+#	define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 0
+#endif // LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE
+
+	} // namespace kernels
 
 	namespace detail {
 		namespace cpu {
