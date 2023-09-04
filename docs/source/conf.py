@@ -182,10 +182,10 @@ html_theme_options = {
     <img src="/en/latest/_static/LR_icon.png" alt="LibRapid" width="22.5"></img>
     <a href="https://github.com/sponsors/Pencilcaseman">
         <span class="banner-resize-text-lg">
-            If you like LibRapid, please consider a small donation support its development!
+            If you like LibRapid, please consider supporting its development!
         </span>
         <span class="banner-resize-text-sm">
-            Please consider donating!
+            Support LibRapid's Development!
         </span>
     </a>
 </div>
