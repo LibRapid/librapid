@@ -68,7 +68,8 @@ Getting Started <gettingStarted>
 CMake Integration <cmakeIntegration>
 API Reference <apiReference>
 Tutorials <tutorials>
-Performance and Benchmarks <performance/performance>
+Performance <performance/performance>
+Benchmark Results <BenchmarkResults/BenchmarkResults>
 Caution <caution>
 ```
 
