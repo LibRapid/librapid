@@ -789,7 +789,7 @@ namespace librapid {
 			auto ptr = LIBRAPID_ASSUME_ALIGNED(m_storage.begin());
 
 #if defined(LIBRAPID_NATIVE_ARCH)
-			LIBRAIPD_ASSERT(
+			LIBRAPID_ASSERT(
 			  reinterpret_cast<uintptr_t>(ptr) % typetraits::TypeInfo<Scalar>::packetWidth == 0,
 			  "ArrayContainer::packet called on unaligned storage");
 			value.store_aligned(ptr + index);
