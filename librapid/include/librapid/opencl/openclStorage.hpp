@@ -175,8 +175,7 @@ namespace librapid {
 
 		LIBRAPID_ALWAYS_INLINE OpenCLStorage &operator=(const OpenCLStorage &other);
 
-		LIBRAPID_ALWAYS_INLINE OpenCLStorage &
-		operator=(OpenCLStorage &&other) noexcept;
+		LIBRAPID_ALWAYS_INLINE OpenCLStorage &operator=(OpenCLStorage &&other) noexcept;
 
 		void set(const OpenCLStorage &other);
 
@@ -217,7 +216,6 @@ namespace librapid {
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE cl::Buffer &data();
 
 	private:
-
 		SizeType m_size;
 		cl::Buffer m_buffer;
 		bool m_ownsData = true;
@@ -290,7 +288,7 @@ namespace librapid {
 		if (this != &other) {
 			size_t oldSize = m_size;
 			m_size		   = other.m_size;
-			if (other.m_size != m_size) LIBRAPID_UNLIKELY {
+			if (oldSize != m_size) LIBRAPID_UNLIKELY {
 					if (m_ownsData) LIBRAPID_LIKELY {
 							m_buffer = cl::Buffer(
 							  global::openCLContext, bufferFlags, m_size * sizeof(Scalar));
@@ -309,8 +307,7 @@ namespace librapid {
 	}
 
 	template<typename Scalar>
-	OpenCLStorage<Scalar> &
-	OpenCLStorage<Scalar>::operator=(OpenCLStorage &&other) noexcept {
+	OpenCLStorage<Scalar> &OpenCLStorage<Scalar>::operator=(OpenCLStorage &&other) noexcept {
 		LIBRAPID_CHECK_OPENCL;
 		if (this != &other) {
 			m_size	   = std::move(other.m_size);

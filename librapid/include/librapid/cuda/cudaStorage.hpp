@@ -378,7 +378,7 @@ namespace librapid {
 		if (this != &other) {
 			size_t oldSize = m_size;
 			m_size		   = other.m_size;
-			if (other.m_size != m_size) LIBRAPID_UNLIKELY {
+			if (oldSize != m_size) LIBRAPID_UNLIKELY {
 					if (m_ownsData) LIBRAPID_LIKELY {
 							// Reallocate
 							detail::cudaSafeDeallocate(m_begin);
