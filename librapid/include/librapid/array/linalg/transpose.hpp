@@ -624,8 +624,8 @@ namespace librapid {
 				else {
 					if (m_inputShape.ndim() == 2) {
 						int64_t blockSize		= global::cacheLineSize / sizeof(Scalar);
-						auto *__restrict outPtr = out.storage().begin().get();
-						auto *__restrict inPtr	= m_array.storage().begin().get();
+						auto *__restrict outPtr = out.storage().begin();
+						auto *__restrict inPtr	= m_array.storage().begin();
 						detail::cuda::transposeImpl(
 						  outPtr, inPtr, m_inputShape[0], m_inputShape[1], m_alpha, blockSize);
 					} else {

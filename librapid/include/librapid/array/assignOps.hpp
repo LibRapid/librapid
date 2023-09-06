@@ -328,7 +328,7 @@ namespace librapid {
                                                          ::librapid::detail::LibRapidType::Scalar,
                                                        int> = 0>
         LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
-            return obj.storage().begin().get();
+            return obj.storage().begin();
         }
 
         template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
@@ -518,7 +518,7 @@ namespace librapid {
               std::make_index_sequence<argSize>(),
               filename,
               kernelName,
-              reinterpret_cast<Scalar *>(lhs.storage().begin().get()),
+              reinterpret_cast<Scalar *>(lhs.storage().begin()),
               function);
         }
     }  // namespace detail
