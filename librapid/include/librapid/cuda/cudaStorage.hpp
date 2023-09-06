@@ -359,7 +359,8 @@ namespace librapid {
 	template<typename V>
 	auto CudaStorage<T>::fromData(const std::initializer_list<V> &list) -> CudaStorage {
 		CudaStorage ret;
-		ret.initData(list.begin(), list.end());
+		// ret.initData(list.begin(), list.end());
+		ret.initData(static_cast<const V *>(list.begin()), static_cast<const V *>(list.end()));
 		return ret;
 	}
 
@@ -367,7 +368,8 @@ namespace librapid {
 	template<typename V>
 	auto CudaStorage<T>::fromData(const std::vector<V> &vec) -> CudaStorage {
 		CudaStorage ret;
-		ret.initData(vec.begin(), vec.end());
+		// ret.initData(vec.begin(), vec.end());
+		ret.initData(&vec[0], &vec[0] + vec.size());
 		return ret;
 	}
 

@@ -173,8 +173,8 @@ namespace librapid::ml {
                                                           "sigmoidActivationForward",
                                                           dst.shape().size(),
                                                           temp.shape().size(),
-                                                          dst.storage().begin().get(),
-                                                          temp.storage().begin().get());
+                                                          dst.storage().begin(),
+                                                          temp.storage().begin());
         }
 
         template<
@@ -189,8 +189,8 @@ namespace librapid::ml {
                                                           "sigmoidActivationBackward",
                                                           dst.shape().size(),
                                                           temp.shape().size(),
-                                                          dst.storage().begin().get(),
-                                                          temp.storage().begin().get());
+                                                          dst.storage().begin(),
+                                                          temp.storage().begin());
         }
 #endif // LIBRAPID_HAS_CUDA
     };

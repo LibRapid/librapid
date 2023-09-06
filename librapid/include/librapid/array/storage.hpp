@@ -366,7 +366,13 @@ namespace librapid {
 			LIBRAPID_ASSERT(err == 0, "posix_memalign failed with error code {}", err);
 			auto ptr = static_cast<Pointer>(_ptr);
 #elif defined(LIBRAPID_MSVC) || defined(LIBRAPID_MINGW)
-			auto ptr = static_cast<Pointer>(_aligned_malloc(size * sizeof(T), LIBRAPID_MEM_ALIGN));
+			Pointer ptr;
+			try {
+				ptr =
+				  static_cast<Pointer>(_aligned_malloc(size * sizeof(T), LIBRAPID_MEM_ALIGN));
+			} catch (const std::exception &) {
+				LIBRAPID_ASSERT(false, "Failed to allocate {} bytes of memory", size * sizeof(T));
+			}
 #else
 			auto ptr =
 			  static_cast<Pointer>(std::aligned_alloc(LIBRAPID_MEM_ALIGN, size * sizeof(T)));
@@ -377,7 +383,6 @@ namespace librapid {
 
 			// If the type cannot be trivially constructed, we need to
 			// initialize each value
-
 			auto ptr_ = LIBRAPID_ASSUME_ALIGNED(ptr);
 			LIBRAPID_ASSUME(ptr_ != nullptr);
 			LIBRAPID_ASSUME(size > 0);
@@ -471,7 +476,7 @@ namespace librapid {
 		if (this != &other) {
 			size_t oldSize = m_size;
 			m_size		   = other.m_size;
-			if (other.m_size != m_size) LIBRAPID_UNLIKELY {
+			if (oldSize != m_size) LIBRAPID_UNLIKELY {
 					if (m_ownsData) LIBRAPID_LIKELY {
 							// Reallocate
 							detail::safeDeallocate(m_begin, oldSize);
