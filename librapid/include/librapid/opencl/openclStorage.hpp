@@ -184,11 +184,9 @@ namespace librapid {
 		template<typename ShapeType>
 		static ShapeType defaultShape();
 
-		template<typename V>
-		static OpenCLStorage fromData(const std::initializer_list<V> &list);
+		static OpenCLStorage fromData(const std::initializer_list<Scalar> &list);
 
-		template<typename V>
-		static OpenCLStorage fromData(const std::vector<V> &vec);
+		static OpenCLStorage fromData(const std::vector<Scalar> &vec);
 
 		~OpenCLStorage();
 
@@ -337,14 +335,13 @@ namespace librapid {
 	}
 
 	template<typename Scalar>
-	template<typename V>
-	OpenCLStorage<Scalar> OpenCLStorage<Scalar>::fromData(const std::initializer_list<V> &list) {
+	OpenCLStorage<Scalar>
+	OpenCLStorage<Scalar>::fromData(const std::initializer_list<Scalar> &list) {
 		return OpenCLStorage<Scalar>(list);
 	}
 
 	template<typename Scalar>
-	template<typename V>
-	OpenCLStorage<Scalar> OpenCLStorage<Scalar>::fromData(const std::vector<V> &vec) {
+	OpenCLStorage<Scalar> OpenCLStorage<Scalar>::fromData(const std::vector<Scalar> &vec) {
 		return OpenCLStorage<Scalar>(vec);
 	}
 

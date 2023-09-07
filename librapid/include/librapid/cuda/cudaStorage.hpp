@@ -75,7 +75,7 @@ namespace librapid {
 		public:
 			using PtrType = T *;
 
-			CudaRef(const PtrType &ptr, size_t offset) : m_ptr(ptr), m_offset(offset) {}
+			CudaRef(PtrType ptr, size_t offset) : m_ptr(ptr), m_offset(offset) {}
 
 			LIBRAPID_ALWAYS_INLINE CudaRef &operator=(const T &val) {
 				cudaSafeCall(cudaMemcpyAsync(
@@ -161,22 +161,18 @@ namespace librapid {
 
 		/// Create a CudaStorage object from an std::initializer_list
 		/// \param list Initializer list of elements
-		template<typename V>
-		LIBRAPID_ALWAYS_INLINE CudaStorage(const std::initializer_list<V> &list);
+		LIBRAPID_ALWAYS_INLINE CudaStorage(const std::initializer_list<Scalar> &list);
 
 		/// Create a CudaStorage object from an std::vector of values
 		/// \param vec The vector to fill with
-		template<typename V>
-		LIBRAPID_ALWAYS_INLINE explicit CudaStorage(const std::vector<V> &vec);
+		LIBRAPID_ALWAYS_INLINE explicit CudaStorage(const std::vector<Scalar> &vec);
 
 		template<typename ShapeType>
 		static ShapeType defaultShape();
 
-		template<typename V>
-		static CudaStorage fromData(const std::initializer_list<V> &vec);
+		static CudaStorage fromData(const std::initializer_list<Scalar> &vec);
 
-		template<typename V>
-		static CudaStorage fromData(const std::vector<V> &vec);
+		static CudaStorage fromData(const std::vector<Scalar> &vec);
 
 		/// Assignment operator for a CudaStorage object
 		/// \param other CudaStorage object to copy
@@ -236,16 +232,6 @@ namespace librapid {
 		/// \param end End of data to copy
 		template<typename P>
 		LIBRAPID_ALWAYS_INLINE void initData(P begin, P end);
-
-		/// Resize the Storage Object to \p newSize elements, retaining existing
-		/// data.
-		/// \param newSize New size of the Storage object
-		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize, int);
-
-		/// Resize the Storage object to \p newSize elements. Note this does not
-		/// initialize the new elements or maintain existing data.
-		/// \param newSize New size of the Storage object
-		LIBRAPID_ALWAYS_INLINE void resizeImpl(SizeType newSize);
 
 		Pointer m_begin = nullptr;
 		size_t m_size;
@@ -332,8 +318,7 @@ namespace librapid {
 	}
 
 	template<typename T>
-	template<typename V>
-	CudaStorage<T>::CudaStorage(const std::initializer_list<V> &list) :
+	CudaStorage<T>::CudaStorage(const std::initializer_list<T> &list) :
 			m_size(list.size()), m_begin(detail::cudaSafeAllocate<T>(list.size())),
 			m_ownsData(true) {
 		cudaSafeCall(cudaMemcpyAsync(
@@ -341,12 +326,11 @@ namespace librapid {
 	}
 
 	template<typename T>
-	template<typename V>
-	CudaStorage<T>::CudaStorage(const std::vector<V> &list) :
+	CudaStorage<T>::CudaStorage(const std::vector<T> &list) :
 			m_size(list.size()), m_begin(detail::cudaSafeAllocate<T>(list.size())),
 			m_ownsData(true) {
 		cudaSafeCall(cudaMemcpyAsync(
-		  m_begin, list.begin(), sizeof(T) * m_size, cudaMemcpyHostToDevice, global::cudaStream));
+		  m_begin, &list[0], sizeof(T) * m_size, cudaMemcpyHostToDevice, global::cudaStream));
 	}
 
 	template<typename T>
@@ -356,17 +340,15 @@ namespace librapid {
 	}
 
 	template<typename T>
-	template<typename V>
-	auto CudaStorage<T>::fromData(const std::initializer_list<V> &list) -> CudaStorage {
+	auto CudaStorage<T>::fromData(const std::initializer_list<T> &list) -> CudaStorage {
 		CudaStorage ret;
 		// ret.initData(list.begin(), list.end());
-		ret.initData(static_cast<const V *>(list.begin()), static_cast<const V *>(list.end()));
+		ret.initData(static_cast<const T *>(list.begin()), static_cast<const T *>(list.end()));
 		return ret;
 	}
 
 	template<typename T>
-	template<typename V>
-	auto CudaStorage<T>::fromData(const std::vector<V> &vec) -> CudaStorage {
+	auto CudaStorage<T>::fromData(const std::vector<T> &vec) -> CudaStorage {
 		CudaStorage ret;
 		// ret.initData(vec.begin(), vec.end());
 		ret.initData(&vec[0], &vec[0] + vec.size());
