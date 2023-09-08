@@ -94,7 +94,6 @@ namespace librapid {
 			using Scalar	  = typename StorageType::Scalar;
 			using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;
 			using Backend	  = typename typetraits::TypeInfo<ArrayContainer>::Backend;
-			using Iterator	  = detail::ArrayIterator<GeneralArrayView<ArrayContainer, ShapeType>>;
 
 			using DirectSubscriptType	 = typename detail::SubscriptType<StorageType>::Direct;
 			using DirectRefSubscriptType = typename detail::SubscriptType<StorageType>::Ref;
@@ -331,19 +330,19 @@ namespace librapid {
 
 			/// \brief Return an iterator to the beginning of the array container
 			/// \return Iterator
-			LIBRAPID_ALWAYS_INLINE Iterator begin() const noexcept;
+			LIBRAPID_ALWAYS_INLINE auto begin() const noexcept;
 
 			/// \brief Return an iterator to the end of the array container
 			/// \return Iterator
-			LIBRAPID_ALWAYS_INLINE Iterator end() const noexcept;
+			LIBRAPID_ALWAYS_INLINE auto end() const noexcept;
 
 			/// \brief Return an iterator to the beginning of the array container
 			/// \return Iterator
-			LIBRAPID_ALWAYS_INLINE Iterator begin();
+			LIBRAPID_ALWAYS_INLINE auto begin();
 
 			/// \brief Return an iterator to the end of the array container
 			/// \return Iterator
-			LIBRAPID_ALWAYS_INLINE Iterator end();
+			LIBRAPID_ALWAYS_INLINE auto end();
 
 			template<typename T, typename Char, typename Ctx>
 			void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
@@ -886,24 +885,24 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::begin() const noexcept
-		  -> Iterator {
-			return Iterator(GeneralArrayView(*this), 0);
+		  -> auto {
+			return detail::ArrayIterator(createGeneralArrayView(*this), 0);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::end() const noexcept
-		  -> Iterator {
-			return Iterator(GeneralArrayView(*this), m_shape[0]);
+		  -> auto {
+			return detail::ArrayIterator(createGeneralArrayView(*this), m_shape[0]);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::begin() -> Iterator {
-			return Iterator(GeneralArrayView(*this), 0);
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::begin() -> auto {
+			return detail::ArrayIterator(createGeneralArrayView(*this), 0);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::end() -> Iterator {
-			return Iterator(GeneralArrayView(*this), m_shape[0]);
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::end() -> auto {
+			return detail::ArrayIterator(createGeneralArrayView(*this), m_shape[0]);
 		}
 
 		template<typename ShapeType_, typename StorageType_>

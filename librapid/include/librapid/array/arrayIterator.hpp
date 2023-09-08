@@ -5,7 +5,7 @@ namespace librapid::detail {
 	template<typename T>
 	class ArrayIterator {
 	public:
-		using IndexType = int64_t;
+		using IndexType = size_t;
 
 		/// Default constructor should never be used
 		ArrayIterator() = delete;
@@ -13,6 +13,8 @@ namespace librapid::detail {
 		explicit LIBRAPID_ALWAYS_INLINE ArrayIterator(const T &array);
 
 		explicit LIBRAPID_ALWAYS_INLINE ArrayIterator(const T &array, IndexType index);
+
+		explicit LIBRAPID_ALWAYS_INLINE ArrayIterator(T &&array, IndexType index);
 
 		/// Copy an ArrayIterator object (const)
 		/// \param other The array to copy
@@ -52,6 +54,10 @@ namespace librapid::detail {
 	template<typename T>
 	LIBRAPID_ALWAYS_INLINE ArrayIterator<T>::ArrayIterator(const T &array, IndexType index) :
 			m_array(array), m_index(index) {}
+
+	template<typename T>
+	LIBRAPID_ALWAYS_INLINE ArrayIterator<T>::ArrayIterator(T &&array, IndexType index) :
+			m_array(std::move(array)), m_index(index) {}
 
 	template<typename T>
 	LIBRAPID_ALWAYS_INLINE ArrayIterator<T> &ArrayIterator<T>::operator++() {
