@@ -241,6 +241,22 @@
 #	ifndef LIBRAPID_MEM_ALIGN
 #		define LIBRAPID_MEM_ALIGN 16
 #	endif
+#elif defined(__ARM_NEON) || defined(__ARM_NEON__)
+#	define LIBRAPID_NEON
+#	define LIBRAPID_ARCH	   ARCH_NEON
+#	define LIBRAPID_ARCH_NAME "NEON"
+
+#	ifndef LIBRAPID_MEM_ALIGN
+#		define LIBRAPID_MEM_ALIGN 16
+#	endif
+#elif defined(__ARM_FEATURE_SVE)
+#	define LIBRAPID_SVE
+#	define LIBRAPID_ARCH	   ARCH_SVE
+#	define LIBRAPID_ARCH_NAME "SVE"
+
+#	ifndef LIBRAPID_MEM_ALIGN
+#		define LIBRAPID_MEM_ALIGN 128 // SVE has a max vector length of 2048 bits
+#	endif
 #elif defined(_M_IX86_FP) // Defined in MS compiler. 1: SSE, 2: SSE2
 #	if _M_IX86_FP == 1
 #		define LIBRAPID_SSE
