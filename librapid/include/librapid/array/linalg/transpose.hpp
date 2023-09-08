@@ -441,8 +441,6 @@ namespace librapid {
 			using ArrayType		 = TransposeType;
 			using BaseType		 = typename std::decay_t<TransposeType>;
 			using Scalar		 = typename typetraits::TypeInfo<BaseType>::Scalar;
-			using Reference		 = BaseType &;
-			using ConstReference = const BaseType &;
 			using ShapeType		 = typename BaseType::ShapeType;
 			using Backend		 = typename typetraits::TypeInfo<BaseType>::Backend;
 
