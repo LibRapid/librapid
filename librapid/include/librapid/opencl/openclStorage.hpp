@@ -299,7 +299,7 @@ namespace librapid {
 
 			// Copy data
 			global::openCLQueue.enqueueCopyBuffer(
-			  other.m_buffer, m_buffer, 0, 0, std::min(m_size, oldSize) * sizeof(Scalar));
+			  other.m_buffer, m_buffer, 0, 0, m_size * sizeof(Scalar));
 		}
 		return *this;
 	}
