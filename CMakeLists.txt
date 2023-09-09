@@ -2,7 +2,16 @@ cmake_minimum_required(VERSION 3.16)
 project(librapid)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 cmake_policy(SET CMP0077 NEW)
-set(CMAKE_CXX_STANDARD 17)
+
+if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    message(STATUS "[ LIBRAPID ] LibRapid is a top-level project. Using C++23")
+    set(CMAKE_CXX_STANDARD 23)
+endif ()
+
+# LibRapid requires C++20 or later
+if (CMAKE_CXX_STANDARD LESS 20)
+    message(FATAL_ERROR "LibRapid requires C++20 or later")
+endif ()
 
 # Extract version information
 file(READ "version.txt" ver)
@@ -28,6 +37,8 @@ option(LIBRAPID_CODE_COV "Compile LibRapid C++ with Coverage" OFF)
 option(LIBRAPID_STRICT "Force all warnings into errors (use with caution)" OFF)
 option(LIBRAPID_QUIET "Hide warnings generated WITHIN LibRapid's source" OFF)
 
+option(LIBRAPID_USE_PRECOMPILED_HEADER "Use precompiled headers to speed up compilation" OFF)
+
 option(LIBRAPID_GET_FFTW "Clone and use FFTW -- WARNING: SEE DOCUMENTATION" OFF)
 option(LIBRAPID_GET_BLAS "Download pre-built OpenBLAS binaries and use them" OFF)
 option(LIBRAPID_GET_MULTIPREC "Download generic multiprecision libraries, as opposed to trying to find one on the system" OFF)
@@ -38,7 +49,7 @@ option(LIBRAPID_USE_OPENCL "Search for OpenCL and use it if possible" ON)
 option(LIBRAPID_USE_CUDA "Attempt to use CUDA" ON)
 option(LIBRAPID_USE_MULTIPREC "Include MPIR and MPFR in the LibRapid build" OFF)
 option(LIBRAPID_FAST_MATH "Use potentially less accurate operations to increase performance" OFF)
-option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" OFF)
+option(LIBRAPID_NATIVE_ARCH "Use the native architecture of the system" ON)
 
 option(LIBRAPID_CUDA_DOUBLE_VECTOR_WIDTH "Preferred vector width for vectorised kernels" 2)
 option(LIBRAPID_CUDA_FLOAT_VECTOR_WIDTH "Preferred vector width for vectorised kernels" 4)
@@ -97,7 +108,9 @@ target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE="${LIBRAPID_SOU
 # clang-format on
 
 # Precompiled Headers
-target_precompile_headers(${module_name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include/librapid/core/librapidPch.hpp")
+if (LIBRAPID_USE_PRECOMPILED_HEADER)
+    target_precompile_headers(${module_name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include/librapid/core/librapidPch.hpp")
+endif ()
 
 # Extract system information
 set(IS_LINUX OFF)
@@ -123,6 +136,12 @@ endif ()
 if (LIBRAPID_STRICT AND LIBRAPID_QUIET)
     message(FATAL_ERROR "LIBRAPID_STRICT and LIBRAPID_QUIET cannot be enabled at the same time")
 endif ()
+
+# SIMD instructions do not currently work on MacOS
+#if (IS_MACOS AND LIBRAPID_NATIVE_ARCH)
+#    message(WARNING "SIMD instructions are not currently supported on MacOS. Disabling LIBRAPID_NATIVE_ARCH")
+#    set(LIBRAPID_NATIVE_ARCH OFF)
+#endif ()
 
 if (LIBRAPID_STRICT)
     # Enable all warnings and treat them as errors
@@ -415,19 +434,10 @@ endif ()
 
 # Add dependencies
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/fmt")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/Vc")
-
-if (NOT MINGW)
-    # scnlib does not support MinGW, since it does not implement std::from_chars, which is required by the library
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/scnlib")
-else ()
-    message(WARNING "[ LIBRAPID ] scnlib cannot be built by MinGW, so it will not be enabled")
-    target_compile_definitions(${module_name} PUBLIC LIBRAPID_MINGW)
-endif ()
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/xsimd")
 
 target_compile_definitions(fmt PUBLIC FMT_HEADER_ONLY)
-target_compile_definitions(Vc PRIVATE Vc_HACK_OSTREAM_FOR_TTY)
-target_link_libraries(${module_name} PUBLIC fmt scn Vc)
+target_link_libraries(${module_name} PUBLIC fmt xsimd)
 
 if (${LIBRAPID_USE_MULTIPREC})
     # Load MPIR
@@ -484,15 +494,19 @@ if (LIBRAPID_FAST_MATH)
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_FAST_MATH)
 endif ()
 
-set(LIBRAPID_ARCH_FLAGS)
 if (LIBRAPID_NATIVE_ARCH)
     message(STATUS "[ LIBRAPID ] Compiling for native architecture")
-    OptimizeForArchitecture()
-    target_compile_options(${module_name} PUBLIC ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
+
+    include(ArchDetect2)
+    target_compile_options(${module_name} PUBLIC ${LIBRAPID_ARCH_FLAGS})
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_NATIVE_ARCH)
-    set(LIBRAPID_ARCH_FLAGS ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
-    message(STATUS "[ LIBRAPID ] Additional Definitions: ${Vc_DEFINITIONS}")
-    message(STATUS "[ LIBRAPID ] Supported flags: ${Vc_ARCHITECTURE_FLAGS}")
+
+    #    OptimizeForArchitecture()
+    #    target_compile_options(${module_name} PUBLIC ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
+    #    target_compile_definitions(${module_name} PUBLIC LIBRAPID_NATIVE_ARCH)
+    #    set(LIBRAPID_ARCH_FLAGS ${Vc_DEFINITIONS} ${Vc_ARCHITECTURE_FLAGS})
+    #    message(STATUS "[ LIBRAPID ] Additional Definitions: ${Vc_DEFINITIONS}")
+    #    message(STATUS "[ LIBRAPID ] Supported flags: ${Vc_ARCHITECTURE_FLAGS}")
 endif ()
 
 # Add defines for CUDA vector widths

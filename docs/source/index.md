@@ -38,11 +38,18 @@ View LibRapid's API and documentation.
 Learn how to use some of LibRapid's features.
 :::
 
-:::{grid-item-card} {octicon}`stopwatch` Performance and Benchmarks
+:::{grid-item-card} {octicon}`stopwatch` Performance Tips
 :link: performance/performance
 :link-type: doc
 
-View LibRapid's benchmark results.
+Learn how to get the most out of LibRapid.
+:::
+
+:::{grid-item-card} {octicon}`fold` Benchmarks
+:link: BenchmarkResults/BenchmarkResults
+:link-type: doc
+
+See how LibRapid compares to other libraries.
 :::
 
 :::{grid-item-card} {octicon}`alert` Caution
@@ -61,7 +68,8 @@ Getting Started <gettingStarted>
 CMake Integration <cmakeIntegration>
 API Reference <apiReference>
 Tutorials <tutorials>
-Performance and Benchmarks <performance/performance>
+Performance <performance/performance>
+Benchmark Results <BenchmarkResults/BenchmarkResults>
 Caution <caution>
 ```
 

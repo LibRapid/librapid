@@ -31,7 +31,7 @@
 #define COMMON_HELPER_FUNCTIONS_H_
 
 #ifdef WIN32
-#	pragma warning(disable : 4996)
+#    pragma warning(disable : 4996)
 #endif
 
 // includes, project
@@ -51,7 +51,7 @@
 #include "helper_string.h" // helper functions for string parsing
 
 #ifndef EXIT_WAIVED
-#	define EXIT_WAIVED 2
+#    define EXIT_WAIVED 2
 #endif
 
 #endif // COMMON_HELPER_FUNCTIONS_H_

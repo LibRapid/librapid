@@ -14,64 +14,64 @@
 
 #if defined(LIBRAPID_APPLE)
 
-#	include <sys/sysctl.h>
+#    include <sys/sysctl.h>
 
 namespace librapid {
-	size_t cacheLineSize() {
-		size_t lineSize		  = 64;
-		size_t sizeOfLineSize = sizeof(lineSize);
-		sysctlbyname("hw.cachelinesize", &lineSize, &sizeOfLineSize, 0, 0);
-		return lineSize;
-	}
+    size_t cacheLineSize() {
+        size_t lineSize       = 64;
+        size_t sizeOfLineSize = sizeof(lineSize);
+        sysctlbyname("hw.cachelinesize", &lineSize, &sizeOfLineSize, 0, 0);
+        return lineSize;
+    }
 } // namespace librapid
 
 #elif defined(LIBRAPID_WINDOWS) && !defined(LIBRAPID_NO_WINDOWS_H)
 
 namespace librapid {
-	size_t cacheLineSize() {
-		size_t lineSize								 = 64;
-		DWORD bufferSize							 = 0;
-		DWORD i										 = 0;
-		SYSTEM_LOGICAL_PROCESSOR_INFORMATION *buffer = 0;
+    size_t cacheLineSize() {
+        size_t lineSize                              = 64;
+        DWORD bufferSize                             = 0;
+        DWORD i                                      = 0;
+        SYSTEM_LOGICAL_PROCESSOR_INFORMATION *buffer = 0;
 
-		GetLogicalProcessorInformation(0, &bufferSize);
-		buffer = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION *)malloc(bufferSize);
-		GetLogicalProcessorInformation(&buffer[0], &bufferSize);
+        GetLogicalProcessorInformation(0, &bufferSize);
+        buffer = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION *)malloc(bufferSize);
+        GetLogicalProcessorInformation(&buffer[0], &bufferSize);
 
-		for (i = 0; i != bufferSize / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION); ++i) {
-			if (buffer[i].Relationship == RelationCache && buffer[i].Cache.Level == 1) {
-				lineSize = buffer[i].Cache.LineSize;
-				break;
-			}
-		}
+        for (i = 0; i != bufferSize / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION); ++i) {
+            if (buffer[i].Relationship == RelationCache && buffer[i].Cache.Level == 1) {
+                lineSize = buffer[i].Cache.LineSize;
+                break;
+            }
+        }
 
-		free(buffer);
-		return lineSize;
-	}
+        free(buffer);
+        return lineSize;
+    }
 } // namespace librapid
 
 #elif defined(LIBRAPID_LINUX)
 
 namespace librapid {
-	size_t cacheLineSize() {
-		FILE *p = 0;
-		p		= fopen("/sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size", "r");
-		unsigned int lineSize = 64;
-		if (p) {
-			fscanf(p, "%d", &lineSize);
-			fclose(p);
-		}
-		return lineSize;
-	}
+    size_t cacheLineSize() {
+        FILE *p = 0;
+        p       = fopen("/sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size", "r");
+        unsigned int lineSize = 64;
+        if (p) {
+            fscanf(p, "%d", &lineSize);
+            fclose(p);
+        }
+        return lineSize;
+    }
 } // namespace librapid
 
 #else
 
 namespace librapid {
-	size_t cacheLineSize() {
-		// On unknown platforms, return 64
-		return 64;
-	}
+    size_t cacheLineSize() {
+        // On unknown platforms, return 64
+        return 64;
+    }
 } // namespace librapid
 
 #endif

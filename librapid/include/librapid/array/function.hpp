@@ -40,7 +40,13 @@ namespace librapid {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
 			using Scalar							   = decltype(std::declval<Functor_>()(
 				std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
+			using Packet							   = typename TypeInfo<Scalar>::Packet;
 			using Backend							   = decltype(commonBackend<Args...>());
+			using ShapeType =
+			  typename detail::ShapeTypeHelper<typename TypeInfo<Args>::ShapeType...>::Type;
+
+			using ArrayType	  = Array<Scalar, Backend>;
+			using StorageType = typename TypeInfo<ArrayType>::StorageType;
 
 			static constexpr bool allowVectorisation = checkAllowVectorisation<Args...>();
 
@@ -111,7 +117,7 @@ namespace librapid {
 		public:
 			using Type		 = Function<desc, Functor_, Args...>;
 			using Functor	 = Functor_;
-			using ShapeType	 = Shape<size_t, 32>;
+			using ShapeType	 = typename typetraits::TypeInfo<Type>::ShapeType;
 			using StrideType = ShapeType;
 			using Scalar	 = typename typetraits::TypeInfo<Type>::Scalar;
 			using Backend	 = typename typetraits::TypeInfo<Type>::Backend;
@@ -127,7 +133,7 @@ namespace librapid {
 			/// Constructs a Function from a functor and arguments.
 			/// \param functor The functor to use.
 			/// \param args The arguments to use.
-			LIBRAPID_ALWAYS_INLINE explicit Function(const Functor &functor, const Args &...args);
+			LIBRAPID_ALWAYS_INLINE explicit Function(Functor &&functor, Args &&...args);
 
 			/// Constructs a Function from another function.
 			/// \param other The Function to copy.
@@ -147,9 +153,13 @@ namespace librapid {
 			/// \return A reference to this Function.
 			LIBRAPID_ALWAYS_INLINE Function &operator=(Function &&other) noexcept = default;
 
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const -> size_t;
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ndim() const -> size_t;
+
 			/// Return the shape of the Function's result
 			/// \return The shape of the Function's result
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto shape() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto shape() const -> const ShapeType &;
 
 			/// Return the arguments in the Function
 			/// \return The arguments in the Function
@@ -174,10 +184,9 @@ namespace librapid {
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator begin() const;
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator end() const;
 
-			/// Return a string representation of the Function
-			/// \param format The format to use.
-			/// \return A string representation of the Function
-			LIBRAPID_NODISCARD std::string str(const std::string &format = "{}") const;
+			template<typename T, typename Char, typename Ctx>
+			void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
+					 Ctx &ctx) const;
 
 		private:
 			/// Implementation detail -- evaluates the function at the given index,
@@ -200,82 +209,103 @@ namespace librapid {
 
 			Functor m_functor;
 			std::tuple<Args...> m_args;
+			ShapeType m_shape;
+			size_t m_size = 0;
 		};
 
 		template<typename desc, typename Functor, typename... Args>
-		Function<desc, Functor, Args...>::Function(const Functor &functor, const Args &...args) :
-				m_functor(functor), m_args(args...) {}
+		LIBRAPID_ALWAYS_INLINE Function<desc, Functor, Args...>::Function(Functor &&functor,
+																		  Args &&...args) :
+				m_functor(std::forward<Functor>(functor)),
+				m_args(std::forward<Args>(args)...),
+				m_shape(typetraits::TypeInfo<Functor>::getShape(m_args)), m_size(m_shape.size()) {}
 
 		template<typename desc, typename Functor, typename... Args>
-		auto Function<desc, Functor, Args...>::shape() const {
-			return typetraits::TypeInfo<Functor>::getShape(m_args);
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::shape() const
+		  -> const ShapeType & {
+			return m_shape;
 		}
 
 		template<typename desc, typename Functor, typename... Args>
-		auto &Function<desc, Functor, Args...>::args() const {
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::size() const -> size_t {
+			return m_size;
+		}
+
+		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::ndim() const -> size_t {
+			return m_shape.ndim();
+		}
+
+		template<typename desc, typename Functor, typename... Args>
+		LIBRAPID_ALWAYS_INLINE auto &Function<desc, Functor, Args...>::args() const {
 			return m_args;
 		}
 
 		template<typename desc, typename Functor, typename... Args>
-		auto Function<desc, Functor, Args...>::operator[](int64_t index) const {
-			return array::ArrayView(*this)[index];
+		LIBRAPID_ALWAYS_INLINE auto
+		Function<desc, Functor, Args...>::operator[](int64_t index) const {
+			return createGeneralArrayView(*this)[index];
 		}
 
 		template<typename desc, typename Functor, typename... Args>
-		auto Function<desc, Functor, Args...>::eval() const {
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::eval() const {
 			auto res = Array<Scalar, Backend>(shape());
 			res		 = *this;
 			return res;
 		}
 
 		template<typename desc, typename Functor, typename... Args>
-		typename Function<desc, Functor, Args...>::Packet
+		typename Function<desc, Functor, Args...>::Packet LIBRAPID_ALWAYS_INLINE
 		Function<desc, Functor, Args...>::packet(size_t index) const {
 			return packetImpl(std::make_index_sequence<sizeof...(Args)>(), index);
 		}
 
 		template<typename desc, typename Functor, typename... Args>
 		template<size_t... I>
-		auto Function<desc, Functor, Args...>::packetImpl(std::index_sequence<I...>,
-														  size_t index) const -> Packet {
+		LIBRAPID_ALWAYS_INLINE auto
+		Function<desc, Functor, Args...>::packetImpl(std::index_sequence<I...>, size_t index) const
+		  -> Packet {
 			return m_functor.packet(packetExtractor<Packet>(std::get<I>(m_args), index)...);
 		}
 
 		template<typename desc, typename Functor, typename... Args>
-		auto Function<desc, Functor, Args...>::scalar(size_t index) const -> Scalar {
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::scalar(size_t index) const
+		  -> Scalar {
 			return scalarImpl(std::make_index_sequence<sizeof...(Args)>(), index);
 		}
 
 		template<typename desc, typename Functor, typename... Args>
 		template<size_t... I>
-		auto Function<desc, Functor, Args...>::scalarImpl(std::index_sequence<I...>,
-														  size_t index) const -> Scalar {
+		LIBRAPID_ALWAYS_INLINE auto
+		Function<desc, Functor, Args...>::scalarImpl(std::index_sequence<I...>, size_t index) const
+		  -> Scalar {
 			return m_functor(scalarExtractor(std::get<I>(m_args), index)...);
 		}
 
 		template<typename desc, typename Functor, typename... Args>
-		auto Function<desc, Functor, Args...>::begin() const -> Iterator {
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::begin() const -> Iterator {
 			return Iterator(*this, 0);
 		}
 
 		template<typename desc, typename Functor, typename... Args>
-		auto Function<desc, Functor, Args...>::end() const -> Iterator {
+		LIBRAPID_ALWAYS_INLINE auto Function<desc, Functor, Args...>::end() const -> Iterator {
 			return Iterator(*this, shape()[0]);
 		}
 
 		template<typename desc, typename Functor, typename... Args>
-		std::string Function<desc, Functor, Args...>::str(const std::string &format) const {
-			return eval().str(format);
+		template<typename T, typename Char, typename Ctx>
+		LIBRAPID_ALWAYS_INLINE void
+		Function<desc, Functor, Args...>::str(const fmt::formatter<T, Char> &format, char bracket,
+											  char separator, Ctx &ctx) const {
+			createGeneralArrayView(*this).str(format, bracket, separator, ctx);
 		}
 	} // namespace detail
 } // namespace librapid
 
 // Support FMT printing
-#ifdef FMT_API
-LIBRAPID_SIMPLE_IO_IMPL(typename desc COMMA typename Functor COMMA typename... Args,
-						librapid::detail::Function<desc COMMA Functor COMMA Args...>)
+ARRAY_TYPE_FMT_IML(typename desc COMMA typename Functor COMMA typename... Args,
+				   librapid::detail::Function<desc COMMA Functor COMMA Args...>)
 LIBRAPID_SIMPLE_IO_NORANGE(typename desc COMMA typename Functor COMMA typename... Args,
 						   librapid::detail::Function<desc COMMA Functor COMMA Args...>)
-#endif // FMT_API
 
 #endif // LIBRAPID_ARRAY_FUNCTION_HPP

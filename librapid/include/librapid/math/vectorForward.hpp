@@ -79,8 +79,9 @@ namespace librapid {
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType z() { return derived()[2]; }
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType w() { return derived()[3]; }
 
-			LIBRAPID_NODISCARD virtual std::string str(const std::string &format) const {
-				return derived().str(format);
+			template<typename T_, typename Char, typename Ctx>
+			void str(const fmt::formatter<T_, Char> &formatter, Ctx &ctx) const {
+				derived().str(formatter, ctx);
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE virtual GetType _get(size_t index) const {

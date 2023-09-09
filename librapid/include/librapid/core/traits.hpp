@@ -29,7 +29,7 @@ namespace librapid {
 			Vector,
 			ArrayContainer,
 			ArrayFunction,
-			ArrayView,
+			GeneralArrayView,
 		};
 
 		constexpr bool sameType(LibRapidType type1, LibRapidType type2) { return type1 == type2; }
@@ -101,6 +101,7 @@ namespace librapid {
 			using Scalar							   = T;
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CPU;
+			using ShapeType							   = std::false_type;
 			static constexpr int64_t packetWidth	   = 1;
 			static constexpr char name[]			   = "[ NO DEFINED TYPE ]";
 			static constexpr bool supportsArithmetic   = true;
@@ -161,6 +162,7 @@ namespace librapid {
 			using Scalar							   = bool;
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CPU;
+			using ShapeType							   = std::false_type;
 			static constexpr int64_t packetWidth	   = 1;
 			static constexpr char name[]			   = "char";
 			static constexpr bool supportsArithmetic   = false;
@@ -182,6 +184,7 @@ namespace librapid {
 			using Scalar							   = char;
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CPU;
+			using ShapeType							   = std::false_type;
 			static constexpr int64_t packetWidth	   = 1;
 			static constexpr char name[]			   = "bool";
 			static constexpr bool supportsArithmetic   = false;
@@ -211,9 +214,10 @@ namespace librapid {
 		struct TypeInfo<int8_t> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = int8_t;
-			using Packet							   = Vc::Vector<int8_t>;
+			using Packet							   = xsimd::batch<int8_t>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			using ShapeType							   = std::false_type;
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "int8_t";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -242,9 +246,10 @@ namespace librapid {
 		struct TypeInfo<uint8_t> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = uint8_t;
-			using Packet							   = Vc::Vector<uint8_t>;
+			using Packet							   = xsimd::batch<uint8_t>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			using ShapeType							   = std::false_type;
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "uint8_t";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -273,9 +278,10 @@ namespace librapid {
 		struct TypeInfo<int16_t> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = int16_t;
-			using Packet							   = Vc::Vector<int16_t>;
+			using Packet							   = xsimd::batch<int16_t>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			using ShapeType							   = std::false_type;
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "int16_t";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -304,9 +310,10 @@ namespace librapid {
 		struct TypeInfo<uint16_t> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = uint16_t;
-			using Packet							   = Vc::Vector<uint16_t>;
+			using Packet							   = xsimd::batch<uint16_t>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			using ShapeType							   = std::false_type;
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "uint16_t";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -335,9 +342,10 @@ namespace librapid {
 		struct TypeInfo<int32_t> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = int32_t;
-			using Packet							   = Vc::Vector<int32_t>;
+			using Packet							   = xsimd::batch<int32_t>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			using ShapeType							   = std::false_type;
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "int32_t";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -366,9 +374,10 @@ namespace librapid {
 		struct TypeInfo<uint32_t> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = uint32_t;
-			using Packet							   = Vc::Vector<uint32_t>;
+			using Packet							   = xsimd::batch<uint32_t>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			using ShapeType							   = std::false_type;
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "uint32_t";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -399,6 +408,7 @@ namespace librapid {
 			using Scalar							   = int64_t;
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CPU;
+			using ShapeType							   = std::false_type;
 			static constexpr int64_t packetWidth	   = 1;
 			static constexpr char name[]			   = "int64_t";
 			static constexpr bool supportsArithmetic   = true;
@@ -430,6 +440,7 @@ namespace librapid {
 			using Scalar							   = uint64_t;
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CPU;
+			using ShapeType							   = std::false_type;
 			static constexpr int64_t packetWidth	   = 1;
 			static constexpr char name[]			   = "uint64_t";
 			static constexpr bool supportsArithmetic   = true;
@@ -459,9 +470,10 @@ namespace librapid {
 		struct TypeInfo<float> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = float;
-			using Packet							   = Vc::Vector<float>;
+			using Packet							   = xsimd::batch<float>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			using ShapeType							   = std::false_type;
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "float";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -490,9 +502,10 @@ namespace librapid {
 		struct TypeInfo<double> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
 			using Scalar							   = double;
-			using Packet							   = Vc::Vector<double>;
+			using Packet							   = xsimd::batch<double>;
 			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = Packet::size();
+			using ShapeType							   = std::false_type;
+			static constexpr int64_t packetWidth	   = Packet::size;
 			static constexpr char name[]			   = "double";
 			static constexpr bool supportsArithmetic   = true;
 			static constexpr bool supportsLogical	   = true;
@@ -518,11 +531,12 @@ namespace librapid {
 		};
 
 		template<typename T, typename Abi>
-		struct TypeInfo<Vc::Vector<T, Abi>> {
+		struct TypeInfo<xsimd::batch<T, Abi>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
 			using Scalar							   = T;
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CPU;
+			using ShapeType							   = std::false_type;
 			static constexpr int64_t packetWidth	   = 1;
 			static constexpr char name[]			   = "Vector";
 			static constexpr bool supportsArithmetic   = TypeInfo<Scalar>::supportsArithmetic;
@@ -555,6 +569,7 @@ namespace librapid {
 			using Scalar							   = float;
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CUDA;
+			using ShapeType							   = std::false_type;
 			static constexpr int64_t packetWidth	   = 4;
 			static constexpr char name[]			   = "float2";
 			static constexpr bool supportsArithmetic   = true;
@@ -586,6 +601,7 @@ namespace librapid {
 			using Scalar							   = float;
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CUDA;
+			using ShapeType							   = std::false_type;
 			static constexpr int64_t packetWidth	   = 1;
 			static constexpr char name[]			   = "float3";
 			static constexpr bool supportsArithmetic   = true;
@@ -617,6 +633,7 @@ namespace librapid {
 			using Scalar							   = float;
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CUDA;
+			using ShapeType							   = std::false_type;
 			static constexpr int64_t packetWidth	   = 1;
 			static constexpr char name[]			   = "float4";
 			static constexpr bool supportsArithmetic   = true;
@@ -648,6 +665,7 @@ namespace librapid {
 			using Scalar							   = double;
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CUDA;
+			using ShapeType							   = std::false_type;
 			static constexpr int64_t packetWidth	   = 1;
 			static constexpr char name[]			   = "double2";
 			static constexpr bool supportsArithmetic   = true;
@@ -679,6 +697,7 @@ namespace librapid {
 			using Scalar							   = double;
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CUDA;
+			using ShapeType							   = std::false_type;
 			static constexpr int64_t packetWidth	   = 1;
 			static constexpr char name[]			   = "double3";
 			static constexpr bool supportsArithmetic   = true;
@@ -710,6 +729,7 @@ namespace librapid {
 			using Scalar							   = double;
 			using Packet							   = std::false_type;
 			using Backend							   = backend::CUDA;
+			using ShapeType							   = std::false_type;
 			static constexpr int64_t packetWidth	   = 1;
 			static constexpr char name[]			   = "double4";
 			static constexpr bool supportsArithmetic   = true;
@@ -736,18 +756,19 @@ namespace librapid {
 		};
 #endif
 
-		template<typename VectorType, typename InstructionSet>
-		struct TypeInfo<Vc_1::Detail::ElementReference<VectorType, InstructionSet>> {
+		template<typename BatchType>
+		struct TypeInfo<xsimd::batch_element_reference<BatchType>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
-			using Scalar							   = typename VectorType::EntryType;
-			using Packet							   = std::false_type;
-			using Backend							   = backend::CPU;
-			static constexpr int64_t packetWidth	   = 1;
-			static constexpr char name[]			   = "Vc::ElementReference";
-			static constexpr bool supportsArithmetic   = true;
-			static constexpr bool supportsLogical	   = false;
-			static constexpr bool supportsBinary	   = false;
-			static constexpr bool allowVectorisation   = false;
+			using Scalar	= typename xsimd::batch_element_reference<BatchType>::Scalar;
+			using Packet	= std::false_type;
+			using Backend	= backend::CPU;
+			using ShapeType = std::false_type;
+			static constexpr int64_t packetWidth	 = 1;
+			static constexpr char name[]			 = "xsimd::batch_element_reference";
+			static constexpr bool supportsArithmetic = true;
+			static constexpr bool supportsLogical	 = false;
+			static constexpr bool supportsBinary	 = false;
+			static constexpr bool allowVectorisation = false;
 
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = false;
@@ -765,14 +786,14 @@ namespace librapid {
 		template<>
 		struct TypeInfo<backend::CPU> {
 			static constexpr char name[] = "CPU";
-			using Backend = backend::CPU;
+			using Backend				 = backend::CPU;
 		};
 
 #if defined(LIBRAPID_HAS_OPENCL)
 		template<>
 		struct TypeInfo<backend::OpenCL> {
 			static constexpr char name[] = "OpenCL";
-			using Backend = backend::OpenCL;
+			using Backend				 = backend::OpenCL;
 		};
 #endif
 
@@ -780,7 +801,7 @@ namespace librapid {
 		template<>
 		struct TypeInfo<backend::CUDA> {
 			static constexpr char name[] = "CUDA";
-			using Backend = backend::CUDA;
+			using Backend				 = backend::CUDA;
 		};
 #endif
 

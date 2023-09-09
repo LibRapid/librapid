@@ -89,16 +89,14 @@ namespace librapid::ml {
 		template<typename ShapeType, typename StorageScalar>
 		LIBRAPID_ALWAYS_INLINE void
 		forward(array::ArrayContainer<ShapeType, Storage<StorageScalar>> &dst,
-				const array::ArrayContainer<ShapeType, Storage<StorageScalar>>
-				  &src) const {
+				const array::ArrayContainer<ShapeType, Storage<StorageScalar>> &src) const {
 			dst = StorageScalar(1) / (StorageScalar(1) + exp(-src));
 		}
 
 		template<typename ShapeType, typename StorageScalar>
 		LIBRAPID_ALWAYS_INLINE void
 		backward(array::ArrayContainer<ShapeType, Storage<StorageScalar>> &dst,
-				 const array::ArrayContainer<ShapeType, Storage<StorageScalar>>
-				   &src) const {
+				 const array::ArrayContainer<ShapeType, Storage<StorageScalar>> &src) const {
 			dst = src * (StorageScalar(1) - src);
 		}
 
@@ -116,16 +114,16 @@ namespace librapid::ml {
 			dst = src * (StorageScalar(1) - src);
 		}
 
-		template<typename ShapeType, typename StorageScalar,
-				 typename descriptor, typename Functor, typename... Args>
+		template<typename ShapeType, typename StorageScalar, typename descriptor, typename Functor,
+				 typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
 		forward(array::ArrayContainer<ShapeType, Storage<StorageScalar>> &dst,
 				const detail::Function<descriptor, Functor, Args...> &src) const {
 			dst = StorageScalar(1) / (StorageScalar(1) + exp(-src));
 		}
 
-		template<typename ShapeType, typename StorageScalar,
-				 typename descriptor, typename Functor, typename... Args>
+		template<typename ShapeType, typename StorageScalar, typename descriptor, typename Functor,
+				 typename... Args>
 		LIBRAPID_ALWAYS_INLINE void
 		backward(array::ArrayContainer<ShapeType, Storage<StorageScalar>> &dst,
 				 const detail::Function<descriptor, Functor, Args...> &src) const {
@@ -175,8 +173,8 @@ namespace librapid::ml {
 														  "sigmoidActivationForward",
 														  dst.shape().size(),
 														  temp.shape().size(),
-														  dst.storage().begin().get(),
-														  temp.storage().begin().get());
+														  dst.storage().begin(),
+														  temp.storage().begin());
 		}
 
 		template<
@@ -191,8 +189,8 @@ namespace librapid::ml {
 														  "sigmoidActivationBackward",
 														  dst.shape().size(),
 														  temp.shape().size(),
-														  dst.storage().begin().get(),
-														  temp.storage().begin().get());
+														  dst.storage().begin(),
+														  temp.storage().begin());
 		}
 #endif // LIBRAPID_HAS_CUDA
 	};

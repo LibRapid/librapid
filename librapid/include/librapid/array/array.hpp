@@ -1,16 +1,16 @@
 #ifndef LIBRAPID_ARRAY
 #define LIBRAPID_ARRAY
 
-#include "sizetype.hpp"
+#include "shape.hpp"
 #include "strideTools.hpp"
 #include "storage.hpp"
 
 #if defined(LIBRAPID_HAS_OPENCL)
-#	include "../OpenCL/openclStorage.hpp"
+#    include "../OpenCL/openclStorage.hpp"
 #endif // LIBRAPID_HAS_OPENCL
 
 #if defined(LIBRAPID_HAS_CUDA)
-#	include "../cuda/cudaStorage.hpp"
+#    include "../cuda/cudaStorage.hpp"
 #endif // LIBRAPID_HAS_CUDA
 
 #include "arrayTypeDef.hpp"
@@ -20,8 +20,8 @@
 #include "operations.hpp"
 #include "function.hpp"
 #include "assignOps.hpp"
-#include "arrayView.hpp"
-#include "arrayViewString.hpp"
+#include "generalArrayView.hpp"
+#include "generalArrayViewToString.hpp"
 #include "arrayFromData.hpp"
 #include "fill.hpp"
 #include "pseudoConstructors.hpp"

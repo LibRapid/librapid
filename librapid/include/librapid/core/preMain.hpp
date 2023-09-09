@@ -6,26 +6,27 @@
  */
 
 namespace librapid::detail {
-	class PreMain {
-	public:
-		PreMain();
-	private:
-	};
+    class PreMain {
+    public:
+        PreMain();
 
-	// These must be declared here for use in ASSERT functions
-	template<typename T>
-	T internalMax(T val) {
-		return val;
-	}
+    private:
+    };
 
-	template<typename T, typename... Tn>
-	T internalMax(T val, Tn... vals) {
-		auto maxOther = internalMax(vals...);
-		return val < maxOther ? maxOther : val;
-	}
+    // These must be declared here for use in ASSERT functions
+    template<typename T>
+    T internalMax(T val) {
+        return val;
+    }
 
-	extern bool preMainRun;
-	static inline PreMain preMain = PreMain();
+    template<typename T, typename... Tn>
+    T internalMax(T val, Tn... vals) {
+        auto maxOther = internalMax(vals...);
+        return val < maxOther ? maxOther : val;
+    }
+
+    extern bool preMainRun;
+    static inline PreMain preMain = PreMain();
 } // namespace librapid::detail
 
 #endif // LIBRAPID_CORE_PREMAIN

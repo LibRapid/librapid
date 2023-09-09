@@ -41,9 +41,9 @@ namespace librapid {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
 			using Scalar							   = T;
 			using Packet							   = typename TypeInfo<T>::Packet;
-			using IndexType		 = typename std::decay_t<decltype(std::declval<Packet>()[0])>;
-			using IndexTypeConst = typename std::decay_t<decltype(std::declval<const Packet>()[0])>;
-			using GetType		 = const Packet &;
+			using IndexType							   = decltype(std::declval<Packet>()[0]);
+			using IndexTypeConst					   = Scalar;
+			using GetType							   = Packet;
 
 			using StorageType = vectorDetail::SimdVectorStorage<T, N>;
 
@@ -142,7 +142,7 @@ namespace librapid {
 			// std::array<Scalar, length> data {};
 
 #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-			alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Scalar, length> data {};
+			alignas(LIBRAPID_MEM_ALIGN) std::array<Scalar, length> data {};
 #else
 			// No memory alignment on Apple platforms or if it is disabled
 			std::array<Scalar, length> data {};
@@ -238,7 +238,7 @@ namespace librapid {
 						  "SimdVectorStorage can only be used with SIMD types");
 
 #if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-			alignas(LIBRAPID_DEFAULT_MEM_ALIGN) std::array<Packet, length> data {};
+			alignas(LIBRAPID_MEM_ALIGN) std::array<Packet, length> data {};
 #else
 			// No memory alignment on Apple platforms or if it is disabled
 			std::array<Packet, length> data {};
@@ -279,7 +279,7 @@ namespace librapid {
 								length);
 				const int64_t packetIndex  = index / packetWidth;
 				const int64_t elementIndex = index % packetWidth;
-				return data[packetIndex][elementIndex];
+				return data[packetIndex].get(elementIndex);
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType operator[](int64_t index) {
@@ -562,14 +562,24 @@ namespace librapid {
 		LIBRAPID_VECTOR_INPLACE_OP(<<)
 		LIBRAPID_VECTOR_INPLACE_OP(>>)
 
-		LIBRAPID_NODISCARD std::string str(const std::string &format) const override {
-			std::string ret = "(";
-			for (size_t i = 0; i < dims; ++i) {
-				ret += fmt::format(format, m_data[i]);
-				if (i != dims - 1) { ret += ", "; }
-			}
+		//		LIBRAPID_NODISCARD std::string str(const std::string &format) const override {
+		//			std::string ret = "(";
+		//			for (size_t i = 0; i < dims; ++i) {
+		//				ret += fmt::format(format, m_data[i]);
+		//				if (i != dims - 1) { ret += ", "; }
+		//			}
+		//
+		//			return ret + ")";
+		//		}
 
-			return ret + ")";
+		template<typename T_, typename Char, typename Ctx>
+		void str(const fmt::formatter<T_, Char> &formatter, Ctx &ctx) const {
+			fmt::format_to(ctx.out(), "(");
+			for (size_t i = 0; i < dims; ++i) {
+				formatter.format(m_data[i], ctx);
+				if (i != dims - 1) { fmt::format_to(ctx.out(), ", "); }
+			}
+			fmt::format_to(ctx.out(), ")");
 		}
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const StorageType &storage() const {
@@ -640,8 +650,13 @@ namespace librapid {
 				return op(scalarSubscriptHelper(left, index), scalarSubscriptHelper(right, index));
 			}
 
-			LIBRAPID_NODISCARD std::string str(const std::string &format) const override {
-				return eval().str(format);
+//			LIBRAPID_NODISCARD std::string str(const std::string &format) const override {
+//				return eval().str(format);
+//			}
+
+			template<typename T_, typename Char, typename Ctx>
+			void str(const fmt::formatter<T_, Char> &formatter, Ctx &ctx) const {
+				eval().str(formatter, ctx);
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GetType _get(size_t index) const override {
@@ -695,8 +710,13 @@ namespace librapid {
 				return op(scalarSubscriptHelper(val, index));
 			}
 
-			LIBRAPID_NODISCARD std::string str(const std::string &format) const override {
-				return eval().str(format);
+			// LIBRAPID_NODISCARD std::string str(const std::string &format) const override {
+			// 	return eval().str(format);
+			// }
+
+			template<typename T_, typename Char, typename Ctx>
+			void str(const fmt::formatter<T_, Char> &formatter, Ctx &ctx) const {
+				eval().str(formatter, ctx);
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GetType _get(size_t index) const override {
@@ -756,11 +776,11 @@ namespace librapid {
 			return val;
 		}
 
-		template<typename T, typename U>
-		constexpr auto scalarExtractor(const Vc_1::Detail::ElementReference<T, U> &val) {
-			using Scalar = typename Vc_1::Detail::ElementReference<T, U>::value_type;
-			return static_cast<Scalar>(val);
-		}
+		// template<typename T, typename U>
+		// constexpr auto scalarExtractor(const Vc_1::Detail::ElementReference<T, U> &val) {
+		// 	using Scalar = typename Vc_1::Detail::ElementReference<T, U>::value_type;
+		// 	return static_cast<Scalar>(val);
+		// }
 
 		template<typename NewScalar, size_t NewDims, typename T>
 		constexpr auto scalarVectorCaster(const T &val) {
@@ -972,11 +992,73 @@ namespace librapid {
 	}
 } // namespace librapid
 
-LIBRAPID_SIMPLE_IO_IMPL(typename Derived, librapid::vectorDetail::VectorBase<Derived>);
-LIBRAPID_SIMPLE_IO_IMPL(typename T COMMA size_t N, librapid::Vector<T COMMA N>);
-LIBRAPID_SIMPLE_IO_IMPL(typename LHS COMMA typename RHS COMMA typename Op,
-						librapid::vectorDetail::BinaryVecOp<LHS COMMA RHS COMMA Op>);
-LIBRAPID_SIMPLE_IO_IMPL(typename Val COMMA typename Op,
-						librapid::vectorDetail::UnaryVecOp<Val COMMA Op>);
+template<typename Derived, typename Char>
+struct fmt::formatter<librapid::vectorDetail::VectorBase<Derived>, Char> {
+	using Type = librapid::vectorDetail::VectorBase<Derived>;
+	using Base = fmt::formatter<typename Type::Scalar, Char>;
+	Base m_base;
+
+	template<typename ParseContext>
+	constexpr auto parse(ParseContext &ctx) {
+		return m_base.parse(ctx);
+	}
+
+	template<typename FormatContext>
+	auto format(const Type &vec, FormatContext &ctx) {
+		vec.str(m_base, ctx);
+		return ctx.out();
+	}
+};
+
+template<typename Scalar, size_t NumDims, typename Char>
+struct fmt::formatter<librapid::Vector<Scalar, NumDims>, Char> {
+	using Base = fmt::formatter<Scalar, Char>;
+	Base m_base;
+
+	template<typename ParseContext>
+	constexpr auto parse(ParseContext &ctx) {
+		return m_base.parse(ctx);
+	}
+
+	template<typename FormatContext>
+	auto format(const librapid::Vector<Scalar, NumDims> &vec, FormatContext &ctx) {
+		vec.str(m_base, ctx);
+		return ctx.out();
+	}
+};
+
+template<typename LHS, typename RHS, typename Op, typename Char>
+struct fmt::formatter<librapid::vectorDetail::BinaryVecOp<LHS, RHS, Op>, Char> {
+	using Base = fmt::formatter<typename librapid::vectorDetail::BinaryVecOp<LHS, RHS, Op>::Scalar, Char>;
+	Base m_base;
+
+	template<typename ParseContext>
+	constexpr auto parse(ParseContext &ctx) {
+		return m_base.parse(ctx);
+	}
+
+	template<typename FormatContext>
+	auto format(const librapid::vectorDetail::BinaryVecOp<LHS, RHS, Op> &vec, FormatContext &ctx) {
+		vec.str(m_base, ctx);
+		return ctx.out();
+	}
+};
+
+template<typename Val, typename Op, typename Char>
+struct fmt::formatter<librapid::vectorDetail::UnaryVecOp<Val, Op>, Char> {
+	using Base = fmt::formatter<typename librapid::vectorDetail::UnaryVecOp<Val, Op>::Scalar, Char>;
+	Base m_base;
+
+	template<typename ParseContext>
+	constexpr auto parse(ParseContext &ctx) {
+		return m_base.parse(ctx);
+	}
+
+	template<typename FormatContext>
+	auto format(const librapid::vectorDetail::UnaryVecOp<Val, Op> &vec, FormatContext &ctx) {
+		vec.str(m_base, ctx);
+		return ctx.out();
+	}
+};
 
 #endif // LIBRAPID_MATH_VECTOR_HPP

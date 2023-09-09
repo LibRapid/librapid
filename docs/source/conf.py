@@ -99,10 +99,10 @@ myst_enable_extensions = [
 if os.environ.get("GITHUB_TOKEN") is not None:
     extensions.append("rtds_action")
     rtds_action_github_repo = "LibRapid/librapid"
-    rtds_action_path = "BENCH_RESULTS"
-    rtds_action_artifact_prefix = "benchmark-results-for-"
+    rtds_action_path = "BenchmarkResults"
+    rtds_action_artifact_prefix = "LibRapid_Benchmark_SHA_"
     rtds_action_github_token = os.environ["GITHUB_TOKEN"]
-    rtds_action_error_if_missing = False
+    rtds_action_error_if_missing = True
 
 autosectionlabel_prefix_document = True
 
@@ -182,10 +182,10 @@ html_theme_options = {
     <img src="/en/latest/_static/LR_icon.png" alt="LibRapid" width="22.5"></img>
     <a href="https://github.com/sponsors/Pencilcaseman">
         <span class="banner-resize-text-lg">
-            If you like LibRapid, please consider a small donation support its development!
+            If you like LibRapid, please consider supporting its development!
         </span>
         <span class="banner-resize-text-sm">
-            Please consider donating!
+            Support LibRapid's Development!
         </span>
     </a>
 </div>

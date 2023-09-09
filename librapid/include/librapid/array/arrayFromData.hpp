@@ -2,95 +2,93 @@
 #define LIBRAPID_ARRAY_FROM_DATA_HPP
 
 namespace librapid {
-	/// \brief Create an array from a list of values (possibly multi-dimensional)
-	///
-	/// Create a new array from a potentially nested list of values. It is possible to specify the
-	/// data type of the Array with the \p Scalar template parameter. If no type is specified, the
-	/// type will be inferred from the data. The backend on which the Array is created can also be
-	/// specified with the \p Backend template parameter. If no backend is specified, the Array will
-	/// be created on the CPU.
-	///
-	/// \tparam Scalar The type of the Array
-	/// \tparam Backend The backend on which the Array is created
-	/// \param data The data from which the Array is created
-	/// \return The created Array
-	template<typename Scalar, typename Backend>
-	auto array::ArrayContainer<Scalar, Backend>::fromData(const std::initializer_list<Scalar> &data)
-	  -> ArrayContainer {
+	template<typename ShapeType, typename StorageType>
+	LIBRAPID_ALWAYS_INLINE auto array::ArrayContainer<ShapeType, StorageType>::fromData(
+	  const std::initializer_list<Scalar> &data) -> ArrayContainer {
+		static_assert(!std::is_same_v<ShapeType, MatrixShape>,
+					  "Cannot create a matrix from a 1D array");
 		LIBRAPID_ASSERT(data.size() > 0, "Array must have at least one element");
 		return ArrayContainer(data);
 	}
 
-	template<typename Scalar, typename Backend>
-	auto array::ArrayContainer<Scalar, Backend>::fromData(const std::vector<Scalar> &data)
+	template<typename ShapeType, typename StorageType>
+	LIBRAPID_ALWAYS_INLINE auto
+	array::ArrayContainer<ShapeType, StorageType>::fromData(const std::vector<Scalar> &data)
 	  -> ArrayContainer {
+		static_assert(!std::is_same_v<ShapeType, MatrixShape>,
+					  "Cannot create a matrix from a 1D array");
 		LIBRAPID_ASSERT(data.size() > 0, "Array must have at least one element");
 		return ArrayContainer(data);
 	}
 
-	template<typename Scalar, typename Backend>
-	auto array::ArrayContainer<Scalar, Backend>::fromData(
+	template<typename ShapeType, typename StorageType>
+	LIBRAPID_ALWAYS_INLINE auto array::ArrayContainer<ShapeType, StorageType>::fromData(
 	  const std::initializer_list<std::initializer_list<Scalar>> &data) -> ArrayContainer {
 		LIBRAPID_ASSERT(data.size() > 0, "Cannot create a zero-sized array");
-		auto newShape = ShapeType({data.size(), data.begin()->size()});
+
+		if constexpr (std::is_same_v<ShapeType, MatrixShape>) {
+			auto newShape = ShapeType({data.size(), data.begin()->size()});
+			auto res	  = ArrayContainer(newShape);
+			for (size_t i = 0; i < data.size(); ++i) {
+				LIBRAPID_ASSERT(data.begin()[i].size() == newShape[1],
+								"Arrays must have consistent shapes");
+				for (size_t j = 0; j < data.begin()[i].size(); ++j) {
+					res(i, j) = data.begin()[i].begin()[j];
+				}
+			}
+			return res;
+		} else {
+			auto newShape = ShapeType({data.size(), data.begin()->size()});
 #if defined(LIBRAPID_ENABLE_ASSERT)
-		for (size_t i = 0; i < data.size(); ++i) {
-			LIBRAPID_ASSERT(data.begin()[i].size() == newShape[1],
-							"Arrays must have consistent shapes");
-		}
+			for (size_t i = 0; i < data.size(); ++i) {
+				LIBRAPID_ASSERT(data.begin()[i].size() == newShape[1],
+								"Arrays must have consistent shapes");
+			}
 #endif
-		auto res	  = ArrayContainer(newShape);
-		int64_t index = 0;
-		for (const auto &item : data) res[index++] = fromData(item);
-		return res;
+			auto res	  = ArrayContainer(newShape);
+			int64_t index = 0;
+			for (const auto &item : data) res[index++] = fromData(item);
+			return res;
+		}
 	}
 
-	template<typename Scalar, typename Backend>
-	auto
-	array::ArrayContainer<Scalar, Backend>::fromData(const std::vector<std::vector<Scalar>> &data)
-	  -> ArrayContainer {
+	template<typename ShapeType, typename StorageType>
+	LIBRAPID_ALWAYS_INLINE auto array::ArrayContainer<ShapeType, StorageType>::fromData(
+	  const std::vector<std::vector<Scalar>> &data) -> ArrayContainer {
 		LIBRAPID_ASSERT(data.size() > 0, "Cannot create a zero-sized array");
-		auto newShape = ShapeType({data.size(), data.begin()->size()});
-#if defined(LIBRAPID_ENABLE_ASSERT)
-		for (size_t i = 0; i < data.size(); ++i) {
-			LIBRAPID_ASSERT(data.begin()[i].size() == newShape[1],
-							"Arrays must have consistent shapes");
-		}
-#endif
-		auto res	  = ArrayContainer(newShape);
-		int64_t index = 0;
-		for (const auto &item : data) res[index++] = fromData(item);
-		return res;
-	}
 
-	//#define HIGHER_DIMENSIONAL_FROM_DATA(TYPE)                                                         \
-//	template<typename Scalar, typename Backend>                                                    \
-//	auto array::ArrayContainer<Scalar, Backend>::fromData(const TYPE &data) -> ArrayContainer {    \
-//		LIBRAPID_ASSERT(data.size() > 0, "Cannot create a zero-sized array");                      \
-//		auto *tmp	  = new ArrayContainer[data.size()];                                           \
-//		int64_t index = 0;                                                                         \
-//		for (const auto &item : data) tmp[index++] = fromData(item);                               \
-//		auto zeroShape = tmp[0].shape();                                                           \
-//		for (int64_t i = 0; i < data.size(); ++i)                                                  \
-//			LIBRAPID_ASSERT(tmp[i].shape().operator==(zeroShape),                                  \
-//							"Arrays must have consistent shapes");                                 \
-//		auto newShape = ShapeType::zeros(zeroShape.ndim() + 1);                                    \
-//		newShape[0]	  = data.size();                                                               \
-//		for (size_t i = 0; i < zeroShape.ndim(); ++i) { newShape[i + 1] = zeroShape[i]; }          \
-//		auto res = Array<Scalar, Backend>(newShape);                                               \
-//		index	 = 0;                                                                              \
-//		for (int64_t i = 0; i < data.size(); ++i) res[i] = std::move(tmp[i]);                      \
-//		delete[] tmp;                                                                              \
-//		return res;                                                                                \
-//	}
+		if constexpr (std::is_same_v<ShapeType, MatrixShape>) {
+			auto newShape = ShapeType({data.size(), data[0].size()});
+			auto res	  = ArrayContainer(newShape);
+			for (size_t i = 0; i < data.size(); ++i) {
+				LIBRAPID_ASSERT(data[i].size() == newShape[1],
+								"Arrays must have consistent shapes");
+				for (size_t j = 0; j < data[i].size(); ++j) { res(i, j) = data[i][j]; }
+			}
+			return res;
+		} else {
+			auto newShape = ShapeType({data.size(), data.begin()->size()});
+#if defined(LIBRAPID_ENABLE_ASSERT)
+			for (size_t i = 0; i < data.size(); ++i) {
+				LIBRAPID_ASSERT(data.begin()[i].size() == newShape[1],
+								"Arrays must have consistent shapes");
+			}
+#endif
+			auto res	  = ArrayContainer(newShape);
+			int64_t index = 0;
+			for (const auto &item : data) res[index++] = fromData(item);
+			return res;
+		}
+	}
 
 #define HIGHER_DIMENSIONAL_FROM_DATA(TYPE)                                                         \
-	template<typename Scalar, typename Backend>                                                    \
-	auto array::ArrayContainer<Scalar, Backend>::fromData(const TYPE &data) -> ArrayContainer {    \
+	template<typename ShapeType, typename StorageType>                                             \
+	LIBRAPID_ALWAYS_INLINE auto array::ArrayContainer<ShapeType, StorageType>::fromData(           \
+	  const TYPE &data) -> ArrayContainer {                                                        \
 		LIBRAPID_ASSERT(data.size() > 0, "Cannot create a zero-sized array");                      \
 		std::vector<ArrayContainer> tmp(data.size());                                              \
 		int64_t index = 0;                                                                         \
-		for (const auto &item : data) tmp[index++] = fromData(item);                               \
+		for (const auto &item : data) tmp[index++] = std::move(fromData(item));                    \
 		auto zeroShape = tmp[0].shape();                                                           \
 		for (int64_t i = 0; i < data.size(); ++i)                                                  \
 			LIBRAPID_ASSERT(tmp[i].shape().operator==(zeroShape),                                  \

@@ -10,16 +10,18 @@ constexpr double tolerance = 0.001;
 // #define BACKEND lrc::backend::CPU
 
 #define TEST_ARRAY_VIEW(SCALAR, BACKEND)                                                           \
-	TEST_CASE(fmt::format("Test ArrayView -- {} {}", STRINGIFY(SCALAR), STRINGIFY(BACKEND)),       \
-			  "[array-lib]") {                                                                     \
+	TEST_CASE(                                                                                     \
+	  fmt::format("Test GeneralArrayView -- {} {}", STRINGIFY(SCALAR), STRINGIFY(BACKEND)),        \
+	  "[array-lib]") {                                                                             \
 		lrc::Shape shape({7, 11});                                                                 \
 		lrc::Array<SCALAR, BACKEND> testArr(shape);                                                \
                                                                                                    \
 		for (int64_t i = 0; i < testArr.shape().size(); ++i) { testArr.storage()[i] = i; }         \
                                                                                                    \
-		auto testView		  = lrc::array::ArrayView(testArr);                                    \
-		auto testViewCopy	  = lrc::array::ArrayView(testView);                                   \
-		auto testViewMoveView = lrc::array::ArrayView(lrc::array::ArrayView(testArr));             \
+		auto testView	  = lrc::createGeneralArrayView(testArr);                                 \
+		auto testViewCopy = lrc::createGeneralArrayView(testView);                                \
+		auto testViewMoveView =                                                                    \
+		  lrc::array::GeneralArrayView(lrc::createGeneralArrayView(testArr));                     \
                                                                                                    \
 		REQUIRE(testView.ndim() == 2);                                                             \
 		REQUIRE(testViewCopy.ndim() == 2);                                                         \

@@ -10,17 +10,16 @@
 #define LIBRAPID_SIMPLE_IO_IMPL(TEMPLATE_, TYPE_)                                                  \
 	template<TEMPLATE_>                                                                            \
 	struct fmt::formatter<TYPE_> {                                                                 \
-		std::string formatStr = "{}";                                                              \
+		char formatStr[32] = {'{', ':'};                                                           \
                                                                                                    \
-		template<typename ParseContext>                                                            \
-		constexpr auto parse(ParseContext &ctx) {                                                  \
-			formatStr = "{:";                                                                      \
-			auto it	  = ctx.begin();                                                               \
+		constexpr auto parse(format_parse_context &ctx) -> format_parse_context::iterator {        \
+			auto it		   = ctx.begin();                                                          \
+			uint64_t index = 0;                                                                    \
 			for (; it != ctx.end(); ++it) {                                                        \
 				if (*it == '}') break;                                                             \
-				formatStr += *it;                                                                  \
+				formatStr[index++] += *it;                                                         \
 			}                                                                                      \
-			formatStr += "}";                                                                      \
+			formatStr[index] = '}';                                                                \
 			return it;                                                                             \
 		}                                                                                          \
                                                                                                    \
@@ -69,7 +68,7 @@
 	}
 
 #define LIBRAPID_SIMPLE_IO_NORANGE(TEMPLATE, TYPE)                                                 \
-	template<TEMPLATE, typename Char>                                                                             \
+	template<TEMPLATE, typename Char>                                                              \
 	struct fmt::is_range<TYPE, Char> : std::false_type {};
 
 namespace librapid::typetraits {
@@ -80,6 +79,10 @@ namespace librapid::typetraits {
 // Define a type as being part of librapid -- this should be contained in the typetraits namespace
 #define LIBRAPID_DEFINE_AS_TYPE(TEMPLATE_, TYPE_)                                                  \
 	template<TEMPLATE_>                                                                            \
+	struct IsLibRapidType<TYPE_> : std::true_type {}
+
+#define LIBRAPID_DEFINE_AS_TYPE_NO_TEMPLATE(TYPE_)                                                 \
+	template<>                                                                                     \
 	struct IsLibRapidType<TYPE_> : std::true_type {}
 
 #endif // LIBRAPID_CORE_HELPER_MACROS

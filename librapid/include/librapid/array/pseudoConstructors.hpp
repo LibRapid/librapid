@@ -51,9 +51,9 @@ namespace librapid {
 	/// \tparam N Maximum number of dimensions of the Shape
 	/// \param shape Shape of the Array
 	/// \return Array filled with zeros
-	template<typename Scalar = double, typename Backend = backend::CPU, typename T = size_t,
-			 size_t N = 32>
-	Array<Scalar, Backend> zeros(const Shape<T, N> &shape) {
+	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType = Shape,
+			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
+	Array<Scalar, Backend> zeros(const ShapeType &shape) {
 		return Array<Scalar, Backend>(shape, Scalar(0));
 	}
 
@@ -79,9 +79,9 @@ namespace librapid {
 	/// \tparam N Maximum number of dimensions of the Shape
 	/// \param shape Shape of the Array
 	/// \return Array filled with ones
-	template<typename Scalar = double, typename Backend = backend::CPU, typename T = size_t,
-			 size_t N = 32>
-	Array<Scalar, Backend> ones(const Shape<T, N> &shape) {
+	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType = Shape,
+			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
+	Array<Scalar, Backend> ones(const ShapeType &shape) {
 		return Array<Scalar, Backend>(shape, Scalar(1));
 	}
 
@@ -109,11 +109,11 @@ namespace librapid {
 	/// \tparam N Maximum number of dimensions of the Shape
 	/// \param shape Shape of the Array
 	/// \return Array filled with numbers from 0 to N-1
-	template<typename Scalar = int64_t, typename Backend = backend::CPU, typename T = size_t,
-			 size_t N = 32>
-	Array<Scalar, Backend> ordered(const Shape<T, N> &shape) {
+	template<typename Scalar = int64_t, typename Backend = backend::CPU, typename ShapeType = Shape,
+			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
+	Array<Scalar, Backend> ordered(const ShapeType &shape) {
 		Array<Scalar, Backend> result(shape);
-		for (size_t i = 0; i < shape.size(); i++) { result.storage()[i] = Scalar(i); }
+		for (size_t i = 0; i < result.size(); i++) { result.storage()[i] = Scalar(i); }
 		return result;
 	}
 
@@ -216,8 +216,9 @@ namespace librapid {
 		return result;
 	}
 
-	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType, typename Lower, typename Upper>
-	Array<Scalar, Backend> random(const ShapeType &shape, Lower lower, Upper upper) {
+	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType,
+			 typename Lower = double, typename Upper = double>
+	Array<Scalar, Backend> random(const ShapeType &shape, Lower lower = 0, Upper upper = 1) {
 		Array<Scalar, Backend> result(shape);
 		fillRandom(result, lower, upper);
 		return result;

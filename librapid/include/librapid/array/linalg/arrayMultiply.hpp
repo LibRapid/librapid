@@ -65,15 +65,7 @@ namespace librapid {
 			/// Move constructor
 			ArrayMultiply(ArrayMultiply &&) noexcept = default;
 
-			/// \brief Full set of parameters for an array multiplication
-			/// \param transA Determines \f$ \mathrm{OP}_A \f$ (true: transpose, false: no
-			/// transpose) \param transB Determines \f$ \mathrm{OP}_B \f$ (true: transpose, false:
-			/// no transpose) \param a First array \param alpha Scaling factor \f$ \alpha \f$ \param
-			/// b Second array \param beta Scaling factor \f$ \beta \f$
-			ArrayMultiply(bool transA, bool transB, const TypeA &a, Alpha alpha, const TypeB &b,
-						  Beta beta);
-
-			/// \brief Full set of parameters, but with move semantics
+			/// \brief Full set of parameters
 			/// \param transA
 			/// \param transB
 			/// \param a
@@ -85,24 +77,10 @@ namespace librapid {
 			/// \brief Array multiplication with \f$ \alpha = 1 \f$ and \f$ \beta = 0 \f$
 			/// \param a
 			/// \param b
-			ArrayMultiply(const TypeA &a, const TypeB &b);
-
-			/// \brief Array multiplication with \f$ \alpha = 1 \f$ and \f$ \beta = 0 \f$, but with
-			/// move semantics
-			/// \param a
-			/// \param b
 			ArrayMultiply(TypeA &&a, TypeB &&b);
 
 			/// \brief Array multiplication with \f$ \alpha = 1 \f$ and \f$ \beta = 0 \f$ and
 			/// transpose options
-			/// \param transA
-			/// \param transB
-			/// \param a
-			/// \param b
-			ArrayMultiply(bool transA, bool transB, const TypeA &a, const TypeB &b);
-
-			/// \brief Array multiplication with \f$ \alpha = 1 \f$ and \f$ \beta = 0 \f$ and
-			/// transpose options, but with move semantics
 			/// \param transA
 			/// \param transB
 			/// \param a
@@ -128,9 +106,13 @@ namespace librapid {
 			/// \return Class of the array multiplication
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE MatmulClass matmulClass() const;
 
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ShapeType calculateShape() const;
+
 			/// \brief Determine the shape of the result
 			/// \return Shape of the result
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ShapeType shape() const;
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE size_t size() const;
 
 			/// \brief Determine the number of dimensions of the result
 			/// \return Number of dimensions of the result
@@ -184,10 +166,9 @@ namespace librapid {
 			template<typename StorageType>
 			void applyTo(array::ArrayContainer<ShapeType, StorageType> &out) const;
 
-			/// \brief String representation of the array multiplication
-			/// \param format Format string for each element
-			/// \return String representation of the array multiplication
-			LIBRAPID_NODISCARD std::string str(const std::string &format) const;
+			template<typename T, typename Char, typename Ctx>
+			void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
+					 Ctx &ctx) const;
 
 		private:
 			bool m_transA;	 // Transpose state of A
@@ -196,16 +177,10 @@ namespace librapid {
 			ScalarA m_alpha; // Scaling factor for A
 			TypeB m_b;		 // Second array
 			ScalarB m_beta;	 // Scaling factor for B
-		};
 
-		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
-				 typename StorageTypeB, typename Alpha, typename Beta>
-		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
-					  Beta>::ArrayMultiply(bool transA, bool transB, const TypeA &a, Alpha alpha,
-										   const TypeB &b, Beta beta) :
-				m_transA(transA),
-				m_transB(transB), m_a(a), m_alpha(static_cast<ScalarA>(alpha)), m_b(b),
-				m_beta(static_cast<ScalarB>(beta)) {}
+			ShapeType m_shape;
+			size_t m_size;
+		};
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
@@ -214,14 +189,8 @@ namespace librapid {
 										   TypeB &&b, Beta beta) :
 				m_transA(transA),
 				m_transB(transB), m_a(std::forward<TypeA>(a)), m_alpha(static_cast<ScalarA>(alpha)),
-				m_b(std::forward<TypeB>(b)), m_beta(static_cast<ScalarB>(beta)) {}
-
-		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
-				 typename StorageTypeB, typename Alpha, typename Beta>
-		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
-					  Beta>::ArrayMultiply(const TypeA &a, const TypeB &b) :
-				m_transA(false),
-				m_transB(false), m_a(a), m_alpha(1), m_b(b), m_beta(0) {}
+				m_b(std::forward<TypeB>(b)), m_beta(static_cast<ScalarB>(beta)),
+				m_shape(calculateShape()), m_size(m_shape.size()) {}
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
@@ -229,15 +198,8 @@ namespace librapid {
 					  Beta>::ArrayMultiply(TypeA &&a, TypeB &&b) :
 				m_transA(false),
 				m_transB(false), m_a(std::forward<TypeA>(a)), m_alpha(1),
-				m_b(std::forward<TypeB>(b)), m_beta(0) {}
-
-		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
-				 typename StorageTypeB, typename Alpha, typename Beta>
-		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
-					  Beta>::ArrayMultiply(bool transA, bool transB, const TypeA &a,
-										   const TypeB &b) :
-				m_transA(transA),
-				m_transB(transB), m_a(a), m_alpha(1), m_b(b), m_beta(0) {}
+				m_b(std::forward<TypeB>(b)), m_beta(0), m_shape(calculateShape()),
+				m_size(m_shape.size()) {}
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
@@ -245,7 +207,8 @@ namespace librapid {
 					  Beta>::ArrayMultiply(bool transA, bool transB, TypeA &&a, TypeB &&b) :
 				m_transA(transA),
 				m_transB(transB), m_a(std::forward<TypeA>(a)), m_alpha(1),
-				m_b(std::forward<TypeB>(b)), m_beta(0) {}
+				m_b(std::forward<TypeB>(b)), m_beta(0), m_shape(calculateShape()),
+				m_size(m_shape.size()) {}
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
@@ -315,8 +278,8 @@ namespace librapid {
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
-		auto ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::shape()
-		  const -> ShapeType {
+		auto ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
+						   Beta>::calculateShape() const -> ShapeType {
 			const auto &shapeA		= m_a.shape();
 			const auto &shapeB		= m_b.shape();
 			MatmulClass matmulClass = this->matmulClass();
@@ -339,6 +302,21 @@ namespace librapid {
 
 			LIBRAPID_NOT_IMPLEMENTED;
 			return {1};
+		}
+
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		auto ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::shape()
+		  const -> ShapeType {
+			return m_shape;
+		}
+
+		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
+				 typename StorageTypeB, typename Alpha, typename Beta>
+		auto
+		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::size() const
+		  -> size_t {
+			return m_size;
 		}
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
@@ -497,10 +475,10 @@ namespace librapid {
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
-		std::string
-		ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::str(
-		  const std::string &format) const {
-			return eval().str(format);
+		template<typename T, typename Char, typename Ctx>
+		void ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::str(
+		  const fmt::formatter<T, Char> &format, char bracket, char separator, Ctx &ctx) const {
+			eval().str(format, bracket, separator, ctx);
 		}
 	} // namespace linalg
 
@@ -618,13 +596,17 @@ namespace librapid {
 		auto dotHelper(T &&val) {
 			if constexpr (IsTransposeType<T>::value) {
 				auto [transpose, alpha, array]	  = transposeExtractor(std::forward<T>(val));
-				auto [transpose2, alpha2, array2] = dotHelper(std::forward<T>(array));
+				using ArrayType					  = decltype(array);
+				auto [transpose2, alpha2, array2] = dotHelper(std::forward<ArrayType>(array));
+				using Array2Type				  = decltype(array2);
 				return std::make_tuple(
-				  transpose ^ transpose2, alpha * alpha2, std::forward<T>(array2));
+				  transpose ^ transpose2, alpha * alpha2, std::forward<Array2Type>(array2));
 			} else if constexpr (IsMultiplyType<T>::value) {
 				auto [alpha, array]				 = multiplyExtractor(std::forward<T>(val));
-				auto [transpose, alpha2, array2] = dotHelper(std::forward<T>(array));
-				return std::make_tuple(transpose, alpha * alpha2, std::forward<T>(array2));
+				using ArrayType					 = decltype(array);
+				auto [transpose, alpha2, array2] = dotHelper(std::forward<ArrayType>(array));
+				using Array2Type				 = decltype(array2);
+				return std::make_tuple(transpose, alpha * alpha2, std::forward<Array2Type>(array2));
 			} else {
 				using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
 				return std::make_tuple(false, Scalar(1), std::forward<T>(val));
@@ -655,42 +637,54 @@ namespace librapid {
 	  typename First, typename Second,
 	  typename std::enable_if_t<IsArrayType<First>::value && IsArrayType<Second>::value, int> = 0>
 	auto dot(First &&a, Second &&b) {
-		using ScalarA  = typename typetraits::TypeInfo<std::decay_t<First>>::Scalar;
-		using ScalarB  = typename typetraits::TypeInfo<std::decay_t<Second>>::Scalar;
-		using BackendA = typename typetraits::TypeInfo<std::decay_t<First>>::Backend;
-		using BackendB = typename typetraits::TypeInfo<std::decay_t<Second>>::Backend;
-		using ArrayA   = Array<ScalarA, BackendA>;
-		using ArrayB   = Array<ScalarB, BackendB>;
+		using ScalarA	   = typename typetraits::TypeInfo<std::decay_t<First>>::Scalar;
+		using ScalarB	   = typename typetraits::TypeInfo<std::decay_t<Second>>::Scalar;
+		using BackendA	   = typename typetraits::TypeInfo<std::decay_t<First>>::Backend;
+		using BackendB	   = typename typetraits::TypeInfo<std::decay_t<Second>>::Backend;
+		using ArrayA	   = Array<ScalarA, BackendA>;
+		using ArrayB	   = Array<ScalarB, BackendB>;
+		using ShapeTypeA   = typename typetraits::TypeInfo<std::decay_t<First>>::ShapeType;
+		using ShapeTypeB   = typename typetraits::TypeInfo<std::decay_t<Second>>::ShapeType;
+		using StorageTypeA = typename typetraits::TypeInfo<std::decay_t<First>>::StorageType;
+		using StorageTypeB = typename typetraits::TypeInfo<std::decay_t<Second>>::StorageType;
 
-		auto [transA, alpha, arrA] = detail::dotHelper(a);
-		auto [transB, beta, arrB]  = detail::dotHelper(b);
-		return linalg::ArrayMultiply(transA,
-									 transB,
-									 std::forward<ArrayA>(arrA),
-									 alpha * beta,
-									 std::forward<ArrayB>(arrB),
-									 0); // .eval();
+		auto [transA, alpha, arrA] = detail::dotHelper(std::forward<First>(a));
+		auto [transB, beta, arrB]  = detail::dotHelper(std::forward<Second>(b));
+		return linalg::
+		  ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, ScalarA, ScalarB>(
+			transA,
+			transB,
+			std::forward<ArrayA>(arrA),
+			alpha * beta,
+			std::forward<ArrayB>(arrB),
+			0);
 	}
 
 	namespace typetraits {
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
-		struct TypeInfo<linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB,
-											  Alpha, Beta>> {
+		struct TypeInfo<
+		  linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>> {
 			detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
-			using Type = linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB,
-											  Alpha, Beta>;
+			using Type	 = linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB,
+												 Alpha, Beta>;
 			using Scalar = typename Type::Scalar;
-			using Backend = typename Type::Backend;
+			using Backend							 = typename Type::Backend;
+			static constexpr bool allowVectorisation = false;
 		};
-	}
+
+		LIBRAPID_DEFINE_AS_TYPE(typename ShapeTypeA COMMA typename StorageTypeA COMMA
+								typename ShapeTypeB COMMA typename StorageTypeB COMMA
+								typename Alpha COMMA typename Beta,
+								linalg::ArrayMultiply<ShapeTypeA COMMA StorageTypeA COMMA ShapeTypeB
+														COMMA StorageTypeB COMMA Alpha COMMA Beta>);
+	} // namespace typetraits
 } // namespace librapid
 
-LIBRAPID_SIMPLE_IO_IMPL(
-  typename ShapeTypeA COMMA typename StorageTypeA COMMA typename ShapeTypeB COMMA
-  typename StorageTypeB COMMA typename Alpha COMMA typename Beta,
-  librapid::linalg::ArrayMultiply<
-	ShapeTypeA COMMA StorageTypeA COMMA ShapeTypeB COMMA StorageTypeB COMMA Alpha COMMA Beta>)
+ARRAY_TYPE_FMT_IML(typename ShapeTypeA COMMA typename StorageTypeA COMMA typename ShapeTypeB COMMA
+				   typename StorageTypeB COMMA typename Alpha COMMA typename Beta,
+				   librapid::linalg::ArrayMultiply<ShapeTypeA COMMA StorageTypeA COMMA ShapeTypeB
+													 COMMA StorageTypeB COMMA Alpha COMMA Beta>)
 
 LIBRAPID_SIMPLE_IO_NORANGE(
   typename ShapeTypeA COMMA typename StorageTypeA COMMA typename ShapeTypeB COMMA
