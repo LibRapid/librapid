@@ -272,7 +272,7 @@ jobs:
 
     steps:
       - name: Checkout LibRapid
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -354,7 +354,7 @@ jobs:
 
     steps:
       - name: Checkout LibRapid
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -370,7 +370,7 @@ jobs:
 
     steps:
       - name: Checkout LibRapid
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -478,7 +478,7 @@ jobs:
 
     steps:
       - name: Checkout LibRapid
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -520,7 +520,7 @@ jobs:
     if: github.event_name != 'pull_request'
     steps:
       - name: Checkout LibRapid
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
