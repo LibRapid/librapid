@@ -332,7 +332,7 @@ namespace librapid {
 			mkl_free(ptr_);
 #elif defined(LIBRAPID_APPLE)
 			free(ptr_);
-#elif defined(LIBRAPID_NATIVE_ARCH) && defined(LIBRAPID_MSVC)
+#elif defined(LIBRAPID_MSVC) || defined(LIBRAPID_MINGW)
 			_aligned_free(ptr_);
 #else
 			free(ptr_);
@@ -368,8 +368,7 @@ namespace librapid {
 #elif defined(LIBRAPID_MSVC) || defined(LIBRAPID_MINGW)
 			Pointer ptr;
 			try {
-				ptr =
-				  static_cast<Pointer>(_aligned_malloc(size * sizeof(T), LIBRAPID_MEM_ALIGN));
+				ptr = static_cast<Pointer>(_aligned_malloc(size * sizeof(T), LIBRAPID_MEM_ALIGN));
 			} catch (const std::exception &) {
 				LIBRAPID_ASSERT(false, "Failed to allocate {} bytes of memory", size * sizeof(T));
 			}
