@@ -61,6 +61,25 @@ DEFAULT: OFF
 Disable all warnings from LibRapid. This is useful if you are using LibRapid as a dependency and want a cleaner
 compilation output. Warnings should be minimal in the first place, but this option is provided just in case.
 
+### ``LIBRAPID_USE_PRECOMPILED_HEADER``
+
+```
+DEFAULT: OFF
+```
+
+Enable the use of precompiled headers within LibRapid's compilation. This can be useful to accelerate compilation, but
+can lead to some strange build errors, which is why it is disabled by default.
+
+:::{warning}
+One such build error occurs on some macOS systems with GCC. The resulting error is something along the lines of:
+
+```
+Unknown flag -Xarch_amd64
+```
+
+If you encounter this error, try disabling ``LIBRAPID_USE_PRECOMPILED_HEADER``.
+:::
+
 ### ``LIBRAPID_GET_FFTW``
 
 ```

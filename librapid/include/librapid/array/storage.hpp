@@ -99,10 +99,6 @@ namespace librapid {
 		/// Free a Storage object
 		~Storage();
 
-		/// \brief Set this storage object to reference the same data as \p other
-		/// \param other Storage object to reference
-		void set(const Storage &other);
-
 		/// \brief Return a Storage object on the host with the same data as this Storage object
 		/// (mainly for use with CUDA or OpenCL)
 		/// \return
@@ -174,7 +170,7 @@ namespace librapid {
 		template<typename P>
 		LIBRAPID_ALWAYS_INLINE void initData(P begin, SizeType size);
 
-#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
+#if defined(LIBRAPID_NATIVE_ARCH)
 		alignas(LIBRAPID_MEM_ALIGN) Pointer m_begin = nullptr;
 #else
 		Pointer m_begin = nullptr; // Pointer to the beginning of the data
@@ -336,7 +332,7 @@ namespace librapid {
 			mkl_free(ptr_);
 #elif defined(LIBRAPID_APPLE)
 			free(ptr_);
-#elif defined(LIBRAPID_NATIVE_ARCH) && defined(LIBRAPID_MSVC)
+#elif defined(LIBRAPID_MSVC) || defined(LIBRAPID_MINGW)
 			_aligned_free(ptr_);
 #else
 			free(ptr_);
@@ -370,7 +366,12 @@ namespace librapid {
 			LIBRAPID_ASSERT(err == 0, "posix_memalign failed with error code {}", err);
 			auto ptr = static_cast<Pointer>(_ptr);
 #elif defined(LIBRAPID_MSVC) || defined(LIBRAPID_MINGW)
-			auto ptr = static_cast<Pointer>(_aligned_malloc(size * sizeof(T), LIBRAPID_MEM_ALIGN));
+			Pointer ptr;
+			try {
+				ptr = static_cast<Pointer>(_aligned_malloc(size * sizeof(T), LIBRAPID_MEM_ALIGN));
+			} catch (const std::exception &) {
+				LIBRAPID_ASSERT(false, "Failed to allocate {} bytes of memory", size * sizeof(T));
+			}
 #else
 			auto ptr =
 			  static_cast<Pointer>(std::aligned_alloc(LIBRAPID_MEM_ALIGN, size * sizeof(T)));
@@ -381,7 +382,6 @@ namespace librapid {
 
 			// If the type cannot be trivially constructed, we need to
 			// initialize each value
-
 			auto ptr_ = LIBRAPID_ASSUME_ALIGNED(ptr);
 			LIBRAPID_ASSUME(ptr_ != nullptr);
 			LIBRAPID_ASSUME(size > 0);
@@ -475,7 +475,7 @@ namespace librapid {
 		if (this != &other) {
 			size_t oldSize = m_size;
 			m_size		   = other.m_size;
-			if (other.m_size == m_size) LIBRAPID_UNLIKELY {
+			if (oldSize != m_size) LIBRAPID_UNLIKELY {
 					if (m_ownsData) LIBRAPID_LIKELY {
 							// Reallocate
 							detail::safeDeallocate(m_begin, oldSize);
@@ -494,7 +494,7 @@ namespace librapid {
 	}
 
 	template<typename T>
-	Storage<T> &Storage<T>::operator=(Storage &&other) noexcept {
+	auto Storage<T>::operator=(Storage &&other) noexcept -> Storage & {
 		if (this != &other) {
 			m_begin	   = std::move(other.m_begin);
 			m_size	   = std::move(other.m_size);
@@ -517,6 +517,7 @@ namespace librapid {
 	void Storage<T>::initData(P begin, P end) {
 		m_size			= static_cast<SizeType>(std::distance(begin, end));
 		m_begin			= detail::safeAllocate<T>(m_size);
+		m_ownsData		= true;
 		auto thisBegin	= LIBRAPID_ASSUME_ALIGNED(m_begin);
 		auto otherBegin = LIBRAPID_ASSUME_ALIGNED(begin);
 		detail::fastCopy(thisBegin, otherBegin, m_size);
@@ -527,14 +528,6 @@ namespace librapid {
 	void Storage<T>::initData(P begin, SizeType size) {
 		initData(begin, begin + size);
 	}
-
-	// template<typename T>
-	// void Storage<T>::set(const Storage<T> &other) {
-	// 	// We can simply copy the shared pointers across
-	// 	m_begin	   = other.m_begin;
-	// 	m_size	   = other.m_size;
-	// 	m_ownsData = other.m_ownsData;
-	// }
 
 	template<typename T>
 	auto Storage<T>::toHostStorage() const -> Storage {

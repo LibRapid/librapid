@@ -73,7 +73,8 @@ namespace librapid {
 		struct IsArrayContainer : std::false_type {};
 
 		template<typename ShapeType, typename StorageScalar>
-		struct IsArrayContainer<array::ArrayContainer<ShapeType, StorageScalar>> : std::true_type {};
+		struct IsArrayContainer<array::ArrayContainer<ShapeType, StorageScalar>> : std::true_type {
+		};
 
 		LIBRAPID_DEFINE_AS_TYPE(typename StorageScalar,
 								array::ArrayContainer<Shape COMMA StorageScalar>);
@@ -93,7 +94,6 @@ namespace librapid {
 			using Scalar	  = typename StorageType::Scalar;
 			using Packet	  = typename typetraits::TypeInfo<Scalar>::Packet;
 			using Backend	  = typename typetraits::TypeInfo<ArrayContainer>::Backend;
-			using Iterator	  = detail::ArrayIterator<GeneralArrayView<ArrayContainer, ShapeType>>;
 
 			using DirectSubscriptType	 = typename detail::SubscriptType<StorageType>::Direct;
 			using DirectRefSubscriptType = typename detail::SubscriptType<StorageType>::Ref;
@@ -330,19 +330,19 @@ namespace librapid {
 
 			/// \brief Return an iterator to the beginning of the array container
 			/// \return Iterator
-			LIBRAPID_ALWAYS_INLINE Iterator begin() const noexcept;
+			LIBRAPID_ALWAYS_INLINE auto begin() const noexcept;
 
 			/// \brief Return an iterator to the end of the array container
 			/// \return Iterator
-			LIBRAPID_ALWAYS_INLINE Iterator end() const noexcept;
+			LIBRAPID_ALWAYS_INLINE auto end() const noexcept;
 
 			/// \brief Return an iterator to the beginning of the array container
 			/// \return Iterator
-			LIBRAPID_ALWAYS_INLINE Iterator begin();
+			LIBRAPID_ALWAYS_INLINE auto begin();
 
 			/// \brief Return an iterator to the end of the array container
 			/// \return Iterator
-			LIBRAPID_ALWAYS_INLINE Iterator end();
+			LIBRAPID_ALWAYS_INLINE auto end();
 
 			template<typename T, typename Char, typename Ctx>
 			void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
@@ -765,12 +765,11 @@ namespace librapid {
 		ArrayContainer<ShapeType_, StorageType_>::packet(size_t index) const -> Packet {
 			auto ptr = LIBRAPID_ASSUME_ALIGNED(m_storage.begin());
 
-#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_OSX)
-			// On MacOS (and other platforms??) we cannot use aligned loads in arrays due to one
-			// annoying edge case. Normally, all SIMD loads will be aligned to a 64-byte boundary.
-			// Say, however, this array is a sub-array of a larger array. If the outer dimension
-			// of the larger array does not result in a 64-byte alignment, the data of *this* array
-			// will not be correctly aligned, hence causing a segfault.
+#if defined(LIBRAPID_NATIVE_ARCH)
+			LIBRAPID_ASSERT(
+			  reinterpret_cast<uintptr_t>(ptr) % typetraits::TypeInfo<Scalar>::packetWidth == 0,
+			  "ArrayContainer::packet called on unaligned storage");
+
 			return xsimd::load_aligned(ptr + index);
 #else
 			return xsimd::load_unaligned(ptr + index);
@@ -786,10 +785,15 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE void
 		ArrayContainer<ShapeType_, StorageType_>::writePacket(size_t index, const Packet &value) {
+			auto ptr = LIBRAPID_ASSUME_ALIGNED(m_storage.begin());
+
 #if defined(LIBRAPID_NATIVE_ARCH)
-			value.store_aligned(m_storage.begin() + index);
+			LIBRAPID_ASSERT(
+			  reinterpret_cast<uintptr_t>(ptr) % typetraits::TypeInfo<Scalar>::packetWidth == 0,
+			  "ArrayContainer::packet called on unaligned storage");
+			value.store_aligned(ptr + index);
 #else
-			value.store_unaligned(m_storage.begin() + index);
+			value.store_unaligned(ptr + index);
 #endif
 		}
 
@@ -881,24 +885,24 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::begin() const noexcept
-		  -> Iterator {
-			return Iterator(GeneralArrayView(*this), 0);
+		  -> auto {
+			return detail::ArrayIterator(createGeneralArrayView(*this), 0);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::end() const noexcept
-		  -> Iterator {
-			return Iterator(GeneralArrayView(*this), m_shape[0]);
+		  -> auto {
+			return detail::ArrayIterator(createGeneralArrayView(*this), m_shape[0]);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::begin() -> Iterator {
-			return Iterator(GeneralArrayView(*this), 0);
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::begin() -> auto {
+			return detail::ArrayIterator(createGeneralArrayView(*this), 0);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::end() -> Iterator {
-			return Iterator(GeneralArrayView(*this), m_shape[0]);
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::end() -> auto {
+			return detail::ArrayIterator(createGeneralArrayView(*this), m_shape[0]);
 		}
 
 		template<typename ShapeType_, typename StorageType_>

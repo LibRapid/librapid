@@ -30,6 +30,10 @@ set(LIBRAPID_STRICT OFF) # Enable all warnings and treat them as errors
 
 set(LIBRAPID_QUIET OFF) # Silence all warnings
 
+set(LIBRAPID_USE_PRECOMPILED_HEADER OFF) # Use precompiled headers to accelerate
+                                         # compilation at the cost of stability
+                                         # on some systems.
+
 set(LIBRAPID_USE_BLAS ON) # Attempt to use a BLAS library -- if not found,
                           # LibRapid falls back to less optimized routines
 

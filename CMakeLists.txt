@@ -37,6 +37,8 @@ option(LIBRAPID_CODE_COV "Compile LibRapid C++ with Coverage" OFF)
 option(LIBRAPID_STRICT "Force all warnings into errors (use with caution)" OFF)
 option(LIBRAPID_QUIET "Hide warnings generated WITHIN LibRapid's source" OFF)
 
+option(LIBRAPID_USE_PRECOMPILED_HEADER "Use precompiled headers to speed up compilation" OFF)
+
 option(LIBRAPID_GET_FFTW "Clone and use FFTW -- WARNING: SEE DOCUMENTATION" OFF)
 option(LIBRAPID_GET_BLAS "Download pre-built OpenBLAS binaries and use them" OFF)
 option(LIBRAPID_GET_MULTIPREC "Download generic multiprecision libraries, as opposed to trying to find one on the system" OFF)
@@ -106,7 +108,9 @@ target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE="${LIBRAPID_SOU
 # clang-format on
 
 # Precompiled Headers
-target_precompile_headers(${module_name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include/librapid/core/librapidPch.hpp")
+if (LIBRAPID_USE_PRECOMPILED_HEADER)
+    target_precompile_headers(${module_name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include/librapid/core/librapidPch.hpp")
+endif ()
 
 # Extract system information
 set(IS_LINUX OFF)
