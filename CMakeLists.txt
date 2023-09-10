@@ -80,7 +80,7 @@ if (LIBRAPID_USE_BLAS)
 endif ()
 
 if (LIBRAPID_USE_OMP)
-    find_package(OpenMP REQUIRED)
+	find_package(OpenMP QUIET)
 endif ()
 
 set(LIBRAPID_HAS_OMP false)
