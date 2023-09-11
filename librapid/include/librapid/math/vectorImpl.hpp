@@ -127,23 +127,9 @@ namespace librapid {
 			((dst.data.scalar[Indices] = src[Indices]), ...);
 		}
 
-		template<typename T, size_t N, size_t... Indices>
-		LIBRAPID_ALWAYS_INLINE void
-		vectorStorageAssigner_impl(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
-								   const SimdVectorStorage<T, N> &src) {
-			((dst.data.simd[Indices] = src.data.simd[Indices]), ...);
-		}
-
 		template<typename T, size_t N, typename T2, size_t N2, size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void
-		vectorStorageAssigner_impl(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
-								   const SimdVectorStorage<T2, N2> &src) {
-			((dst.data.scalar[Indices] = src.data.scalar[Indices]), ...);
-		}
-
-		template<typename T, size_t N, typename T2, size_t N2, size_t... Indices>
-		LIBRAPID_ALWAYS_INLINE void
-		vectorStorageAssigner_impl(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
+		vectorStorageAssigner_simdHelper(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
 								   const SimdVectorStorage<T2, N2> &src) {
 			((dst.data.simd[Indices] = src.data.simd[Indices]), ...);
 		}
@@ -156,9 +142,14 @@ namespace librapid {
 
 			// Since `indices` represents a number of scalars, we need to reduce it to a number of
 			// packets.
-			constexpr size_t packetWidth = typetraits::TypeInfo<T>::packetWidth;
-			constexpr size_t length		 = (N + packetWidth - 1) / packetWidth;
-			vectorStorageAssigner_impl(std::make_index_sequence<length>(), dst, src);
+
+			if constexpr (std::is_same_v<T, T2>) {
+				constexpr size_t packetWidth = typetraits::TypeInfo<T>::packetWidth;
+				constexpr size_t length		 = (N + packetWidth - 1) / packetWidth;
+				vectorStorageAssigner_simdHelper(std::make_index_sequence<length>(), dst, src);
+			} else {
+				((dst.data.simd[Indices] = src.data.simd[Indices]), ...);
+			}
 		}
 
 		template<typename ScalarType, size_t NumDims>
