@@ -673,7 +673,7 @@ if (LIBRAPID_GET_FFTW)
         FetchContent_MakeAvailable(fftw_float)
     endif ()
 
-    if (LIBRAPID_USE_OMP)
+    if (LIBRAPID_USE_OMP AND LIBRAPID_HAS_OMP)
         target_link_libraries(${module_name} PUBLIC fftw3_omp fftw3f_omp)
     else ()
         target_link_libraries(${module_name} PUBLIC fftw3 fftw3f)
