@@ -148,7 +148,7 @@ namespace librapid {
 				constexpr size_t length		 = (N + packetWidth - 1) / packetWidth;
 				vectorStorageAssigner_simdHelper(std::make_index_sequence<length>(), dst, src);
 			} else {
-				((dst.data.simd[Indices] = src.data.simd[Indices]), ...);
+				((dst.data.scalar[Indices] = src.data.scalar[Indices]), ...);
 			}
 		}
 
