@@ -127,6 +127,20 @@ namespace librapid {
 			((dst.data.scalar[Indices] = src[Indices]), ...);
 		}
 
+		template<typename T, size_t N, size_t... Indices>
+		LIBRAPID_ALWAYS_INLINE void
+		vectorStorageAssigner_impl(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
+								   const SimdVectorStorage<T, N> &src) {
+			((dst.data.simd[Indices] = src.data.simd[Indices]), ...);
+		}
+
+		template<typename T, size_t N, typename T2, size_t N2, size_t... Indices>
+		LIBRAPID_ALWAYS_INLINE void
+		vectorStorageAssigner_impl(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
+								   const SimdVectorStorage<T2, N2> &src) {
+			((dst.data.scalar[Indices] = src.data.scalar[Indices]), ...);
+		}
+
 		template<typename T, size_t N, typename T2, size_t N2, size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void
 		vectorStorageAssigner_impl(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
