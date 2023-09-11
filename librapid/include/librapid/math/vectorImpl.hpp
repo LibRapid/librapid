@@ -41,8 +41,8 @@ namespace librapid {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
 			using Scalar							   = T;
 			using Packet							   = typename TypeInfo<T>::Packet;
-			using IndexType							   = decltype(std::declval<Packet>()[0]);
-			using IndexTypeConst					   = Scalar;
+			using IndexType							   = T &;
+			using IndexTypeConst					   = const T &;
 			using GetType							   = Packet;
 
 			using StorageType = vectorDetail::SimdVectorStorage<T, N>;
@@ -93,39 +93,58 @@ namespace librapid {
 
 	namespace vectorDetail {
 		template<typename T, size_t N, typename... Args, size_t... Indices>
-		void vectorStorageAssigner(std::index_sequence<Indices...>, GenericVectorStorage<T, N> &dst,
-								   const Args &...args) {
+		LIBRAPID_ALWAYS_INLINE void vectorStorageAssigner(std::index_sequence<Indices...>,
+														  GenericVectorStorage<T, N> &dst,
+														  const Args &...args) {
 			((dst[Indices] = args), ...);
 		}
 
 		template<typename T, size_t N, typename... Args, size_t... Indices>
-		void vectorStorageAssigner(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
-								   const Args &...args) {
-			((dst[Indices] = args), ...);
+		LIBRAPID_ALWAYS_INLINE void vectorStorageAssigner(std::index_sequence<Indices...>,
+														  SimdVectorStorage<T, N> &dst,
+														  const Args &...args) {
+			((dst.data.scalar[Indices] = args), ...);
 		}
 
 		template<typename T, size_t N, typename T2, size_t N2, size_t... Indices>
-		void vectorStorageAssigner(std::index_sequence<Indices...>, GenericVectorStorage<T, N> &dst,
-								   const GenericVectorStorage<T2, N2> &src) {
+		LIBRAPID_ALWAYS_INLINE void vectorStorageAssigner(std::index_sequence<Indices...>,
+														  GenericVectorStorage<T, N> &dst,
+														  const GenericVectorStorage<T2, N2> &src) {
 			((dst[Indices] = src[Indices]), ...);
 		}
 
 		template<typename T, size_t N, typename T2, size_t N2, size_t... Indices>
-		void vectorStorageAssigner(std::index_sequence<Indices...>, GenericVectorStorage<T, N> &dst,
+		LIBRAPID_ALWAYS_INLINE void vectorStorageAssigner(std::index_sequence<Indices...>,
+														  GenericVectorStorage<T, N> &dst,
+														  const SimdVectorStorage<T2, N2> &src) {
+			((dst[Indices] = src.data.scalar[Indices]), ...);
+		}
+
+		template<typename T, size_t N, typename T2, size_t N2, size_t... Indices>
+		LIBRAPID_ALWAYS_INLINE void vectorStorageAssigner(std::index_sequence<Indices...>,
+														  SimdVectorStorage<T, N> &dst,
+														  const GenericVectorStorage<T2, N2> &src) {
+			((dst.data.scalar[Indices] = src[Indices]), ...);
+		}
+
+		template<typename T, size_t N, typename T2, size_t N2, size_t... Indices>
+		LIBRAPID_ALWAYS_INLINE void
+		vectorStorageAssigner_impl(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
 								   const SimdVectorStorage<T2, N2> &src) {
-			((dst[Indices] = src[Indices]), ...);
+			((dst.data.simd[Indices] = src.data.simd[Indices]), ...);
 		}
 
 		template<typename T, size_t N, typename T2, size_t N2, size_t... Indices>
-		void vectorStorageAssigner(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
-								   const GenericVectorStorage<T2, N2> &src) {
-			((dst[Indices] = src[Indices]), ...);
-		}
+		LIBRAPID_ALWAYS_INLINE void vectorStorageAssigner(std::index_sequence<Indices...>,
+														  SimdVectorStorage<T, N> &dst,
+														  const SimdVectorStorage<T2, N2> &src) {
+			// ((dst.data.simd[Indices] = src.data.simd[Indices]), ...);
 
-		template<typename T, size_t N, typename T2, size_t N2, size_t... Indices>
-		void vectorStorageAssigner(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
-								   const SimdVectorStorage<T2, N2> &src) {
-			((dst[Indices] = src[Indices]), ...);
+			// Since `indices` represents a number of scalars, we need to reduce it to a number of
+			// packets.
+			constexpr size_t packetWidth = typetraits::TypeInfo<T>::packetWidth;
+			constexpr size_t length		 = (N + packetWidth - 1) / packetWidth;
+			vectorStorageAssigner_impl(std::make_index_sequence<length>(), dst, src);
 		}
 
 		template<typename ScalarType, size_t NumDims>
@@ -222,6 +241,26 @@ namespace librapid {
 			}
 		};
 
+		/// A union mapping N scalars to an array of SIMD packets. The number of packets stored is
+		/// equal to \f$(N + L - 1) / L\f$, where \f$L\f$ is the packet width of the scalar type.
+		/// \tparam Scalar_ The scalar type to store
+		/// \tparam N The number of scalars to store
+		template<typename Scalar_, size_t N>
+		union ScalarToSimd {
+			using Scalar						= Scalar_;
+			using Packet						= typename typetraits::TypeInfo<Scalar>::Packet;
+			static constexpr size_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
+			static constexpr size_t length		= (N + packetWidth - 1) / packetWidth;
+
+#if defined(LIBRAPID_NATIVE_ARCH)
+			alignas(LIBRAPID_MEM_ALIGN) std::array<Scalar, N> scalar;
+			alignas(LIBRAPID_MEM_ALIGN) std::array<Packet, length> simd;
+#else
+			std::array<Scalar, N> scalar;
+			std::array<Packet, length> simd;
+#endif
+		};
+
 		template<typename ScalarType, size_t NumDims>
 		struct SimdVectorStorage {
 			using Scalar						= ScalarType;
@@ -237,12 +276,7 @@ namespace librapid {
 			static_assert(typetraits::TypeInfo<Scalar>::packetWidth > 1,
 						  "SimdVectorStorage can only be used with SIMD types");
 
-#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
-			alignas(LIBRAPID_MEM_ALIGN) std::array<Packet, length> data {};
-#else
-			// No memory alignment on Apple platforms or if it is disabled
-			std::array<Packet, length> data {};
-#endif
+			ScalarToSimd<Scalar, dims> data;
 
 			template<typename... Args>
 			explicit SimdVectorStorage(Args... args) {
@@ -258,7 +292,7 @@ namespace librapid {
 								other.size(),
 								dims);
 				const size_t minDims = (other.size() < dims) ? other.size() : dims;
-				for (size_t i = 0; i < minDims; ++i) { this->operator[](i) = *(other.begin() + i); }
+				for (size_t i = 0; i < minDims; ++i) { data.scalar[i] = *(other.begin() + i); }
 			}
 
 			template<typename T>
@@ -268,7 +302,7 @@ namespace librapid {
 								other.size(),
 								dims);
 				const size_t minDims = (other.size() < dims) ? other.size() : dims;
-				for (size_t i = 0; i < minDims; ++i) { this->operator[](i) = other[i]; }
+				for (size_t i = 0; i < minDims; ++i) { data.scalar[i] = other[i]; }
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexTypeConst
@@ -277,9 +311,7 @@ namespace librapid {
 								"Index {} out of bounds for Vector of length {}",
 								index,
 								length);
-				const int64_t packetIndex  = index / packetWidth;
-				const int64_t elementIndex = index % packetWidth;
-				return data[packetIndex].get(elementIndex);
+				return data.scalar[index];
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType operator[](int64_t index) {
@@ -287,9 +319,7 @@ namespace librapid {
 								"Index {} out of bounds for Vector of length {}",
 								index,
 								length);
-				const int64_t packetIndex  = index / packetWidth;
-				const int64_t elementIndex = index % packetWidth;
-				return data[packetIndex][elementIndex];
+				return data.scalar[index];
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sum() const -> Scalar {
@@ -309,7 +339,7 @@ namespace librapid {
 								"Index {} out of bounds for Vector of length {}",
 								index,
 								length);
-				return data[index];
+				return data.simd[index];
 			}
 
 			LIBRAPID_ALWAYS_INLINE void _set(size_t index, const Packet &value) {
@@ -317,7 +347,7 @@ namespace librapid {
 								"Index {} out of bounds for Vector of length {}",
 								index,
 								length);
-				data[index] = value;
+				data.simd[index] = value;
 			}
 		};
 
@@ -650,9 +680,9 @@ namespace librapid {
 				return op(scalarSubscriptHelper(left, index), scalarSubscriptHelper(right, index));
 			}
 
-//			LIBRAPID_NODISCARD std::string str(const std::string &format) const override {
-//				return eval().str(format);
-//			}
+			//			LIBRAPID_NODISCARD std::string str(const std::string &format) const override
+			//{ 				return eval().str(format);
+			//			}
 
 			template<typename T_, typename Char, typename Ctx>
 			void str(const fmt::formatter<T_, Char> &formatter, Ctx &ctx) const {
@@ -1029,7 +1059,8 @@ struct fmt::formatter<librapid::Vector<Scalar, NumDims>, Char> {
 
 template<typename LHS, typename RHS, typename Op, typename Char>
 struct fmt::formatter<librapid::vectorDetail::BinaryVecOp<LHS, RHS, Op>, Char> {
-	using Base = fmt::formatter<typename librapid::vectorDetail::BinaryVecOp<LHS, RHS, Op>::Scalar, Char>;
+	using Base =
+	  fmt::formatter<typename librapid::vectorDetail::BinaryVecOp<LHS, RHS, Op>::Scalar, Char>;
 	Base m_base;
 
 	template<typename ParseContext>
