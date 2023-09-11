@@ -329,14 +329,14 @@ namespace librapid {
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sum() const -> Scalar {
 				Packet sum = Packet(0);
-				for (size_t i = 0; i < length; ++i) { sum += data[i]; }
+				for (size_t i = 0; i < length; ++i) { sum += data.simd[i]; }
 				// return sum.sum();
 				return xsimd::reduce_add(sum);
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sum2() const -> Scalar {
 				Packet sum = Packet(0);
-				for (size_t i = 0; i < length; ++i) { sum += data[i] * data[i]; }
+				for (size_t i = 0; i < length; ++i) { sum += data.simd[i] * data.simd[i]; }
 				// return sum.sum();
 				return xsimd::reduce_add(sum);
 			}
