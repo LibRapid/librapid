@@ -165,7 +165,7 @@ namespace librapid {
 			// Scalar data[length] {};
 			// std::array<Scalar, length> data {};
 
-#if defined(LIBRAPID_NATIVE_ARCH) && !defined(LIBRAPID_APPLE)
+#if defined(LIBRAPID_NATIVE_ARCH)
 			alignas(LIBRAPID_MEM_ALIGN) std::array<Scalar, length> data {};
 #else
 			// No memory alignment on Apple platforms or if it is disabled
@@ -329,13 +329,13 @@ namespace librapid {
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sum() const -> Scalar {
 				Packet sum = Packet(0);
-				for (size_t i = 0; i < length; ++i) { sum += data[i]; }
+				for (size_t i = 0; i < length; ++i) { sum += data.simd[i]; }
 				return sum.sum();
 			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sum2() const -> Scalar {
 				Packet sum = Packet(0);
-				for (size_t i = 0; i < length; ++i) { sum += data[i] * data[i]; }
+				for (size_t i = 0; i < length; ++i) { sum += data.simd[i] * data.simd[i]; }
 				return sum.sum();
 			}
 
