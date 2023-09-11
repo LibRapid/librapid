@@ -298,28 +298,28 @@ namespace librapid {
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE auto Shape::operator=(const std::initializer_list<V> &vals) -> Shape & {
 		m_dims = vals.size();
-		for (int64_t i = 0; i < vals.size(); ++i) { m_data[i] = *(vals.begin() + i); }
+		for (size_t i = 0; i < vals.size(); ++i) { m_data[i] = *(vals.begin() + i); }
 		return *this;
 	}
 
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE auto Shape::operator=(const std::vector<V> &vals) -> Shape & {
 		m_dims = vals.size();
-		for (int64_t i = 0; i < vals.size(); ++i) { m_data[i] = vals[i]; }
+		for (size_t i = 0; i < vals.size(); ++i) { m_data[i] = vals[i]; }
 		return *this;
 	}
 
 	LIBRAPID_ALWAYS_INLINE auto Shape::zeros(int dims) -> Shape {
 		Shape res;
 		res.m_dims = dims;
-		for (size_t i = 0; i < dims; ++i) res.m_data[i] = 0;
+		for (int i = 0; i < dims; ++i) res.m_data[i] = 0;
 		return res;
 	}
 
 	LIBRAPID_ALWAYS_INLINE auto Shape::ones(int dims) -> Shape {
 		Shape res;
 		res.m_dims = dims;
-		for (size_t i = 0; i < dims; ++i) res.m_data[i] = 1;
+		for (int i = 0; i < dims; ++i) res.m_data[i] = 1;
 		return res;
 	}
 
@@ -342,7 +342,7 @@ namespace librapid {
 
 	LIBRAPID_ALWAYS_INLINE auto Shape::operator==(const Shape &other) const -> bool {
 		if (m_dims != other.m_dims) return false;
-		for (size_t i = 0; i < m_dims; ++i) {
+		for (int i = 0; i < m_dims; ++i) {
 			if (m_data[i] != other.m_data[i]) return false;
 		}
 		return true;
@@ -362,20 +362,20 @@ namespace librapid {
 
 		Shape res;
 		res.m_dims = end - start;
-		for (size_t i = 0; i < res.m_dims; ++i) res.m_data[i] = m_data[i + start];
+		for (int i = 0; i < res.m_dims; ++i) res.m_data[i] = m_data[i + start];
 		return res;
 	}
 
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto Shape::size() const -> size_t {
 		size_t res = 1;
-		for (size_t i = 0; i < m_dims; ++i) res *= m_data[i];
+		for (int i = 0; i < m_dims; ++i) res *= m_data[i];
 		return res;
 	}
 
 	template<typename T_, typename Char, typename Ctx>
 	LIBRAPID_ALWAYS_INLINE void Shape::str(const fmt::formatter<T_, Char> &format, Ctx &ctx) const {
 		fmt::format_to(ctx.out(), "Shape(");
-		for (size_t i = 0; i < m_dims; ++i) {
+		for (int i = 0; i < m_dims; ++i) {
 			format.format(m_data[i], ctx);
 			if (i != m_dims - 1) fmt::format_to(ctx.out(), ", ");
 		}
