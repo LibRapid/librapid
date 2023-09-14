@@ -670,6 +670,7 @@ jobs:
           submodules: recursive
 
       - name: Trigger RTDs build
+        if: github.event_name != 'pull_request'
         uses: dfm/rtds-action@v1
         with:
           webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
