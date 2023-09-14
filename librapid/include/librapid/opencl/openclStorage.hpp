@@ -223,7 +223,6 @@ namespace librapid {
 	OpenCLStorage<Scalar>::OpenCLStorage(SizeType size) :
 			m_size(size), m_buffer(global::openCLContext, bufferFlags, size * sizeof(Scalar)),
 			m_ownsData(true) {
-		LIBRAPID_ASSERT(m_size > 0, "Cannot allocate 0 bytes of memory");
 		LIBRAPID_CHECK_OPENCL;
 	}
 
@@ -231,7 +230,6 @@ namespace librapid {
 	OpenCLStorage<Scalar>::OpenCLStorage(SizeType size, Scalar value) :
 			m_size(size), m_buffer(global::openCLContext, bufferFlags, size * sizeof(Scalar)),
 			m_ownsData(true) {
-		LIBRAPID_ASSERT(m_size > 0, "Cannot allocate 0 bytes of memory");
 		LIBRAPID_CHECK_OPENCL;
 		global::openCLQueue.enqueueFillBuffer(m_buffer, value, 0, size * sizeof(Scalar));
 	}
@@ -239,14 +237,12 @@ namespace librapid {
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(const cl::Buffer &buffer, SizeType size, bool ownsData) :
 			m_size(size), m_buffer(buffer), m_ownsData(ownsData) {
-		LIBRAPID_ASSERT(m_size > 0, "Cannot allocate 0 bytes of memory");
 		LIBRAPID_CHECK_OPENCL;
 	}
 
 	template<typename Scalar>
 	OpenCLStorage<Scalar>::OpenCLStorage(const OpenCLStorage &other) :
 			m_size(other.m_size), m_ownsData(true) {
-		LIBRAPID_ASSERT(m_size > 0, "Cannot allocate 0 bytes of memory");
 		LIBRAPID_CHECK_OPENCL;
 
 		// Copy data
@@ -269,7 +265,6 @@ namespace librapid {
 			m_size(list.size()),
 			m_buffer(global::openCLContext, bufferFlags, list.size() * sizeof(Scalar)),
 			m_ownsData(true) {
-		LIBRAPID_ASSERT(m_size > 0, "Cannot allocate 0 bytes of memory");
 		LIBRAPID_CHECK_OPENCL;
 		global::openCLQueue.enqueueWriteBuffer(
 		  m_buffer, CL_TRUE, 0, m_size * sizeof(Scalar), list.begin());
@@ -280,7 +275,6 @@ namespace librapid {
 			m_size(vec.size()),
 			m_buffer(global::openCLContext, bufferFlags, m_size * sizeof(Scalar)),
 			m_ownsData(true) {
-		LIBRAPID_ASSERT(m_size > 0, "Cannot allocate 0 bytes of memory");
 		LIBRAPID_CHECK_OPENCL;
 		global::openCLQueue.enqueueWriteBuffer(
 		  m_buffer, CL_TRUE, 0, m_size * sizeof(Scalar), vec.data());
@@ -364,7 +358,7 @@ namespace librapid {
 	template<typename Scalar>
 	void OpenCLStorage<Scalar>::resize(SizeType newSize) {
 		if (newSize == m_size) return;
-		LIBRAPID_ASSERT(newSize > 0, "Cannot allocate 0 bytes of memory");
+		LIBRAPID_ASSERT(newSize > 0, "Cannot resize to zero-size array");
 		LIBRAPID_ASSERT(m_ownsData, "Cannot resize dependent OpenCLStorage");
 
 		cl::Buffer oldBuffer = m_buffer;
@@ -381,7 +375,8 @@ namespace librapid {
 	template<typename Scalar>
 	void OpenCLStorage<Scalar>::resize(SizeType newSize, int) {
 		if (newSize == m_size) return;
-		LIBRAPID_ASSERT(newSize > 0, "Cannot allocate 0 bytes of memory");
+		LIBRAPID_ASSERT(newSize > 0, "Cannot resize to zero-size array");
+		LIBRAPID_ASSERT(m_ownsData, "Cannot resize dependent OpenCLStorage");
 		m_size	 = newSize;
 		m_buffer = cl::Buffer(global::openCLContext, bufferFlags, newSize * sizeof(Scalar));
 	}

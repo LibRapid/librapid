@@ -394,6 +394,9 @@ namespace librapid {
 		template<typename T, typename V>
 		void fastCopy(T *__restrict dst, const V *__restrict src, size_t size) {
 			if (size == 0) return;
+			LIBRAPID_ASSERT(dst != nullptr, "Cannot copy to nullptr");
+			LIBRAPID_ASSERT(src != nullptr, "Cannot copy from nullptr");
+
 			LIBRAPID_ASSUME(dst != nullptr);
 			LIBRAPID_ASSUME(src != nullptr);
 
@@ -415,19 +418,16 @@ namespace librapid {
 	template<typename T>
 	Storage<T>::Storage(SizeType size) :
 			m_begin(detail::safeAllocate<T>(size)), m_size(size), m_ownsData(true) {
-		LIBRAPID_ASSERT(size > 0, "Cannot allocate 0 bytes of memory");
 	}
 
 	template<typename T>
 	Storage<T>::Storage(Scalar *begin, Scalar *end, bool ownsData) :
 			m_begin(begin), m_size(std::distance(begin, end)), m_ownsData(ownsData) {
-		LIBRAPID_ASSERT(m_size > 0, "Cannot store 0 bytes of memory");
 	}
 
 	template<typename T>
 	Storage<T>::Storage(SizeType size, ConstReference value) :
 			m_begin(detail::safeAllocate<T>(size)), m_size(size), m_ownsData(true) {
-		LIBRAPID_ASSERT(size > 0, "Cannot allocate 0 bytes of memory");
 		auto ptr_ = LIBRAPID_ASSUME_ALIGNED(m_begin);
 		for (SizeType i = 0; i < size; ++i) { ptr_[i] = value; }
 	}
@@ -454,7 +454,6 @@ namespace librapid {
 	Storage<T>::Storage(const std::initializer_list<V> &list) :
 			m_begin(nullptr), m_size(0), m_ownsData(true) {
 		initData(static_cast<const V *>(list.begin()), static_cast<const V *>(list.end()));
-		LIBRAPID_ASSERT(m_size > 0, "Cannot allocate 0 bytes of memory");
 	}
 
 	template<typename T>
@@ -462,7 +461,6 @@ namespace librapid {
 	Storage<T>::Storage(const std::vector<V> &vector) :
 			m_begin(nullptr), m_size(0), m_ownsData(true) {
 		initData(static_cast<const V *>(vector.data()), vector.size());
-		LIBRAPID_ASSERT(m_size > 0, "Cannot allocate 0 bytes of memory");
 	}
 
 	template<typename T>
@@ -572,7 +570,7 @@ namespace librapid {
 	template<typename T>
 	void Storage<T>::resize(SizeType newSize) {
 		// Resize and retain data
-		LIBRAPID_ASSERT(newSize > 0, "Cannot allocate 0 bytes of memory");
+		LIBRAPID_ASSERT(newSize > 0, "Cannot resize to a size of 0");
 		if (newSize == size()) return;
 
 		LIBRAPID_ASSERT(m_ownsData, "Dependent storage cannot be resized");
@@ -596,7 +594,7 @@ namespace librapid {
 	void Storage<T>::resize(SizeType newSize, int) {
 		// Resize and discard data
 
-		LIBRAPID_ASSERT(newSize > 0, "Cannot allocate 0 bytes of memory");
+		LIBRAPID_ASSERT(newSize > 0, "Cannot resize to a size of 0");
 
 		if (size() == newSize) return;
 		LIBRAPID_ASSERT(m_ownsData, "Dependent storage cannot be resized");
