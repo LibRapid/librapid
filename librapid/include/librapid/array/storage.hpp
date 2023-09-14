@@ -350,9 +350,7 @@ namespace librapid {
 		/// \see safeDeallocate
 		template<typename T>
 		T *safeAllocate(size_t size) {
-			LIBRAPID_ASSERT(size > 0, "Cannot allocate 0 bytes of memory");
-
-			LIBRAPID_ASSUME(size > 0);
+			if (size == 0) return nullptr;
 
 			using Pointer = T *;
 
@@ -395,7 +393,7 @@ namespace librapid {
 
 		template<typename T, typename V>
 		void fastCopy(T *__restrict dst, const V *__restrict src, size_t size) {
-			LIBRAPID_ASSUME(size > 0);
+			if (size == 0) return;
 			LIBRAPID_ASSUME(dst != nullptr);
 			LIBRAPID_ASSUME(src != nullptr);
 
@@ -455,16 +453,16 @@ namespace librapid {
 	template<typename V>
 	Storage<T>::Storage(const std::initializer_list<V> &list) :
 			m_begin(nullptr), m_size(0), m_ownsData(true) {
-		LIBRAPID_ASSERT(m_size > 0, "Cannot allocate 0 bytes of memory");
 		initData(static_cast<const V *>(list.begin()), static_cast<const V *>(list.end()));
+		LIBRAPID_ASSERT(m_size > 0, "Cannot allocate 0 bytes of memory");
 	}
 
 	template<typename T>
 	template<typename V>
 	Storage<T>::Storage(const std::vector<V> &vector) :
 			m_begin(nullptr), m_size(0), m_ownsData(true) {
-		LIBRAPID_ASSERT(m_size > 0, "Cannot allocate 0 bytes of memory");
 		initData(static_cast<const V *>(vector.data()), vector.size());
+		LIBRAPID_ASSERT(m_size > 0, "Cannot allocate 0 bytes of memory");
 	}
 
 	template<typename T>
