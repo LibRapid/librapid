@@ -132,8 +132,12 @@ submodules of the library -- you don't need to install anything manually):
 # Star History
 
 <div align="center">
-  <a href="https://star-history.com/#LibRapid/librapid&Date">
-    <img src="https://api.star-history.com/svg?repos=LibRapid/librapid&type=Date" alt="Star History" width="700">
+  <a href="https://star-history.com/#LibRapid/librapid&Timeline">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=LibRapid/librapid&type=Timeline&theme=dark" />
+      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=LibRapid/librapid&type=Timeline" />
+      <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=LibRapid/librapid&type=Timeline" />
+    </picture>
   </a>
 </div>
 
