@@ -350,9 +350,7 @@ namespace librapid {
 		/// \see safeDeallocate
 		template<typename T>
 		T *safeAllocate(size_t size) {
-			LIBRAPID_ASSERT(size > 0, "Cannot allocate 0 bytes of memory");
-
-			LIBRAPID_ASSUME(size > 0);
+			if (size == 0) return nullptr;
 
 			using Pointer = T *;
 
@@ -395,7 +393,10 @@ namespace librapid {
 
 		template<typename T, typename V>
 		void fastCopy(T *__restrict dst, const V *__restrict src, size_t size) {
-			LIBRAPID_ASSUME(size > 0);
+			if (size == 0) return;
+			LIBRAPID_ASSERT(dst != nullptr, "Cannot copy to nullptr");
+			LIBRAPID_ASSERT(src != nullptr, "Cannot copy from nullptr");
+
 			LIBRAPID_ASSUME(dst != nullptr);
 			LIBRAPID_ASSUME(src != nullptr);
 
@@ -416,11 +417,13 @@ namespace librapid {
 
 	template<typename T>
 	Storage<T>::Storage(SizeType size) :
-			m_begin(detail::safeAllocate<T>(size)), m_size(size), m_ownsData(true) {}
+			m_begin(detail::safeAllocate<T>(size)), m_size(size), m_ownsData(true) {
+	}
 
 	template<typename T>
 	Storage<T>::Storage(Scalar *begin, Scalar *end, bool ownsData) :
-			m_begin(begin), m_size(std::distance(begin, end)), m_ownsData(ownsData) {}
+			m_begin(begin), m_size(std::distance(begin, end)), m_ownsData(ownsData) {
+	}
 
 	template<typename T>
 	Storage<T>::Storage(SizeType size, ConstReference value) :
@@ -431,6 +434,8 @@ namespace librapid {
 
 	template<typename T>
 	Storage<T>::Storage(const Storage &other) : m_size(other.m_size), m_ownsData(true) {
+		if (m_size == 0) return; // Quick return
+
 		// Copy the data from `other`
 		initData(other.begin(), other.end());
 	}
@@ -473,6 +478,8 @@ namespace librapid {
 	template<typename T>
 	auto Storage<T>::operator=(const Storage &other) -> Storage & {
 		if (this != &other) {
+			if (other.m_size == 0) return *this; // Quick return
+
 			size_t oldSize = m_size;
 			m_size		   = other.m_size;
 			if (oldSize != m_size) LIBRAPID_UNLIKELY {
@@ -515,6 +522,9 @@ namespace librapid {
 	template<typename T>
 	template<typename P>
 	void Storage<T>::initData(P begin, P end) {
+		// Quick return in the case of empty range
+		if (begin == nullptr || end == nullptr || begin == end) return;
+
 		m_size			= static_cast<SizeType>(std::distance(begin, end));
 		m_begin			= detail::safeAllocate<T>(m_size);
 		m_ownsData		= true;
@@ -560,6 +570,7 @@ namespace librapid {
 	template<typename T>
 	void Storage<T>::resize(SizeType newSize) {
 		// Resize and retain data
+		LIBRAPID_ASSERT(newSize > 0, "Cannot resize to a size of 0");
 		if (newSize == size()) return;
 
 		LIBRAPID_ASSERT(m_ownsData, "Dependent storage cannot be resized");
@@ -582,6 +593,8 @@ namespace librapid {
 	template<typename T>
 	void Storage<T>::resize(SizeType newSize, int) {
 		// Resize and discard data
+
+		LIBRAPID_ASSERT(newSize > 0, "Cannot resize to a size of 0");
 
 		if (size() == newSize) return;
 		LIBRAPID_ASSERT(m_ownsData, "Dependent storage cannot be resized");

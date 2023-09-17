@@ -284,6 +284,8 @@ namespace librapid {
 	OpenCLStorage<Scalar> &OpenCLStorage<Scalar>::operator=(const OpenCLStorage &other) {
 		LIBRAPID_CHECK_OPENCL;
 		if (this != &other) {
+			if (other.m_size == 0) return *this; // Quick return
+
 			size_t oldSize = m_size;
 			m_size		   = other.m_size;
 			if (oldSize != m_size) LIBRAPID_UNLIKELY {
@@ -356,6 +358,7 @@ namespace librapid {
 	template<typename Scalar>
 	void OpenCLStorage<Scalar>::resize(SizeType newSize) {
 		if (newSize == m_size) return;
+		LIBRAPID_ASSERT(newSize > 0, "Cannot resize to zero-size array");
 		LIBRAPID_ASSERT(m_ownsData, "Cannot resize dependent OpenCLStorage");
 
 		cl::Buffer oldBuffer = m_buffer;
@@ -372,6 +375,8 @@ namespace librapid {
 	template<typename Scalar>
 	void OpenCLStorage<Scalar>::resize(SizeType newSize, int) {
 		if (newSize == m_size) return;
+		LIBRAPID_ASSERT(newSize > 0, "Cannot resize to zero-size array");
+		LIBRAPID_ASSERT(m_ownsData, "Cannot resize dependent OpenCLStorage");
 		m_size	 = newSize;
 		m_buffer = cl::Buffer(global::openCLContext, bufferFlags, newSize * sizeof(Scalar));
 	}

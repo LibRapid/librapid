@@ -344,13 +344,17 @@
 #endif
 
 #if LIBRAPID_CPP_VERSION >= 23
-#	ifdef LIBRAPID_MSVC
-#		define LIBRAPID_ASSUME(COND_) __assume((COND_));
+#	if defined(LIBRAPID_MSVC)
+#		define LIBRAPID_ASSUME(COND_) __assume(COND_)
+#	elif defined(LIBRAPID_GCC)
+#		define LIBRAPID_ASSUME(COND_) __attribute__((assume(COND_)))
+#	elif defined(LIBRAPID_CLANG)
+#		define LIBRAPID_ASSUME(COND_) __builtin_assume(COND_)
 #	else
-#		define LIBRAPID_ASSUME(COND_) [[assume((COND_))]];
+#		define LIBRAPID_ASSUME(COND_)
 #	endif
 #else
-#	define LIBRAPID_ASSUME(cond)
+#	define LIBRAPID_ASSUME(COND_)
 #endif
 
 #if LIBRAPID_CPP_VERSION >= 20

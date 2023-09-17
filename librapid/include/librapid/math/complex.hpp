@@ -1135,7 +1135,7 @@ namespace librapid {
     /// \brief Compute the complex arc cosine of a complex number
     ///
     /// This function computes the complex arc cosine of the input complex number,
-    /// \f$z = \text{acos}(z)\f$
+    /// \f$\text{acos}(z)\f$
     ///
     /// The algorithm handles NaN and infinity values, and avoids overflow.
     ///
@@ -1219,7 +1219,7 @@ namespace librapid {
     ///
     ///
     /// This function computes the complex area hyperbolic cosine of the input complex number,
-    /// \f$ z = \text{acosh}(z) \f$
+    /// \f$ \text{acosh}(z) \f$
     ///
     /// The algorithm handles NaN and infinity values, and avoids overflow.
     ///
@@ -1295,7 +1295,7 @@ namespace librapid {
     /// \brief Compute the complex arc hyperbolic sine of a complex number
     ///
     /// This function computes the complex arc hyperbolic sine of the input complex number,
-    /// \f$ z = \text{asinh}(z) \f$
+    /// \f$ \text{asinh}(z) \f$
     ///
     /// The algorithm handles NaN and infinity values, and avoids overflow.
     ///
@@ -1372,7 +1372,7 @@ namespace librapid {
     /// \brief Compute the complex arc sine of a complex number
     ///
     /// This function computes the complex arc sine of the input complex number,
-    /// \f$ z = \text{asin}(z) \f$
+    /// \f$ \text{asin}(z) \f$
     ///
     /// It calculates the complex arc sine by using the complex hyperbolic sine function.
     ///
@@ -1389,7 +1389,7 @@ namespace librapid {
     /// \brief Compute the complex arc hyperbolic tangent of a complex number
     ///
     /// This function computes the complex arc hyperbolic tangent of the input complex number,
-    /// \f$ z = \text{atanh}(z) \f$
+    /// \f$ \text{atanh}(z) \f$
     ///
     /// This function performs error checking and supports NaNs and Infs.
     ///
@@ -1455,7 +1455,7 @@ namespace librapid {
     /// \brief Compute the complex arc tangent of a complex number
     ///
     /// This function computes the complex arc tangent of the input complex number,
-    /// \f$ z = \text{atan}(z) \f$
+    /// \f$ \text{atan}(z) \f$
     ///
     /// The algorithm handles NaN and infinity values, and avoids overflow.
     ///
@@ -1471,7 +1471,7 @@ namespace librapid {
     /// \brief Compute the complex hyperbolic cosine of a complex number
     ///
     /// This function computes the complex hyperbolic cosine of the input complex number,
-    /// \f$ z = \text{cosh}(z) \f$
+    /// \f$ \text{cosh}(z) \f$
     ///
     /// \tparam T Scalar type of the complex number
     /// \param other Input complex number
@@ -1502,7 +1502,7 @@ namespace librapid {
     /// \brief Compute the complex exponential of a complex number
     ///
     /// This function computes the complex exponential of the input complex number,
-    /// \f$ z = e^z \f$
+    /// \f$ e^z \f$
     ///
     /// The algorithm handles NaN and infinity values.
     ///

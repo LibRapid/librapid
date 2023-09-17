@@ -474,11 +474,15 @@ namespace cxxblas {
 		constexpr bool multiThread = false;
 #endif
 
-		if (multiThread)
+#if defined(LIBRAPID_HAS_OMP)
+		if (multiThread) {
 			gemm_generic_parallel(
 			  order, transA, transB, m, n, k, alpha, A, ldA, B, ldB, beta, C, ldC);
-		else
+		} else 
+#endif // LIBRAPID_HAS_OMP
+		{
 			gemm_generic(order, transA, transB, m, n, k, alpha, A, ldA, B, ldB, beta, C, ldC);
+		}
 	}
 
 #ifdef HAVE_CBLAS

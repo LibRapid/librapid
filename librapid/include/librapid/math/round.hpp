@@ -21,8 +21,6 @@ namespace librapid {
     template<typename T = double>
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto round(T num, int64_t dp = 0,
                                                          RoundingMode mode = RoundingMode::MATH) {
-        using Scalar = typename typetraits::TypeInfo<T>::Scalar;
-
         int8_t mode_        = static_cast<int8_t>(mode);
         const double alpha  = fastmath::pow10(dp);
         const double beta   = fastmath::pow10(-dp);
