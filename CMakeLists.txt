@@ -80,7 +80,7 @@ endif ()
 #endif ()
 
 if (LIBRAPID_USE_OMP)
-	find_package(OpenMP QUIET)
+    find_package(OpenMP QUIET)
 endif ()
 
 set(LIBRAPID_HAS_OMP false)
@@ -190,8 +190,10 @@ if (LIBRAPID_USE_OMP)
 endif ()
 
 # Include any required modules
-include(blasConfig)
-configure_blas()
+if (LIBRAPID_USE_BLAS)
+    include(blasConfig)
+    configure_blas()
+endif ()
 
 ## If LIBRAPID_MKL_CONFIG_PATH is set, use that instead of the default
 #if (LIBRAPID_MKL_CONFIG_PATH)
