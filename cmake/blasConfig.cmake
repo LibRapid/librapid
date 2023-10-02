@@ -21,6 +21,7 @@ macro(set_blas_definition_from_file filename)
 endmacro()
 
 macro(set_blas_definition name)
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
     target_compile_definitions(${module_name} PUBLIC LIBRAPID_BLAS_${name})
 endmacro()
 
@@ -56,8 +57,31 @@ macro(link_openblas)
     get_filename_component(filename ${LIBRAPID_BLAS} NAME)
 
     set(include_path "${filepath}/../include")
+    target_include_directories(${module_name} PUBLIC "${include_path}")
 
-    # todo
+    set(include_files "")
+    if (EXISTS "${include_path}/openblas")
+        FILE(GLOB_RECURSE include_files "${include_path}/openblas/*.*")
+        target_include_directories(${module_name} PUBLIC "${include_path}/openblas")
+    else ()
+        FILE(GLOB_RECURSE include_files "${include_path}/*.*")
+    endif ()
+
+    set(has_cblas OFF)
+
+    foreach (file IN LISTS include_files)
+        get_filename_component(inc_file ${file} NAME)
+        if (${inc_file} STREQUAL "cblas.h")
+            set(has_cblas ON)
+        endif ()
+    endforeach ()
+
+    if (NOT ${has_cblas})
+        message(WARNING "[ LIBRAPID ] OpenBLAS does not contain cblas.h. Consider enabling LIBRAPID_GET_BLAS")
+        return()
+    endif ()
+
+    target_link_libraries(${module_name} PUBLIC ${LIBRAPID_BLAS})
 
     set_blas_definition("OPENBLAS")
 endmacro()
