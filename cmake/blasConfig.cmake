@@ -50,9 +50,11 @@ macro(download_openblas)
     endif ()
 
     set_blas_definition("OPENBLAS")
+    set(LIBRAPID_BLAS ${BLAS_LIBRARIES})
 endmacro()
 
 macro(link_openblas)
+
     get_filename_component(filepath ${LIBRAPID_BLAS} DIRECTORY)
     get_filename_component(filename ${LIBRAPID_BLAS} NAME)
 
@@ -96,6 +98,9 @@ macro(link_accelerate)
     endif ()
 
     set_blas_definition("ACCELERATE")
+endmacro()
+
+macro(link_generic)
 endmacro()
 
 macro(configure_blas)
