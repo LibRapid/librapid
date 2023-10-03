@@ -11,7 +11,7 @@ on:
 
 jobs:
   compile:
-    name: Compile on ${{ matrix.os }} with ${{ matrix.cxx }} (BLAS ${{ matrix.blas }}, FFTW ${{ matrix.fftw }}, MPFR ${{ matrix.mpfr }}, C++ ${{ matrix.cpp }})
+    name: Compile on ${{ matrix.os }} with ${{ matrix.cxx }} (BLAS ${{ matrix.blas }}, Get BLAS ${{ matrix.getBlas }}, FFTW ${{ matrix.fftw }}, MPFR ${{ matrix.mpfr }}, C++ ${{ matrix.cpp }})
     runs-on: ${{ matrix.os }}
 
     strategy:

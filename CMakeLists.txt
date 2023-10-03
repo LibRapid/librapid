@@ -69,19 +69,7 @@ MACRO(SUBDIRLIST result curdir)
     SET(${result} ${dirlist})
 ENDMACRO()
 
-# Attempt to locate the required packages
 include(FetchContent)
-if (LIBRAPID_USE_CUDA)
-    find_package(CUDAToolkit QUIET)
-endif ()
-
-#if (LIBRAPID_USE_BLAS)
-#    find_package(BLAS QUIET)
-#endif ()
-
-if (LIBRAPID_USE_OMP)
-    find_package(OpenMP QUIET)
-endif ()
 
 set(LIBRAPID_HAS_OMP false)
 set(LIBRAPID_HAS_BLAS false)
@@ -137,25 +125,12 @@ if (LIBRAPID_STRICT AND LIBRAPID_QUIET)
     message(FATAL_ERROR "LIBRAPID_STRICT and LIBRAPID_QUIET cannot be enabled at the same time")
 endif ()
 
-# SIMD instructions do not currently work on MacOS
-#if (IS_MACOS AND LIBRAPID_NATIVE_ARCH)
-#    message(WARNING "SIMD instructions are not currently supported on MacOS. Disabling LIBRAPID_NATIVE_ARCH")
-#    set(LIBRAPID_NATIVE_ARCH OFF)
-#endif ()
-
 if (LIBRAPID_STRICT)
     # Enable all warnings and treat them as errors
     if (MSVC)
         target_compile_options(${module_name} PRIVATE /W4 /WX)
     else ()
         target_compile_options(${module_name} PRIVATE -Wall -Wextra -pedantic -Werror)
-    endif ()
-else ()
-    # Enable all warnings
-    if (MSVC)
-        target_compile_options(${module_name} PRIVATE /W4)
-    else ()
-        target_compile_options(${module_name} PRIVATE -Wall -Wextra -pedantic)
     endif ()
 endif ()
 
@@ -175,6 +150,8 @@ endif ()
 
 # See if OpenMP should be linked against
 if (LIBRAPID_USE_OMP)
+    find_package(OpenMP QUIET)
+
     if (${OpenMP_FOUND})
         message(STATUS "[ LIBRAPID ] Linking against OpenMP")
 
@@ -354,6 +331,8 @@ endif ()
 
 # Check if CUDA should be used
 if (LIBRAPID_USE_CUDA)
+    find_package(CUDAToolkit QUIET)
+
     if (${CUDAToolkit_FOUND})
         message(STATUS "[ LIBRAPID ] Using CUDA ${CUDAToolkit_VERSION}")
 
