@@ -187,6 +187,7 @@ jobs:
             cxx: ../llvm/clang++
             clangVer: "15.0"
             blas: off
+            getBlas: off
             fftw: off
             mpfr: on
             cpp: 20
@@ -197,6 +198,7 @@ jobs:
             cxx: ../llvm/clang++
             clangVer: "15.0"
             blas: on
+            getBlas: on
             fftw: on
             mpfr: on
             cpp: 20
@@ -207,6 +209,7 @@ jobs:
             cxx: ./llvm/clang++
             clangVer: "15.0"
             blas: off
+            getBlas: off
             fftw: off
             mpfr: on
             cpp: 23
@@ -217,6 +220,7 @@ jobs:
             cxx: ./llvm/clang++
             clangVer: "15.0"
             blas: on
+            getBlas: on
             fftw: on
             mpfr: on
             cpp: 23
@@ -226,6 +230,7 @@ jobs:
             cc: msvc
             cxx: msvc
             blas: off
+            getBlas: off
             fftw: off
             mpfr: on
             cpp: 20
@@ -235,6 +240,7 @@ jobs:
             cc: msvc
             cxx: msvc
             blas: on
+            getBlas: on
             fftw: on
             mpfr: on
             cpp: 20
@@ -244,6 +250,7 @@ jobs:
             cc: msvc
             cxx: msvc
             blas: off
+            getBlas: off
             fftw: off
             mpfr: on
             cpp: 23
@@ -253,6 +260,7 @@ jobs:
             cc: msvc
             cxx: msvc
             blas: on
+            getBlas: on
             fftw: on
             mpfr: on
             cpp: 23
