@@ -1,4 +1,4 @@
-#include <librapid>
+#include <librapid/librapid.hpp>
 
 #if defined(LIBRAPID_USE_MULTIPREC)
 
