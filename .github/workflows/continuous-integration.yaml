@@ -23,6 +23,7 @@ jobs:
             cxx: ../llvm/bin/clang++
             clangVer: "15.0"
             blas: off
+            getBlas: off
             fftw: off
             mpfr: on
             cpp: 20
@@ -33,6 +34,7 @@ jobs:
             cxx: ../llvm/bin/clang++
             clangVer: "15.0"
             blas: on
+            getBlas: on
             fftw: on
             mpfr: on
             cpp: 20
@@ -42,6 +44,7 @@ jobs:
             cc: gcc-10
             cxx: g++-10
             blas: off
+            getBlas: off
             fftw: off
             mpfr: on
             cpp: 20
@@ -51,6 +54,7 @@ jobs:
             cc: gcc-10
             cxx: g++-10
             blas: on
+            getBlas: on
             fftw: on
             mpfr: on
             cpp: 20
@@ -60,6 +64,7 @@ jobs:
             cc: gcc-10
             cxx: g++-10
             blas: off
+            getBlas: off
             fftw: off
             mpfr: on
             cpp: 23
@@ -69,6 +74,7 @@ jobs:
             cc: gcc-10
             cxx: g++-10
             blas: on
+            getBlas: on
             fftw: on
             mpfr: on
             cpp: 23
@@ -78,6 +84,7 @@ jobs:
             cc: gcc-11
             cxx: g++-11
             blas: off
+            getBlas: off
             fftw: off
             mpfr: on
             cpp: 20
@@ -87,6 +94,7 @@ jobs:
             cc: gcc-11
             cxx: g++-11
             blas: on
+            getBlas: on
             fftw: on
             mpfr: on
             cpp: 20
@@ -96,6 +104,7 @@ jobs:
             cc: gcc-11
             cxx: g++-11
             blas: off
+            getBlas: off
             fftw: off
             mpfr: on
             cpp: 23
@@ -105,6 +114,7 @@ jobs:
             cc: gcc-11
             cxx: g++-11
             blas: on
+            getBlas: on
             fftw: on
             mpfr: on
             cpp: 23
@@ -115,6 +125,7 @@ jobs:
             cxx: ../llvm/bin/clang++
             clangVer: "15.0"
             blas: off
+            getBlas: off
             fftw: off
             mpfr: on
             cpp: 20
@@ -125,6 +136,7 @@ jobs:
             cxx: ../llvm/bin/clang++
             clangVer: "15.0"
             blas: on
+            getBlas: off # Included with XCode
             fftw: on
             mpfr: on
             cpp: 20
@@ -134,6 +146,7 @@ jobs:
             cc: gcc-11
             cxx: g++-11
             blas: off
+            getBlas: off
             fftw: off
             mpfr: on
             cpp: 20
@@ -142,7 +155,8 @@ jobs:
           - os: macos-latest
             cc: gcc-11
             cxx: g++-11
-            blas: on
+            blas: on # Accelerate requires clang so we get blas
+            getBlas: on
             fftw: on
             mpfr: on
             cpp: 20
@@ -152,6 +166,7 @@ jobs:
             cc: gcc-11
             cxx: g++-11
             blas: off
+            getBlas: off
             fftw: off
             mpfr: on
             cpp: 23
@@ -160,7 +175,8 @@ jobs:
           - os: macos-latest
             cc: gcc-11
             cxx: g++-11
-            blas: on
+            blas: on # Accelerate Requires clang, so we get blas
+            getBlas: on
             fftw: on
             mpfr: on
             cpp: 23
@@ -267,7 +283,7 @@ jobs:
         run: |
           mkdir buildDebug
           cd buildDebug
-          cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
+          cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_USE_BLAS=${{ matrix.blas }} -DLIBRAPID_GET_BLAS=${{ matrix.getBlas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
           cmake --build . --config Debug
         env:
           CC: ${{ matrix.cc }}
@@ -282,7 +298,7 @@ jobs:
         run: |
           mkdir buildRelease
           cd buildRelease
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=${{ matrix.blas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_USE_BLAS=${{ matrix.blas }} -DLIBRAPID_GET_BLAS=${{ matrix.getBlas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
           cmake --build . --config Release
         env:
           CC: ${{ matrix.cc }}
@@ -646,7 +662,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=ON -DLIBRAPID_GET_FFTW=on -DLIBRAPID_USE_MULTIPREC=on
+          cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_USE_BLAS=ON -DLIBRAPID_GET_FFTW=on -DLIBRAPID_USE_MULTIPREC=on
           cmake --build .
         env:
           CC: gcc-11
