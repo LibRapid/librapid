@@ -6,7 +6,7 @@
 <img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_dark.png#gh-dark-mode-only" width="800">
 </p>
 
-![C++ Version](https://img.shields.io/badge/C++-17/20-purple.svg?style=flat&logo=c%2B%2B) ![License](https://img.shields.io/badge/License-MIT-orange.svg?style=flat) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC)
+![C++ Version](https://img.shields.io/badge/C++-20/23-purple.svg?style=flat&logo=c%2B%2B) ![License](https://img.shields.io/badge/License-MIT-orange.svg?style=flat) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC)
 
 ---
 
@@ -132,8 +132,12 @@ submodules of the library -- you don't need to install anything manually):
 # Star History
 
 <div align="center">
-  <a href="https://star-history.com/#LibRapid/librapid&Date">
-    <img src="https://api.star-history.com/svg?repos=LibRapid/librapid&type=Date" alt="Star History" width="700">
+  <a href="https://star-history.com/#LibRapid/librapid&Timeline">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=LibRapid/librapid&type=Timeline&theme=dark" />
+      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=LibRapid/librapid&type=Timeline" />
+      <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=LibRapid/librapid&type=Timeline" />
+    </picture>
   </a>
 </div>
 

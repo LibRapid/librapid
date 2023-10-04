@@ -47,6 +47,8 @@
 #	include "cxxblas/drivers/veclib.h"
 #elif defined(LIBRAPID_BLAS_MKL)
 #	include "cxxblas/drivers/mklblas.h"
+#elif defined(LIBRAPID_BLAS_ACCELERATE)
+#	include "cxxblas/drivers/accelerate.h"
 #elif defined(LIBRAPID_BLAS_REFBLAS)
 #	include "cxxblas/drivers/refblas.h"
 #endif

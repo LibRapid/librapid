@@ -124,7 +124,7 @@ namespace cxxblas {
 		typename RestrictTo<IsSame<ENUM, Transpose>::value, CBLAS_TRANSPOSE>::Type
 		getCblasType(ENUM trans) {
 			if (trans == NoTrans) { return CblasNoTrans; }
-#	if !defined(LIBRAPID_BLAS_MKL)
+#	if !defined(LIBRAPID_BLAS_MKL) && !defined(LIBRAPID_BLAS_ACCELERATE)
 			if (trans == Conj) { return CblasConjNoTrans; }
 #	endif
 			if (trans == Trans) { return CblasTrans; }
