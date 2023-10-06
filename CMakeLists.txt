@@ -405,7 +405,16 @@ if (LIBRAPID_USE_OPENCL)
         target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/CLBlast/include")
         set(LIBRAPID_HAS_OPENCL true)
 
-        
+        if (IS_MACOS)
+            # Add -framework OpenCL to the linker flags
+            target_link_libraries(${module_name} PUBLIC "-framework OpenCL")
+
+            # Define CL_HPP_TARGET_OPENCL_VERSION to the version of OpenCL being used
+            message(STATUS "[ LIBRAPID ] OpenCL Version: ${OpenCL_VERSION_MAJOR}${OpenCL_VERSION_MINOR}0")
+            set(OpenCLVersion ${OpenCL_VERSION_MAJOR}${OpenCL_VERSION_MINOR}0)
+            target_compile_definitions(${module_name} PUBLIC CL_HPP_TARGET_OPENCL_VERSION=${OpenCLVersion})
+            target_compile_definitions(${module_name} PUBLIC CL_HPP_MINIMUM_OPENCL_VERSION=${OpenCLVersion})
+        endif ()
     else ()
         message(WARNING "OpenCL support was requested, but a valid OpenCL installation could not be found")
     endif ()

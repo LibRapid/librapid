@@ -3,19 +3,24 @@
 
 #if defined(LIBRAPID_HAS_OPENCL)
 
-#    if defined(LIBRAPID_APPLE)
-#        include <OpenCL/opencl.h>
-#    else
-#        include <CL/cl.hpp>
-#    endif // LIBRAPID_APPLE
+// Required files...
+#include <complex>
 
-#    include <clblast.h>
+#	if defined(__APPLE__)
+// 		On MacOS, we have to use custom C++ bindings, since they are not provided by default
+#		include <OpenCL/opencl.h>
+#		include <librapid/opencl/opencl.hpp>
+#	else
+#		include <CL/cl.hpp>
+#	endif // LIBRAPID_APPLE
+
+#	include <clblast.h>
 
 #else // LIBRAPID_HAS_OPENCL
 
 namespace librapid::typetraits {
-    template<typename T>
-    struct IsOpenCLStorage : std::false_type {};
+	template<typename T>
+	struct IsOpenCLStorage : std::false_type {};
 } // namespace librapid::typetraits
 
 #endif // LIBRAPID_HAS_OPENCL
