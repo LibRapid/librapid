@@ -291,7 +291,7 @@ jobs:
         run: |
           mkdir buildDebug
           cd buildDebug
-          cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_USE_BLAS=${{ matrix.blas }} -DLIBRAPID_GET_BLAS=${{ matrix.getBlas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
+          cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_USE_BLAS=${{ matrix.blas }} -DLIBRAPID_GET_BLAS=${{ matrix.getBlas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }} -DLIBRAPID_USE_OPENCL=off
           cmake --build . --config Debug
         env:
           CC: ${{ matrix.cc }}
@@ -306,7 +306,7 @@ jobs:
         run: |
           mkdir buildRelease
           cd buildRelease
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_USE_BLAS=${{ matrix.blas }} -DLIBRAPID_GET_BLAS=${{ matrix.getBlas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }}
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{ matrix.cpp }} -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_USE_BLAS=${{ matrix.blas }} -DLIBRAPID_GET_BLAS=${{ matrix.getBlas }} -DLIBRAPID_USE_MULTIPREC=${{ matrix.mpfr }} -DLIBRAPID_USE_OPENCL=off
           cmake --build . --config Release
         env:
           CC: ${{ matrix.cc }}
