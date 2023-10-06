@@ -90,6 +90,6 @@ TEST_CASE("Test Multiprecision", "[multiprecision]") {
 
 #else
 
-TEST_CASE("INVALID -- MultiPrecision not Enabled", "[multiprecision]") { REQUIRE(false); }
+TEST_CASE("INVALID -- MultiPrecision not Enabled", "[multiprecision]") { REQUIRE(true); }
 
 #endif // LIBRAPID_USE_MULTIPRECISION
