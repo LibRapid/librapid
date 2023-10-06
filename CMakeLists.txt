@@ -370,8 +370,12 @@ if (LIBRAPID_USE_CUDA)
                 CUDA::curand
                 CUDA::cusolver
                 CUDA::cusparse
-                Dbghelp
         )
+
+        # Link with Dbghelp on Windows
+        if (IS_WINDOWS)
+            target_link_libraries(${module_name} PUBLIC Dbghelp)
+        endif ()
 
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_CUDA)
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_CUDA_STREAM)
