@@ -384,10 +384,10 @@ if (LIBRAPID_USE_CUDA)
 endif ()
 
 
-if (LIBRAPID_USE_OPENCL AND IS_MACOS)
-    message(WARNING "OpenCL support was requested, but OpenCL is not supported on macOS. Disabling OpenCL support")
-    set(LIBRAPID_USE_OPENCL OFF)
-endif ()
+#if (LIBRAPID_USE_OPENCL AND IS_MACOS)
+#    message(WARNING "OpenCL support was requested, but OpenCL is not supported on macOS. Disabling OpenCL support")
+#    set(LIBRAPID_USE_OPENCL OFF)
+#endif ()
 
 if (LIBRAPID_USE_OPENCL)
     find_package(OpenCL QUIET)
@@ -404,6 +404,8 @@ if (LIBRAPID_USE_OPENCL)
         target_link_libraries(${module_name} PUBLIC clblast)
         target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/CLBlast/include")
         set(LIBRAPID_HAS_OPENCL true)
+
+        
     else ()
         message(WARNING "OpenCL support was requested, but a valid OpenCL installation could not be found")
     endif ()
