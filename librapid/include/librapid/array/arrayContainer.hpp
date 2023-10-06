@@ -686,14 +686,15 @@ namespace librapid {
 			  sizeof...(Indices),
 			  m_shape.ndim());
 
+			int dim = 0;
 			int64_t index = 0;
 			for (int64_t i : {indices...}) {
 				LIBRAPID_ASSERT(
-				  i >= 0 && i < static_cast<int64_t>(m_shape[index]),
+				  i >= 0 && i < static_cast<int64_t>(m_shape[dim]),
 				  "Index {} out of bounds in ArrayContainer::operator() with dimension={}",
 				  i,
-				  m_shape[index]);
-				index = index * m_shape[index] + i;
+				  m_shape[dim]);
+				index = index * m_shape[dim++] + i;
 			}
 			return m_storage[index];
 		}

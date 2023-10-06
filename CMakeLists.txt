@@ -69,19 +69,7 @@ MACRO(SUBDIRLIST result curdir)
     SET(${result} ${dirlist})
 ENDMACRO()
 
-# Attempt to locate the required packages
 include(FetchContent)
-if (LIBRAPID_USE_CUDA)
-    find_package(CUDAToolkit QUIET)
-endif ()
-
-if (LIBRAPID_USE_BLAS)
-    find_package(BLAS QUIET)
-endif ()
-
-if (LIBRAPID_USE_OMP)
-	find_package(OpenMP QUIET)
-endif ()
 
 set(LIBRAPID_HAS_OMP false)
 set(LIBRAPID_HAS_BLAS false)
@@ -137,25 +125,12 @@ if (LIBRAPID_STRICT AND LIBRAPID_QUIET)
     message(FATAL_ERROR "LIBRAPID_STRICT and LIBRAPID_QUIET cannot be enabled at the same time")
 endif ()
 
-# SIMD instructions do not currently work on MacOS
-#if (IS_MACOS AND LIBRAPID_NATIVE_ARCH)
-#    message(WARNING "SIMD instructions are not currently supported on MacOS. Disabling LIBRAPID_NATIVE_ARCH")
-#    set(LIBRAPID_NATIVE_ARCH OFF)
-#endif ()
-
 if (LIBRAPID_STRICT)
     # Enable all warnings and treat them as errors
     if (MSVC)
         target_compile_options(${module_name} PRIVATE /W4 /WX)
     else ()
         target_compile_options(${module_name} PRIVATE -Wall -Wextra -pedantic -Werror)
-    endif ()
-else ()
-    # Enable all warnings
-    if (MSVC)
-        target_compile_options(${module_name} PRIVATE /W4)
-    else ()
-        target_compile_options(${module_name} PRIVATE -Wall -Wextra -pedantic)
     endif ()
 endif ()
 
@@ -175,6 +150,8 @@ endif ()
 
 # See if OpenMP should be linked against
 if (LIBRAPID_USE_OMP)
+    find_package(OpenMP QUIET)
+
     if (${OpenMP_FOUND})
         message(STATUS "[ LIBRAPID ] Linking against OpenMP")
 
@@ -190,167 +167,172 @@ if (LIBRAPID_USE_OMP)
 endif ()
 
 # Include any required modules
-include(identifyBLAS)
-
-# If LIBRAPID_MKL_CONFIG_PATH is set, use that instead of the default
-if (LIBRAPID_MKL_CONFIG_PATH)
-    message(STATUS "[ LIBRAPID ] Using MKLConfig.cmake from ${LIBRAPID_MKL_CONFIG_PATH}")
-    include(${LIBRAPID_MKL_CONFIG_PATH})
-    message(STATUS "[ LIBRAPID ] Linking against MKL")
-    message(STATUS "[ LIBRAPID ] MKL Libraries: ${MKL_LIBRARIES}")
-    message(STATUS "[ LIBRAPID ] MKL Include Directories: ${MKL_INCLUDE}")
-    target_link_libraries(${module_name} PUBLIC MKL::MKL)
-    target_include_directories(${module_name} PUBLIC ${MKL_INCLUDE})
-    target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
-    set(LIBRAPID_HAS_BLAS ON)
-    set_blas_definition("MKL")
+if (LIBRAPID_USE_BLAS)
+    include(blasConfig)
+    configure_blas()
 endif ()
 
-if (LIBRAPID_GET_BLAS AND NOT LIBRAPID_HAS_BLAS)
-    message(STATUS "[ LIBRAPID ] Downloading OpenBLAS Build...")
-
-    FetchContent_Declare(
-            BuildOpenBLAS
-            GIT_REPOSITORY https://github.com/LibRapid/BuildOpenBLAS.git
-    )
-
-    FetchContent_MakeAvailable(BuildOpenBLAS)
-
-    set(BLAS_FOUND TRUE)
-    set(LIBRAPID_USE_BLAS TRUE)
-
-    if (${IS_WINDOWS})
-        # Use openblas-windows-latest
-        set(BLAS_LIBRARIES "${FETCHCONTENT_BASE_DIR}/buildopenblas-src/openblas-windows-latest/lib/openblas.lib")
-    elseif (${IS_MACOS})
-        # Use openblas-macos-latest
-        set(BLAS_LIBRARIES "${FETCHCONTENT_BASE_DIR}/buildopenblas-src/openblas-macos-latest/lib/libopenblas.a")
-    else () # Linux and other systems
-        # Use openblas-ubuntu-latest
-        set(BLAS_LIBRARIES "${FETCHCONTENT_BASE_DIR}/buildopenblas-src/openblas-ubuntu-latest/lib/libopenblas.a")
-    endif ()
-endif ()
-
-# See if BLAS should be linked against
-if (LIBRAPID_USE_BLAS AND NOT LIBRAPID_HAS_BLAS)
-    if (${BLAS_FOUND})
-        message(STATUS "[ LIBRAPID ] BLAS located was ${BLAS_LIBRARIES}")
-
-        list(GET ${BLAS_LIBRARIES} 0 LIBRAPID_BLAS)
-
-        if (NOT ${LIBRAPID_BLAS})
-            set(LIBRAPID_BLAS ${BLAS_LIBRARIES})
-        endif ()
-
-        message(STATUS "[ LIBRAPID ] Using BLAS (" ${LIBRAPID_BLAS} ")")
-
-        get_filename_component(filepath ${LIBRAPID_BLAS} DIRECTORY)
-        get_filename_component(filename ${LIBRAPID_BLAS} NAME)
-
-        # Attempt to identify which BLAS library is being used and
-        # set the appropriate compile definition
-        set_blas_definition_from_file(filename)
-
-        # Copy include files
-        set(inc_path "${filepath}/../include")
-        message(STATUS "[ LIBRAPID ] Checking path ${inc_path} for include files")
-        FILE(GLOB_RECURSE files "${filepath}/..")
-        message(STATUS "[ LIBRAPID ] Information: ${files}")
-        if (NOT (EXISTS ${inc_path}))
-            message(STATUS "[ LIBRAPID ] Could not locate include path for BLAS")
-        endif ()
-
-        set(has_cblas OFF)
-
-        if (EXISTS "${inc_path}/openblas")
-            FILE(GLOB_RECURSE include_files "${inc_path}/openblas/*.*")
-            foreach (file IN LISTS include_files)
-                get_filename_component(inc_file ${file} NAME)
-                if (${inc_file} STREQUAL "cblas.h")
-                    set(has_cblas ON)
-                endif ()
-            endforeach ()
-        else ()
-            FILE(GLOB_RECURSE include_files "${inc_path}/*.*")
-            foreach (file IN LISTS include_files)
-                get_filename_component(inc_file ${file} NAME)
-                if (${inc_file} STREQUAL "cblas.h")
-                    set(has_cblas ON)
-                endif ()
-            endforeach ()
-        endif ()
-
-        if (${has_cblas})
-            if (EXISTS "${inc_path}/openblas")
-                FILE(GLOB_RECURSE include_files "${inc_path}/openblas/*.*")
-                foreach (file IN LISTS include_files)
-                    message(STATUS "[ LIBRAPID ] Found OpenBLAS include file " ${file})
-                    get_filename_component(inc_file ${file} NAME)
-                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${inc_file}" COPYONLY)
-                endforeach ()
-            endif ()
-            # else ()
-
-            FILE(GLOB_RECURSE include_files "${inc_path}/*.*")
-            foreach (file IN LISTS include_files)
-                message(STATUS "[ LIBRAPID ] Found include file " ${file})
-                get_filename_component(inc_file ${file} NAME)
-                configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${inc_file}" COPYONLY)
-            endforeach ()
-
-            # endif ()
-
-            # Copy library files
-            get_filename_component(lib_name ${LIBRAPID_BLAS} NAME)
-            # message(STATUS "[ LIBRAPID ] Found library file ${lib_name}")
-            configure_file(${LIBRAPID_BLAS} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${lib_name}" COPYONLY)
-        endif ()
-
-        # Copy binary files if on Windows
-        if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-            set(bin_path "${filepath}/../bin")
-            if (NOT (EXISTS ${bin_path}))
-                message(WARNING "Could not locate <bin> folder for BLAS")
-            else ()
-                FILE(GLOB_RECURSE include_files "${bin_path}/*.dll")
-                foreach (file IN LISTS include_files)
-                    message(STATUS "[ LIBRAPID ] Found binary file " ${file})
-                    get_filename_component(filename ${file} NAME)
-                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
-                endforeach ()
-
-                FILE(GLOB_RECURSE bin_files "${CMAKE_CURRENT_SOURCE_DIR}/*.dll")
-                foreach (file IN LISTS bin_files)
-                    message(STATUS "[ LIBRAPID ] Found packaged binary file " ${file})
-                    get_filename_component(filename ${file} NAME)
-                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
-                endforeach ()
-            endif ()
-        endif ()
-
-        # Add the compile definition so LibRapid knows it has BLAS
-        if (${has_cblas})
-            # Link the required library
-            target_link_libraries(${module_name} PUBLIC
-                    "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${lib_name}"
-            )
-
-            target_include_directories(${module_name} PUBLIC
-                    "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas"
-            )
-
-            target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
-            set(LIBRAPID_HAS_BLAS true)
-        else ()
-            message(WARNING "Although BLAS was found, no cblas.h file was found, so BLAS support is not enabled")
-        endif ()
-    else ()
-        message(WARNING "BLAS support was requested but a valid BLAS interface was not found")
-    endif ()
-endif ()
+## If LIBRAPID_MKL_CONFIG_PATH is set, use that instead of the default
+#if (LIBRAPID_MKL_CONFIG_PATH)
+#    message(STATUS "[ LIBRAPID ] Using MKLConfig.cmake from ${LIBRAPID_MKL_CONFIG_PATH}")
+#    include(${LIBRAPID_MKL_CONFIG_PATH})
+#    message(STATUS "[ LIBRAPID ] Linking against MKL")
+#    message(STATUS "[ LIBRAPID ] MKL Libraries: ${MKL_LIBRARIES}")
+#    message(STATUS "[ LIBRAPID ] MKL Include Directories: ${MKL_INCLUDE}")
+#    target_link_libraries(${module_name} PUBLIC MKL::MKL)
+#    target_include_directories(${module_name} PUBLIC ${MKL_INCLUDE})
+#    target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
+#    set(LIBRAPID_HAS_BLAS ON)
+#    set_blas_definition("MKL")
+#endif ()
+#
+#if (LIBRAPID_GET_BLAS AND NOT LIBRAPID_HAS_BLAS)
+#    message(STATUS "[ LIBRAPID ] Downloading OpenBLAS Build...")
+#
+#    FetchContent_Declare(
+#            BuildOpenBLAS
+#            GIT_REPOSITORY https://github.com/LibRapid/BuildOpenBLAS.git
+#    )
+#
+#    FetchContent_MakeAvailable(BuildOpenBLAS)
+#
+#    set(BLAS_FOUND TRUE)
+#    set(LIBRAPID_USE_BLAS TRUE)
+#
+#    if (${IS_WINDOWS})
+#        # Use openblas-windows-latest
+#        set(BLAS_LIBRARIES "${FETCHCONTENT_BASE_DIR}/buildopenblas-src/openblas-windows-latest/lib/openblas.lib")
+#    elseif (${IS_MACOS})
+#        # Use openblas-macos-latest
+#        set(BLAS_LIBRARIES "${FETCHCONTENT_BASE_DIR}/buildopenblas-src/openblas-macos-latest/lib/libopenblas.a")
+#    else () # Linux and other systems
+#        # Use openblas-ubuntu-latest
+#        set(BLAS_LIBRARIES "${FETCHCONTENT_BASE_DIR}/buildopenblas-src/openblas-ubuntu-latest/lib/libopenblas.a")
+#    endif ()
+#endif ()
+#
+## See if BLAS should be linked against
+#if (LIBRAPID_USE_BLAS AND NOT LIBRAPID_HAS_BLAS)
+#    if (${BLAS_FOUND})
+#        message(STATUS "[ LIBRAPID ] BLAS located was ${BLAS_LIBRARIES}")
+#
+#        list(GET ${BLAS_LIBRARIES} 0 LIBRAPID_BLAS)
+#
+#        if (NOT ${LIBRAPID_BLAS})
+#            set(LIBRAPID_BLAS ${BLAS_LIBRARIES})
+#        endif ()
+#
+#        message(STATUS "[ LIBRAPID ] Using BLAS (" ${LIBRAPID_BLAS} ")")
+#
+#        get_filename_component(filepath ${LIBRAPID_BLAS} DIRECTORY)
+#        get_filename_component(filename ${LIBRAPID_BLAS} NAME)
+#
+#        # Attempt to identify which BLAS library is being used and
+#        # set the appropriate compile definition
+#        set_blas_definition_from_file(filename)
+#
+#        # Copy include files
+#        set(inc_path "${filepath}/../include")
+#        message(STATUS "[ LIBRAPID ] Checking path ${inc_path} for include files")
+#        FILE(GLOB_RECURSE files "${filepath}/..")
+#        message(STATUS "[ LIBRAPID ] Information: ${files}")
+#        if (NOT (EXISTS ${inc_path}))
+#            message(STATUS "[ LIBRAPID ] Could not locate include path for BLAS")
+#        endif ()
+#
+#        set(has_cblas OFF)
+#
+#        if (EXISTS "${inc_path}/openblas")
+#            FILE(GLOB_RECURSE include_files "${inc_path}/openblas/*.*")
+#            foreach (file IN LISTS include_files)
+#                get_filename_component(inc_file ${file} NAME)
+#                if (${inc_file} STREQUAL "cblas.h")
+#                    set(has_cblas ON)
+#                endif ()
+#            endforeach ()
+#        else ()
+#            FILE(GLOB_RECURSE include_files "${inc_path}/*.*")
+#            foreach (file IN LISTS include_files)
+#                get_filename_component(inc_file ${file} NAME)
+#                if (${inc_file} STREQUAL "cblas.h")
+#                    set(has_cblas ON)
+#                endif ()
+#            endforeach ()
+#        endif ()
+#
+#        if (${has_cblas})
+#            if (EXISTS "${inc_path}/openblas")
+#                FILE(GLOB_RECURSE include_files "${inc_path}/openblas/*.*")
+#                foreach (file IN LISTS include_files)
+#                    message(STATUS "[ LIBRAPID ] Found OpenBLAS include file " ${file})
+#                    get_filename_component(inc_file ${file} NAME)
+#                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${inc_file}" COPYONLY)
+#                endforeach ()
+#            endif ()
+#            # else ()
+#
+#            FILE(GLOB_RECURSE include_files "${inc_path}/*.*")
+#            foreach (file IN LISTS include_files)
+#                message(STATUS "[ LIBRAPID ] Found include file " ${file})
+#                get_filename_component(inc_file ${file} NAME)
+#                configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${inc_file}" COPYONLY)
+#            endforeach ()
+#
+#            # endif ()
+#
+#            # Copy library files
+#            get_filename_component(lib_name ${LIBRAPID_BLAS} NAME)
+#            # message(STATUS "[ LIBRAPID ] Found library file ${lib_name}")
+#            configure_file(${LIBRAPID_BLAS} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${lib_name}" COPYONLY)
+#        endif ()
+#
+#        # Copy binary files if on Windows
+#        if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+#            set(bin_path "${filepath}/../bin")
+#            if (NOT (EXISTS ${bin_path}))
+#                message(WARNING "Could not locate <bin> folder for BLAS")
+#            else ()
+#                FILE(GLOB_RECURSE include_files "${bin_path}/*.dll")
+#                foreach (file IN LISTS include_files)
+#                    message(STATUS "[ LIBRAPID ] Found binary file " ${file})
+#                    get_filename_component(filename ${file} NAME)
+#                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
+#                endforeach ()
+#
+#                FILE(GLOB_RECURSE bin_files "${CMAKE_CURRENT_SOURCE_DIR}/*.dll")
+#                foreach (file IN LISTS bin_files)
+#                    message(STATUS "[ LIBRAPID ] Found packaged binary file " ${file})
+#                    get_filename_component(filename ${file} NAME)
+#                    configure_file(${file} "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${filename}" COPYONLY)
+#                endforeach ()
+#            endif ()
+#        endif ()
+#
+#        # Add the compile definition so LibRapid knows it has BLAS
+#        if (${has_cblas})
+#            # Link the required library
+#            target_link_libraries(${module_name} PUBLIC
+#                    "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas/${lib_name}"
+#            )
+#
+#            target_include_directories(${module_name} PUBLIC
+#                    "${CMAKE_CURRENT_SOURCE_DIR}/librapid/blas"
+#            )
+#
+#            target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_BLAS)
+#            set(LIBRAPID_HAS_BLAS true)
+#        else ()
+#            message(WARNING "Although BLAS was found, no cblas.h file was found, so BLAS support is not enabled")
+#        endif ()
+#    else ()
+#        message(WARNING "BLAS support was requested but a valid BLAS interface was not found")
+#    endif ()
+#endif ()
 
 # Check if CUDA should be used
 if (LIBRAPID_USE_CUDA)
+    find_package(CUDAToolkit QUIET)
+
     if (${CUDAToolkit_FOUND})
         message(STATUS "[ LIBRAPID ] Using CUDA ${CUDAToolkit_VERSION}")
 
