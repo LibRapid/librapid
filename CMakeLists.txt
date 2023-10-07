@@ -387,12 +387,6 @@ if (LIBRAPID_USE_CUDA)
     endif ()
 endif ()
 
-
-#if (LIBRAPID_USE_OPENCL AND IS_MACOS)
-#    message(WARNING "OpenCL support was requested, but OpenCL is not supported on macOS. Disabling OpenCL support")
-#    set(LIBRAPID_USE_OPENCL OFF)
-#endif ()
-
 if (LIBRAPID_USE_OPENCL)
     find_package(OpenCL QUIET)
 
