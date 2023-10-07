@@ -534,7 +534,7 @@ jobs:
           cd BenchmarksCPP
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DUSING_GITHUB_ACTIONS=ON -DLIBRAPID_OPTIMISE_SMALL_ARRAYS=${{ matrix.smallArrays }} -DLIBRAPID_USE_BLAS=ON -DLIBRAPID_GET_FFTW=on -DLIBRAPID_USE_MULTIPREC=on -DLIBRAPID_USE_OPENCL=off
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DUSING_GITHUB_ACTIONS=ON -DLIBRAPID_OPTIMISE_SMALL_ARRAYS=${{ matrix.smallArrays }} -DLIBRAPID_USE_BLAS=ON -DLIBRAPID_USE_MULTIPREC=ON -DLIBRAPID_USE_OPENCL=OFF
           cmake --build . --config Release
         env:
           CC: ${{ matrix.cc }}
