@@ -37,6 +37,13 @@ Fixed-size vectors and supported operations.
 Complex numbers and their operations.
 :::
 
+:::{grid-item-card} {octicon}`stack` Sets
+:link: set/set
+:link-type: doc
+
+Mathematical sets.
+:::
+
 :::{grid-item-card} {octicon}`number` Mathematics
 :link: math/math
 :link-type: doc
@@ -67,6 +74,7 @@ Usage Examples <topics/topics>
 Arrays, Matrices and Linear Algebra <array/array>
 Vectors <vector/vector>
 Complex Numbers <complex/complex>
+Sets <set/set>
 Mathematics <math/math>
 Multi-Precision Arithmetic <multiPrecision/multiPrecision>
 Utilities <utility/utility>

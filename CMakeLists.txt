@@ -84,7 +84,8 @@ file(GLOB_RECURSE LIBRAPID_SOURCES
 )
 
 set(module_name "librapid")
-add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
+add_library(${module_name} STATIC ${LIBRAPID_SOURCES}
+        librapid/include/librapid/utils/set.hpp)
 
 # clang-format off
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_MAJOR=${LIBRAPID_MAJOR})
