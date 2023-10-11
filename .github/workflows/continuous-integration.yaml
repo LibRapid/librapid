@@ -372,8 +372,10 @@ jobs:
 
       - name: Install LaTeX
         continue-on-error: true
+        # run: |
+        #   sudo apt-get install -y texlive-full
         run: |
-          sudo apt-get install -y texlive-full
+          sudo apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
 
       - name: Install Requirements
         continue-on-error: true
@@ -386,7 +388,7 @@ jobs:
         run: |
           sudo apt --fix-broken install
           sudo apt-get install python3-sphinx
-
+          
       - name: Configure Files
         run: |
           touch .is_local
