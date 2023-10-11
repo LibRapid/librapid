@@ -12,6 +12,7 @@
 #	define CBLAS_INDEX size_t
 #endif // CBLAS_INDEX
 
+#define ACCELERATE_NEW_LAPACK 1
 #include <Accelerate/Accelerate.h>
 
 #ifdef negativeInfinity // This breaks things

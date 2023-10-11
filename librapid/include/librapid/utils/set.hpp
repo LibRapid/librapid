@@ -16,25 +16,25 @@ namespace librapid {
 	class Set {
 	public:
 		/// \brief The type of the elements in the set
-		using ElementType		  = ElementType_;
+		using ElementType = ElementType_;
 
 		/// \brief The type of the underlying vector
-		using VectorType		  = std::vector<ElementType>;
+		using VectorType = std::vector<ElementType>;
 
 		/// \brief The type of the iterator for the underlying vector
-		using VectorIterator	  = typename VectorType::iterator;
+		using VectorIterator = typename VectorType::iterator;
 
 		/// \brief The type of the const iterator for the underlying vector
 		using VectorConstIterator = typename VectorType::const_iterator;
 
 		/// \brief Default constructor
-		Set()				  = default;
+		Set() = default;
 
 		/// \brief Copy constructor
 		Set(const Set &other) = default;
 
 		/// \brief Move constructor
-		Set(Set &&other)	  = default;
+		Set(Set &&other) = default;
 
 		/// \brief Construct a set from an array
 		///
@@ -69,7 +69,7 @@ namespace librapid {
 		Set &operator=(const Set &other) = default;
 
 		/// \brief Move assignment operator
-		Set &operator=(Set &&other)		 = default;
+		Set &operator=(Set &&other) = default;
 
 		/// \return Return the cardinality of the set \f$ |S| \f$
 		LIBRAPID_NODISCARD int64_t size() const { return m_data.size(); }
@@ -130,7 +130,8 @@ namespace librapid {
 			return *this;
 		}
 
-		/// \brief Insert an `std::vector` of values into the set (\f$ S \leftarrow S \cup \text{data} \f$)
+		/// \brief Insert an `std::vector` of values into the set (\f$ S \leftarrow S \cup
+		/// \text{data} \f$)
 		///
 		/// Each element of the vector is inserted into the set.
 		/// \param data
@@ -140,9 +141,8 @@ namespace librapid {
 			return *this;
 		}
 
-		/// \brief Insert an initializer list of values into the set (\f$ S \leftarrow S \cup \text{data} \f$)
-		/// \param data
-		/// \return Reference to the set
+		/// \brief Insert an initializer list of values into the set (\f$ S \leftarrow S \cup
+		/// \text{data} \f$) \param data \return Reference to the set
 		Set &insert(const std::initializer_list<ElementType> &data) {
 			for (const auto &val : data) { insert(val); }
 			return *this;
@@ -154,16 +154,14 @@ namespace librapid {
 		/// \see insert(const ElementType &val)
 		Set &operator+=(const ElementType &val) { return insert(val); }
 
-		/// \brief Insert an `std::vector` of values into the set (\f$ S \leftarrow S \cup \text{data} \f$)
-		/// \param data
-		/// \return Reference to the set
-		/// \see insert(const std::vector<ElementType> &data)
+		/// \brief Insert an `std::vector` of values into the set (\f$ S \leftarrow S \cup
+		/// \text{data} \f$) \param data \return Reference to the set \see insert(const
+		/// std::vector<ElementType> &data)
 		Set &operator+=(const std::vector<ElementType> &data) { return insert(data); }
 
-		/// \brief Insert an initializer list of values into the set (\f$ S \leftarrow S \cup \text{data} \f$)
-		/// \param data
-		/// \return Reference to the set
-		/// \see insert(const std::initializer_list<ElementType> &data)
+		/// \brief Insert an initializer list of values into the set (\f$ S \leftarrow S \cup
+		/// \text{data} \f$) \param data \return Reference to the set \see insert(const
+		/// std::initializer_list<ElementType> &data)
 		Set &operator+=(const std::initializer_list<ElementType> &data) { return insert(data); }
 
 		/// \brief Insert an element into the set and return the result
@@ -232,7 +230,8 @@ namespace librapid {
 			return *this;
 		}
 
-		/// \brief Discard an initializer list of values from the set (\f$ S \setminus \text{data} \f$)
+		/// \brief Discard an initializer list of values from the set (\f$ S \setminus \text{data}
+		/// \f$)
 		///
 		/// If an element in \p data is not contained within the set, nothing happens.
 		///
@@ -265,7 +264,8 @@ namespace librapid {
 			return *this;
 		}
 
-		/// \brief Remove an initializer list of values from the set (\f$ S \setminus \text{data} \f$)
+		/// \brief Remove an initializer list of values from the set (\f$ S \setminus \text{data}
+		/// \f$)
 		///
 		/// If an element in \p data is not contained within the set, an exception is thrown.
 		///
@@ -455,6 +455,8 @@ namespace librapid {
 			return result;
 		}
 
+		LIBRAPID_NODISCARD auto operator<=>(const Set &other) const = default;
+
 		/// \return Iterator to the beginning of the set
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto begin() const { return m_data.begin(); }
 
@@ -480,9 +482,7 @@ namespace librapid {
 	protected:
 		/// \brief Reserve space in the underlying vector for \p elements elements
 		/// \param elements The number of elements to reserve space for
-		void reserve(size_t elements) {
-			m_data.reserve(elements);
-		}
+		void reserve(size_t elements) { m_data.reserve(elements); }
 
 		/// \brief Sort the underlying vector
 		void sort() { std::sort(m_data.begin(), m_data.end()); }
@@ -499,17 +499,15 @@ namespace librapid {
 
 		/// \brief Add a value to the end of the set if it is known to be the largest element
 		/// \param val
-		LIBRAPID_ALWAYS_INLINE void pushBack(const ElementType &val) {
-			m_data.emplace_back(val);
-		}
+		LIBRAPID_ALWAYS_INLINE void pushBack(const ElementType &val) { m_data.emplace_back(val); }
 
 		/// \brief Insert a vector of values into a location in the set if they are known to
 		/// be valid in that position
 		/// \param insertLocation
 		/// \param begin
 		/// \param end
-		LIBRAPID_ALWAYS_INLINE void insert(VectorConstIterator insertLocation, VectorConstIterator begin,
-										   VectorConstIterator end) {
+		LIBRAPID_ALWAYS_INLINE void insert(VectorConstIterator insertLocation,
+										   VectorConstIterator begin, VectorConstIterator end) {
 			m_data.insert(insertLocation, begin, end);
 		}
 
