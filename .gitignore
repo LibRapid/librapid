@@ -23,3 +23,5 @@ docs/source/docBuild
 *.fatbin
 
 *.synctex.gz
+
+*.DS_Store

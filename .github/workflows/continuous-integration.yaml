@@ -382,7 +382,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Force install Sphinx Build
+        continue-on-error: true
         run: |
+          sudo apt --fix-broken install
           sudo apt-get install python3-sphinx
 
       - name: Configure Files
