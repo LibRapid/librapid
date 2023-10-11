@@ -158,13 +158,3 @@ Thanks to JetBrains for providing LibRapid with free licenses for their amazing 
     <img src="https://devclass.com/wp-content/uploads/2018/12/jetbrains-variant-4.png" alt="JetBrains" width="200"/>
   </a>
 </p>
-
-# Lines of Code
-
-If you want to see how many lines of code LibRapid has, you can run the following command:
-
-```bash
-cloc --fullpath --not-match-d="(vendor|docs/source)" .
-```
-
-(You'll need to install [cloc](https://github.com/AlDanial/cloc) first)
