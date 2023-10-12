@@ -135,3 +135,17 @@ the library's features! There are more example programs in the ``examples`` dire
 ---
 
 (``examples/``)[https://github.com/LibRapid/librapid/tree/master/examples]
+
+## Troubleshooting
+
+While I have done my best to make LibRapid compile with as few issues as possible, there are cases where it will not work the first time around. Some issues I have experienced myself or have been told about by other users. Some of these issues and their solutions are shown below:
+
+### Linux with CUDA
+
+If you want to use LibRapid with CUDA on a Linux machine and your code is not compiling, please ensure you have the **development OpenGL** packages installed.
+
+On Ubuntu and similar distros, this can be done with the following:
+
+```
+sudo apt-get install libgl1-mesa-dev
+```

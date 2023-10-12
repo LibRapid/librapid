@@ -71,7 +71,7 @@
 #endif
 
 // Compiler information
-#if defined(__GNUC__)
+#if defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER)
 #	define LIBRAPID_GNU
 #	define LIBRAPID_COMPILER_NAME "GNU C/C++ Compiler"
 #endif

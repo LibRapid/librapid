@@ -266,7 +266,7 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
         global::openCLQueue   = cl::CommandQueue(global::openCLContext, global::openCLDevice);
 
         // Add kernel files
-        auto basePath = fmt::format("{}/include/librapid/OpenCL/kernels/", LIBRAPID_SOURCE);
+        auto basePath = fmt::format("{}/include/librapid/opencl/kernels/", LIBRAPID_SOURCE);
         addOpenCLKernelFile(basePath + "core.cl");
         addOpenCLKernelFile(basePath + "dual.cl");
         addOpenCLKernelFile(basePath + "fill.cl");

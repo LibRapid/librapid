@@ -14,7 +14,10 @@ exclude_dirs = [
     "librapid/vendor",
     "librapid/blas",
     "librapid/cxxblas",
-    "librapid/fftw"
+    "librapid/fftw",
+    "librapid/cuda/kernels",
+    "librapid/opencl/kernels",
+    "librapid/opencl/opencl.hpp"
 ]
 
 file_match = regex.compile(".*\..*")
@@ -102,7 +105,7 @@ if os.environ.get("GITHUB_TOKEN") is not None:
     rtds_action_path = "BenchmarkResults"
     rtds_action_artifact_prefix = "LibRapid_Benchmark_SHA_"
     rtds_action_github_token = os.environ["GITHUB_TOKEN"]
-    rtds_action_error_if_missing = True
+    rtds_action_error_if_missing = False # Don't fail if the artifact is missing
 
 autosectionlabel_prefix_document = True
 

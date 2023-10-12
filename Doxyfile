@@ -983,6 +983,9 @@ EXCLUDE_PATTERNS       = */librapid/vendor/*
 EXCLUDE_PATTERNS      += */librapid/blas/*
 EXCLUDE_PATTERNS      += */librapid/cxxblas/*
 EXCLUDE_PATTERNS      += */librapid/fftw/*
+EXCLUDE_PATTERNS      += */opencl/kernels/*
+EXCLUDE_PATTERNS      += */cuda/kernels/*
+EXCLUDE_PATTERNS      += */opencl/opencl.hpp
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the

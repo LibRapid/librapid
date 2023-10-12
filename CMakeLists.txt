@@ -370,8 +370,12 @@ if (LIBRAPID_USE_CUDA)
                 CUDA::curand
                 CUDA::cusolver
                 CUDA::cusparse
-                Dbghelp
         )
+
+        # Link with Dbghelp on Windows
+        if (IS_WINDOWS)
+            target_link_libraries(${module_name} PUBLIC Dbghelp)
+        endif ()
 
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_HAS_CUDA)
         target_compile_definitions(${module_name} PUBLIC LIBRAPID_CUDA_STREAM)
@@ -381,12 +385,6 @@ if (LIBRAPID_USE_CUDA)
     else ()
         message(WARNING "CUDA support was requested, but a valid CUDA installation could not be found")
     endif ()
-endif ()
-
-
-if (LIBRAPID_USE_OPENCL AND IS_MACOS)
-    message(WARNING "OpenCL support was requested, but OpenCL is not supported on macOS. Disabling OpenCL support")
-    set(LIBRAPID_USE_OPENCL OFF)
 endif ()
 
 if (LIBRAPID_USE_OPENCL)
@@ -404,6 +402,22 @@ if (LIBRAPID_USE_OPENCL)
         target_link_libraries(${module_name} PUBLIC clblast)
         target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/CLBlast/include")
         set(LIBRAPID_HAS_OPENCL true)
+
+        if (IS_MACOS)
+            # Add -framework OpenCL to the linker flags
+            target_link_libraries(${module_name} PUBLIC "-framework OpenCL")
+
+            # Define CL_HPP_TARGET_OPENCL_VERSION to the version of OpenCL being used
+            message(STATUS "[ LIBRAPID ] OpenCL Version: ${OpenCL_VERSION_MAJOR}${OpenCL_VERSION_MINOR}0")
+            set(OpenCLVersion ${OpenCL_VERSION_MAJOR}${OpenCL_VERSION_MINOR}0)
+            target_compile_definitions(${module_name} PUBLIC CL_HPP_TARGET_OPENCL_VERSION=${OpenCLVersion})
+            target_compile_definitions(${module_name} PUBLIC CL_HPP_MINIMUM_OPENCL_VERSION=${OpenCLVersion})
+
+            if (NOT CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
+                message(WARNING "[ LIBRAPID ] Accelerate OpenCL is designed for AppleClang. Relaxing some conditions")
+                target_compile_options(${module_name} PUBLIC "-flax-vector-conversions")
+            endif ()
+        endif ()
     else ()
         message(WARNING "OpenCL support was requested, but a valid OpenCL installation could not be found")
     endif ()
