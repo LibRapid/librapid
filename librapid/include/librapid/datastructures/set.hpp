@@ -471,7 +471,7 @@ namespace librapid {
 		/// \param ctx ``format_context`` instance
 		template<typename T, typename Char, typename Ctx>
 		void str(const fmt::formatter<T, Char> &format, Ctx &ctx) const {
-			fmt::format_to(ctx.out(), "Set(");
+			fmt::format_to(ctx.out(), "(");
 			for (int64_t i = 0; i < m_data.size(); ++i) {
 				format.format(m_data[i], ctx);
 				if (i < m_data.size() - 1) { fmt::format_to(ctx.out(), ", "); }
@@ -538,5 +538,11 @@ public:
 };
 
 LIBRAPID_SIMPLE_IO_NORANGE(typename ElementType, librapid::Set<ElementType>)
+
+// std ostream support
+template<typename ElementType>
+std::ostream &operator<<(std::ostream &os, const librapid::Set<ElementType> &set) {
+	return os << fmt::format("{}", set);
+}
 
 #endif // LIBRAPID_SET_HPP
