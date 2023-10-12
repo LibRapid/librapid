@@ -16,6 +16,7 @@
 #include <cfloat>
 #include <chrono>
 #include <cmath>
+#include <compare>
 #include <complex>
 #include <cstddef>
 #include <cstdint>

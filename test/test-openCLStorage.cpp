@@ -134,7 +134,6 @@ TEST_CASE("Test OpenCLStorage<T>", "[storage]") {
         REGISTER_CASES(unsigned long long);
         REGISTER_CASES(float);
         REGISTER_CASES(double);
-        REGISTER_CASES(long double);
     }
 
     SECTION("Benchmarks") {

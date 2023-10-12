@@ -21,7 +21,7 @@
 #    include <cufft.h>
 #    include <cufftw.h>
 #    include <cuda_runtime.h>
-#    include <device_launch_parameters.h>
+// #    include <device_launch_parameters.h>
 
 #    ifdef _MSC_VER
 #        pragma warning(pop)

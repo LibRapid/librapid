@@ -39,13 +39,14 @@ namespace librapid {
 #    define SETENV(name, value) setenv(name, value, 1)
 #endif
 
-    void setOpenBLASThreadsEnv(int num_threads) {
-        char num_threads_str[20];
-        sprintf(num_threads_str, "%d", num_threads);
+    void setOpenBLASThreadsEnv(int numThreads) {
+		char numThreadsStr[20];
+		std::string str = fmt::format("{}", numThreads);
+		strcpy(numThreadsStr, str.c_str());
 
-        SETENV("OPENBLAS_NUM_THREADS", num_threads_str);
-        SETENV("GOTO_NUM_THREADS", num_threads_str);
-        SETENV("OMP_NUM_THREADS", num_threads_str);
+		SETENV("OPENBLAS_NUM_THREADS", numThreadsStr);
+		SETENV("GOTO_NUM_THREADS", numThreadsStr);
+		SETENV("OMP_NUM_THREADS", numThreadsStr);
     }
 
     void setNumThreads(size_t numThreads) {

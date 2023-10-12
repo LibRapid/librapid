@@ -109,11 +109,11 @@ namespace librapid {
 		  "fill",
 		  std::is_same_v<StorageScalar, half> ? "fillRandomHalf" : "fillRandom",
 		  elements,
-		  dst.storage().data().get(),
+		  dst.storage().data(),
 		  elements,
 		  static_cast<StorageScalar>(lower),
 		  static_cast<StorageScalar>(upper),
-		  seeds.storage().data().get(),
+		  seeds.storage().data(),
 		  numSeeds);
 	}
 
@@ -137,7 +137,7 @@ namespace librapid {
 		if (global::reseed) { curandSetPseudoRandomGeneratorSeed(prng, global::randomSeed); }
 
 		// Run the kernel
-		curandGenerateUniform(prng, dst.storage().data().get(), elements);
+		curandGenerateUniform(prng, dst.storage().data(), elements);
 
 		// Scale the result to the desired range
 		dst = dst * (upper - lower) + lower;
@@ -163,7 +163,7 @@ namespace librapid {
 		if (global::reseed) { curandSetPseudoRandomGeneratorSeed(prng, global::randomSeed); }
 
 		// Run the kernel
-		curandGenerateUniformDouble(prng, dst.storage().data().get(), elements);
+		curandGenerateUniformDouble(prng, dst.storage().data(), elements);
 
 		// Scale the result to the desired range
 		dst = dst * (upper - lower) + lower;

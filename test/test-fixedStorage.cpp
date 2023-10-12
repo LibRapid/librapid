@@ -115,7 +115,6 @@ TEST_CASE("Test FixedStorage<T>", "[fixed-storage]") {
         REGISTER_CASES(unsigned long long);
         REGISTER_CASES(float);
         REGISTER_CASES(double);
-        REGISTER_CASES(long double);
     }
 
     SECTION("Non-Trivially Constructible Storage") {

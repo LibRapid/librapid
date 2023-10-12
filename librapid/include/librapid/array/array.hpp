@@ -6,7 +6,7 @@
 #include "storage.hpp"
 
 #if defined(LIBRAPID_HAS_OPENCL)
-#    include "../OpenCL/openclStorage.hpp"
+#    include "../opencl/openclStorage.hpp"
 #endif // LIBRAPID_HAS_OPENCL
 
 #if defined(LIBRAPID_HAS_CUDA)
