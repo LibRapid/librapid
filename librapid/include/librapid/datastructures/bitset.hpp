@@ -135,16 +135,13 @@ namespace librapid {
 					}
 #endif
 				}
-
-				return numBits;
 			}
+			return numBits;
 		}
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE uint64_t popCount() const {
 			uint64_t res = 0;
-			for (uint64_t i = 0; i < numElements; ++i) {
-				res += std::popcount(m_data[i]);
-			}
+			for (uint64_t i = 0; i < numElements; ++i) { res += std::popcount(m_data[i]); }
 			return res;
 		}
 
