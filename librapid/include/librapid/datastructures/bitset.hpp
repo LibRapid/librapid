@@ -139,6 +139,37 @@ namespace librapid {
 			return numBits;
 		}
 
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE uint64_t last() const {
+			for (uint64_t i = numElements - 1; i >= 0; --i) {
+				if (m_data[i]) {
+#if defined(LIBRAPID_CLANG) || defined(LIBRAPID_GCC)
+					if constexpr (sizeof(ElementType) == 8) {
+						return 63 - __builtin_clzll(m_data[i]) + i * bitsPerElement;
+					} else if constexpr (sizeof(ElementType) == 4) {
+						return 31 - __builtin_clz(m_data[i]) + i * bitsPerElement;
+					} else if constexpr (sizeof(ElementType) == 2) {
+						return 15 - __builtin_clzs(m_data[i]) + i * bitsPerElement;
+					} else if constexpr (sizeof(ElementType) == 1) {
+						return 7 - __builtin_clz(m_data[i]) + i * bitsPerElement;
+					}
+#elif defined(LIBRAPID_MSVC)
+					unsigned long index;
+					if constexpr (sizeof(ElementType) == 8) {
+						_BitScanReverse64(&index, m_data[i]);
+					} else {
+						_BitScanReverse(&index, m_data[i]);
+					}
+					return index + i * bitsPerElement;
+#else
+					for (uint64_t j = bitsPerElement - 1; j >= 0; --j) {
+						if (m_data[i] & (1ULL << j)) return i * bitsPerElement + j;
+					}
+#endif
+				}
+			}
+			return numBits;
+		}
+
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE uint64_t popCount() const {
 			uint64_t res = 0;
 			for (uint64_t i = 0; i < numElements; ++i) { res += std::popcount(m_data[i]); }
@@ -302,6 +333,22 @@ namespace librapid {
 
 		const auto &data() const { return m_data; }
 		auto &data() { return m_data; }
+
+		template<typename Integer											 = ElementType,
+				 typename std::enable_if_t<std::is_integral_v<Integer>, int> = 0>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE int toInt() const {
+#if defined(LIBRAPID_DEBUG)
+			static bool warned = false;
+			if (!warned && last() >= sizeof(Integer) * 8) {
+				warned = true;
+				LIBRAPID_WARN(
+				  "BitSet::toInt() called with BitSet that is too large for the "
+				  "requested integer type");
+			}
+#endif
+
+			return m_data[0];
+		}
 
 		template<typename T, typename Char, typename Ctx>
 		void str(const fmt::formatter<T, Char> &format, Ctx &ctx) const {
