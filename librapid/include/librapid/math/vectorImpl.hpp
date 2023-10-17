@@ -384,33 +384,33 @@ namespace librapid {
 
 		template<typename T>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto scalarGetHelper(const T &val,
-																				 uint64_t index) {
+																				 size_t index) {
 			return val;
 		}
 
 		template<typename ScalarType, uint64_t NumDims>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto constexpr scalarGetHelper(
-		  const Vector<ScalarType, NumDims> &val, uint64_t index) {
+		  const Vector<ScalarType, NumDims> &val, size_t index) {
 			return val._get(index);
 		}
 
 		template<typename ScalarType, uint64_t NumDims>
 		LIBRAPID_NODISCARD
 		  LIBRAPID_ALWAYS_INLINE auto constexpr scalarGetHelper(Vector<ScalarType, NumDims> &val,
-																uint64_t index) {
+																size_t index) {
 			return val._get(index);
 		}
 
 		template<typename LHS, typename RHS, typename Op>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto constexpr scalarGetHelper(
-		  const BinaryVecOp<LHS, RHS, Op> &val, uint64_t index) {
+		  const BinaryVecOp<LHS, RHS, Op> &val, size_t index) {
 			return val._get(index);
 		}
 
 		template<typename Val, typename Op>
 		LIBRAPID_NODISCARD
 		  LIBRAPID_ALWAYS_INLINE auto constexpr scalarGetHelper(const UnaryVecOp<Val, Op> &val,
-																uint64_t index) {
+																size_t index) {
 			return val._get(index);
 		}
 
@@ -762,7 +762,7 @@ namespace librapid {
 		};
 
 		template<typename Scalar, uint64_t N, typename LHS, typename RHS, typename Op,
-				 uint64_t... Indices>
+				 size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void assignImpl(Vector<Scalar, N> &dst,
 											   const BinaryVecOp<LHS, RHS, Op> &src,
 											   std::index_sequence<Indices...>) {
@@ -772,7 +772,7 @@ namespace librapid {
 			 ...);
 		}
 
-		template<typename Scalar, uint64_t N, typename Val, typename Op, uint64_t... Indices>
+		template<typename Scalar, uint64_t N, typename Val, typename Op, size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void assignImpl(Vector<Scalar, N> &dst,
 											   const UnaryVecOp<Val, Op> &src,
 											   std::index_sequence<Indices...>) {
@@ -788,7 +788,7 @@ namespace librapid {
 				constexpr uint64_t lengthDst = Vector<Scalar, N>::length;
 				constexpr uint64_t lengthSrc = BinaryVecOp<LHS, RHS, Op>::length;
 				constexpr uint64_t minLength = (lengthDst < lengthSrc) ? lengthDst : lengthSrc;
-				assignImpl(dst, src, std::make_index_sequence<minLength>());
+				assignImpl(dst, src, std::make_index_sequence<static_cast<size_t>(minLength)>());
 			} else {
 				dst = src.template cast<Scalar, N>();
 			}
@@ -802,7 +802,7 @@ namespace librapid {
 				constexpr uint64_t lengthDst = Vector<Scalar, N>::length;
 				constexpr uint64_t lengthSrc = UnaryVecOp<Val, Op>::length;
 				constexpr uint64_t minLength = (lengthDst < lengthSrc) ? lengthDst : lengthSrc;
-				assignImpl(dst, src, std::make_index_sequence<minLength>());
+				assignImpl(dst, src, std::make_index_sequence<static_cast<size_t>(minLength)>());
 			} else {
 				dst = src.template cast<Scalar, N>();
 			}

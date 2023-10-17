@@ -101,12 +101,12 @@ namespace librapid {
 		struct UnaryVecOp;
 
 		template<typename Scalar, uint64_t N, typename LHS, typename RHS, typename Op,
-				 uint64_t... Indices>
+				 size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void assignImpl(Vector<Scalar, N> &dst,
 											   const BinaryVecOp<LHS, RHS, Op> &src,
 											   std::index_sequence<Indices...>);
 
-		template<typename Scalar, uint64_t N, typename Val, typename Op, uint64_t... Indices>
+		template<typename Scalar, uint64_t N, typename Val, typename Op, size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void assignImpl(Vector<Scalar, N> &dst,
 											   const UnaryVecOp<Val, Op> &src,
 											   std::index_sequence<Indices...>);
