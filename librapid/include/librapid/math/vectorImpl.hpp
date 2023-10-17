@@ -146,7 +146,7 @@ namespace librapid {
 			if constexpr (std::is_same_v<T, T2>) {
 				constexpr uint64_t packetWidth = typetraits::TypeInfo<T>::packetWidth;
 				constexpr uint64_t length		 = (N + packetWidth - 1) / packetWidth;
-				vectorStorageAssigner_simdHelper(std::make_index_sequence<length>(), dst, src);
+				vectorStorageAssigner_simdHelper(std::make_index_sequence<static_cast<size_t>(length)>(), dst, src);
 			} else {
 				((dst.data.scalar[Indices] = src.data.scalar[Indices]), ...);
 			}
@@ -287,7 +287,7 @@ namespace librapid {
 			explicit SimdVectorStorage(Args... args) {
 				constexpr uint64_t minLength = (sizeof...(Args) < dims) ? sizeof...(Args) : dims;
 				vectorDetail::vectorStorageAssigner(
-				  std::make_index_sequence<minLength>(), *this, args...);
+				  std::make_index_sequence<static_cast<size_t>(minLength)>(), *this, args...);
 			}
 
 			template<typename T>
@@ -573,7 +573,7 @@ namespace librapid {
 			constexpr uint64_t minDims = (NewVectorType::dims < dims) ? NewVectorType::dims : dims;
 			NewVectorType ret;
 			vectorDetail::vectorStorageAssigner(
-			  std::make_index_sequence<minDims>(), ret.storage(), m_data);
+			  std::make_index_sequence<static_cast<size_t>(minDims)>(), ret.storage(), m_data);
 			return ret;
 		}
 
