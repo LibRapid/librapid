@@ -39,8 +39,8 @@ namespace librapid {
     Vector<T, 3> randomPointInSphere() {
         // Adapted from https://karthikkaranth.me/blog/generating-random-points-in-a-sphere/
 
-        auto u = lrc::random<T>(); // [0, 1)
-        auto v = lrc::random<T>(); // [0, 1)
+        auto u = ::librapid::random<T>(); // [0, 1)
+        auto v = ::librapid::random<T>(); // [0, 1)
         auto theta = u * 2 * PI;
         auto phi = ::librapid::acos(2 * v - 1);
         auto r = ::librapid::cbrt(random<T>());
