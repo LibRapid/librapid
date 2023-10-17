@@ -20,7 +20,7 @@ namespace librapid {
     using Vec4 = Vector<double, 4>;
 
     template<typename T = float, uint64_t numDims = 3>
-    Vector<T, numDims> pointOnUnitSphere() {
+    Vector<T, numDims> randomPointOnSphere() {
         // Given X = [x_1, x_2, ..., x_n], where x_n ~ N(1, 0),
         // X / |X| will be uniformly distributed on the unit sphere
 
