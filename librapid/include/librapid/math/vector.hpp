@@ -29,7 +29,7 @@ namespace librapid {
             result[i] = ::librapid::randomGaussian();
         }
 
-        return result.norm();
+        return norm(result);
     }
 
     /// \brief Generate a random point within the unit sphere
