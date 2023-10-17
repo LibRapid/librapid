@@ -49,7 +49,7 @@ namespace librapid {
         auto sinPhi = ::librapid::sin(phi);
         auto cosPhi = ::librapid::cos(phi);
         auto x = r * sinPhi * cosTheta;
-        auto y = r * sinPhi * sintheta;
+        auto y = r * sinPhi * sinTheta;
         auto z = r * cosPhi;
         return {x, y, z};
     }
