@@ -62,6 +62,8 @@ namespace librapid {
 			using IndexTypeConst		   = typename StorageType::IndexTypeConst;
 			using IndexType				   = typename StorageType::IndexType;
 			using GetType				   = typename StorageType::GetType;
+
+			static constexpr bool allowVectorisation = false;
 		};
 
 		template<typename LHS, typename RHS, typename Op>
