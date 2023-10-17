@@ -56,6 +56,7 @@ namespace librapid {
 		struct TypeInfo<Vector<ScalarType, NumDims>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
 			using Scalar							   = ScalarType;
+			using Packet = std::false_type;
 			static constexpr uint64_t dims			   = NumDims;
 			using StorageType			   = vectorDetail::VectorStorage<Scalar, NumDims>;
 			static constexpr uint64_t length = StorageType::length;
@@ -72,6 +73,7 @@ namespace librapid {
 			using ScalarLHS							   = typename typetraits::TypeInfo<LHS>::Scalar;
 			using ScalarRHS							   = typename typetraits::TypeInfo<RHS>::Scalar;
 			using Scalar = decltype(Op()(std::declval<ScalarLHS>(), std::declval<ScalarRHS>()));
+			using Packet = std::false_type;
 			using IndexTypeConst		   = Scalar;
 			using IndexType				   = Scalar;
 			using StorageType			   = typename vectorDetail::VectorStorageMerger<LHS, RHS>;
@@ -84,6 +86,7 @@ namespace librapid {
 		struct TypeInfo<vectorDetail::UnaryVecOp<Val, Op>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
 			using Scalar							   = typename typetraits::TypeInfo<Val>::Scalar;
+			using Packet = std::false_type;
 			using IndexTypeConst					   = Scalar;
 			using IndexType							   = Scalar;
 			using StorageType			 = typename vectorDetail::VectorStorage<Scalar, Val::dims>;
