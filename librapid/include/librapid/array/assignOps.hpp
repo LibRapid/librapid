@@ -24,11 +24,18 @@ namespace librapid {
 			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
 			using Scalar =
 			  typename array::ArrayContainer<ShapeType_, Storage<StorageScalar>>::Scalar;
-			constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 			constexpr bool allowVectorisation =
 			  typetraits::TypeInfo<
 				detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation &&
 			  Function::argsAreSameType;
+			// constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
+			constexpr int64_t packetWidth = []() {
+				if constexpr (allowVectorisation) {
+					return typetraits::TypeInfo<Scalar>::packetWidth;
+				} else {
+					return 1;
+				}
+			}();
 
 			const int64_t size		 = function.shape().size();
 			const int64_t vectorSize = size - (size % packetWidth);

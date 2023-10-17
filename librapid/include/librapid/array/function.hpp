@@ -35,13 +35,60 @@ namespace librapid {
 			}
 		}
 
+		// Normally, we want to use the scalar type of the input. This said, there are a few edge
+		// cases where it is necessary to use the type itself.
+
+		// Default
+		template<typename T>
+		struct ScalarTypeHelper {
+			using Type = typename TypeInfo<std::decay_t<T>>::Scalar;
+		};
+
+		// Vectors
+		template<typename T, uint64_t NumDims>
+		struct ScalarTypeHelper<Vector<T, NumDims>> {
+			using Type = Vector<T, NumDims>;
+		};
+
+		// Once we have the correct scalar types, we need to check if the result is a lazy-evaluated
+		// function. If so, we need to extract the actual return type from the function.
+
+		// Default
+		template<typename T>
+		struct ReturnTypeHelper {
+			using Type = T;
+		};
+
+		// Binary vector operation
+		template<typename LHS, typename RHS, typename Op>
+		struct ReturnTypeHelper<vectorDetail::BinaryVecOp<LHS, RHS, Op>> {
+			using IntermediateType = vectorDetail::BinaryVecOp<LHS, RHS, Op>;
+			using Type			   = decltype(std::declval<IntermediateType>().eval());
+		};
+
+		// Unary vector operation
+		template<typename Val, typename Op>
+		struct ReturnTypeHelper<vectorDetail::UnaryVecOp<Val, Op>> {
+			using IntermediateType = vectorDetail::UnaryVecOp<Val, Op>;
+			using Type			   = decltype(std::declval<IntermediateType>().eval());
+		};
+
 		template<typename desc, typename Functor_, typename... Args>
 		struct TypeInfo<::librapid::detail::Function<desc, Functor_, Args...>> {
 			static constexpr detail::LibRapidType type = detail::LibRapidType::ArrayFunction;
-			using Scalar							   = decltype(std::declval<Functor_>()(
-				std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
-			using Packet							   = typename TypeInfo<Scalar>::Packet;
-			using Backend							   = decltype(commonBackend<Args...>());
+			// using Scalar	= decltype(std::declval<Functor_>()(
+			// 		std::declval<typename TypeInfo<std::decay_t<Args>>::Scalar>()...));
+
+			// using Scalar = decltype(std::declval<Functor_>()(
+			//   std::declval<typename ScalarTypeHelper<Args>::Type>()...));
+
+			using TempScalar = decltype(std::declval<Functor_>()(
+			  std::declval<typename ScalarTypeHelper<Args>::Type>()...));
+
+			using Scalar = typename ReturnTypeHelper<TempScalar>::Type;
+
+			using Packet  = typename TypeInfo<Scalar>::Packet;
+			using Backend = decltype(commonBackend<Args...>());
 			using ShapeType =
 			  typename detail::ShapeTypeHelper<typename TypeInfo<Args>::ShapeType...>::Type;
 
@@ -88,9 +135,11 @@ namespace librapid {
 			return obj.scalar(index);
 		}
 
-		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
-														 ::librapid::detail::LibRapidType::Scalar,
-													   int> = 0>
+		template<typename T,
+				 typename std::enable_if_t<
+				   typetraits::TypeInfo<T>::type == ::librapid::detail::LibRapidType::Scalar ||
+					 typetraits::TypeInfo<T>::type == ::librapid::detail::LibRapidType::Vector,
+				   int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t) {
 			return obj;
 		}

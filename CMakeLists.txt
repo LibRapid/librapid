@@ -435,6 +435,9 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/librapid/vendor/xsimd")
 target_compile_definitions(fmt PUBLIC FMT_HEADER_ONLY)
 target_link_libraries(${module_name} PUBLIC fmt xsimd)
 
+# Disable "parameter passing for argument of type ... changed to match ..." for xsimd
+target_compile_options(xsimd INTERFACE -Wno-psabi)
+
 if (${LIBRAPID_USE_MULTIPREC})
     # Load MPIR
     find_package(MPIR QUIET)

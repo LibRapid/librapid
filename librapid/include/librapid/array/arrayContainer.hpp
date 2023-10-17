@@ -56,7 +56,13 @@ namespace librapid {
 			static constexpr bool supportsArithmetic   = TypeInfo<Scalar>::supportsArithmetic;
 			static constexpr bool supportsLogical	   = TypeInfo<Scalar>::supportsLogical;
 			static constexpr bool supportsBinary	   = TypeInfo<Scalar>::supportsBinary;
-			static constexpr bool allowVectorisation   = TypeInfo<Scalar>::packetWidth > 1;
+			static constexpr bool allowVectorisation   = []() {
+				  if constexpr (typetraits::HasAllowVectorisation<TypeInfo<Scalar>>::value) {
+					  return TypeInfo<Scalar>::allowVectorisation;
+				  } else {
+					  return TypeInfo<Scalar>::packetWidth > 1;
+				  }
+			}();
 
 #if defined(LIBRAPID_HAS_CUDA)
 			static constexpr cudaDataType_t CudaType = TypeInfo<Scalar>::CudaType;
@@ -65,15 +71,6 @@ namespace librapid {
 
 			static constexpr bool canAlign	   = false;
 			static constexpr int64_t canMemcpy = false;
-		};
-
-		/// Evaluates as true if the input type is an ArrayContainer instance
-		/// \tparam T Input type
-		template<typename T>
-		struct IsArrayContainer : std::false_type {};
-
-		template<typename ShapeType, typename StorageScalar>
-		struct IsArrayContainer<array::ArrayContainer<ShapeType, StorageScalar>> : std::true_type {
 		};
 
 		LIBRAPID_DEFINE_AS_TYPE(typename StorageScalar,
@@ -686,7 +683,7 @@ namespace librapid {
 			  sizeof...(Indices),
 			  m_shape.ndim());
 
-			int dim = 0;
+			int dim		  = 0;
 			int64_t index = 0;
 			for (int64_t i : {indices...}) {
 				LIBRAPID_ASSERT(
