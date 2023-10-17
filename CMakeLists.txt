@@ -436,7 +436,7 @@ target_compile_definitions(fmt PUBLIC FMT_HEADER_ONLY)
 target_link_libraries(${module_name} PUBLIC fmt xsimd)
 
 # Disable "parameter passing for argument of type ... changed to match ..." for xsimd
-target_compile_options(xsimd INTERFACE -Wno-psabi)
+target_compile_options(xsimd INTERFACE $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-Wno-psabi>)
 
 if (${LIBRAPID_USE_MULTIPREC})
     # Load MPIR
