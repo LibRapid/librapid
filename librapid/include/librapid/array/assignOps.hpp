@@ -28,7 +28,6 @@ namespace librapid {
 			  typetraits::TypeInfo<
 				detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation &&
 			  Function::argsAreSameType;
-			// constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 			constexpr int64_t packetWidth = []() {
 				if constexpr (allowVectorisation) {
 					return typetraits::TypeInfo<Scalar>::packetWidth;
@@ -81,13 +80,21 @@ namespace librapid {
 			using Scalar =
 			  typename array::ArrayContainer<ShapeType_,
 											 FixedStorage<StorageScalar, StorageSize...>>::Scalar;
-			constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
-			constexpr int64_t elements	  = ::librapid::product<StorageSize...>();
-			constexpr int64_t vectorSize  = elements - (elements % packetWidth);
+
 			constexpr bool allowVectorisation =
 			  typetraits::TypeInfo<
 				detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation &&
 			  Function::argsAreSameType;
+			constexpr int64_t packetWidth = []() {
+				if constexpr (allowVectorisation) {
+					return typetraits::TypeInfo<Scalar>::packetWidth;
+				} else {
+					return 1;
+				}
+			}();
+
+			constexpr int64_t elements	 = ::librapid::product<StorageSize...>();
+			constexpr int64_t vectorSize = elements - (elements % packetWidth);
 
 			// Ensure the function can actually be assigned to the array container
 			static_assert(
@@ -131,12 +138,18 @@ namespace librapid {
 			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
 			using Scalar =
 			  typename array::ArrayContainer<ShapeType_, Storage<StorageScalar>>::Scalar;
-			constexpr size_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
 			constexpr bool allowVectorisation =
 			  typetraits::TypeInfo<
 				detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation &&
 			  Function::argsAreSameType;
+			constexpr int64_t packetWidth = []() {
+				if constexpr (allowVectorisation) {
+					return typetraits::TypeInfo<Scalar>::packetWidth;
+				} else {
+					return 1;
+				}
+			}();
 
 			const size_t size		= function.size();
 			const size_t vectorSize = size - (size % packetWidth);
@@ -187,12 +200,18 @@ namespace librapid {
 			using Scalar =
 			  typename array::ArrayContainer<ShapeType_,
 											 FixedStorage<StorageScalar, StorageSize...>>::Scalar;
-			constexpr int64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;
 
 			constexpr bool allowVectorisation =
 			  typetraits::TypeInfo<
 				detail::Function<descriptor::Trivial, Functor_, Args...>>::allowVectorisation &&
 			  Function::argsAreSameType;
+			constexpr int64_t packetWidth = []() {
+				if constexpr (allowVectorisation) {
+					return typetraits::TypeInfo<Scalar>::packetWidth;
+				} else {
+					return 1;
+				}
+			}();
 
 			constexpr int64_t size		 = ::librapid::product<StorageSize...>();
 			constexpr int64_t vectorSize = size - (size % packetWidth);
