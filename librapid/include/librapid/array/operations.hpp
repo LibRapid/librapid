@@ -67,20 +67,37 @@
 		return std::get<0>(args).shape();                                                          \
 	}
 
+//#define LIBRAPID_BINARY_SHAPE_EXTRACTOR                                                            \
+//	template<typename First, typename Second>                                                      \
+//	LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto getShapeImpl(                            \
+//	  const std::tuple<First, Second> &tup) {                                                      \
+//		if constexpr (TypeInfo<std::decay_t<First>>::type != detail::LibRapidType::Scalar &&       \
+//					  TypeInfo<std::decay_t<Second>>::type != detail::LibRapidType::Scalar) {      \
+//			LIBRAPID_ASSERT(std::get<0>(tup).shape() == std::get<1>(tup).shape(),                  \
+//							"Shapes must match for binary operations");                            \
+//			return std::get<0>(tup).shape();                                                       \
+//		} else if constexpr (TypeInfo<std::decay_t<First>>::type ==                                \
+//							 detail::LibRapidType::Scalar) {                                       \
+//			return std::get<1>(tup).shape();                                                       \
+//		} else {                                                                                   \
+//			return std::get<0>(tup).shape();                                                       \
+//		}                                                                                          \
+//	}                                                                                                 \
+
+
 #define LIBRAPID_BINARY_SHAPE_EXTRACTOR                                                            \
 	template<typename First, typename Second>                                                      \
 	LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto getShapeImpl(                            \
 	  const std::tuple<First, Second> &tup) {                                                      \
-		if constexpr (TypeInfo<std::decay_t<First>>::type != detail::LibRapidType::Scalar &&       \
-					  TypeInfo<std::decay_t<Second>>::type != detail::LibRapidType::Scalar) {      \
-			LIBRAPID_ASSERT(std::get<0>(tup).shape() == std::get<1>(tup).shape(),                  \
-							"Shapes must match for binary operations");                            \
+		if constexpr (IsArrayType<std::decay_t<First>>::value) {                                   \
+			if constexpr (IsArrayType<std::decay_t<Second>>::value) {                              \
+				LIBRAPID_ASSERT(std::get<0>(tup).shape() == std::get<1>(tup).shape(),              \
+								"Shapes must match for binary operations");                        \
+				return std::get<0>(tup).shape();                                                   \
+			}                                                                                      \
 			return std::get<0>(tup).shape();                                                       \
-		} else if constexpr (TypeInfo<std::decay_t<First>>::type ==                                \
-							 detail::LibRapidType::Scalar) {                                       \
+		} else if constexpr (IsArrayType<std::decay_t<Second>>::value) {                           \
 			return std::get<1>(tup).shape();                                                       \
-		} else {                                                                                   \
-			return std::get<0>(tup).shape();                                                       \
 		}                                                                                          \
 	}                                                                                              \
                                                                                                    \
@@ -525,8 +542,8 @@ namespace librapid {
 	namespace detail {
 		template<typename T, LibRapidType... ValidTypes>
 		constexpr bool isType() {
-		  constexpr LibRapidType t = typetraits::TypeInfo<std::decay_t<T>>::type;
-		  return ((t == ValidTypes) || ...);
+			constexpr LibRapidType t = typetraits::TypeInfo<std::decay_t<T>>::type;
+			return ((t == ValidTypes) || ...);
 		}
 
 		template<typename VAL>
@@ -547,16 +564,16 @@ namespace librapid {
 			// GeneralArrayView
 
 			constexpr bool lhsIsValid = isType<LHS,
-												LibRapidType::ArrayContainer,
-												LibRapidType::ArrayFunction,
-												LibRapidType::GeneralArrayView>();
+											   LibRapidType::ArrayContainer,
+											   LibRapidType::ArrayFunction,
+											   LibRapidType::GeneralArrayView>();
 
 			constexpr bool rhsIsValid = isType<RHS,
-												LibRapidType::ArrayContainer,
-												LibRapidType::ArrayFunction,
-												LibRapidType::GeneralArrayView>();
+											   LibRapidType::ArrayContainer,
+											   LibRapidType::ArrayFunction,
+											   LibRapidType::GeneralArrayView>();
 
-			return lhsIsValid && rhsIsValid;						
+			return lhsIsValid && rhsIsValid;
 		}
 
 		template<typename LHS, typename RHS>
@@ -576,22 +593,18 @@ namespace librapid {
 			// 		typetraits::IsLibRapidType<std::decay_t<RHS>>::value);
 
 			constexpr bool lhsIsArray = isType<LHS,
-												LibRapidType::ArrayContainer,
-												LibRapidType::ArrayFunction,
-												LibRapidType::GeneralArrayView>();
+											   LibRapidType::ArrayContainer,
+											   LibRapidType::ArrayFunction,
+											   LibRapidType::GeneralArrayView>();
 
 			constexpr bool rhsIsArray = isType<RHS,
-												LibRapidType::ArrayContainer,
-												LibRapidType::ArrayFunction,
-												LibRapidType::GeneralArrayView>();
+											   LibRapidType::ArrayContainer,
+											   LibRapidType::ArrayFunction,
+											   LibRapidType::GeneralArrayView>();
 
-			constexpr bool lhsIsScalar = isType<LHS,
-													LibRapidType::Scalar,
-													LibRapidType::Vector>();
+			constexpr bool lhsIsScalar = isType<LHS, LibRapidType::Scalar, LibRapidType::Vector>();
 
-			constexpr bool rhsIsScalar = isType<RHS,
-													LibRapidType::Scalar,
-													LibRapidType::Vector>();
+			constexpr bool rhsIsScalar = isType<RHS, LibRapidType::Scalar, LibRapidType::Vector>();
 
 			return (lhsIsArray ^ rhsIsArray) && (lhsIsScalar ^ rhsIsScalar);
 		}

@@ -128,18 +128,12 @@ namespace librapid {
 			return Packet(obj);
 		}
 
-		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
-														 ::librapid::detail::LibRapidType::Scalar,
-													   int> = 0>
+		template<typename T, typename std::enable_if_t<detail::IsArrayType<T>::val, int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t index) {
 			return obj.scalar(index);
 		}
 
-		template<typename T,
-				 typename std::enable_if_t<
-				   typetraits::TypeInfo<T>::type == ::librapid::detail::LibRapidType::Scalar ||
-					 typetraits::TypeInfo<T>::type == ::librapid::detail::LibRapidType::Vector,
-				   int> = 0>
+		template<typename T, typename std::enable_if_t<!detail::IsArrayType<T>::val, int> = 0>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t) {
 			return obj;
 		}

@@ -25,7 +25,7 @@ namespace librapid {
 
 		template<typename T, uint64_t N>
 		struct TypeInfo<vectorDetail::GenericVectorStorage<T, N>> {
-			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
 			using Scalar							   = T;
 			using IndexType							   = T &;
 			using IndexTypeConst					   = const T &;
@@ -38,7 +38,7 @@ namespace librapid {
 
 		template<typename T, uint64_t N>
 		struct TypeInfo<vectorDetail::SimdVectorStorage<T, N>> {
-			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
 			using Scalar							   = T;
 			using Packet							   = typename TypeInfo<T>::Packet;
 			using IndexType							   = T &;
@@ -55,7 +55,7 @@ namespace librapid {
 
 		template<typename ScalarType, uint64_t NumDims>
 		struct TypeInfo<Vector<ScalarType, NumDims>> {
-			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
 			using Scalar							   = ScalarType;
 			using Packet							   = std::false_type;
 			static constexpr uint64_t dims			   = NumDims;
@@ -72,7 +72,7 @@ namespace librapid {
 
 		template<typename LHS, typename RHS, typename Op>
 		struct TypeInfo<vectorDetail::BinaryVecOp<LHS, RHS, Op>> {
-			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
 			using ScalarLHS							   = typename typetraits::TypeInfo<LHS>::Scalar;
 			using ScalarRHS							   = typename typetraits::TypeInfo<RHS>::Scalar;
 			using Scalar = decltype(Op()(std::declval<ScalarLHS>(), std::declval<ScalarRHS>()));
@@ -91,7 +91,7 @@ namespace librapid {
 
 		template<typename Val, typename Op>
 		struct TypeInfo<vectorDetail::UnaryVecOp<Val, Op>> {
-			static constexpr detail::LibRapidType type = detail::LibRapidType::Scalar;
+			static constexpr detail::LibRapidType type = detail::LibRapidType::Vector;
 			using Scalar							   = typename typetraits::TypeInfo<Val>::Scalar;
 			using Packet							   = std::false_type;
 			using IndexTypeConst					   = Scalar;
@@ -699,12 +699,11 @@ namespace librapid {
 				return cast<NewScalar, NewDims>();
 			}
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType
-			operator[](int64_t index) const override {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType operator[](int64_t index) const {
 				return op(scalarSubscriptHelper(left, index), scalarSubscriptHelper(right, index));
 			}
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType operator[](int64_t index) override {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE IndexType operator[](int64_t index) {
 				return op(scalarSubscriptHelper(left, index), scalarSubscriptHelper(right, index));
 			}
 
@@ -713,7 +712,7 @@ namespace librapid {
 				eval().str(formatter, ctx);
 			}
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GetType _get(uint64_t index) const override {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE GetType _get(uint64_t index) const {
 				return op(scalarGetHelper(left, index), scalarGetHelper(right, index));
 			}
 		};
