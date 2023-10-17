@@ -394,10 +394,10 @@ namespace librapid {
 	}
 } // namespace librapid
 
-template<size_t numBits, typename Char>
-struct fmt::formatter<librapid::BitSet<numBits>, Char> {
+template<uint64_t numBits, bool stackAlloc, typename Char>
+struct fmt::formatter<librapid::BitSet<numBits, stackAlloc>, Char> {
 private:
-	using Type = librapid::BitSet<numBits>;
+	using Type = librapid::BitSet<numBits, stackAlloc>;
 	using Base = fmt::formatter<int, Char>;
 	Base m_base;
 
@@ -414,11 +414,11 @@ public:
 	}
 };
 
-LIBRAPID_SIMPLE_IO_NORANGE(uint64_t numBits, librapid::BitSet<numBits>)
+LIBRAPID_SIMPLE_IO_NORANGE(uint64_t numBits COMMA bool stackAlloc, librapid::BitSet<numBits COMMA stackAlloc>)
 
 // std ostream support
-template<uint64_t numElements>
-std::ostream &operator<<(std::ostream &os, const librapid::BitSet<numElements> &bitset) {
+template<uint64_t numElements, bool stackAlloc>
+std::ostream &operator<<(std::ostream &os, const librapid::BitSet<numElements, stackAlloc> &bitset) {
 	return os << fmt::format("{}", bitset);
 }
 
