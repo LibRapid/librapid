@@ -46,7 +46,7 @@ macro(download_openblas)
         set(BLAS_LIBRARIES "${FETCHCONTENT_BASE_DIR}/buildopenblas-src/openblas-macos-latest/lib/libopenblas.a")
     else () # Linux and other systems
         # Use openblas-ubuntu-latest
-        set(BLAS_LIBRARIES "${FETCHCONTENT_BASE_DIR}/buildopenblas-src/openblas-ubuntu-latest/lib/libopenblas.a")
+        set(BLAS_LIBRARIES "${FETCHCONTENT_BASE_DIR}/buildopenblas-src/openblas-ubuntu-latest/lib/libopenblas.so")
     endif ()
 
     set_blas_definition("OPENBLAS")
