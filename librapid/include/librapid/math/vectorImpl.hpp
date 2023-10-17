@@ -92,49 +92,49 @@ namespace librapid {
 	} // namespace typetraits
 
 	namespace vectorDetail {
-		template<typename T, uint64_t N, typename... Args, uint64_t... Indices>
+		template<typename T, uint64_t N, typename... Args, size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void vectorStorageAssigner(std::index_sequence<Indices...>,
 														  GenericVectorStorage<T, N> &dst,
 														  const Args &...args) {
 			((dst[Indices] = args), ...);
 		}
 
-		template<typename T, uint64_t N, typename... Args, uint64_t... Indices>
+		template<typename T, uint64_t N, typename... Args, size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void vectorStorageAssigner(std::index_sequence<Indices...>,
 														  SimdVectorStorage<T, N> &dst,
 														  const Args &...args) {
 			((dst.data.scalar[Indices] = args), ...);
 		}
 
-		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
+		template<typename T, uint64_t N, typename T2, uint64_t N2, size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void vectorStorageAssigner(std::index_sequence<Indices...>,
 														  GenericVectorStorage<T, N> &dst,
 														  const GenericVectorStorage<T2, N2> &src) {
 			((dst[Indices] = src[Indices]), ...);
 		}
 
-		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
+		template<typename T, uint64_t N, typename T2, uint64_t N2, size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void vectorStorageAssigner(std::index_sequence<Indices...>,
 														  GenericVectorStorage<T, N> &dst,
 														  const SimdVectorStorage<T2, N2> &src) {
 			((dst[Indices] = src.data.scalar[Indices]), ...);
 		}
 
-		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
+		template<typename T, uint64_t N, typename T2, uint64_t N2, size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void vectorStorageAssigner(std::index_sequence<Indices...>,
 														  SimdVectorStorage<T, N> &dst,
 														  const GenericVectorStorage<T2, N2> &src) {
 			((dst.data.scalar[Indices] = src[Indices]), ...);
 		}
 
-		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
+		template<typename T, uint64_t N, typename T2, uint64_t N2, size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void
 		vectorStorageAssigner_simdHelper(std::index_sequence<Indices...>, SimdVectorStorage<T, N> &dst,
 								   const SimdVectorStorage<T2, N2> &src) {
 			((dst.data.simd[Indices] = src.data.simd[Indices]), ...);
 		}
 
-		template<typename T, uint64_t N, typename T2, uint64_t N2, uint64_t... Indices>
+		template<typename T, uint64_t N, typename T2, uint64_t N2, size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void vectorStorageAssigner(std::index_sequence<Indices...>,
 														  SimdVectorStorage<T, N> &dst,
 														  const SimdVectorStorage<T2, N2> &src) {
