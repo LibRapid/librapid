@@ -28,6 +28,17 @@ namespace librapid {
         class ArrayContainer;
     }
 
+    namespace typetraits {
+        /// Evaluates as true if the input type is an ArrayContainer instance
+        /// \tparam T Input type
+        template<typename T>
+        struct IsArrayContainer : std::false_type {};
+
+        template<typename ShapeType, typename StorageScalar>
+        struct IsArrayContainer<array::ArrayContainer<ShapeType, StorageScalar>> : std::true_type {
+        };
+    }
+
     namespace detail {
         /// \brief Identifies which type of function is being used
         namespace descriptor {

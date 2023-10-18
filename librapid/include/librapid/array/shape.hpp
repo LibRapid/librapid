@@ -776,34 +776,19 @@ namespace librapid {
 			using Type = VectorShape;
 		};
 
-		template<>
-		struct ShapeTypeHelperImpl<Shape, std::false_type> {
+		template<typename NonFalseType>
+		struct ShapeTypeHelperImpl<NonFalseType, std::false_type> {
+			using Type = NonFalseType;
+		};
+
+		template<typename NonFalseType>
+		struct ShapeTypeHelperImpl<std::false_type, NonFalseType> {
 			using Type = Shape;
 		};
 
 		template<>
-		struct ShapeTypeHelperImpl<std::false_type, Shape> {
-			using Type = Shape;
-		};
-
-		template<>
-		struct ShapeTypeHelperImpl<MatrixShape, std::false_type> {
-			using Type = MatrixShape;
-		};
-
-		template<>
-		struct ShapeTypeHelperImpl<std::false_type, MatrixShape> {
-			using Type = MatrixShape;
-		};
-
-		template<>
-		struct ShapeTypeHelperImpl<VectorShape, std::false_type> {
-			using Type = VectorShape;
-		};
-
-		template<>
-		struct ShapeTypeHelperImpl<std::false_type, VectorShape> {
-			using Type = VectorShape;
+		struct ShapeTypeHelperImpl<std::false_type, std::false_type> {
+			using Type = VectorShape; // Fastest
 		};
 
 		template<typename... Args>
