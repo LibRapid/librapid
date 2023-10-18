@@ -46,6 +46,12 @@ namespace librapid::typetraits {
         std::true_type testCast(int);
         template<typename From, typename To>
         std::false_type testCast(float);
+
+		// Test for T::allowVectorisation (static constexpr bool)
+		template<typename T, typename = decltype(T::allowVectorisation)>
+		std::true_type testAllowVectorisation(int);
+		template<typename T>
+		std::false_type testAllowVectorisation(float);
     } // namespace impl
 
     template<typename T, typename Index = int64_t>
@@ -63,6 +69,10 @@ namespace librapid::typetraits {
     // Detect whether a class can be default constructed
     template<class T>
     using TriviallyDefaultConstructible = std::is_trivially_default_constructible<T>;
+
+	// Detect whether a class has a static constexpr bool member called allowVectorization
+	template<typename T>
+	struct HasAllowVectorisation : public decltype(impl::testAllowVectorisation<T>(1)) {};
 } // namespace librapid::typetraits
 
 #endif // LIBRAPID_CORE_TYPETRAITS_HPP

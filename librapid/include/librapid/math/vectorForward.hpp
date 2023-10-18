@@ -3,13 +3,13 @@
 
 namespace librapid {
 	namespace vectorDetail {
-		template<typename T, size_t N>
+		template<typename T, uint64_t N>
 		struct GenericVectorStorage;
 
-		template<typename T, size_t N>
+		template<typename T, uint64_t N>
 		struct SimdVectorStorage;
 
-		template<typename T, size_t N>
+		template<typename T, uint64_t N>
 		struct VectorStorageType {
 			using type = std::conditional_t<(typetraits::TypeInfo<T>::packetWidth > 1),
 											SimdVectorStorage<T, N>, GenericVectorStorage<T, N>>;
@@ -17,18 +17,23 @@ namespace librapid {
 
 		template<typename Storage0, typename Storage1>
 		auto vectorStorageTypeMerger() {
-			using Scalar0						 = typename typetraits::TypeInfo<Storage0>::Scalar;
-			using Scalar1						 = typename typetraits::TypeInfo<Storage1>::Scalar;
-			static constexpr size_t packetWidth0 = typetraits::TypeInfo<Scalar0>::packetWidth;
-			static constexpr size_t packetWidth1 = typetraits::TypeInfo<Scalar1>::packetWidth;
-			if constexpr (packetWidth0 > 1 && packetWidth1 > 1) {
+			using Scalar0 = typename typetraits::TypeInfo<Storage0>::Scalar;
+			using Scalar1 = typename typetraits::TypeInfo<Storage1>::Scalar;
+			static constexpr uint64_t packetWidth0 = typetraits::TypeInfo<Scalar0>::packetWidth;
+			static constexpr uint64_t packetWidth1 = typetraits::TypeInfo<Scalar1>::packetWidth;
+			if constexpr (typetraits::TypeInfo<Storage0>::type == detail::LibRapidType::Scalar) {
+				return Storage1 {};
+			} else if constexpr (typetraits::TypeInfo<Storage1>::type ==
+								 detail::LibRapidType::Scalar) {
+				return Storage0 {};
+			} else if constexpr (packetWidth0 > 1 && packetWidth1 > 1) {
 				return SimdVectorStorage<typename Storage0::Scalar, Storage0::dims> {};
 			} else {
 				return GenericVectorStorage<typename Storage0::Scalar, Storage0::dims> {};
 			}
 		}
 
-		template<typename T, size_t N>
+		template<typename T, uint64_t N>
 		using VectorStorage = typename VectorStorageType<T, N>::type;
 
 		template<typename Storage0, typename Storage1>
@@ -50,7 +55,9 @@ namespace librapid {
 				return static_cast<Derived &>(*this);
 			}
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto eval() const { return derived(); }
+//			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE virtual Derived eval() const {
+//				return derived();
+//			}
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE virtual IndexTypeConst
 			operator[](int64_t index) const {
@@ -84,13 +91,13 @@ namespace librapid {
 				derived().str(formatter, ctx);
 			}
 
-			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE virtual GetType _get(size_t index) const {
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE virtual GetType _get(uint64_t index) const {
 				return derived()._get(index);
 			}
 		};
 	} // namespace vectorDetail
 
-	template<typename ScalarType, size_t NumDims>
+	template<typename ScalarType, uint64_t NumDims>
 	class Vector;
 
 	namespace vectorDetail {
@@ -100,27 +107,35 @@ namespace librapid {
 		template<typename Val, typename Op>
 		struct UnaryVecOp;
 
-		template<typename Scalar, size_t N, typename LHS, typename RHS, typename Op,
+		template<typename Scalar, uint64_t N, typename LHS, typename RHS, typename Op,
 				 size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void assignImpl(Vector<Scalar, N> &dst,
 											   const BinaryVecOp<LHS, RHS, Op> &src,
 											   std::index_sequence<Indices...>);
 
-		template<typename Scalar, size_t N, typename Val, typename Op, size_t... Indices>
+		template<typename Scalar, uint64_t N, typename Val, typename Op, size_t... Indices>
 		LIBRAPID_ALWAYS_INLINE void assignImpl(Vector<Scalar, N> &dst,
 											   const UnaryVecOp<Val, Op> &src,
 											   std::index_sequence<Indices...>);
 
-		template<typename Scalar, size_t N, typename LHS, typename RHS, typename Op>
+		template<typename Scalar, uint64_t N, typename LHS, typename RHS, typename Op>
 		LIBRAPID_ALWAYS_INLINE void assign(Vector<Scalar, N> &dst,
 										   const BinaryVecOp<LHS, RHS, Op> &src);
 
-		template<typename Scalar, size_t N, typename Val, typename Op>
+		template<typename Scalar, uint64_t N, typename Val, typename Op>
 		LIBRAPID_ALWAYS_INLINE void assign(Vector<Scalar, N> &dst, const UnaryVecOp<Val, Op> &src);
 	} // namespace vectorDetail
 
-	template<typename ScalarType, size_t NumDims>
-	class Vector;
+	namespace typetraits {
+		LIBRAPID_DEFINE_AS_TYPE(typename ScalarType COMMA uint64_t NumDims,
+								Vector<ScalarType COMMA NumDims>);
+
+		LIBRAPID_DEFINE_AS_TYPE(typename LHS COMMA typename RHS COMMA typename Op,
+								vectorDetail::BinaryVecOp<LHS COMMA RHS COMMA Op>);
+
+		LIBRAPID_DEFINE_AS_TYPE(typename Val COMMA typename Op,
+								vectorDetail::UnaryVecOp<Val COMMA Op>);
+	} // namespace typetraits
 } // namespace librapid
 
 #endif // LIBRAPID_MATH_VECTOR_FORWARD_HPP
