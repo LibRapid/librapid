@@ -41,7 +41,7 @@ namespace librapid {
 	using ArrayF = array::ArrayContainer<Shape, FixedStorage<Scalar, Dimensions...>>;
 
 	/// A reference type for Array objects. Use this to accept Array objects as parameters since
-	/// the compiler cannot determine the templates tingle for the Array typedef. For more
+	/// the compiler cannot determine the templates for the Array typedef. For more
 	/// granularity, you can also accept a raw ArrayContainer object. \tparam StorageType The
 	/// storage type of the array. \see Array \see ArrayF \see Function \see FunctionRef
 	template<typename ShapeType, typename StorageType>
