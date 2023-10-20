@@ -103,7 +103,6 @@ setup(
     description="A highly optimised C++ library for high-performance computing",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    # packages=ic(["librapid"] + ["librapid." + mod for mod in find_packages("librapid/python")]),
     packages=ic(["librapid." + mod for mod in find_packages("librapid")]),
     package_dir={"": "librapid"},
     cmake_args=cmakeArgs,
