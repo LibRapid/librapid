@@ -184,87 +184,87 @@ jobs:
           - os: macos-latest
             pythonVersion: 37
             bitness: 64
-            platform_id: macosx_x86_64
+            platformID: macosx_x86_64
             pythonType: "cp"
 
           - os: macos-latest
             pythonVersion: 38
             bitness: 64
-            platform_id: macosx_x86_64
+            platformID: macosx_x86_64
             pythonType: "cp"
 
           - os: macos-latest
             pythonVersion: 39
             bitness: 64
-            platform_id: macosx_x86_64
+            platformID: macosx_x86_64
             pythonType: "cp"
 
           - os: macos-latest
             pythonVersion: 310
             bitness: 64
-            platform_id: macosx_x86_64
+            platformID: macosx_x86_64
             pythonType: "cp"
 
           - os: macos-latest
             pythonVersion: 311
             bitness: 64
-            platform_id: macosx_x86_64
+            platformID: macosx_x86_64
             pythonType: "cp"
 
           - os: macos-latest
             pythonVersion: 312
             bitness: 64
-            platform_id: macosx_x86_64
+            platformID: macosx_x86_64
             pythonType: "cp"
 
           # Apple-Silicon MacOS
           - os: macos-latest
             pythonVersion: 38
             bitness: 64
-            platform_id: macosx_arm64
+            platformID: macosx_arm64
             pythonType: "cp"
 
           - os: macos-latest
             pythonVersion: 39
             bitness: 64
-            platform_id: macosx_arm64
+            platformID: macosx_arm64
             pythonType: "cp"
 
           - os: macos-latest
             pythonVersion: 310
             bitness: 64
-            platform_id: macosx_arm64
+            platformID: macosx_arm64
             pythonType: "cp"
 
           - os: macos-latest
             pythonVersion: 311
             bitness: 64
-            platform_id: macosx_arm64
+            platformID: macosx_arm64
             pythonType: "cp"
 
           - os: macos-latest
             pythonVersion: 312
             bitness: 64
-            platform_id: macosx_arm64
+            platformID: macosx_arm64
             pythonType: "cp"
 
           # Apple-Silicon MacOS PyPy
           - os: macos-latest
             pythonVersion: 38
             bitness: 64
-            platform_id: macosx_arm64
+            platformID: macosx_arm64
             pythonType: "pp"
 
           - os: macos-latest
             pythonVersion: 39
             bitness: 64
-            platform_id: macosx_arm64
+            platformID: macosx_arm64
             pythonType: "pp"
 
           - os: macos-latest
             pythonVersion: 310
             bitness: 64
-            platform_id: macosx_arm64
+            platformID: macosx_arm64
             pythonType: "pp"
 
     steps:
@@ -386,7 +386,6 @@ jobs:
         run: |
           ls dist
           twine upload --skip-existing dist/artifact/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
-  
 
   # To uncomment: remove hash -- no space after!!!
   #  # Build the wheels for Linux and Windows with CUDA support
