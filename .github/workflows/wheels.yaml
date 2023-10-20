@@ -59,48 +59,48 @@ jobs:
             pythonType: "cp"
 
           # Arm Windows
-          - os: windows-latest
-            pythonVersion: 39
-            bitness: 32
-            platformID: win_arm64
-            pythonType: "cp"
+          # - os: windows-latest
+          #   pythonVersion: 39
+          #   bitness: 32
+          #   platformID: win_arm64
+          #   pythonType: "cp"
 
-          - os: windows-latest
-            pythonVersion: 310
-            bitness: 32
-            platformID: win_arm64
-            pythonType: "cp"
+          # - os: windows-latest
+          #   pythonVersion: 310
+          #   bitness: 32
+          #   platformID: win_arm64
+          #   pythonType: "cp"
 
-          - os: windows-latest
-            pythonVersion: 311
-            bitness: 32
-            platformID: win_arm64
-            pythonType: "cp"
+          # - os: windows-latest
+          #   pythonVersion: 311
+          #   bitness: 32
+          #   platformID: win_arm64
+          #   pythonType: "cp"
 
-          - os: windows-latest
-            pythonVersion: 312
-            bitness: 32
-            platformID: win_arm64
-            pythonType: "cp"
+          # - os: windows-latest
+          #   pythonVersion: 312
+          #   bitness: 32
+          #   platformID: win_arm64
+          #   pythonType: "cp"
 
           # PyPy on Windows
-          - os: windows-latest
-            pythonVersion: 37
-            bitness: 64
-            platformID: win_amd64
-            pythonType: "pp"
+          # - os: windows-latest
+          #   pythonVersion: 37
+          #   bitness: 64
+          #   platformID: win_amd64
+          #   pythonType: "pp"
 
-          - os: windows-latest
-            pythonVersion: 38
-            bitness: 64
-            platformID: win_amd64
-            pythonType: "pp"
+          # - os: windows-latest
+          #   pythonVersion: 38
+          #   bitness: 64
+          #   platformID: win_amd64
+          #   pythonType: "pp"
 
-          - os: windows-latest
-            pythonVersion: 39
-            bitness: 64
-            platformID: win_amd64
-            pythonType: "pp"
+          # - os: windows-latest
+          #   pythonVersion: 39
+          #   bitness: 64
+          #   platformID: win_amd64
+          #   pythonType: "pp"
 
           - os: windows-latest
             pythonVersion: 310
@@ -249,23 +249,23 @@ jobs:
             pythonType: "cp"
 
           # Apple-Silicon MacOS PyPy
-          - os: macos-latest
-            pythonVersion: 38
-            bitness: 64
-            platformID: macosx_arm64
-            pythonType: "pp"
+          # - os: macos-latest
+          #   pythonVersion: 38
+          #   bitness: 64
+          #   platformID: macosx_arm64
+          #   pythonType: "pp"
 
-          - os: macos-latest
-            pythonVersion: 39
-            bitness: 64
-            platformID: macosx_arm64
-            pythonType: "pp"
+          # - os: macos-latest
+          #   pythonVersion: 39
+          #   bitness: 64
+          #   platformID: macosx_arm64
+          #   pythonType: "pp"
 
-          - os: macos-latest
-            pythonVersion: 310
-            bitness: 64
-            platformID: macosx_arm64
-            pythonType: "pp"
+          # - os: macos-latest
+          #   pythonVersion: 310
+          #   bitness: 64
+          #   platformID: macosx_arm64
+          #   pythonType: "pp"
 
     steps:
       - name: Checkout LibRapid
@@ -291,8 +291,6 @@ jobs:
           CIBW_MANYLINUX_PYPY_X86_64_IMAGE: ${{ matrix.manylinux_image }}
           CIBW_MANYLINUX_PYPY_I686_IMAGE: ${{ matrix.manylinux_image }}
           CIBW_BUILD_VERBOSITY: 1
-          CC: gcc-11
-          CXX: g++-11
           CMAKE_BUILD_PARALLEL_LEVEL: 1
           GITHUB_ACTIONS: ON
           LIBRAPID_GET_BLAS: OFF

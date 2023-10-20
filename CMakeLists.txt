@@ -111,12 +111,13 @@ if (${SKBUILD})
             WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/librapid/bindings/generators"
     )
 
-
     # Since it is not possible to set the CMake options in setup.py (we have to use pyproject.toml), we have to manually
     # read from the environment to set everything correctly:
 
     # Enable BLAS
-    set(LIBRAPID_USE_BLAS ON)
+    if (NOT ${LIBRAPID_NO_BLAS})
+        set(LIBRAPID_USE_BLAS ON)
+    endif()
 
     # Get BLAS if the environment variable is set
     if ($ENV{LIBRAPID_GET_BLAS})
