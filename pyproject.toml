@@ -1,0 +1,47 @@
+[build-system]
+requires = [
+    "setuptools",
+    "wheel",
+    "pybind11",
+    "cibuildwheel",
+    "scikit-build-core",
+    "cmake",
+    "ninja",
+    "icecream"
+]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+
+cmake.args = [
+]
+
+cmake.build-type = "Release"
+
+ninja.make-fallback = true
+
+sdist.exclude = [
+    "CMakeLists.txt",
+    "cmake",
+    "CMakeFiles",
+    "build",
+    "dist",
+    "*.h",
+    "*.c",
+    "*.hpp",
+    "*.cpp",
+    "*.tcc",
+    "*.cxx",
+    "*.cu",
+    "*.cuh",
+    "*.cl",
+    "*.so",
+    "*.dylib",
+    "*.dll",
+    "*.doc",
+    "*.tgz",
+]
+
+[project]
+name = "librapid"
+version = "0.7.3"
