@@ -294,9 +294,9 @@ jobs:
           CC: gcc-11
           CXX: g++-11
           CMAKE_BUILD_PARALLEL_LEVEL: 1
-          GITHUB_ACTIONS: true
-          LIBRAPID_GET_BLAS: false
-          LIBRAPID_GET_FFTW: false
+          GITHUB_ACTIONS: ON
+          LIBRAPID_GET_BLAS: OFF
+          LIBRAPID_GET_FFTW: OFF
 
         run: |
           python -m pip install cibuildwheel
@@ -313,9 +313,9 @@ jobs:
           CIBW_MANYLINUX_PYPY_I686_IMAGE: ${{ matrix.manylinux_image }}
           CIBW_BUILD_VERBOSITY: 1
           CMAKE_BUILD_PARALLEL_LEVEL: 1
-          GITHUB_ACTIONS: true
-          LIBRAPID_GET_BLAS: true
-          LIBRAPID_GET_FFTW: false
+          GITHUB_ACTIONS: ON
+          LIBRAPID_GET_BLAS: ON
+          LIBRAPID_GET_FFTW: OFF
 
         run: |
           python -m pip install cibuildwheel

@@ -114,38 +114,35 @@ if (${SKBUILD})
 
     # Since it is not possible to set the CMake options in setup.py (we have to use pyproject.toml), we have to manually
     # read from the environment to set everything correctly:
-    # LIBRAPID_USE_BLAS = ${LIBRAPID_USE_BLAS}
-    # LIBRAPID_GET_BLAS = ${LIBRAPID_GET_BLAS}
-    # LIBRAPID_USE_CUDA = ON
-    # LIBRAPID_USE_OPENCL = ON
-    # LIBRAPID_USE_OMP = ON
-    # LIBRAPID_USE_MULTIPREC = ON
-    # LIBRAPID_NATIVE_ARCH = NOT ${GITHUB_ACTIONS}
-    # LIBRAPID_FAST_MATH = ${LIBRAPID_FAST_MATH}
-    # LIBRAPID_GET_FFTW = ${LIBRAPID_GET_FFTW}
 
+    # Enable BLAS
+    set(LIBRAPID_USE_BLAS ON)
+
+    # Get BLAS if the environment variable is set
     if ($ENV{LIBRAPID_GET_BLAS})
         set(LIBRAPID_GET_BLAS ON)
-    endif ()
+    endif()
 
-    if (NOT $ENV{GITHUB_ACTIONS})
-        set(LIBRAPID_NATIVE_ARCH ON)
-    endif ()
-
+    # Use fast math if the environment variable is set
     if ($ENV{LIBRAPID_FAST_MATH})
         set(LIBRAPID_FAST_MATH ON)
-    endif ()
+    endif()
 
+    # Get FFTW if the environment variable is set
     if ($ENV{LIBRAPID_GET_FFTW})
         set(LIBRAPID_GET_FFTW ON)
-    endif ()
+    endif()
 
-    set(LIBRAPID_USE_BLAS ON)
-    set(LIBRAPID_USE_CUDA ON)
-    set(LIBRAPID_USE_OPENCL ON)
-    set(LIBRAPID_USE_OMP ON)
+    # Use CUDA/OpenCL only when not inside GitHub Actions
+    if (NOT $ENV{GITHUB_ACTIONS})
+        set(LIBRAPID_USE_CUDA ON)
+        set(LIBRAPID_USE_OPENCL ON)
+    endif()
+
+    # Disable multiprec
     set(LIBRAPID_USE_MULTIPREC OFF)
     set(LIBRAPID_GET_MULTIPREC OFF)
+
 
     file(GLOB_RECURSE PYTHON_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/librapid/bindings/python/*.hpp" # Header files
