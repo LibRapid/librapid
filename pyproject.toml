@@ -7,14 +7,12 @@ requires = [
     "scikit-build-core",
     "cmake",
     "ninja",
-    "icecream"
+    "icecream",
+    "build"
 ]
 build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
-
-cmake.args = [
-]
 
 cmake.build-type = "Release"
 
@@ -45,3 +43,57 @@ sdist.exclude = [
 [project]
 name = "librapid"
 version = "0.7.3"
+description = "A high-performance library for arrays and numeric calculations"
+long_description = ["file: README.md"]
+long_description_content_type = "text/markdown"
+author = "Toby Davis"
+author_email = "pencilcasman@gmail.com"
+license = { file = "LICENSE" }
+keywords = [
+    "librapid",
+    "high-performance computing",
+    "c++",
+    "mathematics",
+    "array",
+    "matrix",
+    "vector",
+    "tensor",
+    "gpu",
+    "cuda",
+    "openmp",
+    "multithreading",
+    "multicore",
+    "parallel"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+]
+
+[project.urls]
+homepage = "https://tobydavis.dev/librapid"
+documentation = "https://librapid.readthedocs.io/en/latest/"
+repository = "https://github.com/LibRapid/librapid"
+download = "https://pypi.org/project/librapid/#files"
+bug-tracker = "https://github.com/LibRapid/librapid/issues"
+

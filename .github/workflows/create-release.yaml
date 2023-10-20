@@ -17,17 +17,17 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Compile
-        run: |
-          mkdir build
-          cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_GET_BLAS=ON -DLIBRAPID_USE_MULTIPREC=ON
-          cmake --build . --config Release
+      - name: Check Compilation, Tests, Examples, Docs and Benchmarks
+        uses: actions/workflow-run-action@v2
+        with:
+          workflow: "continuous-integration.yaml"
+          ref: ${{ github.ref }}
 
-      - name: Run Tests
-        run: |
-          cd build
-          ctest -C Release --output-on-failure
+      - name: Generate Python Wheels
+        uses: actions/workflow-run-action@v2
+        with:
+          workflow: "wheels.yaml"
+          ref: ${{ github.ref }}
 
       - name: Zip Source Code
         run: |

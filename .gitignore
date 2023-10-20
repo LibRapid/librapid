@@ -29,3 +29,8 @@ docs/source/docBuild
 _skbuild
 librapid.egg-info
 librapid/librapid.egg-info
+librapid/bindings/python/generated
+
+dist/
+
+*.pyc
