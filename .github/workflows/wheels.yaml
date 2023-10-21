@@ -287,6 +287,13 @@ jobs:
         with:
           xcode-version: latest
 
+      - name: Install Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: ${{ matrix.clangVer }}
+          directory: "./llvm"
+          env: on
+
       - name: Build Wheels
         if: runner.os == 'macOS'
         env:
@@ -301,6 +308,8 @@ jobs:
           GITHUB_ACTIONS: ON
           LIBRAPID_GET_BLAS: OFF
           LIBRAPID_GET_FFTW: OFF
+          CC: ../llvm/bin/clang
+          CXX: ../llvm/bin/clang++
 
         run: |
           python -m pip install cibuildwheel
