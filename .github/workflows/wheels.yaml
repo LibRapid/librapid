@@ -300,6 +300,7 @@ jobs:
         if: matrix.os == 'macos-13'
         run: |
           rm -f '/usr/local/bin/2to3'
+          rm -f '/usr/local/bin/2to3-*'
           brew install llvm libomp
 
       - name: Build Wheels
