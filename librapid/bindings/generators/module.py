@@ -1,11 +1,13 @@
 from class_ import Class
+import textwrap
 
 
 class Module:
-    def __init__(self, name, parentModule=None, docstring=None):
+    def __init__(self, name, parentModule=None, docstring=None, includeGuard=None):
         self.name = name
         self.parent = parentModule
-        self.docstring = docstring if docstring is not None else f"Bindings for {name}"
+        self.docstring = docstring
+        self.includeGuard = includeGuard
         self.classes = []
         self.functions = []
 
@@ -34,7 +36,8 @@ class Module:
             ret += f"module.def_submodule(\"{self.name}\", \"{self.parent.name}.{self.name}\") {{\n"
             moduleName = self.name
 
-        ret += f"{moduleName}.doc() = \"{self.docstring}\";\n\n"
+        if self.docstring is not None:
+            ret += f"{moduleName}.doc() = \"{self.docstring}\";\n\n"
 
         for class_ in self.classes:
             ret += class_.genInterface(moduleName)
@@ -45,7 +48,17 @@ class Module:
             ret += "\n"
 
         ret += "}\n"
-        return ret
+
+        if self.includeGuard is None:
+            return ret
+        else:
+            return textwrap.dedent(f"""
+            #if {self.includeGuard}
+            {ret}
+            #else
+            {self.genInterfaceDefinition()} {{}}
+            #endif
+            """)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@ import os
 import textwrap
 
 import shapeGenerator
+import arrayGenerator
 
 outputDir = "../python/generated"
 
@@ -19,6 +20,7 @@ boilerplate = textwrap.dedent(f"""
             namespace lrc = librapid;
         """).strip()
 
+
 def main():
     # Ensure the output directory exists
     if not os.path.exists(outputDir):
@@ -26,7 +28,8 @@ def main():
 
     interfaceFunctions = []
 
-    interfaceFunctions += shapeGenerator.write(outputDir + "/shape.cpp")
+    interfaceFunctions += shapeGenerator.write(outputDir)
+    interfaceFunctions += arrayGenerator.write(outputDir)
 
     with open(f"{outputDir}/librapidPython.hpp", "w") as f:
         f.write(boilerplate)

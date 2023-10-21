@@ -258,6 +258,29 @@ methods = [
         op="""
             return fmt::format("_librapid.{}", self);
         """
+    ),
+
+    # Format (__format__)
+    function.Function(
+        name="__format__",
+        args=[
+            argument.Argument(
+                name="self",
+                type="lrc::Shape",
+                const=True,
+                ref=True
+            ),
+            argument.Argument(
+                name="formatSpec",
+                type="std::string",
+                const=True,
+                ref=True
+            )
+        ],
+        op="""
+            std::string format = fmt::format("{{:{}}}", formatSpec);
+            return fmt::format(fmt::runtime(format), self);
+        """
     )
 ]
 
@@ -275,9 +298,9 @@ moduleType = module.Module(
 moduleType.classes.append(classType)
 
 
-def write(path):
+def write(root):
     fileType = file.File(
-        path="../python/generated/shape.cpp"
+        path=f"{root}/shape.cpp"
     )
 
     fileType.modules.append(moduleType)
