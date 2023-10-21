@@ -288,9 +288,10 @@ jobs:
           xcode-version: latest
 
       - name: Install Clang
+        if: matrix.os == 'macos-latest'
         uses: KyleMayes/install-llvm-action@v1
         with:
-          version: ${{ matrix.clangVer }}
+          version: "15.0"
           directory: "./llvm"
           env: on
 
