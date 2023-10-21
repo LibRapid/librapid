@@ -181,87 +181,87 @@ jobs:
             pythonType: "pp"
 
           # MacOS x86_64
-          - os: macos-latest
+          - os: macos-13
             pythonVersion: 37
             bitness: 64
             platformID: macosx_x86_64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: macos-13
             pythonVersion: 38
             bitness: 64
             platformID: macosx_x86_64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: macos-13
             pythonVersion: 39
             bitness: 64
             platformID: macosx_x86_64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: macos-13
             pythonVersion: 310
             bitness: 64
             platformID: macosx_x86_64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: macos-13
             pythonVersion: 311
             bitness: 64
             platformID: macosx_x86_64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: macos-13
             pythonVersion: 312
             bitness: 64
             platformID: macosx_x86_64
             pythonType: "cp"
 
           # Apple-Silicon MacOS
-          - os: macos-latest
+          - os: macos-13
             pythonVersion: 38
             bitness: 64
             platformID: macosx_arm64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: macos-13
             pythonVersion: 39
             bitness: 64
             platformID: macosx_arm64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: macos-13
             pythonVersion: 310
             bitness: 64
             platformID: macosx_arm64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: macos-13
             pythonVersion: 311
             bitness: 64
             platformID: macosx_arm64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: macos-13
             pythonVersion: 312
             bitness: 64
             platformID: macosx_arm64
             pythonType: "cp"
 
           # Apple-Silicon MacOS PyPy
-          # - os: macos-latest
+          # - os: macos-13
           #   pythonVersion: 38
           #   bitness: 64
           #   platformID: macosx_arm64
           #   pythonType: "pp"
 
-          # - os: macos-latest
+          # - os: macos-13
           #   pythonVersion: 39
           #   bitness: 64
           #   platformID: macosx_arm64
           #   pythonType: "pp"
 
-          # - os: macos-latest
+          # - os: macos-13
           #   pythonVersion: 310
           #   bitness: 64
           #   platformID: macosx_arm64
@@ -282,13 +282,13 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Install XCode
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-13'
         uses: maxim-lobanov/setup-xcode@v1.5.1
         with:
           xcode-version: latest
 
       # - name: Install Clang
-      #   if: matrix.os == 'macos-latest'
+      #   if: matrix.os == 'macos-13'
       #   uses: KyleMayes/install-llvm-action@v1
       #   with:
       #     version: "15.0"
@@ -296,7 +296,7 @@ jobs:
       #     env: on
 
       - name: Install Clang
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-13'
         run: |
           brew install llvm libomp
 
