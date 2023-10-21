@@ -987,6 +987,8 @@ EXCLUDE_PATTERNS      += */librapid/fftw/*
 EXCLUDE_PATTERNS      += */opencl/kernels/*
 EXCLUDE_PATTERNS      += */cuda/kernels/*
 EXCLUDE_PATTERNS      += */opencl/opencl.hpp
+EXCLUDE_PATTERNS      += */librapid/bindings/*
+EXCLUDE_PATTERNS      += *.py
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
