@@ -180,6 +180,7 @@ jobs:
             manylinux_image: manylinux2014
             pythonType: "pp"
 
+
           # MacOS x86_64
           - os: macos-13
             pythonVersion: 37
@@ -310,6 +311,7 @@ jobs:
           CIBW_MANYLINUX_PYPY_X86_64_IMAGE: ${{ matrix.manylinux_image }}
           CIBW_MANYLINUX_PYPY_I686_IMAGE: ${{ matrix.manylinux_image }}
           CIBW_BUILD_VERBOSITY: 1
+          MACOSX_DEPLOYMENT_TARGET: 10.15
           CMAKE_BUILD_PARALLEL_LEVEL: 1
           GITHUB_ACTIONS: ON
           LIBRAPID_GET_BLAS: OFF
