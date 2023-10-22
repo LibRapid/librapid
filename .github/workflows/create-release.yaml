@@ -18,92 +18,9 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Check Compilation, Tests, Examples, Docs and Benchmarks
-        uses: ./.github/workflows/continuous-integration.yaml
-
-      - name: Generate Python Wheels
-        uses: ./.github/workflows/wheels.yaml
-
       - name: Zip Source Code
         run: |
           zip -r librapid.zip ../librapid
-
-      - name: Get latest CMake and ninja
-        uses: lukka/get-cmake@latest
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-
-      - name: Install Clang
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: "15.0"
-          directory: "./llvm"
-          env: on
-
-      - name: Build Doxygen
-        id: build_doxygen
-        continue-on-error: true
-        run: |
-          git clone --recursive https://github.com/doxygen/doxygen.git
-          cd doxygen
-          git checkout Release_1_9_7
-          mkdir build
-          cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
-          cmake --build . --config Release
-          sudo make install
-        env:
-          CC: gcc
-          CXX: g++
-
-      - name: Install Doxygen on Error
-        if: steps.build_doxygen.outcome != 'success'
-        run: |
-          sudo apt install doxygen
-
-      - name: Upgrade Source Distribution
-        continue-on-error: true
-        run: |
-          sudo apt update
-          sudo apt upgrade -y
-          sudo apt autoremove -y
-
-      - name: Install LaTeX
-        continue-on-error: true
-        run: |
-          sudo apt-get install -y texlive-full
-
-      - name: Install Requirements
-        continue-on-error: true
-        run: |
-          cd docs
-          pip install -r requirements.txt
-
-      - name: Force install Sphinx Build
-        run: |
-          sudo apt-get install python3-sphinx
-
-      - name: Configure Files
-        run: |
-          touch .is_local
-
-      - name: Build HTML Documentation
-        run: |
-          cd docs
-          make html
-
-      - name: Build PDf Documentation
-        # continue-on-error: true
-        run: |
-          cd docs
-          make latexpdf
-
-      - name: Zip Documentation (HTML)
-        run: |
-          zip -r htmlDocs.zip ./docs/build/html  
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -111,5 +28,10 @@ jobs:
           prerelease: false
           files: |
             librapid.zip
-            htmlDocs.zip
-            docs/build/latex/librapid.pdf
+            README.md
+            LICENSE
+            version.txt
+            SECURITY.md
+            CONTRIBUTING.md
+            CODE_OF_CONDUCT.md
+            CITATION.cff
