@@ -18,12 +18,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Check Compilation, Tests, Examples, Docs and Benchmarks
-        uses: ./.github/workflows/continuous-integration.yaml
-
-      - name: Generate Python Wheels
-        uses: ./.github/workflows/wheels.yaml
-
       - name: Zip Source Code
         run: |
           zip -r librapid.zip ../librapid
