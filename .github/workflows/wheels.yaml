@@ -9,6 +9,7 @@ on:
     branches:
       - "**"
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   # Build the wheels for Linux, Windows and macOS for CPython 3.7 and newer
