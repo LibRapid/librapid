@@ -38,7 +38,7 @@ PROJECT_NAME           = "LibRapid"
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = v0.7.3
+PROJECT_NUMBER         = v0.7.4
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -964,6 +964,7 @@ RECURSIVE              = YES
 # run.
 
 EXCLUDE                =
+
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
