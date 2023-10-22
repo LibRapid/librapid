@@ -5,6 +5,7 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   tagged-release:
@@ -18,16 +19,10 @@ jobs:
           submodules: recursive
 
       - name: Check Compilation, Tests, Examples, Docs and Benchmarks
-        uses: actions/workflow-run-action@v2
-        with:
-          workflow: "continuous-integration.yaml"
-          ref: ${{ github.ref }}
+        uses: ./.github/workflows/continuous-integration.yaml
 
       - name: Generate Python Wheels
-        uses: actions/workflow-run-action@v2
-        with:
-          workflow: "wheels.yaml"
-          ref: ${{ github.ref }}
+        uses: ./.github/workflows/wheels.yaml
 
       - name: Zip Source Code
         run: |
