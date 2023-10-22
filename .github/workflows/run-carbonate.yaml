@@ -3,6 +3,7 @@ on:
     types: [created]
   issues:
     types: [opened]
+  workflow_call:
 
 jobs:
   carbonate:
