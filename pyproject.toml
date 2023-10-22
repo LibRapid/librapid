@@ -42,7 +42,7 @@ sdist.exclude = [
 
 [project]
 name = "librapid"
-version = "0.7.3"
+version = "0.7.4"
 description = "A high-performance library for arrays and numeric calculations"
 readme = "README.md"
 long_description = ["file: README.md"]

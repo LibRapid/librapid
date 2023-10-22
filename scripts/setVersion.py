@@ -42,7 +42,7 @@ if args.version and any([args.major, args.minor, args.patch]):
 
 if args.version:
     # Validate version number
-    if not re.match("[0-9]+\.[0-9]+\.[0-9]+", args.version):
+    if not re.match("[0-9]+\\.[0-9]+\\.[0-9]+", args.version):
         print("[ ERROR ] Invalid version number")
         sys.exit(1)
     newMajorVersion = args.version.split(".")[0]
@@ -93,7 +93,7 @@ with open("tmp/pyprojectTemplate.toml", "r") as templateFile:
     print("Loaded pyproject.toml template")
 
 with open("../pyproject.toml", "w") as pyprojectFile:
-    versionString = f"\"{newMajorVersion}.{newMinorVersion}.{newPatchVersion}\""
+    versionString = f"{newMajorVersion}.{newMinorVersion}.{newPatchVersion}"
     template = template.replace("$${{ INSERT_VERSION_NUMBER_HERE }}$$", versionString)
     pyprojectFile.write(template)
     print("Written to pyproject.toml")
