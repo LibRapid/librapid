@@ -7,7 +7,7 @@ It will then update all LibRapid version numbers to the specified version.
 """
 
 import sys
-import regex
+import re
 import argparse
 from datetime import datetime
 
@@ -19,9 +19,9 @@ currentPatchVersion = None
 try:
     with open("../version.txt", "r") as versionFile:
         text = versionFile.read()
-        currentMajorVersion = regex.search("MAJOR [0-9]+", text).group().split()[1]
-        currentMinorVersion = regex.search("MINOR [0-9]+", text).group().split()[1]
-        currentPatchVersion = regex.search("PATCH [0-9]+", text).group().split()[1]
+        currentMajorVersion = re.search("MAJOR [0-9]+", text).group().split()[1]
+        currentMinorVersion = re.search("MINOR [0-9]+", text).group().split()[1]
+        currentPatchVersion = re.search("PATCH [0-9]+", text).group().split()[1]
     print(f"Current Version: v{currentMajorVersion}.{currentMinorVersion}.{currentPatchVersion}")
 except Exception as e:
     print("[ ERROR ] Failed to read version.txt")
@@ -42,7 +42,7 @@ if args.version and any([args.major, args.minor, args.patch]):
 
 if args.version:
     # Validate version number
-    if not regex.match("[0-9]+\.[0-9]+\.[0-9]+", args.version):
+    if not re.match("[0-9]+\.[0-9]+\.[0-9]+", args.version):
         print("[ ERROR ] Invalid version number")
         sys.exit(1)
     newMajorVersion = args.version.split(".")[0]
@@ -87,13 +87,13 @@ with open("../CITATION.cff", "w") as citationFile:
     citationFile.write(template)
     print("Written to CITATION.cff")
 
-# # Write to .hdoc.toml
-# with open("tmp/hdocTemplate.toml", "r") as templateFile:
-#     template = templateFile.read()
-#     print("Loaded .hdoc.toml template")
-# 
-# with open("../.hdoc.toml", "w") as hdocFile:
-#     versionString = f"v{newMajorVersion}.{newMinorVersion}.{newPatchVersion}"
-#     template = template.replace("$${{ INSERT_VERSION_NUMBER_HERE }}$$", versionString)
-#     hdocFile.write(template)
-#     print("Written to .hdoc.toml")
+# Write to pyproject.toml
+with open("tmp/pyprojectTemplate.toml", "r") as templateFile:
+    template = templateFile.read()
+    print("Loaded pyproject.toml template")
+
+with open("../pyproject.toml", "w") as pyprojectFile:
+    versionString = f"\"{newMajorVersion}.{newMinorVersion}.{newPatchVersion}\""
+    template = template.replace("$${{ INSERT_VERSION_NUMBER_HERE }}$$", versionString)
+    pyprojectFile.write(template)
+    print("Written to pyproject.toml")

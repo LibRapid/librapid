@@ -154,7 +154,8 @@ templates_path = ["_templates"]
 exclude_patterns = [
     "*jitify*",
     "*fmt*",
-    "*blas/*"
+    "*blas/*",
+    "*bindings*"
 ]
 
 # -- Options for HTML output -------------------------------------------------

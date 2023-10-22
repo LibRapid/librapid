@@ -6,11 +6,11 @@ formats: all
 
 # Set the build image to use the most recent version
 build:
-  image: latest
+  os: "ubuntu-22.04"
 
 # Set the python version and requirements
 python:
-  version: "3.8"
+  version: "3"
   # install:
   #   - requirements: docs/requirements.txt
 

@@ -489,6 +489,11 @@ namespace librapid {
 		Vector(const Vector &other)		= default;
 		Vector(Vector &&other) noexcept = default;
 
+		template<typename T>
+		explicit Vector(T value) {
+			for (uint64_t i = 0; i < dims; ++i) { m_data[i] = value; }
+		}
+
 		template<typename... Args>
 		explicit Vector(Args... args) : m_data {args...} {}
 
@@ -558,6 +563,11 @@ namespace librapid {
 
 		auto operator=(const Vector &other) -> Vector	  & = default;
 		auto operator=(Vector &&other) noexcept -> Vector & = default;
+
+		auto operator=(const ScalarType &val) -> Vector & {
+			for (uint64_t i = 0; i < dims; ++i) { m_data[i] = val; }
+			return *this;
+		}
 
 		template<typename OtherScalar, uint64_t OtherDims>
 		auto operator=(const Vector<OtherScalar, OtherDims> &other) -> Vector & {
@@ -1043,6 +1053,20 @@ namespace librapid {
 	template<typename T, typename std::enable_if_t<typetraits::IsVector<T>::value, int> = 0>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto norm(const T &val) {
 		return val / mag(val);
+	}
+
+	template<typename LowerScalar, uint64_t LowerDims, typename UpperScalar, uint64_t UpperDims>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	random(const Vector<LowerScalar, LowerDims> &lower,
+		   const Vector<UpperScalar, UpperDims> &upper) {
+		using Scalar			= decltype(::librapid::random(lower[0], upper[0]));
+		constexpr uint64_t dims = (LowerDims > UpperDims) ? LowerDims : UpperDims;
+		Vector<Scalar, dims> ret;
+		for (uint64_t i = 0; i < dims; ++i) {
+			ret[i] = ::librapid::random<Scalar>(
+			  i < LowerDims ? lower[i] : 0, upper[i], i < UpperDims ? upper[i] : 1);
+		}
+		return ret;
 	}
 } // namespace librapid
 
