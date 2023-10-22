@@ -1,10 +1,17 @@
-<p align="center">
+<!-- <p align="center">
 <img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_light.png#gh-light-mode-only" width="800">
 </p>
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_dark.png#gh-dark-mode-only" width="800">
-</p>
+</p> -->
+
+<picture>
+  <source 
+    srcset="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_dark.png" 
+    media="(prefers-color-scheme: dark)">
+  <img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_light.png">
+</picture>
 
 ![C++ Version](https://img.shields.io/badge/C++-20/23-purple.svg?style=flat&logo=c%2B%2B) ![License](https://img.shields.io/badge/License-MIT-orange.svg?style=flat) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC)
 
