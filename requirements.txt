@@ -1,0 +1,11 @@
+setuptools
+wheel
+twine
+cibuildwheel
+pytest
+pybind11
+cmake
+scikit-build
+packaging
+icecream
+build

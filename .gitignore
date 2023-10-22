@@ -25,3 +25,12 @@ docs/source/docBuild
 *.synctex.gz
 
 *.DS_Store
+
+_skbuild
+librapid.egg-info
+librapid/librapid.egg-info
+librapid/bindings/python/generated
+
+dist/
+
+*.pyc

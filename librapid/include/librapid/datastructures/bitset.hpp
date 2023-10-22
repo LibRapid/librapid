@@ -6,10 +6,13 @@ namespace librapid {
 	class BitSet {
 	public:
 		template<uint64_t otherBits, bool otherStackAlloc>
+
+#ifndef LIBRAPID_DOXYGEN
 		using BitSetMerger =
 		  BitSet<(numBits_ > otherBits ? numBits_ : otherBits), stackAlloc_ && otherStackAlloc>;
-
-		friend BitSet<numBits_, !stackAlloc_>;
+#else
+		using BitSetMerger = BitSet;
+#endif
 
 		using ElementType						 = uint64_t;
 		static constexpr bool stackAlloc		 = stackAlloc_;
@@ -414,11 +417,13 @@ public:
 	}
 };
 
-LIBRAPID_SIMPLE_IO_NORANGE(uint64_t numBits COMMA bool stackAlloc, librapid::BitSet<numBits COMMA stackAlloc>)
+LIBRAPID_SIMPLE_IO_NORANGE(uint64_t numBits COMMA bool stackAlloc,
+						   librapid::BitSet<numBits COMMA stackAlloc>)
 
 // std ostream support
 template<uint64_t numElements, bool stackAlloc>
-std::ostream &operator<<(std::ostream &os, const librapid::BitSet<numElements, stackAlloc> &bitset) {
+std::ostream &operator<<(std::ostream &os,
+						 const librapid::BitSet<numElements, stackAlloc> &bitset) {
 	return os << fmt::format("{}", bitset);
 }
 
