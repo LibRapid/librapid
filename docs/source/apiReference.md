@@ -44,6 +44,21 @@ Complex numbers and their operations.
 Mathematical sets.
 :::
 
+:::{grid-item-card} {octicon}`stack` Bitset
+:link: bitset/bitset
+:link-type: doc
+
+Optimised arrays of Boolean values with support for
+bitwise operations.
+:::
+
+:::{grid-item-card} {octicon}`book` Maps
+:link: map.map
+:link-type: doc
+
+Maps and dictionary-like objects.
+:::
+
 :::{grid-item-card} {octicon}`number` Mathematics
 :link: math/math
 :link-type: doc
@@ -75,6 +90,8 @@ Arrays, Matrices and Linear Algebra <array/array>
 Vectors <vector/vector>
 Complex Numbers <complex/complex>
 Sets <set/set>
+Bitset <bitset/bitset>
+Map <map/map>
 Mathematics <math/math>
 Multi-Precision Arithmetic <multiPrecision/multiPrecision>
 Utilities <utility/utility>

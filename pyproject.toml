@@ -24,6 +24,7 @@ sdist.exclude = [
     "CMakeFiles",
     "build",
     "dist",
+    "librapid/vendor",
     "*.h",
     "*.c",
     "*.hpp",
@@ -38,6 +39,13 @@ sdist.exclude = [
     "*.dll",
     "*.doc",
     "*.tgz",
+    "*.md",
+    "*.yml",
+    "*.yaml",
+    "*.in",
+    "*.rst",
+    "*.sh",
+    "*.html"
 ]
 
 [project]
