@@ -9,8 +9,7 @@ import itertools
 # The set of Array types we support in Python
 arrayTypes = []
 
-for scalar in [("int16_t", "Int16"),
-               ("int32_t", "Int32"),
+for scalar in [("int32_t", "Int32"),
                ("int64_t", "Int64"),
                ("float", "Float"),
                ("double", "Double"),
@@ -110,6 +109,28 @@ def generateFunctionsForArray(config):
                     ref=True
                 )
             ]
+        ),
+
+        # Addition
+        function.Function(
+            name="__add__",
+            args=[
+                argument.Argument(
+                    name="self",
+                    type=generateCppArrayType(config),
+                    const=True,
+                    ref=True
+                ),
+                argument.Argument(
+                    name="other",
+                    type=generateCppArrayType(config),
+                    const=True,
+                    ref=True
+                )
+            ],
+            op="""
+                return (self + other).eval();
+            """
         ),
 
         # String representation

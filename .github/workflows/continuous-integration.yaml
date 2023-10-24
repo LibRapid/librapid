@@ -693,7 +693,7 @@ jobs:
     name: Trigger Documentation Build
     needs: [ compile, build-docs, quodona, code-coverage ]
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'push'
     steps:
       - name: Checkout LibRapid
         uses: actions/checkout@v4
