@@ -266,7 +266,6 @@ namespace librapid {
 	 */
 
 #if defined(LIBRAPID_HAS_OPENCL)
-
 	namespace opencl {
 		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
 														 ::librapid::detail::LibRapidType::Scalar,
@@ -347,7 +346,6 @@ namespace librapid {
 #endif // LIBRAPID_HAS_OPENCL
 
 #if defined(LIBRAPID_HAS_CUDA)
-
 	namespace cuda {
 		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
 														 ::librapid::detail::LibRapidType::Scalar,

@@ -21,6 +21,7 @@ class Argument:
         - default
         - const
         - ref
+        - move
         - pointer
         - noConvert
         - returnPolicy
@@ -34,6 +35,7 @@ class Argument:
         self.default = kwargs.get("default", None)
         self.const = kwargs.get("const", True)
         self.ref = kwargs.get("ref", True)
+        self.move = kwargs.get("move", False)
         self.pointer = kwargs.get("pointer", False)
         self.noConvert = kwargs.get("noConvert", False)
 
@@ -48,9 +50,11 @@ class Argument:
                 self.const = args[i]
             elif i == 4 and self.ref is None:
                 self.ref = args[i]
-            elif i == 5 and self.pointer is None:
+            elif i == 5 and self.move is None:
+                self.move = args[i]
+            elif i == 6 and self.pointer is None:
                 self.pointer = args[i]
-            elif i == 6 and self.noConvert is None:
+            elif i == 7 and self.noConvert is None:
                 self.noConvert = args[i]
             else:
                 raise ValueError("Too many arguments")
@@ -71,7 +75,7 @@ class Argument:
             return f"py::kwargs kwargs"
         else:
             isPrimitiveType = isPrimitive(self.type)
-            return f"{'const ' if self.const and not isPrimitiveType else ''}{self.type} {'&' if self.ref and not isPrimitiveType else ''}{'*' if self.pointer else ''}{self.name}"
+            return f"{'const ' if self.const and not isPrimitiveType else ''}{self.type} {'&' if self.ref and not isPrimitiveType else ''}{"&&" if self.move and not self.ref else ""}{'*' if self.pointer else ''}{self.name}"
 
     def declaration(self):
         if self.default is None:

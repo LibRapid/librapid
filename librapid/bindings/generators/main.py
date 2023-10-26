@@ -3,13 +3,16 @@ import textwrap
 
 import shapeGenerator
 import arrayGenerator
+import generalArrayViewGenerator
 
 outputDir = "../python/generated"
 
 boilerplate = textwrap.dedent(f"""
             #pragma once
 
-            #define LIBRAPID_ASSERT
+            #ifndef LIBRAPID_DEBUG
+                #define LIBRAPID_DEBUG
+            #endif
 
             #include <librapid/librapid.hpp>
             #include <pybind11/pybind11.h>
@@ -30,6 +33,7 @@ def main():
 
     interfaceFunctions += shapeGenerator.write(outputDir)
     interfaceFunctions += arrayGenerator.write(outputDir)
+    interfaceFunctions += generalArrayViewGenerator.write(outputDir)
 
     with open(f"{outputDir}/librapidPython.hpp", "w") as f:
         f.write(boilerplate)
