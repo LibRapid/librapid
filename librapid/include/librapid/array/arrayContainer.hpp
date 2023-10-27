@@ -195,6 +195,10 @@ namespace librapid {
 			/// \param other The array container to reference
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator=(const ArrayContainer &other) = default;
 
+			template<typename ArrayViewType, typename ArrayViewScalar>
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &
+			operator=(const array::GeneralArrayView<ArrayViewType, ArrayViewScalar> &view);
+
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator=(const Scalar &value);
 
 			/// Assign a temporary array container to this array container.
@@ -341,9 +345,9 @@ namespace librapid {
 			/// \return Iterator
 			LIBRAPID_ALWAYS_INLINE auto end();
 
-			template<typename T, typename Char, typename Ctx>
+			template<typename T, typename Char, size_t N, typename Ctx>
 			void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
-					 Ctx &ctx) const;
+					 const char (&formatString)[N], Ctx &ctx) const;
 
 		private:
 			ShapeType m_shape;	   // The shape type of the array
@@ -550,6 +554,17 @@ namespace librapid {
 			m_size	= arrayMultiply.size();
 			m_storage.resize(m_shape.size(), 0);
 			arrayMultiply.applyTo(*this);
+			return *this;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		template<typename ArrayViewType, typename ArrayViewScalar>
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::operator=(
+		  const array::GeneralArrayView<ArrayViewType, ArrayViewScalar> &view) -> ArrayContainer & {
+			m_shape = view.shape();
+			m_size	= view.size();
+			m_storage.resize(m_shape.size(), 0);
+			for (int64_t i = 0; i < m_size; ++i) { m_storage[i] = view.scalar(i); }
 			return *this;
 		}
 
@@ -904,10 +919,12 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		template<typename T, typename Char, typename Ctx>
-		LIBRAPID_ALWAYS_INLINE void ArrayContainer<ShapeType_, StorageType_>::str(
-		  const fmt::formatter<T, Char> &format, char bracket, char separator, Ctx &ctx) const {
-			createGeneralArrayView(*this).str(format, bracket, separator, ctx);
+		template<typename T, typename Char, size_t N, typename Ctx>
+		LIBRAPID_ALWAYS_INLINE void
+		ArrayContainer<ShapeType_, StorageType_>::str(const fmt::formatter<T, Char> &format,
+													  char bracket, char separator,
+													  const char (&formatString)[N], Ctx &ctx) const {
+			createGeneralArrayView(*this).str(format, bracket, separator, formatString, ctx);
 		}
 	} // namespace array
 

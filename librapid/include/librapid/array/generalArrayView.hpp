@@ -41,8 +41,8 @@ namespace librapid {
 			using ShapeType		 = ArrayViewShapeType;
 			using StrideType	 = Stride<ShapeType>;
 			using StorageType	 = typename typetraits::TypeInfo<BaseType>::StorageType;
-			using ArrayType = array::ArrayContainer<ShapeType, StorageType>;
-			using Iterator	= detail::ArrayIterator<GeneralArrayView>;
+			using ArrayType		 = array::ArrayContainer<ShapeType, StorageType>;
+			using Iterator		 = detail::ArrayIterator<GeneralArrayView>;
 
 			/// Default constructor should never be used
 			GeneralArrayView() = delete;
@@ -57,17 +57,16 @@ namespace librapid {
 
 			/// Copy an ArrayView object (const)
 			/// \param other The array to copy
-			LIBRAPID_ALWAYS_INLINE GeneralArrayView(const GeneralArrayView &other) = default;
+			LIBRAPID_ALWAYS_INLINE GeneralArrayView(const GeneralArrayView &other);
 
 			/// Constructs an ArrayView from a temporary instance
 			/// \param other The ArrayView to move
-			LIBRAPID_ALWAYS_INLINE GeneralArrayView(GeneralArrayView &&other) = default;
+			LIBRAPID_ALWAYS_INLINE GeneralArrayView(GeneralArrayView &&other);
 
 			/// Assigns another ArrayView object to this ArrayView.
 			/// \param other The ArrayView to assign.
 			/// \return A reference to this
-			LIBRAPID_ALWAYS_INLINE GeneralArrayView &
-			operator=(const GeneralArrayView &other) = default;
+			LIBRAPID_ALWAYS_INLINE GeneralArrayView &operator=(const GeneralArrayView &other);
 
 			/// Assigns a temporary ArrayView to this ArrayView.
 			/// \param other The ArrayView to move.
@@ -105,6 +104,8 @@ namespace librapid {
 			/// \return The scalar represented by the ArrayView object
 			template<typename CAST>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE explicit operator CAST() const;
+
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE int64_t size() const;
 
 			/// Access the underlying shape of this ArrayView
 			/// \return Shape object
@@ -150,8 +151,8 @@ namespace librapid {
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator begin() const;
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator end() const;
 
-			template<typename T, typename Char, typename Ctx>
-			void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
+			template<typename T, typename Char, size_t N, typename Ctx>
+			void str(const fmt::formatter<T, Char> &format, char bracket, char separator, const char (&formatString)[N],
 					 Ctx &ctx) const;
 
 		private:
@@ -161,18 +162,26 @@ namespace librapid {
 			int64_t m_offset = 0;
 		};
 
-		// template<typename ArrayViewType>
-		// LIBRAPID_ALWAYS_INLINE
-		// GeneralArrayView<ArrayViewType>::GeneralArrayView(ArrayViewType &array) :
-		// 		m_ref(array),
-		// 		m_shape(array.shape()), m_stride(array.shape()) {}
-
 		template<typename ArrayViewType, typename ArrayViewShapeType>
 		LIBRAPID_ALWAYS_INLINE
 		GeneralArrayView<ArrayViewType, ArrayViewShapeType>::GeneralArrayView(
 		  ArrayViewType &&array) :
 				m_ref(array),
 				m_shape(array.shape()), m_stride(array.shape()) {}
+
+		template<typename ArrayViewType, typename ArrayViewShapeType>
+		LIBRAPID_ALWAYS_INLINE
+		GeneralArrayView<ArrayViewType, ArrayViewShapeType>::GeneralArrayView(
+		  const GeneralArrayView &other) :
+				m_ref(other.m_ref),
+				m_shape(other.m_shape), m_stride(other.m_stride) {}
+
+		template<typename ArrayViewType, typename ArrayViewShapeType>
+		LIBRAPID_ALWAYS_INLINE
+		GeneralArrayView<ArrayViewType, ArrayViewShapeType>::GeneralArrayView(
+		  GeneralArrayView &&other) :
+				m_ref(other.m_ref),
+				m_shape(other.m_shape), m_stride(other.m_stride), m_offset(other.m_offset) {}
 
 		template<typename ArrayViewType, typename ArrayViewShapeType>
 		LIBRAPID_ALWAYS_INLINE GeneralArrayView<ArrayViewType, ArrayViewShapeType> &
@@ -183,12 +192,42 @@ namespace librapid {
 		}
 
 		template<typename ArrayViewType, typename ArrayViewShapeType>
+		LIBRAPID_ALWAYS_INLINE GeneralArrayView<ArrayViewType, ArrayViewShapeType> &
+		GeneralArrayView<ArrayViewType, ArrayViewShapeType>::operator=(
+		  const GeneralArrayView &other) {
+			LIBRAPID_ASSERT(m_shape.operator==(other.shape()),
+							"GeneralArrayView assignment shape mismatch.");
+
+			ShapeType coord = ShapeType::zeros(m_shape.ndim());
+			int64_t d = 0, p = 0;
+			int64_t idim = 0, adim = 0;
+			const int64_t ndim = m_shape.ndim();
+
+			do {
+				m_ref.storage()[p + m_offset] = other.scalar(d++);
+
+				for (idim = 0; idim < ndim; ++idim) {
+					adim = ndim - idim - 1;
+					if (++coord[adim] == m_shape[adim]) {
+						coord[adim] = 0;
+						p			= p - (m_shape[adim] - 1) * m_stride[adim];
+					} else {
+						p = p + m_stride[adim];
+						break;
+					}
+				}
+			} while (idim < ndim);
+
+			return *this;
+		}
+
+		template<typename ArrayViewType, typename ArrayViewShapeType>
 		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE GeneralArrayView<ArrayViewType, ArrayViewShapeType> &
 		GeneralArrayView<ArrayViewType, ArrayViewShapeType>::operator=(
 		  const ArrayContainer<ShapeType_, StorageType_> &other) {
 			LIBRAPID_ASSERT(m_shape.operator==(other.shape()),
-							"Cannot assign to a non-scalar ArrayView.");
+							"GeneralArrayView assignment shape mismatch.");
 
 			ShapeType coord = ShapeType::zeros(m_shape.ndim());
 			int64_t d = 0, p = 0;
@@ -265,6 +304,12 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE
 		  GeneralArrayView<ArrayViewType, ArrayViewShapeType>::operator CAST() const {
 			return get();
+		}
+
+		template<typename ArrayViewType, typename ArrayViewShapeType>
+		LIBRAPID_ALWAYS_INLINE int64_t
+		GeneralArrayView<ArrayViewType, ArrayViewShapeType>::size() const {
+			return m_shape.size();
 		}
 
 		template<typename ArrayViewType, typename ArrayViewShapeType>

@@ -515,9 +515,9 @@ namespace librapid {
 			/// \return Evaluated expression
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto eval() const;
 
-			template<typename T, typename Char, typename Ctx>
+			template<typename T, typename Char, size_t N, typename Ctx>
 			LIBRAPID_ALWAYS_INLINE void str(const fmt::formatter<T, Char> &format, char bracket,
-											char separator, Ctx &ctx) const;
+											char separator, const char (&formatString)[N], Ctx &ctx) const;
 
 		private:
 			ArrayType m_array;
@@ -652,10 +652,10 @@ namespace librapid {
 		};
 
 		template<typename TransposeType>
-		template<typename T, typename Char, typename Ctx>
+		template<typename T, typename Char, size_t N, typename Ctx>
 		void Transpose<TransposeType>::str(const fmt::formatter<T, Char> &format, char bracket,
-										   char separator, Ctx &ctx) const {
-			eval().str(format, bracket, separator, ctx);
+										   char separator, const char (&formatString)[N], Ctx &ctx) const {
+			eval().str(format, bracket, separator, formatString, ctx);
 		}
 	}; // namespace array
 

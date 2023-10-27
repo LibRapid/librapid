@@ -28,44 +28,11 @@ def generateCppArrayType(config):
 
 
 def generateCppArrayViewType(config):
-    return f"lrc::array::GeneralArrayView<{generateCppArrayType(config)} &>"
+    return f"lrc::array::GeneralArrayView<{generateCppArrayType(config)} &, lrc::Shape>"
 
 
 def generateFunctionsForGeneralArrayView(config):
     methods = [
-        # From an existing Array type
-        # function.Function(
-        #     name="__init__",
-        #     args=[
-        #         argument.Argument(
-        #             name="array",
-        #             type=generateCppArrayType(config),
-        #             const=False,
-        #             ref=False,
-        #             move=True
-        #         )
-        #     ],
-        #     op=f"""
-        #         return lrc::createGeneralArrayView(array);
-        #     """
-        # ),
-
-        # Reference an existing GeneralArrayView
-        # function.Function(
-        #     name="__init__",
-        #     args=[
-        #         argument.Argument(
-        #             name="arrView",
-        #             type=generateCppArrayViewType(config),
-        #             const=True,
-        #             ref=True
-        #         )
-        #     ],
-        #     op=f"""
-        #         return {generateCppArrayViewType(config)}(arrView);
-        #     """
-        # ),
-
         # Create a new GeneralArrayView
         function.Function(
             name="createFromArray",
@@ -81,6 +48,107 @@ def generateFunctionsForGeneralArrayView(config):
                 return lrc::createGeneralArrayView(array);
             """,
             static=True
+        ),
+
+        # Get item
+        function.Function(
+            name="__getitem__",
+            args=[
+                argument.Argument(
+                    name="self",
+                    type=generateCppArrayViewType(config),
+                    const=True,
+                    ref=True
+                ),
+                argument.Argument(
+                    name="index",
+                    type="int64_t"
+                )
+            ],
+            op="""
+                return self[index];
+            """
+        ),
+
+        # Set item (GeneralArrayView)
+        function.Function(
+            name="__setitem__",
+            args=[
+                argument.Argument(
+                    name="self",
+                    type=generateCppArrayViewType(config),
+                    const=False,
+                    ref=True
+                ),
+                argument.Argument(
+                    name="index",
+                    type="int64_t"
+                ),
+                argument.Argument(
+                    name="other",
+                    type=generateCppArrayViewType(config),
+                    const=True,
+                    ref=True
+                )
+            ],
+            op="""
+                self[index] = other;
+                return self;
+            """
+        ),
+
+        # Set item (Array)
+        function.Function(
+            name="__setitem__",
+            args=[
+                argument.Argument(
+                    name="self",
+                    type=generateCppArrayViewType(config),
+                    const=False,
+                    ref=True
+                ),
+                argument.Argument(
+                    name="index",
+                    type="int64_t"
+                ),
+                argument.Argument(
+                    name="other",
+                    type=generateCppArrayType(config),
+                    const=True,
+                    ref=True
+                )
+            ],
+            op="""
+                self[index] = other;
+                return self;
+            """
+        ),
+
+        # Set item (Scalar)
+        function.Function(
+            name="__setitem__",
+            args=[
+                argument.Argument(
+                    name="self",
+                    type=generateCppArrayViewType(config),
+                    const=False,
+                    ref=True
+                ),
+                argument.Argument(
+                    name="index",
+                    type="int64_t"
+                ),
+                argument.Argument(
+                    name="other",
+                    type=config["scalar"],
+                    const=True,
+                    ref=True
+                )
+            ],
+            op="""
+                self[index] = other;
+                return self;
+            """
         ),
 
         # Addition
@@ -102,6 +170,72 @@ def generateFunctionsForGeneralArrayView(config):
             ],
             op="""
                 return (self + other).eval();
+            """
+        ),
+
+        # Subtraction
+        function.Function(
+            name="__sub__",
+            args=[
+                argument.Argument(
+                    name="self",
+                    type=generateCppArrayViewType(config),
+                    const=True,
+                    ref=True
+                ),
+                argument.Argument(
+                    name="other",
+                    type=generateCppArrayViewType(config),
+                    const=True,
+                    ref=True
+                )
+            ],
+            op="""
+                return (self - other).eval();
+            """
+        ),
+
+        # Multiplication
+        function.Function(
+            name="__mul__",
+            args=[
+                argument.Argument(
+                    name="self",
+                    type=generateCppArrayViewType(config),
+                    const=True,
+                    ref=True
+                ),
+                argument.Argument(
+                    name="other",
+                    type=generateCppArrayViewType(config),
+                    const=True,
+                    ref=True
+                )
+            ],
+            op="""
+                return (self * other).eval();
+            """
+        ),
+
+        # Addition
+        function.Function(
+            name="__div__",
+            args=[
+                argument.Argument(
+                    name="self",
+                    type=generateCppArrayViewType(config),
+                    const=True,
+                    ref=True
+                ),
+                argument.Argument(
+                    name="other",
+                    type=generateCppArrayViewType(config),
+                    const=True,
+                    ref=True
+                )
+            ],
+            op="""
+                return (self / other).eval();
             """
         ),
 
@@ -133,7 +267,15 @@ def generateFunctionsForGeneralArrayView(config):
                 )
             ],
             op=f"""
-                return fmt::format("<librapid.{config['name']} ~ {{}}>", self.shape());
+                std::string thisStr = fmt::format("{{}}", self);
+                std::string padded;
+                for (const auto &c : thisStr) {{
+                    padded += c;
+                    if (c == '\\n') {{
+                        padded += std::string(27, ' ');
+                    }}
+                }}
+                return fmt::format("<librapid.GeneralArrayView {{}} dtype={config['scalar']} backend={config['backend']}>", padded);
             """
         ),
 

@@ -88,6 +88,7 @@ if (${SKBUILD})
     set(module_name "_librapid")
 
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
+    set(LIBRAPID_QUIET ON) # Disable warnings for a cleaner output.
 
     message(STATUS "[ LIBRAPID ] Cloning PyBind11")
     FetchContent_Declare(
