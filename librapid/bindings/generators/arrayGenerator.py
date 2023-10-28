@@ -37,8 +37,33 @@ def generateFunctionsForArray(config):
         function.Function(
             name="__init__",
             args=[]
-        )
-    ]
+        ),
+
+        # Copy constructor
+        function.Function(
+            name="__init__",
+            args=[
+                argument.Argument(
+                    name="other",
+                    type=generateCppArrayType(config),
+                    const=True,
+                    ref=True
+                )
+            ]
+        ),
+
+        # # Move constructor
+        # function.Function(
+        #     name="__init__",
+        #     args=[
+        #         argument.Argument(
+        #             name="other",
+        #             type=generateCppArrayType(config),
+        #             move=True
+        #         )
+        #     ]
+        # )
+    ],
 
     # Static fromData (n dimensions)
     for n in range(1, 9):
@@ -390,7 +415,6 @@ def writeArray(root, config):
     # Run clang-format if possible
     try:
         import subprocess
-
         subprocess.run(["clang-format", "-i", fileType.path])
     except Exception as e:
         print("Unable to run clang-format:", e)
