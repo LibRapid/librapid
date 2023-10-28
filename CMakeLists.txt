@@ -6,6 +6,7 @@ cmake_policy(SET CMP0077 NEW)
 if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     message(STATUS "[ LIBRAPID ] LibRapid is a top-level project. Using C++23")
     set(CMAKE_CXX_STANDARD 23)
+    message(STATUS "[ LIBRAPID ] Building ${CMAKE_BUILD_TYPE}")
 endif ()
 
 # LibRapid requires C++20 or later
@@ -139,7 +140,11 @@ if (${SKBUILD})
     if (NOT $ENV{GITHUB_ACTIONS})
         set(LIBRAPID_USE_CUDA ON)
         set(LIBRAPID_USE_OPENCL ON)
+        set(LIBRAPID_NATIVE_ARCH ON)
     endif()
+
+    set(LIBRAPID_USE_OMP ON)
+    set(LIBRAPID_OPTIMISE_SMALL_ARRAYS OFF)
 
     # Disable multiprec
     set(LIBRAPID_USE_MULTIPREC OFF)

@@ -15,7 +15,7 @@ for scalar in [("int32_t", "Int32"),
                ("double", "Double"),
                ("lrc::Complex<float>", "ComplexFloat"),
                ("lrc::Complex<double>", "ComplexDouble")]:
-    for backend in ["CPU", "OpenCL", "CUDA"]:
+    for backend in ["CPU"]:  # ["CPU", "OpenCL", "CUDA"]:
         arrayTypes.append({
             "scalar": scalar[0],
             "backend": backend,
@@ -209,96 +209,84 @@ def generateFunctionsForArray(config):
                 self[index] = other;
                 return self;
             """
-        ),
+        )
+    ]
 
-        # Addition
-        function.Function(
-            name="__add__",
-            args=[
-                argument.Argument(
-                    name="self",
-                    type=generateCppArrayType(config),
-                    const=True,
-                    ref=True
-                ),
-                argument.Argument(
-                    name="other",
-                    type=generateCppArrayType(config),
-                    const=True,
-                    ref=True
+    for operation in [("add", "+"), ("sub", "-"), ("mul", "*"), ("div", "/")]:
+        for dtype in [generateCppArrayType(config), generateCppArrayViewType(config), config["scalar"]]:
+            methods.append(
+                function.Function(
+                    name=f"__i{operation[0]}__",
+                    args=[
+                        argument.Argument(
+                            name="self",
+                            type=generateCppArrayType(config),
+                            const=False,
+                            ref=True
+                        ),
+                        argument.Argument(
+                            name="other",
+                            type=dtype,
+                            const=True,
+                            ref=True
+                        )
+                    ],
+                    op=f"""
+                        self += other;
+                        return self;
+                    """
                 )
-            ],
-            op="""
-                return (self + other).eval();
-            """
-        ),
+            )
 
-        # Subtraction
-        function.Function(
-            name="__sub__",
-            args=[
-                argument.Argument(
-                    name="self",
-                    type=generateCppArrayType(config),
-                    const=True,
-                    ref=True
-                ),
-                argument.Argument(
-                    name="other",
-                    type=generateCppArrayType(config),
-                    const=True,
-                    ref=True
+            methods.append(
+                function.Function(
+                    name=f"__{operation[0]}__",
+                    args=[
+                        argument.Argument(
+                            name="self",
+                            type=generateCppArrayType(config),
+                            const=True,
+                            ref=True
+                        ),
+                        argument.Argument(
+                            name="other",
+                            type=dtype,
+                            const=True,
+                            ref=True
+                        )
+                    ],
+                    op=f"""
+                        // Release the GIL to improve performance
+                        py::gil_scoped_release release;
+                        return (self {operation[1]} other).eval();
+                    """
                 )
-            ],
-            op="""
-                return (self - other).eval();
-            """
-        ),
+            )
 
-        # Multiplication
-        function.Function(
-            name="__mul__",
-            args=[
-                argument.Argument(
-                    name="self",
-                    type=generateCppArrayType(config),
-                    const=True,
-                    ref=True
-                ),
-                argument.Argument(
-                    name="other",
-                    type=generateCppArrayType(config),
-                    const=True,
-                    ref=True
+            methods.append(
+                function.Function(
+                    name=f"__r{operation[0]}__",
+                    args=[
+                        argument.Argument(
+                            name="self",
+                            type=generateCppArrayType(config),
+                            const=True,
+                            ref=True
+                        ),
+                        argument.Argument(
+                            name="other",
+                            type=dtype,
+                            const=True,
+                            ref=True
+                        )
+                    ],
+                    op=f"""
+                        return (other {operation[1]} self).eval();
+                    """
                 )
-            ],
-            op="""
-                return (self * other).eval();
-            """
-        ),
+            )
 
-        # Division
-        function.Function(
-            name="__div__",
-            args=[
-                argument.Argument(
-                    name="self",
-                    type=generateCppArrayType(config),
-                    const=True,
-                    ref=True
-                ),
-                argument.Argument(
-                    name="other",
-                    type=generateCppArrayType(config),
-                    const=True,
-                    ref=True
-                )
-            ],
-            op="""
-                return (self / other).eval();
-            """
-        ),
-
+    methods += [
         # String representation
         function.Function(
             name="__str__",
