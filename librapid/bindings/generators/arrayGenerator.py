@@ -52,18 +52,18 @@ def generateFunctionsForArray(config):
             ]
         ),
 
-        # # Move constructor
-        # function.Function(
-        #     name="__init__",
-        #     args=[
-        #         argument.Argument(
-        #             name="other",
-        #             type=generateCppArrayType(config),
-        #             move=True
-        #         )
-        #     ]
-        # )
-    ],
+        # Move constructor
+        function.Function(
+            name="__init__",
+            args=[
+                argument.Argument(
+                    name="other",
+                    type=generateCppArrayType(config),
+                    move=True
+                )
+            ]
+        )
+    ]
 
     # Static fromData (n dimensions)
     for n in range(1, 9):
@@ -89,6 +89,7 @@ def generateFunctionsForArray(config):
                 """
             )
         )
+
     methods += [
         # Shape
         function.Function(

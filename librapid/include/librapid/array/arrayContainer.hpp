@@ -779,10 +779,6 @@ namespace librapid {
 			auto ptr = LIBRAPID_ASSUME_ALIGNED(m_storage.begin());
 
 #if defined(LIBRAPID_NATIVE_ARCH)
-			LIBRAPID_ASSERT(
-			  reinterpret_cast<uintptr_t>(ptr) % typetraits::TypeInfo<Scalar>::packetWidth == 0,
-			  "ArrayContainer::packet called on unaligned storage");
-
 			return xsimd::load_aligned(ptr + index);
 #else
 			return xsimd::load_unaligned(ptr + index);
@@ -801,9 +797,6 @@ namespace librapid {
 			auto ptr = LIBRAPID_ASSUME_ALIGNED(m_storage.begin());
 
 #if defined(LIBRAPID_NATIVE_ARCH)
-			LIBRAPID_ASSERT(
-			  reinterpret_cast<uintptr_t>(ptr) % typetraits::TypeInfo<Scalar>::packetWidth == 0,
-			  "ArrayContainer::packet called on unaligned storage");
 			value.store_aligned(ptr + index);
 #else
 			value.store_unaligned(ptr + index);
