@@ -65,6 +65,9 @@ class Argument:
         if self.type is None:
             raise ValueError("Argument must have a type")
 
+        if self.move and self.ref:
+            raise ValueError("Argument cannot be both a move and a reference")
+
         self.isArgs = self.name == "*args"
         self.isKwargs = self.name == "**kwargs"
 
@@ -75,7 +78,7 @@ class Argument:
             return f"py::kwargs kwargs"
         else:
             isPrimitiveType = isPrimitive(self.type)
-            return f"{'const ' if self.const and not isPrimitiveType else ''}{self.type} {'&' if self.ref and not isPrimitiveType else ''}{"&&" if self.move and not self.ref else ""}{'*' if self.pointer else ''}{self.name}"
+            return f"{'const ' if self.const and not isPrimitiveType else ''}{self.type} {'&' if self.ref and not isPrimitiveType else ''}{'&&' if self.move else ''}{'*' if self.pointer else ''}{self.name}"
 
     def declaration(self):
         if self.default is None:
