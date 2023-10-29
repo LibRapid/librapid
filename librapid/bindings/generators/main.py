@@ -10,7 +10,7 @@ outputDir = "../python/generated"
 boilerplate = textwrap.dedent(f"""
             #pragma once
 
-            #ifndef LIBRAPID_DEBUG
+              #ifndef LIBRAPID_DEBUG
                 #define LIBRAPID_DEBUG
             #endif
 

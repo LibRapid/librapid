@@ -20,7 +20,10 @@
 #	include <arm64_neon.h>
 #endif
 
-#define REQUIRE_SCALAR(T) typename std::enable_if_t<std::is_scalar_v<T>, T> = 0
+#define REQUIRE_SCALAR(T)                                                                          \
+	typename std::enable_if_t<::librapid::typetraits::TypeInfo<T>::type ==                         \
+								::librapid::detail::LibRapidType::Scalar,                          \
+							  int> = 0
 
 namespace librapid {
 	namespace detail {

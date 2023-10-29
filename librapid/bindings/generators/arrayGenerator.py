@@ -67,14 +67,11 @@ def generateFunctionsForArray(config):
 
     # Static fromData (n dimensions)
     for n in range(1, 9):
-        cppType = ""
-        for j in range(n):
-            cppType += "std::vector<"
-        cppType += config['scalar'] + ">" * n
+        cppType = ("std::vector<" * n) + config['scalar'] + (">" * n)
 
         methods.append(
             function.Function(
-                name="fromData",
+                name="__init__",
                 args=[
                     argument.Argument(
                         name=f"array{n}D",
@@ -82,11 +79,7 @@ def generateFunctionsForArray(config):
                         const=True,
                         ref=True,
                     )
-                ],
-                static=True,
-                op=f"""
-                    return {generateCppArrayType(config)}::fromData(array{n}D);
-                """
+                ]
             )
         )
 

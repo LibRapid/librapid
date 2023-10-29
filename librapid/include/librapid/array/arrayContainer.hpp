@@ -98,21 +98,19 @@ namespace librapid {
 			/// Default constructor
 			ArrayContainer();
 
-			template<typename T>
-			LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::initializer_list<T> &data);
+			// template<typename T>
+			// LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::initializer_list<T> &data);
 
-			template<typename T>
-			explicit LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::vector<T> &data);
+			// template<typename T>
+			// explicit LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::vector<T> &data);
 
 			// clang-format off
 #define SINIT(SUB_TYPE) std::initializer_list<SUB_TYPE>
 #define SVEC(SUB_TYPE)	std::vector<SUB_TYPE>
 
-#define ARRAY_FROM_DATA_DEF(TYPE_INIT, TYPE_VEC)                                                   \
-	LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto fromData(const TYPE_INIT &data)          \
-	  -> ArrayContainer;                                                                           \
-	LIBRAPID_NODISCARD static LIBRAPID_ALWAYS_INLINE auto fromData(const TYPE_VEC &data)           \
-	  -> ArrayContainer
+#define ARRAY_FROM_DATA_DEF(TYPE_INIT, TYPE_VEC) \
+	LIBRAPID_ALWAYS_INLINE ArrayContainer(const TYPE_INIT & data); \
+	explicit LIBRAPID_ALWAYS_INLINE ArrayContainer(const TYPE_VEC &data) ;
 
 			ARRAY_FROM_DATA_DEF(SINIT(Scalar), SVEC(Scalar));
 			ARRAY_FROM_DATA_DEF(SINIT(SINIT(Scalar)), SVEC(SVEC(Scalar)));
@@ -358,20 +356,6 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType_, StorageType_>::ArrayContainer() :
 				m_shape(StorageType_::template defaultShape<ShapeType_>()), m_size(0) {}
-
-		template<typename ShapeType_, typename StorageType_>
-		template<typename T>
-		LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
-		  const std::initializer_list<T> &data) :
-				m_shape({data.size()}),
-				m_size(data.size()), m_storage(StorageType::fromData(data)) {}
-
-		template<typename ShapeType_, typename StorageType_>
-		template<typename T>
-		LIBRAPID_ALWAYS_INLINE
-		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const std::vector<T> &data) :
-				m_shape({data.size()}),
-				m_size(data.size()), m_storage(StorageType::fromData(data)) {}
 
 		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE
@@ -913,10 +897,9 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T, typename Char, size_t N, typename Ctx>
-		LIBRAPID_ALWAYS_INLINE void
-		ArrayContainer<ShapeType_, StorageType_>::str(const fmt::formatter<T, Char> &format,
-													  char bracket, char separator,
-													  const char (&formatString)[N], Ctx &ctx) const {
+		LIBRAPID_ALWAYS_INLINE void ArrayContainer<ShapeType_, StorageType_>::str(
+		  const fmt::formatter<T, Char> &format, char bracket, char separator,
+		  const char (&formatString)[N], Ctx &ctx) const {
 			createGeneralArrayView(*this).str(format, bracket, separator, formatString, ctx);
 		}
 	} // namespace array
