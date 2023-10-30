@@ -87,7 +87,6 @@ file(GLOB_RECURSE LIBRAPID_SOURCES
 if (${SKBUILD})
     message(STATUS "[ LIBRAPID ] Building for Python")
     set(module_name "_librapid")
-
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
     set(LIBRAPID_QUIET ON) # Disable warnings for a cleaner output.
 
@@ -163,6 +162,7 @@ if (${SKBUILD})
         ${PYTHON_SOURCES}
     )
 
+    target_compile_definitions(${module_name} PUBLIC LIBRAPID_PYTHON)
     install(TARGETS ${module_name} DESTINATION .)
 else()
     set(module_name "librapid")

@@ -180,8 +180,8 @@ namespace librapid {
 			/// \tparam Args The argument types of the function
 			/// \param function The function to assign
 			template<typename desc, typename Functor_, typename... Args>
-			LIBRAPID_ALWAYS_INLINE ArrayContainer(
-			  const detail::Function<desc, Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT;
+			LIBRAPID_ALWAYS_INLINE
+			ArrayContainer(const detail::Function<desc, Functor_, Args...> &function);
 
 			/// \brief Reference an existing array container
 			///
@@ -503,10 +503,9 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		template<typename desc, typename Functor_, typename... Args>
 		LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
-		  const detail::Function<desc, Functor_, Args...> &function) LIBRAPID_RELEASE_NOEXCEPT
-				: m_shape(function.shape()),
-				  m_size(function.size()),
-				  m_storage(m_shape.size()) {
+		  const detail::Function<desc, Functor_, Args...> &function) :
+				m_shape(function.shape()),
+				m_size(function.size()), m_storage(m_shape.size()) {
 			assign(function);
 		}
 
@@ -556,7 +555,8 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator=(const Scalar &value)
 		  -> ArrayContainer & {
-			LIBRAPID_ASSERT(m_shape.ndim() == 0, "Cannot assign a scalar to an array");
+			LIBRAPID_ASSERT_WITH_EXCEPTION(
+			  std::invalid_argument, m_shape.ndim() == 0, "Cannot assign a scalar to an array with {} dimensions", m_shape.ndim());
 			m_storage[0] = value;
 			return *this;
 		}
@@ -580,7 +580,8 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const {
-			LIBRAPID_ASSERT(
+			LIBRAPID_ASSERT_WITH_EXCEPTION(
+			  std::out_of_range,
 			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
@@ -627,7 +628,8 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) {
-			LIBRAPID_ASSERT(
+			LIBRAPID_ASSERT_WITH_EXCEPTION(
+			  std::out_of_range,
 			  index >= 0 && index < static_cast<int64_t>(m_shape[0]),
 			  "Index {} out of bounds in ArrayContainer::operator[] with leading dimension={}",
 			  index,
@@ -676,7 +678,8 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator()(Indices... indices) const
 		  -> DirectSubscriptType {
-			LIBRAPID_ASSERT(
+			LIBRAPID_ASSERT_WITH_EXCEPTION(
+			  std::invalid_argument,
 			  m_shape.ndim() == sizeof...(Indices),
 			  "ArrayContainer::operator() called with {} indices, but array has {} dimensions",
 			  sizeof...(Indices),
@@ -685,7 +688,8 @@ namespace librapid {
 			int dim		  = 0;
 			int64_t index = 0;
 			for (int64_t i : {indices...}) {
-				LIBRAPID_ASSERT(
+				LIBRAPID_ASSERT_WITH_EXCEPTION(
+				  std::out_of_range,
 				  i >= 0 && i < static_cast<int64_t>(m_shape[dim]),
 				  "Index {} out of bounds in ArrayContainer::operator() with dimension={}",
 				  i,
@@ -700,7 +704,8 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator()(Indices... indices)
 		  -> DirectRefSubscriptType {
-			LIBRAPID_ASSERT(
+			LIBRAPID_ASSERT_WITH_EXCEPTION(
+			  std::invalid_argument,
 			  m_shape.ndim() == sizeof...(Indices),
 			  "ArrayContainer::operator() called with {} indices, but array has {} dimensions",
 			  sizeof...(Indices),
@@ -709,11 +714,12 @@ namespace librapid {
 			int64_t index = 0;
 			int64_t count = 0;
 			for (int64_t i : {indices...}) {
-				LIBRAPID_ASSERT(
+				LIBRAPID_ASSERT_WITH_EXCEPTION(
+				  std::out_of_range,
 				  i >= 0 && i < static_cast<int64_t>(m_shape[count]),
 				  "Index {} out of bounds in ArrayContainer::operator() with dimension={}",
 				  i,
-				  m_shape[index]);
+				  m_shape[count]);
 				index = index * m_shape[count++] + i;
 			}
 			return m_storage[index];
@@ -722,8 +728,9 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::get() const
 		  -> Scalar {
-			LIBRAPID_ASSERT(m_shape.ndim() == 0,
-							"Can only cast a scalar ArrayView to a salar object");
+			LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
+										   m_shape.ndim() == 0,
+										   "Can only cast a scalar ArrayView to a salar object. Array has {}", m_shape);
 			return scalar(0);
 		}
 

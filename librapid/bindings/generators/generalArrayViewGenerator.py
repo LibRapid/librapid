@@ -11,11 +11,13 @@ arrayTypes = []
 
 for scalar in [("int32_t", "Int32"),
                ("int64_t", "Int64"),
+               ("uint32_t", "UInt32"),
+               ("uint64_t", "UInt64"),
                ("float", "Float"),
                ("double", "Double"),
                ("lrc::Complex<float>", "ComplexFloat"),
                ("lrc::Complex<double>", "ComplexDouble")]:
-    for backend in ["CPU"]: # ["CPU", "OpenCL", "CUDA"]:
+    for backend in ["CPU"]:  # ["CPU", "OpenCL", "CUDA"]:
         arrayTypes.append({
             "scalar": scalar[0],
             "backend": backend,
@@ -149,96 +151,84 @@ def generateFunctionsForGeneralArrayView(config):
                 self[index] = other;
                 return self;
             """
-        ),
+        )
+    ]
 
-        # Addition
-        function.Function(
-            name="__add__",
-            args=[
-                argument.Argument(
-                    name="self",
-                    type=generateCppArrayViewType(config),
-                    const=True,
-                    ref=True
-                ),
-                argument.Argument(
-                    name="other",
-                    type=generateCppArrayViewType(config),
-                    const=True,
-                    ref=True
+    for operation in [("add", "+"), ("sub", "-"), ("mul", "*"), ("div", "/")]:
+        for dtype in [generateCppArrayViewType(config), generateCppArrayType(config), config["scalar"]]:
+            methods.append(
+                function.Function(
+                    name=f"__i{operation[0]}__",
+                    args=[
+                        argument.Argument(
+                            name="self",
+                            type=generateCppArrayViewType(config),
+                            const=False,
+                            ref=True
+                        ),
+                        argument.Argument(
+                            name="other",
+                            type=dtype,
+                            const=True,
+                            ref=True
+                        )
+                    ],
+                    op=f"""
+                        self += other;
+                        return self;
+                    """
                 )
-            ],
-            op="""
-                return (self + other).eval();
-            """
-        ),
+            )
 
-        # Subtraction
-        function.Function(
-            name="__sub__",
-            args=[
-                argument.Argument(
-                    name="self",
-                    type=generateCppArrayViewType(config),
-                    const=True,
-                    ref=True
-                ),
-                argument.Argument(
-                    name="other",
-                    type=generateCppArrayViewType(config),
-                    const=True,
-                    ref=True
+            methods.append(
+                function.Function(
+                    name=f"__{operation[0]}__",
+                    args=[
+                        argument.Argument(
+                            name="self",
+                            type=generateCppArrayViewType(config),
+                            const=True,
+                            ref=True
+                        ),
+                        argument.Argument(
+                            name="other",
+                            type=dtype,
+                            const=True,
+                            ref=True
+                        )
+                    ],
+                    op=f"""
+                        // Release the GIL to improve performance
+                        py::gil_scoped_release release;
+                        return (self {operation[1]} other).eval();
+                    """
                 )
-            ],
-            op="""
-                return (self - other).eval();
-            """
-        ),
+            )
 
-        # Multiplication
-        function.Function(
-            name="__mul__",
-            args=[
-                argument.Argument(
-                    name="self",
-                    type=generateCppArrayViewType(config),
-                    const=True,
-                    ref=True
-                ),
-                argument.Argument(
-                    name="other",
-                    type=generateCppArrayViewType(config),
-                    const=True,
-                    ref=True
+            methods.append(
+                function.Function(
+                    name=f"__r{operation[0]}__",
+                    args=[
+                        argument.Argument(
+                            name="self",
+                            type=generateCppArrayViewType(config),
+                            const=True,
+                            ref=True
+                        ),
+                        argument.Argument(
+                            name="other",
+                            type=dtype,
+                            const=True,
+                            ref=True
+                        )
+                    ],
+                    op=f"""
+                        return (other {operation[1]} self).eval();
+                    """
                 )
-            ],
-            op="""
-                return (self * other).eval();
-            """
-        ),
+            )
 
-        # Addition
-        function.Function(
-            name="__div__",
-            args=[
-                argument.Argument(
-                    name="self",
-                    type=generateCppArrayViewType(config),
-                    const=True,
-                    ref=True
-                ),
-                argument.Argument(
-                    name="other",
-                    type=generateCppArrayViewType(config),
-                    const=True,
-                    ref=True
-                )
-            ],
-            op="""
-                return (self / other).eval();
-            """
-        ),
-
+    methods += [
         # String representation
         function.Function(
             name="__str__",
@@ -335,18 +325,8 @@ def writeGeneralArrayView(root, config):
     fileType = file.File(
         path=f"{root}/GeneralArrayView_{config['name']}.cpp"
     )
-
     fileType.modules.append(generateGeneralArrayViewModule(config))
-
     interfaceFunctions = fileType.write()
-    # Run clang-format if possible
-    try:
-        import subprocess
-
-        subprocess.run(["clang-format", "-i", fileType.path])
-    except Exception as e:
-        print("Unable to run clang-format:", e)
-
     return interfaceFunctions
 
 

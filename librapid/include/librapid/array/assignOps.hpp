@@ -43,7 +43,11 @@ namespace librapid {
 			// static_assert(
 			//   typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
 			//   "Function return type must be the same as the array container's scalar type");
-			LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
+			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+										   lhs.shape() == function.shape(),
+										   "Shapes must be equal. Expected {}, received {}",
+										   lhs.shape(),
+										   function.shape());
 
 			if constexpr (allowVectorisation) {
 				for (int64_t index = 0; index < vectorSize; index += packetWidth) {
@@ -100,7 +104,11 @@ namespace librapid {
 			static_assert(
 			  typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
 			  "Function return type must be the same as the array container's scalar type");
-			LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
+			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+										   lhs.shape() == function.shape(),
+										   "Shapes must be equal. Expected {}, received {}",
+										   lhs.shape(),
+										   function.shape());
 
 			if constexpr (allowVectorisation) {
 				for (int64_t index = 0; index < vectorSize; index += packetWidth) {
@@ -160,7 +168,11 @@ namespace librapid {
 			// static_assert(
 			//   typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
 			//   "Function return type must be the same as the array container's scalar type");
-			LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
+			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+										   lhs.shape() == function.shape(),
+										   "Shapes must be equal. Expected {}, received {}",
+										   lhs.shape(),
+										   function.shape());
 
 			if constexpr (allowVectorisation) {
 #pragma omp parallel for shared(vectorSize, lhs, function) default(none)                           \
@@ -220,7 +232,11 @@ namespace librapid {
 			static_assert(
 			  typetraits::IsSame<Scalar, typename std::decay_t<decltype(function)>::Scalar>,
 			  "Function return type must be the same as the array container's scalar type");
-			LIBRAPID_ASSERT(lhs.shape() == function.shape(), "Shapes must be equal");
+			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+										   lhs.shape() == function.shape(),
+										   "Shapes must be equal. Expected {}, received {}",
+										   lhs.shape(),
+										   function.shape());
 
 			if constexpr (allowVectorisation) {
 #pragma omp parallel for shared(vectorSize, lhs, function) default(none)                           \

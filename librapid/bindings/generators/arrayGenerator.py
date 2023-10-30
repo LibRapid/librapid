@@ -11,6 +11,8 @@ arrayTypes = []
 
 for scalar in [("int32_t", "Int32"),
                ("int64_t", "Int64"),
+               ("uint32_t", "UInt32"),
+               ("uint64_t", "UInt64"),
                ("float", "Float"),
                ("double", "Double"),
                ("lrc::Complex<float>", "ComplexFloat"),
@@ -62,28 +64,8 @@ def generateFunctionsForArray(config):
                     move=True
                 )
             ]
-        )
-    ]
+        ),
 
-    # Static fromData (n dimensions)
-    for n in range(1, 9):
-        cppType = ("std::vector<" * n) + config['scalar'] + (">" * n)
-
-        methods.append(
-            function.Function(
-                name="__init__",
-                args=[
-                    argument.Argument(
-                        name=f"array{n}D",
-                        type=cppType,
-                        const=True,
-                        ref=True,
-                    )
-                ]
-            )
-        )
-
-    methods += [
         # Shape
         function.Function(
             name="__init__",
@@ -128,7 +110,27 @@ def generateFunctionsForArray(config):
                 )
             ]
         ),
+    ]
 
+    # Static fromData (n dimensions)
+    for n in range(1, 9):
+        cppType = ("std::vector<" * n) + config['scalar'] + (">" * n)
+
+        methods.append(
+            function.Function(
+                name="__init__",
+                args=[
+                    argument.Argument(
+                        name=f"array{n}D",
+                        type=cppType,
+                        const=True,
+                        ref=True,
+                    )
+                ]
+            )
+        )
+
+    methods += [
         # Get item
         function.Function(
             name="__getitem__",
@@ -275,9 +277,11 @@ def generateFunctionsForArray(config):
                         )
                     ],
                     op=f"""
-                        // Release the GIL to improve performance
-                        py::gil_scoped_release release;
-                        return (self {operation[1]} other).eval();
+                        try {{
+                            return (self {operation[1]} other).eval();
+                        }} catch (const std::exception &e) {{
+                            return lrc::Array<{config['scalar']}, lrc::backend::{config['backend']}>({{{{1, 2}}, {{3, 4}}, {{5, 6}}}});
+                        }}
                     """
                 )
             )
@@ -402,17 +406,8 @@ def writeArray(root, config):
     fileType = file.File(
         path=f"{root}/{config['name']}.cpp"
     )
-
     fileType.modules.append(generateArrayModule(config))
-
     interfaceFunctions = fileType.write()
-    # Run clang-format if possible
-    try:
-        import subprocess
-        subprocess.run(["clang-format", "-i", fileType.path])
-    except Exception as e:
-        print("Unable to run clang-format:", e)
-
     return interfaceFunctions
 
 

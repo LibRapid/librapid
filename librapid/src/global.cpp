@@ -4,7 +4,7 @@
 
 namespace librapid {
     namespace global {
-        bool throwOnAssert              = false;
+        bool printOnAssert              = true;
         size_t multithreadThreshold     = 5000;
         size_t gemmMultithreadThreshold = 100;
         size_t gemvMultithreadThreshold = 100;
