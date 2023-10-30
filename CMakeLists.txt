@@ -118,29 +118,29 @@ if (${SKBUILD})
     # Enable BLAS
     if (NOT ${LIBRAPID_NO_BLAS})
         set(LIBRAPID_USE_BLAS ON)
-    endif()
+    endif ()
 
     # Get BLAS if the environment variable is set
     if ($ENV{LIBRAPID_GET_BLAS})
         set(LIBRAPID_GET_BLAS ON)
-    endif()
+    endif ()
 
     # Use fast math if the environment variable is set
     if ($ENV{LIBRAPID_FAST_MATH})
         set(LIBRAPID_FAST_MATH ON)
-    endif()
+    endif ()
 
     # Get FFTW if the environment variable is set
     if ($ENV{LIBRAPID_GET_FFTW})
         set(LIBRAPID_GET_FFTW ON)
-    endif()
+    endif ()
 
     # Use CUDA/OpenCL only when not inside GitHub Actions
     if (NOT $ENV{GITHUB_ACTIONS})
         set(LIBRAPID_USE_CUDA ON)
         set(LIBRAPID_USE_OPENCL ON)
         set(LIBRAPID_NATIVE_ARCH ON)
-    endif()
+    endif ()
 
     set(LIBRAPID_USE_OMP ON)
     set(LIBRAPID_OPTIMISE_SMALL_ARRAYS OFF)
@@ -151,24 +151,28 @@ if (${SKBUILD})
 
 
     file(GLOB_RECURSE PYTHON_SOURCES
-        "${CMAKE_CURRENT_SOURCE_DIR}/librapid/bindings/python/*.hpp" # Header files
-        "${CMAKE_CURRENT_SOURCE_DIR}/librapid/bindings/python/*.cpp" # Source files
+            "${CMAKE_CURRENT_SOURCE_DIR}/librapid/bindings/python/*.hpp" # Header files
+            "${CMAKE_CURRENT_SOURCE_DIR}/librapid/bindings/python/*.cpp" # Source files
     )
 
     pybind11_add_module(
-        ${module_name} MODULE
+            ${module_name} MODULE
 
-        ${LIBRAPID_SOURCES}
-        ${PYTHON_SOURCES}
+            ${LIBRAPID_SOURCES}
+            ${PYTHON_SOURCES}
     )
 
-    target_compile_definitions(${module_name} PUBLIC LIBRAPID_PYTHON)
+    target_compile_definitions(${module_name} PUBLIC
+            LIBRAPID_PYTHON
+            WIN32_LEAN_AND_MEAN
+            LIBRAPID_USE_PRECOMPILED_HEADER=ON
+    )
     install(TARGETS ${module_name} DESTINATION .)
-else()
+else ()
     set(module_name "librapid")
     add_library(${module_name} STATIC ${LIBRAPID_SOURCES}
             librapid/include/librapid/core/log.hpp)
-endif()
+endif ()
 
 # clang-format off
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_MAJOR=${LIBRAPID_MAJOR})
@@ -336,7 +340,7 @@ if (LIBRAPID_USE_OPENCL)
 
             # Define CL_HPP_TARGET_OPENCL_VERSION to the version of OpenCL being used
             message(STATUS "[ LIBRAPID ] OpenCL Version: ${OpenCL_VERSION_MAJOR}${OpenCL_VERSION_MINOR}0")
-            set(OpenCLVersion ${OpenCL_VERSION_MAJOR}${OpenCL_VERSION_MINOR}0)
+            set(OpenCLVersion ${OpenCL_VERSION_MAJOR} ${OpenCL_VERSION_MINOR}0)
             target_compile_definitions(${module_name} PUBLIC CL_HPP_TARGET_OPENCL_VERSION=${OpenCLVersion})
             target_compile_definitions(${module_name} PUBLIC CL_HPP_MINIMUM_OPENCL_VERSION=${OpenCLVersion})
 
