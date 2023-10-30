@@ -165,7 +165,6 @@ if (${SKBUILD})
     target_compile_definitions(${module_name} PUBLIC
             LIBRAPID_PYTHON
             WIN32_LEAN_AND_MEAN
-            LIBRAPID_USE_PRECOMPILED_HEADER=ON
     )
     install(TARGETS ${module_name} DESTINATION .)
 else ()

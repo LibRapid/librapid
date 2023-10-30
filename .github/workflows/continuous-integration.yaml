@@ -268,6 +268,11 @@ jobs:
             pretty: "LibRapid_Windows-Latest_MSVC_C++23"
 
     steps:
+      - name: Workflow Telemetry
+        uses: runforesight/workflow-telemetry-action@v1.8.7
+        with:
+          theme: "dark"
+
       - name: Checkout LibRapid
         uses: actions/checkout@v4
         with:
