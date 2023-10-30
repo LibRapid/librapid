@@ -25,9 +25,18 @@ boilerplate = textwrap.dedent(f"""
         """).strip()
 
 postBoilerplate = textwrap.dedent(f"""
+#if defined(LIBRAPID_HAS_OPENCL)
             module.def("configureOpenCL", [](bool verbose, bool ask) {{
                 lrc::configureOpenCL(verbose, ask);
             }}, py::arg("verbose") = false, py::arg("ask") = false);
+#else
+            module.def("configureOpenCL", [](bool verbose, bool ask) {{
+                throw std::runtime_error("OpenCL is not supported in this build "
+                                         "of LibRapid. Please ensure OpenCL is "
+                                         "installed on your system and reinstall "
+                                         "LibRapid from source.");
+            }}, py::arg("verbose") = false, py::arg("ask") = false);
+#endif
 
             module.def("hasOpenCL", []() {{ 
             #if defined(LIBRAPID_HAS_OPENCL)
