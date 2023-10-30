@@ -12,8 +12,8 @@
 															 __LINE__,                             \
 															 FUNCTION,                             \
 															 FILENAME,                             \
-															 STRINGIFY(condition) __VA_OPT__(, )   \
-															   __VA_ARGS__)
+															 STRINGIFY(condition),   \
+															 __VA_ARGS__)
 
 #	define LIBRAPID_ASSERT_WITH_EXCEPTION(raiseType, condition, message, ...)                     \
 		librapid::assert::librapidAssert<raiseType>(condition,                                     \
