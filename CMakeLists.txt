@@ -84,6 +84,23 @@ file(GLOB_RECURSE LIBRAPID_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas/*.cxx" # Source files
 )
 
+# Extract system information
+set(IS_LINUX OFF)
+set(IS_MACOS OFF)
+set(IS_WINDOWS OFF)
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(IS_LINUX ON)
+endif ()
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(IS_MACOS ON)
+endif ()
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(IS_WINDOWS ON)
+
+    # Disable shared libraries, since they just cause problems on Windows
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
+endif ()
+
 if (${SKBUILD})
     message(STATUS "[ LIBRAPID ] Building for Python")
     set(module_name "_librapid")
@@ -164,6 +181,10 @@ if (${SKBUILD})
             ${PYTHON_SOURCES}
     )
 
+    if (MSVC)
+        target_compile_options(${module_name} PUBLIC /Zm200)
+    endif ()
+
     target_compile_definitions(${module_name} PUBLIC
             LIBRAPID_PYTHON
             WIN32_LEAN_AND_MEAN
@@ -187,23 +208,6 @@ target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE="${LIBRAPID_SOU
 # Precompiled Headers
 if (LIBRAPID_USE_PRECOMPILED_HEADER)
     target_precompile_headers(${module_name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include/librapid/core/librapidPch.hpp")
-endif ()
-
-# Extract system information
-set(IS_LINUX OFF)
-set(IS_MACOS OFF)
-set(IS_WINDOWS OFF)
-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(IS_LINUX ON)
-endif ()
-if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(IS_MACOS ON)
-endif ()
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(IS_WINDOWS ON)
-
-    # Disable shared libraries, since they just cause problems on Windows
-    set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
 endif ()
 
 if (MINGW)
