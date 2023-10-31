@@ -329,6 +329,8 @@ jobs:
           CC: /usr/local/opt/llvm/bin/clang
           CXX: /usr/local/opt/llvm/bin/clang++
           CIBW_ENVIRONMENT: CC=/usr/local/opt/llvm/bin/clang CXX=/usr/local/opt/llvm/bin/clang++
+          CMAKE_C_COMPILER: /usr/local/opt/llvm/bin/clang
+          CMAKE_CXX_COMPILER: /usr/local/opt/llvm/bin/clang++
 
       - name: Build Wheels
         if: runner.os == 'Windows'
@@ -350,6 +352,8 @@ jobs:
           CC: ${RUNNER_TOOL_CACHE}/llvm/bin/clang
           CXX: ${RUNNER_TOOL_CACHE}/llvm/bin/clang++
           CIBW_ENVIRONMENT: CC=${RUNNER_TOOL_CACHE}/llvm/bin/clang CXX=${RUNNER_TOOL_CACHE}/llvm/bin/clang++
+          CMAKE_C_COMPILER: ${RUNNER_TOOL_CACHE}/llvm/bin/clang
+          CMAKE_CXX_COMPILER: ${RUNNER_TOOL_CACHE}/llvm/bin/clang++
 
       - name: Build Wheels
         if: runner.os == 'Linux'
