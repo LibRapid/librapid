@@ -309,7 +309,7 @@ jobs:
           rm -f '/usr/local/bin/2to3*'
           brew install llvm libomp
 
-      -- name: Install Clang
+      - name: Install Clang
         if: matrix.os == 'Windows'
         uses: KyleMayes/install-llvm-action@v1
         with:
