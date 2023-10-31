@@ -339,7 +339,7 @@ if (LIBRAPID_USE_OPENCL)
 
             # Define CL_HPP_TARGET_OPENCL_VERSION to the version of OpenCL being used
             message(STATUS "[ LIBRAPID ] OpenCL Version: ${OpenCL_VERSION_MAJOR}${OpenCL_VERSION_MINOR}0")
-            set(OpenCLVersion ${OpenCL_VERSION_MAJOR}${OpenCL_VERSION_MINOR}0)
+            set(OpenCLVersion ${OpenCL_VERSION_MAJOR} ${OpenCL_VERSION_MINOR}0)
             target_compile_definitions(${module_name} PUBLIC CL_HPP_TARGET_OPENCL_VERSION=${OpenCLVersion})
             target_compile_definitions(${module_name} PUBLIC CL_HPP_MINIMUM_OPENCL_VERSION=${OpenCLVersion})
 

@@ -98,13 +98,19 @@ namespace librapid {
 			/// Default constructor
 			ArrayContainer();
 
+			// template<typename T>
+			// LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::initializer_list<T> &data);
+
+			// template<typename T>
+			// explicit LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::vector<T> &data);
+
 			// clang-format off
 #define SINIT(SUB_TYPE) std::initializer_list<SUB_TYPE>
 #define SVEC(SUB_TYPE)	std::vector<SUB_TYPE>
 
 #define ARRAY_FROM_DATA_DEF(TYPE_INIT, TYPE_VEC) \
-	ArrayContainer(const TYPE_INIT & data); \
-	explicit ArrayContainer(const TYPE_VEC &data) ;
+	LIBRAPID_ALWAYS_INLINE ArrayContainer(const TYPE_INIT & data); \
+	explicit LIBRAPID_ALWAYS_INLINE ArrayContainer(const TYPE_VEC &data) ;
 
 			ARRAY_FROM_DATA_DEF(SINIT(Scalar), SVEC(Scalar));
 			ARRAY_FROM_DATA_DEF(SINIT(SINIT(Scalar)), SVEC(SVEC(Scalar)));
@@ -129,9 +135,9 @@ namespace librapid {
 			/// Create an array container from a shape and a scalar value. The scalar value
 			/// represents the value the memory is initialized with. \param shape The shape of the
 			/// array container \param value The value to initialize the memory with
-		 	ArrayContainer(const Shape &shape, const Scalar &value);
-			ArrayContainer(const MatrixShape &shape, const Scalar &value);
-			ArrayContainer(const VectorShape &shape, const Scalar &value);
+			LIBRAPID_ALWAYS_INLINE ArrayContainer(const Shape &shape, const Scalar &value);
+			LIBRAPID_ALWAYS_INLINE ArrayContainer(const MatrixShape &shape, const Scalar &value);
+			LIBRAPID_ALWAYS_INLINE ArrayContainer(const VectorShape &shape, const Scalar &value);
 
 			/// Allows for a fixed-size array to be constructed with a fill value
 			/// \param value The value to fill the array with
@@ -148,17 +154,18 @@ namespace librapid {
 			/// constructed array container. Please use ``ArrayContainer::copy()`` if you want to
 			/// copy the data.
 			/// \param other The array container to reference
-			ArrayContainer(const ArrayContainer &other) = default;
+			LIBRAPID_ALWAYS_INLINE ArrayContainer(const ArrayContainer &other) = default;
 
 			/// Construct an array container from a temporary array container.
 			/// \param other The array container to move.
-			ArrayContainer(ArrayContainer &&other) noexcept = default;
+			LIBRAPID_ALWAYS_INLINE ArrayContainer(ArrayContainer &&other) noexcept = default;
 
 			template<typename TransposeType>
-			ArrayContainer(const Transpose<TransposeType> &trans);
+			LIBRAPID_ALWAYS_INLINE ArrayContainer(const Transpose<TransposeType> &trans);
 
 			template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 					 typename StorageTypeB, typename Alpha, typename Beta>
+			LIBRAPID_ALWAYS_INLINE
 			ArrayContainer(const linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB,
 													   StorageTypeB, Alpha, Beta> &multiply);
 
@@ -205,16 +212,16 @@ namespace librapid {
 			/// \param function The function to assign
 			/// \return A reference to this array container.
 			template<typename desc, typename Functor_, typename... Args>
-			ArrayContainer &
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &
 			operator=(const detail::Function<desc, Functor_, Args...> &function);
 
 			template<typename TransposeType>
-			ArrayContainer &
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &
 			operator=(const Transpose<TransposeType> &transpose);
 
 			template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 					 typename StorageTypeB, typename Alpha, typename Beta>
-			ArrayContainer &
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &
 			operator=(const linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB,
 												  StorageTypeB, Alpha, Beta> &multiply);
 
@@ -224,22 +231,22 @@ namespace librapid {
 			/// \param value The value to set in the Array object
 			/// \return The comma initializer object
 			template<typename T>
-			detail::CommaInitializer<ArrayContainer>
+			LIBRAPID_ALWAYS_INLINE detail::CommaInitializer<ArrayContainer>
 			operator<<(const T &value);
 
 			// template<typename ScalarTo = Scalar, typename BackendTo = Backend>
 			// LIBRAPID_NODISCARD auto cast() const;
 
-			LIBRAPID_NODISCARD ArrayContainer copy() const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ArrayContainer copy() const;
 
 			/// Access a sub-array of this ArrayContainer instance. The sub-array will reference
 			/// the same memory as this ArrayContainer instance.
 			/// \param index The index of the sub-array
 			/// \return A reference to the sub-array (ArrayView)
 			/// \see ArrayView
-			LIBRAPID_NODISCARD auto operator[](int64_t index) const;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index) const;
 
-			LIBRAPID_NODISCARD auto operator[](int64_t index);
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](int64_t index);
 
 			template<typename... Indices>
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE DirectSubscriptType
@@ -260,15 +267,15 @@ namespace librapid {
 
 			/// Return the shape of the array container. This is an immutable reference.
 			/// \return The shape of the array container.
-			LIBRAPID_NODISCARD const ShapeType &shape() const noexcept;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ShapeType &shape() const noexcept;
 
 			/// Return the StorageType object of the ArrayContainer
 			/// \return The StorageType object of the ArrayContainer
-			LIBRAPID_NODISCARD const StorageType &storage() const noexcept;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const StorageType &storage() const noexcept;
 
 			/// Return the StorageType object of the ArrayContainer
 			/// \return The StorageType object of the ArrayContainer
-			LIBRAPID_NODISCARD StorageType &storage() noexcept;
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE StorageType &storage() noexcept;
 
 			/// Return a Packet object from the array's storage at a specific index.
 			/// \param index The index to get the packet from
@@ -347,10 +354,11 @@ namespace librapid {
 		};
 
 		template<typename ShapeType_, typename StorageType_>
-		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer() :
+		LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType_, StorageType_>::ArrayContainer() :
 				m_shape(StorageType_::template defaultShape<ShapeType_>()), m_size(0) {}
 
 		template<typename ShapeType_, typename StorageType_>
+		LIBRAPID_ALWAYS_INLINE
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const Shape &shape) :
 				m_shape(shape),
 				m_size(shape.size()), m_storage(m_size) {
@@ -361,6 +369,7 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
+		LIBRAPID_ALWAYS_INLINE
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const MatrixShape &shape) :
 				m_shape(shape),
 				m_size(shape.size()), m_storage(m_size) {
@@ -371,6 +380,7 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
+		LIBRAPID_ALWAYS_INLINE
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const VectorShape &shape) :
 				m_shape(shape),
 				m_size(shape.size()), m_storage(m_size) {
@@ -381,6 +391,7 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
+		LIBRAPID_ALWAYS_INLINE
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const Shape &shape,
 																 const Scalar &value) :
 				m_shape(shape),
@@ -399,6 +410,7 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
+		LIBRAPID_ALWAYS_INLINE
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const MatrixShape &shape,
 																 const Scalar &value) :
 				m_shape(shape),
@@ -417,7 +429,7 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		
+		LIBRAPID_ALWAYS_INLINE
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const VectorShape &shape,
 																 const Scalar &value) :
 				m_shape(shape),
@@ -436,7 +448,7 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		
+		LIBRAPID_ALWAYS_INLINE
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(const Scalar &value) :
 				m_shape(detail::shapeFromFixedStorage(m_storage)),
 				m_size(m_shape.size()), m_storage(value) {
@@ -447,14 +459,14 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		
+		LIBRAPID_ALWAYS_INLINE
 		ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(ShapeType_ &&shape) :
 				m_shape(std::forward<ShapeType_>(shape)),
 				m_size(m_shape.size()), m_storage(m_size) {}
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename TransposeType>
-		 ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
+		LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
 		  const array::Transpose<TransposeType> &trans) {
 			*this = trans;
 		}
@@ -462,7 +474,7 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
-		 ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
+		LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
 		  const linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
 									  Beta> &multiply) {
 			*this = multiply;
@@ -470,7 +482,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename desc, typename Functor_, typename... Args>
-		 auto ArrayContainer<ShapeType_, StorageType_>::assign(
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::assign(
 		  const detail::Function<desc, Functor_, Args...> &function) -> ArrayContainer & {
 			using FunctionType = detail::Function<desc, Functor_, Args...>;
 			m_storage.resize(function.size(), 0);
@@ -490,7 +502,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename desc, typename Functor_, typename... Args>
-		 ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
+		LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType_, StorageType_>::ArrayContainer(
 		  const detail::Function<desc, Functor_, Args...> &function) :
 				m_shape(function.shape()),
 				m_size(function.size()), m_storage(m_shape.size()) {
@@ -499,14 +511,14 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename desc, typename Functor_, typename... Args>
-		 auto ArrayContainer<ShapeType_, StorageType_>::operator=(
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::operator=(
 		  const detail::Function<desc, Functor_, Args...> &function) -> ArrayContainer & {
 			return assign(function);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename TransposeType>
-		 auto ArrayContainer<ShapeType_, StorageType_>::operator=(
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::operator=(
 		  const Transpose<TransposeType> &transpose) -> ArrayContainer & {
 			m_shape = transpose.shape();
 			m_size	= transpose.size();
@@ -518,7 +530,7 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
-		 auto ArrayContainer<ShapeType_, StorageType_>::operator=(
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::operator=(
 		  const linalg::ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha,
 									  Beta> &arrayMultiply) -> ArrayContainer & {
 			m_shape = arrayMultiply.shape();
@@ -530,7 +542,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename ArrayViewType, typename ArrayViewScalar>
-		 auto ArrayContainer<ShapeType_, StorageType_>::operator=(
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::operator=(
 		  const array::GeneralArrayView<ArrayViewType, ArrayViewScalar> &view) -> ArrayContainer & {
 			m_shape = view.shape();
 			m_size	= view.size();
@@ -540,7 +552,7 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator=(const Scalar &value)
 		  -> ArrayContainer & {
 			LIBRAPID_ASSERT_WITH_EXCEPTION(
@@ -551,14 +563,14 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator<<(const T &value)
 		  -> detail::CommaInitializer<ArrayContainer> {
 			return detail::CommaInitializer<ArrayContainer>(*this, static_cast<Scalar>(value));
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto ArrayContainer<ShapeType_, StorageType_>::copy() const
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::copy() const
 		  -> ArrayContainer {
 			ArrayContainer res(m_shape);
 			res.m_storage = m_storage.copy();
@@ -566,7 +578,7 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) const {
 			LIBRAPID_ASSERT_WITH_EXCEPTION(
 			  std::out_of_range,
@@ -614,7 +626,7 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator[](int64_t index) {
 			LIBRAPID_ASSERT_WITH_EXCEPTION(
 			  std::out_of_range,
@@ -663,7 +675,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename... Indices>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator()(Indices... indices) const
 		  -> DirectSubscriptType {
 			LIBRAPID_ASSERT_WITH_EXCEPTION(
@@ -689,7 +701,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename... Indices>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator()(Indices... indices)
 		  -> DirectRefSubscriptType {
 			LIBRAPID_ASSERT_WITH_EXCEPTION(
@@ -714,7 +726,7 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto ArrayContainer<ShapeType_, StorageType_>::get() const
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::get() const
 		  -> Scalar {
 			LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
 										   m_shape.ndim() == 0,
@@ -723,37 +735,37 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto ArrayContainer<ShapeType_, StorageType_>::ndim() const noexcept
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::ndim() const noexcept
 		  -> typename ShapeType_::SizeType {
 			return m_shape.ndim();
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto ArrayContainer<ShapeType_, StorageType_>::size() const noexcept
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::size() const noexcept
 		  -> size_t {
 			return m_size;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto ArrayContainer<ShapeType_, StorageType_>::shape() const noexcept
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::shape() const noexcept
 		  -> const ShapeType & {
 			return m_shape;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::storage() const noexcept -> const StorageType & {
 			return m_storage;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto ArrayContainer<ShapeType_, StorageType_>::storage() noexcept
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::storage() noexcept
 		  -> StorageType & {
 			return m_storage;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::packet(size_t index) const -> Packet {
 			auto ptr = LIBRAPID_ASSUME_ALIGNED(m_storage.begin());
 
@@ -765,13 +777,13 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::scalar(size_t index) const -> Scalar {
 			return m_storage[index];
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 void
+		LIBRAPID_ALWAYS_INLINE void
 		ArrayContainer<ShapeType_, StorageType_>::writePacket(size_t index, const Packet &value) {
 			auto ptr = LIBRAPID_ASSUME_ALIGNED(m_storage.begin());
 
@@ -783,14 +795,14 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 void
+		LIBRAPID_ALWAYS_INLINE void
 		ArrayContainer<ShapeType_, StorageType_>::write(size_t index, const Scalar &value) {
 			m_storage[index] = value;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator+=(const T &value) -> ArrayContainer & {
 			*this = *this + value;
 			return *this;
@@ -798,7 +810,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator-=(const T &value) -> ArrayContainer & {
 			*this = *this - value;
 			return *this;
@@ -806,7 +818,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator*=(const T &value) -> ArrayContainer & {
 			*this = *this * value;
 			return *this;
@@ -814,7 +826,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator/=(const T &value) -> ArrayContainer & {
 			*this = *this / value;
 			return *this;
@@ -822,7 +834,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator%=(const T &value) -> ArrayContainer & {
 			*this = *this % value;
 			return *this;
@@ -830,7 +842,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator&=(const T &value) -> ArrayContainer & {
 			*this = *this & value;
 			return *this;
@@ -838,7 +850,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator|=(const T &value) -> ArrayContainer & {
 			*this = *this | value;
 			return *this;
@@ -846,7 +858,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator^=(const T &value) -> ArrayContainer & {
 			*this = *this ^ value;
 			return *this;
@@ -854,7 +866,7 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator<<=(const T &value) -> ArrayContainer & {
 			*this = *this << value;
 			return *this;
@@ -862,37 +874,37 @@ namespace librapid {
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T>
-		 auto
+		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator>>=(const T &value) -> ArrayContainer & {
 			*this = *this >> value;
 			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto ArrayContainer<ShapeType_, StorageType_>::begin() const noexcept
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::begin() const noexcept
 		  -> auto {
 			return detail::ArrayIterator(createGeneralArrayView(*this), 0);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto ArrayContainer<ShapeType_, StorageType_>::end() const noexcept
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::end() const noexcept
 		  -> auto {
 			return detail::ArrayIterator(createGeneralArrayView(*this), m_shape[0]);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto ArrayContainer<ShapeType_, StorageType_>::begin() -> auto {
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::begin() -> auto {
 			return detail::ArrayIterator(createGeneralArrayView(*this), 0);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
-		 auto ArrayContainer<ShapeType_, StorageType_>::end() -> auto {
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::end() -> auto {
 			return detail::ArrayIterator(createGeneralArrayView(*this), m_shape[0]);
 		}
 
 		template<typename ShapeType_, typename StorageType_>
 		template<typename T, typename Char, size_t N, typename Ctx>
-		void ArrayContainer<ShapeType_, StorageType_>::str(
+		LIBRAPID_ALWAYS_INLINE void ArrayContainer<ShapeType_, StorageType_>::str(
 		  const fmt::formatter<T, Char> &format, char bracket, char separator,
 		  const char (&formatString)[N], Ctx &ctx) const {
 			createGeneralArrayView(*this).str(format, bracket, separator, formatString, ctx);
