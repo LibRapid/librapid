@@ -310,7 +310,7 @@ jobs:
           brew install llvm libomp
 
       - name: Install Clang
-        if: matrix.os == 'Windows'
+        if: matrix.os == 'windows-latest'
         uses: KyleMayes/install-llvm-action@v1
         with:
           version: '15.0'
@@ -318,7 +318,7 @@ jobs:
           env: on
 
       - name: Build Wheels
-        if: runner.os == 'macOS'
+        if: runner.os == 'macos-latest'
         env:
           CIBW_BUILD: ${{ matrix.pythonType }}${{ matrix.pythonVersion }}-${{ matrix.platformID }}
           CIBW_ARCHS: all
@@ -340,7 +340,7 @@ jobs:
           python -m cibuildwheel --output-dir wheelhouse
 
       - name: Build Wheels
-        if: runner.os == 'Windows'
+        if: runner.os == 'windows-latest'
         env:
           CIBW_BUILD: ${{ matrix.pythonType }}${{ matrix.pythonVersion }}-${{ matrix.platformID }}
           CIBW_ARCHS: all
@@ -362,7 +362,7 @@ jobs:
           python -m cibuildwheel --output-dir wheelhouse
 
       - name: Build Wheels
-        if: runner.os == 'Linux'
+        if: runner.os == 'ubuntu-latest'
         env:
           CIBW_BUILD: ${{ matrix.pythonType }}${{ matrix.pythonVersion }}-${{ matrix.platformID }}
           CIBW_ARCHS: all

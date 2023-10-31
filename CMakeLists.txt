@@ -181,10 +181,6 @@ if (${SKBUILD})
             ${PYTHON_SOURCES}
     )
 
-    if (MSVC AND $ENV{GITHUB_ACTIONS})
-        target_compile_options(${module_name} PUBLIC /Zm200)
-    endif ()
-
     target_compile_definitions(${module_name} PUBLIC
             LIBRAPID_PYTHON
             WIN32_LEAN_AND_MEAN
