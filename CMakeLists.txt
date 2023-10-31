@@ -140,6 +140,8 @@ if (${SKBUILD})
         set(LIBRAPID_USE_CUDA ON)
         set(LIBRAPID_USE_OPENCL ON)
         set(LIBRAPID_NATIVE_ARCH ON)
+    else()
+        set(LIBRAPID_NO_ALWAYS_INLINE ON) # Reduce compile memory
     endif ()
 
     set(LIBRAPID_USE_OMP ON)
@@ -339,7 +341,7 @@ if (LIBRAPID_USE_OPENCL)
 
             # Define CL_HPP_TARGET_OPENCL_VERSION to the version of OpenCL being used
             message(STATUS "[ LIBRAPID ] OpenCL Version: ${OpenCL_VERSION_MAJOR}${OpenCL_VERSION_MINOR}0")
-            set(OpenCLVersion ${OpenCL_VERSION_MAJOR} ${OpenCL_VERSION_MINOR}0)
+            set(OpenCLVersion ${OpenCL_VERSION_MAJOR}${OpenCL_VERSION_MINOR}0)
             target_compile_definitions(${module_name} PUBLIC CL_HPP_TARGET_OPENCL_VERSION=${OpenCLVersion})
             target_compile_definitions(${module_name} PUBLIC CL_HPP_MINIMUM_OPENCL_VERSION=${OpenCLVersion})
 

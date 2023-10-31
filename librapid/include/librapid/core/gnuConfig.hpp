@@ -2,7 +2,12 @@
 #define LIBRAPID_CORE_GNU_CONFIG_HPP
 
 #define LIBRAPID_INLINE        inline
-#define LIBRAPID_ALWAYS_INLINE inline __attribute__((always_inline))
+
+#if defined(LIBRAPID_NO_ALWAYS_INLINE)
+#	define LIBRAPID_ALWAYS_INLINE inline
+#else
+#	define LIBRAPID_ALWAYS_INLINE inline __attribute__((always_inline))
+#endif
 
 #if defined(LIBRAPID_ENABLE_ASSERT)
 
