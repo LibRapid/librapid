@@ -3,7 +3,7 @@
 
 namespace librapid::array {
 	template<typename ShapeType, typename StorageType>
-	LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType, StorageType>::ArrayContainer(
+	ArrayContainer<ShapeType, StorageType>::ArrayContainer(
 	  const std::initializer_list<Scalar> &data) :
 			m_shape({data.size()}),
 			m_size(data.size()), m_storage(StorageType::fromData(data)) {
@@ -12,7 +12,7 @@ namespace librapid::array {
 	}
 
 	template<typename ShapeType, typename StorageType>
-	LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType, StorageType>::ArrayContainer::ArrayContainer(
+	ArrayContainer<ShapeType, StorageType>::ArrayContainer::ArrayContainer(
 	  const std::vector<Scalar> &data) :
 			m_shape({data.size()}),
 			m_size(data.size()), m_storage(StorageType::fromData(data)) {
@@ -21,7 +21,7 @@ namespace librapid::array {
 	}
 
 	template<typename ShapeType, typename StorageType>
-	LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType, StorageType>::ArrayContainer(
+	ArrayContainer<ShapeType, StorageType>::ArrayContainer(
 	  const std::initializer_list<std::initializer_list<Scalar>> &data) {
 		LIBRAPID_ASSERT_WITH_EXCEPTION(
 		  std::invalid_argument, data.size() > 0, "Cannot create a zero-sized array");
@@ -67,7 +67,7 @@ namespace librapid::array {
 	}
 
 	template<typename ShapeType, typename StorageType>
-	LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType, StorageType>::ArrayContainer(
+	ArrayContainer<ShapeType, StorageType>::ArrayContainer(
 	  const std::vector<std::vector<Scalar>> &data) {
 		LIBRAPID_ASSERT_WITH_EXCEPTION(
 		  std::invalid_argument, data.size() > 0, "Cannot create a zero-sized array");
@@ -112,7 +112,7 @@ namespace librapid::array {
 
 #define HIGHER_DIMENSIONAL_FROM_DATA(TYPE)                                                         \
 	template<typename ShapeType, typename StorageType>                                             \
-	LIBRAPID_ALWAYS_INLINE ArrayContainer<ShapeType, StorageType>::ArrayContainer(                 \
+	ArrayContainer<ShapeType, StorageType>::ArrayContainer(                 \
 	  const TYPE &data) {                                                                          \
 		LIBRAPID_ASSERT_WITH_EXCEPTION(                                                            \
 		  std::invalid_argument, data.size() > 0, "Cannot create a zero-sized array");             \
