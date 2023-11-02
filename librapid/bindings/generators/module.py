@@ -27,8 +27,9 @@ class Module:
         tmpName = self.name.replace(".", "_")
         return f"genInterface_{tmpName}({moduleName})"
 
-    def genInterface(self):
+    def genInterface(self, root="./"):
         ret = f"{self.genInterfaceDefinition()} {{\n"
+        includes = []
 
         if self.parent is None:
             moduleName = "module"
@@ -40,7 +41,9 @@ class Module:
             ret += f"{moduleName}.doc() = \"{self.docstring}\";\n\n"
 
         for class_ in self.classes:
-            ret += class_.genInterface(moduleName)
+            classInterface, classIncludes = class_.genInterface(moduleName, root=root, includeGuard=self.includeGuard)
+            includes += classIncludes
+            ret += classInterface
             ret += "\n"
 
         for func in self.functions:
@@ -50,15 +53,15 @@ class Module:
         ret += "}\n"
 
         if self.includeGuard is None:
-            return ret
+            return ret, includes
         else:
-            return textwrap.dedent(f"""
+            guardedInterface = textwrap.dedent(f"""
             #if {self.includeGuard}
             {ret}
             #else
             {self.genInterfaceDefinition()} {{}}
             #endif
-            """)
+            """), includes
 
 
 if __name__ == "__main__":

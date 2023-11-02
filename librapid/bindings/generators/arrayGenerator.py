@@ -396,6 +396,7 @@ def generateArrayModule(config):
         name=f"librapid.{config['name']}",
         includeGuard=includeGuard
     )
+
     arrayModule.addClass(arrayClass)
     arrayModule.functions.extend(functions)
 
