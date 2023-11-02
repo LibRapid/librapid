@@ -21,6 +21,7 @@ class Argument:
         - default
         - const
         - ref
+        # - move
         - pointer
         - noConvert
         - returnPolicy
@@ -32,10 +33,11 @@ class Argument:
         self.name = kwargs.get("name", None)
         self.type = kwargs.get("type", None)
         self.default = kwargs.get("default", None)
-        self.const = kwargs.get("const", True)
-        self.ref = kwargs.get("ref", True)
-        self.pointer = kwargs.get("pointer", False)
-        self.noConvert = kwargs.get("noConvert", False)
+        self.const = kwargs.get("const", None)
+        self.ref = kwargs.get("ref", None)
+        # self.move = kwargs.get("move", None)
+        self.pointer = kwargs.get("pointer", None)
+        self.noConvert = kwargs.get("noConvert", None)
 
         for i in range(len(args)):
             if i == 0 and self.name is None:
@@ -48,6 +50,8 @@ class Argument:
                 self.const = args[i]
             elif i == 4 and self.ref is None:
                 self.ref = args[i]
+            # elif i == 5 and self.move is None:
+            #     self.move = args[i]
             elif i == 5 and self.pointer is None:
                 self.pointer = args[i]
             elif i == 6 and self.noConvert is None:
@@ -61,6 +65,24 @@ class Argument:
         if self.type is None:
             raise ValueError("Argument must have a type")
 
+        if self.const is None:
+            self.const = False
+
+        if self.ref is None:
+            self.ref = False
+
+        # if self.move is None:
+        #     self.move = False
+
+        if self.pointer is None:
+            self.pointer = False
+
+        if self.noConvert is None:
+            self.noConvert = False
+
+        # if self.move and self.ref:
+        #     raise ValueError("Argument cannot be both a move and a reference")
+
         self.isArgs = self.name == "*args"
         self.isKwargs = self.name == "**kwargs"
 
@@ -71,6 +93,7 @@ class Argument:
             return f"py::kwargs kwargs"
         else:
             isPrimitiveType = isPrimitive(self.type)
+            # return f"{'const ' if self.const and not isPrimitiveType and not self.move else ''}{self.type} {'&' if self.ref and not isPrimitiveType else ''}{'&&' if self.move else ''}{'*' if self.pointer else ''}{self.name}"
             return f"{'const ' if self.const and not isPrimitiveType else ''}{self.type} {'&' if self.ref and not isPrimitiveType else ''}{'*' if self.pointer else ''}{self.name}"
 
     def declaration(self):

@@ -14,31 +14,11 @@ build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
 
-cmake.build-type = "Release"
+cmake.build-type = "MinSizeRel"
+cmake.args = ["-DCMAKE_BUILD_TYPE=MinSizeRel"]
 
 ninja.make-fallback = true
-
-sdist.exclude = [
-    "CMakeLists.txt",
-    "cmake",
-    "CMakeFiles",
-    "build",
-    "dist",
-    "*.h",
-    "*.c",
-    "*.hpp",
-    "*.cpp",
-    "*.tcc",
-    "*.cxx",
-    "*.cu",
-    "*.cuh",
-    "*.cl",
-    "*.so",
-    "*.dylib",
-    "*.dll",
-    "*.doc",
-    "*.tgz",
-]
+sdist.cmake = true
 
 [project]
 name = "librapid"

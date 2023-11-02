@@ -166,9 +166,9 @@ namespace librapid {
 			template<typename StorageType>
 			void applyTo(array::ArrayContainer<ShapeType, StorageType> &out) const;
 
-			template<typename T, typename Char, typename Ctx>
+			template<typename T, typename Char, size_t N, typename Ctx>
 			void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
-					 Ctx &ctx) const;
+					 const char (&formatString)[N], Ctx &ctx) const;
 
 		private:
 			bool m_transA;	 // Transpose state of A
@@ -475,10 +475,11 @@ namespace librapid {
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
-		template<typename T, typename Char, typename Ctx>
+		template<typename T, typename Char, size_t N, typename Ctx>
 		void ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::str(
-		  const fmt::formatter<T, Char> &format, char bracket, char separator, Ctx &ctx) const {
-			eval().str(format, bracket, separator, ctx);
+		  const fmt::formatter<T, Char> &format, char bracket, char separator,
+		  const char (&formatString)[N], Ctx &ctx) const {
+			eval().str(format, bracket, separator, formatString, ctx);
 		}
 	} // namespace linalg
 

@@ -13,7 +13,8 @@
   <img src="https://raw.githubusercontent.com/LibRapid/librapid_extras/master/branding/LibRapid_light.png">
 </picture>
 
-![C++ Version](https://img.shields.io/badge/C++-20/23-purple.svg?style=flat&logo=c%2B%2B) ![License](https://img.shields.io/badge/License-MIT-orange.svg?style=flat) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC)
+![C++ Version](https://img.shields.io/badge/C++-20/23-purple.svg?style=flat&logo=c%2B%2B) ![License](https://img.shields.io/badge/License-MIT-orange.svg?style=flat) [![Discord](https://img.shields.io/discord/848914274105557043?color=blue&label=Discord&logo=Discord)](https://discord.gg/cGxTFTgCAC)![PyPI - Downloads](https://img.shields.io/pypi/dm/librapid?label=PyPI%20Downloads&link=https%3A%2F%2Fpypi.org%2Fproject%2Flibrapid%2F)
+
 
 ---
 

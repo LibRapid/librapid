@@ -1,4 +1,5 @@
 #include <librapid/librapid.hpp>
+#include <fstream> // std::ifstream
 
 namespace librapid {
 #if defined(LIBRAPID_HAS_OPENCL)

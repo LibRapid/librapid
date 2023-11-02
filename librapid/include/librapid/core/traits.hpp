@@ -116,14 +116,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<typename T>
@@ -200,14 +200,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<>
@@ -232,14 +232,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<>
@@ -264,14 +264,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<>
@@ -296,14 +296,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<>
@@ -328,14 +328,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<>
@@ -360,14 +360,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<>
@@ -392,14 +392,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<>
@@ -424,14 +424,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<>
@@ -456,14 +456,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<>
@@ -488,14 +488,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<>
@@ -520,14 +520,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<typename T, typename Abi>
@@ -552,14 +552,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = true;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 #if defined(LIBRAPID_HAS_CUDA)
@@ -773,14 +773,14 @@ namespace librapid {
 			static constexpr bool canAlign	= true;
 			static constexpr bool canMemcpy = false;
 
-			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
-			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
-			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
-			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
-			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
-			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
-			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
-			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			//			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			//			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			//			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			//			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			//			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			//			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			//			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
 		};
 
 		template<>
@@ -804,6 +804,19 @@ namespace librapid {
 			using Backend				 = backend::CUDA;
 		};
 #endif
+
+		template<typename T>
+		struct NumericInfo {
+			using Scalar = typename TypeInfo<T>::Scalar;
+			LIMIT_IMPL_CONSTEXPR(min) { return NUM_LIM(min); }
+			LIMIT_IMPL_CONSTEXPR(max) { return NUM_LIM(max); }
+			LIMIT_IMPL_CONSTEXPR(epsilon) { return NUM_LIM(epsilon); }
+			LIMIT_IMPL_CONSTEXPR(roundError) { return NUM_LIM(round_error); }
+			LIMIT_IMPL_CONSTEXPR(denormMin) { return NUM_LIM(denorm_min); }
+			LIMIT_IMPL_CONSTEXPR(infinity) { return NUM_LIM(infinity); }
+			LIMIT_IMPL_CONSTEXPR(quietNaN) { return NUM_LIM(quiet_NaN); }
+			LIMIT_IMPL_CONSTEXPR(signalingNaN) { return NUM_LIM(signaling_NaN); }
+		};
 
 		template<typename T>
 		using ScalarReturnType = typename TypeInfo<T>::Scalar;

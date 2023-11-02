@@ -4,5 +4,6 @@
 #include "cacheLineSize.hpp"
 #include "time.hpp"
 #include "memUtils.hpp"
+#include "consoleSize.hpp"
 
 #endif // LIBRAPID_UTILS

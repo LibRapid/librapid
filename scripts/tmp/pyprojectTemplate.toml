@@ -15,7 +15,6 @@ build-backend = "scikit_build_core.build"
 [tool.scikit-build]
 
 cmake.build-type = "Release"
-
 ninja.make-fallback = true
 
 sdist.exclude = [

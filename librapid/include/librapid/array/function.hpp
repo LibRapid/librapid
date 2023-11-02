@@ -227,8 +227,8 @@ namespace librapid {
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator begin() const;
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator end() const;
 
-			template<typename T, typename Char, typename Ctx>
-			void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
+			template<typename T, typename Char, size_t N, typename Ctx>
+			void str(const fmt::formatter<T, Char> &format, char bracket, char separator, const char (&formatString)[N],
 					 Ctx &ctx) const;
 
 		private:
@@ -336,11 +336,11 @@ namespace librapid {
 		}
 
 		template<typename desc, typename Functor, typename... Args>
-		template<typename T, typename Char, typename Ctx>
+		template<typename T, typename Char, size_t N, typename Ctx>
 		LIBRAPID_ALWAYS_INLINE void
 		Function<desc, Functor, Args...>::str(const fmt::formatter<T, Char> &format, char bracket,
-											  char separator, Ctx &ctx) const {
-			createGeneralArrayView(*this).str(format, bracket, separator, ctx);
+											  char separator, const char (&formatString)[N], Ctx &ctx) const {
+			createGeneralArrayView(*this).str(format, bracket, separator, formatString, ctx);
 		}
 	} // namespace detail
 } // namespace librapid

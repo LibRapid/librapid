@@ -268,6 +268,11 @@ jobs:
             pretty: "LibRapid_Windows-Latest_MSVC_C++23"
 
     steps:
+      - name: Workflow Telemetry
+        uses: runforesight/workflow-telemetry-action@v1.8.7
+        with:
+          theme: "dark"
+
       - name: Checkout LibRapid
         uses: actions/checkout@v4
         with:
@@ -693,7 +698,7 @@ jobs:
     name: Trigger Documentation Build
     needs: [ compile, build-docs, quodona, code-coverage ]
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'push'
     steps:
       - name: Checkout LibRapid
         uses: actions/checkout@v4

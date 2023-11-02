@@ -21,7 +21,7 @@ for scalar in [("int32_t", "Int32"),
         arrayTypes.append({
             "scalar": scalar[0],
             "backend": backend,
-            "name": f"Array{scalar[1]}{backend}"
+            "name": f"GeneralArrayView{scalar[1]}{backend}"
         })
 
 
@@ -33,112 +33,33 @@ def generateCppArrayViewType(config):
     return f"lrc::array::GeneralArrayView<{generateCppArrayType(config)} &, lrc::Shape>"
 
 
-def generateFunctionsForArray(config):
+def generateFunctionsForGeneralArrayView(config):
     methods = [
-        # Default constructor
+        # Create a new GeneralArrayView
         function.Function(
-            name="__init__",
-            args=[]
-        ),
-
-        # Copy constructor
-        function.Function(
-            name="__init__",
+            name="createFromArray",
             args=[
                 argument.Argument(
-                    name="other",
+                    name="array",
                     type=generateCppArrayType(config),
-                    const=True,
+                    const=False,
                     ref=True
                 )
-            ]
+            ],
+            op=f"""
+                return lrc::createGeneralArrayView(array);
+            """,
+            static=True
         ),
 
-        # Move constructor
-        function.Function(
-            name="__init__",
-            args=[
-                argument.Argument(
-                    name="other",
-                    type=generateCppArrayType(config),
-                    move=True
-                )
-            ]
-        ),
-
-        # Shape
-        function.Function(
-            name="__init__",
-            args=[
-                argument.Argument(
-                    name="shape",
-                    type="lrc::Shape",
-                    const=True,
-                    ref=True
-                )
-            ]
-        ),
-
-        # Shape and fill
-        function.Function(
-            name="__init__",
-            args=[
-                argument.Argument(
-                    name="shape",
-                    type="lrc::Shape",
-                    const=True,
-                    ref=True
-                ),
-                argument.Argument(
-                    name="val",
-                    type=config['scalar'],
-                    const=True,
-                    ref=True
-                )
-            ]
-        ),
-
-        # Copy constructor
-        function.Function(
-            name="__init__",
-            args=[
-                argument.Argument(
-                    name="other",
-                    type=generateCppArrayType(config),
-                    const=True,
-                    ref=True
-                )
-            ]
-        ),
-    ]
-
-    # Static fromData (n dimensions)
-    for n in range(1, 9):
-        cppType = ("std::vector<" * n) + config['scalar'] + (">" * n)
-
-        methods.append(
-            function.Function(
-                name="__init__",
-                args=[
-                    argument.Argument(
-                        name=f"array{n}D",
-                        type=cppType,
-                        const=True,
-                        ref=True,
-                    )
-                ]
-            )
-        )
-
-    methods += [
         # Get item
         function.Function(
             name="__getitem__",
             args=[
                 argument.Argument(
                     name="self",
-                    type=generateCppArrayType(config),
-                    const=False,
+                    type=generateCppArrayViewType(config),
+                    const=True,
                     ref=True
                 ),
                 argument.Argument(
@@ -157,7 +78,7 @@ def generateFunctionsForArray(config):
             args=[
                 argument.Argument(
                     name="self",
-                    type=generateCppArrayType(config),
+                    type=generateCppArrayViewType(config),
                     const=False,
                     ref=True
                 ),
@@ -184,7 +105,7 @@ def generateFunctionsForArray(config):
             args=[
                 argument.Argument(
                     name="self",
-                    type=generateCppArrayType(config),
+                    type=generateCppArrayViewType(config),
                     const=False,
                     ref=True
                 ),
@@ -211,7 +132,7 @@ def generateFunctionsForArray(config):
             args=[
                 argument.Argument(
                     name="self",
-                    type=generateCppArrayType(config),
+                    type=generateCppArrayViewType(config),
                     const=False,
                     ref=True
                 ),
@@ -234,14 +155,14 @@ def generateFunctionsForArray(config):
     ]
 
     for operation in [("add", "+"), ("sub", "-"), ("mul", "*"), ("div", "/")]:
-        for dtype in [generateCppArrayType(config), generateCppArrayViewType(config), config["scalar"]]:
+        for dtype in [generateCppArrayViewType(config), generateCppArrayType(config), config["scalar"]]:
             methods.append(
                 function.Function(
                     name=f"__i{operation[0]}__",
                     args=[
                         argument.Argument(
                             name="self",
-                            type=generateCppArrayType(config),
+                            type=generateCppArrayViewType(config),
                             const=False,
                             ref=True
                         ),
@@ -265,7 +186,7 @@ def generateFunctionsForArray(config):
                     args=[
                         argument.Argument(
                             name="self",
-                            type=generateCppArrayType(config),
+                            type=generateCppArrayViewType(config),
                             const=True,
                             ref=True
                         ),
@@ -277,6 +198,8 @@ def generateFunctionsForArray(config):
                         )
                     ],
                     op=f"""
+                        // Release the GIL to improve performance
+                        py::gil_scoped_release release;
                         return (self {operation[1]} other).eval();
                     """
                 )
@@ -288,7 +211,7 @@ def generateFunctionsForArray(config):
                     args=[
                         argument.Argument(
                             name="self",
-                            type=generateCppArrayType(config),
+                            type=generateCppArrayViewType(config),
                             const=True,
                             ref=True
                         ),
@@ -312,7 +235,7 @@ def generateFunctionsForArray(config):
             args=[
                 argument.Argument(
                     name="self",
-                    type=generateCppArrayType(config),
+                    type=generateCppArrayViewType(config),
                     const=True,
                     ref=True
                 )
@@ -328,7 +251,7 @@ def generateFunctionsForArray(config):
             args=[
                 argument.Argument(
                     name="self",
-                    type=generateCppArrayType(config),
+                    type=generateCppArrayViewType(config),
                     const=True,
                     ref=True
                 )
@@ -339,10 +262,10 @@ def generateFunctionsForArray(config):
                 for (const auto &c : thisStr) {{
                     padded += c;
                     if (c == '\\n') {{
-                        padded += std::string(16, ' ');
+                        padded += std::string(27, ' ');
                     }}
                 }}
-                return fmt::format("<librapid.Array {{}} dtype={config['scalar']} backend={config['backend']}>", padded);
+                return fmt::format("<librapid.GeneralArrayView {{}} dtype={config['scalar']} backend={config['backend']}>", padded);
             """
         ),
 
@@ -352,7 +275,7 @@ def generateFunctionsForArray(config):
             args=[
                 argument.Argument(
                     name="self",
-                    type=generateCppArrayType(config),
+                    type=generateCppArrayViewType(config),
                     const=True,
                     ref=True
                 ),
@@ -373,14 +296,14 @@ def generateFunctionsForArray(config):
     return methods, []
 
 
-def generateArrayModule(config):
-    arrayClass = class_.Class(
+def generateGeneralArrayViewModule(config):
+    generalArrayViewClass = class_.Class(
         name=config["name"],
-        type=generateCppArrayType(config)
+        type=generateCppArrayViewType(config)
     )
 
-    methods, functions = generateFunctionsForArray(config)
-    arrayClass.functions.extend(methods)
+    methods, functions = generateFunctionsForGeneralArrayView(config)
+    generalArrayViewClass.functions.extend(methods)
 
     includeGuard = None
     if config["backend"] == "CUDA":
@@ -388,22 +311,21 @@ def generateArrayModule(config):
     elif config["backend"] == "OpenCL":
         includeGuard = "defined(LIBRAPID_HAS_OPENCL)"
 
-    arrayModule = module.Module(
-        name=f"librapid.{config['name']}",
+    generalArrayViewModule = module.Module(
+        name=f"librapid.GeneralArrayView.{config['name']}",
         includeGuard=includeGuard
     )
+    generalArrayViewModule.addClass(generalArrayViewClass)
+    generalArrayViewModule.functions.extend(functions)
 
-    arrayModule.addClass(arrayClass)
-    arrayModule.functions.extend(functions)
-
-    return arrayModule
+    return generalArrayViewModule
 
 
-def writeArray(root, config):
+def writeGeneralArrayView(root, config):
     fileType = file.File(
-        path=f"{root}/{config['name']}.cpp"
+        path=f"{root}/GeneralArrayView_{config['name']}.cpp"
     )
-    fileType.modules.append(generateArrayModule(config))
+    fileType.modules.append(generateGeneralArrayViewModule(config))
     interfaceFunctions = fileType.write()
     return interfaceFunctions
 
@@ -411,5 +333,5 @@ def writeArray(root, config):
 def write(root):
     interfaces = []
     for config in arrayTypes:
-        interfaces.extend(writeArray(root, config))
+        interfaces.extend(writeGeneralArrayView(root, config))
     return interfaces
