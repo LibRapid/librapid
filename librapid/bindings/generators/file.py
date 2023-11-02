@@ -12,20 +12,28 @@ class File:
 
     def genInterface(self):
         interfaceFunctions = []
+        includes = []
         ret = ""
+
+        root = self.path[:self.path.rfind("/")]
+
         for module in self.modules:
-            ret += module.genInterface()
+            moduleInterface, moduleIncludes = module.genInterface(root=root)
+            ret += moduleInterface
             ret += "\n"
 
             interfaceFunctions.append((module.genInterfaceDefinition, module.genInterfaceCall))
+            includes += moduleIncludes
 
-        return ret, interfaceFunctions
+        return ret, interfaceFunctions, includes
 
     def write(self, path=None):
         interfaceFunctions = []
         with open(path if path is not None else self.path, "w") as f:
             f.write("#include \"librapidPython.hpp\"\n\n")
-            interface, interfaceFunctionsTmp = self.genInterface()
+            interface, interfaceFunctionsTmp, includes = self.genInterface()
+            for include in includes:
+                f.write(f"#include \"{include.strip('../python/generated/')}.hpp\"\n")
             f.write(interface.strip())
             interfaceFunctions.extend(interfaceFunctionsTmp)
 

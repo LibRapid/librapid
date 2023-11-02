@@ -183,6 +183,7 @@ if (${SKBUILD})
 
     target_compile_definitions(${module_name} PUBLIC
             LIBRAPID_PYTHON
+            LIBRAPID_NO_ALWAYS_INLINE
             WIN32_LEAN_AND_MEAN
     )
     install(TARGETS ${module_name} DESTINATION .)
