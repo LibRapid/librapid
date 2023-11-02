@@ -1,8 +1,5 @@
 from argument import Argument
 import function
-import os
-import textwrap
-import boilerplate
 
 
 class Class:
@@ -27,68 +24,21 @@ class Class:
 
         return ret
 
-    def genInterface(self, parent="module", root="./", includeGuard=None):
-        mainInterface = f"py::class_<{self.type}> {self.name}Class({parent}, \"{self.name}\");\n"
-        includes = []
-
-        # Ensure directory exists
-        if not os.path.exists(f"{root}/{self.name}"):
-            os.makedirs(f"{root}/{self.name}")
-
-        # Ensure function names are unique
-        functionCount = 0
-
+    def genInterface(self, parent="module"):
+        ret = f"py::class_<{self.type}>({parent}, \"{self.name}\")\n"
         for func in self.functions:
-            functionName = f"librapidPython_{self.name}_{func.name}_{functionCount}"
-            fileName = f"{func.name}_{functionCount}"
-            filePath = f"{root}/{self.name}/{fileName}"
+            ret += func.gen(self, False)
 
-            # Write definition
-            with open(f"{filePath}.hpp", "w") as f:
-                f.write(textwrap.dedent(f"""
-                    {boilerplate.boilerplate()}
-                    
-                    void {functionName}(py::class_<{self.type}>& module);
-                """))
-                includes.append(f"{filePath}.hpp")
+            if func is not self.functions[-1]:
+                ret += "\n"
 
-            # Write implementation
-            with open(f"{filePath}.cpp", "w") as f:
-                f.write(f"#include \"{fileName}.hpp\"\n")
-
-                if includeGuard is not None:
-                    f.write(f"#if {includeGuard}\n")
-
-                f.write(textwrap.dedent(f"""
-                    void {functionName}(py::class_<{self.type}>& {self.name}) {{
-                        {func.gen(self, True)};
-                    }}
-                """))
-
-                if includeGuard is not None:
-                    f.write(f"#else\n")
-                    f.write(textwrap.dedent(f"""
-                        void {functionName}(py::class_<{self.type}>& module) {{
-                            return;
-                        }}
-                    """))
-                    f.write(f"#endif\n")
-
-            # Add function call to interface
-            mainInterface += f"{functionName}({self.name}Class);\n"
-
-            functionCount += 1
-
-            # ret += func.gen(self, False)
-            #
-            # if func is not self.functions[-1]:
-            #     ret += "\n"
+        ret += ";\n"
 
         if len(self.implicitConversions) > 0:
-            mainInterface += "\n"
-            mainInterface += self.genImplicitConversions()
+            ret += "\n"
+            ret += self.genImplicitConversions()
 
-        return mainInterface, includes
+        return ret
 
     def __str__(self):
         return self.name
@@ -159,6 +109,4 @@ if __name__ == "__main__":
 
     vector.addImplicitConversion(vector)
 
-    mainInterface, includes = vector.genInterface(root="../python/generated", includeGuard="defined(LIBRAPID_HAS_CUDA)")
-    print(mainInterface)
-    print(includes)
+    print(vector.genInterface())

@@ -4,9 +4,25 @@ import textwrap
 import shapeGenerator
 import arrayGenerator
 import generalArrayViewGenerator
-import boilerplate
 
 outputDir = "../python/generated"
+
+boilerplate = textwrap.dedent(f"""
+            #pragma once
+
+            #ifndef LIBRAPID_DEBUG
+                #define LIBRAPID_DEBUG
+            #endif
+            
+            #include <pybind11/pybind11.h>
+            #include <pybind11/stl.h>
+            #include <pybind11/functional.h>
+
+            #include <librapid/librapid.hpp>
+            
+            namespace py  = pybind11;
+            namespace lrc = librapid;
+        """).strip()
 
 postBoilerplate = textwrap.dedent(f"""
 #if defined(LIBRAPID_HAS_OPENCL)
@@ -68,7 +84,7 @@ def main():
     interfaceFunctions += generalArrayViewGenerator.write(outputDir)
 
     with open(f"{outputDir}/librapidPython.hpp", "w") as f:
-        f.write(boilerplate.boilerplate())
+        f.write(boilerplate)
         f.write("\n\n")
         for interfaceDef, _ in interfaceFunctions:
             f.write(f"{interfaceDef()};\n")
@@ -87,31 +103,13 @@ def main():
         f.write("}\n")
 
     # Apply clang-format to the generated files
-    # import subprocess
-    # for file in os.listdir("../python/generated"):
-    #     if file.endswith(".hpp") or file.endswith(".cpp"):
-    #         try:
-    #             subprocess.run(["clang-format", "-i", "-style=llvm", f"librapid/bindings/python/generated/{file}"], cwd="../../../")
-    #         except Exception as e:
-    #             print("Unable to run clang-format:", e)
-
-    # Apply clang-format to the generated files (recursive)
     import subprocess
-    prevChars = 0
-    for root, dirs, files in os.walk("../python/generated"):
-        for file in files:
-
-            print(" " * prevChars, end='\r')
-            text = f"Formatting {root}/{file}"
-            print(text, end='\r')
-            prevChars = len(text)
-
-
-            if file.endswith(".hpp") or file.endswith(".cpp"):
-                try:
-                    subprocess.run(["clang-format", "-i", "-style=llvm", f"{root}/{file}"], cwd="./")
-                except Exception as e:
-                    print(f"Unable to run clang-format on {root}/{file}:", e)
+    for file in os.listdir("../python/generated"):
+        if file.endswith(".hpp") or file.endswith(".cpp"):
+            try:
+                subprocess.run(["clang-format", "-i", "-style=llvm", f"librapid/bindings/python/generated/{file}"], cwd="../../../")
+            except Exception as e:
+                print("Unable to run clang-format:", e)
 
 
 if __name__ == "__main__":
