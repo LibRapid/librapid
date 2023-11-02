@@ -9,28 +9,16 @@
  */
 
 // Standard Library
-#include <algorithm>
 #include <array>
-#include <atomic>
-#include <bitset>
 #include <cfloat>
 #include <chrono>
 #include <cmath>
 #include <compare>
-#include <complex>
-#include <cstddef>
 #include <cstdint>
-#include <cstdlib>
-#include <cfloat>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <iterator>
 #include <limits>
 #include <map>
 #include <memory>
 #include <random>
-#include <utility>
 
 #if defined(LIBRAPID_HAS_OMP)
 #    include <omp.h>
@@ -48,15 +36,7 @@
 // fmtlib
 #include <fmt/core.h>
 #include <fmt/format.h>
-#include <fmt/ranges.h>
-#include <fmt/chrono.h>
-#include <fmt/std.h>
-#include <fmt/compile.h>
 #include <fmt/color.h>
-#include <fmt/os.h>
-#include <fmt/ostream.h>
-#include <fmt/printf.h>
-#include <fmt/xchar.h>
 
 #include <xsimd/xsimd.hpp>
 

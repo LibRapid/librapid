@@ -227,8 +227,8 @@ namespace librapid {
 				// 0.5 gets truncated to zero
 				static inline T val =
 				  (std::is_integral_v<T>)
-					? (::librapid::sqrt(typetraits::TypeInfo<T>::max()) / T(2))
-					: (T(0.5) * ::librapid::sqrt(typetraits::TypeInfo<T>::max()));
+					? (::librapid::sqrt(typetraits::NumericInfo<T>::max()) / T(2))
+					: (T(0.5) * ::librapid::sqrt(typetraits::NumericInfo<T>::max()));
 			};
 
 			template<>
@@ -245,8 +245,8 @@ namespace librapid {
 			struct HypotLegTinyHelper {
 				// If <T> is an integer type, divide by two rather than multiplying by 0.5, as
 				// 0.5 gets truncated to zero
-				static inline T val = ::librapid::sqrt(T(2) * typetraits::TypeInfo<T>::min() /
-													   typetraits::TypeInfo<T>::epsilon());
+				static inline T val = ::librapid::sqrt(T(2) * typetraits::NumericInfo<T>::min() /
+													   typetraits::NumericInfo<T>::epsilon());
 			};
 
 			template<>
@@ -298,12 +298,12 @@ namespace librapid {
 				// Naive formula
 				if (x <= T(-0.5) || T(2) <= x) {
 					// To avoid overflow
-					if (x == typetraits::TypeInfo<T>::max()) return ::librapid::log(x);
+					if (x == typetraits::NumericInfo<T>::max()) return ::librapid::log(x);
 					return ::librapid::log(T(1) + x);
 				}
 
 				const T absX = ::librapid::abs(x);
-				if (absX < typetraits::TypeInfo<T>::epsilon()) {
+				if (absX < typetraits::NumericInfo<T>::epsilon()) {
 					if (x == T(0)) return x;
 					return x - T(0.5) * x * x; // Honour rounding
 				}
@@ -744,7 +744,7 @@ namespace librapid {
 			T otherImag = static_cast<T>(other.imag());
 
 			if (::librapid::isNaN(otherReal) || ::librapid::isNaN(otherImag)) { // Set result to NaN
-				m_val[RE] = typetraits::TypeInfo<T>::quietNaN();
+				m_val[RE] = typetraits::NumericInfo<T>::quietNaN();
 				m_val[IM] = m_val[RE];
 			} else if ((otherImag < 0 ? T(-otherImag)
 									  : T(+otherImag)) < // |other.imag()| < |other.real()|
@@ -753,7 +753,7 @@ namespace librapid {
 				T wd = otherReal + wr * otherImag;
 
 				if (::librapid::isNaN(wd) || wd == 0) { // NaN result
-					m_val[RE] = typetraits::TypeInfo<T>::quietNaN();
+					m_val[RE] = typetraits::NumericInfo<T>::quietNaN();
 					m_val[IM] = m_val[RE];
 				} else { // Valid result
 					T tmp	  = (m_val[RE] + m_val[IM] * wr) / wd;
@@ -761,14 +761,14 @@ namespace librapid {
 					m_val[RE] = tmp;
 				}
 			} else if (otherImag == 0) { // Set NaN
-				m_val[RE] = typetraits::TypeInfo<T>::quietNaN();
+				m_val[RE] = typetraits::NumericInfo<T>::quietNaN();
 				m_val[IM] = m_val[RE];
 			} else { // 0 < |other.real()| <= |other.imag()|
 				T wr = otherReal / otherImag;
 				T wd = otherImag + wr * otherReal;
 
 				if (::librapid::isNaN(wd) || wd == 0) { // NaN result
-					m_val[RE] = typetraits::TypeInfo<T>::quietNaN();
+					m_val[RE] = typetraits::NumericInfo<T>::quietNaN();
 					m_val[IM] = m_val[RE];
 				} else {
 					T tmp	  = (m_val[RE] * wr + m_val[IM]) / wd;
@@ -1147,7 +1147,7 @@ namespace librapid {
 	/// \return Complex arc cosine of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> acos(const Complex<T> &other) {
-		const T arcBig = T(0.25) * ::librapid::sqrt(typetraits::TypeInfo<T>::max());
+		const T arcBig = T(0.25) * ::librapid::sqrt(typetraits::NumericInfo<T>::max());
 		const T pi	   = []() {
 #if defined(LIBRAPID_USE_MULTIPREC)
 			if constexpr (std::is_same_v<T, mpfr>)
@@ -1164,7 +1164,7 @@ namespace librapid {
 		T ux, vx;
 
 		if (::librapid::isNaN(re) || ::librapid::isNaN(im)) { // At least one NaN
-			ux = typetraits::TypeInfo<T>::quietNaN();
+			ux = typetraits::NumericInfo<T>::quietNaN();
 			vx = ux;
 		} else if (::librapid::isInf(re)) { // +/- Inf
 			if (::librapid::isInf(im)) {
@@ -1177,7 +1177,7 @@ namespace librapid {
 			} else {
 				ux = 0; // (+Inf, finite)
 			}
-			vx = -::librapid::copySign(typetraits::TypeInfo<T>::infinity(), im);
+			vx = -::librapid::copySign(typetraits::NumericInfo<T>::infinity(), im);
 		} else if (::librapid::isInf(im)) { // finite, Inf)
 			ux = T(0.5) * pi;				// (finite, +/-Inf)
 			vx = -im;
@@ -1231,7 +1231,7 @@ namespace librapid {
 	/// \return Complex area hyperbolic cosine of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> acosh(const Complex<T> &other) {
-		const T arcBig = T(0.25) * ::librapid::sqrt(typetraits::TypeInfo<T>::max());
+		const T arcBig = T(0.25) * ::librapid::sqrt(typetraits::NumericInfo<T>::max());
 		const T pi	   = []() {
 #if defined(LIBRAPID_USE_MULTIPREC)
 			if constexpr (std::is_same_v<T, mpfr>)
@@ -1248,10 +1248,10 @@ namespace librapid {
 		T ux, vx;
 
 		if (::librapid::isNaN(re) || ::librapid::isNaN(im)) { // At least one NaN
-			ux = typetraits::TypeInfo<T>::quietNaN();
+			ux = typetraits::NumericInfo<T>::quietNaN();
 			vx = ux;
 		} else if (::librapid::isInf(re)) { // (+/-Inf, not NaN)
-			ux = typetraits::TypeInfo<T>::infinity();
+			ux = typetraits::NumericInfo<T>::infinity();
 			if (::librapid::isInf(im)) {
 				if (re < 0)
 					vx = T(0.75) * pi; // (-Inf, +/-Inf)
@@ -1307,7 +1307,7 @@ namespace librapid {
 	/// \return Complex arc hyperbolic sine of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> asinh(const Complex<T> &other) {
-		const T arcBig = T(0.25) * ::librapid::sqrt(typetraits::TypeInfo<T>::max());
+		const T arcBig = T(0.25) * ::librapid::sqrt(typetraits::NumericInfo<T>::max());
 		const T pi	   = []() {
 #if defined(LIBRAPID_USE_MULTIPREC)
 			if constexpr (std::is_same_v<T, mpfr>)
@@ -1324,7 +1324,7 @@ namespace librapid {
 		T ux, vx;
 
 		if (::librapid::isNaN(re) || ::librapid::isNaN(im)) { // At least one NaN/Inf
-			ux = typetraits::TypeInfo<T>::quietNaN();
+			ux = typetraits::NumericInfo<T>::quietNaN();
 			vx = ux;
 		} else if (::librapid::isInf(re)) { // (+/-Inf, not NaN)
 			if (::librapid::isInf(im)) {	// (+/-Inf, +/-Inf)
@@ -1335,7 +1335,7 @@ namespace librapid {
 				vx = ::librapid::copySign(T(0), im);
 			}
 		} else if (::librapid::isInf(im)) {
-			ux = ::librapid::copySign(typetraits::TypeInfo<T>::infinity(), re);
+			ux = ::librapid::copySign(typetraits::NumericInfo<T>::infinity(), re);
 			vx = ::librapid::copySign(T(0.5) * pi, im);
 		} else { // (finite, finite)
 			const Complex<T> wx = sqrt(Complex<T>(1 - im, re));
@@ -1401,7 +1401,7 @@ namespace librapid {
 	/// \return Complex arc hyperbolic tangent of the input complex number
 	template<typename T>
 	LIBRAPID_NODISCARD Complex<T> atanh(const Complex<T> &other) {
-		const T arcBig = T(0.25) * ::librapid::sqrt(typetraits::TypeInfo<T>::max());
+		const T arcBig = T(0.25) * ::librapid::sqrt(typetraits::NumericInfo<T>::max());
 		const T piBy2  = []() {
 #if defined(LIBRAPID_USE_MULTIPREC)
 			if constexpr (std::is_same_v<T, mpfr>)
@@ -1418,7 +1418,7 @@ namespace librapid {
 		T ux, vx;
 
 		if (::librapid::isNaN(re) || ::librapid::isNaN(im)) { // At least one NaN
-			ux = typetraits::TypeInfo<T>::quietNaN();
+			ux = typetraits::NumericInfo<T>::quietNaN();
 			vx = ux;
 		} else if (::librapid::isInf(re)) { // (+/-Inf, not NaN)
 			ux = ::librapid::copySign(T(0), re);
@@ -1443,7 +1443,7 @@ namespace librapid {
 				ux = T(0.25) * detail::algorithm::logP1(4 * re / (reFrom1 * reFrom1 + imEps2));
 				vx = T(0.5) * ::librapid::atan2(2 * im, reFrom1 * (1 + re) - imEps2);
 			} else if (im == 0) { // {+/-1, 0)
-				ux = typetraits::TypeInfo<T>::infinity();
+				ux = typetraits::NumericInfo<T>::infinity();
 				vx = im;
 			} else { // (+/-1, nonzero)
 				ux = ::librapid::log(::librapid::sqrt(::librapid::sqrt(4 + im * im)) /
@@ -1566,7 +1566,7 @@ namespace librapid {
 		T bv = ::librapid::abs(imag(other));
 
 		if (::librapid::isInf(av) || ::librapid::isInf(bv)) {
-			return typetraits::TypeInfo<T>::infinity(); // At least one component is Inf
+			return typetraits::NumericInfo<T>::infinity(); // At least one component is Inf
 		} else if (::librapid::isNaN(av)) {
 			return av; // Real component is NaN
 		} else if (::librapid::isNaN(bv)) {
@@ -1580,8 +1580,8 @@ namespace librapid {
 				av	 = av * T(0.0625);
 				bv	 = bv * T(0.0625);
 			} else {
-				const T fltEps	= typetraits::TypeInfo<T>::epsilon();
-				const T legTiny = fltEps == 0 ? T(0) : 2 * typetraits::TypeInfo<T>::min() / fltEps;
+				const T fltEps	= typetraits::NumericInfo<T>::epsilon();
+				const T legTiny = fltEps == 0 ? T(0) : 2 * typetraits::NumericInfo<T>::min() / fltEps;
 
 				if (av < legTiny) {
 					int64_t exponent;
@@ -1791,7 +1791,7 @@ namespace librapid {
 				const T im = imag(other);
 
 				if (::librapid::isInf(im)) {
-					return Complex<T>(typetraits::TypeInfo<T>::infinity(), im); // (any, +/-Inf)
+					return Complex<T>(typetraits::NumericInfo<T>::infinity(), im); // (any, +/-Inf)
 				} else if (::librapid::isNaN(im)) {
 					if (re < 0) {
 						// (-Inf, NaN)
@@ -1867,7 +1867,7 @@ namespace librapid {
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Complex<T> proj(const Complex<T> &other) {
 		if (::librapid::isInf(real(other)) || ::librapid::isInf(imag(other))) {
 			const T im = ::librapid::copySign(T(0), imag(other));
-			return Complex<T>(typetraits::TypeInfo<T>::infinity(), im);
+			return Complex<T>(typetraits::NumericInfo<T>::infinity(), im);
 		}
 		return other;
 	}

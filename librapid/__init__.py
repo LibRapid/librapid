@@ -72,7 +72,7 @@ def Array(*args, **kwargs):
 
     for i, arg in enumerate(args):
         if i == 0:
-            shape = arg
+            data = arg
         elif i == 1:
             dtype = arg
         elif i == 2:
