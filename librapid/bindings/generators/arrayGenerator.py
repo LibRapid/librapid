@@ -277,11 +277,7 @@ def generateFunctionsForArray(config):
                         )
                     ],
                     op=f"""
-                        try {{
-                            return (self {operation[1]} other).eval();
-                        }} catch (const std::exception &e) {{
-                            return lrc::Array<{config['scalar']}, lrc::backend::{config['backend']}>({{{{1, 2}}, {{3, 4}}, {{5, 6}}}});
-                        }}
+                        return (self {operation[1]} other).eval();
                     """
                 )
             )
@@ -396,6 +392,7 @@ def generateArrayModule(config):
         name=f"librapid.{config['name']}",
         includeGuard=includeGuard
     )
+
     arrayModule.addClass(arrayClass)
     arrayModule.functions.extend(functions)
 

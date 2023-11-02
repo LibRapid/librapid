@@ -67,9 +67,13 @@
 		return os;                                                                                 \
 	}
 
-#define LIBRAPID_SIMPLE_IO_NORANGE(TEMPLATE, TYPE)                                                 \
-	template<TEMPLATE, typename Char>                                                              \
-	struct fmt::is_range<TYPE, Char> : std::false_type {};
+#if defined(FMT_RANGES_H_)
+#	define LIBRAPID_SIMPLE_IO_NORANGE(TEMPLATE, TYPE)                                             \
+		template<TEMPLATE, typename Char>                                                          \
+		struct fmt::is_range<TYPE, Char> : std::false_type {};
+#else
+#	define LIBRAPID_SIMPLE_IO_NORANGE(TEMPLATE, TYPE)
+#endif // FMT_RANGES_H_
 
 namespace librapid::typetraits {
 	template<typename T>
