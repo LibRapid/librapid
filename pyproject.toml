@@ -77,4 +77,3 @@ documentation = "https://librapid.readthedocs.io/en/latest/"
 repository = "https://github.com/LibRapid/librapid"
 download = "https://pypi.org/project/librapid/#files"
 bug-tracker = "https://github.com/LibRapid/librapid/issues"
-

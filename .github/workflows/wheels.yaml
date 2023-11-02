@@ -308,6 +308,12 @@ jobs:
           directory: ${RUNNER_TOOL_CACHE}
           env: on
 
+      - name: Set C/CXX Compiler for Windows
+        if: runner.os == 'Windows'
+        run: |
+          cd scripts
+          python setPythonLibCompiler.py -cc ${RUNNER_TOOL_CACHE}/llvm/bin/clang -cxx ${RUNNER_TOOL_CACHE}/llvm/bin/clang++ -o pyproject.toml
+
       - name: Build Wheels
         if: runner.os == 'macOS'
         run: |

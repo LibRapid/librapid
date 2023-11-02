@@ -617,3 +617,5 @@ target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/li
 include("warnings")
 
 auto_disable_warnings(${module_name})
+
+# target_compile_options(${module_name} PUBLIC "-Q" "-ftime-report")
