@@ -162,8 +162,13 @@ namespace librapid {
 		LIBRAPID_UNARY_FUNCTOR(Sinh, ::librapid::sinh); // sinh(a)
 		LIBRAPID_UNARY_FUNCTOR(Cosh, ::librapid::cosh); // cosh(a)
 		LIBRAPID_UNARY_FUNCTOR(Tanh, ::librapid::tanh); // tanh(a)
+		LIBRAPID_UNARY_FUNCTOR(Asinh, ::librapid::sinh); // asinh(a)
+		LIBRAPID_UNARY_FUNCTOR(Acosh, ::librapid::cosh); // acosh(a)
+		LIBRAPID_UNARY_FUNCTOR(Atanh, ::librapid::tanh); // atanh(a)
 
 		LIBRAPID_UNARY_FUNCTOR(Exp, ::librapid::exp);	  // exp(a)
+		LIBRAPID_UNARY_FUNCTOR(Exp2, ::librapid::exp);	  // exp2(a)
+		LIBRAPID_UNARY_FUNCTOR(Exp10, ::librapid::exp);	  // exp10(a)
 		LIBRAPID_UNARY_FUNCTOR(Log, ::librapid::log);	  // log(a)
 		LIBRAPID_UNARY_FUNCTOR(Log2, ::librapid::log2);	  // log2(a)
 		LIBRAPID_UNARY_FUNCTOR(Log10, ::librapid::log10); // log10(a)
@@ -462,10 +467,55 @@ namespace librapid {
 		};
 
 		template<>
+		struct TypeInfo<::librapid::detail::Asinh> {
+			static constexpr const char *name		= "hyperbolic arcsine";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "asinhArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Acosh> {
+			static constexpr const char *name		= "hyperbolic arccosine";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "acoshArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Atanh> {
+			static constexpr const char *name		= "hyperbolic arctangent";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "atanhArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
 		struct TypeInfo<::librapid::detail::Exp> {
 			static constexpr const char *name		= "exponent";
 			static constexpr const char *filename	= "expLogPow";
 			static constexpr const char *kernelName = "expArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Exp2> {
+			static constexpr const char *name		= "exponent base 2";
+			static constexpr const char *filename	= "expLogPow";
+			static constexpr const char *kernelName = "exp2Arrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Exp10> {
+			static constexpr const char *name		= "exponent base 10";
+			static constexpr const char *filename	= "expLogPow";
+			static constexpr const char *kernelName = "exp10Arrays";
 			LIBRAPID_UNARY_KERNEL_GETTER
 			LIBRAPID_UNARY_SHAPE_EXTRACTOR
 		};
@@ -1079,6 +1129,54 @@ namespace librapid {
 		  std::forward<VAL>(val));
 	}
 
+
+
+
+	/// \brief Calculate the hyperbolic arcsine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \sinh^{-1}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Hyperbolic sine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto asinh(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Asinh, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Asinh>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the hyperbolic arccosine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \cosh^{-1}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Hyperbolic cosine function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto acosh(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Acosh, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Acosh>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the hyperbolic arctangent of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \tanh^{-1}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Hyperbolic tangent function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto atanh(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Atanh, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Atanh>(
+		  std::forward<VAL>(val));
+	}
+
+
+
+
 	/// \brief Raise e to the power of each element in the array
 	///
 	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = e^{A_i}\f$
@@ -1090,6 +1188,34 @@ namespace librapid {
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Exp>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Raise 2 to the power of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = 2^{A_i}\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Exponential function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp2(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp2, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Exp2>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Raise 10 to the power of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = 10^{A_i}\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Exponential function object
+	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp10(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp10, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Exp10>(
 		  std::forward<VAL>(val));
 	}
 

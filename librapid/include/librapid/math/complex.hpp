@@ -1821,6 +1821,12 @@ namespace librapid {
 		}
 	}
 
+	template<typename T>
+	LIBRAPID_NODISCARD Complex<T> cbrt(const Complex<T> &other) {
+		constexpr T oneThird = T(1) / T(3);
+		return pow(other, oneThird);
+	}
+
 	/// \brief Calculate the hyperbolic tangent of a complex number
 	///
 	/// This function supports propagation of NaNs and Infs.

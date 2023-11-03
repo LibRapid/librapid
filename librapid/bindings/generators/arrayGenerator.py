@@ -15,8 +15,9 @@ for scalar in [("int32_t", "Int32"),
                ("uint64_t", "UInt64"),
                ("float", "Float"),
                ("double", "Double"),
-               ("lrc::Complex<float>", "ComplexFloat"),
-               ("lrc::Complex<double>", "ComplexDouble")]:
+               # ("lrc::Complex<float>", "ComplexFloat"),
+               # ("lrc::Complex<double>", "ComplexDouble")
+               ]:
     for backend in ["CPU"]:  # ["CPU", "OpenCL", "CUDA"]:
         arrayTypes.append({
             "scalar": scalar[0],
@@ -370,7 +371,86 @@ def generateFunctionsForArray(config):
         )
     ]
 
-    return methods, []
+    functions = [
+        # Transpose
+        function.Function(
+            name="transpose",
+            args=[
+                argument.Argument(
+                    name="array",
+                    type=generateCppArrayType(config),
+                    const=True,
+                    ref=True
+                )
+            ],
+            op="""
+                return lrc::transpose(array).eval();
+            """
+        ),
+
+        # Matmul
+        function.Function(
+            name="dot",
+            args=[
+                argument.Argument(
+                    name="a",
+                    type=generateCppArrayType(config),
+                    const=True,
+                    ref=True
+                ),
+                argument.Argument(
+                    name="b",
+                    type=generateCppArrayType(config),
+                    const=True,
+                    ref=True
+                )
+            ],
+            op="""
+                return lrc::dot(a, b).eval();
+            """
+        )
+    ]
+
+    for f in [
+        "sin",
+        "cos",
+        "tan",
+        "asin",
+        "acos",
+        "atan",
+        "sinh",
+        "cosh",
+        "tanh",
+        "asinh",
+        "acosh",
+        "atanh",
+        "sqrt",
+        "cbrt",
+        "exp",
+        # "exp2",
+        # "exp10",
+        "log",
+        "log2",
+        "log10"
+    ]:
+        functions.append(
+            function.Function(
+                name=f,
+                args=[
+                    argument.Argument(
+                        name="array",
+                        type=generateCppArrayType(config),
+                        const=True,
+                        ref=True
+                    )
+                ],
+                op=f"""
+                    return lrc::{f}(array).eval();
+                """
+            )
+        )
+
+    return methods, functions
 
 
 def generateArrayModule(config):

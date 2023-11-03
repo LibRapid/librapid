@@ -44,8 +44,7 @@ class Module:
             ret += "\n"
 
         for func in self.functions:
-            ret += func.gen(moduleName)
-            ret += "\n"
+            ret += func.gen(moduleName) + ";\n"
 
         ret += "}\n"
 

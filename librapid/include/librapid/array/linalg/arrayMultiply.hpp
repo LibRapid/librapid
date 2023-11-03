@@ -658,7 +658,7 @@ namespace librapid {
 			std::forward<ArrayA>(arrA),
 			alpha * beta,
 			std::forward<ArrayB>(arrB),
-			0);
+			ScalarA(0));
 	}
 
 	namespace typetraits {
