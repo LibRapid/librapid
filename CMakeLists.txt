@@ -188,8 +188,7 @@ if (${SKBUILD})
     install(TARGETS ${module_name} DESTINATION .)
 else ()
     set(module_name "librapid")
-    add_library(${module_name} STATIC ${LIBRAPID_SOURCES}
-            librapid/include/librapid/core/log.hpp)
+    add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
 endif ()
 
 # clang-format off

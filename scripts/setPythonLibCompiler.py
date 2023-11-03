@@ -13,7 +13,7 @@ text = ""
 with open("../pyproject.toml", "r") as pyproj:
     for line in pyproj.readlines():
         if line.startswith("cmake.args"):
-            text += f'cmake.args = ["-DCMAKE_BUILD_TYPE=MinSizeRel", "-DCMAKE_C_COMPILER={args.ccompiler}", "-DCMAKE_CXX_COMPILER={args.cxxcompiler}"]\n'
+            text += f'cmake.args = ["-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_C_COMPILER={args.ccompiler}", "-DCMAKE_CXX_COMPILER={args.cxxcompiler}"]\n'
         else:
             text += line
 

@@ -14,8 +14,8 @@ build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
 
-cmake.build-type = "MinSizeRel"
-cmake.args = ["-DCMAKE_BUILD_TYPE=MinSizeRel"]
+cmake.build-type = "Release"
+cmake.args = ["-DCMAKE_BUILD_TYPE=Release"]
 
 ninja.make-fallback = true
 sdist.cmake = true

@@ -55,16 +55,16 @@ def generateFunctionsForArray(config):
         ),
 
         # Move constructor
-        function.Function(
-            name="__init__",
-            args=[
-                argument.Argument(
-                    name="other",
-                    type=generateCppArrayType(config),
-                    move=True
-                )
-            ]
-        ),
+        # function.Function(
+        #     name="__init__",
+        #     args=[
+        #         argument.Argument(
+        #             name="other",
+        #             type=generateCppArrayType(config),
+        #             move=True
+        #         )
+        #     ]
+        # ),
 
         # Shape
         function.Function(
