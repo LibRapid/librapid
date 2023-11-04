@@ -2,6 +2,10 @@
 name: Wheels
 
 on:
+  push:
+    branches:
+      - this_is_a_dummy_branch
+  
 #  push:
 #    branches:
 #      - "**"
