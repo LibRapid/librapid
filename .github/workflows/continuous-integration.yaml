@@ -22,7 +22,7 @@ jobs:
           - os: ubuntu-latest
             cc: ../llvm/bin/clang
             cxx: ../llvm/bin/clang++
-            clangVer: "15.0"
+            clangVer: "16.0"
             blas: off
             getBlas: off
             fftw: off
@@ -33,7 +33,7 @@ jobs:
           - os: ubuntu-latest
             cc: ../llvm/bin/clang
             cxx: ../llvm/bin/clang++
-            clangVer: "15.0"
+            clangVer: "16.0"
             blas: on
             getBlas: on
             fftw: on
