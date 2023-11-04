@@ -22,7 +22,7 @@ jobs:
           - os: ubuntu-latest
             cc: ../llvm/bin/clang
             cxx: ../llvm/bin/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             blas: off
             getBlas: off
             fftw: off
@@ -33,7 +33,7 @@ jobs:
           - os: ubuntu-latest
             cc: ../llvm/bin/clang
             cxx: ../llvm/bin/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             blas: on
             getBlas: on
             fftw: on
@@ -124,7 +124,7 @@ jobs:
           - os: macos-latest
             cc: ../llvm/bin/clang
             cxx: ../llvm/bin/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             blas: off
             getBlas: off
             fftw: off
@@ -135,7 +135,7 @@ jobs:
           - os: macos-latest
             cc: ../llvm/bin/clang
             cxx: ../llvm/bin/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             blas: on
             getBlas: off # Included with XCode
             fftw: on
@@ -186,7 +186,7 @@ jobs:
           - os: windows-latest
             cc: ../llvm/clang
             cxx: ../llvm/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             blas: off
             getBlas: off
             fftw: off
@@ -197,7 +197,7 @@ jobs:
           - os: windows-latest
             cc: ../llvm/clang
             cxx: ../llvm/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             blas: on
             getBlas: on
             fftw: on
@@ -208,7 +208,7 @@ jobs:
           - os: windows-latest
             cc: ./llvm/clang
             cxx: ./llvm/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             blas: off
             getBlas: off
             fftw: off
@@ -219,7 +219,7 @@ jobs:
           - os: windows-latest
             cc: ./llvm/clang
             cxx: ./llvm/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             blas: on
             getBlas: on
             fftw: on
@@ -428,14 +428,14 @@ jobs:
           - os: ubuntu-latest
             cc: ../../llvm/bin/clang
             cxx: ../../llvm/bin/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             smallArrays: ON
             pretty: "LibRapid_Ubuntu_Clang_OptimiseSmallArrays"
 
           - os: ubuntu-latest
             cc: ../../llvm/bin/clang
             cxx: ../../llvm/bin/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             smallArrays: OFF
             pretty: "LibRapid_Ubuntu_Clang"
 
@@ -454,14 +454,14 @@ jobs:
           - os: macos-latest
             cc: ../../llvm/bin/clang
             cxx: ../../llvm/bin/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             smallArrays: ON
             pretty: "LibRapid_MacOS_Clang_OptimiseSmallArrays"
 
           - os: macos-latest
             cc: ../../llvm/bin/clang
             cxx: ../../llvm/bin/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             smallArrays: OFF
             pretty: "LibRapid_MacOS_Clang"
 
@@ -480,14 +480,14 @@ jobs:
           - os: windows-latest
             cc: ../../llvm/clang
             cxx: ../../llvm/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             smallArrays: ON
             pretty: "LibRapid_Windows_Clang_OptimiseSmallArrays"
 
           - os: windows-latest
             cc: ../../llvm/clang
             cxx: ../../llvm/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             smallArrays: OFF
             pretty: "LibRapid_Windows_Clang"
 
