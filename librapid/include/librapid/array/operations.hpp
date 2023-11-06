@@ -153,15 +153,15 @@ namespace librapid {
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseEqual, ==);	 // a == b
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseNotEqual, !=); // a != b
 
-		LIBRAPID_UNARY_FUNCTOR(Sin, ::librapid::sin);	// sin(a)
-		LIBRAPID_UNARY_FUNCTOR(Cos, ::librapid::cos);	// cos(a)
-		LIBRAPID_UNARY_FUNCTOR(Tan, ::librapid::tan);	// tan(a)
-		LIBRAPID_UNARY_FUNCTOR(Asin, ::librapid::asin); // asin(a)
-		LIBRAPID_UNARY_FUNCTOR(Acos, ::librapid::acos); // acos(a)
-		LIBRAPID_UNARY_FUNCTOR(Atan, ::librapid::atan); // atan(a)
-		LIBRAPID_UNARY_FUNCTOR(Sinh, ::librapid::sinh); // sinh(a)
-		LIBRAPID_UNARY_FUNCTOR(Cosh, ::librapid::cosh); // cosh(a)
-		LIBRAPID_UNARY_FUNCTOR(Tanh, ::librapid::tanh); // tanh(a)
+		LIBRAPID_UNARY_FUNCTOR(Sin, ::librapid::sin);	 // sin(a)
+		LIBRAPID_UNARY_FUNCTOR(Cos, ::librapid::cos);	 // cos(a)
+		LIBRAPID_UNARY_FUNCTOR(Tan, ::librapid::tan);	 // tan(a)
+		LIBRAPID_UNARY_FUNCTOR(Asin, ::librapid::asin);	 // asin(a)
+		LIBRAPID_UNARY_FUNCTOR(Acos, ::librapid::acos);	 // acos(a)
+		LIBRAPID_UNARY_FUNCTOR(Atan, ::librapid::atan);	 // atan(a)
+		LIBRAPID_UNARY_FUNCTOR(Sinh, ::librapid::sinh);	 // sinh(a)
+		LIBRAPID_UNARY_FUNCTOR(Cosh, ::librapid::cosh);	 // cosh(a)
+		LIBRAPID_UNARY_FUNCTOR(Tanh, ::librapid::tanh);	 // tanh(a)
 		LIBRAPID_UNARY_FUNCTOR(Asinh, ::librapid::sinh); // asinh(a)
 		LIBRAPID_UNARY_FUNCTOR(Acosh, ::librapid::cosh); // acosh(a)
 		LIBRAPID_UNARY_FUNCTOR(Atanh, ::librapid::tanh); // atanh(a)
@@ -608,15 +608,6 @@ namespace librapid {
 
 		template<typename LHS, typename RHS>
 		constexpr bool isArrayOpArray() {
-			// return (typetraits::TypeInfo<std::decay_t<LHS>>::type != LibRapidType::Scalar) &&
-			// 	   (typetraits::TypeInfo<std::decay_t<RHS>>::type != LibRapidType::Scalar) &&
-			// 	   typetraits::IsLibRapidType<std::decay_t<LHS>>::value &&
-			// 	   typetraits::IsLibRapidType<std::decay_t<RHS>>::value;
-
-			// ArrayContainer,
-			// ArrayFunction,
-			// GeneralArrayView
-
 			constexpr bool lhsIsValid = isType<LHS,
 											   LibRapidType::ArrayContainer,
 											   LibRapidType::ArrayFunction,
@@ -632,20 +623,6 @@ namespace librapid {
 
 		template<typename LHS, typename RHS>
 		constexpr bool isArrayOpWithScalar() {
-			// // We allow operations with vectors here
-			// return (typetraits::IsLibRapidType<std::decay_t<LHS>>::value &&
-			// 		(
-			// 			(typetraits::TypeInfo<std::decay_t<RHS>>::type == LibRapidType::Scalar) ||
-			// 			(typetraits::TypeInfo<std::decay_t<RHS>>::type == LibRapidType::Vector)
-			// 		)
-			// 	   ) ||
-			// 	   (
-			// 	   	(
-			// 	   		(typetraits::TypeInfo<std::decay_t<LHS>>::type == LibRapidType::Scalar) ||
-			// 	   		(typetraits::TypeInfo<std::decay_t<LHS>>::type == LibRapidType::Vector)
-			// 	   	) &&
-			// 		typetraits::IsLibRapidType<std::decay_t<RHS>>::value);
-
 			constexpr bool lhsIsArray = isType<LHS,
 											   LibRapidType::ArrayContainer,
 											   LibRapidType::ArrayFunction,
@@ -679,21 +656,16 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise sum of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus, LHS, RHS> {
-			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
-										   lhs.shape().operator==(rhs.shape()),
-										   "Shapes must be equal. {} vs {}",
-										   lhs.shape(),
-										   rhs.shape());
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus>(
-			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -708,21 +680,16 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise difference of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus, LHS, RHS> {
-			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
-										   lhs.shape().operator==(rhs.shape()),
-										   "Shapes must be equal. {} vs {}",
-										   lhs.shape(),
-										   rhs.shape());
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus>(
-			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -737,21 +704,16 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise product of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply, LHS, RHS> {
-			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
-										   lhs.shape().operator==(rhs.shape()),
-										   "Shapes must be equal. {} vs {}",
-										   lhs.shape(),
-										   rhs.shape());
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply>(
-			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -766,21 +728,16 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise division of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide, LHS, RHS> {
-			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
-										   lhs.shape().operator==(rhs.shape()),
-										   "Shapes must be equal. {} vs {}",
-										   lhs.shape(),
-										   rhs.shape());
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide>(
-			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -797,21 +754,16 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan, LHS, RHS> {
-			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
-										   lhs.shape().operator==(rhs.shape()),
-										   "Shapes must be equal. {} vs {}",
-										   lhs.shape(),
-										   rhs.shape());
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan>(
-			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -828,24 +780,16 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::GreaterThan, LHS,
-							  RHS> {
-			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
-										   lhs.shape().operator==(rhs.shape()),
-										   "Shapes must be equal. {} vs {}",
-										   lhs.shape(),
-										   rhs.shape());
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
-										detail::GreaterThan>(std::forward<LHS>(lhs),
-															 std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::GreaterThan, LHS,
-							  RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::GreaterThan>(std::forward<LHS>(lhs),
 															 std::forward<RHS>(rhs));
@@ -863,24 +807,16 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<=(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThanEqual, LHS,
-							  RHS> {
-			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
-										   lhs.shape().operator==(rhs.shape()),
-										   "Shapes must be equal. {} vs {}",
-										   lhs.shape(),
-										   rhs.shape());
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
-										detail::LessThanEqual>(std::forward<LHS>(lhs),
-															   std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<=(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<=(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThanEqual, LHS,
-							  RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::LessThanEqual>(std::forward<LHS>(lhs),
 															   std::forward<RHS>(rhs));
@@ -898,24 +834,16 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>=(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::GreaterThanEqual, LHS,
-							  RHS> {
-			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
-										   lhs.shape().operator==(rhs.shape()),
-										   "Shapes must be equal. {} vs {}",
-										   lhs.shape(),
-										   rhs.shape());
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
-										detail::GreaterThanEqual>(std::forward<LHS>(lhs),
-																  std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>=(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>=(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::GreaterThanEqual, LHS,
-							  RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::GreaterThanEqual>(std::forward<LHS>(lhs),
 																  std::forward<RHS>(rhs));
@@ -933,24 +861,16 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::ElementWiseEqual, LHS,
-							  RHS> {
-			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
-										   lhs.shape().operator==(rhs.shape()),
-										   "Shapes must be equal. {} vs {}",
-										   lhs.shape(),
-										   rhs.shape());
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
-										detail::ElementWiseEqual>(std::forward<LHS>(lhs),
-																  std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::ElementWiseEqual, LHS,
-							  RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::ElementWiseEqual>(std::forward<LHS>(lhs),
 																  std::forward<RHS>(rhs));
@@ -968,24 +888,16 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::ElementWiseNotEqual,
-							  LHS, RHS> {
-			LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
-										   lhs.shape().operator==(rhs.shape()),
-										   "Shapes must be equal. {} vs {}",
-										   lhs.shape(),
-										   rhs.shape());
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
-										detail::ElementWiseNotEqual>(std::forward<LHS>(lhs),
-																	 std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(LHS &&lhs, RHS &&rhs)
-		  -> detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::ElementWiseNotEqual,
-							  LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::ElementWiseNotEqual>(std::forward<LHS>(lhs),
 																	 std::forward<RHS>(rhs));
@@ -995,9 +907,8 @@ namespace librapid {
 		/// \tparam VAL Type to negate
 		/// \param val The input array or function
 		/// \return Negation function object
-		template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(VAL &&val)
-		  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Neg, VAL> {
+		template<class VAL>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(VAL &&val) {
 			return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Neg>(
 			  std::forward<VAL>(val));
 		}
@@ -1129,9 +1040,6 @@ namespace librapid {
 		  std::forward<VAL>(val));
 	}
 
-
-
-
 	/// \brief Calculate the hyperbolic arcsine of each element in the array
 	///
 	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \sinh^{-1}(A_i)\f$
@@ -1173,9 +1081,6 @@ namespace librapid {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Atanh>(
 		  std::forward<VAL>(val));
 	}
-
-
-
 
 	/// \brief Raise e to the power of each element in the array
 	///
