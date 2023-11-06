@@ -6,17 +6,17 @@ namespace librapid {
 		constexpr int64_t nanosecond  = int64_t(1);
 		constexpr int64_t microsecond = nanosecond * 1000;
 		constexpr int64_t millisecond = microsecond * 1000;
-		constexpr int64_t second      = millisecond * 1000;
-		constexpr int64_t minute      = second * 60;
-		constexpr int64_t hour        = minute * 60;
-		constexpr int64_t day         = hour * 24;
+		constexpr int64_t second	  = millisecond * 1000;
+		constexpr int64_t minute	  = second * 60;
+		constexpr int64_t hour		  = minute * 60;
+		constexpr int64_t day		  = hour * 24;
 	} // namespace time
 
 	template<int64_t scale = time::second>
 	LIBRAPID_NODISCARD double now() {
 		using namespace std::chrono;
 #if defined(LIBRAPID_OS_WINDOWS)
-		using rep      = int64_t;
+		using rep	   = int64_t;
 		using period   = std::nano;
 		using duration = std::chrono::duration<rep, period>;
 
@@ -53,12 +53,13 @@ namespace librapid {
 	} // namespace detail
 
 	template<int64_t scale = time::second>
-	detail::FormattedTime formatTime(double time, const std::string &format = "{:.3f}") {
-		double ns    = time * scale;
+	detail::FormattedTime formatTime(double time) {
+		double ns	 = time * scale;
 		int numUnits = 8;
 
 		static std::string prefix[] = {
 			"ns",
+// Should this be !defined(LIBRAPID_NO_WINDOWS_H)?? I'm not on windows currently so can't test this
 #if defined(LIBRAPID_OS_WINDOWS) && defined(LIBRAPID_NO_WINDOWS_H)
 			"µs",
 #else
@@ -92,23 +93,23 @@ namespace librapid {
 		explicit Timer(std::string name = "") :
 				m_name(std::move(name)), m_start(now<time::nanosecond>()), m_end(-1) {}
 
-		Timer(const Timer &)            = default;
-		Timer(Timer &&)                 = default;
+		Timer(const Timer &)			= default;
+		Timer(Timer &&)					= default;
 		Timer &operator=(const Timer &) = default;
-		Timer &operator=(Timer &&)      = default;
+		Timer &operator=(Timer &&)		= default;
 
 		template<size_t scale = time::second>
 		Timer &setTargetTime(double time) {
-			m_iters      = 0;
+			m_iters		 = 0;
 			m_targetTime = time * (double)scale;
-			m_start      = now<time::nanosecond>();
+			m_start		 = now<time::nanosecond>();
 			return *this;
 		}
 
 		/// Start the timer
 		void start() {
 			m_start = now<time::nanosecond>();
-			m_end   = -1;
+			m_end	= -1;
 		}
 
 		/// Stop the timer
@@ -117,7 +118,7 @@ namespace librapid {
 		/// Reset the timer
 		void reset() {
 			m_start = now<time::nanosecond>();
-			m_end   = -1;
+			m_end	= -1;
 		}
 
 		/// Get the elapsed time in a given unit
@@ -165,10 +166,10 @@ namespace librapid {
 
 	private:
 		std::string m_name = "Timer";
-		double m_start     = 0;
-		double m_end       = 0;
+		double m_start	   = 0;
+		double m_end	   = 0;
 
-		size_t m_iters      = 0;
+		size_t m_iters		= 0;
 		double m_targetTime = 0;
 	};
 } // namespace librapid
@@ -204,8 +205,8 @@ public:
 	}
 
 	template<typename FormatContext>
-	FMT_CONSTEXPR auto format(const librapid::detail::FormattedTime &val,
-							  FormatContext &ctx) const -> decltype(ctx.out()) {
+	FMT_CONSTEXPR auto format(const librapid::detail::FormattedTime &val, FormatContext &ctx) const
+	  -> decltype(ctx.out()) {
 		m_base.format(val.time, ctx);
 		fmt::format_to(ctx.out(), "{}", val.unit);
 		return ctx.out();

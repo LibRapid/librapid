@@ -32,7 +32,5 @@ librapid/librapid.egg-info
 librapid/bindings/python/generated
 
 dist/
-librapid/bindings/generators/*.hpp
-librapid/bindings/generators/*.cpp
 
 *.pyc

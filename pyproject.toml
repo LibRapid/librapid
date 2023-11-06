@@ -14,8 +14,8 @@ build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
 
-cmake.build-type = "MinSizeRel"
-cmake.args = ["-DCMAKE_BUILD_TYPE=MinSizeRel"]
+cmake.build-type = "Release"
+cmake.args = ["-DCMAKE_BUILD_TYPE=Release"]
 
 ninja.make-fallback = true
 sdist.cmake = true
@@ -77,4 +77,3 @@ documentation = "https://librapid.readthedocs.io/en/latest/"
 repository = "https://github.com/LibRapid/librapid"
 download = "https://pypi.org/project/librapid/#files"
 bug-tracker = "https://github.com/LibRapid/librapid/issues"
-

@@ -297,6 +297,30 @@ def getSeed():
     return _librapid.getSeed()
 
 
+transpose = _librapid.transpose
+dot = _librapid.dot
+sin = _librapid.sin
+cos = _librapid.cos
+tan = _librapid.tan
+asin = _librapid.asin
+acos = _librapid.acos
+atan = _librapid.atan
+sinh = _librapid.sinh
+cosh = _librapid.cosh
+tanh = _librapid.tanh
+asinh = _librapid.asinh
+acosh = _librapid.acosh
+atanh = _librapid.atanh
+sqrt = _librapid.sqrt
+cbrt = _librapid.cbrt
+log = _librapid.log
+log2 = _librapid.log2
+log10 = _librapid.log10
+exp = _librapid.exp
+exp2 = _librapid.exp2
+exp10 = _librapid.exp10
+
+
 float32 = DataType("float32", 4)
 float64 = DataType("float64", 8)
 int32 = DataType("int32", 4)

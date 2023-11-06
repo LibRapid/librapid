@@ -183,14 +183,12 @@ if (${SKBUILD})
 
     target_compile_definitions(${module_name} PUBLIC
             LIBRAPID_PYTHON
-            LIBRAPID_NO_ALWAYS_INLINE
             WIN32_LEAN_AND_MEAN
     )
     install(TARGETS ${module_name} DESTINATION .)
 else ()
     set(module_name "librapid")
-    add_library(${module_name} STATIC ${LIBRAPID_SOURCES}
-            librapid/include/librapid/core/log.hpp)
+    add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
 endif ()
 
 # clang-format off
@@ -618,3 +616,5 @@ target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/li
 include("warnings")
 
 auto_disable_warnings(${module_name})
+
+# target_compile_options(${module_name} PUBLIC "-Q" "-ftime-report")

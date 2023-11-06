@@ -15,29 +15,10 @@ build-backend = "scikit_build_core.build"
 [tool.scikit-build]
 
 cmake.build-type = "Release"
-ninja.make-fallback = true
+cmake.args = ["-DCMAKE_BUILD_TYPE=Release"]
 
-sdist.exclude = [
-    "CMakeLists.txt",
-    "cmake",
-    "CMakeFiles",
-    "build",
-    "dist",
-    "*.h",
-    "*.c",
-    "*.hpp",
-    "*.cpp",
-    "*.tcc",
-    "*.cxx",
-    "*.cu",
-    "*.cuh",
-    "*.cl",
-    "*.so",
-    "*.dylib",
-    "*.dll",
-    "*.doc",
-    "*.tgz",
-]
+ninja.make-fallback = true
+sdist.cmake = true
 
 [project]
 name = "librapid"
@@ -96,4 +77,3 @@ documentation = "https://librapid.readthedocs.io/en/latest/"
 repository = "https://github.com/LibRapid/librapid"
 download = "https://pypi.org/project/librapid/#files"
 bug-tracker = "https://github.com/LibRapid/librapid/issues"
-
