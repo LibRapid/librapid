@@ -427,8 +427,8 @@ def generateFunctionsForArray(config):
         "sqrt",
         "cbrt",
         "exp",
-        # "exp2",
-        # "exp10",
+        "exp2",
+        "exp10",
         "log",
         "log2",
         "log10"
