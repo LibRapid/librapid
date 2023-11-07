@@ -110,8 +110,8 @@ def Array(*args, **kwargs):
             int64: _librapid.ArrayInt64CPU,
             uint32: _librapid.ArrayUInt32CPU,
             uint64: _librapid.ArrayUInt64CPU,
-            Complex32: _librapid.ArrayComplexFloatCPU,
-            Complex64: _librapid.ArrayComplexDoubleCPU,
+            # Complex32: _librapid.ArrayComplexFloatCPU,
+            # Complex64: _librapid.ArrayComplexDoubleCPU,
         }
 
         arrayType = cpuTypeList.get(dtype, None)
@@ -129,8 +129,8 @@ def Array(*args, **kwargs):
             int64: _librapid.ArrayInt64OpenCL,
             uint32: _librapid.ArrayUInt32OpenCL,
             uint64: _librapid.ArrayUInt64OpenCL,
-            Complex32: _librapid.ArrayComplexFloatOpenCL,
-            Complex64: _librapid.ArrayComplexDoubleOpenCL,
+            # Complex32: _librapid.ArrayComplexFloatOpenCL,
+            # Complex64: _librapid.ArrayComplexDoubleOpenCL,
         }
 
         arrayType = openclTypeList.get(dtype, None)
@@ -148,8 +148,8 @@ def Array(*args, **kwargs):
             int64: _librapid.ArrayInt64CUDA,
             uint32: _librapid.ArrayUInt32CUDA,
             uint64: _librapid.ArrayUInt64CUDA,
-            Complex32: _librapid.ArrayComplexFloatCUDA,
-            Complex64: _librapid.ArrayComplexDoubleCUDA,
+            # Complex32: _librapid.ArrayComplexFloatCUDA,
+            # Complex64: _librapid.ArrayComplexDoubleCUDA,
         }
 
         arrayType = cudaTypeList.get(dtype, None)
@@ -189,8 +189,8 @@ def isArray(obj):
         _librapid.ArrayInt64CPU,
         _librapid.ArrayUInt32CPU,
         _librapid.ArrayUInt64CPU,
-        _librapid.ArrayComplexFloatCPU,
-        _librapid.ArrayComplexDoubleCPU
+        # _librapid.ArrayComplexFloatCPU,
+        # _librapid.ArrayComplexDoubleCPU
     ]:
         return True
 
@@ -201,8 +201,8 @@ def isArray(obj):
         _librapid.ArrayInt64OpenCL,
         _librapid.ArrayUInt32OpenCL,
         _librapid.ArrayUInt64OpenCL,
-        _librapid.ArrayComplexFloatOpenCL,
-        _librapid.ArrayComplexDoubleOpenCL
+        # _librapid.ArrayComplexFloatOpenCL,
+        # _librapid.ArrayComplexDoubleOpenCL
     ]:
         return True
 
@@ -213,8 +213,8 @@ def isArray(obj):
         _librapid.ArrayInt64CUDA,
         _librapid.ArrayUInt32CUDA,
         _librapid.ArrayUInt64CUDA,
-        _librapid.ArrayComplexFloatCUDA,
-        _librapid.ArrayComplexDoubleCUDA
+        # _librapid.ArrayComplexFloatCUDA,
+       #  _librapid.ArrayComplexDoubleCUDA
     ]:
         return True
 
@@ -327,8 +327,8 @@ int32 = DataType("int32", 4)
 int64 = DataType("int64", 8)
 uint32 = DataType("uint32", 4)
 uint64 = DataType("uint64", 8)
-Complex32 = DataType("Complex32", 8)
-Complex64 = DataType("Complex64", 16)
+# Complex32 = DataType("Complex32", 8)
+# Complex64 = DataType("Complex64", 16)
 
 CPU = Backend("CPU")
 OpenCL = Backend("OpenCL")

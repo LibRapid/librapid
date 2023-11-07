@@ -129,13 +129,13 @@ namespace librapid {
 	template<typename T>
 		requires(typetraits::SIMD<T>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto floor(const T &x) {
-		return xsimd::floor(x);
+		SIMD_OP_IMPL(floor)
 	}
 
 	template<typename T>
 		requires(typetraits::SIMD<T>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ceil(const T &x) {
-		return xsimd::ceil(x);
+		SIMD_OP_IMPL(ceil)
 	}
 } // namespace librapid
 
