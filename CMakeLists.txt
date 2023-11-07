@@ -114,6 +114,12 @@ if (${SKBUILD})
     )
     FetchContent_MakeAvailable(pybind11)
 
+    # Set CMAKE_BUILD_PARALLEL_LEVEL=1 to reduce memory usage
+    set(CMAKE_BUILD_PARALLEL_LEVEL 1)
+
+    # Set environment variable CMAKE_BUILD_PARALLEL_LEVEL=1 to reduce memory usage
+    set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 1)
+
     # Run auto-generation script
     # 1. Find the Python executable
     # 2. cd into 'librapid/bindings/generators'

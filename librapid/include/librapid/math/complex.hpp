@@ -2077,6 +2077,11 @@ namespace librapid {
 
 			static constexpr bool canAlign	= TypeInfo<T>::canAlign;
 			static constexpr bool canMemcpy = TypeInfo<T>::canMemcpy;
+		};
+
+		template<typename T>
+		struct NumericInfo<Complex<T>> {
+			using Scalar = typename TypeInfo<Complex<T>>::Scalar;
 
 			LIMIT_IMPL(min) { return TypeInfo<T>::min(); }
 			LIMIT_IMPL(max) { return TypeInfo<T>::max(); }

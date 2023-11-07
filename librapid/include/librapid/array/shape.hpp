@@ -784,8 +784,7 @@ namespace librapid {
 	/// \param shapes Remaining (optional) inputs
 	/// \return True if all inputs have the same shape, false otherwise
 	template<typename First, typename Second, typename... Rest>
-		requires(typetraits::IsSizeType<First>::value &&
-				 typetraits::IsSizeType<Second>::value &&
+		requires(typetraits::IsSizeType<First>::value && typetraits::IsSizeType<Second>::value &&
 				 (typetraits::IsSizeType<Rest>::value && ...))
 	LIBRAPID_NODISCARD LIBRAPID_INLINE bool
 	shapesMatch(const std::tuple<First, Second, Rest...> &shapes) {
@@ -797,17 +796,21 @@ namespace librapid {
 					 [](auto, auto, auto... rest) { return std::make_tuple(rest...); }, shapes));
 		}
 	}
-	
+
+	template<typename First>
+		requires(typetraits::IsSizeType<First>::value)
+	LIBRAPID_NODISCARD LIBRAPID_INLINE bool
+	shapesMatch(const std::tuple<First> &shapes) {
+		return true;
+	}
+
 	/// \sa shapesMatch
 	//	template<typename First, typename Second, typename... Rest>
-	//		requires(typetraits::IsSizeType<First>::value && typetraits::IsSizeType<Second>::value &&
-	//				 (typetraits::IsSizeType<Rest>::value && ...))
-	//	LIBRAPID_NODISCARD LIBRAPID_INLINE bool shapesMatch(const First &first, const Second &second,
-	//														const Rest &...shapes) {
-	//		if constexpr (sizeof...(Rest) == 0) {
-	//			return first == second;
-	//		} else {
-	//			return first == second && shapesMatch(first, shapes...);
+	//		requires(typetraits::IsSizeType<First>::value && typetraits::IsSizeType<Second>::value
+	//&& 				 (typetraits::IsSizeType<Rest>::value && ...)) 	LIBRAPID_NODISCARD LIBRAPID_INLINE bool
+	//shapesMatch(const First &first, const Second &second, 														const Rest &...shapes) { 		if constexpr
+	//(sizeof...(Rest) == 0) { 			return first == second; 		} else { 			return first == second &&
+	//shapesMatch(first, shapes...);
 	//		}
 	//	}
 

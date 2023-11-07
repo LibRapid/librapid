@@ -334,7 +334,7 @@ jobs:
           LIBRAPID_GET_FFTW: OFF
           CC: /usr/local/opt/llvm/bin/clang
           CXX: /usr/local/opt/llvm/bin/clang++
-          CIBW_ENVIRONMENT: CC=/usr/local/opt/llvm/bin/clang CXX=/usr/local/opt/llvm/bin/clang++
+          CIBW_ENVIRONMENT: CC=/usr/local/opt/llvm/bin/clang CXX=/usr/local/opt/llvm/bin/clang++ CMAKE_BUILD_PARALLEL_LEVEL=1
           CMAKE_C_COMPILER: /usr/local/opt/llvm/bin/clang
           CMAKE_CXX_COMPILER: /usr/local/opt/llvm/bin/clang++
 
@@ -357,7 +357,7 @@ jobs:
           LIBRAPID_GET_FFTW: OFF
           CC: ${RUNNER_TOOL_CACHE}/llvm/bin/clang
           CXX: ${RUNNER_TOOL_CACHE}/llvm/bin/clang++
-          CIBW_ENVIRONMENT: CC=${RUNNER_TOOL_CACHE}/llvm/bin/clang CXX=${RUNNER_TOOL_CACHE}/llvm/bin/clang++
+          CIBW_ENVIRONMENT: CC=${RUNNER_TOOL_CACHE}/llvm/bin/clang CXX=${RUNNER_TOOL_CACHE}/llvm/bin/clang++ CMAKE_BUILD_PARALLEL_LEVEL=1
           CMAKE_C_COMPILER: ${RUNNER_TOOL_CACHE}/llvm/bin/clang
           CMAKE_CXX_COMPILER: ${RUNNER_TOOL_CACHE}/llvm/bin/clang++
 
@@ -378,6 +378,7 @@ jobs:
           GITHUB_ACTIONS: ON
           LIBRAPID_GET_BLAS: ON
           LIBRAPID_GET_FFTW: OFF
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=1
 
       - name: Store Artifacts
         uses: actions/upload-artifact@v3

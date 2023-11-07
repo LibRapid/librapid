@@ -15,8 +15,7 @@ build-backend = "scikit_build_core.build"
 [tool.scikit-build]
 
 cmake.build-type = "Release"
-cmake.args = ["-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_PARALLEL_LEVEL=1"]
-cmake.parallel = false
+cmake.args = ["-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_BUILD_PARALLEL_LEVEL=1"]
 
 ninja.make-fallback = true
 sdist.cmake = true
