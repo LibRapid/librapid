@@ -438,11 +438,11 @@ namespace librapid {
 		template<typename TransposeType>
 		class Transpose {
 		public:
-			using ArrayType		 = TransposeType;
-			using BaseType		 = typename std::decay_t<TransposeType>;
-			using Scalar		 = typename typetraits::TypeInfo<BaseType>::Scalar;
-			using ShapeType		 = typename BaseType::ShapeType;
-			using Backend		 = typename typetraits::TypeInfo<BaseType>::Backend;
+			using ArrayType = TransposeType;
+			using BaseType	= typename std::decay_t<TransposeType>;
+			using Scalar	= typename typetraits::TypeInfo<BaseType>::Scalar;
+			using ShapeType = typename BaseType::ShapeType;
+			using Backend	= typename typetraits::TypeInfo<BaseType>::Backend;
 
 			static constexpr bool allowVectorisation =
 			  typetraits::TypeInfo<Scalar>::allowVectorisation;
@@ -517,7 +517,8 @@ namespace librapid {
 
 			template<typename T, typename Char, size_t N, typename Ctx>
 			LIBRAPID_ALWAYS_INLINE void str(const fmt::formatter<T, Char> &format, char bracket,
-											char separator, const char (&formatString)[N], Ctx &ctx) const;
+											char separator, const char (&formatString)[N],
+											Ctx &ctx) const;
 
 		private:
 			ArrayType m_array;
@@ -654,13 +655,14 @@ namespace librapid {
 		template<typename TransposeType>
 		template<typename T, typename Char, size_t N, typename Ctx>
 		void Transpose<TransposeType>::str(const fmt::formatter<T, Char> &format, char bracket,
-										   char separator, const char (&formatString)[N], Ctx &ctx) const {
+										   char separator, const char (&formatString)[N],
+										   Ctx &ctx) const {
 			eval().str(format, bracket, separator, formatString, ctx);
 		}
 	}; // namespace array
 
-	template<typename T, typename ShapeType = MatrixShape,
-			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
+	template<typename T, typename ShapeType = MatrixShape>
+		requires(typetraits::IsSizeType<ShapeType>::value)
 	auto transpose(T &&array, const ShapeType &axes = ShapeType()) {
 		// If axes is empty, transpose the array in reverse order
 		ShapeType newAxes = axes;

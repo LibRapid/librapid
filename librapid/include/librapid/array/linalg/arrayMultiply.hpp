@@ -535,16 +535,15 @@ namespace librapid {
 		/// \tparam T
 		/// \param val
 		/// \return
-		template<typename T, typename std::enable_if_t<!IsTransposeType<T>::value, int> = 0>
+		template<typename T>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto transposeExtractor(T &&val) {
-			using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
-			return std::make_tuple(false, Scalar(1), std::forward<T>(val));
-		}
-
-		template<typename T, typename std::enable_if_t<IsTransposeType<T>::value, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto transposeExtractor(T &&val) {
-			using Type = decltype(val.array());
-			return std::make_tuple(true, val.alpha(), std::forward<Type>(val.array()));
+			if constexpr (IsTransposeType<T>::value) {
+				using Type = decltype(val.array());
+				return std::make_tuple(true, val.alpha(), std::forward<Type>(val.array()));
+			} else {
+				using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
+				return std::make_tuple(false, Scalar(1), std::forward<T>(val));
+			}
 		}
 
 		/// Evaluates to true if the type is a multiply type.
@@ -561,15 +560,15 @@ namespace librapid {
 		/// \tparam T
 		/// \param val
 		/// \return
-		template<typename T, typename std::enable_if_t<!IsMultiplyType<T>::value, int> = 0>
+		template<typename T>
+			requires(!IsMultiplyType<T>::value)
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto multiplyExtractor(T &&val) {
 			using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
 			return std::make_tuple(Scalar(1), std::forward<T>(val));
 		}
 
-		template<typename Descriptor, typename Arr, typename Scalar,
-				 typename std::enable_if_t<
-				   typetraits::TypeInfo<Scalar>::type == detail::LibRapidType::Scalar, int> = 0>
+		template<typename Descriptor, typename Arr, typename Scalar>
+			requires(typetraits::TypeInfo<Scalar>::type == detail::LibRapidType::Scalar)
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		multiplyExtractor(detail::Function<Descriptor, detail::Multiply, Arr, Scalar> &&val) {
 			using Type = decltype(std::get<0>(val.args()));
@@ -577,9 +576,8 @@ namespace librapid {
 								   std::forward<Type>(std::get<0>(val.args())));
 		}
 
-		template<typename Descriptor, typename Arr, typename Scalar,
-				 typename std::enable_if_t<
-				   typetraits::TypeInfo<Scalar>::type == detail::LibRapidType::Scalar, int> = 0>
+		template<typename Descriptor, typename Arr, typename Scalar>
+			requires(typetraits::TypeInfo<Scalar>::type == detail::LibRapidType::Scalar)
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		multiplyExtractor(detail::Function<Descriptor, detail::Multiply, Scalar, Arr> &&val) {
 			using Type = decltype(std::get<1>(val.args()));
@@ -634,9 +632,8 @@ namespace librapid {
 	/// StorageTypeB The storage type of the right input array. \param a The left input array.
 	/// \param b The right input array.
 	/// \return The dot product of the two input arrays.
-	template<
-	  typename First, typename Second,
-	  typename std::enable_if_t<IsArrayType<First>::value && IsArrayType<Second>::value, int> = 0>
+	template<typename First, typename Second>
+		requires(IsArrayType<First>::value && IsArrayType<Second>::value)
 	auto dot(First &&a, Second &&b) {
 		using ScalarA	   = typename typetraits::TypeInfo<std::decay_t<First>>::Scalar;
 		using ScalarB	   = typename typetraits::TypeInfo<std::decay_t<Second>>::Scalar;
