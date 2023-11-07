@@ -11,8 +11,8 @@ arrayTypes = []
 
 for scalar in [("int32_t", "Int32"),
                ("int64_t", "Int64"),
-               ("uint32_t", "UInt32"),
-               ("uint64_t", "UInt64"),
+               # ("uint32_t", "UInt32"),
+               # ("uint64_t", "UInt64"),
                ("float", "Float"),
                ("double", "Double"),
                # ("lrc::Complex<float>", "ComplexFloat"),
@@ -58,7 +58,7 @@ def generateFunctionsForArray(config):
         # Move constructor
         # function.Function(
         #     name="__init__",
-        #     args=[
+        #     args=[
         #         argument.Argument(
         #             name="other",
         #             type=generateCppArrayType(config),
