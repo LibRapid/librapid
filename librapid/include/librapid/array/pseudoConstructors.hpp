@@ -51,8 +51,8 @@ namespace librapid {
 	/// \tparam N Maximum number of dimensions of the Shape
 	/// \param shape Shape of the Array
 	/// \return Array filled with zeros
-	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType = Shape,
-			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
+	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType = Shape>
+		requires(typetraits::IsSizeType<ShapeType>::value)
 	Array<Scalar, Backend> zeros(const ShapeType &shape) {
 		return Array<Scalar, Backend>(shape, Scalar(0));
 	}
@@ -79,8 +79,8 @@ namespace librapid {
 	/// \tparam N Maximum number of dimensions of the Shape
 	/// \param shape Shape of the Array
 	/// \return Array filled with ones
-	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType = Shape,
-			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
+	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType = Shape>
+		requires(typetraits::IsSizeType<ShapeType>::value)
 	Array<Scalar, Backend> ones(const ShapeType &shape) {
 		return Array<Scalar, Backend>(shape, Scalar(1));
 	}
@@ -109,8 +109,8 @@ namespace librapid {
 	/// \tparam N Maximum number of dimensions of the Shape
 	/// \param shape Shape of the Array
 	/// \return Array filled with numbers from 0 to N-1
-	template<typename Scalar = int64_t, typename Backend = backend::CPU, typename ShapeType = Shape,
-			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
+	template<typename Scalar = int64_t, typename Backend = backend::CPU, typename ShapeType = Shape>
+		requires(typetraits::IsSizeType<ShapeType>::value)
 	Array<Scalar, Backend> ordered(const ShapeType &shape) {
 		Array<Scalar, Backend> result(shape);
 		for (size_t i = 0; i < result.size(); i++) { result.storage()[i] = Scalar(i); }

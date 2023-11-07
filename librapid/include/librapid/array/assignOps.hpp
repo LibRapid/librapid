@@ -354,18 +354,14 @@ namespace librapid {
 
 #if defined(LIBRAPID_HAS_CUDA)
 	namespace cuda {
-		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type !=
-														 ::librapid::detail::LibRapidType::Scalar,
-													   int> = 0>
+		template<typename T>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
-			return obj.storage().begin();
-		}
-
-		template<typename T, typename std::enable_if_t<typetraits::TypeInfo<T>::type ==
-														 ::librapid::detail::LibRapidType::Scalar,
-													   int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const auto &dataSourceExtractor(const T &obj) {
-			return obj;
+			if constexpr(typetraits::TypeInfo<T>::type ==
+						  ::librapid::detail::LibRapidType::Scalar) {
+				return obj;
+			} else {
+				return obj.storage().begin();
+			}
 		}
 
 		template<typename T>

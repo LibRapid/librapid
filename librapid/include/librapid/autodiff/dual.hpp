@@ -2,9 +2,9 @@
 #define LIBRAPID_AUTODIFF_DUAL
 
 #if defined(LIBRAPID_IN_JITIFY)
-#    define REQUIRE_SCALAR(TYPE) typename AD_ARG_ = void
+#    define IS_SCALAR(TYPE) false
 #else
-#    define REQUIRE_SCALAR(TYPE) typename std::enable_if_t<std::is_scalar_v<TYPE>, int> = 0
+#    define IS_SCALAR(TYPE) std::is_scalar_v<TYPE>
 #endif // LIBRAPID_IN_JITIFY
 
 #if !defined(LIBRAPID_IN_JITIFY)
@@ -119,13 +119,13 @@ namespace librapid {
         return {lhs.value + rhs.value, lhs.derivative + rhs.derivative};
     }
 
-    template<typename T, typename V, REQUIRE_SCALAR(V)>
+    template<typename T, typename V> requires(IS_SCALAR(V))
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() + V())>
     operator+(const Dual<T> &lhs, const V &rhs) {
         return {lhs.value + rhs, lhs.derivative};
     }
 
-    template<typename T, typename V, REQUIRE_SCALAR(V)>
+    template<typename T, typename V> requires(IS_SCALAR(V))
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() + V())>
     operator+(const V &lhs, const Dual<T> &rhs) {
         return {lhs + rhs.value, rhs.derivative};
@@ -137,13 +137,13 @@ namespace librapid {
         return {lhs.value - rhs.value, lhs.derivative - rhs.derivative};
     }
 
-    template<typename T, typename V, REQUIRE_SCALAR(V)>
+    template<typename T, typename V> requires(IS_SCALAR(V))
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() - V())>
     operator-(const Dual<T> &lhs, const V &rhs) {
         return {lhs.value - rhs, lhs.derivative};
     }
 
-    template<typename T, typename V, REQUIRE_SCALAR(V)>
+    template<typename T, typename V> requires(IS_SCALAR(V))
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() - V())>
     operator-(const V &lhs, const Dual<T> &rhs) {
         return {lhs - rhs.value, -rhs.derivative};
@@ -155,13 +155,13 @@ namespace librapid {
         return {lhs.value * rhs.value, lhs.derivative * rhs.value + lhs.value * rhs.derivative};
     }
 
-    template<typename T, typename V, REQUIRE_SCALAR(V)>
+    template<typename T, typename V> requires(IS_SCALAR(V))
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() * V())>
     operator*(const Dual<T> &lhs, const V &rhs) {
         return {lhs.value * rhs, lhs.derivative * rhs};
     }
 
-    template<typename T, typename V, REQUIRE_SCALAR(V)>
+    template<typename T, typename V> requires(IS_SCALAR(V))
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() * V())>
     operator*(const V &lhs, const Dual<T> &rhs) {
         return {lhs * rhs.value, lhs * rhs.derivative};
@@ -175,13 +175,13 @@ namespace librapid {
                   (rhs.value * rhs.value)};
     }
 
-    template<typename T, typename V, REQUIRE_SCALAR(V)>
+    template<typename T, typename V> requires(IS_SCALAR(V))
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() / V())>
     operator/(const Dual<T> &lhs, const V &rhs) {
         return {lhs.value / rhs, lhs.derivative / rhs};
     }
 
-    template<typename T, typename V, REQUIRE_SCALAR(V)>
+    template<typename T, typename V> requires(IS_SCALAR(V))
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<decltype(T() / V())>
     operator/(const V &lhs, const Dual<T> &rhs) {
         return {lhs / rhs.value, -lhs * rhs.derivative / (rhs.value * rhs.value)};
@@ -328,14 +328,14 @@ namespace librapid {
                          x.derivative / (3 * ::librapid::cbrt(x.value * x.value)));
     }
 
-    template<typename T, typename V, REQUIRE_SCALAR(V)>
+    template<typename T, typename V> requires(IS_SCALAR(V))
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<T> pow(const Dual<T> &x, const V &y) {
         using Ret = decltype(::librapid::pow(x.value, y));
         return Dual<Ret>(::librapid::pow(x.value, y),
                          y * ::librapid::pow(x.value, y - 1) * x.derivative);
     }
 
-    template<typename T, typename V, REQUIRE_SCALAR(V)>
+    template<typename T, typename V> requires(IS_SCALAR(V))
     LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Dual<T> pow(const V &x, const Dual<T> &y) {
         using Ret = decltype(::librapid::pow(x, y.value));
         return Dual<Ret>(::librapid::pow(x, y.value),
@@ -463,5 +463,7 @@ public:
 };
 
 #endif // FMT_API
+
+#undef IS_SCALAR
 
 #endif // LIBRAPID_AUTODIFF_DUAL

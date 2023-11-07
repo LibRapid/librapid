@@ -956,7 +956,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Cosine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cos(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cos, VAL> {
@@ -971,7 +971,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Tangent function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tan(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tan, VAL> {
@@ -986,7 +986,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Arcsine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto asin(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Asin, VAL> {
@@ -1001,7 +1001,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Arccosine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto acos(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Acos, VAL> {
@@ -1016,7 +1016,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Arctangent function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto atan(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Atan, VAL> {
@@ -1031,7 +1031,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Hyperbolic sine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sinh(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sinh, VAL> {
@@ -1046,7 +1046,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Hyperbolic cosine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cosh(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cosh, VAL> {
@@ -1061,7 +1061,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Hyperbolic tangent function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tanh(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tanh, VAL> {
@@ -1076,7 +1076,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Hyperbolic sine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto asinh(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Asinh, VAL> {
@@ -1091,7 +1091,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Hyperbolic cosine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto acosh(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Acosh, VAL> {
@@ -1106,7 +1106,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Hyperbolic tangent function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto atanh(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Atanh, VAL> {
@@ -1121,7 +1121,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Exponential function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp, VAL> {
@@ -1136,7 +1136,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Exponential function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp2(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp2, VAL> {
@@ -1151,7 +1151,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Exponential function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp10(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp10, VAL> {
@@ -1166,7 +1166,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Natural logarithm function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log, VAL> {
@@ -1181,7 +1181,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Base 10 logarithm function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log10(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log10, VAL> {
@@ -1196,7 +1196,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Base 2 logarithm function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log2(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log2, VAL> {
@@ -1211,7 +1211,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Square root function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sqrt(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sqrt, VAL> {
@@ -1226,7 +1226,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Cube root function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cbrt(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cbrt, VAL> {
@@ -1241,7 +1241,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Absolute value function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto abs(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Abs, VAL> {
@@ -1256,7 +1256,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Floor function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto floor(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Floor, VAL> {
@@ -1271,7 +1271,7 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Ceiling function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
+	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ceil(VAL &&val)
 	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Ceil, VAL> {

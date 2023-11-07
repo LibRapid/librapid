@@ -783,26 +783,10 @@ namespace librapid {
 	/// \param second Second input
 	/// \param shapes Remaining (optional) inputs
 	/// \return True if all inputs have the same shape, false otherwise
-	template<typename First, typename Second, typename... Rest,
-			 typename std::enable_if_t<typetraits::IsSizeType<First>::value &&
-										 typetraits::IsSizeType<Second>::value &&
-										 (typetraits::IsSizeType<Rest>::value && ...),
-									   int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_INLINE bool shapesMatch(const First &first, const Second &second,
-														const Rest &...shapes) {
-		if constexpr (sizeof...(Rest) == 0) {
-			return first == second;
-		} else {
-			return first == second && shapesMatch(first, shapes...);
-		}
-	}
-
-	/// \sa shapesMatch
-	template<typename First, typename Second, typename... Rest,
-			 typename std::enable_if_t<typetraits::IsSizeType<First>::value &&
-										 typetraits::IsSizeType<Second>::value &&
-										 (typetraits::IsSizeType<Rest>::value && ...),
-									   int> = 0>
+	template<typename First, typename Second, typename... Rest>
+		requires(typetraits::IsSizeType<First>::value &&
+				 typetraits::IsSizeType<Second>::value &&
+				 (typetraits::IsSizeType<Rest>::value && ...))
 	LIBRAPID_NODISCARD LIBRAPID_INLINE bool
 	shapesMatch(const std::tuple<First, Second, Rest...> &shapes) {
 		if constexpr (sizeof...(Rest) == 0) {
@@ -813,6 +797,19 @@ namespace librapid {
 					 [](auto, auto, auto... rest) { return std::make_tuple(rest...); }, shapes));
 		}
 	}
+	
+	/// \sa shapesMatch
+	//	template<typename First, typename Second, typename... Rest>
+	//		requires(typetraits::IsSizeType<First>::value && typetraits::IsSizeType<Second>::value &&
+	//				 (typetraits::IsSizeType<Rest>::value && ...))
+	//	LIBRAPID_NODISCARD LIBRAPID_INLINE bool shapesMatch(const First &first, const Second &second,
+	//														const Rest &...shapes) {
+	//		if constexpr (sizeof...(Rest) == 0) {
+	//			return first == second;
+	//		} else {
+	//			return first == second && shapesMatch(first, shapes...);
+	//		}
+	//	}
 
 	namespace detail {
 		template<typename First, typename Second>
