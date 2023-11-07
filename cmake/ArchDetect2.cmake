@@ -118,7 +118,7 @@ int main() {
 }" SIMD_FMA3)
 
 # Check AVX
-check_simd_capability("-mavx" "/arch:AVX" "AVX" "
+check_simd_capability("-mavx" "" "AVX" "
 #include <immintrin.h>
 int main() {
     __m256 a = _mm256_set_ps(-1.0f, 2.0f, -3.0f, 4.0f, -1.0f, 2.0f, -3.0f, 4.0f);
