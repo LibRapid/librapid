@@ -20,10 +20,8 @@
 #	include <arm64_neon.h>
 #endif
 
-#define REQUIRE_SCALAR(T)                                                                          \
-	typename std::enable_if_t<::librapid::typetraits::TypeInfo<T>::type ==                         \
-								::librapid::detail::LibRapidType::Scalar,                          \
-							  int> = 0
+#define IS_SCALAR(T)                                                                               \
+	::librapid::typetraits::TypeInfo<T>::type == ::librapid::detail::LibRapidType::Scalar
 
 namespace librapid {
 	namespace detail {
@@ -821,7 +819,8 @@ namespace librapid {
 	/// \param left LHS complex number
 	/// \param right RHS scalar
 	/// \return Sum of LHS and RHS
-	template<typename T, typename R, REQUIRE_SCALAR(R)>
+	template<typename T, typename R>
+		requires(IS_SCALAR(R))
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(const Complex<T> &left,
 															 const R &right) {
 		Complex<T> tmp(left);
@@ -838,7 +837,8 @@ namespace librapid {
 	/// \param real LHS scalar
 	/// \param right RHS complex number
 	/// \return Sum of LHS and RHS
-	template<typename R, typename T, REQUIRE_SCALAR(R)>
+	template<typename R, typename T>
+		requires(IS_SCALAR(R))
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(const R &real,
 															 const Complex<T> &right) {
 		Complex<T> tmp(real);
@@ -874,7 +874,8 @@ namespace librapid {
 	/// \param left LHS complex number
 	/// \param real RHS scalar
 	/// \return Difference of LHS and RHS
-	template<typename T, typename R, REQUIRE_SCALAR(R)>
+	template<typename T, typename R>
+		requires(IS_SCALAR(R))
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(const Complex<T> &left,
 															 const R &real) {
 		Complex<T> tmp(left);
@@ -892,7 +893,8 @@ namespace librapid {
 	/// \param real LHS scalar
 	/// \param right RHS complex number
 	/// \return Difference of LHS and RHS
-	template<typename R, typename T, REQUIRE_SCALAR(R)>
+	template<typename R, typename T>
+		requires(IS_SCALAR(R))
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(const R &real,
 															 const Complex<T> &right) {
 		Complex<T> tmp(real);
@@ -928,7 +930,8 @@ namespace librapid {
 	/// \param left LHS complex number
 	/// \param real RHS scalar
 	/// \return Product of LHS and RHS
-	template<typename T, typename R, REQUIRE_SCALAR(R)>
+	template<typename T, typename R>
+		requires(IS_SCALAR(R))
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(const Complex<T> &left,
 															 const R &real) {
 		Complex<T> tmp(left);
@@ -946,7 +949,8 @@ namespace librapid {
 	/// \param real LHS scalar
 	/// \param right RHS complex number
 	/// \return Product of LHS and RHS
-	template<typename R, typename T, REQUIRE_SCALAR(R)>
+	template<typename R, typename T>
+		requires(IS_SCALAR(R))
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(const R &real,
 															 const Complex<T> &right) {
 		Complex<T> tmp(real);
@@ -982,7 +986,8 @@ namespace librapid {
 	/// \param left LHS complex number
 	/// \param real RHS scalar
 	/// \return Quotient of LHS and RHS
-	template<typename T, typename R, REQUIRE_SCALAR(R)>
+	template<typename T, typename R>
+		requires(IS_SCALAR(R))
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(const Complex<T> &left,
 															 const R &real) {
 		Complex<T> tmp(left);
@@ -1000,7 +1005,8 @@ namespace librapid {
 	/// \param real LHS scalar
 	/// \param right RHS complex number
 	/// \return Quotient of LHS and RHS
-	template<typename R, typename T, REQUIRE_SCALAR(R)>
+	template<typename R, typename T>
+		requires(IS_SCALAR(R))
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(const R &real,
 															 const Complex<T> &right) {
 		Complex<T> tmp(real);
@@ -1580,8 +1586,9 @@ namespace librapid {
 				av	 = av * T(0.0625);
 				bv	 = bv * T(0.0625);
 			} else {
-				const T fltEps	= typetraits::NumericInfo<T>::epsilon();
-				const T legTiny = fltEps == 0 ? T(0) : 2 * typetraits::NumericInfo<T>::min() / fltEps;
+				const T fltEps = typetraits::NumericInfo<T>::epsilon();
+				const T legTiny =
+				  fltEps == 0 ? T(0) : 2 * typetraits::NumericInfo<T>::min() / fltEps;
 
 				if (av < legTiny) {
 					int64_t exponent;
@@ -1718,9 +1725,8 @@ namespace librapid {
 	/// \param left Complex base
 	/// \param right Real exponent
 	/// \return \f$ \text{left}^{\text{right}} \f$
-	template<typename T, typename V,
-			 typename std::enable_if_t<
-			   typetraits::TypeInfo<V>::type == detail::LibRapidType::Scalar, int> = 0>
+	template<typename T, typename V>
+		requires(typetraits::TypeInfo<V>::type == detail::LibRapidType::Scalar)
 	LIBRAPID_NODISCARD Complex<T> pow(const Complex<T> &left, const V &right) {
 		if (imag(left) == 0) {
 			if (::librapid::signBit(imag(left))) {
@@ -1739,9 +1745,8 @@ namespace librapid {
 	/// \param left Real base
 	/// \param right Complex exponent
 	/// \return \f$ \text{left}^{\text{right}} \f$
-	template<typename T, typename V,
-			 typename std::enable_if_t<
-			   typetraits::TypeInfo<V>::type == detail::LibRapidType::Scalar, int> = 0>
+	template<typename T, typename V>
+		requires(typetraits::TypeInfo<V>::type == detail::LibRapidType::Scalar)
 	LIBRAPID_NODISCARD Complex<T> pow(const V &left, const Complex<T> &right) {
 		if (imag(right) == 0) {
 			return _pow(static_cast<V>(left), real(right));
@@ -2117,6 +2122,6 @@ public:
 #	undef USE_ARM64_INTRINSICS
 #endif
 
-#undef REQUIRE_SCALAR
+#undef IS_SCALAR
 
 #endif // LIBRAPID_MATH_COMPLEX_HPP

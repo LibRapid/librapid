@@ -874,13 +874,10 @@ namespace librapid {
 		}                                                                                          \
 	};                                                                                             \
                                                                                                    \
-	template<typename LHS,                                                                         \
-			 typename RHS,                                                                         \
-			 typename std::enable_if_t<(typetraits::IsVector<LHS>::value ||                        \
-										typetraits::IsVector<RHS>::value) &&                       \
-										 (!typetraits::IsArrayContainer<LHS>::value &&             \
-										  !typetraits::IsArrayContainer<RHS>::value),              \
-									   int> = 0>                                                   \
+	template<typename LHS, typename RHS>                                                           \
+		requires((typetraits::IsVector<LHS>::value || typetraits::IsVector<RHS>::value) &&         \
+				 (!typetraits::IsArrayContainer<LHS>::value &&                                     \
+				  !typetraits::IsArrayContainer<RHS>::value))                                      \
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator OP_(const LHS &lhs, const RHS &rhs) {  \
 		using namespace ::librapid::vectorDetail;                                                  \
 		using ScalarLeft  = typename typetraits::TypeInfo<LHS>::Scalar;                            \
@@ -902,15 +899,16 @@ namespace librapid {
 
 #define VECTOR_UNARY_OP(NAME_, OP_NAME_, OP_)                                                      \
 	struct NAME_ {                                                                                 \
-		template<typename Val,                                                                     \
-				 typename std::enable_if_t<typetraits::IsVector<Val>::value, int> = 0>             \
+		template<typename Val>                                                                     \
+			requires(typetraits::IsVector<Val>::value)                                             \
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator()(const Val &val) const {          \
 			using namespace ::librapid::vectorDetail;                                              \
 			return OP_(scalarExtractor(val));                                                      \
 		}                                                                                          \
 	};                                                                                             \
                                                                                                    \
-	template<typename Val, typename std::enable_if_t<typetraits::IsVector<Val>::value, int> = 0>   \
+	template<typename Val>                                                                         \
+		requires(typetraits::IsVector<Val>::value)                                                 \
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto OP_NAME_(const Val &val) {                      \
 		using Op = NAME_;                                                                          \
 		return ::librapid::vectorDetail::UnaryVecOp<Val, Op> {val, Op {}};                         \
@@ -1007,31 +1005,32 @@ namespace librapid {
 	VECTOR_FUNC_IMPL_DEF(sqrt)
 	VECTOR_FUNC_IMPL_DEF(cbrt)
 
-	template<typename T, typename std::enable_if_t<typetraits::IsVector<T>::value, int> = 0>
+	template<typename T>
+		requires(typetraits::IsVector<T>::value)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto mag2(const T &val) {
 		return val.eval().storage().sum2();
 	}
 
-	template<typename T, typename std::enable_if_t<typetraits::IsVector<T>::value, int> = 0>
+	template<typename T>
+		requires(typetraits::IsVector<T>::value)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto mag(const T &val) {
 		return ::librapid::sqrt(mag2(val));
 	}
 
-	template<typename T, typename std::enable_if_t<typetraits::IsVector<T>::value, int> = 0>
+	template<typename T>
+		requires(typetraits::IsVector<T>::value)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sum(const T &val) {
 		return val.eval().storage().sum();
 	}
 
-	template<typename First, typename Second,
-			 typename std::enable_if_t<
-			   typetraits::IsVector<First>::value && typetraits::IsVector<Second>::value, int> = 0>
+	template<typename First, typename Second>
+		requires(typetraits::IsVector<First>::value && typetraits::IsVector<Second>::value)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dot(const First &first, const Second &second) {
 		return (first * second).eval().storage().sum();
 	}
 
-	template<typename First, typename Second,
-			 typename std::enable_if_t<
-			   typetraits::IsVector<First>::value && typetraits::IsVector<Second>::value, int> = 0>
+	template<typename First, typename Second>
+		requires(typetraits::IsVector<First>::value && typetraits::IsVector<Second>::value)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cross(const First &first, const Second &second) {
 		LIBRAPID_ASSERT(typetraits::TypeInfo<First>::dims == 3 &&
 						  typetraits::TypeInfo<Second>::dims == 3,
@@ -1050,7 +1049,8 @@ namespace librapid {
 		return Vector<Scalar, 3> {y1 * z2 - z1 * y2, z1 * x2 - x1 * z2, x1 * y2 - y1 * x2};
 	}
 
-	template<typename T, typename std::enable_if_t<typetraits::IsVector<T>::value, int> = 0>
+	template<typename T>
+		requires(typetraits::IsVector<T>::value)
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto norm(const T &val) {
 		return val / mag(val);
 	}

@@ -41,7 +41,7 @@ namespace librapid {
 
         auto u = ::librapid::random<T>(); // [0, 1)
         auto v = ::librapid::random<T>(); // [0, 1)
-        auto theta = u * 2 * PI;
+        auto theta = u * 2 * constants::pi;
         auto phi = ::librapid::acos(2 * v - 1);
         auto r = ::librapid::cbrt(random<T>());
         auto sinTheta = ::librapid::sin(theta);
