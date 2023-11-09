@@ -23,7 +23,7 @@ jobs:
       matrix:
         include:
           # Window 64 bit
-          - os: windows-latest
+          - os: macos-latest
             pythonVersion: 37
             bitness: 64
             platformID: win_amd64
@@ -295,27 +295,13 @@ jobs:
           xcode-version: latest
 
       - name: Install Clang
-        if: runner.os == 'macOS'
-        run: |
-          rm -f '/usr/local/bin/2to3*'
-          brew install llvm libomp
-
-      - name: Install Clang
-        if: runner.os == 'Windows'
         uses: KyleMayes/install-llvm-action@v1
         with:
           version: '15.0'
           directory: ${RUNNER_TOOL_CACHE}
           env: on
 
-      - name: Set C/CXX Compiler for Windows
-        if: runner.os == 'Windows'
-        run: |
-          cd scripts
-          python setPythonLibCompiler.py -cc ${RUNNER_TOOL_CACHE}/llvm/bin/clang -cxx ${RUNNER_TOOL_CACHE}/llvm/bin/clang++ -o pyproject.toml
-
       - name: Build Wheels
-        if: runner.os == 'macOS'
         run: |
           python -m pip install cibuildwheel
           python -m cibuildwheel --output-dir wheelhouse
@@ -332,53 +318,7 @@ jobs:
           GITHUB_ACTIONS: ON
           LIBRAPID_GET_BLAS: OFF
           LIBRAPID_GET_FFTW: OFF
-          CC: /usr/local/opt/llvm/bin/clang
-          CXX: /usr/local/opt/llvm/bin/clang++
-          CIBW_ENVIRONMENT: CC=/usr/local/opt/llvm/bin/clang CXX=/usr/local/opt/llvm/bin/clang++ CMAKE_BUILD_PARALLEL_LEVEL=1
-          CMAKE_C_COMPILER: /usr/local/opt/llvm/bin/clang
-          CMAKE_CXX_COMPILER: /usr/local/opt/llvm/bin/clang++
-
-      - name: Build Wheels
-        if: runner.os == 'Windows'
-        run: |
-          python -m pip install cibuildwheel
-          python -m cibuildwheel --output-dir wheelhouse
-        env:
-          CIBW_BUILD: ${{ matrix.pythonType }}${{ matrix.pythonVersion }}-${{ matrix.platformID }}
-          CIBW_ARCHS: all
-          CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.manylinux_image }}
-          CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.manylinux_image }}
-          CIBW_MANYLINUX_PYPY_X86_64_IMAGE: ${{ matrix.manylinux_image }}
-          CIBW_MANYLINUX_PYPY_I686_IMAGE: ${{ matrix.manylinux_image }}
-          CIBW_BUILD_VERBOSITY: 1
-          CMAKE_BUILD_PARALLEL_LEVEL: 1
-          GITHUB_ACTIONS: ON
-          LIBRAPID_GET_BLAS: ON
-          LIBRAPID_GET_FFTW: OFF
-          CC: ${RUNNER_TOOL_CACHE}/llvm/bin/clang
-          CXX: ${RUNNER_TOOL_CACHE}/llvm/bin/clang++
-          CIBW_ENVIRONMENT: CC=${RUNNER_TOOL_CACHE}/llvm/bin/clang CXX=${RUNNER_TOOL_CACHE}/llvm/bin/clang++ CMAKE_BUILD_PARALLEL_LEVEL=1
-          CMAKE_C_COMPILER: ${RUNNER_TOOL_CACHE}/llvm/bin/clang
-          CMAKE_CXX_COMPILER: ${RUNNER_TOOL_CACHE}/llvm/bin/clang++
-
-      - name: Build Wheels
-        if: runner.os == 'Linux'
-        run: |
-          python -m pip install cibuildwheel
-          python -m cibuildwheel --output-dir wheelhouse
-        env:
-          CIBW_BUILD: ${{ matrix.pythonType }}${{ matrix.pythonVersion }}-${{ matrix.platformID }}
-          CIBW_ARCHS: all
-          CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.manylinux_image }}
-          CIBW_MANYLINUX_I686_IMAGE: ${{ matrix.manylinux_image }}
-          CIBW_MANYLINUX_PYPY_X86_64_IMAGE: ${{ matrix.manylinux_image }}
-          CIBW_MANYLINUX_PYPY_I686_IMAGE: ${{ matrix.manylinux_image }}
-          CIBW_BUILD_VERBOSITY: 1
-          CMAKE_BUILD_PARALLEL_LEVEL: 1
-          GITHUB_ACTIONS: ON
-          LIBRAPID_GET_BLAS: ON
-          LIBRAPID_GET_FFTW: OFF
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=1
+          CIBW_ENVIRONMENT: CC=${CLANG_PATH}/clang CXX=${CLANG_PATH}/clang++ CMAKE_BUILD_PARALLEL_LEVEL=1
 
       - name: Store Artifacts
         uses: actions/upload-artifact@v3
