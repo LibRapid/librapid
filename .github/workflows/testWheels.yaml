@@ -101,18 +101,10 @@ jobs:
           rm -f '/usr/local/bin/2to3*'
           brew install llvm libomp
 
-      - name: Install Clang
-        if: runner.os == 'Windows'
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: '16.0'
-          directory: ${RUNNER_TOOL_CACHE}
-          env: on
-
       - name: Build Wheels
         run: |
           python -m pip install cibuildwheel
-          python -m cibuildwheel --output-dir wheelhouse --platform ${{ matrix.platform }} --arch ${{ matrix.bitness }}
+          python -m cibuildwheel --output-dir wheelhouse --platform ${{ matrix.platform }}
         env:
           CIBW_BUILD: ${{ matrix.pythonType }}${{ matrix.pythonVersion }}-${{ matrix.platformID }}
           CIBW_ARCHS: all
