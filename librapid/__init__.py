@@ -247,8 +247,8 @@ uint64 = DataType("uint64", 8)
 __cpuTypeList = {
     int32: _librapid.ArrayInt32CPU,
     int64: _librapid.ArrayInt64CPU,
-    # uint32: _librapid.ArrayUInt32CPU,
-    # uint64: _librapid.ArrayUInt64CPU,
+    uint32: _librapid.ArrayUInt32CPU,
+    uint64: _librapid.ArrayUInt64CPU,
     float32: _librapid.ArrayFloatCPU,
     float64: _librapid.ArrayDoubleCPU,
     # Complex32: _librapid.ArrayComplexFloatCPU,
@@ -259,8 +259,8 @@ if _librapid.hasOpenCL():
     __openclTypeList = {
         int32: _librapid.ArrayInt32OpenCL,
         int64: _librapid.ArrayInt64OpenCL,
-        # uint32: _librapid.ArrayUInt32OpenCL,
-        # uint64: _librapid.ArrayUInt64OpenCL,
+        uint32: _librapid.ArrayUInt32OpenCL,
+        uint64: _librapid.ArrayUInt64OpenCL,
         float32: _librapid.ArrayFloatOpenCL,
         float64: _librapid.ArrayDoubleOpenCL,
         # Complex32: _librapid.ArrayComplexFloatOpenCL,
@@ -273,8 +273,8 @@ if _librapid.hasCUDA():
     __cudaTypeList = {
         int32: _librapid.ArrayInt32CUDA,
         int64: _librapid.ArrayInt64CUDA,
-        # uint32: _librapid.ArrayUInt32CUDA,
-        # uint64: _librapid.ArrayUInt64CUDA,
+        uint32: _librapid.ArrayUInt32CUDA,
+        uint64: _librapid.ArrayUInt64CUDA,
         float32: _librapid.ArrayFloatCUDA,
         float64: _librapid.ArrayDoubleCUDA,
         # Complex32: _librapid.ArrayComplexFloatCUDA,

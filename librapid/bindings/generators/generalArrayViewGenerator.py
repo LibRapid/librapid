@@ -11,12 +11,12 @@ arrayTypes = []
 
 for scalar in [("int32_t", "Int32"),
                ("int64_t", "Int64"),
-               # ("uint32_t", "UInt32"),
-               # ("uint64_t", "UInt64"),
+               ("uint32_t", "UInt32"),
+               ("uint64_t", "UInt64"),
                ("float", "Float"),
                ("double", "Double"),
-               # ("lrc::Complex<float>", "ComplexFloat"),
-               # ("lrc::Complex<double>", "ComplexDouble")
+               ("lrc::Complex<float>", "ComplexFloat"),
+               ("lrc::Complex<double>", "ComplexDouble")
                ]:
     for backend in ["CPU"]:  # ["CPU", "OpenCL", "CUDA"]:
         arrayTypes.append({
