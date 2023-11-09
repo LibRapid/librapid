@@ -15,8 +15,8 @@ for scalar in [("int32_t", "Int32"),
                ("uint64_t", "UInt64"),
                ("float", "Float"),
                ("double", "Double"),
-               ("lrc::Complex<float>", "ComplexFloat"),
-               ("lrc::Complex<double>", "ComplexDouble")
+               # ("lrc::Complex<float>", "ComplexFloat"),
+               # ("lrc::Complex<double>", "ComplexDouble")
                ]:
     for backend in ["CPU"]:  # ["CPU", "OpenCL", "CUDA"]:
         arrayTypes.append({
@@ -54,18 +54,6 @@ def generateFunctionsForArray(config):
                 )
             ]
         ),
-
-        # Move constructor
-        # function.Function(
-        #     name="__init__",
-        #     args=[
-        #         argument.Argument(
-        #             name="other",
-        #             type=generateCppArrayType(config),
-        #             move=True
-        #         )
-        #     ]
-        # ),
 
         # Shape
         function.Function(
@@ -113,23 +101,23 @@ def generateFunctionsForArray(config):
         ),
     ]
 
-    # Static fromData (n dimensions)
-    for n in range(1, 9):
-        cppType = ("std::vector<" * n) + config['scalar'] + (">" * n)
-
-        methods.append(
-            function.Function(
-                name="__init__",
-                args=[
-                    argument.Argument(
-                        name=f"array{n}D",
-                        type=cppType,
-                        const=True,
-                        ref=True,
-                    )
-                ]
-            )
-        )
+    # # Static fromData (n dimensions)
+    # for n in range(1, 9):
+    #     cppType = ("std::vector<" * n) + config['scalar'] + (">" * n)
+    #
+    #     methods.append(
+    #         function.Function(
+    #             name="__init__",
+    #             args=[
+    #                 argument.Argument(
+    #                     name=f"array{n}D",
+    #                     type=cppType,
+    #                     const=True,
+    #                     ref=True,
+    #                 )
+    #             ]
+    #         )
+    #     )
 
     methods += [
         # Get item
