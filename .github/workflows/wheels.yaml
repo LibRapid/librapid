@@ -358,6 +358,8 @@ jobs:
           CC: ${RUNNER_TOOL_CACHE}/llvm/bin/clang
           CXX: ${RUNNER_TOOL_CACHE}/llvm/bin/clang++
           CIBW_ENVIRONMENT: CC=${RUNNER_TOOL_CACHE}/llvm/bin/clang CXX=${RUNNER_TOOL_CACHE}/llvm/bin/clang++ CMAKE_BUILD_PARALLEL_LEVEL=1
+          CIBW_BEFORE_ALL: |
+            export CMAKE_BUILD_PARALLEL_LEVEL=1
           CMAKE_C_COMPILER: ${RUNNER_TOOL_CACHE}/llvm/bin/clang
           CMAKE_CXX_COMPILER: ${RUNNER_TOOL_CACHE}/llvm/bin/clang++
 
