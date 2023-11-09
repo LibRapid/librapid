@@ -29,31 +29,31 @@ jobs:
             platformID: win_amd64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: windows-latest
             pythonVersion: 38
             bitness: 64
             platformID: win_amd64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: windows-latest
             pythonVersion: 39
             bitness: 64
             platformID: win_amd64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: windows-latest
             pythonVersion: 310
             bitness: 64
             platformID: win_amd64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: windows-latest
             pythonVersion: 311
             bitness: 64
             platformID: win_amd64
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: windows-latest
             pythonVersion: 312
             bitness: 64
             platformID: win_amd64
@@ -110,42 +110,42 @@ jobs:
             pythonType: "pp"
 
           # Linux 64 bit manylinux2014
-          - os: macos-latest
+          - os: ubuntu-latest
             pythonVersion: 37
             bitness: 64
             platformID: manylinux_x86_64
             manylinux_image: manylinux2014
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: ubuntu-latest
             pythonVersion: 38
             bitness: 64
             platformID: manylinux_x86_64
             manylinux_image: manylinux2014
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: ubuntu-latest
             pythonVersion: 39
             bitness: 64
             platformID: manylinux_x86_64
             manylinux_image: manylinux2014
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: ubuntu-latest
             pythonVersion: 310
             bitness: 64
             platformID: manylinux_x86_64
             manylinux_image: manylinux2014
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: ubuntu-latest
             pythonVersion: 311
             bitness: 64
             platformID: manylinux_x86_64
             manylinux_image: manylinux2014
             pythonType: "cp"
 
-          - os: macos-latest
+          - os: ubuntu-latest
             pythonVersion: 312
             bitness: 64
             platformID: manylinux_x86_64
@@ -153,28 +153,28 @@ jobs:
             pythonType: "cp"
 
           # Linux PyPy 64 bit manylinux2014
-          - os: macos-latest
+          - os: ubuntu-latest
             pythonVersion: 37
             bitness: 64
             platformID: manylinux_x86_64
             manylinux_image: manylinux2014
             pythonType: "pp"
 
-          - os: macos-latest
+          - os: ubuntu-latest
             pythonVersion: 38
             bitness: 64
             platformID: manylinux_x86_64
             manylinux_image: manylinux2014
             pythonType: "pp"
 
-          - os: macos-latest
+          - os: ubuntu-latest
             pythonVersion: 39
             bitness: 64
             platformID: manylinux_x86_64
             manylinux_image: manylinux2014
             pythonType: "pp"
 
-          - os: macos-latest
+          - os: ubuntu-latest
             pythonVersion: 310
             bitness: 64
             platformID: manylinux_x86_64
