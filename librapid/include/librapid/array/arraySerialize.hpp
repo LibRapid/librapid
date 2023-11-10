@@ -22,13 +22,14 @@ namespace librapid::serialize {
 
 			DimType numDims = shape.ndim();
 			size_t hashed	= hasher();
-			memcpy(serialized.data(), &numDims, sizeof(DimType));
-			memcpy(serialized.data() + sizeof(DimType),
-				   shape.data().begin(),
-				   sizeof(SizeType) * LIBRAPID_MAX_ARRAY_DIMS);
-			memcpy(serialized.data() + sizeof(DimType) + sizeof(SizeType) * LIBRAPID_MAX_ARRAY_DIMS,
-				   &hashed,
-				   sizeof(size_t));
+			std::memcpy(serialized.data(), &numDims, sizeof(DimType));
+			std::memcpy(serialized.data() + sizeof(DimType),
+						shape.data().begin(),
+						sizeof(SizeType) * LIBRAPID_MAX_ARRAY_DIMS);
+			std::memcpy(serialized.data() + sizeof(DimType) +
+						  sizeof(SizeType) * LIBRAPID_MAX_ARRAY_DIMS,
+						&hashed,
+						sizeof(size_t));
 			return serialized;
 		}
 
@@ -42,14 +43,14 @@ namespace librapid::serialize {
 
 			DimType numDims;
 			size_t hashed;
-			memcpy(&numDims, data.data(), sizeof(DimType));
+			std::memcpy(&numDims, data.data(), sizeof(DimType));
 			Shape shape = Shape::zeros(numDims);
-			memcpy(shape.data().begin(),
-				   data.data() + sizeof(DimType),
-				   sizeof(SizeType) * LIBRAPID_MAX_ARRAY_DIMS);
-			memcpy(&hashed,
-				   data.data() + sizeof(DimType) + sizeof(SizeType) * LIBRAPID_MAX_ARRAY_DIMS,
-				   sizeof(size_t));
+			std::memcpy(shape.data().begin(),
+						data.data() + sizeof(DimType),
+						sizeof(SizeType) * LIBRAPID_MAX_ARRAY_DIMS);
+			std::memcpy(&hashed,
+						data.data() + sizeof(DimType) + sizeof(SizeType) * LIBRAPID_MAX_ARRAY_DIMS,
+						sizeof(size_t));
 
 			LIBRAPID_ASSERT(
 			  hashed == hasher(),
@@ -77,12 +78,12 @@ namespace librapid::serialize {
 
 			size_t elements = storage.size();
 			size_t hashed	= hasher();
-			memcpy(serialized.data(), &elements, sizeof(size_t));
-			memcpy(
+			std::memcpy(serialized.data(), &elements, sizeof(size_t));
+			std::memcpy(
 			  serialized.data() + sizeof(size_t), storage.data(), sizeof(Scalar) * storage.size());
-			memcpy(serialized.data() + sizeof(size_t) + sizeof(Scalar) * storage.size(),
-				   &hashed,
-				   sizeof(size_t));
+			std::memcpy(serialized.data() + sizeof(size_t) + sizeof(Scalar) * storage.size(),
+						&hashed,
+						sizeof(size_t));
 			return serialized;
 		}
 
@@ -94,12 +95,13 @@ namespace librapid::serialize {
 
 			size_t elements;
 			size_t hashed;
-			memcpy(&elements, data.data(), sizeof(size_t));
+			std::memcpy(&elements, data.data(), sizeof(size_t));
 			Storage<Scalar> storage(elements);
-			memcpy(storage.data(), data.data() + sizeof(size_t), sizeof(Scalar) * storage.size());
-			memcpy(&hashed,
-				   data.data() + sizeof(size_t) + sizeof(Scalar) * storage.size(),
-				   sizeof(size_t));
+			std::memcpy(
+			  storage.data(), data.data() + sizeof(size_t), sizeof(Scalar) * storage.size());
+			std::memcpy(&hashed,
+						data.data() + sizeof(size_t) + sizeof(Scalar) * storage.size(),
+						sizeof(size_t));
 
 			LIBRAPID_ASSERT(
 			  hashed == hasher(),
@@ -148,12 +150,12 @@ namespace librapid::serialize {
 			std::vector<uint8_t> serialized;
 			serialized.resize(shapeBytes + storageBytes);
 
-			memcpy(
+			std::memcpy(
 			  serialized.data(), SerializerImpl<ShapeType>::serialize(shape).data(), shapeBytes);
-			memcpy(serialized.data() + shapeBytes,
-				   SerializerImpl<StorageType>::serialize(storage).data(),
-				   storageBytes);
-			memcpy(serialized.data() + shapeBytes + storageBytes, &hashed, sizeof(size_t));
+			std::memcpy(serialized.data() + shapeBytes,
+						SerializerImpl<StorageType>::serialize(storage).data(),
+						storageBytes);
+			std::memcpy(serialized.data() + shapeBytes + storageBytes, &hashed, sizeof(size_t));
 
 			return serialized;
 		}
@@ -170,8 +172,8 @@ namespace librapid::serialize {
 			  data.begin() + SerializerImpl<ShapeType>::serialize(shape).size(), data.end()));
 
 			Type ret;
-			ret.size_() = shape.size();
-			ret.shape() = shape;
+			ret.size_()	  = shape.size();
+			ret.shape()	  = shape;
 			ret.storage() = storage;
 			return ret;
 		}
