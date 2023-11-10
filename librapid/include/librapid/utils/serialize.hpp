@@ -27,20 +27,20 @@ namespace librapid::serialize {
 			std::vector<uint8_t> data;
 			data.resize(sizeof(T) + sizeof(size_t));
 			size_t hashed = hasher();
-			std::memcpy(data.data() + sizeof(T), &hashed, sizeof(size_t));
-			std::memcpy(data.data(), &obj, sizeof(T));
+			memcpy(data.data() + sizeof(T), &hashed, sizeof(size_t));
+			memcpy(data.data(), &obj, sizeof(T));
 			return data;
 		}
 
 		LIBRAPID_NODISCARD static T deserialize(const std::vector<uint8_t> &data) {
 			size_t hashed;
-			std::memcpy(&hashed, data.data() + sizeof(T), sizeof(size_t));
+			memcpy(&hashed, data.data() + sizeof(T), sizeof(size_t));
 			LIBRAPID_ASSERT(
 			  hasher() == hashed,
 			  "Hash mismatch. Ensure the types are the same and the data is not corrupted.");
 
 			T obj;
-			std::memcpy(&obj, data.data(), sizeof(T));
+			memcpy(&obj, data.data(), sizeof(T));
 			return obj;
 		}
 	};
