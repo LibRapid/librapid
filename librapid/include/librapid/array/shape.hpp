@@ -128,8 +128,8 @@ namespace librapid {
 		/// \param start Starting index
 		/// \param end Ending index
 		/// \return Subshape
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(DimType start, DimType end) const
-		  -> Shape;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(DimType start = -1,
+																DimType end	  = -1) const -> Shape;
 
 		/// Return the number of elements the Shape object represents
 		/// \return Number of elements
@@ -377,6 +377,9 @@ namespace librapid {
 	LIBRAPID_NODISCARD auto Shape::ndim() const -> DimType { return m_dims; }
 
 	LIBRAPID_NODISCARD auto Shape::subshape(DimType start, DimType end) const -> Shape {
+		if (start < 0) start = 0;
+		if (end < 0) end = m_dims;
+
 		LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
 									   start <= end,
 									   "Start index ({}) must not be greater than end index ({})",
