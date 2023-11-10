@@ -438,6 +438,47 @@ def generateFunctionsForArray(config):
             )
         )
 
+    if config["backend"] == "CPU":
+        functions += [
+            function.Function(
+                name=f"serialize{config['name']}",
+                args=[
+                    argument.Argument(
+                        name="array",
+                        type=generateCppArrayType(config),
+                        const=True,
+                        ref=True
+                    ),
+                    argument.Argument(
+                        name="path",
+                        type="std::string",
+                        const=True,
+                        ref=True
+                    )
+                ],
+                op="""
+                    return lrc::serialize::Serializer(array).write(path);
+                """
+            ),
+
+            function.Function(
+                name=f"deserialize{config['name']}",
+                args=[
+                    argument.Argument(
+                        name="path",
+                        type="std::string",
+                        const=True,
+                        ref=True
+                    )
+                ],
+                op=f"""
+                    lrc::serialize::Serializer<{generateCppArrayType(config)}> serializer;
+                    serializer.read(path);
+                    return serializer.deserialize();
+                """
+            )
+        ]
+
     return methods, functions
 
 

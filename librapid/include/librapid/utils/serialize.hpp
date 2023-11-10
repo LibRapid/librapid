@@ -73,11 +73,14 @@ namespace librapid::serialize {
 
 		LIBRAPID_NODISCARD bool write(const std::string &path) const {
 			std::fstream file(path, std::ios::out | detail::fileBinMode(path));
-			return write(file);
+			bool ret = write(file);
+			file.close();
+			return ret;
 		}
 
 		LIBRAPID_NODISCARD bool read(std::fstream &file) {
 			file.seekg(0, std::ios::end);
+			if (file.tellg() == -1) return false;
 			m_data.resize(file.tellg());
 			file.seekg(0, std::ios::beg);
 			file.read(reinterpret_cast<char *>(m_data.data()), m_data.size());
@@ -86,7 +89,9 @@ namespace librapid::serialize {
 
 		LIBRAPID_NODISCARD bool read(const std::string &path) {
 			std::fstream f(path, std::ios::in | detail::fileBinMode(path));
-			return read(f);
+			bool ret = read(f);
+			f.close();
+			return ret;
 		}
 
 	private:

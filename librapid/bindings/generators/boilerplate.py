@@ -43,19 +43,23 @@ postBoilerplate = textwrap.dedent(f"""
 #endif
 
             module.def("hasOpenCL", []() {{ 
-            #if defined(LIBRAPID_HAS_OPENCL)
-                return true;
-            #else
+            // #if defined(LIBRAPID_HAS_OPENCL)
+            //     return true;
+            // #else
+            //     return false;
+            // #endif
+            
                 return false;
-            #endif
             }});
             
             module.def("hasCUDA", []() {{
-            #if defined(LIBRAPID_HAS_CUDA)
-                return true;
-            #else
+            // #if defined(LIBRAPID_HAS_CUDA)
+            //     return true;
+            // #else
+            //     return false;
+            // #endif
+            
                 return false;
-            #endif
             }});
             
             module.def("setNumThreads", [](size_t numThreads) {{
