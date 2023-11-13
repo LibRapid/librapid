@@ -28,14 +28,14 @@ namespace librapid {
 		Scalar derivative;
 
 		Dual() = default;
-		explicit Dual(Scalar value) : value(value), derivative(Scalar()) {}
+		Dual(Scalar value) : value(value), derivative(Scalar()) {}
 		Dual(Scalar value, Scalar derivative) : value(value), derivative(derivative) {}
 
 		template<typename U>
-		explicit Dual(const Dual<U> &other) : value(other.value), derivative(other.derivative) {}
+		Dual(const Dual<U> &other) : value(other.value), derivative(other.derivative) {}
 
 		template<typename U>
-		explicit Dual(Dual<U> &&other) :
+		Dual(Dual<U> &&other) :
 				value(std::move(other.value)), derivative(std::move(other.derivative)) {}
 
 		template<typename U>

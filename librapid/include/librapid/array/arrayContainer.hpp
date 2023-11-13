@@ -298,6 +298,8 @@ namespace librapid {
 			/// \param value The value to write to the array's storage
 			LIBRAPID_ALWAYS_INLINE void write(size_t index, const Scalar &value);
 
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &resize(const ShapeType &shape);
+
 			template<typename T>
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator+=(const T &other);
 
@@ -815,6 +817,19 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void
 		ArrayContainer<ShapeType_, StorageType_>::write(size_t index, const Scalar &value) {
 			m_storage[index] = value;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		LIBRAPID_ALWAYS_INLINE auto
+		ArrayContainer<ShapeType_, StorageType_>::resize(const ShapeType &shape)
+		  -> ArrayContainer & {
+			LIBRAPID_ASSERT(shape.size() == m_size,
+							"Size of new shape ({}) must equal size of old shape ({})",
+							shape.size(),
+							m_size);
+			m_shape = shape;
+			m_size	= shape.size();
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
