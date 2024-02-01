@@ -687,7 +687,7 @@ jobs:
           ctest -C Debug --output-on-failure
 
       - name: Upload Coverage Reports
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
 
   trigger-docs:
     name: Trigger Documentation Build
