@@ -275,7 +275,7 @@ jobs:
 
       - name: Install Clang
         if: matrix.clangVer != null
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: ${{ matrix.clangVer }}
           directory: "./llvm"
@@ -337,7 +337,7 @@ jobs:
           python-version: "3.9"
 
       - name: Install Clang
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: "15.0"
           directory: "./llvm"
@@ -501,7 +501,7 @@ jobs:
     steps:
       - name: Install Clang
         if: matrix.clangVer != null
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: ${{ matrix.clangVer }}
           directory: "./llvm"
