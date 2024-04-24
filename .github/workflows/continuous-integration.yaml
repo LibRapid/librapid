@@ -275,7 +275,7 @@ jobs:
 
       - name: Install Clang
         if: matrix.clangVer != null
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: ${{ matrix.clangVer }}
           directory: "./llvm"
@@ -332,12 +332,12 @@ jobs:
         uses: lukka/get-cmake@latest
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.9"
 
       - name: Install Clang
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: "15.0"
           directory: "./llvm"
@@ -406,7 +406,7 @@ jobs:
           make latexpdf
 
       - name: Store Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Documentation
           path: docs/build/**
@@ -501,7 +501,7 @@ jobs:
     steps:
       - name: Install Clang
         if: matrix.clangVer != null
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: ${{ matrix.clangVer }}
           directory: "./llvm"
@@ -524,7 +524,7 @@ jobs:
           git submodule update --init --recursive
 
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.9"
 
@@ -572,7 +572,7 @@ jobs:
           python dataProcessor.py --directory ../build --output ../../${{ matrix.pretty }} --relative Eigen --verbose
 
       - name: Upload Intermediate Benchmark Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.pretty }}
           path: ${{ matrix.pretty }}
@@ -589,7 +589,7 @@ jobs:
 
 
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.9"
 
@@ -604,7 +604,7 @@ jobs:
           tree
           
       - name: Upload Intermediate Benchmark Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: IntermediateBenchmarkResults
           path: IntermediateBenchmarkResults
@@ -624,7 +624,7 @@ jobs:
           tree
 
       - name: Upload Benchmark Documentation
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: LibRapid_Benchmark_SHA_${{ github.sha }}
           path: BenchmarkDocumentation
@@ -662,7 +662,7 @@ jobs:
         uses: lukka/get-cmake@latest
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.9"
 
