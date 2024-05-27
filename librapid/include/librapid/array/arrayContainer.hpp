@@ -943,6 +943,8 @@ namespace librapid {
 		}
 	} // namespace array
 
+	// template<typename ShapeType_, typename StorageType_>
+
 	namespace detail {
 		template<typename T>
 		struct IsArrayType {

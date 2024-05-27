@@ -146,16 +146,17 @@
 #endif
 
 // Instruction sets
-#define ARCH_AVX512_2 10
-#define ARCH_AVX512	  9
-#define ARCH_AVX2	  8
-#define ARCH_AVX	  7
-#define ARCH_SSE4_2	  6
-#define ARCH_SSE4_1	  5
-#define ARCH_SSSE3	  4
-#define ARCH_SSE3	  3
-#define ARCH_SSE2	  2
-#define ARCH_SSE	  1
+#define ARCH_AVX512_2 11
+#define ARCH_AVX512	  10
+#define ARCH_AVX2	  9
+#define ARCH_AVX	  8
+#define ARCH_SSE4_2	  7
+#define ARCH_SSE4_1	  6
+#define ARCH_SSSE3	  5
+#define ARCH_SSE3	  4
+#define ARCH_SSE2	  3
+#define ARCH_SSE	  2
+#define ARCH_NEON	  1
 #define ARCH_NONE	  0
 
 // Instruction set detection
