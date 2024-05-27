@@ -186,7 +186,7 @@ jobs:
           - os: windows-latest
             cc: ../llvm/clang
             cxx: ../llvm/clang++
-            clangVer: "15.0"
+            clangVer: "16.0"
             blas: off
             getBlas: off
             fftw: off
@@ -197,7 +197,7 @@ jobs:
           - os: windows-latest
             cc: ../llvm/clang
             cxx: ../llvm/clang++
-            clangVer: "15.0"
+            clangVer: "16.0"
             blas: on
             getBlas: on
             fftw: on
@@ -208,7 +208,7 @@ jobs:
           - os: windows-latest
             cc: ./llvm/clang
             cxx: ./llvm/clang++
-            clangVer: "15.0"
+            clangVer: "16.0"
             blas: off
             getBlas: off
             fftw: off
@@ -219,7 +219,7 @@ jobs:
           - os: windows-latest
             cc: ./llvm/clang
             cxx: ./llvm/clang++
-            clangVer: "15.0"
+            clangVer: "16.0"
             blas: on
             getBlas: on
             fftw: on
@@ -290,7 +290,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         uses: maxim-lobanov/setup-xcode@v1.5.1
         with:
-            xcode-version: latest
+          xcode-version: latest
 
       # Tests must pass in both debug and release mode
       - name: Compile (Debug)
@@ -394,7 +394,7 @@ jobs:
         run: |
           sudo apt --fix-broken install
           sudo apt-get install python3-sphinx
-          
+
       - name: Configure Files
         run: |
           touch .is_local
@@ -428,14 +428,14 @@ jobs:
           - os: ubuntu-latest
             cc: ../../llvm/bin/clang
             cxx: ../../llvm/bin/clang++
-            clangVer: "15.0"
+            clangVer: "16.0"
             smallArrays: ON
             pretty: "LibRapid_Ubuntu_Clang_OptimiseSmallArrays"
 
           - os: ubuntu-latest
             cc: ../../llvm/bin/clang
             cxx: ../../llvm/bin/clang++
-            clangVer: "15.0"
+            clangVer: "16.0"
             smallArrays: OFF
             pretty: "LibRapid_Ubuntu_Clang"
 
@@ -454,14 +454,14 @@ jobs:
           - os: macos-latest
             cc: ../../llvm/bin/clang
             cxx: ../../llvm/bin/clang++
-            clangVer: "15.0"
+            clangVer: "16.0"
             smallArrays: ON
             pretty: "LibRapid_MacOS_Clang_OptimiseSmallArrays"
 
           - os: macos-latest
             cc: ../../llvm/bin/clang
             cxx: ../../llvm/bin/clang++
-            clangVer: "15.0"
+            clangVer: "16.0"
             smallArrays: OFF
             pretty: "LibRapid_MacOS_Clang"
 
@@ -480,14 +480,14 @@ jobs:
           - os: windows-latest
             cc: ../../llvm/clang
             cxx: ../../llvm/clang++
-            clangVer: "15.0"
+            clangVer: "16.0"
             smallArrays: ON
             pretty: "LibRapid_Windows_Clang_OptimiseSmallArrays"
 
           - os: windows-latest
             cc: ../../llvm/clang
             cxx: ../../llvm/clang++
-            clangVer: "15.0"
+            clangVer: "16.0"
             smallArrays: OFF
             pretty: "LibRapid_Windows_Clang"
 
@@ -607,7 +607,7 @@ jobs:
         run: |
           cd IntermediateBenchmarkResults
           tree
-          
+
       - name: Upload Intermediate Benchmark Results
         uses: actions/upload-artifact@v3
         with:

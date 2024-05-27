@@ -16,7 +16,6 @@ namespace librapid {
 		concept SIMD = IsSIMD<T>::value;
 	} // namespace typetraits
 
-#define REQUIRE_SIMD(TYPE) typename std::enable_if_t<typetraits::IsSIMD<TYPE>::value, int> = 0
 #define IS_FLOATING(TYPE)  std::is_floating_point_v<TYPE>
 
 #define SIMD_OP_IMPL(OP)                                                                           \

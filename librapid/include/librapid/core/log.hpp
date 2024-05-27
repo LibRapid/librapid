@@ -20,7 +20,26 @@ namespace librapid::assert {
 												 (int)signature.length(),
 												 (int)strlen("ASSERTION FAILED"));
 
-				std::string formatted = fmt::format(
+				// std::string formatted = fmt::format(
+				//   "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "
+				//   "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "
+				//   "{4:>{10}}]\n{5}\n",
+				//   "ASSERTION FAILED",
+				//   filename,
+				//   signature,
+				//   line,
+				//   conditionString,
+				//   formattedMessage,
+				//   maxLen + 14,
+				//   maxLen + 9,
+				//   maxLen + 5,
+				//   maxLen + 9,
+				//   maxLen + 4);
+
+				// fmt::print(fmt::fg(fmt::color::red), formatted);
+				// fmt::vprint(fmt::fg(fmt::color::red), formatted);
+
+				fmt::print(fmt::fg(fmt::color::red),
 				  "[{0:-^{6}}]\n[File {1:>{7}}]\n[Function "
 				  "{2:>{8}}]\n[Line {3:>{9}}]\n[Condition "
 				  "{4:>{10}}]\n{5}\n",
@@ -35,8 +54,6 @@ namespace librapid::assert {
 				  maxLen + 5,
 				  maxLen + 9,
 				  maxLen + 4);
-
-				fmt::print(fmt::fg(fmt::color::red), formatted);
 			}
 
 			throw RaiseType(formattedMessage);

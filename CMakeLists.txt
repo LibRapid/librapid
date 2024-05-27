@@ -114,6 +114,12 @@ if (${SKBUILD})
     )
     FetchContent_MakeAvailable(pybind11)
 
+    # Set CMAKE_BUILD_PARALLEL_LEVEL=1 to reduce memory usage
+    set(CMAKE_BUILD_PARALLEL_LEVEL 1)
+
+    # Set environment variable CMAKE_BUILD_PARALLEL_LEVEL=1 to reduce memory usage
+    set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 1)
+
     # Run auto-generation script
     # 1. Find the Python executable
     # 2. cd into 'librapid/bindings/generators'
@@ -157,7 +163,7 @@ if (${SKBUILD})
         set(LIBRAPID_USE_CUDA ON)
         set(LIBRAPID_USE_OPENCL ON)
         set(LIBRAPID_NATIVE_ARCH ON)
-    else()
+    else ()
         set(LIBRAPID_NO_ALWAYS_INLINE ON) # Reduce compile memory
     endif ()
 
@@ -180,6 +186,11 @@ if (${SKBUILD})
             ${LIBRAPID_SOURCES}
             ${PYTHON_SOURCES}
     )
+
+    # If using MSVC with GitHub, set /Zm512 to reduce memory usage
+    if (MSVC AND "$ENV{CI}")
+        target_compile_options(${module_name} PRIVATE /Zm512)
+    endif ()
 
     target_compile_definitions(${module_name} PUBLIC
             LIBRAPID_PYTHON

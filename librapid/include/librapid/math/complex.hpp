@@ -2077,6 +2077,11 @@ namespace librapid {
 
 			static constexpr bool canAlign	= TypeInfo<T>::canAlign;
 			static constexpr bool canMemcpy = TypeInfo<T>::canMemcpy;
+		};
+
+		template<typename T>
+		struct NumericInfo<Complex<T>> {
+			using Scalar = typename TypeInfo<Complex<T>>::Scalar;
 
 			LIMIT_IMPL(min) { return TypeInfo<T>::min(); }
 			LIMIT_IMPL(max) { return TypeInfo<T>::max(); }
@@ -2089,6 +2094,13 @@ namespace librapid {
 		};
 	} // namespace typetraits
 } // namespace librapid
+
+namespace cxxblas {
+	template<typename T>
+	librapid::Complex<T> conjugate(const librapid::Complex<T> &val) {
+		return librapid::conj(val);
+	}
+} // namespace cxxblas
 
 // Support FMT printing
 #ifdef FMT_API

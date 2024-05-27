@@ -55,7 +55,10 @@ namespace librapid {
         // OpenBLAS threading
 #if defined(LIBRAPID_BLAS_OPENBLAS)
         openblas_set_num_threads((int)numThreads);
+
+    #if defined(_OPENMP)
         omp_set_num_threads((int)numThreads);
+    #endif // _OPENMP
         goto_set_num_threads((int)numThreads);
 
         setOpenBLASThreadsEnv((int)numThreads);

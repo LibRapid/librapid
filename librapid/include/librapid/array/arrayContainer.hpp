@@ -98,12 +98,6 @@ namespace librapid {
 			/// Default constructor
 			ArrayContainer();
 
-			// template<typename T>
-			// LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::initializer_list<T> &data);
-
-			// template<typename T>
-			// explicit LIBRAPID_ALWAYS_INLINE ArrayContainer(const std::vector<T> &data);
-
 			// clang-format off
 #define SINIT(SUB_TYPE) std::initializer_list<SUB_TYPE>
 #define SVEC(SUB_TYPE)	std::vector<SUB_TYPE>
@@ -265,9 +259,16 @@ namespace librapid {
 
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const noexcept -> size_t;
 
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size_() noexcept -> size_t &;
+
 			/// Return the shape of the array container. This is an immutable reference.
 			/// \return The shape of the array container.
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE const ShapeType &shape() const noexcept;
+
+			/// Return a reference to the shape of the array container. PROCEED WITH CAUTION.
+			/// Editing the shape of the array container may result in undefined behaviour.
+			/// \return The shape of the array container.
+			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE ShapeType &shape() noexcept;
 
 			/// Return the StorageType object of the ArrayContainer
 			/// \return The StorageType object of the ArrayContainer
@@ -296,6 +297,8 @@ namespace librapid {
 			/// \param index The index to write the scalar to
 			/// \param value The value to write to the array's storage
 			LIBRAPID_ALWAYS_INLINE void write(size_t index, const Scalar &value);
+
+			LIBRAPID_ALWAYS_INLINE ArrayContainer &resize(const ShapeType &shape);
 
 			template<typename T>
 			LIBRAPID_ALWAYS_INLINE ArrayContainer &operator+=(const T &other);
@@ -555,8 +558,10 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE auto
 		ArrayContainer<ShapeType_, StorageType_>::operator=(const Scalar &value)
 		  -> ArrayContainer & {
-			LIBRAPID_ASSERT_WITH_EXCEPTION(
-			  std::invalid_argument, m_shape.ndim() == 0, "Cannot assign a scalar to an array with {} dimensions", m_shape.ndim());
+			LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
+										   m_shape.ndim() == 0,
+										   "Cannot assign a scalar to an array with {} dimensions",
+										   m_shape.ndim());
 			m_storage[0] = value;
 			return *this;
 		}
@@ -728,9 +733,11 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::get() const
 		  -> Scalar {
-			LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
-										   m_shape.ndim() == 0,
-										   "Can only cast a scalar ArrayView to a salar object. Array has {}", m_shape);
+			LIBRAPID_ASSERT_WITH_EXCEPTION(
+			  std::invalid_argument,
+			  m_shape.ndim() == 0,
+			  "Can only cast a scalar ArrayView to a salar object. Array has {}",
+			  m_shape);
 			return scalar(0);
 		}
 
@@ -747,8 +754,20 @@ namespace librapid {
 		}
 
 		template<typename ShapeType_, typename StorageType_>
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::size_() noexcept
+		  -> size_t & {
+			return m_size;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
 		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::shape() const noexcept
 		  -> const ShapeType & {
+			return m_shape;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		LIBRAPID_ALWAYS_INLINE auto ArrayContainer<ShapeType_, StorageType_>::shape() noexcept
+		  -> ShapeType & {
 			return m_shape;
 		}
 
@@ -798,6 +817,19 @@ namespace librapid {
 		LIBRAPID_ALWAYS_INLINE void
 		ArrayContainer<ShapeType_, StorageType_>::write(size_t index, const Scalar &value) {
 			m_storage[index] = value;
+		}
+
+		template<typename ShapeType_, typename StorageType_>
+		LIBRAPID_ALWAYS_INLINE auto
+		ArrayContainer<ShapeType_, StorageType_>::resize(const ShapeType &shape)
+		  -> ArrayContainer & {
+			LIBRAPID_ASSERT(shape.size() == m_size,
+							"Size of new shape ({}) must equal size of old shape ({})",
+							shape.size(),
+							m_size);
+			m_shape = shape;
+			m_size	= shape.size();
+			return *this;
 		}
 
 		template<typename ShapeType_, typename StorageType_>
@@ -910,6 +942,8 @@ namespace librapid {
 			createGeneralArrayView(*this).str(format, bracket, separator, formatString, ctx);
 		}
 	} // namespace array
+
+	// template<typename ShapeType_, typename StorageType_>
 
 	namespace detail {
 		template<typename T>

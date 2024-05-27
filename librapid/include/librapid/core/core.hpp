@@ -1,12 +1,6 @@
 #ifndef LIBRAPID_CORE
 #define LIBRAPID_CORE
 
-#if defined(LIBRAPID_PYTHON)
-#	include <pybind11/pybind11.h>
-#	include <pybind11/stl.h>
-#	include <pybind11/functional.h>
-#endif // LIBRAPID_PYTHON
-
 #include "warningSuppress.hpp"
 #include "librapidPch.hpp"
 #include "debugTrap.hpp"

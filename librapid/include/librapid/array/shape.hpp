@@ -16,6 +16,7 @@ namespace librapid {
 	class Shape {
 	public:
 		using SizeType						  = uint32_t;
+		using DimType						  = int16_t;
 		static constexpr size_t MaxDimensions = LIBRAPID_MAX_ARRAY_DIMS;
 
 		/// Default constructor
@@ -87,12 +88,12 @@ namespace librapid {
 		/// Return a Shape object with \p dims dimensions, all initialized to zero.
 		/// \param dims Number of dimensions
 		/// \return New Shape object
-		LIBRAPID_ALWAYS_INLINE static auto zeros(int dims) -> Shape;
+		LIBRAPID_ALWAYS_INLINE static auto zeros(DimType dims) -> Shape;
 
 		/// Return a Shape object with \p dims dimensions, all initialized to one.
 		/// \param dims Number of dimensions
 		/// \return New Shape object
-		LIBRAPID_ALWAYS_INLINE static auto ones(int dims) -> Shape;
+		LIBRAPID_ALWAYS_INLINE static auto ones(DimType dims) -> Shape;
 
 		/// Access an element of the Shape object
 		/// \tparam Index Typename of the index
@@ -121,23 +122,30 @@ namespace librapid {
 
 		/// Return the number of dimensions in the Shape object
 		/// \return Number of dimensions
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ndim() const -> int;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ndim() const -> DimType;
 
 		/// Return a subshape of the Shape object
 		/// \param start Starting index
 		/// \param end Ending index
 		/// \return Subshape
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(int start, int end) const -> Shape;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(DimType start = -1,
+																DimType end	  = -1) const -> Shape;
 
 		/// Return the number of elements the Shape object represents
 		/// \return Number of elements
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const -> size_t;
 
+		LIBRAPID_NODISCARD const std::array<SizeType, MaxDimensions> &data() const {
+			return m_data;
+		}
+
+		LIBRAPID_NODISCARD std::array<SizeType, MaxDimensions> &data() { return m_data; }
+
 		template<typename T_, typename Char, typename Ctx>
 		void str(const fmt::formatter<T_, Char> &format, Ctx &ctx) const;
 
 	protected:
-		int m_dims;
+		DimType m_dims;
 		std::array<SizeType, MaxDimensions> m_data;
 	};
 
@@ -205,6 +213,7 @@ namespace librapid {
 	class VectorShape {
 	public:
 		using SizeType						  = uint32_t;
+		using DimType						  = int16_t;
 		static constexpr size_t MaxDimensions = 1;
 
 		LIBRAPID_ALWAYS_INLINE VectorShape() = default;
@@ -237,8 +246,8 @@ namespace librapid {
 		static LIBRAPID_ALWAYS_INLINE auto zeros() -> VectorShape;
 		static LIBRAPID_ALWAYS_INLINE auto ones() -> VectorShape;
 
-		static LIBRAPID_ALWAYS_INLINE auto zeros(size_t) -> VectorShape;
-		static LIBRAPID_ALWAYS_INLINE auto ones(size_t) -> VectorShape;
+		static LIBRAPID_ALWAYS_INLINE auto zeros(DimType) -> VectorShape;
+		static LIBRAPID_ALWAYS_INLINE auto ones(DimType) -> VectorShape;
 
 		template<typename Index>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](Index index) const
@@ -251,7 +260,8 @@ namespace librapid {
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto ndim() const -> int;
 
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(int start, int end) const -> Shape;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(DimType start, DimType end) const
+		  -> Shape;
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const -> size_t;
 
@@ -309,14 +319,14 @@ namespace librapid {
 		return *this;
 	}
 
-	LIBRAPID_ALWAYS_INLINE auto Shape::zeros(int dims) -> Shape {
+	LIBRAPID_ALWAYS_INLINE auto Shape::zeros(DimType dims) -> Shape {
 		Shape res;
 		res.m_dims = dims;
 		for (int i = 0; i < dims; ++i) res.m_data[i] = 0;
 		return res;
 	}
 
-	LIBRAPID_ALWAYS_INLINE auto Shape::ones(int dims) -> Shape {
+	LIBRAPID_ALWAYS_INLINE auto Shape::ones(DimType dims) -> Shape {
 		Shape res;
 		res.m_dims = dims;
 		for (int i = 0; i < dims; ++i) res.m_data[i] = 1;
@@ -364,9 +374,12 @@ namespace librapid {
 		return !(*this == other);
 	}
 
-	LIBRAPID_NODISCARD auto Shape::ndim() const -> int { return m_dims; }
+	LIBRAPID_NODISCARD auto Shape::ndim() const -> DimType { return m_dims; }
 
-	LIBRAPID_NODISCARD auto Shape::subshape(int start, int end) const -> Shape {
+	LIBRAPID_NODISCARD auto Shape::subshape(DimType start, DimType end) const -> Shape {
+		if (start < 0) start = 0;
+		if (end < 0) end = m_dims;
+
 		LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
 									   start <= end,
 									   "Start index ({}) must not be greater than end index ({})",
@@ -634,11 +647,11 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE auto VectorShape::zeros() -> VectorShape { return VectorShape({0}); }
 	LIBRAPID_ALWAYS_INLINE auto VectorShape::ones() -> VectorShape { return VectorShape({1}); }
 
-	LIBRAPID_ALWAYS_INLINE auto VectorShape::zeros(size_t) -> VectorShape {
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::zeros(DimType) -> VectorShape {
 		return VectorShape({0});
 	}
 
-	LIBRAPID_ALWAYS_INLINE auto VectorShape::ones(size_t) -> VectorShape {
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::ones(DimType) -> VectorShape {
 		return VectorShape({1});
 	}
 
@@ -670,7 +683,7 @@ namespace librapid {
 
 	LIBRAPID_ALWAYS_INLINE constexpr auto VectorShape::ndim() const -> int { return 1; }
 
-	LIBRAPID_ALWAYS_INLINE auto VectorShape::subshape(int start, int end) const -> Shape {
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::subshape(DimType start, DimType end) const -> Shape {
 		LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
 									   start <= end,
 									   "Start index ({}) must not be greater than end index ({})",
@@ -784,8 +797,7 @@ namespace librapid {
 	/// \param shapes Remaining (optional) inputs
 	/// \return True if all inputs have the same shape, false otherwise
 	template<typename First, typename Second, typename... Rest>
-		requires(typetraits::IsSizeType<First>::value &&
-				 typetraits::IsSizeType<Second>::value &&
+		requires(typetraits::IsSizeType<First>::value && typetraits::IsSizeType<Second>::value &&
 				 (typetraits::IsSizeType<Rest>::value && ...))
 	LIBRAPID_NODISCARD LIBRAPID_INLINE bool
 	shapesMatch(const std::tuple<First, Second, Rest...> &shapes) {
@@ -797,19 +809,12 @@ namespace librapid {
 					 [](auto, auto, auto... rest) { return std::make_tuple(rest...); }, shapes));
 		}
 	}
-	
-	/// \sa shapesMatch
-	//	template<typename First, typename Second, typename... Rest>
-	//		requires(typetraits::IsSizeType<First>::value && typetraits::IsSizeType<Second>::value &&
-	//				 (typetraits::IsSizeType<Rest>::value && ...))
-	//	LIBRAPID_NODISCARD LIBRAPID_INLINE bool shapesMatch(const First &first, const Second &second,
-	//														const Rest &...shapes) {
-	//		if constexpr (sizeof...(Rest) == 0) {
-	//			return first == second;
-	//		} else {
-	//			return first == second && shapesMatch(first, shapes...);
-	//		}
-	//	}
+
+	template<typename First>
+		requires(typetraits::IsSizeType<First>::value)
+	LIBRAPID_NODISCARD LIBRAPID_INLINE bool shapesMatch(const std::tuple<First> &shapes) {
+		return true;
+	}
 
 	namespace detail {
 		template<typename First, typename Second>

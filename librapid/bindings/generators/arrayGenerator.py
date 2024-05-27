@@ -15,8 +15,8 @@ for scalar in [("int32_t", "Int32"),
                ("uint64_t", "UInt64"),
                ("float", "Float"),
                ("double", "Double"),
-               # ("lrc::Complex<float>", "ComplexFloat"),
-               # ("lrc::Complex<double>", "ComplexDouble")
+               ("lrc::Complex<float>", "ComplexFloat"),
+               ("lrc::Complex<double>", "ComplexDouble")
                ]:
     for backend in ["CPU"]:  # ["CPU", "OpenCL", "CUDA"]:
         arrayTypes.append({
@@ -54,18 +54,6 @@ def generateFunctionsForArray(config):
                 )
             ]
         ),
-
-        # Move constructor
-        # function.Function(
-        #     name="__init__",
-        #     args=[
-        #         argument.Argument(
-        #             name="other",
-        #             type=generateCppArrayType(config),
-        #             move=True
-        #         )
-        #     ]
-        # ),
 
         # Shape
         function.Function(
@@ -449,6 +437,47 @@ def generateFunctionsForArray(config):
                 """
             )
         )
+
+    if config["backend"] == "CPU":
+        functions += [
+            function.Function(
+                name=f"serialize{config['name']}",
+                args=[
+                    argument.Argument(
+                        name="array",
+                        type=generateCppArrayType(config),
+                        const=True,
+                        ref=True
+                    ),
+                    argument.Argument(
+                        name="path",
+                        type="std::string",
+                        const=True,
+                        ref=True
+                    )
+                ],
+                op="""
+                    return lrc::serialize::Serializer(array).write(path);
+                """
+            ),
+
+            function.Function(
+                name=f"deserialize{config['name']}",
+                args=[
+                    argument.Argument(
+                        name="path",
+                        type="std::string",
+                        const=True,
+                        ref=True
+                    )
+                ],
+                op=f"""
+                    lrc::serialize::Serializer<{generateCppArrayType(config)}> serializer;
+                    serializer.read(path);
+                    return serializer.deserialize();
+                """
+            )
+        ]
 
     return methods, functions
 

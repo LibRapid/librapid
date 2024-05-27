@@ -337,8 +337,8 @@ namespace librapid {
 		const auto &data() const { return m_data; }
 		auto &data() { return m_data; }
 
-		template<typename Integer											 = ElementType,
-				 typename std::enable_if_t<std::is_integral_v<Integer>, int> = 0>
+		template<typename Integer = ElementType>
+			requires(std::is_integral_v<Integer>)
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE int toInt() const {
 #if defined(LIBRAPID_DEBUG)
 			static bool warned = false;
