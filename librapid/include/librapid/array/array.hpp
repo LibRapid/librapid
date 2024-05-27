@@ -29,6 +29,4 @@
 
 #include "linalg/linalg.hpp"
 
-#include "arraySerialize.hpp"
-
 #endif // LIBRAPID_ARRAY
