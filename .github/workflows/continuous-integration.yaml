@@ -124,7 +124,7 @@ jobs:
           - os: macos-latest
             cc: ../llvm/bin/clang
             cxx: ../llvm/bin/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             blas: off
             getBlas: off
             fftw: off
@@ -135,7 +135,7 @@ jobs:
           - os: macos-latest
             cc: ../llvm/bin/clang
             cxx: ../llvm/bin/clang++
-            clangVer: "16.0"
+            clangVer: "15.0"
             blas: on
             getBlas: off # Included with XCode
             fftw: on
