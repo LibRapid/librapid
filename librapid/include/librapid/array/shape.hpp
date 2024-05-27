@@ -16,6 +16,7 @@ namespace librapid {
 	class Shape {
 	public:
 		using SizeType						  = uint32_t;
+		using DimType						  = int16_t;
 		static constexpr size_t MaxDimensions = LIBRAPID_MAX_ARRAY_DIMS;
 
 		/// Default constructor
@@ -87,12 +88,12 @@ namespace librapid {
 		/// Return a Shape object with \p dims dimensions, all initialized to zero.
 		/// \param dims Number of dimensions
 		/// \return New Shape object
-		LIBRAPID_ALWAYS_INLINE static auto zeros(int dims) -> Shape;
+		LIBRAPID_ALWAYS_INLINE static auto zeros(DimType dims) -> Shape;
 
 		/// Return a Shape object with \p dims dimensions, all initialized to one.
 		/// \param dims Number of dimensions
 		/// \return New Shape object
-		LIBRAPID_ALWAYS_INLINE static auto ones(int dims) -> Shape;
+		LIBRAPID_ALWAYS_INLINE static auto ones(DimType dims) -> Shape;
 
 		/// Access an element of the Shape object
 		/// \tparam Index Typename of the index
@@ -121,23 +122,30 @@ namespace librapid {
 
 		/// Return the number of dimensions in the Shape object
 		/// \return Number of dimensions
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ndim() const -> int;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ndim() const -> DimType;
 
 		/// Return a subshape of the Shape object
 		/// \param start Starting index
 		/// \param end Ending index
 		/// \return Subshape
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(int start, int end) const -> Shape;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(DimType start = -1,
+																DimType end	  = -1) const -> Shape;
 
 		/// Return the number of elements the Shape object represents
 		/// \return Number of elements
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const -> size_t;
 
+		LIBRAPID_NODISCARD const std::array<SizeType, MaxDimensions> &data() const {
+			return m_data;
+		}
+
+		LIBRAPID_NODISCARD std::array<SizeType, MaxDimensions> &data() { return m_data; }
+
 		template<typename T_, typename Char, typename Ctx>
 		void str(const fmt::formatter<T_, Char> &format, Ctx &ctx) const;
 
 	protected:
-		int m_dims;
+		DimType m_dims;
 		std::array<SizeType, MaxDimensions> m_data;
 	};
 
@@ -205,6 +213,7 @@ namespace librapid {
 	class VectorShape {
 	public:
 		using SizeType						  = uint32_t;
+		using DimType						  = int16_t;
 		static constexpr size_t MaxDimensions = 1;
 
 		LIBRAPID_ALWAYS_INLINE VectorShape() = default;
@@ -237,8 +246,8 @@ namespace librapid {
 		static LIBRAPID_ALWAYS_INLINE auto zeros() -> VectorShape;
 		static LIBRAPID_ALWAYS_INLINE auto ones() -> VectorShape;
 
-		static LIBRAPID_ALWAYS_INLINE auto zeros(size_t) -> VectorShape;
-		static LIBRAPID_ALWAYS_INLINE auto ones(size_t) -> VectorShape;
+		static LIBRAPID_ALWAYS_INLINE auto zeros(DimType) -> VectorShape;
+		static LIBRAPID_ALWAYS_INLINE auto ones(DimType) -> VectorShape;
 
 		template<typename Index>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator[](Index index) const
@@ -251,7 +260,8 @@ namespace librapid {
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE constexpr auto ndim() const -> int;
 
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(int start, int end) const -> Shape;
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto subshape(DimType start, DimType end) const
+		  -> Shape;
 
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto size() const -> size_t;
 
@@ -309,14 +319,14 @@ namespace librapid {
 		return *this;
 	}
 
-	LIBRAPID_ALWAYS_INLINE auto Shape::zeros(int dims) -> Shape {
+	LIBRAPID_ALWAYS_INLINE auto Shape::zeros(DimType dims) -> Shape {
 		Shape res;
 		res.m_dims = dims;
 		for (int i = 0; i < dims; ++i) res.m_data[i] = 0;
 		return res;
 	}
 
-	LIBRAPID_ALWAYS_INLINE auto Shape::ones(int dims) -> Shape {
+	LIBRAPID_ALWAYS_INLINE auto Shape::ones(DimType dims) -> Shape {
 		Shape res;
 		res.m_dims = dims;
 		for (int i = 0; i < dims; ++i) res.m_data[i] = 1;
@@ -327,16 +337,28 @@ namespace librapid {
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto Shape::operator[](Index index) const
 	  -> const SizeType & {
 		static_assert(std::is_integral_v<Index>, "Index must be an integral type");
-		LIBRAPID_ASSERT(index < m_dims, "Index out of bounds");
-		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::out_of_range,
+									   index < m_dims,
+									   "Index {} out of bounds for Shape with {} dimensions",
+									   index,
+									   m_dims);
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::out_of_range,
+									   index >= 0,
+									   "Index out of bounds. Must be greater than 0. Received {}",
+									   index);
 		return m_data[index];
 	}
 
 	template<typename Index>
 	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto Shape::operator[](Index index) -> SizeType & {
 		static_assert(std::is_integral_v<Index>, "Index must be an integral type");
-		LIBRAPID_ASSERT(index < m_dims, "Index out of bounds");
-		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::out_of_range,
+									   index < m_dims,
+									   "Index {} out of bounds for Shape with {} dimensions",
+									   index,
+									   m_dims);
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::range_error, index >= 0, "Index {} out of bounds. Must be greater than 0", index);
 		return m_data[index];
 	}
 
@@ -352,13 +374,27 @@ namespace librapid {
 		return !(*this == other);
 	}
 
-	LIBRAPID_NODISCARD auto Shape::ndim() const -> int { return m_dims; }
+	LIBRAPID_NODISCARD auto Shape::ndim() const -> DimType { return m_dims; }
 
-	LIBRAPID_NODISCARD auto Shape::subshape(int start, int end) const -> Shape {
-		LIBRAPID_ASSERT(start <= end, "Start index must be less than end index");
-		LIBRAPID_ASSERT(end <= m_dims,
-						"End index must be less than or equal to the number of dimensions");
-		LIBRAPID_ASSERT(start >= 0, "Start index must be greater than or equal to 0");
+	LIBRAPID_NODISCARD auto Shape::subshape(DimType start, DimType end) const -> Shape {
+		if (start < 0) start = 0;
+		if (end < 0) end = m_dims;
+
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+									   start <= end,
+									   "Start index ({}) must not be greater than end index ({})",
+									   start,
+									   end);
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::out_of_range,
+		  end <= m_dims,
+		  "End index ({}) must be less than or equal to the number of dimensions ({}).",
+		  end,
+		  m_dims);
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::out_of_range,
+									   start >= 0,
+									   "Start index ({}) must be greater than or equal to 0",
+									   start);
 
 		Shape res;
 		res.m_dims = end - start;
@@ -388,7 +424,10 @@ namespace librapid {
 
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE MatrixShape::MatrixShape(const std::initializer_list<V> &vals) {
-		LIBRAPID_ASSERT(vals.size() <= 2, "MatrixShape must be initialized with 2 values");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
+									   vals.size() <= 2,
+									   "MatrixShape must be initialized with 2 values. Received {}",
+									   vals.size());
 		if (vals.size() == 2) {
 			m_rows = *(vals.begin());
 			m_cols = *(vals.begin() + 1);
@@ -403,7 +442,10 @@ namespace librapid {
 
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE MatrixShape::MatrixShape(const std::vector<V> &vals) {
-		LIBRAPID_ASSERT(vals.size() <= 2, "MatrixShape must be initialized with 2 values");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
+									   vals.size() <= 2,
+									   "MatrixShape must be initialized with 2 values. Received {}",
+									   vals.size());
 		if (vals.size() == 2) {
 			m_rows = vals[0];
 			m_cols = vals[1];
@@ -417,9 +459,11 @@ namespace librapid {
 	}
 
 	LIBRAPID_ALWAYS_INLINE MatrixShape::MatrixShape(const Shape &other) {
-		LIBRAPID_ASSERT(other.ndim() <= 2,
-						"MatrixShape must be initialized with 2 dimension, but received {}",
-						other.ndim());
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::invalid_argument,
+		  other.ndim() <= 2,
+		  "MatrixShape must be initialized with 2 dimension, but received {}",
+		  other.ndim());
 		if (other.ndim() == 2) {
 			m_rows = other[0];
 			m_cols = other[1];
@@ -435,7 +479,11 @@ namespace librapid {
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE auto MatrixShape::operator=(const std::initializer_list<V> &vals)
 	  -> MatrixShape & {
-		LIBRAPID_ASSERT(vals.size() <= 2, "MatrixShape must be initialized with 2 values");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::invalid_argument,
+		  vals.size() <= 2,
+		  "MatrixShape must be initialized with 2 values, but received {}",
+		  vals.size());
 		if (vals.size() == 2) {
 			m_rows = *(vals.begin());
 			m_cols = *(vals.begin() + 1);
@@ -452,7 +500,11 @@ namespace librapid {
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE auto MatrixShape::operator=(const std::vector<V> &vals)
 	  -> MatrixShape & {
-		LIBRAPID_ASSERT(vals.size() <= 2, "MatrixShape must be initialized with 2 values");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::invalid_argument,
+		  vals.size() <= 2,
+		  "MatrixShape must be initialized with 2 values, but received {}",
+		  vals.size());
 		if (vals.size() == 2) {
 			m_rows = vals[0];
 			m_cols = vals[1];
@@ -480,8 +532,12 @@ namespace librapid {
 	template<typename Index>
 	LIBRAPID_ALWAYS_INLINE auto MatrixShape::operator[](Index index) const -> const SizeType & {
 		static_assert(std::is_integral_v<Index>, "Index must be an integral type");
-		LIBRAPID_ASSERT(index < 2, "Index out of bounds");
-		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::out_of_range,
+									   index < 2,
+									   "Index {} out of bounds for MatrixShape with 2 dimensions",
+									   index);
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::out_of_range, index >= 0, "Index {} out of bounds. Must be greater than 0", index);
 
 		return index == 0 ? m_rows : m_cols;
 	}
@@ -489,8 +545,12 @@ namespace librapid {
 	template<typename Index>
 	LIBRAPID_ALWAYS_INLINE auto MatrixShape::operator[](Index index) -> SizeType & {
 		static_assert(std::is_integral_v<Index>, "Index must be an integral type");
-		LIBRAPID_ASSERT(index < 2, "Index out of bounds");
-		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::out_of_range,
+									   index < 2,
+									   "Index {} out of bounds for MatrixShape with 2 dimensions",
+									   index);
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::out_of_range, index >= 0, "Index {} out of bounds. Must be greater than 0", index);
 
 		return index == 0 ? m_rows : m_cols;
 	}
@@ -498,10 +558,20 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE constexpr auto MatrixShape::ndim() const -> int { return 2; }
 
 	LIBRAPID_ALWAYS_INLINE auto MatrixShape::subshape(int start, int end) const -> Shape {
-		LIBRAPID_ASSERT(start <= end, "Start index must be less than end index");
-		LIBRAPID_ASSERT(end <= 2,
-						"End index must be less than or equal to the number of dimensions");
-		LIBRAPID_ASSERT(start >= 0, "Start index must be greater than or equal to 0");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
+									   start <= end,
+									   "Start index ({}) must not be greater than end index ({})",
+									   start,
+									   end);
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::out_of_range,
+		  end <= 2,
+		  "End index ({}) must be less than or equal to the number of dimensions (2).",
+		  end);
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::out_of_range,
+									   start >= 0,
+									   "Start index ({}) must be greater than or equal to 0",
+									   start);
 
 		Shape res = Shape::zeros(2);
 		res[0]	  = m_rows;
@@ -527,27 +597,38 @@ namespace librapid {
 
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE VectorShape::VectorShape(const std::initializer_list<V> &vals) {
-		LIBRAPID_ASSERT(vals.size() == 1, "MatrixShape must be initialized with 1 value");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
+									   vals.size() == 1,
+									   "MatrixShape must be initialized with 1 value. Received {}",
+									   vals.size());
 		m_elements = *(vals.begin());
 	}
 
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE VectorShape::VectorShape(const std::vector<V> &vals) {
-		LIBRAPID_ASSERT(vals.size() == 1, "MatrixShape must be initialized with 1 value");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
+									   vals.size() == 1,
+									   "MatrixShape must be initialized with 1 value. Received {}",
+									   vals.size());
 		m_elements = vals[0];
 	}
 
 	LIBRAPID_ALWAYS_INLINE VectorShape::VectorShape(const Shape &other) {
-		LIBRAPID_ASSERT(other.ndim() == 1,
-						"VectorShape must be initialized with 1 dimension, but received {}",
-						other.ndim());
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::invalid_argument,
+		  other.ndim() == 1,
+		  "VectorShape must be initialized with 1 dimension, but received {}",
+		  other.ndim());
 		m_elements = other[0];
 	}
 
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE auto VectorShape::operator=(const std::initializer_list<V> &vals)
 	  -> VectorShape & {
-		LIBRAPID_ASSERT(vals.size() == 1, "MatrixShape must be initialized with 1 value");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
+									   vals.size() == 1,
+									   "MatrixShape must be initialized with 1 value. Received {}",
+									   vals.size());
 		m_elements = *(vals.begin());
 		return *this;
 	}
@@ -555,7 +636,10 @@ namespace librapid {
 	template<typename V>
 	LIBRAPID_ALWAYS_INLINE auto VectorShape::operator=(const std::vector<V> &vals)
 	  -> VectorShape & {
-		LIBRAPID_ASSERT(vals.size() == 1, "MatrixShape must be initialized with 1 value");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::runtime_error,
+									   vals.size() == 1,
+									   "MatrixShape must be initialized with 1 value. Received {}",
+									   vals.size());
 		m_elements = vals[0];
 		return *this;
 	}
@@ -563,19 +647,23 @@ namespace librapid {
 	LIBRAPID_ALWAYS_INLINE auto VectorShape::zeros() -> VectorShape { return VectorShape({0}); }
 	LIBRAPID_ALWAYS_INLINE auto VectorShape::ones() -> VectorShape { return VectorShape({1}); }
 
-	LIBRAPID_ALWAYS_INLINE auto VectorShape::zeros(size_t) -> VectorShape {
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::zeros(DimType) -> VectorShape {
 		return VectorShape({0});
 	}
 
-	LIBRAPID_ALWAYS_INLINE auto VectorShape::ones(size_t) -> VectorShape {
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::ones(DimType) -> VectorShape {
 		return VectorShape({1});
 	}
 
 	template<typename Index>
 	LIBRAPID_ALWAYS_INLINE auto VectorShape::operator[](Index index) const -> const SizeType & {
 		static_assert(std::is_integral_v<Index>, "Index must be an integral type");
-		LIBRAPID_ASSERT(index < 1, "Index out of bounds");
-		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+									   index < 1,
+									   "Index {} out of bounds for VectorShape with 1 dimension",
+									   index);
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::range_error, index >= 0, "Index {} out of bounds. Must be greater than 0", index);
 
 		return m_elements;
 	}
@@ -583,19 +671,33 @@ namespace librapid {
 	template<typename Index>
 	LIBRAPID_ALWAYS_INLINE auto VectorShape::operator[](Index index) -> SizeType & {
 		static_assert(std::is_integral_v<Index>, "Index must be an integral type");
-		LIBRAPID_ASSERT(index < 1, "Index out of bounds");
-		LIBRAPID_ASSERT(index >= 0, "Index out of bounds");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+									   index < 1,
+									   "Index {} out of bounds for VectorShape with 1 dimension",
+									   index);
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::range_error, index >= 0, "Index {} out of bounds. Must be greater than 0", index);
 
 		return m_elements;
 	}
 
 	LIBRAPID_ALWAYS_INLINE constexpr auto VectorShape::ndim() const -> int { return 1; }
 
-	LIBRAPID_ALWAYS_INLINE auto VectorShape::subshape(int start, int end) const -> Shape {
-		LIBRAPID_ASSERT(start <= end, "Start index must be less than end index");
-		LIBRAPID_ASSERT(end <= 1,
-						"End index must be less than or equal to the number of dimensions");
-		LIBRAPID_ASSERT(start >= 0, "Start index must be greater than or equal to 0");
+	LIBRAPID_ALWAYS_INLINE auto VectorShape::subshape(DimType start, DimType end) const -> Shape {
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
+									   start <= end,
+									   "Start index ({}) must not be greater than end index ({})",
+									   start,
+									   end);
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::range_error,
+		  end <= 1,
+		  "End index ({}) must be less than or equal to the number of dimensions (1).",
+		  end);
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+									   start >= 0,
+									   "Start index ({}) must be greater than or equal to 0",
+									   start);
 
 		return Shape::zeros(1);
 	}
@@ -694,26 +796,9 @@ namespace librapid {
 	/// \param second Second input
 	/// \param shapes Remaining (optional) inputs
 	/// \return True if all inputs have the same shape, false otherwise
-	template<typename First, typename Second, typename... Rest,
-			 typename std::enable_if_t<typetraits::IsSizeType<First>::value &&
-										 typetraits::IsSizeType<Second>::value &&
-										 (typetraits::IsSizeType<Rest>::value && ...),
-									   int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_INLINE bool shapesMatch(const First &first, const Second &second,
-														const Rest &...shapes) {
-		if constexpr (sizeof...(Rest) == 0) {
-			return first == second;
-		} else {
-			return first == second && shapesMatch(first, shapes...);
-		}
-	}
-
-	/// \sa shapesMatch
-	template<typename First, typename Second, typename... Rest,
-			 typename std::enable_if_t<typetraits::IsSizeType<First>::value &&
-										 typetraits::IsSizeType<Second>::value &&
-										 (typetraits::IsSizeType<Rest>::value && ...),
-									   int> = 0>
+	template<typename First, typename Second, typename... Rest>
+		requires(typetraits::IsSizeType<First>::value && typetraits::IsSizeType<Second>::value &&
+				 (typetraits::IsSizeType<Rest>::value && ...))
 	LIBRAPID_NODISCARD LIBRAPID_INLINE bool
 	shapesMatch(const std::tuple<First, Second, Rest...> &shapes) {
 		if constexpr (sizeof...(Rest) == 0) {
@@ -723,6 +808,12 @@ namespace librapid {
 				   shapesMatch(std::apply(
 					 [](auto, auto, auto... rest) { return std::make_tuple(rest...); }, shapes));
 		}
+	}
+
+	template<typename First>
+		requires(typetraits::IsSizeType<First>::value)
+	LIBRAPID_NODISCARD LIBRAPID_INLINE bool shapesMatch(const std::tuple<First> &shapes) {
+		return true;
 	}
 
 	namespace detail {

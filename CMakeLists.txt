@@ -6,6 +6,7 @@ cmake_policy(SET CMP0077 NEW)
 if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     message(STATUS "[ LIBRAPID ] LibRapid is a top-level project. Using C++23")
     set(CMAKE_CXX_STANDARD 23)
+    message(STATUS "[ LIBRAPID ] Building ${CMAKE_BUILD_TYPE}")
 endif ()
 
 # LibRapid requires C++20 or later
@@ -83,11 +84,28 @@ file(GLOB_RECURSE LIBRAPID_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/librapid/cxxblas/*.cxx" # Source files
 )
 
+# Extract system information
+set(IS_LINUX OFF)
+set(IS_MACOS OFF)
+set(IS_WINDOWS OFF)
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(IS_LINUX ON)
+endif ()
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(IS_MACOS ON)
+endif ()
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(IS_WINDOWS ON)
+
+    # Disable shared libraries, since they just cause problems on Windows
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
+endif ()
+
 if (${SKBUILD})
     message(STATUS "[ LIBRAPID ] Building for Python")
     set(module_name "_librapid")
-
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
+    set(LIBRAPID_QUIET ON) # Disable warnings for a cleaner output.
 
     message(STATUS "[ LIBRAPID ] Cloning PyBind11")
     FetchContent_Declare(
@@ -95,6 +113,12 @@ if (${SKBUILD})
             GIT_REPOSITORY https://github.com/pybind/pybind11.git
     )
     FetchContent_MakeAvailable(pybind11)
+
+    # Set CMAKE_BUILD_PARALLEL_LEVEL=1 to reduce memory usage
+    set(CMAKE_BUILD_PARALLEL_LEVEL 1)
+
+    # Set environment variable CMAKE_BUILD_PARALLEL_LEVEL=1 to reduce memory usage
+    set(ENV{CMAKE_BUILD_PARALLEL_LEVEL} 1)
 
     # Run auto-generation script
     # 1. Find the Python executable
@@ -117,28 +141,34 @@ if (${SKBUILD})
     # Enable BLAS
     if (NOT ${LIBRAPID_NO_BLAS})
         set(LIBRAPID_USE_BLAS ON)
-    endif()
+    endif ()
 
     # Get BLAS if the environment variable is set
     if ($ENV{LIBRAPID_GET_BLAS})
         set(LIBRAPID_GET_BLAS ON)
-    endif()
+    endif ()
 
     # Use fast math if the environment variable is set
     if ($ENV{LIBRAPID_FAST_MATH})
         set(LIBRAPID_FAST_MATH ON)
-    endif()
+    endif ()
 
     # Get FFTW if the environment variable is set
     if ($ENV{LIBRAPID_GET_FFTW})
         set(LIBRAPID_GET_FFTW ON)
-    endif()
+    endif ()
 
     # Use CUDA/OpenCL only when not inside GitHub Actions
     if (NOT $ENV{GITHUB_ACTIONS})
         set(LIBRAPID_USE_CUDA ON)
         set(LIBRAPID_USE_OPENCL ON)
-    endif()
+        set(LIBRAPID_NATIVE_ARCH ON)
+    else ()
+        set(LIBRAPID_NO_ALWAYS_INLINE ON) # Reduce compile memory
+    endif ()
+
+    set(LIBRAPID_USE_OMP ON)
+    set(LIBRAPID_OPTIMISE_SMALL_ARRAYS OFF)
 
     # Disable multiprec
     set(LIBRAPID_USE_MULTIPREC OFF)
@@ -146,22 +176,31 @@ if (${SKBUILD})
 
 
     file(GLOB_RECURSE PYTHON_SOURCES
-        "${CMAKE_CURRENT_SOURCE_DIR}/librapid/bindings/python/*.hpp" # Header files
-        "${CMAKE_CURRENT_SOURCE_DIR}/librapid/bindings/python/*.cpp" # Source files
+            "${CMAKE_CURRENT_SOURCE_DIR}/librapid/bindings/python/*.hpp" # Header files
+            "${CMAKE_CURRENT_SOURCE_DIR}/librapid/bindings/python/*.cpp" # Source files
     )
 
     pybind11_add_module(
-        ${module_name} MODULE
+            ${module_name} MODULE
 
-        ${LIBRAPID_SOURCES}
-        ${PYTHON_SOURCES}
+            ${LIBRAPID_SOURCES}
+            ${PYTHON_SOURCES}
     )
 
+    # If using MSVC with GitHub, set /Zm512 to reduce memory usage
+    if (MSVC AND "$ENV{CI}")
+        target_compile_options(${module_name} PRIVATE /Zm512)
+    endif ()
+
+    target_compile_definitions(${module_name} PUBLIC
+            LIBRAPID_PYTHON
+            WIN32_LEAN_AND_MEAN
+    )
     install(TARGETS ${module_name} DESTINATION .)
-else()
+else ()
     set(module_name "librapid")
     add_library(${module_name} STATIC ${LIBRAPID_SOURCES})
-endif()
+endif ()
 
 # clang-format off
 target_compile_definitions(${module_name} PUBLIC LIBRAPID_MAJOR=${LIBRAPID_MAJOR})
@@ -175,23 +214,6 @@ target_compile_definitions(${module_name} PUBLIC LIBRAPID_SOURCE="${LIBRAPID_SOU
 # Precompiled Headers
 if (LIBRAPID_USE_PRECOMPILED_HEADER)
     target_precompile_headers(${module_name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/librapid/include/librapid/core/librapidPch.hpp")
-endif ()
-
-# Extract system information
-set(IS_LINUX OFF)
-set(IS_MACOS OFF)
-set(IS_WINDOWS OFF)
-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(IS_LINUX ON)
-endif ()
-if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(IS_MACOS ON)
-endif ()
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(IS_WINDOWS ON)
-
-    # Disable shared libraries, since they just cause problems on Windows
-    set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
 endif ()
 
 if (MINGW)
@@ -605,3 +627,5 @@ target_include_directories(${module_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/li
 include("warnings")
 
 auto_disable_warnings(${module_name})
+
+# target_compile_options(${module_name} PUBLIC "-Q" "-ftime-report")

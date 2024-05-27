@@ -9,7 +9,7 @@ auto main() -> int {
 	// (You can pass (true, true) to select the device manually)
 	lrc::configureOpenCL(true);
 
-	auto openclArray = lrc::Array<float, lrc::backend::OpenCL>::fromData({{1, 2, 3}, {4, 5, 6}});
+	auto openclArray = lrc::Array<float, lrc::backend::OpenCL>({{1, 2, 3}, {4, 5, 6}});
 	fmt::print("OpenCL Array:\n{}\n", openclArray);
 
 	// Operations on OpenCL arrays work exactly the same as on CPU arrays
@@ -31,7 +31,7 @@ auto main() -> int {
 	// Linear algebra operations also work
 	fmt::print("Transposed OpenCL Array:\n{}\n", lrc::transpose(prod));
 
-	auto vector = lrc::Array<float, lrc::backend::OpenCL>::fromData({{1, 2, 3}});
+	auto vector = lrc::Array<float, lrc::backend::OpenCL>({{1, 2, 3}});
 	fmt::print("Array: \n{}\n", openclArray);
 	fmt::print("Vector: \n{}\n", vector);
 	fmt::print("Matrix dot Vector^T:\n{}\n", lrc::dot(openclArray, lrc::transpose(vector)));

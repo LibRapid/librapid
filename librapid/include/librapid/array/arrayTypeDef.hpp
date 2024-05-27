@@ -106,6 +106,7 @@ namespace librapid {
 		Formatter m_formatter;                                                                     \
 		char m_bracket	 = 's';                                                                    \
 		char m_separator = ' ';                                                                    \
+		char m_formatString[16] {};                                                                \
                                                                                                    \
 		template<typename ParseContext>                                                            \
 		FMT_CONSTEXPR auto parse(ParseContext &ctx) -> const char * {                              \
@@ -121,29 +122,17 @@ namespace librapid {
 			/*  - "-|" for pipe separator           */                                             \
 			/*  - "-_" for underscore separator     */                                             \
                                                                                                    \
-			auto it = ctx.begin(), end = ctx.end();                                                \
-			if (it != end && *it == '~') {                                                         \
-				++it;                                                                              \
-				if (it != end &&                                                                   \
-					(*it == 'r' || *it == 's' || *it == 'c' || *it == 'a' || *it == 'p')) {        \
-					m_bracket = *it++;                                                             \
-				}                                                                                  \
-			}                                                                                      \
-                                                                                                   \
-			if (it != end && *it == '-') {                                                         \
-				++it;                                                                              \
-				if (it != end) { m_separator = *it++; }                                            \
-			}                                                                                      \
-                                                                                                   \
-			ctx.advance_to(it);                                                                    \
-                                                                                                   \
-			return m_formatter.parse(ctx);                                                         \
+			auto it			= ctx.begin();                                                         \
+			const char *ret = m_formatter.parse(ctx);                                              \
+			int index		= 0;                                                                   \
+			for (auto itt = it; itt != ret; itt++) { m_formatString[index++] = *itt; }             \
+			return ret;                                                                            \
 		}                                                                                          \
                                                                                                    \
 		template<typename FormatContext>                                                           \
 		FMT_CONSTEXPR auto format(const Type &val, FormatContext &ctx) const                       \
 		  -> decltype(ctx.out()) {                                                                 \
-			val.str(m_formatter, m_bracket, m_separator, ctx);                                     \
+			val.str(m_formatter, m_bracket, m_separator, m_formatString, ctx);                     \
 			return ctx.out();                                                                      \
 		}                                                                                          \
 	};                                                                                             \

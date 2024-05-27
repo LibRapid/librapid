@@ -51,8 +51,8 @@ namespace librapid {
 	/// \tparam N Maximum number of dimensions of the Shape
 	/// \param shape Shape of the Array
 	/// \return Array filled with zeros
-	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType = Shape,
-			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
+	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType = Shape>
+		requires(typetraits::IsSizeType<ShapeType>::value)
 	Array<Scalar, Backend> zeros(const ShapeType &shape) {
 		return Array<Scalar, Backend>(shape, Scalar(0));
 	}
@@ -79,8 +79,8 @@ namespace librapid {
 	/// \tparam N Maximum number of dimensions of the Shape
 	/// \param shape Shape of the Array
 	/// \return Array filled with ones
-	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType = Shape,
-			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
+	template<typename Scalar = double, typename Backend = backend::CPU, typename ShapeType = Shape>
+		requires(typetraits::IsSizeType<ShapeType>::value)
 	Array<Scalar, Backend> ones(const ShapeType &shape) {
 		return Array<Scalar, Backend>(shape, Scalar(1));
 	}
@@ -109,8 +109,8 @@ namespace librapid {
 	/// \tparam N Maximum number of dimensions of the Shape
 	/// \param shape Shape of the Array
 	/// \return Array filled with numbers from 0 to N-1
-	template<typename Scalar = int64_t, typename Backend = backend::CPU, typename ShapeType = Shape,
-			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
+	template<typename Scalar = int64_t, typename Backend = backend::CPU, typename ShapeType = Shape>
+		requires(typetraits::IsSizeType<ShapeType>::value)
 	Array<Scalar, Backend> ordered(const ShapeType &shape) {
 		Array<Scalar, Backend> result(shape);
 		for (size_t i = 0; i < result.size(); i++) { result.storage()[i] = Scalar(i); }
@@ -135,8 +135,11 @@ namespace librapid {
 	template<typename Scalar = double, typename Backend = backend::CPU, typename Start,
 			 typename Stop, typename Step>
 	Array<Scalar, Backend> arange(Start start, Stop stop, Step step) {
-		LIBRAPID_ASSERT(step != 0, "Step size cannot be zero");
-		LIBRAPID_ASSERT((stop - start) / step > 0, "Step size is invalid for the specified range");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::invalid_argument, step != 0, "Step size cannot be zero");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
+									   (stop - start) / step > 0,
+									   "Step size is invalid for the specified range");
 
 		Shape shape = {(int64_t)::librapid::abs((stop - start) / step)};
 		Array<Scalar, Backend> result(shape);
@@ -148,7 +151,9 @@ namespace librapid {
 
 	template<typename Scalar = double, typename Backend = backend::CPU, typename T>
 	Array<Scalar, Backend> arange(T start, T stop) {
-		LIBRAPID_ASSERT((stop - start) > 0, "Step size is invalid for the specified range");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(std::invalid_argument,
+									   (stop - start) > 0,
+									   "Step size is invalid for the specified range");
 
 		Shape shape = {(int64_t)::librapid::abs(stop - start)};
 		Array<Scalar, Backend> result(shape);
@@ -183,7 +188,8 @@ namespace librapid {
 	template<typename Scalar = double, typename Backend = backend::CPU, typename Start,
 			 typename Stop>
 	Array<Scalar, Backend> linspace(Start start, Stop stop, int64_t num, bool includeEnd = true) {
-		LIBRAPID_ASSERT(num > 0, "Number of samples must be greater than zero");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::invalid_argument, num > 0, "Number of samples must be greater than zero");
 
 		auto startCast = static_cast<Scalar>(start);
 		auto stopCast  = static_cast<Scalar>(stop);
@@ -199,7 +205,8 @@ namespace librapid {
 	template<typename Scalar = double, typename Backend = backend::CPU, typename Start,
 			 typename Stop>
 	Array<Scalar, Backend> logspace(Start start, Stop stop, int64_t num, bool includeEnd = true) {
-		LIBRAPID_ASSERT(num > 0, "Number of samples must be greater than zero");
+		LIBRAPID_ASSERT_WITH_EXCEPTION(
+		  std::invalid_argument, num > 0, "Number of samples must be greater than zero");
 
 		auto logLower = ::librapid::log(static_cast<Scalar>(start));
 		auto logUpper = ::librapid::log(static_cast<Scalar>(stop));
@@ -216,8 +223,8 @@ namespace librapid {
 		return result;
 	}
 
-	template<typename Scalar = double, typename Backend = backend::CPU,
-			 typename Lower = double, typename Upper = double>
+	template<typename Scalar = double, typename Backend = backend::CPU, typename Lower = double,
+			 typename Upper = double>
 	Array<Scalar, Backend> random(const Shape &shape, Lower lower = 0, Upper upper = 1) {
 		Array<Scalar, Backend> result(shape);
 		fillRandom(result, static_cast<Scalar>(lower), static_cast<Upper>(upper));

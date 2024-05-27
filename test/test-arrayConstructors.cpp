@@ -75,7 +75,7 @@ using CUDA				   = lrc::backend::CUDA;
 		/* Due to the way the code works, if this passes for a 3D array, it *must* pass for all    \
 		 * other dimensions */                                                                     \
 		auto testI =                                                                               \
-		  lrc::Array<SCALAR, BACKEND>::fromData(InitList({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}));   \
+		  lrc::Array<SCALAR, BACKEND>(InitList({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}));   \
 		REQUIRE(fmt::format("{}", testI) ==                                                        \
 				fmt::format("[[[{} {}]\n  [{} {}]]\n\n [[{} {}]\n  [{} {}]]]",                     \
 							SCALAR(1),                                                             \
@@ -88,7 +88,7 @@ using CUDA				   = lrc::backend::CUDA;
 							SCALAR(8)));                                                           \
                                                                                                    \
 		auto testJ =                                                                               \
-		  lrc::Array<SCALAR, BACKEND>::fromData(Vec({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}));        \
+		  lrc::Array<SCALAR, BACKEND>(Vec({{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}));        \
 		REQUIRE(fmt::format("{}", testJ) ==                                                        \
 				fmt::format("[[[{} {}]\n  [{} {}]]\n\n [[{} {}]\n  [{} {}]]]",                     \
 							SCALAR(1),                                                             \

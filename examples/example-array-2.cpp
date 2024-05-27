@@ -12,8 +12,8 @@ auto main() -> int {
 	std::vector<std::vector<float>> firstData  = {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}};
 	std::vector<std::vector<float>> secondData = {{1.0f}, {2.0f}, {3.0f}};
 
-	auto firstMatrix  = lrc::Array<float>::fromData(firstData);
-	auto secondMatrix = lrc::Array<float>::fromData(secondData);
+	auto firstMatrix  = lrc::Array<float>(firstData);
+	auto secondMatrix = lrc::Array<float>(secondData);
 	auto firstResult  = lrc::dot(firstMatrix, secondMatrix);
 	fmt::print("Left:\n{}\n", firstMatrix);
 	fmt::print("Right:\n{}\n", secondMatrix);

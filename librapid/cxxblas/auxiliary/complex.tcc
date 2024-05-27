@@ -36,7 +36,14 @@
 #include <complex>
 #include "cxxblas/auxiliary/complex.h"
 
+namespace librapid {
+	template<typename T>
+	class Complex;
+}
+
 namespace cxxblas {
+	template<typename T>
+	librapid::Complex<T> conjugate(const librapid::Complex<T> &val);
 
 	template<typename T>
 	typename cxxblas::RestrictTo<std::is_arithmetic<T>::value, const T &>::Type

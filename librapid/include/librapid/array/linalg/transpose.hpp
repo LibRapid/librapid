@@ -168,8 +168,59 @@ namespace librapid {
 			_mm_storeu_pd(out + 1 * cols, _mm_mul_pd(tmp1Unpck, alphaVec));
 		}
 
-#	endif // LIBRAPID_MSVC
-#endif	   // LIBRAPID_NATIVE_ARCH
+#	elif defined(LIBRAPID_NEON)
+#		define LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE 2
+#		define LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE 4
+
+		template<typename Alpha>
+		LIBRAPID_ALWAYS_INLINE void transposeFloatKernel(float *__restrict out,
+														 float *__restrict in, Alpha alpha,
+														 int64_t cols) {
+			float32x4_t r0, r1, r2, r3;
+			float32x4_t t0, t1, t2, t3;
+
+			r0 = vld1q_f32(&in[0 * cols]);
+			r1 = vld1q_f32(&in[1 * cols]);
+			r2 = vld1q_f32(&in[2 * cols]);
+			r3 = vld1q_f32(&in[3 * cols]);
+
+			t0 = vzip1q_f32(r0, r1);
+			t1 = vzip2q_f32(r0, r1);
+			t2 = vzip1q_f32(r2, r3);
+			t3 = vzip2q_f32(r2, r3);
+
+			r0 = vcombine_f32(vget_low_f32(t0), vget_low_f32(t2));
+			r1 = vcombine_f32(vget_high_f32(t0), vget_high_f32(t2));
+			r2 = vcombine_f32(vget_low_f32(t1), vget_low_f32(t3));
+			r3 = vcombine_f32(vget_high_f32(t1), vget_high_f32(t3));
+
+			float32x4_t alphaVec = vdupq_n_f32(alpha);
+
+			vst1q_f32(&out[0 * cols], vmulq_f32(r0, alphaVec));
+			vst1q_f32(&out[1 * cols], vmulq_f32(r1, alphaVec));
+			vst1q_f32(&out[2 * cols], vmulq_f32(r2, alphaVec));
+			vst1q_f32(&out[3 * cols], vmulq_f32(r3, alphaVec));
+		}
+
+		template<typename Alpha>
+		LIBRAPID_ALWAYS_INLINE void transposeDoubleKernel(double *__restrict out,
+														  double *__restrict in, Alpha alpha,
+														  int64_t cols) {
+			float64x2_t r0, r1;
+
+			r0 = vld1q_f64(&in[0 * cols]);
+			r1 = vld1q_f64(&in[1 * cols]);
+
+			float64x2_t t0 = vzip1q_f64(r0, r1);
+			float64x2_t t1 = vzip2q_f64(r0, r1);
+
+			float64x2_t alphaVec = vdupq_n_f64(alpha);
+
+			vst1q_f64(&out[0 * cols], vmulq_f64(t0, alphaVec));
+			vst1q_f64(&out[1 * cols], vmulq_f64(t1, alphaVec));
+		}
+#	endif
+#endif // LIBRAPID_NATIVE_ARCH
 
 		// Ensure the kernel size is always defined, even if the above code doesn't define it
 #ifndef LIBRAPID_F32_TRANSPOSE_KERNEL_SIZE
@@ -310,7 +361,7 @@ namespace librapid {
 					}
 				}
 			}
-#endif	  // LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE > 0
+#endif // LIBRAPID_F64_TRANSPOSE_KERNEL_SIZE > 0
 		} // namespace cpu
 
 #if defined(LIBRAPID_HAS_OPENCL)
@@ -431,18 +482,18 @@ namespace librapid {
 										   rows));
 			}
 		} // namespace cuda
-#endif	  // LIBRAPID_HAS_CUDA
-	}	  // namespace detail
+#endif // LIBRAPID_HAS_CUDA
+	} // namespace detail
 
 	namespace array {
 		template<typename TransposeType>
 		class Transpose {
 		public:
-			using ArrayType		 = TransposeType;
-			using BaseType		 = typename std::decay_t<TransposeType>;
-			using Scalar		 = typename typetraits::TypeInfo<BaseType>::Scalar;
-			using ShapeType		 = typename BaseType::ShapeType;
-			using Backend		 = typename typetraits::TypeInfo<BaseType>::Backend;
+			using ArrayType = TransposeType;
+			using BaseType	= typename std::decay_t<TransposeType>;
+			using Scalar	= typename typetraits::TypeInfo<BaseType>::Scalar;
+			using ShapeType = typename BaseType::ShapeType;
+			using Backend	= typename typetraits::TypeInfo<BaseType>::Backend;
 
 			static constexpr bool allowVectorisation =
 			  typetraits::TypeInfo<Scalar>::allowVectorisation;
@@ -515,9 +566,10 @@ namespace librapid {
 			/// \return Evaluated expression
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto eval() const;
 
-			template<typename T, typename Char, typename Ctx>
+			template<typename T, typename Char, size_t N, typename Ctx>
 			LIBRAPID_ALWAYS_INLINE void str(const fmt::formatter<T, Char> &format, char bracket,
-											char separator, Ctx &ctx) const;
+											char separator, const char (&formatString)[N],
+											Ctx &ctx) const;
 
 		private:
 			ArrayType m_array;
@@ -652,15 +704,16 @@ namespace librapid {
 		};
 
 		template<typename TransposeType>
-		template<typename T, typename Char, typename Ctx>
+		template<typename T, typename Char, size_t N, typename Ctx>
 		void Transpose<TransposeType>::str(const fmt::formatter<T, Char> &format, char bracket,
-										   char separator, Ctx &ctx) const {
-			eval().str(format, bracket, separator, ctx);
+										   char separator, const char (&formatString)[N],
+										   Ctx &ctx) const {
+			eval().str(format, bracket, separator, formatString, ctx);
 		}
 	}; // namespace array
 
-	template<typename T, typename ShapeType = MatrixShape,
-			 typename std::enable_if_t<typetraits::IsSizeType<ShapeType>::value, int> = 0>
+	template<typename T, typename ShapeType = MatrixShape>
+		requires(typetraits::IsSizeType<ShapeType>::value)
 	auto transpose(T &&array, const ShapeType &axes = ShapeType()) {
 		// If axes is empty, transpose the array in reverse order
 		ShapeType newAxes = axes;

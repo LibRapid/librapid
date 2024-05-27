@@ -184,6 +184,21 @@ methods = [
         """
     ),
 
+    function.Function(
+        name="__len__",
+        args=[
+            argument.Argument(
+                name="self",
+                type="lrc::Shape",
+                const=True,
+                ref=True
+            )
+        ],
+        op="""
+            return self.ndim();
+        """
+    ),
+
     # Subshape
     function.Function(
         name="subshape",

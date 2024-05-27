@@ -4,7 +4,7 @@ namespace lrc = librapid;
 
 auto main() -> int {
 #if defined(LIBRAPID_HAS_CUDA)
-	auto cudaArray = lrc::Array<float, lrc::backend::CUDA>::fromData({{1, 2, 3}, {4, 5, 6}});
+	auto cudaArray = lrc::Array<float, lrc::backend::CUDA>({{1, 2, 3}, {4, 5, 6}});
 	fmt::print("CUDA Array:\n{}\n", cudaArray);
 
 	// Operations on CUDA arrays work exactly the same as on CPU arrays
@@ -26,13 +26,13 @@ auto main() -> int {
 	// Linear algebra operations also work
 	fmt::print("Transposed CUDA Array:\n{}\n", lrc::transpose(prod));
 
-	auto vector = lrc::Array<float, lrc::backend::CUDA>::fromData({{1, 2, 3}});
+	auto vector = lrc::Array<float, lrc::backend::CUDA>({{1, 2, 3}});
 	fmt::print("Array: \n{}\n", cudaArray);
 	fmt::print("Vector: \n{}\n", vector);
 	fmt::print("Matrix dot Vector^T:\n{}\n", lrc::dot(cudaArray, lrc::transpose(vector)));
 #else
 	fmt::print("CUDA not enabled in this build of librapid\n");
-	fmt::print("Check the documentation for more information on enabling OpenCL\n");
+	fmt::print("Check the documentation for more information on enabling CUDA\n");
 	fmt::print("https://librapid.readthedocs.io/en/latest/cmakeIntegration.html#librapid-use-cuda\n");
 #endif // LIBRAPID_HAS_CUDA
 

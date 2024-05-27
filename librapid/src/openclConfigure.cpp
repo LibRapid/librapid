@@ -1,4 +1,5 @@
 #include <librapid/librapid.hpp>
+#include <fstream> // std::ifstream
 
 namespace librapid {
 #if defined(LIBRAPID_HAS_OPENCL)
@@ -27,15 +28,6 @@ __kernel void testAddition(__global const float *a, __global const float *b, __g
             cl_int err;
             cl::Program program(context, sources);
             err = program.build();
-
-            // if (err != CL_SUCCESS) {
-            // 	auto format = fmt::fg(fmt::color::red) | fmt::emphasis::bold;
-            // 	fmt::print(format,
-            // 			   "Error compiling test program: {}\n",
-            // 			   program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device));
-            // 	fmt::print(format, "Error Code [{}]: {}\n", err, opencl::getOpenCLErrorString(err));
-            // 	return false;
-            // }
 
             // Check the build status
             cl_build_status buildStatus = program.getBuildInfo<CL_PROGRAM_BUILD_STATUS>(device);

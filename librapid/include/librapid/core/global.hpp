@@ -8,8 +8,8 @@
 
 namespace librapid {
     namespace global {
-        // Should ASSERT functions error or throw exceptions?
-        extern bool throwOnAssert;
+        // Should ASSERT functions print their message to stdout?
+        extern bool printOnAssert;
 
         /// Arrays with more elements than this will run with multithreaded implementations
         extern size_t multithreadThreshold;

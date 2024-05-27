@@ -131,10 +131,8 @@ namespace librapid::ml {
 		}
 
 #if defined(LIBRAPID_HAS_OPENCL)
-		template<
-		  typename ShapeType, typename StorageScalar, typename Src,
-		  typename std::enable_if_t<
-			std::is_same_v<typename typetraits::TypeInfo<Src>::Backend, backend::OpenCL>, int> = 0>
+		template<typename ShapeType, typename StorageScalar, typename Src>
+			requires(std::is_same_v<typename typetraits::TypeInfo<Src>::Backend, backend::OpenCL>)
 		LIBRAPID_ALWAYS_INLINE void
 		forward(array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &dst,
 				const Src &src) const {
@@ -145,10 +143,8 @@ namespace librapid::ml {
 												   src.storage().data());
 		}
 
-		template<
-		  typename ShapeType, typename StorageScalar, typename Src,
-		  typename std::enable_if_t<
-			std::is_same_v<typename typetraits::TypeInfo<Src>::Backend, backend::OpenCL>, int> = 0>
+		template<typename ShapeType, typename StorageScalar, typename Src>
+			requires(std::is_same_v<typename typetraits::TypeInfo<Src>::Backend, backend::OpenCL>)
 		LIBRAPID_ALWAYS_INLINE void
 		backward(array::ArrayContainer<ShapeType, OpenCLStorage<StorageScalar>> &dst,
 				 const Src &src) const {
@@ -161,13 +157,11 @@ namespace librapid::ml {
 #endif // LIBRAPID_HAS_OPENCL
 
 #if defined(LIBRAPID_HAS_CUDA)
-		template<
-		  typename ShapeType, typename StorageScalar, typename Src,
-		  typename std::enable_if_t<
-			std::is_same_v<typename typetraits::TypeInfo<Src>::Backend, backend::CUDA>, int> = 0>
-		LIBRAPID_ALWAYS_INLINE void
-		forward(array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &dst,
-				const Src &src) const {
+		template<typename ShapeType, typename StorageScalar, typename Src>
+		require(std::is_same_v<typename typetraits::TypeInfo<Src>::Backend, backend::CUDA>)
+		  LIBRAPID_ALWAYS_INLINE
+		  void forward(array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &dst,
+					   const Src &src) const {
 			auto temp = evaluated(src);
 			cuda::runKernel<StorageScalar, StorageScalar>("activations",
 														  "sigmoidActivationForward",
@@ -177,10 +171,8 @@ namespace librapid::ml {
 														  temp.storage().begin());
 		}
 
-		template<
-		  typename ShapeType, typename StorageScalar, typename Src,
-		  typename std::enable_if_t<
-			std::is_same_v<typename typetraits::TypeInfo<Src>::Backend, backend::CUDA>, int> = 0>
+		template<typename ShapeType, typename StorageScalar, typename Src>
+			requires(std::is_same_v<typename typetraits::TypeInfo<Src>::Backend, backend::CUDA>)
 		LIBRAPID_ALWAYS_INLINE void
 		backward(array::ArrayContainer<ShapeType, CudaStorage<StorageScalar>> &dst,
 				 const Src &src) const {

@@ -166,9 +166,9 @@ namespace librapid {
 			template<typename StorageType>
 			void applyTo(array::ArrayContainer<ShapeType, StorageType> &out) const;
 
-			template<typename T, typename Char, typename Ctx>
+			template<typename T, typename Char, size_t N, typename Ctx>
 			void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
-					 Ctx &ctx) const;
+					 const char (&formatString)[N], Ctx &ctx) const;
 
 		private:
 			bool m_transA;	 // Transpose state of A
@@ -475,10 +475,11 @@ namespace librapid {
 
 		template<typename ShapeTypeA, typename StorageTypeA, typename ShapeTypeB,
 				 typename StorageTypeB, typename Alpha, typename Beta>
-		template<typename T, typename Char, typename Ctx>
+		template<typename T, typename Char, size_t N, typename Ctx>
 		void ArrayMultiply<ShapeTypeA, StorageTypeA, ShapeTypeB, StorageTypeB, Alpha, Beta>::str(
-		  const fmt::formatter<T, Char> &format, char bracket, char separator, Ctx &ctx) const {
-			eval().str(format, bracket, separator, ctx);
+		  const fmt::formatter<T, Char> &format, char bracket, char separator,
+		  const char (&formatString)[N], Ctx &ctx) const {
+			eval().str(format, bracket, separator, formatString, ctx);
 		}
 	} // namespace linalg
 
@@ -534,16 +535,15 @@ namespace librapid {
 		/// \tparam T
 		/// \param val
 		/// \return
-		template<typename T, typename std::enable_if_t<!IsTransposeType<T>::value, int> = 0>
+		template<typename T>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto transposeExtractor(T &&val) {
-			using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
-			return std::make_tuple(false, Scalar(1), std::forward<T>(val));
-		}
-
-		template<typename T, typename std::enable_if_t<IsTransposeType<T>::value, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto transposeExtractor(T &&val) {
-			using Type = decltype(val.array());
-			return std::make_tuple(true, val.alpha(), std::forward<Type>(val.array()));
+			if constexpr (IsTransposeType<T>::value) {
+				using Type = decltype(val.array());
+				return std::make_tuple(true, val.alpha(), std::forward<Type>(val.array()));
+			} else {
+				using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
+				return std::make_tuple(false, Scalar(1), std::forward<T>(val));
+			}
 		}
 
 		/// Evaluates to true if the type is a multiply type.
@@ -560,15 +560,15 @@ namespace librapid {
 		/// \tparam T
 		/// \param val
 		/// \return
-		template<typename T, typename std::enable_if_t<!IsMultiplyType<T>::value, int> = 0>
+		template<typename T>
+			requires(!IsMultiplyType<T>::value)
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto multiplyExtractor(T &&val) {
 			using Scalar = typename typetraits::TypeInfo<std::decay_t<T>>::Scalar;
 			return std::make_tuple(Scalar(1), std::forward<T>(val));
 		}
 
-		template<typename Descriptor, typename Arr, typename Scalar,
-				 typename std::enable_if_t<
-				   typetraits::TypeInfo<Scalar>::type == detail::LibRapidType::Scalar, int> = 0>
+		template<typename Descriptor, typename Arr, typename Scalar>
+			requires(typetraits::TypeInfo<Scalar>::type == detail::LibRapidType::Scalar)
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		multiplyExtractor(detail::Function<Descriptor, detail::Multiply, Arr, Scalar> &&val) {
 			using Type = decltype(std::get<0>(val.args()));
@@ -576,9 +576,8 @@ namespace librapid {
 								   std::forward<Type>(std::get<0>(val.args())));
 		}
 
-		template<typename Descriptor, typename Arr, typename Scalar,
-				 typename std::enable_if_t<
-				   typetraits::TypeInfo<Scalar>::type == detail::LibRapidType::Scalar, int> = 0>
+		template<typename Descriptor, typename Arr, typename Scalar>
+			requires(typetraits::TypeInfo<Scalar>::type == detail::LibRapidType::Scalar)
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
 		multiplyExtractor(detail::Function<Descriptor, detail::Multiply, Scalar, Arr> &&val) {
 			using Type = decltype(std::get<1>(val.args()));
@@ -633,9 +632,8 @@ namespace librapid {
 	/// StorageTypeB The storage type of the right input array. \param a The left input array.
 	/// \param b The right input array.
 	/// \return The dot product of the two input arrays.
-	template<
-	  typename First, typename Second,
-	  typename std::enable_if_t<IsArrayType<First>::value && IsArrayType<Second>::value, int> = 0>
+	template<typename First, typename Second>
+		requires(IsArrayType<First>::value && IsArrayType<Second>::value)
 	auto dot(First &&a, Second &&b) {
 		using ScalarA	   = typename typetraits::TypeInfo<std::decay_t<First>>::Scalar;
 		using ScalarB	   = typename typetraits::TypeInfo<std::decay_t<Second>>::Scalar;
@@ -657,7 +655,7 @@ namespace librapid {
 			std::forward<ArrayA>(arrA),
 			alpha * beta,
 			std::forward<ArrayB>(arrB),
-			0);
+			ScalarA(0));
 	}
 
 	namespace typetraits {

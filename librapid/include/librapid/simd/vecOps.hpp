@@ -2,109 +2,140 @@
 #define LIBRAPID_SIMD_TRIGONOMETRY
 
 namespace librapid {
-    namespace typetraits {
-        template<typename T>
-        struct IsSIMD : std::false_type {};
+	namespace typetraits {
+		template<typename T>
+		struct IsSIMD : std::false_type {};
 
-        template<typename T, typename U>
-        struct IsSIMD<xsimd::batch<T, U>> : std::true_type {};
+		template<typename T, typename U>
+		struct IsSIMD<xsimd::batch<T, U>> : std::true_type {};
 
-        template<typename T>
-        struct IsSIMD<xsimd::batch_element_reference<T>> : std::true_type {};
-    } // namespace typetraits
+		template<typename T>
+		struct IsSIMD<xsimd::batch_element_reference<T>> : std::true_type {};
 
-#define REQUIRE_SIMD(TYPE) typename std::enable_if_t<typetraits::IsSIMD<TYPE>::value, int> = 0
-#define IF_FLOATING(TYPE)  if constexpr (std::is_floating_point_v<typename TYPE::value_type>)
+		template<typename T>
+		concept SIMD = IsSIMD<T>::value;
+	} // namespace typetraits
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sin(const T &x) {
-        return xsimd::sin(x);
-    }
+#define IS_FLOATING(TYPE)  std::is_floating_point_v<TYPE>
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cos(const T &x) {
-        return xsimd::cos(x);
-    }
+#define SIMD_OP_IMPL(OP)                                                                           \
+	using Scalar = typename typetraits::TypeInfo<T>::Scalar;                                       \
+	if constexpr (IS_FLOATING(Scalar)) {                                                           \
+		return xsimd::OP(x);                                                                       \
+	} else {                                                                                       \
+		T result;                                                                                  \
+		constexpr uint64_t packetWidth = typetraits::TypeInfo<Scalar>::packetWidth;                \
+		for (size_t i = 0; i < packetWidth; ++i) { result.set(i, std::OP(x.get(i))); }             \
+		return result;                                                                             \
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tan(const T &x) {
-        return xsimd::tan(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sin(const T &x) {
+		SIMD_OP_IMPL(sin)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto asin(const T &x) {
-        return xsimd::asin(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cos(const T &x) {
+		SIMD_OP_IMPL(cos)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto acos(const T &x) {
-        return xsimd::acos(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tan(const T &x) {
+		SIMD_OP_IMPL(tan)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto atan(const T &x) {
-        return xsimd::atan(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto asin(const T &x) {
+		SIMD_OP_IMPL(asin)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sinh(const T &x) {
-        return xsimd::sinh(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto acos(const T &x) {
+		SIMD_OP_IMPL(acos)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cosh(const T &x) {
-        return xsimd::cosh(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto atan(const T &x) {
+		SIMD_OP_IMPL(atan)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tanh(const T &x) {
-        return xsimd::tanh(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sinh(const T &x) {
+		SIMD_OP_IMPL(sinh)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp(const T &x) {
-        return xsimd::exp(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cosh(const T &x) {
+		SIMD_OP_IMPL(cosh)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log(const T &x) {
-        return xsimd::log(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tanh(const T &x) {
+		SIMD_OP_IMPL(tanh)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log2(const T &x) {
-        return xsimd::log2(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp(const T &x) {
+		SIMD_OP_IMPL(exp)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log10(const T &x) {
-        return xsimd::log10(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log(const T &x) {
+		SIMD_OP_IMPL(log)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sqrt(const T &x) {
-        return xsimd::sqrt(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log2(const T &x) {
+		SIMD_OP_IMPL(log2)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cbrt(const T &x) {
-        return xsimd::cbrt(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log10(const T &x) {
+		SIMD_OP_IMPL(log10)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto abs(const T &x) {
-        return xsimd::abs(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sqrt(const T &x) {
+		SIMD_OP_IMPL(sqrt)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto floor(const T &x) {
-        return xsimd::floor(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cbrt(const T &x) {
+		SIMD_OP_IMPL(cbrt)
+	}
 
-    template<typename T, REQUIRE_SIMD(T)>
-    LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ceil(const T &x) {
-        return xsimd::ceil(x);
-    }
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto abs(const T &x) {
+		SIMD_OP_IMPL(abs)
+	}
+
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto floor(const T &x) {
+		SIMD_OP_IMPL(floor)
+	}
+
+	template<typename T>
+		requires(typetraits::SIMD<T>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ceil(const T &x) {
+		SIMD_OP_IMPL(ceil)
+	}
 } // namespace librapid
 
 #endif // LIBRAPID_SIMD_TRIGONOMETRY

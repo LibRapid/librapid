@@ -109,33 +109,24 @@ namespace librapid {
 	namespace detail {
 		// Descriptor is defined in "forward.hpp"
 
-		template<
-		  typename Packet, typename T,
-		  typename std::enable_if_t<
-			typetraits::TypeInfo<T>::type != ::librapid::detail::LibRapidType::Scalar, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetExtractor(const T &obj,
-																		 size_t index) {
-			static_assert(std::is_same_v<Packet, decltype(obj.packet(index))>,
-						  "Packet types do not match");
-			return obj.packet(index);
+		template<typename Packet, typename T>
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetExtractor(const T &obj, size_t index) {
+			if constexpr (detail::IsArrayType<T>::val) {
+				static_assert(std::is_same_v<Packet, decltype(obj.packet(index))>,
+							  "Packet types do not match");
+				return obj.packet(index);
+			} else {
+				return Packet(obj);
+			}
 		}
 
-		template<
-		  typename Packet, typename T,
-		  typename std::enable_if_t<
-			typetraits::TypeInfo<T>::type == ::librapid::detail::LibRapidType::Scalar, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Packet packetExtractor(const T &obj, size_t) {
-			return Packet(obj);
-		}
-
-		template<typename T, typename std::enable_if_t<detail::IsArrayType<T>::val, int> = 0>
+		template<typename T>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t index) {
-			return obj.scalar(index);
-		}
-
-		template<typename T, typename std::enable_if_t<!detail::IsArrayType<T>::val, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto scalarExtractor(const T &obj, size_t) {
-			return obj;
+			if constexpr(detail::IsArrayType<T>::val) {
+				return obj.scalar(index);
+			} else {
+				return obj;
+			}
 		}
 
 		template<typename First, typename... Rest>
@@ -227,9 +218,9 @@ namespace librapid {
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator begin() const;
 			LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE Iterator end() const;
 
-			template<typename T, typename Char, typename Ctx>
+			template<typename T, typename Char, size_t N, typename Ctx>
 			void str(const fmt::formatter<T, Char> &format, char bracket, char separator,
-					 Ctx &ctx) const;
+					 const char (&formatString)[N], Ctx &ctx) const;
 
 		private:
 			/// Implementation detail -- evaluates the function at the given index,
@@ -336,11 +327,12 @@ namespace librapid {
 		}
 
 		template<typename desc, typename Functor, typename... Args>
-		template<typename T, typename Char, typename Ctx>
+		template<typename T, typename Char, size_t N, typename Ctx>
 		LIBRAPID_ALWAYS_INLINE void
 		Function<desc, Functor, Args...>::str(const fmt::formatter<T, Char> &format, char bracket,
-											  char separator, Ctx &ctx) const {
-			createGeneralArrayView(*this).str(format, bracket, separator, ctx);
+											  char separator, const char (&formatString)[N],
+											  Ctx &ctx) const {
+			createGeneralArrayView(*this).str(format, bracket, separator, formatString, ctx);
 		}
 	} // namespace detail
 } // namespace librapid

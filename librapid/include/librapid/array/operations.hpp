@@ -91,8 +91,12 @@
 	  const std::tuple<First, Second> &tup) {                                                      \
 		if constexpr (IsArrayType<std::decay_t<First>>::value) {                                   \
 			if constexpr (IsArrayType<std::decay_t<Second>>::value) {                              \
-				LIBRAPID_ASSERT(std::get<0>(tup).shape() == std::get<1>(tup).shape(),              \
-								"Shapes must match for binary operations");                        \
+				LIBRAPID_ASSERT_WITH_EXCEPTION(                                                    \
+				  std::range_error,                                                                \
+				  std::get<0>(tup).shape() == std::get<1>(tup).shape(),                            \
+				  "Shapes must match for binary operations. {} vs {}",                             \
+				  std::get<0>(tup).shape(),                                                        \
+				  std::get<1>(tup).shape());                                                       \
 				return std::get<0>(tup).shape();                                                   \
 			}                                                                                      \
 			return std::get<0>(tup).shape();                                                       \
@@ -149,17 +153,22 @@ namespace librapid {
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseEqual, ==);	 // a == b
 		LIBRAPID_BINARY_COMPARISON_FUNCTOR(ElementWiseNotEqual, !=); // a != b
 
-		LIBRAPID_UNARY_FUNCTOR(Sin, ::librapid::sin);	// sin(a)
-		LIBRAPID_UNARY_FUNCTOR(Cos, ::librapid::cos);	// cos(a)
-		LIBRAPID_UNARY_FUNCTOR(Tan, ::librapid::tan);	// tan(a)
-		LIBRAPID_UNARY_FUNCTOR(Asin, ::librapid::asin); // asin(a)
-		LIBRAPID_UNARY_FUNCTOR(Acos, ::librapid::acos); // acos(a)
-		LIBRAPID_UNARY_FUNCTOR(Atan, ::librapid::atan); // atan(a)
-		LIBRAPID_UNARY_FUNCTOR(Sinh, ::librapid::sinh); // sinh(a)
-		LIBRAPID_UNARY_FUNCTOR(Cosh, ::librapid::cosh); // cosh(a)
-		LIBRAPID_UNARY_FUNCTOR(Tanh, ::librapid::tanh); // tanh(a)
+		LIBRAPID_UNARY_FUNCTOR(Sin, ::librapid::sin);	 // sin(a)
+		LIBRAPID_UNARY_FUNCTOR(Cos, ::librapid::cos);	 // cos(a)
+		LIBRAPID_UNARY_FUNCTOR(Tan, ::librapid::tan);	 // tan(a)
+		LIBRAPID_UNARY_FUNCTOR(Asin, ::librapid::asin);	 // asin(a)
+		LIBRAPID_UNARY_FUNCTOR(Acos, ::librapid::acos);	 // acos(a)
+		LIBRAPID_UNARY_FUNCTOR(Atan, ::librapid::atan);	 // atan(a)
+		LIBRAPID_UNARY_FUNCTOR(Sinh, ::librapid::sinh);	 // sinh(a)
+		LIBRAPID_UNARY_FUNCTOR(Cosh, ::librapid::cosh);	 // cosh(a)
+		LIBRAPID_UNARY_FUNCTOR(Tanh, ::librapid::tanh);	 // tanh(a)
+		LIBRAPID_UNARY_FUNCTOR(Asinh, ::librapid::sinh); // asinh(a)
+		LIBRAPID_UNARY_FUNCTOR(Acosh, ::librapid::cosh); // acosh(a)
+		LIBRAPID_UNARY_FUNCTOR(Atanh, ::librapid::tanh); // atanh(a)
 
 		LIBRAPID_UNARY_FUNCTOR(Exp, ::librapid::exp);	  // exp(a)
+		LIBRAPID_UNARY_FUNCTOR(Exp2, ::librapid::exp);	  // exp2(a)
+		LIBRAPID_UNARY_FUNCTOR(Exp10, ::librapid::exp);	  // exp10(a)
 		LIBRAPID_UNARY_FUNCTOR(Log, ::librapid::log);	  // log(a)
 		LIBRAPID_UNARY_FUNCTOR(Log2, ::librapid::log2);	  // log2(a)
 		LIBRAPID_UNARY_FUNCTOR(Log10, ::librapid::log10); // log10(a)
@@ -458,10 +467,55 @@ namespace librapid {
 		};
 
 		template<>
+		struct TypeInfo<::librapid::detail::Asinh> {
+			static constexpr const char *name		= "hyperbolic arcsine";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "asinhArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Acosh> {
+			static constexpr const char *name		= "hyperbolic arccosine";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "acoshArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Atanh> {
+			static constexpr const char *name		= "hyperbolic arctangent";
+			static constexpr const char *filename	= "trigonometry";
+			static constexpr const char *kernelName = "atanhArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
 		struct TypeInfo<::librapid::detail::Exp> {
 			static constexpr const char *name		= "exponent";
 			static constexpr const char *filename	= "expLogPow";
 			static constexpr const char *kernelName = "expArrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Exp2> {
+			static constexpr const char *name		= "exponent base 2";
+			static constexpr const char *filename	= "expLogPow";
+			static constexpr const char *kernelName = "exp2Arrays";
+			LIBRAPID_UNARY_KERNEL_GETTER
+			LIBRAPID_UNARY_SHAPE_EXTRACTOR
+		};
+
+		template<>
+		struct TypeInfo<::librapid::detail::Exp10> {
+			static constexpr const char *name		= "exponent base 10";
+			static constexpr const char *filename	= "expLogPow";
+			static constexpr const char *kernelName = "exp10Arrays";
 			LIBRAPID_UNARY_KERNEL_GETTER
 			LIBRAPID_UNARY_SHAPE_EXTRACTOR
 		};
@@ -554,15 +608,6 @@ namespace librapid {
 
 		template<typename LHS, typename RHS>
 		constexpr bool isArrayOpArray() {
-			// return (typetraits::TypeInfo<std::decay_t<LHS>>::type != LibRapidType::Scalar) &&
-			// 	   (typetraits::TypeInfo<std::decay_t<RHS>>::type != LibRapidType::Scalar) &&
-			// 	   typetraits::IsLibRapidType<std::decay_t<LHS>>::value &&
-			// 	   typetraits::IsLibRapidType<std::decay_t<RHS>>::value;
-
-			// ArrayContainer,
-			// ArrayFunction,
-			// GeneralArrayView
-
 			constexpr bool lhsIsValid = isType<LHS,
 											   LibRapidType::ArrayContainer,
 											   LibRapidType::ArrayFunction,
@@ -578,20 +623,6 @@ namespace librapid {
 
 		template<typename LHS, typename RHS>
 		constexpr bool isArrayOpWithScalar() {
-			// // We allow operations with vectors here
-			// return (typetraits::IsLibRapidType<std::decay_t<LHS>>::value &&
-			// 		(
-			// 			(typetraits::TypeInfo<std::decay_t<RHS>>::type == LibRapidType::Scalar) ||
-			// 			(typetraits::TypeInfo<std::decay_t<RHS>>::type == LibRapidType::Vector)
-			// 		)
-			// 	   ) ||
-			// 	   (
-			// 	   	(
-			// 	   		(typetraits::TypeInfo<std::decay_t<LHS>>::type == LibRapidType::Scalar) ||
-			// 	   		(typetraits::TypeInfo<std::decay_t<LHS>>::type == LibRapidType::Vector)
-			// 	   	) &&
-			// 		typetraits::IsLibRapidType<std::decay_t<RHS>>::value);
-
 			constexpr bool lhsIsArray = isType<LHS,
 											   LibRapidType::ArrayContainer,
 											   LibRapidType::ArrayFunction,
@@ -608,6 +639,15 @@ namespace librapid {
 
 			return (lhsIsArray ^ rhsIsArray) && (lhsIsScalar ^ rhsIsScalar);
 		}
+
+		template<typename VAL>
+		concept IsArrayOp = isArrayOp<VAL>();
+
+		template<typename LHS, typename RHS>
+		concept IsArrayOpArray = isArrayOpArray<LHS, RHS>();
+
+		template<typename LHS, typename RHS>
+		concept IsArrayOpWithScalar = isArrayOpWithScalar<LHS, RHS>();
 	} // namespace detail
 
 	namespace array {
@@ -625,19 +665,17 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise sum of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		operator+(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus, LHS, RHS> {
-			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus>(
-			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+			requires(detail::IsArrayOpArray<LHS, RHS> || detail::IsArrayOpWithScalar<LHS, RHS>)
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator+(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		operator+(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Plus>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -652,19 +690,17 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise difference of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		operator-(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus, LHS, RHS> {
-			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus>(
-			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+			requires(detail::IsArrayOpArray<LHS, RHS> || detail::IsArrayOpWithScalar<LHS, RHS>)
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		operator-(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Minus>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -679,19 +715,17 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise product of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		operator*(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply, LHS, RHS> {
-			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply>(
-			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+			requires(detail::IsArrayOpArray<LHS, RHS> || detail::IsArrayOpWithScalar<LHS, RHS>)
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator*(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		operator*(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Multiply>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -706,19 +740,17 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise division of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		operator/(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide, LHS, RHS> {
-			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide>(
-			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+			requires(detail::IsArrayOpArray<LHS, RHS> || detail::IsArrayOpWithScalar<LHS, RHS>)
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator/(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		operator/(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::Divide>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -735,19 +767,17 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		operator<(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan, LHS, RHS> {
-			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan>(
-			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+			requires(detail::IsArrayOpArray<LHS, RHS> || detail::IsArrayOpWithScalar<LHS, RHS>)
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		operator<(LHS &&lhs, RHS &&rhs) LIBRAPID_RELEASE_NOEXCEPT
-		  ->detail::Function<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>, detail::LessThan>(
 			  std::forward<LHS>(lhs), std::forward<RHS>(rhs));
 		}
@@ -764,20 +794,17 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
-													  detail::GreaterThan, LHS, RHS> {
-			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
-										detail::GreaterThan>(std::forward<LHS>(lhs),
-															 std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+			requires(detail::IsArrayOpArray<LHS, RHS> || detail::IsArrayOpWithScalar<LHS, RHS>)
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
-													  detail::GreaterThan, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::GreaterThan>(std::forward<LHS>(lhs),
 															 std::forward<RHS>(rhs));
@@ -795,20 +822,17 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<=(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
-													  detail::LessThanEqual, LHS, RHS> {
-			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
-										detail::LessThanEqual>(std::forward<LHS>(lhs),
-															   std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+			requires(detail::IsArrayOpArray<LHS, RHS> || detail::IsArrayOpWithScalar<LHS, RHS>)
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<=(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator<=(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
-													  detail::LessThanEqual, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::LessThanEqual>(std::forward<LHS>(lhs),
 															   std::forward<RHS>(rhs));
@@ -826,20 +850,17 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>=(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
-													  detail::GreaterThanEqual, LHS, RHS> {
-			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
-										detail::GreaterThanEqual>(std::forward<LHS>(lhs),
-																  std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+			requires(detail::IsArrayOpArray<LHS, RHS> || detail::IsArrayOpWithScalar<LHS, RHS>)
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>=(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator>=(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
-													  detail::GreaterThanEqual, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::GreaterThanEqual>(std::forward<LHS>(lhs),
 																  std::forward<RHS>(rhs));
@@ -857,20 +878,17 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
-													  detail::ElementWiseEqual, LHS, RHS> {
-			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
-										detail::ElementWiseEqual>(std::forward<LHS>(lhs),
-																  std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+			requires(detail::IsArrayOpArray<LHS, RHS> || detail::IsArrayOpWithScalar<LHS, RHS>)
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator==(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
-													  detail::ElementWiseEqual, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::ElementWiseEqual>(std::forward<LHS>(lhs),
 																  std::forward<RHS>(rhs));
@@ -888,20 +906,17 @@ namespace librapid {
 		/// \param lhs The first array
 		/// \param rhs The second array
 		/// \return The element-wise comparison of the two arrays
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_ARRAY, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
-													  detail::ElementWiseNotEqual, LHS, RHS> {
-			LIBRAPID_ASSERT(lhs.shape().operator==(rhs.shape()), "Shapes must be equal");
-			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
-										detail::ElementWiseNotEqual>(std::forward<LHS>(lhs),
-																	 std::forward<RHS>(rhs));
-		}
+		template<class LHS, class RHS>
+			requires(detail::IsArrayOpArray<LHS, RHS> || detail::IsArrayOpWithScalar<LHS, RHS>)
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(LHS &&lhs, RHS &&rhs) {
+			if constexpr (IS_ARRAY_OP_ARRAY) {
+				LIBRAPID_ASSERT_WITH_EXCEPTION(std::range_error,
+											   lhs.shape().operator==(rhs.shape()),
+											   "Shapes must be equal. {} vs {}",
+											   lhs.shape(),
+											   rhs.shape());
+			}
 
-		template<class LHS, class RHS, typename std::enable_if_t<IS_ARRAY_OP_WITH_SCALAR, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator!=(LHS &&lhs, RHS &&rhs)
-		  LIBRAPID_RELEASE_NOEXCEPT->detail::Function<typetraits::DescriptorType_t<LHS, RHS>,
-													  detail::ElementWiseNotEqual, LHS, RHS> {
 			return detail::makeFunction<typetraits::DescriptorType_t<LHS, RHS>,
 										detail::ElementWiseNotEqual>(std::forward<LHS>(lhs),
 																	 std::forward<RHS>(rhs));
@@ -911,10 +926,9 @@ namespace librapid {
 		/// \tparam VAL Type to negate
 		/// \param val The input array or function
 		/// \return Negation function object
-		template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
-		operator-(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-		  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Neg, VAL> {
+		template<class VAL>
+			requires(detail::IsArrayOp<VAL>)
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto operator-(VAL &&val) {
 			return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Neg>(
 			  std::forward<VAL>(val));
 		}
@@ -927,9 +941,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Sine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sin(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sin, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sin(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sin, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Sin>(
 		  std::forward<VAL>(val));
 	}
@@ -941,9 +956,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Cosine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cos(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cos, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cos(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cos, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Cos>(
 		  std::forward<VAL>(val));
 	}
@@ -955,9 +971,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Tangent function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tan(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tan, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tan(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tan, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Tan>(
 		  std::forward<VAL>(val));
 	}
@@ -969,9 +986,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Arcsine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto asin(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Asin, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto asin(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Asin, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Asin>(
 		  std::forward<VAL>(val));
 	}
@@ -983,9 +1001,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Arccosine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto acos(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Acos, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto acos(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Acos, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Acos>(
 		  std::forward<VAL>(val));
 	}
@@ -997,9 +1016,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Arctangent function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto atan(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Atan, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto atan(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Atan, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Atan>(
 		  std::forward<VAL>(val));
 	}
@@ -1011,9 +1031,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Hyperbolic sine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sinh(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sinh, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sinh(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sinh, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Sinh>(
 		  std::forward<VAL>(val));
 	}
@@ -1025,9 +1046,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Hyperbolic cosine function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cosh(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cosh, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cosh(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cosh, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Cosh>(
 		  std::forward<VAL>(val));
 	}
@@ -1039,10 +1061,56 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Hyperbolic tangent function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tanh(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tanh, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tanh(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tanh, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Tanh>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the hyperbolic arcsine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \sinh^{-1}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Hyperbolic sine function object
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto asinh(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Asinh, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Asinh>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the hyperbolic arccosine of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \cosh^{-1}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Hyperbolic cosine function object
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto acosh(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Acosh, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Acosh>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Calculate the hyperbolic arctangent of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = \tanh^{-1}(A_i)\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Hyperbolic tangent function object
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto atanh(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Atanh, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Atanh>(
 		  std::forward<VAL>(val));
 	}
 
@@ -1053,10 +1121,41 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Exponential function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Exp>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Raise 2 to the power of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = 2^{A_i}\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Exponential function object
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp2(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp2, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Exp2>(
+		  std::forward<VAL>(val));
+	}
+
+	/// \brief Raise 10 to the power of each element in the array
+	///
+	/// \f$R = \{ R_0, R_1, R_2, ... \} \f$ \text{ where } \f$R_i = 10^{A_i}\f$
+	///
+	/// \tparam VAL Type of the input
+	/// \param val The input array or function
+	/// \return Exponential function object
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp10(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp10, VAL> {
+		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Exp10>(
 		  std::forward<VAL>(val));
 	}
 
@@ -1067,9 +1166,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Natural logarithm function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Log>(
 		  std::forward<VAL>(val));
 	}
@@ -1081,9 +1181,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Base 10 logarithm function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log10(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log10, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log10(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log10, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Log10>(
 		  std::forward<VAL>(val));
 	}
@@ -1095,9 +1196,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Base 2 logarithm function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log2(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log2, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log2(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log2, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Log2>(
 		  std::forward<VAL>(val));
 	}
@@ -1109,9 +1211,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Square root function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sqrt(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sqrt, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sqrt(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sqrt, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Sqrt>(
 		  std::forward<VAL>(val));
 	}
@@ -1123,9 +1226,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Cube root function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cbrt(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cbrt, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cbrt(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cbrt, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Cbrt>(
 		  std::forward<VAL>(val));
 	}
@@ -1137,9 +1241,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Absolute value function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto abs(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Abs, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto abs(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Abs, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Abs>(
 		  std::forward<VAL>(val));
 	}
@@ -1151,9 +1256,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Floor function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto floor(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Floor, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto floor(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Floor, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Floor>(
 		  std::forward<VAL>(val));
 	}
@@ -1165,9 +1271,10 @@ namespace librapid {
 	/// \tparam VAL Type of the input
 	/// \param val The input array or function
 	/// \return Ceiling function object
-	template<class VAL, typename std::enable_if_t<IS_ARRAY_OP, int> = 0>
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ceil(VAL &&val) LIBRAPID_RELEASE_NOEXCEPT
-	  ->detail::Function<typetraits::DescriptorType_t<VAL>, detail::Ceil, VAL> {
+	template<class VAL>
+		requires(detail::IsArrayOp<VAL>)
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ceil(VAL &&val)
+	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Ceil, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Ceil>(
 		  std::forward<VAL>(val));
 	}
