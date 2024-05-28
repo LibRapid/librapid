@@ -302,7 +302,7 @@ jobs:
 
       - name: Install Clang
         if: runner.os == 'Windows'
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: '15.0'
           directory: ${RUNNER_TOOL_CACHE}
