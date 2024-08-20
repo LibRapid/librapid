@@ -943,8 +943,8 @@ namespace librapid {
 	/// \return Sine function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sin(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sin, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	sin(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sin, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Sin>(
 		  std::forward<VAL>(val));
 	}
@@ -958,8 +958,8 @@ namespace librapid {
 	/// \return Cosine function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cos(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cos, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	cos(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cos, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Cos>(
 		  std::forward<VAL>(val));
 	}
@@ -973,8 +973,8 @@ namespace librapid {
 	/// \return Tangent function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tan(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tan, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	tan(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tan, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Tan>(
 		  std::forward<VAL>(val));
 	}
@@ -988,8 +988,8 @@ namespace librapid {
 	/// \return Arcsine function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto asin(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Asin, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	asin(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Asin, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Asin>(
 		  std::forward<VAL>(val));
 	}
@@ -1003,8 +1003,8 @@ namespace librapid {
 	/// \return Arccosine function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto acos(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Acos, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	acos(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Acos, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Acos>(
 		  std::forward<VAL>(val));
 	}
@@ -1018,8 +1018,8 @@ namespace librapid {
 	/// \return Arctangent function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto atan(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Atan, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	atan(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Atan, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Atan>(
 		  std::forward<VAL>(val));
 	}
@@ -1033,8 +1033,8 @@ namespace librapid {
 	/// \return Hyperbolic sine function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sinh(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sinh, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	sinh(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sinh, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Sinh>(
 		  std::forward<VAL>(val));
 	}
@@ -1048,8 +1048,8 @@ namespace librapid {
 	/// \return Hyperbolic cosine function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cosh(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cosh, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	cosh(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cosh, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Cosh>(
 		  std::forward<VAL>(val));
 	}
@@ -1063,8 +1063,8 @@ namespace librapid {
 	/// \return Hyperbolic tangent function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto tanh(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tanh, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	tanh(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Tanh, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Tanh>(
 		  std::forward<VAL>(val));
 	}
@@ -1078,8 +1078,8 @@ namespace librapid {
 	/// \return Hyperbolic sine function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto asinh(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Asinh, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	asinh(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Asinh, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Asinh>(
 		  std::forward<VAL>(val));
 	}
@@ -1093,8 +1093,8 @@ namespace librapid {
 	/// \return Hyperbolic cosine function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto acosh(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Acosh, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	acosh(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Acosh, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Acosh>(
 		  std::forward<VAL>(val));
 	}
@@ -1108,8 +1108,8 @@ namespace librapid {
 	/// \return Hyperbolic tangent function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto atanh(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Atanh, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	atanh(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Atanh, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Atanh>(
 		  std::forward<VAL>(val));
 	}
@@ -1123,8 +1123,8 @@ namespace librapid {
 	/// \return Exponential function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	exp(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Exp>(
 		  std::forward<VAL>(val));
 	}
@@ -1138,8 +1138,8 @@ namespace librapid {
 	/// \return Exponential function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp2(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp2, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	exp2(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp2, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Exp2>(
 		  std::forward<VAL>(val));
 	}
@@ -1153,8 +1153,8 @@ namespace librapid {
 	/// \return Exponential function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto exp10(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp10, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	exp10(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Exp10, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Exp10>(
 		  std::forward<VAL>(val));
 	}
@@ -1168,8 +1168,8 @@ namespace librapid {
 	/// \return Natural logarithm function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	log(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Log>(
 		  std::forward<VAL>(val));
 	}
@@ -1183,8 +1183,8 @@ namespace librapid {
 	/// \return Base 10 logarithm function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log10(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log10, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	log10(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log10, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Log10>(
 		  std::forward<VAL>(val));
 	}
@@ -1198,8 +1198,8 @@ namespace librapid {
 	/// \return Base 2 logarithm function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto log2(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log2, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	log2(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Log2, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Log2>(
 		  std::forward<VAL>(val));
 	}
@@ -1213,8 +1213,8 @@ namespace librapid {
 	/// \return Square root function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto sqrt(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sqrt, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	sqrt(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Sqrt, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Sqrt>(
 		  std::forward<VAL>(val));
 	}
@@ -1228,8 +1228,8 @@ namespace librapid {
 	/// \return Cube root function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto cbrt(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cbrt, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	cbrt(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Cbrt, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Cbrt>(
 		  std::forward<VAL>(val));
 	}
@@ -1243,8 +1243,8 @@ namespace librapid {
 	/// \return Absolute value function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto abs(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Abs, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	abs(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Abs, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Abs>(
 		  std::forward<VAL>(val));
 	}
@@ -1258,8 +1258,8 @@ namespace librapid {
 	/// \return Floor function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto floor(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Floor, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	floor(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Floor, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Floor>(
 		  std::forward<VAL>(val));
 	}
@@ -1273,8 +1273,8 @@ namespace librapid {
 	/// \return Ceiling function object
 	template<class VAL>
 		requires(detail::IsArrayOp<VAL>)
-	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto ceil(VAL &&val)
-	  -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Ceil, VAL> {
+	LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto
+	ceil(VAL &&val) -> detail::Function<typetraits::DescriptorType_t<VAL>, detail::Ceil, VAL> {
 		return detail::makeFunction<typetraits::DescriptorType_t<VAL>, detail::Ceil>(
 		  std::forward<VAL>(val));
 	}

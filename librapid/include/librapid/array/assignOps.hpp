@@ -17,7 +17,7 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
 			requires(!typetraits::HasCustomEval<
 					 detail::Function<descriptor::Trivial, Functor_, Args...>>::value)
-		LIBRAPID_ALWAYS_INLINE void
+		LIBRAPID_FLATTEN LIBRAPID_ALWAYS_INLINE void
 		assign(array::ArrayContainer<ShapeType_, Storage<StorageScalar>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
@@ -75,7 +75,7 @@ namespace librapid {
 				 typename Functor_, typename... Args>
 			requires(!typetraits::HasCustomEval<
 					 detail::Function<descriptor::Trivial, Functor_, Args...>>::value)
-		LIBRAPID_ALWAYS_INLINE void
+		LIBRAPID_FLATTEN LIBRAPID_ALWAYS_INLINE void
 		assign(array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 			   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
@@ -137,7 +137,7 @@ namespace librapid {
 		template<typename ShapeType_, typename StorageScalar, typename Functor_, typename... Args>
 			requires(!typetraits::HasCustomEval<
 					 detail::Function<descriptor::Trivial, Functor_, Args...>>::value)
-		LIBRAPID_ALWAYS_INLINE void
+		LIBRAPID_FLATTEN LIBRAPID_ALWAYS_INLINE void
 		assignParallel(array::ArrayContainer<ShapeType_, Storage<StorageScalar>> &lhs,
 					   const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
@@ -201,7 +201,7 @@ namespace librapid {
 				 typename Functor_, typename... Args>
 			requires(!typetraits::HasCustomEval<
 					 detail::Function<descriptor::Trivial, Functor_, Args...>>::value)
-		LIBRAPID_ALWAYS_INLINE void assignParallel(
+		LIBRAPID_FLATTEN LIBRAPID_ALWAYS_INLINE void assignParallel(
 		  array::ArrayContainer<ShapeType_, FixedStorage<StorageScalar, StorageSize...>> &lhs,
 		  const detail::Function<descriptor::Trivial, Functor_, Args...> &function) {
 			using Function = detail::Function<descriptor::Trivial, Functor_, Args...>;
@@ -356,7 +356,7 @@ namespace librapid {
 	namespace cuda {
 		template<typename T>
 		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE auto dataSourceExtractor(const T &obj) {
-			if constexpr(typetraits::TypeInfo<T>::type ==
+			if constexpr (typetraits::TypeInfo<T>::type ==
 						  ::librapid::detail::LibRapidType::Scalar) {
 				return obj;
 			} else {
@@ -545,7 +545,7 @@ namespace librapid {
 												 reinterpret_cast<Scalar *>(lhs.storage().begin()),
 												 function);
 		}
-	}  // namespace detail
+	} // namespace detail
 #endif // LIBRAPID_HAS_CUDA
 } // namespace librapid
 

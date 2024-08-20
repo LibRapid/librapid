@@ -34,3 +34,15 @@ librapid/bindings/python/generated
 dist/
 
 *.pyc
+examples/CMakeFiles
+examples/CTestTestfile.cmake
+examples/Makefile
+examples/cmake_install.cmake
+test/CMakeFiles
+test/CTestTestfile.cmake
+test/Makefile
+test/cmake_install.cmake
+cmake_install.cmake
+DartConfiguration.tcl
+CTestTestfile.cmake
+Makefile
