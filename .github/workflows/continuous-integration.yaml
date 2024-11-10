@@ -42,8 +42,8 @@ jobs:
             pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
 
           - os: ubuntu-latest
-            cc: gcc-10
-            cxx: g++-10
+            cc: gcc-13
+            cxx: g++-13
             blas: off
             getBlas: off
             fftw: off
@@ -52,8 +52,8 @@ jobs:
             pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
 
           - os: ubuntu-latest
-            cc: gcc-10
-            cxx: g++-10
+            cc: gcc-13
+            cxx: g++-13
             blas: on
             getBlas: on
             fftw: on
@@ -62,8 +62,8 @@ jobs:
             pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
 
           - os: ubuntu-latest
-            cc: gcc-10
-            cxx: g++-10
+            cc: gcc-13
+            cxx: g++-13
             blas: off
             getBlas: off
             fftw: off
@@ -72,8 +72,8 @@ jobs:
             pretty: "LibRapid_Ubuntu_Clang_C++23_MPFR"
 
           - os: ubuntu-latest
-            cc: gcc-10
-            cxx: g++-10
+            cc: gcc-13
+            cxx: g++-13
             blas: on
             getBlas: on
             fftw: on
@@ -82,8 +82,8 @@ jobs:
             pretty: "LibRapid_Ubuntu_Clang_C++23_BLAS_FFTW_MPFR"
 
           - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-14
+            cxx: g++-14
             blas: off
             getBlas: off
             fftw: off
@@ -92,8 +92,8 @@ jobs:
             pretty: "LibRapid_Ubuntu_Clang_C++20_MPFR"
 
           - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-14
+            cxx: g++-14
             blas: on
             getBlas: on
             fftw: on
@@ -102,8 +102,8 @@ jobs:
             pretty: "LibRapid_Ubuntu_Clang_C++20_BLAS_FFTW_MPFR"
 
           - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-14
+            cxx: g++-14
             blas: off
             getBlas: off
             fftw: off
@@ -112,8 +112,8 @@ jobs:
             pretty: "LibRapid_Ubuntu_Clang_C++23_MPFR"
 
           - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-14
+            cxx: g++-14
             blas: on
             getBlas: on
             fftw: on
@@ -144,44 +144,44 @@ jobs:
             pretty: "LibRapid_MacOS_Clang++_C++20_BLAS_FFTW_MPFR"
 
           - os: macos-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-14
+            cxx: g++-14
             blas: off
             getBlas: off
             fftw: off
             mpfr: on
             cpp: 20
-            pretty: "LibRapid_MacOS_GCC-11_C++20_MPFR"
+            pretty: "LibRapid_MacOS_GCC-14_C++20_MPFR"
 
           - os: macos-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-14
+            cxx: g++-14
             blas: on # Accelerate requires clang so we get blas
             getBlas: on
             fftw: on
             mpfr: on
             cpp: 20
-            pretty: "LibRapid_MacOS_GCC-11_C++20_BLAS_FFTW_MPFR"
+            pretty: "LibRapid_MacOS_GCC-14_C++20_BLAS_FFTW_MPFR"
 
           - os: macos-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-14
+            cxx: g++-14
             blas: off
             getBlas: off
             fftw: off
             mpfr: on
             cpp: 23
-            pretty: "LibRapid_MacOS_GCC-11_C++23_MPFR"
+            pretty: "LibRapid_MacOS_GCC-14_C++23_MPFR"
 
           - os: macos-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-14
+            cxx: g++-14
             blas: on # Accelerate Requires clang, so we get blas
             getBlas: on
             fftw: on
             mpfr: on
             cpp: 23
-            pretty: "LibRapid_MacOS_GCC-11_C++23_BLAS_FFTW_MPFR"
+            pretty: "LibRapid_MacOS_GCC-14_C++23_BLAS_FFTW_MPFR"
 
           - os: windows-latest
             cc: ../llvm/clang
@@ -440,14 +440,14 @@ jobs:
             pretty: "LibRapid_Ubuntu_Clang"
 
           - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-14
+            cxx: g++-14
             smallArrays: ON
             pretty: "LibRapid_Ubuntu_GCC_OptimiseSmallArrays"
 
           - os: ubuntu-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-14
+            cxx: g++-14
             smallArrays: OFF
             pretty: "LibRapid_Ubuntu_GCC"
 
@@ -466,14 +466,14 @@ jobs:
             pretty: "LibRapid_MacOS_Clang"
 
           - os: macos-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-14
+            cxx: g++-14
             smallArrays: ON
             pretty: "LibRapid_MacOS_GCC_OptimiseSmallArrays"
 
           - os: macos-latest
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-14
+            cxx: g++-14
             smallArrays: OFF
             pretty: "LibRapid_MacOS_GCC"
 
@@ -683,8 +683,8 @@ jobs:
           cmake .. -DCMAKE_BUILD_TYPE=Debug -DLIBRAPID_CODE_COV=on -DLIBRAPID_BUILD_EXAMPLES=on -DLIBRAPID_BUILD_TESTS=on -DLIBRAPID_USE_BLAS=ON -DLIBRAPID_GET_FFTW=on -DLIBRAPID_USE_MULTIPREC=on
           cmake --build .
         env:
-          CC: gcc-11
-          CXX: g++-11
+          CC: gcc-14
+          CXX: g++-14
 
       - name: Run Tests
         run: |
