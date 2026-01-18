@@ -599,7 +599,7 @@ jobs:
           python-version: "3.9"
 
       - name: Download Intermediate Benchmark Results
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: IntermediateBenchmarkResults
 
